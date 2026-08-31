@@ -6,7 +6,9 @@ import { listDemoEvents, runBaselineDemo } from './api/demo';
 import { healthResponse, logsResponse, versionResponse } from './api/operations';
 import { renderLogsDemo } from './demos/logs';
 import { requireAdmin } from './lib/admin-auth';
+import { requireSameOrigin } from './lib/admin-auth';
 import { getDemoControl, setDemoControl } from './lib/demo-control';
+import { json, methodNotAllowed, safeError } from './lib/http';
 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/'];
@@ -32,11 +34,10 @@ export function wantsHtml(request: Request, path: string): boolean {
   return accept.includes('text/html') || accept === '';
 }
 
-function offlineApiResponse(message: string): Response {
-  return new Response(JSON.stringify({ status: 'offline', message }), {
+export function offlineApiResponse(message: string): Response {
+  return json({ status: 'offline', message }, {
     status: 503,
     headers: {
-      'content-type': 'application/json; charset=utf-8',
       'cache-control': 'no-store',
       'retry-after': '60'
     }
@@ -44,22 +45,37 @@ function offlineApiResponse(message: string): Response {
 }
 
 export async function routeRequest(request: Request, env: Env): Promise<Response> {
+  try {
+    return await routeRequestUnsafe(request, env);
+  } catch (error) {
+    return safeError(request, error);
+  }
+}
+
+async function routeRequestUnsafe(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
   const path = url.pathname.length > 1 ? url.pathname.replace(/\/+$/, '') : '/';
 
   if (path === '/admin') {
-    const identity = requireAdmin(request, env);
+    const identity = await requireAdmin(request, env);
     if (identity instanceof Response) return identity;
     if (request.method === 'POST') {
+      const originFailure = requireSameOrigin(request);
+      if (originFailure) return originFailure;
       const form = await request.formData();
       const state = form.get('state') === 'offline' ? 'offline' : 'online';
       const fallback = state === 'offline' ? 'The demo is temporarily unavailable.' : 'The architecture demo is available.';
       const message = String(form.get('message') || fallback).trim().slice(0, 500) || fallback;
-      const control = await setDemoControl(env, state, message, identity.username);
-      return renderAdmin(env, control, `Demo is now ${state}.`);
+      await setDemoControl(env, state, message, identity.username);
+      const location = new URL('/admin', url.origin);
+      location.searchParams.set('changed', state);
+      return new Response(null, { status: 303, headers: { location: location.toString(), 'cache-control': 'no-store' } });
     }
-    if (request.method === 'GET') return renderAdmin(env, await getDemoControl(env));
-    return new Response('Method not allowed', { status: 405, headers: { allow: 'GET, POST', 'cache-control': 'no-store' } });
+    if (request.method === 'GET') {
+      const changed = url.searchParams.get('changed');
+      return renderAdmin(env, await getDemoControl(env), changed === 'online' || changed === 'offline' ? `Demo is now ${changed}.` : '');
+    }
+    return methodNotAllowed(['GET', 'POST']);
   }
 
   if (request.method === 'GET' && path === '/health') return healthResponse(env);
