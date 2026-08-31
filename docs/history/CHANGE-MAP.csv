@@ -17,4 +17,5 @@ DEMO-015,49163e19a48505249fb83efff8e43c695fe9f139,74497144914d4651cb2f8e53e4b645
 DEMO-016,37a2071372c87007488ec09dde38e9c0963b0133,74497144914d4651cb2f8e53e4b645d0c2c8db76,2026-08-31,decomposed,v0.2.0,populated record demonstrations
 DEMO-017,273658c0ad5c774b3e2efe779ca84f21060020ce,74497144914d4651cb2f8e53e4b645d0c2c8db76,2026-08-31,decomposed,v0.2.0,registry-generated sitemap
 DEMO-018,3b6647b2ba4176dc58f967112ae99a44dd45c1ae,,2026-08-31,direct,v0.2.0,corrected implementation and change provenance
-DEMO-019,,,2026-08-31,direct,v0.2.0,record and version the v0.2.0 release; this file is evidence in the commit it maps
+DEMO-019,29be94ab6b4441d0696db4799195c987c8efc1fa,,2026-08-31,direct,v0.2.0,record and version the v0.2.0 release
+DEMO-020,,,2026-08-31,direct,Unreleased,record the verified v0.2.0 production deployment; this file is evidence in the commit it maps
