@@ -22,6 +22,7 @@ import { renderI18nDemo } from './demos/i18n-page';
 import { renderAccessibilityDemo } from './demos/accessibility-page';
 import { billingScenarioResponse } from './api/billing';
 import { renderBilling, renderDashboard, renderDocs, renderHealth, renderUptime } from './demos/operations-pages';
+import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } from './api/governance';
 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/'];
@@ -129,6 +130,9 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/identity/saml/metadata') return samlMetadataResponse(request);
   if (path === '/__api/identity/saml/inspect') return samlInspectionResponse(request);
   if (path === '/__api/operations/billing') return billingScenarioResponse(request, env);
+  if (path === '/__api/evidence/traceability') return traceabilityResponse(request, env);
+  if (path === '/__api/governance/security-controls') return securityControlsResponse(request, env);
+  if (path === '/__api/governance/ai-evaluation') return aiEvaluationResponse(request, env);
 
   if (request.method === 'GET' && path === '/') return renderIndex(env, demos);
   if (request.method === 'GET' && path === '/i18n') return renderI18nDemo(request, env);
