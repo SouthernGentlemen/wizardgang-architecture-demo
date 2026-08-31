@@ -10,6 +10,9 @@ import { requireSameOrigin } from './lib/admin-auth';
 import { getDemoControl, setDemoControl } from './lib/demo-control';
 import { json, methodNotAllowed, safeError } from './lib/http';
 import { recordsResponse } from './api/records';
+import { edgeInspectionResponse, workerComputeResponse } from './api/runtime';
+import { r2DemoObjectResponse, r2ObjectResponse } from './api/r2';
+import { durableCounterResponse } from './api/durable';
 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/'];
@@ -99,6 +102,11 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
 
   if (path === '/v1/demo-records') return recordsResponse(request, env);
   if (path.startsWith('/v1/demo-records/')) return recordsResponse(request, env, path.slice('/v1/demo-records/'.length));
+  if (path === '/__api/edge/inspect') return edgeInspectionResponse(request, env);
+  if (path === '/__api/workers/compute') return workerComputeResponse(request, env);
+  if (path === '/__api/r2/demo') return r2DemoObjectResponse(request, env);
+  if (path === '/__api/r2/object') return r2ObjectResponse(request, env);
+  if (path === '/__api/durable/counter') return durableCounterResponse(request, env);
 
   if (request.method === 'GET' && path === '/') return renderIndex(env, demos);
   if (request.method === 'GET' && path === '/dashboard/logs') return renderLogsDemo(request, env);

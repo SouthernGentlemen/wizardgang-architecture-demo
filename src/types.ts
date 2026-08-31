@@ -84,4 +84,10 @@ export interface DemoDefinition {
     label: string;
     path: string;
   }>;
+  action?: {
+    label: string;
+    method: 'GET' | 'POST';
+    path: string;
+    body?: unknown;
+  };
 }
