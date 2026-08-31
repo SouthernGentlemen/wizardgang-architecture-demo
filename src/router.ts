@@ -13,6 +13,10 @@ import { recordsResponse } from './api/records';
 import { edgeInspectionResponse, workerComputeResponse } from './api/runtime';
 import { r2DemoObjectResponse, r2ObjectResponse } from './api/r2';
 import { durableCounterResponse } from './api/durable';
+import { graphqlResponse, graphqlSchemaResponse } from './api/graphql';
+import { webhookDemoResponse, webhookReceiptResponse } from './api/webhooks';
+import { openApiResponse } from './api/openapi';
+import { mcpResponse } from './api/mcp';
 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/'];
@@ -107,6 +111,12 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/__api/r2/demo') return r2DemoObjectResponse(request, env);
   if (path === '/__api/r2/object') return r2ObjectResponse(request, env);
   if (path === '/__api/durable/counter') return durableCounterResponse(request, env);
+  if (path === '/v1/openapi.json') return openApiResponse(request);
+  if (path === '/graphql') return graphqlResponse(request, env);
+  if (path === '/graphql/schema') return graphqlSchemaResponse(request);
+  if (path === '/v1/webhooks/demo') return webhookReceiptResponse(request, env);
+  if (path === '/__api/webhooks/demo') return webhookDemoResponse(request, env);
+  if (path === '/mcp' && request.method !== 'GET') return mcpResponse(request, env);
 
   if (request.method === 'GET' && path === '/') return renderIndex(env, demos);
   if (request.method === 'GET' && path === '/dashboard/logs') return renderLogsDemo(request, env);

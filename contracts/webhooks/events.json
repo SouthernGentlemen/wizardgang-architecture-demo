@@ -1,11 +1,11 @@
 {
-  "status": "scaffolded",
+  "status": "working",
   "events": [
     {
       "type": "demo.record.changed",
       "delivery": "HTTPS POST",
       "payload": "JSON",
-      "security": "Signed delivery to be implemented without exposing signing secrets."
+      "security": "HMAC-SHA256 over the exact request body; signing secret remains outside Git; delivery IDs are unique to reject replay."
     }
   ]
 }
