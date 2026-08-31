@@ -8,11 +8,14 @@ const demo: DemoDefinition = {
   "sourcePath": "src/demos/r2.ts",
   "summary": "Object storage for files, artifacts, reports, evidence, exports, and other large objects.",
   "proves": [
-    "Dedicated route boundary",
-    "Placeholder for object storage binding",
-    "D1 metadata/audit baseline"
+    "Text content stored in the DEMO_R2 bucket",
+    "Object references and size metadata stored separately in D1",
+    "Read/write/delete operations cross the Worker authorization boundary"
   ],
-  "status": "scaffolded"
+  "status": "working",
+  "interfaces": [{ "method": "POST", "path": "/__api/r2/demo", "description": "Write a bounded visitor demonstration object to R2." }, { "method": "GET / PUT / DELETE", "path": "/__api/r2/object?key=public/{name}", "description": "Read publicly; write and delete with bearer authorization." }],
+  "supportingSources": [{ "label": "View R2 API implementation", "path": "src/api/r2.ts" }, { "label": "View R2 storage boundary", "path": "src/storage/r2.ts" }, { "label": "View R2 metadata migration", "path": "migrations/0005_capability_records.sql" }],
+  "action": { "label": "Store a real R2 demo object", "method": "POST", "path": "/__api/r2/demo" }
 };
 
 export default demo;

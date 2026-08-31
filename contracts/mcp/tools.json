@@ -1,15 +1,15 @@
 {
   "name": "wizardgang-architecture-demo",
-  "status": "scaffolded",
+  "status": "working",
   "boundary": "MCP callers remain inside normal application authentication, authorization, validation, and audit boundaries.",
   "tools": [
     {
       "name": "list_demo_records",
-      "description": "List authorized demo records from the shared D1 demonstration data.",
+      "description": "List authorized public demo records from the shared D1 demonstration data.",
       "inputSchema": {
         "type": "object",
         "properties": {
-          "namespace": { "type": "string" }
+          "namespace": { "type": "string", "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$" }
         },
         "additionalProperties": false
       }

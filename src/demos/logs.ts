@@ -16,7 +16,9 @@ const demo: DemoDefinition = {
     'Application events are persisted separately from audit/evidence records',
     'Log retention and query limits are intentionally bounded for a public demo'
   ],
-  status: 'scaffolded'
+  status: 'working',
+  interfaces: [{ method: 'GET', path: '/__api/operations/logs', description: 'Read bounded, sanitized log rows as JSON.' }],
+  supportingSources: [{ label: 'View redaction tests', path: 'tests/logs.test.ts' }]
 };
 
 function detailText(value: string | null): string {

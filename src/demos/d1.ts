@@ -9,10 +9,19 @@ const demo: DemoDefinition = {
   "summary": "Relational persistence for structured application records and audit metadata.",
   "proves": [
     "Shared DEMO_DB binding",
-    "Write to demo-blob",
-    "Relational audit record"
+    "Versioned CRUD against demo-blob",
+    "Relational audit and public-safe operational records"
   ],
-  "status": "scaffolded"
+  "status": "working",
+  "interfaces": [
+    { "method": "GET", "path": "/v1/demo-records?namespace=public", "description": "List public records using anonymous demo:read authorization." },
+    { "method": "POST", "path": "/v1/demo-records", "description": "Create or update a bounded record using bearer-protected demo:write authorization." },
+    { "method": "GET / DELETE", "path": "/v1/demo-records/{key}", "description": "Read publicly or delete with write authorization." }
+  ],
+  "supportingSources": [
+    { "label": "View D1 API implementation", "path": "src/api/records.ts" },
+    { "label": "View authorization boundary", "path": "src/lib/authorization.ts" }
+  ]
 };
 
 export default demo;

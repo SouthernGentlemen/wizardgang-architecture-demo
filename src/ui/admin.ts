@@ -3,16 +3,17 @@ import type { DemoControl } from '../lib/demo-control';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
 import { styles } from './styles';
+import { withSecurityHeaders } from '../lib/http';
 
 function document(env: Env, title: string, body: string, status = 200): Response {
   return new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>${escapeHtml(title)} · WizardGang Architecture Demo</title><style>${styles}</style></head><body><header><a class="brand" href="/">WizardGang / Architecture Demo</a><a href="/dashboard">Operations dashboard</a><a href="${escapeHtml(repoUrl(env))}">Public repository</a></header><main>${body}</main><footer>WG-ARCH-001 companion · Admin controls are authenticated; credentials and secrets never belong in source or audit payloads.</footer></body></html>`, {
     status,
-    headers: {
+    headers: withSecurityHeaders(new Headers({
       'content-type': 'text/html; charset=utf-8',
       'cache-control': 'no-store',
       'x-robots-tag': 'noindex, nofollow',
       'referrer-policy': 'no-referrer'
-    }
+    }))
   });
 }
 

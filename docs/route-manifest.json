@@ -4,224 +4,260 @@
     "title": "Architecture Map",
     "group": "Navigation",
     "source": "src/ui/page.ts",
-    "status": "working-scaffold"
+    "status": "working"
   },
   {
     "route": "/edge",
     "title": "Cloudflare Edge",
     "group": "Runtime",
-    "source": "src/demos/edge.ts"
+    "source": "src/demos/edge.ts",
+    "status": "working"
   },
   {
     "route": "/workers",
     "title": "Cloudflare Workers",
     "group": "Runtime",
-    "source": "src/demos/workers.ts"
+    "source": "src/demos/workers.ts",
+    "status": "working"
   },
   {
     "route": "/durable-objects",
     "title": "Durable Objects",
     "group": "Runtime",
-    "source": "src/demos/durable-objects.ts"
+    "source": "src/demos/durable-objects.ts",
+    "status": "working"
   },
   {
     "route": "/d1",
     "title": "Cloudflare D1",
     "group": "Runtime",
-    "source": "src/demos/d1.ts"
+    "source": "src/demos/d1.ts",
+    "status": "working"
   },
   {
     "route": "/r2",
     "title": "Cloudflare R2",
     "group": "Runtime",
-    "source": "src/demos/r2.ts"
+    "source": "src/demos/r2.ts",
+    "status": "working"
   },
   {
     "route": "/api",
     "title": "API Architecture",
     "group": "Integration",
-    "source": "src/demos/api.ts"
+    "source": "src/demos/api.ts",
+    "status": "working"
   },
   {
     "route": "/api/rest",
     "title": "REST / JSON",
     "group": "Integration",
-    "source": "src/demos/rest.ts"
+    "source": "src/demos/rest.ts",
+    "status": "working"
   },
   {
     "route": "/api/openapi",
     "title": "OpenAPI / Swagger 2.x",
     "group": "Integration",
-    "source": "src/demos/openapi.ts"
+    "source": "src/demos/openapi.ts",
+    "status": "working"
   },
   {
     "route": "/api/graphql",
     "title": "GraphQL",
     "group": "Integration",
-    "source": "src/demos/graphql.ts"
+    "source": "src/demos/graphql.ts",
+    "status": "working"
   },
   {
     "route": "/api/webhooks",
     "title": "Webhooks",
     "group": "Integration",
-    "source": "src/demos/webhooks.ts"
+    "source": "src/demos/webhooks.ts",
+    "status": "working"
   },
   {
     "route": "/identity",
     "title": "Authentication & Authorization",
     "group": "Identity",
-    "source": "src/demos/identity.ts"
+    "source": "src/demos/identity.ts",
+    "status": "working"
   },
   {
     "route": "/identity/oauth",
     "title": "OAuth 2.0",
     "group": "Identity",
-    "source": "src/demos/oauth.ts"
+    "source": "src/demos/oauth.ts",
+    "status": "working"
   },
   {
     "route": "/identity/sso",
     "title": "Single Sign-On",
     "group": "Identity",
-    "source": "src/demos/sso.ts"
+    "source": "src/demos/sso.ts",
+    "status": "working"
   },
   {
     "route": "/identity/saml",
     "title": "SAML",
     "group": "Identity",
-    "source": "src/demos/saml.ts"
+    "source": "src/demos/saml.ts",
+    "status": "working"
   },
   {
     "route": "/mcp",
     "title": "Model Context Protocol",
     "group": "AI Integration",
-    "source": "src/demos/mcp.ts"
+    "source": "src/demos/mcp.ts",
+    "status": "working"
   },
   {
     "route": "/i18n",
     "title": "Internationalization",
     "group": "Interface Standards",
-    "source": "src/demos/i18n.ts"
+    "source": "src/demos/i18n.ts",
+    "status": "working"
   },
   {
     "route": "/accessibility",
     "title": "WCAG 2.2",
     "group": "Interface Standards",
-    "source": "src/demos/accessibility.ts"
+    "source": "src/demos/accessibility.ts",
+    "status": "working"
   },
   {
     "route": "/git",
     "title": "Git / GitHub",
     "group": "Delivery",
-    "source": "src/demos/git.ts"
+    "source": "src/demos/git.ts",
+    "status": "working"
   },
   {
     "route": "/git/versioning",
     "title": "Git Versioning",
     "group": "Delivery",
-    "source": "src/demos/versioning.ts"
+    "source": "src/demos/versioning.ts",
+    "status": "working"
   },
   {
     "route": "/git/branching",
     "title": "Branching",
     "group": "Delivery",
-    "source": "src/demos/branching.ts"
+    "source": "src/demos/branching.ts",
+    "status": "working"
   },
   {
     "route": "/git/releases",
     "title": "Release Management",
     "group": "Delivery",
-    "source": "src/demos/releases.ts"
+    "source": "src/demos/releases.ts",
+    "status": "working"
   },
   {
     "route": "/git/actions",
     "title": "GitHub Actions",
     "group": "Delivery",
-    "source": "src/demos/actions.ts"
+    "source": "src/demos/actions.ts",
+    "status": "working"
   },
   {
     "route": "/environments",
     "title": "Environment Separation",
     "group": "Delivery",
-    "source": "src/demos/environments.ts"
+    "source": "src/demos/environments.ts",
+    "status": "working"
   },
   {
     "route": "/traceability",
     "title": "Change Traceability",
     "group": "Governance",
-    "source": "src/demos/traceability.ts"
+    "source": "src/demos/traceability.ts",
+    "status": "working"
   },
   {
     "route": "/governance",
     "title": "Governance",
     "group": "Governance",
-    "source": "src/demos/governance.ts"
+    "source": "src/demos/governance.ts",
+    "status": "working"
   },
   {
     "route": "/governance/iso-27001",
     "title": "ISO/IEC 27001 Alignment",
     "group": "Governance",
-    "source": "src/demos/iso-27001.ts"
+    "source": "src/demos/iso-27001.ts",
+    "status": "working"
   },
   {
     "route": "/governance/iso-42001",
     "title": "ISO/IEC 42001 Alignment",
     "group": "Governance",
-    "source": "src/demos/iso-42001.ts"
+    "source": "src/demos/iso-42001.ts",
+    "status": "working"
   },
   {
     "route": "/evidence",
     "title": "Evidence & Auditability",
     "group": "Governance",
-    "source": "src/demos/evidence.ts"
+    "source": "src/demos/evidence.ts",
+    "status": "working"
   },
   {
     "route": "/dashboard",
     "title": "Operations Dashboard",
     "group": "Operations",
-    "source": "src/demos/dashboard.ts"
+    "source": "src/demos/dashboard.ts",
+    "status": "working"
   },
   {
     "route": "/dashboard/uptime",
     "title": "Uptime",
     "group": "Operations",
-    "source": "src/demos/uptime.ts"
+    "source": "src/demos/uptime.ts",
+    "status": "working"
   },
   {
     "route": "/dashboard/health",
     "title": "Health",
     "group": "Operations",
-    "source": "src/demos/health.ts"
+    "source": "src/demos/health.ts",
+    "status": "working"
   },
   {
     "route": "/dashboard/docs",
     "title": "Documentation",
     "group": "Operations",
-    "source": "src/demos/docs.ts"
+    "source": "src/demos/docs.ts",
+    "status": "working"
   },
   {
     "route": "/dashboard/logs",
     "title": "Log Viewer",
     "group": "Operations",
-    "source": "src/demos/logs.ts"
+    "source": "src/demos/logs.ts",
+    "status": "working"
   },
   {
     "route": "/dashboard/billing",
     "title": "Billing & Usage",
     "group": "Operations",
-    "source": "src/demos/billing.ts"
+    "source": "src/demos/billing.ts",
+    "status": "working"
   },
   {
     "route": "/admin",
     "title": "Demo Admin",
     "group": "Operations",
     "source": "src/ui/admin.ts",
-    "protected": true
+    "protected": true,
+    "status": "working"
   },
   {
     "route": "/offline",
     "title": "Demo Offline",
     "group": "Operations",
-    "source": "src/ui/admin.ts"
+    "source": "src/ui/admin.ts",
+    "status": "working"
   },
   {
     "route": "/health",
@@ -229,7 +265,8 @@
     "group": "Operations",
     "source": "src/api/operations.ts",
     "machine": true,
-    "offline_reachable": true
+    "offline_reachable": true,
+    "status": "working"
   },
   {
     "route": "/version",
@@ -237,7 +274,8 @@
     "group": "Operations",
     "source": "src/api/operations.ts",
     "machine": true,
-    "offline_reachable": true
+    "offline_reachable": true,
+    "status": "working"
   },
   {
     "route": "/__api/operations/logs",
@@ -245,7 +283,8 @@
     "group": "Operations",
     "source": "src/api/operations.ts",
     "machine": true,
-    "offline_reachable": true
+    "offline_reachable": true,
+    "status": "working"
   },
   {
     "route": "/__api/demo/run",
@@ -253,7 +292,8 @@
     "group": "Internal Demo API",
     "source": "src/api/demo.ts",
     "machine": true,
-    "offline_behavior": "503"
+    "offline_behavior": "503",
+    "status": "working"
   },
   {
     "route": "/__api/demo/events",
@@ -261,6 +301,217 @@
     "group": "Internal Demo API",
     "source": "src/api/demo.ts",
     "machine": true,
-    "offline_behavior": "503"
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/edge/inspect",
+    "title": "Edge Context JSON",
+    "group": "Runtime API",
+    "source": "src/api/runtime.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/workers/compute",
+    "title": "Stateless Worker Compute",
+    "group": "Runtime API",
+    "source": "src/api/runtime.ts",
+    "method": "POST",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/durable/counter",
+    "title": "Durable Object Counter",
+    "group": "Runtime API",
+    "source": "src/api/durable.ts",
+    "method": "GET, POST",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/r2/demo",
+    "title": "Visitor R2 Object Action",
+    "group": "Runtime API",
+    "source": "src/api/r2.ts",
+    "method": "POST",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/r2/object",
+    "title": "R2 Object API",
+    "group": "Runtime API",
+    "source": "src/api/r2.ts",
+    "method": "GET, PUT, DELETE",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/v1/demo-records",
+    "title": "REST Demo Records",
+    "group": "Integration API",
+    "source": "src/api/records.ts",
+    "method": "GET, POST",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/v1/demo-records/{key}",
+    "title": "REST Demo Record",
+    "group": "Integration API",
+    "source": "src/api/records.ts",
+    "method": "GET, DELETE",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/v1/openapi.json",
+    "title": "Swagger 2.0 Contract",
+    "group": "Integration API",
+    "source": "src/api/openapi.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/graphql",
+    "title": "GraphQL API",
+    "group": "Integration API",
+    "source": "src/api/graphql.ts",
+    "method": "POST",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/graphql/schema",
+    "title": "GraphQL Schema",
+    "group": "Integration API",
+    "source": "src/api/graphql.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/v1/webhooks/demo",
+    "title": "Signed Webhook Receiver",
+    "group": "Integration API",
+    "source": "src/api/webhooks.ts",
+    "method": "POST",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/webhooks/demo",
+    "title": "Visitor Signed Webhook Action",
+    "group": "Integration API",
+    "source": "src/api/webhooks.ts",
+    "method": "POST",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/identity/oauth-pkce",
+    "title": "OAuth PKCE Material",
+    "group": "Identity API",
+    "source": "src/api/identity.ts",
+    "method": "POST",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/identity/authorize",
+    "title": "Authorization Policy Evaluation",
+    "group": "Identity API",
+    "source": "src/api/identity.ts",
+    "method": "POST",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/identity/sso",
+    "title": "SSO Trust Boundary",
+    "group": "Identity API",
+    "source": "src/api/identity.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/identity/saml/metadata",
+    "title": "SAML Service Provider Metadata",
+    "group": "Identity API",
+    "source": "src/api/identity.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/identity/saml/inspect",
+    "title": "SAML Validation Boundary",
+    "group": "Identity API",
+    "source": "src/api/identity.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/operations/billing",
+    "title": "Synthetic Budget Scenario",
+    "group": "Operations",
+    "source": "src/api/billing.ts",
+    "method": "POST",
+    "machine": true,
+    "offline_reachable": true,
+    "status": "working"
+  },
+  {
+    "route": "/__api/evidence/traceability",
+    "title": "Traceability Evidence JSON",
+    "group": "Governance API",
+    "source": "src/api/governance.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/governance/security-controls",
+    "title": "Security Control Evidence JSON",
+    "group": "Governance API",
+    "source": "src/api/governance.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/governance/ai-evaluation",
+    "title": "AI Boundary Evaluation",
+    "group": "Governance API",
+    "source": "src/api/governance.ts",
+    "method": "POST",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
   }
 ]

@@ -11,13 +11,14 @@
     "GITHUB_REPO_URL": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo",
     "GITHUB_BRANCH": "main",
     "DEPLOYED_VERSION": "development",
+    "DEPLOYMENT_ENVIRONMENT": "production",
     "BILLING_DEMO_MONTHLY_BUDGET_USD": "10"
   },
   "d1_databases": [
     {
       "binding": "DEMO_DB",
       "database_name": "demo-blob",
-      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "database_id": "4a8ba118-da0e-497b-a13c-911c407a09e3",
       "migrations_dir": "migrations"
     }
   ],

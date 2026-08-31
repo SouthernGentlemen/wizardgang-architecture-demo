@@ -10,8 +10,8 @@ export interface DemoControl {
 }
 
 const DEFAULT_CONTROL: DemoControl = {
-  state: 'online',
-  publicMessage: 'The architecture demo is available.',
+  state: 'offline',
+  publicMessage: 'Demo control state is temporarily unavailable.',
   updatedAt: new Date(0).toISOString(),
   updatedBy: null
 };
@@ -30,6 +30,7 @@ export async function getDemoControl(env: Env): Promise<DemoControl> {
       updatedBy: row.updated_by
     };
   } catch {
+    // Fail closed: a D1 outage must not accidentally bypass an intentional offline state.
     return DEFAULT_CONTROL;
   }
 }

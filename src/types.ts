@@ -56,12 +56,15 @@ export interface Env {
   GITHUB_BRANCH: string;
   DEMO_ADMIN_USER?: string;
   DEMO_ADMIN_PASSWORD?: string;
+  DEMO_API_TOKEN?: string;
+  WEBHOOK_DEMO_SECRET?: string;
   DEPLOYED_VERSION?: string;
   DEPLOYED_SHA?: string;
+  DEPLOYMENT_ENVIRONMENT?: string;
   BILLING_DEMO_MONTHLY_BUDGET_USD?: string;
 }
 
-export type DemoStatus = 'scaffolded' | 'working' | 'planned';
+export type DemoStatus = 'working' | 'planned';
 
 export interface DemoDefinition {
   id: string;
@@ -72,4 +75,23 @@ export interface DemoDefinition {
   summary: string;
   proves: string[];
   status: DemoStatus;
+  interfaces?: Array<{
+    method: string;
+    path: string;
+    description: string;
+  }>;
+  supportingSources?: Array<{
+    label: string;
+    path: string;
+  }>;
+  action?: {
+    label: string;
+    method: 'GET' | 'POST';
+    path: string;
+    body?: unknown;
+  };
+  repositoryLinks?: Array<{
+    label: string;
+    path: string;
+  }>;
 }

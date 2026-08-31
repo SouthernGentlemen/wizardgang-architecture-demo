@@ -16,7 +16,14 @@ const requiredRoutes = [
   '/governance/iso-42001', '/evidence', '/dashboard',
   '/dashboard/uptime', '/dashboard/health', '/dashboard/docs',
   '/dashboard/logs', '/dashboard/billing', '/admin', '/offline', '/health', '/version',
-  '/__api/demo/run', '/__api/demo/events', '/__api/operations/logs'
+  '/__api/demo/run', '/__api/demo/events', '/__api/operations/logs',
+  '/__api/edge/inspect', '/__api/workers/compute', '/__api/durable/counter',
+  '/__api/r2/demo', '/__api/r2/object', '/v1/demo-records', '/v1/demo-records/{key}',
+  '/v1/openapi.json', '/graphql', '/graphql/schema', '/v1/webhooks/demo',
+  '/__api/webhooks/demo', '/__api/identity/oauth-pkce', '/__api/identity/authorize',
+  '/__api/identity/sso', '/identity/saml/metadata', '/__api/identity/saml/inspect',
+  '/__api/operations/billing', '/__api/evidence/traceability',
+  '/__api/governance/security-controls', '/__api/governance/ai-evaluation'
 ];
 
 const failures = [];
@@ -25,6 +32,7 @@ for (const route of requiredRoutes) {
 }
 
 for (const entry of manifest) {
+  if (entry.status !== 'working') failures.push(`route is not marked working: ${entry.route}`);
   if (!entry.source) continue;
   const sourcePath = path.join(root, entry.source);
   if (!fs.existsSync(sourcePath)) failures.push(`manifest source does not exist: ${entry.route} -> ${entry.source}`);

@@ -1,3 +1,5 @@
 # Copy to .dev.vars for local development. Never commit real credentials.
 DEMO_ADMIN_USER=admin
 DEMO_ADMIN_PASSWORD=replace-me-with-a-local-only-value
+DEMO_API_TOKEN=replace-me-with-a-local-only-api-token
+WEBHOOK_DEMO_SECRET=replace-me-with-a-local-only-webhook-secret

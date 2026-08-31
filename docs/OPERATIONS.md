@@ -121,6 +121,8 @@ Suggested default demonstration policy:
 - **Warning:** 70% to < 90%.
 - **Degraded:** >= 90%.
 
+The live controlled scenario endpoint is `/__api/operations/billing`. In degraded state it pauses the optional stateless Worker compute action with a structured response while status, documentation, logs, admin, and health remain available. This state is synthetic and never reads a Cloudflare billing account.
+
 The UI should show which optional behaviors would be reduced or disabled as cost rises, while keeping critical status, admin, and health routes available. The policy is a demonstration of graceful degradation, not a real billing-control integration unless explicitly wired later.
 
 ## Admin control
@@ -142,7 +144,7 @@ Requirements:
 - no redirect loop;
 - public offline page uses the explicit heading **“Oops! demo is down.”**.
 
-For local development the scaffold supports HTTP Basic credentials from `.dev.vars`. For production, prefer Cloudflare-native access control when configured, while retaining an application-side authorization boundary for state-changing actions.
+For local development the implementation supports HTTP Basic credentials from `.dev.vars`. The application compares digests, requires exact same-origin state-changing submissions, emits no-store responses, and fails closed if control state cannot be read. For production, prefer Cloudflare Access in front of `/admin` while retaining the application-side authorization boundary.
 
 ## Offline behavior matrix
 

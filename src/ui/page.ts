@@ -2,6 +2,7 @@ import type { DemoDefinition, Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
 import { styles } from './styles';
+import { withSecurityHeaders } from '../lib/http';
 
 export function shell(env: Env, title: string, body: string, options: { cacheControl?: string } = {}): Response {
   const html = `<!doctype html>
@@ -21,8 +22,8 @@ export function shell(env: Env, title: string, body: string, options: { cacheCon
 <footer>WG-ARCH-001 companion · WCAG 2.2 / ISO/IEC 27001 / ISO/IEC 42001 references are alignment targets, not certification claims.</footer>
 </body>
 </html>`;
-  const headers: Record<string, string> = { 'content-type': 'text/html; charset=utf-8' };
-  if (options.cacheControl) headers['cache-control'] = options.cacheControl;
+  const headers = withSecurityHeaders(new Headers({ 'content-type': 'text/html; charset=utf-8' }));
+  if (options.cacheControl) headers.set('cache-control', options.cacheControl);
   return new Response(html, { headers });
 }
 
@@ -51,6 +52,7 @@ ${groups.map((group) => `
 }
 
 export function renderDemo(env: Env, demo: DemoDefinition): Response {
+  const action = demo.action ?? { label: 'Run baseline demo', method: 'POST' as const, path: '/__api/demo/run', body: { demoId: demo.id } };
   const operationsNav = demo.group === 'Operations' ? `
 <section class="panel" aria-labelledby="operations-heading">
   <h2 id="operations-heading">Operations surface</h2>
@@ -78,17 +80,20 @@ export function renderDemo(env: Env, demo: DemoDefinition): Response {
     <a href="${escapeHtml(sourceUrl(env, 'src/router.ts'))}">View router</a>
     <a href="${escapeHtml(sourceUrl(env, 'migrations/0001_demo_blob.sql'))}">View shared D1 schema</a>
     <a href="${escapeHtml(sourceUrl(env, 'docs/ROUTES.md'))}">View route map</a>
+    ${(demo.supportingSources ?? []).map((source) => `<a href="${escapeHtml(sourceUrl(env, source.path))}">${escapeHtml(source.label)}</a>`).join('')}
+    ${(demo.repositoryLinks ?? []).map((link) => `<a href="${escapeHtml(`${repoUrl(env)}${link.path}`)}">${escapeHtml(link.label)}</a>`).join('')}
   </div>
 </section>
 ${operationsNav}
+${demo.interfaces?.length ? `<section class="panel" aria-labelledby="interfaces-heading"><h2 id="interfaces-heading">Live interfaces</h2><ul>${demo.interfaces.map((item) => `<li><code>${escapeHtml(item.method)} ${escapeHtml(item.path)}</code> — ${escapeHtml(item.description)}</li>`).join('')}</ul></section>` : ''}
 <section class="panel" aria-labelledby="proves-heading">
   <h2 id="proves-heading">This route proves</h2>
   <ul>${demo.proves.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
 </section>
 <section class="panel" aria-labelledby="run-heading">
-  <h2 id="run-heading">Shared demo backend</h2>
-  <p>This scaffold action reaches the Worker and records a demo event in <code>DEMO_DB</code> / <code>demo-blob</code>. Route-specific behavior replaces this generic action as each architecture demo is implemented.</p>
-  <button type="button" data-run-demo="${escapeHtml(demo.id)}">Run baseline demo</button>
+  <h2 id="run-heading">Run or inspect the capability</h2>
+  <p>This action calls the live Worker interface listed above. Meaningful demo actions emit safe audit or operational evidence to <code>demo-blob</code>.</p>
+  <button type="button" data-run-demo>${escapeHtml(action.label)}</button>
   <pre aria-live="polite" data-demo-output>Ready.</pre>
 </section>
 <script>
@@ -98,12 +103,13 @@ ${operationsNav}
   button?.addEventListener('click', async () => {
     output.textContent = 'Running…';
     try {
-      const response = await fetch('/__api/demo/run', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ demoId: button.dataset.runDemo })
+      const response = await fetch(${JSON.stringify(action.path)}, {
+        method: ${JSON.stringify(action.method)},
+        ${action.body === undefined ? '' : `headers: { 'content-type': 'application/json' }, body: JSON.stringify(${JSON.stringify(action.body)})`}
       });
-      output.textContent = JSON.stringify(await response.json(), null, 2);
+      const contentType = response.headers.get('content-type') || '';
+      const result = contentType.includes('application/json') ? await response.json() : await response.text();
+      output.textContent = JSON.stringify(result, null, 2);
     } catch (error) {
       output.textContent = String(error);
     }
