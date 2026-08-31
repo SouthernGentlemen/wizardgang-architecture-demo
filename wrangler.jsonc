@@ -18,7 +18,7 @@
     {
       "binding": "DEMO_DB",
       "database_name": "demo-blob",
-      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "database_id": "4a8ba118-da0e-497b-a13c-911c407a09e3",
       "migrations_dir": "migrations"
     }
   ],
