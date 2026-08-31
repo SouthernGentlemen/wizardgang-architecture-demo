@@ -68,6 +68,7 @@ export type DemoStatus = 'working' | 'planned';
 
 export interface DemoAction {
   id?: string;
+  aliases?: string[];
   title?: string;
   description?: string;
   label: string;
@@ -83,6 +84,7 @@ export interface DemoDefinition {
   group: string;
   sourcePath: string;
   summary: string;
+  notice?: string;
   proves: string[];
   status: DemoStatus;
   sections?: Array<{

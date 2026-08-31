@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { billingScenarioResponse } from '../src/api/billing';
 import { workerComputeResponse } from '../src/api/runtime';
-import { renderBilling, renderDashboard, renderDocs, renderHealth, renderUptime } from '../src/demos/operations-pages';
+import { renderBilling, renderDashboard, renderDocs, renderUptime } from '../src/demos/operations-pages';
 import type { D1PreparedStatement, Env } from '../src/types';
 
 interface Usage { id: number; service_key: string; metric_key: string; quantity: number; unit: string; estimated_cost_usd: number; budget_limit_usd: number; captured_at: string }
@@ -46,8 +46,10 @@ function env(): Env {
 describe('operations proof surface', () => {
   it('renders dashboard, health, docs, uptime classification, and billing from live state', async () => {
     const environment = env();
-    expect(await (await renderDashboard(environment)).text()).toContain('Current operational state');
-    expect(await (await renderHealth(environment)).text()).toContain('Runtime and dependency health');
+    const dashboard = await (await renderDashboard(environment)).text();
+    expect(dashboard).toContain('Current operational state');
+    expect(dashboard).toContain('id="health"');
+    expect(dashboard).toContain('<dt>Checked</dt><dd>');
     expect(await renderDocs(environment).text()).toContain('Swagger JSON');
     const uptime = await (await renderUptime(environment)).text();
     expect(uptime).toContain('planned/manual offline');

@@ -92,6 +92,17 @@ describe('public route contract', () => {
     expect(html.match(/data-run-demo="\d+"/g)).toHaveLength(1);
     expect(html).toContain('GET /version');
   });
+
+  it('renders consolidated governance controls, evidence anchors, and the alignment notice', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/governance', { headers: { accept: 'text/html' } }), env());
+    const html = await response.text();
+    for (const anchor of ['iso-27001', 'iso-42001', 'traceability', 'evidence']) expect(html).toContain(`id="${anchor}"`);
+    for (const endpoint of ['/__api/governance/security-controls', '/__api/governance/ai-evaluation', '/__api/evidence/traceability']) expect(html).toContain(endpoint);
+    expect(html).toContain('alignment targets, not certification claims');
+
+    const edge = await routeRequest(new Request('https://demo.wizardgang.ai/edge', { headers: { accept: 'text/html' } }), env());
+    expect(await edge.text()).not.toContain('alignment targets, not certification claims');
+  });
 });
 
 describe('offline routing matrix', () => {

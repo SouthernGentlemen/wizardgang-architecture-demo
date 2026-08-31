@@ -23,7 +23,7 @@ import { authorizationDecisionResponse, oauthPkceResponse, samlInspectionRespons
 import { renderI18nDemo } from './demos/i18n-page';
 import { renderAccessibilityDemo } from './demos/accessibility-page';
 import { billingScenarioResponse } from './api/billing';
-import { renderBilling, renderDashboard, renderDocs, renderHealth, renderUptime } from './demos/operations-pages';
+import { renderBilling, renderDashboard, renderDocs, renderUptime } from './demos/operations-pages';
 import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } from './api/governance';
 
 const OPERATIONS_PREFIX = '/dashboard';
@@ -171,7 +171,6 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (request.method === 'GET' && path === '/accessibility') return renderAccessibilityDemo(request, env);
   if (request.method === 'GET' && path === '/dashboard') return renderDashboard(env);
   if (request.method === 'GET' && path === '/dashboard/uptime') return renderUptime(env);
-  if (request.method === 'GET' && path === '/dashboard/health') return renderHealth(env);
   if (request.method === 'GET' && path === '/dashboard/docs') return renderDocs(env);
   if (request.method === 'GET' && path === '/dashboard/billing') return renderBilling(env);
   if (request.method === 'GET' && path === '/dashboard/logs') return renderLogsDemo(request, env);

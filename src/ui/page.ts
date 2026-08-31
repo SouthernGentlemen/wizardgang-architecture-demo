@@ -59,7 +59,6 @@ export function shell(env: Env, title: string, body: string, options: ShellOptio
 <main id="main">${body}</main>
 <footer>
   <span>WG-ARCH-001 companion · <a href="${escapeHtml(repoUrl(env))}">Public source</a></span>
-  <span>WCAG 2.2 / ISO 27001 / ISO 42001 references are alignment targets, not certification claims.</span>
 </footer>
 <script>${THEME_TOGGLE}</script>
 </body>
@@ -159,6 +158,7 @@ export function renderDemo(env: Env, demo: DemoDefinition, all: DemoDefinition[]
     const requestPreview = `${action.method} ${action.path}${action.body === undefined ? '' : `\n\n${JSON.stringify(action.body, null, 2)}`}`;
     const headingId = `${action.id ?? `run-${index + 1}`}-heading`;
     return `<section class="panel"${action.id ? ` id="${escapeHtml(action.id)}"` : ''} aria-labelledby="${escapeHtml(headingId)}">
+  ${(action.aliases ?? []).map((alias) => `<span id="${escapeHtml(alias)}" aria-hidden="true"></span>`).join('')}
   <h2 id="${escapeHtml(headingId)}">${escapeHtml(action.title ?? 'Run it')}</h2>
   ${action.description ? `<p>${escapeHtml(action.description)}</p>` : ''}
   <p class="subtle">This button calls the live Worker interface below. Meaningful actions write public-safe audit evidence to <code>demo-blob</code>.</p>
@@ -177,6 +177,7 @@ export function renderDemo(env: Env, demo: DemoDefinition, all: DemoDefinition[]
   <p class="eyebrow"><a href="/#${escapeHtml(slug(demo.group))}">${escapeHtml(demo.group)}</a> / ${escapeHtml(demo.route)}</p>
   <h1>${escapeHtml(demo.title)}</h1>
   <p class="lede">${escapeHtml(demo.summary)}</p>
+  ${demo.notice ? `<p class="subtle">${escapeHtml(demo.notice)}</p>` : ''}
   <div class="meta">
     <span class="badge badge-ok">${escapeHtml(demo.status)}</span>
     <a href="${escapeHtml(sourceUrl(env, demo.sourcePath))}">Route source</a>
