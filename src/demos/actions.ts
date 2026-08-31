@@ -8,11 +8,14 @@ const demo: DemoDefinition = {
   "sourcePath": "src/demos/actions.ts",
   "summary": "Automated validation, testing, release, and deployment controls.",
   "proves": [
-    "CI workflow source link",
-    "Typecheck/test scaffold",
-    "Deploy workflow scaffold"
+    "Clean dependency install plus full validation suite",
+    "Contract, migration, accessibility, localization, and security checks",
+    "Reviewed tagged source drives controlled deployment"
   ],
-  "status": "scaffolded"
+  "status": "working",
+  "supportingSources": [{ "label": "View CI workflow", "path": ".github/workflows/ci.yml" }, { "label": "View deploy workflow", "path": ".github/workflows/deploy.yml" }, { "label": "View validation scripts", "path": "scripts/validate-scaffold.mjs" }],
+  "repositoryLinks": [{ "label": "Inspect workflow runs", "path": "/actions" }],
+  "action": { "label": "Inspect running release identity", "method": "GET", "path": "/version" }
 };
 
 export default demo;

@@ -8,11 +8,14 @@ const demo: DemoDefinition = {
   "sourcePath": "src/demos/branching.ts",
   "summary": "Simple branch lifecycle where development returns to main through validated review.",
   "proves": [
-    "Stable main baseline",
-    "Feature branch model",
-    "PR/validation scaffold"
+    "main is the accepted production baseline",
+    "Isolated branch changes return through pull request review",
+    "CI is required before semantic tagging and deployment"
   ],
-  "status": "scaffolded"
+  "status": "working",
+  "supportingSources": [{ "label": "View contribution workflow", "path": "CONTRIBUTING.md" }, { "label": "View CI workflow", "path": ".github/workflows/ci.yml" }],
+  "repositoryLinks": [{ "label": "Inspect branches", "path": "/branches" }, { "label": "Inspect pull requests", "path": "/pulls" }, { "label": "Inspect branch CI", "path": "/actions" }],
+  "action": { "label": "Inspect the running branch", "method": "GET", "path": "/version" }
 };
 
 export default demo;

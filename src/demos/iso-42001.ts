@@ -8,11 +8,14 @@ const demo: DemoDefinition = {
   "sourcePath": "src/demos/iso-42001.ts",
   "summary": "AI governance reference covering system boundaries, permissions, evaluation, oversight, monitoring, fallback, and evidence.",
   "proves": [
-    "Alignment-only status",
-    "AI boundary demonstration scaffold",
-    "No certification claim"
+    "Defined MCP system boundary, intended use, oversight, and fallback",
+    "Executable approved, unknown-method, and invalid-scope evaluations",
+    "Alignment only; no certification claim"
   ],
-  "status": "scaffolded"
+  "status": "working",
+  "interfaces": [{ "method": "POST", "path": "/__api/governance/ai-evaluation", "description": "Run and audit controlled MCP boundary evaluations." }],
+  "supportingSources": [{ "label": "View AI evaluation implementation", "path": "src/api/governance.ts" }, { "label": "View MCP implementation", "path": "src/api/mcp.ts" }, { "label": "View tool contract", "path": "contracts/mcp/tools.json" }],
+  "action": { "label": "Run the AI boundary evaluation", "method": "POST", "path": "/__api/governance/ai-evaluation" }
 };
 
 export default demo;

@@ -81,6 +81,7 @@ export function renderDemo(env: Env, demo: DemoDefinition): Response {
     <a href="${escapeHtml(sourceUrl(env, 'migrations/0001_demo_blob.sql'))}">View shared D1 schema</a>
     <a href="${escapeHtml(sourceUrl(env, 'docs/ROUTES.md'))}">View route map</a>
     ${(demo.supportingSources ?? []).map((source) => `<a href="${escapeHtml(sourceUrl(env, source.path))}">${escapeHtml(source.label)}</a>`).join('')}
+    ${(demo.repositoryLinks ?? []).map((link) => `<a href="${escapeHtml(`${repoUrl(env)}${link.path}`)}">${escapeHtml(link.label)}</a>`).join('')}
   </div>
 </section>
 ${operationsNav}

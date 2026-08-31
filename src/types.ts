@@ -90,4 +90,8 @@ export interface DemoDefinition {
     path: string;
     body?: unknown;
   };
+  repositoryLinks?: Array<{
+    label: string;
+    path: string;
+  }>;
 }
