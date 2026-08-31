@@ -12,7 +12,9 @@ const demo: DemoDefinition = {
     'Availability calculation over a defined window',
     'Operational history retained in D1'
   ],
-  status: 'scaffolded'
+  status: 'working',
+  interfaces: [{ method: 'GET', path: '/dashboard/uptime', description: 'Calculate availability from the latest 100 stored public-demo observations.' }],
+  supportingSources: [{ label: 'View uptime implementation', path: 'src/demos/operations-pages.ts' }, { label: 'View health persistence', path: 'src/api/operations.ts' }]
 };
 
 export default demo;
