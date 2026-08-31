@@ -2,6 +2,7 @@ import type { Env } from './types';
 import { demos, demosByRoute } from './demos/registry';
 import { renderDemo, renderIndex, renderNotFound } from './ui/page';
 import { recordsConsole } from './demos/records-console';
+import { sitemapResponse } from './api/sitemap';
 import { renderAdmin, renderOffline } from './ui/admin';
 import { listDemoEvents, runBaselineDemo } from './api/demo';
 import { healthResponse, logsResponse, versionResponse } from './api/operations';
@@ -139,6 +140,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/__api/governance/security-controls') return securityControlsResponse(request, env);
   if (path === '/__api/governance/ai-evaluation') return aiEvaluationResponse(request, env);
 
+  if (request.method === 'GET' && path === '/sitemap.xml') return sitemapResponse(request, demos);
   if (request.method === 'GET' && path === '/') return renderIndex(env, demos);
   if (request.method === 'GET' && path === '/i18n') return renderI18nDemo(request, env);
   if (request.method === 'GET' && path === '/accessibility') return renderAccessibilityDemo(request, env);
