@@ -1,4 +1,4 @@
-"""Public schema scaffold for the GraphQL architecture demonstration."""
+"""Executable public read schema for the GraphQL architecture demonstration."""
 type DemoRecord {
   id: ID!
   namespace: String!

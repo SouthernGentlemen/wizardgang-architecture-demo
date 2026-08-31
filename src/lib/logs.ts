@@ -28,7 +28,8 @@ function safeText(value: string, max: number): string {
   return value.replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, max);
 }
 
-const SENSITIVE_KEY = /(password|passwd|token|authorization|cookie|secret|api[_-]?key|access[_-]?key|payment|card|credential)/i;
+const SENSITIVE_KEY = /(password|passwd|token|authorization|cookie|secret|api[_-]?key|access[_-]?key|private[_-]?key|payment|card|credential|account[_-]?id|request[_-]?body|raw[_-]?body)/i;
+const SENSITIVE_VALUE = /(?:bearer\s+[a-z0-9._~+/-]{8,}|sk-[a-z0-9_-]{8,})/i;
 
 function redactDetail(value: unknown, depth = 0): unknown {
   if (depth > 6) return '[truncated]';
@@ -41,12 +42,16 @@ function redactDetail(value: unknown, depth = 0): unknown {
       ]),
     );
   }
+  if (typeof value === 'string') return SENSITIVE_VALUE.test(value) ? '[redacted]' : safeText(value, 1000);
   return value;
 }
 
 export async function recordApplicationLog(env: Env, input: ApplicationLogInput): Promise<void> {
   const createdAt = new Date().toISOString();
-  const detailJson = input.detail === undefined ? null : JSON.stringify(redactDetail(input.detail));
+  const serializedDetail = input.detail === undefined ? null : JSON.stringify(redactDetail(input.detail));
+  const detailJson = serializedDetail && serializedDetail.length > 4000
+    ? JSON.stringify({ truncated: true, preview: serializedDetail.slice(0, 3000) })
+    : serializedDetail;
 
   await env.DEMO_DB.prepare(
     `INSERT INTO application_logs
@@ -59,7 +64,7 @@ export async function recordApplicationLog(env: Env, input: ApplicationLogInput)
     safeText(input.message, 500),
     input.route ? safeText(input.route, 200) : null,
     input.requestId ? safeText(input.requestId, 120) : null,
-    detailJson?.slice(0, 4000) ?? null,
+    detailJson,
     createdAt,
   ).run();
 }

@@ -18,3 +18,5 @@ Baseline checklist:
 - accessible dynamic demo output using live regions where appropriate.
 
 Status language remains **WCAG 2.2 aligned — uncertified** until independent certification exists.
+
+The live `/accessibility` interaction and shared page shell implement this baseline. `tests/interface.test.ts` verifies language/direction output, label/error relationships, skip navigation, invalid-state semantics, and status output. CI evidence supports the implementation but does not replace manual keyboard, zoom/reflow, contrast, screen-reader, browser, and assistive-technology testing.

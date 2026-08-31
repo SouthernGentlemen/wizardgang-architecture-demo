@@ -12,7 +12,9 @@ const demo: DemoDefinition = {
     'Machine-readable route manifest',
     'Documentation stays versioned with the implementation'
   ],
-  status: 'scaffolded'
+  status: 'working',
+  interfaces: [{ method: 'GET', path: '/dashboard/docs', description: 'Index architecture, operations, contracts, source, workflows, releases, and live operational APIs.' }],
+  supportingSources: [{ label: 'View documentation index implementation', path: 'src/demos/operations-pages.ts' }, { label: 'View machine route manifest', path: 'docs/route-manifest.json' }]
 };
 
 export default demo;

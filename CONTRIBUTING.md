@@ -24,4 +24,16 @@ Each architecture demo change must:
 10. Preserve WCAG/i18n readiness and accurately qualify ISO/WCAG alignment claims as uncertified.
 11. Update the architecture/operations documentation when behavior changes.
 
+Before opening a pull request, run:
+
+```text
+npm ci
+npm run check
+npm run validate:migrations
+npm run security:dependencies
+npm run build
+```
+
+CI repeats these checks and uploads commit-bound validation evidence. Never edit an applied migration; add the next numbered migration. Releases and production deployment follow [`docs/RELEASE.md`](docs/RELEASE.md).
+
 Do not add PDF documentation to this project unless explicitly requested; architecture and operational standards are maintained in reviewable Markdown/text.

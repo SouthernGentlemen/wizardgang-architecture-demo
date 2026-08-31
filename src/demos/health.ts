@@ -12,7 +12,9 @@ const demo: DemoDefinition = {
     'Dependency readiness checks',
     'Safe public status response'
   ],
-  status: 'scaffolded'
+  status: 'working',
+  interfaces: [{ method: 'GET', path: '/health', description: 'Return machine-readable runtime, D1, R2, Durable Object, and intentional demo state.' }],
+  supportingSources: [{ label: 'View health implementation', path: 'src/api/operations.ts' }, { label: 'View human health page', path: 'src/demos/operations-pages.ts' }]
 };
 
 export default demo;

@@ -6,10 +6,26 @@ import { listDemoEvents, runBaselineDemo } from './api/demo';
 import { healthResponse, logsResponse, versionResponse } from './api/operations';
 import { renderLogsDemo } from './demos/logs';
 import { requireAdmin } from './lib/admin-auth';
+import { requireSameOrigin } from './lib/admin-auth';
 import { getDemoControl, setDemoControl } from './lib/demo-control';
+import { json, methodNotAllowed, safeError } from './lib/http';
+import { recordsResponse } from './api/records';
+import { edgeInspectionResponse, workerComputeResponse } from './api/runtime';
+import { r2DemoObjectResponse, r2ObjectResponse } from './api/r2';
+import { durableCounterResponse } from './api/durable';
+import { graphqlResponse, graphqlSchemaResponse } from './api/graphql';
+import { webhookDemoResponse, webhookReceiptResponse } from './api/webhooks';
+import { openApiResponse } from './api/openapi';
+import { mcpResponse } from './api/mcp';
+import { authorizationDecisionResponse, oauthPkceResponse, samlInspectionResponse, samlMetadataResponse, ssoBoundaryResponse } from './api/identity';
+import { renderI18nDemo } from './demos/i18n-page';
+import { renderAccessibilityDemo } from './demos/accessibility-page';
+import { billingScenarioResponse } from './api/billing';
+import { renderBilling, renderDashboard, renderDocs, renderHealth, renderUptime } from './demos/operations-pages';
+import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } from './api/governance';
 
 const OPERATIONS_PREFIX = '/dashboard';
-const API_PREFIXES = ['/__api/', '/v1/'];
+const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
 const API_PATHS = new Set(['/graphql', '/mcp']);
 
 export function bypassOfflineGate(path: string): boolean {
@@ -18,6 +34,7 @@ export function bypassOfflineGate(path: string): boolean {
     || path === '/health'
     || path === '/version'
     || path === '/__api/operations/logs'
+    || path === '/__api/operations/billing'
     || path === OPERATIONS_PREFIX
     || path.startsWith(`${OPERATIONS_PREFIX}/`);
 }
@@ -27,16 +44,17 @@ export function isApiLike(path: string): boolean {
 }
 
 export function wantsHtml(request: Request, path: string): boolean {
-  if (request.method !== 'GET' || isApiLike(path)) return false;
+  if (request.method !== 'GET') return false;
   const accept = request.headers.get('accept') || '';
+  if (path === '/mcp') return accept.includes('text/html') || accept === '';
+  if (isApiLike(path)) return false;
   return accept.includes('text/html') || accept === '';
 }
 
-function offlineApiResponse(message: string): Response {
-  return new Response(JSON.stringify({ status: 'offline', message }), {
+export function offlineApiResponse(message: string): Response {
+  return json({ status: 'offline', message }, {
     status: 503,
     headers: {
-      'content-type': 'application/json; charset=utf-8',
       'cache-control': 'no-store',
       'retry-after': '60'
     }
@@ -44,22 +62,37 @@ function offlineApiResponse(message: string): Response {
 }
 
 export async function routeRequest(request: Request, env: Env): Promise<Response> {
+  try {
+    return await routeRequestUnsafe(request, env);
+  } catch (error) {
+    return safeError(request, error);
+  }
+}
+
+async function routeRequestUnsafe(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
   const path = url.pathname.length > 1 ? url.pathname.replace(/\/+$/, '') : '/';
 
   if (path === '/admin') {
-    const identity = requireAdmin(request, env);
+    const identity = await requireAdmin(request, env);
     if (identity instanceof Response) return identity;
     if (request.method === 'POST') {
+      const originFailure = requireSameOrigin(request);
+      if (originFailure) return originFailure;
       const form = await request.formData();
       const state = form.get('state') === 'offline' ? 'offline' : 'online';
       const fallback = state === 'offline' ? 'The demo is temporarily unavailable.' : 'The architecture demo is available.';
       const message = String(form.get('message') || fallback).trim().slice(0, 500) || fallback;
-      const control = await setDemoControl(env, state, message, identity.username);
-      return renderAdmin(env, control, `Demo is now ${state}.`);
+      await setDemoControl(env, state, message, identity.username);
+      const location = new URL('/admin', url.origin);
+      location.searchParams.set('changed', state);
+      return new Response(null, { status: 303, headers: { location: location.toString(), 'cache-control': 'no-store' } });
     }
-    if (request.method === 'GET') return renderAdmin(env, await getDemoControl(env));
-    return new Response('Method not allowed', { status: 405, headers: { allow: 'GET, POST', 'cache-control': 'no-store' } });
+    if (request.method === 'GET') {
+      const changed = url.searchParams.get('changed');
+      return renderAdmin(env, await getDemoControl(env), changed === 'online' || changed === 'offline' ? `Demo is now ${changed}.` : '');
+    }
+    return methodNotAllowed(['GET', 'POST']);
   }
 
   if (request.method === 'GET' && path === '/health') return healthResponse(env);
@@ -80,7 +113,37 @@ export async function routeRequest(request: Request, env: Env): Promise<Response
     return offlineApiResponse(control.publicMessage);
   }
 
+  if (path === '/v1/demo-records') return recordsResponse(request, env);
+  if (path.startsWith('/v1/demo-records/')) return recordsResponse(request, env, path.slice('/v1/demo-records/'.length));
+  if (path === '/__api/edge/inspect') return edgeInspectionResponse(request, env);
+  if (path === '/__api/workers/compute') return workerComputeResponse(request, env);
+  if (path === '/__api/r2/demo') return r2DemoObjectResponse(request, env);
+  if (path === '/__api/r2/object') return r2ObjectResponse(request, env);
+  if (path === '/__api/durable/counter') return durableCounterResponse(request, env);
+  if (path === '/v1/openapi.json') return openApiResponse(request);
+  if (path === '/graphql') return graphqlResponse(request, env);
+  if (path === '/graphql/schema') return graphqlSchemaResponse(request);
+  if (path === '/v1/webhooks/demo') return webhookReceiptResponse(request, env);
+  if (path === '/__api/webhooks/demo') return webhookDemoResponse(request, env);
+  if (path === '/mcp' && request.method !== 'GET') return mcpResponse(request, env);
+  if (path === '/__api/identity/oauth-pkce') return oauthPkceResponse(request, env);
+  if (path === '/__api/identity/authorize') return authorizationDecisionResponse(request, env);
+  if (path === '/__api/identity/sso') return ssoBoundaryResponse(request);
+  if (path === '/identity/saml/metadata') return samlMetadataResponse(request);
+  if (path === '/__api/identity/saml/inspect') return samlInspectionResponse(request);
+  if (path === '/__api/operations/billing') return billingScenarioResponse(request, env);
+  if (path === '/__api/evidence/traceability') return traceabilityResponse(request, env);
+  if (path === '/__api/governance/security-controls') return securityControlsResponse(request, env);
+  if (path === '/__api/governance/ai-evaluation') return aiEvaluationResponse(request, env);
+
   if (request.method === 'GET' && path === '/') return renderIndex(env, demos);
+  if (request.method === 'GET' && path === '/i18n') return renderI18nDemo(request, env);
+  if (request.method === 'GET' && path === '/accessibility') return renderAccessibilityDemo(request, env);
+  if (request.method === 'GET' && path === '/dashboard') return renderDashboard(env);
+  if (request.method === 'GET' && path === '/dashboard/uptime') return renderUptime(env);
+  if (request.method === 'GET' && path === '/dashboard/health') return renderHealth(env);
+  if (request.method === 'GET' && path === '/dashboard/docs') return renderDocs(env);
+  if (request.method === 'GET' && path === '/dashboard/billing') return renderBilling(env);
   if (request.method === 'GET' && path === '/dashboard/logs') return renderLogsDemo(request, env);
   if (request.method === 'POST' && path === '/__api/demo/run') return runBaselineDemo(request, env);
   if (request.method === 'GET' && path === '/__api/demo/events') return listDemoEvents(request, env);

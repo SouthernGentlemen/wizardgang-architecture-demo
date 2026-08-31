@@ -1,0 +1,94 @@
+import { describe, expect, it } from 'vitest';
+import { demos } from '../src/demos/registry';
+import { routeRequest } from '../src/router';
+import type { D1PreparedStatement, Env } from '../src/types';
+
+class RouterStatement implements D1PreparedStatement {
+  private values: unknown[] = [];
+  constructor(private readonly db: RouterD1, private readonly sql: string) { db.queries.push(sql); }
+  bind(...values: unknown[]) { this.values = values; this.db.binds.push(...values); return this; }
+  async run() { return { meta: { last_row_id: this.db.nextId++ } }; }
+  async all<T>() {
+    if (this.sql.includes('FROM demo_control')) return { results: [{ state: this.db.state, public_message: this.db.state === 'online' ? 'Available.' : 'Planned maintenance.', updated_at: '2026-08-31T00:00:00.000Z', updated_by: 'test' }] as T[] };
+    return { results: [] as T[] };
+  }
+}
+
+class RouterD1 {
+  nextId = 1;
+  queries: string[] = [];
+  binds: unknown[] = [];
+  constructor(public state: 'online' | 'offline' = 'online') {}
+  prepare(sql: string) { return new RouterStatement(this, sql); }
+}
+
+function env(state: 'online' | 'offline' = 'online'): Env & { DEMO_DB: RouterD1 } {
+  return {
+    DEMO_DB: new RouterD1(state),
+    GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+    GITHUB_BRANCH: 'main',
+    DEMO_ADMIN_USER: 'operator',
+    DEMO_ADMIN_PASSWORD: 'test-admin-password',
+    BILLING_DEMO_MONTHLY_BUDGET_USD: '10',
+  };
+}
+
+const basic = `Basic ${btoa('operator:test-admin-password')}`;
+
+describe('public route contract', () => {
+  it('resolves every registered human demo route and links to its exact primary source', async () => {
+    const environment = env();
+    for (const demo of demos) {
+      const response = await routeRequest(new Request(`https://demo.wizardgang.ai${demo.route}`, { headers: { accept: 'text/html' } }), environment);
+      expect(response.status, demo.route).toBe(200);
+      const html = await response.text();
+      expect(html, demo.route).toContain(`https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/main/${demo.sourcePath}`);
+    }
+  });
+
+  it('resolves root, protected admin, offline, health, version, and logs surfaces', async () => {
+    const environment = env();
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/'), environment)).status).toBe(200);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/admin', { headers: { authorization: basic } }), environment)).status).toBe(200);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/offline'), environment)).status).toBe(503);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/health'), environment)).status).toBe(200);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/version'), environment)).status).toBe(200);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/__api/operations/logs'), environment)).status).toBe(200);
+  });
+});
+
+describe('offline routing matrix', () => {
+  it('blocks ordinary behavior before execution while keeping operations reachable', async () => {
+    const environment = env('offline');
+    const html = await routeRequest(new Request('https://demo.wizardgang.ai/edge', { headers: { accept: 'text/html' } }), environment);
+    expect(html.status).toBe(302);
+    expect(html.headers.get('location')).toContain('/offline?from=%2Fedge');
+    expect(environment.DEMO_DB.queries.every((query) => query.includes('demo_control'))).toBe(true);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'text/html' } }), environment)).status).toBe(302);
+
+    const api = await routeRequest(new Request('https://demo.wizardgang.ai/v1/demo-records', { headers: { accept: 'application/json' } }), environment);
+    expect(api.status).toBe(503);
+    expect(await api.json()).toMatchObject({ status: 'offline' });
+
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/dashboard'), environment)).status).toBe(200);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/__api/operations/logs'), environment)).status).toBe(200);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/version'), environment)).status).toBe(200);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/health'), environment)).status).toBe(503);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/admin', { headers: { authorization: basic } }), environment)).status).toBe(200);
+  });
+
+  it('persists and audits an authenticated same-origin admin transition without binding credentials', async () => {
+    const environment = env();
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/admin', {
+      method: 'POST',
+      headers: { authorization: basic, origin: 'https://demo.wizardgang.ai', 'content-type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ state: 'offline', message: 'Planned public demonstration window.' }),
+    }), environment);
+    expect(response.status).toBe(303);
+    expect(environment.DEMO_DB.queries.some((query) => query.includes('INSERT INTO demo_control'))).toBe(true);
+    expect(environment.DEMO_DB.queries.some((query) => query.includes('INSERT INTO demo_events'))).toBe(true);
+    expect(environment.DEMO_DB.queries.some((query) => query.includes('INSERT INTO application_logs'))).toBe(true);
+    expect(environment.DEMO_DB.binds.join(' ')).not.toContain('test-admin-password');
+    expect(environment.DEMO_DB.binds.join(' ')).not.toContain(basic);
+  });
+});
