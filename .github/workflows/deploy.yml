@@ -23,11 +23,11 @@ jobs:
     timeout-minutes: 20
     environment: production
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ github.event.release.tag_name || inputs.ref }}
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -72,15 +72,54 @@ jobs:
           node - <<'NODE'
           const expectedVersion = process.env.EXPECTED_VERSION;
           const expectedSha = process.env.EXPECTED_SHA;
-          const version = await fetch('https://demo.wizardgang.ai/version');
-          if (!version.ok) throw new Error(`/version returned ${version.status}`);
-          const metadata = await version.json();
+
+          const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+          const headers = {
+            accept: 'application/json',
+            'user-agent': 'Mozilla/5.0 (compatible; WizardGangDeploymentVerifier/1.0; +https://github.com/SouthernGentlemen/wizardgang-architecture-demo)'
+          };
+
+          async function fetchJsonWithRetry(url, acceptedStatuses) {
+            const attempts = 24;
+            let lastFailure = 'no response';
+
+            for (let attempt = 1; attempt <= attempts; attempt += 1) {
+              try {
+                const response = await fetch(url, { headers, redirect: 'error' });
+                const bodyText = await response.text();
+                lastFailure = `HTTP ${response.status}`;
+
+                if (acceptedStatuses.includes(response.status)) {
+                  try {
+                    return { response, body: JSON.parse(bodyText) };
+                  } catch {
+                    lastFailure = `HTTP ${response.status} with a non-JSON response`;
+                  }
+                }
+              } catch (error) {
+                lastFailure = error instanceof Error ? error.message : String(error);
+              }
+
+              console.log(`Attempt ${attempt}/${attempts} for ${url} failed: ${lastFailure}`);
+              if (attempt < attempts) await sleep(5_000);
+            }
+
+            throw new Error(`${url} did not become verifiable: ${lastFailure}`);
+          }
+
+          const { body: metadata } = await fetchJsonWithRetry(
+            'https://demo.wizardgang.ai/version',
+            [200]
+          );
           if (metadata.version !== expectedVersion || metadata.commit !== expectedSha) {
             throw new Error(`Version mismatch: ${JSON.stringify(metadata)}`);
           }
-          const health = await fetch('https://demo.wizardgang.ai/health');
-          const body = await health.json();
-          if (![200, 503].includes(health.status) || body.services?.worker !== 'operational') {
+
+          const { response: health, body } = await fetchJsonWithRetry(
+            'https://demo.wizardgang.ai/health',
+            [200, 503]
+          );
+          if (body.services?.worker !== 'operational') {
             throw new Error(`Health verification failed: ${health.status} ${JSON.stringify(body)}`);
           }
           console.log(`Verified ${metadata.version} (${metadata.commit}) with Worker status ${body.services.worker}.`);
