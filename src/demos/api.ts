@@ -18,7 +18,8 @@ const demo: DemoDefinition = {
     { "method": "POST", "path": "/graphql", "description": "Schema-driven read interface." },
     { "method": "POST", "path": "/mcp", "description": "Controlled JSON-RPC MCP tool interface." }
   ],
-  "supportingSources": [{ "label": "View shared authorization", "path": "src/lib/authorization.ts" }, { "label": "View Swagger contract", "path": "contracts/openapi/swagger.json" }]
+  "supportingSources": [{ "label": "View shared authorization", "path": "src/lib/authorization.ts" }, { "label": "View Swagger contract", "path": "contracts/openapi/swagger.json" }],
+  "action": { "label": "Read the shared resource collection", "method": "GET", "path": "/v1/demo-records?namespace=public" }
 };
 
 export default demo;

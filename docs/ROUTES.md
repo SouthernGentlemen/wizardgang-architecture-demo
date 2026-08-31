@@ -49,6 +49,7 @@ This file is the stable public URL contract for `demo.wizardgang.ai`.
 | `/__api/operations/logs` | Sanitized log JSON | `src/api/operations.ts` | Working |
 | `/admin` | Protected demo control | `src/ui/admin.ts` | Working |
 | `/offline` | Public maintenance page | `src/ui/admin.ts` | Working |
+| `/sitemap.xml` | Registry-generated sitemap | `src/api/sitemap.ts` | Working |
 
 ## Machine and action interfaces
 

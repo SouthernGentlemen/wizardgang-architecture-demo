@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { demos } from '../src/demos/registry';
 import { bypassOfflineGate, isApiLike, wantsHtml } from '../src/router';
+import { sitemapResponse } from '../src/api/sitemap';
 import { readFileSync } from 'node:fs';
 
 describe('architecture demo registry', () => {
@@ -63,5 +64,16 @@ describe('intentional offline gate', () => {
     expect(wantsHtml(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'text/html' } }), '/mcp')).toBe(true);
     expect(wantsHtml(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'application/json' } }), '/mcp')).toBe(false);
     expect(wantsHtml(new Request('https://demo.wizardgang.ai/graphql/schema'), '/graphql/schema')).toBe(false);
+  });
+});
+
+describe('public sitemap', () => {
+  it('publishes every registered route over https', async () => {
+    const xml = await sitemapResponse(new Request('https://demo.wizardgang.ai/sitemap.xml'), demos).text();
+    expect(xml).toContain('<loc>https://demo.wizardgang.ai/</loc>');
+    for (const demo of demos) {
+      expect(xml, demo.route).toContain(`<loc>https://demo.wizardgang.ai${demo.route}</loc>`);
+    }
+    expect((xml.match(/<loc>/g) ?? []).length).toBe(demos.length + 1);
   });
 });

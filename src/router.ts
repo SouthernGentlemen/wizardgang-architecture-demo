@@ -1,6 +1,8 @@
 import type { Env } from './types';
 import { demos, demosByRoute } from './demos/registry';
 import { renderDemo, renderIndex, renderNotFound } from './ui/page';
+import { recordsConsole } from './demos/records-console';
+import { sitemapResponse } from './api/sitemap';
 import { renderAdmin, renderOffline } from './ui/admin';
 import { listDemoEvents, runBaselineDemo } from './api/demo';
 import { healthResponse, logsResponse, versionResponse } from './api/operations';
@@ -27,6 +29,8 @@ import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
 const API_PATHS = new Set(['/graphql', '/mcp']);
+/** Routes whose whole point is the D1-backed record resource, so they get the live console. */
+const RECORD_CONSOLE_ROUTES = new Set(['/d1', '/api/rest']);
 
 export function bypassOfflineGate(path: string): boolean {
   return path === '/admin'
@@ -136,6 +140,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/__api/governance/security-controls') return securityControlsResponse(request, env);
   if (path === '/__api/governance/ai-evaluation') return aiEvaluationResponse(request, env);
 
+  if (request.method === 'GET' && path === '/sitemap.xml') return sitemapResponse(request, demos);
   if (request.method === 'GET' && path === '/') return renderIndex(env, demos);
   if (request.method === 'GET' && path === '/i18n') return renderI18nDemo(request, env);
   if (request.method === 'GET' && path === '/accessibility') return renderAccessibilityDemo(request, env);
@@ -150,7 +155,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
 
   if (request.method === 'GET') {
     const demo = demosByRoute.get(path);
-    if (demo) return renderDemo(env, demo);
+    if (demo) return renderDemo(env, demo, demos, RECORD_CONSOLE_ROUTES.has(path) ? recordsConsole() : '');
   }
 
   return renderNotFound(env);

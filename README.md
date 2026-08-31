@@ -30,6 +30,12 @@ Core invariants:
 
 See [`docs/ROUTES.md`](docs/ROUTES.md) and [`docs/route-manifest.json`](docs/route-manifest.json) for the stable human and machine route contract.
 
+## Interface
+
+The demo uses the `wizardgang.ai` design tokens: dark by default, with a light theme the reader can toggle and the browser remembers. Every page carries a skip link, primary navigation, and in-group previous/next paging; `/sitemap.xml` is generated from the same registry that serves the routes, so it cannot drift from the published contract.
+
+`/d1` and `/api/rest` expose a live record console. Reads are anonymous. Submitting a write without a token is part of the demonstration: the shared authorization boundary refuses it before it reaches D1.
+
 ## Operations and admin
 
 ```text
@@ -53,7 +59,7 @@ See [`docs/ROUTES.md`](docs/ROUTES.md) and [`docs/route-manifest.json`](docs/rou
 The numbered migrations establish:
 
 - `demo_events` — common audit/evidence stream;
-- `demo_records` — versioned REST/GraphQL/MCP demonstration records;
+- `demo_records` — versioned REST/GraphQL/MCP demonstration records, seeded so public reads return real data;
 - `service_health_checks` — timestamped availability history;
 - `usage_snapshots` — controlled synthetic usage/cost state;
 - `demo_control` — online/offline state and public message;
@@ -84,16 +90,18 @@ CI repeats those controls and uploads commit-bound validation evidence.
 
 ## Delivery
 
-Commit pattern: `[DEMO-NNN] CATEGORY Description`.
+Commit pattern: `[DEMO-NNN] [TYPE] Imperative description`.
 
-Categories: `FEAT`, `FIX`, `SEC`, `API`, `A11Y`, `I18N`, `AI`, `DB`, `OPS`, `TEST`, `DOCS`, `REFACTOR`.
+Primary types: `INIT`, `FEAT`, `FIX`, `SEC`, `API`, `A11Y`, `I18N`, `AI`, `DB`, `OPS`, `TEST`, `DOCS`, `REFACTOR`, `PERF`, `BUILD`, `REVERT`, `CHORE`.
 
-`main` is the accepted production baseline. Changes flow through isolated branches, pull requests, automated validation, review, semantic tags, GitHub Releases, and tag-only deployment. Production requires real Cloudflare resource identifiers, managed Worker secrets, the custom domain, and preferably Cloudflare Access in front of `/admin`. See [`docs/RELEASE.md`](docs/RELEASE.md).
+`main` is the accepted production baseline. Changes flow through isolated branches, pull requests, automated validation, review, annotated semantic tags, GitHub Releases, and tag-only deployment. Production requires real Cloudflare resource identifiers, managed Worker secrets, the custom domain, and preferably Cloudflare Access in front of `/admin`. See [`docs/CHANGE-MANAGEMENT.md`](docs/CHANGE-MANAGEMENT.md), [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md), and [`docs/RELEASE.md`](docs/RELEASE.md).
 
 ## Start here
 
 - [`docs/ARCHITECTURE-STANDARD.md`](docs/ARCHITECTURE-STANDARD.md) — governing architecture.
 - [`docs/OPERATIONS.md`](docs/OPERATIONS.md) — dashboard, health, logs, billing, admin, and offline behavior.
+- [`docs/CHANGE-MANAGEMENT.md`](docs/CHANGE-MANAGEMENT.md) — permanent change IDs, commit records, and risk controls.
+- [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md) — reproducible releases, annotated tags, and rollback records.
 - [`docs/ROUTES.md`](docs/ROUTES.md) — routes mapped to implementation source.
 - [`docs/IMPLEMENTATION-PLAN.md`](docs/IMPLEMENTATION-PLAN.md) — implementation status and external prerequisites.
 - [`KICKOFF-SOL-VERY-HIGH.md`](KICKOFF-SOL-VERY-HIGH.md) — original implementation brief retained as project context.

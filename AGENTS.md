@@ -2,6 +2,22 @@
 
 This repository is a public architecture demonstration, not a generic application template.
 
+## Definition of done
+
+After every task that changes repository files, finish the delivery loop before handing the task back:
+
+1. Account for every modified, deleted, and untracked file; preserve unrelated or user-authored work.
+2. Remove only task-created temporary artifacts, then run `npm run check`, `npm run validate:migrations`, `npm run security:dependencies`, `npm run build`, and `git diff --check`.
+3. Commit each intended controlled change with one permanent `DEMO-###` ID and one primary bracketed type.
+4. Push the isolated branch and open a pull request. Do not push ordinary changes directly to `main`.
+5. Confirm the worktree is clean before reporting completion.
+
+Production is deployed only from an annotated semantic-version release tag, never from an arbitrary branch commit. See `docs/CHANGE-MANAGEMENT.md` and `docs/RELEASE-MANAGEMENT.md`.
+
+If a required check, push, pull request, release, deployment, or live verification cannot be completed, report the exact blocker and leave all recoverable work intact.
+
+## Architecture invariants
+
 Preserve these invariants:
 
 - Keep public routes stable once released.
