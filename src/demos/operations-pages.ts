@@ -4,7 +4,6 @@ import { currentBudgetState, recentUsage } from '../lib/billing';
 import { getDemoControl } from '../lib/demo-control';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
-import { recentApplicationLogs } from '../lib/logs';
 import { shell } from '../ui/page';
 
 interface HealthRow {
@@ -18,7 +17,7 @@ interface HealthRow {
 
 function navigation(active: string): string {
   const links: Array<[string, string]> = [
-    ['/dashboard', 'Dashboard'], ['/dashboard/uptime', 'Uptime'], ['/dashboard/health', 'Health'],
+    ['/dashboard', 'Dashboard'], ['/dashboard/uptime', 'Uptime'],
     ['/dashboard/docs', 'Docs'], ['/dashboard/logs', 'Logs'], ['/dashboard/billing', 'Billing'],
     ['/health', 'Health JSON'], ['/version', 'Version JSON'],
   ];
@@ -43,12 +42,12 @@ function operationalPage(env: Env, route: string, title: string, heading: string
   <h1>${escapeHtml(heading)}</h1>
   <div class="meta"><span class="badge badge-ok">working</span><a href="${escapeHtml(sourceUrl(env, primarySource))}">Primary route source</a></div>
 </section>
-${navigation(route)}
+${route === '/dashboard' ? '' : navigation(route)}
 ${content}`, { cacheControl: 'no-store', activeRoute: route });
 }
 
 export async function renderDashboard(env: Env): Promise<Response> {
-  const [control, health, budget, logs] = await Promise.all([getDemoControl(env), collectHealth(env, false), currentBudgetState(env), recentApplicationLogs(env, { limit: 5 })]);
+  const [control, health, budget] = await Promise.all([getDemoControl(env), collectHealth(env, false), currentBudgetState(env)]);
   const version = env.DEPLOYED_VERSION || 'development';
   return operationalPage(env, '/dashboard', 'Operations Dashboard', 'Operations Dashboard', 'src/demos/dashboard.ts', `
   <section class="grid" aria-label="Current operational state">
@@ -57,7 +56,6 @@ export async function renderDashboard(env: Env): Promise<Response> {
     <article class="card"><h2 class="eyebrow">Synthetic budget</h2><p class="${statusClass(budget.state)}">${escapeHtml(budget.state)}</p><p>${budget.percent.toFixed(1)}% of the controlled demonstration budget.</p><a href="/dashboard/billing">Exercise degradation</a></article>
     <article class="card"><h2 class="eyebrow">Deployed version</h2><p class="stat">${escapeHtml(version)}</p><p>Commit: ${escapeHtml(env.DEPLOYED_SHA || 'not supplied')}</p><a href="/version">Inspect version JSON</a></article>
   </section>
-  <section class="panel"><h2>Operational proof surfaces</h2><ul><li><a href="/dashboard/uptime">Timestamped uptime history and availability calculation</a></li><li><a href="/dashboard/docs">Architecture, contracts, source, security, contribution, release, and evidence index</a></li><li><a href="/dashboard/logs">Bounded public-safe application logs</a> (${logs.length} recent row${logs.length === 1 ? '' : 's'} sampled)</li><li><a href="${escapeHtml(repoUrl(env))}">Public GitHub evidence</a></li></ul></section>
   <section class="panel"><h2>Source evidence</h2><div class="meta"><a href="${escapeHtml(sourceUrl(env, 'src/demos/operations-pages.ts'))}">Dashboard implementation</a><a href="${escapeHtml(sourceUrl(env, 'src/api/operations.ts'))}">Health implementation</a><a href="${escapeHtml(sourceUrl(env, 'docs/OPERATIONS.md'))}">Operations standard</a><a href="${escapeHtml(sourceUrl(env, 'tests/operations.test.ts'))}">Operations tests</a></div></section>`);
 }
 
@@ -80,7 +78,7 @@ export async function renderUptime(env: Env): Promise<Response> {
 
 export function renderDocs(env: Env): Response {
   const links: Array<[string, string]> = [
-    ['Architecture standard', 'docs/ARCHITECTURE-STANDARD.md'], ['Operations standard', 'docs/OPERATIONS.md'], ['Stable route map', 'docs/ROUTES.md'], ['Machine route manifest', 'docs/route-manifest.json'], ['Implementation plan', 'docs/IMPLEMENTATION-PLAN.md'], ['Evidence map', 'docs/EVIDENCE.md'], ['Accessibility guidance', 'docs/ACCESSIBILITY.md'], ['Identity guidance', 'docs/IDENTITY.md'], ['README', 'README.md'], ['Contributing', 'CONTRIBUTING.md'], ['Agent guidance', 'AGENTS.md'], ['Security', 'SECURITY.md'], ['Changelog', 'CHANGELOG.md'], ['Swagger 2.0 contract', 'contracts/openapi/swagger.json'], ['GraphQL schema', 'contracts/graphql/schema.graphql'], ['MCP tools', 'contracts/mcp/tools.json'], ['Webhook events', 'contracts/webhooks/events.json'], ['CI workflow', '.github/workflows/ci.yml'], ['Deploy workflow', '.github/workflows/deploy.yml'], ['D1 migrations', 'migrations/0001_demo_blob.sql'],
+    ['Architecture standard', 'docs/ARCHITECTURE-STANDARD.md'], ['Operations standard', 'docs/OPERATIONS.md'], ['Stable route map', 'docs/ROUTES.md'], ['Machine route manifest', 'docs/route-manifest.json'], ['Router', 'src/router.ts'], ['Implementation plan', 'docs/IMPLEMENTATION-PLAN.md'], ['Evidence map', 'docs/EVIDENCE.md'], ['Accessibility guidance', 'docs/ACCESSIBILITY.md'], ['Identity guidance', 'docs/IDENTITY.md'], ['README', 'README.md'], ['Contributing', 'CONTRIBUTING.md'], ['Agent guidance', 'AGENTS.md'], ['Security', 'SECURITY.md'], ['Changelog', 'CHANGELOG.md'], ['Swagger 2.0 contract', 'contracts/openapi/swagger.json'], ['GraphQL schema', 'contracts/graphql/schema.graphql'], ['MCP tools', 'contracts/mcp/tools.json'], ['Webhook events', 'contracts/webhooks/events.json'], ['CI workflow', '.github/workflows/ci.yml'], ['Deploy workflow', '.github/workflows/deploy.yml'], ['D1 migrations', 'migrations/0001_demo_blob.sql'],
   ];
   return operationalPage(env, '/dashboard/docs', 'Documentation', 'Live documentation index', 'src/demos/docs.ts', `<section class="grid">${links.map(([label, path]) => `<a class="card" href="${escapeHtml(sourceUrl(env, path))}"><h3>${escapeHtml(label)}</h3><code>${escapeHtml(path)}</code></a>`).join('')}</section><section class="panel"><h2>Live machine surfaces</h2><div class="meta"><a href="/v1/openapi.json">Swagger JSON</a><a href="/graphql/schema">GraphQL schema</a><a href="/health">Health JSON</a><a href="/version">Version JSON</a><a href="/__api/operations/logs">Logs JSON</a><a href="${escapeHtml(repoUrl(env))}/releases">GitHub Releases</a><a href="${escapeHtml(repoUrl(env))}/tags">Git tags</a></div></section>`);
 }

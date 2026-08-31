@@ -72,7 +72,7 @@ export function renderOffline(env: Env, control: DemoControl, requestedPath: str
   <p class="subtle">Operational surfaces stay available during an intentional offline window so the demo can be observed while it is down.</p>
   <div class="meta">
     <a href="/dashboard">Operations dashboard</a>
-    <a href="/dashboard/health">Health</a>
+    <a href="/dashboard#health">Health</a>
     <a href="/dashboard/uptime">Uptime</a>
     <a href="/dashboard/docs">Docs</a>
     <a href="${escapeHtml(repoUrl(env))}">Public source</a>

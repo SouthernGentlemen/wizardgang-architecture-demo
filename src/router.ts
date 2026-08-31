@@ -4,7 +4,6 @@ import { renderDemo, renderIndex, renderNotFound } from './ui/page';
 import { recordsConsole } from './demos/records-console';
 import { sitemapResponse } from './api/sitemap';
 import { renderAdmin, renderOffline } from './ui/admin';
-import { listDemoEvents, runBaselineDemo } from './api/demo';
 import { healthResponse, logsResponse, versionResponse } from './api/operations';
 import { renderLogsDemo } from './demos/logs';
 import { requireAdmin } from './lib/admin-auth';
@@ -174,8 +173,6 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (request.method === 'GET' && path === '/dashboard/docs') return renderDocs(env);
   if (request.method === 'GET' && path === '/dashboard/billing') return renderBilling(env);
   if (request.method === 'GET' && path === '/dashboard/logs') return renderLogsDemo(request, env);
-  if (request.method === 'POST' && path === '/__api/demo/run') return runBaselineDemo(request, env);
-  if (request.method === 'GET' && path === '/__api/demo/events') return listDemoEvents(request, env);
 
   if (request.method === 'GET') {
     const demo = demosByRoute.get(path);

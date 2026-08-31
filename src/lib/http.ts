@@ -37,7 +37,7 @@ export function safeError(request: Request, error: unknown): Response {
       'content-type': 'text/html; charset=utf-8',
       'cache-control': 'no-store',
     }));
-    return new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Service unavailable</title></head><body><main><h1>Service temporarily unavailable</h1><p>The request could not be completed. Try again later.</p><p>Reference: <code>${escapeHtml(requestId)}</code></p><p><a href="/dashboard/health">View health</a></p></main></body></html>`, { status: 503, headers });
+    return new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Service unavailable</title></head><body><main><h1>Service temporarily unavailable</h1><p>The request could not be completed. Try again later.</p><p>Reference: <code>${escapeHtml(requestId)}</code></p><p><a href="/dashboard#health">View health</a></p></main></body></html>`, { status: 503, headers });
   }
   return json({ error: 'service_unavailable', requestId }, {
     status: 503,

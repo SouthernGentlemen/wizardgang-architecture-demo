@@ -50,7 +50,7 @@ describe('intentional offline gate', () => {
   });
 
   it('identifies machine/API-like paths', () => {
-    expect(isApiLike('/__api/demo/run')).toBe(true);
+    expect(isApiLike('/__api/edge/inspect')).toBe(true);
     expect(isApiLike('/v1/things')).toBe(true);
     expect(isApiLike('/__api/operations/logs')).toBe(true);
     expect(isApiLike('/graphql')).toBe(true);
@@ -59,7 +59,7 @@ describe('intentional offline gate', () => {
 
   it('only treats browser-style GETs as HTML redirects', () => {
     expect(wantsHtml(new Request('https://demo.wizardgang.ai/edge', { headers: { accept: 'text/html' } }), '/edge')).toBe(true);
-    expect(wantsHtml(new Request('https://demo.wizardgang.ai/__api/demo/events', { headers: { accept: 'application/json' } }), '/__api/demo/events')).toBe(false);
+    expect(wantsHtml(new Request('https://demo.wizardgang.ai/__api/evidence/traceability', { headers: { accept: 'application/json' } }), '/__api/evidence/traceability')).toBe(false);
     expect(wantsHtml(new Request('https://demo.wizardgang.ai/edge', { method: 'POST' }), '/edge')).toBe(false);
     expect(wantsHtml(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'text/html' } }), '/mcp')).toBe(true);
     expect(wantsHtml(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'application/json' } }), '/mcp')).toBe(false);
