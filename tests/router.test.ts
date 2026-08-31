@@ -50,7 +50,8 @@ describe('public route contract', () => {
     const environment = env();
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/admin', { headers: { authorization: basic } }), environment)).status).toBe(200);
-    expect((await routeRequest(new Request('https://demo.wizardgang.ai/offline'), environment)).status).toBe(503);
+    // The maintenance page reports the real state: it only claims the demo is down while it is.
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/offline'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/health'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/version'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/__api/operations/logs'), environment)).status).toBe(200);
@@ -69,6 +70,10 @@ describe('offline routing matrix', () => {
     const api = await routeRequest(new Request('https://demo.wizardgang.ai/v1/demo-records', { headers: { accept: 'application/json' } }), environment);
     expect(api.status).toBe(503);
     expect(await api.json()).toMatchObject({ status: 'offline' });
+
+    const offlinePage = await routeRequest(new Request('https://demo.wizardgang.ai/offline', { headers: { accept: 'text/html' } }), environment);
+    expect(offlinePage.status).toBe(503);
+    expect(await offlinePage.text()).toContain('Oops! demo is down.');
 
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/dashboard'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/__api/operations/logs'), environment)).status).toBe(200);

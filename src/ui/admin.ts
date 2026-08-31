@@ -2,32 +2,80 @@ import type { Env } from '../types';
 import type { DemoControl } from '../lib/demo-control';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
-import { styles } from './styles';
-import { withSecurityHeaders } from '../lib/http';
-
-function document(env: Env, title: string, body: string, status = 200): Response {
-  return new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>${escapeHtml(title)} · WizardGang Architecture Demo</title><style>${styles}</style></head><body><header><a class="brand" href="/">WizardGang / Architecture Demo</a><a href="/dashboard">Operations dashboard</a><a href="${escapeHtml(repoUrl(env))}">Public repository</a></header><main>${body}</main><footer>WG-ARCH-001 companion · Admin controls are authenticated; credentials and secrets never belong in source or audit payloads.</footer></body></html>`, {
-    status,
-    headers: withSecurityHeaders(new Headers({
-      'content-type': 'text/html; charset=utf-8',
-      'cache-control': 'no-store',
-      'x-robots-tag': 'noindex, nofollow',
-      'referrer-policy': 'no-referrer'
-    }))
-  });
-}
+import { shell } from './page';
 
 export function renderAdmin(env: Env, control: DemoControl, notice = ''): Response {
-  return document(env, 'Demo Admin', `
-<section><div class="eyebrow">Operations / protected</div><h1>Demo Admin</h1><p>Take ordinary public architecture demonstrations online or offline without disabling the public status, documentation, or administration surface.</p>
-<div class="meta"><span class="badge">${escapeHtml(control.state)}</span><a href="${escapeHtml(sourceUrl(env, 'src/ui/admin.ts'))}">View admin UI source</a><a href="${escapeHtml(sourceUrl(env, 'src/lib/demo-control.ts'))}">View control logic</a><a href="${escapeHtml(sourceUrl(env, 'src/router.ts'))}">View offline gate</a><a href="${escapeHtml(sourceUrl(env, 'migrations/0003_demo_control.sql'))}">View D1 control schema</a><a href="${escapeHtml(sourceUrl(env, 'docs/OPERATIONS.md'))}">View operations design</a></div></section>
+  const offline = control.state === 'offline';
+  return shell(env, 'Demo Admin', `
+<section>
+  <p class="eyebrow">Operations / protected</p>
+  <h1>Demo Admin</h1>
+  <p class="lede">Take ordinary public architecture demonstrations online or offline without disabling the public status, documentation, or administration surface.</p>
+  <div class="meta">
+    <span class="badge ${offline ? 'badge-down' : 'badge-ok'}">${escapeHtml(control.state)}</span>
+    <a href="${escapeHtml(sourceUrl(env, 'src/ui/admin.ts'))}">Admin UI source</a>
+    <a href="${escapeHtml(sourceUrl(env, 'src/lib/demo-control.ts'))}">Control logic</a>
+    <a href="${escapeHtml(sourceUrl(env, 'src/router.ts'))}">Offline gate</a>
+    <a href="${escapeHtml(sourceUrl(env, 'migrations/0003_demo_control.sql'))}">D1 control schema</a>
+    <a href="${escapeHtml(sourceUrl(env, 'docs/OPERATIONS.md'))}">Operations design</a>
+  </div>
+</section>
 ${notice ? `<section class="panel" role="status"><strong>${escapeHtml(notice)}</strong></section>` : ''}
-<section class="panel"><h2>Public demo state</h2><p>Current state: <strong>${escapeHtml(control.state)}</strong></p><p>Last changed: ${escapeHtml(control.updatedAt)}${control.updatedBy ? ` by ${escapeHtml(control.updatedBy)}` : ''}</p>
-<form method="post" action="/admin"><label for="message"><strong>Public message</strong></label><p class="subtle">Displayed on the offline page. Maximum 500 characters. Do not place secrets or internal incident details here.</p><textarea id="message" name="message" rows="4" maxlength="500" style="width:100%;margin:8px 0 16px">${escapeHtml(control.publicMessage)}</textarea><div class="meta"><button name="state" value="online" type="submit">Take demo online</button><button name="state" value="offline" type="submit">Take demo offline</button></div></form></section>
-<section class="panel"><h2>Offline invariants</h2><ul><li>Browser demo pages redirect to the public offline message.</li><li>API/non-HTML/write requests return structured 503 responses.</li><li>Dashboard, health, version, offline, and admin routes remain reachable.</li><li>Every state transition is written to the shared audit event stream.</li></ul></section>`);
+<section class="panel">
+  <h2>Public demo state</h2>
+  <dl style="margin-bottom:1.4rem">
+    <dt>Current state</dt><dd><strong>${escapeHtml(control.state)}</strong></dd>
+    <dt>Last changed</dt><dd>${escapeHtml(control.updatedAt)}${control.updatedBy ? ` by ${escapeHtml(control.updatedBy)}` : ''}</dd>
+  </dl>
+  <form method="post" action="/admin">
+    <div class="field">
+      <label for="message">Public message</label>
+      <p class="subtle" id="message-help">Displayed on the offline page. Maximum 500 characters. Do not place secrets or internal incident details here.</p>
+      <textarea id="message" name="message" rows="4" maxlength="500" aria-describedby="message-help" style="width:100%">${escapeHtml(control.publicMessage)}</textarea>
+    </div>
+    <div class="meta" style="margin-top:1.2rem">
+      <button class="button-primary" name="state" value="online" type="submit">Take demo online</button>
+      <button name="state" value="offline" type="submit">Take demo offline</button>
+    </div>
+  </form>
+</section>
+<section class="panel">
+  <h2>Offline invariants</h2>
+  <ul>
+    <li>Browser demo pages redirect to the public offline message.</li>
+    <li>API, non-HTML, and write requests return structured <code>503</code> responses.</li>
+    <li>Dashboard, health, version, offline, and admin routes remain reachable.</li>
+    <li>Every state transition is written to the shared audit event stream.</li>
+  </ul>
+</section>`, { cacheControl: 'no-store', noindex: true });
 }
 
 export function renderOffline(env: Env, control: DemoControl, requestedPath: string): Response {
-  return document(env, 'Demo offline', `
-<section><div class="eyebrow">Demo status / offline</div><h1>Oops! demo is down.</h1><p>${escapeHtml(control.publicMessage)}</p><p class="subtle">Requested route: <code>${escapeHtml(requestedPath)}</code></p><div class="meta"><a href="/dashboard">Operations dashboard</a><a href="/dashboard/health">Health</a><a href="/dashboard/uptime">Uptime</a><a href="/dashboard/docs">Docs</a><a href="${escapeHtml(repoUrl(env))}">Public source</a></div></section>`, 503);
+  const offline = control.state === 'offline';
+  const safePath = requestedPath.startsWith('/') && !requestedPath.startsWith('//') ? requestedPath : '/';
+  const body = offline
+    ? `<section>
+  <p class="eyebrow">Demo status / offline</p>
+  <h1>Oops! demo is down.</h1>
+  <p class="lede">${escapeHtml(control.publicMessage)}</p>
+  <p class="subtle">Requested route: <code>${escapeHtml(safePath)}</code></p>
+</section>`
+    : `<section>
+  <p class="eyebrow">Demo status / online</p>
+  <h1>The demo is running.</h1>
+  <p class="lede">${escapeHtml(control.publicMessage)} This page is the maintenance surface visitors see when an operator intentionally takes the demonstrations offline.</p>
+  <p class="subtle"><a href="${escapeHtml(safePath)}">Continue to <code>${escapeHtml(safePath)}</code></a></p>
+</section>`;
+  return shell(env, offline ? 'Demo offline' : 'Demo online', `${body}
+<section class="panel">
+  <h2>Always reachable</h2>
+  <p class="subtle">Operational surfaces stay available during an intentional offline window so the demo can be observed while it is down.</p>
+  <div class="meta">
+    <a href="/dashboard">Operations dashboard</a>
+    <a href="/dashboard/health">Health</a>
+    <a href="/dashboard/uptime">Uptime</a>
+    <a href="/dashboard/docs">Docs</a>
+    <a href="${escapeHtml(repoUrl(env))}">Public source</a>
+  </div>
+</section>`, { cacheControl: 'no-store', noindex: true, status: offline ? 503 : 200 });
 }
