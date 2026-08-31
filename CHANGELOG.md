@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — 0.1.0 architecture laboratory baseline
+## 0.1.0 — 2026-08-31
 
 - Added the stable public human and machine route contract with direct source links.
 - Added the repository-native architecture/operations standards and removed the PDF package dependency.
@@ -14,4 +14,4 @@
 - Expanded CI to validate contracts, migrations, localization, security, dependencies, Worker build, and commit-bound evidence.
 - Hardened tag-only deployment so runtime version metadata is verified after deployment.
 
-No public release or production deployment is implied by this unreleased entry.
+This is the first reviewed public architecture-laboratory baseline. Production deployment is recorded separately by the tag-bound workflow and runtime `/version` evidence.
