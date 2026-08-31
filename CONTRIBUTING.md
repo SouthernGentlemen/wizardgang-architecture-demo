@@ -6,11 +6,11 @@ Project prefix: `DEMO`.
 
 Commit pattern:
 
-`[DEMO-013] [BUILD] Adopt controlled delivery`
+`[DEMO-NNN] [TYPE] Imperative summary`
 
 Primary types follow WG-ARCH-001 conventions: `INIT`, `FEAT`, `FIX`, `SEC`, `API`, `A11Y`, `I18N`, `AI`, `DB`, `OPS`, `TEST`, `DOCS`, `REFACTOR`, `PERF`, `BUILD`, `REVERT`, `CHORE`. One controlled change has one permanent ID and one primary type.
 
-Use an isolated branch named for its first controlled change, such as `demo-013-controlled-delivery`. A pull-request title follows the same controlled-title format. See [`docs/CHANGE-MANAGEMENT.md`](docs/CHANGE-MANAGEMENT.md).
+Use an isolated branch named for its first controlled change, such as `demo-NNN-imperative-summary`. A pull-request title follows the same controlled-title format. See [`docs/CHANGE-MANAGEMENT.md`](docs/CHANGE-MANAGEMENT.md).
 
 Each architecture demo change must:
 
