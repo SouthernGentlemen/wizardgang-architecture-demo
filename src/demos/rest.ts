@@ -8,11 +8,20 @@ const demo: DemoDefinition = {
   "sourcePath": "src/demos/rest.ts",
   "summary": "Conventional RESTful integration using JSON payloads and explicit resource endpoints.",
   "proves": [
-    "Dedicated REST exhibit route",
-    "Separation between exhibit UI and /v1 API surface",
-    "D1-backed demo data"
+    "GET, POST, and DELETE resource semantics",
+    "JSON content negotiation and bounded validation",
+    "D1-backed data with shared read/write authorization"
   ],
-  "status": "scaffolded"
+  "status": "working",
+  "interfaces": [
+    { "method": "GET", "path": "/v1/demo-records", "description": "List records as JSON." },
+    { "method": "POST", "path": "/v1/demo-records", "description": "Bearer-protected record upsert." },
+    { "method": "DELETE", "path": "/v1/demo-records/{key}", "description": "Bearer-protected record deletion." }
+  ],
+  "supportingSources": [
+    { "label": "View REST implementation", "path": "src/api/records.ts" },
+    { "label": "View Swagger 2.x contract", "path": "contracts/openapi/swagger.json" }
+  ]
 };
 
 export default demo;

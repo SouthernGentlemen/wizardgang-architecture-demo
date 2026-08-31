@@ -11,6 +11,7 @@
     "GITHUB_REPO_URL": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo",
     "GITHUB_BRANCH": "main",
     "DEPLOYED_VERSION": "development",
+    "DEPLOYMENT_ENVIRONMENT": "production",
     "BILLING_DEMO_MONTHLY_BUDGET_USD": "10"
   },
   "d1_databases": [
