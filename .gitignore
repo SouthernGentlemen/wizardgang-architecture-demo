@@ -8,3 +8,4 @@ coverage/
 *.pdf
 *.zip
 artifacts/evidence/*.json
+.claude/
