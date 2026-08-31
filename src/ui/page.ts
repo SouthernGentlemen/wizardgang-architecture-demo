@@ -2,6 +2,7 @@ import type { DemoDefinition, Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
 import { styles } from './styles';
+import { withSecurityHeaders } from '../lib/http';
 
 export function shell(env: Env, title: string, body: string, options: { cacheControl?: string } = {}): Response {
   const html = `<!doctype html>
@@ -21,8 +22,8 @@ export function shell(env: Env, title: string, body: string, options: { cacheCon
 <footer>WG-ARCH-001 companion · WCAG 2.2 / ISO/IEC 27001 / ISO/IEC 42001 references are alignment targets, not certification claims.</footer>
 </body>
 </html>`;
-  const headers: Record<string, string> = { 'content-type': 'text/html; charset=utf-8' };
-  if (options.cacheControl) headers['cache-control'] = options.cacheControl;
+  const headers = withSecurityHeaders(new Headers({ 'content-type': 'text/html; charset=utf-8' }));
+  if (options.cacheControl) headers.set('cache-control', options.cacheControl);
   return new Response(html, { headers });
 }
 
@@ -78,9 +79,11 @@ export function renderDemo(env: Env, demo: DemoDefinition): Response {
     <a href="${escapeHtml(sourceUrl(env, 'src/router.ts'))}">View router</a>
     <a href="${escapeHtml(sourceUrl(env, 'migrations/0001_demo_blob.sql'))}">View shared D1 schema</a>
     <a href="${escapeHtml(sourceUrl(env, 'docs/ROUTES.md'))}">View route map</a>
+    ${(demo.supportingSources ?? []).map((source) => `<a href="${escapeHtml(sourceUrl(env, source.path))}">${escapeHtml(source.label)}</a>`).join('')}
   </div>
 </section>
 ${operationsNav}
+${demo.interfaces?.length ? `<section class="panel" aria-labelledby="interfaces-heading"><h2 id="interfaces-heading">Live interfaces</h2><ul>${demo.interfaces.map((item) => `<li><code>${escapeHtml(item.method)} ${escapeHtml(item.path)}</code> — ${escapeHtml(item.description)}</li>`).join('')}</ul></section>` : ''}
 <section class="panel" aria-labelledby="proves-heading">
   <h2 id="proves-heading">This route proves</h2>
   <ul>${demo.proves.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
