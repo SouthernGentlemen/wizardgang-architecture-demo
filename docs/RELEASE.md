@@ -8,7 +8,7 @@ branch -> DEMO commit(s) -> pull request -> CI -> review -> merge
        -> smoke check -> operational observation
 ```
 
-The deploy workflow accepts published GitHub Releases and manually selected semantic tags. It checks out the tag or release commit, runs the full validation suite, applies D1 migrations, injects `DEPLOYED_VERSION` and `DEPLOYED_SHA`, deploys the Worker, and verifies `/version` and `/health`.
+Pushing an annotated semantic tag runs the release workflow. It reproduces the tagged state, publishes the matching record from `docs/releases/`, and calls the deployment workflow with that exact tag. The deploy workflow also accepts a manually selected existing semantic tag for recovery. It checks out the tag, runs the full validation suite, applies D1 migrations, injects `DEPLOYED_VERSION` and `DEPLOYED_SHA`, deploys the Worker, and verifies `/version` and `/health`.
 
 Required managed repository secrets:
 
@@ -22,4 +22,4 @@ Required Cloudflare-managed Worker secrets:
 - `DEMO_API_TOKEN`
 - `WEBHOOK_DEMO_SECRET`
 
-The first public release should be tagged only after the intended GitHub repository exists, Cloudflare resource identifiers replace local placeholders, migrations apply, and the custom domain resolves. Do not describe an untagged or unverified deployment as a released production baseline.
+The first public release should be tagged only after the intended GitHub repository exists, Cloudflare resource identifiers replace local placeholders, migrations apply, and the custom domain resolves. Do not describe an untagged or unverified deployment as a released production baseline. The controlled change model is in [`CHANGE-MANAGEMENT.md`](CHANGE-MANAGEMENT.md); the release record and rollback requirements are in [`RELEASE-MANAGEMENT.md`](RELEASE-MANAGEMENT.md).

@@ -167,15 +167,15 @@ Git history is part of the engineering and audit trail. Changes should be small 
 Commit pattern:
 
 ```text
-[WG-001] FEAT Add authentication middleware
-[WG-002] API Add project API contract
-[WG-003] SEC Enforce role validation
-[WG-004] A11Y Correct keyboard navigation
-[WG-005] FIX Handle expired OAuth tokens
-[WG-006] DOCS Document SAML configuration
+[WG-001] [FEAT] Add authentication middleware
+[WG-002] [API] Add project API contract
+[WG-003] [SEC] Enforce role validation
+[WG-004] [A11Y] Correct keyboard navigation
+[WG-005] [FIX] Handle expired OAuth tokens
+[WG-006] [DOCS] Document SAML configuration
 ```
 
-Categories: `FEAT`, `FIX`, `SEC`, `API`, `A11Y`, `I18N`, `AI`, `DB`, `OPS`, `TEST`, `DOCS`, `REFACTOR`.
+Each controlled change has one permanent ID and one primary bracketed type. Types include `INIT`, `FEAT`, `FIX`, `SEC`, `API`, `A11Y`, `I18N`, `AI`, `DB`, `OPS`, `TEST`, `DOCS`, `REFACTOR`, `PERF`, `BUILD`, `REVERT`, and `CHORE`.
 
 Project-specific prefixes are encouraged, such as `[DEMO-001]` for this repository.
 
@@ -189,7 +189,7 @@ branch -> commits -> validation -> pull request -> review -> merge -> tag -> dep
 
 ## 18 — Release management
 
-Production milestones are represented by Git tags and GitHub Releases using semantic versioning: `MAJOR.MINOR.PATCH`.
+Production milestones are represented by annotated Git tags and GitHub Releases using semantic versioning: `MAJOR.MINOR.PATCH`.
 
 A deployed production version must be traceable to a specific Git tag and commit. Meaningful releases should document version, date, major changes, fixes, security-related changes, known limitations, compatibility changes, and migration requirements where applicable.
 

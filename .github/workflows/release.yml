@@ -1,0 +1,55 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Reproduce the tagged state
+        run: |
+          npm run check
+          npm run validate:migrations
+          npm run security:dependencies
+          npm run build
+      - name: Require an annotated tag
+        run: |
+          tag_ref="refs/tags/$GITHUB_REF_NAME"
+          git fetch --force --no-tags origin "$tag_ref:$tag_ref"
+          if [ "$(git cat-file -t "$tag_ref")" != "tag" ]; then
+            echo "::error::$GITHUB_REF_NAME is not an annotated tag"
+            exit 1
+          fi
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git fetch --quiet origin main
+          notes=$(mktemp)
+          git show "origin/main:docs/releases/$GITHUB_REF_NAME.md" > "$notes"
+          gh release create "$GITHUB_REF_NAME" \
+            --title "WizardGang Architecture Demo $GITHUB_REF_NAME" \
+            --notes-file "$notes" \
+            --verify-tag
+
+  deploy:
+    needs: reproduce
+    uses: ./.github/workflows/deploy.yml
+    with:
+      ref: ${{ github.ref_name }}
+    secrets: inherit
