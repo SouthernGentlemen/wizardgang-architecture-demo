@@ -1,15 +1,15 @@
 /**
- * Live console shared by /d1 and /api/rest.
+ * Live console shared by /d1 and /api.
  *
  * Reads are anonymous (`demo:read`); writes require a bearer token (`demo:write`).
  * Running a write with an empty token is the point: the visitor sees the shared
  * authorization boundary reject the request instead of reading about it.
  */
-export function recordsConsole(): string {
+export function recordsConsole(id = 'records'): string {
   return `
-<section class="panel" aria-labelledby="records-console-heading">
+<section class="panel" id="${id}" aria-labelledby="records-console-heading">
   <h2 id="records-console-heading">Live record console</h2>
-  <p class="subtle">These controls call <code>/v1/demo-records</code> — the same D1-backed resource that <a href="/api/graphql">GraphQL</a> and the <a href="/mcp">MCP tool</a> read through the same authorization policy.</p>
+  <p class="subtle">These controls call <code>/v1/demo-records</code> — the same D1-backed resource that <a href="/api#graphql">GraphQL</a> and the <a href="/mcp">MCP tool</a> read through the same authorization policy.</p>
 
   <h3>Read — public</h3>
   <div class="filters">

@@ -70,6 +70,13 @@ describe('public route contract', () => {
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/version'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/__api/operations/logs'), environment)).status).toBe(200);
   });
+
+  it('renders the consolidated API interfaces as runnable anchored sections', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/api', { headers: { accept: 'text/html' } }), env());
+    const html = await response.text();
+    for (const anchor of ['rest', 'openapi', 'graphql', 'webhooks']) expect(html).toContain(`id="${anchor}"`);
+    for (const endpoint of ['/v1/demo-records', '/v1/openapi.json', '/graphql', '/__api/webhooks/demo']) expect(html).toContain(endpoint);
+  });
 });
 
 describe('offline routing matrix', () => {

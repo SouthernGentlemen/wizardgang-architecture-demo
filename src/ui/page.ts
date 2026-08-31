@@ -137,7 +137,7 @@ function groupPager(demo: DemoDefinition, all: DemoDefinition[]): string {
 }
 
 export function renderDemo(env: Env, demo: DemoDefinition, all: DemoDefinition[] = [], extra = ''): Response {
-  const action = demo.action ?? { label: 'Run baseline demo', method: 'POST' as const, path: '/__api/demo/run', body: { demoId: demo.id } };
+  const actions = demo.actions ?? [demo.action ?? { label: 'Run baseline demo', method: 'POST' as const, path: '/__api/demo/run', body: { demoId: demo.id } }];
   const operationsNav = demo.group === 'Operations' ? `
 <section class="panel" aria-labelledby="operations-heading">
   <h2 id="operations-heading">Operations surface</h2>
@@ -154,16 +154,19 @@ export function renderDemo(env: Env, demo: DemoDefinition, all: DemoDefinition[]
   </div>
   <p class="subtle">Operations routes stay reachable during intentional demo-offline windows. Billing data is synthetic and public-safe by design.</p>
 </section>` : '';
-  const requestPreview = `${action.method} ${action.path}${action.body === undefined ? '' : `\n\n${JSON.stringify(action.body, null, 2)}`}`;
   // A route with its own live console demonstrates itself; the generic runner would only duplicate it.
-  const runPanel = extra ? '' : `
-<section class="panel" aria-labelledby="run-heading">
-  <h2 id="run-heading">Run it</h2>
+  const runPanels = extra && !demo.actions ? '' : actions.map((action, index) => {
+    const requestPreview = `${action.method} ${action.path}${action.body === undefined ? '' : `\n\n${JSON.stringify(action.body, null, 2)}`}`;
+    const headingId = `${action.id ?? `run-${index + 1}`}-heading`;
+    return `<section class="panel"${action.id ? ` id="${escapeHtml(action.id)}"` : ''} aria-labelledby="${escapeHtml(headingId)}">
+  <h2 id="${escapeHtml(headingId)}">${escapeHtml(action.title ?? 'Run it')}</h2>
+  ${action.description ? `<p>${escapeHtml(action.description)}</p>` : ''}
   <p class="subtle">This button calls the live Worker interface below. Meaningful actions write public-safe audit evidence to <code>demo-blob</code>.</p>
   <div class="field" style="margin-bottom:1rem"><span>Request</span><pre style="min-height:0">${escapeHtml(requestPreview)}</pre></div>
-  <button type="button" data-run-demo>${escapeHtml(action.label)}</button>
-  <div class="field" style="margin-top:1rem"><span>Response</span><pre aria-live="polite" data-demo-output>Ready.</pre></div>
+  <button type="button" data-run-demo="${index}">${escapeHtml(action.label)}</button>
+  <div class="field" style="margin-top:1rem"><span>Response</span><pre aria-live="polite" data-demo-output="${index}">Ready.</pre></div>
 </section>`;
+  }).join('');
   const body = `
 <section>
   <p class="eyebrow"><a href="/#${escapeHtml(slug(demo.group))}">${escapeHtml(demo.group)}</a> / ${escapeHtml(demo.route)}</p>
@@ -180,8 +183,8 @@ export function renderDemo(env: Env, demo: DemoDefinition, all: DemoDefinition[]
   </div>
 </section>
 ${operationsNav}
-${runPanel}
 ${extra}
+${runPanels}
 ${demo.interfaces?.length ? `<section class="panel" aria-labelledby="interfaces-heading"><h2 id="interfaces-heading">Live interfaces</h2><ul>${demo.interfaces.map((item) => `<li><code>${escapeHtml(item.method)} ${escapeHtml(item.path)}</code> — ${escapeHtml(item.description)}</li>`).join('')}</ul></section>` : ''}
 <section class="panel" aria-labelledby="proves-heading">
   <h2 id="proves-heading">This route proves</h2>
@@ -190,14 +193,17 @@ ${demo.interfaces?.length ? `<section class="panel" aria-labelledby="interfaces-
 ${groupPager(demo, all)}
 <script>
 (() => {
-  const button = document.querySelector('[data-run-demo]');
-  const output = document.querySelector('[data-demo-output]');
-  button?.addEventListener('click', async () => {
+  const actions = ${JSON.stringify(actions)};
+  document.querySelectorAll('[data-run-demo]').forEach((button) => button.addEventListener('click', async () => {
+    const index = Number(button.dataset.runDemo);
+    const action = actions[index];
+    const output = document.querySelector('[data-demo-output="' + index + '"]');
+    if (!action || !output) return;
     output.textContent = 'Running…';
     try {
-      const response = await fetch(${JSON.stringify(action.path)}, {
-        method: ${JSON.stringify(action.method)},
-        ${action.body === undefined ? '' : `headers: { 'content-type': 'application/json' }, body: JSON.stringify(${JSON.stringify(action.body)})`}
+      const response = await fetch(action.path, {
+        method: action.method,
+        ...(action.body === undefined ? {} : { headers: { 'content-type': 'application/json' }, body: JSON.stringify(action.body) })
       });
       const contentType = response.headers.get('content-type') || '';
       const result = contentType.includes('application/json') ? await response.json() : await response.text();
@@ -205,7 +211,7 @@ ${groupPager(demo, all)}
     } catch (error) {
       output.textContent = String(error);
     }
-  });
+  }));
 })();
 </script>`;
   return shell(env, demo.title, body, { activeRoute: demo.route, description: demo.summary });

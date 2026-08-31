@@ -66,6 +66,16 @@ export interface Env {
 
 export type DemoStatus = 'working' | 'planned';
 
+export interface DemoAction {
+  id?: string;
+  title?: string;
+  description?: string;
+  label: string;
+  method: 'GET' | 'POST';
+  path: string;
+  body?: unknown;
+}
+
 export interface DemoDefinition {
   id: string;
   route: string;
@@ -84,12 +94,8 @@ export interface DemoDefinition {
     label: string;
     path: string;
   }>;
-  action?: {
-    label: string;
-    method: 'GET' | 'POST';
-    path: string;
-    body?: unknown;
-  };
+  action?: DemoAction;
+  actions?: DemoAction[];
   repositoryLinks?: Array<{
     label: string;
     path: string;
