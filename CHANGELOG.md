@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.2.0 — 2026-08-31
+
 - Adopted the shared WizardGang controlled change, branch, release, annotated-tag, and exact-tag deployment model.
 - Rethemed every surface onto the `wizardgang.ai` token system with a persisted light theme, shared wordmark, route labels, focus treatment, and type scale.
 - Seeded `demo_records` so the REST, GraphQL, and MCP read demonstrations return real data instead of an empty array.

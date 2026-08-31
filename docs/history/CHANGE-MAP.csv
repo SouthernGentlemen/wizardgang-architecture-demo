@@ -10,10 +10,11 @@ DEMO-008,fa8d79e4055f5593eb45f65c13a70049eb728376,7ad01e7908777b10edf7371bd5a97b
 DEMO-009,bfe08cfdd9194c5790a7e756801517bfd50035c5,8721b54d9c9d1b632b137b5f1b62900e9902a9da,2026-08-31,history-rewrite,v0.1.0,route evidence and delivery controls
 DEMO-010,dc4832df185f415d6468fd7d3b057eb33dfbe408,4f06be08b28d8d3e86d52d4823df9b1439004d8f,2026-08-31,history-rewrite,v0.1.0,production Cloudflare bindings
 DEMO-011,119a0224e6c14db4880f20e1823043a96ee924e3,8a5dbceb48c8d74ac38fbb338f2a8c70cdb42c65,2026-08-31,history-rewrite,v0.1.0,v0.1.0 release record
-DEMO-012,4574d5089f783b49bf60ac73a9fb38e1a01532d1,e063d1e5638e251a695fce4c4701e0f9f84f90fb,2026-08-31,history-rewrite,Unreleased,deployment identity verification
-DEMO-013,d4160cab71731c64f7b0052ee61ef657cfc0a42d,,2026-08-31,direct,Unreleased,controlled delivery model
-DEMO-014,11991d8939deb75b31320b5d76905b50b0bf40da,74497144914d4651cb2f8e53e4b645d0c2c8db76,2026-08-31,decomposed,Unreleased,WizardGang interface system
-DEMO-015,49163e19a48505249fb83efff8e43c695fe9f139,74497144914d4651cb2f8e53e4b645d0c2c8db76,2026-08-31,decomposed,Unreleased,state-accurate maintenance surface
-DEMO-016,37a2071372c87007488ec09dde38e9c0963b0133,74497144914d4651cb2f8e53e4b645d0c2c8db76,2026-08-31,decomposed,Unreleased,populated record demonstrations
-DEMO-017,273658c0ad5c774b3e2efe779ca84f21060020ce,74497144914d4651cb2f8e53e4b645d0c2c8db76,2026-08-31,decomposed,Unreleased,registry-generated sitemap
-DEMO-018,,,2026-08-31,direct,Unreleased,record corrected implementation and change provenance; this file is evidence in the commit it maps
+DEMO-012,4574d5089f783b49bf60ac73a9fb38e1a01532d1,e063d1e5638e251a695fce4c4701e0f9f84f90fb,2026-08-31,history-rewrite,v0.2.0,deployment identity verification
+DEMO-013,d4160cab71731c64f7b0052ee61ef657cfc0a42d,,2026-08-31,direct,v0.2.0,controlled delivery model
+DEMO-014,11991d8939deb75b31320b5d76905b50b0bf40da,74497144914d4651cb2f8e53e4b645d0c2c8db76,2026-08-31,decomposed,v0.2.0,WizardGang interface system
+DEMO-015,49163e19a48505249fb83efff8e43c695fe9f139,74497144914d4651cb2f8e53e4b645d0c2c8db76,2026-08-31,decomposed,v0.2.0,state-accurate maintenance surface
+DEMO-016,37a2071372c87007488ec09dde38e9c0963b0133,74497144914d4651cb2f8e53e4b645d0c2c8db76,2026-08-31,decomposed,v0.2.0,populated record demonstrations
+DEMO-017,273658c0ad5c774b3e2efe779ca84f21060020ce,74497144914d4651cb2f8e53e4b645d0c2c8db76,2026-08-31,decomposed,v0.2.0,registry-generated sitemap
+DEMO-018,3b6647b2ba4176dc58f967112ae99a44dd45c1ae,,2026-08-31,direct,v0.2.0,corrected implementation and change provenance
+DEMO-019,,,2026-08-31,direct,v0.2.0,record and version the v0.2.0 release; this file is evidence in the commit it maps
