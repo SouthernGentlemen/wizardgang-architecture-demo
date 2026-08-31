@@ -1,0 +1,28 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "WizardGang Architecture Demo REST API",
+    "version": "0.1.0",
+    "description": "Scaffold contract for the public REST demonstration. Keep this synchronized with the real /v1 implementation."
+  },
+  "host": "demo.wizardgang.ai",
+  "basePath": "/v1",
+  "schemes": ["https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/demo-records": {
+      "get": {
+        "summary": "List demo records",
+        "responses": {
+          "200": {
+            "description": "Demo record collection"
+          },
+          "503": {
+            "description": "Demo intentionally offline or dependency unavailable"
+          }
+        }
+      }
+    }
+  }
+}

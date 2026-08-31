@@ -1,0 +1,45 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "wizardgang-architecture-demo",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-31",
+  "routes": [
+    { "pattern": "demo.wizardgang.ai", "custom_domain": true }
+  ],
+  // Configure DEMO_ADMIN_USER and DEMO_ADMIN_PASSWORD with `wrangler secret put`; never commit values.
+  "vars": {
+    "GITHUB_REPO_URL": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo",
+    "GITHUB_BRANCH": "main",
+    "DEPLOYED_VERSION": "development",
+    "BILLING_DEMO_MONTHLY_BUDGET_USD": "10"
+  },
+  "d1_databases": [
+    {
+      "binding": "DEMO_DB",
+      "database_name": "demo-blob",
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "DEMO_R2",
+      "bucket_name": "wizardgang-demo-r2",
+      "preview_bucket_name": "wizardgang-demo-r2-preview"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "DEMO_COORDINATOR",
+        "class_name": "DemoCoordinator"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "do-v1",
+      "new_sqlite_classes": ["DemoCoordinator"]
+    }
+  ]
+}

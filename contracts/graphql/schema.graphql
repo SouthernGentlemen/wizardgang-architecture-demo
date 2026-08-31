@@ -1,0 +1,15 @@
+"""Public schema scaffold for the GraphQL architecture demonstration."""
+type DemoRecord {
+  id: ID!
+  namespace: String!
+  key: String!
+  valueJson: String!
+}
+
+type Query {
+  demoRecords(namespace: String): [DemoRecord!]!
+}
+
+schema {
+  query: Query
+}

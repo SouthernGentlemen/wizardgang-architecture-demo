@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Public non-secret scaffold only. Replace entity/ACS values during a real SAML integration. -->
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://demo.wizardgang.ai/identity/saml">
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://demo.wizardgang.ai/identity/saml/callback" index="0" />
+  </SPSSODescriptor>
+</EntityDescriptor>
