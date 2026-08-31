@@ -15,6 +15,11 @@ async function challenge(verifier: string): Promise<string> {
   return base64Url(new Uint8Array(await crypto.subtle.digest('SHA-256', encoder.encode(verifier))));
 }
 
+async function subjectDigest(subject: string): Promise<string> {
+  const bytes = new Uint8Array(await crypto.subtle.digest('SHA-256', encoder.encode(subject)));
+  return [...bytes].map((value) => value.toString(16).padStart(2, '0')).join('');
+}
+
 export async function oauthPkceResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'POST') return methodNotAllowed(['POST']);
   const random = crypto.getRandomValues(new Uint8Array(32));
@@ -48,7 +53,7 @@ export async function authorizationDecisionResponse(request: Request, env: Env):
     const action = body.requestedAction === 'demo:write' ? 'demo:write' : body.requestedAction === 'demo:read' ? 'demo:read' : null;
     if (!subject || !assurance || !role || !action) throw new HttpError(400, 'invalid_policy_input');
     const allowed = action === 'demo:read' || (action === 'demo:write' && role === 'operator' && assurance === 'mfa');
-    const event = await recordDemoEvent(env, 'identity', 'authorization_evaluated', { subject, assurance, role, action, allowed });
+    const event = await recordDemoEvent(env, 'identity', 'authorization_evaluated', { subjectSha256: await subjectDigest(subject), assurance, role, action, allowed });
     await recordApplicationLog(env, { source: 'identity', eventKey: 'authorization_evaluated', message: `Authorization policy ${allowed ? 'allowed' : 'denied'} ${action}.`, route: '/__api/identity/authorize', detail: { assurance, role, action, allowed, eventId: event.id } });
     return json({
       authentication: { establishedSubject: subject, assurance, source: 'supplied provider-neutral demonstration context' },

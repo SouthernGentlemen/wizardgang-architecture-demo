@@ -1,20 +1,17 @@
 # Changelog
 
-## 0.1.0 - Complete scaffold refresh
+## Unreleased — 0.1.0 architecture laboratory baseline
 
-- Added stable public route registry for the full WizardGang architecture surface.
-- Added direct route-to-source links and machine-readable route manifest.
-- Added repository-native `docs/ARCHITECTURE-STANDARD.md`; removed PDF dependency from the package.
-- Added shared D1 `demo-blob` records and audit baseline.
-- Added operations schemas for health history and synthetic usage/cost snapshots.
-- Added public operations route family: dashboard, uptime, health, docs, and billing.
-- Added `/dashboard/logs` and `/__api/operations/logs` with D1-backed public-safe operational logging, bounded filters, and defensive structured-detail redaction.
-- Added machine-readable `/health` and `/version` endpoints.
-- Added protected `/admin` online/offline controls with D1-persisted state.
-- Added safe audit events for demo state transitions.
-- Added `/offline` maintenance page with **“Oops! demo is down.”** messaging.
-- Hardened offline routing so browser HTML requests redirect while API/non-HTML/write requests return JSON `503`.
-- Kept dashboard/status/admin routes reachable during intentional offline state.
-- Added `docs/OPERATIONS.md` with dashboard, billing, health, uptime, admin, and offline behavior requirements.
-- Refreshed Sol Very High kickoff prompt to cover runtime, APIs, identity, MCP, WCAG/i18n, dashboard/admin operations, Git/release evidence, and governance.
-- Added CI/deploy workflow scaffolding.
+- Added the stable public human and machine route contract with direct source links.
+- Added the repository-native architecture/operations standards and removed the PDF package dependency.
+- Implemented Edge, stateless Worker, D1, real R2, and real Durable Object demonstrations.
+- Implemented authorized REST CRUD, served Swagger 2.0, GraphQL, signed webhooks, and controlled MCP.
+- Implemented OAuth PKCE, provider-neutral SSO/SAML boundaries, and separate application authorization evaluation.
+- Implemented English, Spanish, and Arabic localization with RTL and accessible interactions.
+- Built the live dashboard, health, uptime, docs, sanitized logs, synthetic billing, and observable graceful degradation.
+- Hardened authenticated D1-backed online/offline control, same-origin mutations, fail-closed state, and public maintenance behavior.
+- Added delivery/traceability evidence, ISO-aligned control mapping, and executable AI/MCP boundary evaluation.
+- Expanded CI to validate contracts, migrations, localization, security, dependencies, Worker build, and commit-bound evidence.
+- Hardened tag-only deployment so runtime version metadata is verified after deployment.
+
+No public release or production deployment is implied by this unreleased entry.

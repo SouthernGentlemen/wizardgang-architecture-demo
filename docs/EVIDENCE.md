@@ -24,3 +24,5 @@ Primary sources:
 - application UI: accessibility/i18n behavior, AI evaluations/fallback demonstrations, operational views.
 
 Do not reconstruct evidence after the fact when the engineering workflow can create it automatically.
+
+The traceability API reports missing `DEPLOYED_VERSION` / `DEPLOYED_SHA` as `not-supplied`; it never invents a release. CI generates `artifacts/evidence/validation.json` for the exact tested commit and uploads it as a GitHub Actions artifact. Tagged deployment injects the version and SHA, then verifies the public `/version` and `/health` surfaces.

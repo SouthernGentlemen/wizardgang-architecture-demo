@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { demos } from '../src/demos/registry';
 import { bypassOfflineGate, isApiLike, wantsHtml } from '../src/router';
+import { readFileSync } from 'node:fs';
 
 describe('architecture demo registry', () => {
   it('uses unique public routes', () => {
@@ -21,11 +22,22 @@ describe('architecture demo registry', () => {
       expect(routes.has(route)).toBe(true);
     }
   });
+
+  it('keeps registry metadata synchronized with the machine route manifest', () => {
+    const manifest = JSON.parse(readFileSync('docs/route-manifest.json', 'utf8')) as Array<{ route: string; source: string; status: string }>;
+    for (const demo of demos) {
+      const entry = manifest.find((candidate) => candidate.route === demo.route);
+      expect(entry, `missing manifest entry for ${demo.route}`).toBeDefined();
+      expect(entry?.source).toBe(demo.sourcePath);
+      expect(entry?.status).toBe(demo.status);
+    }
+    expect(demos.every((demo) => demo.status === 'working')).toBe(true);
+  });
 });
 
 describe('intentional offline gate', () => {
   it('keeps operations, status, offline, and admin routes reachable', () => {
-    for (const route of ['/dashboard', '/dashboard/uptime', '/dashboard/health', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing', '/health', '/version', '/__api/operations/logs', '/offline', '/admin']) {
+    for (const route of ['/dashboard', '/dashboard/uptime', '/dashboard/health', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing', '/health', '/version', '/__api/operations/logs', '/__api/operations/billing', '/offline', '/admin']) {
       expect(bypassOfflineGate(route)).toBe(true);
     }
   });
@@ -48,5 +60,8 @@ describe('intentional offline gate', () => {
     expect(wantsHtml(new Request('https://demo.wizardgang.ai/edge', { headers: { accept: 'text/html' } }), '/edge')).toBe(true);
     expect(wantsHtml(new Request('https://demo.wizardgang.ai/__api/demo/events', { headers: { accept: 'application/json' } }), '/__api/demo/events')).toBe(false);
     expect(wantsHtml(new Request('https://demo.wizardgang.ai/edge', { method: 'POST' }), '/edge')).toBe(false);
+    expect(wantsHtml(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'text/html' } }), '/mcp')).toBe(true);
+    expect(wantsHtml(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'application/json' } }), '/mcp')).toBe(false);
+    expect(wantsHtml(new Request('https://demo.wizardgang.ai/graphql/schema'), '/graphql/schema')).toBe(false);
   });
 });

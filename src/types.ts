@@ -64,7 +64,7 @@ export interface Env {
   BILLING_DEMO_MONTHLY_BUDGET_USD?: string;
 }
 
-export type DemoStatus = 'scaffolded' | 'working' | 'planned';
+export type DemoStatus = 'working' | 'planned';
 
 export interface DemoDefinition {
   id: string;

@@ -13,11 +13,15 @@ This is a public architecture demonstration. Public source is intentional; secre
 
 Use Cloudflare/GitHub managed secret stores for production and ignored `.dev.vars` for local-only admin placeholders.
 
+The current Worker secrets are `DEMO_ADMIN_USER`, `DEMO_ADMIN_PASSWORD`, `DEMO_API_TOKEN`, and `WEBHOOK_DEMO_SECRET`. Values are never returned by health, version, logs, evidence, or source-link surfaces.
+
 ## Demo administration
 
 `/admin` is authenticated and state-changing responses use `Cache-Control: no-store`. Online/offline state is persisted in D1 and state transitions are auditable, but audit payloads must never contain credentials or authorization material.
 
-For production, prefer Cloudflare-native access control where practical, while retaining an application-side authorization boundary for state changes.
+Admin credentials are compared through fixed-length digests, state-changing form submissions require an exact same-origin request, and control failures fail closed. For production, place Cloudflare Access in front of `/admin` where practical while retaining the application-side Basic authentication and authorization boundary for state changes.
+
+REST writes and R2 mutations require a bearer token supplied through `DEMO_API_TOKEN`. Public REST, GraphQL, and MCP reads share the explicit `demo:read` boundary. The demo webhook verifies HMAC-SHA256 over the exact request body and rejects reused delivery IDs; its signing secret is environment-owned.
 
 ## Public logging
 
