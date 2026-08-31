@@ -4,7 +4,7 @@ const demo: DemoDefinition = {
   "id": "i18n",
   "route": "/i18n",
   "title": "Internationalization",
-  "group": "Interface Standards",
+  "group": "Standards",
   "sourcePath": "src/demos/i18n.ts",
   "summary": "Locale-ready interface architecture including language, formatting, translation resources, and RTL readiness.",
   "proves": [

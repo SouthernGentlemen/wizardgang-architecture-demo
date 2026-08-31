@@ -7,7 +7,6 @@ This document makes the operational surface a first-class part of the architectu
 ```text
 /dashboard
 ├── /dashboard/uptime
-├── /dashboard/health
 ├── /dashboard/docs
 ├── /dashboard/logs
 └── /dashboard/billing
@@ -23,7 +22,7 @@ The operational routes remain reachable while ordinary demos are intentionally o
 
 ## Dashboard
 
-`/dashboard` is the public operational proof surface. It should answer five questions without requiring access to private infrastructure:
+`/dashboard` is the public operational proof surface. It should answer six questions without requiring access to private infrastructure:
 
 1. Is the demo intentionally online or offline?
 2. Is the Worker healthy and are its dependencies ready?
@@ -52,7 +51,7 @@ Do not imply an SLA unless one is explicitly defined.
 
 ## Health
 
-`/dashboard/health` is the human-readable view. `/health` is the machine-readable endpoint.
+`/dashboard#health` is the human-readable view. `/health` is the machine-readable endpoint. The retired `/dashboard/health` page permanently redirects to that dashboard card.
 
 Health should report separately:
 
@@ -74,6 +73,7 @@ No secret, token, account identifier, internal host, or private Cloudflare metad
 - `docs/ARCHITECTURE-STANDARD.md`;
 - `docs/ROUTES.md`;
 - `docs/route-manifest.json`;
+- `src/router.ts`;
 - API/OpenAPI/GraphQL/MCP contracts when implemented;
 - public repository and direct route source links;
 - README, CONTRIBUTING, AGENTS, SECURITY, CHANGELOG;

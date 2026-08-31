@@ -4,7 +4,7 @@ const demo: DemoDefinition = {
   "id": "api",
   "route": "/api",
   "title": "Application Interfaces",
-  "group": "Integration",
+  "group": "Interfaces",
   "sourcePath": "src/demos/api.ts",
   "summary": "One D1-backed resource exposed through REST, a served OpenAPI contract, GraphQL, and a signed webhook workflow under shared application policy boundaries.",
   "proves": [

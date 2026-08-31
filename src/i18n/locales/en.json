@@ -1,7 +1,7 @@
 {
   "app.title": "WizardGang Architecture Demo",
   "offline.title": "Oops! demo is down.",
-  "demo.eyebrow": "Interface Standards / Internationalization",
+  "demo.eyebrow": "Standards / Internationalization",
   "demo.title": "Internationalization in the interface",
   "demo.summary": "Switch locale to inspect translated content, locale-aware formats, pluralization, and right-to-left layout.",
   "source": "View page source",

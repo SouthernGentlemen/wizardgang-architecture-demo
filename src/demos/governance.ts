@@ -4,7 +4,7 @@ const demo: DemoDefinition = {
   "id": "governance",
   "route": "/governance",
   "title": "Governance",
-  "group": "Governance",
+  "group": "Delivery & Governance",
   "sourcePath": "src/demos/governance.ts",
   "summary": "Security controls, AI-system boundary evaluation, traceability, and audit evidence implemented through ordinary engineering work and inspected together.",
   "notice": "WCAG 2.2 / ISO 27001 / ISO 42001 references are alignment targets, not certification claims.",

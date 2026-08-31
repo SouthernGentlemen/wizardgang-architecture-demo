@@ -16,9 +16,11 @@
     "validate:history": "node scripts/validate-history.mjs",
     "validate:migrations": "wrangler d1 migrations apply demo-blob --local",
     "validate:security": "node scripts/validate-security.mjs",
+    "generate:routes": "node scripts/generate-route-manifest.mjs",
+    "validate:routes": "node scripts/generate-route-manifest.mjs --check",
     "security:dependencies": "npm audit --audit-level=high",
     "evidence": "node scripts/generate-evidence.mjs",
-    "check": "npm run validate:scaffold && npm run validate:history && npm run lint && npm run typecheck && npm run test && npm run validate:contracts && npm run validate:locales && npm run validate:security",
+    "check": "npm run validate:routes && npm run validate:scaffold && npm run validate:history && npm run lint && npm run typecheck && npm run test && npm run validate:contracts && npm run validate:locales && npm run validate:security",
     "validate:scaffold": "node scripts/validate-scaffold.mjs"
   },
   "devDependencies": {

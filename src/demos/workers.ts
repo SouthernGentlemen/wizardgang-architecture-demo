@@ -4,7 +4,7 @@ const demo: DemoDefinition = {
   "id": "workers",
   "route": "/workers",
   "title": "Cloudflare Workers",
-  "group": "Runtime",
+  "group": "Platform",
   "sourcePath": "src/demos/workers.ts",
   "summary": "Stateless TypeScript application compute and the mediation layer between clients, platform state, and integrations.",
   "proves": [

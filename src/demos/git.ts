@@ -4,7 +4,7 @@ const demo: DemoDefinition = {
   "id": "git",
   "route": "/git",
   "title": "Git / GitHub",
-  "group": "Delivery",
+  "group": "Delivery & Governance",
   "sourcePath": "src/demos/git.ts",
   "summary": "One inspectable delivery chain connecting public source, controlled commits, branching, CI/CD, releases, and environment boundaries to the running version.",
   "proves": [

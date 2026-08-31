@@ -5,6 +5,13 @@ import { sitemapResponse } from '../src/api/sitemap';
 import { readFileSync } from 'node:fs';
 
 describe('architecture demo registry', () => {
+  it('publishes 17 HTML routes in five architecture groups', () => {
+    expect(demos).toHaveLength(17);
+    expect([...new Set(demos.map((demo) => demo.group))]).toEqual([
+      'Platform', 'Interfaces', 'Standards', 'Delivery & Governance', 'Operations',
+    ]);
+  });
+
   it('uses unique public routes', () => {
     expect(new Set(demos.map((demo) => demo.route)).size).toBe(demos.length);
   });
@@ -19,9 +26,10 @@ describe('architecture demo registry', () => {
 
   it('includes the complete operations dashboard route family', () => {
     const routes = new Set(demos.map((demo) => demo.route));
-    for (const route of ['/dashboard', '/dashboard/uptime', '/dashboard/health', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing']) {
+    for (const route of ['/dashboard', '/dashboard/uptime', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing']) {
       expect(routes.has(route)).toBe(true);
     }
+    expect(routes.has('/dashboard/health')).toBe(false);
   });
 
   it('keeps registry metadata synchronized with the machine route manifest', () => {
@@ -33,6 +41,7 @@ describe('architecture demo registry', () => {
       expect(entry?.status).toBe(demo.status);
     }
     expect(demos.every((demo) => demo.status === 'working')).toBe(true);
+    expect(manifest.filter((entry) => entry.source.startsWith('src/demos/'))).toHaveLength(17);
   });
 });
 
@@ -44,7 +53,7 @@ describe('intentional offline gate', () => {
   });
 
   it('does not bypass ordinary demo routes', () => {
-    for (const route of ['/edge', '/d1', '/api/rest', '/identity/oauth', '/mcp']) {
+    for (const route of ['/edge', '/d1', '/api', '/identity', '/mcp']) {
       expect(bypassOfflineGate(route)).toBe(false);
     }
   });
@@ -75,5 +84,8 @@ describe('public sitemap', () => {
       expect(xml, demo.route).toContain(`<loc>https://demo.wizardgang.ai${demo.route}</loc>`);
     }
     expect((xml.match(/<loc>/g) ?? []).length).toBe(demos.length + 1);
+    for (const retired of ['/api/rest', '/identity/oauth', '/git/versioning', '/governance/iso-27001', '/dashboard/health']) {
+      expect(xml).not.toContain(`<loc>https://demo.wizardgang.ai${retired}</loc>`);
+    }
   });
 });

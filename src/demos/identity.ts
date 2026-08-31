@@ -4,7 +4,7 @@ const demo: DemoDefinition = {
   "id": "identity",
   "route": "/identity",
   "title": "Authentication & Authorization",
-  "group": "Identity",
+  "group": "Interfaces",
   "sourcePath": "src/demos/identity.ts",
   "summary": "One provider-neutral identity boundary for authentication context, OAuth PKCE, enterprise SSO, SAML validation, and separate application authorization.",
   "proves": [
