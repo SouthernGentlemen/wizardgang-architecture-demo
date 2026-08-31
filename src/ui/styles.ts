@@ -7,6 +7,12 @@ header, main, footer { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
 header { padding: 28px 0 18px; display: flex; justify-content: space-between; gap: 20px; align-items: baseline; border-bottom: 1px solid #c9c9c2; }
 .brand { font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .subtle { color: #65655f; }
+.skip-link { position: absolute; left: 16px; top: -80px; background: #111; color: #fff; padding: 10px; z-index: 2; }
+.skip-link:focus { top: 12px; }
+.error { border-left: 4px solid #9b1c1c; padding-left: 10px; }
+dl { display: grid; grid-template-columns: minmax(120px, 1fr) 2fr; gap: 10px 20px; }
+dt { font-weight: 800; }
+dd { margin: 0; }
 main { padding: 40px 0 64px; }
 h1 { font-size: clamp(2.2rem, 7vw, 5rem); line-height: .92; margin: 0 0 18px; max-width: 850px; }
 h2 { margin-top: 48px; }
@@ -22,6 +28,7 @@ button { font: inherit; font-weight: 700; padding: 10px 14px; border: 1px solid 
 .filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
 .filters label { display: grid; gap: 5px; font-weight: 700; }
 input, select { font: inherit; padding: 9px 10px; border: 1px solid #777; background: #fff; color: #111; }
+textarea { font: inherit; padding: 9px 10px; border: 1px solid #777; background: #fff; color: #111; }
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: .9rem; }
 th, td { text-align: left; vertical-align: top; padding: 10px; border-bottom: 1px solid #d8d8d0; }
@@ -30,4 +37,6 @@ details pre { max-width: 520px; margin: 8px 0 0; }
 button:focus-visible, a:focus-visible { outline: 3px solid #7a9400; outline-offset: 3px; }
 pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #111; color: #fff; padding: 14px; min-height: 52px; }
 footer { border-top: 1px solid #c9c9c2; padding: 22px 0 40px; color: #65655f; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
+@media (max-width: 560px) { header { align-items: flex-start; flex-direction: column; } dl { grid-template-columns: 1fr; } }
 `;

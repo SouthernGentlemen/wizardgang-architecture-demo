@@ -17,6 +17,9 @@ import { graphqlResponse, graphqlSchemaResponse } from './api/graphql';
 import { webhookDemoResponse, webhookReceiptResponse } from './api/webhooks';
 import { openApiResponse } from './api/openapi';
 import { mcpResponse } from './api/mcp';
+import { authorizationDecisionResponse, oauthPkceResponse, samlInspectionResponse, samlMetadataResponse, ssoBoundaryResponse } from './api/identity';
+import { renderI18nDemo } from './demos/i18n-page';
+import { renderAccessibilityDemo } from './demos/accessibility-page';
 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/'];
@@ -117,8 +120,15 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/v1/webhooks/demo') return webhookReceiptResponse(request, env);
   if (path === '/__api/webhooks/demo') return webhookDemoResponse(request, env);
   if (path === '/mcp' && request.method !== 'GET') return mcpResponse(request, env);
+  if (path === '/__api/identity/oauth-pkce') return oauthPkceResponse(request, env);
+  if (path === '/__api/identity/authorize') return authorizationDecisionResponse(request, env);
+  if (path === '/__api/identity/sso') return ssoBoundaryResponse(request);
+  if (path === '/identity/saml/metadata') return samlMetadataResponse(request);
+  if (path === '/__api/identity/saml/inspect') return samlInspectionResponse(request);
 
   if (request.method === 'GET' && path === '/') return renderIndex(env, demos);
+  if (request.method === 'GET' && path === '/i18n') return renderI18nDemo(request, env);
+  if (request.method === 'GET' && path === '/accessibility') return renderAccessibilityDemo(request, env);
   if (request.method === 'GET' && path === '/dashboard/logs') return renderLogsDemo(request, env);
   if (request.method === 'POST' && path === '/__api/demo/run') return runBaselineDemo(request, env);
   if (request.method === 'GET' && path === '/__api/demo/events') return listDemoEvents(request, env);
