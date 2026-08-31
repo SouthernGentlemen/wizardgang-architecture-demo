@@ -26,7 +26,7 @@ Source implementation is complete without inventing external evidence. Before ca
 
 1. Publish or push the reviewed branch to `SouthernGentlemen/wizardgang-architecture-demo`.
 2. Complete pull-request review and merge to `main`.
-3. Create `demo-blob`, the R2 buckets, and Worker secrets; replace the D1 identifier placeholder.
+3. Create `demo-blob`, the R2 buckets, and Worker secrets; bind the reviewed resource identifiers.
 4. Configure Cloudflare Access for `/admin` where available and configure `demo.wizardgang.ai`.
 5. Tag the reviewed commit with semantic versioning and publish a GitHub Release.
 6. Run the tag-only deploy workflow and verify `/version`, `/health`, and the dashboard.

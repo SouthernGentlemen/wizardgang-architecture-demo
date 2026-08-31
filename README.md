@@ -66,7 +66,7 @@ Machine contracts for Swagger 2.0, GraphQL, MCP, webhooks, and provider-neutral 
 ## Local setup
 
 1. Run `npm ci` using the committed lock file.
-2. Replace `REPLACE_WITH_D1_DATABASE_ID` in `wrangler.jsonc` before remote deployment.
+2. The committed D1 identifier targets the public `demo-blob`; local mode still uses isolated Wrangler state.
 3. Copy `.dev.vars.example` to ignored `.dev.vars` and replace every local placeholder.
 4. Apply migrations: `npm run validate:migrations`.
 5. Run `npm run dev`.
