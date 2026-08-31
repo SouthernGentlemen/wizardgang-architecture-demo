@@ -52,6 +52,7 @@ ${groups.map((group) => `
 }
 
 export function renderDemo(env: Env, demo: DemoDefinition): Response {
+  const action = demo.action ?? { label: 'Run baseline demo', method: 'POST' as const, path: '/__api/demo/run', body: { demoId: demo.id } };
   const operationsNav = demo.group === 'Operations' ? `
 <section class="panel" aria-labelledby="operations-heading">
   <h2 id="operations-heading">Operations surface</h2>
@@ -89,9 +90,9 @@ ${demo.interfaces?.length ? `<section class="panel" aria-labelledby="interfaces-
   <ul>${demo.proves.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
 </section>
 <section class="panel" aria-labelledby="run-heading">
-  <h2 id="run-heading">Shared demo backend</h2>
-  <p>This scaffold action reaches the Worker and records a demo event in <code>DEMO_DB</code> / <code>demo-blob</code>. Route-specific behavior replaces this generic action as each architecture demo is implemented.</p>
-  <button type="button" data-run-demo="${escapeHtml(demo.id)}">Run baseline demo</button>
+  <h2 id="run-heading">Run or inspect the capability</h2>
+  <p>This action calls the live Worker interface listed above. Meaningful demo actions emit safe audit or operational evidence to <code>demo-blob</code>.</p>
+  <button type="button" data-run-demo>${escapeHtml(action.label)}</button>
   <pre aria-live="polite" data-demo-output>Ready.</pre>
 </section>
 <script>
@@ -101,12 +102,13 @@ ${demo.interfaces?.length ? `<section class="panel" aria-labelledby="interfaces-
   button?.addEventListener('click', async () => {
     output.textContent = 'Running…';
     try {
-      const response = await fetch('/__api/demo/run', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ demoId: button.dataset.runDemo })
+      const response = await fetch(${JSON.stringify(action.path)}, {
+        method: ${JSON.stringify(action.method)},
+        ${action.body === undefined ? '' : `headers: { 'content-type': 'application/json' }, body: JSON.stringify(${JSON.stringify(action.body)})`}
       });
-      output.textContent = JSON.stringify(await response.json(), null, 2);
+      const contentType = response.headers.get('content-type') || '';
+      const result = contentType.includes('application/json') ? await response.json() : await response.text();
+      output.textContent = JSON.stringify(result, null, 2);
     } catch (error) {
       output.textContent = String(error);
     }
