@@ -1,0 +1,14 @@
+{
+  "synthetic": true,
+  "currency": "USD",
+  "monthlyBudget": 10,
+  "thresholds": {
+    "warningPercent": 70,
+    "degradedPercent": 90
+  },
+  "policy": {
+    "normal": "All optional demo behavior available.",
+    "warning": "Surface budget warning; retain full critical operations.",
+    "degraded": "Reduce optional/noncritical demo work while keeping dashboard, health, version, admin, and offline routes available."
+  }
+}

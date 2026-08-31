@@ -1,0 +1,266 @@
+[
+  {
+    "route": "/",
+    "title": "Architecture Map",
+    "group": "Navigation",
+    "source": "src/ui/page.ts",
+    "status": "working-scaffold"
+  },
+  {
+    "route": "/edge",
+    "title": "Cloudflare Edge",
+    "group": "Runtime",
+    "source": "src/demos/edge.ts"
+  },
+  {
+    "route": "/workers",
+    "title": "Cloudflare Workers",
+    "group": "Runtime",
+    "source": "src/demos/workers.ts"
+  },
+  {
+    "route": "/durable-objects",
+    "title": "Durable Objects",
+    "group": "Runtime",
+    "source": "src/demos/durable-objects.ts"
+  },
+  {
+    "route": "/d1",
+    "title": "Cloudflare D1",
+    "group": "Runtime",
+    "source": "src/demos/d1.ts"
+  },
+  {
+    "route": "/r2",
+    "title": "Cloudflare R2",
+    "group": "Runtime",
+    "source": "src/demos/r2.ts"
+  },
+  {
+    "route": "/api",
+    "title": "API Architecture",
+    "group": "Integration",
+    "source": "src/demos/api.ts"
+  },
+  {
+    "route": "/api/rest",
+    "title": "REST / JSON",
+    "group": "Integration",
+    "source": "src/demos/rest.ts"
+  },
+  {
+    "route": "/api/openapi",
+    "title": "OpenAPI / Swagger 2.x",
+    "group": "Integration",
+    "source": "src/demos/openapi.ts"
+  },
+  {
+    "route": "/api/graphql",
+    "title": "GraphQL",
+    "group": "Integration",
+    "source": "src/demos/graphql.ts"
+  },
+  {
+    "route": "/api/webhooks",
+    "title": "Webhooks",
+    "group": "Integration",
+    "source": "src/demos/webhooks.ts"
+  },
+  {
+    "route": "/identity",
+    "title": "Authentication & Authorization",
+    "group": "Identity",
+    "source": "src/demos/identity.ts"
+  },
+  {
+    "route": "/identity/oauth",
+    "title": "OAuth 2.0",
+    "group": "Identity",
+    "source": "src/demos/oauth.ts"
+  },
+  {
+    "route": "/identity/sso",
+    "title": "Single Sign-On",
+    "group": "Identity",
+    "source": "src/demos/sso.ts"
+  },
+  {
+    "route": "/identity/saml",
+    "title": "SAML",
+    "group": "Identity",
+    "source": "src/demos/saml.ts"
+  },
+  {
+    "route": "/mcp",
+    "title": "Model Context Protocol",
+    "group": "AI Integration",
+    "source": "src/demos/mcp.ts"
+  },
+  {
+    "route": "/i18n",
+    "title": "Internationalization",
+    "group": "Interface Standards",
+    "source": "src/demos/i18n.ts"
+  },
+  {
+    "route": "/accessibility",
+    "title": "WCAG 2.2",
+    "group": "Interface Standards",
+    "source": "src/demos/accessibility.ts"
+  },
+  {
+    "route": "/git",
+    "title": "Git / GitHub",
+    "group": "Delivery",
+    "source": "src/demos/git.ts"
+  },
+  {
+    "route": "/git/versioning",
+    "title": "Git Versioning",
+    "group": "Delivery",
+    "source": "src/demos/versioning.ts"
+  },
+  {
+    "route": "/git/branching",
+    "title": "Branching",
+    "group": "Delivery",
+    "source": "src/demos/branching.ts"
+  },
+  {
+    "route": "/git/releases",
+    "title": "Release Management",
+    "group": "Delivery",
+    "source": "src/demos/releases.ts"
+  },
+  {
+    "route": "/git/actions",
+    "title": "GitHub Actions",
+    "group": "Delivery",
+    "source": "src/demos/actions.ts"
+  },
+  {
+    "route": "/environments",
+    "title": "Environment Separation",
+    "group": "Delivery",
+    "source": "src/demos/environments.ts"
+  },
+  {
+    "route": "/traceability",
+    "title": "Change Traceability",
+    "group": "Governance",
+    "source": "src/demos/traceability.ts"
+  },
+  {
+    "route": "/governance",
+    "title": "Governance",
+    "group": "Governance",
+    "source": "src/demos/governance.ts"
+  },
+  {
+    "route": "/governance/iso-27001",
+    "title": "ISO/IEC 27001 Alignment",
+    "group": "Governance",
+    "source": "src/demos/iso-27001.ts"
+  },
+  {
+    "route": "/governance/iso-42001",
+    "title": "ISO/IEC 42001 Alignment",
+    "group": "Governance",
+    "source": "src/demos/iso-42001.ts"
+  },
+  {
+    "route": "/evidence",
+    "title": "Evidence & Auditability",
+    "group": "Governance",
+    "source": "src/demos/evidence.ts"
+  },
+  {
+    "route": "/dashboard",
+    "title": "Operations Dashboard",
+    "group": "Operations",
+    "source": "src/demos/dashboard.ts"
+  },
+  {
+    "route": "/dashboard/uptime",
+    "title": "Uptime",
+    "group": "Operations",
+    "source": "src/demos/uptime.ts"
+  },
+  {
+    "route": "/dashboard/health",
+    "title": "Health",
+    "group": "Operations",
+    "source": "src/demos/health.ts"
+  },
+  {
+    "route": "/dashboard/docs",
+    "title": "Documentation",
+    "group": "Operations",
+    "source": "src/demos/docs.ts"
+  },
+  {
+    "route": "/dashboard/logs",
+    "title": "Log Viewer",
+    "group": "Operations",
+    "source": "src/demos/logs.ts"
+  },
+  {
+    "route": "/dashboard/billing",
+    "title": "Billing & Usage",
+    "group": "Operations",
+    "source": "src/demos/billing.ts"
+  },
+  {
+    "route": "/admin",
+    "title": "Demo Admin",
+    "group": "Operations",
+    "source": "src/ui/admin.ts",
+    "protected": true
+  },
+  {
+    "route": "/offline",
+    "title": "Demo Offline",
+    "group": "Operations",
+    "source": "src/ui/admin.ts"
+  },
+  {
+    "route": "/health",
+    "title": "Health JSON",
+    "group": "Operations",
+    "source": "src/api/operations.ts",
+    "machine": true,
+    "offline_reachable": true
+  },
+  {
+    "route": "/version",
+    "title": "Version JSON",
+    "group": "Operations",
+    "source": "src/api/operations.ts",
+    "machine": true,
+    "offline_reachable": true
+  },
+  {
+    "route": "/__api/operations/logs",
+    "title": "Operational Logs JSON",
+    "group": "Operations",
+    "source": "src/api/operations.ts",
+    "machine": true,
+    "offline_reachable": true
+  },
+  {
+    "route": "/__api/demo/run",
+    "title": "Baseline Demo Run API",
+    "group": "Internal Demo API",
+    "source": "src/api/demo.ts",
+    "machine": true,
+    "offline_behavior": "503"
+  },
+  {
+    "route": "/__api/demo/events",
+    "title": "Demo Events API",
+    "group": "Internal Demo API",
+    "source": "src/api/demo.ts",
+    "machine": true,
+    "offline_behavior": "503"
+  }
+]

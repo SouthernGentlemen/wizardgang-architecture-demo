@@ -1,0 +1,11 @@
+{
+  "status": "scaffolded",
+  "events": [
+    {
+      "type": "demo.record.changed",
+      "delivery": "HTTPS POST",
+      "payload": "JSON",
+      "security": "Signed delivery to be implemented without exposing signing secrets."
+    }
+  ]
+}

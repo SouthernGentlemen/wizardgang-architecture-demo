@@ -1,0 +1,96 @@
+import type { DemoDefinition, Env } from '../types';
+import { escapeHtml } from '../lib/html';
+import { sourceUrl } from '../lib/github';
+import { recentApplicationLogs } from '../lib/logs';
+import { shell } from '../ui/page';
+
+const demo: DemoDefinition = {
+  id: 'logs',
+  route: '/dashboard/logs',
+  title: 'Log Viewer',
+  group: 'Operations',
+  sourcePath: 'src/demos/logs.ts',
+  summary: 'Public-safe D1-backed application log viewer with bounded history, level/source filtering, and direct links to the code that emits and stores each log.',
+  proves: [
+    'Operational logs can be inspected without exposing Cloudflare credentials or private account data',
+    'Application events are persisted separately from audit/evidence records',
+    'Log retention and query limits are intentionally bounded for a public demo'
+  ],
+  status: 'scaffolded'
+};
+
+function detailText(value: string | null): string {
+  if (!value) return '';
+  try {
+    return JSON.stringify(JSON.parse(value), null, 2);
+  } catch {
+    return value;
+  }
+}
+
+export async function renderLogsDemo(request: Request, env: Env): Promise<Response> {
+  const url = new URL(request.url);
+  const level = url.searchParams.get('level') || '';
+  const source = url.searchParams.get('source') || '';
+  const limit = Math.max(1, Math.min(Number(url.searchParams.get('limit') || '50') || 50, 200));
+  const logs = await recentApplicationLogs(env, { level, source, limit });
+
+  const rows = logs.map((log) => `
+    <tr>
+      <td><time datetime="${escapeHtml(log.created_at)}">${escapeHtml(log.created_at)}</time></td>
+      <td><span class="badge">${escapeHtml(log.level)}</span></td>
+      <td><code>${escapeHtml(log.source)}</code></td>
+      <td><code>${escapeHtml(log.event_key)}</code></td>
+      <td>${escapeHtml(log.message)}</td>
+      <td>${log.route ? `<code>${escapeHtml(log.route)}</code>` : '—'}</td>
+      <td>${log.detail_json ? `<details><summary>View</summary><pre>${escapeHtml(detailText(log.detail_json))}</pre></details>` : '—'}</td>
+    </tr>`).join('');
+
+  const body = `
+<section>
+  <div class="eyebrow">Operations / /dashboard/logs</div>
+  <h1>Log Viewer</h1>
+  <p>${escapeHtml(demo.summary)}</p>
+  <div class="meta">
+    <span class="badge">${escapeHtml(demo.status)}</span>
+    <a href="${escapeHtml(sourceUrl(env, demo.sourcePath))}">View route source</a>
+    <a href="${escapeHtml(sourceUrl(env, 'src/lib/logs.ts'))}">View log persistence</a>
+    <a href="${escapeHtml(sourceUrl(env, 'migrations/0004_application_logs.sql'))}">View log schema</a>
+    <a href="${escapeHtml(sourceUrl(env, 'docs/OPERATIONS.md'))}">Operations design</a>
+  </div>
+</section>
+<section class="panel" aria-labelledby="filters-heading">
+  <h2 id="filters-heading">Filter logs</h2>
+  <form method="get" class="filters">
+    <label>Level
+      <select name="level">
+        <option value="">All</option>
+        ${['debug', 'info', 'warn', 'error'].map((item) => `<option value="${item}"${level === item ? ' selected' : ''}>${item}</option>`).join('')}
+      </select>
+    </label>
+    <label>Source
+      <input name="source" value="${escapeHtml(source)}" maxlength="80" placeholder="health, admin, d1…">
+    </label>
+    <label>Limit
+      <input name="limit" type="number" min="1" max="200" value="${limit}">
+    </label>
+    <button type="submit">Apply</button>
+    <a href="/dashboard/logs">Reset</a>
+  </form>
+</section>
+<section class="panel" aria-labelledby="viewer-heading">
+  <h2 id="viewer-heading">Recent application logs</h2>
+  <p class="subtle">Showing ${logs.length} row${logs.length === 1 ? '' : 's'}. Public logs must never contain passwords, authorization headers, cookies, tokens, secrets, payment data, or private Cloudflare account metadata.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Time</th><th>Level</th><th>Source</th><th>Event</th><th>Message</th><th>Route</th><th>Detail</th></tr></thead>
+      <tbody>${rows || '<tr><td colspan="7">No logs have been recorded yet.</td></tr>'}</tbody>
+    </table>
+  </div>
+  <p><a href="/__api/operations/logs?limit=${limit}${level ? `&level=${encodeURIComponent(level)}` : ''}${source ? `&source=${encodeURIComponent(source)}` : ''}">View JSON</a></p>
+</section>`;
+
+  return shell(env, demo.title, body, { cacheControl: 'no-store' });
+}
+
+export default demo;

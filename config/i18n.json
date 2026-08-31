@@ -1,0 +1,6 @@
+{
+  "defaultLocale": "en",
+  "supportedLocales": ["en", "es", "ar"],
+  "rtlLocales": ["ar"],
+  "fallbackLocale": "en"
+}
