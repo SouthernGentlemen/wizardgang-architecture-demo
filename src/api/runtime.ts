@@ -2,6 +2,7 @@ import type { Env } from '../types';
 import { recordDemoEvent } from '../lib/audit';
 import { HttpError, errorResponse, json, methodNotAllowed, readJson } from '../lib/http';
 import { recordApplicationLog } from '../lib/logs';
+import { currentBudgetState } from '../lib/billing';
 
 interface ComputeInput {
   operation?: unknown;
@@ -28,6 +29,10 @@ export async function edgeInspectionResponse(request: Request, env: Env): Promis
 export async function workerComputeResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'POST') return methodNotAllowed(['POST']);
   try {
+    const budget = await currentBudgetState(env);
+    if (budget.state === 'degraded') {
+      return json({ error: 'synthetic_budget_degraded', message: 'Optional Worker compute is paused by the controlled billing policy.', percent: budget.percent, criticalRoutesRemainAvailable: ['/dashboard', '/health', '/version', '/admin', '/offline'] }, { status: 429, headers: { 'cache-control': 'no-store', 'retry-after': '60' } });
+    }
     const body = await readJson<ComputeInput>(request, 4096);
     const operation = typeof body.operation === 'string' ? body.operation : '';
     if (!['sum', 'average', 'min', 'max'].includes(operation)) throw new HttpError(400, 'invalid_operation');

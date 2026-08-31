@@ -20,6 +20,8 @@ import { mcpResponse } from './api/mcp';
 import { authorizationDecisionResponse, oauthPkceResponse, samlInspectionResponse, samlMetadataResponse, ssoBoundaryResponse } from './api/identity';
 import { renderI18nDemo } from './demos/i18n-page';
 import { renderAccessibilityDemo } from './demos/accessibility-page';
+import { billingScenarioResponse } from './api/billing';
+import { renderBilling, renderDashboard, renderDocs, renderHealth, renderUptime } from './demos/operations-pages';
 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/'];
@@ -31,6 +33,7 @@ export function bypassOfflineGate(path: string): boolean {
     || path === '/health'
     || path === '/version'
     || path === '/__api/operations/logs'
+    || path === '/__api/operations/billing'
     || path === OPERATIONS_PREFIX
     || path.startsWith(`${OPERATIONS_PREFIX}/`);
 }
@@ -125,10 +128,16 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/__api/identity/sso') return ssoBoundaryResponse(request);
   if (path === '/identity/saml/metadata') return samlMetadataResponse(request);
   if (path === '/__api/identity/saml/inspect') return samlInspectionResponse(request);
+  if (path === '/__api/operations/billing') return billingScenarioResponse(request, env);
 
   if (request.method === 'GET' && path === '/') return renderIndex(env, demos);
   if (request.method === 'GET' && path === '/i18n') return renderI18nDemo(request, env);
   if (request.method === 'GET' && path === '/accessibility') return renderAccessibilityDemo(request, env);
+  if (request.method === 'GET' && path === '/dashboard') return renderDashboard(env);
+  if (request.method === 'GET' && path === '/dashboard/uptime') return renderUptime(env);
+  if (request.method === 'GET' && path === '/dashboard/health') return renderHealth(env);
+  if (request.method === 'GET' && path === '/dashboard/docs') return renderDocs(env);
+  if (request.method === 'GET' && path === '/dashboard/billing') return renderBilling(env);
   if (request.method === 'GET' && path === '/dashboard/logs') return renderLogsDemo(request, env);
   if (request.method === 'POST' && path === '/__api/demo/run') return runBaselineDemo(request, env);
   if (request.method === 'GET' && path === '/__api/demo/events') return listDemoEvents(request, env);
