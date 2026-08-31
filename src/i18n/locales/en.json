@@ -1,4 +1,19 @@
 {
   "app.title": "WizardGang Architecture Demo",
-  "offline.title": "Oops! demo is down."
+  "offline.title": "Oops! demo is down.",
+  "demo.eyebrow": "Interface Standards / Internationalization",
+  "demo.title": "Internationalization in the interface",
+  "demo.summary": "Switch locale to inspect translated content, locale-aware formats, pluralization, and right-to-left layout.",
+  "source": "View page source",
+  "resource": "View locale resource",
+  "controls": "Internationalization controls",
+  "language": "Language",
+  "count": "Item count",
+  "apply": "Apply",
+  "output": "Localized output",
+  "plural": "Pluralization",
+  "items.one": "{count} architecture item",
+  "items.other": "{count} architecture items",
+  "date": "Date",
+  "currency": "Currency"
 }

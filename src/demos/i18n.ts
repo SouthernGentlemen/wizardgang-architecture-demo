@@ -8,11 +8,13 @@ const demo: DemoDefinition = {
   "sourcePath": "src/demos/i18n.ts",
   "summary": "Locale-ready interface architecture including language, formatting, translation resources, and RTL readiness.",
   "proves": [
-    "Correct document language",
-    "Locale-ready route scaffold",
-    "Accessible localization surface"
+    "Translated resources for English, Spanish, and Arabic",
+    "Locale-aware number, date, currency, and plural formatting",
+    "Correct document language and right-to-left direction"
   ],
-  "status": "scaffolded"
+  "status": "working",
+  "interfaces": [{ "method": "GET", "path": "/i18n?locale=ar&count=3", "description": "Render the live locale and RTL demonstration." }],
+  "supportingSources": [{ "label": "View rendered i18n page", "path": "src/demos/i18n-page.ts" }, { "label": "View locale configuration", "path": "config/i18n.json" }]
 };
 
 export default demo;

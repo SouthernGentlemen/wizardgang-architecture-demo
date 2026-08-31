@@ -1,4 +1,19 @@
 {
   "app.title": "Demostración de arquitectura de WizardGang",
-  "offline.title": "¡Vaya! La demostración no está disponible."
+  "offline.title": "¡Vaya! La demostración no está disponible.",
+  "demo.eyebrow": "Estándares de interfaz / Internacionalización",
+  "demo.title": "Internacionalización en la interfaz",
+  "demo.summary": "Cambia la configuración regional para inspeccionar traducciones, formatos, pluralización y diseño de derecha a izquierda.",
+  "source": "Ver código de la página",
+  "resource": "Ver recurso de idioma",
+  "controls": "Controles de internacionalización",
+  "language": "Idioma",
+  "count": "Cantidad de elementos",
+  "apply": "Aplicar",
+  "output": "Resultado localizado",
+  "plural": "Pluralización",
+  "items.one": "{count} elemento de arquitectura",
+  "items.other": "{count} elementos de arquitectura",
+  "date": "Fecha",
+  "currency": "Moneda"
 }

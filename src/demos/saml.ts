@@ -8,11 +8,14 @@ const demo: DemoDefinition = {
   "sourcePath": "src/demos/saml.ts",
   "summary": "SAML enterprise identity integration demonstration surface.",
   "proves": [
-    "Stable SAML exhibit route",
-    "Metadata/config scaffold",
-    "Application authorization remains separate"
+    "Served provider-neutral service-provider metadata",
+    "Explicit assertion signature, issuer, audience, time, and replay requirements",
+    "Application role policy remains separate from SAML authentication"
   ],
-  "status": "scaffolded"
+  "status": "working",
+  "interfaces": [{ "method": "GET", "path": "/identity/saml/metadata", "description": "Fetch non-secret service-provider metadata." }, { "method": "GET", "path": "/__api/identity/saml/inspect", "description": "Inspect the required validation and authorization boundary." }],
+  "supportingSources": [{ "label": "View SAML boundary implementation", "path": "src/api/identity.ts" }, { "label": "View metadata example", "path": "contracts/identity/saml-metadata.example.xml" }],
+  "action": { "label": "Inspect the SAML boundary", "method": "GET", "path": "/__api/identity/saml/inspect" }
 };
 
 export default demo;
