@@ -1,6 +1,7 @@
 import type { Env } from './types';
 import { demos, demosByRoute } from './demos/registry';
 import { renderDemo, renderIndex, renderNotFound } from './ui/page';
+import { recordsConsole } from './demos/records-console';
 import { renderAdmin, renderOffline } from './ui/admin';
 import { listDemoEvents, runBaselineDemo } from './api/demo';
 import { healthResponse, logsResponse, versionResponse } from './api/operations';
@@ -27,6 +28,8 @@ import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
 const API_PATHS = new Set(['/graphql', '/mcp']);
+/** Routes whose whole point is the D1-backed record resource, so they get the live console. */
+const RECORD_CONSOLE_ROUTES = new Set(['/d1', '/api/rest']);
 
 export function bypassOfflineGate(path: string): boolean {
   return path === '/admin'
@@ -150,7 +153,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
 
   if (request.method === 'GET') {
     const demo = demosByRoute.get(path);
-    if (demo) return renderDemo(env, demo);
+    if (demo) return renderDemo(env, demo, demos, RECORD_CONSOLE_ROUTES.has(path) ? recordsConsole() : '');
   }
 
   return renderNotFound(env);
