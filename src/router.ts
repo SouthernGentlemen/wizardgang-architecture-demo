@@ -25,7 +25,7 @@ import { renderBilling, renderDashboard, renderDocs, renderHealth, renderUptime 
 import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } from './api/governance';
 
 const OPERATIONS_PREFIX = '/dashboard';
-const API_PREFIXES = ['/__api/', '/v1/'];
+const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
 const API_PATHS = new Set(['/graphql', '/mcp']);
 
 export function bypassOfflineGate(path: string): boolean {
@@ -44,8 +44,10 @@ export function isApiLike(path: string): boolean {
 }
 
 export function wantsHtml(request: Request, path: string): boolean {
-  if (request.method !== 'GET' || isApiLike(path)) return false;
+  if (request.method !== 'GET') return false;
   const accept = request.headers.get('accept') || '';
+  if (path === '/mcp') return accept.includes('text/html') || accept === '';
+  if (isApiLike(path)) return false;
   return accept.includes('text/html') || accept === '';
 }
 

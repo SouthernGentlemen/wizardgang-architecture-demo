@@ -29,7 +29,7 @@ export async function requireAdmin(request: Request, env: Env): Promise<AdminIde
     return new Response('Demo admin is not configured.', { status: 503, headers: { 'cache-control': 'no-store' } });
   }
   const header = request.headers.get('authorization');
-  if (!header?.startsWith('Basic ')) return unauthorized();
+  if (!header?.startsWith('Basic ') || header.length > 4096) return unauthorized();
   try {
     const decoded = atob(header.slice(6));
     const split = decoded.indexOf(':');
