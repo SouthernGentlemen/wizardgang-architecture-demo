@@ -2,7 +2,7 @@
 
 The stable route contract was established first; genuine capabilities were then implemented without renaming the public human routes. Capability IDs below are design-plan references, not permanent Git change IDs.
 
-The interaction-depth backlog for R2, D1, i18n, WCAG, Git, webhooks, and GraphQL is specified in [`INTERACTIVE-DEMO-SPEC.md`](INTERACTIVE-DEMO-SPEC.md) and was implemented for v0.5.0 by DEMO-037 through DEMO-044. Production deployment evidence is recorded separately only after exact-tag verification.
+The interaction-depth backlog for R2, D1, i18n, WCAG, Git, webhooks, and GraphQL is specified in [`INTERACTIVE-DEMO-SPEC.md`](INTERACTIVE-DEMO-SPEC.md), was implemented for v0.5.0 by DEMO-037 through DEMO-044, and was deployed from the verified annotated tag on 2026-09-01. Exact production evidence is recorded separately in [`history/DEPLOYMENTS.md`](history/DEPLOYMENTS.md).
 
 | Sequence | Capability | Status |
 |---|---|---|

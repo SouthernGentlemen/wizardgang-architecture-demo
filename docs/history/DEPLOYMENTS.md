@@ -127,3 +127,29 @@ Each record ties one production deployment to one annotated release tag. A deplo
 **Rollback:** Deploy v0.4.0.
 
 **Note:** GitHub Release workflow 33516080109 completed end to end, including exact-tag validation, remote migration check, tagged Worker deployment, automated public identity verification, and independent post-deploy API interaction and visual inspection.
+
+---
+
+## DEP-DEMO-006
+
+**Product:** WizardGang Architecture Demo
+
+**Release:** v0.5.0
+
+**Commit:** `a6438a2ec361a36311958ece1b5cb12b5e1242fd`
+
+**Environment:** production
+
+**Date:** 2026-09-01
+
+**URL:** https://demo.wizardgang.ai
+
+**Changes:** DEMO-035 through DEMO-045
+
+**Validation:** PASS — annotated-tag reproduction, GitHub Release publication, controlled-history validation, 74 tests across 17 files, generated 17-route HTML registry and 59-entry full contract, six synchronized locales with 27 keys, typecheck, contract/security checks, dependency audit with no vulnerabilities, 2,725.27 KiB compressed production build, remote migration `0008_interactive_demo.sql`, exact live `/version` identity, operational Worker/D1/R2/Durable Object health, Japanese and Arabic localization, accessible and intentionally broken comparison modes, same-origin GraphiQL with schema documentation, eight public GraphQL records, three visitor-scoped D1 seed users, live GitHub release/commit/Actions evidence, a real R2 upload/preview/delete/reset lifecycle, and visitor webhook delivery/list/reset lifecycle.
+
+**Previous:** v0.4.1
+
+**Rollback:** Deploy v0.4.1.
+
+**Note:** GitHub Release workflow 33531585459 completed end to end, including exact-tag validation, remote migration, tagged Worker deployment, and automated public identity checks. Independent API and in-app browser verification confirmed the interactive laboratories and removed all temporary R2 and visitor webhook test state. GitHub branch-protection controls remain explicitly unverifiable without the optional managed read token.
