@@ -58,6 +58,7 @@ const machine = [
   { route: '/v1/openapi.json', title: 'Swagger 2.0 Contract', group: 'Interfaces API', source: 'src/api/openapi.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/graphql', title: 'GraphQL API and GraphiQL', group: 'Interfaces API', source: 'src/api/graphql.ts', method: 'GET, POST', machine: true, offline_behavior: '503' },
   { route: '/graphql/schema', title: 'GraphQL Schema', group: 'Interfaces API', source: 'src/api/graphql.ts', method: 'GET', machine: true, offline_behavior: '503' },
+  { route: '/__assets/graphiql/{asset}', title: 'Locally Bundled GraphiQL Assets', group: 'Interfaces API', source: 'src/ui/graphiql-assets.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/v1/webhooks/demo', title: 'Signed Webhook Receiver', group: 'Interfaces API', source: 'src/api/webhooks.ts', method: 'POST', machine: true, offline_behavior: '503' },
   { route: '/v1/webhooks/github', title: 'Verified GitHub Webhook Receiver', group: 'Interfaces API', source: 'src/api/webhooks.ts', method: 'POST', machine: true, offline_behavior: '503' },
   { route: '/__api/webhooks/demo', title: 'Visitor Signed Webhook Action', group: 'Interfaces API', source: 'src/api/webhooks.ts', method: 'POST', machine: true, offline_behavior: '503' },

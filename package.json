@@ -29,6 +29,7 @@
     "wrangler": "^4.33.1"
   },
   "dependencies": {
+    "@graphql-yoga/graphiql": "^4.5.0",
     "axe-core": "^4.13.0",
     "graphql": "^16.14.2",
     "graphql-yoga": "^5.22.0"

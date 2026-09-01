@@ -6,6 +6,7 @@ import { ensureDemoSession, withDemoSession, type DemoSession } from '../lib/dem
 import { createDemoUser, deleteDemoUser, getDemoUser, listDemoUsers, updateDemoUser } from '../lib/demo-users';
 import { json, methodNotAllowed, withSecurityHeaders } from '../lib/http';
 import { recordApplicationLog } from '../lib/logs';
+import { localGraphiqlResponse } from '../ui/graphiql-assets';
 
 interface RecordRow { id: number; namespace: string; record_key: string; value_json: string }
 interface GraphQLServerContext { env: Env; request: Request; session?: DemoSession }
@@ -94,15 +95,6 @@ const schema = createSchema<GraphQLServerContext>({
   },
 });
 
-const defaultQuery = `query Users {
-  users {
-    id
-    name
-    email
-    role
-  }
-}`;
-
 const yoga = createYoga<GraphQLServerContext>({
   schema,
   graphqlEndpoint: '/graphql',
@@ -117,7 +109,7 @@ const yoga = createYoga<GraphQLServerContext>({
       return new GraphQLError(message, { extensions: { code: 'INTERNAL_SERVER_ERROR' } });
     },
   },
-  graphiql: { title: 'WizardGang GraphiQL', defaultQuery, credentials: 'same-origin', shouldPersistHeaders: false },
+  graphiql: false,
 });
 
 function documentMetrics(document: DocumentNode): { fields: number; depth: number } {
@@ -148,25 +140,25 @@ async function limitsFailure(request: Request): Promise<Response | null> {
   if (typeof query !== 'string') return null;
   try {
     const metrics = documentMetrics(parse(query));
-    if (metrics.depth > 8 || metrics.fields > 50) return json({ errors: [{ message: 'GraphQL operation exceeds the public demo complexity limit.' }] }, { status: 400 });
+    const introspection = /\b__(schema|type)\b/.test(query);
+    const depthLimit = introspection ? 20 : 8;
+    const fieldLimit = introspection ? 500 : 50;
+    if (metrics.depth > depthLimit || metrics.fields > fieldLimit) return json({ errors: [{ message: 'GraphQL operation exceeds the public demo complexity limit.' }] }, { status: 400 });
   } catch { /* Yoga returns the canonical parse error. */ }
   return null;
 }
 
-function secured(response: Response, session?: DemoSession, graphiql = false): Response {
+function secured(response: Response, session?: DemoSession): Response {
   const headers = new Headers(response.headers);
-  if (graphiql) {
-    headers.set('content-security-policy', "default-src 'none'; connect-src 'self' https://unpkg.com; img-src data:; script-src 'unsafe-inline' https://unpkg.com blob:; style-src 'unsafe-inline' https://unpkg.com; worker-src blob:; frame-ancestors 'self'; base-uri 'none'; form-action 'self'");
-    headers.set('x-frame-options', 'SAMEORIGIN');
-    headers.set('x-content-type-options', 'nosniff');
-    headers.set('referrer-policy', 'no-referrer');
-  } else withSecurityHeaders(headers);
+  withSecurityHeaders(headers);
   const wrapped = new Response(response.body, { status: response.status, statusText: response.statusText, headers });
   return session ? withDemoSession(wrapped, session) : wrapped;
 }
 
 export async function graphqlResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'GET' && request.method !== 'POST') return methodNotAllowed(['GET', 'POST']);
+  const acceptsHtml = (request.headers.get('accept') || '').includes('text/html');
+  if (request.method === 'GET' && acceptsHtml) return localGraphiqlResponse(request);
   const failure = await limitsFailure(request);
   if (failure) return failure;
   let session: DemoSession | undefined;
@@ -179,8 +171,7 @@ export async function graphqlResponse(request: Request, env: Env): Promise<Respo
     const payload = await response.clone().json() as { data?: unknown; errors?: unknown[] };
     if (payload.data === undefined && payload.errors?.length) response = new Response(response.body, { status: 400, headers: response.headers });
   }
-  const acceptsHtml = (request.headers.get('accept') || '').includes('text/html');
-  return secured(response, session, request.method === 'GET' && acceptsHtml);
+  return secured(response, session);
 }
 
 export function graphqlSchemaResponse(request: Request): Response {

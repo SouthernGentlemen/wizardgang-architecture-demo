@@ -33,6 +33,7 @@ import { accessibilityLabResponse } from './ui/accessibility-lab';
 import { webhookConsole } from './demos/webhook-console';
 import { gitEvidenceResponse } from './api/git-evidence';
 import { renderGitDemo } from './demos/git-page';
+import { graphiqlAssetResponse } from './ui/graphiql-assets';
 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
@@ -163,6 +164,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/v1/openapi.json') return openApiResponse(request);
   if (path === '/graphql') return graphqlResponse(request, env);
   if (path === '/graphql/schema') return graphqlSchemaResponse(request);
+  if (path.startsWith('/__assets/graphiql/')) return graphiqlAssetResponse(request, path.slice('/__assets/graphiql/'.length));
   if (path === '/v1/webhooks/demo') return webhookReceiptResponse(request, env);
   if (path === '/v1/webhooks/github') return githubWebhookResponse(request, env);
   if (path === '/__api/webhooks/demo') return webhookDemoResponse(request, env);
