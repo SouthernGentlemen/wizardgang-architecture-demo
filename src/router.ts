@@ -30,7 +30,7 @@ const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
 const API_PATHS = new Set(['/graphql', '/mcp']);
 /** Routes whose whole point is the D1-backed record resource, so they get the live console. */
-const RECORD_CONSOLE_ROUTES = new Set(['/d1', '/api/rest']);
+const RECORD_CONSOLE_ROUTES = new Set(['/d1', '/api']);
 
 export const RETIRED_PAGE_REDIRECTS = new Map<string, string>([
   ['/api/rest', '/api#rest'],
@@ -180,7 +180,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
 
   if (request.method === 'GET') {
     const demo = demosByRoute.get(path);
-    if (demo) return renderDemo(env, demo, demos, RECORD_CONSOLE_ROUTES.has(path) ? recordsConsole() : '');
+    if (demo) return renderDemo(env, demo, demos, RECORD_CONSOLE_ROUTES.has(path) ? recordsConsole(path === '/api' ? 'rest' : 'records') : '');
   }
 
   return renderNotFound(env);
