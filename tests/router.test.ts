@@ -109,9 +109,9 @@ describe('public route contract', () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/git', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     for (const anchor of ['source-of-truth', 'versioning', 'branching', 'actions', 'releases', 'environments']) expect(html).toContain(`id="${anchor}"`);
-    expect(html.match(/data-run-demo="\d+"/g)).toHaveLength(1);
-    expect(html).toContain('http-get');
-    expect(html).toContain('/version');
+    expect(html).toContain('/__api/git/evidence');
+    expect(html).toContain('data-evidence-refresh');
+    expect(html).toContain('Not publicly verifiable');
   });
 
   it('renders consolidated governance controls, evidence anchors, and the alignment notice', async () => {

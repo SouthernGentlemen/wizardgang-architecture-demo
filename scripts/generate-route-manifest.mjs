@@ -52,6 +52,7 @@ const machine = [
   { route: '/__api/r2/files/{id}', title: 'R2 Visitor File', group: 'Platform API', source: 'src/api/r2.ts', method: 'GET, DELETE', machine: true, offline_behavior: '503' },
   { route: '/__api/r2/reset', title: 'R2 Visitor Reset', group: 'Platform API', source: 'src/api/r2.ts', method: 'POST', machine: true, offline_behavior: '503' },
   { route: '/__api/accessibility/lab', title: 'Sandboxed Accessibility Lab', group: 'Standards API', source: 'src/ui/accessibility-lab.ts', method: 'GET', machine: true, offline_behavior: '503' },
+  { route: '/__api/git/evidence', title: 'Live GitHub Delivery Evidence', group: 'Delivery & Governance API', source: 'src/api/git-evidence.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/v1/demo-records', title: 'REST Demo Records', group: 'Interfaces API', source: 'src/api/records.ts', method: 'GET, POST', machine: true, offline_behavior: '503' },
   { route: '/v1/demo-records/{key}', title: 'REST Demo Record', group: 'Interfaces API', source: 'src/api/records.ts', method: 'GET, DELETE', machine: true, offline_behavior: '503' },
   { route: '/v1/openapi.json', title: 'Swagger 2.0 Contract', group: 'Interfaces API', source: 'src/api/openapi.ts', method: 'GET', machine: true, offline_behavior: '503' },

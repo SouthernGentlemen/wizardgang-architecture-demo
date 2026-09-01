@@ -31,6 +31,8 @@ import { graphqlConsole } from './demos/graphql-console';
 import { renderR2Demo } from './demos/r2-page';
 import { accessibilityLabResponse } from './ui/accessibility-lab';
 import { webhookConsole } from './demos/webhook-console';
+import { gitEvidenceResponse } from './api/git-evidence';
+import { renderGitDemo } from './demos/git-page';
 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
@@ -177,6 +179,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/__api/governance/security-controls') return securityControlsResponse(request, env);
   if (path === '/__api/governance/ai-evaluation') return aiEvaluationResponse(request, env);
   if (path === '/__api/accessibility/lab') return accessibilityLabResponse(request);
+  if (path === '/__api/git/evidence') return gitEvidenceResponse(request, env);
 
   if (request.method === 'GET') {
     const redirect = RETIRED_PAGE_REDIRECTS.get(path);
@@ -189,6 +192,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (request.method === 'GET' && path === '/r2') return renderR2Demo(env);
   if (request.method === 'GET' && path === '/i18n') return renderI18nDemo(request, env);
   if (request.method === 'GET' && path === '/accessibility') return renderAccessibilityDemo(request, env);
+  if (request.method === 'GET' && path === '/git') return renderGitDemo(env);
   if (request.method === 'GET' && path === '/dashboard') return renderDashboard(env);
   if (request.method === 'GET' && path === '/dashboard/uptime') return renderUptime(env);
   if (request.method === 'GET' && path === '/dashboard/docs') return renderDocs(env);
