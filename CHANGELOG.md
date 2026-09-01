@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## 0.5.0 — 2026-09-01
+
+- Added a session-isolated D1 users-and-tasks lab shared with the executable GraphQL interface.
+- Added a bounded R2 mini file manager with upload quotas, metadata, preview, download, deletion, and visitor-scoped reset.
+- Upgraded the GraphQL endpoint to GraphQL Yoga and bundled GraphiQL locally for same-origin schema exploration and queries.
+- Expanded localization to English, Spanish, French, German, Japanese, and Arabic with instant switching, an `Intl` inspector, and RTL rendering.
+- Added isolated accessible and intentionally broken comparison labs with locally bundled axe-core analysis and manual test guidance.
+- Added a verified GitHub-compatible webhook receiver and visitor-safe delivery viewer with replay protection and sanitized summaries.
+- Replaced static Git delivery claims with live public evidence for branches, commits, pull requests, Actions, tags, releases, and verifiable controls.
+
 ## 0.4.1 — 2026-09-01
 
 - Simplified every public interface with smaller hierarchy, compact status and documentation surfaces, progressive disclosure for supporting references and schemas, and hidden request/response output until it is used.

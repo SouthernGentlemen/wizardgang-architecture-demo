@@ -1,6 +1,6 @@
 # Interactive demo implementation specification
 
-Status: implementation-ready backlog over the working v0.4.1 capability baseline. This document is a specification, not evidence that the interaction upgrades are already deployed.
+Status: implemented by DEMO-037 through DEMO-044 for the v0.5.0 release. This document remains the design specification; deployed evidence is recorded only by the exact-tag release and deployment records.
 
 ## Objective
 
