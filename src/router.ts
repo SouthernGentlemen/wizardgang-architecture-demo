@@ -29,6 +29,7 @@ import { d1LabResponse } from './api/d1-lab';
 import { renderD1Demo } from './demos/d1-page';
 import { graphqlConsole } from './demos/graphql-console';
 import { renderR2Demo } from './demos/r2-page';
+import { accessibilityLabResponse } from './ui/accessibility-lab';
 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
@@ -171,6 +172,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/__api/evidence/traceability') return traceabilityResponse(request, env);
   if (path === '/__api/governance/security-controls') return securityControlsResponse(request, env);
   if (path === '/__api/governance/ai-evaluation') return aiEvaluationResponse(request, env);
+  if (path === '/__api/accessibility/lab') return accessibilityLabResponse(request);
 
   if (request.method === 'GET') {
     const redirect = RETIRED_PAGE_REDIRECTS.get(path);

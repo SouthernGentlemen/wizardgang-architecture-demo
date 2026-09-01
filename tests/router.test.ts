@@ -74,6 +74,9 @@ describe('public route contract', () => {
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/health'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/version'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/__api/operations/logs'), environment)).status).toBe(200);
+    const accessibilityFrame = await routeRequest(new Request('https://demo.wizardgang.ai/__api/accessibility/lab?mode=accessible'), environment);
+    expect(accessibilityFrame.status).toBe(200);
+    expect(accessibilityFrame.headers.get('content-type')).toContain('text/html');
   });
 
   it('renders the consolidated API interfaces as runnable anchored sections', async () => {

@@ -3,6 +3,9 @@
   "name": "wizardgang-architecture-demo",
   "main": "src/index.ts",
   "compatibility_date": "2026-08-31",
+  "rules": [
+    { "type": "Text", "globs": ["**/axe.min.js"], "fallthrough": true }
+  ],
   "routes": [
     { "pattern": "demo.wizardgang.ai", "custom_domain": true }
   ],

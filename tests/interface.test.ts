@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { renderAccessibilityDemo } from '../src/demos/accessibility-page';
 import { renderI18nDemo } from '../src/demos/i18n-page';
 import { styles } from '../src/ui/styles';
+import { accessibilityLabResponse } from '../src/ui/accessibility-lab';
 import type { Env } from '../src/types';
 
 const env = {
@@ -37,19 +38,29 @@ describe('internationalized interface', () => {
 });
 
 describe('accessible interaction surface', () => {
-  it('associates validation help and error text with the labeled control', async () => {
-    const html = await renderAccessibilityDemo(new Request('https://demo.example/accessibility?name=A'), env).text();
+  it('keeps parent controls accessible and isolates opt-in broken content', async () => {
+    const html = await renderAccessibilityDemo(new Request('https://demo.example/accessibility'), env).text();
     expect(html).toContain('class="skip-link"');
-    expect(html).toContain('<label for="name">');
-    expect(html).toContain('aria-describedby="name-help name-error"');
-    expect(html).toContain('aria-invalid="true"');
-    expect(html).toContain('<strong>Error:</strong>');
+    expect(html).toContain('sandbox="allow-scripts allow-forms"');
+    expect(html).toContain('data-a11y-mode="accessible" aria-pressed="true"');
+    expect(html).toContain('data-broken-warning hidden');
+    expect(html.match(/class="criterion-card"/g)).toHaveLength(12);
+    expect(html).toContain('axe-core / partial coverage');
   });
 
-  it('uses an explicit status role for a successful submission', async () => {
-    const html = await renderAccessibilityDemo(new Request('https://demo.example/accessibility?name=Ada'), env).text();
-    expect(html).toContain('role="status"');
-    expect(html).toContain('Hello, Ada');
+  it('ships deterministic accessible and broken frame variants with local axe execution', async () => {
+    const accessible = await accessibilityLabResponse(new Request('https://demo.example/__api/accessibility/lab?mode=accessible')).text();
+    expect(accessible).toContain('<html lang="en">');
+    expect(accessible).toContain('<label for="email">');
+    expect(accessible).toContain('role="dialog" aria-modal="true"');
+    expect(accessible).toContain("axe.run(document");
+    expect(accessible).toContain("type:'wg-accessibility-report'");
+
+    const broken = await accessibilityLabResponse(new Request('https://demo.example/__api/accessibility/lab?mode=broken')).text();
+    expect(broken).toContain('<html><head>');
+    expect(broken).toContain('onpaste="return false"');
+    expect(broken).toContain('outline:none!important');
+    expect(broken).toContain('<img class="product" src=');
   });
 });
 

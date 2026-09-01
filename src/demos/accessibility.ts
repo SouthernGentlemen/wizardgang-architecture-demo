@@ -6,14 +6,14 @@ const demo: DemoDefinition = {
   "title": "WCAG 2.2",
   "group": "Standards",
   "sourcePath": "src/demos/accessibility.ts",
-  "summary": "Accessibility engineering demonstration for semantic HTML, keyboard use, focus, labels, errors, and predictable navigation.",
+  "summary": "Isolated WCAG 2.2 before-and-after laboratory with accessible behavior, opt-in teaching failures, axe-core output, and manual evidence.",
   "proves": [
-    "Semantic landmarks, headings, labels, and native disclosure",
-    "Skip link, keyboard-visible focus, and responsive text reflow",
-    "Understandable validation and status output that does not rely on color"
+    "Twelve visible accessible-versus-broken behavior comparisons",
+    "Sandboxed teaching failures that cannot invalidate the surrounding controls",
+    "Locally bundled axe-core findings labeled as partial automated coverage"
   ],
   "status": "working",
-  "interfaces": [{ "method": "GET", "path": "/accessibility?name=Ada", "description": "Run the server-rendered accessible form and status interaction." }],
+  "interfaces": [{ "method": "GET", "path": "/accessibility?mode=accessible", "description": "Run the isolated WCAG 2.2 comparison laboratory." }],
   "supportingSources": [{ "label": "View rendered accessibility page", "path": "src/demos/accessibility-page.ts" }, { "label": "View accessibility checklist", "path": "docs/ACCESSIBILITY.md" }]
 };
 
