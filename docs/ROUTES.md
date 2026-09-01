@@ -70,6 +70,11 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | `/__api/edge/inspect` | `GET` | Allowlisted edge request context | `src/api/runtime.ts` |
 | `/__api/workers/compute` | `POST` | Bounded stateless Worker compute | `src/api/runtime.ts` |
 | `/__api/durable/counter` | `GET`, `POST` | Coordinated Durable Object counter | `src/api/durable.ts` |
+| `/__api/d1/users` | `GET`, `POST` | Session-scoped D1 demo users | `src/api/d1-lab.ts` |
+| `/__api/d1/users/{id}` | `PATCH`, `DELETE` | Session-scoped D1 demo user | `src/api/d1-lab.ts` |
+| `/__api/d1/tasks` | `GET`, `POST` | Session-scoped D1 demo tasks | `src/api/d1-lab.ts` |
+| `/__api/d1/tasks/{id}` | `PATCH`, `DELETE` | Session-scoped D1 demo task | `src/api/d1-lab.ts` |
+| `/__api/d1/reset` | `POST` | Reset the current D1 visitor sandbox | `src/api/d1-lab.ts` |
 | `/__api/r2/demo` | `POST` | Visitor-safe R2 write | `src/api/r2.ts` |
 | `/__api/r2/object` | `GET`, `PUT`, `DELETE` | R2 object with D1 metadata | `src/api/r2.ts` |
 | `/v1/demo-records` | `GET`, `POST` | REST record collection | `src/api/records.ts` |

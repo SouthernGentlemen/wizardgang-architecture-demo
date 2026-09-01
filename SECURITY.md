@@ -13,7 +13,7 @@ This is a public architecture demonstration. Public source is intentional; secre
 
 Use Cloudflare/GitHub managed secret stores for production and ignored `.dev.vars` for local-only admin placeholders.
 
-The current Worker secrets are `DEMO_ADMIN_USER`, `DEMO_ADMIN_PASSWORD`, `DEMO_API_TOKEN`, and `WEBHOOK_DEMO_SECRET`. Values are never returned by health, version, logs, evidence, or source-link surfaces.
+The current Worker secrets are `DEMO_ADMIN_USER`, `DEMO_ADMIN_PASSWORD`, `DEMO_API_TOKEN`, `WEBHOOK_DEMO_SECRET`, and `DEMO_SESSION_SECRET`. Values are never returned by health, version, logs, evidence, or source-link surfaces.
 
 ## Demo administration
 
