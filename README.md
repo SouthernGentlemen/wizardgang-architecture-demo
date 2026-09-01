@@ -11,10 +11,10 @@ The canonical standard is [`docs/ARCHITECTURE-STANDARD.md`](docs/ARCHITECTURE-ST
 
 Seventeen public HTML routes organize the architecture into five layers. Each layer has a dedicated owner under `src/demos/`, live implementation, observable behavior, and direct public source/evidence links.
 
-- **Platform:** safe edge-context inspection, bounded stateless Worker compute, D1 CRUD, real R2 objects with D1 metadata, and a coordinated Durable Object counter.
-- **Interfaces:** REST/JSON, a served Swagger 2.0 contract, GraphQL, signed webhooks, provider-neutral OAuth/SSO/SAML boundaries, and a JSON-RPC MCP read tool under explicit application policies.
-- **Standards:** English, Spanish, and Arabic resources; number/date/currency/plural formatting; RTL rendering; and inspectable semantic/keyboard/form/status accessibility behavior.
-- **Delivery and governance:** commit/release/runtime traceability, CI and tag-only deployment workflows, public evidence links, security-control mapping, and an executable MCP boundary evaluation.
+- **Platform:** safe edge-context inspection, bounded stateless Worker compute, a session-isolated D1 users-and-tasks lab, a bounded R2 mini file manager with D1 metadata, and a coordinated Durable Object counter.
+- **Interfaces:** REST/JSON, a served Swagger 2.0 contract, GraphQL Yoga with locally bundled GraphiQL, verified GitHub-compatible webhooks, provider-neutral OAuth/SSO/SAML boundaries, and a JSON-RPC MCP read tool under explicit application policies.
+- **Standards:** English, Spanish, French, German, Japanese, and Arabic resources; instant switching and `Intl` inspection; RTL rendering; and accessible/broken comparison labs with locally bundled axe-core analysis.
+- **Delivery and governance:** live GitHub branch/commit/pull-request/Actions/tag/release evidence, runtime traceability, CI and tag-only deployment workflows, security-control mapping, and an executable MCP boundary evaluation.
 - **Operations:** dependency-aware health, timestamped availability, live documentation, sanitized D1 logs, synthetic billing thresholds, observable graceful degradation, and authenticated D1-backed demo control.
 
 Core invariants:
@@ -33,7 +33,7 @@ See [`docs/ROUTES.md`](docs/ROUTES.md) and [`docs/route-manifest.json`](docs/rou
 
 The demo uses the `wizardgang.ai` design tokens: dark by default, with a light theme the reader can toggle and the browser remembers. Every page carries a skip link, primary navigation, and in-group previous/next paging; `/sitemap.xml` is generated from the same registry that serves the routes, so it cannot drift from the published contract.
 
-`/d1` and `/api#rest` expose a live record console. Reads are anonymous. Submitting a write without a token is part of the demonstration: the shared authorization boundary refuses it before it reaches D1.
+`/d1` exposes a visitor-scoped users-and-tasks lab whose D1 records are also queryable through GraphQL. `/r2` provides a bounded mini file manager, `/accessibility` compares accessible and intentionally broken interfaces, `/i18n` switches among six locales, `/git` fetches live repository evidence, and `/api` includes runnable REST, GraphQL, and webhook demonstrations. Existing bearer-protected record and object interfaces retain their original authorization boundaries.
 
 ## Operations and admin
 
@@ -66,6 +66,10 @@ The numbered migrations establish:
 - `application_logs` — bounded public-safe diagnostics;
 - `r2_object_metadata` — relational references to real R2 objects;
 - `webhook_receipts` — signed-delivery digests and replay protection.
+- `demo_sessions`, `demo_users`, and `demo_tasks` — expiring visitor-scoped D1 laboratory state;
+- session fields on `r2_object_metadata` — expiring visitor-scoped references to R2 uploads;
+- `webhook_events` — bounded sanitized webhook evidence and delivery-ID replay state;
+- `demo_state` — bounded shared lab state used by reset and cleanup operations.
 
 Machine contracts for Swagger 2.0, GraphQL, MCP, webhooks, and provider-neutral SAML metadata are versioned beside their implementations.
 

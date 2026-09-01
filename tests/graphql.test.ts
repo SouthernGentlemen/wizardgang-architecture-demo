@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { graphqlResponse } from '../src/api/graphql';
+import { graphiqlAssetResponse } from '../src/ui/graphiql-assets';
 import type { D1PreparedStatement, Env } from '../src/types';
 
 type Row = Record<string, unknown>;
@@ -58,7 +59,15 @@ describe('GraphQL Yoga D1 interface', () => {
     const response = await graphqlResponse(new Request('https://demo.example/graphql', { headers: { accept: 'text/html' } }), env());
     expect(response.status).toBe(200);
     expect(response.headers.get('x-frame-options')).toBe('SAMEORIGIN');
-    expect(await response.text()).toContain('WizardGang GraphiQL');
+    const html = await response.text();
+    expect(html).toContain('WizardGang GraphiQL');
+    expect(html).toContain('/__assets/graphiql/graphiql.js');
+    expect(html).toContain('/__assets/graphiql/graphql.worker.js');
+    expect(html).not.toContain('unpkg.com');
+    const asset = graphiqlAssetResponse(new Request('https://demo.example/__assets/graphiql/graphiql.js'), 'graphiql.js');
+    expect(asset.status).toBe(200);
+    expect(asset.headers.get('content-type')).toContain('text/javascript');
+    expect((await asset.text()).length).toBeGreaterThan(1_000_000);
   });
 
   it('queries and mutates the same session-scoped users', async () => {
@@ -90,5 +99,14 @@ describe('GraphQL Yoga D1 interface', () => {
       body: JSON.stringify({ query: 'mutation { createUser(input: { name: "X", email: "x@example.test", role: MEMBER }) { id } }' }),
     }), environment);
     expect(await denied.json()).toMatchObject({ errors: [{ extensions: { code: 'FORBIDDEN' } }] });
+  });
+
+  it('permits bounded schema introspection for the local GraphiQL IDE', async () => {
+    const response = await graphqlResponse(new Request('https://demo.example/graphql', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ operationName: 'IntrospectionQuery', query: 'query IntrospectionQuery { __schema { queryType { name } mutationType { name } } }' }),
+    }), env());
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({ data: { __schema: { queryType: { name: 'Query' }, mutationType: { name: 'Mutation' } } } });
   });
 });

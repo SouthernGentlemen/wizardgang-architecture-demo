@@ -21,5 +21,11 @@ Required Cloudflare-managed Worker secrets:
 - `DEMO_ADMIN_PASSWORD`
 - `DEMO_API_TOKEN`
 - `WEBHOOK_DEMO_SECRET`
+- `DEMO_SESSION_SECRET`
+- `GITHUB_WEBHOOK_SECRET`
+
+Optional Worker secret:
+
+- `GITHUB_READ_TOKEN` — enables evidence that GitHub does not expose anonymously, such as private branch-protection details; the public evidence dashboard remains functional without it and reports unverifiable controls honestly.
 
 The first public release should be tagged only after the intended GitHub repository exists, Cloudflare resource identifiers replace local placeholders, migrations apply, and the custom domain resolves. Do not describe an untagged or unverified deployment as a released production baseline. The controlled change model is in [`CHANGE-MANAGEMENT.md`](CHANGE-MANAGEMENT.md); the release record and rollback requirements are in [`RELEASE-MANAGEMENT.md`](RELEASE-MANAGEMENT.md).

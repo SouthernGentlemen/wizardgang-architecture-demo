@@ -2,7 +2,7 @@
 
 The stable route contract was established first; genuine capabilities were then implemented without renaming the public human routes. Capability IDs below are design-plan references, not permanent Git change IDs.
 
-The next interaction-depth backlog for R2, D1, i18n, WCAG, Git, webhooks, and GraphQL is specified in [`INTERACTIVE-DEMO-SPEC.md`](INTERACTIVE-DEMO-SPEC.md). The current capabilities remain working; that document is explicit planned scope and must not be treated as deployed evidence.
+The interaction-depth backlog for R2, D1, i18n, WCAG, Git, webhooks, and GraphQL is specified in [`INTERACTIVE-DEMO-SPEC.md`](INTERACTIVE-DEMO-SPEC.md) and was implemented for v0.5.0 by DEMO-037 through DEMO-044. Production deployment evidence is recorded separately only after exact-tag verification.
 
 | Sequence | Capability | Status |
 |---|---|---|
@@ -19,6 +19,8 @@ The next interaction-depth backlog for R2, D1, i18n, WCAG, Git, webhooks, and Gr
 | CAP-018 | ISO/IEC 42001-aligned MCP evaluation/fallback evidence | Complete; uncertified |
 | CAP-019 | End-to-end traceability and evidence API | Complete |
 | CAP-020–024 | Dashboard, uptime/health, logs, synthetic billing/degradation, protected control | Complete |
+
+The v0.5.0 interaction work adds visitor-scoped D1 users/tasks, GraphQL Yoga and local GraphiQL, bounded R2 uploads, six-locale switching, an accessibility comparison lab, verified GitHub webhook handling, and live GitHub delivery evidence without changing the released HTML route set.
 
 Each route identifies what it proves, links to primary/supporting source and tests, exposes behavior a visitor can execute or inspect, emits appropriate D1 evidence, and fails safely during intentional offline or dependency-failure conditions.
 

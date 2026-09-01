@@ -4,7 +4,18 @@
   "main": "src/index.ts",
   "compatibility_date": "2026-08-31",
   "rules": [
-    { "type": "Text", "globs": ["**/axe.min.js"], "fallthrough": true }
+    {
+      "type": "Text",
+      "globs": [
+        "**/axe.min.js",
+        "**/yoga-graphiql.umd.js",
+        "**/graphiql.css",
+        "**/editor.worker.bundle.js",
+        "**/json.worker.bundle.js",
+        "**/graphql.worker..bundle.js"
+      ],
+      "fallthrough": true
+    }
   ],
   "routes": [
     { "pattern": "demo.wizardgang.ai", "custom_domain": true }

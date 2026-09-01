@@ -377,6 +377,16 @@
     "status": "working"
   },
   {
+    "route": "/__assets/graphiql/{asset}",
+    "title": "Locally Bundled GraphiQL Assets",
+    "group": "Interfaces API",
+    "source": "src/ui/graphiql-assets.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
     "route": "/v1/webhooks/demo",
     "title": "Signed Webhook Receiver",
     "group": "Interfaces API",

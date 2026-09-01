@@ -87,6 +87,7 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | `/v1/openapi.json` | `GET` | Swagger 2.0 contract | `src/api/openapi.ts` |
 | `/graphql` | `GET`, `POST` | Embedded GraphiQL and GraphQL query/mutation execution | `src/api/graphql.ts` |
 | `/graphql/schema` | `GET` | GraphQL schema | `src/api/graphql.ts` |
+| `/__assets/graphiql/{asset}` | `GET` | Locked local GraphiQL UI, CSS, and editor workers | `src/ui/graphiql-assets.ts` |
 | `/v1/webhooks/demo` | `POST` | Signed webhook receiver | `src/api/webhooks.ts` |
 | `/v1/webhooks/github` | `POST` | GitHub-compatible verified receiver | `src/api/webhooks.ts` |
 | `/__api/webhooks/demo` | `POST` | Generate a session-scoped GitHub-shaped event | `src/api/webhooks.ts` |
