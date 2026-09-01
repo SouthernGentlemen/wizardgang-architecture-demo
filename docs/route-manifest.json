@@ -307,6 +307,16 @@
     "status": "working"
   },
   {
+    "route": "/__api/accessibility/lab",
+    "title": "Sandboxed Accessibility Lab",
+    "group": "Standards API",
+    "source": "src/ui/accessibility-lab.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
     "route": "/v1/demo-records",
     "title": "REST Demo Records",
     "group": "Interfaces API",

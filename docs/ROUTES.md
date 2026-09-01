@@ -80,6 +80,7 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | `/__api/r2/files` | `GET`, `POST` | List or upload current visitor R2 files | `src/api/r2.ts` |
 | `/__api/r2/files/{id}` | `GET`, `DELETE` | Preview/download or delete a visible R2 file | `src/api/r2.ts` |
 | `/__api/r2/reset` | `POST` | Delete current visitor R2 uploads | `src/api/r2.ts` |
+| `/__api/accessibility/lab` | `GET` | Locally bundled axe-core teaching frame | `src/ui/accessibility-lab.ts` |
 | `/v1/demo-records` | `GET`, `POST` | REST record collection | `src/api/records.ts` |
 | `/v1/demo-records/{key}` | `GET`, `DELETE` | REST record item | `src/api/records.ts` |
 | `/v1/openapi.json` | `GET` | Swagger 2.0 contract | `src/api/openapi.ts` |
