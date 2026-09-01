@@ -99,7 +99,8 @@ describe('signed visitor session', () => {
     const id = crypto.randomUUID();
     const value = await createSignedDemoSessionValue(id, secret);
     expect(await verifySignedDemoSessionValue(value, secret)).toBe(id);
-    expect(await verifySignedDemoSessionValue(`${value.slice(0, -1)}0`, secret)).toBeNull();
+    const replacement = value.endsWith('0') ? '1' : '0';
+    expect(await verifySignedDemoSessionValue(`${value.slice(0, -1)}${replacement}`, secret)).toBeNull();
   });
 });
 
@@ -140,4 +141,3 @@ describe('D1 visitor laboratory', () => {
     expect(database.sessions.size).toBe(2);
   });
 });
-
