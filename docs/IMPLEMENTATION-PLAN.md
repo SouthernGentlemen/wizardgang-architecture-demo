@@ -21,6 +21,7 @@ The shared dark/light interface, responsive shell, technical surfaces, navigatio
 | CAP-018 | ISO/IEC 42001-aligned MCP evaluation/fallback evidence | Complete; uncertified |
 | CAP-019 | End-to-end traceability and evidence API | Complete |
 | CAP-020–024 | Dashboard, uptime/health, logs, synthetic billing/degradation, protected control | Complete |
+| CAP-025 | Dashboard-visible, admin-controlled ChatGPT search/fetch access with independent training opt-out | Complete |
 
 The v0.5.0 interaction work adds visitor-scoped D1 users/tasks, GraphQL Yoga and local GraphiQL, bounded R2 uploads, six-locale switching, an accessibility comparison lab, verified GitHub webhook handling, and live GitHub delivery evidence without changing the released HTML route set.
 

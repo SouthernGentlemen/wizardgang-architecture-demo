@@ -60,6 +60,7 @@ These are exact-path `301` redirects. `/identity/saml/metadata` is resolved as a
 | `/admin` | Protected demo control | `src/ui/admin.ts` | Working |
 | `/offline` | Public maintenance page | `src/ui/admin.ts` | Working |
 | `/og.png` | Branded social preview image | `src/ui/brand-assets.ts` | Working |
+| `/robots.txt` | Dynamic ChatGPT crawler policy | `src/lib/crawler-control.ts` | Working |
 | `/sitemap.xml` | Registry-generated sitemap | `src/api/sitemap.ts` | Working |
 
 ## Machine and action interfaces
@@ -118,9 +119,11 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | GitHub source-link builder | `src/lib/github.ts` |
 | Shared D1 audit functions | `src/lib/audit.ts` |
 | Application log persistence and redaction | `src/lib/logs.ts` |
+| ChatGPT crawler access and dynamic robots policy | `src/lib/crawler-control.ts` |
 | Operations APIs | `src/api/operations.ts` |
 | D1 base schema | `migrations/0001_demo_blob.sql` |
 | Operations and log schemas | `migrations/0002_operations_dashboard.sql`, `migrations/0004_application_logs.sql` |
+| ChatGPT crawler-control schema | `migrations/0009_crawler_control.sql` |
 | Route-flatten seed update | `migrations/0007_flatten_demo_record_routes.sql` |
 | Cloudflare configuration | `wrangler.jsonc` |
 | CI | `.github/workflows/ci.yml` |

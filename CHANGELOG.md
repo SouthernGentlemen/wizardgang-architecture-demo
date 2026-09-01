@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added an authenticated, D1-backed dashboard control for ChatGPT search and user-requested web access, with a dynamic `/robots.txt`, server-enforced crawler gate, public status, audit logging, and an independent permanent `GPTBot` training opt-out.
+
 ## 0.6.0 — 2026-09-01
 
 - Aligned the complete demo interface with the flagship `wizardgang.ai` brand system, including editorial scale, square technical surfaces, responsive navigation, shared dark/light color semantics, main-site cross-links, and a dedicated social preview card.

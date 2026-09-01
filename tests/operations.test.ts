@@ -16,6 +16,7 @@ class OperationsStatement implements D1PreparedStatement {
   }
   async all<T>() {
     if (this.sql.includes('FROM demo_control')) return { results: [{ state: 'online', public_message: 'Available.', updated_at: '2026-08-31T00:00:00.000Z', updated_by: 'test' }] as T[] };
+    if (this.sql.includes('FROM crawler_control')) return { results: [{ state: 'disabled', updated_at: '2026-09-01T12:00:00.000Z', updated_by: 'test' }] as T[] };
     if (this.sql.includes('FROM usage_snapshots')) return { results: this.db.usage.slice(0, Number(this.values.at(-1) || 20)) as T[] };
     if (this.sql.includes('FROM service_health_checks')) return { results: this.db.health as T[] };
     if (this.sql.includes('FROM application_logs')) return { results: [] as T[] };
@@ -50,6 +51,12 @@ describe('operations proof surface', () => {
     expect(dashboard).toContain('Current operational state');
     expect(dashboard).toContain('id="health"');
     expect(dashboard).toContain('<dt>Checked</dt><dd>');
+    expect(dashboard).toContain('ChatGPT access');
+    expect(dashboard).toContain('href="/admin#chatgpt-crawl"');
+    expect(dashboard).toContain('href="/robots.txt"');
+    expect(dashboard).toContain('name="control" value="chatgpt-crawl"');
+    expect(dashboard).toContain('name="state" value="enabled"');
+    expect(dashboard).toContain('Authentication is required when a control is submitted.');
     const docs = await renderDocs(environment).text();
     expect(docs).toContain('Swagger JSON');
     expect(docs).toContain('docs/INTERACTIVE-DEMO-SPEC.md');

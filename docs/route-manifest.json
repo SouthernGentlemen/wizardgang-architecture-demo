@@ -170,6 +170,16 @@
     "status": "working"
   },
   {
+    "route": "/robots.txt",
+    "title": "ChatGPT Crawler Policy",
+    "group": "Operations",
+    "source": "src/lib/crawler-control.ts",
+    "method": "GET, HEAD",
+    "machine": true,
+    "offline_reachable": true,
+    "status": "working"
+  },
+  {
     "route": "/sitemap.xml",
     "title": "Public Route Sitemap",
     "group": "Navigation",

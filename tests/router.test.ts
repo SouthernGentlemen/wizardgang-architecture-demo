@@ -11,6 +11,7 @@ class RouterStatement implements D1PreparedStatement {
   async run() { return { meta: { last_row_id: this.db.nextId++ } }; }
   async all<T>() {
     if (this.sql.includes('FROM demo_control')) return { results: [{ state: this.db.state, public_message: this.db.state === 'online' ? 'Available.' : 'Planned maintenance.', updated_at: '2026-08-31T00:00:00.000Z', updated_by: 'test' }] as T[] };
+    if (this.sql.includes('FROM crawler_control')) return { results: [{ state: this.db.crawlerState, updated_at: '2026-09-01T12:00:00.000Z', updated_by: 'test' }] as T[] };
     return { results: [] as T[] };
   }
 }
@@ -19,13 +20,13 @@ class RouterD1 {
   nextId = 1;
   queries: string[] = [];
   binds: unknown[] = [];
-  constructor(public state: 'online' | 'offline' = 'online') {}
+  constructor(public state: 'online' | 'offline' = 'online', public crawlerState: 'enabled' | 'disabled' = 'disabled') {}
   prepare(sql: string) { return new RouterStatement(this, sql); }
 }
 
-function env(state: 'online' | 'offline' = 'online'): Env & { DEMO_DB: RouterD1 } {
+function env(state: 'online' | 'offline' = 'online', crawlerState: 'enabled' | 'disabled' = 'disabled'): Env & { DEMO_DB: RouterD1 } {
   return {
-    DEMO_DB: new RouterD1(state),
+    DEMO_DB: new RouterD1(state, crawlerState),
     GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
     DEMO_ADMIN_USER: 'operator',
@@ -68,7 +69,11 @@ describe('public route contract', () => {
   it('resolves root, protected admin, offline, health, version, and logs surfaces', async () => {
     const environment = env();
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/'), environment)).status).toBe(200);
-    expect((await routeRequest(new Request('https://demo.wizardgang.ai/admin', { headers: { authorization: basic } }), environment)).status).toBe(200);
+    const admin = await routeRequest(new Request('https://demo.wizardgang.ai/admin', { headers: { authorization: basic } }), environment);
+    expect(admin.status).toBe(200);
+    const adminHtml = await admin.text();
+    expect(adminHtml).toContain('ChatGPT web access');
+    expect(adminHtml).toContain('https://developers.openai.com/api/docs/bots');
     // The maintenance page reports the real state: it only claims the demo is down while it is.
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/offline'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/health'), environment)).status).toBe(200);
@@ -78,6 +83,7 @@ describe('public route contract', () => {
     expect(socialCard.headers.get('content-type')).toBe('image/png');
     expect(socialCard.headers.get('cache-control')).toContain('immutable');
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/__api/operations/logs'), environment)).status).toBe(200);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/robots.txt'), environment)).status).toBe(200);
     const accessibilityFrame = await routeRequest(new Request('https://demo.wizardgang.ai/__api/accessibility/lab?mode=accessible'), environment);
     expect(accessibilityFrame.status).toBe(200);
     expect(accessibilityFrame.headers.get('content-type')).toContain('text/html');
@@ -153,6 +159,8 @@ describe('public route contract', () => {
     const dashboard = await (await routeRequest(new Request('https://demo.wizardgang.ai/dashboard'), environment)).text();
     expect(dashboard).not.toContain('<nav aria-label="Operations">');
     expect(dashboard).not.toContain('Operational proof surfaces');
+    expect(dashboard).toContain('ChatGPT access');
+    expect(dashboard).toContain('Model-training crawl stays blocked.');
 
     const docs = await (await routeRequest(new Request('https://demo.wizardgang.ai/dashboard/docs'), environment)).text();
     expect(docs).toContain('src/router.ts');
@@ -162,6 +170,50 @@ describe('public route contract', () => {
     const environment = env();
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/__api/demo/run', { method: 'POST' }), environment)).status).toBe(404);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/__api/demo/events'), environment)).status).toBe(404);
+  });
+});
+
+describe('ChatGPT crawler control', () => {
+  it('publishes the selected robots policy while always opting out of model training', async () => {
+    const disabled = await routeRequest(new Request('https://demo.wizardgang.ai/robots.txt'), env('online', 'disabled'));
+    expect(disabled.status).toBe(200);
+    expect(disabled.headers.get('cache-control')).toBe('no-store');
+    expect(disabled.headers.get('x-chatgpt-crawl-access')).toBe('disabled');
+    const disabledPolicy = await disabled.text();
+    expect(disabledPolicy).toContain('User-agent: OAI-SearchBot\nDisallow: /');
+    expect(disabledPolicy).toContain('User-agent: ChatGPT-User\nDisallow: /');
+    expect(disabledPolicy).toContain('User-agent: GPTBot\nDisallow: /');
+
+    const enabled = await routeRequest(new Request('https://demo.wizardgang.ai/robots.txt'), env('online', 'enabled'));
+    const enabledPolicy = await enabled.text();
+    expect(enabled.headers.get('x-chatgpt-crawl-access')).toBe('enabled');
+    expect(enabledPolicy).toContain('User-agent: OAI-SearchBot\nAllow: /');
+    expect(enabledPolicy).toContain('User-agent: ChatGPT-User\nAllow: /');
+    expect(enabledPolicy).toContain('User-agent: GPTBot\nDisallow: /');
+    expect(enabledPolicy).toContain('Sitemap: https://demo.wizardgang.ai/sitemap.xml');
+  });
+
+  it('enforces the switch for search and user-requested fetches, with training always blocked', async () => {
+    const searchAgent = 'Mozilla/5.0; compatible; OAI-SearchBot/1.4; +https://openai.com/searchbot';
+    const userAgent = 'Mozilla/5.0; compatible; ChatGPT-User/1.0; +https://openai.com/bot';
+    const trainingAgent = 'Mozilla/5.0; compatible; GPTBot/1.4; +https://openai.com/gptbot';
+
+    const searchBlocked = await routeRequest(new Request('https://demo.wizardgang.ai/', { headers: { 'user-agent': searchAgent } }), env('online', 'disabled'));
+    expect(searchBlocked.status).toBe(403);
+    expect(await searchBlocked.json()).toMatchObject({ agent: 'OAI-SearchBot', reason: 'chatgpt_crawl_access_disabled' });
+
+    const userBlocked = await routeRequest(new Request('https://demo.wizardgang.ai/health', { headers: { 'user-agent': userAgent } }), env('online', 'disabled'));
+    expect(userBlocked.status).toBe(403);
+    expect(userBlocked.headers.get('x-robots-tag')).toBe('noindex, nofollow');
+
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/', { headers: { 'user-agent': searchAgent } }), env('online', 'enabled'))).status).toBe(200);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/version', { headers: { 'user-agent': userAgent } }), env('online', 'enabled'))).status).toBe(200);
+
+    const trainingBlocked = await routeRequest(new Request('https://demo.wizardgang.ai/', { headers: { 'user-agent': trainingAgent } }), env('online', 'enabled'));
+    expect(trainingBlocked.status).toBe(403);
+    expect(await trainingBlocked.json()).toMatchObject({ agent: 'GPTBot', reason: 'model_training_disabled' });
+
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/'), env('online', 'disabled'))).status).toBe(200);
   });
 });
 
@@ -203,5 +255,31 @@ describe('offline routing matrix', () => {
     expect(environment.DEMO_DB.queries.some((query) => query.includes('INSERT INTO application_logs'))).toBe(true);
     expect(environment.DEMO_DB.binds.join(' ')).not.toContain('test-admin-password');
     expect(environment.DEMO_DB.binds.join(' ')).not.toContain(basic);
+  });
+
+  it('persists and audits the authenticated ChatGPT access switch', async () => {
+    const unauthenticatedEnvironment = env();
+    const denied = await routeRequest(new Request('https://demo.wizardgang.ai/admin', {
+      method: 'POST',
+      headers: { origin: 'https://demo.wizardgang.ai', 'content-type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ control: 'chatgpt-crawl', state: 'enabled' }),
+    }), unauthenticatedEnvironment);
+    expect(denied.status).toBe(401);
+    expect(unauthenticatedEnvironment.DEMO_DB.queries.some((query) => query.includes('INSERT INTO crawler_control'))).toBe(false);
+
+    const environment = env();
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/admin', {
+      method: 'POST',
+      headers: { authorization: basic, origin: 'https://demo.wizardgang.ai', 'content-type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ control: 'chatgpt-crawl', state: 'enabled' }),
+    }), environment);
+    expect(response.status).toBe(303);
+    expect(response.headers.get('location')).toContain('changed=chatgpt-crawl-enabled');
+    expect(response.headers.get('location')).toContain('#chatgpt-crawl');
+    expect(environment.DEMO_DB.queries.some((query) => query.includes('INSERT INTO crawler_control'))).toBe(true);
+    expect(environment.DEMO_DB.queries.some((query) => query.includes('INSERT INTO demo_events'))).toBe(true);
+    expect(environment.DEMO_DB.queries.some((query) => query.includes('INSERT INTO application_logs'))).toBe(true);
+    expect(environment.DEMO_DB.binds).toContain('chatgpt_crawl_access_changed');
+    expect(environment.DEMO_DB.binds.join(' ')).not.toContain('test-admin-password');
   });
 });
