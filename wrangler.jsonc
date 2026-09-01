@@ -5,6 +5,11 @@
   "compatibility_date": "2026-08-31",
   "rules": [
     {
+      "type": "Data",
+      "globs": ["**/*.png"],
+      "fallthrough": true
+    },
+    {
       "type": "Text",
       "globs": [
         "**/axe.min.js",

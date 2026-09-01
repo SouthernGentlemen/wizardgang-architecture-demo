@@ -36,6 +36,7 @@ const machine = [
   { route: '/offline', title: 'Demo Offline', group: 'Operations', source: 'src/ui/admin.ts' },
   { route: '/health', title: 'Health JSON', group: 'Operations', source: 'src/api/operations.ts', machine: true, offline_reachable: true },
   { route: '/version', title: 'Version JSON', group: 'Operations', source: 'src/api/operations.ts', machine: true, offline_reachable: true },
+  { route: '/og.png', title: 'WizardGang Social Preview', group: 'Navigation', source: 'src/ui/brand-assets.ts', method: 'GET, HEAD', machine: true, offline_reachable: true },
   { route: '/sitemap.xml', title: 'Public Route Sitemap', group: 'Navigation', source: 'src/api/sitemap.ts', machine: true },
   { route: '/__api/operations/logs', title: 'Operational Logs JSON', group: 'Operations', source: 'src/api/operations.ts', machine: true, offline_reachable: true },
   { route: '/__api/edge/inspect', title: 'Edge Context JSON', group: 'Platform API', source: 'src/api/runtime.ts', method: 'GET', machine: true, offline_behavior: '503' },

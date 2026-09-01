@@ -160,6 +160,16 @@
     "status": "working"
   },
   {
+    "route": "/og.png",
+    "title": "WizardGang Social Preview",
+    "group": "Navigation",
+    "source": "src/ui/brand-assets.ts",
+    "method": "GET, HEAD",
+    "machine": true,
+    "offline_reachable": true,
+    "status": "working"
+  },
+  {
     "route": "/sitemap.xml",
     "title": "Public Route Sitemap",
     "group": "Navigation",

@@ -39,26 +39,36 @@ export function shell(env: Env, title: string, body: string, options: ShellOptio
   <meta property="og:site_name" content="${SITE_NAME}">
   <meta property="og:title" content="${escapeHtml(title)}">
   <meta property="og:description" content="${escapeHtml(description)}">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="https://demo.wizardgang.ai/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="WizardGang Architecture — Architecture you can inspect.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://demo.wizardgang.ai/og.png">
   <link rel="icon" href="${FAVICON}">
   <style>${styles}</style>
   <script>${THEME_BOOT}</script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
-<header>
-  <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span>WizardGang / Architecture</a>
+<header class="site-header">
+  <a class="brand" href="/" aria-label="WizardGang Architecture Demo home">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span class="brand-copy"><strong>WIZARDGANG.AI</strong><small>Architecture demo</small></span>
+  </a>
   <nav class="nav" aria-label="Primary">
     <a href="/"${current('/')}>Map</a>
     <a href="/dashboard"${current('/dashboard')}>Operations</a>
     <a href="/dashboard/docs"${current('/dashboard/docs')}>Docs</a>
-    <a href="${escapeHtml(repoUrl(env))}">GitHub</a>
+    <a href="https://wizardgang.ai/">Main site <span aria-hidden="true">↗</span></a>
+    <a href="${escapeHtml(repoUrl(env))}">GitHub <span aria-hidden="true">↗</span></a>
     <button type="button" data-theme-toggle aria-pressed="false">Light</button>
   </nav>
 </header>
-<main id="main">${body}</main>
-<footer>
-  <span>WG-ARCH-001 companion · <a href="${escapeHtml(repoUrl(env))}">Public source</a></span>
+<main class="site-main" id="main">${body}</main>
+<footer class="site-footer">
+  <span>WizardGang.ai · WG-ARCH-001 companion</span>
+  <span><a href="https://wizardgang.ai/">Main site</a> · <a href="${escapeHtml(repoUrl(env))}">Public source</a></span>
 </footer>
 <script>${THEME_TOGGLE}</script>
 </body>
@@ -77,7 +87,8 @@ export function renderIndex(env: Env, list: DemoDefinition[]): Response {
   const body = `
 <section class="page-header home-header">
   <p class="eyebrow">WG-ARCH-001 / executable companion</p>
-  <h1>Architecture you can inspect.</h1>
+  <h1>Architecture <span>you can inspect.</span></h1>
+  <p class="lede home-lede">Seventeen live routes expose the platform, interfaces, standards, delivery controls, and operations behind a production edge system.</p>
 </section>
 <section class="status-strip" aria-label="Live service state">
   <a href="/version"><span>Version</span><strong>${escapeHtml(env.DEPLOYED_VERSION || 'development')}</strong></a>
