@@ -30,5 +30,6 @@ DEMO-028,fd51c99bbf80dc99d9d8d3bbc64c8de77ed66882,,2026-08-31,direct,v0.3.0,reco
 DEMO-029,90011a9cbf62b1c6ce37450b5c2730793692bc64,,2026-08-31,direct,v0.4.0,record the verified v0.3.0 production deployment
 DEMO-030,4f59a5b61cd364204f240abf2138991bba2734e8,,2026-08-31,direct,v0.4.0,generate the runnable REST explorer from the served Swagger contract
 DEMO-031,,,2026-08-31,direct,v0.4.0,record and version the v0.4.0 release; this file is evidence in the commit it maps
-DEMO-032,,,2026-08-31,direct,Unreleased,record the verified v0.4.0 production deployment; this file is evidence in the commit it maps
-DEMO-033,,,2026-08-31,direct,Unreleased,simplify the shared interface hierarchy and progressively disclose supporting detail; this file is evidence in the commit it maps
+DEMO-032,5feaded5e92351dc80713957528bc6ab7387b53a,,2026-08-31,direct,v0.4.1,record the verified v0.4.0 production deployment
+DEMO-033,3fb8201fb4b3a6f2275f0240b784ff80908832d1,,2026-08-31,direct,v0.4.1,simplify the shared interface hierarchy and progressively disclose supporting detail
+DEMO-034,,,2026-09-01,direct,v0.4.1,record and version the v0.4.1 release; this file is evidence in the commit it maps
