@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.4.1 — 2026-09-01
+
 - Simplified every public interface with smaller hierarchy, compact status and documentation surfaces, progressive disclosure for supporting references and schemas, and hidden request/response output until it is used.
 - Reworked `/api` into a concise list of collapsed Swagger operations that still exposes the generated request controls, request schemas, response schemas, and runnable calls on demand.
 
