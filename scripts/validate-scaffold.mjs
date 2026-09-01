@@ -11,7 +11,7 @@ const requiredRoutes = [
   '/api', '/identity', '/mcp', '/i18n', '/accessibility', '/git',
   '/governance', '/dashboard', '/dashboard/uptime', '/dashboard/docs',
   '/dashboard/logs', '/dashboard/billing', '/admin', '/offline', '/health', '/version',
-  '/sitemap.xml', '/__api/operations/logs',
+  '/sitemap.xml', '/og.png', '/__api/operations/logs',
   '/__api/edge/inspect', '/__api/workers/compute', '/__api/durable/counter',
   '/__api/d1/users', '/__api/d1/users/{id}', '/__api/d1/tasks', '/__api/d1/tasks/{id}', '/__api/d1/reset',
   '/__api/r2/files', '/__api/r2/files/{id}', '/__api/r2/reset',

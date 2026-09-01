@@ -59,6 +59,7 @@ These are exact-path `301` redirects. `/identity/saml/metadata` is resolved as a
 | `/__api/operations/logs` | Sanitized log JSON | `src/api/operations.ts` | Working |
 | `/admin` | Protected demo control | `src/ui/admin.ts` | Working |
 | `/offline` | Public maintenance page | `src/ui/admin.ts` | Working |
+| `/og.png` | Branded social preview image | `src/ui/brand-assets.ts` | Working |
 | `/sitemap.xml` | Registry-generated sitemap | `src/api/sitemap.ts` | Working |
 
 ## Machine and action interfaces

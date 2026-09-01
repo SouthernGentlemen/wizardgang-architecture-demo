@@ -34,6 +34,7 @@ import { webhookConsole } from './demos/webhook-console';
 import { gitEvidenceResponse } from './api/git-evidence';
 import { renderGitDemo } from './demos/git-page';
 import { graphiqlAssetResponse } from './ui/graphiql-assets';
+import { socialCardResponse } from './ui/brand-assets';
 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
@@ -64,6 +65,7 @@ export const RETIRED_PAGE_REDIRECTS = new Map<string, string>([
 export function bypassOfflineGate(path: string): boolean {
   return path === '/admin'
     || path === '/offline'
+    || path === '/og.png'
     || path === '/health'
     || path === '/version'
     || path === '/__api/operations/logs'
@@ -130,6 +132,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
 
   if (request.method === 'GET' && path === '/health') return healthResponse(env);
   if (request.method === 'GET' && path === '/version') return versionResponse(env);
+  if ((request.method === 'GET' || request.method === 'HEAD') && path === '/og.png') return socialCardResponse(request);
   if (request.method === 'GET' && path === '/__api/operations/logs') return logsResponse(request, env);
 
   const control = await getDemoControl(env);

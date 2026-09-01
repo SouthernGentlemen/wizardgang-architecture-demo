@@ -73,6 +73,10 @@ describe('public route contract', () => {
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/offline'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/health'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/version'), environment)).status).toBe(200);
+    const socialCard = await routeRequest(new Request('https://demo.wizardgang.ai/og.png'), environment);
+    expect(socialCard.status).toBe(200);
+    expect(socialCard.headers.get('content-type')).toBe('image/png');
+    expect(socialCard.headers.get('cache-control')).toContain('immutable');
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/__api/operations/logs'), environment)).status).toBe(200);
     const accessibilityFrame = await routeRequest(new Request('https://demo.wizardgang.ai/__api/accessibility/lab?mode=accessible'), environment);
     expect(accessibilityFrame.status).toBe(200);
@@ -143,6 +147,8 @@ describe('public route contract', () => {
     expect(index).toContain('<section class="status-strip"');
     expect(index).toContain('<span>Version</span>');
     expect(index).toContain('<span>Health</span>');
+    expect(index).toContain('<strong>WIZARDGANG.AI</strong>');
+    expect(index).toContain('<meta property="og:image" content="https://demo.wizardgang.ai/og.png">');
 
     const dashboard = await (await routeRequest(new Request('https://demo.wizardgang.ai/dashboard'), environment)).text();
     expect(dashboard).not.toContain('<nav aria-label="Operations">');
@@ -180,6 +186,7 @@ describe('offline routing matrix', () => {
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/__api/operations/logs'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/version'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/health'), environment)).status).toBe(503);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/og.png'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/admin', { headers: { authorization: basic } }), environment)).status).toBe(200);
   });
 
