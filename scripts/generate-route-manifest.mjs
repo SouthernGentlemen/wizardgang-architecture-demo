@@ -51,7 +51,7 @@ const machine = [
   { route: '/v1/demo-records', title: 'REST Demo Records', group: 'Interfaces API', source: 'src/api/records.ts', method: 'GET, POST', machine: true, offline_behavior: '503' },
   { route: '/v1/demo-records/{key}', title: 'REST Demo Record', group: 'Interfaces API', source: 'src/api/records.ts', method: 'GET, DELETE', machine: true, offline_behavior: '503' },
   { route: '/v1/openapi.json', title: 'Swagger 2.0 Contract', group: 'Interfaces API', source: 'src/api/openapi.ts', method: 'GET', machine: true, offline_behavior: '503' },
-  { route: '/graphql', title: 'GraphQL API', group: 'Interfaces API', source: 'src/api/graphql.ts', method: 'POST', machine: true, offline_behavior: '503' },
+  { route: '/graphql', title: 'GraphQL API and GraphiQL', group: 'Interfaces API', source: 'src/api/graphql.ts', method: 'GET, POST', machine: true, offline_behavior: '503' },
   { route: '/graphql/schema', title: 'GraphQL Schema', group: 'Interfaces API', source: 'src/api/graphql.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/v1/webhooks/demo', title: 'Signed Webhook Receiver', group: 'Interfaces API', source: 'src/api/webhooks.ts', method: 'POST', machine: true, offline_behavior: '503' },
   { route: '/__api/webhooks/demo', title: 'Visitor Signed Webhook Action', group: 'Interfaces API', source: 'src/api/webhooks.ts', method: 'POST', machine: true, offline_behavior: '503' },

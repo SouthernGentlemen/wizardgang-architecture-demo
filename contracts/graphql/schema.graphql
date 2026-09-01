@@ -1,4 +1,4 @@
-"""Executable public read schema for the GraphQL architecture demonstration."""
+"""Executable public schema for the GraphQL architecture demonstration."""
 type DemoRecord {
   id: ID!
   namespace: String!
@@ -6,10 +6,46 @@ type DemoRecord {
   valueJson: String!
 }
 
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  role: UserRole!
+  createdAt: String!
+  updatedAt: String!
+}
+
+enum UserRole {
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+input CreateUserInput {
+  name: String!
+  email: String!
+  role: UserRole!
+}
+
+input UpdateUserInput {
+  name: String!
+  email: String!
+  role: UserRole!
+}
+
 type Query {
   demoRecords(namespace: String): [DemoRecord!]!
+  users: [User!]!
+  user(id: ID!): User
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): User!
+  updateUser(id: ID!, input: UpdateUserInput!): User!
+  deleteUser(id: ID!): Boolean!
 }
 
 schema {
   query: Query
+  mutation: Mutation
 }

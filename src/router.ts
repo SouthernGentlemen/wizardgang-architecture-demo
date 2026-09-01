@@ -27,6 +27,7 @@ import { renderBilling, renderDashboard, renderDocs, renderUptime } from './demo
 import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } from './api/governance';
 import { d1LabResponse } from './api/d1-lab';
 import { renderD1Demo } from './demos/d1-page';
+import { graphqlConsole } from './demos/graphql-console';
 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
@@ -186,7 +187,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (request.method === 'GET') {
     const demo = demosByRoute.get(path);
     if (demo) {
-      const extra = path === '/api' ? swaggerConsole() : RECORD_CONSOLE_ROUTES.has(path) ? recordsConsole('records') : '';
+      const extra = path === '/api' ? `${swaggerConsole()}${graphqlConsole()}` : RECORD_CONSOLE_ROUTES.has(path) ? recordsConsole('records') : '';
       return renderDemo(env, demo, demos, extra);
     }
   }

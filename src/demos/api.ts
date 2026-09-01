@@ -19,13 +19,14 @@ const demo: DemoDefinition = {
     { "label": "View shared authorization", "path": "src/lib/authorization.ts" },
     { "label": "View Swagger contract", "path": "contracts/openapi/swagger.json" },
     { "label": "View GraphQL implementation", "path": "src/api/graphql.ts" },
+    { "label": "View embedded GraphiQL", "path": "src/demos/graphql-console.ts" },
     { "label": "View webhook implementation", "path": "src/api/webhooks.ts" }
   ],
   "actions": [
     {
       "id": "graphql",
       "title": "GraphQL",
-      "description": "Query the same D1 records through the same demo:read policy used by REST and MCP.",
+      "description": "Use the embedded GraphiQL IDE to query or mutate the same session-scoped users shown by the D1 laboratory.",
       "label": "Query demo records with GraphQL",
       "method": "POST",
       "path": "/graphql",
