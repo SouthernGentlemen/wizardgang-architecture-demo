@@ -23,14 +23,6 @@ const demo: DemoDefinition = {
   ],
   "actions": [
     {
-      "id": "openapi",
-      "title": "OpenAPI / Swagger 2.x",
-      "description": "Fetch the machine-readable contract that documents the REST resource, payloads, authorization, responses, and failures.",
-      "label": "Fetch the live API contract",
-      "method": "GET",
-      "path": "/v1/openapi.json"
-    },
-    {
       "id": "graphql",
       "title": "GraphQL",
       "description": "Query the same D1 records through the same demo:read policy used by REST and MCP.",

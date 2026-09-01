@@ -83,7 +83,12 @@ describe('public route contract', () => {
     for (const anchor of ['rest', 'openapi', 'graphql', 'webhooks']) expect(html).toContain(`id="${anchor}"`);
     for (const endpoint of ['/v1/demo-records', '/v1/openapi.json', '/graphql', '/__api/webhooks/demo']) expect(html).toContain(endpoint);
     expect(html.match(/<form data-swagger-form/g)).toHaveLength(swaggerOperationCount);
-    expect(html).toContain('Swagger 2.0 · contract-driven');
+    expect(html.match(/<details class="swagger-operation"/g)).toHaveLength(swaggerOperationCount);
+    expect(html).not.toContain('<details class="swagger-operation" open');
+    expect(html).toContain('Swagger 2.0');
+    expect(html).toContain('REST API');
+    expect(html).not.toContain('All 6 operations below are generated from the same');
+    expect(html).not.toContain('>Ready.</pre>');
     expect(html).toContain('Request body schema');
     expect(html).toContain('swagger-definition-RecordInput');
     expect(html).toContain('swagger-definition-WebhookEvent');
@@ -102,7 +107,8 @@ describe('public route contract', () => {
     const html = await response.text();
     for (const anchor of ['source-of-truth', 'versioning', 'branching', 'actions', 'releases', 'environments']) expect(html).toContain(`id="${anchor}"`);
     expect(html.match(/data-run-demo="\d+"/g)).toHaveLength(1);
-    expect(html).toContain('GET /version');
+    expect(html).toContain('http-get');
+    expect(html).toContain('/version');
   });
 
   it('renders consolidated governance controls, evidence anchors, and the alignment notice', async () => {
@@ -126,13 +132,14 @@ describe('public route contract', () => {
     expect(html).not.toContain('This button calls the live Worker interface below');
   });
 
-  it('keeps only live status cards on the index and removes duplicate dashboard navigation', async () => {
+  it('keeps a compact live status strip on the index and removes duplicate dashboard navigation', async () => {
     const environment = env();
     const index = await (await routeRequest(new Request('https://demo.wizardgang.ai/'), environment)).text();
     expect(index).not.toContain('<h2 class="eyebrow">Routes</h2>');
     expect(index).not.toContain('<h2 class="eyebrow">Groups</h2>');
-    expect(index).toContain('<h2 class="eyebrow">Version</h2>');
-    expect(index).toContain('<h2 class="eyebrow">Health</h2>');
+    expect(index).toContain('<section class="status-strip"');
+    expect(index).toContain('<span>Version</span>');
+    expect(index).toContain('<span>Health</span>');
 
     const dashboard = await (await routeRequest(new Request('https://demo.wizardgang.ai/dashboard'), environment)).text();
     expect(dashboard).not.toContain('<nav aria-label="Operations">');

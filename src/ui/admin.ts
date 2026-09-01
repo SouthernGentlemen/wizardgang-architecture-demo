@@ -2,22 +2,24 @@ import type { Env } from '../types';
 import type { DemoControl } from '../lib/demo-control';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
-import { shell } from './page';
+import { referenceDetails, shell } from './page';
 
 export function renderAdmin(env: Env, control: DemoControl, notice = ''): Response {
   const offline = control.state === 'offline';
   return shell(env, 'Demo Admin', `
-<section>
+<section class="page-header">
   <p class="eyebrow">Operations / protected</p>
   <h1>Demo Admin</h1>
   <p class="lede">Take ordinary public architecture demonstrations online or offline without disabling the public status, documentation, or administration surface.</p>
-  <div class="meta">
+  <div class="page-tools">
     <span class="badge ${offline ? 'badge-down' : 'badge-ok'}">${escapeHtml(control.state)}</span>
-    <a href="${escapeHtml(sourceUrl(env, 'src/ui/admin.ts'))}">Admin UI source</a>
-    <a href="${escapeHtml(sourceUrl(env, 'src/lib/demo-control.ts'))}">Control logic</a>
-    <a href="${escapeHtml(sourceUrl(env, 'src/router.ts'))}">Offline gate</a>
-    <a href="${escapeHtml(sourceUrl(env, 'migrations/0003_demo_control.sql'))}">D1 control schema</a>
-    <a href="${escapeHtml(sourceUrl(env, 'docs/OPERATIONS.md'))}">Operations design</a>
+    ${referenceDetails([
+      { label: 'Admin UI source', href: sourceUrl(env, 'src/ui/admin.ts') },
+      { label: 'Control logic', href: sourceUrl(env, 'src/lib/demo-control.ts') },
+      { label: 'Offline gate', href: sourceUrl(env, 'src/router.ts') },
+      { label: 'D1 control schema', href: sourceUrl(env, 'migrations/0003_demo_control.sql') },
+      { label: 'Operations design', href: sourceUrl(env, 'docs/OPERATIONS.md') },
+    ])}
   </div>
 </section>
 ${notice ? `<section class="panel" role="status"><strong>${escapeHtml(notice)}</strong></section>` : ''}

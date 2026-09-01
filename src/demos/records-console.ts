@@ -21,18 +21,20 @@ export function recordsConsole(id = 'records'): string {
     <tbody data-rc-rows><tr><td colspan="4">Choose <strong>GET</strong> to load records.</td></tr></tbody>
   </table></div>
 
-  <h3 style="margin-top:2rem">Write — bearer protected</h3>
-  <p class="subtle">Leave the token empty and submit. The request is refused before it reaches D1 — <code>401 authentication_required</code> where a token is configured, <code>503 protected_demo_not_configured</code> where none is. Either way the write never happens, and that refusal is the demonstration. An operator holding <code>DEMO_API_TOKEN</code> can paste it to complete the round trip; it is used for this one request and never stored.</p>
-  <div class="filters">
-    <label for="rc-key">Record key<input id="rc-key" value="visitor-note" maxlength="64" autocomplete="off"></label>
-    <label for="rc-value">Value (JSON)<input id="rc-value" value='{"note":"hello"}' autocomplete="off"></label>
-    <label for="rc-token">Bearer token (optional)<input id="rc-token" type="password" autocomplete="off" placeholder="empty → 401"></label>
-  </div>
-  <div class="meta" style="margin-top:1rem">
-    <button type="button" data-rc="write">POST /v1/demo-records</button>
-    <button type="button" data-rc="delete">DELETE /v1/demo-records/{key}</button>
-  </div>
-  <div class="field" style="margin-top:1rem"><span>Response</span><pre aria-live="polite" data-rc-out>Ready.</pre></div>
+  <details class="console-write">
+    <summary>Protected write controls</summary>
+    <p class="subtle">Writes require <code>DEMO_API_TOKEN</code>. The token is used once and never stored.</p>
+    <div class="filters">
+      <label for="rc-key">Record key<input id="rc-key" value="visitor-note" maxlength="64" autocomplete="off"></label>
+      <label for="rc-value">Value (JSON)<input id="rc-value" value='{"note":"hello"}' autocomplete="off"></label>
+      <label for="rc-token">Bearer token (optional)<input id="rc-token" type="password" autocomplete="off" placeholder="empty → 401"></label>
+    </div>
+    <div class="button-row" style="margin-top:1rem">
+      <button type="button" data-rc="write">Write record</button>
+      <button type="button" data-rc="delete">Delete record</button>
+    </div>
+  </details>
+  <pre class="action-output" aria-live="polite" data-rc-out hidden></pre>
 </section>
 <script>
 (() => {
@@ -42,6 +44,7 @@ export function recordsConsole(id = 'records'): string {
   const escape = (value) => String(value).replace(/[&<>"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[character]));
 
   const show = (status, statusText, payload) => {
+    out.hidden = false;
     out.textContent = status + ' ' + statusText + '\\n\\n' + (typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2));
   };
 
@@ -57,11 +60,11 @@ export function recordsConsole(id = 'records'): string {
     return token ? { authorization: 'Bearer ' + token } : {};
   };
 
-  async function list() {
-    out.textContent = 'Running…';
+  async function list(showResult = false) {
+    if (showResult) { out.hidden = false; out.textContent = 'Running…'; }
     const response = await fetch('/v1/demo-records?namespace=' + namespace());
     const payload = await read(response);
-    show(response.status, response.statusText, payload);
+    if (showResult || !response.ok) show(response.status, response.statusText, payload);
     const results = (payload && payload.results) || [];
     rows.innerHTML = results.length
       ? results.map((record) =>
@@ -72,6 +75,7 @@ export function recordsConsole(id = 'records'): string {
   }
 
   async function write() {
+    out.hidden = false;
     out.textContent = 'Running…';
     let value;
     try {
@@ -90,6 +94,7 @@ export function recordsConsole(id = 'records'): string {
   }
 
   async function remove() {
+    out.hidden = false;
     out.textContent = 'Running…';
     const response = await fetch('/v1/demo-records/' + encodeURIComponent($('#rc-key').value.trim()) + '?namespace=' + namespace(), {
       method: 'DELETE',
@@ -99,7 +104,7 @@ export function recordsConsole(id = 'records'): string {
     if (response.ok) await list();
   }
 
-  const handlers = { list, write, delete: remove };
+  const handlers = { list: () => list(true), write, delete: remove };
   document.querySelectorAll('[data-rc]').forEach((button) => {
     button.addEventListener('click', () => handlers[button.dataset.rc]().catch((error) => show('—', 'network error', String(error))));
   });
