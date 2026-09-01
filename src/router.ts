@@ -25,12 +25,14 @@ import { renderAccessibilityDemo } from './demos/accessibility-page';
 import { billingScenarioResponse } from './api/billing';
 import { renderBilling, renderDashboard, renderDocs, renderUptime } from './demos/operations-pages';
 import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } from './api/governance';
+import { d1LabResponse } from './api/d1-lab';
+import { renderD1Demo } from './demos/d1-page';
 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
 const API_PATHS = new Set(['/graphql', '/mcp']);
 /** Routes whose whole point is the D1-backed record resource, so they get the live console. */
-const RECORD_CONSOLE_ROUTES = new Set(['/d1', '/api']);
+const RECORD_CONSOLE_ROUTES = new Set(['/api']);
 
 export const RETIRED_PAGE_REDIRECTS = new Map<string, string>([
   ['/api/rest', '/api#rest'],
@@ -139,6 +141,11 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
 
   if (path === '/v1/demo-records') return recordsResponse(request, env);
   if (path.startsWith('/v1/demo-records/')) return recordsResponse(request, env, path.slice('/v1/demo-records/'.length));
+  if (path === '/__api/d1/users') return d1LabResponse(request, env, 'users');
+  if (path.startsWith('/__api/d1/users/')) return d1LabResponse(request, env, 'users', path.slice('/__api/d1/users/'.length));
+  if (path === '/__api/d1/tasks') return d1LabResponse(request, env, 'tasks');
+  if (path.startsWith('/__api/d1/tasks/')) return d1LabResponse(request, env, 'tasks', path.slice('/__api/d1/tasks/'.length));
+  if (path === '/__api/d1/reset') return d1LabResponse(request, env, 'reset');
   if (path === '/__api/edge/inspect') return edgeInspectionResponse(request, env);
   if (path === '/__api/workers/compute') return workerComputeResponse(request, env);
   if (path === '/__api/r2/demo') return r2DemoObjectResponse(request, env);
@@ -167,6 +174,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
 
   if (request.method === 'GET' && path === '/sitemap.xml') return sitemapResponse(request, demos);
   if (request.method === 'GET' && path === '/') return renderIndex(env, demos);
+  if (request.method === 'GET' && path === '/d1') return renderD1Demo(env);
   if (request.method === 'GET' && path === '/i18n') return renderI18nDemo(request, env);
   if (request.method === 'GET' && path === '/accessibility') return renderAccessibilityDemo(request, env);
   if (request.method === 'GET' && path === '/dashboard') return renderDashboard(env);

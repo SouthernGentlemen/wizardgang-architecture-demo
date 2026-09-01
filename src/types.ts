@@ -1,5 +1,6 @@
 export interface D1RunResultMeta {
   last_row_id?: number;
+  changes?: number;
 }
 
 export interface D1RunResult {
@@ -58,6 +59,9 @@ export interface Env {
   DEMO_ADMIN_PASSWORD?: string;
   DEMO_API_TOKEN?: string;
   WEBHOOK_DEMO_SECRET?: string;
+  GITHUB_WEBHOOK_SECRET?: string;
+  GITHUB_READ_TOKEN?: string;
+  DEMO_SESSION_SECRET?: string;
   DEPLOYED_VERSION?: string;
   DEPLOYED_SHA?: string;
   DEPLOYMENT_ENVIRONMENT?: string;

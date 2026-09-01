@@ -160,6 +160,14 @@ td code { font-size: .8rem; }
 summary { cursor: pointer; }
 
 .info-grid, .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: .75rem; margin: 1rem 0; }
+.lab-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(280px, .85fr); gap: 1rem; align-items: start; }
+.lab-grid aside { position: sticky; top: 1rem; }
+.lab-heading { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
+.lab-heading .eyebrow { margin-bottom: .45rem; }
+.lab-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .7rem; margin: 1rem 0 1.25rem; padding: 1rem; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2); }
+.lab-form label { display: grid; gap: .35rem; }
+.lab-form .button-row { grid-column: 1 / -1; }
+.technical-state pre { max-height: 22rem; }
 .info-card, .action-card { padding: 1.25rem; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
 .info-card h2, .action-card h2 { font-size: 1.3rem; }
 .info-card p, .action-card p { color: var(--muted); }
@@ -250,5 +258,7 @@ footer a { color: var(--paper); }
   .swagger-operation > summary { grid-template-columns: 1fr auto; gap: .55rem; }
   .swagger-operation > summary .swagger-route { grid-column: 1 / -1; }
   .info-grid, .action-grid { grid-template-columns: 1fr; }
+  .lab-grid { grid-template-columns: 1fr; }
+  .lab-grid aside { position: static; }
 }
 `;

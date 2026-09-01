@@ -207,6 +207,56 @@
     "status": "working"
   },
   {
+    "route": "/__api/d1/users",
+    "title": "D1 Demo Users",
+    "group": "Platform API",
+    "source": "src/api/d1-lab.ts",
+    "method": "GET, POST",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/d1/users/{id}",
+    "title": "D1 Demo User",
+    "group": "Platform API",
+    "source": "src/api/d1-lab.ts",
+    "method": "PATCH, DELETE",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/d1/tasks",
+    "title": "D1 Demo Tasks",
+    "group": "Platform API",
+    "source": "src/api/d1-lab.ts",
+    "method": "GET, POST",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/d1/tasks/{id}",
+    "title": "D1 Demo Task",
+    "group": "Platform API",
+    "source": "src/api/d1-lab.ts",
+    "method": "PATCH, DELETE",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/d1/reset",
+    "title": "D1 Demo Reset",
+    "group": "Platform API",
+    "source": "src/api/d1-lab.ts",
+    "method": "POST",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
     "route": "/__api/r2/demo",
     "title": "Visitor R2 Object Action",
     "group": "Platform API",

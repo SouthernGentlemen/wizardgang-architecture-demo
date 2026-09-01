@@ -6,10 +6,10 @@ const demo: DemoDefinition = {
   "title": "Cloudflare D1",
   "group": "Platform",
   "sourcePath": "src/demos/d1.ts",
-  "summary": "Relational persistence for structured application records and audit metadata.",
+  "summary": "Isolated Users and Tasks CRUD with live parameterized SQL, timing, row counts, shared GraphQL data, and resettable D1 state.",
   "proves": [
     "Shared DEMO_DB binding",
-    "Versioned CRUD against demo-blob",
+    "Session-scoped Users and Tasks CRUD against demo-blob",
     "Relational audit and public-safe operational records"
   ],
   "status": "working",
@@ -20,7 +20,8 @@ const demo: DemoDefinition = {
   ],
   "supportingSources": [
     { "label": "View D1 API implementation", "path": "src/api/records.ts" },
-    { "label": "View authorization boundary", "path": "src/lib/authorization.ts" }
+    { "label": "View visitor sandbox", "path": "src/lib/demo-session.ts" },
+    { "label": "View interactive schema", "path": "migrations/0008_interactive_demo.sql" }
   ]
 };
 
