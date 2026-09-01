@@ -11,7 +11,7 @@ const demo: DemoDefinition = {
     "GET, POST, and DELETE REST semantics over the D1-backed record resource",
     "REST and GraphQL reads share the same demo:read authorization policy",
     "The served Swagger 2.0 contract and live router stay synchronized",
-    "Signed webhook delivery verifies HMAC integrity and rejects replay"
+    "GitHub-compatible webhook delivery verifies HMAC integrity, repository scope, event type, and replay protection"
   ],
   "status": "working",
   "supportingSources": [
@@ -21,25 +21,6 @@ const demo: DemoDefinition = {
     { "label": "View GraphQL implementation", "path": "src/api/graphql.ts" },
     { "label": "View embedded GraphiQL", "path": "src/demos/graphql-console.ts" },
     { "label": "View webhook implementation", "path": "src/api/webhooks.ts" }
-  ],
-  "actions": [
-    {
-      "id": "graphql",
-      "title": "GraphQL",
-      "description": "Use the embedded GraphiQL IDE to query or mutate the same session-scoped users shown by the D1 laboratory.",
-      "label": "Query demo records with GraphQL",
-      "method": "POST",
-      "path": "/graphql",
-      "body": { "query": "query Records($namespace: String) { demoRecords(namespace: $namespace) { id namespace key valueJson } }", "variables": { "namespace": "public" } }
-    },
-    {
-      "id": "webhooks",
-      "title": "Webhooks",
-      "description": "Generate and verify a visitor-safe signed delivery while keeping the signing secret out of the browser and stored evidence.",
-      "label": "Send a signed demo webhook",
-      "method": "POST",
-      "path": "/__api/webhooks/demo"
-    }
   ]
 };
 

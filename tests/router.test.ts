@@ -84,7 +84,7 @@ describe('public route contract', () => {
     const html = await response.text();
     const swaggerOperationCount = Object.values(swagger.paths).reduce((count, path) => count + Object.keys(path).filter((method) => ['get', 'post', 'put', 'patch', 'delete', 'head', 'options'].includes(method)).length, 0);
     for (const anchor of ['rest', 'openapi', 'graphql', 'webhooks']) expect(html).toContain(`id="${anchor}"`);
-    for (const endpoint of ['/v1/demo-records', '/v1/openapi.json', '/graphql', '/__api/webhooks/demo']) expect(html).toContain(endpoint);
+    for (const endpoint of ['/v1/demo-records', '/v1/openapi.json', '/graphql', '/v1/webhooks/github', '/__api/webhooks/demo', '/__api/webhooks/events']) expect(html).toContain(endpoint);
     expect(html.match(/<form data-swagger-form/g)).toHaveLength(swaggerOperationCount);
     expect(html.match(/<details class="swagger-operation"/g)).toHaveLength(swaggerOperationCount);
     expect(html).not.toContain('<details class="swagger-operation" open');

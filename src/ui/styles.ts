@@ -184,6 +184,11 @@ summary { cursor: pointer; }
 .criterion-card .eyebrow { margin-bottom: .7rem; }
 .criterion-card p { color: var(--muted); font-size: .88rem; }
 .criterion-card strong { color: var(--paper); }
+.button-row { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0; }
+.webhook-events { display: grid; gap: .65rem; margin-top: 1rem; }
+.webhook-event { padding: 1rem; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2); }
+.webhook-event h3 { margin: 0; }
+.webhook-event pre { max-height: 13rem; }
 .technical-state pre { max-height: 22rem; }
 .graphql-frame { height: min(72vh, 760px); min-height: 540px; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
 .graphql-frame iframe { width: 100%; height: 100%; border: 0; }
