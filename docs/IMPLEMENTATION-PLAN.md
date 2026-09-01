@@ -4,6 +4,8 @@ The stable route contract was established first; genuine capabilities were then 
 
 The interaction-depth backlog for R2, D1, i18n, WCAG, Git, webhooks, and GraphQL is specified in [`INTERACTIVE-DEMO-SPEC.md`](INTERACTIVE-DEMO-SPEC.md), was implemented for v0.5.0 by DEMO-037 through DEMO-044, and was deployed from the verified annotated tag on 2026-09-01. Exact production evidence is recorded separately in [`history/DEPLOYMENTS.md`](history/DEPLOYMENTS.md).
 
+The shared dark/light interface, responsive shell, technical surfaces, navigation, and social preview were aligned with the flagship `wizardgang.ai` brand system in v0.6.0 and deployed from its verified annotated tag on 2026-09-01.
+
 | Sequence | Capability | Status |
 |---|---|---|
 | CAP-001 | Route registry, shell, direct source links, D1/admin/offline baseline | Complete |
