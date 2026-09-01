@@ -48,11 +48,14 @@ The demo uses the `wizardgang.ai` design tokens: dark by default, with a light t
 /offline     public maintenance page
 /health      machine-readable dependency health
 /version     machine-readable release/source identity
+/robots.txt  dynamic ChatGPT crawler policy
 ```
 
 The dashboard’s `#health` card carries the detailed per-service snapshot and checked timestamp formerly shown at `/dashboard/health`.
 
 `/admin` can intentionally take ordinary demos online or offline. Offline browser navigation redirects to `/offline?from=<route>` and displays **“Oops! demo is down.”** API, non-HTML, and write requests return JSON `503`. Dashboard, status, logs, synthetic billing, offline, and authenticated admin surfaces remain reachable. Control failures fail closed.
+
+The same protected admin page controls ChatGPT web access. The switch updates a D1-backed `/robots.txt` policy and a server-side gate for `OAI-SearchBot` and `ChatGPT-User`, so disabling access also covers user-requested ChatGPT fetches that may not follow robots rules. `GPTBot` remains blocked in either state; this control never opts the demo into foundation-model training. The public dashboard shows the current state without exposing the protected mutation.
 
 ## Shared D1 backend
 
@@ -63,6 +66,7 @@ The numbered migrations establish:
 - `service_health_checks` — timestamped availability history;
 - `usage_snapshots` — controlled synthetic usage/cost state;
 - `demo_control` — online/offline state and public message;
+- `crawler_control` — ChatGPT search and user-requested web access state;
 - `application_logs` — bounded public-safe diagnostics;
 - `r2_object_metadata` — relational references to real R2 objects;
 - `webhook_receipts` — signed-delivery digests and replay protection.

@@ -2,6 +2,7 @@ import type { Env } from '../types';
 import { collectHealth } from '../api/operations';
 import { currentBudgetState, recentUsage } from '../lib/billing';
 import { getDemoControl } from '../lib/demo-control';
+import { getCrawlerControl } from '../lib/crawler-control';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
 import { referenceDetails, shell } from '../ui/page';
@@ -47,11 +48,12 @@ ${content}`, { cacheControl: 'no-store', activeRoute: route });
 }
 
 export async function renderDashboard(env: Env): Promise<Response> {
-  const [control, health, budget] = await Promise.all([getDemoControl(env), collectHealth(env, false), currentBudgetState(env)]);
+  const [control, crawlerControl, health, budget] = await Promise.all([getDemoControl(env), getCrawlerControl(env), collectHealth(env, false), currentBudgetState(env)]);
   const version = env.DEPLOYED_VERSION || 'development';
   return operationalPage(env, '/dashboard', 'Operations Dashboard', 'Operations Dashboard', 'src/demos/dashboard.ts', `
   <section class="grid" aria-label="Current operational state">
     <article class="card"><h2 class="eyebrow">Demo control</h2><p class="${statusClass(control.state)}">${escapeHtml(control.state)}</p><p>${escapeHtml(control.publicMessage)}</p><a href="/admin">Protected control</a></article>
+    <article class="card" id="chatgpt-access"><h2 class="eyebrow">ChatGPT access</h2><p class="${statusClass(crawlerControl.state === 'enabled' ? 'online' : 'offline')}">${escapeHtml(crawlerControl.state)}</p><p>Search and user-requested ChatGPT fetching are ${crawlerControl.state === 'enabled' ? 'allowed' : 'blocked'}. Model-training crawl stays blocked.</p><form method="post" action="/admin"><input type="hidden" name="control" value="chatgpt-crawl"><div class="button-row"><button name="state" value="enabled" type="submit">Enable access</button><button name="state" value="disabled" type="submit">Disable access</button></div></form><p class="subtle">Authentication is required when a control is submitted.</p><a href="/admin#chatgpt-crawl">Review protected control</a> · <a href="/robots.txt">Robots policy</a></article>
     <article class="card" id="health"><h2 class="eyebrow">Health</h2><p class="${statusClass(health.status)}">${escapeHtml(health.status)}</p><dl><dt>Worker/runtime</dt><dd>${health.services.worker}</dd><dt>D1</dt><dd>${health.services.d1}</dd><dt>R2</dt><dd>${health.services.r2}</dd><dt>Durable Objects</dt><dd>${health.services.durableObjects}</dd><dt>Intentional demo state</dt><dd>${escapeHtml(health.demo.state)} — ${escapeHtml(health.demo.message)}</dd><dt>Checked</dt><dd>${escapeHtml(health.checkedAt)}</dd></dl><a href="/health">Inspect health JSON</a></article>
     <article class="card"><h2 class="eyebrow">Synthetic budget</h2><p class="${statusClass(budget.state)}">${escapeHtml(budget.state)}</p><p>${budget.percent.toFixed(1)}% of the controlled demonstration budget.</p><a href="/dashboard/billing">Exercise degradation</a></article>
     <article class="card"><h2 class="eyebrow">Deployed version</h2><p class="stat">${escapeHtml(version)}</p><p>Commit: ${escapeHtml(env.DEPLOYED_SHA || 'not supplied')}</p><a href="/version">Inspect version JSON</a></article>

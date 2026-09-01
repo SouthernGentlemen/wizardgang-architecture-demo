@@ -35,6 +35,7 @@ import { gitEvidenceResponse } from './api/git-evidence';
 import { renderGitDemo } from './demos/git-page';
 import { graphiqlAssetResponse } from './ui/graphiql-assets';
 import { socialCardResponse } from './ui/brand-assets';
+import { crawlerBlockedResponse, getCrawlerControl, identifyOpenAIAgent, robotsResponse, setCrawlerControl } from './lib/crawler-control';
 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
@@ -66,6 +67,7 @@ export function bypassOfflineGate(path: string): boolean {
   return path === '/admin'
     || path === '/offline'
     || path === '/og.png'
+    || path === '/robots.txt'
     || path === '/health'
     || path === '/version'
     || path === '/__api/operations/logs'
@@ -115,6 +117,21 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
       const originFailure = requireSameOrigin(request);
       if (originFailure) return originFailure;
       const form = await request.formData();
+      const requestedControl = form.get('control');
+      if (requestedControl === 'chatgpt-crawl') {
+        const requestedState = form.get('state');
+        if (requestedState !== 'enabled' && requestedState !== 'disabled') {
+          return json({ error: 'invalid_crawler_state' }, { status: 400, headers: { 'cache-control': 'no-store' } });
+        }
+        await setCrawlerControl(env, requestedState, identity.username);
+        const location = new URL('/admin', url.origin);
+        location.searchParams.set('changed', `chatgpt-crawl-${requestedState}`);
+        location.hash = 'chatgpt-crawl';
+        return new Response(null, { status: 303, headers: { location: location.toString(), 'cache-control': 'no-store' } });
+      }
+      if (requestedControl !== null && requestedControl !== 'demo') {
+        return json({ error: 'invalid_admin_control' }, { status: 400, headers: { 'cache-control': 'no-store' } });
+      }
       const state = form.get('state') === 'offline' ? 'offline' : 'online';
       const fallback = state === 'offline' ? 'The demo is temporarily unavailable.' : 'The architecture demo is available.';
       const message = String(form.get('message') || fallback).trim().slice(0, 500) || fallback;
@@ -125,9 +142,25 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
     }
     if (request.method === 'GET') {
       const changed = url.searchParams.get('changed');
-      return renderAdmin(env, await getDemoControl(env), changed === 'online' || changed === 'offline' ? `Demo is now ${changed}.` : '');
+      const [demoControl, crawlerControl] = await Promise.all([getDemoControl(env), getCrawlerControl(env)]);
+      const notice = changed === 'online' || changed === 'offline'
+        ? `Demo is now ${changed}.`
+        : changed === 'chatgpt-crawl-enabled' || changed === 'chatgpt-crawl-disabled'
+          ? `ChatGPT crawl access is now ${changed.endsWith('enabled') ? 'enabled' : 'disabled'}.`
+          : '';
+      return renderAdmin(env, demoControl, crawlerControl, notice);
     }
     return methodNotAllowed(['GET', 'POST']);
+  }
+
+  if ((request.method === 'GET' || request.method === 'HEAD') && path === '/robots.txt') {
+    return robotsResponse(request, await getCrawlerControl(env));
+  }
+
+  const openAIAgent = identifyOpenAIAgent(request.headers.get('user-agent'));
+  if (openAIAgent === 'GPTBot') return crawlerBlockedResponse(openAIAgent);
+  if (openAIAgent && (await getCrawlerControl(env)).state === 'disabled') {
+    return crawlerBlockedResponse(openAIAgent);
   }
 
   if (request.method === 'GET' && path === '/health') return healthResponse(env);

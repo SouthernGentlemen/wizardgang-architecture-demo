@@ -17,9 +17,11 @@ The current Worker secrets are `DEMO_ADMIN_USER`, `DEMO_ADMIN_PASSWORD`, `DEMO_A
 
 ## Demo administration
 
-`/admin` is authenticated and state-changing responses use `Cache-Control: no-store`. Online/offline state is persisted in D1 and state transitions are auditable, but audit payloads must never contain credentials or authorization material.
+`/admin` is authenticated and state-changing responses use `Cache-Control: no-store`. Online/offline and ChatGPT crawler-access states are persisted in D1 and state transitions are auditable, but audit payloads must never contain credentials or authorization material.
 
 Admin credentials are compared through fixed-length digests, state-changing form submissions require an exact same-origin request, and control failures fail closed. For production, place Cloudflare Access in front of `/admin` where practical while retaining the application-side Basic authentication and authorization boundary for state changes.
+
+The crawler-access control combines a dynamic `/robots.txt` with a request gate for `OAI-SearchBot` and `ChatGPT-User`; relying on robots rules alone is insufficient for user-triggered visits. `GPTBot` is always denied so search/fetch access is separate from model-training access. User-agent matching expresses site policy rather than bot identity authentication; the site contains only public data and no authorization decision relies on a crawler user agent.
 
 REST writes and R2 mutations require a bearer token supplied through `DEMO_API_TOKEN`. Public REST, GraphQL, and MCP reads share the explicit `demo:read` boundary. Webhook receivers verify HMAC-SHA256 over the exact request body and reject reused delivery IDs. The GitHub receiver additionally allowlists event types and the configured repository. Signing secrets remain environment-owned; only bounded summaries and payload digests are persisted.
 

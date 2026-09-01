@@ -15,6 +15,7 @@ This document makes the operational surface a first-class part of the architectu
 /offline     public maintenance/offline page
 /health      machine-readable health
 /version     machine-readable release/build metadata
+/robots.txt  dynamic ChatGPT crawler policy
 /__api/operations/logs  machine-readable public-safe logs
 ```
 
@@ -30,6 +31,7 @@ The operational routes remain reachable while ordinary demos are intentionally o
 4. What version/source/docs are running?
 5. What recent application activity can be safely inspected?
 6. What would usage, estimated cost, thresholds, and degradation look like?
+7. Is ChatGPT search and user-requested web access currently enabled?
 
 The dashboard should link directly to the source files, migrations, tests, GitHub Actions, releases, and route documentation that produce the displayed state.
 
@@ -127,13 +129,14 @@ The UI should show which optional behaviors would be reduced or disabled as cost
 
 ## Admin control
 
-`/admin` intentionally controls whether public architecture demos are online or offline.
+`/admin` intentionally controls whether public architecture demos are online or offline and whether ChatGPT may fetch public demo content.
 
 Requirements:
 
 - authenticated access only;
 - credentials never committed;
 - D1 persistence through `demo_control`;
+- separate D1 persistence through `crawler_control`;
 - public message editable by admin;
 - changes written to the common audit event stream;
 - `Cache-Control: no-store`;
@@ -143,6 +146,9 @@ Requirements:
 - `/dashboard/*`, `/health`, `/version`, `/offline`, and `/admin` stay available;
 - no redirect loop;
 - public offline page uses the explicit heading **“Oops! demo is down.”**.
+- crawler changes update both `/robots.txt` and a server-side `OAI-SearchBot` / `ChatGPT-User` request gate;
+- crawler control fails closed when D1 is unavailable;
+- `GPTBot` remains blocked in both crawler-control states so web access never implies model-training access.
 
 For local development the implementation supports HTTP Basic credentials from `.dev.vars`. The application compares digests, requires exact same-origin state-changing submissions, emits no-store responses, and fails closed if control state cannot be read. For production, prefer Cloudflare Access in front of `/admin` while retaining the application-side authorization boundary.
 
@@ -159,6 +165,7 @@ For local development the implementation supports HTTP Basic credentials from `.
 | `/version` | available | available |
 | `/admin` | protected | protected + available |
 | `/offline` | available | available |
+| `/robots.txt` | available; reflects crawler control | available; reflects crawler control |
 
 ## Audit trail
 
@@ -178,6 +185,8 @@ Admin transitions should emit a `demo_events` record such as:
 
 Do not record passwords, authorization headers, tokens, cookies, or other credentials.
 
+Crawler transitions use the same safe evidence boundaries with event type `chatgpt_crawl_access_changed`; the public payload contains only the selected state, an opaque authenticated-admin actor label, and a timestamp. The actual admin username remains confined to the protected control record. OpenAI documents that ChatGPT user-triggered fetches may not follow `robots.txt`, so the Worker also enforces the state before routing public content. Search indexing may take time to observe a policy update even though the Worker gate changes immediately.
+
 ## Source ownership
 
 | Concern | Primary source |
@@ -193,8 +202,10 @@ Do not record passwords, authorization headers, tokens, cookies, or other creden
 | Admin UI/offline page | `src/ui/admin.ts` |
 | Admin authentication | `src/lib/admin-auth.ts` |
 | Online/offline state | `src/lib/demo-control.ts` |
+| ChatGPT crawler state, robots policy, and request classification | `src/lib/crawler-control.ts` |
 | Shared event audit | `src/lib/audit.ts` |
 | Operations schema | `migrations/0002_operations_dashboard.sql` |
 | Application log schema | `migrations/0004_application_logs.sql` |
 | Control schema | `migrations/0003_demo_control.sql` |
+| Crawler-control schema | `migrations/0009_crawler_control.sql` |
 | Routing gate | `src/router.ts` |

@@ -11,7 +11,7 @@ const requiredRoutes = [
   '/api', '/identity', '/mcp', '/i18n', '/accessibility', '/git',
   '/governance', '/dashboard', '/dashboard/uptime', '/dashboard/docs',
   '/dashboard/logs', '/dashboard/billing', '/admin', '/offline', '/health', '/version',
-  '/sitemap.xml', '/og.png', '/__api/operations/logs',
+  '/sitemap.xml', '/og.png', '/robots.txt', '/__api/operations/logs',
   '/__api/edge/inspect', '/__api/workers/compute', '/__api/durable/counter',
   '/__api/d1/users', '/__api/d1/users/{id}', '/__api/d1/tasks', '/__api/d1/tasks/{id}', '/__api/d1/reset',
   '/__api/r2/files', '/__api/r2/files/{id}', '/__api/r2/reset',
@@ -61,12 +61,14 @@ for (const requiredFile of [
   'docs/IMPLEMENTATION-PLAN.md',
   'src/ui/admin.ts',
   'src/lib/demo-control.ts',
+  'src/lib/crawler-control.ts',
   'src/api/operations.ts',
   'src/demos/logs.ts',
   'src/lib/logs.ts',
   'migrations/0002_operations_dashboard.sql',
   'migrations/0003_demo_control.sql',
   'migrations/0004_application_logs.sql',
+  'migrations/0009_crawler_control.sql',
   'KICKOFF-SOL-VERY-HIGH.md'
 ]) {
   if (!fs.existsSync(path.join(root, requiredFile))) failures.push(`missing required file: ${requiredFile}`);
@@ -83,7 +85,7 @@ function walk(dir) {
 walk(root);
 
 const router = fs.readFileSync(path.join(root, 'src/router.ts'), 'utf8');
-for (const token of ['/dashboard', '/dashboard/logs', '/__api/operations/logs', '/admin', '/offline', '/health', '/version', 'offlineApiResponse', 'wantsHtml']) {
+for (const token of ['/dashboard', '/dashboard/logs', '/__api/operations/logs', '/admin', '/offline', '/health', '/version', '/robots.txt', 'offlineApiResponse', 'wantsHtml']) {
   if (!router.includes(token)) failures.push(`router missing operations/admin invariant: ${token}`);
 }
 
@@ -92,6 +94,11 @@ if (!adminUi.includes('Oops! demo is down.')) failures.push('offline UI missing 
 
 const control = fs.readFileSync(path.join(root, 'src/lib/demo-control.ts'), 'utf8');
 if (!control.includes('demo_state_changed')) failures.push('admin state changes are not auditable');
+
+const crawlerControl = fs.readFileSync(path.join(root, 'src/lib/crawler-control.ts'), 'utf8');
+for (const token of ['OAI-SearchBot', 'ChatGPT-User', 'GPTBot', 'chatgpt_crawl_access_changed']) {
+  if (!crawlerControl.includes(token)) failures.push(`crawler control invariant missing: ${token}`);
+}
 
 
 const logsLib = fs.readFileSync(path.join(root, 'src/lib/logs.ts'), 'utf8');

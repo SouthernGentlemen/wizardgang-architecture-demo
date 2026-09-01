@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { requireAdmin, requireSameOrigin } from '../src/lib/admin-auth';
 import { getDemoControl } from '../src/lib/demo-control';
+import { getCrawlerControl } from '../src/lib/crawler-control';
 import { json, readJson } from '../src/lib/http';
 import type { Env } from '../src/types';
 
@@ -60,15 +61,17 @@ describe('safe HTTP and control defaults', () => {
   });
 
   it('fails closed when the D1 control state cannot be read', async () => {
-    const control = await getDemoControl({
+    const unavailableEnv = {
       ...baseEnv,
       DEMO_DB: {
         prepare() {
           return { bind: () => { throw new Error('unused'); }, run: async () => { throw new Error('unavailable'); }, all: async () => { throw new Error('unavailable'); } };
         },
       },
-    });
+    };
+    const control = await getDemoControl(unavailableEnv);
     expect(control.state).toBe('offline');
     expect(control.publicMessage).toContain('unavailable');
+    expect((await getCrawlerControl(unavailableEnv)).state).toBe('disabled');
   });
 });

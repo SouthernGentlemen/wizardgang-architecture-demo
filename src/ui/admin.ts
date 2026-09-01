@@ -1,23 +1,27 @@
 import type { Env } from '../types';
 import type { DemoControl } from '../lib/demo-control';
+import type { CrawlerControl } from '../lib/crawler-control';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
 import { referenceDetails, shell } from './page';
 
-export function renderAdmin(env: Env, control: DemoControl, notice = ''): Response {
+export function renderAdmin(env: Env, control: DemoControl, crawlerControl: CrawlerControl, notice = ''): Response {
   const offline = control.state === 'offline';
+  const crawlEnabled = crawlerControl.state === 'enabled';
   return shell(env, 'Demo Admin', `
 <section class="page-header">
   <p class="eyebrow">Operations / protected</p>
   <h1>Demo Admin</h1>
-  <p class="lede">Take ordinary public architecture demonstrations online or offline without disabling the public status, documentation, or administration surface.</p>
+  <p class="lede">Control public demo availability and ChatGPT web access without disabling the status, documentation, or administration surface.</p>
   <div class="page-tools">
     <span class="badge ${offline ? 'badge-down' : 'badge-ok'}">${escapeHtml(control.state)}</span>
     ${referenceDetails([
       { label: 'Admin UI source', href: sourceUrl(env, 'src/ui/admin.ts') },
       { label: 'Control logic', href: sourceUrl(env, 'src/lib/demo-control.ts') },
+      { label: 'Crawler control', href: sourceUrl(env, 'src/lib/crawler-control.ts') },
       { label: 'Offline gate', href: sourceUrl(env, 'src/router.ts') },
       { label: 'D1 control schema', href: sourceUrl(env, 'migrations/0003_demo_control.sql') },
+      { label: 'Crawler schema', href: sourceUrl(env, 'migrations/0009_crawler_control.sql') },
       { label: 'Operations design', href: sourceUrl(env, 'docs/OPERATIONS.md') },
     ])}
   </div>
@@ -30,6 +34,7 @@ ${notice ? `<section class="panel" role="status"><strong>${escapeHtml(notice)}</
     <dt>Last changed</dt><dd>${escapeHtml(control.updatedAt)}${control.updatedBy ? ` by ${escapeHtml(control.updatedBy)}` : ''}</dd>
   </dl>
   <form method="post" action="/admin">
+    <input type="hidden" name="control" value="demo">
     <div class="field">
       <label for="message">Public message</label>
       <p class="subtle" id="message-help">Displayed on the offline page. Maximum 500 characters. Do not place secrets or internal incident details here.</p>
@@ -38,6 +43,28 @@ ${notice ? `<section class="panel" role="status"><strong>${escapeHtml(notice)}</
     <div class="meta" style="margin-top:1.2rem">
       <button class="button-primary" name="state" value="online" type="submit">Take demo online</button>
       <button name="state" value="offline" type="submit">Take demo offline</button>
+    </div>
+  </form>
+</section>
+<section class="panel" id="chatgpt-crawl">
+  <p class="eyebrow">Crawler policy</p>
+  <h2>ChatGPT web access</h2>
+  <p><span class="badge ${crawlEnabled ? 'badge-ok' : 'badge-down'}">${escapeHtml(crawlerControl.state)}</span></p>
+  <p>${crawlEnabled
+    ? '<strong>OAI-SearchBot</strong> and <strong>ChatGPT-User</strong> can fetch public demo routes. The ordinary demo offline gate still applies.'
+    : '<strong>OAI-SearchBot</strong> and <strong>ChatGPT-User</strong> receive a server-enforced <code>403</code> response.'}</p>
+  <p class="subtle"><strong>GPTBot remains blocked</strong>, so enabling this switch does not opt the site into foundation-model training. Search systems may take about 24 hours to observe a robots policy change.</p>
+  <dl style="margin-bottom:1.4rem">
+    <dt>Current state</dt><dd><strong>${escapeHtml(crawlerControl.state)}</strong></dd>
+    <dt>Last changed</dt><dd>${escapeHtml(crawlerControl.updatedAt)}${crawlerControl.updatedBy ? ` by ${escapeHtml(crawlerControl.updatedBy)}` : ''}</dd>
+    <dt>Published policy</dt><dd><a href="/robots.txt">Inspect <code>/robots.txt</code></a></dd>
+    <dt>Agent reference</dt><dd><a href="https://developers.openai.com/api/docs/bots">OpenAI crawler documentation</a></dd>
+  </dl>
+  <form method="post" action="/admin">
+    <input type="hidden" name="control" value="chatgpt-crawl">
+    <div class="meta">
+      <button class="button-primary" name="state" value="enabled" type="submit">Enable ChatGPT access</button>
+      <button name="state" value="disabled" type="submit">Disable ChatGPT access</button>
     </div>
   </form>
 </section>
