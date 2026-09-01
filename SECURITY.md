@@ -13,7 +13,7 @@ This is a public architecture demonstration. Public source is intentional; secre
 
 Use Cloudflare/GitHub managed secret stores for production and ignored `.dev.vars` for local-only admin placeholders.
 
-The current Worker secrets are `DEMO_ADMIN_USER`, `DEMO_ADMIN_PASSWORD`, `DEMO_API_TOKEN`, `WEBHOOK_DEMO_SECRET`, and `DEMO_SESSION_SECRET`. Values are never returned by health, version, logs, evidence, or source-link surfaces.
+The current Worker secrets are `DEMO_ADMIN_USER`, `DEMO_ADMIN_PASSWORD`, `DEMO_API_TOKEN`, `WEBHOOK_DEMO_SECRET`, `GITHUB_WEBHOOK_SECRET`, and `DEMO_SESSION_SECRET`. `GITHUB_READ_TOKEN` is an optional read-only GitHub API token. Values are never returned by health, version, logs, evidence, or source-link surfaces.
 
 ## Demo administration
 
@@ -21,7 +21,7 @@ The current Worker secrets are `DEMO_ADMIN_USER`, `DEMO_ADMIN_PASSWORD`, `DEMO_A
 
 Admin credentials are compared through fixed-length digests, state-changing form submissions require an exact same-origin request, and control failures fail closed. For production, place Cloudflare Access in front of `/admin` where practical while retaining the application-side Basic authentication and authorization boundary for state changes.
 
-REST writes and R2 mutations require a bearer token supplied through `DEMO_API_TOKEN`. Public REST, GraphQL, and MCP reads share the explicit `demo:read` boundary. The demo webhook verifies HMAC-SHA256 over the exact request body and rejects reused delivery IDs; its signing secret is environment-owned.
+REST writes and R2 mutations require a bearer token supplied through `DEMO_API_TOKEN`. Public REST, GraphQL, and MCP reads share the explicit `demo:read` boundary. Webhook receivers verify HMAC-SHA256 over the exact request body and reject reused delivery IDs. The GitHub receiver additionally allowlists event types and the configured repository. Signing secrets remain environment-owned; only bounded summaries and payload digests are persisted.
 
 ## Public logging
 

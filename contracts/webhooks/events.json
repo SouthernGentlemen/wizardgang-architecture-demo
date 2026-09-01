@@ -3,9 +3,18 @@
   "events": [
     {
       "type": "demo.record.changed",
+      "route": "/v1/webhooks/demo",
       "delivery": "HTTPS POST",
       "payload": "JSON",
       "security": "HMAC-SHA256 over the exact request body; signing secret remains outside Git; delivery IDs are unique to reject replay."
+    },
+    {
+      "type": "github",
+      "route": "/v1/webhooks/github",
+      "allowedEvents": ["ping", "push", "pull_request", "workflow_run", "release"],
+      "delivery": "HTTPS POST",
+      "payload": "GitHub JSON",
+      "security": "X-Hub-Signature-256 verification over the exact body, X-GitHub-Delivery replay rejection, event allowlist, configured-repository allowlist, and sanitized summary persistence."
     }
   ]
 }

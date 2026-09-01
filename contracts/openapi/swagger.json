@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "WizardGang Architecture Demo REST API",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "description": "Executable Swagger 2.0 contract for the versioned REST and signed-webhook demonstration. Reads are public; mutations use the same bearer authorization boundary as GraphQL and MCP."
   },
   "host": "demo.wizardgang.ai",
@@ -65,6 +65,19 @@
         "responses": { "202": { "description": "Signature verified and receipt stored" }, "401": { "description": "Invalid signature" }, "409": { "description": "Duplicate delivery" }, "503": { "description": "Unavailable" } }
       }
     },
+    "/webhooks/github": {
+      "post": {
+        "summary": "Receive an allowlisted, signed GitHub webhook",
+        "description": "Verifies X-Hub-Signature-256 over the exact body, rejects replay, and stores only a sanitized summary for the configured repository.",
+        "parameters": [
+          { "name": "X-GitHub-Delivery", "in": "header", "required": true, "type": "string", "maxLength": 100, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]{0,99}$", "x-example": "github-delivery-example", "description": "GitHub delivery identifier used for replay protection." },
+          { "name": "X-GitHub-Event", "in": "header", "required": true, "type": "string", "enum": ["ping", "push", "pull_request", "workflow_run", "release"], "x-example": "push", "description": "Allowlisted GitHub event type." },
+          { "name": "X-Hub-Signature-256", "in": "header", "required": true, "type": "string", "pattern": "^sha256=[0-9a-f]{64}$", "description": "GitHub HMAC-SHA256 signature of the exact request body." },
+          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/GitHubWebhookPayload" } }
+        ],
+        "responses": { "202": { "description": "Signature, event, repository, and delivery verified" }, "400": { "description": "Unsupported or malformed event" }, "401": { "description": "Invalid signature" }, "403": { "description": "Repository not allowed" }, "409": { "description": "Duplicate delivery" }, "503": { "description": "Unavailable or secret not configured" } }
+      }
+    },
     "/openapi.json": {
       "get": {
         "summary": "Fetch this Swagger 2.0 contract",
@@ -113,6 +126,25 @@
         "sentAt": { "type": "string", "format": "date-time" }
       },
       "additionalProperties": false
+    },
+    "GitHubWebhookPayload": {
+      "type": "object",
+      "required": ["repository"],
+      "example": { "ref": "refs/heads/main", "after": "0000000000000000000000000000000000000000", "repository": { "full_name": "SouthernGentlemen/wizardgang-architecture-demo" }, "sender": { "login": "demo-visitor" } },
+      "properties": {
+        "action": { "type": "string" },
+        "ref": { "type": "string" },
+        "after": { "type": "string" },
+        "repository": { "type": "object" },
+        "sender": { "type": "object" },
+        "pusher": { "type": "object" },
+        "head_commit": { "type": "object" },
+        "pull_request": { "type": "object" },
+        "workflow_run": { "type": "object" },
+        "release": { "type": "object" },
+        "zen": { "type": "string" },
+        "hook": { "type": "object" }
+      }
     }
   }
 }

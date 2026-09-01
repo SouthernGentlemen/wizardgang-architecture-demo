@@ -16,7 +16,7 @@ import { edgeInspectionResponse, workerComputeResponse } from './api/runtime';
 import { r2DemoObjectResponse, r2FilesResetResponse, r2FilesResponse, r2ObjectResponse } from './api/r2';
 import { durableCounterResponse } from './api/durable';
 import { graphqlResponse, graphqlSchemaResponse } from './api/graphql';
-import { webhookDemoResponse, webhookReceiptResponse } from './api/webhooks';
+import { githubWebhookResponse, webhookDemoResponse, webhookEventsResponse, webhookReceiptResponse, webhookResetResponse } from './api/webhooks';
 import { openApiResponse } from './api/openapi';
 import { mcpResponse } from './api/mcp';
 import { authorizationDecisionResponse, oauthPkceResponse, samlInspectionResponse, samlMetadataResponse, ssoBoundaryResponse } from './api/identity';
@@ -30,6 +30,7 @@ import { renderD1Demo } from './demos/d1-page';
 import { graphqlConsole } from './demos/graphql-console';
 import { renderR2Demo } from './demos/r2-page';
 import { accessibilityLabResponse } from './ui/accessibility-lab';
+import { webhookConsole } from './demos/webhook-console';
 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
@@ -161,7 +162,10 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/graphql') return graphqlResponse(request, env);
   if (path === '/graphql/schema') return graphqlSchemaResponse(request);
   if (path === '/v1/webhooks/demo') return webhookReceiptResponse(request, env);
+  if (path === '/v1/webhooks/github') return githubWebhookResponse(request, env);
   if (path === '/__api/webhooks/demo') return webhookDemoResponse(request, env);
+  if (path === '/__api/webhooks/events') return webhookEventsResponse(request, env);
+  if (path === '/__api/webhooks/reset') return webhookResetResponse(request, env);
   if (path === '/mcp' && request.method !== 'GET') return mcpResponse(request, env);
   if (path === '/__api/identity/oauth-pkce') return oauthPkceResponse(request, env);
   if (path === '/__api/identity/authorize') return authorizationDecisionResponse(request, env);
@@ -194,7 +198,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (request.method === 'GET') {
     const demo = demosByRoute.get(path);
     if (demo) {
-      const extra = path === '/api' ? `${swaggerConsole()}${graphqlConsole()}` : RECORD_CONSOLE_ROUTES.has(path) ? recordsConsole('records') : '';
+      const extra = path === '/api' ? `${swaggerConsole()}${graphqlConsole()}${webhookConsole()}` : RECORD_CONSOLE_ROUTES.has(path) ? recordsConsole('records') : '';
       return renderDemo(env, demo, demos, extra);
     }
   }

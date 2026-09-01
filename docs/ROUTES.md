@@ -87,7 +87,10 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | `/graphql` | `GET`, `POST` | Embedded GraphiQL and GraphQL query/mutation execution | `src/api/graphql.ts` |
 | `/graphql/schema` | `GET` | GraphQL schema | `src/api/graphql.ts` |
 | `/v1/webhooks/demo` | `POST` | Signed webhook receiver | `src/api/webhooks.ts` |
-| `/__api/webhooks/demo` | `POST` | Visitor signed-webhook run | `src/api/webhooks.ts` |
+| `/v1/webhooks/github` | `POST` | GitHub-compatible verified receiver | `src/api/webhooks.ts` |
+| `/__api/webhooks/demo` | `POST` | Generate a session-scoped GitHub-shaped event | `src/api/webhooks.ts` |
+| `/__api/webhooks/events` | `GET` | Poll verified GitHub and current-session events | `src/api/webhooks.ts` |
+| `/__api/webhooks/reset` | `POST` | Reset current-session synthetic events | `src/api/webhooks.ts` |
 | `/mcp` | `POST` | Controlled MCP JSON-RPC interface | `src/api/mcp.ts` |
 | `/__api/identity/oauth-pkce` | `POST` | OAuth PKCE material | `src/api/identity.ts` |
 | `/__api/identity/authorize` | `POST` | Application policy decision | `src/api/identity.ts` |

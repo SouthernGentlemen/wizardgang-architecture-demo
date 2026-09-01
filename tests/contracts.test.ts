@@ -16,6 +16,8 @@ describe('public machine contracts', () => {
     expect(graphql).toContain('demoRecords');
     expect(graphql).toContain('createUser');
     expect(JSON.parse(readFileSync('contracts/mcp/tools.json', 'utf8')).status).toBe('working');
-    expect(JSON.parse(readFileSync('contracts/webhooks/events.json', 'utf8')).status).toBe('working');
+    const webhookContract = JSON.parse(readFileSync('contracts/webhooks/events.json', 'utf8'));
+    expect(webhookContract.status).toBe('working');
+    expect(webhookContract.events.find((event: { type: string }) => event.type === 'github')?.allowedEvents).toEqual(['ping', 'push', 'pull_request', 'workflow_run', 'release']);
   });
 });
