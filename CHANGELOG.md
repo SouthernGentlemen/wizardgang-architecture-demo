@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.3.0 — 2026-08-31
+
 - Flattened the public architecture map from 34 HTML routes in eight groups to 17 routes in five layer-level groups without removing an executable demonstration.
 - Preserved all 17 retired page URLs as exact permanent redirects to anchors on `/api`, `/identity`, `/git`, `/governance`, and `/dashboard`; `/identity/saml/metadata` remains a distinct XML machine endpoint.
 - Consolidated REST CRUD, OpenAPI, GraphQL, webhooks, identity boundaries, delivery lifecycle, ISO-aligned governance, traceability, evidence, and detailed health into their layer pages.
