@@ -14,6 +14,7 @@ const requiredRoutes = [
   '/sitemap.xml', '/__api/operations/logs',
   '/__api/edge/inspect', '/__api/workers/compute', '/__api/durable/counter',
   '/__api/d1/users', '/__api/d1/users/{id}', '/__api/d1/tasks', '/__api/d1/tasks/{id}', '/__api/d1/reset',
+  '/__api/r2/files', '/__api/r2/files/{id}', '/__api/r2/reset',
   '/__api/r2/demo', '/__api/r2/object', '/v1/demo-records', '/v1/demo-records/{key}',
   '/v1/openapi.json', '/graphql', '/graphql/schema', '/v1/webhooks/demo',
   '/__api/webhooks/demo', '/__api/identity/oauth-pkce', '/__api/identity/authorize',
