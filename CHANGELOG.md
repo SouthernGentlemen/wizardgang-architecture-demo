@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.6.0 — 2026-09-01
+
 - Aligned the complete demo interface with the flagship `wizardgang.ai` brand system, including editorial scale, square technical surfaces, responsive navigation, shared dark/light color semantics, main-site cross-links, and a dedicated social preview card.
 
 ## 0.5.0 — 2026-09-01
