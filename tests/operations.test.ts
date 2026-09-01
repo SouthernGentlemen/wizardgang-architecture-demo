@@ -50,7 +50,9 @@ describe('operations proof surface', () => {
     expect(dashboard).toContain('Current operational state');
     expect(dashboard).toContain('id="health"');
     expect(dashboard).toContain('<dt>Checked</dt><dd>');
-    expect(await renderDocs(environment).text()).toContain('Swagger JSON');
+    const docs = await renderDocs(environment).text();
+    expect(docs).toContain('Swagger JSON');
+    expect(docs).toContain('docs/INTERACTIVE-DEMO-SPEC.md');
     const uptime = await (await renderUptime(environment)).text();
     expect(uptime).toContain('planned/manual offline');
     expect(uptime).toContain('Unexpected degraded/down</dt><dd>1');
