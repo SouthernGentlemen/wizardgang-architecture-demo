@@ -53,6 +53,10 @@ describe('public route contract', () => {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${route}`, { headers: { accept: 'text/html' } }), environment);
       expect(response.status, route).toBe(301);
       expect(response.headers.get('location'), route).toBe(`https://demo.wizardgang.ai${destination}`);
+      const target = new URL(destination, 'https://demo.wizardgang.ai');
+      const targetResponse = await routeRequest(new Request(target, { headers: { accept: 'text/html' } }), environment);
+      expect(targetResponse.status, destination).toBe(200);
+      expect(await targetResponse.text(), destination).toContain(`id="${target.hash.slice(1)}"`);
     }
 
     const metadata = await routeRequest(new Request('https://demo.wizardgang.ai/identity/saml/metadata'), environment);

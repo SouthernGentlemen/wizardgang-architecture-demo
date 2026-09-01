@@ -4,7 +4,7 @@ const demo: DemoDefinition = {
   "id": "durable-objects",
   "route": "/durable-objects",
   "title": "Durable Objects",
-  "group": "Runtime",
+  "group": "Platform",
   "sourcePath": "src/demos/durable-objects.ts",
   "summary": "Coordinated stateful compute for cases where independent Worker requests must agree on shared state.",
   "proves": [

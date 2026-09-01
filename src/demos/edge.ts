@@ -4,7 +4,7 @@ const demo: DemoDefinition = {
   "id": "edge",
   "route": "/edge",
   "title": "Cloudflare Edge",
-  "group": "Runtime",
+  "group": "Platform",
   "sourcePath": "src/demos/edge.ts",
   "summary": "Public edge boundary for DNS, TLS, CDN, routing, traffic filtering, rate controls, and security policy.",
   "proves": [

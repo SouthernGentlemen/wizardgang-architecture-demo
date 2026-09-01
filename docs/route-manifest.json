@@ -9,197 +9,86 @@
   {
     "route": "/edge",
     "title": "Cloudflare Edge",
-    "group": "Runtime",
+    "group": "Platform",
     "source": "src/demos/edge.ts",
     "status": "working"
   },
   {
     "route": "/workers",
     "title": "Cloudflare Workers",
-    "group": "Runtime",
+    "group": "Platform",
     "source": "src/demos/workers.ts",
     "status": "working"
   },
   {
     "route": "/durable-objects",
     "title": "Durable Objects",
-    "group": "Runtime",
+    "group": "Platform",
     "source": "src/demos/durable-objects.ts",
     "status": "working"
   },
   {
     "route": "/d1",
     "title": "Cloudflare D1",
-    "group": "Runtime",
+    "group": "Platform",
     "source": "src/demos/d1.ts",
     "status": "working"
   },
   {
     "route": "/r2",
     "title": "Cloudflare R2",
-    "group": "Runtime",
+    "group": "Platform",
     "source": "src/demos/r2.ts",
     "status": "working"
   },
   {
     "route": "/api",
-    "title": "API Architecture",
-    "group": "Integration",
+    "title": "Application Interfaces",
+    "group": "Interfaces",
     "source": "src/demos/api.ts",
-    "status": "working"
-  },
-  {
-    "route": "/api/rest",
-    "title": "REST / JSON",
-    "group": "Integration",
-    "source": "src/demos/rest.ts",
-    "status": "working"
-  },
-  {
-    "route": "/api/openapi",
-    "title": "OpenAPI / Swagger 2.x",
-    "group": "Integration",
-    "source": "src/demos/openapi.ts",
-    "status": "working"
-  },
-  {
-    "route": "/api/graphql",
-    "title": "GraphQL",
-    "group": "Integration",
-    "source": "src/demos/graphql.ts",
-    "status": "working"
-  },
-  {
-    "route": "/api/webhooks",
-    "title": "Webhooks",
-    "group": "Integration",
-    "source": "src/demos/webhooks.ts",
     "status": "working"
   },
   {
     "route": "/identity",
     "title": "Authentication & Authorization",
-    "group": "Identity",
+    "group": "Interfaces",
     "source": "src/demos/identity.ts",
-    "status": "working"
-  },
-  {
-    "route": "/identity/oauth",
-    "title": "OAuth 2.0",
-    "group": "Identity",
-    "source": "src/demos/oauth.ts",
-    "status": "working"
-  },
-  {
-    "route": "/identity/sso",
-    "title": "Single Sign-On",
-    "group": "Identity",
-    "source": "src/demos/sso.ts",
-    "status": "working"
-  },
-  {
-    "route": "/identity/saml",
-    "title": "SAML",
-    "group": "Identity",
-    "source": "src/demos/saml.ts",
     "status": "working"
   },
   {
     "route": "/mcp",
     "title": "Model Context Protocol",
-    "group": "AI Integration",
+    "group": "Interfaces",
     "source": "src/demos/mcp.ts",
-    "status": "working"
+    "status": "working",
+    "method": "GET, POST"
   },
   {
     "route": "/i18n",
     "title": "Internationalization",
-    "group": "Interface Standards",
+    "group": "Standards",
     "source": "src/demos/i18n.ts",
     "status": "working"
   },
   {
     "route": "/accessibility",
     "title": "WCAG 2.2",
-    "group": "Interface Standards",
+    "group": "Standards",
     "source": "src/demos/accessibility.ts",
     "status": "working"
   },
   {
     "route": "/git",
     "title": "Git / GitHub",
-    "group": "Delivery",
+    "group": "Delivery & Governance",
     "source": "src/demos/git.ts",
-    "status": "working"
-  },
-  {
-    "route": "/git/versioning",
-    "title": "Git Versioning",
-    "group": "Delivery",
-    "source": "src/demos/versioning.ts",
-    "status": "working"
-  },
-  {
-    "route": "/git/branching",
-    "title": "Branching",
-    "group": "Delivery",
-    "source": "src/demos/branching.ts",
-    "status": "working"
-  },
-  {
-    "route": "/git/releases",
-    "title": "Release Management",
-    "group": "Delivery",
-    "source": "src/demos/releases.ts",
-    "status": "working"
-  },
-  {
-    "route": "/git/actions",
-    "title": "GitHub Actions",
-    "group": "Delivery",
-    "source": "src/demos/actions.ts",
-    "status": "working"
-  },
-  {
-    "route": "/environments",
-    "title": "Environment Separation",
-    "group": "Delivery",
-    "source": "src/demos/environments.ts",
-    "status": "working"
-  },
-  {
-    "route": "/traceability",
-    "title": "Change Traceability",
-    "group": "Governance",
-    "source": "src/demos/traceability.ts",
     "status": "working"
   },
   {
     "route": "/governance",
     "title": "Governance",
-    "group": "Governance",
+    "group": "Delivery & Governance",
     "source": "src/demos/governance.ts",
-    "status": "working"
-  },
-  {
-    "route": "/governance/iso-27001",
-    "title": "ISO/IEC 27001 Alignment",
-    "group": "Governance",
-    "source": "src/demos/iso-27001.ts",
-    "status": "working"
-  },
-  {
-    "route": "/governance/iso-42001",
-    "title": "ISO/IEC 42001 Alignment",
-    "group": "Governance",
-    "source": "src/demos/iso-42001.ts",
-    "status": "working"
-  },
-  {
-    "route": "/evidence",
-    "title": "Evidence & Auditability",
-    "group": "Governance",
-    "source": "src/demos/evidence.ts",
     "status": "working"
   },
   {
@@ -214,13 +103,6 @@
     "title": "Uptime",
     "group": "Operations",
     "source": "src/demos/uptime.ts",
-    "status": "working"
-  },
-  {
-    "route": "/dashboard/health",
-    "title": "Health",
-    "group": "Operations",
-    "source": "src/demos/health.ts",
     "status": "working"
   },
   {
@@ -278,6 +160,14 @@
     "status": "working"
   },
   {
+    "route": "/sitemap.xml",
+    "title": "Public Route Sitemap",
+    "group": "Navigation",
+    "source": "src/api/sitemap.ts",
+    "machine": true,
+    "status": "working"
+  },
+  {
     "route": "/__api/operations/logs",
     "title": "Operational Logs JSON",
     "group": "Operations",
@@ -287,27 +177,9 @@
     "status": "working"
   },
   {
-    "route": "/__api/demo/run",
-    "title": "Baseline Demo Run API",
-    "group": "Internal Demo API",
-    "source": "src/api/demo.ts",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/demo/events",
-    "title": "Demo Events API",
-    "group": "Internal Demo API",
-    "source": "src/api/demo.ts",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
     "route": "/__api/edge/inspect",
     "title": "Edge Context JSON",
-    "group": "Runtime API",
+    "group": "Platform API",
     "source": "src/api/runtime.ts",
     "method": "GET",
     "machine": true,
@@ -317,7 +189,7 @@
   {
     "route": "/__api/workers/compute",
     "title": "Stateless Worker Compute",
-    "group": "Runtime API",
+    "group": "Platform API",
     "source": "src/api/runtime.ts",
     "method": "POST",
     "machine": true,
@@ -327,7 +199,7 @@
   {
     "route": "/__api/durable/counter",
     "title": "Durable Object Counter",
-    "group": "Runtime API",
+    "group": "Platform API",
     "source": "src/api/durable.ts",
     "method": "GET, POST",
     "machine": true,
@@ -337,7 +209,7 @@
   {
     "route": "/__api/r2/demo",
     "title": "Visitor R2 Object Action",
-    "group": "Runtime API",
+    "group": "Platform API",
     "source": "src/api/r2.ts",
     "method": "POST",
     "machine": true,
@@ -347,7 +219,7 @@
   {
     "route": "/__api/r2/object",
     "title": "R2 Object API",
-    "group": "Runtime API",
+    "group": "Platform API",
     "source": "src/api/r2.ts",
     "method": "GET, PUT, DELETE",
     "machine": true,
@@ -357,7 +229,7 @@
   {
     "route": "/v1/demo-records",
     "title": "REST Demo Records",
-    "group": "Integration API",
+    "group": "Interfaces API",
     "source": "src/api/records.ts",
     "method": "GET, POST",
     "machine": true,
@@ -367,7 +239,7 @@
   {
     "route": "/v1/demo-records/{key}",
     "title": "REST Demo Record",
-    "group": "Integration API",
+    "group": "Interfaces API",
     "source": "src/api/records.ts",
     "method": "GET, DELETE",
     "machine": true,
@@ -377,7 +249,7 @@
   {
     "route": "/v1/openapi.json",
     "title": "Swagger 2.0 Contract",
-    "group": "Integration API",
+    "group": "Interfaces API",
     "source": "src/api/openapi.ts",
     "method": "GET",
     "machine": true,
@@ -387,7 +259,7 @@
   {
     "route": "/graphql",
     "title": "GraphQL API",
-    "group": "Integration API",
+    "group": "Interfaces API",
     "source": "src/api/graphql.ts",
     "method": "POST",
     "machine": true,
@@ -397,7 +269,7 @@
   {
     "route": "/graphql/schema",
     "title": "GraphQL Schema",
-    "group": "Integration API",
+    "group": "Interfaces API",
     "source": "src/api/graphql.ts",
     "method": "GET",
     "machine": true,
@@ -407,7 +279,7 @@
   {
     "route": "/v1/webhooks/demo",
     "title": "Signed Webhook Receiver",
-    "group": "Integration API",
+    "group": "Interfaces API",
     "source": "src/api/webhooks.ts",
     "method": "POST",
     "machine": true,
@@ -417,7 +289,7 @@
   {
     "route": "/__api/webhooks/demo",
     "title": "Visitor Signed Webhook Action",
-    "group": "Integration API",
+    "group": "Interfaces API",
     "source": "src/api/webhooks.ts",
     "method": "POST",
     "machine": true,
@@ -427,7 +299,7 @@
   {
     "route": "/__api/identity/oauth-pkce",
     "title": "OAuth PKCE Material",
-    "group": "Identity API",
+    "group": "Interfaces API",
     "source": "src/api/identity.ts",
     "method": "POST",
     "machine": true,
@@ -437,7 +309,7 @@
   {
     "route": "/__api/identity/authorize",
     "title": "Authorization Policy Evaluation",
-    "group": "Identity API",
+    "group": "Interfaces API",
     "source": "src/api/identity.ts",
     "method": "POST",
     "machine": true,
@@ -447,7 +319,7 @@
   {
     "route": "/__api/identity/sso",
     "title": "SSO Trust Boundary",
-    "group": "Identity API",
+    "group": "Interfaces API",
     "source": "src/api/identity.ts",
     "method": "GET",
     "machine": true,
@@ -457,7 +329,7 @@
   {
     "route": "/identity/saml/metadata",
     "title": "SAML Service Provider Metadata",
-    "group": "Identity API",
+    "group": "Interfaces API",
     "source": "src/api/identity.ts",
     "method": "GET",
     "machine": true,
@@ -467,7 +339,7 @@
   {
     "route": "/__api/identity/saml/inspect",
     "title": "SAML Validation Boundary",
-    "group": "Identity API",
+    "group": "Interfaces API",
     "source": "src/api/identity.ts",
     "method": "GET",
     "machine": true,
@@ -487,7 +359,7 @@
   {
     "route": "/__api/evidence/traceability",
     "title": "Traceability Evidence JSON",
-    "group": "Governance API",
+    "group": "Delivery & Governance API",
     "source": "src/api/governance.ts",
     "method": "GET",
     "machine": true,
@@ -497,7 +369,7 @@
   {
     "route": "/__api/governance/security-controls",
     "title": "Security Control Evidence JSON",
-    "group": "Governance API",
+    "group": "Delivery & Governance API",
     "source": "src/api/governance.ts",
     "method": "GET",
     "machine": true,
@@ -507,7 +379,7 @@
   {
     "route": "/__api/governance/ai-evaluation",
     "title": "AI Boundary Evaluation",
-    "group": "Governance API",
+    "group": "Delivery & Governance API",
     "source": "src/api/governance.ts",
     "method": "POST",
     "machine": true,

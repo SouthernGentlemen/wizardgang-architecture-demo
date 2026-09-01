@@ -4,7 +4,7 @@ const demo: DemoDefinition = {
   "id": "d1",
   "route": "/d1",
   "title": "Cloudflare D1",
-  "group": "Runtime",
+  "group": "Platform",
   "sourcePath": "src/demos/d1.ts",
   "summary": "Relational persistence for structured application records and audit metadata.",
   "proves": [

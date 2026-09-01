@@ -1,7 +1,7 @@
 {
   "app.title": "Demostración de arquitectura de WizardGang",
   "offline.title": "¡Vaya! La demostración no está disponible.",
-  "demo.eyebrow": "Estándares de interfaz / Internacionalización",
+  "demo.eyebrow": "Estándares / Internacionalización",
   "demo.title": "Internacionalización en la interfaz",
   "demo.summary": "Cambia la configuración regional para inspeccionar traducciones, formatos, pluralización y diseño de derecha a izquierda.",
   "source": "Ver código de la página",

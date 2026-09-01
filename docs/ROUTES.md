@@ -1,51 +1,61 @@
 # Route-to-source map
 
-This file is the stable public URL contract for `demo.wizardgang.ai`.
+This file is the stable public URL contract for `demo.wizardgang.ai`. The public architecture map contains 17 HTML routes in five groups. Retired page URLs remain stable through exact permanent redirects to anchored sections; machine interfaces keep their existing paths and response shapes.
 
-| Route | Architecture concept | Primary source | Status |
-|---|---|---|---|
-| `/edge` | Cloudflare Edge | `src/demos/edge.ts` | Working |
-| `/workers` | Cloudflare Workers | `src/demos/workers.ts` | Working |
-| `/durable-objects` | Durable Objects | `src/demos/durable-objects.ts` | Working |
-| `/d1` | Cloudflare D1 | `src/demos/d1.ts` | Working |
-| `/r2` | Cloudflare R2 | `src/demos/r2.ts` | Working |
-| `/api` | API Architecture | `src/demos/api.ts` | Working |
-| `/api/rest` | REST / JSON | `src/demos/rest.ts` | Working |
-| `/api/openapi` | OpenAPI / Swagger 2.x | `src/demos/openapi.ts` | Working |
-| `/api/graphql` | GraphQL | `src/demos/graphql.ts` | Working |
-| `/api/webhooks` | Webhooks | `src/demos/webhooks.ts` | Working |
-| `/identity` | Authentication & Authorization | `src/demos/identity.ts` | Working |
-| `/identity/oauth` | OAuth 2.0 | `src/demos/oauth.ts` | Working |
-| `/identity/sso` | Single Sign-On | `src/demos/sso.ts` | Working |
-| `/identity/saml` | SAML | `src/demos/saml.ts` | Working |
-| `/mcp` | Model Context Protocol | `src/demos/mcp.ts` | Working |
-| `/i18n` | Internationalization | `src/demos/i18n.ts` | Working |
-| `/accessibility` | WCAG 2.2 | `src/demos/accessibility.ts` | Working |
-| `/git` | Git / GitHub | `src/demos/git.ts` | Working |
-| `/git/versioning` | Git Versioning | `src/demos/versioning.ts` | Working |
-| `/git/branching` | Branching | `src/demos/branching.ts` | Working |
-| `/git/releases` | Release Management | `src/demos/releases.ts` | Working |
-| `/git/actions` | GitHub Actions | `src/demos/actions.ts` | Working |
-| `/environments` | Environment Separation | `src/demos/environments.ts` | Working |
-| `/traceability` | Change Traceability | `src/demos/traceability.ts` | Working |
-| `/governance` | Governance | `src/demos/governance.ts` | Working |
-| `/governance/iso-27001` | ISO/IEC 27001 Alignment | `src/demos/iso-27001.ts` | Working |
-| `/governance/iso-42001` | ISO/IEC 42001 Alignment | `src/demos/iso-42001.ts` | Working |
-| `/evidence` | Evidence & Auditability | `src/demos/evidence.ts` | Working |
+## Public architecture routes
 
+| Group | Route | Architecture concept | Primary source | Status |
+|---|---|---|---|---|
+| Platform | `/edge` | Cloudflare Edge | `src/demos/edge.ts` | Working |
+| Platform | `/workers` | Cloudflare Workers | `src/demos/workers.ts` | Working |
+| Platform | `/durable-objects` | Durable Objects | `src/demos/durable-objects.ts` | Working |
+| Platform | `/d1` | Cloudflare D1 | `src/demos/d1.ts` | Working |
+| Platform | `/r2` | Cloudflare R2 | `src/demos/r2.ts` | Working |
+| Interfaces | `/api` | REST, OpenAPI, GraphQL, and webhooks | `src/demos/api.ts` | Working |
+| Interfaces | `/identity` | Authorization, OAuth, SSO, and SAML | `src/demos/identity.ts` | Working |
+| Interfaces | `/mcp` | Model Context Protocol | `src/demos/mcp.ts` | Working |
+| Standards | `/i18n` | Internationalization | `src/demos/i18n.ts` | Working |
+| Standards | `/accessibility` | WCAG 2.2 | `src/demos/accessibility.ts` | Working |
+| Delivery & Governance | `/git` | Source, change, CI/CD, release, and environment lifecycle | `src/demos/git.ts` | Working |
+| Delivery & Governance | `/governance` | ISO alignment, traceability, and evidence | `src/demos/governance.ts` | Working |
+| Operations | `/dashboard` | Operations dashboard and detailed health | `src/demos/dashboard.ts` | Working |
+| Operations | `/dashboard/uptime` | Uptime history | `src/demos/uptime.ts` | Working |
+| Operations | `/dashboard/docs` | Documentation index | `src/demos/docs.ts` | Working |
+| Operations | `/dashboard/logs` | Public-safe log viewer | `src/demos/logs.ts` | Working |
+| Operations | `/dashboard/billing` | Synthetic billing and usage | `src/demos/billing.ts` | Working |
 
-## Operations routes
+The architecture map at `/` and `/sitemap.xml` are generated from this 17-route registry.
+
+## Retired page redirects
+
+These are exact-path `301` redirects. `/identity/saml/metadata` is resolved as a machine interface before the redirect table and is not covered by the `/identity/saml` entry.
+
+| Retired route | Permanent destination |
+|---|---|
+| `/api/rest` | `/api#rest` |
+| `/api/openapi` | `/api#openapi` |
+| `/api/graphql` | `/api#graphql` |
+| `/api/webhooks` | `/api#webhooks` |
+| `/identity/oauth` | `/identity#oauth` |
+| `/identity/sso` | `/identity#sso` |
+| `/identity/saml` | `/identity#saml` |
+| `/git/versioning` | `/git#versioning` |
+| `/git/branching` | `/git#branching` |
+| `/git/releases` | `/git#releases` |
+| `/git/actions` | `/git#actions` |
+| `/environments` | `/git#environments` |
+| `/governance/iso-27001` | `/governance#iso-27001` |
+| `/governance/iso-42001` | `/governance#iso-42001` |
+| `/traceability` | `/governance#traceability` |
+| `/evidence` | `/governance#evidence` |
+| `/dashboard/health` | `/dashboard#health` |
+
+## Operations and control routes
 
 | Route | Operational concept | Primary source | Status |
 |---|---|---|---|
-| `/dashboard` | Operations dashboard | `src/demos/dashboard.ts` | Working |
-| `/dashboard/uptime` | Uptime history | `src/demos/uptime.ts` | Working |
-| `/dashboard/health` | Human health view | `src/demos/health.ts` | Working |
-| `/dashboard/docs` | Documentation index | `src/demos/docs.ts` | Working |
-| `/dashboard/logs` | Public-safe log viewer | `src/demos/logs.ts` | Working |
-| `/dashboard/billing` | Synthetic billing / usage | `src/demos/billing.ts` | Working |
 | `/health` | Machine health | `src/api/operations.ts` | Working |
-| `/version` | Build / release metadata | `src/api/operations.ts` | Working |
+| `/version` | Build and release metadata | `src/api/operations.ts` | Working |
 | `/__api/operations/logs` | Sanitized log JSON | `src/api/operations.ts` | Working |
 | `/admin` | Protected demo control | `src/ui/admin.ts` | Working |
 | `/offline` | Public maintenance page | `src/ui/admin.ts` | Working |
@@ -53,7 +63,7 @@ This file is the stable public URL contract for `demo.wizardgang.ai`.
 
 ## Machine and action interfaces
 
-These interfaces are part of the public route contract. Ordinary interfaces return structured `503` responses during an intentional offline window; operational interfaces explicitly marked as reachable continue to work.
+Ordinary interfaces return structured `503` responses during an intentional offline window; operational interfaces explicitly marked as reachable continue to work.
 
 | Route | Methods | Capability | Primary source |
 |---|---|---|---|
@@ -77,7 +87,7 @@ These interfaces are part of the public route contract. Ordinary interfaces retu
 | `/__api/identity/saml/inspect` | `GET` | SAML validation boundary | `src/api/identity.ts` |
 | `/__api/operations/logs` | `GET` | Sanitized logs; offline-reachable | `src/api/operations.ts` |
 | `/__api/operations/billing` | `POST` | Synthetic budget scenario; offline-reachable | `src/api/billing.ts` |
-| `/__api/evidence/traceability` | `GET` | Release/audit evidence | `src/api/governance.ts` |
+| `/__api/evidence/traceability` | `GET` | Release and audit evidence | `src/api/governance.ts` |
 | `/__api/governance/security-controls` | `GET` | Security-control mapping | `src/api/governance.ts` |
 | `/__api/governance/ai-evaluation` | `POST` | MCP boundary evaluation | `src/api/governance.ts` |
 
@@ -86,27 +96,26 @@ These interfaces are part of the public route contract. Ordinary interfaces retu
 | Concern | Source |
 |---|---|
 | Worker entry point | `src/index.ts` |
-| Router | `src/router.ts` |
+| Router and retired-page redirects | `src/router.ts` |
 | Demo registry | `src/demos/registry.ts` |
+| Route-manifest generator | `scripts/generate-route-manifest.mjs` |
 | HTML renderer | `src/ui/page.ts` |
 | GitHub source-link builder | `src/lib/github.ts` |
 | Shared D1 audit functions | `src/lib/audit.ts` |
-| Application log persistence/redaction | `src/lib/logs.ts` |
-| Demo API endpoint | `src/api/demo.ts` |
+| Application log persistence and redaction | `src/lib/logs.ts` |
 | Operations APIs | `src/api/operations.ts` |
 | D1 base schema | `migrations/0001_demo_blob.sql` |
-| Operations / log schemas | `migrations/0002_operations_dashboard.sql`, `migrations/0004_application_logs.sql` |
+| Operations and log schemas | `migrations/0002_operations_dashboard.sql`, `migrations/0004_application_logs.sql` |
+| Route-flatten seed update | `migrations/0007_flatten_demo_record_routes.sql` |
 | Cloudflare configuration | `wrangler.jsonc` |
 | CI | `.github/workflows/ci.yml` |
 | Deployment | `.github/workflows/deploy.yml` |
-
-The dedicated demo files own public metadata and link to their small route-specific API/page implementations. Shared infrastructure remains limited to routing, authorization, audit/log persistence, HTML response safety, and source-link generation.
 
 ## Working contracts and specialized primitives
 
 | Capability | Source |
 |---|---|
-| R2 helper / object boundary | `src/storage/r2.ts` |
+| R2 helper and object boundary | `src/storage/r2.ts` |
 | Durable Object class | `src/durable/demo-coordinator.ts` |
 | REST OpenAPI / Swagger 2.x contract | `contracts/openapi/swagger.json` |
 | GraphQL schema | `contracts/graphql/schema.graphql` |

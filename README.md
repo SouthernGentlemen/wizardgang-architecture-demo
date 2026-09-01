@@ -9,12 +9,11 @@ The canonical standard is [`docs/ARCHITECTURE-STANDARD.md`](docs/ARCHITECTURE-ST
 
 ## Architecture laboratory
 
-Every architecture concept has a stable public route, a dedicated owner under `src/demos/`, a live implementation, observable behavior, and direct public source/evidence links.
+Seventeen public HTML routes organize the architecture into five layers. Each layer has a dedicated owner under `src/demos/`, live implementation, observable behavior, and direct public source/evidence links.
 
-- **Runtime:** safe edge-context inspection, bounded stateless Worker compute, D1 CRUD, real R2 objects with D1 metadata, and a coordinated Durable Object counter.
-- **Integration:** versioned REST/JSON, a served Swagger 2.0 contract, GraphQL reads, HMAC/replay-protected webhooks, and a JSON-RPC MCP read tool sharing one authorization policy.
-- **Identity:** OAuth PKCE material, provider-neutral SSO/SAML trust-boundary inspection, and a separate application authorization-policy evaluator. No live identity-provider tenant is implied.
-- **Interface:** English, Spanish, and Arabic resources; number/date/currency/plural formatting; RTL rendering; and inspectable semantic/keyboard/form/status accessibility behavior.
+- **Platform:** safe edge-context inspection, bounded stateless Worker compute, D1 CRUD, real R2 objects with D1 metadata, and a coordinated Durable Object counter.
+- **Interfaces:** REST/JSON, a served Swagger 2.0 contract, GraphQL, signed webhooks, provider-neutral OAuth/SSO/SAML boundaries, and a JSON-RPC MCP read tool under explicit application policies.
+- **Standards:** English, Spanish, and Arabic resources; number/date/currency/plural formatting; RTL rendering; and inspectable semantic/keyboard/form/status accessibility behavior.
 - **Delivery and governance:** commit/release/runtime traceability, CI and tag-only deployment workflows, public evidence links, security-control mapping, and an executable MCP boundary evaluation.
 - **Operations:** dependency-aware health, timestamped availability, live documentation, sanitized D1 logs, synthetic billing thresholds, observable graceful degradation, and authenticated D1-backed demo control.
 
@@ -34,14 +33,13 @@ See [`docs/ROUTES.md`](docs/ROUTES.md) and [`docs/route-manifest.json`](docs/rou
 
 The demo uses the `wizardgang.ai` design tokens: dark by default, with a light theme the reader can toggle and the browser remembers. Every page carries a skip link, primary navigation, and in-group previous/next paging; `/sitemap.xml` is generated from the same registry that serves the routes, so it cannot drift from the published contract.
 
-`/d1` and `/api/rest` expose a live record console. Reads are anonymous. Submitting a write without a token is part of the demonstration: the shared authorization boundary refuses it before it reaches D1.
+`/d1` and `/api#rest` expose a live record console. Reads are anonymous. Submitting a write without a token is part of the demonstration: the shared authorization boundary refuses it before it reaches D1.
 
 ## Operations and admin
 
 ```text
 /dashboard
 ├── /dashboard/uptime
-├── /dashboard/health
 ├── /dashboard/docs
 ├── /dashboard/logs
 └── /dashboard/billing
@@ -51,6 +49,8 @@ The demo uses the `wizardgang.ai` design tokens: dark by default, with a light t
 /health      machine-readable dependency health
 /version     machine-readable release/source identity
 ```
+
+The dashboard’s `#health` card carries the detailed per-service snapshot and checked timestamp formerly shown at `/dashboard/health`.
 
 `/admin` can intentionally take ordinary demos online or offline. Offline browser navigation redirects to `/offline?from=<route>` and displays **“Oops! demo is down.”** API, non-HTML, and write requests return JSON `503`. Dashboard, status, logs, synthetic billing, offline, and authenticated admin surfaces remain reachable. Control failures fail closed.
 

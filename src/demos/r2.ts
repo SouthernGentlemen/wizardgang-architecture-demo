@@ -4,7 +4,7 @@ const demo: DemoDefinition = {
   "id": "r2",
   "route": "/r2",
   "title": "Cloudflare R2",
-  "group": "Runtime",
+  "group": "Platform",
   "sourcePath": "src/demos/r2.ts",
   "summary": "Object storage for files, artifacts, reports, evidence, exports, and other large objects.",
   "proves": [

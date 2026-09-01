@@ -4,7 +4,7 @@ const demo: DemoDefinition = {
   "id": "accessibility",
   "route": "/accessibility",
   "title": "WCAG 2.2",
-  "group": "Interface Standards",
+  "group": "Standards",
   "sourcePath": "src/demos/accessibility.ts",
   "summary": "Accessibility engineering demonstration for semantic HTML, keyboard use, focus, labels, errors, and predictable navigation.",
   "proves": [

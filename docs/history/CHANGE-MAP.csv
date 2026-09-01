@@ -19,3 +19,10 @@ DEMO-017,273658c0ad5c774b3e2efe779ca84f21060020ce,74497144914d4651cb2f8e53e4b645
 DEMO-018,3b6647b2ba4176dc58f967112ae99a44dd45c1ae,,2026-08-31,direct,v0.2.0,corrected implementation and change provenance
 DEMO-019,29be94ab6b4441d0696db4799195c987c8efc1fa,,2026-08-31,direct,v0.2.0,record and version the v0.2.0 release
 DEMO-020,,,2026-08-31,direct,Unreleased,record the verified v0.2.0 production deployment; this file is evidence in the commit it maps
+DEMO-021,4a0661e7c0e5e5b28c927eb3754241a68a2935f0,,2026-08-31,direct,Unreleased,preserve retired page URLs with exact anchored redirects
+DEMO-022,01310af1c0a60f234e310795c94c94979e1565bc,,2026-08-31,direct,Unreleased,consolidate application interface proofs
+DEMO-023,6e2edd569a873395bc656c925a6f1d1275df9bda,,2026-08-31,direct,Unreleased,consolidate provider-neutral identity boundaries
+DEMO-024,a15697145315b7f363cdbb634fb83308252e925c,,2026-08-31,direct,Unreleased,consolidate delivery lifecycle evidence
+DEMO-025,360971f5459414df9930898bfd30c50476543f7d,,2026-08-31,direct,Unreleased,consolidate governance and dashboard health evidence
+DEMO-026,75571e3cc7d37bb9872ce6e57d8aab98917521ea,,2026-08-31,direct,Unreleased,simplify shared page chrome and retire generic runner routes
+DEMO-027,,,2026-08-31,direct,Unreleased,finalize the 17-route registry manifest migration and documentation; this file is evidence in the commit it maps
