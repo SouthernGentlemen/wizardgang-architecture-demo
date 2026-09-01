@@ -27,5 +27,6 @@ DEMO-025,360971f5459414df9930898bfd30c50476543f7d,,2026-08-31,direct,v0.3.0,cons
 DEMO-026,75571e3cc7d37bb9872ce6e57d8aab98917521ea,,2026-08-31,direct,v0.3.0,simplify shared page chrome and retire generic runner routes
 DEMO-027,42004dec72c3d95f62683ff2f4639ea18b8c7f3d,,2026-08-31,direct,v0.3.0,finalize the 17-route registry manifest migration and documentation
 DEMO-028,fd51c99bbf80dc99d9d8d3bbc64c8de77ed66882,,2026-08-31,direct,v0.3.0,record and version the v0.3.0 release
-DEMO-029,,,2026-08-31,direct,Unreleased,record the verified v0.3.0 production deployment; this file is evidence in the commit it maps
-DEMO-030,,,2026-08-31,direct,Unreleased,generate the runnable REST explorer from the served Swagger contract; this file is evidence in the commit it maps
+DEMO-029,90011a9cbf62b1c6ce37450b5c2730793692bc64,,2026-08-31,direct,v0.4.0,record the verified v0.3.0 production deployment
+DEMO-030,4f59a5b61cd364204f240abf2138991bba2734e8,,2026-08-31,direct,v0.4.0,generate the runnable REST explorer from the served Swagger contract
+DEMO-031,,,2026-08-31,direct,v0.4.0,record and version the v0.4.0 release; this file is evidence in the commit it maps

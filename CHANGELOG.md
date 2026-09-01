@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.4.0 — 2026-08-31
+
 - Replaced the hand-authored REST controls on `/api` with a runnable explorer generated from the served Swagger 2.0 contract, including path/query/header inputs, bearer handling, request examples, response contracts, and linked schema definitions.
 
 ## 0.3.0 — 2026-08-31
