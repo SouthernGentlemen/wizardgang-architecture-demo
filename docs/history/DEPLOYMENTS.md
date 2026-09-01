@@ -101,3 +101,29 @@ Each record ties one production deployment to one annotated release tag. A deplo
 **Rollback:** Deploy v0.3.0.
 
 **Note:** The tag-triggered GitHub release and deployment workflow completed end to end, including exact-tag validation, remote migration check, tagged Worker deployment, automated public identity verification, and an independent post-deploy check of the API explorer and contract.
+
+---
+
+## DEP-DEMO-005
+
+**Product:** WizardGang Architecture Demo
+
+**Release:** v0.4.1
+
+**Commit:** `4cbc6fdd0be5f756ab7f4133616a9f13d36df52f`
+
+**Environment:** production
+
+**Date:** 2026-09-01
+
+**URL:** https://demo.wizardgang.ai
+
+**Changes:** DEMO-032 through DEMO-034
+
+**Validation:** PASS — annotated-tag reproduction, GitHub Release publication, controlled-history validation, 58 tests across 12 files, typecheck, contract/locale/security checks, dependency audit, production build, remote confirmation that no D1 migrations were pending, exact live `/version` identity, operational Worker/D1/R2/Durable Object health, six collapsed Swagger-generated operations on `/api`, successful generated public GET execution, absence of removed filler and idle response text, no page-level horizontal overflow, and served Swagger 2.0 contract version 1.1.0.
+
+**Previous:** v0.4.0
+
+**Rollback:** Deploy v0.4.0.
+
+**Note:** GitHub Release workflow 33516080109 completed end to end, including exact-tag validation, remote migration check, tagged Worker deployment, automated public identity verification, and independent post-deploy API interaction and visual inspection.

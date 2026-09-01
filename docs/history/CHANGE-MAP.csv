@@ -33,3 +33,4 @@ DEMO-031,,,2026-08-31,direct,v0.4.0,record and version the v0.4.0 release; this 
 DEMO-032,5feaded5e92351dc80713957528bc6ab7387b53a,,2026-08-31,direct,v0.4.1,record the verified v0.4.0 production deployment
 DEMO-033,3fb8201fb4b3a6f2275f0240b784ff80908832d1,,2026-08-31,direct,v0.4.1,simplify the shared interface hierarchy and progressively disclose supporting detail
 DEMO-034,,,2026-09-01,direct,v0.4.1,record and version the v0.4.1 release; this file is evidence in the commit it maps
+DEMO-035,,,2026-09-01,direct,Unreleased,record the verified v0.4.1 production deployment; this file is evidence in the commit it maps
