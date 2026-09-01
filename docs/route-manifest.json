@@ -277,6 +277,36 @@
     "status": "working"
   },
   {
+    "route": "/__api/r2/files",
+    "title": "R2 Visitor Files",
+    "group": "Platform API",
+    "source": "src/api/r2.ts",
+    "method": "GET, POST",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/r2/files/{id}",
+    "title": "R2 Visitor File",
+    "group": "Platform API",
+    "source": "src/api/r2.ts",
+    "method": "GET, DELETE",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/r2/reset",
+    "title": "R2 Visitor Reset",
+    "group": "Platform API",
+    "source": "src/api/r2.ts",
+    "method": "POST",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
     "route": "/v1/demo-records",
     "title": "REST Demo Records",
     "group": "Interfaces API",
