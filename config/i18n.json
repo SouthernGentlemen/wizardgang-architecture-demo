@@ -1,6 +1,6 @@
 {
   "defaultLocale": "en",
-  "supportedLocales": ["en", "es", "ar"],
+  "supportedLocales": ["en", "es", "fr", "de", "ja", "ar"],
   "rtlLocales": ["ar"],
   "fallbackLocale": "en"
 }

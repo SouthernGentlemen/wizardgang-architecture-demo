@@ -167,6 +167,13 @@ summary { cursor: pointer; }
 .lab-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .7rem; margin: 1rem 0 1.25rem; padding: 1rem; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2); }
 .lab-form label { display: grid; gap: .35rem; }
 .lab-form .button-row { grid-column: 1 / -1; }
+.locale-switcher { display: flex; flex-wrap: wrap; gap: .45rem; margin: 1rem 0; }
+.locale-switcher button { min-height: 40px; padding: .45rem .7rem; font-size: .78rem; }
+.locale-switcher button[aria-pressed="true"] { border-color: var(--acid); background: var(--acid); color: var(--button-text); }
+.i18n-controls { margin-bottom: 1rem; }
+.locale-app [data-inspect] { cursor: help; }
+.locale-app [data-inspect]:hover { text-decoration: underline; text-decoration-color: var(--acid); text-underline-offset: .25em; }
+.locale-app .button-primary { margin-top: 1.25rem; }
 .technical-state pre { max-height: 22rem; }
 .graphql-frame { height: min(72vh, 760px); min-height: 540px; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
 .graphql-frame iframe { width: 100%; height: 100%; border: 0; }

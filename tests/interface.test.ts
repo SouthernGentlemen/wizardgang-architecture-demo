@@ -16,12 +16,23 @@ describe('internationalized interface', () => {
     expect(html).toContain('<html lang="ar" dir="rtl">');
     expect(html).toContain('التدويل في الواجهة');
     expect(html).toContain('src/i18n/locales/ar.json');
-    expect(html).toContain('<code>rtl</code>');
+    expect(html).toContain('<code data-direction>rtl</code>');
   });
 
   it('falls back to English for unsupported locale input', async () => {
     const html = await (await renderI18nDemo(new Request('https://demo.example/i18n?locale=xx'), env)).text();
     expect(html).toContain('<html lang="en" dir="ltr">');
+  });
+
+  it('ships six synchronized instant-switch resources and an inspector', async () => {
+    const html = await (await renderI18nDemo(new Request('https://demo.example/i18n?locale=ja&count=7'), env)).text();
+    expect(html).toContain('<html lang="ja" dir="ltr">');
+    expect(html).toContain('data-locale="fr"');
+    expect(html).toContain('data-locale="de"');
+    expect(html).toContain('data-locale="ja" aria-pressed="true"');
+    expect(html).toContain('Translation inspector');
+    expect(html).toContain('history.replaceState');
+    expect(html).toContain('items_other');
   });
 });
 
