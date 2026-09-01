@@ -13,7 +13,7 @@ import { getDemoControl, setDemoControl } from './lib/demo-control';
 import { json, methodNotAllowed, safeError } from './lib/http';
 import { recordsResponse } from './api/records';
 import { edgeInspectionResponse, workerComputeResponse } from './api/runtime';
-import { r2DemoObjectResponse, r2ObjectResponse } from './api/r2';
+import { r2DemoObjectResponse, r2FilesResetResponse, r2FilesResponse, r2ObjectResponse } from './api/r2';
 import { durableCounterResponse } from './api/durable';
 import { graphqlResponse, graphqlSchemaResponse } from './api/graphql';
 import { webhookDemoResponse, webhookReceiptResponse } from './api/webhooks';
@@ -28,6 +28,7 @@ import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } 
 import { d1LabResponse } from './api/d1-lab';
 import { renderD1Demo } from './demos/d1-page';
 import { graphqlConsole } from './demos/graphql-console';
+import { renderR2Demo } from './demos/r2-page';
 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
@@ -151,6 +152,9 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/__api/workers/compute') return workerComputeResponse(request, env);
   if (path === '/__api/r2/demo') return r2DemoObjectResponse(request, env);
   if (path === '/__api/r2/object') return r2ObjectResponse(request, env);
+  if (path === '/__api/r2/files') return r2FilesResponse(request, env);
+  if (path.startsWith('/__api/r2/files/')) return r2FilesResponse(request, env, path.slice('/__api/r2/files/'.length));
+  if (path === '/__api/r2/reset') return r2FilesResetResponse(request, env);
   if (path === '/__api/durable/counter') return durableCounterResponse(request, env);
   if (path === '/v1/openapi.json') return openApiResponse(request);
   if (path === '/graphql') return graphqlResponse(request, env);
@@ -176,6 +180,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (request.method === 'GET' && path === '/sitemap.xml') return sitemapResponse(request, demos);
   if (request.method === 'GET' && path === '/') return renderIndex(env, demos);
   if (request.method === 'GET' && path === '/d1') return renderD1Demo(env);
+  if (request.method === 'GET' && path === '/r2') return renderR2Demo(env);
   if (request.method === 'GET' && path === '/i18n') return renderI18nDemo(request, env);
   if (request.method === 'GET' && path === '/accessibility') return renderAccessibilityDemo(request, env);
   if (request.method === 'GET' && path === '/dashboard') return renderDashboard(env);

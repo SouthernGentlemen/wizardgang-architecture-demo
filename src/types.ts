@@ -23,10 +23,16 @@ export interface D1Database {
 
 export interface R2ObjectBody {
   text(): Promise<string>;
+  arrayBuffer?(): Promise<ArrayBuffer>;
+  body?: ReadableStream<Uint8Array>;
+  size?: number;
+  etag?: string;
+  uploaded?: Date;
+  httpMetadata?: { contentType?: string };
 }
 
 export interface R2Bucket {
-  put(key: string, value: string, options?: { httpMetadata?: { contentType?: string } }): Promise<unknown>;
+  put(key: string, value: string | ArrayBuffer | ReadableStream<Uint8Array>, options?: { httpMetadata?: { contentType?: string } }): Promise<unknown>;
   get(key: string): Promise<R2ObjectBody | null>;
   delete(key: string): Promise<void>;
 }
