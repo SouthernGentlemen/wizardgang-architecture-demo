@@ -153,3 +153,29 @@ Each record ties one production deployment to one annotated release tag. A deplo
 **Rollback:** Deploy v0.4.1.
 
 **Note:** GitHub Release workflow 33531585459 completed end to end, including exact-tag validation, remote migration, tagged Worker deployment, and automated public identity checks. Independent API and in-app browser verification confirmed the interactive laboratories and removed all temporary R2 and visitor webhook test state. GitHub branch-protection controls remain explicitly unverifiable without the optional managed read token.
+
+---
+
+## DEP-DEMO-007
+
+**Product:** WizardGang Architecture Demo
+
+**Release:** v0.6.0
+
+**Commit:** `af1b52aac2f04bba8f09b5513fee9b15bd2e63c1`
+
+**Environment:** production
+
+**Date:** 2026-09-01
+
+**URL:** https://demo.wizardgang.ai
+
+**Changes:** DEMO-046 through DEMO-049
+
+**Validation:** PASS — annotated-tag reproduction, GitHub Release publication, controlled-history validation, 74 tests across 17 files, generated 17-route HTML registry and 60-entry full contract, typecheck, contract/six-locale/security checks, dependency audit with no vulnerabilities, 3,575.65 KiB compressed production build, remote confirmation that no D1 migrations were pending, exact live `/version` identity, operational Worker/D1/R2/Durable Object health, branded dark and light themes, representative dense API-route rendering, 390 × 844 responsive rendering, no observed horizontal overflow, exact live WizardGang color tokens, 17 architecture cards, and a cacheable 1200 × 630 social preview image.
+
+**Previous:** v0.5.0
+
+**Rollback:** Deploy v0.5.0.
+
+**Note:** GitHub Release workflow 33549894035 completed end to end, including exact-tag validation, GitHub Release publication, remote migration check, tagged Worker deployment, and automated public identity verification. Independent in-app browser and API verification confirmed the WizardGang wordmark, editorial hierarchy, dark palette, full route map, operational live health state, social metadata, social image response, and viewport-width containment.
