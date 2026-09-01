@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Simplified every public interface with smaller hierarchy, compact status and documentation surfaces, progressive disclosure for supporting references and schemas, and hidden request/response output until it is used.
+- Reworked `/api` into a concise list of collapsed Swagger operations that still exposes the generated request controls, request schemas, response schemas, and runnable calls on demand.
+
 ## 0.4.0 — 2026-08-31
 
 - Replaced the hand-authored REST controls on `/api` with a runnable explorer generated from the served Swagger 2.0 contract, including path/query/header inputs, bearer handling, request examples, response contracts, and linked schema definitions.

@@ -4,7 +4,7 @@ import { currentBudgetState, recentUsage } from '../lib/billing';
 import { getDemoControl } from '../lib/demo-control';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
-import { shell } from '../ui/page';
+import { referenceDetails, shell } from '../ui/page';
 
 interface HealthRow {
   id: number;
@@ -21,8 +21,8 @@ function navigation(active: string): string {
     ['/dashboard/docs', 'Docs'], ['/dashboard/logs', 'Logs'], ['/dashboard/billing', 'Billing'],
     ['/health', 'Health JSON'], ['/version', 'Version JSON'],
   ];
-  return `<nav aria-label="Operations"><div class="meta">${links.map(([href, label]) =>
-    `<a href="${href}"${href === active ? ' aria-current="page"' : ''}>${label}</a>`).join('')}</div></nav>`;
+  return `<nav class="section-nav" aria-label="Operations">${links.map(([href, label]) =>
+    `<a href="${href}"${href === active ? ' aria-current="page"' : ''}>${label}</a>`).join('')}</nav>`;
 }
 
 /** Maps an operational state onto the shared ok/warn/down colour scale. */
@@ -37,10 +37,10 @@ const statusClass = (value: string) => `stat${tone(value) ? ` stat-${tone(value)
 const badgeClass = (value: string) => `badge${tone(value) ? ` badge-${tone(value)}` : ''}`;
 
 function operationalPage(env: Env, route: string, title: string, heading: string, primarySource: string, content: string): Response {
-  return shell(env, title, `<section>
+  return shell(env, title, `<section class="page-header">
   <p class="eyebrow">Operations / public proof</p>
   <h1>${escapeHtml(heading)}</h1>
-  <div class="meta"><span class="badge badge-ok">working</span><a href="${escapeHtml(sourceUrl(env, primarySource))}">Primary route source</a></div>
+  <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, primarySource))}">Route source</a></div>
 </section>
 ${route === '/dashboard' ? '' : navigation(route)}
 ${content}`, { cacheControl: 'no-store', activeRoute: route });
@@ -56,7 +56,12 @@ export async function renderDashboard(env: Env): Promise<Response> {
     <article class="card"><h2 class="eyebrow">Synthetic budget</h2><p class="${statusClass(budget.state)}">${escapeHtml(budget.state)}</p><p>${budget.percent.toFixed(1)}% of the controlled demonstration budget.</p><a href="/dashboard/billing">Exercise degradation</a></article>
     <article class="card"><h2 class="eyebrow">Deployed version</h2><p class="stat">${escapeHtml(version)}</p><p>Commit: ${escapeHtml(env.DEPLOYED_SHA || 'not supplied')}</p><a href="/version">Inspect version JSON</a></article>
   </section>
-  <section class="panel"><h2>Source evidence</h2><div class="meta"><a href="${escapeHtml(sourceUrl(env, 'src/demos/operations-pages.ts'))}">Dashboard implementation</a><a href="${escapeHtml(sourceUrl(env, 'src/api/operations.ts'))}">Health implementation</a><a href="${escapeHtml(sourceUrl(env, 'docs/OPERATIONS.md'))}">Operations standard</a><a href="${escapeHtml(sourceUrl(env, 'tests/operations.test.ts'))}">Operations tests</a></div></section>`);
+  ${referenceDetails([
+    { label: 'Dashboard implementation', href: sourceUrl(env, 'src/demos/operations-pages.ts') },
+    { label: 'Health implementation', href: sourceUrl(env, 'src/api/operations.ts') },
+    { label: 'Operations standard', href: sourceUrl(env, 'docs/OPERATIONS.md') },
+    { label: 'Operations tests', href: sourceUrl(env, 'tests/operations.test.ts') },
+  ], 'Source evidence')}`);
 }
 
 export async function renderUptime(env: Env): Promise<Response> {
@@ -80,13 +85,17 @@ export function renderDocs(env: Env): Response {
   const links: Array<[string, string]> = [
     ['Architecture standard', 'docs/ARCHITECTURE-STANDARD.md'], ['Operations standard', 'docs/OPERATIONS.md'], ['Stable route map', 'docs/ROUTES.md'], ['Machine route manifest', 'docs/route-manifest.json'], ['Router', 'src/router.ts'], ['Implementation plan', 'docs/IMPLEMENTATION-PLAN.md'], ['Evidence map', 'docs/EVIDENCE.md'], ['Accessibility guidance', 'docs/ACCESSIBILITY.md'], ['Identity guidance', 'docs/IDENTITY.md'], ['README', 'README.md'], ['Contributing', 'CONTRIBUTING.md'], ['Agent guidance', 'AGENTS.md'], ['Security', 'SECURITY.md'], ['Changelog', 'CHANGELOG.md'], ['Swagger 2.0 contract', 'contracts/openapi/swagger.json'], ['GraphQL schema', 'contracts/graphql/schema.graphql'], ['MCP tools', 'contracts/mcp/tools.json'], ['Webhook events', 'contracts/webhooks/events.json'], ['CI workflow', '.github/workflows/ci.yml'], ['Deploy workflow', '.github/workflows/deploy.yml'], ['D1 migrations', 'migrations/0001_demo_blob.sql'],
   ];
-  return operationalPage(env, '/dashboard/docs', 'Documentation', 'Live documentation index', 'src/demos/docs.ts', `<section class="grid">${links.map(([label, path]) => `<a class="card" href="${escapeHtml(sourceUrl(env, path))}"><h3>${escapeHtml(label)}</h3><code>${escapeHtml(path)}</code></a>`).join('')}</section><section class="panel"><h2>Live machine surfaces</h2><div class="meta"><a href="/v1/openapi.json">Swagger JSON</a><a href="/graphql/schema">GraphQL schema</a><a href="/health">Health JSON</a><a href="/version">Version JSON</a><a href="/__api/operations/logs">Logs JSON</a><a href="${escapeHtml(repoUrl(env))}/releases">GitHub Releases</a><a href="${escapeHtml(repoUrl(env))}/tags">Git tags</a></div></section>`);
+  return operationalPage(env, '/dashboard/docs', 'Documentation', 'Documentation', 'src/demos/docs.ts', `<section class="resource-list" aria-label="Repository documentation">${links.map(([label, path]) => `<a href="${escapeHtml(sourceUrl(env, path))}"><strong>${escapeHtml(label)}</strong><code>${escapeHtml(path)}</code></a>`).join('')}</section><section class="machine-links"><h2>Live interfaces</h2><nav class="link-row" aria-label="Live machine interfaces"><a href="/v1/openapi.json">Swagger JSON</a><a href="/graphql/schema">GraphQL schema</a><a href="/health">Health JSON</a><a href="/version">Version JSON</a><a href="/__api/operations/logs">Logs JSON</a><a href="${escapeHtml(repoUrl(env))}/releases">Releases</a><a href="${escapeHtml(repoUrl(env))}/tags">Tags</a></nav></section>`);
 }
 
 export async function renderBilling(env: Env): Promise<Response> {
   const [current, history] = await Promise.all([currentBudgetState(env), recentUsage(env)]);
   const rows = history.map((row) => `<tr><td>${escapeHtml(row.captured_at)}</td><td>${row.quantity.toLocaleString('en-US')} ${escapeHtml(row.unit)}</td><td>$${row.estimated_cost_usd.toFixed(4)}</td><td>$${(row.budget_limit_usd ?? 0).toFixed(2)}</td><td>${budgetLabel(row.estimated_cost_usd, row.budget_limit_usd ?? 0)}</td></tr>`).join('');
-  return operationalPage(env, '/dashboard/billing', 'Billing & Usage', 'Synthetic billing and graceful degradation', 'src/demos/billing.ts', `<section class="panel"><h2>Current controlled state</h2><p><span class="${badgeClass(current.state)}">${escapeHtml(current.state)}</span> ${current.percent.toFixed(1)}% of the synthetic monthly budget.</p><p>This surface never reads a real invoice, payment method, Cloudflare account identifier, or private billing API.</p><div class="meta"><button type="button" data-budget="normal">Set normal (40%)</button><button type="button" data-budget="warning">Set warning (75%)</button><button type="button" data-budget="degraded">Set degraded (95%)</button></div><pre aria-live="polite" data-budget-output>Choose a scenario.</pre></section><section class="panel"><h2>Behavior policy</h2><ul><li><strong>Normal:</strong> optional stateless compute remains available.</li><li><strong>Warning:</strong> warnings are visible; critical and optional operations remain available.</li><li><strong>Degraded:</strong> optional Worker compute pauses with a structured response; dashboard, health, version, admin, and offline routes remain available.</li></ul><p><a href="/workers">Exercise the optional Worker workload</a></p></section><section class="panel"><h2>Stored usage history</h2><div class="table-wrap"><table><thead><tr><th>Captured</th><th>Quantity</th><th>Estimated cost</th><th>Budget</th><th>State</th></tr></thead><tbody>${rows || '<tr><td colspan="5">No synthetic snapshots yet.</td></tr>'}</tbody></table></div><div class="meta"><a href="${escapeHtml(sourceUrl(env, 'src/api/billing.ts'))}">Scenario implementation</a><a href="${escapeHtml(sourceUrl(env, 'config/billing-demo.json'))}">Policy config</a><a href="${escapeHtml(sourceUrl(env, 'migrations/0002_operations_dashboard.sql'))}">Usage schema</a></div></section><script>(()=>{const out=document.querySelector('[data-budget-output]');document.querySelectorAll('[data-budget]').forEach((button)=>button.addEventListener('click',async()=>{out.textContent='Updating…';const response=await fetch('/__api/operations/billing',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({scenario:button.dataset.budget})});out.textContent=JSON.stringify(await response.json(),null,2);if(response.ok)setTimeout(()=>location.reload(),500)}))})()</script>`);
+  return operationalPage(env, '/dashboard/billing', 'Billing & Usage', 'Synthetic billing and graceful degradation', 'src/demos/billing.ts', `<section class="panel"><h2>Current state</h2><p><span class="${badgeClass(current.state)}">${escapeHtml(current.state)}</span> ${current.percent.toFixed(1)}% of the synthetic monthly budget.</p><div class="button-row"><button type="button" data-budget="normal">Normal · 40%</button><button type="button" data-budget="warning">Warning · 75%</button><button type="button" data-budget="degraded">Degraded · 95%</button></div><pre aria-live="polite" data-budget-output hidden></pre></section><section class="panel"><h2>Behavior</h2><dl><dt>Normal</dt><dd>Optional compute remains available.</dd><dt>Warning</dt><dd>Warnings are visible; operations remain available.</dd><dt>Degraded</dt><dd>Optional Worker compute pauses while operational routes remain available.</dd></dl></section><section class="panel"><h2>Usage history</h2><div class="table-wrap"><table><thead><tr><th>Captured</th><th>Quantity</th><th>Estimated cost</th><th>Budget</th><th>State</th></tr></thead><tbody>${rows || '<tr><td colspan="5">No synthetic snapshots yet.</td></tr>'}</tbody></table></div>${referenceDetails([
+    { label: 'Scenario implementation', href: sourceUrl(env, 'src/api/billing.ts') },
+    { label: 'Policy config', href: sourceUrl(env, 'config/billing-demo.json') },
+    { label: 'Usage schema', href: sourceUrl(env, 'migrations/0002_operations_dashboard.sql') },
+  ])}</section><script>(()=>{const out=document.querySelector('[data-budget-output]');document.querySelectorAll('[data-budget]').forEach((button)=>button.addEventListener('click',async()=>{out.hidden=false;out.textContent='Updating…';const response=await fetch('/__api/operations/billing',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({scenario:button.dataset.budget})});out.textContent=JSON.stringify(await response.json(),null,2);if(response.ok)setTimeout(()=>location.reload(),500)}))})()</script>`);
 }
 
 function budgetLabel(cost: number, budget: number): string {

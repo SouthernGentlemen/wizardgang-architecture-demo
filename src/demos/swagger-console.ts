@@ -141,11 +141,12 @@ function renderSecurityInputs(operation: JsonObject, spec: SwaggerDocument): str
 function renderRequestContract(parameters: JsonObject[], definitions: Record<string, JsonObject>): string {
   const body = parameters.find((parameter) => parameter.in === 'body');
   const nonBody = parameters.filter((parameter) => parameter.in !== 'body');
+  if (!body && !nonBody.length) return '';
   const parameterRows = nonBody.map((parameter) => `<tr><th scope="row"><code>${escapeHtml(String(parameter.name ?? ''))}</code></th><td>${escapeHtml(String(parameter.in ?? ''))}</td><td>${parameter.required ? 'yes' : 'no'}</td><td><code>${escapeHtml(schemaType(parameter))}</code></td><td>${escapeHtml(constraintSummary(parameter))}</td></tr>`).join('');
-  return `<details class="swagger-contract" open><summary>Request contract</summary>
-    ${parameterRows ? `<div class="table-wrap"><table><caption class="sr-only">Request parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">In</th><th scope="col">Required</th><th scope="col">Type</th><th scope="col">Constraints</th></tr></thead><tbody>${parameterRows}</tbody></table></div>` : '<p class="subtle">No request parameters.</p>'}
-    ${body ? `<h4>JSON body${body.required ? ' · required' : ''}</h4>${renderSchemaFields(asObject(body.schema), definitions, 'Request body schema')}` : ''}
-  </details>`;
+  return `<section class="contract-block"><h4>Request</h4>
+    ${parameterRows ? `<div class="table-wrap"><table><caption class="sr-only">Request parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">In</th><th scope="col">Required</th><th scope="col">Type</th><th scope="col">Constraints</th></tr></thead><tbody>${parameterRows}</tbody></table></div>` : ''}
+    ${body ? `${renderSchemaFields(asObject(body.schema), definitions, 'Request body schema')}` : ''}
+  </section>`;
 }
 
 function renderResponses(responses: JsonObject, definitions: Record<string, JsonObject>): string {
@@ -158,7 +159,7 @@ function renderResponses(responses: JsonObject, definitions: Record<string, Json
       : '—';
     return `<tr><th scope="row"><code>${escapeHtml(status)}</code></th><td>${escapeHtml(String(value.description ?? ''))}</td><td>${type}</td></tr>`;
   }).join('');
-  return `<details class="swagger-contract"><summary>Response contract</summary><div class="table-wrap"><table><caption class="sr-only">Documented responses</caption><thead><tr><th scope="col">Status</th><th scope="col">Meaning</th><th scope="col">Schema</th></tr></thead><tbody>${rows}</tbody></table></div></details>`;
+  return `<section class="contract-block"><h4>Responses</h4><div class="table-wrap"><table><caption class="sr-only">Documented responses</caption><thead><tr><th scope="col">Status</th><th scope="col">Meaning</th><th scope="col">Schema</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
 }
 
 function operationAnchor(method: string, path: string): string {
@@ -178,23 +179,26 @@ function renderOperation(entry: OperationEntry, index: number, spec: SwaggerDocu
   const contentType = consumes?.[0] ?? 'application/json';
   const title = `${method} ${spec.basePath ?? ''}${path}`;
 
-  return `<article class="panel swagger-operation" id="${escapeHtml(operationAnchor(method, path))}">
-    <div class="swagger-route"><span class="http-method http-${method.toLowerCase()}">${escapeHtml(method)}</span><code>${escapeHtml(`${spec.basePath ?? ''}${path}`)}</code></div>
-    <h3>${escapeHtml(String(operation.summary ?? title))}</h3>
-    ${operation.description ? `<p class="subtle">${escapeHtml(String(operation.description))}</p>` : ''}
-    ${renderRequestContract(parameters, definitions)}
-    <form data-swagger-form data-method="${escapeHtml(method)}" data-path="${escapeHtml(path)}" data-base-path="${escapeHtml(spec.basePath ?? '')}" data-content-type="${escapeHtml(contentType)}" data-operation-index="${index}">
-      ${inputs || securityInputs || body ? `<fieldset><legend>Try this operation</legend><div class="swagger-inputs">${inputs}${securityInputs}${body ? `<label class="swagger-body">JSON body <span class="parameter-meta">${body.required ? 'required' : 'optional'}</span><textarea data-swagger-body spellcheck="false"${body.required ? ' required' : ''}>${escapeHtml(bodyExample)}</textarea></label>` : ''}</div></fieldset>` : ''}
-      <button class="button-primary" type="submit">Run ${escapeHtml(method)} request</button>
-      <div class="field swagger-request-preview"><span>Generated request</span><pre data-swagger-request>${escapeHtml(title)}${bodyExample ? `\n\n${escapeHtml(bodyExample)}` : ''}</pre></div>
-      <div class="field"><span>Live response</span><pre aria-live="polite" data-swagger-output>Ready.</pre></div>
-    </form>
-    ${renderResponses(asObject(operation.responses), definitions)}
-  </article>`;
+  return `<details class="swagger-operation" id="${escapeHtml(operationAnchor(method, path))}">
+    <summary><span class="swagger-route"><span class="http-method http-${method.toLowerCase()}">${escapeHtml(method)}</span><code>${escapeHtml(`${spec.basePath ?? ''}${path}`)}</code></span><strong>${escapeHtml(String(operation.summary ?? title))}</strong></summary>
+    <div class="swagger-operation-body">
+      ${operation.description ? `<p class="subtle">${escapeHtml(String(operation.description))}</p>` : ''}
+      ${renderRequestContract(parameters, definitions)}
+      ${renderResponses(asObject(operation.responses), definitions)}
+      <form data-swagger-form data-method="${escapeHtml(method)}" data-path="${escapeHtml(path)}" data-base-path="${escapeHtml(spec.basePath ?? '')}" data-content-type="${escapeHtml(contentType)}" data-operation-index="${index}">
+        ${inputs || securityInputs || body ? `<fieldset><legend>Try it</legend><div class="swagger-inputs">${inputs}${securityInputs}${body ? `<label class="swagger-body">JSON body <span class="parameter-meta">${body.required ? 'required' : 'optional'}</span><textarea data-swagger-body spellcheck="false"${body.required ? ' required' : ''}>${escapeHtml(bodyExample)}</textarea></label>` : ''}</div></fieldset>` : ''}
+        <button class="button-primary" type="submit">Send ${escapeHtml(method)}</button>
+        <div class="swagger-result" data-swagger-result hidden>
+          <div class="field"><span>Request sent</span><pre data-swagger-request></pre></div>
+          <div class="field"><span>Response</span><pre aria-live="polite" data-swagger-output></pre></div>
+        </div>
+      </form>
+    </div>
+  </details>`;
 }
 
 function renderDefinitions(definitions: Record<string, JsonObject>): string {
-  return Object.entries(definitions).map(([name, schema]) => `<article class="panel swagger-definition" id="swagger-definition-${escapeHtml(name)}"><h3>${escapeHtml(name)}</h3>${renderSchemaFields(schema, definitions, `${name} schema`)}</article>`).join('');
+  return Object.entries(definitions).map(([name, schema]) => `<article class="schema-card" id="swagger-definition-${escapeHtml(name)}"><h3>${escapeHtml(name)}</h3>${renderSchemaFields(schema, definitions, `${name} schema`)}</article>`).join('');
 }
 
 const SWAGGER_RUNNER = `(() => {
@@ -239,6 +243,7 @@ const SWAGGER_RUNNER = `(() => {
         previewHeaders['content-type'] = headers['content-type'];
       }
       const requestPreview = form.querySelector('[data-swagger-request]');
+      form.querySelector('[data-swagger-result]').hidden = false;
       requestPreview.textContent = method + ' ' + path + (Object.keys(previewHeaders).length ? '\\n' + Object.entries(previewHeaders).map(([name, value]) => name + ': ' + value).join('\\n') : '') + (body ? '\\n\\n' + JSON.stringify(JSON.parse(body), null, 2) : '');
       const output = form.querySelector('[data-swagger-output]');
       output.textContent = 'Running…';
@@ -246,8 +251,13 @@ const SWAGGER_RUNNER = `(() => {
       const payload = await responseBody(response);
       output.textContent = response.status + ' ' + response.statusText + '\\n\\n' + (typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2));
     } catch (error) {
+      form.querySelector('[data-swagger-result]').hidden = false;
       form.querySelector('[data-swagger-output]').textContent = 'Request not sent.\\n\\n' + String(error);
     }
+  }));
+  document.querySelectorAll('a[href^="#swagger-definition-"]').forEach((link) => link.addEventListener('click', () => {
+    const browser = document.querySelector('[data-schema-browser]');
+    if (browser) browser.open = true;
   }));
 })();`;
 
@@ -260,15 +270,13 @@ const SWAGGER_RUNNER = `(() => {
 export function swaggerConsole(): string {
   const spec = swagger as SwaggerDocument;
   const entries = operationEntries(spec);
-  const index = entries.map(({ method, path }) => `<li><a href="#${escapeHtml(operationAnchor(method, path))}"><span class="http-method http-${method.toLowerCase()}">${escapeHtml(method)}</span><code>${escapeHtml(`${spec.basePath ?? ''}${path}`)}</code></a></li>`).join('');
 
-  return `<section class="panel swagger-intro" id="rest" aria-labelledby="rest-heading">
-    <p class="eyebrow">Swagger 2.0 · contract-driven</p>
-    <h2 id="rest-heading">Runnable REST explorer</h2>
-    <p>All ${entries.length} operations below are generated from the same <a href="/v1/openapi.json">live Swagger document</a> used by API tooling. Change the contract and the request controls, body schemas, response schemas, and generated requests change with it.</p>
-    <nav aria-label="REST operations"><ul class="swagger-index">${index}</ul></nav>
+  return `<section class="api-heading" id="rest" aria-labelledby="rest-heading">
+    <span id="openapi" aria-hidden="true"></span>
+    <div><p class="eyebrow">Swagger 2.0</p><h2 id="rest-heading">REST API</h2></div>
+    <a class="text-link" href="/v1/openapi.json">Raw contract →</a>
   </section>
-  ${entries.map((entry, indexNumber) => renderOperation(entry, indexNumber, spec)).join('')}
-  <section aria-labelledby="swagger-definitions-heading"><div class="section-head"><h2 id="swagger-definitions-heading">Swagger definitions</h2><span>${Object.keys(spec.definitions ?? {}).length} schemas</span></div>${renderDefinitions(spec.definitions ?? {})}</section>
+  <div class="swagger-operation-list">${entries.map((entry, indexNumber) => renderOperation(entry, indexNumber, spec)).join('')}</div>
+  <details class="schema-browser" data-schema-browser><summary><span>Schemas</span><span>${Object.keys(spec.definitions ?? {}).length}</span></summary><div class="schema-grid">${renderDefinitions(spec.definitions ?? {})}</div></details>
   <script>${SWAGGER_RUNNER}</script>`;
 }

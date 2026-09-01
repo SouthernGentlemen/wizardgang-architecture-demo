@@ -4,7 +4,7 @@ import en from '../i18n/locales/en.json';
 import es from '../i18n/locales/es.json';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
-import { shell } from '../ui/page';
+import { referenceDetails, shell } from '../ui/page';
 
 const resources = { en, es, ar } as const;
 type Locale = keyof typeof resources;
@@ -20,11 +20,14 @@ export async function renderI18nDemo(request: Request, env: Env): Promise<Respon
   const count = Math.max(0, Math.min(Number(url.searchParams.get('count') || '3') || 0, 9999));
   const plural = new Intl.PluralRules(locale).select(count) === 'one' ? messages['items.one'] : messages['items.other'];
   const formattedItems = plural.replace('{count}', new Intl.NumberFormat(locale).format(count));
-  const body = `<section dir="${locale === 'ar' ? 'rtl' : 'ltr'}">
+  const body = `<section class="page-header" dir="${locale === 'ar' ? 'rtl' : 'ltr'}">
     <div class="eyebrow">${escapeHtml(messages['demo.eyebrow'])}</div>
     <h1>${escapeHtml(messages['demo.title'])}</h1>
     <p>${escapeHtml(messages['demo.summary'])}</p>
-    <div class="meta"><span class="badge">working</span><a href="${escapeHtml(sourceUrl(env, 'src/demos/i18n.ts'))}">View primary route source</a><a href="${escapeHtml(sourceUrl(env, 'src/demos/i18n-page.ts'))}">${escapeHtml(messages['source'])}</a><a href="${escapeHtml(sourceUrl(env, `src/i18n/locales/${locale}.json`))}">${escapeHtml(messages['resource'])}</a></div>
+    <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/i18n.ts'))}">Route source</a>${referenceDetails([
+      { label: messages['source'], href: sourceUrl(env, 'src/demos/i18n-page.ts') },
+      { label: messages['resource'], href: sourceUrl(env, `src/i18n/locales/${locale}.json`) },
+    ])}</div>
     <form method="get" class="filters" aria-label="${escapeHtml(messages['controls'])}">
       <label for="locale">${escapeHtml(messages['language'])}<select id="locale" name="locale"><option value="en"${locale === 'en' ? ' selected' : ''}>English</option><option value="es"${locale === 'es' ? ' selected' : ''}>Español</option><option value="ar"${locale === 'ar' ? ' selected' : ''}>العربية</option></select></label>
       <label for="count">${escapeHtml(messages['count'])}<input id="count" name="count" type="number" min="0" max="9999" value="${count}"></label>

@@ -2,7 +2,7 @@ import type { DemoDefinition, Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
 import { recentApplicationLogs } from '../lib/logs';
-import { shell } from '../ui/page';
+import { referenceDetails, shell } from '../ui/page';
 
 const demo: DemoDefinition = {
   id: 'logs',
@@ -49,16 +49,17 @@ export async function renderLogsDemo(request: Request, env: Env): Promise<Respon
     </tr>`).join('');
 
   const body = `
-<section>
+<section class="page-header">
   <div class="eyebrow">Operations / /dashboard/logs</div>
   <h1>Log Viewer</h1>
-  <p>${escapeHtml(demo.summary)}</p>
-  <div class="meta">
-    <span class="badge">${escapeHtml(demo.status)}</span>
-    <a href="${escapeHtml(sourceUrl(env, demo.sourcePath))}">View route source</a>
-    <a href="${escapeHtml(sourceUrl(env, 'src/lib/logs.ts'))}">View log persistence</a>
-    <a href="${escapeHtml(sourceUrl(env, 'migrations/0004_application_logs.sql'))}">View log schema</a>
-    <a href="${escapeHtml(sourceUrl(env, 'docs/OPERATIONS.md'))}">Operations design</a>
+  <p class="lede">${escapeHtml(demo.summary)}</p>
+  <div class="page-tools">
+    <a class="text-link" href="${escapeHtml(sourceUrl(env, demo.sourcePath))}">Route source</a>
+    ${referenceDetails([
+      { label: 'Log persistence', href: sourceUrl(env, 'src/lib/logs.ts') },
+      { label: 'Log schema', href: sourceUrl(env, 'migrations/0004_application_logs.sql') },
+      { label: 'Operations design', href: sourceUrl(env, 'docs/OPERATIONS.md') },
+    ])}
   </div>
 </section>
 <section class="panel" aria-labelledby="filters-heading">
@@ -82,7 +83,7 @@ export async function renderLogsDemo(request: Request, env: Env): Promise<Respon
 </section>
 <section class="panel" aria-labelledby="viewer-heading">
   <h2 id="viewer-heading">Recent application logs</h2>
-  <p class="subtle">Showing ${logs.length} row${logs.length === 1 ? '' : 's'}. Public logs must never contain passwords, authorization headers, cookies, tokens, secrets, payment data, or private Cloudflare account metadata.</p>
+  <p class="subtle">Showing ${logs.length} sanitized row${logs.length === 1 ? '' : 's'}.</p>
   <div class="table-wrap">
     <table>
       <thead><tr><th>Time</th><th>Level</th><th>Source</th><th>Event</th><th>Message</th><th>Route</th><th>Detail</th></tr></thead>

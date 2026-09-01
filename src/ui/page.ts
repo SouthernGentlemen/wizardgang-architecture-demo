@@ -75,14 +75,13 @@ export function shell(env: Env, title: string, body: string, options: ShellOptio
 export function renderIndex(env: Env, list: DemoDefinition[]): Response {
   const groups = [...new Set(list.map((demo) => demo.group))];
   const body = `
-<section>
+<section class="page-header home-header">
   <p class="eyebrow">WG-ARCH-001 / executable companion</p>
   <h1>Architecture you can inspect.</h1>
-  <p class="lede">Every concept below has a stable route, a dedicated source module, a live implementation you can run from the page, and a direct link to the public code behind it.</p>
 </section>
-<section class="grid" aria-label="Live service state">
-  <div class="card"><h2 class="eyebrow">Version</h2><p class="stat">${escapeHtml(env.DEPLOYED_VERSION || 'development')}</p><p>Deployed from a tag. <a href="/version">Inspect version JSON</a>.</p></div>
-  <div class="card"><h2 class="eyebrow">Health</h2><p class="stat" data-health>—</p><p>Live dependency check. <a href="/dashboard#health">Inspect health</a>.</p></div>
+<section class="status-strip" aria-label="Live service state">
+  <a href="/version"><span>Version</span><strong>${escapeHtml(env.DEPLOYED_VERSION || 'development')}</strong></a>
+  <a href="/dashboard#health"><span>Health</span><strong data-health>Checking…</strong></a>
 </section>
 ${groups.map((group) => {
     const inGroup = list.filter((demo) => demo.group === group);
@@ -95,7 +94,6 @@ ${groups.map((group) => {
         <p class="eyebrow">${escapeHtml(demo.route)}</p>
         <h3>${escapeHtml(demo.title)}</h3>
         <p>${escapeHtml(demo.summary)}</p>
-        <span class="badge badge-ok">${escapeHtml(demo.status)}</span>
       </a>`).join('')}
   </div>
 </section>`;
@@ -104,7 +102,10 @@ ${groups.map((group) => {
 fetch('/health').then((r) => r.json()).then((h) => {
   const slot = document.querySelector('[data-health]');
   if (slot) slot.textContent = h.status;
-}).catch(() => {});
+}).catch(() => {
+  const slot = document.querySelector('[data-health]');
+  if (slot) slot.textContent = 'Unavailable';
+});
 </script>`;
   return shell(env, 'Architecture', body, { activeRoute: '/', description: DEFAULT_DESCRIPTION });
 }
@@ -126,48 +127,60 @@ function groupPager(demo: DemoDefinition, all: DemoDefinition[]): string {
   </nav>`;
 }
 
+export interface ReferenceLink {
+  label: string;
+  href: string;
+}
+
+/** Keep provenance available without making it compete with the page's primary task. */
+export function referenceDetails(links: ReferenceLink[], label = 'References'): string {
+  if (!links.length) return '';
+  return `<details class="reference-details"><summary>${escapeHtml(label)}</summary><div class="reference-links">${links.map((link) => `<a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a>`).join('')}</div></details>`;
+}
+
 export function renderDemo(env: Env, demo: DemoDefinition, all: DemoDefinition[] = [], extra = ''): Response {
   const actions = demo.actions ?? (demo.action ? [{
     ...demo.action,
     description: demo.action.description ?? demo.interfaces?.find((item) => item.path === demo.action?.path)?.description,
   }] : []);
-  const runPanels = extra && !demo.actions ? '' : actions.map((action, index) => {
-    const requestPreview = `${action.method} ${action.path}${action.body === undefined ? '' : `\n\n${JSON.stringify(action.body, null, 2)}`}`;
+  const runPanelItems = extra && !demo.actions ? '' : actions.map((action, index) => {
     const headingId = `${action.id ?? `run-${index + 1}`}-heading`;
-    return `<section class="panel"${action.id ? ` id="${escapeHtml(action.id)}"` : ''} aria-labelledby="${escapeHtml(headingId)}">
+    return `<section class="action-card"${action.id ? ` id="${escapeHtml(action.id)}"` : ''} aria-labelledby="${escapeHtml(headingId)}">
   ${(action.aliases ?? []).map((alias) => `<span id="${escapeHtml(alias)}" aria-hidden="true"></span>`).join('')}
   <h2 id="${escapeHtml(headingId)}">${escapeHtml(action.title ?? 'Run it')}</h2>
   ${action.description ? `<p>${escapeHtml(action.description)}</p>` : ''}
-  <div class="field" style="margin-bottom:1rem"><span>Request</span><pre style="min-height:0">${escapeHtml(requestPreview)}</pre></div>
-  <button type="button" data-run-demo="${index}">${escapeHtml(action.label)}</button>
-  <div class="field" style="margin-top:1rem"><span>Response</span><pre aria-live="polite" data-demo-output="${index}">Ready.</pre></div>
+  <div class="request-line"><span class="http-method http-${action.method.toLowerCase()}">${escapeHtml(action.method)}</span><code>${escapeHtml(action.path)}</code></div>
+  ${action.body === undefined ? '' : `<details class="request-example"><summary>Request body</summary><pre>${escapeHtml(JSON.stringify(action.body, null, 2))}</pre></details>`}
+  <button class="button-primary" type="button" data-run-demo="${index}">${escapeHtml(action.label)}</button>
+  <pre class="action-output" aria-live="polite" data-demo-output="${index}" hidden></pre>
 </section>`;
   }).join('');
-  const sections = (demo.sections ?? []).map((section) => `<section class="panel" id="${escapeHtml(section.id)}" aria-labelledby="${escapeHtml(section.id)}-heading">
+  const runPanels = runPanelItems ? `<div class="action-grid">${runPanelItems}</div>` : '';
+  const sectionItems = (demo.sections ?? []).map((section) => `<article class="info-card" id="${escapeHtml(section.id)}" aria-labelledby="${escapeHtml(section.id)}-heading">
   <h2 id="${escapeHtml(section.id)}-heading">${escapeHtml(section.title)}</h2>
   <p>${escapeHtml(section.description)}</p>
   ${section.points?.length ? `<ul>${section.points.map((point) => `<li>${escapeHtml(point)}</li>`).join('')}</ul>` : ''}
-</section>`).join('');
+</article>`).join('');
+  const sections = sectionItems ? `<div class="info-grid">${sectionItems}</div>` : '';
+  const references: ReferenceLink[] = [
+    ...(demo.supportingSources ?? []).map((source) => ({ label: source.label, href: sourceUrl(env, source.path) })),
+    ...(demo.repositoryLinks ?? []).map((link) => ({ label: link.label, href: `${repoUrl(env)}${link.path}` })),
+  ];
   const body = `
-<section>
+<section class="page-header">
   <p class="eyebrow"><a href="/#${escapeHtml(slug(demo.group))}">${escapeHtml(demo.group)}</a> / ${escapeHtml(demo.route)}</p>
   <h1>${escapeHtml(demo.title)}</h1>
   <p class="lede">${escapeHtml(demo.summary)}</p>
   ${demo.notice ? `<p class="subtle">${escapeHtml(demo.notice)}</p>` : ''}
-  <div class="meta">
-    <span class="badge badge-ok">${escapeHtml(demo.status)}</span>
-    <a href="${escapeHtml(sourceUrl(env, demo.sourcePath))}">Route source</a>
-    ${(demo.supportingSources ?? []).map((source) => `<a href="${escapeHtml(sourceUrl(env, source.path))}">${escapeHtml(source.label)}</a>`).join('')}
-    ${(demo.repositoryLinks ?? []).map((link) => `<a href="${escapeHtml(`${repoUrl(env)}${link.path}`)}">${escapeHtml(link.label)}</a>`).join('')}
+  <div class="page-tools">
+    <a class="text-link" href="${escapeHtml(sourceUrl(env, demo.sourcePath))}">Route source</a>
+    ${referenceDetails(references)}
   </div>
 </section>
 ${sections}
 ${extra}
 ${runPanels}
-<section class="panel" aria-labelledby="proves-heading">
-  <h2 id="proves-heading">This route proves</h2>
-  <ul>${demo.proves.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
-</section>
+<details class="implementation-notes"><summary id="proves-heading">Implementation notes</summary><ul>${demo.proves.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></details>
 ${groupPager(demo, all)}
 <script>
 (() => {
@@ -177,6 +190,7 @@ ${groupPager(demo, all)}
     const action = actions[index];
     const output = document.querySelector('[data-demo-output="' + index + '"]');
     if (!action || !output) return;
+    output.hidden = false;
     output.textContent = 'Running…';
     try {
       const response = await fetch(action.path, {
