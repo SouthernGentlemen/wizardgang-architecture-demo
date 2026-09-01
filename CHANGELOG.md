@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.7.0 — 2026-09-01
+
 - Added an authenticated, D1-backed dashboard control for ChatGPT search and user-requested web access, with a dynamic `/robots.txt`, server-enforced crawler gate, public status, audit logging, and an independent permanent `GPTBot` training opt-out.
 
 ## 0.6.0 — 2026-09-01

@@ -6,6 +6,8 @@ The interaction-depth backlog for R2, D1, i18n, WCAG, Git, webhooks, and GraphQL
 
 The shared dark/light interface, responsive shell, technical surfaces, navigation, and social preview were aligned with the flagship `wizardgang.ai` brand system in v0.6.0 and deployed from its verified annotated tag on 2026-09-01.
 
+The dashboard-visible ChatGPT crawler control, dynamic robots policy, and server-enforced user-agent gate are included in v0.7.0. The production migration seeds access as disabled so an authenticated operator must explicitly enable it.
+
 | Sequence | Capability | Status |
 |---|---|---|
 | CAP-001 | Route registry, shell, direct source links, D1/admin/offline baseline | Complete |
