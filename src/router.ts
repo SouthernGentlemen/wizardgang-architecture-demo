@@ -32,6 +32,26 @@ const API_PATHS = new Set(['/graphql', '/mcp']);
 /** Routes whose whole point is the D1-backed record resource, so they get the live console. */
 const RECORD_CONSOLE_ROUTES = new Set(['/d1', '/api/rest']);
 
+export const RETIRED_PAGE_REDIRECTS = new Map<string, string>([
+  ['/api/rest', '/api#rest'],
+  ['/api/openapi', '/api#openapi'],
+  ['/api/graphql', '/api#graphql'],
+  ['/api/webhooks', '/api#webhooks'],
+  ['/identity/oauth', '/identity#oauth'],
+  ['/identity/sso', '/identity#sso'],
+  ['/identity/saml', '/identity#saml'],
+  ['/git/versioning', '/git#versioning'],
+  ['/git/branching', '/git#branching'],
+  ['/git/releases', '/git#releases'],
+  ['/git/actions', '/git#actions'],
+  ['/environments', '/git#environments'],
+  ['/governance/iso-27001', '/governance#iso-27001'],
+  ['/governance/iso-42001', '/governance#iso-42001'],
+  ['/traceability', '/governance#traceability'],
+  ['/evidence', '/governance#evidence'],
+  ['/dashboard/health', '/dashboard#health'],
+]);
+
 export function bypassOfflineGate(path: string): boolean {
   return path === '/admin'
     || path === '/offline'
@@ -139,6 +159,11 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/__api/evidence/traceability') return traceabilityResponse(request, env);
   if (path === '/__api/governance/security-controls') return securityControlsResponse(request, env);
   if (path === '/__api/governance/ai-evaluation') return aiEvaluationResponse(request, env);
+
+  if (request.method === 'GET') {
+    const redirect = RETIRED_PAGE_REDIRECTS.get(path);
+    if (redirect) return Response.redirect(new URL(redirect, url.origin).toString(), 301);
+  }
 
   if (request.method === 'GET' && path === '/sitemap.xml') return sitemapResponse(request, demos);
   if (request.method === 'GET' && path === '/') return renderIndex(env, demos);
