@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Replaced the hand-authored REST controls on `/api` with a runnable explorer generated from the served Swagger 2.0 contract, including path/query/header inputs, bearer handling, request examples, response contracts, and linked schema definitions.
+
 ## 0.3.0 — 2026-08-31
 
 - Flattened the public architecture map from 34 HTML routes in eight groups to 17 routes in five layer-level groups without removing an executable demonstration.
