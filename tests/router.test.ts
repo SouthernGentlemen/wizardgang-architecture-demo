@@ -103,6 +103,38 @@ describe('public route contract', () => {
     const edge = await routeRequest(new Request('https://demo.wizardgang.ai/edge', { headers: { accept: 'text/html' } }), env());
     expect(await edge.text()).not.toContain('alignment targets, not certification claims');
   });
+
+  it('keeps source context without repeating global route chrome or interface lists', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/edge', { headers: { accept: 'text/html' } }), env());
+    const html = await response.text();
+    expect(html).toContain('Route source');
+    expect(html).not.toContain('D1 schema');
+    expect(html).not.toContain('Route map');
+    expect(html).not.toContain('Live interfaces');
+    expect(html).not.toContain('This button calls the live Worker interface below');
+  });
+
+  it('keeps only live status cards on the index and removes duplicate dashboard navigation', async () => {
+    const environment = env();
+    const index = await (await routeRequest(new Request('https://demo.wizardgang.ai/'), environment)).text();
+    expect(index).not.toContain('<h2 class="eyebrow">Routes</h2>');
+    expect(index).not.toContain('<h2 class="eyebrow">Groups</h2>');
+    expect(index).toContain('<h2 class="eyebrow">Version</h2>');
+    expect(index).toContain('<h2 class="eyebrow">Health</h2>');
+
+    const dashboard = await (await routeRequest(new Request('https://demo.wizardgang.ai/dashboard'), environment)).text();
+    expect(dashboard).not.toContain('<nav aria-label="Operations">');
+    expect(dashboard).not.toContain('Operational proof surfaces');
+
+    const docs = await (await routeRequest(new Request('https://demo.wizardgang.ai/dashboard/docs'), environment)).text();
+    expect(docs).toContain('src/router.ts');
+  });
+
+  it('removes the generic fallback runner and event listing routes', async () => {
+    const environment = env();
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/__api/demo/run', { method: 'POST' }), environment)).status).toBe(404);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/__api/demo/events'), environment)).status).toBe(404);
+  });
 });
 
 describe('offline routing matrix', () => {

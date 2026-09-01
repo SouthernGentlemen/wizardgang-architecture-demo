@@ -79,18 +79,10 @@ export function renderIndex(env: Env, list: DemoDefinition[]): Response {
   <p class="eyebrow">WG-ARCH-001 / executable companion</p>
   <h1>Architecture you can inspect.</h1>
   <p class="lede">Every concept below has a stable route, a dedicated source module, a live implementation you can run from the page, and a direct link to the public code behind it.</p>
-  <div class="meta">
-    <a href="#runtime">Jump to routes</a>
-    <a href="/dashboard">Operations dashboard</a>
-    <a href="/dashboard/docs">Documentation index</a>
-    <a href="/v1/openapi.json">OpenAPI contract</a>
-  </div>
 </section>
 <section class="grid" aria-label="Live service state">
-  <div class="card"><h2 class="eyebrow">Routes</h2><p class="stat">${list.length}</p><p>Registered architecture routes, each with its own source module.</p></div>
-  <div class="card"><h2 class="eyebrow">Groups</h2><p class="stat">${groups.length}</p><p>Runtime, integration, identity, AI, interface, delivery, governance, operations.</p></div>
   <div class="card"><h2 class="eyebrow">Version</h2><p class="stat">${escapeHtml(env.DEPLOYED_VERSION || 'development')}</p><p>Deployed from a tag. <a href="/version">Inspect version JSON</a>.</p></div>
-  <div class="card"><h2 class="eyebrow">Health</h2><p class="stat" data-health>—</p><p>Live dependency check. <a href="/dashboard/health">Inspect health</a>.</p></div>
+  <div class="card"><h2 class="eyebrow">Health</h2><p class="stat" data-health>—</p><p>Live dependency check. <a href="/dashboard#health">Inspect health</a>.</p></div>
 </section>
 ${groups.map((group) => {
     const inGroup = list.filter((demo) => demo.group === group);
@@ -121,7 +113,7 @@ function slug(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
-/** Previous/next within the same group keeps a 34-route site navigable without a menu. */
+/** Previous/next within the same group keeps adjacent proofs easy to reach. */
 function groupPager(demo: DemoDefinition, all: DemoDefinition[]): string {
   const siblings = all.filter((candidate) => candidate.group === demo.group);
   const index = siblings.findIndex((candidate) => candidate.route === demo.route);
@@ -130,30 +122,15 @@ function groupPager(demo: DemoDefinition, all: DemoDefinition[]): string {
   if (!previous && !next) return '';
   return `<nav class="meta" aria-label="${escapeHtml(demo.group)} routes" style="margin-top:2.5rem;padding-top:1.1rem;border-top:1px solid var(--line)">
     ${previous ? `<a href="${escapeHtml(previous.route)}">← ${escapeHtml(previous.title)}</a>` : ''}
-    <a href="/#${escapeHtml(slug(demo.group))}">All ${escapeHtml(demo.group)}</a>
     ${next ? `<a href="${escapeHtml(next.route)}">${escapeHtml(next.title)} →</a>` : ''}
   </nav>`;
 }
 
 export function renderDemo(env: Env, demo: DemoDefinition, all: DemoDefinition[] = [], extra = ''): Response {
-  const actions = demo.actions ?? [demo.action ?? { label: 'Run baseline demo', method: 'POST' as const, path: '/__api/demo/run', body: { demoId: demo.id } }];
-  const operationsNav = demo.group === 'Operations' ? `
-<section class="panel" aria-labelledby="operations-heading">
-  <h2 id="operations-heading">Operations surface</h2>
-  <div class="meta">
-    <a href="/dashboard">Dashboard</a>
-    <a href="/dashboard/uptime">Uptime</a>
-    <a href="/dashboard/health">Health</a>
-    <a href="/dashboard/docs">Docs</a>
-    <a href="/dashboard/logs">Logs</a>
-    <a href="/dashboard/billing">Billing &amp; usage</a>
-    <a href="/health">Health JSON</a>
-    <a href="/version">Version JSON</a>
-    <a href="${escapeHtml(sourceUrl(env, 'docs/OPERATIONS.md'))}">Operations design</a>
-  </div>
-  <p class="subtle">Operations routes stay reachable during intentional demo-offline windows. Billing data is synthetic and public-safe by design.</p>
-</section>` : '';
-  // A route with its own live console demonstrates itself; the generic runner would only duplicate it.
+  const actions = demo.actions ?? (demo.action ? [{
+    ...demo.action,
+    description: demo.action.description ?? demo.interfaces?.find((item) => item.path === demo.action?.path)?.description,
+  }] : []);
   const runPanels = extra && !demo.actions ? '' : actions.map((action, index) => {
     const requestPreview = `${action.method} ${action.path}${action.body === undefined ? '' : `\n\n${JSON.stringify(action.body, null, 2)}`}`;
     const headingId = `${action.id ?? `run-${index + 1}`}-heading`;
@@ -161,7 +138,6 @@ export function renderDemo(env: Env, demo: DemoDefinition, all: DemoDefinition[]
   ${(action.aliases ?? []).map((alias) => `<span id="${escapeHtml(alias)}" aria-hidden="true"></span>`).join('')}
   <h2 id="${escapeHtml(headingId)}">${escapeHtml(action.title ?? 'Run it')}</h2>
   ${action.description ? `<p>${escapeHtml(action.description)}</p>` : ''}
-  <p class="subtle">This button calls the live Worker interface below. Meaningful actions write public-safe audit evidence to <code>demo-blob</code>.</p>
   <div class="field" style="margin-bottom:1rem"><span>Request</span><pre style="min-height:0">${escapeHtml(requestPreview)}</pre></div>
   <button type="button" data-run-demo="${index}">${escapeHtml(action.label)}</button>
   <div class="field" style="margin-top:1rem"><span>Response</span><pre aria-live="polite" data-demo-output="${index}">Ready.</pre></div>
@@ -181,18 +157,13 @@ export function renderDemo(env: Env, demo: DemoDefinition, all: DemoDefinition[]
   <div class="meta">
     <span class="badge badge-ok">${escapeHtml(demo.status)}</span>
     <a href="${escapeHtml(sourceUrl(env, demo.sourcePath))}">Route source</a>
-    <a href="${escapeHtml(sourceUrl(env, 'src/router.ts'))}">Router</a>
-    <a href="${escapeHtml(sourceUrl(env, 'migrations/0001_demo_blob.sql'))}">D1 schema</a>
-    <a href="${escapeHtml(sourceUrl(env, 'docs/ROUTES.md'))}">Route map</a>
     ${(demo.supportingSources ?? []).map((source) => `<a href="${escapeHtml(sourceUrl(env, source.path))}">${escapeHtml(source.label)}</a>`).join('')}
     ${(demo.repositoryLinks ?? []).map((link) => `<a href="${escapeHtml(`${repoUrl(env)}${link.path}`)}">${escapeHtml(link.label)}</a>`).join('')}
   </div>
 </section>
-${operationsNav}
 ${sections}
 ${extra}
 ${runPanels}
-${demo.interfaces?.length ? `<section class="panel" aria-labelledby="interfaces-heading"><h2 id="interfaces-heading">Live interfaces</h2><ul>${demo.interfaces.map((item) => `<li><code>${escapeHtml(item.method)} ${escapeHtml(item.path)}</code> — ${escapeHtml(item.description)}</li>`).join('')}</ul></section>` : ''}
 <section class="panel" aria-labelledby="proves-heading">
   <h2 id="proves-heading">This route proves</h2>
   <ul>${demo.proves.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
