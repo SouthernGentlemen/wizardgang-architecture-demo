@@ -189,6 +189,14 @@ summary { cursor: pointer; }
 .webhook-event { padding: 1rem; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2); }
 .webhook-event h3 { margin: 0; }
 .webhook-event pre { max-height: 13rem; }
+.pipeline { display: flex; align-items: stretch; gap: 1px; margin: 1rem 0; overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--line); }
+.pipeline span { position: relative; flex: 1 0 105px; display: grid; place-items: center; min-height: 62px; padding: .65rem; background: var(--panel); color: var(--muted); font: 800 .68rem/1.35 var(--mono); text-align: center; text-transform: uppercase; }
+.evidence-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: .75rem; margin: 1rem 0; }
+.evidence-card { min-width: 0; padding: 1.15rem; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+.evidence-card h2 { font-size: 1.25rem; }
+.evidence-row { padding: .7rem 0; border-top: 1px solid var(--line); }
+.evidence-row:first-child { border-top: 0; }
+.evidence-row p { margin: .25rem 0 0; font-size: .78rem; overflow-wrap: anywhere; }
 .technical-state pre { max-height: 22rem; }
 .graphql-frame { height: min(72vh, 760px); min-height: 540px; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
 .graphql-frame iframe { width: 100%; height: 100%; border: 0; }
