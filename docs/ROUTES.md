@@ -126,5 +126,6 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | i18n configuration | `config/i18n.json` |
 | Locale resources | `src/i18n/locales/` |
 | Accessibility plan | `docs/ACCESSIBILITY.md` |
+| Seven-demo interaction specification | `docs/INTERACTIVE-DEMO-SPEC.md` |
 | Identity plan | `docs/IDENTITY.md` |
 | Evidence map | `docs/EVIDENCE.md` |

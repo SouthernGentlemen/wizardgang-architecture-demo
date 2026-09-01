@@ -2,6 +2,8 @@
 
 The stable route contract was established first; genuine capabilities were then implemented without renaming the public human routes. Capability IDs below are design-plan references, not permanent Git change IDs.
 
+The next interaction-depth backlog for R2, D1, i18n, WCAG, Git, webhooks, and GraphQL is specified in [`INTERACTIVE-DEMO-SPEC.md`](INTERACTIVE-DEMO-SPEC.md). The current capabilities remain working; that document is explicit planned scope and must not be treated as deployed evidence.
+
 | Sequence | Capability | Status |
 |---|---|---|
 | CAP-001 | Route registry, shell, direct source links, D1/admin/offline baseline | Complete |
