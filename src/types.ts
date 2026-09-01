@@ -85,6 +85,12 @@ export interface DemoDefinition {
   summary: string;
   proves: string[];
   status: DemoStatus;
+  sections?: Array<{
+    id: string;
+    title: string;
+    description: string;
+    points?: string[];
+  }>;
   interfaces?: Array<{
     method: string;
     path: string;

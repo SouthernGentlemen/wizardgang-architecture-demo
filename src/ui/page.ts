@@ -167,6 +167,11 @@ export function renderDemo(env: Env, demo: DemoDefinition, all: DemoDefinition[]
   <div class="field" style="margin-top:1rem"><span>Response</span><pre aria-live="polite" data-demo-output="${index}">Ready.</pre></div>
 </section>`;
   }).join('');
+  const sections = (demo.sections ?? []).map((section) => `<section class="panel" id="${escapeHtml(section.id)}" aria-labelledby="${escapeHtml(section.id)}-heading">
+  <h2 id="${escapeHtml(section.id)}-heading">${escapeHtml(section.title)}</h2>
+  <p>${escapeHtml(section.description)}</p>
+  ${section.points?.length ? `<ul>${section.points.map((point) => `<li>${escapeHtml(point)}</li>`).join('')}</ul>` : ''}
+</section>`).join('');
   const body = `
 <section>
   <p class="eyebrow"><a href="/#${escapeHtml(slug(demo.group))}">${escapeHtml(demo.group)}</a> / ${escapeHtml(demo.route)}</p>
@@ -183,6 +188,7 @@ export function renderDemo(env: Env, demo: DemoDefinition, all: DemoDefinition[]
   </div>
 </section>
 ${operationsNav}
+${sections}
 ${extra}
 ${runPanels}
 ${demo.interfaces?.length ? `<section class="panel" aria-labelledby="interfaces-heading"><h2 id="interfaces-heading">Live interfaces</h2><ul>${demo.interfaces.map((item) => `<li><code>${escapeHtml(item.method)} ${escapeHtml(item.path)}</code> — ${escapeHtml(item.description)}</li>`).join('')}</ul></section>` : ''}

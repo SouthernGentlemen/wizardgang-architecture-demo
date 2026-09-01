@@ -84,6 +84,14 @@ describe('public route contract', () => {
     for (const anchor of ['oauth', 'sso', 'saml']) expect(html).toContain(`id="${anchor}"`);
     for (const endpoint of ['/__api/identity/authorize', '/__api/identity/oauth-pkce', '/__api/identity/sso', '/__api/identity/saml/inspect', '/identity/saml/metadata']) expect(html).toContain(endpoint);
   });
+
+  it('renders the consolidated delivery lifecycle with one runnable version proof', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/git', { headers: { accept: 'text/html' } }), env());
+    const html = await response.text();
+    for (const anchor of ['source-of-truth', 'versioning', 'branching', 'actions', 'releases', 'environments']) expect(html).toContain(`id="${anchor}"`);
+    expect(html.match(/data-run-demo="\d+"/g)).toHaveLength(1);
+    expect(html).toContain('GET /version');
+  });
 });
 
 describe('offline routing matrix', () => {
