@@ -179,3 +179,29 @@ Each record ties one production deployment to one annotated release tag. A deplo
 **Rollback:** Deploy v0.5.0.
 
 **Note:** GitHub Release workflow 33549894035 completed end to end, including exact-tag validation, GitHub Release publication, remote migration check, tagged Worker deployment, and automated public identity verification. Independent in-app browser and API verification confirmed the WizardGang wordmark, editorial hierarchy, dark palette, full route map, operational live health state, social metadata, social image response, and viewport-width containment.
+
+---
+
+## DEP-DEMO-008
+
+**Product:** WizardGang Architecture Demo
+
+**Release:** v0.7.0
+
+**Commit:** `79c0d8784966b5d3751774d8fc8dc19d22349bef`
+
+**Environment:** production
+
+**Date:** 2026-09-01
+
+**URL:** https://demo.wizardgang.ai
+
+**Changes:** DEMO-050 through DEMO-052
+
+**Validation:** PASS — annotated-tag reproduction, GitHub Release publication, controlled-history validation, 77 tests across 17 files, generated 17-route HTML registry and 61-entry full contract, typecheck, contract/six-locale/security checks, dependency audit with no vulnerabilities, 3,577.54 KiB compressed production build, remote application of migration `0009_crawler_control.sql`, exact live `/version` identity, operational Worker/D1/R2/Durable Object health, dashboard-visible disabled crawler state and authenticated controls, dynamic `/robots.txt` disabled policy, live `403` enforcement for `OAI-SearchBot` and `ChatGPT-User` while disabled, independent `GPTBot` training-block response, `401` rejection of an unauthenticated toggle attempt, and live browser verification with no warnings.
+
+**Previous:** v0.6.0
+
+**Rollback:** Deploy v0.6.0.
+
+**Note:** GitHub Release workflow 33552987927 completed end to end, including exact-tag validation, GitHub Release publication, production D1 migration, tagged Worker deployment, and automated public identity verification. Independent API and in-app browser verification confirmed that crawler access remained disabled by default after deployment, ordinary public access remained available, and the training crawler stayed blocked independently.
