@@ -49,3 +49,29 @@ Each record ties one production deployment to one annotated release tag. A deplo
 **Rollback:** Deploy v0.1.0.
 
 **Note:** The GitHub release workflow reproduced and published the exact tag. Its deployment job could not authenticate because the repository Cloudflare API token is invalid; the exact tag was deployed and verified through the authorized local Wrangler OAuth session. Rotate the repository token before the next automated deployment.
+
+---
+
+## DEP-DEMO-003
+
+**Product:** WizardGang Architecture Demo
+
+**Release:** v0.3.0
+
+**Commit:** `cd03515a37c8098bd164c748cb8e804f7d50614d`
+
+**Environment:** production
+
+**Date:** 2026-08-31
+
+**URL:** https://demo.wizardgang.ai
+
+**Changes:** DEMO-020 through DEMO-028
+
+**Validation:** PASS — annotated-tag reproduction, GitHub Release publication, controlled-history validation, 58 tests across 12 files, generated 17-route HTML registry and 45-entry full contract, typecheck, contract/locale/security checks, dependency audit, production build, remote migration 0007, exact live `/version` identity, operational `/health`, all 17 exact redirects and destination anchors, five index groups, 18-location sitemap without retired pages, and preserved SAML metadata XML.
+
+**Previous:** v0.2.0
+
+**Rollback:** Deploy v0.2.0.
+
+**Note:** The tag-triggered GitHub release and deployment workflow completed end to end, including remote migration, tagged Worker deployment, and public identity verification.
