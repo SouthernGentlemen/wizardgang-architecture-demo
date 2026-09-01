@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import swagger from '../contracts/openapi/swagger.json';
 import { demos } from '../src/demos/registry';
 import { RETIRED_PAGE_REDIRECTS, routeRequest } from '../src/router';
 import type { D1PreparedStatement, Env } from '../src/types';
@@ -78,8 +79,15 @@ describe('public route contract', () => {
   it('renders the consolidated API interfaces as runnable anchored sections', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/api', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
+    const swaggerOperationCount = Object.values(swagger.paths).reduce((count, path) => count + Object.keys(path).filter((method) => ['get', 'post', 'put', 'patch', 'delete', 'head', 'options'].includes(method)).length, 0);
     for (const anchor of ['rest', 'openapi', 'graphql', 'webhooks']) expect(html).toContain(`id="${anchor}"`);
     for (const endpoint of ['/v1/demo-records', '/v1/openapi.json', '/graphql', '/__api/webhooks/demo']) expect(html).toContain(endpoint);
+    expect(html.match(/<form data-swagger-form/g)).toHaveLength(swaggerOperationCount);
+    expect(html).toContain('Swagger 2.0 · contract-driven');
+    expect(html).toContain('Request body schema');
+    expect(html).toContain('swagger-definition-RecordInput');
+    expect(html).toContain('swagger-definition-WebhookEvent');
+    expect(html).toContain('data-auth-prefix="Bearer "');
   });
 
   it('renders the consolidated identity interfaces as runnable anchored sections', async () => {

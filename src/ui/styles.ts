@@ -29,6 +29,7 @@ export const styles = `
   --button-text: #fff;
 }
 * { box-sizing: border-box; }
+.sr-only { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
 html { background: var(--ink); }
 body {
   min-width: 280px;
@@ -135,6 +136,36 @@ tbody tr:last-child td { border-bottom: 0; }
 td code { font-size: .8rem; }
 details pre { max-width: 520px; }
 summary { cursor: pointer; }
+
+.swagger-intro { border-inline-start: 4px solid var(--violet); }
+.swagger-index { display: flex; flex-wrap: wrap; gap: .55rem; margin: 1.25rem 0 0 !important; padding: 0 !important; list-style: none; }
+.swagger-index li { margin: 0; }
+.swagger-index a { display: inline-flex; align-items: center; gap: .45rem; min-height: 44px; padding: .45rem .65rem; border: 1px solid var(--line); text-decoration: none; }
+.swagger-index a:hover { border-color: var(--paper); }
+.swagger-route { display: flex; align-items: center; gap: .65rem; margin-bottom: .8rem; }
+.swagger-route code { overflow-wrap: anywhere; color: var(--paper); font-size: 1rem; }
+.http-method { display: inline-flex; justify-content: center; min-width: 4.4rem; padding: .34rem .45rem; border: 1px solid currentColor; color: var(--cyan); font: 900 .68rem/1 var(--mono); letter-spacing: .1em; text-decoration: none; }
+.http-post { color: var(--acid); }
+.http-put, .http-patch { color: var(--violet); }
+.http-delete { color: #ff9d9d; }
+:root[data-theme="light"] .http-delete { color: #a11; }
+.swagger-contract { margin: 1rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.swagger-contract summary { min-height: 44px; padding: .7rem 0; color: var(--muted); font: 850 .72rem/1.5 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.swagger-contract > :not(summary) { margin-bottom: 1rem; }
+.swagger-contract h4 { margin: 1rem 0 .55rem; }
+.swagger-operation form { margin-top: 1.2rem; }
+.swagger-operation fieldset { margin: 0 0 1rem; padding: 1rem; border: 1px solid var(--line); }
+.swagger-operation legend { padding: 0 .45rem; }
+.swagger-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .85rem; }
+.swagger-inputs label { display: grid; align-content: start; gap: .35rem; }
+.swagger-inputs .swagger-body { grid-column: 1 / -1; }
+.parameter-meta { color: var(--muted); font-weight: 500; letter-spacing: 0; text-transform: none; }
+.input-help { color: var(--muted); font: 400 .78rem/1.4 inherit; letter-spacing: 0; text-transform: none; }
+.swagger-request-preview { margin-top: 1rem; }
+.swagger-definition { scroll-margin-top: 1rem; }
+.swagger-definition h3 { color: var(--violet); }
+.swagger-schema-table { min-width: 580px; }
+.schema-source { min-height: 0; }
 
 footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .9rem; padding: 1.6rem 0 2.6rem; border-top: 1px solid var(--line); color: var(--muted); font: .7rem/1.6 var(--mono); text-transform: uppercase; }
 footer a { color: var(--paper); }

@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "WizardGang Architecture Demo REST API",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Executable Swagger 2.0 contract for the versioned REST and signed-webhook demonstration. Reads are public; mutations use the same bearer authorization boundary as GraphQL and MCP."
   },
   "host": "demo.wizardgang.ai",
@@ -15,6 +15,7 @@
       "type": "apiKey",
       "name": "Authorization",
       "in": "header",
+      "x-value-prefix": "Bearer ",
       "description": "Use Authorization: Bearer <DEMO_API_TOKEN>. The token is supplied through managed secrets and never committed."
     }
   },
@@ -22,7 +23,7 @@
     "/demo-records": {
       "get": {
         "summary": "List demo records",
-        "parameters": [{ "name": "namespace", "in": "query", "type": "string", "default": "public" }],
+        "parameters": [{ "name": "namespace", "in": "query", "type": "string", "default": "public", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$" }],
         "responses": {
           "200": { "description": "Demo record collection", "schema": { "$ref": "#/definitions/RecordCollection" } },
           "503": { "description": "Demo intentionally offline or dependency unavailable" }
@@ -43,13 +44,13 @@
     "/demo-records/{key}": {
       "get": {
         "summary": "Read one demo record",
-        "parameters": [{ "name": "key", "in": "path", "required": true, "type": "string" }, { "name": "namespace", "in": "query", "type": "string", "default": "public" }],
-        "responses": { "200": { "description": "Record" }, "404": { "description": "Not found" }, "503": { "description": "Unavailable" } }
+        "parameters": [{ "name": "key", "in": "path", "required": true, "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$", "x-example": "visitor-note" }, { "name": "namespace", "in": "query", "type": "string", "default": "public", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$" }],
+        "responses": { "200": { "description": "Record", "schema": { "$ref": "#/definitions/DemoRecord" } }, "404": { "description": "Not found" }, "503": { "description": "Unavailable" } }
       },
       "delete": {
         "summary": "Delete one demo record",
         "security": [{ "BearerToken": [] }],
-        "parameters": [{ "name": "key", "in": "path", "required": true, "type": "string" }, { "name": "namespace", "in": "query", "type": "string", "default": "public" }],
+        "parameters": [{ "name": "key", "in": "path", "required": true, "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$", "x-example": "visitor-note" }, { "name": "namespace", "in": "query", "type": "string", "default": "public", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$" }],
         "responses": { "204": { "description": "Deleted" }, "401": { "description": "Authentication required" }, "503": { "description": "Unavailable" } }
       }
     },
@@ -57,9 +58,9 @@
       "post": {
         "summary": "Receive a signed, replay-protected demo webhook",
         "parameters": [
-          { "name": "X-Demo-Delivery-Id", "in": "header", "required": true, "type": "string" },
-          { "name": "X-Demo-Signature", "in": "header", "required": true, "type": "string" },
-          { "name": "body", "in": "body", "required": true, "schema": { "type": "object" } }
+          { "name": "X-Demo-Delivery-Id", "in": "header", "required": true, "type": "string", "maxLength": 100, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]{0,99}$", "x-example": "visitor-example", "description": "Unique delivery identifier used for replay protection." },
+          { "name": "X-Demo-Signature", "in": "header", "required": true, "type": "string", "description": "Lowercase HMAC-SHA256 hex digest of the exact request body." },
+          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/WebhookEvent" } }
         ],
         "responses": { "202": { "description": "Signature verified and receipt stored" }, "401": { "description": "Invalid signature" }, "409": { "description": "Duplicate delivery" }, "503": { "description": "Unavailable" } }
       }
@@ -75,9 +76,10 @@
     "RecordInput": {
       "type": "object",
       "required": ["key", "value"],
+      "example": { "namespace": "public", "key": "visitor-note", "value": { "note": "hello" } },
       "properties": {
-        "namespace": { "type": "string", "default": "public", "maxLength": 64 },
-        "key": { "type": "string", "maxLength": 64 },
+        "namespace": { "type": "string", "default": "public", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$" },
+        "key": { "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$" },
         "value": {}
       },
       "additionalProperties": false
@@ -100,6 +102,17 @@
         "results": { "type": "array", "items": { "$ref": "#/definitions/DemoRecord" } },
         "authorization": { "type": "object" }
       }
+    },
+    "WebhookEvent": {
+      "type": "object",
+      "required": ["type", "data", "sentAt"],
+      "example": { "type": "demo.record.changed", "data": { "key": "visitor-example" }, "sentAt": "2026-08-31T12:00:00.000Z" },
+      "properties": {
+        "type": { "type": "string", "pattern": "^demo\\.[a-z.]{1,60}$" },
+        "data": { "type": "object" },
+        "sentAt": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
     }
   }
 }

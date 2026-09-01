@@ -2,6 +2,7 @@ import type { Env } from './types';
 import { demos, demosByRoute } from './demos/registry';
 import { renderDemo, renderIndex, renderNotFound } from './ui/page';
 import { recordsConsole } from './demos/records-console';
+import { swaggerConsole } from './demos/swagger-console';
 import { sitemapResponse } from './api/sitemap';
 import { renderAdmin, renderOffline } from './ui/admin';
 import { healthResponse, logsResponse, versionResponse } from './api/operations';
@@ -176,7 +177,10 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
 
   if (request.method === 'GET') {
     const demo = demosByRoute.get(path);
-    if (demo) return renderDemo(env, demo, demos, RECORD_CONSOLE_ROUTES.has(path) ? recordsConsole(path === '/api' ? 'rest' : 'records') : '');
+    if (demo) {
+      const extra = path === '/api' ? swaggerConsole() : RECORD_CONSOLE_ROUTES.has(path) ? recordsConsole('records') : '';
+      return renderDemo(env, demo, demos, extra);
+    }
   }
 
   return renderNotFound(env);
