@@ -308,10 +308,10 @@
   },
   {
     "route": "/graphql",
-    "title": "GraphQL API",
+    "title": "GraphQL API and GraphiQL",
     "group": "Interfaces API",
     "source": "src/api/graphql.ts",
-    "method": "POST",
+    "method": "GET, POST",
     "machine": true,
     "offline_behavior": "503",
     "status": "working"

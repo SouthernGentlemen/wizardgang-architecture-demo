@@ -12,7 +12,9 @@ describe('public machine contracts', () => {
   });
 
   it('keeps GraphQL, MCP, and webhook contracts marked executable', () => {
-    expect(readFileSync('contracts/graphql/schema.graphql', 'utf8')).toContain('demoRecords');
+    const graphql = readFileSync('contracts/graphql/schema.graphql', 'utf8');
+    expect(graphql).toContain('demoRecords');
+    expect(graphql).toContain('createUser');
     expect(JSON.parse(readFileSync('contracts/mcp/tools.json', 'utf8')).status).toBe('working');
     expect(JSON.parse(readFileSync('contracts/webhooks/events.json', 'utf8')).status).toBe('working');
   });

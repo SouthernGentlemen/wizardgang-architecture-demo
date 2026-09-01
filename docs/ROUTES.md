@@ -80,7 +80,7 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | `/v1/demo-records` | `GET`, `POST` | REST record collection | `src/api/records.ts` |
 | `/v1/demo-records/{key}` | `GET`, `DELETE` | REST record item | `src/api/records.ts` |
 | `/v1/openapi.json` | `GET` | Swagger 2.0 contract | `src/api/openapi.ts` |
-| `/graphql` | `POST` | GraphQL record query | `src/api/graphql.ts` |
+| `/graphql` | `GET`, `POST` | Embedded GraphiQL and GraphQL query/mutation execution | `src/api/graphql.ts` |
 | `/graphql/schema` | `GET` | GraphQL schema | `src/api/graphql.ts` |
 | `/v1/webhooks/demo` | `POST` | Signed webhook receiver | `src/api/webhooks.ts` |
 | `/__api/webhooks/demo` | `POST` | Visitor signed-webhook run | `src/api/webhooks.ts` |

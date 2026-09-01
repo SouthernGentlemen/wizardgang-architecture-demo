@@ -168,6 +168,8 @@ summary { cursor: pointer; }
 .lab-form label { display: grid; gap: .35rem; }
 .lab-form .button-row { grid-column: 1 / -1; }
 .technical-state pre { max-height: 22rem; }
+.graphql-frame { height: min(72vh, 760px); min-height: 540px; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+.graphql-frame iframe { width: 100%; height: 100%; border: 0; }
 .info-card, .action-card { padding: 1.25rem; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
 .info-card h2, .action-card h2 { font-size: 1.3rem; }
 .info-card p, .action-card p { color: var(--muted); }
@@ -260,5 +262,6 @@ footer a { color: var(--paper); }
   .info-grid, .action-grid { grid-template-columns: 1fr; }
   .lab-grid { grid-template-columns: 1fr; }
   .lab-grid aside { position: static; }
+  .graphql-frame { min-height: 620px; }
 }
 `;
