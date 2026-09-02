@@ -12,7 +12,7 @@ This file is the stable public URL contract for `demo.wizardgang.ai`. The public
 | Platform | `/d1` | Cloudflare D1 | `src/demos/d1.ts` | Working |
 | Platform | `/r2` | Cloudflare R2 | `src/demos/r2.ts` | Working |
 | Interfaces | `/api` | REST, OpenAPI, GraphQL, and webhooks | `src/demos/api.ts` | Working |
-| Interfaces | `/identity` | Authorization, OAuth, SSO, and SAML | `src/demos/identity.ts` | Working |
+| Interfaces | `/identity` | Real provider authentication, normalized identity, SSO, and application authorization | `src/demos/identity.ts` | Working |
 | Interfaces | `/mcp` | Model Context Protocol | `src/demos/mcp.ts` | Working |
 | Standards | `/i18n` | Internationalization | `src/demos/i18n.ts` | Working |
 | Standards | `/accessibility` | WCAG 2.2 | `src/demos/accessibility.ts` | Working |
@@ -28,7 +28,7 @@ The architecture map at `/` and `/sitemap.xml` are generated from this 17-route 
 
 ## Retired page redirects
 
-These are exact-path `301` redirects. `/identity/saml/metadata` is resolved as a machine interface before the redirect table and is not covered by the `/identity/saml` entry.
+These are exact-path `301` redirects. `/identity/saml` is now the live Entra SAML sign-in route rather than a redirect.
 
 | Retired route | Permanent destination |
 |---|---|
@@ -38,7 +38,6 @@ These are exact-path `301` redirects. `/identity/saml/metadata` is resolved as a
 | `/api/webhooks` | `/api#webhooks` |
 | `/identity/oauth` | `/identity#oauth` |
 | `/identity/sso` | `/identity#sso` |
-| `/identity/saml` | `/identity#saml` |
 | `/git/versioning` | `/git#versioning` |
 | `/git/branching` | `/git#branching` |
 | `/git/releases` | `/git#releases` |
@@ -104,6 +103,16 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | `/__api/identity/sso` | `GET` | SSO trust boundary | `src/api/identity.ts` |
 | `/identity/saml/metadata` | `GET` | SAML SP metadata | `src/api/identity.ts` |
 | `/__api/identity/saml/inspect` | `GET` | SAML validation boundary | `src/api/identity.ts` |
+| `/identity/microsoft` | `GET` | Start Microsoft Entra ID OIDC authentication | `src/api/identity.ts` |
+| `/identity/microsoft/callback` | `GET` | Validate Microsoft Entra ID OIDC callback | `src/api/identity.ts` |
+| `/identity/google` | `GET` | Start Google OIDC authentication | `src/api/identity.ts` |
+| `/identity/google/callback` | `GET` | Validate Google OIDC callback | `src/api/identity.ts` |
+| `/identity/github` | `GET` | Start GitHub OAuth authentication | `src/api/identity.ts` |
+| `/identity/github/callback` | `GET` | Validate GitHub OAuth callback and API identity | `src/api/identity.ts` |
+| `/identity/saml` | `GET` | Start Microsoft Entra ID SAML authentication | `src/api/identity.ts` |
+| `/identity/saml/acs` | `POST` | Validate Microsoft Entra ID SAML assertion | `src/api/identity.ts` |
+| `/identity/session` | `GET` | Current sanitized application identity | `src/api/identity.ts` |
+| `/identity/logout` | `POST` | Revoke current application session | `src/api/identity.ts` |
 | `/__api/operations/logs` | `GET` | Sanitized logs; offline-reachable | `src/api/operations.ts` |
 | `/__api/operations/billing` | `POST` | Synthetic budget scenario; offline-reachable | `src/api/billing.ts` |
 | `/__api/evidence/traceability` | `GET` | Release and audit evidence | `src/api/governance.ts` |

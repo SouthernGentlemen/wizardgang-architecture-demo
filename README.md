@@ -5,14 +5,14 @@ Public, executable companion to **WG-ARCH-001 — WizardGang Systems Architectur
 Target site: `https://demo.wizardgang.ai`  
 Intended public repository: `SouthernGentlemen/wizardgang-architecture-demo`
 
-The canonical standard is [`docs/ARCHITECTURE-STANDARD.md`](docs/ARCHITECTURE-STANDARD.md). This repository intentionally contains no PDFs. All registered architecture routes have working implementations; external production deployment and identity-provider configuration remain environment-specific steps.
+The canonical standard is [`docs/ARCHITECTURE-STANDARD.md`](docs/ARCHITECTURE-STANDARD.md). This repository intentionally contains no PDFs. All registered architecture routes have working implementations; external production deployment and identity-provider credentials remain environment-specific steps.
 
 ## Architecture laboratory
 
 Seventeen public HTML routes organize the architecture into five layers. Each layer has a dedicated owner under `src/demos/`, live implementation, observable behavior, and direct public source/evidence links.
 
 - **Platform:** safe edge-context inspection, bounded stateless Worker compute, a session-isolated D1 users-and-tasks lab, a bounded R2 mini file manager with D1 metadata, and a coordinated Durable Object counter.
-- **Interfaces:** REST/JSON, a served Swagger 2.0 contract, GraphQL Yoga with locally bundled GraphiQL, verified GitHub-compatible webhooks, provider-neutral OAuth/SSO/SAML boundaries, and a JSON-RPC MCP read tool under explicit application policies.
+- **Interfaces:** REST/JSON, a served Swagger 2.0 contract, GraphQL Yoga with locally bundled GraphiQL, verified GitHub-compatible webhooks, real Entra/Google/GitHub authentication paths behind environment-owned credentials, and a JSON-RPC MCP read tool under explicit application policies.
 - **Standards:** English, Spanish, French, German, Japanese, and Arabic resources; instant switching and `Intl` inspection; RTL rendering; and accessible/broken comparison labs with locally bundled axe-core analysis.
 - **Delivery and governance:** live GitHub branch/commit/pull-request/Actions/tag/release evidence, runtime traceability, CI and tag-only deployment workflows, security-control mapping, and an executable MCP boundary evaluation.
 - **Operations:** dependency-aware health, timestamped availability, live documentation, sanitized D1 logs, synthetic billing thresholds, observable graceful degradation, and authenticated D1-backed demo control.
@@ -69,13 +69,15 @@ The numbered migrations establish:
 - `crawler_control` — ChatGPT search and user-requested web access state;
 - `application_logs` — bounded public-safe diagnostics;
 - `r2_object_metadata` — relational references to real R2 objects;
-- `webhook_receipts` — signed-delivery digests and replay protection.
+- `webhook_receipts` — signed-delivery digests and replay protection;
 - `demo_sessions`, `demo_users`, and `demo_tasks` — expiring visitor-scoped D1 laboratory state;
 - session fields on `r2_object_metadata` — expiring visitor-scoped references to R2 uploads;
 - `webhook_events` — bounded sanitized webhook evidence and delivery-ID replay state;
-- `demo_state` — bounded shared lab state used by reset and cleanup operations.
+- `demo_state` — bounded shared lab state used by reset and cleanup operations;
+- `identity_sessions` — encrypted, expiring, revocable application sessions;
+- `identity_saml_requests` and `identity_saml_assertions` — SAML request correlation and assertion replay protection.
 
-Machine contracts for Swagger 2.0, GraphQL, MCP, webhooks, and provider-neutral SAML metadata are versioned beside their implementations.
+Machine contracts for Swagger 2.0, GraphQL, MCP, webhooks, and SAML service-provider metadata are versioned beside their implementations.
 
 ## Local setup
 

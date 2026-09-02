@@ -69,6 +69,17 @@ export interface Env {
   GITHUB_READ_TOKEN?: string;
   GITHUB_DEMO_TOKEN?: string;
   DEMO_SESSION_SECRET?: string;
+  IDENTITY_SESSION_SECRET?: string;
+  MICROSOFT_CLIENT_ID?: string;
+  MICROSOFT_CLIENT_SECRET?: string;
+  MICROSOFT_TENANT_ID?: string;
+  GOOGLE_CLIENT_ID?: string;
+  GOOGLE_CLIENT_SECRET?: string;
+  GITHUB_CLIENT_ID?: string;
+  GITHUB_CLIENT_SECRET?: string;
+  SAML_IDP_CERT?: string;
+  SAML_IDP_ISSUER?: string;
+  SAML_SSO_URL?: string;
   DEPLOYED_VERSION?: string;
   DEPLOYED_SHA?: string;
   DEPLOYMENT_ENVIRONMENT?: string;

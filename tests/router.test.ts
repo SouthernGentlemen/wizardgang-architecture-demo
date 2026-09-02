@@ -108,11 +108,13 @@ describe('public route contract', () => {
     expect(html).toContain('data-auth-prefix="Bearer "');
   });
 
-  it('renders the consolidated identity interfaces as runnable anchored sections', async () => {
+  it('renders the identity console with provider routes, inspector views, and stable anchors', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/identity', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     for (const anchor of ['oauth', 'sso', 'saml']) expect(html).toContain(`id="${anchor}"`);
-    for (const endpoint of ['/__api/identity/authorize', '/__api/identity/oauth-pkce', '/__api/identity/sso', '/__api/identity/saml/inspect', '/identity/saml/metadata']) expect(html).toContain(endpoint);
+    for (const endpoint of ['/identity/microsoft', '/identity/google', '/identity/github', '/identity/saml', '/identity/session', '/__api/identity/authorize', '/identity/saml/metadata']) expect(html).toContain(endpoint);
+    for (const view of ['Provider payload', 'Normalized identity', 'Authorization', 'Protocol']) expect(html).toContain(view);
+    expect(html).not.toContain('visitor@example.test');
   });
 
   it('renders the consolidated delivery lifecycle with one runnable version proof', async () => {

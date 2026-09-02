@@ -14,8 +14,8 @@ The dashboard-visible ChatGPT crawler control, dynamic robots policy, and server
 | CAP-002 | D1 CRUD and shared read/write authorization | Complete |
 | CAP-003–006 | Edge context, stateless Worker compute, R2 objects, Durable Object coordination | Complete |
 | CAP-007–010 | REST/JSON v1, Swagger 2.0, GraphQL, signed webhooks | Complete |
-| CAP-011 | OAuth 2.0 PKCE boundary | Complete; no live provider tenant is claimed |
-| CAP-012 | Provider-neutral SSO/SAML boundary and metadata | Complete; real federation needs environment-owned configuration |
+| CAP-011 | Microsoft/Google OIDC and GitHub OAuth 2.0 authorization-code flows with server-side PKCE | Complete; provider credentials are environment-owned |
+| CAP-012 | Microsoft Entra SSO/SAML validation, identity normalization, and revocable application sessions | Complete; provider credentials and signing certificate are environment-owned |
 | CAP-013 | MCP tool operating against authorized D1 data | Complete |
 | CAP-014–015 | Locale switching/formatting/pluralization/RTL and accessible interaction | Complete; WCAG aligned — uncertified |
 | CAP-016 | Git/branch/release/Actions source and runtime evidence | Complete |
