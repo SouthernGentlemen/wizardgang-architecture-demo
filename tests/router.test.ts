@@ -123,6 +123,10 @@ describe('public route contract', () => {
     expect(html).toContain('/__api/git/demo');
     expect(html).toContain('Run Live Git Demo');
     expect(html).toContain('Merge &amp; Release');
+    expect(html).toContain('GitHub Actions live feed');
+    expect(html).toContain('data-feed-cadence');
+    expect(html).toContain('state.feedStores');
+    expect(html).not.toContain("q('[data-ci-jobs]').innerHTML");
     expect(html).toContain('data-evidence-refresh');
     expect(html).toContain('Not publicly verifiable');
   });

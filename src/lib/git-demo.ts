@@ -88,7 +88,8 @@ export interface GitDemoStatus {
 
 const GITHUB_API = 'https://api.github.com';
 const WORKFLOW_FILE = 'git-demo.yml';
-const STATUS_CACHE_MS = 2_000;
+const ACTIVE_STATUS_CACHE_MS = 900;
+const IDLE_STATUS_CACHE_MS = 2_000;
 const REQUEST_TIMEOUT_MS = 5_000;
 const REQUEST_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const responseCache = new Map<string, StatusCacheEntry>();
@@ -273,7 +274,7 @@ function buildStages(input: {
     input.pullRequest?.headSha ? 'complete' : 'queued',
     input.pullRequest ? 'complete' : 'queued',
     workflowState(input.ciRun),
-    input.ciRun?.conclusion === 'success' ? 'current' : 'queued',
+    input.pullRequest?.mergedAt ? 'complete' : input.ciRun?.conclusion === 'success' ? 'current' : 'queued',
     input.pullRequest?.mergedAt ? 'complete' : input.releaseController ? workflowState(input.releaseController) : 'queued',
     input.releaseRun ? 'complete' : input.pullRequest?.mergedAt ? 'current' : 'queued',
     input.releasePublished ? 'complete' : workflowState(input.releaseRun),
@@ -417,7 +418,7 @@ export async function collectGitDemoStatus(env: Env, requestedId: string | null 
     delivery: { releaseRun, deployRun, jobs: [...(releaseController ? controllerJobs : []), ...releaseJobs, ...deployJobs], releaseUrl },
     releaseReady,
     failures,
-    pollAfterMs: active ? 2_500 : 60_000,
+    pollAfterMs: active ? 500 : 60_000,
     stages: buildStages({
       requested: Boolean(startController || selectedPull),
       pullRequest: selectedPull,
@@ -428,7 +429,10 @@ export async function collectGitDemoStatus(env: Env, requestedId: string | null 
       releasePublished: Boolean(releaseUrl),
     }),
   };
-  responseCache.set(cacheKey, { expiresAt: Date.now() + STATUS_CACHE_MS, value: status });
+  responseCache.set(cacheKey, {
+    expiresAt: Date.now() + (active ? ACTIVE_STATUS_CACHE_MS : IDLE_STATUS_CACHE_MS),
+    value: status,
+  });
   return status;
 }
 

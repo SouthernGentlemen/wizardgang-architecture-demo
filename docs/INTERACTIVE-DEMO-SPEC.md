@@ -327,7 +327,7 @@ The primary interaction is a real, two-stage lifecycle. `Run Live Git Demo` acce
 
 The start workflow serializes all lifecycle controller runs, refuses to proceed while another `demo/live-v*` pull request is open, calculates the next semantic version and next permanent `DEMO-###` identifier from `main`, updates `package.json` and `package-lock.json`, creates the matching `docs/releases/vX.Y.Z.md`, commits the complete controlled record, pushes an isolated branch, and opens a controlled pull request using the GitHub-managed `GIT_DEMO_PR_TOKEN`. The dedicated token is required because a pull request created with the repository `GITHUB_TOKEN` can leave ordinary pull-request workflows awaiting approval.
 
-The pull request stays open while the page polls its specific lifecycle every 2.5 seconds and renders the actual GitHub workflow run, jobs, and steps. CI exposes route, scaffold, history, lint, type, unit, contract, localization, security, migration, dependency, build, and evidence steps individually. General repository evidence retains its independent 60-second cache.
+The pull request stays open while the page polls its specific lifecycle every 500 milliseconds and reconciles the actual GitHub workflow runs, jobs, and steps in place. Existing rows remain mounted while their queued, in-progress, passed, skipped, or failed state changes, so the interface advances down the check feed instead of replacing whole text blocks. CI exposes route, scaffold, history, lint, type, unit, contract, localization, security, migration, dependency, build, and evidence steps individually. General repository evidence retains its independent 60-second cache.
 
 After the real CI workflow succeeds, `Merge & Release vX.Y.Z` requires demo-admin authentication again. The release controller validates the exact request ID, controlled PR title and branch, head SHA, reviewed package version, release record, and successful CI jobs. It merges without an administrative bypass, resolves the merge commit, creates an annotated semantic tag, and pushes it with the dedicated automation token. The existing tag-triggered release workflow reproduces the tag, publishes the GitHub Release, calls the deploy workflow, deploys the exact tag, verifies `/version` and `/health`, and exposes those real jobs and steps on `/git`.
 
@@ -348,7 +348,7 @@ Only show `Protected`, `PR required`, `CI required`, `signed commits`, `linear h
 
 `GET /__api/git/evidence` accepts no repository parameter. It derives the allowlisted owner/repository from `GITHUB_REPO_URL`, uses public GitHub APIs with an optional managed `GITHUB_READ_TOKEN`, applies a short timeout, sanitizes fields, caches successful responses for 60 seconds, and returns per-card freshness and partial-failure state. The token is never forwarded, logged, or returned.
 
-`GET /__api/git/demo` returns bounded status for the active or most recent lifecycle and accepts only an optional Worker-issued `request_id`. It uses the public/read-only GitHub boundary, a two-second in-process coalescing cache, and `Cache-Control: no-store`; no write token reaches status output.
+`GET /__api/git/demo` returns bounded status for the active or most recent lifecycle and accepts only an optional Worker-issued `request_id`. It uses the public/read-only GitHub boundary, a sub-second in-process coalescing cache while active, a two-second idle cache, and `Cache-Control: no-store`; no write token reaches status output. The 500-millisecond browser heartbeat can therefore update connection state immediately while GitHub refreshes are coalesced to a safe cadence.
 
 `POST /__api/git/demo` accepts only `{ "bump": "patch" | "minor" | "major" }`. `POST /__api/git/demo/release` accepts only the active demo PR number and matching request ID. Both cap input, require exact same-origin and demo-admin Basic authentication, fail closed when preflight evidence or managed secrets are unavailable, dispatch only `git-demo.yml` on the configured default branch, return `202`, and record credential-free audit/log evidence.
 
@@ -370,7 +370,7 @@ Only show `Protected`, `PR required`, `CI required`, `signed commits`, `linear h
 - The page makes no control assertion not present in the evidence response.
 - Start and release reject cross-origin, unauthenticated, malformed, mismatched, concurrent, or premature requests without dispatching GitHub.
 - Audit records contain version, operation, request ID, and public object identifiers, never Basic credentials or managed tokens.
-- Fast polling tracks the specific workflow/PR lifecycle while active; `Refresh evidence` remains a read-only refresh for the passive evidence grid.
+- A 500-millisecond active heartbeat tracks the specific workflow/PR lifecycle, updates keyed job and step rows in place, and never fabricates a transition; `Refresh evidence` remains a read-only refresh for the passive evidence grid.
 
 ## `/api#webhooks` — Verified live delivery
 

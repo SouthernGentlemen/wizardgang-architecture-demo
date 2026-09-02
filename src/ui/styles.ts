@@ -223,17 +223,61 @@ summary { cursor: pointer; }
 .lifecycle-facts article { min-width: 0; padding: .9rem; background: var(--panel-2); }
 .lifecycle-facts span { display: block; margin-bottom: .55rem; color: var(--muted); font: 800 .65rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
 .lifecycle-facts strong, .lifecycle-facts a { overflow-wrap: anywhere; font: 800 .82rem/1.4 var(--mono); }
-.workflow-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: .75rem; }
-.workflow-columns > article { min-width: 0; padding: 1rem; border: 1px solid var(--line); background: var(--panel-2); }
-.workflow-columns h3 { margin-bottom: .85rem; font-size: 1rem; }
-.workflow-job { padding: .8rem 0; border-top: 1px solid var(--line); }
-.workflow-job:first-child { padding-top: 0; border-top: 0; }
-.workflow-job h4 { display: flex; gap: .6rem; align-items: baseline; margin: 0 0 .55rem; font: 800 .78rem/1.4 var(--mono); }
-.workflow-job .job-symbol { color: var(--acid); }
-.workflow-job ul { display: grid; gap: .3rem; margin: 0 0 .65rem; padding: 0; list-style: none; }
-.workflow-job li { display: grid; grid-template-columns: 1rem 1fr; gap: .45rem; margin: 0; color: var(--muted); font: .74rem/1.4 var(--mono); }
+.workflow-feed { margin-top: 1rem; overflow: hidden; border: 1px solid var(--line); background: var(--panel-2); }
+.workflow-feed-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--line); background: var(--panel); }
+.workflow-feed-heading h3 { margin: 0; font-size: 1.15rem; }
+.workflow-feed-heading .eyebrow { margin-bottom: .35rem; }
+.workflow-feed-connection { display: grid; grid-template-columns: .65rem auto; align-items: center; column-gap: .5rem; color: var(--muted); font-family: var(--mono); text-align: right; }
+.workflow-feed-connection > span { grid-row: 1 / span 2; width: .55rem; height: .55rem; border-radius: 50%; background: var(--muted); }
+.workflow-feed-connection strong { color: var(--paper); font-size: .7rem; letter-spacing: .05em; }
+.workflow-feed-connection small { font-size: .63rem; }
+.workflow-feed-connection[data-feed-state="live"] > span { background: var(--acid); box-shadow: 0 0 0 4px rgb(183 255 62 / 12%); animation: git-feed-pulse 1s ease-in-out infinite; }
+.workflow-feed-connection[data-feed-state="failed"] > span { background: #ff6b6b; }
+.workflow-lane + .workflow-lane { border-top: 1px solid var(--line); }
+.workflow-lane > header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .85rem 1rem; border-bottom: 1px solid var(--line); }
+.workflow-lane > header .eyebrow { margin-bottom: .35rem; }
+.workflow-lane > header h3 { margin: 0; font-size: 1rem; }
+.check-summary { color: var(--muted); font: 700 .68rem/1.4 var(--mono); text-align: right; }
+.workflow-job-list { display: grid; gap: .7rem; padding: .8rem; }
+.workflow-empty { margin: 0; padding: 1.25rem; border: 1px dashed var(--line); color: var(--muted); font: .75rem/1.45 var(--mono); text-align: center; }
+.workflow-job { min-width: 0; overflow: hidden; border: 1px solid var(--line); background: var(--panel); transition: border-color .2s ease, background-color .2s ease; }
+.workflow-job-header { display: grid; grid-template-columns: 1.1rem minmax(0, 1fr) auto; align-items: center; gap: .65rem; min-height: 54px; padding: .7rem .8rem; }
+.workflow-job h4 { margin: 0; color: var(--paper); font: 800 .82rem/1.35 var(--mono); overflow-wrap: anywhere; }
+.workflow-job-meta { margin: .15rem 0 0; color: var(--muted); font: .65rem/1.3 var(--mono); text-transform: uppercase; }
+.workflow-job-link { color: var(--muted); font: 800 .64rem/1 var(--mono); letter-spacing: .04em; text-decoration: none; text-transform: uppercase; }
+.workflow-job-link:hover { color: var(--paper); }
+.workflow-state-icon { display: inline-grid; place-items: center; width: 1rem; height: 1rem; color: var(--muted); font: 900 .85rem/1 var(--mono); }
+.workflow-steps { margin: 0; padding: 0; border-top: 1px solid var(--line); list-style: none; }
+.workflow-steps li { display: grid; grid-template-columns: 1.1rem minmax(0, 1fr) auto; align-items: center; gap: .65rem; min-height: 38px; margin: 0; padding: .5rem .8rem; color: var(--muted); font: .73rem/1.35 var(--mono); transition: background-color .2s ease, color .2s ease; }
+.workflow-steps li + li { border-top: 1px solid rgb(255 255 255 / 5%); }
+:root[data-theme="light"] .workflow-steps li + li { border-top-color: rgb(0 0 0 / 7%); }
+.workflow-step-name { overflow-wrap: anywhere; }
+.workflow-step-result { color: var(--muted); font-size: .61rem; letter-spacing: .04em; text-align: right; text-transform: uppercase; }
+.workflow-step-empty { grid-template-columns: 1fr !important; color: var(--muted); font-style: italic !important; }
+.workflow-job[data-state="success"] > .workflow-job-header > .workflow-state-icon,
+.workflow-steps li[data-state="success"] > .workflow-state-icon { border-radius: 50%; background: var(--acid); color: var(--button-text); font-size: .62rem; }
+.workflow-job[data-state="in_progress"] { border-color: rgb(164 137 255 / 55%); }
+.workflow-job[data-state="in_progress"] > .workflow-job-header { background: rgb(164 137 255 / 8%); }
+.workflow-job[data-state="in_progress"] > .workflow-job-header > .workflow-state-icon,
+.workflow-steps li[data-state="in_progress"] > .workflow-state-icon { color: var(--violet); animation: git-feed-pulse .75s ease-in-out infinite; }
+.workflow-steps li[data-state="in_progress"] { color: var(--paper); background: rgb(164 137 255 / 8%); }
+.workflow-job[data-state="failure"], .workflow-job[data-state="cancelled"] { border-color: rgb(255 95 95 / 55%); }
+.workflow-job[data-state="failure"] > .workflow-job-header > .workflow-state-icon,
+.workflow-job[data-state="cancelled"] > .workflow-job-header > .workflow-state-icon,
+.workflow-steps li[data-state="failure"] > .workflow-state-icon,
+.workflow-steps li[data-state="cancelled"] > .workflow-state-icon { color: #ff7676; }
+.workflow-job[data-state="skipped"], .workflow-steps li[data-state="skipped"] { opacity: .68; }
+.workflow-job.state-updated, .workflow-steps li.state-updated { animation: git-feed-update .4s ease-out; }
+@keyframes git-feed-pulse { 50% { opacity: .42; transform: scale(.82); } }
+@keyframes git-feed-update { 0% { background-color: rgb(183 255 62 / 14%); } 100% { background-color: transparent; } }
 .evidence-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: .75rem; margin: 1rem 0; }
-@media (max-width: 480px) { .workflow-columns, .evidence-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 600px) {
+  .workflow-feed-heading, .workflow-lane > header { align-items: flex-start; }
+  .workflow-feed-connection { max-width: 12rem; }
+  .workflow-job-header { grid-template-columns: 1rem minmax(0, 1fr); }
+  .workflow-job-link { grid-column: 2; justify-self: start; }
+}
+@media (max-width: 480px) { .evidence-grid { grid-template-columns: minmax(0, 1fr); } }
 .evidence-card { min-width: 0; padding: 1.15rem; border: 1px solid var(--line); border-radius: 0; background: var(--panel); }
 .evidence-card h2 { font-size: 1.25rem; }
 .evidence-row { padding: .7rem 0; border-top: 1px solid var(--line); }

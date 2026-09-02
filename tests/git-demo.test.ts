@@ -124,6 +124,7 @@ describe('live Git delivery lifecycle', () => {
       requestId,
       currentVersion: '0.7.0',
       targetVersion: '0.7.1',
+      pollAfterMs: 500,
       releaseReady: true,
       pullRequest: { number: 54, branch: 'demo/live-v0.7.1-123e4567', ciReady: true },
       ci: { run: { name: 'CI', conclusion: 'success' } },
