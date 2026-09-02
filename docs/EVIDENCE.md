@@ -23,6 +23,8 @@ Primary sources:
 - R2: actual demo objects/artifacts plus D1 references;
 - application UI: accessibility/i18n behavior, AI evaluations/fallback demonstrations, operational views.
 
+The controlled public assurance data layer lives under `assurance/` and is described in `docs/ASSURANCE.md`. It assigns stable identifiers to disclosure-safe evidence and derives claim-to-evidence and reverse relationships without duplicating URLs or counts. Narrative governance records remain authoritative for policy and method; the registry is authoritative for the public machine-readable projection.
+
 `/compliance` is the assurance front door across those sources. It states the WCAG 2.2, ISO/IEC 27001, and ISO/IEC 42001 posture as aligned or supported and uncertified, then links to the canonical working evidence at `/accessibility`, `/i18n`, `/governance`, `/mcp`, `/git`, and `/dashboard/*`. It does not reproduce their explanations or turn alignment into a certification claim.
 
 Do not reconstruct evidence after the fact when the engineering workflow can create it automatically.

@@ -106,7 +106,7 @@ CI validates reference uniqueness, registry/header agreement, governed-file exis
 | DEMO-100 | `CRYPTOGRAPHY-SECRETS-KEY-MANAGEMENT.md` | Cryptographic mechanisms, authentication information and secret lifecycle | cryptography-secrets register |
 | DEMO-101 | `SECURE-ENGINEERING-TESTING.md` | Risk-scaled secure engineering and security testing | security-testing register, CI/tests |
 | DEMO-102 | `CONTINUITY-RESILIENCE.md` | Safe continuity, degradation, supplier disruption and return to service | incident/recovery exercises, operations evidence |
-| DEMO-103 | `CONTROL-AND-DOCUMENT-INDEX.md` | Authoritative navigation and traceability index | future `/compliance` registry and consistency checks |
+| DEMO-103 | `CONTROL-AND-DOCUMENT-INDEX.md` | Authoritative navigation and traceability index | `assurance/registry.json`, future `/compliance` registry and consistency checks |
 
 ## 6. Assessment, SoA, and Register Inventory
 
@@ -277,6 +277,7 @@ The most important technical evidence owners are:
 | Recovery | release reconstruction path, recovery procedure/register, future RT-001 evidence |
 | Accessibility | `docs/ACCESSIBILITY.md`, `/accessibility`, interface tests, manual records |
 | Traceability | `docs/EVIDENCE.md`, Git/PR/CI/tag/release/deploy/runtime chain |
+| Public assurance data | `assurance/registry.json`, `docs/ASSURANCE.md`, `contracts/assurance/**` |
 
 Implementation evidence can support `Met` only when the applicable requirement is actually satisfied and current enough. A source file alone cannot prove recurring effectiveness.
 

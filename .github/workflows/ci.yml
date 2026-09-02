@@ -30,6 +30,8 @@ jobs:
         run: npm run validate:history
       - name: Governance metadata validation
         run: npm run validate:governance
+      - name: Public assurance registry validation
+        run: npm run validate:assurance
       - name: Lint
         run: npm run lint
       - name: Typecheck
