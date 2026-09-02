@@ -120,6 +120,9 @@ describe('public route contract', () => {
     const html = await response.text();
     for (const anchor of ['source-of-truth', 'versioning', 'branching', 'actions', 'releases', 'environments']) expect(html).toContain(`id="${anchor}"`);
     expect(html).toContain('/__api/git/evidence');
+    expect(html).toContain('/__api/git/demo');
+    expect(html).toContain('Run Live Git Demo');
+    expect(html).toContain('Merge &amp; Release');
     expect(html).toContain('data-evidence-refresh');
     expect(html).toContain('Not publicly verifiable');
   });

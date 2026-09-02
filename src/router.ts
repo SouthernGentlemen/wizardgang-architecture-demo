@@ -32,6 +32,7 @@ import { renderR2Demo } from './demos/r2-page';
 import { accessibilityLabResponse } from './ui/accessibility-lab';
 import { webhookConsole } from './demos/webhook-console';
 import { gitEvidenceResponse } from './api/git-evidence';
+import { gitDemoReleaseResponse, gitDemoStartResponse, gitDemoStatusResponse } from './api/git-demo';
 import { renderGitDemo } from './demos/git-page';
 import { graphiqlAssetResponse } from './ui/graphiql-assets';
 import { socialCardResponse } from './ui/brand-assets';
@@ -218,6 +219,8 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/__api/governance/ai-evaluation') return aiEvaluationResponse(request, env);
   if (path === '/__api/accessibility/lab') return accessibilityLabResponse(request);
   if (path === '/__api/git/evidence') return gitEvidenceResponse(request, env);
+  if (path === '/__api/git/demo') return request.method === 'GET' ? gitDemoStatusResponse(request, env) : gitDemoStartResponse(request, env);
+  if (path === '/__api/git/demo/release') return gitDemoReleaseResponse(request, env);
 
   if (request.method === 'GET') {
     const redirect = RETIRED_PAGE_REDIRECTS.get(path);
