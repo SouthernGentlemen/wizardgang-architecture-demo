@@ -2,9 +2,15 @@
 
 ## Unreleased
 
+## 0.8.0 — 2026-09-02
+
 - Rebuilt `/dashboard` as a read-only operations center with top-level system, availability, Cloudflare usage, and deployment KPIs; dependency latency; recent activity; policy state; and shared Operations navigation.
 - Added five-minute Cron health collection, fifteen-minute server-side Cloudflare analytics snapshots, hourly progressive billable-usage attempts, sanitized D1 caching, and a public-safe usage JSON endpoint.
 - Recast `/dashboard/billing` as Cloudflare Usage & Cost, keeping live/billed/estimated evidence explicitly separate from the controlled cost-guardrail simulator.
+- Reworked `/r2` into a cohesive visitor file sandbox with immediate quota validation, inline previews, operation status, and guarded delete/reset actions.
+- Reworked `/d1` into a relational Users and Tasks console with focused CRUD, SQL evidence, bounded usage, and explicit relational-delete behavior.
+- Replaced the simulated identity surface with real Entra OIDC and SAML, Google OIDC, and GitHub OAuth trust boundaries backed by revocable encrypted sessions.
+- Replaced the hand-written MCP dispatcher with the official TypeScript SDK, a dedicated Streamable HTTP endpoint, modern and legacy negotiation, and real-client interoperability coverage.
 - Split the application interface showcase into focused `/api`, `/graphql`, and `/webhooks` routes while retaining `/identity` and `/mcp` as distinct trust boundaries.
 - Rebuilt the REST explorer from the OpenAPI 2.0 contract with five resource operations, four-language examples, response diagnostics, request-linked logs, and progressive schema disclosure.
 - Added ten-minute identity-derived bearer tokens, visitor-isolated record namespaces, normalized REST and GraphQL authorization, create-only POST semantics, and replace-or-create PUT semantics.
