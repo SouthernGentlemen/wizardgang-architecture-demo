@@ -9,7 +9,7 @@ const routes = new Set(manifest.map((entry) => entry.route));
 const requiredRoutes = [
   '/', '/edge', '/workers', '/durable-objects', '/d1', '/r2',
   '/api', '/identity', '/mcp', '/i18n', '/accessibility', '/git',
-  '/governance', '/dashboard', '/dashboard/uptime', '/dashboard/docs',
+  '/governance', '/compliance', '/dashboard', '/dashboard/uptime', '/dashboard/docs',
   '/dashboard/logs', '/dashboard/billing', '/admin', '/offline', '/health', '/version',
   '/sitemap.xml', '/og.png', '/robots.txt', '/__api/operations/logs',
   '/__api/operations/cloudflare-usage',
@@ -39,7 +39,7 @@ const retiredRoutes = [
 const failures = [];
 if (routes.size !== manifest.length) failures.push('manifest contains duplicate routes');
 const htmlDemos = manifest.filter((entry) => entry.source?.startsWith('src/demos/'));
-if (htmlDemos.length !== 19) failures.push(`expected 19 registered HTML demos; found ${htmlDemos.length}`);
+if (htmlDemos.length !== 20) failures.push(`expected 20 registered HTML demos; found ${htmlDemos.length}`);
 const expectedGroups = ['Platform', 'Interfaces', 'Standards', 'Delivery & Governance', 'Operations'];
 const actualGroups = [...new Set(htmlDemos.map((entry) => entry.group))];
 if (JSON.stringify(actualGroups) !== JSON.stringify(expectedGroups)) failures.push(`unexpected HTML demo groups: ${actualGroups.join(', ')}`);

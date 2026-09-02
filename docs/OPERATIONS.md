@@ -6,6 +6,7 @@ This document makes the operational surface a first-class part of the architectu
 
 ```text
 /dashboard
+├── overview → /compliance assurance index
 ├── /dashboard/uptime
 ├── /dashboard/docs
 ├── /dashboard/logs
@@ -34,8 +35,11 @@ The operational routes remain reachable while ordinary demos are intentionally o
 6. What Cloudflare resources are being consumed, and how fresh is that data?
 7. Is ChatGPT search and user-requested web access currently enabled?
 8. What happens when cost guardrails enter warning or degraded state?
+9. Where can a reviewer enter the compliance and assurance evidence map?
 
 All mutation controls live under authenticated `/admin` or an explicitly labeled simulator. The overview reports demo and crawler policy state but renders no working administration forms. It links directly to the source files, migrations, tests, GitHub Actions, releases, and route documentation that produce the displayed state.
+
+Compliance is not an operational KPI or a dashboard child route. The overview presents a separate Compliance & Assurance panel linking to canonical `/compliance`, where alignment statements lead back into the dashboard and other working evidence owners.
 
 ## Availability
 

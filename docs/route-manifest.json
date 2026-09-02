@@ -106,6 +106,13 @@
     "status": "working"
   },
   {
+    "route": "/compliance",
+    "title": "Compliance & Assurance",
+    "group": "Delivery & Governance",
+    "source": "src/demos/compliance.ts",
+    "status": "working"
+  },
+  {
     "route": "/dashboard",
     "title": "System Operations",
     "group": "Operations",

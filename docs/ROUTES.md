@@ -1,6 +1,6 @@
 # Route-to-source map
 
-This file is the stable public URL contract for `demo.wizardgang.ai`. The public architecture map contains 19 HTML routes in five groups. Retired page URLs remain stable through exact permanent redirects to focused routes or anchored sections; machine interfaces keep their existing paths and response shapes.
+This file is the stable public URL contract for `demo.wizardgang.ai`. The public architecture map contains 20 HTML routes in five groups. Retired page URLs remain stable through exact permanent redirects to focused routes or anchored sections; machine interfaces keep their existing paths and response shapes.
 
 ## Public architecture routes
 
@@ -20,13 +20,14 @@ This file is the stable public URL contract for `demo.wizardgang.ai`. The public
 | Standards | `/accessibility` | WCAG 2.2 | `src/demos/accessibility.ts` | Working |
 | Delivery & Governance | `/git` | Source, change, CI/CD, release, and environment lifecycle | `src/demos/git.ts` | Working |
 | Delivery & Governance | `/governance` | ISO alignment, traceability, and evidence | `src/demos/governance.ts` | Working |
+| Delivery & Governance | `/compliance` | Uncertified assurance posture and canonical evidence index | `src/demos/compliance.ts` | Working |
 | Operations | `/dashboard` | Read-only operations center, detailed health, availability, activity, usage, and deployment | `src/demos/dashboard.ts` | Working |
 | Operations | `/dashboard/uptime` | Scheduled availability history | `src/demos/uptime.ts` | Working |
 | Operations | `/dashboard/docs` | Documentation index | `src/demos/docs.ts` | Working |
 | Operations | `/dashboard/logs` | Public-safe log viewer | `src/demos/logs.ts` | Working |
 | Operations | `/dashboard/billing` | Cloudflare usage, cost evidence, and separate guardrail simulator | `src/demos/billing.ts` | Working |
 
-The architecture map at `/` and `/sitemap.xml` are generated from this 19-route registry.
+The architecture map at `/` and `/sitemap.xml` are generated from this 20-route registry.
 
 ## Retired page redirects
 

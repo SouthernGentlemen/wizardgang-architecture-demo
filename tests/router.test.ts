@@ -190,6 +190,21 @@ describe('public route contract', () => {
     expect(await edge.text()).not.toContain('alignment targets, not certification claims');
   });
 
+  it('renders compliance as an uncertified assurance index into canonical evidence', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/compliance', { headers: { accept: 'text/html' } }), env());
+    const html = await response.text();
+    expect(response.status).toBe(200);
+    for (const statement of ['WCAG 2.2', 'Aligned / supported, uncertified', 'ISO/IEC 27001', 'ISO/IEC 42001', 'Aligned, uncertified']) {
+      expect(html).toContain(statement);
+    }
+    for (const route of ['/accessibility', '/i18n', '/governance#iso-27001', '/governance#iso-42001', '/mcp', '/dashboard/uptime', '/dashboard/logs', '/git', '/dashboard/docs', '/dashboard']) {
+      expect(html).toContain(`href="${route}"`);
+    }
+    expect(html).not.toMatch(/>\s*(?:COMPLIANT|CERTIFIED)\s*</i);
+    expect(html).not.toContain('Met</span>');
+    expect(html).not.toContain('Partial</span>');
+  });
+
   it('keeps source context without repeating global route chrome or interface lists', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/edge', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
@@ -208,8 +223,14 @@ describe('public route contract', () => {
     expect(index).toContain('<section class="status-strip"');
     expect(index).toContain('<span>Version</span>');
     expect(index).toContain('<span>Health</span>');
-    expect(index).toContain('<strong>WIZARDGANG.AI</strong>');
+    expect(index).toContain('<strong>WIZARDGANG</strong>');
     expect(index).toContain('<meta property="og:image" content="https://demo.wizardgang.ai/og.png">');
+    expect(index).toContain('href="/dashboard">Dashboard</a>');
+    expect(index).not.toContain('>Map</a>');
+    expect(index).not.toContain('>Operations</a>');
+    expect(index).not.toContain('>Docs</a>');
+    expect(index).not.toContain('>GitHub <span');
+    expect(index).toContain('WG-ARCH-001 · <a href="https://github.com/SouthernGentlemen/wizardgang-architecture-demo">Public source</a>');
 
     const dashboard = await (await routeRequest(new Request('https://demo.wizardgang.ai/dashboard'), environment)).text();
     expect(dashboard).toContain('<nav class="section-nav" aria-label="Operations">');
@@ -217,6 +238,9 @@ describe('public route contract', () => {
     expect(dashboard).toContain('User-requested ChatGPT fetch');
     expect(dashboard).toContain('Model-training crawl');
     expect(dashboard).not.toContain('name="control" value="chatgpt-crawl"');
+    expect(dashboard).toContain('Compliance &amp; Assurance');
+    expect(dashboard).toContain('Aligned / uncertified');
+    expect(dashboard).toContain('href="/compliance"');
 
     const docs = await (await routeRequest(new Request('https://demo.wizardgang.ai/dashboard/docs'), environment)).text();
     expect(docs).toContain('src/router.ts');

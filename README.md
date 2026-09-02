@@ -9,12 +9,12 @@ The canonical standard is [`docs/ARCHITECTURE-STANDARD.md`](docs/ARCHITECTURE-ST
 
 ## Architecture laboratory
 
-Nineteen public HTML routes organize the architecture into five layers. Each layer has a dedicated owner under `src/demos/`, live implementation, observable behavior, and direct public source/evidence links.
+Twenty public HTML routes organize the architecture into five layers. Each layer has a dedicated owner under `src/demos/`, live implementation, observable behavior, and direct public source/evidence links.
 
 - **Platform:** safe edge-context inspection, bounded stateless Worker compute, a session-isolated D1 users-and-tasks lab, a bounded R2 mini file manager with D1 metadata, and a coordinated Durable Object counter.
 - **Interfaces:** focused REST/OpenAPI, GraphQL/GraphiQL, signed-webhook, identity, and MCP routes converging on explicit application policies and shared D1/logging boundaries.
 - **Standards:** English, Spanish, French, German, Japanese, and Arabic resources; instant switching and `Intl` inspection; RTL rendering; and accessible/broken comparison labs with locally bundled axe-core analysis.
-- **Delivery and governance:** live GitHub branch/commit/pull-request/Actions/tag/release evidence, runtime traceability, CI and tag-only deployment workflows, security-control mapping, and an executable MCP boundary evaluation.
+- **Delivery and governance:** live GitHub branch/commit/pull-request/Actions/tag/release evidence, runtime traceability, CI and tag-only deployment workflows, security-control mapping, an executable MCP boundary evaluation, and a compact compliance and assurance index linking those canonical proofs.
 - **Operations:** five-minute scheduled dependency health, measured availability, live documentation, sanitized D1 logs, cached Cloudflare usage telemetry, progressive billable-cost evidence, observable graceful degradation, and authenticated D1-backed demo control.
 
 Core invariants:
@@ -31,7 +31,7 @@ See [`docs/ROUTES.md`](docs/ROUTES.md) and [`docs/route-manifest.json`](docs/rou
 
 ## Interface
 
-The demo uses the `wizardgang.ai` design tokens: dark by default, with a light theme the reader can toggle and the browser remembers. Every page carries a skip link, primary navigation, and in-group previous/next paging; `/sitemap.xml` is generated from the same registry that serves the routes, so it cannot drift from the published contract.
+The demo uses the `wizardgang.ai` design tokens: dark by default, with a light theme the reader can toggle and the browser remembers. Every page carries a skip link, a compact Dashboard/Main site/Theme header, and in-group previous/next paging; `/sitemap.xml` is generated from the same registry that serves the routes, so it cannot drift from the published contract.
 
 `/d1` exposes a visitor-scoped users-and-tasks lab whose D1 records are also queryable through `/graphql`. `/r2` provides a bounded mini file manager, `/accessibility` compares accessible and intentionally broken interfaces, `/i18n` switches among six locales, and `/git` runs and tracks a controlled two-stage delivery lifecycle against this repository. `/api` is now a focused REST/OpenAPI client while `/webhooks` owns event-ingestion evidence.
 
@@ -39,6 +39,7 @@ The demo uses the `wizardgang.ai` design tokens: dark by default, with a light t
 
 ```text
 /dashboard
+├── overview → /compliance assurance index
 ├── /dashboard/uptime
 ├── /dashboard/docs
 ├── /dashboard/logs
@@ -51,7 +52,7 @@ The demo uses the `wizardgang.ai` design tokens: dark by default, with a light t
 /robots.txt  dynamic ChatGPT crawler policy
 ```
 
-The read-only dashboard’s `#health` section carries per-service status and latency. Cloudflare Cron stores a health observation every five minutes, refreshes sanitized account telemetry every fifteen minutes, and attempts restricted billable usage hourly. `/dashboard/billing` keeps that live usage evidence visually and behaviorally separate from the synthetic cost-guardrail simulator.
+The read-only dashboard’s `#health` section carries per-service status and latency, while its separate Compliance & Assurance panel links to the canonical `/compliance` evidence index. Cloudflare Cron stores a health observation every five minutes, refreshes sanitized account telemetry every fifteen minutes, and attempts restricted billable usage hourly. `/dashboard/billing` keeps that live usage evidence visually and behaviorally separate from the synthetic cost-guardrail simulator.
 
 `/admin` can intentionally take ordinary demos online or offline. Offline browser navigation redirects to `/offline?from=<route>` and displays **“Oops! demo is down.”** API, non-HTML, and write requests return JSON `503`. Dashboard, status, logs, synthetic billing, offline, and authenticated admin surfaces remain reachable. Control failures fail closed.
 
