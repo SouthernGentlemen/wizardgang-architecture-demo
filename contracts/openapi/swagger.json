@@ -3,7 +3,7 @@
   "info": {
     "title": "WizardGang Architecture Demo REST API",
     "version": "1.2.0",
-    "description": "Executable Swagger 2.0 contract for the versioned REST and signed-webhook demonstration. Reads are public; mutations use the same bearer authorization boundary as GraphQL and MCP."
+    "description": "Executable OpenAPI 2.0 contract for the versioned D1-backed REST resource. Reads are public. Writes accept either a short-lived identity-derived visitor token scoped to one sandbox or the managed operator credential, which is never exposed by the public explorer."
   },
   "host": "demo.wizardgang.ai",
   "basePath": "/v1",
@@ -15,91 +15,110 @@
       "type": "apiKey",
       "name": "Authorization",
       "in": "header",
-      "x-value-prefix": "Bearer ",
-      "description": "Use Authorization: Bearer <DEMO_API_TOKEN>. The token is supplied through managed secrets and never committed."
+      "description": "A ten-minute demo token issued after provider sign-in. Its demo:write permission is restricted to the caller's server-derived visitor sandbox. A managed operator credential is also accepted but never exposed by the public explorer."
     }
   },
   "paths": {
     "/demo-records": {
       "get": {
-        "summary": "List demo records",
-        "parameters": [{ "name": "namespace", "in": "query", "type": "string", "default": "public", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$" }],
+        "summary": "List records",
+        "description": "List at most 100 records. Anonymous requests read the public namespace; an identity-derived token reads its visitor sandbox.",
+        "parameters": [
+          { "name": "namespace", "in": "query", "type": "string", "default": "public", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$", "description": "Anonymous reads are fixed to public. Operators may select a namespace; this value is ignored for identity-derived visitor tokens." }
+        ],
         "responses": {
-          "200": { "description": "Demo record collection", "schema": { "$ref": "#/definitions/RecordCollection" } },
+          "200": {
+            "description": "Record collection",
+            "schema": {
+              "type": "object",
+              "required": ["results", "authorization"],
+              "properties": {
+                "results": { "type": "array", "items": { "$ref": "#/definitions/DemoRecord" } },
+                "authorization": { "type": "object" }
+              }
+            }
+          },
           "503": { "description": "Demo intentionally offline or dependency unavailable" }
         }
       },
       "post": {
-        "summary": "Create or update a bounded demo record",
+        "summary": "Create a record",
+        "description": "Create a new key. Returns 409 when that key already exists; use PUT to replace it.",
         "security": [{ "BearerToken": [] }],
-        "parameters": [{ "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/RecordInput" } }],
+        "parameters": [
+          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/RecordInput" } }
+        ],
         "responses": {
-          "201": { "description": "Record stored" },
+          "201": { "description": "Record created", "schema": { "$ref": "#/definitions/DemoRecord" } },
           "400": { "description": "Invalid record" },
           "401": { "description": "Authentication required" },
+          "409": { "description": "Key already exists" },
           "503": { "description": "Demo intentionally offline or dependency unavailable" }
         }
       }
     },
     "/demo-records/{key}": {
       "get": {
-        "summary": "Read one demo record",
-        "parameters": [{ "name": "key", "in": "path", "required": true, "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$", "x-example": "visitor-note" }, { "name": "namespace", "in": "query", "type": "string", "default": "public", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$" }],
-        "responses": { "200": { "description": "Record", "schema": { "$ref": "#/definitions/DemoRecord" } }, "404": { "description": "Not found" }, "503": { "description": "Unavailable" } }
+        "summary": "Read one record",
+        "parameters": [
+          { "name": "key", "in": "path", "required": true, "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$", "x-example": "visitor-note" },
+          { "name": "namespace", "in": "query", "type": "string", "default": "public", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$", "description": "Anonymous reads are fixed to public. Operators may select a namespace; this value is ignored for identity-derived visitor tokens." }
+        ],
+        "responses": {
+          "200": { "description": "Record", "schema": { "$ref": "#/definitions/DemoRecord" } },
+          "404": { "description": "Record not found" },
+          "503": { "description": "Unavailable" }
+        }
+      },
+      "put": {
+        "summary": "Create or replace one record",
+        "description": "Create the requested key or replace its complete value.",
+        "security": [{ "BearerToken": [] }],
+        "parameters": [
+          { "name": "key", "in": "path", "required": true, "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$", "x-example": "visitor-note" },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": ["value"],
+              "example": { "value": { "note": "replaced" } },
+              "properties": {
+                "namespace": { "type": "string", "default": "public", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$", "description": "Optional managed-operator namespace. Ignored for identity-derived visitor tokens." },
+                "value": {}
+              },
+              "additionalProperties": false
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Existing record replaced", "schema": { "$ref": "#/definitions/DemoRecord" } },
+          "201": { "description": "Record created at the requested key", "schema": { "$ref": "#/definitions/DemoRecord" } },
+          "400": { "description": "Invalid record" },
+          "401": { "description": "Authentication required" },
+          "503": { "description": "Unavailable" }
+        }
       },
       "delete": {
-        "summary": "Delete one demo record",
+        "summary": "Delete one record",
         "security": [{ "BearerToken": [] }],
-        "parameters": [{ "name": "key", "in": "path", "required": true, "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$", "x-example": "visitor-note" }, { "name": "namespace", "in": "query", "type": "string", "default": "public", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$" }],
-        "responses": { "204": { "description": "Deleted" }, "401": { "description": "Authentication required" }, "503": { "description": "Unavailable" } }
-      }
-    },
-    "/webhooks/demo": {
-      "post": {
-        "summary": "Receive a signed, replay-protected demo webhook",
         "parameters": [
-          { "name": "X-Demo-Delivery-Id", "in": "header", "required": true, "type": "string", "maxLength": 100, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]{0,99}$", "x-example": "visitor-example", "description": "Unique delivery identifier used for replay protection." },
-          { "name": "X-Demo-Signature", "in": "header", "required": true, "type": "string", "description": "Lowercase HMAC-SHA256 hex digest of the exact request body." },
-          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/WebhookEvent" } }
+          { "name": "key", "in": "path", "required": true, "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$", "x-example": "visitor-note" },
+          { "name": "namespace", "in": "query", "type": "string", "default": "public", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$", "description": "Ignored for identity-derived visitor tokens." }
         ],
-        "responses": { "202": { "description": "Signature verified and receipt stored" }, "401": { "description": "Invalid signature" }, "409": { "description": "Duplicate delivery" }, "503": { "description": "Unavailable" } }
-      }
-    },
-    "/webhooks/github": {
-      "post": {
-        "summary": "Receive an allowlisted, signed GitHub webhook",
-        "description": "Verifies X-Hub-Signature-256 over the exact body, rejects replay, and stores only a sanitized summary for the configured repository.",
-        "parameters": [
-          { "name": "X-GitHub-Delivery", "in": "header", "required": true, "type": "string", "maxLength": 100, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]{0,99}$", "x-example": "github-delivery-example", "description": "GitHub delivery identifier used for replay protection." },
-          { "name": "X-GitHub-Event", "in": "header", "required": true, "type": "string", "enum": ["ping", "push", "pull_request", "workflow_run", "release"], "x-example": "push", "description": "Allowlisted GitHub event type." },
-          { "name": "X-Hub-Signature-256", "in": "header", "required": true, "type": "string", "pattern": "^sha256=[0-9a-f]{64}$", "description": "GitHub HMAC-SHA256 signature of the exact request body." },
-          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/GitHubWebhookPayload" } }
-        ],
-        "responses": { "202": { "description": "Signature, event, repository, and delivery verified" }, "400": { "description": "Unsupported or malformed event" }, "401": { "description": "Invalid signature" }, "403": { "description": "Repository not allowed" }, "409": { "description": "Duplicate delivery" }, "503": { "description": "Unavailable or secret not configured" } }
-      }
-    },
-    "/openapi.json": {
-      "get": {
-        "summary": "Fetch this Swagger 2.0 contract",
-        "responses": { "200": { "description": "Swagger document" } }
+        "responses": {
+          "204": { "description": "Record absent after deletion" },
+          "401": { "description": "Authentication required" },
+          "503": { "description": "Unavailable" }
+        }
       }
     }
   },
   "definitions": {
-    "RecordInput": {
-      "type": "object",
-      "required": ["key", "value"],
-      "example": { "namespace": "public", "key": "visitor-note", "value": { "note": "hello" } },
-      "properties": {
-        "namespace": { "type": "string", "default": "public", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$" },
-        "key": { "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$" },
-        "value": {}
-      },
-      "additionalProperties": false
-    },
     "DemoRecord": {
       "type": "object",
-      "required": ["id", "namespace", "key", "value", "createdAt", "updatedAt"],
+      "required": ["namespace", "key", "value", "createdAt", "updatedAt"],
       "properties": {
         "id": { "type": "integer" },
         "namespace": { "type": "string" },
@@ -109,42 +128,16 @@
         "updatedAt": { "type": "string", "format": "date-time" }
       }
     },
-    "RecordCollection": {
+    "RecordInput": {
       "type": "object",
+      "required": ["key", "value"],
+      "example": { "key": "visitor-note", "value": { "note": "hello" } },
       "properties": {
-        "results": { "type": "array", "items": { "$ref": "#/definitions/DemoRecord" } },
-        "authorization": { "type": "object" }
-      }
-    },
-    "WebhookEvent": {
-      "type": "object",
-      "required": ["type", "data", "sentAt"],
-      "example": { "type": "demo.record.changed", "data": { "key": "visitor-example" }, "sentAt": "2026-08-31T12:00:00.000Z" },
-      "properties": {
-        "type": { "type": "string", "pattern": "^demo\\.[a-z.]{1,60}$" },
-        "data": { "type": "object" },
-        "sentAt": { "type": "string", "format": "date-time" }
+        "namespace": { "type": "string", "default": "public", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$", "description": "Optional managed-operator namespace. Ignored for identity-derived visitor tokens." },
+        "key": { "type": "string", "maxLength": 64, "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$" },
+        "value": {}
       },
       "additionalProperties": false
-    },
-    "GitHubWebhookPayload": {
-      "type": "object",
-      "required": ["repository"],
-      "example": { "ref": "refs/heads/main", "after": "0000000000000000000000000000000000000000", "repository": { "full_name": "SouthernGentlemen/wizardgang-architecture-demo" }, "sender": { "login": "demo-visitor" } },
-      "properties": {
-        "action": { "type": "string" },
-        "ref": { "type": "string" },
-        "after": { "type": "string" },
-        "repository": { "type": "object" },
-        "sender": { "type": "object" },
-        "pusher": { "type": "object" },
-        "head_commit": { "type": "object" },
-        "pull_request": { "type": "object" },
-        "workflow_run": { "type": "object" },
-        "release": { "type": "object" },
-        "zen": { "type": "string" },
-        "hook": { "type": "object" }
-      }
     }
   }
 }

@@ -114,10 +114,12 @@ export async function logsResponse(request: Request, env: Env): Promise<Response
   const limit = Number(url.searchParams.get('limit') ?? '50');
   const level = url.searchParams.get('level');
   const source = url.searchParams.get('source');
+  const requestId = url.searchParams.get('requestId');
   const results = await recentApplicationLogs(env, {
     limit: Number.isFinite(limit) ? limit : 50,
     level,
-    source
+    source,
+    requestId,
   });
   return json({ results }, { headers: { 'cache-control': 'no-store' } });
 }

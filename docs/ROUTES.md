@@ -1,6 +1,6 @@
 # Route-to-source map
 
-This file is the stable public URL contract for `demo.wizardgang.ai`. The public architecture map contains 17 HTML routes in five groups. Retired page URLs remain stable through exact permanent redirects to anchored sections; machine interfaces keep their existing paths and response shapes.
+This file is the stable public URL contract for `demo.wizardgang.ai`. The public architecture map contains 19 HTML routes in five groups. Retired page URLs remain stable through exact permanent redirects to focused routes or anchored sections; machine interfaces keep their existing paths and response shapes.
 
 ## Public architecture routes
 
@@ -11,7 +11,9 @@ This file is the stable public URL contract for `demo.wizardgang.ai`. The public
 | Platform | `/durable-objects` | Durable Objects | `src/demos/durable-objects.ts` | Working |
 | Platform | `/d1` | Cloudflare D1 | `src/demos/d1.ts` | Working |
 | Platform | `/r2` | Cloudflare R2 | `src/demos/r2.ts` | Working |
-| Interfaces | `/api` | REST, OpenAPI, GraphQL, and webhooks | `src/demos/api.ts` | Working |
+| Interfaces | `/api` | REST and OpenAPI 2.0 | `src/demos/api.ts` | Working |
+| Interfaces | `/graphql` | GraphQL Yoga and locally bundled GraphiQL | `src/demos/graphql.ts` | Working |
+| Interfaces | `/webhooks` | Signed GitHub-compatible webhook verification and delivery evidence | `src/demos/webhooks.ts` | Working |
 | Interfaces | `/identity` | Real provider authentication, normalized identity, SSO, and application authorization | `src/demos/identity.ts` | Working |
 | Interfaces | `/mcp` | Model Context Protocol | `src/demos/mcp.ts` | Working |
 | Standards | `/i18n` | Internationalization | `src/demos/i18n.ts` | Working |
@@ -24,7 +26,7 @@ This file is the stable public URL contract for `demo.wizardgang.ai`. The public
 | Operations | `/dashboard/logs` | Public-safe log viewer | `src/demos/logs.ts` | Working |
 | Operations | `/dashboard/billing` | Synthetic billing and usage | `src/demos/billing.ts` | Working |
 
-The architecture map at `/` and `/sitemap.xml` are generated from this 17-route registry.
+The architecture map at `/` and `/sitemap.xml` are generated from this 19-route registry.
 
 ## Retired page redirects
 
@@ -34,8 +36,8 @@ These are exact-path `301` redirects. `/identity/saml` is now the live Entra SAM
 |---|---|
 | `/api/rest` | `/api#rest` |
 | `/api/openapi` | `/api#openapi` |
-| `/api/graphql` | `/api#graphql` |
-| `/api/webhooks` | `/api#webhooks` |
+| `/api/graphql` | `/graphql#graphql` |
+| `/api/webhooks` | `/webhooks#webhooks` |
 | `/identity/oauth` | `/identity#oauth` |
 | `/identity/sso` | `/identity#sso` |
 | `/git/versioning` | `/git#versioning` |
@@ -87,9 +89,12 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | `/__api/git/demo` | `POST` | Same-origin admin-authorized semantic-version workflow dispatch | `src/api/git-demo.ts` |
 | `/__api/git/demo/release` | `POST` | Same-origin admin-authorized merge and release dispatch after successful CI | `src/api/git-demo.ts` |
 | `/v1/demo-records` | `GET`, `POST` | REST record collection | `src/api/records.ts` |
-| `/v1/demo-records/{key}` | `GET`, `DELETE` | REST record item | `src/api/records.ts` |
+| `/v1/demo-records/{key}` | `GET`, `PUT`, `DELETE` | Read, create/replace, or delete one REST record | `src/api/records.ts` |
+| `/__api/api-sandbox/reset` | `POST` | Delete only the authenticated visitor's REST sandbox | `src/api/records.ts` |
 | `/v1/openapi.json` | `GET` | Swagger 2.0 contract | `src/api/openapi.ts` |
-| `/graphql` | `GET`, `POST` | Embedded GraphiQL and GraphQL query/mutation execution | `src/api/graphql.ts` |
+| `/v1/openapi.yaml` | `GET` | Download the OpenAPI 2.0 contract as YAML | `src/api/openapi.ts` |
+| `/graphql` | `GET`, `POST` | Focused GraphQL page for browser navigation; GraphQL execution for API clients | `src/api/graphql.ts` |
+| `/graphql/console` | `GET` | Locally bundled embeddable GraphiQL | `src/ui/graphiql-assets.ts` |
 | `/graphql/schema` | `GET` | GraphQL schema | `src/api/graphql.ts` |
 | `/__assets/graphiql/{asset}` | `GET` | Locked local GraphiQL UI, CSS, and editor workers | `src/ui/graphiql-assets.ts` |
 | `/v1/webhooks/demo` | `POST` | Signed webhook receiver | `src/api/webhooks.ts` |
@@ -100,6 +105,7 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | `/mcp/server` | `GET`, `POST`, `DELETE` | MCP 2026-07-28 and stateless legacy Streamable HTTP interface | `src/api/mcp.ts` |
 | `/__api/identity/oauth-pkce` | `POST` | OAuth PKCE material | `src/api/identity.ts` |
 | `/__api/identity/authorize` | `POST` | Application policy decision | `src/api/identity.ts` |
+| `/__api/identity/token` | `POST` | Issue a ten-minute visitor-sandbox bearer token from the current identity session | `src/api/identity.ts` |
 | `/__api/identity/sso` | `GET` | SSO trust boundary | `src/api/identity.ts` |
 | `/identity/saml/metadata` | `GET` | SAML SP metadata | `src/api/identity.ts` |
 | `/__api/identity/saml/inspect` | `GET` | SAML validation boundary | `src/api/identity.ts` |

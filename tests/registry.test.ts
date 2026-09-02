@@ -5,8 +5,8 @@ import { sitemapResponse } from '../src/api/sitemap';
 import { readFileSync } from 'node:fs';
 
 describe('architecture demo registry', () => {
-  it('publishes 17 HTML routes in five architecture groups', () => {
-    expect(demos).toHaveLength(17);
+  it('publishes 19 HTML routes in five architecture groups', () => {
+    expect(demos).toHaveLength(19);
     expect([...new Set(demos.map((demo) => demo.group))]).toEqual([
       'Platform', 'Interfaces', 'Standards', 'Delivery & Governance', 'Operations',
     ]);
@@ -41,7 +41,7 @@ describe('architecture demo registry', () => {
       expect(entry?.status).toBe(demo.status);
     }
     expect(demos.every((demo) => demo.status === 'working')).toBe(true);
-    expect(manifest.filter((entry) => entry.source.startsWith('src/demos/'))).toHaveLength(17);
+    expect(manifest.filter((entry) => entry.source.startsWith('src/demos/'))).toHaveLength(19);
   });
 });
 
@@ -53,7 +53,7 @@ describe('intentional offline gate', () => {
   });
 
   it('does not bypass ordinary demo routes', () => {
-    for (const route of ['/edge', '/d1', '/api', '/identity', '/mcp']) {
+    for (const route of ['/edge', '/d1', '/api', '/graphql', '/webhooks', '/identity', '/mcp']) {
       expect(bypassOfflineGate(route)).toBe(false);
     }
   });
@@ -75,6 +75,8 @@ describe('intentional offline gate', () => {
     expect(wantsHtml(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'text/html' } }), '/mcp')).toBe(true);
     expect(wantsHtml(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'application/json' } }), '/mcp')).toBe(false);
     expect(wantsHtml(new Request('https://demo.wizardgang.ai/mcp/server', { headers: { accept: 'text/html' } }), '/mcp/server')).toBe(false);
+    expect(wantsHtml(new Request('https://demo.wizardgang.ai/graphql', { headers: { accept: 'text/html' } }), '/graphql')).toBe(true);
+    expect(wantsHtml(new Request('https://demo.wizardgang.ai/graphql', { headers: { accept: 'application/json' } }), '/graphql')).toBe(false);
     expect(wantsHtml(new Request('https://demo.wizardgang.ai/graphql/schema'), '/graphql/schema')).toBe(false);
   });
 });

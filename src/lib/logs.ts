@@ -71,13 +71,14 @@ export async function recordApplicationLog(env: Env, input: ApplicationLogInput)
 
 export async function recentApplicationLogs(
   env: Env,
-  options: { limit?: number; level?: string | null; source?: string | null } = {},
+  options: { limit?: number; level?: string | null; source?: string | null; requestId?: string | null } = {},
 ): Promise<ApplicationLogRow[]> {
   const limit = Math.max(1, Math.min(Number(options.limit ?? 50) || 50, 200));
   const level = options.level && ['debug', 'info', 'warn', 'error'].includes(options.level)
     ? options.level
     : null;
   const source = options.source?.trim().slice(0, 80) || null;
+  const requestId = options.requestId?.trim().slice(0, 120) || null;
 
   const where: string[] = [];
   const binds: unknown[] = [];
@@ -89,6 +90,10 @@ export async function recentApplicationLogs(
   if (source) {
     where.push('source = ?');
     binds.push(source);
+  }
+  if (requestId) {
+    where.push('request_id = ?');
+    binds.push(requestId);
   }
 
   const sql = `SELECT id, level, source, event_key, message, route, request_id, detail_json, created_at

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Split the application interface showcase into focused `/api`, `/graphql`, and `/webhooks` routes while retaining `/identity` and `/mcp` as distinct trust boundaries.
+- Rebuilt the REST explorer from the OpenAPI 2.0 contract with five resource operations, four-language examples, response diagnostics, request-linked logs, and progressive schema disclosure.
+- Added ten-minute identity-derived bearer tokens, visitor-isolated record namespaces, normalized REST and GraphQL authorization, create-only POST semantics, and replace-or-create PUT semantics.
+
 ## 0.7.0 — 2026-09-01
 
 - Added an authenticated, D1-backed dashboard control for ChatGPT search and user-requested web access, with a dynamic `/robots.txt`, server-enforced crawler gate, public status, audit logging, and an independent permanent `GPTBot` training opt-out.

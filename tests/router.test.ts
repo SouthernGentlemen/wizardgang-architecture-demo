@@ -89,23 +89,48 @@ describe('public route contract', () => {
     expect(accessibilityFrame.headers.get('content-type')).toContain('text/html');
   });
 
-  it('renders the consolidated API interfaces as runnable anchored sections', async () => {
+  it('renders a focused REST client generated from the OpenAPI contract', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/api', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     const swaggerOperationCount = Object.values(swagger.paths).reduce((count, path) => count + Object.keys(path).filter((method) => ['get', 'post', 'put', 'patch', 'delete', 'head', 'options'].includes(method)).length, 0);
-    for (const anchor of ['rest', 'openapi', 'graphql', 'webhooks']) expect(html).toContain(`id="${anchor}"`);
-    for (const endpoint of ['/v1/demo-records', '/v1/openapi.json', '/graphql', '/v1/webhooks/github', '/__api/webhooks/demo', '/__api/webhooks/events']) expect(html).toContain(endpoint);
-    expect(html.match(/<form data-swagger-form/g)).toHaveLength(swaggerOperationCount);
-    expect(html.match(/<details class="swagger-operation"/g)).toHaveLength(swaggerOperationCount);
-    expect(html).not.toContain('<details class="swagger-operation" open');
-    expect(html).toContain('Swagger 2.0');
+    for (const anchor of ['rest', 'openapi']) expect(html).toContain(`id="${anchor}"`);
+    for (const endpoint of ['/v1/demo-records', '/v1/openapi.json', '/v1/openapi.yaml', '/graphql', '/webhooks']) expect(html).toContain(endpoint);
+    expect(html.match(/<form data-api-form/g)).toHaveLength(swaggerOperationCount);
+    expect(html.match(/data-api-endpoint=/g)).toHaveLength(swaggerOperationCount);
+    expect(html).toContain('OpenAPI 2.0 / Swagger');
     expect(html).toContain('REST API');
-    expect(html).not.toContain('All 6 operations below are generated from the same');
-    expect(html).not.toContain('>Ready.</pre>');
-    expect(html).toContain('Request body schema');
+    expect(html).toContain('Your API sandbox');
+    expect(html).toContain('Sign in to enable writes');
+    expect(html).toContain('View request in logs');
+    for (const language of ['curl', 'JavaScript', 'Python', 'C#']) expect(html).toContain(language);
     expect(html).toContain('swagger-definition-RecordInput');
-    expect(html).toContain('swagger-definition-WebhookEvent');
-    expect(html).toContain('data-auth-prefix="Bearer "');
+    expect(html).not.toContain('swagger-definition-WebhookEvent');
+    expect(html).not.toContain('DEMO_API_TOKEN');
+    const runner = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((match) => match[1]).find((script) => script.includes("data-api-endpoint"));
+    expect(() => new Function(runner || '')).not.toThrow();
+
+    const yaml = await routeRequest(new Request('https://demo.wizardgang.ai/v1/openapi.yaml'), env());
+    expect(yaml.headers.get('content-type')).toContain('application/yaml');
+    expect(await yaml.text()).toContain('swagger: "2.0"');
+  });
+
+  it('renders focused GraphQL and webhook interface routes', async () => {
+    const environment = env();
+    const graphqlPage = await routeRequest(new Request('https://demo.wizardgang.ai/graphql', { headers: { accept: 'text/html' } }), environment);
+    const graphqlHtml = await graphqlPage.text();
+    expect(graphqlHtml).toContain('src="/graphql/console"');
+    for (const control of ['Depth limit', 'Field limit', 'Batching', 'Request limit']) expect(graphqlHtml).toContain(control);
+    expect(graphqlHtml).toContain('GraphQL ↔ D1 Users');
+
+    const graphqlApi = await routeRequest(new Request('https://demo.wizardgang.ai/graphql', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ query: '{ demoRecords { key } }' }) }), environment);
+    expect(graphqlApi.headers.get('content-type')).toContain('application/json');
+
+    const webhooksPage = await routeRequest(new Request('https://demo.wizardgang.ai/webhooks', { headers: { accept: 'text/html' } }), environment);
+    const webhooksHtml = await webhooksPage.text();
+    expect(webhooksHtml).toContain('/v1/webhooks/github');
+    expect(webhooksHtml).toContain('Generate signed event');
+    expect(webhooksHtml).toContain('Signature valid');
+    expect(webhooksHtml).toContain('Verified deliveries');
   });
 
   it('renders the identity console with provider routes, inspector views, and stable anchors', async () => {

@@ -3,11 +3,14 @@ import { readFileSync } from 'node:fs';
 
 describe('public machine contracts', () => {
   it('keeps the Swagger 2.0 contract aligned to implemented REST routes', () => {
-    const contract = JSON.parse(readFileSync('contracts/openapi/swagger.json', 'utf8')) as { swagger: string; basePath: string; paths: Record<string, unknown>; securityDefinitions: Record<string, unknown> };
+    const contract = JSON.parse(readFileSync('contracts/openapi/swagger.json', 'utf8')) as { swagger: string; basePath: string; paths: Record<string, Record<string, unknown>>; definitions: Record<string, unknown>; securityDefinitions: Record<string, unknown> };
     const router = readFileSync('src/router.ts', 'utf8');
     expect(contract.swagger).toBe('2.0');
     expect(contract.basePath).toBe('/v1');
     for (const path of Object.keys(contract.paths)) expect(router).toContain(`/v1${path}`.replace('/{key}', '/'));
+    expect(Object.keys(contract.paths)).toEqual(['/demo-records', '/demo-records/{key}']);
+    expect(Object.keys(contract.paths['/demo-records/{key}'])).toEqual(['get', 'put', 'delete']);
+    expect(Object.keys(contract.definitions)).toEqual(['DemoRecord', 'RecordInput']);
     expect(contract.securityDefinitions).toHaveProperty('BearerToken');
   });
 

@@ -88,7 +88,7 @@ export function renderIndex(env: Env, list: DemoDefinition[]): Response {
 <section class="page-header home-header">
   <p class="eyebrow">WG-ARCH-001 / executable companion</p>
   <h1>Architecture <span>you can inspect.</span></h1>
-  <p class="lede home-lede">Seventeen live routes expose the platform, interfaces, standards, delivery controls, and operations behind a production edge system.</p>
+  <p class="lede home-lede">${list.length} live routes expose the platform, interfaces, standards, delivery controls, and operations behind a production edge system.</p>
 </section>
 <section class="status-strip" aria-label="Live service state">
   <a href="/version"><span>Version</span><strong>${escapeHtml(env.DEPLOYED_VERSION || 'development')}</strong></a>

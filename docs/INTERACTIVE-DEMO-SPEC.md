@@ -25,8 +25,8 @@ Released routes remain canonical. The proposed `/demo/*` names are represented b
 | i18n | `/i18n` | Server render plus local progressive enhancement | Deepen the existing route and retain Arabic/RTL. |
 | WCAG | `/accessibility` | Isolated lab frame and test result JSON | Do not add `/wcag`; the released accessibility route remains canonical. |
 | Git/GitHub | `/git` | `/__api/git/evidence`; `/__api/git/demo*` | Show public evidence and run a controlled two-stage release lifecycle against this repository. |
-| Webhooks | `/api#webhooks` | `/v1/webhooks/github`; `/__api/webhooks/*` | Do not restore `/webhook`; `/api/webhooks` continues to redirect to the anchor. |
-| GraphQL | `/api#graphql` | `/graphql`; `/graphql/schema` | Embed GraphiQL in the existing section; `/graphql` remains the executable endpoint. |
+| Webhooks | `/webhooks` | `/v1/webhooks/github`; `/__api/webhooks/*` | `/api/webhooks` redirects to the focused webhook route. |
+| GraphQL | `/graphql` | `/graphql`; `/graphql/schema`; `/graphql/console` | Browser navigation renders the focused route; API clients execute against the same path by content negotiation. |
 
 No existing response field, method, redirect, source link, or offline-gate behavior may be removed in the same release. Additive interface changes must be reflected in `docs/ROUTES.md`, `docs/route-manifest.json`, and the applicable contract.
 
@@ -372,7 +372,7 @@ Only show `Protected`, `PR required`, `CI required`, `signed commits`, `linear h
 - Audit records contain version, operation, request ID, and public object identifiers, never Basic credentials or managed tokens.
 - A 500-millisecond active heartbeat tracks the specific workflow/PR lifecycle, updates keyed job and step rows in place, and never fabricates a transition; `Refresh evidence` remains a read-only refresh for the passive evidence grid.
 
-## `/api#webhooks` — Verified live delivery
+## `/webhooks` — Verified live delivery
 
 ### Working demonstration
 
@@ -394,7 +394,7 @@ Verify the signature against the raw bytes before parsing JSON. Accept only allo
 
 ### Source links
 
-- Section: `src/demos/api.ts` and `src/demos/webhook-console.ts`
+- Route: `src/demos/webhooks.ts` and `src/demos/webhook-console.ts`
 - Worker: `src/api/webhooks.ts`
 - Event contract: `contracts/webhooks/events.json`
 - Schema: the new numbered migration
@@ -408,7 +408,7 @@ Verify the signature against the raw bytes before parsing JSON. Accept only allo
 - The live stream reconnects with last event ID and falls back to bounded polling without losing accepted deliveries.
 - Reset cannot remove real GitHub events.
 
-## `/api#graphql` — GraphiQL over the D1 lab
+## `/graphql` — GraphiQL over the D1 lab
 
 ### Working demonstration
 
@@ -450,7 +450,7 @@ Keep `demoRecords` for backward compatibility. User resolvers call the same repo
 
 ### Source links
 
-- Section: `src/demos/api.ts` and `src/demos/graphql-console.ts`
+- Route: `src/demos/graphql.ts` and `src/demos/graphql-console.ts`
 - Worker: `src/api/graphql.ts`
 - Schema: `contracts/graphql/schema.graphql`
 - Shared D1 repository: `src/lib/demo-users.ts`
@@ -476,8 +476,8 @@ The `sourceEvidence` component renders these labels in this order. A missing fil
 | `/i18n` | `src/demos/i18n-page.ts` | `src/demos/i18n-page.ts` | selected locale JSON | `tests/interface.test.ts` | `.github/workflows/ci.yml` |
 | `/accessibility` | `src/demos/accessibility-page.ts` | `src/ui/accessibility-lab.ts` | `docs/ACCESSIBILITY.md` | `tests/accessibility-browser.spec.ts` | `.github/workflows/ci.yml` |
 | `/git` | `src/demos/git-page.ts` | `src/lib/github-api.ts` | `docs/CHANGE-MANAGEMENT.md` | `tests/git-evidence.test.ts` | `.github/workflows/deploy.yml` |
-| `/api#webhooks` | `src/demos/webhook-console.ts` | `src/api/webhooks.ts` | `contracts/webhooks/events.json` | `tests/webhooks.test.ts` | `.github/workflows/ci.yml` |
-| `/api#graphql` | `src/demos/graphql-console.ts` | `src/api/graphql.ts` | `contracts/graphql/schema.graphql` | `tests/graphql.test.ts` | `.github/workflows/ci.yml` |
+| `/webhooks` | `src/demos/webhook-console.ts` | `src/api/webhooks.ts` | `contracts/webhooks/events.json` | `tests/webhooks.test.ts` | `.github/workflows/ci.yml` |
+| `/graphql` | `src/demos/graphql-console.ts` | `src/api/graphql.ts` | `contracts/graphql/schema.graphql` | `tests/graphql.test.ts` | `.github/workflows/ci.yml` |
 
 ## Delivery slices
 

@@ -1,6 +1,6 @@
 import { exportJWK, generateKeyPair, SignJWT } from 'jose';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { authorizationDecisionResponse, identityProviderConfiguration, identitySessionResponse, oauthPkceResponse, providerCallbackResponse, providerStartResponse, samlMetadataResponse, ssoBoundaryResponse } from '../src/api/identity';
+import { authorizationDecisionResponse, demoAccessTokenResponse, identityProviderConfiguration, identitySessionResponse, oauthPkceResponse, providerCallbackResponse, providerStartResponse, samlMetadataResponse, ssoBoundaryResponse } from '../src/api/identity';
 import { createIdentitySession, writeFlowCookie, type IdentitySession } from '../src/lib/identity-session';
 import type { D1Database, Env } from '../src/types';
 
@@ -88,6 +88,20 @@ describe('identity protocol boundaries', () => {
     expect(await write.json()).toMatchObject({ authorization: { decision: 'allow' }, identity: { role: 'operator', assurance: 'mfa' } });
     const session = await identitySessionResponse(new Request('https://demo.example/identity/session', { headers: { cookie } }), environment);
     expect(await session.json()).toMatchObject({ authenticated: true, session: { identity: { subject: 'stable-subject' } } });
+  });
+
+  it('issues a ten-minute token with a server-derived visitor sandbox', async () => {
+    const environment = env({ IDENTITY_SESSION_SECRET: 'a-test-secret-that-is-at-least-thirty-two-characters' });
+    const cookie = (await createIdentitySession(environment, authenticatedSession())).split(';')[0];
+    const response = await demoAccessTokenResponse(new Request('https://demo.example/__api/identity/token', {
+      method: 'POST', headers: { cookie, origin: 'https://demo.example' },
+    }), environment);
+    expect(response.status).toBe(200);
+    const body = await response.json() as { accessToken: string; namespace: string; permissions: string[]; expiresAt: string };
+    expect(body.accessToken).toMatch(/^v1\./);
+    expect(body.namespace).toMatch(/^sandbox-[0-9a-f]{24}$/);
+    expect(body.permissions).toEqual(['demo:read', 'demo:write']);
+    expect(Date.parse(body.expiresAt) - Date.now()).toBeLessThanOrEqual(10 * 60_000);
   });
 
   it('requires the application origin for authenticated authorization requests', async () => {

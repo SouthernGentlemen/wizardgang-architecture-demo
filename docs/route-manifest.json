@@ -43,9 +43,24 @@
   },
   {
     "route": "/api",
-    "title": "Application Interfaces",
+    "title": "REST API",
     "group": "Interfaces",
     "source": "src/demos/api.ts",
+    "status": "working"
+  },
+  {
+    "route": "/graphql",
+    "title": "GraphQL API",
+    "group": "Interfaces",
+    "source": "src/demos/graphql.ts",
+    "status": "working",
+    "method": "GET, POST"
+  },
+  {
+    "route": "/webhooks",
+    "title": "Signed Webhooks",
+    "group": "Interfaces",
+    "source": "src/demos/webhooks.ts",
     "status": "working"
   },
   {
@@ -382,7 +397,17 @@
     "title": "REST Demo Record",
     "group": "Interfaces API",
     "source": "src/api/records.ts",
-    "method": "GET, DELETE",
+    "method": "GET, PUT, DELETE",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/api-sandbox/reset",
+    "title": "REST Visitor Sandbox Reset",
+    "group": "Interfaces API",
+    "source": "src/api/records.ts",
+    "method": "POST",
     "machine": true,
     "offline_behavior": "503",
     "status": "working"
@@ -398,11 +423,21 @@
     "status": "working"
   },
   {
-    "route": "/graphql",
-    "title": "GraphQL API and GraphiQL",
+    "route": "/v1/openapi.yaml",
+    "title": "OpenAPI 2.0 YAML Contract",
     "group": "Interfaces API",
-    "source": "src/api/graphql.ts",
-    "method": "GET, POST",
+    "source": "src/api/openapi.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/graphql/console",
+    "title": "Embedded GraphiQL",
+    "group": "Interfaces API",
+    "source": "src/ui/graphiql-assets.ts",
+    "method": "GET",
     "machine": true,
     "offline_behavior": "503",
     "status": "working"
@@ -500,6 +535,16 @@
   {
     "route": "/__api/identity/authorize",
     "title": "Authorization Policy Evaluation",
+    "group": "Interfaces API",
+    "source": "src/api/identity.ts",
+    "method": "POST",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/identity/token",
+    "title": "Short-lived Demo API Token",
     "group": "Interfaces API",
     "source": "src/api/identity.ts",
     "method": "POST",

@@ -17,9 +17,9 @@ const requiredRoutes = [
   '/__api/r2/files', '/__api/r2/files/{id}', '/__api/r2/reset',
   '/__api/accessibility/lab',
   '/__api/git/evidence',
-  '/__api/r2/demo', '/__api/r2/object', '/v1/demo-records', '/v1/demo-records/{key}',
-  '/v1/openapi.json', '/graphql', '/graphql/schema', '/__assets/graphiql/{asset}', '/v1/webhooks/demo', '/v1/webhooks/github',
-  '/__api/webhooks/demo', '/__api/webhooks/events', '/__api/webhooks/reset', '/__api/identity/oauth-pkce', '/__api/identity/authorize',
+  '/__api/r2/demo', '/__api/r2/object', '/v1/demo-records', '/v1/demo-records/{key}', '/__api/api-sandbox/reset',
+  '/v1/openapi.json', '/v1/openapi.yaml', '/graphql', '/graphql/console', '/graphql/schema', '/__assets/graphiql/{asset}', '/v1/webhooks/demo', '/v1/webhooks/github',
+  '/__api/webhooks/demo', '/__api/webhooks/events', '/__api/webhooks/reset', '/__api/identity/oauth-pkce', '/__api/identity/authorize', '/__api/identity/token',
   '/__api/identity/sso', '/identity/saml/metadata', '/__api/identity/saml/inspect',
   '/identity/microsoft', '/identity/microsoft/callback', '/identity/google', '/identity/google/callback',
   '/identity/github', '/identity/github/callback', '/identity/saml', '/identity/saml/acs', '/identity/session', '/identity/logout',
@@ -38,7 +38,7 @@ const retiredRoutes = [
 const failures = [];
 if (routes.size !== manifest.length) failures.push('manifest contains duplicate routes');
 const htmlDemos = manifest.filter((entry) => entry.source?.startsWith('src/demos/'));
-if (htmlDemos.length !== 17) failures.push(`expected 17 registered HTML demos; found ${htmlDemos.length}`);
+if (htmlDemos.length !== 19) failures.push(`expected 19 registered HTML demos; found ${htmlDemos.length}`);
 const expectedGroups = ['Platform', 'Interfaces', 'Standards', 'Delivery & Governance', 'Operations'];
 const actualGroups = [...new Set(htmlDemos.map((entry) => entry.group))];
 if (JSON.stringify(actualGroups) !== JSON.stringify(expectedGroups)) failures.push(`unexpected HTML demo groups: ${actualGroups.join(', ')}`);

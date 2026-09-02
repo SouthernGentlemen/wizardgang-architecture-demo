@@ -4,6 +4,7 @@ const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 const SESSION_SECONDS = 30 * 60;
 const FLOW_SECONDS = 10 * 60;
+const ACCESS_TOKEN_SECONDS = 10 * 60;
 
 export const IDENTITY_SESSION_COOKIE = '__Host-wg_identity';
 export const IDENTITY_FLOW_COOKIE = '__Host-wg_identity_flow';
@@ -46,6 +47,16 @@ export interface IdentitySession {
     steps: string[];
     sanitizedAssertion?: string;
   };
+  issuedAt: string;
+  expiresAt: string;
+}
+
+export interface DemoAccessToken {
+  subject: string;
+  authentication: IdentityProtocol;
+  provider: IdentityProvider;
+  permissions: ['demo:read', 'demo:write'];
+  namespace: string;
   issuedAt: string;
   expiresAt: string;
 }
@@ -219,6 +230,49 @@ export async function readIdentitySession(request: Request, env: Env): Promise<I
   const session = await unseal<IdentitySession>(row.payload_ciphertext, secret, 'identity-session-payload');
   if (!session || Date.parse(session.expiresAt) <= Date.now()) return null;
   return session;
+}
+
+export async function createDemoAccessToken(env: Env, session: IdentitySession): Promise<{ token: string; claims: DemoAccessToken }> {
+  const secret = identitySecret(env);
+  if (!secret) throw new Error('identity_not_configured');
+  const now = Date.now();
+  const sessionExpiry = Date.parse(session.expiresAt);
+  const expiresAt = new Date(Math.min(now + ACCESS_TOKEN_SECONDS * 1000, sessionExpiry));
+  const subject = `${session.identity.provider}:${session.identity.subject}`;
+  const subjectSha256 = await sha256(subject);
+  const claims: DemoAccessToken = {
+    subject,
+    authentication: session.identity.protocol,
+    provider: session.identity.provider,
+    permissions: ['demo:read', 'demo:write'],
+    namespace: `sandbox-${subjectSha256.slice(0, 24)}`,
+    issuedAt: new Date(now).toISOString(),
+    expiresAt: expiresAt.toISOString(),
+  };
+  return { token: await seal(claims, secret, 'demo-access-token'), claims };
+}
+
+export async function readDemoAccessToken(env: Env, token: string): Promise<DemoAccessToken | null> {
+  const secret = identitySecret(env);
+  if (!secret || !token.startsWith('v1.')) return null;
+  const claims = await unseal<DemoAccessToken>(token, secret, 'demo-access-token');
+  const issuedAt = Date.parse(claims?.issuedAt ?? '');
+  const expiresAt = Date.parse(claims?.expiresAt ?? '');
+  if (!claims
+    || !claims.subject
+    || !['oidc', 'oauth2', 'saml2'].includes(claims.authentication)
+    || !['microsoft', 'google', 'github'].includes(claims.provider)
+    || !claims.subject.startsWith(`${claims.provider}:`)
+    || !Array.isArray(claims.permissions)
+    || !claims.permissions.includes('demo:read')
+    || !claims.permissions.includes('demo:write')
+    || !/^sandbox-[0-9a-f]{24}$/.test(claims.namespace)
+    || !Number.isFinite(issuedAt)
+    || !Number.isFinite(expiresAt)
+    || issuedAt > Date.now() + 60_000
+    || expiresAt <= Date.now()
+    || expiresAt - issuedAt > ACCESS_TOKEN_SECONDS * 1000 + 1_000) return null;
+  return claims;
 }
 
 export async function revokeIdentitySession(request: Request, env: Env): Promise<void> {
