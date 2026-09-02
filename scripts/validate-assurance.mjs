@@ -4,6 +4,8 @@ import path from 'node:path';
 const root = process.cwd();
 const read = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), 'utf8'));
 const registry = read('assurance/registry.json');
+const routeManifest = read('docs/route-manifest.json');
+const publicRoutes = new Set(routeManifest.map((entry) => entry.route));
 const errors = [];
 const allowedKinds = new Set(['evidence', 'claims', 'compliance', 'risks', 'incidents', 'exercises', 'advisories']);
 const allowedEvidenceKinds = new Set(['source', 'test', 'workflow', 'governance-record', 'release', 'live-route', 'observation']);
@@ -48,6 +50,7 @@ for (const record of evidence.records ?? []) {
   if (locators.length !== 1) errors.push(`${record.id}: exactly one repositoryPath or route locator is required`);
   if (record.locator?.repositoryPath && !fs.existsSync(path.join(root, record.locator.repositoryPath))) errors.push(`${record.id}: repository path does not exist: ${record.locator.repositoryPath}`);
   if (record.locator?.route && !String(record.locator.route).startsWith('/')) errors.push(`${record.id}: route locator must start with /`);
+  if (record.locator?.route && !publicRoutes.has(record.locator.route)) errors.push(`${record.id}: route is missing from the public route manifest: ${record.locator.route}`);
 }
 
 const claims = read(datasets.get('claims') ?? 'assurance/claims/claims.json');

@@ -21,6 +21,8 @@ import { authorizationDecisionResponse, demoAccessTokenResponse, identityLogoutR
 import { renderI18nDemo } from './demos/i18n-page';
 import { renderAccessibilityDemo } from './demos/accessibility-page';
 import { renderComplianceDemo } from './demos/compliance-page';
+import { renderConcerns, renderSecurity } from './demos/assurance-pages';
+import { securityTxtResponse } from './api/security-policy';
 import { billingScenarioResponse } from './api/billing';
 import { renderBilling, renderDashboard, renderDocs, renderUptime } from './demos/operations-pages';
 import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } from './api/governance';
@@ -70,6 +72,8 @@ export function bypassOfflineGate(path: string): boolean {
     || path === '/robots.txt'
     || path === '/health'
     || path === '/version'
+    || path === '/security'
+    || path === '/.well-known/security.txt'
     || path === '/__api/operations/logs'
     || path === '/__api/operations/cloudflare-usage'
     || path === '/__api/operations/billing'
@@ -157,6 +161,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if ((request.method === 'GET' || request.method === 'HEAD') && path === '/robots.txt') {
     return robotsResponse(request, await getCrawlerControl(env));
   }
+  if (path === '/.well-known/security.txt') return securityTxtResponse(request, env);
 
   const openAIAgent = identifyOpenAIAgent(request.headers.get('user-agent'));
   if (openAIAgent === 'GPTBot') return crawlerBlockedResponse(openAIAgent);
@@ -254,6 +259,8 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (request.method === 'GET' && path === '/i18n') return renderI18nDemo(request, env);
   if (request.method === 'GET' && path === '/accessibility') return renderAccessibilityDemo(request, env);
   if (request.method === 'GET' && path === '/compliance') return renderComplianceDemo(env);
+  if (request.method === 'GET' && path === '/security') return renderSecurity(env);
+  if (request.method === 'GET' && path === '/governance/concerns') return renderConcerns(env);
   if (request.method === 'GET' && path === '/git') return renderGitDemo(env);
   if (request.method === 'GET' && path === '/mcp') return renderMcpDemo(request, env);
   if (request.method === 'GET' && path === '/dashboard') return renderDashboard(env);

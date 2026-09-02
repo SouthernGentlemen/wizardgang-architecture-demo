@@ -1,0 +1,46 @@
+name: Other concern
+description: Report an accessibility, AI/MCP, governance, documentation, or other non-sensitive concern.
+title: "[Concern]: "
+labels: [concern]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        This issue will be public. Suspected vulnerabilities, active security incidents, credentials, and exploit details must use private vulnerability reporting instead.
+  - type: dropdown
+    id: category
+    attributes:
+      label: Concern category
+      options:
+        - Accessibility
+        - AI/MCP behavior or impact
+        - Governance or assurance evidence
+        - Documentation
+        - Privacy or data handling without sensitive details
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: route
+    attributes:
+      label: Related route, evidence record, or component
+      placeholder: /accessibility, EVD-SRC-001, or docs/ASSURANCE.md
+  - type: textarea
+    id: concern
+    attributes:
+      label: Describe the concern
+      description: Explain the observed or foreseeable impact and who or what may be affected.
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested response or evidence
+      description: Optional—describe a useful correction, mitigation, or validation approach.
+  - type: checkboxes
+    id: public-safe
+    attributes:
+      label: Public-safety confirmation
+      options:
+        - label: I removed credentials, personal data, private infrastructure details, and sensitive security information.
+          required: true

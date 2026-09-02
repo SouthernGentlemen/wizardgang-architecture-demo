@@ -14,6 +14,8 @@ import demo_accessibility from './accessibility';
 import demo_git from './git';
 import demo_governance from './governance';
 import demo_compliance from './compliance';
+import demo_security from './security';
+import demo_concerns from './concerns';
 import demo_dashboard from './dashboard';
 import demo_uptime from './uptime';
 import demo_docs from './docs';
@@ -36,6 +38,8 @@ export const demos: DemoDefinition[] = [
   demo_git,
   demo_governance,
   demo_compliance,
+  demo_security,
+  demo_concerns,
   demo_dashboard,
   demo_uptime,
   demo_docs,

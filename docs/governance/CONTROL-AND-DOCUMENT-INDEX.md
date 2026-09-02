@@ -290,6 +290,9 @@ The intended public assurance architecture is:
 | **`/compliance`** | Canonical exhaustive WCAG/ISO checklist and current evidence posture; one row per criterion/clause/control |
 | **`/accessibility`** | Detailed WCAG interactive, automated and manual evidence |
 | **`/governance`** | Governance, security-management and AI-management evidence summaries |
+| **`/governance/concerns`** | Public, non-sensitive bug, feature, accessibility, AI/MCP and other concern intake |
+| **`/security`** | Vulnerability disclosure policy and private-reporting boundary |
+| **`/.well-known/security.txt`** | Machine-readable vulnerability-reporting contact and policy |
 | **`/dashboard`** | Operational posture and links to evidence owners |
 | **`/dashboard/uptime`** | Health/availability observations |
 | **`/dashboard/logs`** | Public-safe application diagnostics |

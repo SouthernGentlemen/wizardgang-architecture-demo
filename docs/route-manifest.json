@@ -113,6 +113,20 @@
     "status": "working"
   },
   {
+    "route": "/security",
+    "title": "Security",
+    "group": "Delivery & Governance",
+    "source": "src/demos/security.ts",
+    "status": "working"
+  },
+  {
+    "route": "/governance/concerns",
+    "title": "Report a Concern",
+    "group": "Delivery & Governance",
+    "source": "src/demos/concerns.ts",
+    "status": "working"
+  },
+  {
     "route": "/dashboard",
     "title": "System Operations",
     "group": "Operations",
@@ -195,6 +209,16 @@
     "title": "ChatGPT Crawler Policy",
     "group": "Operations",
     "source": "src/lib/crawler-control.ts",
+    "method": "GET, HEAD",
+    "machine": true,
+    "offline_reachable": true,
+    "status": "working"
+  },
+  {
+    "route": "/.well-known/security.txt",
+    "title": "Vulnerability Reporting Contact",
+    "group": "Delivery & Governance",
+    "source": "src/api/security-policy.ts",
     "method": "GET, HEAD",
     "machine": true,
     "offline_reachable": true,

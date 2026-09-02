@@ -1,6 +1,6 @@
 # Route-to-source map
 
-This file is the stable public URL contract for `demo.wizardgang.ai`. The public architecture map contains 20 HTML routes in five groups. Retired page URLs remain stable through exact permanent redirects to focused routes or anchored sections; machine interfaces keep their existing paths and response shapes.
+This file is the stable public URL contract for `demo.wizardgang.ai`. The public architecture map contains 22 HTML routes in five groups. Retired page URLs remain stable through exact permanent redirects to focused routes or anchored sections; machine interfaces keep their existing paths and response shapes.
 
 ## Public architecture routes
 
@@ -21,13 +21,15 @@ This file is the stable public URL contract for `demo.wizardgang.ai`. The public
 | Delivery & Governance | `/git` | Source, change, CI/CD, release, and environment lifecycle | `src/demos/git.ts` | Working |
 | Delivery & Governance | `/governance` | ISO alignment, traceability, and evidence | `src/demos/governance.ts` | Working |
 | Delivery & Governance | `/compliance` | Uncertified assurance posture and canonical evidence index | `src/demos/compliance.ts` | Working |
+| Delivery & Governance | `/security` | Vulnerability disclosure policy and private reporting path | `src/demos/security.ts` | Working |
+| Delivery & Governance | `/governance/concerns` | Public non-security bug, feature, and other concern intake | `src/demos/concerns.ts` | Working |
 | Operations | `/dashboard` | Read-only operations center, detailed health, availability, activity, usage, and deployment | `src/demos/dashboard.ts` | Working |
 | Operations | `/dashboard/uptime` | Scheduled availability history | `src/demos/uptime.ts` | Working |
 | Operations | `/dashboard/docs` | Documentation index | `src/demos/docs.ts` | Working |
 | Operations | `/dashboard/logs` | Public-safe log viewer | `src/demos/logs.ts` | Working |
 | Operations | `/dashboard/billing` | Cloudflare usage, cost evidence, and separate guardrail simulator | `src/demos/billing.ts` | Working |
 
-The architecture map at `/` and `/sitemap.xml` are generated from this 20-route registry.
+The architecture map at `/` and `/sitemap.xml` are generated from this 22-route registry.
 
 ## Retired page redirects
 
@@ -64,6 +66,7 @@ These are exact-path `301` redirects. `/identity/saml` is now the live Entra SAM
 | `/offline` | Public maintenance page | `src/ui/admin.ts` | Working |
 | `/og.png` | Branded social preview image | `src/ui/brand-assets.ts` | Working |
 | `/robots.txt` | Dynamic ChatGPT crawler policy | `src/lib/crawler-control.ts` | Working |
+| `/.well-known/security.txt` | RFC 9116 vulnerability-reporting contact | `src/api/security-policy.ts` | Working |
 | `/sitemap.xml` | Registry-generated sitemap | `src/api/sitemap.ts` | Working |
 
 ## Machine and action interfaces

@@ -5,8 +5,8 @@ import { sitemapResponse } from '../src/api/sitemap';
 import { readFileSync } from 'node:fs';
 
 describe('architecture demo registry', () => {
-  it('publishes 20 HTML routes in five architecture groups', () => {
-    expect(demos).toHaveLength(20);
+  it('publishes 22 HTML routes in five architecture groups', () => {
+    expect(demos).toHaveLength(22);
     expect([...new Set(demos.map((demo) => demo.group))]).toEqual([
       'Platform', 'Interfaces', 'Standards', 'Delivery & Governance', 'Operations',
     ]);
@@ -51,13 +51,13 @@ describe('architecture demo registry', () => {
       expect(entry?.status).toBe(demo.status);
     }
     expect(demos.every((demo) => demo.status === 'working')).toBe(true);
-    expect(manifest.filter((entry) => entry.source.startsWith('src/demos/'))).toHaveLength(20);
+    expect(manifest.filter((entry) => entry.source.startsWith('src/demos/'))).toHaveLength(22);
   });
 });
 
 describe('intentional offline gate', () => {
   it('keeps operations, status, offline, and admin routes reachable', () => {
-    for (const route of ['/dashboard', '/dashboard/uptime', '/dashboard/health', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing', '/health', '/version', '/__api/operations/logs', '/__api/operations/billing', '/offline', '/admin']) {
+    for (const route of ['/dashboard', '/dashboard/uptime', '/dashboard/health', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing', '/health', '/version', '/__api/operations/logs', '/__api/operations/billing', '/offline', '/admin', '/security', '/.well-known/security.txt']) {
       expect(bypassOfflineGate(route)).toBe(true);
     }
   });

@@ -108,6 +108,33 @@
       "locator": { "repositoryPath": "src/lib/audit.ts" },
       "freshnessPolicy": "release-bound",
       "visibility": "public"
+    },
+    {
+      "id": "EVD-RUN-003",
+      "kind": "live-route",
+      "title": "Public security disclosure policy",
+      "description": "Human-readable private vulnerability reporting and advisory lifecycle boundary.",
+      "locator": { "route": "/security" },
+      "freshnessPolicy": "event-driven",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-RUN-004",
+      "kind": "live-route",
+      "title": "Machine-readable vulnerability contact",
+      "description": "RFC 9116 security contact, policy, canonical location, language, and expiry.",
+      "locator": { "route": "/.well-known/security.txt" },
+      "freshnessPolicy": "event-driven",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-RUN-005",
+      "kind": "live-route",
+      "title": "Public concern intake",
+      "description": "Structured public bug, feature, accessibility, AI/MCP, governance, documentation, and other concern routing.",
+      "locator": { "route": "/governance/concerns" },
+      "freshnessPolicy": "event-driven",
+      "visibility": "public"
     }
   ]
 }

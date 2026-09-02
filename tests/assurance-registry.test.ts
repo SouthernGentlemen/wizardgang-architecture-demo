@@ -3,7 +3,7 @@ import { publicAssuranceRegistry } from '../src/assurance/registry';
 
 describe('public assurance registry foundation', () => {
   it('derives counts from the canonical public datasets', () => {
-    expect(publicAssuranceRegistry.counts).toEqual({ claims: 7, evidence: 12 });
+    expect(publicAssuranceRegistry.counts).toEqual({ claims: 9, evidence: 15 });
     expect(Object.hasOwn(publicAssuranceRegistry, 'storedCounts')).toBe(false);
   });
 

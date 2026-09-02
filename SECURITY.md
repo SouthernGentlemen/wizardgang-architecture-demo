@@ -41,4 +41,8 @@ Intentional offline state is not a reason to expose debugging details. Browser d
 
 ## Vulnerability reporting
 
-Do not open a public issue for a suspected vulnerability involving credentials or active infrastructure. Use the repository's configured private vulnerability reporting mechanism when enabled.
+Do not open a public issue for a suspected vulnerability, active security incident, credential exposure, exploit detail, or sensitive infrastructure concern. Use the repository's [private vulnerability reporting](https://github.com/SouthernGentlemen/wizardgang-architecture-demo/security/advisories/new) mechanism.
+
+The public disclosure policy and reporting boundary are available at `https://demo.wizardgang.ai/security`. Machine-readable contact information is available at `https://demo.wizardgang.ai/.well-known/security.txt`.
+
+Include the affected route, component, or release; observed behavior and impact; safe reproduction steps; and any supporting evidence that can be shared privately. A report may be rejected as non-security, accepted into a draft GitHub Security Advisory, coordinated through remediation, and later published in sanitized form. Not every report is a vulnerability, security incident, GHSA, or CVE.
