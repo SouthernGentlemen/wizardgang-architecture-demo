@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { renderAccessibilityDemo } from '../src/demos/accessibility-page';
 import { renderI18nDemo } from '../src/demos/i18n-page';
+import { renderR2Demo } from '../src/demos/r2-page';
 import { styles } from '../src/ui/styles';
 import { accessibilityLabResponse } from '../src/ui/accessibility-lab';
 import type { Env } from '../src/types';
@@ -9,6 +10,33 @@ const env = {
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
 } as Env;
+
+describe('R2 storage workspace', () => {
+  it('leads with the sandbox workflow and progressively discloses technical evidence', async () => {
+    const html = await renderR2Demo(env).text();
+    expect(html).toContain('Platform / R2');
+    expect(html).toContain('Cloudflare R2 Storage');
+    expect(html).toContain('Your R2 sandbox');
+    expect(html).toContain('Drop a file here');
+    expect(html).toContain('data-upload-button disabled');
+    expect(html).toContain('data-operation-status');
+    expect(html).toContain('View response JSON');
+    expect(html).toContain('Implementation details');
+    expect(html).not.toContain('Platform / /r2');
+    expect(html).not.toContain('Latest R2 operation');
+  });
+
+  it('validates uploads and uses inline confirmation with surfaced operation errors', async () => {
+    const html = await renderR2Demo(env).text();
+    expect(html).toContain("state.selectedFile.size > MAX_FILE_BYTES");
+    expect(html).toContain('File exceeds the 5 MiB limit.');
+    expect(html).toContain('data-confirm-delete');
+    expect(html).toContain('data-confirm-reset');
+    expect(html).toContain('Upload failed — try again.');
+    expect(html).not.toContain("confirm('Delete this R2 object?')");
+    expect(html).not.toContain('catch (_) {}');
+  });
+});
 
 describe('internationalized interface', () => {
   it('renders Arabic with a matching lang, RTL direction, resources, and locale formats', async () => {
