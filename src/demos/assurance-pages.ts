@@ -2,6 +2,7 @@ import type { Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
 import { referenceDetails, shell } from '../ui/page';
+import { deriveRiskCounts, filterPublicRisks, publicAssuranceRegistry, riskFiltersFromUrl, type PublicEvidence, type PublicRisk } from '../assurance/registry';
 
 const issueUrl = (env: Env, template: string) => `${repoUrl(env)}/issues/new?template=${encodeURIComponent(template)}`;
 const privateReportUrl = (env: Env) => `${repoUrl(env)}/security/advisories/new`;
@@ -58,5 +59,101 @@ export function renderConcerns(env: Env): Response {
   </section>`, {
     activeRoute: '/governance/concerns',
     description: 'Public issue intake for non-sensitive WizardGang Architecture Demo bugs, features, accessibility, AI/MCP, and other concerns.',
+  });
+}
+
+function titleCase(value: string): string {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function evidenceHref(env: Env, evidence: PublicEvidence): string {
+  return evidence.locator.route || sourceUrl(env, evidence.locator.repositoryPath || '');
+}
+
+function riskFilterQuery(filters: ReturnType<typeof riskFiltersFromUrl>): string {
+  const params = new URLSearchParams();
+  if (filters.framework) params.set('framework', filters.framework);
+  if (filters.status) params.set('status', filters.status);
+  if (filters.residualRating) params.set('residual', filters.residualRating);
+  const query = params.toString();
+  return query ? `?${query}` : '';
+}
+
+function selected(actual: string | undefined, expected: string): string {
+  return actual === expected ? ' selected' : '';
+}
+
+function riskCard(env: Env, risk: PublicRisk, evidenceById: Map<string, PublicEvidence>): string {
+  const evidence = risk.evidence.map((id) => evidenceById.get(id)).filter((record): record is PublicEvidence => Boolean(record));
+  const evidenceLinks = evidence.map((record) => `<a href="${escapeHtml(evidenceHref(env, record))}">${escapeHtml(record.id)}</a>`).join(', ');
+  const controlLinks = risk.controls.map((control) => `<a href="${escapeHtml(sourceUrl(env, control.repositoryPath))}">${escapeHtml(control.reference)}</a>`).join('; ');
+  return `<article class="info-card" id="${escapeHtml(risk.id)}">
+    <p class="eyebrow"><a href="#${escapeHtml(risk.id)}">${escapeHtml(risk.id)}</a> · ${escapeHtml(titleCase(risk.framework))}</p>
+    <h2>${escapeHtml(risk.title)}</h2>
+    <p><strong>Inherent:</strong> ${risk.inherent.score} ${escapeHtml(titleCase(risk.inherent.rating))} · <strong>Residual:</strong> ${risk.residual.score} ${escapeHtml(titleCase(risk.residual.rating))}</p>
+    <p><strong>Status:</strong> ${escapeHtml(titleCase(risk.status))} · <strong>Treatment direction:</strong> ${escapeHtml(risk.treatment.map(titleCase).join(' / '))}</p>
+    <p><strong>Review due:</strong> <time datetime="${escapeHtml(risk.reviewDue)}">${escapeHtml(risk.reviewDue)}</time></p>
+    <p><strong>Evidence:</strong> ${evidenceLinks}</p>
+    <p><strong>Control references:</strong> ${controlLinks}</p>
+  </article>`;
+}
+
+export function renderRisks(request: Request, env: Env): Response {
+  const filters = riskFiltersFromUrl(new URL(request.url));
+  const records = filterPublicRisks(filters);
+  const counts = deriveRiskCounts(records);
+  const evidenceById = new Map<string, PublicEvidence>(publicAssuranceRegistry.evidence.map((record) => [record.id, record] as const));
+  const query = riskFilterQuery(filters);
+  const cards = records.map((record) => riskCard(env, record, evidenceById)).join('');
+  const results = cards || '<article class="info-card"><h2>No matching risks</h2><p>Change or clear the filters to view the public assurance records.</p></article>';
+
+  return shell(env, 'Risk Assurance', `
+  <section class="page-header assurance-header">
+    <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / /governance/risks</p>
+    <h1>Review the public risk assurance record.</h1>
+    <p class="lede">This disclosure-safe view carries the stable <code>SEC-RISK-*</code> and <code>AI-RISK-*</code> identifiers, current scores, treatment direction, and reviewable evidence/control links from the controlled registers.</p>
+    <p class="assurance-notice"><strong>Public assurance boundary:</strong> private treatment actions, risk-owner and acceptance detail, sensitive infrastructure context, and acceptance rationale are intentionally omitted. These records do not claim certification or residual-risk acceptance.</p>
+    <div class="page-tools"><a class="button button-primary" href="/v1/assurance/risks${escapeHtml(query)}">View JSON</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/risks.ts'))}">Route source</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'assurance/risks/risks.json'))}">Dataset source</a>${referenceDetails([
+      { label: 'Risk schema', href: sourceUrl(env, 'contracts/assurance/risk.schema.json') },
+      { label: 'Risk-management method', href: sourceUrl(env, 'docs/governance/RISK-MANAGEMENT.md') },
+      { label: 'Assurance validation', href: sourceUrl(env, 'scripts/validate-assurance.mjs') },
+    ])}</div>
+  </section>
+  <section class="info-card" aria-labelledby="risk-filter-heading">
+    <h2 id="risk-filter-heading">Filter records</h2>
+    <form method="get" action="/governance/risks">
+      <p>
+        <label>Framework
+          <select name="framework">
+            <option value="">All</option>
+            <option value="security"${selected(filters.framework, 'security')}>Security</option>
+            <option value="ai"${selected(filters.framework, 'ai')}>AI</option>
+          </select>
+        </label>
+        <label>Status
+          <select name="status">
+            <option value="">All</option>
+            <option value="treating"${selected(filters.status, 'treating')}>Treating</option>
+            <option value="open"${selected(filters.status, 'open')}>Open</option>
+          </select>
+        </label>
+        <label>Residual rating
+          <select name="residual">
+            <option value="">All</option>
+            <option value="critical"${selected(filters.residualRating, 'critical')}>Critical</option>
+            <option value="high"${selected(filters.residualRating, 'high')}>High</option>
+            <option value="moderate"${selected(filters.residualRating, 'moderate')}>Moderate</option>
+            <option value="low"${selected(filters.residualRating, 'low')}>Low</option>
+          </select>
+        </label>
+        <button type="submit">Apply filters</button>
+        <a href="/governance/risks">Clear</a>
+      </p>
+    </form>
+    <p><strong>${counts.total}</strong> matching records · ${counts.byFramework.security} security · ${counts.byFramework.ai} AI · ${counts.byResidualRating.high} high residual · ${counts.byResidualRating.moderate} moderate residual · ${counts.byResidualRating.low} low residual.</p>
+  </section>
+  <div class="info-grid">${results}</div>`, {
+    activeRoute: '/governance/risks',
+    description: 'Disclosure-safe security and AI risk assurance with stable identifiers, evidence links, control references, and derived counts.',
   });
 }

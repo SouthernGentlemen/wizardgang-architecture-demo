@@ -1,6 +1,6 @@
 # Route-to-source map
 
-This file is the stable public URL contract for `demo.wizardgang.ai`. The public architecture map contains 22 HTML routes in five groups. Retired page URLs remain stable through exact permanent redirects to focused routes or anchored sections; machine interfaces keep their existing paths and response shapes.
+This file is the stable public URL contract for `demo.wizardgang.ai`. The public architecture map contains 23 HTML routes in five groups. Retired page URLs remain stable through exact permanent redirects to focused routes or anchored sections; machine interfaces keep their existing paths and response shapes.
 
 ## Public architecture routes
 
@@ -23,13 +23,14 @@ This file is the stable public URL contract for `demo.wizardgang.ai`. The public
 | Delivery & Governance | `/compliance` | Uncertified assurance posture and canonical evidence index | `src/demos/compliance.ts` | Working |
 | Delivery & Governance | `/security` | Vulnerability disclosure policy and private reporting path | `src/demos/security.ts` | Working |
 | Delivery & Governance | `/governance/concerns` | Public non-security bug, feature, and other concern intake | `src/demos/concerns.ts` | Working |
+| Delivery & Governance | `/governance/risks` | Disclosure-safe security and AI risk assurance with stable anchors and evidence/control links | `src/demos/risks.ts` | Working |
 | Operations | `/dashboard` | Read-only operations center, detailed health, availability, activity, usage, and deployment | `src/demos/dashboard.ts` | Working |
 | Operations | `/dashboard/uptime` | Scheduled availability history | `src/demos/uptime.ts` | Working |
 | Operations | `/dashboard/docs` | Documentation index | `src/demos/docs.ts` | Working |
 | Operations | `/dashboard/logs` | Public-safe log viewer | `src/demos/logs.ts` | Working |
 | Operations | `/dashboard/billing` | Cloudflare usage, cost evidence, and separate guardrail simulator | `src/demos/billing.ts` | Working |
 
-The architecture map at `/` and `/sitemap.xml` are generated from this 22-route registry.
+The architecture map at `/` and `/sitemap.xml` are generated from this 23-route registry.
 
 ## Retired page redirects
 
@@ -75,61 +76,60 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 
 | Route | Methods | Capability | Primary source |
 |---|---|---|---|
-| `/__api/edge/inspect` | `GET` | Allowlisted edge request context | `src/api/runtime.ts` |
-| `/__api/workers/compute` | `POST` | Bounded stateless Worker compute | `src/api/runtime.ts` |
-| `/__api/durable/counter` | `GET`, `POST` | Coordinated Durable Object counter | `src/api/durable.ts` |
-| `/__api/d1/users` | `GET`, `POST` | Session-scoped D1 demo users | `src/api/d1-lab.ts` |
-| `/__api/d1/users/{id}` | `PATCH`, `DELETE` | Session-scoped D1 demo user | `src/api/d1-lab.ts` |
-| `/__api/d1/tasks` | `GET`, `POST` | Session-scoped D1 demo tasks | `src/api/d1-lab.ts` |
-| `/__api/d1/tasks/{id}` | `PATCH`, `DELETE` | Session-scoped D1 demo task | `src/api/d1-lab.ts` |
-| `/__api/d1/reset` | `POST` | Reset the current D1 visitor sandbox | `src/api/d1-lab.ts` |
-| `/__api/r2/demo` | `POST` | Visitor-safe R2 write | `src/api/r2.ts` |
-| `/__api/r2/object` | `GET`, `PUT`, `DELETE` | R2 object with D1 metadata | `src/api/r2.ts` |
-| `/__api/r2/files` | `GET`, `POST` | List or upload current visitor R2 files | `src/api/r2.ts` |
-| `/__api/r2/files/{id}` | `GET`, `DELETE` | Preview/download or delete a visible R2 file | `src/api/r2.ts` |
-| `/__api/r2/reset` | `POST` | Delete current visitor R2 uploads | `src/api/r2.ts` |
-| `/__api/accessibility/lab` | `GET` | Locally bundled axe-core teaching frame | `src/ui/accessibility-lab.ts` |
-| `/__api/git/evidence` | `GET` | Bounded, cached public GitHub delivery evidence | `src/api/git-evidence.ts` |
-| `/__api/git/demo` | `GET` | Fast-polled active or recent live Git delivery status | `src/api/git-demo.ts` |
-| `/__api/git/demo` | `POST` | Same-origin admin-authorized semantic-version workflow dispatch | `src/api/git-demo.ts` |
-| `/__api/git/demo/release` | `POST` | Same-origin admin-authorized merge and release dispatch after successful CI | `src/api/git-demo.ts` |
-| `/v1/demo-records` | `GET`, `POST` | REST record collection | `src/api/records.ts` |
-| `/v1/demo-records/{key}` | `GET`, `PUT`, `DELETE` | Read, create/replace, or delete one REST record | `src/api/records.ts` |
-| `/__api/api-sandbox/reset` | `POST` | Delete only the authenticated visitor's REST sandbox | `src/api/records.ts` |
-| `/v1/openapi.json` | `GET` | Swagger 2.0 contract | `src/api/openapi.ts` |
-| `/v1/openapi.yaml` | `GET` | Download the OpenAPI 2.0 contract as YAML | `src/api/openapi.ts` |
-| `/graphql` | `GET`, `POST` | Focused GraphQL page for browser navigation; GraphQL execution for API clients | `src/api/graphql.ts` |
-| `/graphql/console` | `GET` | Locally bundled embeddable GraphiQL | `src/ui/graphiql-assets.ts` |
-| `/graphql/schema` | `GET` | GraphQL schema | `src/api/graphql.ts` |
-| `/__assets/graphiql/{asset}` | `GET` | Locked local GraphiQL UI, CSS, and editor workers | `src/ui/graphiql-assets.ts` |
-| `/v1/webhooks/demo` | `POST` | Signed webhook receiver | `src/api/webhooks.ts` |
-| `/v1/webhooks/github` | `POST` | GitHub-compatible verified receiver | `src/api/webhooks.ts` |
-| `/__api/webhooks/demo` | `POST` | Generate a session-scoped GitHub-shaped event | `src/api/webhooks.ts` |
-| `/__api/webhooks/events` | `GET` | Poll verified GitHub and current-session events | `src/api/webhooks.ts` |
-| `/__api/webhooks/reset` | `POST` | Reset current-session synthetic events | `src/api/webhooks.ts` |
-| `/mcp/server` | `GET`, `POST`, `DELETE` | MCP 2026-07-28 and stateless legacy Streamable HTTP interface | `src/api/mcp.ts` |
-| `/__api/identity/oauth-pkce` | `POST` | OAuth PKCE material | `src/api/identity.ts` |
-| `/__api/identity/authorize` | `POST` | Application policy decision | `src/api/identity.ts` |
-| `/__api/identity/token` | `POST` | Issue a ten-minute visitor-sandbox bearer token from the current identity session | `src/api/identity.ts` |
-| `/__api/identity/sso` | `GET` | SSO trust boundary | `src/api/identity.ts` |
-| `/identity/saml/metadata` | `GET` | SAML SP metadata | `src/api/identity.ts` |
-| `/__api/identity/saml/inspect` | `GET` | SAML validation boundary | `src/api/identity.ts` |
-| `/identity/microsoft` | `GET` | Start Microsoft Entra ID OIDC authentication | `src/api/identity.ts` |
-| `/identity/microsoft/callback` | `GET` | Validate Microsoft Entra ID OIDC callback | `src/api/identity.ts` |
-| `/identity/google` | `GET` | Start Google OIDC authentication | `src/api/identity.ts` |
-| `/identity/google/callback` | `GET` | Validate Google OIDC callback | `src/api/identity.ts` |
-| `/identity/github` | `GET` | Start GitHub OAuth authentication | `src/api/identity.ts` |
-| `/identity/github/callback` | `GET` | Validate GitHub OAuth callback and API identity | `src/api/identity.ts` |
-| `/identity/saml` | `GET` | Start Microsoft Entra ID SAML authentication | `src/api/identity.ts` |
-| `/identity/saml/acs` | `POST` | Validate Microsoft Entra ID SAML assertion | `src/api/identity.ts` |
-| `/identity/session` | `GET` | Current sanitized application identity | `src/api/identity.ts` |
-| `/identity/logout` | `POST` | Revoke current application session | `src/api/identity.ts` |
-| `/__api/operations/logs` | `GET` | Sanitized logs; offline-reachable | `src/api/operations.ts` |
-| `/__api/operations/cloudflare-usage` | `GET` | Latest normalized Cloudflare usage snapshot; offline-reachable | `src/api/operations.ts` |
-| `/__api/operations/billing` | `POST` | Synthetic budget scenario; offline-reachable | `src/api/billing.ts` |
-| `/__api/evidence/traceability` | `GET` | Release and audit evidence | `src/api/governance.ts` |
-| `/__api/governance/security-controls` | `GET` | Security-control mapping | `src/api/governance.ts` |
-| `/__api/governance/ai-evaluation` | `POST` | MCP boundary evaluation | `src/api/governance.ts` |
+| `/__api/operations/logs` | `GET` | Operational Logs JSON | `src/api/operations.ts` |
+| `/__api/operations/cloudflare-usage` | `GET` | Sanitized Cloudflare Usage JSON | `src/api/operations.ts` |
+| `/__api/edge/inspect` | `GET` | Edge Context JSON | `src/api/runtime.ts` |
+| `/__api/workers/compute` | `POST` | Stateless Worker Compute | `src/api/runtime.ts` |
+| `/__api/durable/counter` | `GET`, `POST` | Durable Object Counter | `src/api/durable.ts` |
+| `/__api/d1/users` | `GET`, `POST` | D1 Demo Users | `src/api/d1-lab.ts` |
+| `/__api/d1/users/{id}` | `PATCH`, `DELETE` | D1 Demo User | `src/api/d1-lab.ts` |
+| `/__api/d1/tasks` | `GET`, `POST` | D1 Demo Tasks | `src/api/d1-lab.ts` |
+| `/__api/d1/tasks/{id}` | `PATCH`, `DELETE` | D1 Demo Task | `src/api/d1-lab.ts` |
+| `/__api/d1/reset` | `POST` | D1 Demo Reset | `src/api/d1-lab.ts` |
+| `/__api/r2/demo` | `POST` | Visitor R2 Object Action | `src/api/r2.ts` |
+| `/__api/r2/object` | `GET`, `PUT`, `DELETE` | R2 Object API | `src/api/r2.ts` |
+| `/__api/r2/files` | `GET`, `POST` | R2 Visitor Files | `src/api/r2.ts` |
+| `/__api/r2/files/{id}` | `GET`, `DELETE` | R2 Visitor File | `src/api/r2.ts` |
+| `/__api/r2/reset` | `POST` | R2 Visitor Reset | `src/api/r2.ts` |
+| `/__api/accessibility/lab` | `GET` | Sandboxed Accessibility Lab | `src/ui/accessibility-lab.ts` |
+| `/__api/git/evidence` | `GET` | Live GitHub Delivery Evidence | `src/api/git-evidence.ts` |
+| `/__api/git/demo` | `GET`, `POST` | Live Git Delivery Lifecycle | `src/api/git-demo.ts` |
+| `/__api/git/demo/release` | `POST` | Live Git Merge and Release | `src/api/git-demo.ts` |
+| `/v1/demo-records` | `GET`, `POST` | REST Demo Records | `src/api/records.ts` |
+| `/v1/demo-records/{key}` | `GET`, `PUT`, `DELETE` | REST Demo Record | `src/api/records.ts` |
+| `/__api/api-sandbox/reset` | `POST` | REST Visitor Sandbox Reset | `src/api/records.ts` |
+| `/v1/openapi.json` | `GET` | Swagger 2.0 Contract | `src/api/openapi.ts` |
+| `/v1/openapi.yaml` | `GET` | OpenAPI 2.0 YAML Contract | `src/api/openapi.ts` |
+| `/graphql/console` | `GET` | Embedded GraphiQL | `src/ui/graphiql-assets.ts` |
+| `/graphql/schema` | `GET` | GraphQL Schema | `src/api/graphql.ts` |
+| `/__assets/graphiql/{asset}` | `GET` | Locally Bundled GraphiQL Assets | `src/ui/graphiql-assets.ts` |
+| `/v1/webhooks/demo` | `POST` | Signed Webhook Receiver | `src/api/webhooks.ts` |
+| `/v1/webhooks/github` | `POST` | Verified GitHub Webhook Receiver | `src/api/webhooks.ts` |
+| `/__api/webhooks/demo` | `POST` | Visitor Signed Webhook Action | `src/api/webhooks.ts` |
+| `/__api/webhooks/events` | `GET` | Verified Webhook Events | `src/api/webhooks.ts` |
+| `/__api/webhooks/reset` | `POST` | Visitor Webhook Reset | `src/api/webhooks.ts` |
+| `/mcp/server` | `GET`, `POST`, `DELETE` | MCP Streamable HTTP Server | `src/api/mcp.ts` |
+| `/__api/identity/oauth-pkce` | `POST` | OAuth PKCE Material | `src/api/identity.ts` |
+| `/__api/identity/authorize` | `POST` | Authorization Policy Evaluation | `src/api/identity.ts` |
+| `/__api/identity/token` | `POST` | Short-lived Demo API Token | `src/api/identity.ts` |
+| `/__api/identity/sso` | `GET` | SSO Trust Boundary | `src/api/identity.ts` |
+| `/identity/saml/metadata` | `GET` | SAML Service Provider Metadata | `src/api/identity.ts` |
+| `/__api/identity/saml/inspect` | `GET` | SAML Validation Boundary | `src/api/identity.ts` |
+| `/identity/microsoft` | `GET` | Microsoft Entra ID OIDC Start | `src/api/identity.ts` |
+| `/identity/microsoft/callback` | `GET` | Microsoft Entra ID OIDC Callback | `src/api/identity.ts` |
+| `/identity/google` | `GET` | Google OIDC Start | `src/api/identity.ts` |
+| `/identity/google/callback` | `GET` | Google OIDC Callback | `src/api/identity.ts` |
+| `/identity/github` | `GET` | GitHub OAuth Start | `src/api/identity.ts` |
+| `/identity/github/callback` | `GET` | GitHub OAuth Callback | `src/api/identity.ts` |
+| `/identity/saml` | `GET` | Microsoft Entra ID SAML Start | `src/api/identity.ts` |
+| `/identity/saml/acs` | `POST` | Microsoft Entra ID SAML ACS | `src/api/identity.ts` |
+| `/identity/session` | `GET` | Identity Session | `src/api/identity.ts` |
+| `/identity/logout` | `POST` | Identity Logout | `src/api/identity.ts` |
+| `/__api/operations/billing` | `POST` | Synthetic Budget Scenario | `src/api/billing.ts` |
+| `/__api/evidence/traceability` | `GET` | Traceability Evidence JSON | `src/api/governance.ts` |
+| `/v1/assurance/risks` | `GET` | Disclosure-safe Risk Assurance JSON | `src/api/assurance.ts` |
+| `/__api/governance/security-controls` | `GET` | Security Control Evidence JSON | `src/api/governance.ts` |
+| `/__api/governance/ai-evaluation` | `POST` | AI Boundary Evaluation | `src/api/governance.ts` |
 
 ## Shared implementation
 
@@ -145,6 +145,8 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | Application log persistence and redaction | `src/lib/logs.ts` |
 | ChatGPT crawler access and dynamic robots policy | `src/lib/crawler-control.ts` |
 | Operations APIs | `src/api/operations.ts` |
+| Public assurance registry | `src/assurance/registry.ts` |
+| Disclosure-safe risk API | `src/api/assurance.ts` |
 | D1 base schema | `migrations/0001_demo_blob.sql` |
 | Operations, log, and Cloudflare usage schemas | `migrations/0002_operations_dashboard.sql`, `migrations/0004_application_logs.sql`, `migrations/0011_cloudflare_usage.sql` |
 | ChatGPT crawler-control schema | `migrations/0009_crawler_control.sql` |
@@ -157,6 +159,9 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 
 | Capability | Source |
 |---|---|
+| Public assurance registry contract | `contracts/assurance/registry.schema.json` |
+| Public risk assurance contract | `contracts/assurance/risk.schema.json` |
+| Public risk assurance dataset | `assurance/risks/risks.json` |
 | R2 helper and object boundary | `src/storage/r2.ts` |
 | Durable Object class | `src/durable/demo-coordinator.ts` |
 | REST OpenAPI / Swagger 2.x contract | `contracts/openapi/swagger.json` |

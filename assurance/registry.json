@@ -15,6 +15,11 @@
       "kind": "claims",
       "path": "assurance/claims/claims.json",
       "schema": "contracts/assurance/claim.schema.json"
+    },
+    {
+      "kind": "risks",
+      "path": "assurance/risks/risks.json",
+      "schema": "contracts/assurance/risk.schema.json"
     }
   ]
 }
