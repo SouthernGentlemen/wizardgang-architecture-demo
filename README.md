@@ -33,7 +33,7 @@ See [`docs/ROUTES.md`](docs/ROUTES.md) and [`docs/route-manifest.json`](docs/rou
 
 The demo uses the `wizardgang.ai` design tokens: dark by default, with a light theme the reader can toggle and the browser remembers. Every page carries a skip link, primary navigation, and in-group previous/next paging; `/sitemap.xml` is generated from the same registry that serves the routes, so it cannot drift from the published contract.
 
-`/d1` exposes a visitor-scoped users-and-tasks lab whose D1 records are also queryable through GraphQL. `/r2` provides a bounded mini file manager, `/accessibility` compares accessible and intentionally broken interfaces, `/i18n` switches among six locales, `/git` fetches live repository evidence, and `/api` includes runnable REST, GraphQL, and webhook demonstrations. Existing bearer-protected record and object interfaces retain their original authorization boundaries.
+`/d1` exposes a visitor-scoped users-and-tasks lab whose D1 records are also queryable through GraphQL. `/r2` provides a bounded mini file manager, `/accessibility` compares accessible and intentionally broken interfaces, `/i18n` switches among six locales, `/git` runs and tracks a controlled two-stage delivery lifecycle against this repository, and `/api` includes runnable REST, GraphQL, and webhook demonstrations. Existing bearer-protected record and object interfaces retain their original authorization boundaries.
 
 ## Operations and admin
 

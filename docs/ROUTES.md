@@ -84,6 +84,9 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | `/__api/r2/reset` | `POST` | Delete current visitor R2 uploads | `src/api/r2.ts` |
 | `/__api/accessibility/lab` | `GET` | Locally bundled axe-core teaching frame | `src/ui/accessibility-lab.ts` |
 | `/__api/git/evidence` | `GET` | Bounded, cached public GitHub delivery evidence | `src/api/git-evidence.ts` |
+| `/__api/git/demo` | `GET` | Fast-polled active or recent live Git delivery status | `src/api/git-demo.ts` |
+| `/__api/git/demo` | `POST` | Same-origin admin-authorized semantic-version workflow dispatch | `src/api/git-demo.ts` |
+| `/__api/git/demo/release` | `POST` | Same-origin admin-authorized merge and release dispatch after successful CI | `src/api/git-demo.ts` |
 | `/v1/demo-records` | `GET`, `POST` | REST record collection | `src/api/records.ts` |
 | `/v1/demo-records/{key}` | `GET`, `DELETE` | REST record item | `src/api/records.ts` |
 | `/v1/openapi.json` | `GET` | Swagger 2.0 contract | `src/api/openapi.ts` |

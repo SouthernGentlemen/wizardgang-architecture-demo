@@ -24,7 +24,7 @@ Released routes remain canonical. The proposed `/demo/*` names are represented b
 | D1 | `/d1` | `/__api/d1/*`; retain `/v1/demo-records*` | Add the Users/Tasks lab without removing the current record contract. |
 | i18n | `/i18n` | Server render plus local progressive enhancement | Deepen the existing route and retain Arabic/RTL. |
 | WCAG | `/accessibility` | Isolated lab frame and test result JSON | Do not add `/wcag`; the released accessibility route remains canonical. |
-| Git/GitHub | `/git` | `/__api/git/evidence` | Replace static assertions with fetched public evidence. |
+| Git/GitHub | `/git` | `/__api/git/evidence`; `/__api/git/demo*` | Show public evidence and run a controlled two-stage release lifecycle against this repository. |
 | Webhooks | `/api#webhooks` | `/v1/webhooks/github`; `/__api/webhooks/*` | Do not restore `/webhook`; `/api/webhooks` continues to redirect to the anchor. |
 | GraphQL | `/api#graphql` | `/graphql`; `/graphql/schema` | Embed GraphiQL in the existing section; `/graphql` remains the executable endpoint. |
 
@@ -319,11 +319,21 @@ Bundle `axe-core` locally inside the frame and run it only against Accessible mo
 - The known Broken preset produces the expected deterministic teaching findings without disabling the parent page's controls.
 - Reset restores Accessible mode, closes dialogs, clears form state, returns focus to the mode control, and reruns the accessible scan.
 
-## `/git` — Public source-control evidence
+## `/git` — Live controlled delivery lifecycle
 
 ### Working demonstration
 
-Render live cards for the default branch, latest non-default branch when one exists, five commits, one open PR, one recently merged PR, recent Actions runs, tags, and latest release. Every item links to the corresponding GitHub page, object, workflow, or run. Missing data is an explicit empty state; an unavailable API is `Evidence unavailable`, never fabricated data.
+The primary interaction is a real, two-stage lifecycle. `Run Live Git Demo` accepts `PATCH`, `MINOR`, or `MAJOR`, then requires the existing demo-admin credentials. The same-origin Worker authorizes the human and uses the server-side `GITHUB_DEMO_TOKEN` only to dispatch `.github/workflows/git-demo.yml`. It does not send the Basic credentials to GitHub.
+
+The start workflow serializes all lifecycle controller runs, refuses to proceed while another `demo/live-v*` pull request is open, calculates the next semantic version and next permanent `DEMO-###` identifier from `main`, updates `package.json` and `package-lock.json`, creates the matching `docs/releases/vX.Y.Z.md`, commits the complete controlled record, pushes an isolated branch, and opens a controlled pull request using the GitHub-managed `GIT_DEMO_PR_TOKEN`. The dedicated token is required because a pull request created with the repository `GITHUB_TOKEN` can leave ordinary pull-request workflows awaiting approval.
+
+The pull request stays open while the page polls its specific lifecycle every 2.5 seconds and renders the actual GitHub workflow run, jobs, and steps. CI exposes route, scaffold, history, lint, type, unit, contract, localization, security, migration, dependency, build, and evidence steps individually. General repository evidence retains its independent 60-second cache.
+
+After the real CI workflow succeeds, `Merge & Release vX.Y.Z` requires demo-admin authentication again. The release controller validates the exact request ID, controlled PR title and branch, head SHA, reviewed package version, release record, and successful CI jobs. It merges without an administrative bypass, resolves the merge commit, creates an annotated semantic tag, and pushes it with the dedicated automation token. The existing tag-triggered release workflow reproduces the tag, publishes the GitHub Release, calls the deploy workflow, deploys the exact tag, verifies `/version` and `/health`, and exposes those real jobs and steps on `/git`.
+
+If an active live-demo pull request exists, a new start returns `409` with `Live release demonstration already active: PR #N` and the page resumes tracking that lifecycle. Workflow concurrency provides a second collision control for requests that arrive before a pull request becomes visible.
+
+The secondary evidence grid continues to render live cards for the default branch, latest non-default branch when one exists, five commits, one open PR, one recently merged PR, recent Actions runs, tags, and latest release. Every item links to the corresponding GitHub page, object, workflow, or run. Missing data is an explicit empty state; an unavailable API is `Evidence unavailable`, never fabricated data.
 
 Display the delivery pipeline as repository evidence:
 
@@ -338,13 +348,19 @@ Only show `Protected`, `PR required`, `CI required`, `signed commits`, `linear h
 
 `GET /__api/git/evidence` accepts no repository parameter. It derives the allowlisted owner/repository from `GITHUB_REPO_URL`, uses public GitHub APIs with an optional managed `GITHUB_READ_TOKEN`, applies a short timeout, sanitizes fields, caches successful responses for 60 seconds, and returns per-card freshness and partial-failure state. The token is never forwarded, logged, or returned.
 
+`GET /__api/git/demo` returns bounded status for the active or most recent lifecycle and accepts only an optional Worker-issued `request_id`. It uses the public/read-only GitHub boundary, a two-second in-process coalescing cache, and `Cache-Control: no-store`; no write token reaches status output.
+
+`POST /__api/git/demo` accepts only `{ "bump": "patch" | "minor" | "major" }`. `POST /__api/git/demo/release` accepts only the active demo PR number and matching request ID. Both cap input, require exact same-origin and demo-admin Basic authentication, fail closed when preflight evidence or managed secrets are unavailable, dispatch only `git-demo.yml` on the configured default branch, return `202`, and record credential-free audit/log evidence.
+
 ### Source links
 
 - Route: `src/demos/git.ts` and `src/demos/git-page.ts`
 - GitHub client: `src/lib/github-api.ts`
+- Lifecycle boundary: `src/api/git-demo.ts` and `src/lib/git-demo.ts`
 - Change policy: `docs/CHANGE-MANAGEMENT.md`
-- Tests: `tests/git-evidence.test.ts`
+- Tests: `tests/git-evidence.test.ts` and `tests/git-demo.test.ts`
 - CI workflow: `.github/workflows/ci.yml`
+- Lifecycle workflow: `.github/workflows/git-demo.yml`
 - Deploy workflow: `.github/workflows/deploy.yml`
 
 ### Acceptance tests
@@ -352,7 +368,9 @@ Only show `Protected`, `PR required`, `CI required`, `signed commits`, `linear h
 - Fixtures cover open/merged PRs, no feature branches, no release, API rate limit, partial Actions failure, protected/unverifiable branch, timeout, and sanitized upstream errors.
 - Every rendered commit, branch, PR, run, tag, and release link stays under the configured public repository/API origins.
 - The page makes no control assertion not present in the evidence response.
-- Reset is a `Refresh evidence` action that clears only the browser view and refetches; it performs no GitHub mutation.
+- Start and release reject cross-origin, unauthenticated, malformed, mismatched, concurrent, or premature requests without dispatching GitHub.
+- Audit records contain version, operation, request ID, and public object identifiers, never Basic credentials or managed tokens.
+- Fast polling tracks the specific workflow/PR lifecycle while active; `Refresh evidence` remains a read-only refresh for the passive evidence grid.
 
 ## `/api#webhooks` — Verified live delivery
 

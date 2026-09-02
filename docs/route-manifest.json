@@ -347,6 +347,28 @@
     "status": "working"
   },
   {
+    "route": "/__api/git/demo",
+    "title": "Live Git Delivery Lifecycle",
+    "group": "Delivery & Governance API",
+    "source": "src/api/git-demo.ts",
+    "method": "GET, POST",
+    "machine": true,
+    "protected_write": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/__api/git/demo/release",
+    "title": "Live Git Merge and Release",
+    "group": "Delivery & Governance API",
+    "source": "src/api/git-demo.ts",
+    "method": "POST",
+    "machine": true,
+    "protected": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
     "route": "/v1/demo-records",
     "title": "REST Demo Records",
     "group": "Interfaces API",

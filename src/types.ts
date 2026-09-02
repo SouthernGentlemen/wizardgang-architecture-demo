@@ -67,6 +67,7 @@ export interface Env {
   WEBHOOK_DEMO_SECRET?: string;
   GITHUB_WEBHOOK_SECRET?: string;
   GITHUB_READ_TOKEN?: string;
+  GITHUB_DEMO_TOKEN?: string;
   DEMO_SESSION_SECRET?: string;
   DEPLOYED_VERSION?: string;
   DEPLOYED_SHA?: string;

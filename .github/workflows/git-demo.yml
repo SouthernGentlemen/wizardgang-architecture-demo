@@ -1,0 +1,380 @@
+name: Live Git Demo
+run-name: Live Git demo · ${{ inputs.operation }} · ${{ inputs.request_id }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Controlled lifecycle operation
+        required: true
+        type: choice
+        options: [start, release]
+      bump:
+        description: Semantic version component used by start
+        required: true
+        default: patch
+        type: choice
+        options: [patch, minor, major]
+      request_id:
+        description: Worker-issued correlation identifier
+        required: true
+        type: string
+      pull_request:
+        description: Active live-demo pull request used by release
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: live-git-demo-control
+  cancel-in-progress: false
+
+jobs:
+  start:
+    if: inputs.operation == 'start'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Validate controlled inputs
+        shell: bash
+        env:
+          REQUEST_ID: ${{ inputs.request_id }}
+          BUMP: ${{ inputs.bump }}
+        run: |
+          if [[ ! "$REQUEST_ID" =~ ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$ ]]; then
+            echo "::error::request_id must be a UUID"
+            exit 1
+          fi
+          if [[ ! "$BUMP" =~ ^(patch|minor|major)$ ]]; then
+            echo "::error::bump must be patch, minor, or major"
+            exit 1
+          fi
+      - name: Check out main
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GIT_DEMO_PR_TOKEN }}
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - name: Require the dedicated automation token
+        env:
+          GH_TOKEN: ${{ secrets.GIT_DEMO_PR_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error::GIT_DEMO_PR_TOKEN is not configured"
+            exit 1
+          fi
+      - name: Enforce one live demo pull request
+        env:
+          GH_TOKEN: ${{ secrets.GIT_DEMO_PR_TOKEN }}
+        run: |
+          active="$(gh pr list --state open --limit 100 --json number,headRefName --jq '[.[] | select(.headRefName | startswith("demo/live-v"))][0].number // empty')"
+          if [ -n "$active" ]; then
+            echo "::error::Live release demonstration already active: PR #$active"
+            exit 1
+          fi
+      - name: Calculate controlled change and version
+        id: release
+        shell: bash
+        env:
+          BUMP: ${{ inputs.bump }}
+          REQUEST_ID: ${{ inputs.request_id }}
+        run: |
+          node <<'NODE'
+          const { execFileSync } = require('node:child_process');
+          const fs = require('node:fs');
+          const bump = process.env.BUMP;
+          const requestId = process.env.REQUEST_ID;
+          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          if (!/^\d+\.\d+\.\d+$/.test(pkg.version)) throw new Error(`Invalid package version: ${pkg.version}`);
+          const [major, minor, patch] = pkg.version.split('.').map(Number);
+          const version = bump === 'major' ? `${major + 1}.0.0` : bump === 'minor' ? `${major}.${minor + 1}.0` : `${major}.${minor}.${patch + 1}`;
+          const subjects = execFileSync('git', ['log', '--format=%s'], { encoding: 'utf8' });
+          const ids = [...subjects.matchAll(/^\[DEMO-(\d+)\]/gm)].map((match) => Number(match[1]));
+          const width = Math.max(3, ...ids.map((value) => String(value).length));
+          const changeId = `DEMO-${String(Math.max(0, ...ids) + 1).padStart(width, '0')}`;
+          const shortId = requestId.replace(/[^a-f0-9]/gi, '').slice(0, 8).toLowerCase();
+          const values = {
+            current: pkg.version,
+            version,
+            change_id: changeId,
+            branch: `demo/live-v${version}-${shortId}`,
+          };
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, Object.entries(values).map(([key, value]) => `${key}=${value}\n`).join(''));
+          NODE
+      - name: Create semantic version change
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+          CURRENT_VERSION: ${{ steps.release.outputs.current }}
+          CHANGE_ID: ${{ steps.release.outputs.change_id }}
+        run: |
+          npm version "$VERSION" --no-git-tag-version
+          mkdir -p docs/releases
+          release_date="$(date -u +%Y-%m-%d)"
+          release_file="docs/releases/v$VERSION.md"
+          {
+            echo "# WizardGang Architecture Demo v$VERSION"
+            echo
+            echo "**Product:** WizardGang Architecture Demo"
+            echo
+            echo "**Version:** v$VERSION"
+            echo
+            echo "**Release date:** $release_date"
+            echo
+            echo "**Commit:** the commit this tag names — \`git rev-list -n1 v$VERSION\`"
+            echo
+            echo "## Scope"
+            echo
+            echo "Demonstrate the repository's controlled branch, commit, pull-request, CI, release, deployment, and production-verification lifecycle with a real patch, minor, or major version change."
+            echo
+            echo "## Included changes"
+            echo
+            echo "- [$CHANGE_ID] [BUILD] Demonstrate v$VERSION release lifecycle"
+            echo
+            echo "## Validation"
+            echo
+            echo "- Pull-request CI validates routes, controlled history, lint, types, tests, contracts, localization, security, migrations, dependencies, the Worker build, and commit-bound evidence."
+            echo "- Release automation reproduces the annotated tag before deployment."
+            echo "- Deployment automation verifies /version and /health against the exact tag commit."
+            echo
+            echo "## Deployment"
+            echo
+            echo "Target: \`demo.wizardgang.ai\`"
+            echo
+            echo "The release workflow deploys only the reviewed annotated tag and publishes this record as the matching GitHub Release."
+            echo
+            echo "## Known limitations"
+            echo
+            echo "- Merge and release still honor repository protections and managed-environment controls."
+            echo "- GitHub and Cloudflare availability can delay externally verified lifecycle updates."
+            echo "- WCAG and ISO references are alignment demonstrations, not certification claims."
+            echo
+            echo "## Previous release"
+            echo
+            echo "v$CURRENT_VERSION"
+            echo
+            echo "## Rollback target"
+            echo
+            echo "v$CURRENT_VERSION"
+          } > "$release_file"
+      - name: Commit and push controlled branch
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+          CURRENT_VERSION: ${{ steps.release.outputs.current }}
+          CHANGE_ID: ${{ steps.release.outputs.change_id }}
+          BRANCH: ${{ steps.release.outputs.branch }}
+        run: |
+          git config user.name "WizardGang Live Demo"
+          git config user.email "live-demo@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          git add package.json package-lock.json "docs/releases/v$VERSION.md"
+          git commit -F - <<EOF
+          [$CHANGE_ID] [BUILD] Demonstrate v$VERSION release lifecycle
+
+          Change:
+          Increment the semantic version to $VERSION and add its controlled release record.
+
+          Reason:
+          Demonstrate the repository's real delivery lifecycle from an authenticated /git action.
+
+          Impact:
+          Package version metadata and release evidence only.
+
+          Risk:
+          Medium
+
+          Controls:
+          - Keep the generated branch isolated until CI and the explicit release gate pass.
+          - Keep credentials and tokens in managed secret stores.
+
+          Validation:
+          - Pull-request CI runs the repository's complete validation suite.
+
+          Evidence:
+          - package.json
+          - package-lock.json
+          - docs/releases/v$VERSION.md
+
+          Source:
+          Direct live Git demonstration.
+
+          Release:
+          v$VERSION
+          EOF
+          git push --set-upstream origin "$BRANCH"
+      - name: Open controlled pull request
+        env:
+          GH_TOKEN: ${{ secrets.GIT_DEMO_PR_TOKEN }}
+          VERSION: ${{ steps.release.outputs.version }}
+          CURRENT_VERSION: ${{ steps.release.outputs.current }}
+          CHANGE_ID: ${{ steps.release.outputs.change_id }}
+          BRANCH: ${{ steps.release.outputs.branch }}
+          REQUEST_ID: ${{ inputs.request_id }}
+          BUMP: ${{ inputs.bump }}
+        run: |
+          body_file="$(mktemp)"
+          {
+            echo "## Live Git lifecycle"
+            echo
+            echo "This controlled pull request was requested from the authenticated \`/git\` demonstration. It remains open so the real CI jobs and review gate can be observed before release."
+            echo
+            echo "- Version: \`$VERSION\`"
+            echo "- Previous version: \`$CURRENT_VERSION\`"
+            echo "- Bump: \`$BUMP\`"
+            echo "- Branch: \`$BRANCH\`"
+            echo "- Request ID: \`$REQUEST_ID\`"
+            echo
+            echo "<!-- git-demo-request:$REQUEST_ID -->"
+          } > "$body_file"
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "[$CHANGE_ID] [BUILD] Demonstrate v$VERSION release lifecycle" \
+            --body-file "$body_file"
+      - name: Publish start summary
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+          CHANGE_ID: ${{ steps.release.outputs.change_id }}
+          BRANCH: ${{ steps.release.outputs.branch }}
+        run: |
+          {
+            echo "### Live Git demo started"
+            echo "- Change: $CHANGE_ID"
+            echo "- Version: v$VERSION"
+            echo "- Branch: $BRANCH"
+            echo "- Pull request remains open for CI and review."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  release:
+    if: inputs.operation == 'release'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Validate controlled inputs
+        shell: bash
+        env:
+          REQUEST_ID: ${{ inputs.request_id }}
+          PULL_REQUEST: ${{ inputs.pull_request }}
+        run: |
+          if [[ ! "$REQUEST_ID" =~ ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$ ]] || [[ ! "$PULL_REQUEST" =~ ^[1-9][0-9]*$ ]]; then
+            echo "::error::release requires a Worker-issued request ID and pull-request number"
+            exit 1
+          fi
+      - name: Check out main
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GIT_DEMO_PR_TOKEN }}
+      - name: Require the dedicated automation token
+        env:
+          GH_TOKEN: ${{ secrets.GIT_DEMO_PR_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error::GIT_DEMO_PR_TOKEN is not configured"
+            exit 1
+          fi
+      - name: Verify the exact live demo pull request
+        id: pull
+        env:
+          GH_TOKEN: ${{ secrets.GIT_DEMO_PR_TOKEN }}
+          PULL_REQUEST: ${{ inputs.pull_request }}
+          REQUEST_ID: ${{ inputs.request_id }}
+        run: |
+          pr_json="$(gh pr view "$PULL_REQUEST" --json state,title,body,baseRefName,headRefName,headRefOid)"
+          PR_JSON="$pr_json" node <<'NODE'
+          const fs = require('node:fs');
+          const pr = JSON.parse(process.env.PR_JSON);
+          const requestId = process.env.REQUEST_ID;
+          if (pr.state !== 'OPEN' || pr.baseRefName !== 'main') throw new Error('Pull request is not an open live-demo change against main.');
+          const version = /^demo\/live-v(\d+\.\d+\.\d+)-[a-z0-9]+$/i.exec(pr.headRefName)?.[1];
+          if (!version || !/^\[DEMO-\d+\] \[BUILD\] Demonstrate v\d+\.\d+\.\d+ release lifecycle$/.test(pr.title)) throw new Error('Pull request does not match the controlled live-demo contract.');
+          if (!pr.body.includes(`<!-- git-demo-request:${requestId} -->`)) throw new Error('Pull request request ID does not match.');
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `branch=${pr.headRefName}\nsha=${pr.headRefOid}\nversion=${version}\n`);
+          NODE
+      - name: Require successful real CI checks
+        env:
+          GH_TOKEN: ${{ secrets.GIT_DEMO_PR_TOKEN }}
+          PULL_REQUEST: ${{ inputs.pull_request }}
+        run: |
+          checks="$(gh pr checks "$PULL_REQUEST" --json bucket,name,workflow)"
+          CHECKS_JSON="$checks" node <<'NODE'
+          const checks = JSON.parse(process.env.CHECKS_JSON);
+          const ci = checks.filter((check) => check.workflow === 'CI');
+          if (ci.length < 2) throw new Error('The complete CI workflow has not reported both controlled jobs.');
+          const blocked = ci.filter((check) => !['pass', 'skipping'].includes(check.bucket));
+          if (blocked.length) throw new Error(`CI is not ready: ${blocked.map((check) => `${check.name}=${check.bucket}`).join(', ')}`);
+          NODE
+      - name: Verify reviewed source version
+        env:
+          BRANCH: ${{ steps.pull.outputs.branch }}
+          SHA: ${{ steps.pull.outputs.sha }}
+          VERSION: ${{ steps.pull.outputs.version }}
+        run: |
+          git fetch origin "$BRANCH"
+          git checkout --detach "$SHA"
+          test "$(node -p "require('./package.json').version")" = "$VERSION"
+          test -f "docs/releases/v$VERSION.md"
+      - name: Merge without bypassing repository protections
+        env:
+          GH_TOKEN: ${{ secrets.GIT_DEMO_PR_TOKEN }}
+          PULL_REQUEST: ${{ inputs.pull_request }}
+          SHA: ${{ steps.pull.outputs.sha }}
+          VERSION: ${{ steps.pull.outputs.version }}
+        run: |
+          gh pr merge "$PULL_REQUEST" \
+            --merge \
+            --delete-branch \
+            --match-head-commit "$SHA" \
+            --subject "Merge live v$VERSION release demonstration"
+      - name: Resolve merged main commit
+        id: merge
+        env:
+          GH_TOKEN: ${{ secrets.GIT_DEMO_PR_TOKEN }}
+          PULL_REQUEST: ${{ inputs.pull_request }}
+        run: |
+          for attempt in $(seq 1 12); do
+            pr_json="$(gh pr view "$PULL_REQUEST" --json state,mergedAt,mergeCommit)"
+            merge_sha="$(PR_JSON="$pr_json" node -p "JSON.parse(process.env.PR_JSON).mergeCommit?.oid || ''")"
+            if [ -n "$merge_sha" ]; then
+              echo "sha=$merge_sha" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::Pull request did not reach merged state"
+          exit 1
+      - name: Create and push annotated release tag
+        env:
+          VERSION: ${{ steps.pull.outputs.version }}
+          MERGE_SHA: ${{ steps.merge.outputs.sha }}
+        run: |
+          git fetch origin main --tags
+          if git rev-parse "refs/tags/v$VERSION" >/dev/null 2>&1; then
+            echo "::error::Release tag v$VERSION already exists"
+            exit 1
+          fi
+          git config user.name "WizardGang Live Demo"
+          git config user.email "live-demo@users.noreply.github.com"
+          git tag -a "v$VERSION" "$MERGE_SHA" -m "WizardGang Architecture Demo v$VERSION"
+          git push origin "refs/tags/v$VERSION"
+      - name: Publish release summary
+        env:
+          VERSION: ${{ steps.pull.outputs.version }}
+          MERGE_SHA: ${{ steps.merge.outputs.sha }}
+          PULL_REQUEST: ${{ inputs.pull_request }}
+        run: |
+          {
+            echo "### Live Git demo released"
+            echo "- Pull request: #$PULL_REQUEST"
+            echo "- Merge commit: $MERGE_SHA"
+            echo "- Annotated tag: v$VERSION"
+            echo "- The tag-triggered Release workflow now reproduces, deploys, verifies, and publishes the release."
+          } >> "$GITHUB_STEP_SUMMARY"
