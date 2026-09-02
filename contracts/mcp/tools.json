@@ -1,16 +1,81 @@
 {
   "name": "wizardgang-architecture-demo",
   "status": "working",
-  "boundary": "MCP callers remain inside normal application authentication, authorization, validation, and audit boundaries.",
+  "transport": {
+    "type": "streamable-http",
+    "path": "/mcp/server"
+  },
+  "protocol": {
+    "current": "2026-07-28",
+    "legacy": ["2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05", "2024-10-07"]
+  },
+  "boundary": "MCP callers remain inside normal application authentication, authorization, validation, persistence, and audit boundaries.",
   "tools": [
     {
+      "name": "ping",
+      "description": "Verify MCP client connectivity to the WizardGang architecture demo.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "ok": { "const": true },
+          "server": { "const": "wizardgang-architecture-demo" },
+          "transport": { "const": "streamable-http" },
+          "timestamp": { "type": "string" }
+        },
+        "required": ["ok", "server", "transport", "timestamp"],
+        "additionalProperties": false
+      }
+    },
+    {
       "name": "list_demo_records",
-      "description": "List authorized public demo records from the shared D1 demonstration data.",
+      "description": "Read bounded public demonstration records through the shared D1 authorization boundary.",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "inputSchema": {
         "type": "object",
         "properties": {
-          "namespace": { "type": "string", "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$" }
+          "namespace": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$",
+            "default": "public"
+          }
         },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "integer" },
+                "namespace": { "type": "string" },
+                "key": { "type": "string" },
+                "valueJson": { "type": "string" }
+              },
+              "required": ["id", "namespace", "key", "valueJson"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["results"],
         "additionalProperties": false
       }
     }

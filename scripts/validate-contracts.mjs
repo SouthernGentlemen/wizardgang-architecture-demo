@@ -15,7 +15,11 @@ if (!swagger.securityDefinitions?.BearerToken) failures.push('BearerToken securi
 const graphql = fs.readFileSync('contracts/graphql/schema.graphql', 'utf8');
 if (!graphql.includes('demoRecords')) failures.push('GraphQL schema is missing demoRecords');
 const mcp = JSON.parse(fs.readFileSync('contracts/mcp/tools.json', 'utf8'));
-if (mcp.status !== 'working' || !mcp.tools?.some((tool) => tool.name === 'list_demo_records')) failures.push('MCP manifest does not match the live tool');
+if (mcp.status !== 'working' || mcp.transport?.path !== '/mcp/server' || mcp.protocol?.current !== '2026-07-28') failures.push('MCP manifest does not match the live transport');
+for (const name of ['ping', 'list_demo_records']) {
+  const tool = mcp.tools?.find((candidate) => candidate.name === name);
+  if (!tool?.inputSchema || !tool?.outputSchema || tool.annotations?.readOnlyHint !== true) failures.push(`MCP manifest is missing the complete ${name} contract`);
+}
 const webhooks = JSON.parse(fs.readFileSync('contracts/webhooks/events.json', 'utf8'));
 if (webhooks.status !== 'working' || !webhooks.events?.some((event) => event.type === 'demo.record.changed')) failures.push('webhook contract does not match the live event');
 

@@ -79,12 +79,19 @@ describe('signed webhook receipt', () => {
 
 describe('controlled MCP interface', () => {
   it('discovers and invokes only the declared read tool', async () => {
-    const request = (method: string, params?: unknown) => new Request('https://demo.example/mcp', {
-      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }),
+    const message = async (response: Response) => {
+      const text = await response.text();
+      const payload = response.headers.get('content-type')?.includes('text/event-stream')
+        ? [...text.matchAll(/^data:\s*(.+)$/gm)].at(-1)?.[1]
+        : text;
+      return JSON.parse(payload || '{}');
+    };
+    const request = (method: string, params?: unknown) => new Request('https://demo.example/mcp/server', {
+      method: 'POST', headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }),
     });
     const listed = await mcpResponse(request('tools/list'), env());
-    expect(await listed.json()).toMatchObject({ result: { tools: [{ name: 'list_demo_records' }] } });
+    expect(await message(listed)).toMatchObject({ result: { tools: [{ name: 'ping' }, { name: 'list_demo_records' }] } });
     const called = await mcpResponse(request('tools/call', { name: 'list_demo_records', arguments: { namespace: 'public' } }), env());
-    expect(await called.json()).toMatchObject({ result: { isError: false } });
+    expect(await message(called)).toMatchObject({ result: { structuredContent: { results: [{ key: 'architecture', valueJson: '{"edge":true}' }] } } });
   });
 });

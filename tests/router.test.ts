@@ -117,6 +117,27 @@ describe('public route contract', () => {
     expect(html).not.toContain('visitor@example.test');
   });
 
+  it('separates the MCP guide from the interoperable Streamable HTTP endpoint', async () => {
+    const environment = env();
+    const page = await routeRequest(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'text/html' } }), environment);
+    const html = await page.text();
+    expect(page.status).toBe(200);
+    expect(html).toContain('https://demo.wizardgang.ai/mcp/server');
+    expect(html).toContain('claude mcp add --transport http wizardgang');
+    expect(html).toContain('codex mcp add wizardgang --url');
+    expect(html).toContain('MCP-Protocol-Version: 2026-07-28');
+    expect(html).toContain('Live MCP activity');
+    expect(html).toContain('MCP is another interface—not another trust boundary.');
+
+    const oldTransport = await routeRequest(new Request('https://demo.wizardgang.ai/mcp', { method: 'POST' }), environment);
+    expect(oldTransport.status).toBe(405);
+    expect(oldTransport.headers.get('allow')).toBe('GET');
+
+    const transportGet = await routeRequest(new Request('https://demo.wizardgang.ai/mcp/server'), environment);
+    expect(transportGet.status).toBe(405);
+    expect(await transportGet.text()).toContain('Method not allowed');
+  });
+
   it('renders the consolidated delivery lifecycle with one runnable version proof', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/git', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
@@ -234,6 +255,9 @@ describe('offline routing matrix', () => {
     expect(html.headers.get('location')).toContain('/offline?from=%2Fedge');
     expect(environment.DEMO_DB.queries.every((query) => query.includes('demo_control'))).toBe(true);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'text/html' } }), environment)).status).toBe(302);
+    const mcp = await routeRequest(new Request('https://demo.wizardgang.ai/mcp/server', { headers: { accept: 'application/json' } }), environment);
+    expect(mcp.status).toBe(503);
+    expect(await mcp.json()).toMatchObject({ status: 'offline' });
 
     const api = await routeRequest(new Request('https://demo.wizardgang.ai/v1/demo-records', { headers: { accept: 'application/json' } }), environment);
     expect(api.status).toBe(503);

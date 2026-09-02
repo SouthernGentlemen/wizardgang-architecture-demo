@@ -24,17 +24,20 @@
     "validate:scaffold": "node scripts/validate-scaffold.mjs"
   },
   "devDependencies": {
+    "@modelcontextprotocol/client": "^2.0.0",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4",
     "wrangler": "^4.33.1"
   },
   "dependencies": {
     "@graphql-yoga/graphiql": "^4.5.0",
+    "@modelcontextprotocol/server": "^2.0.0",
     "@node-saml/node-saml": "^5.1.0",
     "@xmldom/xmldom": "^0.8.15",
     "axe-core": "^4.13.0",
     "graphql": "^16.14.2",
     "graphql-yoga": "^5.22.0",
-    "jose": "^6.2.10"
+    "jose": "^6.2.10",
+    "zod": "^4.5.4"
   }
 }

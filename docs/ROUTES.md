@@ -97,7 +97,7 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | `/__api/webhooks/demo` | `POST` | Generate a session-scoped GitHub-shaped event | `src/api/webhooks.ts` |
 | `/__api/webhooks/events` | `GET` | Poll verified GitHub and current-session events | `src/api/webhooks.ts` |
 | `/__api/webhooks/reset` | `POST` | Reset current-session synthetic events | `src/api/webhooks.ts` |
-| `/mcp` | `POST` | Controlled MCP JSON-RPC interface | `src/api/mcp.ts` |
+| `/mcp/server` | `GET`, `POST`, `DELETE` | MCP 2026-07-28 and stateless legacy Streamable HTTP interface | `src/api/mcp.ts` |
 | `/__api/identity/oauth-pkce` | `POST` | OAuth PKCE material | `src/api/identity.ts` |
 | `/__api/identity/authorize` | `POST` | Application policy decision | `src/api/identity.ts` |
 | `/__api/identity/sso` | `GET` | SSO trust boundary | `src/api/identity.ts` |
@@ -150,6 +150,7 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | REST OpenAPI / Swagger 2.x contract | `contracts/openapi/swagger.json` |
 | GraphQL schema | `contracts/graphql/schema.graphql` |
 | MCP tool manifest | `contracts/mcp/tools.json` |
+| MCP interoperability test | `tests/mcp-client.test.ts` |
 | Webhook event contract | `contracts/webhooks/events.json` |
 | SAML metadata example | `contracts/identity/saml-metadata.example.xml` |
 | Synthetic billing policy | `config/billing-demo.json` |

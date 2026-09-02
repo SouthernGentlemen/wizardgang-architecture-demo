@@ -27,7 +27,6 @@ const demos = registryList.split(',').map((value) => value.trim()).filter(Boolea
     source: stringField(source, 'sourcePath'),
     status: stringField(source, 'status'),
   };
-  if (entry.route === '/mcp') entry.method = 'GET, POST';
   return entry;
 });
 
@@ -68,6 +67,7 @@ const machine = [
   { route: '/__api/webhooks/demo', title: 'Visitor Signed Webhook Action', group: 'Interfaces API', source: 'src/api/webhooks.ts', method: 'POST', machine: true, offline_behavior: '503' },
   { route: '/__api/webhooks/events', title: 'Verified Webhook Events', group: 'Interfaces API', source: 'src/api/webhooks.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/__api/webhooks/reset', title: 'Visitor Webhook Reset', group: 'Interfaces API', source: 'src/api/webhooks.ts', method: 'POST', machine: true, offline_behavior: '503' },
+  { route: '/mcp/server', title: 'MCP Streamable HTTP Server', group: 'Interfaces API', source: 'src/api/mcp.ts', method: 'GET, POST, DELETE', machine: true, offline_behavior: '503' },
   { route: '/__api/identity/oauth-pkce', title: 'OAuth PKCE Material', group: 'Interfaces API', source: 'src/api/identity.ts', method: 'POST', machine: true, offline_behavior: '503' },
   { route: '/__api/identity/authorize', title: 'Authorization Policy Evaluation', group: 'Interfaces API', source: 'src/api/identity.ts', method: 'POST', machine: true, offline_behavior: '503' },
   { route: '/__api/identity/sso', title: 'SSO Trust Boundary', group: 'Interfaces API', source: 'src/api/identity.ts', method: 'GET', machine: true, offline_behavior: '503' },
