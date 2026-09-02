@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { renderAccessibilityDemo } from '../src/demos/accessibility-page';
+import { renderD1Demo } from '../src/demos/d1-page';
 import { renderI18nDemo } from '../src/demos/i18n-page';
 import { renderR2Demo } from '../src/demos/r2-page';
 import { styles } from '../src/ui/styles';
@@ -10,6 +11,36 @@ const env = {
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
 } as Env;
+
+describe('D1 database console', () => {
+  it('leads with table navigation and progressively discloses relational CRUD controls', async () => {
+    const html = await renderD1Demo(env).text();
+    expect(html).toContain('Platform / D1');
+    expect(html).toContain('Cloudflare D1 Database');
+    expect(html).toContain('role="tablist"');
+    expect(html).toContain('Users <span><strong data-count="users">—</strong> / 10');
+    expect(html).toContain('Tasks <span><strong data-count="tasks">—</strong> / 25');
+    expect(html).toContain('data-form="users" hidden');
+    expect(html).toContain('data-form="tasks" hidden');
+    expect(html).toContain('demo_tasks.assignee_id');
+    expect(html).toContain('SQL Inspector');
+    expect(html).toContain('Implementation details');
+    expect(html).not.toContain('Platform / /d1');
+    expect(html).not.toContain('laboratory');
+    expect(html).not.toContain('data-refresh');
+  });
+
+  it('surfaces API failures and confirms relational and reset behavior', async () => {
+    const html = await renderD1Demo(env).text();
+    expect(html).toContain("email_already_exists: 'That email already exists.'");
+    expect(html).toContain("user_limit_reached: 'This sandbox has reached its 10-user limit.'");
+    expect(html).toContain("task_limit_reached: 'This sandbox has reached its 25-task limit.'");
+    expect(html).toContain("' become Unassigned.'");
+    expect(html).toContain('data-confirm-dialog');
+    expect(html).toContain('Reset sample data?');
+    expect(html).not.toContain('catch (_) {}');
+  });
+});
 
 describe('R2 storage workspace', () => {
   it('leads with the sandbox workflow and progressively discloses technical evidence', async () => {
