@@ -38,6 +38,7 @@ const machine = [
   { route: '/version', title: 'Version JSON', group: 'Operations', source: 'src/api/operations.ts', machine: true, offline_reachable: true },
   { route: '/og.png', title: 'WizardGang Social Preview', group: 'Navigation', source: 'src/ui/brand-assets.ts', method: 'GET, HEAD', machine: true, offline_reachable: true },
   { route: '/robots.txt', title: 'ChatGPT Crawler Policy', group: 'Operations', source: 'src/lib/crawler-control.ts', method: 'GET, HEAD', machine: true, offline_reachable: true },
+  { route: '/.well-known/security.txt', title: 'Vulnerability Reporting Contact', group: 'Delivery & Governance', source: 'src/api/security-policy.ts', method: 'GET, HEAD', machine: true, offline_reachable: true },
   { route: '/sitemap.xml', title: 'Public Route Sitemap', group: 'Navigation', source: 'src/api/sitemap.ts', machine: true },
   { route: '/__api/operations/logs', title: 'Operational Logs JSON', group: 'Operations', source: 'src/api/operations.ts', machine: true, offline_reachable: true },
   { route: '/__api/operations/cloudflare-usage', title: 'Sanitized Cloudflare Usage JSON', group: 'Operations', source: 'src/api/operations.ts', machine: true, offline_reachable: true },

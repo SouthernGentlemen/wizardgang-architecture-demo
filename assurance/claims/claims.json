@@ -63,6 +63,24 @@
       "posture": "partial",
       "frameworkReferences": ["ISO42001:A.6.2.4", "ISO42001:A.9.2"],
       "evidence": ["EVD-SRC-003", "EVD-TST-001", "EVD-SRC-001"]
+    },
+    {
+      "id": "CLM-SEC-007",
+      "area": "vulnerability-reporting",
+      "title": "Sensitive security reports have a private intake path",
+      "statement": "Researchers can discover a private reporting channel through human- and machine-readable public routes without disclosing vulnerabilities in public issues.",
+      "posture": "partial",
+      "frameworkReferences": ["ISO27001:A.6.8", "ISO27001:A.8.8"],
+      "evidence": ["EVD-DOC-003", "EVD-RUN-003", "EVD-RUN-004"]
+    },
+    {
+      "id": "CLM-GOV-001",
+      "area": "concern-intake",
+      "title": "Non-sensitive concerns enter controlled public work",
+      "statement": "Structured issue forms classify public bugs, features, accessibility, AI/MCP, governance, documentation, and other concerns while routing security matters privately.",
+      "posture": "partial",
+      "frameworkReferences": ["ISO42001:A.8.3", "ISO42001:A.8.4", "WCAG22:feedback-support"],
+      "evidence": ["EVD-RUN-005", "EVD-RUN-003"]
     }
   ]
 }

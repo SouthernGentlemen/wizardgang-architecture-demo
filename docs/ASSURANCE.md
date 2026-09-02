@@ -4,7 +4,7 @@ The `assurance/` directory is the canonical public, disclosure-safe data layer f
 
 `assurance/registry.json` indexes controlled datasets and their JSON Schema contracts. Counts and reverse relationships are derived by `src/assurance/registry.ts`; they are not duplicated in source JSON.
 
-The initial registry deliberately contains only the claims already presented by the governance implementation. Later controlled changes will add public risk, incident, exercise, advisory, and exhaustive compliance datasets without replacing the approved narrative governance records.
+The registry begins with the claims already presented by the governance implementation and the public concern/security-intake controls. Later controlled changes will add public risk, incident, exercise, advisory, and exhaustive compliance datasets without replacing the approved narrative governance records.
 
 ## Evidence rules
 
