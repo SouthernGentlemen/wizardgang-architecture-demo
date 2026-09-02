@@ -2,9 +2,10 @@
 
 **Reference:** WG-GOV-027  
 **Applies to:** ISO/IEC 27001:2022 information-security continuity, ICT readiness, supplier, backup/recovery, incident, availability, configuration, logging, access-control, and operational-resilience controls · ISO/IEC 42001:2023 operational continuity, supplier, data, security, human-oversight, AI/MCP, monitoring, incident, and change requirements  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** Operations Owner / Management-System Owner  
 **Approval:** Controlled pull request and merge  
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually, after a material outage/incident/recovery exercise, and after material architecture, supplier, data, security, or AI/MCP change
 
 ## 1. Purpose

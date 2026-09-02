@@ -2,11 +2,12 @@
 
 **Reference:** WG-REG-006  
 **Framework:** Integrated ISMS / AIMS support  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** Management-System Owner  
 **Assessment date:** 2026-09-02  
 **Initial review due:** 2026-12-02  
 **Approval:** Controlled pull request and merge
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 
 ## 1. Purpose
 

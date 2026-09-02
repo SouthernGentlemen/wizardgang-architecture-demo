@@ -2,9 +2,10 @@
 
 **Reference:** WG-GOV-024  
 **Applies to:** ISO/IEC 27001:2022 configuration management, change management, secure development, privileged access, logging, monitoring, supplier, backup/recovery, and operational controls · ISO/IEC 42001:2023 configuration, resource, supplier, data, AI/MCP authority, change, monitoring, and operational-control requirements  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** Technical System Owner / Change and Release Authority  
 **Approval:** Controlled pull request and merge  
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually, after material architecture/provider/configuration changes, and when drift or unauthorized configuration is detected
 
 ## 1. Purpose

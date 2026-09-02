@@ -2,9 +2,10 @@
 
 **Reference:** WG-GOV-022  
 **Applies to:** ISO/IEC 27001:2022 asset inventory, acceptable use, access control, identity/access lifecycle, privileged access, source-code access, supplier, configuration, and information-handling controls · ISO/IEC 42001:2023 resource, access, supplier, data, AI/MCP authority, and operational-control requirements where access to AI-related assets is relevant  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** Management-System Owner / Information Security Owner  
 **Approval:** Controlled pull request and merge  
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** Asset inventory at least annually and after material architecture/supplier changes; privileged and provider access at least quarterly and after material personnel, credential, incident, or authority changes
 
 ## 1. Purpose

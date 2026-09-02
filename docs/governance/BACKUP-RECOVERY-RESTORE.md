@@ -2,9 +2,10 @@
 
 **Reference:** WG-GOV-018  
 **Applies to:** ISO/IEC 27001:2022 backup, continuity, recovery, operational resilience, and information-protection controls · ISO/IEC 42001:2023 operational continuity, data, logging, supplier, and AI-boundary requirements where recovery affects the AIMS  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** Operations Owner / Management-System Owner  
 **Approval:** Controlled pull request and merge  
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually, after a material data/storage/runtime/supplier change, after a failed recovery test, and after an incident that invokes recovery
 
 ## 1. Purpose

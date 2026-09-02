@@ -2,9 +2,10 @@
 
 **Reference:** WG-POL-001  
 **Applies to:** ISO/IEC 27001:2022 §5.2  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** WizardGang  
 **Approval:** Controlled pull request and merge  
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually and after material changes to scope, risk, architecture, suppliers, incidents, or applicable requirements
 
 ## 1. Purpose

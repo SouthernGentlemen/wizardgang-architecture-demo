@@ -2,9 +2,10 @@
 
 **Reference:** WG-GOV-026  
 **Applies to:** ISO/IEC 27001:2022 secure development lifecycle, application security requirements, secure architecture and engineering, secure coding, security testing, outsourced development, development/test/production separation, change management, vulnerability management, logging/evidence, and related Annex A controls · ISO/IEC 42001:2023 AI-system lifecycle, verification/validation, data, security, supplier, human oversight, change, evaluation, monitoring, and operational-control requirements  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** Technical System Owner / Information Security Owner  
 **Approval:** Controlled pull request and merge  
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually and after material architecture, identity, persistence, deployment, cryptography, AI/MCP, supplier, or security-testing changes
 
 ## 1. Purpose

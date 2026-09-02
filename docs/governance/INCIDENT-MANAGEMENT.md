@@ -2,9 +2,10 @@
 
 **Reference:** WG-GOV-017  
 **Applies to:** ISO/IEC 27001:2022 incident-management and improvement requirements · ISO/IEC 42001:2023 AI incident/concern and improvement requirements  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** Management-System Owner / Incident and Corrective-Action Owner  
 **Approval:** Controlled pull request and merge  
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually, after every material incident or exercise, and after material scope, supplier, architecture, security, data, or AI/MCP change
 
 ## 1. Purpose

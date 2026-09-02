@@ -2,11 +2,12 @@
 
 **Reference:** WG-REG-004  
 **Framework:** Integrated ISMS / AIMS  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** Incident and Corrective-Action Owner / WizardGang  
 **Baseline date:** 2026-09-02  
 **Review due:** 2026-12-02, then at least quarterly and after every material incident or exercise  
 **Approval:** Controlled pull request and merge
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 
 ## 1. Purpose
 
