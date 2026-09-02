@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.9.0 — 2026-09-02
+
 - Added canonical `/compliance` assurance ownership with explicit aligned/supporting and uncertified posture statements, links to existing evidence owners, and a separate dashboard entry point.
 - Consolidated global navigation to Dashboard, Main site, and Theme; reduced the footer to route-contract metadata and public source.
 - Added an automated route/link/fragment/source/sitemap contract across every registered public page.
