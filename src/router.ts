@@ -3,7 +3,7 @@ import { demos, demosByRoute } from './demos/registry';
 import { renderDemo, renderIndex, renderNotFound } from './ui/page';
 import { sitemapResponse } from './api/sitemap';
 import { renderAdmin, renderOffline } from './ui/admin';
-import { healthResponse, logsResponse, versionResponse } from './api/operations';
+import { cloudflareUsageResponse, healthResponse, logsResponse, versionResponse } from './api/operations';
 import { renderLogsDemo } from './demos/logs';
 import { requireAdmin } from './lib/admin-auth';
 import { requireSameOrigin } from './lib/admin-auth';
@@ -70,6 +70,7 @@ export function bypassOfflineGate(path: string): boolean {
     || path === '/health'
     || path === '/version'
     || path === '/__api/operations/logs'
+    || path === '/__api/operations/cloudflare-usage'
     || path === '/__api/operations/billing'
     || path === OPERATIONS_PREFIX
     || path.startsWith(`${OPERATIONS_PREFIX}/`);
@@ -166,6 +167,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (request.method === 'GET' && path === '/version') return versionResponse(env);
   if ((request.method === 'GET' || request.method === 'HEAD') && path === '/og.png') return socialCardResponse(request);
   if (request.method === 'GET' && path === '/__api/operations/logs') return logsResponse(request, env);
+  if (path === '/__api/operations/cloudflare-usage') return cloudflareUsageResponse(request, env);
 
   const control = await getDemoControl(env);
   if (request.method === 'GET' && path === '/offline') {

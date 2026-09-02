@@ -12,6 +12,7 @@ const requiredRoutes = [
   '/governance', '/dashboard', '/dashboard/uptime', '/dashboard/docs',
   '/dashboard/logs', '/dashboard/billing', '/admin', '/offline', '/health', '/version',
   '/sitemap.xml', '/og.png', '/robots.txt', '/__api/operations/logs',
+  '/__api/operations/cloudflare-usage',
   '/__api/edge/inspect', '/__api/workers/compute', '/__api/durable/counter',
   '/__api/d1/users', '/__api/d1/users/{id}', '/__api/d1/tasks', '/__api/d1/tasks/{id}', '/__api/d1/reset',
   '/__api/r2/files', '/__api/r2/files/{id}', '/__api/r2/reset',
@@ -72,6 +73,7 @@ for (const requiredFile of [
   'migrations/0004_application_logs.sql',
   'migrations/0009_crawler_control.sql',
   'migrations/0010_identity_sessions.sql',
+  'migrations/0011_cloudflare_usage.sql',
   'src/demos/identity-page.ts',
   'src/lib/identity-session.ts',
   'KICKOFF-SOL-VERY-HIGH.md'
@@ -90,7 +92,7 @@ function walk(dir) {
 walk(root);
 
 const router = fs.readFileSync(path.join(root, 'src/router.ts'), 'utf8');
-for (const token of ['/dashboard', '/dashboard/logs', '/__api/operations/logs', '/admin', '/offline', '/health', '/version', '/robots.txt', 'offlineApiResponse', 'wantsHtml']) {
+for (const token of ['/dashboard', '/dashboard/logs', '/__api/operations/logs', '/__api/operations/cloudflare-usage', '/admin', '/offline', '/health', '/version', '/robots.txt', 'offlineApiResponse', 'wantsHtml']) {
   if (!router.includes(token)) failures.push(`router missing operations/admin invariant: ${token}`);
 }
 

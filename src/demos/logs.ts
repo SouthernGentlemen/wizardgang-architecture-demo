@@ -3,6 +3,7 @@ import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
 import { recentApplicationLogs } from '../lib/logs';
 import { referenceDetails, shell } from '../ui/page';
+import { operationsNavigation } from './operations-pages';
 
 const demo: DemoDefinition = {
   id: 'logs',
@@ -52,8 +53,8 @@ export async function renderLogsDemo(request: Request, env: Env): Promise<Respon
 
   const body = `
 <section class="page-header">
-  <div class="eyebrow">Operations / /dashboard/logs</div>
-  <h1>Log Viewer</h1>
+  <div class="eyebrow">OPERATIONS / LOGS</div>
+  <h1>Application Logs</h1>
   <p class="lede">${escapeHtml(demo.summary)}</p>
   <div class="page-tools">
     <a class="text-link" href="${escapeHtml(sourceUrl(env, demo.sourcePath))}">Route source</a>
@@ -64,6 +65,7 @@ export async function renderLogsDemo(request: Request, env: Env): Promise<Respon
     ])}
   </div>
 </section>
+${operationsNavigation('/dashboard/logs')}
 <section class="panel" aria-labelledby="filters-heading">
   <h2 id="filters-heading">Filter logs</h2>
   <form method="get" class="filters">
@@ -98,7 +100,7 @@ export async function renderLogsDemo(request: Request, env: Env): Promise<Respon
   <p><a href="/__api/operations/logs?limit=${limit}${level ? `&level=${encodeURIComponent(level)}` : ''}${source ? `&source=${encodeURIComponent(source)}` : ''}${requestId ? `&requestId=${encodeURIComponent(requestId)}` : ''}">View JSON</a></p>
 </section>`;
 
-  return shell(env, demo.title, body, { cacheControl: 'no-store' });
+  return shell(env, demo.title, body, { cacheControl: 'no-store', activeRoute: '/dashboard/logs' });
 }
 
 export default demo;

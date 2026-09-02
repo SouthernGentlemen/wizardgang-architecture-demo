@@ -1,7 +1,8 @@
 import type { Env } from '../types';
 import { getDemoControl } from '../lib/demo-control';
 import { recordApplicationLog, recentApplicationLogs } from '../lib/logs';
-import { json } from '../lib/http';
+import { json, methodNotAllowed } from '../lib/http';
+import { latestCloudflareUsage } from '../lib/cloudflare-usage';
 
 type Readiness = 'operational' | 'unavailable' | 'unconfigured';
 
@@ -105,6 +106,7 @@ export function versionResponse(env: Env): Response {
     branch: env.GITHUB_BRANCH,
     repository: env.GITHUB_REPO_URL,
     environment: env.DEPLOYMENT_ENVIRONMENT || 'local',
+    ci: env.DEPLOYMENT_CI_STATUS || null,
   }, { headers: { 'cache-control': 'no-store' } });
 }
 
@@ -122,4 +124,11 @@ export async function logsResponse(request: Request, env: Env): Promise<Response
     requestId,
   });
   return json({ results }, { headers: { 'cache-control': 'no-store' } });
+}
+
+export async function cloudflareUsageResponse(request: Request, env: Env): Promise<Response> {
+  if (request.method !== 'GET') return methodNotAllowed(['GET']);
+  return json(await latestCloudflareUsage(env), {
+    headers: { 'cache-control': 'public, max-age=60, stale-if-error=300' },
+  });
 }

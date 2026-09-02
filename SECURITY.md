@@ -13,7 +13,9 @@ This is a public architecture demonstration. Public source is intentional; secre
 
 Use Cloudflare/GitHub managed secret stores for production and ignored `.dev.vars` for local-only admin placeholders.
 
-The current core Worker secrets are `DEMO_ADMIN_USER`, `DEMO_ADMIN_PASSWORD`, `DEMO_API_TOKEN`, `WEBHOOK_DEMO_SECRET`, `GITHUB_WEBHOOK_SECRET`, `GITHUB_DEMO_TOKEN`, `DEMO_SESSION_SECRET`, and `IDENTITY_SESSION_SECRET`; provider credentials and the SAML certificate are listed in `docs/IDENTITY.md`. `GITHUB_READ_TOKEN` is an optional read-only GitHub API token. `GITHUB_DEMO_TOKEN` is restricted to Actions write on this repository and can dispatch only the checked-in live-demo workflow; it cannot create branches, commits, pull requests, tags, or releases. Values are never returned by health, version, logs, evidence, or source-link surfaces.
+The current core Worker secrets are `DEMO_ADMIN_USER`, `DEMO_ADMIN_PASSWORD`, `DEMO_API_TOKEN`, `WEBHOOK_DEMO_SECRET`, `GITHUB_WEBHOOK_SECRET`, `GITHUB_DEMO_TOKEN`, `DEMO_SESSION_SECRET`, `IDENTITY_SESSION_SECRET`, and the optional read-only `CLOUDFLARE_API_TOKEN`; provider credentials and the SAML certificate are listed in `docs/IDENTITY.md`. `GITHUB_READ_TOKEN` is an optional read-only GitHub API token. `GITHUB_DEMO_TOKEN` is restricted to Actions write on this repository and can dispatch only the checked-in live-demo workflow; it cannot create branches, commits, pull requests, tags, or releases. Values are never returned by health, version, logs, usage, evidence, or source-link surfaces.
+
+Cloudflare usage collection uses a dedicated minimum-permission token with Analytics Read and, only when needed, Billing Read. The public usage API returns normalized product metrics and freshness only. It excludes account/resource identifiers, account names, invoice and subscription identifiers, tokens, payment data, and raw upstream error text. Stored snapshots follow the same boundary.
 
 ## Demo administration
 

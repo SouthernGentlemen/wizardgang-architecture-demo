@@ -3,12 +3,12 @@ import type { DemoDefinition } from '../types';
 const demo: DemoDefinition = {
   id: 'uptime',
   route: '/dashboard/uptime',
-  title: 'Uptime',
+  title: 'Availability',
   group: 'Operations',
   sourcePath: 'src/demos/uptime.ts',
-  summary: 'Service availability history calculated from timestamped public health checks stored in demo-blob.',
+  summary: 'Service availability calculated from five-minute scheduled health checks with planned maintenance separated from unexpected failure.',
   proves: [
-    'Timestamped service checks',
+    'Cloudflare Cron generates timestamped service checks without depending on visitor traffic',
     'Availability calculation over a defined window',
     'Operational history retained in D1'
   ],

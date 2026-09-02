@@ -83,7 +83,14 @@ export interface Env {
   DEPLOYED_VERSION?: string;
   DEPLOYED_SHA?: string;
   DEPLOYMENT_ENVIRONMENT?: string;
+  DEPLOYMENT_CI_STATUS?: string;
   BILLING_DEMO_MONTHLY_BUDGET_USD?: string;
+  CLOUDFLARE_ACCOUNT_ID?: string;
+  CLOUDFLARE_API_TOKEN?: string;
+  CLOUDFLARE_WORKER_NAME?: string;
+  CLOUDFLARE_R2_BUCKET?: string;
+  CLOUDFLARE_D1_DATABASE_ID?: string;
+  CLOUDFLARE_DO_NAMESPACE?: string;
 }
 
 export type DemoStatus = 'working' | 'planned';

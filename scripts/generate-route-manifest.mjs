@@ -40,6 +40,7 @@ const machine = [
   { route: '/robots.txt', title: 'ChatGPT Crawler Policy', group: 'Operations', source: 'src/lib/crawler-control.ts', method: 'GET, HEAD', machine: true, offline_reachable: true },
   { route: '/sitemap.xml', title: 'Public Route Sitemap', group: 'Navigation', source: 'src/api/sitemap.ts', machine: true },
   { route: '/__api/operations/logs', title: 'Operational Logs JSON', group: 'Operations', source: 'src/api/operations.ts', machine: true, offline_reachable: true },
+  { route: '/__api/operations/cloudflare-usage', title: 'Sanitized Cloudflare Usage JSON', group: 'Operations', source: 'src/api/operations.ts', machine: true, offline_reachable: true },
   { route: '/__api/edge/inspect', title: 'Edge Context JSON', group: 'Platform API', source: 'src/api/runtime.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/__api/workers/compute', title: 'Stateless Worker Compute', group: 'Platform API', source: 'src/api/runtime.ts', method: 'POST', machine: true, offline_behavior: '503' },
   { route: '/__api/durable/counter', title: 'Durable Object Counter', group: 'Platform API', source: 'src/api/durable.ts', method: 'GET, POST', machine: true, offline_behavior: '503' },

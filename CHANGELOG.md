@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Rebuilt `/dashboard` as a read-only operations center with top-level system, availability, Cloudflare usage, and deployment KPIs; dependency latency; recent activity; policy state; and shared Operations navigation.
+- Added five-minute Cron health collection, fifteen-minute server-side Cloudflare analytics snapshots, hourly progressive billable-usage attempts, sanitized D1 caching, and a public-safe usage JSON endpoint.
+- Recast `/dashboard/billing` as Cloudflare Usage & Cost, keeping live/billed/estimated evidence explicitly separate from the controlled cost-guardrail simulator.
 - Split the application interface showcase into focused `/api`, `/graphql`, and `/webhooks` routes while retaining `/identity` and `/mcp` as distinct trust boundaries.
 - Rebuilt the REST explorer from the OpenAPI 2.0 contract with five resource operations, four-language examples, response diagnostics, request-linked logs, and progressive schema disclosure.
 - Added ten-minute identity-derived bearer tokens, visitor-isolated record namespaces, normalized REST and GraphQL authorization, create-only POST semantics, and replace-or-create PUT semantics.

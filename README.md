@@ -15,7 +15,7 @@ Nineteen public HTML routes organize the architecture into five layers. Each lay
 - **Interfaces:** focused REST/OpenAPI, GraphQL/GraphiQL, signed-webhook, identity, and MCP routes converging on explicit application policies and shared D1/logging boundaries.
 - **Standards:** English, Spanish, French, German, Japanese, and Arabic resources; instant switching and `Intl` inspection; RTL rendering; and accessible/broken comparison labs with locally bundled axe-core analysis.
 - **Delivery and governance:** live GitHub branch/commit/pull-request/Actions/tag/release evidence, runtime traceability, CI and tag-only deployment workflows, security-control mapping, and an executable MCP boundary evaluation.
-- **Operations:** dependency-aware health, timestamped availability, live documentation, sanitized D1 logs, synthetic billing thresholds, observable graceful degradation, and authenticated D1-backed demo control.
+- **Operations:** five-minute scheduled dependency health, measured availability, live documentation, sanitized D1 logs, cached Cloudflare usage telemetry, progressive billable-cost evidence, observable graceful degradation, and authenticated D1-backed demo control.
 
 Core invariants:
 
@@ -51,11 +51,11 @@ The demo uses the `wizardgang.ai` design tokens: dark by default, with a light t
 /robots.txt  dynamic ChatGPT crawler policy
 ```
 
-The dashboard’s `#health` card carries the detailed per-service snapshot and checked timestamp formerly shown at `/dashboard/health`.
+The read-only dashboard’s `#health` section carries per-service status and latency. Cloudflare Cron stores a health observation every five minutes, refreshes sanitized account telemetry every fifteen minutes, and attempts restricted billable usage hourly. `/dashboard/billing` keeps that live usage evidence visually and behaviorally separate from the synthetic cost-guardrail simulator.
 
 `/admin` can intentionally take ordinary demos online or offline. Offline browser navigation redirects to `/offline?from=<route>` and displays **“Oops! demo is down.”** API, non-HTML, and write requests return JSON `503`. Dashboard, status, logs, synthetic billing, offline, and authenticated admin surfaces remain reachable. Control failures fail closed.
 
-The same protected admin page controls ChatGPT web access. The switch updates a D1-backed `/robots.txt` policy and a server-side gate for `OAI-SearchBot` and `ChatGPT-User`, so disabling access also covers user-requested ChatGPT fetches that may not follow robots rules. `GPTBot` remains blocked in either state; this control never opts the demo into foundation-model training. The public dashboard shows the current state without exposing the protected mutation.
+The same protected admin page controls ChatGPT web access. The switch updates a D1-backed `/robots.txt` policy and a server-side gate for `OAI-SearchBot` and `ChatGPT-User`, so disabling access also covers user-requested ChatGPT fetches that may not follow robots rules. `GPTBot` remains blocked in either state; this control never opts the demo into foundation-model training. The public dashboard reports the current state without rendering a mutation form.
 
 ## Shared D1 backend
 
@@ -65,6 +65,7 @@ The numbered migrations establish:
 - `demo_records` — versioned REST/GraphQL/MCP demonstration records, seeded so public reads return real data;
 - `service_health_checks` — timestamped availability history;
 - `usage_snapshots` — controlled synthetic usage/cost state;
+- `cloudflare_usage_snapshots` — cached, normalized public-safe Cloudflare telemetry;
 - `demo_control` — online/offline state and public message;
 - `crawler_control` — ChatGPT search and user-requested web access state;
 - `application_logs` — bounded public-safe diagnostics;

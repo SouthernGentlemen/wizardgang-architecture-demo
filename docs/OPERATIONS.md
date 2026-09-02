@@ -17,27 +17,29 @@ This document makes the operational surface a first-class part of the architectu
 /version     machine-readable release/build metadata
 /robots.txt  dynamic ChatGPT crawler policy
 /__api/operations/logs  machine-readable public-safe logs
+/__api/operations/cloudflare-usage  sanitized cached usage snapshot
 ```
 
 The operational routes remain reachable while ordinary demos are intentionally offline.
 
 ## Dashboard
 
-`/dashboard` is the public operational proof surface. It should answer six questions without requiring access to private infrastructure:
+`/dashboard` is the public, read-only operational center. It answers these questions without exposing private infrastructure:
 
 1. Is the demo intentionally online or offline?
 2. Is the Worker healthy and are its dependencies ready?
 3. What availability history has been observed?
 4. What version/source/docs are running?
 5. What recent application activity can be safely inspected?
-6. What would usage, estimated cost, thresholds, and degradation look like?
+6. What Cloudflare resources are being consumed, and how fresh is that data?
 7. Is ChatGPT search and user-requested web access currently enabled?
+8. What happens when cost guardrails enter warning or degraded state?
 
-The dashboard should link directly to the source files, migrations, tests, GitHub Actions, releases, and route documentation that produce the displayed state.
+All mutation controls live under authenticated `/admin` or an explicitly labeled simulator. The overview reports demo and crawler policy state but renders no working administration forms. It links directly to the source files, migrations, tests, GitHub Actions, releases, and route documentation that produce the displayed state.
 
-## Uptime
+## Availability
 
-`/dashboard/uptime` uses `service_health_checks` in `demo-blob`.
+`/dashboard/uptime` uses `service_health_checks` in `demo-blob`. A Cloudflare Cron Trigger invokes the Worker every five minutes; `scheduled()` calls `collectHealth(env, true)`, so observations exist independently of dashboard traffic or calls to `/health`.
 
 Show:
 
@@ -50,6 +52,14 @@ Show:
 - distinction between an intentional admin offline window and an unexpected dependency failure.
 
 Do not imply an SLA unless one is explicitly defined.
+
+Collection cadence:
+
+```text
+*/5 * * * *  -> dependency health and availability observation
+every 15 min -> Cloudflare analytics refresh
+hourly       -> analytics refresh plus restricted billable-usage attempt
+```
 
 ## Health
 
@@ -107,9 +117,29 @@ Public log safety is mandatory. Do not log or render passwords, authorization he
 
 `GET /__api/operations/logs` exposes the same sanitized data as JSON with bounded `limit`, `level`, and `source` filters. Both the human and machine log surfaces remain reachable during an intentional demo-offline window so the outage/maintenance state can still be inspected.
 
-## Billing and usage
+## Cloudflare usage and cost
 
-`/dashboard/billing` is a controlled synthetic demonstration. It must never surface real invoices, payment data, Cloudflare account identifiers, API tokens, or other private billing metadata.
+`/dashboard/billing` presents two deliberately separate layers:
+
+1. Sanitized, cached Cloudflare usage telemetry for the configured Worker, D1 database, R2 bucket, and Durable Objects namespace.
+2. The controlled `normal -> warning -> degraded` application-behavior simulator.
+
+The Worker queries Cloudflare server-side and returns only normalized metrics through `GET /__api/operations/cloudflare-usage`. The browser never receives an API token, account identifier, resource identifier, invoice identifier, account name, customer profile, subscription identifier, or payment data. `cloudflare_usage_snapshots` retains the normalized JSON snapshot in D1 so dashboard requests do not call Cloudflare directly.
+
+GraphQL Analytics is labeled **live usage**, never billed cost. When the restricted account billable-usage API returns populated `BilledCost` values, the UI labels the total **billed** and treats it as authoritative usage-based overage. If access or cost fields are unavailable, the UI uses a clearly labeled **estimated** overage from published Workers Paid, D1, R2 Standard, and Durable Objects request rates. Current storage bytes serve only as a GB-month proxy in that fallback; fixed plan fees and unsupported CPU/duration dimensions are excluded and disclosed. Missing credentials or an unavailable dataset produces an honest setup/partial/unavailable state; illustrative values are never substituted.
+
+Runtime configuration:
+
+```text
+CLOUDFLARE_ACCOUNT_ID
+CLOUDFLARE_API_TOKEN       secret; minimum Analytics Read and optional Billing Read
+CLOUDFLARE_WORKER_NAME
+CLOUDFLARE_D1_DATABASE_ID
+CLOUDFLARE_R2_BUCKET
+CLOUDFLARE_DO_NAMESPACE
+```
+
+The account and resource identifiers are environment-owned inputs even though the API response never displays them. Store `CLOUDFLARE_API_TOKEN` as an encrypted Worker secret with `wrangler secret put CLOUDFLARE_API_TOKEN` (or the Cloudflare dashboard), never as a plaintext Wrangler variable. Use a dedicated read-only token rather than the deployment token; the deploy workflow supplies only the non-secret resource identifiers.
 
 Use `usage_snapshots` to demonstrate:
 
@@ -123,7 +153,7 @@ Suggested default demonstration policy:
 - **Warning:** 70% to < 90%.
 - **Degraded:** >= 90%.
 
-The live controlled scenario endpoint is `/__api/operations/billing`. In degraded state it pauses the optional stateless Worker compute action with a structured response while status, documentation, logs, admin, and health remain available. This state is synthetic and never reads a Cloudflare billing account.
+The live controlled scenario endpoint is `/__api/operations/billing`. In degraded state it pauses the optional stateless Worker compute action with a structured response while status, documentation, logs, admin, and health remain available. Selecting a scenario never writes Cloudflare account configuration or changes real billing thresholds.
 
 The UI should show which optional behaviors would be reduced or disabled as cost rises, while keeping critical status, admin, and health routes available. The policy is a demonstration of graceful degradation, not a real billing-control integration unless explicitly wired later.
 
@@ -161,6 +191,7 @@ For local development the implementation supports HTTP Basic credentials from `.
 | Demo write / POST | normal action | JSON `503` |
 | `/dashboard/*` | available | available |
 | `/__api/operations/logs` | available | available |
+| `/__api/operations/cloudflare-usage` | available | available |
 | `/health` | `200` if healthy | reachable; reports intentional offline state, generally `503` overall |
 | `/version` | available | available |
 | `/admin` | protected | protected + available |
@@ -198,6 +229,8 @@ Crawler transitions use the same safe evidence boundaries with event type `chatg
 | Log viewer | `src/demos/logs.ts` |
 | Log persistence / redaction | `src/lib/logs.ts` |
 | Billing metadata | `src/demos/billing.ts` |
+| Cloudflare usage collection and normalization | `src/lib/cloudflare-usage.ts` |
+| Scheduled collection | `src/index.ts`, `wrangler.jsonc` |
 | Machine health/version | `src/api/operations.ts` |
 | Admin UI/offline page | `src/ui/admin.ts` |
 | Admin authentication | `src/lib/admin-auth.ts` |
@@ -205,6 +238,7 @@ Crawler transitions use the same safe evidence boundaries with event type `chatg
 | ChatGPT crawler state, robots policy, and request classification | `src/lib/crawler-control.ts` |
 | Shared event audit | `src/lib/audit.ts` |
 | Operations schema | `migrations/0002_operations_dashboard.sql` |
+| Cloudflare usage cache schema | `migrations/0011_cloudflare_usage.sql` |
 | Application log schema | `migrations/0004_application_logs.sql` |
 | Control schema | `migrations/0003_demo_control.sql` |
 | Crawler-control schema | `migrations/0009_crawler_control.sql` |

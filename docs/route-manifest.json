@@ -107,14 +107,14 @@
   },
   {
     "route": "/dashboard",
-    "title": "Operations Dashboard",
+    "title": "System Operations",
     "group": "Operations",
     "source": "src/demos/dashboard.ts",
     "status": "working"
   },
   {
     "route": "/dashboard/uptime",
-    "title": "Uptime",
+    "title": "Availability",
     "group": "Operations",
     "source": "src/demos/uptime.ts",
     "status": "working"
@@ -135,7 +135,7 @@
   },
   {
     "route": "/dashboard/billing",
-    "title": "Billing & Usage",
+    "title": "Cloudflare Usage & Cost",
     "group": "Operations",
     "source": "src/demos/billing.ts",
     "status": "working"
@@ -204,6 +204,15 @@
   {
     "route": "/__api/operations/logs",
     "title": "Operational Logs JSON",
+    "group": "Operations",
+    "source": "src/api/operations.ts",
+    "machine": true,
+    "offline_reachable": true,
+    "status": "working"
+  },
+  {
+    "route": "/__api/operations/cloudflare-usage",
+    "title": "Sanitized Cloudflare Usage JSON",
     "group": "Operations",
     "source": "src/api/operations.ts",
     "machine": true,
