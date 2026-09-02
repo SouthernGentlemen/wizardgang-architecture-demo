@@ -1,6 +1,6 @@
 # Operational Risk Assessment, Treatment, and AI Impact Reassessment
 
-**Reference:** WG-GOV-010  
+**Reference:** WG-GOV-011  
 **Applies to:** ISO/IEC 27001:2022 §8.2–§8.3 · ISO/IEC 42001:2023 §8.2–§8.4  
 **Status:** Proposed  
 **Owner:** WizardGang  

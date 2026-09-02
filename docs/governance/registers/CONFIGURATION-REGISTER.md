@@ -1,6 +1,6 @@
 # Configuration Register
 
-**Reference:** WG-REG-010  
+**Reference:** WG-REG-011  
 **Framework:** Integrated ISMS / AIMS configuration governance  
 **Status:** Proposed  
 **Owner:** Technical System Owner / Change and Release Authority  

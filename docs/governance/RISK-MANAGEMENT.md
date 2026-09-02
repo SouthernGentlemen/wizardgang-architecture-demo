@@ -1,6 +1,6 @@
 # Risk Management Methodology
 
-**Reference:** WG-GOV-008  
+**Reference:** WG-GOV-007  
 **Applies to:** ISO/IEC 27001:2022 §6.1.1–§6.1.3 · ISO/IEC 42001:2023 §6.1.1–§6.1.4  
 **Status:** Proposed  
 **Owner:** WizardGang  

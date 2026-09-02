@@ -1,6 +1,6 @@
 # Monitoring, Measurement, Analysis, and Evaluation
 
-**Reference:** WG-GOV-010  
+**Reference:** WG-GOV-012  
 **Applies to:** ISO/IEC 27001:2022 §9.1 · ISO/IEC 42001:2023 §9.1  
 **Status:** Proposed  
 **Owner:** WizardGang  

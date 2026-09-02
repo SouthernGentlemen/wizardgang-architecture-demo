@@ -1,6 +1,6 @@
 # Configuration Baseline and Drift Management
 
-**Reference:** WG-GOV-023  
+**Reference:** WG-GOV-024  
 **Applies to:** ISO/IEC 27001:2022 configuration management, change management, secure development, privileged access, logging, monitoring, supplier, backup/recovery, and operational controls · ISO/IEC 42001:2023 configuration, resource, supplier, data, AI/MCP authority, change, monitoring, and operational-control requirements  
 **Status:** Proposed  
 **Owner:** Technical System Owner / Change and Release Authority  

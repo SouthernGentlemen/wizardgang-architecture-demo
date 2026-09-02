@@ -1,6 +1,6 @@
 # Security Engineering and Testing Register
 
-**Reference:** WG-REG-010  
+**Reference:** WG-REG-013  
 **Parent:** `docs/governance/SECURE-ENGINEERING-TESTING.md`  
 **Status:** Proposed  
 **Owner:** Technical System Owner / Information Security Owner  

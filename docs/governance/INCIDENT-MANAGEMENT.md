@@ -1,6 +1,6 @@
 # Incident Management and Response
 
-**Reference:** WG-GOV-016  
+**Reference:** WG-GOV-017  
 **Applies to:** ISO/IEC 27001:2022 incident-management and improvement requirements · ISO/IEC 42001:2023 AI incident/concern and improvement requirements  
 **Status:** Proposed  
 **Owner:** Management-System Owner / Incident and Corrective-Action Owner  

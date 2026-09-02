@@ -1,6 +1,6 @@
 # Backup, Recovery, and Restore Assurance
 
-**Reference:** WG-GOV-017  
+**Reference:** WG-GOV-018  
 **Applies to:** ISO/IEC 27001:2022 backup, continuity, recovery, operational resilience, and information-protection controls · ISO/IEC 42001:2023 operational continuity, data, logging, supplier, and AI-boundary requirements where recovery affects the AIMS  
 **Status:** Proposed  
 **Owner:** Operations Owner / Management-System Owner  

@@ -1,6 +1,6 @@
 # Management-System Control and Document Index
 
-**Reference:** WG-GOV-027  
+**Reference:** WG-GOV-028  
 **Framework:** Integrated ISMS / AIMS / WCAG engineering-assurance system  
 **Status:** Proposed  
 **Owner:** Management-System Owner / Evidence Custodian  
@@ -58,20 +58,20 @@ A document moving to `Approved` does **not** by itself make the associated contr
 
 ## 4. Record Identity and Metadata Rule
 
-The authoritative change identity for this governance build is the permanent sequential **`DEMO-###` controlled commit** plus the repository file path/history.
+`DEMO-104` normalizes management-system metadata into unique canonical reference namespaces.
 
-Several management-system documents created during the initial build contain historical `WG-GOV-*` reference-number overlap or drift. Those metadata references are useful labels but must **not** currently be treated as globally unique database keys.
+The authoritative identity model is now:
 
-Until normalization is completed:
+1. repository path identifies the controlled document or register;
+2. `DEMO-###` history identifies the controlled change that introduced or materially changed it;
+3. the `**Reference:**` header provides a unique stable management-system identifier;
+4. `docs/governance/REFERENCE-REGISTRY.json` is the machine-readable inventory of those identifiers;
+5. SoA control references remain authoritative for individual ISO Annex A rows;
+6. the future exhaustive compliance registry remains authoritative for WCAG criteria and ISO clause/checklist rows.
 
-1. repository path is authoritative for the document;
-2. `DEMO-###` history is authoritative for the controlled change;
-3. document title identifies the governed subject;
-4. SoA control references remain authoritative for ISO Annex A rows;
-5. checklist references remain authoritative for WCAG criteria/ISO clauses in the future compliance registry;
-6. duplicate `WG-GOV-*` or other metadata IDs must not be used to infer that two records are the same document.
+Reference namespaces are separated by record type: `WG-GOV-*`, `WG-POL-*`, `WG-REG-*`, `WG-OBJ-*`, `WG-SOA-*`, and `WG-AIA-*`.
 
-Reference normalization is a consistency cleanup task, not a reason to rewrite the substantive governance baseline.
+CI validates reference uniqueness, registry/header agreement, governed-file existence, and local file links in this control/document index. A duplicate or mismatched canonical reference is a repository validation failure rather than a tolerated metadata ambiguity.
 
 ## 5. Core Governance Document Inventory
 
@@ -442,7 +442,7 @@ No continuity event, incident, or convenience requirement overrides this boundar
 
 This index intentionally preserves the following known gaps for cleanup or operation:
 
-1. `WG-GOV-*` reference metadata is not yet guaranteed globally unique across the initial governance document set.
+1. Canonical governance/register metadata references are unique and CI-validated; future drift is treated as a validation failure.
 2. The exhaustive 280-row WCAG/ISO public compliance registry still needs to be restored and synchronized with the new evidence baseline.
 3. Current SoA statuses were established before all governance documents DEMO-082 through DEMO-103 existed and require a controlled evidence/status refresh.
 4. GitHub ruleset/classic branch-protection enforcement remains unverified through the available integration.
@@ -464,7 +464,7 @@ These gaps are not reasons to invent new evidence or change a row to `Met`.
 
 After DEMO-103, the recommended controlled work sequence is:
 
-1. **Governance metadata consistency pass** — normalize duplicate/drifting `WG-GOV-*` / register references and validate internal links without altering substantive policy intent.
+1. **Governance metadata consistency pass — complete in DEMO-104.** Canonical references are normalized, registered, and CI-validated.
 2. **SoA refresh** — reassess all 93 ISO27001 and 38 ISO42001 Annex A rows against the completed DEMO-070 through DEMO-103 documentation/implementation evidence.
 3. **Exhaustive compliance registry rebuild** — restore all WCAG + ISO clauses/controls with canonical structured data, filters, evidence links, last-verified dates and N/A rationales.
 4. **CI compliance-registry validation** — enforce unique references, valid statuses, N/A rationale, evidence-link integrity and staleness metadata.
@@ -523,4 +523,4 @@ The system now has controlled documentation for:
 - continuity/resilience;
 - and this final control/document index.
 
-The next maturity gain comes from **consistent identifiers, exhaustive requirement mapping, current evidence, completed reviews/exercises, and public traceability**—not from expanding the policy stack.
+The next maturity gain comes from **exhaustive requirement mapping, current evidence, completed reviews/exercises, and public traceability**—not from expanding the policy stack.

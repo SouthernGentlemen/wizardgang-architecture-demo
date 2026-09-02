@@ -1,6 +1,6 @@
 # Continuity and Resilience Plan
 
-**Reference:** WG-GOV-026  
+**Reference:** WG-GOV-027  
 **Applies to:** ISO/IEC 27001:2022 information-security continuity, ICT readiness, supplier, backup/recovery, incident, availability, configuration, logging, access-control, and operational-resilience controls · ISO/IEC 42001:2023 operational continuity, supplier, data, security, human-oversight, AI/MCP, monitoring, incident, and change requirements  
 **Status:** Proposed  
 **Owner:** Operations Owner / Management-System Owner  

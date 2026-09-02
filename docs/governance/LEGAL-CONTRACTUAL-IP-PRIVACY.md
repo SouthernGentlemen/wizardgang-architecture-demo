@@ -1,6 +1,6 @@
 # Legal, Regulatory, Contractual, Intellectual-Property, and Privacy Obligations
 
-**Reference:** WG-GOV-022  
+**Reference:** WG-GOV-023  
 **Applies to:** ISO/IEC 27001:2022 organizational compliance, legal/contractual, intellectual-property, records, privacy, supplier, incident, and documented-information controls · ISO/IEC 42001:2023 legal/contractual, transparency, data, supplier, impact, incident, and external-reporting obligations affecting the AIMS  
 **Status:** Proposed  
 **Owner:** Management-System Owner  

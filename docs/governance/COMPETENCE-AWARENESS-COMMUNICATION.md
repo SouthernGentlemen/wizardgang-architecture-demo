@@ -1,6 +1,6 @@
 # Competence, Awareness, Communication, and AI Concern Reporting
 
-**Reference:** WG-GOV-018  
+**Reference:** WG-GOV-019  
 **Applies to:** ISO/IEC 27001:2022 §7.2–§7.4 and relevant awareness/event-reporting controls · ISO/IEC 42001:2023 §7.2–§7.4 and relevant competence, concern-reporting, external-reporting, and AI-incident communication controls  
 **Status:** Proposed  
 **Owner:** Management-System Owner  

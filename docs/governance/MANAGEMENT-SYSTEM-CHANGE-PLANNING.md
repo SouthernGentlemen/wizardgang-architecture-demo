@@ -1,6 +1,6 @@
 # Management-System Change Planning
 
-**Reference:** WG-GOV-010  
+**Reference:** WG-GOV-008  
 **Applies to:** ISO/IEC 27001:2022 §6.3 · ISO/IEC 42001:2023 §6.3  
 **Status:** Proposed  
 **Owner:** WizardGang  

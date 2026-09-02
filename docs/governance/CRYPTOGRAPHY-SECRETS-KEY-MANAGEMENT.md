@@ -1,6 +1,6 @@
 # Cryptography, Secrets, and Key Lifecycle
 
-**Reference:** WG-GOV-024  
+**Reference:** WG-GOV-025  
 **Applies to:** ISO/IEC 27001:2022 authentication information, use of cryptography, key/secret management, secure authentication, logging/redaction, communications security, supplier, incident, configuration, access, and secure-development controls · ISO/IEC 42001:2023 security, data, supplier, access, operational, change, AI/MCP, and incident controls where cryptographic or secret material protects the AI-system boundary  
 **Status:** Proposed  
 **Owner:** Information Security Owner / Technical System Owner  

@@ -1,6 +1,6 @@
 # Cryptography and Secrets Register
 
-**Reference:** WG-REG-010  
+**Reference:** WG-REG-012  
 **Parent:** `docs/governance/CRYPTOGRAPHY-SECRETS-KEY-MANAGEMENT.md`  
 **Status:** Proposed  
 **Owner:** Information Security Owner / Technical System Owner  

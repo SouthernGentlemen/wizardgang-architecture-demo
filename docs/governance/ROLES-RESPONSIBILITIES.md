@@ -1,6 +1,6 @@
 # Roles, Responsibilities, and Authorities
 
-**Reference:** WG-GOV-008  
+**Reference:** WG-GOV-006  
 **Applies to:** ISO/IEC 27001:2022 §5.3 · ISO/IEC 42001:2023 §5.3  
 **Status:** Proposed  
 **Owner:** WizardGang  

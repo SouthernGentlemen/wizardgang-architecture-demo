@@ -1,6 +1,6 @@
 # Data Governance, Classification, Retention, and Deletion
 
-**Reference:** WG-GOV-019  
+**Reference:** WG-GOV-020  
 **Applies to:** ISO/IEC 27001:2022 information classification, handling, retention, deletion, logging, backup/recovery, and supplier controls · ISO/IEC 42001:2023 data, record, transparency, supplier, AI-impact, and operational-control requirements  
 **Status:** Proposed  
 **Owner:** Management-System Owner / Data Owner  

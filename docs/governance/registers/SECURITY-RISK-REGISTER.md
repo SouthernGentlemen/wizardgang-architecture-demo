@@ -1,6 +1,6 @@
 # Information Security Risk Register
 
-**Reference:** WG-GOV-009  
+**Reference:** WG-REG-001  
 **Framework:** Information Security  
 **Applies to:** ISO/IEC 27001:2022 §6.1.2–§6.1.3  
 **Method:** `docs/governance/RISK-MANAGEMENT.md`  

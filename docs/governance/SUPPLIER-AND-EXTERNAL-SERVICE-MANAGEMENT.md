@@ -1,6 +1,6 @@
 # Supplier and External-Service Management
 
-**Reference:** WG-GOV-015  
+**Reference:** WG-GOV-016  
 **Applies to:** ISO/IEC 27001:2022 supplier/security and operational-control requirements · ISO/IEC 42001:2023 third-party, customer, and AI-supply-chain requirements  
 **Status:** Proposed  
 **Owner:** WizardGang  

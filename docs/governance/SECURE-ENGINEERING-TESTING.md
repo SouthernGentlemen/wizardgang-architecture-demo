@@ -1,6 +1,6 @@
 # Secure Engineering and Security Testing Standard
 
-**Reference:** WG-GOV-025  
+**Reference:** WG-GOV-026  
 **Applies to:** ISO/IEC 27001:2022 secure development lifecycle, application security requirements, secure architecture and engineering, secure coding, security testing, outsourced development, development/test/production separation, change management, vulnerability management, logging/evidence, and related Annex A controls · ISO/IEC 42001:2023 AI-system lifecycle, verification/validation, data, security, supplier, human oversight, change, evaluation, monitoring, and operational-control requirements  
 **Status:** Proposed  
 **Owner:** Technical System Owner / Information Security Owner  

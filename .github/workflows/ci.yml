@@ -28,6 +28,8 @@ jobs:
         run: npm run validate:scaffold
       - name: History validation
         run: npm run validate:history
+      - name: Governance metadata validation
+        run: npm run validate:governance
       - name: Lint
         run: npm run lint
       - name: Typecheck

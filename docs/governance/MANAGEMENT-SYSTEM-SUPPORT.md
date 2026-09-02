@@ -1,6 +1,6 @@
 # Management-System Support
 
-**Reference:** WG-GOV-012  
+**Reference:** WG-GOV-009  
 **Applies to:** ISO/IEC 27001:2022 §7.1–§7.5 · ISO/IEC 42001:2023 §7.1–§7.5  
 **Status:** Proposed  
 **Owner:** WizardGang  

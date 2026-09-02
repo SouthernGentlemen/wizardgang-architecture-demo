@@ -1,6 +1,6 @@
 # Asset Inventory, Acceptable Use, and Access Review
 
-**Reference:** WG-GOV-021  
+**Reference:** WG-GOV-022  
 **Applies to:** ISO/IEC 27001:2022 asset inventory, acceptable use, access control, identity/access lifecycle, privileged access, source-code access, supplier, configuration, and information-handling controls · ISO/IEC 42001:2023 resource, access, supplier, data, AI/MCP authority, and operational-control requirements where access to AI-related assets is relevant  
 **Status:** Proposed  
 **Owner:** Management-System Owner / Information Security Owner  

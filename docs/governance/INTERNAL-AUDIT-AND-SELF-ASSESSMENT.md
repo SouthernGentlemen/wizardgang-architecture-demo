@@ -1,6 +1,6 @@
 # Internal Audit and Self-Assessment Program
 
-**Reference:** WG-GOV-012  
+**Reference:** WG-GOV-013  
 **Applies to:** ISO/IEC 27001:2022 §9.2.1–§9.2.2 · ISO/IEC 42001:2023 §9.2.1–§9.2.2  
 **Status:** Proposed  
 **Owner:** Management-System Owner  

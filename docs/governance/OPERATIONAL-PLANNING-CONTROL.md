@@ -1,6 +1,6 @@
 # Operational Planning and Control
 
-**Reference:** WG-GOV-009  
+**Reference:** WG-GOV-010  
 **Applies to:** ISO/IEC 27001:2022 §8.1 · ISO/IEC 42001:2023 §8.1  
 **Status:** Proposed  
 **Owner:** WizardGang  
