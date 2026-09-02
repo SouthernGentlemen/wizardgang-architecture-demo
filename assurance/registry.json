@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "wizardgang-public-assurance",
+  "title": "WizardGang Architecture Demo Public Assurance Registry",
+  "scope": "Public, disclosure-safe assurance records for demo.wizardgang.ai",
+  "qualification": "Alignment and engineering evidence only; no certification is claimed.",
+  "visibility": "public",
+  "datasets": [
+    {
+      "kind": "evidence",
+      "path": "assurance/evidence/evidence.json",
+      "schema": "contracts/assurance/evidence.schema.json"
+    },
+    {
+      "kind": "claims",
+      "path": "assurance/claims/claims.json",
+      "schema": "contracts/assurance/claim.schema.json"
+    }
+  ]
+}

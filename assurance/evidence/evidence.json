@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "records": [
+    {
+      "id": "EVD-SRC-001",
+      "kind": "source",
+      "title": "Shared authorization implementation",
+      "description": "Server-side authorization and scope enforcement shared by public interfaces.",
+      "locator": { "repositoryPath": "src/lib/authorization.ts" },
+      "freshnessPolicy": "release-bound",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-CI-001",
+      "kind": "workflow",
+      "title": "Continuous integration validation",
+      "description": "Locked installation, validation, tests, dependency audit, build, and commit-bound evidence workflow.",
+      "locator": { "repositoryPath": ".github/workflows/ci.yml" },
+      "freshnessPolicy": "release-bound",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-DOC-001",
+      "kind": "governance-record",
+      "title": "Controlled change management",
+      "description": "Repository change identifiers, review, validation, and approval rules.",
+      "locator": { "repositoryPath": "docs/CHANGE-MANAGEMENT.md" },
+      "freshnessPolicy": "event-driven",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-DOC-002",
+      "kind": "governance-record",
+      "title": "Release management",
+      "description": "Annotated-tag release, deployment, verification, and rollback requirements.",
+      "locator": { "repositoryPath": "docs/RELEASE-MANAGEMENT.md" },
+      "freshnessPolicy": "event-driven",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-SRC-002",
+      "kind": "source",
+      "title": "Public-safe application logging",
+      "description": "Bounded diagnostic logging with defensive redaction and audit separation.",
+      "locator": { "repositoryPath": "src/lib/logs.ts" },
+      "freshnessPolicy": "release-bound",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-DOC-003",
+      "kind": "governance-record",
+      "title": "Security boundary and secret handling",
+      "description": "Public-source, credential, administration, logging, and vulnerability-reporting rules.",
+      "locator": { "repositoryPath": "SECURITY.md" },
+      "freshnessPolicy": "event-driven",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-DOC-004",
+      "kind": "governance-record",
+      "title": "Operations and resilience model",
+      "description": "Health, availability, offline behavior, logging, usage, and operational evidence boundaries.",
+      "locator": { "repositoryPath": "docs/OPERATIONS.md" },
+      "freshnessPolicy": "event-driven",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-RUN-001",
+      "kind": "live-route",
+      "title": "Runtime health",
+      "description": "Current Worker and dependency health observation.",
+      "locator": { "route": "/health" },
+      "freshnessPolicy": "observation-bound",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-RUN-002",
+      "kind": "live-route",
+      "title": "Deployed version identity",
+      "description": "Current deployed semantic version and exact source commit.",
+      "locator": { "route": "/version" },
+      "freshnessPolicy": "observation-bound",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-SRC-003",
+      "kind": "source",
+      "title": "MCP boundary implementation",
+      "description": "Read-only public MCP transport, tools, validation, and authorization boundary.",
+      "locator": { "repositoryPath": "src/api/mcp.ts" },
+      "freshnessPolicy": "release-bound",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-TST-001",
+      "kind": "test",
+      "title": "MCP client interoperability and negative tests",
+      "description": "Official-client coverage for allowed reads, unknown methods, invalid scope, and prohibited writes.",
+      "locator": { "repositoryPath": "tests/mcp-client.test.ts" },
+      "freshnessPolicy": "release-bound",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-SRC-004",
+      "kind": "source",
+      "title": "Application audit persistence",
+      "description": "Bounded audit-event recording and retrieval used by governance demonstrations.",
+      "locator": { "repositoryPath": "src/lib/audit.ts" },
+      "freshnessPolicy": "release-bound",
+      "visibility": "public"
+    }
+  ]
+}

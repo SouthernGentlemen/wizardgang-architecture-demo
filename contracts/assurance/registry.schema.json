@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://demo.wizardgang.ai/contracts/assurance/registry.schema.json",
+  "title": "Public Assurance Registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "title", "scope", "qualification", "visibility", "datasets"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "title": { "type": "string", "minLength": 1 },
+    "scope": { "type": "string", "minLength": 1 },
+    "qualification": { "type": "string", "minLength": 1 },
+    "visibility": { "const": "public" },
+    "datasets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "path", "schema"],
+        "properties": {
+          "kind": { "enum": ["evidence", "claims", "compliance", "risks", "incidents", "exercises", "advisories"] },
+          "path": { "type": "string", "pattern": "^assurance/" },
+          "schema": { "type": "string", "pattern": "^contracts/assurance/" }
+        }
+      }
+    }
+  }
+}
