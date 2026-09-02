@@ -15,8 +15,8 @@ const demo: DemoDefinition = {
   "status": "working",
   "interfaces": [
     { "method": "GET", "path": "/v1/demo-records?namespace=public", "description": "List public records using anonymous demo:read authorization." },
-    { "method": "POST", "path": "/v1/demo-records", "description": "Create or update a bounded record using bearer-protected demo:write authorization." },
-    { "method": "GET / DELETE", "path": "/v1/demo-records/{key}", "description": "Read publicly or delete with write authorization." }
+    { "method": "POST", "path": "/v1/demo-records", "description": "Create a bounded record using scoped demo:write authorization." },
+    { "method": "GET / PUT / DELETE", "path": "/v1/demo-records/{key}", "description": "Read publicly or replace/delete within an authorized namespace." }
   ],
   "supportingSources": [
     { "label": "View D1 API implementation", "path": "src/api/records.ts" },

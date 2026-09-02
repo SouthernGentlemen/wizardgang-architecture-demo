@@ -13,7 +13,7 @@ This is a public architecture demonstration. Public source is intentional; secre
 
 Use Cloudflare/GitHub managed secret stores for production and ignored `.dev.vars` for local-only admin placeholders.
 
-The current Worker secrets are `DEMO_ADMIN_USER`, `DEMO_ADMIN_PASSWORD`, `DEMO_API_TOKEN`, `WEBHOOK_DEMO_SECRET`, `GITHUB_WEBHOOK_SECRET`, `GITHUB_DEMO_TOKEN`, and `DEMO_SESSION_SECRET`. `GITHUB_READ_TOKEN` is an optional read-only GitHub API token. `GITHUB_DEMO_TOKEN` is restricted to Actions write on this repository and can dispatch only the checked-in live-demo workflow; it cannot create branches, commits, pull requests, tags, or releases. Values are never returned by health, version, logs, evidence, or source-link surfaces.
+The current core Worker secrets are `DEMO_ADMIN_USER`, `DEMO_ADMIN_PASSWORD`, `DEMO_API_TOKEN`, `WEBHOOK_DEMO_SECRET`, `GITHUB_WEBHOOK_SECRET`, `GITHUB_DEMO_TOKEN`, `DEMO_SESSION_SECRET`, and `IDENTITY_SESSION_SECRET`; provider credentials and the SAML certificate are listed in `docs/IDENTITY.md`. `GITHUB_READ_TOKEN` is an optional read-only GitHub API token. `GITHUB_DEMO_TOKEN` is restricted to Actions write on this repository and can dispatch only the checked-in live-demo workflow; it cannot create branches, commits, pull requests, tags, or releases. Values are never returned by health, version, logs, evidence, or source-link surfaces.
 
 ## Demo administration
 
@@ -25,7 +25,7 @@ The `/git` lifecycle reuses that application-side admin boundary for both start 
 
 The crawler-access control combines a dynamic `/robots.txt` with a request gate for `OAI-SearchBot` and `ChatGPT-User`; relying on robots rules alone is insufficient for user-triggered visits. `GPTBot` is always denied so search/fetch access is separate from model-training access. User-agent matching expresses site policy rather than bot identity authentication; the site contains only public data and no authorization decision relies on a crawler user agent.
 
-REST writes and R2 mutations require a bearer token supplied through `DEMO_API_TOKEN`. Public REST, GraphQL, and MCP reads share the explicit `demo:read` boundary. Webhook receivers verify HMAC-SHA256 over the exact request body and reject reused delivery IDs. The GitHub receiver additionally allowlists event types and the configured repository. Signing secrets remain environment-owned; only bounded summaries and payload digests are persisted.
+REST writes accept either the managed operator bearer credential or a ten-minute token derived from a validated identity session. Identity-derived tokens are limited to a server-derived visitor namespace; the caller cannot select another visitor's write scope. Public REST, GraphQL, and MCP reads share the explicit `demo:read` boundary, and authenticated GraphQL mutations cross the same normalized-principal policy. R2 mutations retain their existing protected boundary. Webhook receivers verify HMAC-SHA256 over the exact request body and reject reused delivery IDs. The GitHub receiver additionally allowlists event types and the configured repository. Signing secrets remain environment-owned; only bounded summaries and payload digests are persisted.
 
 ## Public logging
 

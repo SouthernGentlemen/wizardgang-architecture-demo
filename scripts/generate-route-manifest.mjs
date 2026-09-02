@@ -27,6 +27,7 @@ const demos = registryList.split(',').map((value) => value.trim()).filter(Boolea
     source: stringField(source, 'sourcePath'),
     status: stringField(source, 'status'),
   };
+  if (entry.route === '/graphql') entry.method = 'GET, POST';
   return entry;
 });
 
@@ -57,9 +58,11 @@ const machine = [
   { route: '/__api/git/demo', title: 'Live Git Delivery Lifecycle', group: 'Delivery & Governance API', source: 'src/api/git-demo.ts', method: 'GET, POST', machine: true, protected_write: true, offline_behavior: '503' },
   { route: '/__api/git/demo/release', title: 'Live Git Merge and Release', group: 'Delivery & Governance API', source: 'src/api/git-demo.ts', method: 'POST', machine: true, protected: true, offline_behavior: '503' },
   { route: '/v1/demo-records', title: 'REST Demo Records', group: 'Interfaces API', source: 'src/api/records.ts', method: 'GET, POST', machine: true, offline_behavior: '503' },
-  { route: '/v1/demo-records/{key}', title: 'REST Demo Record', group: 'Interfaces API', source: 'src/api/records.ts', method: 'GET, DELETE', machine: true, offline_behavior: '503' },
+  { route: '/v1/demo-records/{key}', title: 'REST Demo Record', group: 'Interfaces API', source: 'src/api/records.ts', method: 'GET, PUT, DELETE', machine: true, offline_behavior: '503' },
+  { route: '/__api/api-sandbox/reset', title: 'REST Visitor Sandbox Reset', group: 'Interfaces API', source: 'src/api/records.ts', method: 'POST', machine: true, offline_behavior: '503' },
   { route: '/v1/openapi.json', title: 'Swagger 2.0 Contract', group: 'Interfaces API', source: 'src/api/openapi.ts', method: 'GET', machine: true, offline_behavior: '503' },
-  { route: '/graphql', title: 'GraphQL API and GraphiQL', group: 'Interfaces API', source: 'src/api/graphql.ts', method: 'GET, POST', machine: true, offline_behavior: '503' },
+  { route: '/v1/openapi.yaml', title: 'OpenAPI 2.0 YAML Contract', group: 'Interfaces API', source: 'src/api/openapi.ts', method: 'GET', machine: true, offline_behavior: '503' },
+  { route: '/graphql/console', title: 'Embedded GraphiQL', group: 'Interfaces API', source: 'src/ui/graphiql-assets.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/graphql/schema', title: 'GraphQL Schema', group: 'Interfaces API', source: 'src/api/graphql.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/__assets/graphiql/{asset}', title: 'Locally Bundled GraphiQL Assets', group: 'Interfaces API', source: 'src/ui/graphiql-assets.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/v1/webhooks/demo', title: 'Signed Webhook Receiver', group: 'Interfaces API', source: 'src/api/webhooks.ts', method: 'POST', machine: true, offline_behavior: '503' },
@@ -70,6 +73,7 @@ const machine = [
   { route: '/mcp/server', title: 'MCP Streamable HTTP Server', group: 'Interfaces API', source: 'src/api/mcp.ts', method: 'GET, POST, DELETE', machine: true, offline_behavior: '503' },
   { route: '/__api/identity/oauth-pkce', title: 'OAuth PKCE Material', group: 'Interfaces API', source: 'src/api/identity.ts', method: 'POST', machine: true, offline_behavior: '503' },
   { route: '/__api/identity/authorize', title: 'Authorization Policy Evaluation', group: 'Interfaces API', source: 'src/api/identity.ts', method: 'POST', machine: true, offline_behavior: '503' },
+  { route: '/__api/identity/token', title: 'Short-lived Demo API Token', group: 'Interfaces API', source: 'src/api/identity.ts', method: 'POST', machine: true, offline_behavior: '503' },
   { route: '/__api/identity/sso', title: 'SSO Trust Boundary', group: 'Interfaces API', source: 'src/api/identity.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/identity/saml/metadata', title: 'SAML Service Provider Metadata', group: 'Interfaces API', source: 'src/api/identity.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/__api/identity/saml/inspect', title: 'SAML Validation Boundary', group: 'Interfaces API', source: 'src/api/identity.ts', method: 'GET', machine: true, offline_behavior: '503' },

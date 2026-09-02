@@ -1,8 +1,6 @@
 import type { Env } from './types';
 import { demos, demosByRoute } from './demos/registry';
 import { renderDemo, renderIndex, renderNotFound } from './ui/page';
-import { recordsConsole } from './demos/records-console';
-import { swaggerConsole } from './demos/swagger-console';
 import { sitemapResponse } from './api/sitemap';
 import { renderAdmin, renderOffline } from './ui/admin';
 import { healthResponse, logsResponse, versionResponse } from './api/operations';
@@ -11,7 +9,7 @@ import { requireAdmin } from './lib/admin-auth';
 import { requireSameOrigin } from './lib/admin-auth';
 import { getDemoControl, setDemoControl } from './lib/demo-control';
 import { json, methodNotAllowed, safeError } from './lib/http';
-import { recordsResponse } from './api/records';
+import { recordsResponse, resetRecordSandboxResponse } from './api/records';
 import { edgeInspectionResponse, workerComputeResponse } from './api/runtime';
 import { r2DemoObjectResponse, r2FilesResetResponse, r2FilesResponse, r2ObjectResponse } from './api/r2';
 import { durableCounterResponse } from './api/durable';
@@ -19,7 +17,7 @@ import { graphqlResponse, graphqlSchemaResponse } from './api/graphql';
 import { githubWebhookResponse, webhookDemoResponse, webhookEventsResponse, webhookReceiptResponse, webhookResetResponse } from './api/webhooks';
 import { openApiResponse } from './api/openapi';
 import { MCP_SERVER_PATH, mcpResponse } from './api/mcp';
-import { authorizationDecisionResponse, identityLogoutResponse, identitySessionResponse, oauthPkceResponse, providerCallbackResponse, providerStartResponse, samlCallbackResponse, samlInspectionResponse, samlMetadataResponse, samlStartResponse, ssoBoundaryResponse } from './api/identity';
+import { authorizationDecisionResponse, demoAccessTokenResponse, identityLogoutResponse, identitySessionResponse, oauthPkceResponse, providerCallbackResponse, providerStartResponse, samlCallbackResponse, samlInspectionResponse, samlMetadataResponse, samlStartResponse, ssoBoundaryResponse } from './api/identity';
 import { renderI18nDemo } from './demos/i18n-page';
 import { renderAccessibilityDemo } from './demos/accessibility-page';
 import { billingScenarioResponse } from './api/billing';
@@ -27,30 +25,29 @@ import { renderBilling, renderDashboard, renderDocs, renderUptime } from './demo
 import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } from './api/governance';
 import { d1LabResponse } from './api/d1-lab';
 import { renderD1Demo } from './demos/d1-page';
-import { graphqlConsole } from './demos/graphql-console';
+import { renderGraphqlDemo } from './demos/graphql-console';
 import { renderR2Demo } from './demos/r2-page';
 import { accessibilityLabResponse } from './ui/accessibility-lab';
-import { webhookConsole } from './demos/webhook-console';
+import { renderWebhooksDemo } from './demos/webhook-console';
 import { gitEvidenceResponse } from './api/git-evidence';
 import { gitDemoReleaseResponse, gitDemoStartResponse, gitDemoStatusResponse } from './api/git-demo';
 import { renderGitDemo } from './demos/git-page';
 import { renderIdentityDemo } from './demos/identity-page';
 import { renderMcpDemo } from './demos/mcp-page';
-import { graphiqlAssetResponse } from './ui/graphiql-assets';
+import { graphiqlAssetResponse, localGraphiqlResponse } from './ui/graphiql-assets';
+import { renderApiDemo } from './demos/api-page';
 import { socialCardResponse } from './ui/brand-assets';
 import { crawlerBlockedResponse, getCrawlerControl, identifyOpenAIAgent, robotsResponse, setCrawlerControl } from './lib/crawler-control';
 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
-const API_PATHS = new Set(['/graphql', MCP_SERVER_PATH]);
-/** Routes whose whole point is the D1-backed record resource, so they get the live console. */
-const RECORD_CONSOLE_ROUTES = new Set(['/api']);
+const API_PATHS = new Set([MCP_SERVER_PATH]);
 
 export const RETIRED_PAGE_REDIRECTS = new Map<string, string>([
   ['/api/rest', '/api#rest'],
   ['/api/openapi', '/api#openapi'],
-  ['/api/graphql', '/api#graphql'],
-  ['/api/webhooks', '/api#webhooks'],
+  ['/api/graphql', '/graphql#graphql'],
+  ['/api/webhooks', '/webhooks#webhooks'],
   ['/identity/oauth', '/identity#oauth'],
   ['/identity/sso', '/identity#sso'],
   ['/git/versioning', '/git#versioning'],
@@ -85,6 +82,7 @@ export function isApiLike(path: string): boolean {
 export function wantsHtml(request: Request, path: string): boolean {
   if (request.method !== 'GET') return false;
   const accept = request.headers.get('accept') || '';
+  if (path === '/graphql') return accept.includes('text/html') || accept === '';
   if (isApiLike(path)) return false;
   return accept.includes('text/html') || accept === '';
 }
@@ -185,6 +183,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
 
   if (path === '/v1/demo-records') return recordsResponse(request, env);
   if (path.startsWith('/v1/demo-records/')) return recordsResponse(request, env, path.slice('/v1/demo-records/'.length));
+  if (path === '/__api/api-sandbox/reset') return resetRecordSandboxResponse(request, env);
   if (path === '/__api/d1/users') return d1LabResponse(request, env, 'users');
   if (path.startsWith('/__api/d1/users/')) return d1LabResponse(request, env, 'users', path.slice('/__api/d1/users/'.length));
   if (path === '/__api/d1/tasks') return d1LabResponse(request, env, 'tasks');
@@ -199,7 +198,10 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/__api/r2/reset') return r2FilesResetResponse(request, env);
   if (path === '/__api/durable/counter') return durableCounterResponse(request, env);
   if (path === '/v1/openapi.json') return openApiResponse(request);
+  if (path === '/v1/openapi.yaml') return openApiResponse(request, 'yaml');
+  if (path === '/graphql' && request.method === 'GET' && wantsHtml(request, path)) return renderGraphqlDemo(env);
   if (path === '/graphql') return graphqlResponse(request, env);
+  if (path === '/graphql/console') return localGraphiqlResponse(request);
   if (path === '/graphql/schema') return graphqlSchemaResponse(request);
   if (path.startsWith('/__assets/graphiql/')) return graphiqlAssetResponse(request, path.slice('/__assets/graphiql/'.length));
   if (path === '/v1/webhooks/demo') return webhookReceiptResponse(request, env);
@@ -211,6 +213,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/mcp' && request.method !== 'GET') return methodNotAllowed(['GET']);
   if (path === '/__api/identity/oauth-pkce') return oauthPkceResponse(request, env);
   if (path === '/__api/identity/authorize') return authorizationDecisionResponse(request, env);
+  if (path === '/__api/identity/token') return demoAccessTokenResponse(request, env);
   if (path === '/__api/identity/sso') return ssoBoundaryResponse(request, env);
   if (path === '/identity/microsoft') return providerStartResponse(request, env, 'microsoft');
   if (path === '/identity/microsoft/callback') return providerCallbackResponse(request, env, 'microsoft');
@@ -242,6 +245,8 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (request.method === 'GET' && path === '/') return renderIndex(env, demos);
   if (request.method === 'GET' && path === '/d1') return renderD1Demo(env);
   if (request.method === 'GET' && path === '/r2') return renderR2Demo(env);
+  if (request.method === 'GET' && path === '/api') return renderApiDemo(env);
+  if (request.method === 'GET' && path === '/webhooks') return renderWebhooksDemo(env);
   if (request.method === 'GET' && path === '/identity') return renderIdentityDemo(env);
   if (request.method === 'GET' && path === '/i18n') return renderI18nDemo(request, env);
   if (request.method === 'GET' && path === '/accessibility') return renderAccessibilityDemo(request, env);
@@ -255,10 +260,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
 
   if (request.method === 'GET') {
     const demo = demosByRoute.get(path);
-    if (demo) {
-      const extra = path === '/api' ? `${swaggerConsole()}${graphqlConsole()}${webhookConsole()}` : RECORD_CONSOLE_ROUTES.has(path) ? recordsConsole('records') : '';
-      return renderDemo(env, demo, demos, extra);
-    }
+    if (demo) return renderDemo(env, demo, demos);
   }
 
   return renderNotFound(env);

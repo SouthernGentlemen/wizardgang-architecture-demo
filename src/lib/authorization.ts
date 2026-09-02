@@ -1,12 +1,20 @@
 import type { Env } from '../types';
 import { json } from './http';
+import { readDemoAccessToken, readIdentitySession, sha256, type IdentitySession } from './identity-session';
 
 export type Permission = 'demo:read' | 'demo:write';
 
 export interface Principal {
   subject: string;
-  authentication: 'anonymous' | 'bearer';
+  authentication: 'anonymous' | 'bearer' | 'oidc' | 'oauth2' | 'saml2';
+  provider?: 'operator' | 'microsoft' | 'google' | 'github';
   permissions: Permission[];
+  namespace?: string;
+  expiresAt?: string;
+}
+
+interface AuthorizationOptions {
+  allowIdentitySession?: boolean;
 }
 
 async function secretMatches(actual: string, expected: string): Promise<boolean> {
@@ -22,29 +30,56 @@ async function secretMatches(actual: string, expected: string): Promise<boolean>
   return mismatch === 0;
 }
 
-export async function authorize(request: Request, env: Env, permission: Permission): Promise<Principal | Response> {
-  if (permission === 'demo:read' && !request.headers.has('authorization')) {
+export async function principalFromIdentitySession(session: IdentitySession): Promise<Principal> {
+  const subject = `${session.identity.provider}:${session.identity.subject}`;
+  return {
+    subject,
+    authentication: session.identity.protocol,
+    provider: session.identity.provider,
+    permissions: ['demo:read', 'demo:write'],
+    namespace: `sandbox-${(await sha256(subject)).slice(0, 24)}`,
+    expiresAt: session.expiresAt,
+  };
+}
+
+function rejected(): Response {
+  return json({ error: 'authentication_required' }, {
+    status: 401,
+    headers: { 'www-authenticate': 'Bearer realm="WizardGang architecture demo"', 'cache-control': 'no-store' },
+  });
+}
+
+export async function authorize(request: Request, env: Env, permission: Permission, options: AuthorizationOptions = {}): Promise<Principal | Response> {
+  const header = request.headers.get('authorization');
+  if (header?.startsWith('Bearer ')) {
+    const token = header.slice(7);
+    const visitor = await readDemoAccessToken(env, token);
+    if (visitor) {
+      if (!visitor.permissions.includes(permission)) return json({ error: 'permission_denied' }, { status: 403, headers: { 'cache-control': 'no-store' } });
+      return visitor;
+    }
+    if (env.DEMO_API_TOKEN && await secretMatches(token, env.DEMO_API_TOKEN)) {
+      return {
+        subject: 'demo-api-operator',
+        authentication: 'bearer',
+        provider: 'operator',
+        permissions: ['demo:read', 'demo:write'],
+      };
+    }
+    return rejected();
+  }
+
+  if (options.allowIdentitySession) {
+    const session = await readIdentitySession(request, env);
+    if (session) {
+      const principal = await principalFromIdentitySession(session);
+      if (principal.permissions.includes(permission)) return principal;
+    }
+  }
+
+  if (permission === 'demo:read') {
     return { subject: 'public-visitor', authentication: 'anonymous', permissions: ['demo:read'] };
   }
 
-  if (!env.DEMO_API_TOKEN) {
-    return json({ error: 'protected_demo_not_configured' }, {
-      status: 503,
-      headers: { 'cache-control': 'no-store' },
-    });
-  }
-
-  const header = request.headers.get('authorization');
-  if (!header?.startsWith('Bearer ') || !(await secretMatches(header.slice(7), env.DEMO_API_TOKEN))) {
-    return json({ error: 'authentication_required' }, {
-      status: 401,
-      headers: { 'www-authenticate': 'Bearer realm="WizardGang architecture demo"', 'cache-control': 'no-store' },
-    });
-  }
-
-  return {
-    subject: 'demo-api-operator',
-    authentication: 'bearer',
-    permissions: ['demo:read', 'demo:write'],
-  };
+  return rejected();
 }

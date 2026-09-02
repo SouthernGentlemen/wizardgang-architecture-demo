@@ -3,24 +3,22 @@ import type { DemoDefinition } from '../types';
 const demo: DemoDefinition = {
   "id": "api",
   "route": "/api",
-  "title": "Application Interfaces",
+  "title": "REST API",
   "group": "Interfaces",
   "sourcePath": "src/demos/api.ts",
-  "summary": "One D1-backed resource exposed through REST, a served OpenAPI contract, GraphQL, and a signed webhook workflow under shared application policy boundaries.",
+  "summary": "Explore a versioned D1-backed REST API, execute live requests, and inspect the OpenAPI 2.0 contract behind it.",
   "proves": [
-    "GET, POST, and DELETE REST semantics over the D1-backed record resource",
-    "REST and GraphQL reads share the same demo:read authorization policy",
-    "The served Swagger 2.0 contract and live router stay synchronized",
-    "GitHub-compatible webhook delivery verifies HMAC integrity, repository scope, event type, and replay protection"
+    "GET, POST, PUT, and DELETE retain distinct REST resource semantics",
+    "Public reads and identity-derived sandbox writes cross one normalized application-principal boundary",
+    "The served OpenAPI 2.0 contract generates the live endpoint navigator and code examples",
+    "Every request carries a request ID into the public-safe operational log"
   ],
   "status": "working",
   "supportingSources": [
     { "label": "View REST implementation", "path": "src/api/records.ts" },
     { "label": "View shared authorization", "path": "src/lib/authorization.ts" },
-    { "label": "View Swagger contract", "path": "contracts/openapi/swagger.json" },
-    { "label": "View GraphQL implementation", "path": "src/api/graphql.ts" },
-    { "label": "View embedded GraphiQL", "path": "src/demos/graphql-console.ts" },
-    { "label": "View webhook implementation", "path": "src/api/webhooks.ts" }
+    { "label": "View OpenAPI contract", "path": "contracts/openapi/swagger.json" },
+    { "label": "View explorer implementation", "path": "src/demos/swagger-console.ts" }
   ]
 };
 

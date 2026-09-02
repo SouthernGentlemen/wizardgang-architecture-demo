@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { graphqlResponse } from '../src/api/graphql';
 import { graphiqlAssetResponse } from '../src/ui/graphiql-assets';
+import { createDemoAccessToken, type IdentitySession } from '../src/lib/identity-session';
 import type { D1PreparedStatement, Env } from '../src/types';
 
 type Row = Record<string, unknown>;
@@ -34,6 +35,7 @@ class GraphStatement implements D1PreparedStatement {
       const [sessionId, id] = this.values as string[];
       return { results: [...this.db.users.values()].filter((row) => row.session_id === sessionId && (!id || row.id === id)) as T[] };
     }
+    if (this.sql.includes('FROM demo_records')) this.db.lastRecordNamespace = String(this.values[0]);
     return { results: [] as T[] };
   }
 }
@@ -42,6 +44,7 @@ class GraphD1 {
   sessions = new Map<string, Row>();
   users = new Map<string, Row>();
   tasks = new Map<string, Row>();
+  lastRecordNamespace = '';
   prepare(sql: string) { return new GraphStatement(this, sql); }
 }
 
@@ -49,9 +52,19 @@ function env(): Env {
   return {
     DEMO_DB: new GraphD1(),
     DEMO_SESSION_SECRET: 'test-session-secret-with-at-least-32-characters',
+    IDENTITY_SESSION_SECRET: 'test-identity-secret-with-at-least-32-characters',
     GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
   };
+}
+
+async function visitorAuthorization(environment: Env): Promise<string> {
+  const now = new Date();
+  const session: IdentitySession = {
+    identity: { provider: 'github', protocol: 'oauth2', subject: 'test-user', displayName: 'Test User', assurance: 'provider-authenticated', role: 'viewer', authenticatedAt: now.toISOString(), expiresAt: new Date(now.getTime() + 30 * 60_000).toISOString() },
+    providerPayloadLabel: 'Test identity', providerPayload: {}, validation: [], protocol: { name: 'OAuth 2.0', steps: [] }, issuedAt: now.toISOString(), expiresAt: new Date(now.getTime() + 30 * 60_000).toISOString(),
+  };
+  return `Bearer ${(await createDemoAccessToken(environment, session)).token}`;
 }
 
 describe('GraphQL Yoga D1 interface', () => {
@@ -75,12 +88,13 @@ describe('GraphQL Yoga D1 interface', () => {
     const query = JSON.stringify({ query: 'query { users { id name email role } }' });
     const first = await graphqlResponse(new Request('https://demo.example/graphql', { method: 'POST', headers: { 'content-type': 'application/json' }, body: query }), environment);
     const cookie = first.headers.get('set-cookie')!.split(';')[0];
+    const authorization = await visitorAuthorization(environment);
     const initialBody = await first.clone().json() as { data: { users: Array<{ name: string }> } };
     expect(initialBody.data.users.some((user) => user.name === 'Ada Lovelace')).toBe(true);
 
     const mutation = await graphqlResponse(new Request('https://demo.example/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json', origin: 'https://demo.example', cookie },
+      headers: { 'content-type': 'application/json', origin: 'https://demo.example', cookie, authorization },
       body: JSON.stringify({ query: 'mutation { createUser(input: { name: "Mary Jackson", email: "mary@example.test", role: MEMBER }) { name role } }' }),
     }), environment);
     expect(await mutation.json()).toMatchObject({ data: { createUser: { name: 'Mary Jackson', role: 'MEMBER' } } });
@@ -89,7 +103,7 @@ describe('GraphQL Yoga D1 interface', () => {
     expect((await listed.json() as { data: { users: unknown[] } }).data.users).toHaveLength(4);
   });
 
-  it('rejects batching and cross-origin mutation', async () => {
+  it('rejects batching and unauthenticated mutation', async () => {
     const environment = env();
     const batched = await graphqlResponse(new Request('https://demo.example/graphql', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '[]' }), environment);
     expect(batched.status).toBe(400);
@@ -98,7 +112,17 @@ describe('GraphQL Yoga D1 interface', () => {
       method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://attacker.example' },
       body: JSON.stringify({ query: 'mutation { createUser(input: { name: "X", email: "x@example.test", role: MEMBER }) { id } }' }),
     }), environment);
-    expect(await denied.json()).toMatchObject({ errors: [{ extensions: { code: 'FORBIDDEN' } }] });
+    expect(await denied.json()).toMatchObject({ errors: [{ extensions: { code: 'UNAUTHENTICATED' } }] });
+  });
+
+  it('fixes anonymous record reads to the public namespace', async () => {
+    const environment = env();
+    const response = await graphqlResponse(new Request('https://demo.example/graphql', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: 'query { demoRecords(namespace: "sandbox-guessed") { key } }' }),
+    }), environment);
+    expect(response.status).toBe(200);
+    expect((environment.DEMO_DB as GraphD1).lastRecordNamespace).toBe('public');
   });
 
   it('permits bounded schema introspection for the local GraphiQL IDE', async () => {

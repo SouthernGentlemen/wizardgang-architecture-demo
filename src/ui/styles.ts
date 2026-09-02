@@ -626,6 +626,100 @@ summary { cursor: pointer; }
 .swagger-schema-table { min-width: 580px; }
 .schema-source { min-height: 0; }
 
+.api-page-header { max-width: 920px; margin-bottom: 2rem; }
+.api-page-header h1, .graphql-page-header h1, .webhook-page-header h1 { max-width: 12ch; }
+.api-hero-badges { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1.3rem; }
+.api-base { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.2rem; border: 1px solid var(--line); background: var(--panel); }
+.api-base .eyebrow { margin-bottom: .35rem; }
+.api-base h2 { margin: 0; font-size: clamp(1rem, 2vw, 1.35rem); letter-spacing: -.02em; }
+.api-base h2 code { color: var(--paper); overflow-wrap: anywhere; }
+.api-sandbox { margin: 1rem 0; padding: clamp(1.15rem, 3vw, 1.6rem); border: 1px solid var(--line); background: linear-gradient(135deg, rgb(217 255 67 / 5%), transparent 52%), var(--panel); }
+.api-sandbox-heading, .api-operation-heading, .api-contract-heading, .api-response-heading, .api-subheading, .graphql-workspace-heading, .webhook-section-heading { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
+.api-sandbox-heading .eyebrow, .api-operation-heading .eyebrow, .api-contract-heading .eyebrow, .api-response-heading .eyebrow, .graphql-workspace-heading .eyebrow, .webhook-section-heading .eyebrow { margin-bottom: .4rem; }
+.api-sandbox-heading h2, .api-contract-heading h2, .api-response-heading h3, .api-subheading h3, .graphql-workspace-heading h2, .webhook-section-heading h2 { margin: 0; }
+.api-sandbox > p { max-width: 74ch; color: var(--muted); }
+.api-sandbox-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .65rem; }
+.api-sandbox-actions > span { margin-left: auto; color: var(--muted); font: 800 .7rem/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+.api-token { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1rem; padding: .85rem 1rem; border: 1px solid var(--line); background: var(--panel-2); }
+.api-token > div { display: grid; gap: .25rem; min-width: 0; }
+.api-token span, .api-token small { color: var(--muted); font: 750 .68rem/1.35 var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+.api-token code { overflow: hidden; color: var(--paper); text-overflow: ellipsis; white-space: nowrap; }
+.api-explorer { display: grid; grid-template-columns: minmax(250px, 330px) minmax(0, 1fr); gap: 1rem; margin: clamp(2.5rem, 6vw, 5rem) 0; align-items: start; }
+.api-endpoint-nav { position: sticky; top: 1rem; border: 1px solid var(--line); background: var(--panel); }
+.api-endpoint-nav > div:first-child { padding: 1.15rem; border-bottom: 1px solid var(--line); }
+.api-endpoint-nav .eyebrow { margin-bottom: .4rem; }
+.api-endpoint-nav h2 { margin: 0; font-size: 1.6rem; }
+.api-endpoint-nav [role="tablist"] { display: grid; }
+.api-endpoint-nav button { display: grid; grid-template-columns: 4.8rem minmax(0, 1fr); align-items: center; gap: .65rem; min-height: 64px; padding: .65rem .8rem; border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; transform: none; }
+.api-endpoint-nav button:last-child { border-bottom: 0; }
+.api-endpoint-nav button:hover { background: var(--panel-2); }
+.api-endpoint-nav button[aria-selected="true"] { background: var(--panel-2); box-shadow: inset 3px 0 0 var(--acid); }
+.api-endpoint-nav button code { color: var(--paper); font-size: .78rem; overflow-wrap: anywhere; }
+.api-operation { padding: clamp(1.15rem, 3vw, 1.65rem); border: 1px solid var(--line); background: var(--panel); }
+.api-operation-heading h2 { display: flex; align-items: center; flex-wrap: wrap; gap: .65rem; margin: 0; font-size: clamp(1.25rem, 2.5vw, 1.8rem); }
+.api-operation-heading h2 code { color: var(--paper); overflow-wrap: anywhere; }
+.api-operation-summary { margin-top: 1rem; font-size: 1rem; }
+.api-request-controls, .api-code, .api-response { margin-top: 1.35rem; padding-top: 1.2rem; border-top: 1px solid var(--line); }
+.api-request-controls > h3 { font-size: 1rem; }
+.api-request-controls .swagger-inputs { margin-bottom: 1rem; }
+.api-subheading { align-items: center; margin-bottom: .65rem; }
+.api-subheading button { min-height: 38px; padding: .4rem .65rem; font-size: .72rem; }
+.api-tabs { display: flex; overflow-x: auto; border: 1px solid var(--line); border-bottom: 0; }
+.api-tabs button { flex: 0 0 auto; min-height: 44px; padding: .5rem .8rem; border: 0; border-right: 1px solid var(--line); background: transparent; color: var(--muted); font: 800 .68rem/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; transform: none; }
+.api-tabs button[aria-selected="true"] { background: var(--panel-2); color: var(--paper); box-shadow: inset 0 -2px 0 var(--acid); }
+.api-code pre, .api-response pre { min-height: 11rem; max-height: 26rem; margin: 0; }
+.api-response-heading { align-items: end; margin-bottom: .75rem; }
+.api-response-heading p:last-child { margin: 0; color: var(--muted); font: 750 .7rem/1.4 var(--mono); text-align: right; }
+.api-response-message { display: flex; align-items: center; flex-wrap: wrap; gap: .45rem 1rem; margin-bottom: .75rem; padding: .8rem 1rem; border-left: 3px solid var(--violet); background: var(--panel-2); }
+.api-response-message span { color: var(--muted); }
+.api-response-message a { margin-left: auto; font-weight: 800; }
+.api-response [data-request-log] { display: inline-flex; margin-top: .85rem; }
+.api-contract { margin: clamp(2.5rem, 6vw, 5rem) 0; padding: clamp(1.2rem, 3vw, 1.65rem); border: 1px solid var(--line); background: var(--panel); }
+.api-contract dl { margin-top: 1.25rem; }
+.api-contract .schema-browser { margin-bottom: 0; }
+.api-contract .schema-card { padding: 0; }
+.api-contract .schema-card > summary { min-height: 52px; padding: .7rem .85rem; }
+.api-contract .schema-card pre { margin: 0; border-width: 1px 0 0; }
+.related-interfaces { margin-top: clamp(3rem, 7vw, 6rem); padding-top: 1rem; border-top: 1px solid var(--line); }
+.related-interfaces .eyebrow { margin-bottom: .45rem; }
+
+.graphql-page-header, .webhook-page-header { max-width: 980px; margin-bottom: 2.5rem; }
+.graphql-workspace { margin-top: 1rem; }
+.graphql-workspace-heading { align-items: end; margin-bottom: 1rem; }
+.graphql-workspace-heading > p { max-width: 48ch; margin: 0; color: var(--muted); text-align: right; }
+.graphql-frame { height: min(74vh, 820px); min-height: 600px; }
+.graphql-control-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; border: 1px solid var(--line); background: var(--line); }
+.graphql-control-grid article { display: grid; gap: .4rem; min-height: 120px; padding: 1.1rem; background: var(--panel); }
+.graphql-control-grid strong { color: var(--acid); font: 900 clamp(1.35rem, 3vw, 2rem)/1 var(--mono); }
+.graphql-control-grid span { align-self: end; color: var(--muted); font: 800 .68rem/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.graphql-shared { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin-top: 2rem; }
+.graphql-shared h2 { margin-bottom: .45rem; }
+.graphql-shared p:last-child { margin: 0; color: var(--muted); }
+.graphql-shared .button { flex: 0 0 auto; }
+
+.webhook-connection { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem; padding: clamp(1.2rem, 3vw, 1.65rem); border: 1px solid var(--line); background: var(--panel); }
+.webhook-connection > div .eyebrow { margin-bottom: .4rem; }
+.webhook-connection h2 { margin: 0; }
+.webhook-connection dl { grid-column: 1 / -1; padding-top: 1rem; border-top: 1px solid var(--line); }
+.webhook-tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+.webhook-tags span, .webhook-event-checks span { padding: .28rem .48rem; border: 1px solid var(--line); color: var(--muted); font: 750 .66rem/1 var(--mono); }
+.webhook-test { margin-top: 1rem; }
+.webhook-section-heading > div { max-width: 760px; }
+.webhook-section-heading > div > p:last-child { color: var(--muted); }
+.webhook-pipeline { display: grid; grid-template-columns: repeat(6, minmax(120px, 1fr)); gap: 1px; margin: 1.5rem 0 0 !important; padding: 0 !important; overflow-x: auto; border: 1px solid var(--line); background: var(--line); list-style: none; }
+.webhook-pipeline li { position: relative; display: grid; align-content: space-between; gap: 1rem; min-height: 125px; margin: 0; padding: .85rem; background: var(--panel-2); }
+.webhook-pipeline li:not(:last-child)::after { position: absolute; z-index: 1; right: -.45rem; top: 50%; width: .8rem; height: .8rem; border-top: 1px solid var(--acid); border-right: 1px solid var(--acid); background: var(--panel-2); content: ''; transform: translateY(-50%) rotate(45deg); }
+.webhook-pipeline span { color: var(--acid); font: 900 .7rem/1 var(--mono); }
+.webhook-pipeline strong { color: var(--paper); font-size: .82rem; }
+.webhook-deliveries { margin-top: clamp(3rem, 7vw, 5rem); }
+.webhook-events { margin-top: 1rem; }
+.webhook-event { padding: 1.2rem; }
+.webhook-event-checks { display: flex; flex-wrap: wrap; gap: .35rem; margin: .8rem 0; }
+.webhook-event-checks span { border-color: var(--acid); color: var(--acid); }
+.webhook-event details summary { min-height: 44px; color: var(--muted); font: 800 .68rem/1 var(--mono); letter-spacing: .07em; text-transform: uppercase; }
+.webhook-empty { display: grid; gap: .35rem; padding: 2rem; border: 1px dashed var(--line); color: var(--muted); text-align: center; }
+.webhook-empty strong { color: var(--paper); }
+
 .resource-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1px; overflow: hidden; border: 1px solid var(--line); border-radius: 0; background: var(--line); }
 .resource-list a { display: grid; gap: .25rem; min-height: 72px; padding: .9rem 1rem; background: var(--panel); text-decoration: none; }
 .resource-list a:hover { background: var(--panel-2); }
@@ -702,6 +796,11 @@ footer a { color: var(--paper); }
   .identity-provider-grid { grid-template-columns: 1fr; }
   .identity-architecture-map > strong { flex-basis: 115px; }
   .mcp-activity-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .api-explorer { grid-template-columns: 1fr; }
+  .api-endpoint-nav { position: static; }
+  .api-endpoint-nav [role="tablist"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .api-endpoint-nav button { border-right: 1px solid var(--line); }
+  .graphql-control-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {
   header { align-items: flex-start; flex-wrap: wrap; }
@@ -738,6 +837,17 @@ footer a { color: var(--paper); }
   .d1-implementation > summary { align-items: flex-start; flex-direction: column; }
   .d1-implementation-body { grid-template-columns: 1fr; }
   .graphql-frame { min-height: 620px; }
+  .api-base, .api-token, .api-sandbox-heading, .api-operation-heading, .api-contract-heading, .api-response-heading, .graphql-workspace-heading, .graphql-shared, .webhook-section-heading { align-items: flex-start; flex-direction: column; }
+  .api-base button, .api-token button, .graphql-shared .button, .webhook-section-heading > button { justify-content: center; width: 100%; }
+  .api-sandbox-actions { align-items: stretch; flex-direction: column; }
+  .api-sandbox-actions > span { margin: .35rem 0 0; }
+  .api-endpoint-nav [role="tablist"] { grid-template-columns: 1fr; }
+  .api-endpoint-nav button { border-right: 0; }
+  .api-operation-heading h2 { align-items: flex-start; flex-direction: column; }
+  .api-response-heading p:last-child, .graphql-workspace-heading > p { text-align: left; }
+  .graphql-control-grid { grid-template-columns: 1fr 1fr; }
+  .webhook-connection { grid-template-columns: 1fr; }
+  .webhook-connection dl { grid-column: auto; }
   .r2-workspace-heading, .r2-files-heading, .inline-preview-heading { align-items: flex-start; flex-direction: column; }
   .sandbox-usage { text-align: left; }
   .upload-actions { align-items: stretch; flex-direction: column; }

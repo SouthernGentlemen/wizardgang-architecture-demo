@@ -79,7 +79,7 @@ export function renderIdentityDemo(env: Env): Response {
     <div class="identity-inspector-heading"><div><p class="eyebrow">Application authorization</p><h3>What can this identity do?</h3></div><span class="badge">Independent policy</span></div>
     <div class="identity-policy-subject"><strong data-policy-name>Authenticated identity</strong><span data-policy-context></span></div>
     <div class="identity-policy-actions" role="group" aria-label="Requested action"><button type="button" data-authorize="demo:read">Evaluate demo:read</button><button type="button" data-authorize="demo:write">Evaluate demo:write</button></div>
-    <div class="identity-decision" data-authorization-result hidden><strong data-decision></strong><p data-decision-detail></p><small>demo:read → authenticated viewer or operator<br>demo:write → operator + MFA</small></div>
+    <div class="identity-decision" data-authorization-result hidden><strong data-decision></strong><p data-decision-detail></p><small>demo:read → authenticated identity<br>demo:write → authenticated identity, visitor sandbox only<br>caller-selected namespaces → managed operator credential only</small></div>
   </section>
   <section class="panel identity-inspector-panel" role="tabpanel" aria-labelledby="identity-protocol-tab" id="identity-protocol-panel" data-identity-panel="protocol" hidden>
     <div class="identity-inspector-heading"><div><p class="eyebrow">Trust evidence</p><h3 data-protocol-name>Protocol</h3></div><span class="badge badge-ok">Validated</span></div>

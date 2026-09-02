@@ -2,6 +2,7 @@ import { GraphQLError, Kind, parse, type DocumentNode, type SelectionSetNode } f
 import { createSchema, createYoga } from 'graphql-yoga';
 import type { Env } from '../types';
 import { requireSameOrigin } from '../lib/admin-auth';
+import { authorize, type Principal } from '../lib/authorization';
 import { ensureDemoSession, withDemoSession, type DemoSession } from '../lib/demo-session';
 import { createDemoUser, deleteDemoUser, getDemoUser, listDemoUsers, updateDemoUser } from '../lib/demo-users';
 import { json, methodNotAllowed, withSecurityHeaders } from '../lib/http';
@@ -9,7 +10,7 @@ import { recordApplicationLog } from '../lib/logs';
 import { localGraphiqlResponse } from '../ui/graphiql-assets';
 
 interface RecordRow { id: number; namespace: string; record_key: string; value_json: string }
-interface GraphQLServerContext { env: Env; request: Request; session?: DemoSession }
+interface GraphQLServerContext { env: Env; request: Request; principal: Principal; session?: DemoSession }
 
 const SCHEMA = `"""Executable public schema backed by the shared D1 demonstration database."""
 type DemoRecord {
@@ -52,8 +53,9 @@ function sandbox(context: GraphQLServerContext): DemoSession {
   return context.session;
 }
 
-function sameOrigin(context: GraphQLServerContext): void {
-  if (requireSameOrigin(context.request)) throw new GraphQLError('A same-origin mutation is required.', { extensions: { code: 'FORBIDDEN' } });
+function authorizeMutation(context: GraphQLServerContext): void {
+  if (!context.principal.permissions.includes('demo:write')) throw new GraphQLError('Authentication is required for mutations.', { extensions: { code: 'UNAUTHENTICATED' } });
+  if (!context.request.headers.has('authorization') && requireSameOrigin(context.request)) throw new GraphQLError('A same-origin session mutation is required.', { extensions: { code: 'FORBIDDEN' } });
 }
 
 const schema = createSchema<GraphQLServerContext>({
@@ -62,12 +64,12 @@ const schema = createSchema<GraphQLServerContext>({
     UserRole: { ADMIN: 'admin', MEMBER: 'member', VIEWER: 'viewer' },
     Query: {
       async demoRecords(_: unknown, args: { namespace?: string }, context: GraphQLServerContext) {
-        const namespace = args.namespace ?? 'public';
+        const namespace = context.principal.namespace ?? (context.principal.authentication === 'anonymous' ? 'public' : args.namespace ?? 'public');
         if (!/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$/.test(namespace)) throw new GraphQLError('Invalid namespace.', { extensions: { code: 'BAD_USER_INPUT' } });
         const result = await context.env.DEMO_DB.prepare(
           'SELECT id, namespace, record_key, value_json FROM demo_records WHERE namespace = ? ORDER BY record_key LIMIT 100',
         ).bind(namespace).all<RecordRow>();
-        await recordApplicationLog(context.env, { source: 'graphql', eventKey: 'records_queried', message: `GraphQL queried ${result.results.length} demo record(s).`, route: '/graphql', detail: { namespace, resultCount: result.results.length, subject: 'anonymous-demo-reader' } });
+        await recordApplicationLog(context.env, { source: 'graphql', eventKey: 'records_queried', message: `GraphQL queried ${result.results.length} demo record(s).`, route: '/graphql', detail: { namespace, resultCount: result.results.length, authentication: context.principal.authentication } });
         return result.results.map((row) => ({ id: String(row.id), namespace: row.namespace, key: row.record_key, valueJson: row.value_json }));
       },
       async users(_: unknown, _args: unknown, context: GraphQLServerContext) {
@@ -79,15 +81,15 @@ const schema = createSchema<GraphQLServerContext>({
     },
     Mutation: {
       async createUser(_: unknown, args: { input: { name: string; email: string; role: string } }, context: GraphQLServerContext) {
-        sameOrigin(context);
+        authorizeMutation(context);
         return createDemoUser(context.env, sandbox(context).id, { ...args.input, role: args.input.role.toLowerCase() });
       },
       async updateUser(_: unknown, args: { id: string; input: { name: string; email: string; role: string } }, context: GraphQLServerContext) {
-        sameOrigin(context);
+        authorizeMutation(context);
         return updateDemoUser(context.env, sandbox(context).id, args.id, { ...args.input, role: args.input.role.toLowerCase() });
       },
       async deleteUser(_: unknown, args: { id: string }, context: GraphQLServerContext) {
-        sameOrigin(context);
+        authorizeMutation(context);
         await deleteDemoUser(context.env, sandbox(context).id, args.id);
         return true;
       },
@@ -105,7 +107,7 @@ const yoga = createYoga<GraphQLServerContext>({
     maskError(error, message) {
       const candidate = error as { message?: unknown; extensions?: { code?: unknown }; originalError?: { extensions?: { code?: unknown } } };
       const code = String(candidate.extensions?.code ?? candidate.originalError?.extensions?.code ?? '');
-      if (['FORBIDDEN', 'BAD_USER_INPUT', 'SERVICE_UNAVAILABLE'].includes(code) && error instanceof Error) return error;
+      if (['UNAUTHENTICATED', 'FORBIDDEN', 'BAD_USER_INPUT', 'SERVICE_UNAVAILABLE'].includes(code) && error instanceof Error) return error;
       return new GraphQLError(message, { extensions: { code: 'INTERNAL_SERVER_ERROR' } });
     },
   },
@@ -161,12 +163,14 @@ export async function graphqlResponse(request: Request, env: Env): Promise<Respo
   if (request.method === 'GET' && acceptsHtml) return localGraphiqlResponse(request);
   const failure = await limitsFailure(request);
   if (failure) return failure;
+  const principal = await authorize(request, env, 'demo:read', { allowIdentitySession: true });
+  if (principal instanceof Response) return principal;
   let session: DemoSession | undefined;
   if (env.DEMO_SESSION_SECRET) {
     try { session = await ensureDemoSession(request, env); }
     catch { /* Legacy demoRecords remains available if the optional sandbox is misconfigured. */ }
   }
-  let response = await yoga.fetch(request, { env, request, session });
+  let response = await yoga.fetch(request, { env, request, principal, session });
   if (request.method === 'POST' && response.status === 200 && (response.headers.get('content-type') || '').includes('application/json')) {
     const payload = await response.clone().json() as { data?: unknown; errors?: unknown[] };
     if (payload.data === undefined && payload.errors?.length) response = new Response(response.body, { status: 400, headers: response.headers });

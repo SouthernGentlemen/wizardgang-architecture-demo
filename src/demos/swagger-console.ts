@@ -5,10 +5,9 @@ type JsonObject = Record<string, unknown>;
 
 interface SwaggerDocument extends JsonObject {
   basePath?: string;
-  consumes?: string[];
   definitions?: Record<string, JsonObject>;
+  info?: JsonObject;
   paths: Record<string, JsonObject>;
-  securityDefinitions?: Record<string, JsonObject>;
 }
 
 interface OperationEntry {
@@ -23,7 +22,7 @@ function asObject(value: unknown): JsonObject {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as JsonObject : {};
 }
 
-function asObjects(value: unknown): JsonObject[] {
+function parameters(value: unknown): JsonObject[] {
   return Array.isArray(value) ? value.map(asObject) : [];
 }
 
@@ -50,42 +49,6 @@ function schemaType(schema: JsonObject): string {
   return typeof schema.type === 'string' ? schema.type : 'any';
 }
 
-function constraintSummary(schema: JsonObject): string {
-  const constraints: string[] = [];
-  if (schema.default !== undefined) constraints.push(`default ${JSON.stringify(schema.default)}`);
-  if (Array.isArray(schema.enum)) constraints.push(`one of ${schema.enum.map((value) => JSON.stringify(value)).join(', ')}`);
-  if (typeof schema.format === 'string') constraints.push(schema.format);
-  if (typeof schema.pattern === 'string') constraints.push(`pattern ${schema.pattern}`);
-  if (typeof schema.minLength === 'number') constraints.push(`min ${schema.minLength}`);
-  if (typeof schema.maxLength === 'number') constraints.push(`max ${schema.maxLength}`);
-  return constraints.join(' · ');
-}
-
-function renderSchemaFields(schema: JsonObject, definitions: Record<string, JsonObject>, label: string): string {
-  const resolved = resolveSchema(schema, definitions);
-  const properties = asObject(resolved.properties);
-  const required = new Set(Array.isArray(resolved.required) ? resolved.required.map(String) : []);
-  const reference = refName(schema);
-  const referenceLink = reference
-    ? `<p class="subtle">Schema: <a href="#swagger-definition-${escapeHtml(reference)}"><code>${escapeHtml(reference)}</code></a></p>`
-    : '';
-
-  if (!Object.keys(properties).length) {
-    return `${referenceLink}<pre class="schema-source" aria-label="${escapeHtml(label)} JSON schema">${escapeHtml(JSON.stringify(resolved, null, 2))}</pre>`;
-  }
-
-  const rows = Object.entries(properties).map(([name, property]) => {
-    const propertySchema = asObject(property);
-    const propertyReference = refName(propertySchema);
-    const type = propertyReference
-      ? `<a href="#swagger-definition-${escapeHtml(propertyReference)}"><code>${escapeHtml(propertyReference)}</code></a>`
-      : `<code>${escapeHtml(schemaType(propertySchema))}</code>`;
-    return `<tr><th scope="row"><code>${escapeHtml(name)}</code></th><td>${required.has(name) ? 'yes' : 'no'}</td><td>${type}</td><td>${escapeHtml(constraintSummary(propertySchema))}</td></tr>`;
-  }).join('');
-
-  return `${referenceLink}<div class="table-wrap"><table class="swagger-schema-table"><caption class="sr-only">${escapeHtml(label)} fields</caption><thead><tr><th scope="col">Field</th><th scope="col">Required</th><th scope="col">Type</th><th scope="col">Constraints</th></tr></thead><tbody>${rows}</tbody></table></div>`;
-}
-
 function exampleForSchema(schema: JsonObject, definitions: Record<string, JsonObject>, depth = 0): unknown {
   if (depth > 5) return null;
   const resolved = resolveSchema(schema, definitions);
@@ -93,13 +56,15 @@ function exampleForSchema(schema: JsonObject, definitions: Record<string, JsonOb
   if (resolved.default !== undefined) return resolved.default;
   if (Array.isArray(resolved.enum) && resolved.enum.length) return resolved.enum[0];
   if (resolved.type === 'array') return [exampleForSchema(asObject(resolved.items), definitions, depth + 1)];
-  if (resolved.type === 'object' || resolved.properties) {
-    return Object.fromEntries(Object.entries(asObject(resolved.properties)).map(([name, property]) => [name, exampleForSchema(asObject(property), definitions, depth + 1)]));
-  }
+  if (resolved.type === 'object' || resolved.properties) return Object.fromEntries(Object.entries(asObject(resolved.properties)).map(([name, property]) => [name, exampleForSchema(asObject(property), definitions, depth + 1)]));
   if (resolved.type === 'integer' || resolved.type === 'number') return 0;
   if (resolved.type === 'boolean') return false;
-  if (resolved.type === 'string') return resolved.format === 'date-time' ? '2026-08-31T12:00:00.000Z' : 'string';
+  if (resolved.type === 'string') return resolved.format === 'date-time' ? '2026-09-02T12:00:00.000Z' : 'string';
   return null;
+}
+
+function operationId(entry: OperationEntry): string {
+  return `api-${entry.method.toLowerCase()}-${entry.path.replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
 }
 
 function inputValue(parameter: JsonObject): string {
@@ -108,175 +73,228 @@ function inputValue(parameter: JsonObject): string {
   return '';
 }
 
-function renderParameterInput(parameter: JsonObject, operationIndex: number): string {
+function renderParameterInput(parameter: JsonObject, id: string): string {
   const name = String(parameter.name ?? 'parameter');
   const location = String(parameter.in ?? 'query');
   const required = Boolean(parameter.required);
   const description = typeof parameter.description === 'string' ? parameter.description : '';
-  const sensitive = location === 'header' && /(authorization|signature|token|secret)/i.test(name);
-  const helpId = `help-${operationIndex}-${location}-${name.replace(/[^a-zA-Z0-9]+/g, '-')}`;
-  const inputType = parameter.type === 'integer' || parameter.type === 'number' ? 'number' : sensitive ? 'password' : 'text';
-  const maximumLength = typeof parameter.maxLength === 'number' ? ` maxlength="${parameter.maxLength}"` : '';
-  const pattern = typeof parameter.pattern === 'string' ? ` pattern="${escapeHtml(parameter.pattern)}"` : '';
-  return `<label>${escapeHtml(name)} <span class="parameter-meta">${escapeHtml(location)} · ${required ? 'required' : 'optional'} · ${escapeHtml(schemaType(parameter))}</span>
-    <input type="${inputType}" data-swagger-param data-parameter-name="${escapeHtml(name)}" data-parameter-in="${escapeHtml(location)}" value="${escapeHtml(inputValue(parameter))}"${required ? ' required' : ''}${maximumLength}${pattern} autocomplete="off"${description ? ` aria-describedby="${escapeHtml(helpId)}"` : ''}>
-    ${description ? `<span class="input-help" id="${escapeHtml(helpId)}">${escapeHtml(description)}</span>` : ''}
+  return `<label for="${escapeHtml(`${id}-${location}-${name}`)}">${escapeHtml(name)} <span class="parameter-meta">${escapeHtml(location)} · ${required ? 'required' : 'optional'} · ${escapeHtml(schemaType(parameter))}</span>
+    <input id="${escapeHtml(`${id}-${location}-${name}`)}" data-api-param data-parameter-name="${escapeHtml(name)}" data-parameter-in="${escapeHtml(location)}" value="${escapeHtml(inputValue(parameter))}"${required ? ' required' : ''} autocomplete="off">
+    ${description ? `<span class="input-help">${escapeHtml(description)}</span>` : ''}
   </label>`;
 }
 
-function renderSecurityInputs(operation: JsonObject, spec: SwaggerDocument): string {
-  const requirements = Array.isArray(operation.security) ? operation.security.map(asObject) : [];
-  const schemes = spec.securityDefinitions ?? {};
-  return requirements.flatMap((requirement) => Object.keys(requirement)).map((name) => {
-    const scheme = asObject(schemes[name]);
-    if (scheme.in !== 'header' || typeof scheme.name !== 'string') return '';
-    const prefix = typeof scheme['x-value-prefix'] === 'string' ? scheme['x-value-prefix'] : '';
-    return `<label>${escapeHtml(name)} <span class="parameter-meta">${escapeHtml(String(scheme.name))} header · optional in explorer</span>
-      <input type="password" data-swagger-auth data-auth-name="${escapeHtml(scheme.name)}" data-auth-prefix="${escapeHtml(prefix)}" autocomplete="off" placeholder="Leave empty to demonstrate the authorization boundary">
-      <span class="input-help">Used for this request only; never stored by this page.</span>
-    </label>`;
-  }).join('');
+function exampleRequest(entry: OperationEntry, spec: SwaggerDocument): { url: string; body?: string } {
+  const operationParameters = parameters(entry.operation.parameters);
+  let path = entry.path;
+  const query = new URLSearchParams();
+  for (const parameter of operationParameters.filter((item) => item.in !== 'body')) {
+    const value = inputValue(parameter);
+    if (!value) continue;
+    if (parameter.in === 'path') path = path.replace(`{${String(parameter.name)}}`, encodeURIComponent(value));
+    if (parameter.in === 'query') query.set(String(parameter.name), value);
+  }
+  const bodyParameter = operationParameters.find((item) => item.in === 'body');
+  const body = bodyParameter ? JSON.stringify(exampleForSchema(asObject(bodyParameter.schema), spec.definitions ?? {}), null, 2) : undefined;
+  return { url: `https://demo.wizardgang.ai${spec.basePath ?? ''}${path}${query.size ? `?${query}` : ''}`, ...(body ? { body } : {}) };
 }
 
-function renderRequestContract(parameters: JsonObject[], definitions: Record<string, JsonObject>): string {
-  const body = parameters.find((parameter) => parameter.in === 'body');
-  const nonBody = parameters.filter((parameter) => parameter.in !== 'body');
-  if (!body && !nonBody.length) return '';
-  const parameterRows = nonBody.map((parameter) => `<tr><th scope="row"><code>${escapeHtml(String(parameter.name ?? ''))}</code></th><td>${escapeHtml(String(parameter.in ?? ''))}</td><td>${parameter.required ? 'yes' : 'no'}</td><td><code>${escapeHtml(schemaType(parameter))}</code></td><td>${escapeHtml(constraintSummary(parameter))}</td></tr>`).join('');
-  return `<section class="contract-block"><h4>Request</h4>
-    ${parameterRows ? `<div class="table-wrap"><table><caption class="sr-only">Request parameters</caption><thead><tr><th scope="col">Name</th><th scope="col">In</th><th scope="col">Required</th><th scope="col">Type</th><th scope="col">Constraints</th></tr></thead><tbody>${parameterRows}</tbody></table></div>` : ''}
-    ${body ? `${renderSchemaFields(asObject(body.schema), definitions, 'Request body schema')}` : ''}
-  </section>`;
-}
-
-function renderResponses(responses: JsonObject, definitions: Record<string, JsonObject>): string {
-  const rows = Object.entries(responses).map(([status, response]) => {
-    const value = asObject(response);
-    const schema = asObject(value.schema);
-    const reference = refName(schema);
-    const type = Object.keys(schema).length
-      ? reference ? `<a href="#swagger-definition-${escapeHtml(reference)}"><code>${escapeHtml(reference)}</code></a>` : `<code>${escapeHtml(schemaType(schema))}</code>`
-      : '—';
-    return `<tr><th scope="row"><code>${escapeHtml(status)}</code></th><td>${escapeHtml(String(value.description ?? ''))}</td><td>${type}</td></tr>`;
-  }).join('');
-  return `<section class="contract-block"><h4>Responses</h4><div class="table-wrap"><table><caption class="sr-only">Documented responses</caption><thead><tr><th scope="col">Status</th><th scope="col">Meaning</th><th scope="col">Schema</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
-}
-
-function operationAnchor(method: string, path: string): string {
-  return `swagger-${method.toLowerCase()}-${path.replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').toLowerCase()}`;
+function codeExamples(entry: OperationEntry, spec: SwaggerDocument): string[] {
+  const example = exampleRequest(entry, spec);
+  const secured = Array.isArray(entry.operation.security) && entry.operation.security.length > 0;
+  const body = example.body;
+  const curl = [`curl${entry.method === 'GET' ? '' : ` -X ${entry.method}`} "${example.url}"`, ...(secured ? ['  -H "Authorization: Bearer $DEMO_TOKEN"'] : []), ...(body ? ['  -H "Content-Type: application/json"', `  --data '${body.replaceAll('\n', '')}'`] : [])].join(' \\\n');
+  const javascript = `const response = await fetch('${example.url}', {\n  method: '${entry.method}',${secured ? "\n  headers: { Authorization: 'Bearer ' + demoToken" + (body ? ", 'Content-Type': 'application/json'" : '') + ' },' : body ? "\n  headers: { 'Content-Type': 'application/json' }," : ''}${body ? `\n  body: JSON.stringify(${body.replaceAll('\n', '\n  ')}),` : ''}\n});\nconsole.log(await response${entry.method === 'DELETE' ? '.text()' : '.json()'});`;
+  const python = `import os\nimport requests\n\nresponse = requests.${entry.method.toLowerCase()}(\n    '${example.url}',${secured ? "\n    headers={'Authorization': 'Bearer ' + os.environ['DEMO_TOKEN']}," : ''}${body ? `\n    json=${body.replaceAll('null', 'None').replaceAll('true', 'True').replaceAll('false', 'False')},` : ''}\n)\nprint(response.status_code, response.text)`;
+  const csharp = `using System.Net.Http.Headers;${body ? '\nusing System.Text;' : ''}\n\nusing var client = new HttpClient();${secured ? "\nclient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(\"Bearer\", Environment.GetEnvironmentVariable(\"DEMO_TOKEN\"));" : ''}\nvar request = new HttpRequestMessage(HttpMethod.${entry.method[0]}${entry.method.slice(1).toLowerCase()}, "${example.url}");${body ? `\nrequest.Content = new StringContent(\"\"\"\n${body}\n\"\"\", Encoding.UTF8, \"application/json\");` : ''}\nvar response = await client.SendAsync(request);\nConsole.WriteLine(await response.Content.ReadAsStringAsync());`;
+  return [curl, javascript, python, csharp];
 }
 
 function renderOperation(entry: OperationEntry, index: number, spec: SwaggerDocument): string {
-  const { method, path, operation } = entry;
-  const parameters = asObjects(operation.parameters);
-  const definitions = spec.definitions ?? {};
-  const body = parameters.find((parameter) => parameter.in === 'body');
-  const bodySchema = body ? asObject(body.schema) : {};
-  const bodyExample = body ? JSON.stringify(exampleForSchema(bodySchema, definitions), null, 2) : '';
-  const inputs = parameters.filter((parameter) => parameter.in !== 'body').map((parameter) => renderParameterInput(parameter, index)).join('');
-  const securityInputs = renderSecurityInputs(operation, spec);
-  const consumes = Array.isArray(operation.consumes) ? operation.consumes : spec.consumes;
-  const contentType = consumes?.[0] ?? 'application/json';
-  const title = `${method} ${spec.basePath ?? ''}${path}`;
-
-  return `<details class="swagger-operation" id="${escapeHtml(operationAnchor(method, path))}">
-    <summary><span class="swagger-route"><span class="http-method http-${method.toLowerCase()}">${escapeHtml(method)}</span><code>${escapeHtml(`${spec.basePath ?? ''}${path}`)}</code></span><strong>${escapeHtml(String(operation.summary ?? title))}</strong></summary>
-    <div class="swagger-operation-body">
-      ${operation.description ? `<p class="subtle">${escapeHtml(String(operation.description))}</p>` : ''}
-      ${renderRequestContract(parameters, definitions)}
-      ${renderResponses(asObject(operation.responses), definitions)}
-      <form data-swagger-form data-method="${escapeHtml(method)}" data-path="${escapeHtml(path)}" data-base-path="${escapeHtml(spec.basePath ?? '')}" data-content-type="${escapeHtml(contentType)}" data-operation-index="${index}">
-        ${inputs || securityInputs || body ? `<fieldset><legend>Try it</legend><div class="swagger-inputs">${inputs}${securityInputs}${body ? `<label class="swagger-body">JSON body <span class="parameter-meta">${body.required ? 'required' : 'optional'}</span><textarea data-swagger-body spellcheck="false"${body.required ? ' required' : ''}>${escapeHtml(bodyExample)}</textarea></label>` : ''}</div></fieldset>` : ''}
-        <button class="button-primary" type="submit">Send ${escapeHtml(method)}</button>
-        <div class="swagger-result" data-swagger-result hidden>
-          <div class="field"><span>Request sent</span><pre data-swagger-request></pre></div>
-          <div class="field"><span>Response</span><pre aria-live="polite" data-swagger-output></pre></div>
-        </div>
-      </form>
+  const id = operationId(entry);
+  const operationParameters = parameters(entry.operation.parameters);
+  const bodyParameter = operationParameters.find((parameter) => parameter.in === 'body');
+  const bodyExample = bodyParameter ? JSON.stringify(exampleForSchema(asObject(bodyParameter.schema), spec.definitions ?? {}), null, 2) : '';
+  const inputs = operationParameters.filter((parameter) => parameter.in !== 'body').map((parameter) => renderParameterInput(parameter, id)).join('');
+  const examples = codeExamples(entry, spec);
+  const secured = Array.isArray(entry.operation.security) && entry.operation.security.length > 0;
+  return `<article class="api-operation" id="${escapeHtml(id)}" role="tabpanel" data-api-operation="${index}"${index ? ' hidden' : ''}>
+    <div class="api-operation-heading">
+      <div><p class="eyebrow">${secured ? 'Authenticated · visitor sandbox' : 'Public'}</p><h2><span class="http-method http-${entry.method.toLowerCase()}">${entry.method}</span> <code>${escapeHtml(`${spec.basePath ?? ''}${entry.path}`)}</code></h2></div>
+      <span class="badge${secured ? '' : ' badge-ok'}">${secured ? 'Scoped write' : 'Public'}</span>
     </div>
-  </details>`;
+    <p class="lede api-operation-summary">${escapeHtml(String(entry.operation.description ?? entry.operation.summary ?? 'Execute this operation.'))}</p>
+    <form data-api-form data-method="${entry.method}" data-path="${escapeHtml(entry.path)}" data-base-path="${escapeHtml(spec.basePath ?? '')}" data-secured="${secured}">
+      <section class="api-request-controls" aria-labelledby="${id}-parameters"><h3 id="${id}-parameters">Parameters</h3><div class="swagger-inputs">${inputs || '<p class="subtle">This operation has no path or query parameters.</p>'}${bodyParameter ? `<label class="swagger-body" for="${id}-body">JSON body <span class="parameter-meta">required · application/json</span><textarea id="${id}-body" data-api-body spellcheck="false" required>${escapeHtml(bodyExample)}</textarea></label>` : ''}</div><button class="button-primary" type="submit">Send request</button></section>
+    </form>
+    <section class="api-code" aria-labelledby="${id}-request"><div class="api-subheading"><h3 id="${id}-request">Request</h3><button type="button" data-copy-code>Copy code</button></div>
+      <div class="api-tabs" role="tablist" aria-label="Code example language">
+        ${['curl', 'JavaScript', 'Python', 'C#'].map((label, tabIndex) => `<button type="button" role="tab" aria-selected="${tabIndex === 0}" data-code-tab="${tabIndex}"${tabIndex ? ' tabindex="-1"' : ''}>${label}</button>`).join('')}
+      </div>
+      ${examples.map((example, tabIndex) => `<pre data-code-panel="${tabIndex}"${tabIndex ? ' hidden' : ''}>${escapeHtml(example)}</pre>`).join('')}
+    </section>
+    <section class="api-response" data-api-result hidden aria-live="polite">
+      <div class="api-response-heading"><div><p class="eyebrow">Response</p><h3 data-response-status>Waiting</h3></div><p data-response-meta></p></div>
+      <div class="api-response-message" data-response-message hidden></div>
+      <div class="api-tabs" role="tablist" aria-label="Response details">
+        ${['Body', 'Headers', 'Request'].map((label, tabIndex) => `<button type="button" role="tab" aria-selected="${tabIndex === 0}" data-response-tab="${tabIndex}"${tabIndex ? ' tabindex="-1"' : ''}>${label}</button>`).join('')}
+      </div>
+      <pre data-response-panel="0" data-response-body></pre><pre data-response-panel="1" data-response-headers hidden></pre><pre data-response-panel="2" data-response-request hidden></pre>
+      <a class="text-link" data-request-log hidden>View request in logs →</a>
+    </section>
+  </article>`;
 }
 
 function renderDefinitions(definitions: Record<string, JsonObject>): string {
-  return Object.entries(definitions).map(([name, schema]) => `<article class="schema-card" id="swagger-definition-${escapeHtml(name)}"><h3>${escapeHtml(name)}</h3>${renderSchemaFields(schema, definitions, `${name} schema`)}</article>`).join('');
+  return Object.entries(definitions).map(([name, schema]) => `<details class="schema-card" id="swagger-definition-${escapeHtml(name)}"><summary><code>${escapeHtml(name)}</code></summary><pre>${escapeHtml(JSON.stringify(schema, null, 2))}</pre></details>`).join('');
 }
 
-const SWAGGER_RUNNER = `(() => {
-  const redact = (name, value) => /(authorization|signature|token|secret)/i.test(name) && value ? '[redacted]' : value;
-  const responseBody = async (response) => {
-    if (response.status === 204) return '(no content)';
-    const type = response.headers.get('content-type') || '';
-    return type.includes('application/json') ? response.json() : response.text();
+const API_RUNNER = `(() => {
+  let demoToken = '';
+  let tokenExpiresAt = '';
+  const query = (selector, root = document) => root.querySelector(selector);
+  const queryAll = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+  const bytes = (value) => new TextEncoder().encode(value).byteLength;
+  const securedHeaders = () => demoToken ? { authorization: 'Bearer ' + demoToken } : {};
+  const selectPanels = (buttons, panels, selected) => {
+    buttons.forEach((button, index) => { const active = index === selected; button.setAttribute('aria-selected', String(active)); button.tabIndex = active ? 0 : -1; });
+    panels.forEach((panel, index) => { panel.hidden = index !== selected; });
   };
-  document.querySelectorAll('[data-swagger-form]').forEach((form) => form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const method = form.dataset.method;
+  queryAll('[data-api-endpoint]').forEach((button, index) => button.addEventListener('click', () => {
+    selectPanels(queryAll('[data-api-endpoint]'), queryAll('[data-api-operation]'), index);
+    query('[data-api-operation="' + index + '"]').focus?.();
+  }));
+  queryAll('[data-api-operation]').forEach((operation) => {
+    const codeButtons = queryAll('[data-code-tab]', operation);
+    const codePanels = queryAll('[data-code-panel]', operation);
+    codeButtons.forEach((button, index) => button.addEventListener('click', () => selectPanels(codeButtons, codePanels, index)));
+    const responseButtons = queryAll('[data-response-tab]', operation);
+    const responsePanels = queryAll('[data-response-panel]', operation);
+    responseButtons.forEach((button, index) => button.addEventListener('click', () => selectPanels(responseButtons, responsePanels, index)));
+    query('[data-copy-code]', operation).addEventListener('click', async (event) => {
+      const code = codePanels.find((panel) => !panel.hidden)?.textContent || '';
+      await navigator.clipboard.writeText(code); event.currentTarget.textContent = 'Copied'; setTimeout(() => { event.currentTarget.textContent = 'Copy code'; }, 1200);
+    });
+  });
+  const buildRequest = (form) => {
     let path = (form.dataset.basePath || '') + form.dataset.path;
-    const query = new URLSearchParams();
-    const headers = {};
-    const previewHeaders = {};
+    const search = new URLSearchParams();
+    queryAll('[data-api-param]', form).forEach((input) => {
+      if (input.disabled) return;
+      const value = input.value.trim();
+      if (input.required && !value) throw new Error(input.dataset.parameterName + ' is required.');
+      if (!value) return;
+      if (input.dataset.parameterIn === 'path') path = path.replace('{' + input.dataset.parameterName + '}', encodeURIComponent(value));
+      if (input.dataset.parameterIn === 'query') search.set(input.dataset.parameterName, value);
+    });
+    if (path.includes('{')) throw new Error('Every path parameter is required.');
+    if ([...search].length) path += '?' + search.toString();
+    const headers = { ...(form.dataset.secured === 'true' ? securedHeaders() : {}) };
+    let body;
+    const bodyInput = query('[data-api-body]', form);
+    if (bodyInput) { body = JSON.stringify(JSON.parse(bodyInput.value)); headers['content-type'] = 'application/json'; }
+    return { path, headers, body };
+  };
+  const updateCount = async () => {
+    if (!demoToken) return;
+    const response = await fetch('/v1/demo-records', { headers: securedHeaders() });
+    if (!response.ok) return;
+    const payload = await response.json();
+    query('[data-sandbox-count]').textContent = (payload.results || []).length + ' record' + ((payload.results || []).length === 1 ? '' : 's');
+  };
+  queryAll('[data-api-form]').forEach((form) => form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const operation = form.closest('[data-api-operation]');
+    const result = query('[data-api-result]', operation);
+    result.hidden = false;
+    query('[data-response-status]', result).textContent = 'Sending…';
+    query('[data-response-meta]', result).textContent = '';
+    query('[data-response-message]', result).hidden = true;
     try {
-      form.querySelectorAll('[data-swagger-param]').forEach((input) => {
-        const name = input.dataset.parameterName;
-        const location = input.dataset.parameterIn;
-        const value = input.value.trim();
-        if (input.required && !value) throw new Error(name + ' is required.');
-        if (!value) return;
-        if (location === 'path') path = path.replace('{' + name + '}', encodeURIComponent(value));
-        if (location === 'query') query.append(name, value);
-        if (location === 'header') { headers[name] = value; previewHeaders[name] = redact(name, value); }
-      });
-      const auth = form.querySelector('[data-swagger-auth]');
-      if (auth && auth.value.trim()) {
-        const name = auth.dataset.authName;
-        headers[name] = (auth.dataset.authPrefix || '') + auth.value.trim();
-        previewHeaders[name] = '[redacted]';
-      }
-      if ([...path.matchAll(/\\{([^}]+)\\}/g)].length) throw new Error('Every path parameter is required.');
-      if ([...query].length) path += '?' + query.toString();
-      const bodyInput = form.querySelector('[data-swagger-body]');
-      let body;
-      if (bodyInput) {
-        const parsed = JSON.parse(bodyInput.value);
-        body = JSON.stringify(parsed);
-        headers['content-type'] = form.dataset.contentType || 'application/json';
-        previewHeaders['content-type'] = headers['content-type'];
-      }
-      const requestPreview = form.querySelector('[data-swagger-request]');
-      form.querySelector('[data-swagger-result]').hidden = false;
-      requestPreview.textContent = method + ' ' + path + (Object.keys(previewHeaders).length ? '\\n' + Object.entries(previewHeaders).map(([name, value]) => name + ': ' + value).join('\\n') : '') + (body ? '\\n\\n' + JSON.stringify(JSON.parse(body), null, 2) : '');
-      const output = form.querySelector('[data-swagger-output]');
-      output.textContent = 'Running…';
-      const response = await fetch(path, { method, headers, ...(body === undefined ? {} : { body }) });
-      const payload = await responseBody(response);
-      output.textContent = response.status + ' ' + response.statusText + '\\n\\n' + (typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2));
+      const request = buildRequest(form);
+      const previewHeaders = { ...request.headers };
+      if (previewHeaders.authorization) previewHeaders.authorization = 'Bearer [short-lived scoped token]';
+      const started = performance.now();
+      const response = await fetch(request.path, { method: form.dataset.method, headers: request.headers, ...(request.body === undefined ? {} : { body: request.body }) });
+      const text = await response.text();
+      const duration = Math.max(0, Math.round(performance.now() - started));
+      let formatted = text || '(no content)';
+      try { formatted = JSON.stringify(JSON.parse(text), null, 2); } catch {}
+      query('[data-response-status]', result).textContent = response.status + ' ' + response.statusText;
+      query('[data-response-meta]', result).textContent = duration + ' ms · ' + (response.headers.get('content-type') || 'no content type').split(';')[0] + ' · ' + bytes(text) + ' B';
+      query('[data-response-body]', result).textContent = formatted;
+      query('[data-response-headers]', result).textContent = [...response.headers].map(([name, value]) => name + ': ' + value).join('\\n') || '(no response headers)';
+      query('[data-response-request]', result).textContent = form.dataset.method + ' ' + request.path + (Object.keys(previewHeaders).length ? '\\n' + Object.entries(previewHeaders).map(([name, value]) => name + ': ' + value).join('\\n') : '') + (request.body ? '\\n\\n' + JSON.stringify(JSON.parse(request.body), null, 2) : '');
+      const message = query('[data-response-message]', result);
+      if (response.status === 401) { message.hidden = false; message.innerHTML = '<strong>Authentication required</strong><span>Sign in to enable write requests.</span><a href="/identity">Sign in →</a>'; }
+      else if (response.status === 409) { message.hidden = false; message.innerHTML = '<strong>That key already exists</strong><span>Choose PUT to replace the complete resource.</span>'; }
+      else if (response.status === 404) { message.hidden = false; message.innerHTML = '<strong>Record not found</strong><span>Check the key or create it with POST or PUT.</span>'; }
+      else if (!response.ok) { message.hidden = false; message.innerHTML = '<strong>Request failed</strong><span>The raw response is available below.</span>'; }
+      const id = response.headers.get('x-request-id');
+      const log = query('[data-request-log]', result);
+      if (id) { log.hidden = false; log.href = '/dashboard/logs?source=rest&requestId=' + encodeURIComponent(id); log.textContent = 'View ' + id + ' in logs →'; } else log.hidden = true;
+      if (response.ok && form.dataset.method !== 'GET') updateCount().catch(() => {});
     } catch (error) {
-      form.querySelector('[data-swagger-result]').hidden = false;
-      form.querySelector('[data-swagger-output]').textContent = 'Request not sent.\\n\\n' + String(error);
+      query('[data-response-status]', result).textContent = 'Request not sent';
+      query('[data-response-body]', result).textContent = String(error);
+      query('[data-response-meta]', result).textContent = 'Fix the request inputs and try again.';
     }
   }));
-  document.querySelectorAll('a[href^="#swagger-definition-"]').forEach((link) => link.addEventListener('click', () => {
-    const browser = document.querySelector('[data-schema-browser]');
-    if (browser) browser.open = true;
-  }));
+  const setAuthenticated = (payload) => {
+    demoToken = payload.accessToken; tokenExpiresAt = payload.expiresAt;
+    query('[data-api-auth-state]').textContent = 'Authenticated';
+    query('[data-api-auth-state]').classList.add('badge-ok');
+    query('[data-api-auth-copy]').textContent = payload.provider + ' · ' + payload.authentication.toUpperCase() + ' · demo:read · demo:write';
+    query('[data-token-panel]').hidden = false;
+    query('[data-token-preview]').textContent = '••••••••••••' + demoToken.slice(-10);
+    query('[data-token-expiry]').textContent = 'Expires ' + new Date(tokenExpiresAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + ' · visitor sandbox only';
+    query('[data-sign-in]').hidden = true;
+    query('[data-sandbox-reset]').hidden = false;
+    queryAll('[data-api-param][data-parameter-name="namespace"]').forEach((input) => { input.value = 'Your API sandbox'; input.disabled = true; });
+    updateCount().catch(() => {});
+  };
+  const loadIdentity = async () => {
+    const sessionResponse = await fetch('/identity/session', { headers: { accept: 'application/json' }, credentials: 'same-origin' });
+    if (!sessionResponse.ok) return;
+    const session = await sessionResponse.json();
+    if (!session.authenticated) return;
+    const tokenResponse = await fetch('/__api/identity/token', { method: 'POST', headers: { accept: 'application/json' }, credentials: 'same-origin' });
+    if (tokenResponse.ok) setAuthenticated(await tokenResponse.json());
+  };
+  query('[data-copy-base]').addEventListener('click', async (event) => { await navigator.clipboard.writeText('https://demo.wizardgang.ai/v1'); event.currentTarget.textContent = 'Copied'; });
+  query('[data-copy-token]').addEventListener('click', async (event) => { await navigator.clipboard.writeText(demoToken); event.currentTarget.textContent = 'Copied'; setTimeout(() => { event.currentTarget.textContent = 'Copy token'; }, 1200); });
+  query('[data-sandbox-reset]').addEventListener('click', async (event) => {
+    event.currentTarget.disabled = true;
+    try { const response = await fetch('/__api/api-sandbox/reset', { method: 'POST', headers: securedHeaders() }); if (!response.ok) throw new Error('Reset failed'); await updateCount(); }
+    finally { event.currentTarget.disabled = false; }
+  });
+  loadIdentity().catch(() => {});
 })();`;
 
-/**
- * Render and run every REST operation from the served Swagger 2.0 contract.
- *
- * The contract owns paths, methods, inputs, security, request examples, and response
- * schemas. This renderer deliberately contains no endpoint-specific request logic.
- */
 export function swaggerConsole(): string {
   const spec = swagger as SwaggerDocument;
   const entries = operationEntries(spec);
-
-  return `<section class="api-heading" id="rest" aria-labelledby="rest-heading">
-    <span id="openapi" aria-hidden="true"></span>
-    <div><p class="eyebrow">Swagger 2.0</p><h2 id="rest-heading">REST API</h2></div>
-    <a class="text-link" href="/v1/openapi.json">Raw contract →</a>
+  const definitions = spec.definitions ?? {};
+  return `<section class="api-base" aria-labelledby="api-base-heading">
+    <div><p class="eyebrow">Base URL</p><h2 id="api-base-heading"><code>https://demo.wizardgang.ai/v1</code></h2></div><button type="button" data-copy-base>Copy</button>
   </section>
-  <div class="swagger-operation-list">${entries.map((entry, indexNumber) => renderOperation(entry, indexNumber, spec)).join('')}</div>
-  <details class="schema-browser" data-schema-browser><summary><span>Schemas</span><span>${Object.keys(spec.definitions ?? {}).length}</span></summary><div class="schema-grid">${renderDefinitions(spec.definitions ?? {})}</div></details>
-  <script>${SWAGGER_RUNNER}</script>`;
+  <section class="api-sandbox" aria-labelledby="api-sandbox-heading">
+    <div class="api-sandbox-heading"><div><p class="eyebrow">Authorization</p><h2 id="api-sandbox-heading">Your API sandbox</h2></div><span class="badge" data-api-auth-state>Public read</span></div>
+    <p data-api-auth-copy>Anonymous requests can read <code>public</code>. Authenticate to receive a ten-minute token for isolated writes.</p>
+    <div class="api-sandbox-actions"><a class="button button-primary" href="/identity" data-sign-in>Sign in to enable writes →</a><button type="button" data-sandbox-reset hidden>Reset sandbox</button><span data-sandbox-count>Public records</span></div>
+    <div class="api-token" data-token-panel hidden><div><span>Short-lived bearer token</span><code data-token-preview></code><small data-token-expiry></small></div><button type="button" data-copy-token>Copy token</button></div>
+  </section>
+  <section class="api-explorer" id="rest" aria-labelledby="endpoints-heading">
+    <aside class="api-endpoint-nav"><div><p class="eyebrow">OpenAPI generated</p><h2 id="endpoints-heading">Endpoints</h2></div><div role="tablist" aria-label="REST operations">
+      ${entries.map((entry, index) => `<button type="button" role="tab" aria-selected="${index === 0}" aria-controls="${escapeHtml(operationId(entry))}" data-api-endpoint="${index}"${index ? ' tabindex="-1"' : ''}><span class="http-method http-${entry.method.toLowerCase()}">${entry.method}</span><code>${escapeHtml(entry.path)}</code></button>`).join('')}
+    </div></aside>
+    <div class="api-operation-stage">${entries.map((entry, index) => renderOperation(entry, index, spec)).join('')}</div>
+  </section>
+  <section class="api-contract" id="openapi" aria-labelledby="openapi-heading">
+    <div class="api-contract-heading"><div><p class="eyebrow">Machine-readable source of truth</p><h2 id="openapi-heading">OpenAPI contract</h2></div><span class="badge badge-ok">OpenAPI 2.0 / Swagger</span></div>
+    <dl><dt>Version</dt><dd><code>${escapeHtml(String(spec.swagger))}</code></dd><dt>API version</dt><dd><code>${escapeHtml(String(spec.info?.version ?? ''))}</code></dd><dt>Base URL</dt><dd><code>https://demo.wizardgang.ai${escapeHtml(spec.basePath ?? '')}</code></dd><dt>Format</dt><dd>JSON or YAML</dd></dl>
+    <div class="button-row"><a class="button" href="/v1/openapi.json">View JSON</a><a class="button" href="/v1/openapi.yaml" download>Download YAML</a></div>
+    <details class="schema-browser" data-schema-browser><summary><span>Schemas</span><span>${Object.keys(definitions).length}</span></summary><div class="schema-grid">${renderDefinitions(definitions)}</div></details>
+  </section>
+  <script>${API_RUNNER}</script>`;
 }

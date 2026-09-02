@@ -34,8 +34,9 @@ export async function renderLogsDemo(request: Request, env: Env): Promise<Respon
   const url = new URL(request.url);
   const level = url.searchParams.get('level') || '';
   const source = url.searchParams.get('source') || '';
+  const requestId = url.searchParams.get('requestId') || '';
   const limit = Math.max(1, Math.min(Number(url.searchParams.get('limit') || '50') || 50, 200));
-  const logs = await recentApplicationLogs(env, { level, source, limit });
+  const logs = await recentApplicationLogs(env, { level, source, requestId, limit });
 
   const rows = logs.map((log) => `
     <tr>
@@ -43,6 +44,7 @@ export async function renderLogsDemo(request: Request, env: Env): Promise<Respon
       <td><span class="badge">${escapeHtml(log.level)}</span></td>
       <td><code>${escapeHtml(log.source)}</code></td>
       <td><code>${escapeHtml(log.event_key)}</code></td>
+      <td>${log.request_id ? `<code>${escapeHtml(log.request_id)}</code>` : '—'}</td>
       <td>${escapeHtml(log.message)}</td>
       <td>${log.route ? `<code>${escapeHtml(log.route)}</code>` : '—'}</td>
       <td>${log.detail_json ? `<details><summary>View</summary><pre>${escapeHtml(detailText(log.detail_json))}</pre></details>` : '—'}</td>
@@ -77,6 +79,9 @@ export async function renderLogsDemo(request: Request, env: Env): Promise<Respon
     <label>Limit
       <input name="limit" type="number" min="1" max="200" value="${limit}">
     </label>
+    <label>Request ID
+      <input name="requestId" value="${escapeHtml(requestId)}" maxlength="120" placeholder="req_…">
+    </label>
     <button type="submit">Apply</button>
     <a href="/dashboard/logs">Reset</a>
   </form>
@@ -86,11 +91,11 @@ export async function renderLogsDemo(request: Request, env: Env): Promise<Respon
   <p class="subtle">Showing ${logs.length} sanitized row${logs.length === 1 ? '' : 's'}.</p>
   <div class="table-wrap">
     <table>
-      <thead><tr><th>Time</th><th>Level</th><th>Source</th><th>Event</th><th>Message</th><th>Route</th><th>Detail</th></tr></thead>
-      <tbody>${rows || '<tr><td colspan="7">No logs have been recorded yet.</td></tr>'}</tbody>
+      <thead><tr><th>Time</th><th>Level</th><th>Source</th><th>Event</th><th>Request ID</th><th>Message</th><th>Route</th><th>Detail</th></tr></thead>
+      <tbody>${rows || '<tr><td colspan="8">No logs have been recorded yet.</td></tr>'}</tbody>
     </table>
   </div>
-  <p><a href="/__api/operations/logs?limit=${limit}${level ? `&level=${encodeURIComponent(level)}` : ''}${source ? `&source=${encodeURIComponent(source)}` : ''}">View JSON</a></p>
+  <p><a href="/__api/operations/logs?limit=${limit}${level ? `&level=${encodeURIComponent(level)}` : ''}${source ? `&source=${encodeURIComponent(source)}` : ''}${requestId ? `&requestId=${encodeURIComponent(requestId)}` : ''}">View JSON</a></p>
 </section>`;
 
   return shell(env, demo.title, body, { cacheControl: 'no-store' });

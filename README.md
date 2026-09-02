@@ -9,10 +9,10 @@ The canonical standard is [`docs/ARCHITECTURE-STANDARD.md`](docs/ARCHITECTURE-ST
 
 ## Architecture laboratory
 
-Seventeen public HTML routes organize the architecture into five layers. Each layer has a dedicated owner under `src/demos/`, live implementation, observable behavior, and direct public source/evidence links.
+Nineteen public HTML routes organize the architecture into five layers. Each layer has a dedicated owner under `src/demos/`, live implementation, observable behavior, and direct public source/evidence links.
 
 - **Platform:** safe edge-context inspection, bounded stateless Worker compute, a session-isolated D1 users-and-tasks lab, a bounded R2 mini file manager with D1 metadata, and a coordinated Durable Object counter.
-- **Interfaces:** REST/JSON, a served Swagger 2.0 contract, GraphQL Yoga with locally bundled GraphiQL, verified GitHub-compatible webhooks, real Entra/Google/GitHub authentication paths behind environment-owned credentials, and a JSON-RPC MCP read tool under explicit application policies.
+- **Interfaces:** focused REST/OpenAPI, GraphQL/GraphiQL, signed-webhook, identity, and MCP routes converging on explicit application policies and shared D1/logging boundaries.
 - **Standards:** English, Spanish, French, German, Japanese, and Arabic resources; instant switching and `Intl` inspection; RTL rendering; and accessible/broken comparison labs with locally bundled axe-core analysis.
 - **Delivery and governance:** live GitHub branch/commit/pull-request/Actions/tag/release evidence, runtime traceability, CI and tag-only deployment workflows, security-control mapping, and an executable MCP boundary evaluation.
 - **Operations:** dependency-aware health, timestamped availability, live documentation, sanitized D1 logs, synthetic billing thresholds, observable graceful degradation, and authenticated D1-backed demo control.
@@ -23,7 +23,7 @@ Core invariants:
 - R2 content stays in R2; D1 stores metadata/references only.
 - Coordinated counter state stays in a Durable Object; D1 stores audit evidence only.
 - Workers mediate application state and integrations.
-- REST mutations and R2 writes share bearer-protected authorization; public REST, GraphQL, and MCP reads share the explicit read boundary.
+- Public REST, GraphQL, and MCP reads share one authorization boundary; identity sessions produce ten-minute bearer tokens whose REST writes are limited to server-derived visitor sandboxes.
 - Secrets, credentials, private account metadata, and real billing/payment data never belong in Git or public logs.
 - WCAG 2.2, ISO/IEC 27001, and ISO/IEC 42001 references mean **aligned — uncertified**.
 
@@ -33,7 +33,7 @@ See [`docs/ROUTES.md`](docs/ROUTES.md) and [`docs/route-manifest.json`](docs/rou
 
 The demo uses the `wizardgang.ai` design tokens: dark by default, with a light theme the reader can toggle and the browser remembers. Every page carries a skip link, primary navigation, and in-group previous/next paging; `/sitemap.xml` is generated from the same registry that serves the routes, so it cannot drift from the published contract.
 
-`/d1` exposes a visitor-scoped users-and-tasks lab whose D1 records are also queryable through GraphQL. `/r2` provides a bounded mini file manager, `/accessibility` compares accessible and intentionally broken interfaces, `/i18n` switches among six locales, `/git` runs and tracks a controlled two-stage delivery lifecycle against this repository, and `/api` includes runnable REST, GraphQL, and webhook demonstrations. Existing bearer-protected record and object interfaces retain their original authorization boundaries.
+`/d1` exposes a visitor-scoped users-and-tasks lab whose D1 records are also queryable through `/graphql`. `/r2` provides a bounded mini file manager, `/accessibility` compares accessible and intentionally broken interfaces, `/i18n` switches among six locales, and `/git` runs and tracks a controlled two-stage delivery lifecycle against this repository. `/api` is now a focused REST/OpenAPI client while `/webhooks` owns event-ingestion evidence.
 
 ## Operations and admin
 

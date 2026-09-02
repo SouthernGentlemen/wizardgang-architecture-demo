@@ -8,6 +8,7 @@ import {
   IDENTITY_SESSION_COOKIE,
   clearFlowCookie,
   clearIdentityCookie,
+  createDemoAccessToken,
   createIdentitySession,
   hasIdentitySecret,
   randomValue,
@@ -24,6 +25,7 @@ import {
   type IdentityValidation,
   type NormalizedIdentity,
 } from '../lib/identity-session';
+import { principalFromIdentitySession } from '../lib/authorization';
 import { recordApplicationLog } from '../lib/logs';
 
 const encoder = new TextEncoder();
@@ -275,11 +277,31 @@ export async function authorizationDecisionResponse(request: Request, env: Env):
     const action = body.requestedAction === 'demo:write' ? 'demo:write' : body.requestedAction === 'demo:read' ? 'demo:read' : null;
     if (!action) throw new HttpError(400, 'invalid_requested_action');
     const { identity } = session;
-    const allowed = action === 'demo:read' || (identity.role === 'operator' && identity.assurance === 'mfa');
+    const principal = await principalFromIdentitySession(session);
+    const allowed = principal.permissions.includes(action);
     const eventType = allowed ? 'authorization_allowed' : 'authorization_denied';
     const event = await recordDemoEvent(env, 'identity', `identity.${eventType}`, { subjectSha256: await sha256(`${identity.provider}:${identity.subject}`), provider: identity.provider, assurance: identity.assurance, role: identity.role, action });
     await recordApplicationLog(env, { source: 'identity', eventKey: `identity.${eventType}`, message: `Application policy ${allowed ? 'allowed' : 'denied'} ${action}.`, route: '/__api/identity/authorize', detail: { provider: identity.provider, assurance: identity.assurance, role: identity.role, action, allowed, eventId: event.id } });
-    return json({ identity: { provider: identity.provider, displayName: identity.displayName, assurance: identity.assurance, role: identity.role }, authorization: { requestedAction: action, decision: allowed ? 'allow' : 'deny', policy: 'demo:read requires an authenticated viewer; demo:write requires the operator app role plus MFA.' }, separation: 'Authentication established the identity. Application policy independently decided the permitted action.', auditEventId: event.id }, { status: allowed ? 200 : 403, headers: { 'cache-control': 'no-store' } });
+    return json({ identity: { provider: identity.provider, displayName: identity.displayName, assurance: identity.assurance, role: identity.role }, principal, authorization: { requestedAction: action, decision: allowed ? 'allow' : 'deny', policy: 'Authenticated identities receive demo:read and visitor-sandbox demo:write. Only the managed operator credential can address a caller-selected namespace.' }, separation: 'Authentication established the identity. Application policy independently decided the permitted action and data scope.', auditEventId: event.id }, { status: allowed ? 200 : 403, headers: { 'cache-control': 'no-store' } });
+  } catch (error) { return errorResponse(error); }
+}
+
+export async function demoAccessTokenResponse(request: Request, env: Env): Promise<Response> {
+  if (request.method !== 'POST') return methodNotAllowed(['POST']);
+  try {
+    if (request.headers.get('origin') !== new URL(request.url).origin) throw new HttpError(403, 'same_origin_required');
+    const session = await readIdentitySession(request, env);
+    if (!session) throw new HttpError(401, 'authentication_required');
+    const { token, claims } = await createDemoAccessToken(env, session);
+    const subjectSha256 = await sha256(claims.subject);
+    const event = await recordDemoEvent(env, 'identity', 'identity.demo_access_token_issued', {
+      subjectSha256, provider: claims.provider, permissions: claims.permissions, namespace: claims.namespace, expiresAt: claims.expiresAt,
+    });
+    await recordApplicationLog(env, {
+      source: 'identity', eventKey: 'identity.demo_access_token_issued', message: 'Issued a short-lived visitor API token.', route: '/__api/identity/token',
+      detail: { subjectSha256, provider: claims.provider, permissions: claims.permissions, namespace: claims.namespace, expiresAt: claims.expiresAt, eventId: event.id },
+    });
+    return json({ tokenType: 'Bearer', accessToken: token, ...claims, sandboxLabel: 'Your API sandbox' }, { headers: { 'cache-control': 'no-store' } });
   } catch (error) { return errorResponse(error); }
 }
 
