@@ -60,8 +60,7 @@
     "title": "Model Context Protocol",
     "group": "Interfaces",
     "source": "src/demos/mcp.ts",
-    "status": "working",
-    "method": "GET, POST"
+    "status": "working"
   },
   {
     "route": "/i18n",
@@ -474,6 +473,16 @@
     "group": "Interfaces API",
     "source": "src/api/webhooks.ts",
     "method": "POST",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/mcp/server",
+    "title": "MCP Streamable HTTP Server",
+    "group": "Interfaces API",
+    "source": "src/api/mcp.ts",
+    "method": "GET, POST, DELETE",
     "machine": true,
     "offline_behavior": "503",
     "status": "working"

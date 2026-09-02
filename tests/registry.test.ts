@@ -63,6 +63,8 @@ describe('intentional offline gate', () => {
     expect(isApiLike('/v1/things')).toBe(true);
     expect(isApiLike('/__api/operations/logs')).toBe(true);
     expect(isApiLike('/graphql')).toBe(true);
+    expect(isApiLike('/mcp/server')).toBe(true);
+    expect(isApiLike('/mcp')).toBe(false);
     expect(isApiLike('/edge')).toBe(false);
   });
 
@@ -72,6 +74,7 @@ describe('intentional offline gate', () => {
     expect(wantsHtml(new Request('https://demo.wizardgang.ai/edge', { method: 'POST' }), '/edge')).toBe(false);
     expect(wantsHtml(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'text/html' } }), '/mcp')).toBe(true);
     expect(wantsHtml(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'application/json' } }), '/mcp')).toBe(false);
+    expect(wantsHtml(new Request('https://demo.wizardgang.ai/mcp/server', { headers: { accept: 'text/html' } }), '/mcp/server')).toBe(false);
     expect(wantsHtml(new Request('https://demo.wizardgang.ai/graphql/schema'), '/graphql/schema')).toBe(false);
   });
 });

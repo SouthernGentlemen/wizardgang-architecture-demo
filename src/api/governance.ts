@@ -1,5 +1,5 @@
 import type { Env } from '../types';
-import { mcpResponse } from './mcp';
+import { MCP_SERVER_PATH, mcpResponse } from './mcp';
 import { recordDemoEvent, recentDemoEvents } from '../lib/audit';
 import { json, methodNotAllowed } from '../lib/http';
 import { recordApplicationLog } from '../lib/logs';
@@ -38,16 +38,29 @@ export function securityControlsResponse(request: Request, env: Env): Response {
 
 export async function aiEvaluationResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'POST') return methodNotAllowed(['POST']);
-  const invoke = (method: string, params?: unknown) => mcpResponse(new Request(new URL('/mcp', request.url), {
-    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: crypto.randomUUID(), method, params }),
+  const invoke = (method: string, params?: unknown) => mcpResponse(new Request(new URL(MCP_SERVER_PATH, request.url), {
+    method: 'POST', headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream' }, body: JSON.stringify({ jsonrpc: '2.0', id: crypto.randomUUID(), method, params }),
   }), env);
   const valid = await invoke('tools/call', { name: 'list_demo_records', arguments: { namespace: 'public' } });
   const unknownMethod = await invoke('tools/deleteEverything');
   const invalidScope = await invoke('tools/call', { name: 'list_demo_records', arguments: { namespace: '../private' } });
+  const readMessage = async (response: Response) => {
+    const text = await response.text();
+    const payload = response.headers.get('content-type')?.includes('text/event-stream')
+      ? [...text.matchAll(/^data:\s*(.+)$/gm)].at(-1)?.[1]
+      : text;
+    return payload ? JSON.parse(payload) as Record<string, unknown> : {};
+  };
+  const [validMessage, unknownMessage, invalidMessage] = await Promise.all([
+    readMessage(valid), readMessage(unknownMethod), readMessage(invalidScope),
+  ]);
+  const validResult = validMessage.result as Record<string, unknown> | undefined;
+  const unknownError = unknownMessage.error as Record<string, unknown> | undefined;
+  const invalidResult = invalidMessage.result as Record<string, unknown> | undefined;
   const results = [
-    { case: 'approved read tool', expected: 200, actual: valid.status, passed: valid.status === 200 },
-    { case: 'unknown method fallback', expected: 404, actual: unknownMethod.status, passed: unknownMethod.status === 404 },
-    { case: 'invalid namespace validation', expected: 400, actual: invalidScope.status, passed: invalidScope.status === 400 },
+    { case: 'approved read tool', expected: 'tool result', actual: validResult?.structuredContent ? 'tool result' : 'missing result', httpStatus: valid.status, passed: Boolean(validResult?.structuredContent) },
+    { case: 'unknown method fallback', expected: 'JSON-RPC -32601', actual: `JSON-RPC ${String(unknownError?.code ?? 'missing')}`, httpStatus: unknownMethod.status, passed: unknownError?.code === -32601 },
+    { case: 'invalid namespace validation', expected: 'tool error', actual: invalidResult?.isError === true ? 'tool error' : 'missing error', httpStatus: invalidScope.status, passed: invalidResult?.isError === true },
   ];
   const passed = results.every((result) => result.passed);
   const event = await recordDemoEvent(env, 'iso42001', 'ai_boundary_evaluation', { passed, results });

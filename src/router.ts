@@ -18,7 +18,7 @@ import { durableCounterResponse } from './api/durable';
 import { graphqlResponse, graphqlSchemaResponse } from './api/graphql';
 import { githubWebhookResponse, webhookDemoResponse, webhookEventsResponse, webhookReceiptResponse, webhookResetResponse } from './api/webhooks';
 import { openApiResponse } from './api/openapi';
-import { mcpResponse } from './api/mcp';
+import { MCP_SERVER_PATH, mcpResponse } from './api/mcp';
 import { authorizationDecisionResponse, identityLogoutResponse, identitySessionResponse, oauthPkceResponse, providerCallbackResponse, providerStartResponse, samlCallbackResponse, samlInspectionResponse, samlMetadataResponse, samlStartResponse, ssoBoundaryResponse } from './api/identity';
 import { renderI18nDemo } from './demos/i18n-page';
 import { renderAccessibilityDemo } from './demos/accessibility-page';
@@ -35,13 +35,14 @@ import { gitEvidenceResponse } from './api/git-evidence';
 import { gitDemoReleaseResponse, gitDemoStartResponse, gitDemoStatusResponse } from './api/git-demo';
 import { renderGitDemo } from './demos/git-page';
 import { renderIdentityDemo } from './demos/identity-page';
+import { renderMcpDemo } from './demos/mcp-page';
 import { graphiqlAssetResponse } from './ui/graphiql-assets';
 import { socialCardResponse } from './ui/brand-assets';
 import { crawlerBlockedResponse, getCrawlerControl, identifyOpenAIAgent, robotsResponse, setCrawlerControl } from './lib/crawler-control';
 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
-const API_PATHS = new Set(['/graphql', '/mcp']);
+const API_PATHS = new Set(['/graphql', MCP_SERVER_PATH]);
 /** Routes whose whole point is the D1-backed record resource, so they get the live console. */
 const RECORD_CONSOLE_ROUTES = new Set(['/api']);
 
@@ -84,7 +85,6 @@ export function isApiLike(path: string): boolean {
 export function wantsHtml(request: Request, path: string): boolean {
   if (request.method !== 'GET') return false;
   const accept = request.headers.get('accept') || '';
-  if (path === '/mcp') return accept.includes('text/html') || accept === '';
   if (isApiLike(path)) return false;
   return accept.includes('text/html') || accept === '';
 }
@@ -207,7 +207,8 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/__api/webhooks/demo') return webhookDemoResponse(request, env);
   if (path === '/__api/webhooks/events') return webhookEventsResponse(request, env);
   if (path === '/__api/webhooks/reset') return webhookResetResponse(request, env);
-  if (path === '/mcp' && request.method !== 'GET') return mcpResponse(request, env);
+  if (path === MCP_SERVER_PATH) return mcpResponse(request, env);
+  if (path === '/mcp' && request.method !== 'GET') return methodNotAllowed(['GET']);
   if (path === '/__api/identity/oauth-pkce') return oauthPkceResponse(request, env);
   if (path === '/__api/identity/authorize') return authorizationDecisionResponse(request, env);
   if (path === '/__api/identity/sso') return ssoBoundaryResponse(request, env);
@@ -245,6 +246,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (request.method === 'GET' && path === '/i18n') return renderI18nDemo(request, env);
   if (request.method === 'GET' && path === '/accessibility') return renderAccessibilityDemo(request, env);
   if (request.method === 'GET' && path === '/git') return renderGitDemo(env);
+  if (request.method === 'GET' && path === '/mcp') return renderMcpDemo(request, env);
   if (request.method === 'GET' && path === '/dashboard') return renderDashboard(env);
   if (request.method === 'GET' && path === '/dashboard/uptime') return renderUptime(env);
   if (request.method === 'GET' && path === '/dashboard/docs') return renderDocs(env);

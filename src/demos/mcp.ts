@@ -1,21 +1,25 @@
 import type { DemoDefinition } from '../types';
 
 const demo: DemoDefinition = {
-  "id": "mcp",
-  "route": "/mcp",
-  "title": "Model Context Protocol",
-  "group": "Interfaces",
-  "sourcePath": "src/demos/mcp.ts",
-  "summary": "Controlled AI integration surface where tools operate inside normal application permissions and data boundaries.",
-  "proves": [
-    "JSON-RPC initialization, tool discovery, and tool invocation",
-    "The same demo:read policy used by REST and GraphQL",
-    "Bounded D1 access and public-safe tool-call evidence"
+  id: 'mcp',
+  route: '/mcp',
+  title: 'Model Context Protocol',
+  group: 'Interfaces',
+  sourcePath: 'src/demos/mcp.ts',
+  summary: 'Connect a real MCP client to the live demo and invoke read-only tools through the same application permissions used by the rest of the platform.',
+  proves: [
+    'Real client interoperability over Streamable HTTP',
+    'MCP 2026-07-28 with stateless 2025-era compatibility',
+    'Schema-defined read-only tools behind shared authorization, D1, and sanitized operational evidence',
   ],
-  "status": "working",
-  "interfaces": [{ "method": "POST", "path": "/mcp", "description": "Invoke initialize, tools/list, or tools/call over JSON-RPC." }],
-  "supportingSources": [{ "label": "View MCP implementation", "path": "src/api/mcp.ts" }, { "label": "View tool manifest", "path": "contracts/mcp/tools.json" }, { "label": "View shared authorization", "path": "src/lib/authorization.ts" }],
-  "action": { "label": "Call the controlled MCP tool", "method": "POST", "path": "/mcp", "body": { "jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": { "name": "list_demo_records", "arguments": { "namespace": "public" } } } }
+  status: 'working',
+  interfaces: [{ method: 'GET, POST', path: '/mcp/server', description: 'Connect an MCP 2026-07-28 or stateless 2025-era client over Streamable HTTP.' }],
+  supportingSources: [
+    { label: 'View MCP implementation', path: 'src/api/mcp.ts' },
+    { label: 'View tool manifest', path: 'contracts/mcp/tools.json' },
+    { label: 'View interoperability tests', path: 'tests/mcp-client.test.ts' },
+    { label: 'View shared authorization', path: 'src/lib/authorization.ts' },
+  ],
 };
 
 export default demo;

@@ -38,10 +38,11 @@ describe('governance evidence', () => {
 
   it('executes and audits approved, unknown, and invalid-scope MCP evaluation cases', async () => {
     const response = await aiEvaluationResponse(new Request('https://demo.example/__api/governance/ai-evaluation', { method: 'POST' }), env());
-    const body = await response.json() as { passed: boolean; results: Array<{ actual: number; passed: boolean }>; alignment: string };
+    const body = await response.json() as { passed: boolean; results: Array<{ actual: string; httpStatus: number; passed: boolean }>; alignment: string };
     expect(response.status).toBe(200);
     expect(body.passed).toBe(true);
-    expect(body.results.map((result) => result.actual)).toEqual([200, 404, 400]);
+    expect(body.results.map((result) => result.actual)).toEqual(['tool result', 'JSON-RPC -32601', 'tool error']);
+    expect(body.results.map((result) => result.httpStatus)).toEqual([200, 200, 200]);
     expect(body.alignment).toContain('uncertified');
   });
 });
