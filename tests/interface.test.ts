@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { renderAccessibilityDemo } from '../src/demos/accessibility-page';
+import { renderComplianceDemo } from '../src/demos/compliance-page';
 import { renderD1Demo } from '../src/demos/d1-page';
 import { renderI18nDemo } from '../src/demos/i18n-page';
 import { renderR2Demo } from '../src/demos/r2-page';
@@ -120,6 +121,21 @@ describe('accessible interaction surface', () => {
     expect(broken).toContain('onpaste="return false"');
     expect(broken).toContain('outline:none!important');
     expect(broken).toContain('<img class="product" src=');
+  });
+});
+
+describe('compliance assurance index', () => {
+  it('uses a single heading hierarchy, labelled evidence sections, and descriptive links', async () => {
+    const html = await renderComplianceDemo(env).text();
+    expect(html.match(/<h1\b/g)).toHaveLength(1);
+    expect(html).toContain('aria-labelledby="posture-heading"');
+    expect(html).toContain('aria-labelledby="evidence-heading"');
+    expect(html.match(/class="assurance-posture-card"/g)).toHaveLength(3);
+    expect(html.match(/class="assurance-evidence-card"/g)).toHaveLength(9);
+    for (const label of ['Accessibility demonstration', 'Governance controls', 'MCP boundary', 'Availability history', 'Public logs', 'Documentation index', 'Operations dashboard']) {
+      expect(html).toContain(`${label} <span aria-hidden="true">→</span>`);
+    }
+    expect(html).not.toMatch(/>\s*(?:COMPLIANT|CERTIFIED)\s*</i);
   });
 });
 

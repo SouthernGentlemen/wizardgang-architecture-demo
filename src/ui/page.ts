@@ -13,7 +13,7 @@ const FAVICON = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www
 /** Restores the reader's stored theme before first paint so the page never flashes. */
 const THEME_BOOT = `try{var t=localStorage.getItem('wg-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}`;
 
-const THEME_TOGGLE = `(()=>{const b=document.querySelector('[data-theme-toggle]');if(!b)return;const r=document.documentElement;const sync=()=>{const light=r.dataset.theme==='light';b.textContent=light?'Dark':'Light';b.setAttribute('aria-pressed',String(light))};sync();b.addEventListener('click',()=>{const next=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=next;try{localStorage.setItem('wg-theme',next)}catch(e){}sync()})})()`;
+const THEME_TOGGLE = `(()=>{const b=document.querySelector('[data-theme-toggle]');if(!b)return;const r=document.documentElement;const sync=()=>{const light=r.dataset.theme==='light';const next=light?'dark':'light';b.textContent='Theme: '+(light?'Dark':'Light');b.setAttribute('aria-label','Switch to '+next+' theme');b.setAttribute('aria-pressed',String(light))};sync();b.addEventListener('click',()=>{const next=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=next;try{localStorage.setItem('wg-theme',next)}catch(e){}sync()})})()`;
 
 export interface ShellOptions {
   cacheControl?: string;
@@ -25,7 +25,7 @@ export interface ShellOptions {
 
 export function shell(env: Env, title: string, body: string, options: ShellOptions = {}): Response {
   const description = options.description ?? DEFAULT_DESCRIPTION;
-  const current = (href: string) => (options.activeRoute === href ? ' aria-current="page"' : '');
+  const dashboardCurrent = options.activeRoute?.startsWith('/dashboard') ? ' aria-current="page"' : '';
   const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -54,21 +54,17 @@ export function shell(env: Env, title: string, body: string, options: ShellOptio
 <header class="site-header">
   <a class="brand" href="/" aria-label="WizardGang Architecture Demo home">
     <span class="brand-mark" aria-hidden="true"></span>
-    <span class="brand-copy"><strong>WIZARDGANG.AI</strong><small>Architecture demo</small></span>
+    <span class="brand-copy"><strong>WIZARDGANG</strong><small>Architecture demo</small></span>
   </a>
   <nav class="nav" aria-label="Primary">
-    <a href="/"${current('/')}>Map</a>
-    <a href="/dashboard"${current('/dashboard')}>Operations</a>
-    <a href="/dashboard/docs"${current('/dashboard/docs')}>Docs</a>
+    <a href="/dashboard"${dashboardCurrent}>Dashboard</a>
     <a href="https://wizardgang.ai/">Main site <span aria-hidden="true">↗</span></a>
-    <a href="${escapeHtml(repoUrl(env))}">GitHub <span aria-hidden="true">↗</span></a>
-    <button type="button" data-theme-toggle aria-pressed="false">Light</button>
+    <button type="button" data-theme-toggle aria-label="Switch to light theme" aria-pressed="false">Theme: Light</button>
   </nav>
 </header>
 <main class="site-main" id="main">${body}</main>
 <footer class="site-footer">
-  <span>WizardGang.ai · WG-ARCH-001 companion</span>
-  <span><a href="https://wizardgang.ai/">Main site</a> · <a href="${escapeHtml(repoUrl(env))}">Public source</a></span>
+  <span>WG-ARCH-001 · <a href="${escapeHtml(repoUrl(env))}">Public source</a></span>
 </footer>
 <script>${THEME_TOGGLE}</script>
 </body>

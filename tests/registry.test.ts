@@ -5,8 +5,8 @@ import { sitemapResponse } from '../src/api/sitemap';
 import { readFileSync } from 'node:fs';
 
 describe('architecture demo registry', () => {
-  it('publishes 19 HTML routes in five architecture groups', () => {
-    expect(demos).toHaveLength(19);
+  it('publishes 20 HTML routes in five architecture groups', () => {
+    expect(demos).toHaveLength(20);
     expect([...new Set(demos.map((demo) => demo.group))]).toEqual([
       'Platform', 'Interfaces', 'Standards', 'Delivery & Governance', 'Operations',
     ]);
@@ -32,6 +32,16 @@ describe('architecture demo registry', () => {
     expect(routes.has('/dashboard/health')).toBe(false);
   });
 
+  it('places the canonical compliance route in delivery and governance', () => {
+    const compliance = demos.find((demo) => demo.route === '/compliance');
+    expect(compliance).toMatchObject({
+      group: 'Delivery & Governance',
+      sourcePath: 'src/demos/compliance.ts',
+      status: 'working',
+    });
+    expect(demos.some((demo) => demo.route === '/dashboard/compliance')).toBe(false);
+  });
+
   it('keeps registry metadata synchronized with the machine route manifest', () => {
     const manifest = JSON.parse(readFileSync('docs/route-manifest.json', 'utf8')) as Array<{ route: string; source: string; status: string }>;
     for (const demo of demos) {
@@ -41,7 +51,7 @@ describe('architecture demo registry', () => {
       expect(entry?.status).toBe(demo.status);
     }
     expect(demos.every((demo) => demo.status === 'working')).toBe(true);
-    expect(manifest.filter((entry) => entry.source.startsWith('src/demos/'))).toHaveLength(19);
+    expect(manifest.filter((entry) => entry.source.startsWith('src/demos/'))).toHaveLength(20);
   });
 });
 

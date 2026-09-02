@@ -20,6 +20,7 @@ import { MCP_SERVER_PATH, mcpResponse } from './api/mcp';
 import { authorizationDecisionResponse, demoAccessTokenResponse, identityLogoutResponse, identitySessionResponse, oauthPkceResponse, providerCallbackResponse, providerStartResponse, samlCallbackResponse, samlInspectionResponse, samlMetadataResponse, samlStartResponse, ssoBoundaryResponse } from './api/identity';
 import { renderI18nDemo } from './demos/i18n-page';
 import { renderAccessibilityDemo } from './demos/accessibility-page';
+import { renderComplianceDemo } from './demos/compliance-page';
 import { billingScenarioResponse } from './api/billing';
 import { renderBilling, renderDashboard, renderDocs, renderUptime } from './demos/operations-pages';
 import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } from './api/governance';
@@ -252,6 +253,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (request.method === 'GET' && path === '/identity') return renderIdentityDemo(env);
   if (request.method === 'GET' && path === '/i18n') return renderI18nDemo(request, env);
   if (request.method === 'GET' && path === '/accessibility') return renderAccessibilityDemo(request, env);
+  if (request.method === 'GET' && path === '/compliance') return renderComplianceDemo(env);
   if (request.method === 'GET' && path === '/git') return renderGitDemo(env);
   if (request.method === 'GET' && path === '/mcp') return renderMcpDemo(request, env);
   if (request.method === 'GET' && path === '/dashboard') return renderDashboard(env);

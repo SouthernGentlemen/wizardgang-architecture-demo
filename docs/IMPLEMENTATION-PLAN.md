@@ -24,6 +24,7 @@ The dashboard-visible ChatGPT crawler control, dynamic robots policy, and server
 | CAP-019 | End-to-end traceability and evidence API | Complete |
 | CAP-020–024 | Dashboard, uptime/health, logs, synthetic billing/degradation, protected control | Complete |
 | CAP-025 | Dashboard-visible, admin-controlled ChatGPT search/fetch access with independent training opt-out | Complete |
+| CAP-026 | Canonical `/compliance` assurance index, dashboard entry point, consolidated global chrome, and automated route/link contract | Complete; aligned/supporting statements remain uncertified |
 
 The v0.5.0 interaction work adds visitor-scoped D1 users/tasks, GraphQL Yoga and local GraphiQL, bounded R2 uploads, six-locale switching, an accessibility comparison lab, verified GitHub webhook handling, and live GitHub delivery evidence without changing the released HTML route set.
 

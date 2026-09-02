@@ -23,6 +23,8 @@ Primary sources:
 - R2: actual demo objects/artifacts plus D1 references;
 - application UI: accessibility/i18n behavior, AI evaluations/fallback demonstrations, operational views.
 
+`/compliance` is the assurance front door across those sources. It states the WCAG 2.2, ISO/IEC 27001, and ISO/IEC 42001 posture as aligned or supported and uncertified, then links to the canonical working evidence at `/accessibility`, `/i18n`, `/governance`, `/mcp`, `/git`, and `/dashboard/*`. It does not reproduce their explanations or turn alignment into a certification claim.
+
 Do not reconstruct evidence after the fact when the engineering workflow can create it automatically.
 
 The traceability API reports missing `DEPLOYED_VERSION` / `DEPLOYED_SHA` as `not-supplied`; it never invents a release. CI generates `artifacts/evidence/validation.json` for the exact tested commit and uploads it as a GitHub Actions artifact. Tagged deployment injects the version and SHA, then verifies the public `/version` and `/health` surfaces.

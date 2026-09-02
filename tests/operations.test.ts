@@ -60,6 +60,8 @@ describe('operations proof surface', () => {
     expect(dashboard).toContain('href="/admin"');
     expect(dashboard).toContain('href="/robots.txt"');
     expect(dashboard).toContain('aria-label="Operations"');
+    expect(dashboard).toContain('Compliance &amp; Assurance');
+    expect(dashboard).toContain('href="/compliance"');
     expect(dashboard).not.toContain('name="control" value="chatgpt-crawl"');
     expect(dashboard).not.toContain('name="state" value="enabled"');
     const docs = await renderDocs(environment).text();

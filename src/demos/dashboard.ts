@@ -6,12 +6,13 @@ const demo: DemoDefinition = {
   title: 'System Operations',
   group: 'Operations',
   sourcePath: 'src/demos/dashboard.ts',
-  summary: 'Read-only operational center for live health, scheduled availability, deployment evidence, public-safe activity, Cloudflare usage, and cost guardrails.',
+  summary: 'Read-only operational center for live health, scheduled availability, deployment evidence, public-safe activity, Cloudflare usage, cost guardrails, and the assurance evidence entry point.',
   proves: [
     'Single read-only operational entry point',
     'Links operational state back to public implementation code',
     'Separates public telemetry from private account configuration',
-    'Provides bounded public-safe application log visibility alongside scheduled health, uptime, and sanitized Cloudflare telemetry'
+    'Provides bounded public-safe application log visibility alongside scheduled health, uptime, and sanitized Cloudflare telemetry',
+    'Surfaces compliance and assurance as an evidence index rather than an operational KPI'
   ],
   status: 'working',
   interfaces: [{ method: 'GET', path: '/dashboard', description: 'Compose live control, health, budget, version, log, documentation, and evidence state.' }],

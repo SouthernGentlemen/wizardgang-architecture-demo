@@ -214,6 +214,18 @@ export async function renderDashboard(env: Env): Promise<Response> {
     </article>
   </section>
 
+  <section class="operations-section assurance-dashboard-card" aria-labelledby="assurance-heading">
+    <div>
+      <p class="eyebrow">Assurance / evidence index</p>
+      <h2 id="assurance-heading">Compliance &amp; Assurance</h2>
+      <p>WCAG 2.2 · ISO/IEC 27001 · ISO/IEC 42001</p>
+    </div>
+    <div>
+      <strong>Aligned / uncertified</strong>
+      <a href="/compliance">View controls and evidence <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
   <section class="operations-section policy-card" aria-labelledby="policy-heading">
     <div class="operations-section-heading"><div><p class="eyebrow">Read-only public state</p><h2 id="policy-heading">Operational policy</h2></div><a href="/admin">Admin controls <span aria-hidden="true">→</span></a></div>
     <div class="policy-grid"><div><span>Demo</span><strong class="${statusClass(control.state)}">${escapeHtml(control.state.toUpperCase())}</strong><small>${escapeHtml(control.publicMessage)}</small></div><div><span>User-requested ChatGPT fetch</span><strong class="${statusClass(crawlerControl.state === 'enabled' ? 'online' : 'offline')}">${escapeHtml(crawlerControl.state.toUpperCase())}</strong><small>Search and user-requested fetch policy</small></div><div><span>Model-training crawl</span><strong class="stat-down">BLOCKED</strong><small><a href="/robots.txt">Inspect robots.txt →</a></small></div></div>

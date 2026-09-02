@@ -104,6 +104,20 @@ p { margin: 0 0 1rem; }
 .reference-links { display: flex; flex-wrap: wrap; gap: .55rem 1rem; margin-top: .35rem; padding: .8rem 1rem; border: 1px solid var(--line); background: var(--panel); }
 .reference-links a { color: var(--muted); font-size: .85rem; }
 .reference-links a:hover { color: var(--paper); }
+.assurance-header { max-width: 900px; }
+.assurance-notice { max-width: 68ch; margin: 1.4rem 0 0; padding: 1rem 1.1rem; border-left: 3px solid var(--violet); background: var(--panel); color: var(--muted); }
+.assurance-notice strong { color: var(--paper); }
+.assurance-posture-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin-bottom: clamp(3rem, 6vw, 5rem); border: 1px solid var(--line); background: var(--line); }
+.assurance-posture-card { display: grid; align-content: start; min-height: 240px; padding: clamp(1.2rem, 3vw, 1.8rem); background: var(--panel); text-decoration: none; }
+.assurance-posture-card:hover { background: var(--panel-2); }
+.assurance-posture-card h2 { margin-bottom: 1.35rem; }
+.assurance-posture-card strong { max-width: 18ch; color: var(--acid); font: 850 1rem/1.4 var(--mono); text-transform: uppercase; }
+.assurance-posture-card > span { align-self: end; margin-top: 2rem; color: var(--muted); font: 750 .72rem/1.4 var(--mono); text-transform: uppercase; }
+.assurance-evidence-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
+.assurance-evidence-card { display: flex; min-height: 225px; padding: 1.25rem; border: 1px solid var(--line); background: var(--panel); flex-direction: column; }
+.assurance-evidence-card p { color: var(--muted); font-size: .9rem; }
+.assurance-evidence-card .link-row { align-items: flex-start; margin-top: auto; flex-direction: column; gap: .45rem; }
+.assurance-evidence-card .link-row a { font-size: .72rem; }
 .status-strip { display: flex; gap: 1px; margin-bottom: clamp(4rem, 8vw, 7rem); overflow: hidden; border: 1px solid var(--line); background: var(--line); }
 .status-strip a { position: relative; flex: 1; display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; min-height: 84px; padding: 1.2rem 1.4rem; background: var(--panel); text-decoration: none; }
 .status-strip a::before { position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--acid); content: ""; }
@@ -801,6 +815,12 @@ summary { cursor: pointer; }
 .usage-compact { grid-template-columns: minmax(130px, .8fr) 1.2fr; padding-top: .9rem; border-top: 1px solid var(--line); }
 .deployment-card > .badge { margin-bottom: 1.25rem; }
 .deployment-card dl { margin-bottom: 1.25rem; }
+.assurance-dashboard-card { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(230px, .6fr); align-items: end; gap: 2rem; border-left: 3px solid var(--violet); }
+.assurance-dashboard-card h2 { margin-bottom: .55rem; }
+.assurance-dashboard-card p { margin: 0; color: var(--muted); }
+.assurance-dashboard-card > div:last-child { display: grid; justify-items: end; gap: 1rem; text-align: right; }
+.assurance-dashboard-card strong { color: var(--acid); font: 900 .9rem/1.3 var(--mono); text-transform: uppercase; }
+.assurance-dashboard-card a { font: 800 .72rem/1.3 var(--mono); text-transform: uppercase; }
 .policy-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; border: 1px solid var(--line); background: var(--line); }
 .policy-grid > div { display: grid; gap: .55rem; min-height: 150px; padding: 1rem; background: var(--panel-2); }
 .policy-grid span, .policy-grid small { color: var(--muted); font: 700 .68rem/1.4 var(--mono); }
@@ -918,6 +938,7 @@ footer a { color: var(--paper); }
   .api-endpoint-nav button { border-right: 1px solid var(--line); }
   .graphql-control-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .operations-kpis, .usage-products { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .assurance-evidence-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {
   header { align-items: flex-start; flex-wrap: wrap; }
@@ -936,10 +957,14 @@ footer a { color: var(--paper); }
   .machine-endpoints { align-self: flex-start; }
   .machine-endpoints .link-row { left: 0; right: auto; }
   .operations-split { grid-template-columns: 1fr; }
+  .assurance-posture-grid { grid-template-columns: 1fr; }
+  .assurance-posture-card { min-height: 0; }
   .service-health-row { grid-template-columns: minmax(120px, 1fr) minmax(110px, .8fr) 68px; }
   .service-health-row > :last-child { grid-column: 1 / -1; }
   .service-health-head > :last-child { display: none; }
   .policy-grid, .guardrail-states { grid-template-columns: 1fr; }
+  .assurance-dashboard-card { grid-template-columns: 1fr; }
+  .assurance-dashboard-card > div:last-child { justify-items: start; text-align: left; }
 }
 @media (max-width: 620px) {
   header, main, footer, .bar { width: min(100% - 24px, var(--shell-width)); }
@@ -954,6 +979,7 @@ footer a { color: var(--paper); }
   .swagger-operation > summary { grid-template-columns: 1fr auto; gap: .55rem; }
   .swagger-operation > summary .swagger-route { grid-column: 1 / -1; }
   .info-grid, .action-grid { grid-template-columns: 1fr; }
+  .assurance-evidence-grid { grid-template-columns: 1fr; }
   .lab-grid { grid-template-columns: 1fr; }
   .lab-grid aside { position: static; }
   .d1-table-panel { min-height: 0; }
