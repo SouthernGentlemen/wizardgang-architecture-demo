@@ -21,13 +21,15 @@ const requiredRoutes = [
   '/v1/openapi.json', '/graphql', '/graphql/schema', '/__assets/graphiql/{asset}', '/v1/webhooks/demo', '/v1/webhooks/github',
   '/__api/webhooks/demo', '/__api/webhooks/events', '/__api/webhooks/reset', '/__api/identity/oauth-pkce', '/__api/identity/authorize',
   '/__api/identity/sso', '/identity/saml/metadata', '/__api/identity/saml/inspect',
+  '/identity/microsoft', '/identity/microsoft/callback', '/identity/google', '/identity/google/callback',
+  '/identity/github', '/identity/github/callback', '/identity/saml', '/identity/saml/acs', '/identity/session', '/identity/logout',
   '/__api/operations/billing', '/__api/evidence/traceability',
   '/__api/governance/security-controls', '/__api/governance/ai-evaluation'
 ];
 
 const retiredRoutes = [
   '/api/rest', '/api/openapi', '/api/graphql', '/api/webhooks',
-  '/identity/oauth', '/identity/sso', '/identity/saml',
+  '/identity/oauth', '/identity/sso',
   '/git/versioning', '/git/branching', '/git/releases', '/git/actions', '/environments',
   '/governance/iso-27001', '/governance/iso-42001', '/traceability', '/evidence',
   '/dashboard/health', '/__api/demo/run', '/__api/demo/events',
@@ -69,6 +71,9 @@ for (const requiredFile of [
   'migrations/0003_demo_control.sql',
   'migrations/0004_application_logs.sql',
   'migrations/0009_crawler_control.sql',
+  'migrations/0010_identity_sessions.sql',
+  'src/demos/identity-page.ts',
+  'src/lib/identity-session.ts',
   'KICKOFF-SOL-VERY-HIGH.md'
 ]) {
   if (!fs.existsSync(path.join(root, requiredFile))) failures.push(`missing required file: ${requiredFile}`);

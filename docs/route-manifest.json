@@ -50,7 +50,7 @@
   },
   {
     "route": "/identity",
-    "title": "Authentication & Authorization",
+    "title": "Authentication & SSO",
     "group": "Interfaces",
     "source": "src/demos/identity.ts",
     "status": "working"
@@ -524,6 +524,106 @@
     "group": "Interfaces API",
     "source": "src/api/identity.ts",
     "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/identity/microsoft",
+    "title": "Microsoft Entra ID OIDC Start",
+    "group": "Identity",
+    "source": "src/api/identity.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/identity/microsoft/callback",
+    "title": "Microsoft Entra ID OIDC Callback",
+    "group": "Identity",
+    "source": "src/api/identity.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/identity/google",
+    "title": "Google OIDC Start",
+    "group": "Identity",
+    "source": "src/api/identity.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/identity/google/callback",
+    "title": "Google OIDC Callback",
+    "group": "Identity",
+    "source": "src/api/identity.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/identity/github",
+    "title": "GitHub OAuth Start",
+    "group": "Identity",
+    "source": "src/api/identity.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/identity/github/callback",
+    "title": "GitHub OAuth Callback",
+    "group": "Identity",
+    "source": "src/api/identity.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/identity/saml",
+    "title": "Microsoft Entra ID SAML Start",
+    "group": "Identity",
+    "source": "src/api/identity.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/identity/saml/acs",
+    "title": "Microsoft Entra ID SAML ACS",
+    "group": "Identity",
+    "source": "src/api/identity.ts",
+    "method": "POST",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/identity/session",
+    "title": "Identity Session",
+    "group": "Identity",
+    "source": "src/api/identity.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/identity/logout",
+    "title": "Identity Logout",
+    "group": "Identity",
+    "source": "src/api/identity.ts",
+    "method": "POST",
     "machine": true,
     "offline_behavior": "503",
     "status": "working"

@@ -5,3 +5,17 @@ DEMO_API_TOKEN=replace-me-with-a-local-only-api-token
 WEBHOOK_DEMO_SECRET=replace-me-with-a-local-only-webhook-secret
 GITHUB_WEBHOOK_SECRET=replace-me-with-a-local-only-github-webhook-secret
 DEMO_SESSION_SECRET=replace-me-with-at-least-32-local-only-characters
+
+# Real identity providers. Register localhost callback URLs separately for local testing.
+IDENTITY_SESSION_SECRET=replace-me-with-at-least-32-local-only-characters
+MICROSOFT_CLIENT_ID=replace-me
+MICROSOFT_CLIENT_SECRET=replace-me
+MICROSOFT_TENANT_ID=replace-me
+GOOGLE_CLIENT_ID=replace-me
+GOOGLE_CLIENT_SECRET=replace-me
+GITHUB_CLIENT_ID=replace-me
+GITHUB_CLIENT_SECRET=replace-me
+SAML_IDP_CERT=replace-me-with-the-entra-signing-certificate
+# Optional overrides; defaults are derived from MICROSOFT_TENANT_ID.
+# SAML_IDP_ISSUER=https://sts.windows.net/replace-me/
+# SAML_SSO_URL=https://login.microsoftonline.com/replace-me/saml2

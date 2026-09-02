@@ -19,7 +19,7 @@ import { graphqlResponse, graphqlSchemaResponse } from './api/graphql';
 import { githubWebhookResponse, webhookDemoResponse, webhookEventsResponse, webhookReceiptResponse, webhookResetResponse } from './api/webhooks';
 import { openApiResponse } from './api/openapi';
 import { mcpResponse } from './api/mcp';
-import { authorizationDecisionResponse, oauthPkceResponse, samlInspectionResponse, samlMetadataResponse, ssoBoundaryResponse } from './api/identity';
+import { authorizationDecisionResponse, identityLogoutResponse, identitySessionResponse, oauthPkceResponse, providerCallbackResponse, providerStartResponse, samlCallbackResponse, samlInspectionResponse, samlMetadataResponse, samlStartResponse, ssoBoundaryResponse } from './api/identity';
 import { renderI18nDemo } from './demos/i18n-page';
 import { renderAccessibilityDemo } from './demos/accessibility-page';
 import { billingScenarioResponse } from './api/billing';
@@ -34,6 +34,7 @@ import { webhookConsole } from './demos/webhook-console';
 import { gitEvidenceResponse } from './api/git-evidence';
 import { gitDemoReleaseResponse, gitDemoStartResponse, gitDemoStatusResponse } from './api/git-demo';
 import { renderGitDemo } from './demos/git-page';
+import { renderIdentityDemo } from './demos/identity-page';
 import { graphiqlAssetResponse } from './ui/graphiql-assets';
 import { socialCardResponse } from './ui/brand-assets';
 import { crawlerBlockedResponse, getCrawlerControl, identifyOpenAIAgent, robotsResponse, setCrawlerControl } from './lib/crawler-control';
@@ -51,7 +52,6 @@ export const RETIRED_PAGE_REDIRECTS = new Map<string, string>([
   ['/api/webhooks', '/api#webhooks'],
   ['/identity/oauth', '/identity#oauth'],
   ['/identity/sso', '/identity#sso'],
-  ['/identity/saml', '/identity#saml'],
   ['/git/versioning', '/git#versioning'],
   ['/git/branching', '/git#branching'],
   ['/git/releases', '/git#releases'],
@@ -210,9 +210,19 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/mcp' && request.method !== 'GET') return mcpResponse(request, env);
   if (path === '/__api/identity/oauth-pkce') return oauthPkceResponse(request, env);
   if (path === '/__api/identity/authorize') return authorizationDecisionResponse(request, env);
-  if (path === '/__api/identity/sso') return ssoBoundaryResponse(request);
+  if (path === '/__api/identity/sso') return ssoBoundaryResponse(request, env);
+  if (path === '/identity/microsoft') return providerStartResponse(request, env, 'microsoft');
+  if (path === '/identity/microsoft/callback') return providerCallbackResponse(request, env, 'microsoft');
+  if (path === '/identity/google') return providerStartResponse(request, env, 'google');
+  if (path === '/identity/google/callback') return providerCallbackResponse(request, env, 'google');
+  if (path === '/identity/github') return providerStartResponse(request, env, 'github');
+  if (path === '/identity/github/callback') return providerCallbackResponse(request, env, 'github');
+  if (path === '/identity/saml') return samlStartResponse(request, env);
+  if (path === '/identity/saml/acs') return samlCallbackResponse(request, env);
   if (path === '/identity/saml/metadata') return samlMetadataResponse(request);
-  if (path === '/__api/identity/saml/inspect') return samlInspectionResponse(request);
+  if (path === '/identity/session') return identitySessionResponse(request, env);
+  if (path === '/identity/logout') return identityLogoutResponse(request, env);
+  if (path === '/__api/identity/saml/inspect') return samlInspectionResponse(request, env);
   if (path === '/__api/operations/billing') return billingScenarioResponse(request, env);
   if (path === '/__api/evidence/traceability') return traceabilityResponse(request, env);
   if (path === '/__api/governance/security-controls') return securityControlsResponse(request, env);
@@ -231,6 +241,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (request.method === 'GET' && path === '/') return renderIndex(env, demos);
   if (request.method === 'GET' && path === '/d1') return renderD1Demo(env);
   if (request.method === 'GET' && path === '/r2') return renderR2Demo(env);
+  if (request.method === 'GET' && path === '/identity') return renderIdentityDemo(env);
   if (request.method === 'GET' && path === '/i18n') return renderI18nDemo(request, env);
   if (request.method === 'GET' && path === '/accessibility') return renderAccessibilityDemo(request, env);
   if (request.method === 'GET' && path === '/git') return renderGitDemo(env);

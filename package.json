@@ -30,8 +30,11 @@
   },
   "dependencies": {
     "@graphql-yoga/graphiql": "^4.5.0",
+    "@node-saml/node-saml": "^5.1.0",
+    "@xmldom/xmldom": "^0.8.15",
     "axe-core": "^4.13.0",
     "graphql": "^16.14.2",
-    "graphql-yoga": "^5.22.0"
+    "graphql-yoga": "^5.22.0",
+    "jose": "^6.2.10"
   }
 }
