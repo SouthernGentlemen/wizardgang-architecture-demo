@@ -2,7 +2,8 @@
 
 **Reference:** WG-REG-013  
 **Parent:** `docs/governance/SECURE-ENGINEERING-TESTING.md`  
-**Status:** Proposed  
+**Status:** Approved
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Owner:** Technical System Owner / Information Security Owner  
 **Initialized:** 2026-09-02  
 **Review:** At least quarterly for material security-test coverage and after High-risk/security-sensitive changes

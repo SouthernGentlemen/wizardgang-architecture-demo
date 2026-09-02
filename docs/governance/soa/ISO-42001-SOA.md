@@ -1,11 +1,12 @@
 # ISO/IEC 42001:2023 Statement of Applicability
 
 **Reference:** WG-SOA-002  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** WizardGang  
 **Assessment date:** 2026-09-02  
 **Last refreshed by:** DEMO-105  
 **Approval:** Controlled pull request and merge  
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually and after material scope, risk, supplier, architecture, data, personnel, or AI-capability change
 
 ## Purpose

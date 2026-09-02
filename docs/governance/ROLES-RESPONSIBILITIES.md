@@ -2,9 +2,10 @@
 
 **Reference:** WG-GOV-006  
 **Applies to:** ISO/IEC 27001:2022 §5.3 · ISO/IEC 42001:2023 §5.3  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** WizardGang  
 **Approval:** Controlled pull request and merge  
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually, during management review, and whenever ownership, operating responsibilities, scope, suppliers, or AI capabilities materially change
 
 ## 1. Purpose

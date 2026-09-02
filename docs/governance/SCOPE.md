@@ -2,9 +2,10 @@
 
 **Reference:** WG-GOV-003  
 **Applies to:** ISO/IEC 27001:2022 §4.3 · ISO/IEC 42001:2023 §4.3  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** WizardGang  
 **Approval:** Controlled pull request and merge  
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually and after a material change to system boundaries, suppliers, hosting, AI capabilities, ownership, or applicable requirements
 
 ## 1. Purpose

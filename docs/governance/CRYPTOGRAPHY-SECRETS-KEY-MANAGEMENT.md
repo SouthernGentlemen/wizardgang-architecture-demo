@@ -2,9 +2,10 @@
 
 **Reference:** WG-GOV-025  
 **Applies to:** ISO/IEC 27001:2022 authentication information, use of cryptography, key/secret management, secure authentication, logging/redaction, communications security, supplier, incident, configuration, access, and secure-development controls · ISO/IEC 42001:2023 security, data, supplier, access, operational, change, AI/MCP, and incident controls where cryptographic or secret material protects the AI-system boundary  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** Information Security Owner / Technical System Owner  
 **Approval:** Controlled pull request and merge  
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually and after a material authentication, cryptographic, identity-provider, Cloudflare/GitHub, webhook, AI/MCP, incident, or credential change
 
 ## 1. Purpose

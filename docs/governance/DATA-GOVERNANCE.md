@@ -2,9 +2,10 @@
 
 **Reference:** WG-GOV-020  
 **Applies to:** ISO/IEC 27001:2022 information classification, handling, retention, deletion, logging, backup/recovery, and supplier controls · ISO/IEC 42001:2023 data, record, transparency, supplier, AI-impact, and operational-control requirements  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** Management-System Owner / Data Owner  
 **Approval:** Controlled pull request and merge  
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually and after material schema, storage, logging, supplier, identity, AI/MCP, retention, recovery, or public-data changes
 
 ## 1. Purpose

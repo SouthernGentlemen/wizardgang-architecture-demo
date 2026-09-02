@@ -2,9 +2,10 @@
 
 **Reference:** WG-GOV-023  
 **Applies to:** ISO/IEC 27001:2022 organizational compliance, legal/contractual, intellectual-property, records, privacy, supplier, incident, and documented-information controls · ISO/IEC 42001:2023 legal/contractual, transparency, data, supplier, impact, incident, and external-reporting obligations affecting the AIMS  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** Management-System Owner  
 **Approval:** Controlled pull request and merge  
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually and after material jurisdiction, service, supplier, data, user population, contract, license, public-claim, incident, or AI/MCP change
 
 ## 1. Purpose

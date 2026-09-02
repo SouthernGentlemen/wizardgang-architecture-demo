@@ -2,9 +2,10 @@
 
 **Reference:** WG-GOV-028  
 **Framework:** Integrated ISMS / AIMS / WCAG engineering-assurance system  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** Management-System Owner / Evidence Custodian  
 **Approval:** Controlled pull request and merge  
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually and after material scope, standards, architecture, supplier, AI/MCP, evidence-model, or compliance-registry change
 
 ## 1. Purpose

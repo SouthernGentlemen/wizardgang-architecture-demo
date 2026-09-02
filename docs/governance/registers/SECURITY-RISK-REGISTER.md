@@ -4,11 +4,12 @@
 **Framework:** Information Security  
 **Applies to:** ISO/IEC 27001:2022 §6.1.2–§6.1.3  
 **Method:** `docs/governance/RISK-MANAGEMENT.md`  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** WizardGang  
 **Assessment date:** 2026-09-02  
 **Review due:** 2026-12-02  
 **Approval:** Controlled pull request and merge
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 
 ## 1. Purpose
 

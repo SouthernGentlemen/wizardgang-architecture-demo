@@ -2,11 +2,12 @@
 
 **Reference:** WG-REG-010  
 **Framework:** Integrated ISMS / AIMS external obligations  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** Management-System Owner  
 **Assessment date:** 2026-09-02  
 **Review due:** 2026-12-02 for initial operating review, then at least annually and after material jurisdiction, contract, supplier, data, incident, licensing, or public-claim change  
 **Approval:** Controlled pull request and merge
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 
 ## 1. Purpose
 

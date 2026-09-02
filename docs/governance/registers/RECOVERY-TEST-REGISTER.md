@@ -2,10 +2,11 @@
 
 **Reference:** WG-REG-005  
 **Framework:** Integrated ISMS / AIMS recovery assurance  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** Operations Owner / Management-System Owner  
 **Initial review due:** 2026-12-02  
 **Approval:** Controlled pull request and merge
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 
 ## 1. Purpose
 

@@ -3,11 +3,12 @@
 **Reference:** WG-AIA-001  
 **Applies to:** ISO/IEC 42001:2023 AI impact-assessment and planning requirements  
 **Capability:** WizardGang Architecture Demo Model Context Protocol (MCP) interface  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** WizardGang  
 **Assessment date:** 2026-09-02  
 **Review due:** 2026-12-02, and earlier upon a material AI/MCP change  
 **Approval:** Controlled pull request and merge
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 
 ## 1. Purpose
 

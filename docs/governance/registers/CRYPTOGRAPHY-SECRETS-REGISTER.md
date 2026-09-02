@@ -2,11 +2,12 @@
 
 **Reference:** WG-REG-012  
 **Parent:** `docs/governance/CRYPTOGRAPHY-SECRETS-KEY-MANAGEMENT.md`  
-**Status:** Proposed  
+**Status:** Approved
 **Owner:** Information Security Owner / Technical System Owner  
 **Assessment date:** 2026-09-02  
 **Review due:** 2027-09-02 or earlier after a material credential, cryptographic, provider, identity, webhook, incident, recovery, or AI/MCP change  
 **Approval:** Controlled pull request and merge
+**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 
 ## 1. Purpose
 
