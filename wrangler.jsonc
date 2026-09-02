@@ -25,13 +25,20 @@
   "routes": [
     { "pattern": "demo.wizardgang.ai", "custom_domain": true }
   ],
+  "triggers": {
+    "crons": ["*/5 * * * *"]
+  },
   // Configure admin, GitHub demo, and identity-provider credentials with `wrangler secret put`; never commit values.
   "vars": {
     "GITHUB_REPO_URL": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo",
     "GITHUB_BRANCH": "main",
     "DEPLOYED_VERSION": "development",
     "DEPLOYMENT_ENVIRONMENT": "production",
-    "BILLING_DEMO_MONTHLY_BUDGET_USD": "10"
+    "DEPLOYMENT_CI_STATUS": "not-verified",
+    "BILLING_DEMO_MONTHLY_BUDGET_USD": "10",
+    "CLOUDFLARE_WORKER_NAME": "wizardgang-architecture-demo",
+    "CLOUDFLARE_R2_BUCKET": "wizardgang-demo-r2",
+    "CLOUDFLARE_D1_DATABASE_ID": "4a8ba118-da0e-497b-a13c-911c407a09e3"
   },
   "d1_databases": [
     {

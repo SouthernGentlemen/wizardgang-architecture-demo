@@ -212,10 +212,11 @@ describe('public route contract', () => {
     expect(index).toContain('<meta property="og:image" content="https://demo.wizardgang.ai/og.png">');
 
     const dashboard = await (await routeRequest(new Request('https://demo.wizardgang.ai/dashboard'), environment)).text();
-    expect(dashboard).not.toContain('<nav aria-label="Operations">');
+    expect(dashboard).toContain('<nav class="section-nav" aria-label="Operations">');
     expect(dashboard).not.toContain('Operational proof surfaces');
-    expect(dashboard).toContain('ChatGPT access');
-    expect(dashboard).toContain('Model-training crawl stays blocked.');
+    expect(dashboard).toContain('User-requested ChatGPT fetch');
+    expect(dashboard).toContain('Model-training crawl');
+    expect(dashboard).not.toContain('name="control" value="chatgpt-crawl"');
 
     const docs = await (await routeRequest(new Request('https://demo.wizardgang.ai/dashboard/docs'), environment)).text();
     expect(docs).toContain('src/router.ts');

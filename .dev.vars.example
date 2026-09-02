@@ -19,3 +19,11 @@ SAML_IDP_CERT=replace-me-with-the-entra-signing-certificate
 # Optional overrides; defaults are derived from MICROSOFT_TENANT_ID.
 # SAML_IDP_ISSUER=https://sts.windows.net/replace-me/
 # SAML_SSO_URL=https://login.microsoftonline.com/replace-me/saml2
+
+# Optional live operations telemetry. Use a dedicated minimum-permission read token.
+# CLOUDFLARE_ACCOUNT_ID=replace-me
+# CLOUDFLARE_API_TOKEN=replace-me-with-analytics-read-and-optional-billing-read
+# CLOUDFLARE_WORKER_NAME=wizardgang-architecture-demo
+# CLOUDFLARE_D1_DATABASE_ID=replace-me
+# CLOUDFLARE_R2_BUCKET=wizardgang-demo-r2
+# CLOUDFLARE_DO_NAMESPACE=replace-me

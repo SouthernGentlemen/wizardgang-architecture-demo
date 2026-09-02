@@ -20,11 +20,11 @@ This file is the stable public URL contract for `demo.wizardgang.ai`. The public
 | Standards | `/accessibility` | WCAG 2.2 | `src/demos/accessibility.ts` | Working |
 | Delivery & Governance | `/git` | Source, change, CI/CD, release, and environment lifecycle | `src/demos/git.ts` | Working |
 | Delivery & Governance | `/governance` | ISO alignment, traceability, and evidence | `src/demos/governance.ts` | Working |
-| Operations | `/dashboard` | Operations dashboard and detailed health | `src/demos/dashboard.ts` | Working |
-| Operations | `/dashboard/uptime` | Uptime history | `src/demos/uptime.ts` | Working |
+| Operations | `/dashboard` | Read-only operations center, detailed health, availability, activity, usage, and deployment | `src/demos/dashboard.ts` | Working |
+| Operations | `/dashboard/uptime` | Scheduled availability history | `src/demos/uptime.ts` | Working |
 | Operations | `/dashboard/docs` | Documentation index | `src/demos/docs.ts` | Working |
 | Operations | `/dashboard/logs` | Public-safe log viewer | `src/demos/logs.ts` | Working |
-| Operations | `/dashboard/billing` | Synthetic billing and usage | `src/demos/billing.ts` | Working |
+| Operations | `/dashboard/billing` | Cloudflare usage, cost evidence, and separate guardrail simulator | `src/demos/billing.ts` | Working |
 
 The architecture map at `/` and `/sitemap.xml` are generated from this 19-route registry.
 
@@ -58,6 +58,7 @@ These are exact-path `301` redirects. `/identity/saml` is now the live Entra SAM
 | `/health` | Machine health | `src/api/operations.ts` | Working |
 | `/version` | Build and release metadata | `src/api/operations.ts` | Working |
 | `/__api/operations/logs` | Sanitized log JSON | `src/api/operations.ts` | Working |
+| `/__api/operations/cloudflare-usage` | Sanitized cached Cloudflare usage JSON | `src/api/operations.ts` | Working |
 | `/admin` | Protected demo control | `src/ui/admin.ts` | Working |
 | `/offline` | Public maintenance page | `src/ui/admin.ts` | Working |
 | `/og.png` | Branded social preview image | `src/ui/brand-assets.ts` | Working |
@@ -120,6 +121,7 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | `/identity/session` | `GET` | Current sanitized application identity | `src/api/identity.ts` |
 | `/identity/logout` | `POST` | Revoke current application session | `src/api/identity.ts` |
 | `/__api/operations/logs` | `GET` | Sanitized logs; offline-reachable | `src/api/operations.ts` |
+| `/__api/operations/cloudflare-usage` | `GET` | Latest normalized Cloudflare usage snapshot; offline-reachable | `src/api/operations.ts` |
 | `/__api/operations/billing` | `POST` | Synthetic budget scenario; offline-reachable | `src/api/billing.ts` |
 | `/__api/evidence/traceability` | `GET` | Release and audit evidence | `src/api/governance.ts` |
 | `/__api/governance/security-controls` | `GET` | Security-control mapping | `src/api/governance.ts` |
@@ -140,7 +142,7 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | ChatGPT crawler access and dynamic robots policy | `src/lib/crawler-control.ts` |
 | Operations APIs | `src/api/operations.ts` |
 | D1 base schema | `migrations/0001_demo_blob.sql` |
-| Operations and log schemas | `migrations/0002_operations_dashboard.sql`, `migrations/0004_application_logs.sql` |
+| Operations, log, and Cloudflare usage schemas | `migrations/0002_operations_dashboard.sql`, `migrations/0004_application_logs.sql`, `migrations/0011_cloudflare_usage.sql` |
 | ChatGPT crawler-control schema | `migrations/0009_crawler_control.sql` |
 | Route-flatten seed update | `migrations/0007_flatten_demo_record_routes.sql` |
 | Cloudflare configuration | `wrangler.jsonc` |

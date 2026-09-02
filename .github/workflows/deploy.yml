@@ -70,7 +70,13 @@ jobs:
           --var DEPLOYED_VERSION:${{ steps.release.outputs.version }}
           --var DEPLOYED_SHA:${{ steps.release.outputs.sha }}
           --var DEPLOYMENT_ENVIRONMENT:production
+          --var DEPLOYMENT_CI_STATUS:passed
           --var BILLING_DEMO_MONTHLY_BUDGET_USD:10
+          --var CLOUDFLARE_ACCOUNT_ID:${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          --var CLOUDFLARE_WORKER_NAME:wizardgang-architecture-demo
+          --var CLOUDFLARE_D1_DATABASE_ID:4a8ba118-da0e-497b-a13c-911c407a09e3
+          --var CLOUDFLARE_R2_BUCKET:wizardgang-demo-r2
+          --var CLOUDFLARE_DO_NAMESPACE:${{ vars.CLOUDFLARE_DO_NAMESPACE }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
