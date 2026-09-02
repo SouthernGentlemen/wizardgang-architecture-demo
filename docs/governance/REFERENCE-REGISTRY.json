@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "controlledBy": "DEMO-104",
+  "description": "Canonical management-system document and register references for the WizardGang Architecture Demo.",
+  "records": [
+    {
+      "reference": "WG-AIA-001",
+      "path": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md"
+    },
+    {
+      "reference": "WG-GOV-001",
+      "path": "docs/governance/CONTEXT.md"
+    },
+    {
+      "reference": "WG-GOV-002",
+      "path": "docs/governance/INTERESTED-PARTIES.md"
+    },
+    {
+      "reference": "WG-GOV-003",
+      "path": "docs/governance/SCOPE.md"
+    },
+    {
+      "reference": "WG-GOV-004",
+      "path": "docs/governance/MANAGEMENT-SYSTEM.md"
+    },
+    {
+      "reference": "WG-GOV-005",
+      "path": "docs/governance/LEADERSHIP.md"
+    },
+    {
+      "reference": "WG-GOV-006",
+      "path": "docs/governance/ROLES-RESPONSIBILITIES.md"
+    },
+    {
+      "reference": "WG-GOV-007",
+      "path": "docs/governance/RISK-MANAGEMENT.md"
+    },
+    {
+      "reference": "WG-GOV-008",
+      "path": "docs/governance/MANAGEMENT-SYSTEM-CHANGE-PLANNING.md"
+    },
+    {
+      "reference": "WG-GOV-009",
+      "path": "docs/governance/MANAGEMENT-SYSTEM-SUPPORT.md"
+    },
+    {
+      "reference": "WG-GOV-010",
+      "path": "docs/governance/OPERATIONAL-PLANNING-CONTROL.md"
+    },
+    {
+      "reference": "WG-GOV-011",
+      "path": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md"
+    },
+    {
+      "reference": "WG-GOV-012",
+      "path": "docs/governance/MONITORING-MEASUREMENT-EVALUATION.md"
+    },
+    {
+      "reference": "WG-GOV-013",
+      "path": "docs/governance/INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md"
+    },
+    {
+      "reference": "WG-GOV-014",
+      "path": "docs/governance/MANAGEMENT-REVIEW.md"
+    },
+    {
+      "reference": "WG-GOV-015",
+      "path": "docs/governance/NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md"
+    },
+    {
+      "reference": "WG-GOV-016",
+      "path": "docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md"
+    },
+    {
+      "reference": "WG-GOV-017",
+      "path": "docs/governance/INCIDENT-MANAGEMENT.md"
+    },
+    {
+      "reference": "WG-GOV-018",
+      "path": "docs/governance/BACKUP-RECOVERY-RESTORE.md"
+    },
+    {
+      "reference": "WG-GOV-019",
+      "path": "docs/governance/COMPETENCE-AWARENESS-COMMUNICATION.md"
+    },
+    {
+      "reference": "WG-GOV-020",
+      "path": "docs/governance/DATA-GOVERNANCE.md"
+    },
+    {
+      "reference": "WG-GOV-021",
+      "path": "docs/governance/VULNERABILITY-THREAT-SECURITY-MAINTENANCE.md"
+    },
+    {
+      "reference": "WG-GOV-022",
+      "path": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md"
+    },
+    {
+      "reference": "WG-GOV-023",
+      "path": "docs/governance/LEGAL-CONTRACTUAL-IP-PRIVACY.md"
+    },
+    {
+      "reference": "WG-GOV-024",
+      "path": "docs/governance/CONFIGURATION-BASELINE-DRIFT.md"
+    },
+    {
+      "reference": "WG-GOV-025",
+      "path": "docs/governance/CRYPTOGRAPHY-SECRETS-KEY-MANAGEMENT.md"
+    },
+    {
+      "reference": "WG-GOV-026",
+      "path": "docs/governance/SECURE-ENGINEERING-TESTING.md"
+    },
+    {
+      "reference": "WG-GOV-027",
+      "path": "docs/governance/CONTINUITY-RESILIENCE.md"
+    },
+    {
+      "reference": "WG-GOV-028",
+      "path": "docs/governance/CONTROL-AND-DOCUMENT-INDEX.md"
+    },
+    {
+      "reference": "WG-OBJ-001",
+      "path": "docs/governance/registers/OBJECTIVES.md"
+    },
+    {
+      "reference": "WG-POL-001",
+      "path": "docs/governance/INFORMATION-SECURITY-POLICY.md"
+    },
+    {
+      "reference": "WG-POL-002",
+      "path": "docs/governance/AI-POLICY.md"
+    },
+    {
+      "reference": "WG-REG-001",
+      "path": "docs/governance/registers/SECURITY-RISK-REGISTER.md"
+    },
+    {
+      "reference": "WG-REG-002",
+      "path": "docs/governance/registers/AI-RISK-REGISTER.md"
+    },
+    {
+      "reference": "WG-REG-003",
+      "path": "docs/governance/registers/SUPPLIER-REGISTER.md"
+    },
+    {
+      "reference": "WG-REG-004",
+      "path": "docs/governance/registers/INCIDENT-REGISTER.md"
+    },
+    {
+      "reference": "WG-REG-005",
+      "path": "docs/governance/registers/RECOVERY-TEST-REGISTER.md"
+    },
+    {
+      "reference": "WG-REG-006",
+      "path": "docs/governance/registers/COMPETENCE-AWARENESS-REGISTER.md"
+    },
+    {
+      "reference": "WG-REG-007",
+      "path": "docs/governance/registers/DATA-REGISTER.md"
+    },
+    {
+      "reference": "WG-REG-008",
+      "path": "docs/governance/registers/SECURITY-MAINTENANCE-REGISTER.md"
+    },
+    {
+      "reference": "WG-REG-009",
+      "path": "docs/governance/registers/ASSET-ACCESS-REGISTER.md"
+    },
+    {
+      "reference": "WG-REG-010",
+      "path": "docs/governance/registers/OBLIGATIONS-REGISTER.md"
+    },
+    {
+      "reference": "WG-REG-011",
+      "path": "docs/governance/registers/CONFIGURATION-REGISTER.md"
+    },
+    {
+      "reference": "WG-REG-012",
+      "path": "docs/governance/registers/CRYPTOGRAPHY-SECRETS-REGISTER.md"
+    },
+    {
+      "reference": "WG-REG-013",
+      "path": "docs/governance/registers/SECURITY-TESTING-REGISTER.md"
+    },
+    {
+      "reference": "WG-SOA-001",
+      "path": "docs/governance/soa/ISO-27001-SOA.md"
+    },
+    {
+      "reference": "WG-SOA-002",
+      "path": "docs/governance/soa/ISO-42001-SOA.md"
+    }
+  ]
+}
