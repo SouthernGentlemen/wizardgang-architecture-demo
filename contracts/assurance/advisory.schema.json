@@ -4,42 +4,192 @@
   "title": "Published Security Advisory Register",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "qualification", "records"],
+  "required": [
+    "schemaVersion",
+    "qualification",
+    "records"
+  ],
   "properties": {
-    "schemaVersion": { "const": 1 },
-    "qualification": { "type": "string", "minLength": 1 },
-    "records": { "type": "array", "items": { "$ref": "#/$defs/record" } }
+    "schemaVersion": {
+      "const": 1
+    },
+    "qualification": {
+      "type": "string",
+      "minLength": 1
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/record"
+      }
+    }
   },
   "$defs": {
     "record": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "recordType", "title", "severity", "summary", "publishedAt", "fixedReleases", "incidentLinks", "evidence"],
+      "required": [
+        "id",
+        "recordType",
+        "title",
+        "severity",
+        "summary",
+        "publishedAt",
+        "fixedReleases",
+        "relationships"
+      ],
       "properties": {
-        "id": { "type": "string", "pattern": "^GHSA-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}$" },
-        "recordType": { "const": "advisory" },
-        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
-        "severity": { "enum": ["low", "moderate", "high", "critical"] },
-        "summary": { "type": "string", "minLength": 1 },
-        "publishedAt": { "type": "string", "format": "date-time" },
-        "updatedAt": { "type": "string", "format": "date-time" },
+        "id": {
+          "type": "string",
+          "pattern": "^GHSA-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}$"
+        },
+        "recordType": {
+          "const": "advisory"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "severity": {
+          "enum": [
+            "low",
+            "moderate",
+            "high",
+            "critical"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "publishedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
         "fixedReleases": {
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": { "type": "string", "pattern": "^v[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$" }
+          "items": {
+            "type": "string",
+            "pattern": "^v[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$"
+          }
         },
-        "cveId": { "type": "string", "pattern": "^CVE-[0-9]{4}-[0-9]{4,}$" },
-        "incidentLinks": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": { "type": "string", "pattern": "^INC-[0-9]{3,}$" }
+        "cveId": {
+          "type": "string",
+          "pattern": "^CVE-[0-9]{4}-[0-9]{4,}$"
         },
-        "evidence": {
-          "type": "array",
-          "minItems": 1,
-          "uniqueItems": true,
-          "items": { "type": "string", "pattern": "^EVD-[A-Z]+-[0-9]{3,}$" }
+        "relationships": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "evidence",
+            "compliance",
+            "frameworks",
+            "claims",
+            "risks",
+            "controls",
+            "incidents",
+            "exercises",
+            "advisories",
+            "governanceDocuments",
+            "objectives"
+          ],
+          "properties": {
+            "evidence": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^EVD-[A-Z]+-[0-9]{3,}$"
+              }
+            },
+            "compliance": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^(ISO27001|ISO42001)-[A0-9.]+$|^WCAG-[0-9.]+$"
+              }
+            },
+            "frameworks": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^(iso-27001|iso-42001|wcag-2\\.2)$"
+              }
+            },
+            "claims": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^CLM-[A-Z]+-[0-9]{3,}$"
+              }
+            },
+            "risks": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^(SEC|AI)-RISK-[0-9]{3}$"
+              }
+            },
+            "controls": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^(ISO27001|ISO42001)-A\\.[0-9.]+$"
+              }
+            },
+            "incidents": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^INC-[0-9]{3,}$"
+              }
+            },
+            "exercises": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^EX-[0-9]{3,}$"
+              }
+            },
+            "advisories": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^ADV-[0-9]{3,}$"
+              }
+            },
+            "governanceDocuments": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^WG-[A-Z]+-[0-9]{3}$"
+              }
+            },
+            "objectives": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Z]+-OBJ-[0-9]{3}$"
+              }
+            }
+          }
         }
       }
     }

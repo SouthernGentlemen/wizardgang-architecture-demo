@@ -31,14 +31,14 @@ function writeJson(fixtureRoot: string, relativePath: string, value: unknown): v
   writeFileSync(join(fixtureRoot, relativePath), `${JSON.stringify(value, null, 2)}\n`);
 }
 
-function runLifecycle(fixtureRoot: string): SpawnSyncReturns<string> {
+function runLifecycle(fixtureRoot: string, previousRoot = repositoryRoot): SpawnSyncReturns<string> {
   return spawnSync(process.execPath, ['scripts/validate-assurance-lifecycle.mjs'], {
     cwd: fixtureRoot,
     encoding: 'utf8',
     env: {
       ...process.env,
       ASSURANCE_BASELINE_DIR: repositoryRoot,
-      ASSURANCE_PREVIOUS_DIR: repositoryRoot,
+      ASSURANCE_PREVIOUS_DIR: previousRoot,
     },
   });
 }
@@ -63,6 +63,24 @@ describe('assurance record lifecycle controls', () => {
   it('accepts the released registry as a reviewed Published baseline', () => {
     const fixtureRoot = createFixture();
     const result = runLifecycle(fixtureRoot);
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('Assurance lifecycle validation passed');
+  });
+
+  it('treats legacy claim framework aliases as the same immutable identity', () => {
+    const fixtureRoot = createFixture();
+    const previousRoot = createFixture();
+    const claims = readJson(previousRoot, 'assurance/claims/claims.json');
+    const target = claims.records.find((record: { id: string }) => record.id === 'CLM-GOV-001');
+    expect(target).toBeDefined();
+    target.frameworkReferences = [
+      ...target.relationships.compliance.map((reference: string) => reference.replace('ISO42001-', 'ISO42001:')),
+      'WCAG22:feedback-support',
+    ];
+    delete target.relationships;
+    writeJson(previousRoot, 'assurance/claims/claims.json', claims);
+
+    const result = runLifecycle(fixtureRoot, previousRoot);
     expect(result.status).toBe(0);
     expect(result.stdout).toContain('Assurance lifecycle validation passed');
   });

@@ -98,6 +98,14 @@ function normalizeKey(key) {
   return String(key).replaceAll('-', '').replaceAll('_', '').toLowerCase();
 }
 
+function normalizeHistoricalClaimReference(reference) {
+  if (typeof reference !== 'string') return '';
+  if (reference.startsWith('ISO27001:')) return reference.replace('ISO27001:', 'ISO27001-');
+  if (reference.startsWith('ISO42001:')) return reference.replace('ISO42001:', 'ISO42001-');
+  if (reference === 'WCAG22:feedback-support') return 'wcag-2.2';
+  return reference;
+}
+
 const registry = loadAssuranceRegistry(root);
 const registryResources = flattenAssuranceRegistry(registry);
 const lifecycleResource = requireRegistryResource(
@@ -147,8 +155,15 @@ function collectSnapshot(read, { allowMissing = false } = {}) {
   const claimsResource = primary('claims');
   const claims = claimsResource ? load(claimsResource.path) : null;
   for (const record of claims?.records ?? []) {
-    const frameworks = [...(record.frameworkReferences ?? [])].sort().join(',');
-    add(record.id, 'claims', `claim|${record.area ?? ''}|${frameworks}`, claimsResource.path);
+    const references = [
+      ...(record.frameworkReferences ?? []),
+      ...(record.relationships?.compliance ?? []),
+      ...(record.relationships?.frameworks ?? []),
+    ]
+      .map(normalizeHistoricalClaimReference)
+      .filter(Boolean);
+    const canonicalReferences = [...new Set(references)].sort().join(',');
+    add(record.id, 'claims', `claim|${record.area ?? ''}|${canonicalReferences}`, claimsResource.path);
   }
 
   const risksResource = primary('risks');
@@ -178,6 +193,12 @@ function collectSnapshot(read, { allowMissing = false } = {}) {
   for (const resource of registryResources.filter((entry) => entry.kind === 'compliance' && entry.capabilities?.includes('records'))) {
     const data = load(resource.path);
     if (!data) continue;
+    if (Array.isArray(data.records)) {
+      for (const record of data.records) {
+        add(record.id, 'compliance', `compliance|${record.framework ?? data.framework?.id ?? ''}|${record.reference ?? ''}`, resource.path);
+      }
+      continue;
+    }
     if (data.clauses && data.annexA) {
       const is27001 = String(data.standard).includes('27001');
       const is42001 = String(data.standard).includes('42001');
@@ -196,8 +217,9 @@ function collectSnapshot(read, { allowMissing = false } = {}) {
       continue;
     }
     for (const record of data.criteria ?? []) {
-      const id = `WCAG-${record.criterionId}`;
-      add(id, 'compliance', `compliance|wcag-2.2|${record.criterionId}`, resource.path);
+      const reference = record.reference ?? record.criterionId;
+      const id = record.id ?? (record.criterionId ? `WCAG-${record.criterionId}` : null);
+      add(id, 'compliance', `compliance|wcag-2.2|${reference ?? ''}`, resource.path);
     }
   }
 

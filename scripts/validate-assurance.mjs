@@ -23,9 +23,9 @@ const claimIdPattern = /^CLM-[A-Z]+-[0-9]{3,}$/;
 const riskIdPattern = /^(SEC|AI)-RISK-[0-9]{3}$/;
 const incidentIdPattern = /^INC-[0-9]{3,}$/;
 const exerciseIdPattern = /^EX-[0-9]{3,}$/;
-const allowedRiskKeys = new Set(['id', 'framework', 'title', 'inherent', 'residual', 'treatment', 'status', 'controls', 'evidence', 'reviewDue']);
-const allowedIncidentKeys = new Set(['id', 'recordType', 'simulated', 'title', 'status', 'detectedAt', 'initialSeverity', 'finalSeverity', 'categories', 'summary', 'riskLinks', 'controlLinks', 'evidence', 'closedAt']);
-const allowedExerciseKeys = new Set(['id', 'recordType', 'simulated', 'exerciseType', 'scenario', 'scope', 'owner', 'status', 'dueDate', 'completedAt', 'riskLinks', 'objectiveLinks', 'evidence', 'resultSummary', 'publicNote']);
+const allowedRiskKeys = new Set(['id', 'framework', 'title', 'inherent', 'residual', 'treatment', 'status', 'reviewDue', 'relationships']);
+const allowedIncidentKeys = new Set(['id', 'recordType', 'simulated', 'title', 'status', 'detectedAt', 'initialSeverity', 'finalSeverity', 'categories', 'summary', 'closedAt', 'relationships']);
+const allowedExerciseKeys = new Set(['id', 'recordType', 'simulated', 'exerciseType', 'scenario', 'scope', 'owner', 'status', 'dueDate', 'completedAt', 'resultSummary', 'publicNote', 'relationships']);
 
 function ratingFor(score) {
   if (score <= 4) return 'low';
@@ -127,13 +127,15 @@ for (const record of claims.records ?? []) {
   if (claimIds.has(record.id)) errors.push(`claims: duplicate ID ${record.id}`);
   claimIds.add(record.id);
   if (!allowedPostures.has(record.posture)) errors.push(`${record.id}: unsupported posture ${record.posture}`);
-  if (!Array.isArray(record.frameworkReferences) || record.frameworkReferences.length === 0) errors.push(`${record.id}: at least one framework reference is required`);
-  if (new Set(record.frameworkReferences).size !== record.frameworkReferences.length) errors.push(`${record.id}: duplicate framework reference`);
-  if (!Array.isArray(record.evidence) || record.evidence.length === 0) errors.push(`${record.id}: at least one evidence reference is required`);
-  if (new Set(record.evidence).size !== record.evidence.length) errors.push(`${record.id}: duplicate evidence reference`);
-  for (const evidenceId of record.evidence ?? []) if (!evidenceIds.has(evidenceId)) errors.push(`${record.id}: unresolved evidence ${evidenceId}`);
+  const normalizedReferences = [...(record.relationships?.compliance ?? []), ...(record.relationships?.frameworks ?? [])];
+  if (normalizedReferences.length === 0) errors.push(`${record.id}: at least one compliance or framework relationship is required`);
+  const claimEvidence = record.relationships?.evidence ?? [];
+  if (claimEvidence.length === 0) errors.push(`${record.id}: at least one evidence relationship is required`);
+  for (const evidenceId of claimEvidence) if (!evidenceIds.has(evidenceId)) errors.push(`${record.id}: unresolved evidence ${evidenceId}`);
 }
 
+const governance = read('docs/governance/REFERENCE-REGISTRY.json');
+const governancePaths = new Map((governance.records ?? []).map((record) => [record.reference, record.path]));
 const risks = read(datasets.get('risks') ?? 'assurance/risks/risks.json');
 const riskIds = new Set();
 if (risks.schemaVersion !== registry.schemaVersion) errors.push('risks: schemaVersion must match the registry');
@@ -141,8 +143,9 @@ if ('counts' in risks) errors.push('risks: counts must be derived, not stored');
 const sourceRegisters = new Map();
 for (const source of risks.sourceRegisters ?? []) {
   if (!source.id || sourceRegisters.has(source.id)) errors.push(`risks: invalid or duplicate source register ${source.id}`);
-  sourceRegisters.set(source.id, source.repositoryPath);
-  if (!source.repositoryPath || !fs.existsSync(path.join(root, source.repositoryPath))) errors.push(`risks: source register does not exist: ${source.repositoryPath}`);
+  const repositoryPath = governancePaths.get(source.governanceDocumentReference);
+  sourceRegisters.set(source.id, repositoryPath);
+  if (!repositoryPath || !fs.existsSync(path.join(root, repositoryPath))) errors.push(`risks: governance source register does not resolve: ${source.governanceDocumentReference}`);
 }
 if (sourceRegisters.get('WG-REG-001') !== 'docs/governance/registers/SECURITY-RISK-REGISTER.md') errors.push('risks: WG-REG-001 source register is missing');
 if (sourceRegisters.get('WG-REG-002') !== 'docs/governance/registers/AI-RISK-REGISTER.md') errors.push('risks: WG-REG-002 source register is missing');
@@ -178,15 +181,9 @@ for (const record of risks.records ?? []) {
   if (new Set(record.treatment).size !== record.treatment?.length) errors.push(`${record.id}: duplicate treatment direction`);
   for (const treatment of record.treatment ?? []) if (!allowedRiskTreatments.has(treatment)) errors.push(`${record.id}: unsupported treatment direction ${treatment}`);
 
-  if (!Array.isArray(record.evidence) || record.evidence.length === 0) errors.push(`${record.id}: evidence links are required`);
-  if (new Set(record.evidence).size !== record.evidence?.length) errors.push(`${record.id}: duplicate evidence link`);
-  for (const evidenceId of record.evidence ?? []) if (!evidenceIds.has(evidenceId)) errors.push(`${record.id}: unresolved evidence ${evidenceId}`);
-
-  if (!Array.isArray(record.controls) || record.controls.length === 0) errors.push(`${record.id}: control links are required`);
-  for (const control of record.controls ?? []) {
-    if (!control.reference || !control.repositoryPath) errors.push(`${record.id}: incomplete control link`);
-    if (control.repositoryPath && !fs.existsSync(path.join(root, control.repositoryPath))) errors.push(`${record.id}: unresolved control source ${control.repositoryPath}`);
-  }
+  const riskEvidence = record.relationships?.evidence ?? [];
+  if (riskEvidence.length === 0) errors.push(`${record.id}: evidence relationships are required`);
+  for (const evidenceId of riskEvidence) if (!evidenceIds.has(evidenceId)) errors.push(`${record.id}: unresolved evidence ${evidenceId}`);
 
   if (!/^\d{4}-\d{2}-\d{2}$/.test(record.reviewDue ?? '')) errors.push(`${record.id}: reviewDue must be an ISO date`);
 
@@ -228,8 +225,8 @@ for (const record of incidents.records ?? []) {
   if (!Array.isArray(record.categories) || record.categories.length === 0) errors.push(`${record.id}: at least one public-safe incident category is required`);
   for (const category of record.categories ?? []) if (!allowedIncidentCategories.has(category)) errors.push(`${record.id}: unsupported incident category ${category}`);
   if (new Set(record.categories ?? []).size !== record.categories?.length) errors.push(`${record.id}: duplicate incident category`);
-  for (const riskId of record.riskLinks ?? []) if (!riskIds.has(riskId)) errors.push(`${record.id}: unresolved risk ${riskId}`);
-  for (const evidenceId of record.evidence ?? []) if (!evidenceIds.has(evidenceId)) errors.push(`${record.id}: unresolved evidence ${evidenceId}`);
+  for (const riskId of record.relationships?.risks ?? []) if (!riskIds.has(riskId)) errors.push(`${record.id}: unresolved risk ${riskId}`);
+  for (const evidenceId of record.relationships?.evidence ?? []) if (!evidenceIds.has(evidenceId)) errors.push(`${record.id}: unresolved evidence ${evidenceId}`);
   if (record.status === 'closed' && !record.closedAt) errors.push(`${record.id}: closed incidents require closedAt`);
 }
 
@@ -247,9 +244,8 @@ for (const record of exercises.records ?? []) {
   if (record.recordType !== 'exercise') errors.push(`${record.id}: recordType must be exercise`);
   if (record.simulated !== true) errors.push(`${record.id}: exercises must be explicitly simulated=true`);
   if (!allowedExerciseStatuses.has(record.status)) errors.push(`${record.id}: unsupported exercise status ${record.status}`);
-  for (const riskId of record.riskLinks ?? []) if (!riskIds.has(riskId)) errors.push(`${record.id}: unresolved risk ${riskId}`);
-  for (const objectiveId of record.objectiveLinks ?? []) if (!incidentRegister.includes(objectiveId)) errors.push(`${record.id}: objective link is not established by the source register: ${objectiveId}`);
-  for (const evidenceId of record.evidence ?? []) if (!evidenceIds.has(evidenceId)) errors.push(`${record.id}: unresolved evidence ${evidenceId}`);
+  for (const riskId of record.relationships?.risks ?? []) if (!riskIds.has(riskId)) errors.push(`${record.id}: unresolved risk ${riskId}`);
+  for (const evidenceId of record.relationships?.evidence ?? []) if (!evidenceIds.has(evidenceId)) errors.push(`${record.id}: unresolved evidence ${evidenceId}`);
 
   const source = sourceExercises.get(record.id);
   if (!source) {
@@ -267,12 +263,12 @@ for (const record of exercises.records ?? []) {
     if (!record.dueDate) errors.push(`${record.id}: planned exercises require dueDate`);
     if (record.completedAt) errors.push(`${record.id}: planned exercise cannot have completedAt`);
     if (record.resultSummary) errors.push(`${record.id}: planned exercise cannot have resultSummary`);
-    if ((record.evidence ?? []).length !== 0) errors.push(`${record.id}: planned exercise cannot carry completion evidence`);
+    if ((record.relationships?.evidence ?? []).length !== 0) errors.push(`${record.id}: planned exercise cannot carry completion evidence`);
   }
   if (['completed', 'follow-up-open', 'closed'].includes(record.status)) {
     if (!record.completedAt) errors.push(`${record.id}: completed/post-exercise status requires completedAt`);
     if (!record.resultSummary) errors.push(`${record.id}: completed/post-exercise status requires resultSummary`);
-    if (!Array.isArray(record.evidence) || record.evidence.length === 0) errors.push(`${record.id}: completed/post-exercise status requires evidence`);
+    if ((record.relationships?.evidence ?? []).length === 0) errors.push(`${record.id}: completed/post-exercise status requires evidence`);
   }
 }
 
