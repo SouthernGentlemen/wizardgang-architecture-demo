@@ -1,16 +1,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {
+  flattenAssuranceRegistry,
+  loadAssuranceRegistry,
+  readJsonFile,
+} from './lib/assurance-registry.mjs';
 
 const root = process.cwd();
 const checkOnly = process.argv.includes('--check');
-const sources = [
-  'assurance/compliance/iso-27001-2022.json',
-  'assurance/compliance/iso-42001-2023.json',
-];
-
-function readJson(relative) {
-  return JSON.parse(fs.readFileSync(path.join(root, relative), 'utf8'));
-}
+const registry = loadAssuranceRegistry(root);
+const sources = flattenAssuranceRegistry(registry)
+  .filter((resource) => resource.capabilities?.includes('summary-source'))
+  .sort((left, right) => left.id.localeCompare(right.id));
 
 function titleCase(value) {
   return String(value).slice(0, 1).toUpperCase() + String(value).slice(1);
@@ -31,14 +32,14 @@ function renderSummary(sourcePath, data) {
 }
 
 const failures = [];
-for (const sourcePath of sources) {
-  const data = readJson(sourcePath);
+for (const source of sources) {
+  const data = readJsonFile(root, source.path);
   const outputPath = data.sourceSoa?.repositoryPath;
   if (!outputPath) {
-    failures.push(`${sourcePath}: sourceSoa.repositoryPath is required`);
+    failures.push(`${source.path}: sourceSoa.repositoryPath is required`);
     continue;
   }
-  const rendered = renderSummary(sourcePath, data);
+  const rendered = renderSummary(source.path, data);
   const absolute = path.join(root, outputPath);
   if (checkOnly) {
     const current = fs.existsSync(absolute) ? fs.readFileSync(absolute, 'utf8') : '';
@@ -46,7 +47,7 @@ for (const sourcePath of sources) {
   } else {
     fs.mkdirSync(path.dirname(absolute), { recursive: true });
     fs.writeFileSync(absolute, rendered);
-    console.log(`Generated ${outputPath} from ${sourcePath}`);
+    console.log(`Generated ${outputPath} from ${source.path}`);
   }
 }
 
@@ -56,4 +57,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-if (checkOnly) console.log(`Assurance Markdown summaries match ${sources.length} canonical structured sources.`);
+if (checkOnly) console.log(`Assurance Markdown summaries match ${sources.length} registry-discovered canonical structured sources.`);

@@ -1,12 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import {
+  flattenAssuranceRegistry,
+  loadAssuranceRegistry,
+  requireRegistryResource,
+} from './lib/assurance-registry.mjs';
 
 const root = process.cwd();
 const errors = [];
-const registryPath = 'assurance/registry.json';
-const lifecyclePath = 'assurance/lifecycle/records.json';
-const lifecycleSchemaPath = 'contracts/assurance/lifecycle.schema.json';
 const allowedLifecycles = new Set(['Draft', 'Approved', 'Published', 'Superseded', 'Withdrawn']);
 const lockedIdentityLifecycles = new Set(['Approved', 'Published', 'Superseded', 'Withdrawn']);
 const publicReviewStatus = 'Reviewed';
@@ -74,7 +76,7 @@ function currentReader(relative) {
 function determinePreviousRef() {
   if (process.env.ASSURANCE_PREVIOUS_REF) return process.env.ASSURANCE_PREVIOUS_REF;
 
-  const status = git(['status', '--porcelain', '--', 'assurance', 'contracts/assurance', 'scripts/validate-assurance-lifecycle.mjs']);
+  const status = git(['status', '--porcelain', '--', 'assurance', 'contracts/assurance', 'scripts']);
   if (status.status === 0 && status.stdout.trim()) return 'HEAD';
 
   const head = git(['rev-parse', 'HEAD']);
@@ -96,13 +98,30 @@ function normalizeKey(key) {
   return String(key).replaceAll('-', '').replaceAll('_', '').toLowerCase();
 }
 
-function collectSnapshot(read) {
+const registry = loadAssuranceRegistry(root);
+const registryResources = flattenAssuranceRegistry(registry);
+const lifecycleResource = requireRegistryResource(
+  registry,
+  (resource) => resource.capabilities?.includes('lifecycle'),
+  'lifecycle dataset',
+);
+const lifecyclePath = lifecycleResource.path;
+const lifecycleSchemaPath = lifecycleResource.schema;
+
+function collectSnapshot(read, { allowMissing = false } = {}) {
   const records = new Map();
   const documents = new Map();
 
   function load(relative) {
-    if (!documents.has(relative)) documents.set(relative, read(relative));
-    return documents.get(relative);
+    if (documents.has(relative)) return documents.get(relative);
+    try {
+      const document = read(relative);
+      documents.set(relative, document);
+      return document;
+    } catch (error) {
+      if (allowMissing) return null;
+      throw error;
+    }
   }
 
   function add(id, domain, identity, sourcePath) {
@@ -114,60 +133,71 @@ function collectSnapshot(read) {
     records.set(id, { id, domain, identity, sourcePath });
   }
 
-  const evidence = load('assurance/evidence/evidence.json');
-  for (const record of evidence.records ?? []) {
+  function primary(kind) {
+    return registry.datasets.find((dataset) => dataset.kind === kind && dataset.capabilities?.includes('api-index'));
+  }
+
+  const evidenceResource = primary('evidence');
+  const evidence = evidenceResource ? load(evidenceResource.path) : null;
+  for (const record of evidence?.records ?? []) {
     const locator = record.locator?.repositoryPath ?? record.locator?.route ?? '';
-    add(record.id, 'evidence', `evidence|${record.kind ?? ''}|${locator}`, 'assurance/evidence/evidence.json');
+    add(record.id, 'evidence', `evidence|${record.kind ?? ''}|${locator}`, evidenceResource.path);
   }
 
-  const claims = load('assurance/claims/claims.json');
-  for (const record of claims.records ?? []) {
+  const claimsResource = primary('claims');
+  const claims = claimsResource ? load(claimsResource.path) : null;
+  for (const record of claims?.records ?? []) {
     const frameworks = [...(record.frameworkReferences ?? [])].sort().join(',');
-    add(record.id, 'claims', `claim|${record.area ?? ''}|${frameworks}`, 'assurance/claims/claims.json');
+    add(record.id, 'claims', `claim|${record.area ?? ''}|${frameworks}`, claimsResource.path);
   }
 
-  const risks = load('assurance/risks/risks.json');
-  for (const record of risks.records ?? []) {
-    add(record.id, 'risks', `risk|${record.framework ?? ''}|${record.title ?? ''}`, 'assurance/risks/risks.json');
+  const risksResource = primary('risks');
+  const risks = risksResource ? load(risksResource.path) : null;
+  for (const record of risks?.records ?? []) {
+    add(record.id, 'risks', `risk|${record.framework ?? ''}|${record.title ?? ''}`, risksResource.path);
   }
 
-  const incidents = load('assurance/incidents/incidents.json');
-  for (const record of incidents.records ?? []) {
-    add(record.id, 'incidents', `incident|${record.recordType ?? ''}|${record.detectedAt ?? ''}|${record.title ?? ''}`, 'assurance/incidents/incidents.json');
+  const incidentsResource = primary('incidents');
+  const incidents = incidentsResource ? load(incidentsResource.path) : null;
+  for (const record of incidents?.records ?? []) {
+    add(record.id, 'incidents', `incident|${record.recordType ?? ''}|${record.detectedAt ?? ''}|${record.title ?? ''}`, incidentsResource.path);
   }
 
-  const exercises = load('assurance/incidents/exercises.json');
-  for (const record of exercises.records ?? []) {
-    add(record.id, 'exercises', `exercise|${record.recordType ?? ''}|${record.exerciseType ?? ''}|${record.scenario ?? ''}`, 'assurance/incidents/exercises.json');
+  const exercisesResource = primary('exercises');
+  const exercises = exercisesResource ? load(exercisesResource.path) : null;
+  for (const record of exercises?.records ?? []) {
+    add(record.id, 'exercises', `exercise|${record.recordType ?? ''}|${record.exerciseType ?? ''}|${record.scenario ?? ''}`, exercisesResource.path);
   }
 
-  const advisories = load('assurance/advisories/advisories.json');
-  for (const record of advisories.records ?? []) {
-    add(record.id, 'advisories', `advisory|${record.recordType ?? ''}|${record.publishedAt ?? ''}`, 'assurance/advisories/advisories.json');
+  const advisoriesResource = primary('advisories');
+  const advisories = advisoriesResource ? load(advisoriesResource.path) : null;
+  for (const record of advisories?.records ?? []) {
+    add(record.id, 'advisories', `advisory|${record.recordType ?? ''}|${record.publishedAt ?? ''}`, advisoriesResource.path);
   }
 
-  function addIso(relative, prefix, framework) {
-    const data = load(relative);
-    const sections = [data.clauses, ...Object.values(data.annexA ?? {})];
-    for (const groups of sections) {
-      for (const rows of Object.values(groups ?? {})) {
-        for (const record of rows ?? []) {
-          const id = `${prefix}-${record.reference}`;
-          add(id, 'compliance', `compliance|${framework}|${record.reference}`, relative);
+  for (const resource of registryResources.filter((entry) => entry.kind === 'compliance' && entry.capabilities?.includes('records'))) {
+    const data = load(resource.path);
+    if (!data) continue;
+    if (data.clauses && data.annexA) {
+      const is27001 = String(data.standard).includes('27001');
+      const is42001 = String(data.standard).includes('42001');
+      const prefix = is27001 ? 'ISO27001' : is42001 ? 'ISO42001' : null;
+      const framework = is27001 ? 'iso-27001' : is42001 ? 'iso-42001' : null;
+      if (!prefix || !framework) continue;
+      const sections = [data.clauses, ...Object.values(data.annexA ?? {})];
+      for (const groups of sections) {
+        for (const rows of Object.values(groups ?? {})) {
+          for (const record of rows ?? []) {
+            const id = `${prefix}-${record.reference}`;
+            add(id, 'compliance', `compliance|${framework}|${record.reference}`, resource.path);
+          }
         }
       }
+      continue;
     }
-  }
-
-  addIso('assurance/compliance/iso-27001-2022.json', 'ISO27001', 'iso-27001');
-  addIso('assurance/compliance/iso-42001-2023.json', 'ISO42001', 'iso-42001');
-
-  const wcagManifest = load('assurance/compliance/wcag-2.2.json');
-  for (const partition of wcagManifest.partitions ?? []) {
-    const data = load(partition.path);
     for (const record of data.criteria ?? []) {
       const id = `WCAG-${record.criterionId}`;
-      add(id, 'compliance', `compliance|wcag-2.2|${record.criterionId}`, partition.path);
+      add(id, 'compliance', `compliance|wcag-2.2|${record.criterionId}`, resource.path);
     }
   }
 
@@ -227,9 +257,6 @@ function validateLifecycleEntry(entry, label, retired = false) {
   }
 }
 
-const registry = currentReader(registryPath);
-if (registry.lifecycle?.path !== lifecyclePath) errors.push(`${registryPath}: lifecycle.path must be ${lifecyclePath}`);
-if (registry.lifecycle?.schema !== lifecycleSchemaPath) errors.push(`${registryPath}: lifecycle.schema must be ${lifecycleSchemaPath}`);
 if (!fs.existsSync(path.join(root, lifecyclePath))) errors.push(`${lifecyclePath}: lifecycle metadata is missing`);
 if (!fs.existsSync(path.join(root, lifecycleSchemaPath))) errors.push(`${lifecycleSchemaPath}: lifecycle schema is missing`);
 
@@ -261,7 +288,7 @@ for (const [relative, document] of current.documents) scanSensitive(relative, do
 let baseline = null;
 const baselineDirectoryReader = directoryReaderFromEnv('ASSURANCE_BASELINE_DIR');
 try {
-  baseline = collectSnapshot(baselineDirectoryReader ?? createGitReader(lifecycle.baseline?.commit));
+  baseline = collectSnapshot(baselineDirectoryReader ?? createGitReader(lifecycle.baseline?.commit), { allowMissing: true });
 } catch (error) {
   errors.push(`${lifecyclePath}: unable to load lifecycle baseline: ${error.message}`);
 }
@@ -271,13 +298,13 @@ let previousLifecycle = null;
 const previousDirectoryReader = directoryReaderFromEnv('ASSURANCE_PREVIOUS_DIR');
 try {
   if (previousDirectoryReader) {
-    previous = collectSnapshot(previousDirectoryReader);
+    previous = collectSnapshot(previousDirectoryReader, { allowMissing: true });
     try { previousLifecycle = previousDirectoryReader(lifecyclePath); } catch { previousLifecycle = null; }
   } else {
     const previousRef = determinePreviousRef();
     if (previousRef) {
       const reader = createGitReader(previousRef);
-      previous = collectSnapshot(reader);
+      previous = collectSnapshot(reader, { allowMissing: true });
       try { previousLifecycle = reader(lifecyclePath); } catch { previousLifecycle = null; }
     }
   }
@@ -376,4 +403,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`Assurance lifecycle validation passed: ${current.records.size} current IDs, ${recordsMetadata.size} explicit lifecycle records, ${retiredMetadata.size} retired IDs.`);
+console.log(`Assurance lifecycle validation passed: ${current.records.size} current IDs from registry discovery, ${recordsMetadata.size} explicit lifecycle records, ${retiredMetadata.size} retired IDs.`);
