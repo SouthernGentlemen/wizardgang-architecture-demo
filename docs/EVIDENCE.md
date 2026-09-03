@@ -23,9 +23,13 @@ Primary sources:
 - R2: actual demo objects/artifacts plus D1 references;
 - application UI: accessibility/i18n behavior, AI evaluations/fallback demonstrations, operational views.
 
-The controlled public assurance data layer lives under `assurance/` and is described in `docs/ASSURANCE.md`. It assigns stable identifiers to disclosure-safe evidence and derives claim-to-evidence and reverse relationships without duplicating URLs or counts. Narrative governance records remain authoritative for policy and method; the registry is authoritative for the public machine-readable projection.
+The controlled public assurance data layer lives under `assurance/` and is described in `docs/ASSURANCE.md`. It assigns stable identifiers to disclosure-safe evidence and derives counts, claim/risk/incident/exercise-to-evidence relationships, and reverse `usedBy` relationships without duplicating URLs or counts in canonical JSON. Narrative governance records remain authoritative for policy and method; the registry is authoritative for the public machine-readable projection.
 
-`/compliance` is the assurance front door across those sources. It states the WCAG 2.2, ISO/IEC 27001, and ISO/IEC 42001 posture as aligned or supported and uncertified, then links to the canonical working evidence at `/accessibility`, `/i18n`, `/governance`, `/mcp`, `/git`, and `/dashboard/*`. It does not reproduce their explanations or turn alignment into a certification claim.
+`/evidence` is the canonical searchable human evidence surface. `GET /v1/assurance` exposes the complete public assurance projection and `GET /v1/assurance/evidence` exposes the evidence-only projection. Repository locators resolve only against the exact deployed commit identified by `DEPLOYED_SHA`; when that identity is unavailable, the projection reports `not-supplied` rather than falling back to `main`. Route evidence resolves against the current request origin.
+
+Freshness is explicit rather than implied: `release-bound` evidence changes with a deployed release/commit, `event-driven` evidence changes when its controlled governance or release event is published, and `observation-bound` evidence is current only for the time of the observation.
+
+`/compliance` remains the assurance posture front door across those sources and links into `/evidence` for record-level inspection. It states the WCAG 2.2, ISO/IEC 27001, and ISO/IEC 42001 posture as aligned or supported and uncertified, then links to the canonical working evidence at `/accessibility`, `/i18n`, `/governance`, `/mcp`, `/git`, and `/dashboard/*`. It does not reproduce their explanations or turn alignment into a certification claim.
 
 Do not reconstruct evidence after the fact when the engineering workflow can create it automatically.
 

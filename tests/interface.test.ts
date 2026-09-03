@@ -131,8 +131,8 @@ describe('compliance assurance index', () => {
     expect(html).toContain('aria-labelledby="posture-heading"');
     expect(html).toContain('aria-labelledby="evidence-heading"');
     expect(html.match(/class="assurance-posture-card"/g)).toHaveLength(3);
-    expect(html.match(/class="assurance-evidence-card"/g)).toHaveLength(9);
-    for (const label of ['Accessibility demonstration', 'Governance controls', 'MCP boundary', 'Availability history', 'Public logs', 'Documentation index', 'Operations dashboard']) {
+    expect(html.match(/class="assurance-evidence-card"/g)).toHaveLength(10);
+    for (const label of ['Accessibility demonstration', 'Governance controls', 'MCP boundary', 'Availability history', 'Public logs', 'Documentation index', 'Operations dashboard', 'Search evidence']) {
       expect(html).toContain(`${label} <span aria-hidden="true">→</span>`);
     }
     expect(html).not.toMatch(/>\s*(?:COMPLIANT|CERTIFIED)\s*</i);

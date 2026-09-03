@@ -21,12 +21,14 @@ import { authorizationDecisionResponse, demoAccessTokenResponse, identityLogoutR
 import { renderI18nDemo } from './demos/i18n-page';
 import { renderAccessibilityDemo } from './demos/accessibility-page';
 import { renderComplianceDemo } from './demos/compliance-page';
+import { renderEvidenceDemo } from './demos/evidence-page';
 import { renderConcerns, renderIncidents, renderRisks, renderSecurity } from './demos/assurance-pages';
 import { securityTxtResponse } from './api/security-policy';
 import { billingScenarioResponse } from './api/billing';
 import { renderBilling, renderDashboard, renderDocs, renderUptime } from './demos/operations-pages';
 import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } from './api/governance';
 import { assuranceIncidentsResponse, assuranceRisksResponse } from './api/assurance';
+import { assuranceEvidenceResponse, assuranceResponse } from './api/assurance-registry';
 import { d1LabResponse } from './api/d1-lab';
 import { renderD1Demo } from './demos/d1-page';
 import { renderGraphqlDemo } from './demos/graphql-console';
@@ -61,8 +63,7 @@ export const RETIRED_PAGE_REDIRECTS = new Map<string, string>([
   ['/environments', '/git#environments'],
   ['/governance/iso-27001', '/governance#iso-27001'],
   ['/governance/iso-42001', '/governance#iso-42001'],
-  ['/traceability', '/governance#traceability'],
-  ['/evidence', '/governance#evidence'],
+  ['/traceability', '/evidence#traceability'],
   ['/dashboard/health', '/dashboard#health'],
 ]);
 
@@ -190,6 +191,8 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
     return offlineApiResponse(control.publicMessage);
   }
 
+  if (path === '/v1/assurance') return assuranceResponse(request, env);
+  if (path === '/v1/assurance/evidence') return assuranceEvidenceResponse(request, env);
   if (path === '/v1/assurance/risks') return assuranceRisksResponse(request);
   if (path === '/v1/assurance/incidents') return assuranceIncidentsResponse(request);
   if (path === '/v1/demo-records') return recordsResponse(request, env);
@@ -261,6 +264,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (request.method === 'GET' && path === '/identity') return renderIdentityDemo(env);
   if (request.method === 'GET' && path === '/i18n') return renderI18nDemo(request, env);
   if (request.method === 'GET' && path === '/accessibility') return renderAccessibilityDemo(request, env);
+  if (request.method === 'GET' && path === '/evidence') return renderEvidenceDemo(request, env);
   if (request.method === 'GET' && path === '/compliance') return renderComplianceDemo(env);
   if (request.method === 'GET' && path === '/security') return renderSecurity(env);
   if (request.method === 'GET' && path === '/governance/concerns') return renderConcerns(env);

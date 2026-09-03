@@ -108,11 +108,20 @@ const claims = claimsData.records as PublicAssuranceClaim[];
 const risks = risksData.records as PublicRisk[];
 const incidents = incidentsData.records as PublicIncident[];
 const exercises = exercisesData.records as PublicExercise[];
-const usedBy = new Map<string, string[]>();
+const usedBy = new Map<string, Set<string>>();
 
-for (const claim of claims) {
-  for (const evidenceId of claim.evidence) usedBy.set(evidenceId, [...(usedBy.get(evidenceId) ?? []), claim.id]);
+function addEvidenceUsage(recordId: string, evidenceIds: string[] = []): void {
+  for (const evidenceId of evidenceIds) {
+    const references = usedBy.get(evidenceId) ?? new Set<string>();
+    references.add(recordId);
+    usedBy.set(evidenceId, references);
+  }
 }
+
+for (const claim of claims) addEvidenceUsage(claim.id, claim.evidence);
+for (const risk of risks) addEvidenceUsage(risk.id, risk.evidence);
+for (const incident of incidents) addEvidenceUsage(incident.id, incident.evidence);
+for (const exercise of exercises) addEvidenceUsage(exercise.id, exercise.evidence);
 
 export function deriveRiskCounts(records: PublicRisk[]): PublicRiskCounts {
   const counts: PublicRiskCounts = {
@@ -178,5 +187,5 @@ export const publicAssuranceRegistry = {
   risks,
   incidents,
   exercises,
-  evidence: evidence.map((record) => ({ ...record, usedBy: usedBy.get(record.id) ?? [] })),
+  evidence: evidence.map((record) => ({ ...record, usedBy: [...(usedBy.get(record.id) ?? [])].sort() })),
 };
