@@ -135,6 +135,78 @@
       "locator": { "route": "/governance/concerns" },
       "freshnessPolicy": "event-driven",
       "visibility": "public"
+    },
+    {
+      "id": "EVD-DOC-005",
+      "kind": "governance-record",
+      "title": "Accessibility verification protocol",
+      "description": "Accessibility evidence boundaries, automated-check limitations, and the required manual browser and assistive-technology matrix.",
+      "locator": { "repositoryPath": "docs/ACCESSIBILITY.md" },
+      "freshnessPolicy": "event-driven",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-DOC-006",
+      "kind": "governance-record",
+      "title": "Public architecture route scope",
+      "description": "Documented public route and capability scope used when recording WCAG content or interaction observations.",
+      "locator": { "repositoryPath": "README.md" },
+      "freshnessPolicy": "event-driven",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-SRC-005",
+      "kind": "source",
+      "title": "Accessibility demonstration page",
+      "description": "Public WCAG engineering surface that exposes bounded accessible and intentionally broken behavior comparisons.",
+      "locator": { "repositoryPath": "src/demos/accessibility-page.ts" },
+      "freshnessPolicy": "release-bound",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-SRC-006",
+      "kind": "source",
+      "title": "Isolated accessibility lab implementation",
+      "description": "Sandboxed accessible/broken fixtures and locally bundled axe-core execution used for partial automated evidence.",
+      "locator": { "repositoryPath": "src/ui/accessibility-lab.ts" },
+      "freshnessPolicy": "release-bound",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-SRC-007",
+      "kind": "source",
+      "title": "Shared public page shell",
+      "description": "Shared page semantics, navigation, skip-link, titles, theme controls, and structural markup used across public demo routes.",
+      "locator": { "repositoryPath": "src/ui/page.ts" },
+      "freshnessPolicy": "release-bound",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-TST-002",
+      "kind": "test",
+      "title": "Accessibility interface tests",
+      "description": "Repository tests for the accessibility sandbox, deterministic accessible/broken fixtures, local axe protocol, and visible criterion cards.",
+      "locator": { "repositoryPath": "tests/interface.test.ts" },
+      "freshnessPolicy": "release-bound",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-TST-003",
+      "kind": "test",
+      "title": "WCAG registry integrity tests",
+      "description": "Exhaustiveness, W3C criterion identity, non-conformance wording, evidence resolution, validation distinction, and freshness-rule tests for the public WCAG registry.",
+      "locator": { "repositoryPath": "tests/assurance-wcag.test.ts" },
+      "freshnessPolicy": "release-bound",
+      "visibility": "public"
+    },
+    {
+      "id": "EVD-RUN-006",
+      "kind": "live-route",
+      "title": "Accessibility engineering demonstration",
+      "description": "Live public route for accessible/broken behavior comparison and partial automated accessibility evidence.",
+      "locator": { "route": "/accessibility" },
+      "freshnessPolicy": "observation-bound",
+      "visibility": "public"
     }
   ]
 }
