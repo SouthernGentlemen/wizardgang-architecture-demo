@@ -1,19 +1,17 @@
 import lifecycleData from '../../assurance/lifecycle/records.json';
 import {
+  advisoryQualification,
+  assuranceQualification,
   deriveIncidentCounts,
   deriveRiskCounts,
-  filterPublicCompliance,
-  filterPublicRisks,
+  filterAssuranceRecords,
+  incidentQualifications,
   listAssuranceRecords,
-  presentPublicEvidence,
-  publicAssuranceRegistry,
-  type AssuranceDataset,
+  type AssuranceFilterValues,
   type AssuranceRecordMap,
-  type PresentedPublicEvidence,
-  type PublicComplianceFilters,
-  type PublicRiskFilters,
 } from './service';
-import { primaryAssuranceResource } from './model';
+import { primaryAssuranceResource, type AssuranceDataset } from './model';
+import { presentEvidence, type PresentedEvidence } from './presentation';
 import {
   assuranceObservedState,
   assurancePublicationDecision,
@@ -35,10 +33,9 @@ export type PublishedAssuranceRecordMap = {
   [K in AssuranceDataset]: PublishedAssuranceRecord<AssuranceRecordMap[K]>;
 };
 
-export interface PresentedPublishedEvidence extends PresentedPublicEvidence {
-  publication: AssuranceLifecyclePresentation;
+export type PresentedPublishedEvidence = PresentedEvidence<PublishedAssuranceRecordMap['evidence']> & {
   observation?: AssuranceObservedState;
-}
+};
 
 function publishRecord<K extends AssuranceDataset>(
   dataset: K,
@@ -73,19 +70,15 @@ export function findPublishedAssuranceRecord<K extends AssuranceDataset>(
   dataset: K,
   recordId: string,
 ): PublishedAssuranceRecordMap[K] | undefined {
-  return listPublishedAssuranceRecords(dataset).find((record) => record.id === recordId);
+  const record = listAssuranceRecords(dataset).find((candidate) => candidate.id === recordId);
+  return record ? publishRecord(dataset, record) : undefined;
 }
 
-export function filterPublishedRisks(
-  filters: PublicRiskFilters,
-): PublishedAssuranceRecordMap['risks'][] {
-  return publishRecords('risks', filterPublicRisks(filters));
-}
-
-export function filterPublishedCompliance(
-  filters: PublicComplianceFilters,
-): PublishedAssuranceRecordMap['compliance'][] {
-  return publishRecords('compliance', filterPublicCompliance(filters));
+export function filterPublishedAssuranceRecords<K extends AssuranceDataset>(
+  dataset: K,
+  filters: AssuranceFilterValues,
+): PublishedAssuranceRecordMap[K][] {
+  return filterAssuranceRecords(dataset, filters, listPublishedAssuranceRecords(dataset));
 }
 
 export function assurancePublicationForRecord(
@@ -101,11 +94,8 @@ export function presentedPublishedEvidenceRecords(
   now: Date = new Date(),
 ): PresentedPublishedEvidence[] {
   return listPublishedAssuranceRecords('evidence').map((record) => {
-    const presented = presentPublicEvidence(record, env, origin) as PresentedPublishedEvidence;
-    const observation = assuranceObservedState(
-      record as typeof record & { observedAt?: string; validUntil?: string },
-      now,
-    );
+    const presented = presentEvidence(record, env, origin);
+    const observation = assuranceObservedState(record, now);
     return {
       ...presented,
       publication: record.publication,
@@ -121,8 +111,8 @@ const incidents = listPublishedAssuranceRecords('incidents');
 const exercises = listPublishedAssuranceRecords('exercises');
 const advisories = listPublishedAssuranceRecords('advisories');
 
-export const publicPublishedAssuranceRegistry = {
-  ...publicAssuranceRegistry,
+export const publishedAssuranceSummary = {
+  qualification: assuranceQualification,
   counts: {
     claims: claims.length,
     evidence: evidence.length,
@@ -133,15 +123,8 @@ export const publicPublishedAssuranceRegistry = {
   },
   riskCounts: deriveRiskCounts(risks),
   incidentCounts: deriveIncidentCounts(incidents, exercises),
-  claims,
-  risks,
-  incidents,
-  exercises,
-  advisories,
-  evidence: evidence.map((record) => ({
-    ...record,
-    usedBy: publicAssuranceRegistry.evidence.find((candidate) => candidate.id === record.id)?.usedBy ?? [],
-  })),
+  incidentQualifications,
+  advisoryQualification,
   publication: {
     retainedRecords: (lifecycleRegistry.retiredRecords ?? []).map((record) => assuranceLifecyclePresentation({
       ...record,

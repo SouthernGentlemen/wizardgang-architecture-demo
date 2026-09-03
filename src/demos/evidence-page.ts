@@ -1,9 +1,9 @@
 import {
-  FRESHNESS_SEMANTICS,
   assuranceAnchor,
   assuranceDatasetSource,
   assuranceRecordUrlsById,
 } from '../assurance/service';
+import { FRESHNESS_SEMANTICS } from '../assurance/presentation';
 import {
   presentedPublishedEvidenceRecords,
   type PresentedPublishedEvidence,
@@ -93,7 +93,9 @@ export function renderEvidenceDemo(request: Request, env: Env): Response {
       <a class="text-link" href="/v1/assurance">Assurance API</a>
       <a class="text-link" href="/v1/assurance/evidence">Evidence JSON</a>
       ${referenceDetails([
-        { label: 'Common assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
+        { label: 'Canonical assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
+        { label: 'Shared assurance presentation', href: sourceUrl(env, 'src/assurance/presentation.ts') },
+        { label: 'v1 HTTP serializer', href: sourceUrl(env, 'src/api/assurance-v1.ts') },
         { label: 'Publication policy', href: sourceUrl(env, 'src/assurance/publication-policy.js') },
         { label: 'Canonical evidence dataset', href: sourceUrl(env, assuranceDatasetSource('evidence')) },
         { label: 'Assurance guide', href: sourceUrl(env, 'docs/ASSURANCE.md') },

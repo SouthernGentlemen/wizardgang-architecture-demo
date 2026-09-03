@@ -1,4 +1,3 @@
-import { paginateAssuranceRecords as paginateAssurancePage } from '../assurance/service';
 import { withSecurityHeaders } from '../lib/http';
 
 export const ASSURANCE_SCHEMA_VERSION = 1;
@@ -205,6 +204,30 @@ export function assuranceEnumQuery<T extends string>(
   return values[0] as T;
 }
 
+function sliceAssurancePage<T extends { id: string }>(
+  records: T[],
+  options?: { limit: number; cursor?: string },
+): AssurancePage<T> | undefined {
+  if (!options) return { records: [...records] };
+  let start = 0;
+  if (options.cursor !== undefined) {
+    const index = records.findIndex((record) => record.id === options.cursor);
+    if (index < 0) return undefined;
+    start = index + 1;
+  }
+  const pageRecords = records.slice(start, start + options.limit);
+  const hasMore = start + pageRecords.length < records.length;
+  return {
+    records: pageRecords,
+    pagination: {
+      limit: options.limit,
+      returned: pageRecords.length,
+      total: records.length,
+      nextCursor: hasMore && pageRecords.length > 0 ? pageRecords[pageRecords.length - 1].id : null,
+    },
+  };
+}
+
 export function paginateAssuranceRecords<T extends { id: string }>(
   request: Request,
   url: URL,
@@ -214,7 +237,7 @@ export function paginateAssuranceRecords<T extends { id: string }>(
   const cursorValues = url.searchParams.getAll('cursor');
   const paginationRequested = limitValues.length > 0 || cursorValues.length > 0;
 
-  if (!paginationRequested) return paginateAssurancePage(records) as AssurancePage<T>;
+  if (!paginationRequested) return sliceAssurancePage(records) as AssurancePage<T>;
 
   if (limitValues.length > 1 || cursorValues.length > 1) {
     return assuranceErrorResponse(request, 400, {
@@ -249,7 +272,7 @@ export function paginateAssuranceRecords<T extends { id: string }>(
     });
   }
 
-  const page = paginateAssurancePage(records, { limit, ...(cursor !== undefined ? { cursor } : {}) });
+  const page = sliceAssurancePage(records, { limit, ...(cursor !== undefined ? { cursor } : {}) });
   if (!page) {
     return assuranceErrorResponse(request, 400, {
       error: 'invalid_cursor',

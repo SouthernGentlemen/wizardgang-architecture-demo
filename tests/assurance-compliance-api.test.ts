@@ -1,11 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { assuranceComplianceResponse } from '../src/api/assurance';
-import {
-  deriveComplianceCounts,
-  publicComplianceRecords,
-  type PublicComplianceRecord,
-} from '../src/assurance/registry';
+import { serializeAssuranceV1Compliance, type AssuranceV1ComplianceRecord } from '../src/api/assurance-v1';
+import { deriveComplianceCounts } from '../src/assurance/service';
+import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import { renderComplianceDemo } from '../src/demos/compliance-page';
 import type { Env } from '../src/types';
 
@@ -15,9 +13,11 @@ const environment = {
   DEPLOYED_SHA: '0123456789abcdef0123456789abcdef01234567',
 } as unknown as Env;
 
+const canonicalComplianceRecords = listPublishedAssuranceRecords('compliance');
+
 describe('canonical compliance presentation and API contract', () => {
   it('normalizes every canonical framework record and derives all counts at runtime', () => {
-    const counts = deriveComplianceCounts(publicComplianceRecords);
+    const counts = deriveComplianceCounts(canonicalComplianceRecords);
     expect(counts.total).toBe(287);
     expect(counts.byFramework).toEqual({
       'iso-27001': 127,
@@ -25,11 +25,12 @@ describe('canonical compliance presentation and API contract', () => {
       'wcag-2.2': 86,
     });
     expect(counts.byLevel).toEqual({ A: 31, AA: 24, AAA: 31 });
-    expect(new Set(publicComplianceRecords.map((record) => record.id)).size).toBe(publicComplianceRecords.length);
-    expect(publicComplianceRecords.every((record) => record.evidence.length > 0)).toBe(true);
+    expect(new Set(canonicalComplianceRecords.map((record) => record.id)).size).toBe(canonicalComplianceRecords.length);
+    expect(canonicalComplianceRecords.every((record) => record.relationships.evidence.length > 0)).toBe(true);
+    expect(canonicalComplianceRecords.every((record) => !('evidence' in record))).toBe(true);
   });
 
-  it('filters the list by framework, status, and WCAG level with counts derived from the matching records', async () => {
+  it('filters canonical records while preserving the released v1 record projection', async () => {
     const request = new Request('https://demo.wizardgang.ai/v1/assurance/compliance?framework=wcag-2.2&status=partial&level=AA');
     const response = assuranceComplianceResponse(request);
     expect(response.status).toBe(200);
@@ -38,13 +39,13 @@ describe('canonical compliance presentation and API contract', () => {
       filters: { framework?: string; status?: string; level?: string };
       counts: ReturnType<typeof deriveComplianceCounts>;
       totalAvailable: number;
-      records: PublicComplianceRecord[];
+      records: AssuranceV1ComplianceRecord[];
     };
-    const expected = publicComplianceRecords.filter((record) => record.framework === 'wcag-2.2' && record.status === 'partial' && record.level === 'AA');
+    const expected = canonicalComplianceRecords.filter((record) => record.framework === 'wcag-2.2' && record.status === 'partial' && record.level === 'AA');
     expect(expected.length).toBeGreaterThan(0);
     expect(body.filters).toEqual({ framework: 'wcag-2.2', status: 'partial', level: 'AA' });
     expect(body.totalAvailable).toBe(287);
-    expect(body.records).toEqual(expected);
+    expect(body.records).toEqual(expected.map(serializeAssuranceV1Compliance));
     expect(body.counts).toEqual(deriveComplianceCounts(expected));
   });
 
@@ -54,13 +55,15 @@ describe('canonical compliance presentation and API contract', () => {
       'WCAG-4.1.2',
     );
     expect(exact.status).toBe(200);
-    const exactBody = await exact.json() as { record: PublicComplianceRecord };
+    const exactBody = await exact.json() as { record: AssuranceV1ComplianceRecord };
     expect(exactBody.record).toMatchObject({
       id: 'WCAG-4.1.2',
       framework: 'wcag-2.2',
       reference: '4.1.2',
       level: 'A',
     });
+    expect(exactBody.record).toHaveProperty('evidence');
+    expect(exactBody.record).not.toHaveProperty('relationships');
 
     const missing = assuranceComplianceResponse(
       new Request('https://demo.wizardgang.ai/v1/assurance/compliance/WCAG-9.9.9'),
@@ -83,9 +86,9 @@ describe('canonical compliance presentation and API contract', () => {
     expect(html).toContain('id="WCAG-4.1.2"');
     expect(html).toContain('href="#WCAG-4.1.2"');
     expect(html).toContain('/v1/assurance/compliance/WCAG-4.1.2');
-    const criterion = publicComplianceRecords.find((record) => record.id === 'WCAG-4.1.2');
+    const criterion = canonicalComplianceRecords.find((record) => record.id === 'WCAG-4.1.2');
     expect(criterion).toBeDefined();
-    expect(html).toContain(`/evidence#${criterion?.evidence[0]}`);
+    expect(html).toContain(`/evidence#${criterion?.relationships.evidence[0]}`);
     expect(html).toContain('<a href="/compliance" aria-current="page">Compliance</a>');
     expect(html).not.toContain('id="ISO27001-4.1"');
   });

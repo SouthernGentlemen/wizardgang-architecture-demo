@@ -80,9 +80,9 @@ describe('registry-driven assurance record discovery', () => {
     const registry = {
       datasets: [
         {
-          id: 'risks', kind: 'risks', capabilities: ['runtime', 'records'], recordCollection: { path: 'records', identity: ['id'] },
+          id: 'risks', kind: 'risks', visibility: 'public', capabilities: ['runtime', 'records'], recordCollection: { path: 'records', identity: ['id'] },
           resources: [
-            { id: 'risks.partition', kind: 'risks', capabilities: ['runtime', 'records'], recordCollection: { path: 'items', identity: ['id'] } },
+            { id: 'risks.partition', kind: 'risks', visibility: 'public', capabilities: ['runtime', 'records'], recordCollection: { path: 'items', identity: ['id'] } },
           ],
         },
       ],

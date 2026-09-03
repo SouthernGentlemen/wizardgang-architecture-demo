@@ -2,25 +2,25 @@ import {
   assuranceAnchor,
   assuranceFilterDefinitions,
   assuranceFilterValues,
+  assuranceFiltersFromUrl,
   assuranceRecordUrls,
-  complianceFiltersFromUrl,
+  complianceFrameworks,
+  complianceQualification,
   deriveComplianceCounts,
   labelAssuranceFilterValue,
-  publicComplianceFrameworks,
-  publicComplianceQualification,
-  type PublicComplianceFilters,
-  type PublicComplianceRecord,
+  type AssuranceFilterValues,
 } from '../assurance/service';
 import {
-  filterPublishedCompliance,
+  filterPublishedAssuranceRecords,
   listPublishedAssuranceRecords,
+  type PublishedAssuranceRecordMap,
 } from '../assurance/publication';
 import type { Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
 import { referenceDetails, shell } from '../ui/page';
 
-function filterQuery(filters: PublicComplianceFilters): string {
+function filterQuery(filters: AssuranceFilterValues): string {
   const params = new URLSearchParams();
   if (filters.framework) params.set('framework', filters.framework);
   if (filters.status) params.set('status', filters.status);
@@ -33,14 +33,14 @@ function titleCase(value: string): string {
   return value.split('-').map((part) => part ? `${part[0].toUpperCase()}${part.slice(1)}` : '').join(' ');
 }
 
-function recordEvidence(record: PublicComplianceRecord): string {
-  return record.evidence.map((id) => {
+function recordEvidence(record: PublishedAssuranceRecordMap['compliance']): string {
+  return record.relationships.evidence.map((id) => {
     const href = assuranceRecordUrls('evidence', id).html ?? '/evidence';
     return `<a href="${escapeHtml(href)}"><code>${escapeHtml(id)}</code></a>`;
   }).join(', ');
 }
 
-function recordDetail(record: PublicComplianceRecord): string {
+function recordDetail(record: PublishedAssuranceRecordMap['compliance']): string {
   if (record.rationale) return `<strong>Rationale:</strong> ${escapeHtml(record.rationale)}`;
   if (record.implementation) return escapeHtml(record.implementation);
   return `${escapeHtml(titleCase(record.kind))} mapped to the canonical public assurance dataset.`;
@@ -70,13 +70,13 @@ function countSummary(counts: ReturnType<typeof deriveComplianceCounts>, totalAv
 }
 
 export function renderComplianceDemo(request: Request, env: Env): Response {
-  const filters = complianceFiltersFromUrl(new URL(request.url));
-  const records = filterPublishedCompliance(filters);
+  const filters = assuranceFiltersFromUrl('compliance', new URL(request.url));
+  const records = filterPublishedAssuranceRecords('compliance', filters);
   const allRecords = listPublishedAssuranceRecords('compliance');
   const counts = deriveComplianceCounts(records);
   const query = filterQuery(filters);
-  const frameworkCards = publicComplianceFrameworks.map((framework) => {
-    const frameworkRecords = filterPublishedCompliance({ framework: framework.id });
+  const frameworkCards = complianceFrameworks.map((framework) => {
+    const frameworkRecords = filterPublishedAssuranceRecords('compliance', { framework: framework.id });
     return `<a class="assurance-posture-card" href="/compliance?framework=${encodeURIComponent(framework.id)}">
       <p class="eyebrow">Canonical dataset</p>
       <h2>${escapeHtml(framework.label)}</h2>
@@ -102,8 +102,8 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
   </tr>`;
   }).join('');
 
-  const frameworkNames = publicComplianceFrameworks.map((framework) => framework.label).join(', ');
-  const frameworkReferences = publicComplianceFrameworks.map((framework) => ({
+  const frameworkNames = complianceFrameworks.map((framework) => framework.label).join(', ');
+  const frameworkReferences = complianceFrameworks.map((framework) => ({
     label: `${framework.label} canonical dataset`,
     href: sourceUrl(env, framework.sourcePath),
   }));
@@ -113,13 +113,15 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
     <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / /compliance</p>
     <h1>Compliance evidence, record by record.</h1>
     <p class="lede">Browse the canonical ${escapeHtml(frameworkNames)} public assurance datasets through one derived view with stable record anchors and evidence links.</p>
-    <p class="assurance-notice"><strong>Scope:</strong> ${escapeHtml(publicComplianceQualification)} WCAG statuses are engineering-evidence states, while ISO statuses reflect the approved public mapping; they are not interchangeable pass/fail claims.</p>
+    <p class="assurance-notice"><strong>Scope:</strong> ${escapeHtml(complianceQualification)} WCAG statuses are engineering-evidence states, while ISO statuses reflect the approved public mapping; they are not interchangeable pass/fail claims.</p>
     <div class="page-tools">
-      <a class="button button-primary" href="/v1/assurance/compliance${escapeHtml(query)}">View matching JSON</a>
+      <a class="button button-primary" href="/v1/assurance/compliance${escapeHtml(query)}">View matching v1 JSON</a>
       <a class="text-link" href="/evidence">Search evidence</a>
       <a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/compliance.ts'))}">Route source</a>
       ${referenceDetails([
-        { label: 'Common assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
+        { label: 'Canonical assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
+        { label: 'Shared assurance presentation', href: sourceUrl(env, 'src/assurance/presentation.ts') },
+        { label: 'v1 HTTP serializer', href: sourceUrl(env, 'src/api/assurance-v1.ts') },
         { label: 'Publication policy', href: sourceUrl(env, 'src/assurance/publication-policy.js') },
         ...frameworkReferences,
         { label: 'Assurance guide', href: sourceUrl(env, 'docs/ASSURANCE.md') },

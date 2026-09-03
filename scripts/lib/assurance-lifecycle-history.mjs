@@ -205,8 +205,10 @@ export function collectRegistryAssuranceSnapshot(registry, read, label = 'assura
 
 export function collectHistoricalAssuranceSnapshot(read, label = 'historical assurance snapshot') {
   const registry = readRequired(read, ASSURANCE_REGISTRY_PATH, label, 'assurance registry');
-  if (registryUsesModernRecordContract(registry)) return collectModernSnapshot(registry, read, label);
+  // Historical compatibility is intentionally isolated here. Recognize the exact
+  // immutable v0.14.0 registry before modern resource policy traverses it.
   if (isLegacyV014Registry(registry)) return collectLegacyV014Snapshot(registry, read, label);
+  if (registryUsesModernRecordContract(registry)) return collectModernSnapshot(registry, read, label);
   throw new Error(`${label}: unsupported historical assurance registry format; refusing incomplete identity discovery`);
 }
 

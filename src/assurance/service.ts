@@ -1,11 +1,7 @@
-import { repoUrl } from '../lib/github';
-import type { Env } from '../types';
 import {
-  assuranceCanonicalRelationshipRecords,
-  assuranceModelComplianceFrameworks,
-  assuranceModelQualifications,
-  assuranceModelRecordCollections,
-  assurancePublicRegistryMetadata,
+  assuranceCanonicalRecordCollections,
+  assuranceComplianceFrameworks,
+  assuranceQualifications,
   assuranceRegistryResources,
   primaryAssuranceResource,
   runtimeAssuranceSchema,
@@ -13,85 +9,43 @@ import {
   type AssuranceRelationships,
   type AssuranceRegistryFilter,
   type AssuranceRegistryResource,
+  type CanonicalAssuranceRecordMap,
+  type ComplianceCounts,
   type ComplianceFramework,
   type ComplianceLevel,
   type ComplianceStatus,
-  type FreshnessPolicy,
-  type PublicAdvisory,
-  type PublicAssuranceClaim,
-  type PublicComplianceCounts,
-  type PublicComplianceFilters,
-  type PublicComplianceFramework,
-  type PublicComplianceRecord,
-  type PublicEvidence,
-  type PublicExercise,
-  type PublicIncident,
-  type PublicIncidentCounts,
-  type PublicRisk,
-  type PublicRiskCounts,
-  type PublicRiskFilters,
+  type ExerciseRecord,
+  type IncidentCounts,
+  type IncidentRecord,
+  type RiskCounts,
   type RiskFramework,
   type RiskRating,
+  type RiskRecord,
   type RiskStatus,
 } from './model';
 import { assuranceRecordCollectionPath } from './record-discovery.js';
 
-export type {
-  AssuranceDataset,
-  AssuranceRelationships,
-  AssuranceRegistryFilter,
-  ComplianceFramework,
-  ComplianceLevel,
-  ComplianceStatus,
-  FreshnessPolicy,
-  PublicAdvisory,
-  PublicAssuranceClaim,
-  PublicComplianceCounts,
-  PublicComplianceFilters,
-  PublicComplianceFramework,
-  PublicComplianceRecord,
-  PublicEvidence,
-  PublicExercise,
-  PublicIncident,
-  PublicIncidentCounts,
-  PublicRisk,
-  PublicRiskCounts,
-  PublicRiskFilters,
-  RiskFramework,
-  RiskRating,
-  RiskStatus,
-} from './model';
-
-export interface AssuranceRecordMap {
-  claims: PublicAssuranceClaim;
-  evidence: PublicEvidence;
-  risks: PublicRisk;
-  incidents: PublicIncident;
-  exercises: PublicExercise;
-  advisories: PublicAdvisory;
-  compliance: PublicComplianceRecord;
-}
-
-export type AssuranceRecord = AssuranceRecordMap[AssuranceDataset];
+export type AssuranceRecordMap = CanonicalAssuranceRecordMap;
+export type AssuranceRecord = CanonicalAssuranceRecordMap[AssuranceDataset];
 export type AssuranceFilterValues = Record<string, string>;
 
-function recordsForDataset<K extends AssuranceDataset>(dataset: K): AssuranceRecordMap[K][] {
-  return assuranceModelRecordCollections[dataset] as AssuranceRecordMap[K][];
+function recordsForDataset<K extends AssuranceDataset>(dataset: K): CanonicalAssuranceRecordMap[K][] {
+  return assuranceCanonicalRecordCollections[dataset];
 }
 
-export function listAssuranceRecords<K extends AssuranceDataset>(dataset: K): AssuranceRecordMap[K][] {
+export function listAssuranceRecords<K extends AssuranceDataset>(dataset: K): CanonicalAssuranceRecordMap[K][] {
   return [...recordsForDataset(dataset)];
 }
 
 export function findAssuranceRecord<K extends AssuranceDataset>(
   dataset: K,
   recordId: string,
-): AssuranceRecordMap[K] | undefined {
+): CanonicalAssuranceRecordMap[K] | undefined {
   return recordsForDataset(dataset).find((record) => record.id === recordId);
 }
 
 export function assuranceDatasetForRecordId(recordId: string): AssuranceDataset | undefined {
-  for (const [dataset, records] of Object.entries(assuranceModelRecordCollections)) {
+  for (const [dataset, records] of Object.entries(assuranceCanonicalRecordCollections)) {
     if (records.some((record) => record.id === recordId)) return dataset as AssuranceDataset;
   }
   return undefined;
@@ -206,11 +160,14 @@ export function assuranceFiltersFromUrl(dataset: AssuranceDataset, url: URL): As
   return filters;
 }
 
-export function filterAssuranceRecords<K extends AssuranceDataset>(
+export function filterAssuranceRecords<
+  K extends AssuranceDataset,
+  T extends CanonicalAssuranceRecordMap[K],
+>(
   dataset: K,
   filters: AssuranceFilterValues,
-  records: AssuranceRecordMap[K][] = listAssuranceRecords(dataset),
-): AssuranceRecordMap[K][] {
+  records: T[] = listAssuranceRecords(dataset) as T[],
+): T[] {
   const definitions = assuranceFilterDefinitions(dataset);
   return records.filter((record) => Object.entries(filters).every(([parameter, expected]) => {
     const definition = definitions[parameter];
@@ -225,7 +182,7 @@ export interface AssuranceFacetCounts {
 
 export function deriveAssuranceCounts<K extends AssuranceDataset>(
   dataset: K,
-  records: AssuranceRecordMap[K][],
+  records: CanonicalAssuranceRecordMap[K][],
 ): AssuranceFacetCounts {
   const byFilter: Record<string, Record<string, number>> = {};
   for (const [parameter, definition] of Object.entries(assuranceFilterDefinitions(dataset))) {
@@ -245,13 +202,13 @@ export function labelAssuranceFilterValue(
   value: string,
 ): string {
   if (dataset === 'compliance' && parameter === 'framework') {
-    return assuranceModelComplianceFrameworks.find((framework) => framework.id === value)?.label ?? value;
+    return assuranceComplianceFrameworks.find((framework) => framework.id === value)?.label ?? value;
   }
   if (value === 'ai') return 'AI';
   return value.split('-').map((part) => part ? `${part[0].toUpperCase()}${part.slice(1)}` : '').join(' ');
 }
 
-export function deriveRiskCounts(records: PublicRisk[]): PublicRiskCounts {
+export function deriveRiskCounts(records: RiskRecord[]): RiskCounts {
   const counts = deriveAssuranceCounts('risks', records);
   return {
     total: counts.total,
@@ -261,7 +218,7 @@ export function deriveRiskCounts(records: PublicRisk[]): PublicRiskCounts {
   };
 }
 
-export function deriveComplianceCounts(records: PublicComplianceRecord[]): PublicComplianceCounts {
+export function deriveComplianceCounts(records: CanonicalAssuranceRecordMap['compliance'][]): ComplianceCounts {
   const counts = deriveAssuranceCounts('compliance', records);
   return {
     total: counts.total,
@@ -272,87 +229,15 @@ export function deriveComplianceCounts(records: PublicComplianceRecord[]): Publi
 }
 
 export function deriveIncidentCounts(
-  actual: PublicIncident[],
-  simulatedExercises: PublicExercise[],
-): PublicIncidentCounts {
+  actual: IncidentRecord[],
+  simulatedExercises: ExerciseRecord[],
+): IncidentCounts {
   const completedStatuses = new Set(['completed', 'follow-up-open', 'closed']);
   return {
     actualIncidents: actual.length,
     exercises: simulatedExercises.length,
     plannedExercises: simulatedExercises.filter((record) => record.status === 'planned').length,
     completedExercises: simulatedExercises.filter((record) => completedStatuses.has(record.status)).length,
-  };
-}
-
-export function filterPublicRisks(filters: PublicRiskFilters): PublicRisk[] {
-  return filterAssuranceRecords('risks', {
-    ...(filters.framework ? { framework: filters.framework } : {}),
-    ...(filters.status ? { status: filters.status } : {}),
-    ...(filters.residualRating ? { residual: filters.residualRating } : {}),
-  });
-}
-
-export function filterPublicCompliance(filters: PublicComplianceFilters): PublicComplianceRecord[] {
-  return filterAssuranceRecords('compliance', {
-    ...(filters.framework ? { framework: filters.framework } : {}),
-    ...(filters.status ? { status: filters.status } : {}),
-    ...(filters.level ? { level: filters.level } : {}),
-  });
-}
-
-export function findPublicComplianceRecord(recordId: string): PublicComplianceRecord | undefined {
-  return findAssuranceRecord('compliance', recordId);
-}
-
-export function riskFiltersFromUrl(url: URL): PublicRiskFilters {
-  const filters = assuranceFiltersFromUrl('risks', url);
-  return {
-    ...(filters.framework ? { framework: filters.framework as RiskFramework } : {}),
-    ...(filters.status ? { status: filters.status as RiskStatus } : {}),
-    ...(filters.residual ? { residualRating: filters.residual as RiskRating } : {}),
-  };
-}
-
-export function complianceFiltersFromUrl(url: URL): PublicComplianceFilters {
-  const filters = assuranceFiltersFromUrl('compliance', url);
-  return {
-    ...(filters.framework ? { framework: filters.framework as ComplianceFramework } : {}),
-    ...(filters.status ? { status: filters.status as ComplianceStatus } : {}),
-    ...(filters.level ? { level: filters.level as ComplianceLevel } : {}),
-  };
-}
-
-export interface AssurancePage<T> {
-  records: T[];
-  pagination?: {
-    limit: number;
-    returned: number;
-    total: number;
-    nextCursor: string | null;
-  };
-}
-
-export function paginateAssuranceRecords<T extends { id: string }>(
-  records: T[],
-  options?: { limit: number; cursor?: string },
-): AssurancePage<T> | undefined {
-  if (!options) return { records: [...records] };
-  let start = 0;
-  if (options.cursor !== undefined) {
-    const index = records.findIndex((record) => record.id === options.cursor);
-    if (index < 0) return undefined;
-    start = index + 1;
-  }
-  const pageRecords = records.slice(start, start + options.limit);
-  const hasMore = start + pageRecords.length < records.length;
-  return {
-    records: pageRecords,
-    pagination: {
-      limit: options.limit,
-      returned: pageRecords.length,
-      total: records.length,
-      nextCursor: hasMore && pageRecords.length > 0 ? pageRecords[pageRecords.length - 1].id : null,
-    },
   };
 }
 
@@ -364,8 +249,15 @@ export interface AssuranceRelationshipReference {
   relation: AssuranceRelationshipName;
 }
 
+function recordRelationships(record: AssuranceRecord): AssuranceRelationships | undefined {
+  return 'relationships' in record ? record.relationships : undefined;
+}
+
 export function forwardAssuranceRelationships(recordId: string): AssuranceRelationships | undefined {
-  return assuranceCanonicalRelationshipRecords.find((record) => record.id === recordId)?.relationships;
+  const dataset = assuranceDatasetForRecordId(recordId);
+  if (!dataset) return undefined;
+  const record = findAssuranceRecord(dataset, recordId) as AssuranceRecord | undefined;
+  return record ? recordRelationships(record) : undefined;
 }
 
 export function reverseAssuranceRelationships(
@@ -373,10 +265,14 @@ export function reverseAssuranceRelationships(
   relation?: AssuranceRelationshipName,
 ): AssuranceRelationshipReference[] {
   const references: AssuranceRelationshipReference[] = [];
-  for (const source of assuranceCanonicalRelationshipRecords) {
-    for (const [name, values] of Object.entries(source.relationships) as Array<[AssuranceRelationshipName, string[]]>) {
-      if (relation && name !== relation) continue;
-      if (values.includes(targetId)) references.push({ sourceId: source.id, dataset: source.dataset, relation: name });
+  for (const [dataset, records] of Object.entries(assuranceCanonicalRecordCollections)) {
+    for (const source of records as AssuranceRecord[]) {
+      const relationships = recordRelationships(source);
+      if (!relationships) continue;
+      for (const [name, values] of Object.entries(relationships) as Array<[AssuranceRelationshipName, string[]]>) {
+        if (relation && name !== relation) continue;
+        if (values.includes(targetId)) references.push({ sourceId: source.id, dataset, relation: name });
+      }
     }
   }
   return references.sort((left, right) => left.sourceId.localeCompare(right.sourceId) || left.relation.localeCompare(right.relation));
@@ -415,137 +311,11 @@ export function assuranceRecordUrlsById(recordId: string): { html?: string; api?
   return dataset ? assuranceRecordUrls(dataset, recordId) : {};
 }
 
-export const FRESHNESS_SEMANTICS: Record<FreshnessPolicy, { scope: 'deployment' | 'controlled-event' | 'live-observation'; meaning: string }> = {
-  'release-bound': {
-    scope: 'deployment',
-    meaning: 'Current for the exact deployed source revision. A later deployment establishes a new release-bound revision.',
-  },
-  'event-driven': {
-    scope: 'controlled-event',
-    meaning: 'Current until the governed record or material event requires review or replacement.',
-  },
-  'observation-bound': {
-    scope: 'live-observation',
-    meaning: 'The locator must be observed at use time; the registry does not treat an earlier observation as current state.',
-  },
+export const complianceFrameworks = assuranceComplianceFrameworks;
+export const complianceQualification = assuranceQualifications.compliance;
+export const assuranceQualification = assuranceQualifications.registry;
+export const incidentQualifications = {
+  incidents: assuranceQualifications.incidents,
+  exercises: assuranceQualifications.exercises,
 };
-
-export interface AssuranceDeploymentContext {
-  version: string | null;
-  commit: string | null;
-  sourceResolution: 'deployed-commit' | 'not-supplied';
-}
-
-export type ResolvedEvidenceLocator =
-  | {
-      kind: 'repository';
-      repositoryPath: string;
-      revision: string | null;
-      url: string | null;
-      resolution: 'deployed-commit' | 'not-supplied';
-    }
-  | {
-      kind: 'route';
-      route: string;
-      url: string;
-      resolution: 'live-route';
-    };
-
-export interface PresentedPublicEvidence extends PublicEvidence {
-  usedBy: string[];
-  freshness: { policy: FreshnessPolicy; scope: 'deployment' | 'controlled-event' | 'live-observation'; meaning: string };
-  resolved: ResolvedEvidenceLocator;
-}
-
-export function assuranceDeploymentContext(env: Env): AssuranceDeploymentContext {
-  const commit = env.DEPLOYED_SHA?.trim() || null;
-  return {
-    version: env.DEPLOYED_VERSION?.trim() || null,
-    commit,
-    sourceResolution: commit ? 'deployed-commit' : 'not-supplied',
-  };
-}
-
-export function presentPublicEvidence(record: PublicEvidence & { usedBy?: string[] }, env: Env, origin: string): PresentedPublicEvidence {
-  const freshness = {
-    policy: record.freshnessPolicy,
-    ...FRESHNESS_SEMANTICS[record.freshnessPolicy],
-  };
-  const commit = env.DEPLOYED_SHA?.trim() || null;
-  const usedBy = record.usedBy ? [...record.usedBy] : evidenceUsedBy(record.id);
-
-  if (record.locator.repositoryPath) {
-    const repositoryPath = record.locator.repositoryPath;
-    return {
-      ...record,
-      usedBy,
-      freshness,
-      resolved: {
-        kind: 'repository',
-        repositoryPath,
-        revision: commit,
-        url: commit ? `${repoUrl(env)}/blob/${encodeURIComponent(commit)}/${repositoryPath}` : null,
-        resolution: commit ? 'deployed-commit' : 'not-supplied',
-      },
-    };
-  }
-
-  const route = record.locator.route as string;
-  return {
-    ...record,
-    usedBy,
-    freshness,
-    resolved: {
-      kind: 'route',
-      route,
-      url: new URL(route, origin).toString(),
-      resolution: 'live-route',
-    },
-  };
-}
-
-export function presentedEvidenceRecords(env: Env, origin: string): PresentedPublicEvidence[] {
-  return listAssuranceRecords('evidence').map((record) => presentPublicEvidence(record, env, origin));
-}
-
-export const publicComplianceRecords = listAssuranceRecords('compliance');
-export const publicComplianceFrameworks: PublicComplianceFramework[] = [...assuranceModelComplianceFrameworks];
-export const publicComplianceQualification = assuranceModelQualifications.compliance;
-
-export const publicComplianceRegistry = {
-  schemaVersion: 1,
-  dataset: 'compliance',
-  qualification: publicComplianceQualification,
-  frameworks: publicComplianceFrameworks,
-  counts: deriveComplianceCounts(publicComplianceRecords),
-  records: publicComplianceRecords,
-};
-
-const incidents = listAssuranceRecords('incidents');
-const exercises = listAssuranceRecords('exercises');
-
-// Released v1 envelope: keep this explicit even though record discovery below it is registry-driven.
-export const publicAssuranceRegistry = {
-  ...assurancePublicRegistryMetadata,
-  counts: {
-    claims: assuranceDatasetCount('claims'),
-    evidence: assuranceDatasetCount('evidence'),
-    risks: assuranceDatasetCount('risks'),
-    incidents: assuranceDatasetCount('incidents'),
-    exercises: assuranceDatasetCount('exercises'),
-    advisories: assuranceDatasetCount('advisories'),
-  },
-  riskCounts: deriveRiskCounts(listAssuranceRecords('risks')),
-  incidentCounts: deriveIncidentCounts(incidents, exercises),
-  incidentQualifications: {
-    incidents: assuranceModelQualifications.incidents,
-    exercises: assuranceModelQualifications.exercises,
-  },
-  advisoryQualification: assuranceModelQualifications.advisories,
-  claims: listAssuranceRecords('claims'),
-  risks: listAssuranceRecords('risks'),
-  incidents,
-  exercises,
-  advisories: listAssuranceRecords('advisories'),
-  evidence: listAssuranceRecords('evidence').map((record) => ({ ...record, usedBy: evidenceUsedBy(record.id) })),
-};
+export const advisoryQualification = assuranceQualifications.advisories;

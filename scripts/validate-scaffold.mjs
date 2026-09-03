@@ -13,8 +13,7 @@ const requiredRoutes = [
   '/dashboard/logs', '/dashboard/billing', '/admin', '/offline', '/health', '/version',
   '/sitemap.xml', '/og.png', '/robots.txt', '/.well-known/security.txt', '/__api/operations/logs',
   '/__api/operations/cloudflare-usage',
-  '/__api/edge/inspect', '/__api/workers/compute', '/__api/durable/counter',
-  '/__api/d1/users', '/__api/d1/users/{id}', '/__api/d1/tasks', '/__api/d1/tasks/{id}', '/__api/d1/reset',
+  '/__api/edge/inspect', '/__api/workers/compute', '/__api/durable/counter', '/__api/d1/users', '/__api/d1/users/{id}', '/__api/d1/tasks', '/__api/d1/tasks/{id}', '/__api/d1/reset',
   '/__api/r2/files', '/__api/r2/files/{id}', '/__api/r2/reset',
   '/__api/accessibility/lab',
   '/__api/git/evidence',
@@ -62,6 +61,7 @@ for (const requiredFile of [
   'docs/OPERATIONS.md',
   'docs/ROUTES.md',
   'docs/ASSURANCE.md',
+  'docs/ASSURANCE-API.md',
   'docs/EVIDENCE.md',
   'docs/IMPLEMENTATION-PLAN.md',
   'src/ui/admin.ts',
@@ -69,8 +69,12 @@ for (const requiredFile of [
   'src/lib/crawler-control.ts',
   'src/api/operations.ts',
   'src/api/assurance.ts',
+  'src/api/assurance-v1.ts',
   'src/api/advisories.ts',
   'src/api/assurance-registry.ts',
+  'src/assurance/model.ts',
+  'src/assurance/service.ts',
+  'src/assurance/publication.ts',
   'src/assurance/presentation.ts',
   'src/demos/evidence.ts',
   'src/demos/evidence-page.ts',
@@ -102,6 +106,15 @@ for (const requiredFile of [
   if (!fs.existsSync(path.join(root, requiredFile))) failures.push(`missing required file: ${requiredFile}`);
 }
 
+const assuranceRegistryModule = fs.readFileSync(path.join(root, 'src/assurance/registry.ts'), 'utf8');
+if (assuranceRegistryModule.includes('export *')) {
+  failures.push('src/assurance/registry.ts must not remain a compatibility barrel');
+}
+const assurancePresentationModule = fs.readFileSync(path.join(root, 'src/assurance/presentation.ts'), 'utf8');
+if (assurancePresentationModule.includes('export *')) {
+  failures.push('src/assurance/presentation.ts must not remain a compatibility barrel');
+}
+
 function walk(dir) {
   for (const item of fs.readdirSync(dir, { withFileTypes: true })) {
     if (item.name === 'node_modules' || item.name === '.git') continue;
@@ -115,6 +128,15 @@ walk(root);
 const router = fs.readFileSync(path.join(root, 'src/router.ts'), 'utf8');
 for (const token of ['/dashboard', '/dashboard/logs', '/__api/operations/logs', '/__api/operations/cloudflare-usage', '/admin', '/offline', '/health', '/version', '/robots.txt', '/evidence', '/v1/assurance', '/v1/assurance/evidence', '/governance/risks', '/v1/assurance/risks', '/governance/incidents', '/v1/assurance/incidents', '/v1/assurance/advisories', 'offlineApiResponse', 'wantsHtml']) {
   if (!router.includes(token)) failures.push(`router missing operations/admin invariant: ${token}`);
+}
+
+const assuranceModel = fs.readFileSync(path.join(root, 'src/assurance/model.ts'), 'utf8');
+for (const legacyToken of ['v1BoundaryAdapters', 'frameworkReferences:', 'riskLinks:', 'objectiveLinks:', 'incidentLinks:']) {
+  if (assuranceModel.includes(legacyToken)) failures.push(`canonical assurance model still contains v1 compatibility token: ${legacyToken}`);
+}
+const assuranceSerializer = fs.readFileSync(path.join(root, 'src/api/assurance-v1.ts'), 'utf8');
+for (const requiredToken of ['serializeAssuranceV1Claim', 'serializeAssuranceV1Risk', 'serializeAssuranceV1Compliance']) {
+  if (!assuranceSerializer.includes(requiredToken)) failures.push(`v1 assurance serializer missing boundary adapter: ${requiredToken}`);
 }
 
 const adminUi = fs.readFileSync(path.join(root, 'src/ui/admin.ts'), 'utf8');
