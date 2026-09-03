@@ -50,6 +50,10 @@ jobs:
         run: npm run security:dependencies
       - name: Validate Worker build
         run: npm run build
+      - name: Validate patch whitespace
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: git diff --check "$BASE_SHA...HEAD"
       - name: Generate commit-bound validation evidence
         run: npm run evidence
       - uses: actions/upload-artifact@v4

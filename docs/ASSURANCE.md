@@ -32,6 +32,7 @@ Public record IDs are stable lookup and anchor keys:
 - Repository evidence records paths, not branch-dependent GitHub URLs.
 - Repository evidence URLs are resolved only against the exact `DEPLOYED_SHA`; a moving branch is never substituted when deployment identity is unavailable.
 - Source/test evidence is release-bound, governance evidence is event-driven, and live observations are observation-bound.
+- A recorded time-bound observation uses `observedAt` plus `validUntil`; CI rejects it after `validUntil` or when the interval is malformed. Live-route evidence remains observation-bound without becoming a stored snapshot.
 - Reverse `usedBy` relationships are derived from all public assurance records that reference evidence, including claims, compliance records, risks, incidents, exercises, and published advisories.
 - Counts are derived from canonical datasets at presentation time.
 - No secret, reporter identity, private infrastructure detail, unreviewed request content, or unreleased vulnerability detail belongs in this registry.
@@ -45,4 +46,10 @@ Public record IDs are stable lookup and anchor keys:
 - `INC-*` linkage is optional. An advisory may reference only an actual incident already established in the retained incident register; publishing an advisory never creates or implies an incident record.
 - An empty published-advisory dataset is not a claim that no vulnerabilities, reports, defects, or security investigations have existed.
 
-Run `npm run validate:assurance` to enforce paths, identifiers, visibility, schemas, duplicates, referential integrity, published-advisory disclosure boundaries, and the separation between canonical assurance data and derived presentation fields.
+## CI integrity gates
+
+`npm run validate:assurance` includes a cross-dataset integrity pass after the framework-specific validators. It fails closed on globally duplicated public IDs, unsupported status vocabularies, missing ISO N/A rationales, unresolved evidence/risk/incident/advisory links, stale time-bound observation evidence, missing assurance routes, stored derived counts, and public fields reserved for private or sensitive detail.
+
+`npm run test:assurance-integrity` runs mutation-based negative tests against isolated repository copies so each important failure mode is proven to return a non-zero validator result. The targeted suite also compares the compliance, risk, and incident/exercise APIs against their HTML projections, including filter-specific record identity and derived counts, with negative assertions that deliberately introduce row and count drift.
+
+Run `npm run validate:assurance` to enforce paths, identifiers, visibility, schemas, duplicates, referential integrity, freshness, public disclosure boundaries, route coverage, and the separation between canonical assurance data and derived presentation fields.
