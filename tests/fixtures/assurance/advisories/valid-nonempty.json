@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "qualification": "Synthetic test fixture only. It represents a published, sanitized advisory shape and is never canonical assurance data.",
+  "records": [
+    {
+      "id": "GHSA-aaaa-bbbb-cccc",
+      "recordType": "advisory",
+      "title": "Synthetic advisory validation fixture",
+      "severity": "low",
+      "summary": "Synthetic disclosure-safe fixture used only to validate canonical advisory contracts.",
+      "publishedAt": "2026-09-02T12:00:00Z",
+      "fixedReleases": [
+        "v0.14.0"
+      ],
+      "relationships": {
+        "evidence": [
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      }
+    }
+  ]
+}

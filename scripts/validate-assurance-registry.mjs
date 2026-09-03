@@ -10,17 +10,14 @@ import {
   readJsonFile,
 } from './lib/assurance-registry.mjs';
 import {
-  createFileSchemaLoader,
-  formatJsonSchemaErrors,
-  validateJsonSchema,
-} from './lib/json-schema.mjs';
+  validateAssuranceSchemaValue,
+  validateRegisteredAssuranceResource,
+} from './lib/assurance-validation.mjs';
 import { renderRuntimeBinding, RUNTIME_BINDING_PATH } from './generate-assurance-runtime-binding.mjs';
 
 const root = process.cwd();
 const errors = [];
 const registrySchemaPath = 'contracts/assurance/registry.schema.json';
-const jsonSchemaDraft = 'https://json-schema.org/draft/2020-12/schema';
-const loadSchemaFile = createFileSchemaLoader(root);
 
 function fail(message) {
   errors.push(message);
@@ -30,46 +27,16 @@ function exists(relative) {
   return isControlledRelativePath(relative) && fs.existsSync(path.join(root, relative));
 }
 
-function loadAssuranceSchemaReference(reference, fromSchemaPath) {
-  const loaded = loadSchemaFile(reference, fromSchemaPath);
-  if (!loaded.schemaPath.startsWith('contracts/assurance/')) {
-    throw new Error(`${fromSchemaPath}: assurance schema reference must stay under contracts/assurance: ${reference}`);
-  }
-  if (loaded.schema.$schema !== jsonSchemaDraft) {
-    throw new Error(`${loaded.schemaPath}: expected JSON Schema draft 2020-12`);
-  }
-  return loaded;
-}
-
 let registry;
-let registrySchema;
 try {
   registry = loadAssuranceRegistry(root);
 } catch (error) {
   fail(`${ASSURANCE_REGISTRY_PATH}: unable to read registry: ${error instanceof Error ? error.message : String(error)}`);
 }
-try {
-  registrySchema = readJsonFile(root, registrySchemaPath);
-} catch (error) {
-  fail(`${registrySchemaPath}: unable to read registry schema: ${error instanceof Error ? error.message : String(error)}`);
-}
-
-if (registry && registrySchema) {
-  try {
-    errors.push(...formatJsonSchemaErrors(
-      ASSURANCE_REGISTRY_PATH,
-      registrySchemaPath,
-      validateJsonSchema(registry, registrySchema, {
-        schemaPath: registrySchemaPath,
-        loadSchema: loadAssuranceSchemaReference,
-      }),
-    ));
-  } catch (error) {
-    fail(`${registrySchemaPath}: JSON Schema validation could not run: ${error instanceof Error ? error.message : String(error)}`);
-  }
-}
 
 if (registry) {
+  errors.push(...validateAssuranceSchemaValue(root, ASSURANCE_REGISTRY_PATH, registrySchemaPath, registry));
+
   const resources = flattenAssuranceRegistry(registry);
   const identities = new Map();
   const registeredPaths = new Map();
@@ -85,33 +52,14 @@ if (registry) {
     if (!exists(resource.schema)) fail(`${ASSURANCE_REGISTRY_PATH}: registered schema is missing for ${resource.path}: ${resource.schema}`);
     if (!exists(resource.path) || !exists(resource.schema)) continue;
 
-    let schema;
     let data;
     try {
-      schema = readJsonFile(root, resource.schema);
       data = readJsonFile(root, resource.path);
     } catch (error) {
-      fail(`${resource.path}: unable to read registered data or schema: ${error instanceof Error ? error.message : String(error)}`);
+      fail(`${resource.path}: unable to read registered data: ${error instanceof Error ? error.message : String(error)}`);
       continue;
     }
-
-    if (schema.$schema !== jsonSchemaDraft) {
-      fail(`${resource.schema}: expected JSON Schema draft 2020-12`);
-      continue;
-    }
-
-    try {
-      errors.push(...formatJsonSchemaErrors(
-        resource.path,
-        resource.schema,
-        validateJsonSchema(data, schema, {
-          schemaPath: resource.schema,
-          loadSchema: loadAssuranceSchemaReference,
-        }),
-      ));
-    } catch (error) {
-      fail(`${resource.path}: schema validation via ${resource.schema} could not run: ${error instanceof Error ? error.message : String(error)}`);
-    }
+    errors.push(...validateRegisteredAssuranceResource(root, resource, data));
   }
 
   const canonicalFiles = discoverCanonicalAssuranceJson(root);
