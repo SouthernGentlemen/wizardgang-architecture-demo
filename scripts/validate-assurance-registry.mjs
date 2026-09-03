@@ -9,12 +9,18 @@ import {
   loadAssuranceRegistry,
   readJsonFile,
 } from './lib/assurance-registry.mjs';
-import { formatJsonSchemaErrors, validateJsonSchema } from './lib/json-schema.mjs';
+import {
+  createFileSchemaLoader,
+  formatJsonSchemaErrors,
+  validateJsonSchema,
+} from './lib/json-schema.mjs';
 import { renderRuntimeBinding, RUNTIME_BINDING_PATH } from './generate-assurance-runtime-binding.mjs';
 
 const root = process.cwd();
 const errors = [];
 const registrySchemaPath = 'contracts/assurance/registry.schema.json';
+const jsonSchemaDraft = 'https://json-schema.org/draft/2020-12/schema';
+const loadSchemaFile = createFileSchemaLoader(root);
 
 function fail(message) {
   errors.push(message);
@@ -22,6 +28,17 @@ function fail(message) {
 
 function exists(relative) {
   return isControlledRelativePath(relative) && fs.existsSync(path.join(root, relative));
+}
+
+function loadAssuranceSchemaReference(reference, fromSchemaPath) {
+  const loaded = loadSchemaFile(reference, fromSchemaPath);
+  if (!loaded.schemaPath.startsWith('contracts/assurance/')) {
+    throw new Error(`${fromSchemaPath}: assurance schema reference must stay under contracts/assurance: ${reference}`);
+  }
+  if (loaded.schema.$schema !== jsonSchemaDraft) {
+    throw new Error(`${loaded.schemaPath}: expected JSON Schema draft 2020-12`);
+  }
+  return loaded;
 }
 
 let registry;
@@ -42,7 +59,10 @@ if (registry && registrySchema) {
     errors.push(...formatJsonSchemaErrors(
       ASSURANCE_REGISTRY_PATH,
       registrySchemaPath,
-      validateJsonSchema(registry, registrySchema, { schemaPath: registrySchemaPath }),
+      validateJsonSchema(registry, registrySchema, {
+        schemaPath: registrySchemaPath,
+        loadSchema: loadAssuranceSchemaReference,
+      }),
     ));
   } catch (error) {
     fail(`${registrySchemaPath}: JSON Schema validation could not run: ${error instanceof Error ? error.message : String(error)}`);
@@ -75,7 +95,7 @@ if (registry) {
       continue;
     }
 
-    if (schema.$schema !== 'https://json-schema.org/draft/2020-12/schema') {
+    if (schema.$schema !== jsonSchemaDraft) {
       fail(`${resource.schema}: expected JSON Schema draft 2020-12`);
       continue;
     }
@@ -84,7 +104,10 @@ if (registry) {
       errors.push(...formatJsonSchemaErrors(
         resource.path,
         resource.schema,
-        validateJsonSchema(data, schema, { schemaPath: resource.schema }),
+        validateJsonSchema(data, schema, {
+          schemaPath: resource.schema,
+          loadSchema: loadAssuranceSchemaReference,
+        }),
       ));
     } catch (error) {
       fail(`${resource.path}: schema validation via ${resource.schema} could not run: ${error instanceof Error ? error.message : String(error)}`);

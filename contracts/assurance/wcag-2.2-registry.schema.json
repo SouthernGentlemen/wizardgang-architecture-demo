@@ -19,82 +19,35 @@
     "freshnessRules",
     "partitions",
     "framework",
-    "registryRelationships",
-    "framework",
     "registryRelationships"
   ],
   "properties": {
-    "schemaVersion": {
-      "const": 1
-    },
-    "id": {
-      "const": "wcag-2-2-public-registry"
-    },
-    "standard": {
-      "const": "Web Content Accessibility Guidelines (WCAG) 2.2"
-    },
-    "edition": {
-      "const": "2.2"
-    },
-    "visibility": {
-      "const": "public"
-    },
-    "assessmentDate": {
-      "type": "string",
-      "format": "date"
-    },
-    "scope": {
-      "type": "string",
-      "minLength": 1
-    },
-    "qualification": {
-      "type": "string",
-      "minLength": 1
-    },
+    "schemaVersion": { "const": 1 },
+    "id": { "const": "wcag-2-2-public-registry" },
+    "standard": { "const": "Web Content Accessibility Guidelines (WCAG) 2.2" },
+    "edition": { "const": "2.2" },
+    "visibility": { "const": "public" },
+    "assessmentDate": { "type": "string", "format": "date" },
+    "scope": { "type": "string", "minLength": 1 },
+    "qualification": { "type": "string", "minLength": 1 },
     "statusDefinitions": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "demonstrated",
-        "partial",
-        "gap",
-        "not-observed"
-      ],
+      "required": ["demonstrated", "partial", "gap", "not-observed"],
       "properties": {
-        "demonstrated": {
-          "type": "string",
-          "minLength": 1
-        },
-        "partial": {
-          "type": "string",
-          "minLength": 1
-        },
-        "gap": {
-          "type": "string",
-          "minLength": 1
-        },
-        "not-observed": {
-          "type": "string",
-          "minLength": 1
-        }
+        "demonstrated": { "type": "string", "minLength": 1 },
+        "partial": { "type": "string", "minLength": 1 },
+        "gap": { "type": "string", "minLength": 1 },
+        "not-observed": { "type": "string", "minLength": 1 }
       }
     },
     "validationDefinitions": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "automated",
-        "manual"
-      ],
+      "required": ["automated", "manual"],
       "properties": {
-        "automated": {
-          "type": "string",
-          "minLength": 1
-        },
-        "manual": {
-          "type": "string",
-          "minLength": 1
-        }
+        "automated": { "type": "string", "minLength": 1 },
+        "manual": { "type": "string", "minLength": 1 }
       }
     },
     "sources": {
@@ -109,54 +62,23 @@
         "attribution"
       ],
       "properties": {
-        "normative": {
-          "const": "https://www.w3.org/TR/WCAG22/"
-        },
-        "machineReadable": {
-          "const": "https://www.w3.org/WAI/WCAG22/wcag.json"
-        },
-        "conformanceUnderstanding": {
-          "const": "https://www.w3.org/WAI/WCAG22/Understanding/conformance.html"
-        },
-        "techniquesUnderstanding": {
-          "const": "https://www.w3.org/WAI/WCAG22/Understanding/understanding-techniques.html"
-        },
-        "retrievedDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "attribution": {
-          "type": "string",
-          "minLength": 1
-        }
+        "normative": { "const": "https://www.w3.org/TR/WCAG22/" },
+        "machineReadable": { "const": "https://www.w3.org/WAI/WCAG22/wcag.json" },
+        "conformanceUnderstanding": { "const": "https://www.w3.org/WAI/WCAG22/Understanding/conformance.html" },
+        "techniquesUnderstanding": { "const": "https://www.w3.org/WAI/WCAG22/Understanding/understanding-techniques.html" },
+        "retrievedDate": { "type": "string", "format": "date" },
+        "attribution": { "type": "string", "minLength": 1 }
       }
     },
     "freshnessRules": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "release-bound",
-        "content-change",
-        "interaction-change",
-        "quarterly-manual"
-      ],
+      "required": ["release-bound", "content-change", "interaction-change", "quarterly-manual"],
       "properties": {
-        "release-bound": {
-          "type": "string",
-          "minLength": 1
-        },
-        "content-change": {
-          "type": "string",
-          "minLength": 1
-        },
-        "interaction-change": {
-          "type": "string",
-          "minLength": 1
-        },
-        "quarterly-manual": {
-          "type": "string",
-          "minLength": 1
-        }
+        "release-bound": { "type": "string", "minLength": 1 },
+        "content-change": { "type": "string", "minLength": 1 },
+        "interaction-change": { "type": "string", "minLength": 1 },
+        "quarterly-manual": { "type": "string", "minLength": 1 }
       }
     },
     "partitions": {
@@ -167,166 +89,26 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "principle",
-          "path"
-        ],
+        "required": ["principle", "path"],
         "properties": {
-          "principle": {
-            "enum": [
-              "Perceivable",
-              "Operable",
-              "Understandable",
-              "Robust"
-            ]
-          },
-          "path": {
-            "type": "string",
-            "pattern": "^assurance/compliance/wcag-2\\.2/[a-z-]+\\.json$"
-          }
+          "principle": { "enum": ["Perceivable", "Operable", "Understandable", "Robust"] },
+          "path": { "type": "string", "pattern": "^assurance/compliance/wcag-2\\.2/[a-z-]+\\.json$" }
         }
       }
     },
     "framework": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "id",
-        "label",
-        "edition",
-        "qualification",
-        "assessmentDate",
-        "sourcePath"
-      ],
+      "required": ["id", "label", "edition", "qualification", "assessmentDate", "sourcePath"],
       "properties": {
-        "id": {
-          "const": "wcag-2.2"
-        },
-        "label": {
-          "const": "WCAG 2.2"
-        },
-        "edition": {
-          "const": "2.2"
-        },
-        "qualification": {
-          "type": "string",
-          "minLength": 1
-        },
-        "assessmentDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "sourcePath": {
-          "const": "assurance/compliance/wcag-2.2.json"
-        }
+        "id": { "const": "wcag-2.2" },
+        "label": { "const": "WCAG 2.2" },
+        "edition": { "const": "2.2" },
+        "qualification": { "type": "string", "minLength": 1 },
+        "assessmentDate": { "type": "string", "format": "date" },
+        "sourcePath": { "const": "assurance/compliance/wcag-2.2.json" }
       }
     },
-    "registryRelationships": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "evidence",
-        "compliance",
-        "frameworks",
-        "claims",
-        "risks",
-        "controls",
-        "incidents",
-        "exercises",
-        "advisories",
-        "governanceDocuments",
-        "objectives"
-      ],
-      "properties": {
-        "evidence": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "pattern": "^EVD-[A-Z]+-[0-9]{3,}$"
-          }
-        },
-        "compliance": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "pattern": "^(ISO27001|ISO42001)-[A0-9.]+$|^WCAG-[0-9.]+$"
-          }
-        },
-        "frameworks": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "pattern": "^(iso-27001|iso-42001|wcag-2\\.2)$"
-          }
-        },
-        "claims": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "pattern": "^CLM-[A-Z]+-[0-9]{3,}$"
-          }
-        },
-        "risks": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "pattern": "^(SEC|AI)-RISK-[0-9]{3}$"
-          }
-        },
-        "controls": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "pattern": "^(ISO27001|ISO42001)-A\\.[0-9.]+$"
-          }
-        },
-        "incidents": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "pattern": "^INC-[0-9]{3,}$"
-          }
-        },
-        "exercises": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "pattern": "^EX-[0-9]{3,}$"
-          }
-        },
-        "advisories": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "pattern": "^ADV-[0-9]{3,}$"
-          }
-        },
-        "governanceDocuments": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "pattern": "^WG-[A-Z]+-[0-9]{3}$"
-          }
-        },
-        "objectives": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "pattern": "^[A-Z]+-OBJ-[0-9]{3}$"
-          }
-        }
-      }
-    }
+    "registryRelationships": { "$ref": "./relationships.schema.json" }
   }
 }

@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://demo.wizardgang.ai/contracts/assurance/relationships.schema.json",
+  "title": "Canonical Assurance Relationships",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "evidence",
+    "compliance",
+    "frameworks",
+    "claims",
+    "risks",
+    "controls",
+    "incidents",
+    "exercises",
+    "advisories",
+    "governanceDocuments",
+    "objectives"
+  ],
+  "properties": {
+    "evidence": {
+      "$ref": "#/$defs/relationshipArray",
+      "items": { "$ref": "#/$defs/evidenceId" }
+    },
+    "compliance": {
+      "$ref": "#/$defs/relationshipArray",
+      "items": { "$ref": "#/$defs/complianceId" }
+    },
+    "frameworks": {
+      "$ref": "#/$defs/relationshipArray",
+      "items": { "$ref": "#/$defs/frameworkId" }
+    },
+    "claims": {
+      "$ref": "#/$defs/relationshipArray",
+      "items": { "$ref": "#/$defs/claimId" }
+    },
+    "risks": {
+      "$ref": "#/$defs/relationshipArray",
+      "items": { "$ref": "#/$defs/riskId" }
+    },
+    "controls": {
+      "$ref": "#/$defs/relationshipArray",
+      "items": { "$ref": "#/$defs/controlId" }
+    },
+    "incidents": {
+      "$ref": "#/$defs/relationshipArray",
+      "items": { "$ref": "#/$defs/incidentId" }
+    },
+    "exercises": {
+      "$ref": "#/$defs/relationshipArray",
+      "items": { "$ref": "#/$defs/exerciseId" }
+    },
+    "advisories": {
+      "$ref": "#/$defs/relationshipArray",
+      "items": { "$ref": "#/$defs/advisoryId" }
+    },
+    "governanceDocuments": {
+      "$ref": "#/$defs/relationshipArray",
+      "items": { "$ref": "#/$defs/governanceDocumentId" }
+    },
+    "objectives": {
+      "$ref": "#/$defs/relationshipArray",
+      "items": { "$ref": "#/$defs/objectiveId" }
+    }
+  },
+  "$defs": {
+    "relationshipArray": {
+      "type": "array",
+      "uniqueItems": true
+    },
+    "evidenceId": {
+      "type": "string",
+      "pattern": "^EVD-[A-Z]+-[0-9]{3,}$"
+    },
+    "complianceId": {
+      "type": "string",
+      "pattern": "^(ISO27001|ISO42001)-[A0-9.]+$|^WCAG-[0-9.]+$"
+    },
+    "frameworkId": {
+      "type": "string",
+      "pattern": "^(iso-27001|iso-42001|wcag-2\\.2)$"
+    },
+    "claimId": {
+      "type": "string",
+      "pattern": "^CLM-[A-Z]+-[0-9]{3,}$"
+    },
+    "riskId": {
+      "type": "string",
+      "pattern": "^(SEC|AI)-RISK-[0-9]{3}$"
+    },
+    "controlId": {
+      "type": "string",
+      "pattern": "^(ISO27001|ISO42001)-A\\.[0-9.]+$"
+    },
+    "incidentId": {
+      "type": "string",
+      "pattern": "^INC-[0-9]{3,}$"
+    },
+    "exerciseId": {
+      "type": "string",
+      "pattern": "^EX-[0-9]{3,}$"
+    },
+    "advisoryId": {
+      "type": "string",
+      "pattern": "^GHSA-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}$"
+    },
+    "governanceDocumentId": {
+      "type": "string",
+      "pattern": "^WG-[A-Z]+-[0-9]{3}$"
+    },
+    "objectiveId": {
+      "type": "string",
+      "pattern": "^[A-Z]+-OBJ-[0-9]{3}$"
+    }
+  }
+}

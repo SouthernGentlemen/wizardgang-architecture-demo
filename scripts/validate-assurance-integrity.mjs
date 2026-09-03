@@ -82,35 +82,25 @@ function registerPublicId(id, owner) {
   else idOwners.set(id, owner);
 }
 
-const allowedFreshnessPolicies = new Set(['release-bound', 'event-driven', 'observation-bound']);
 for (const record of evidence.records ?? []) {
   registerPublicId(record.id, 'evidence');
-  if (!allowedFreshnessPolicies.has(record.freshnessPolicy)) errors.push(`${record.id}: unsupported freshness policy ${record.freshnessPolicy}`);
-  if (record.visibility !== 'public') errors.push(`${record.id}: evidence visibility must remain public`);
   if (record.locator?.route && !publicRoutes.has(record.locator.route)) errors.push(`${record.id}: evidence route is missing from the route manifest: ${record.locator.route}`);
   const isTimeBound = record.kind === 'observation' || record.observedAt !== undefined || record.validUntil !== undefined;
   if (isTimeBound) {
     if (record.freshnessPolicy !== 'observation-bound') errors.push(`${record.id}: time-bound evidence must use observation-bound freshness`);
-    if (!record.observedAt || !record.validUntil) errors.push(`${record.id}: time-bound evidence requires observedAt and validUntil`);
-    else {
-      const observedAt = Date.parse(record.observedAt); const validUntil = Date.parse(record.validUntil);
-      if (Number.isNaN(observedAt)) errors.push(`${record.id}: observedAt must be an ISO date-time`);
-      if (Number.isNaN(validUntil)) errors.push(`${record.id}: validUntil must be an ISO date-time`);
+    if (record.observedAt && record.validUntil) {
+      const observedAt = Date.parse(record.observedAt);
+      const validUntil = Date.parse(record.validUntil);
       if (!Number.isNaN(observedAt) && !Number.isNaN(validUntil) && validUntil <= observedAt) errors.push(`${record.id}: validUntil must be after observedAt`);
       if (!Number.isNaN(validUntil) && !Number.isNaN(validationNow) && validUntil <= validationNow) errors.push(`${record.id}: time-bound evidence is stale as of ${nowValue}`);
     }
   }
 }
-const allowedClaimPostures = new Set(['met', 'partial', 'gap', 'not-applicable']);
-for (const record of claims.records ?? []) { registerPublicId(record.id, 'claim'); if (!allowedClaimPostures.has(record.posture)) errors.push(`${record.id}: unsupported claim posture ${record.posture}`); }
-const allowedRiskStatuses = new Set(['open', 'treating']);
-for (const record of risks.records ?? []) { registerPublicId(record.id, 'risk'); if (!allowedRiskStatuses.has(record.status)) errors.push(`${record.id}: unsupported risk status ${record.status}`); }
-const allowedIncidentStatuses = new Set(['investigating', 'contained', 'recovering', 'monitoring', 'closed', 'superseded']);
-for (const record of incidents.records ?? []) { registerPublicId(record.id, 'incident'); if (!allowedIncidentStatuses.has(record.status)) errors.push(`${record.id}: unsupported incident status ${record.status}`); }
-const allowedExerciseStatuses = new Set(['planned', 'in-progress', 'completed', 'follow-up-open', 'closed', 'superseded']);
-for (const record of exercises.records ?? []) { registerPublicId(record.id, 'exercise'); if (!allowedExerciseStatuses.has(record.status)) errors.push(`${record.id}: unsupported exercise status ${record.status}`); }
-const allowedAdvisorySeverities = new Set(['low', 'moderate', 'high', 'critical']);
-for (const record of advisories.records ?? []) { registerPublicId(record.id, 'advisory'); if (!allowedAdvisorySeverities.has(record.severity)) errors.push(`${record.id}: unsupported advisory severity ${record.severity}`); }
+for (const record of claims.records ?? []) registerPublicId(record.id, 'claim');
+for (const record of risks.records ?? []) registerPublicId(record.id, 'risk');
+for (const record of incidents.records ?? []) registerPublicId(record.id, 'incident');
+for (const record of exercises.records ?? []) registerPublicId(record.id, 'exercise');
+for (const record of advisories.records ?? []) registerPublicId(record.id, 'advisory');
 
 const complianceRecords = [];
 const frameworkIds = new Set();
@@ -131,9 +121,8 @@ for (const resource of manifestResources) {
 }
 for (const record of complianceRecords) {
   registerPublicId(record.id, 'compliance');
-  if (record.id !== `${record.framework === 'wcag-2.2' ? 'WCAG' : record.framework === 'iso-27001' ? 'ISO27001' : 'ISO42001'}-${record.reference}`) errors.push(`${record.id}: compliance identity must be explicit and canonical`);
-  if (!['met', 'partial', 'gap', 'not-applicable', 'demonstrated', 'not-observed'].includes(record.status)) errors.push(`${record.id}: unsupported normalized compliance status ${record.status}`);
-  if (record.status === 'not-applicable' && (!record.rationale || record.rationale.trim().length < 10)) errors.push(`${record.id}: N/A rationale is required`);
+  const prefix = record.framework === 'wcag-2.2' ? 'WCAG' : record.framework === 'iso-27001' ? 'ISO27001' : 'ISO42001';
+  if (record.id !== `${prefix}-${record.reference}`) errors.push(`${record.id}: compliance identity must be explicit and canonical`);
 }
 
 const targetFamilies = new Map([
@@ -152,16 +141,10 @@ const targetFamilies = new Map([
 
 export function validateRelationshipSet(relationships, families = targetFamilies, label = 'relationships') {
   const relationshipErrors = [];
-  if (!relationships || typeof relationships !== 'object' || Array.isArray(relationships)) return [`${label}: relationships must be an object`];
-  const known = new Set(families.keys());
-  for (const key of Object.keys(relationships)) if (!known.has(key)) relationshipErrors.push(`${label}: unsupported relationship type ${key}`);
   for (const [family, targets] of families) {
-    const values = relationships[family];
-    if (!Array.isArray(values)) { relationshipErrors.push(`${label}.${family}: must be an array`); continue; }
-    if (new Set(values).size !== values.length) relationshipErrors.push(`${label}.${family}: duplicate relationship IDs are not allowed`);
+    const values = Array.isArray(relationships?.[family]) ? relationships[family] : [];
     for (const id of values) {
-      if (typeof id !== 'string') relationshipErrors.push(`${label}.${family}: relationship IDs must be strings`);
-      else if (!targets.has(id)) relationshipErrors.push(`${label}.${family}: unresolved ${family} relationship ${id}`);
+      if (!targets.has(id)) relationshipErrors.push(`${label}.${family}: unresolved ${family} relationship ${id}`);
     }
   }
   return relationshipErrors;
@@ -171,7 +154,9 @@ const relationshipDatasets = [
   [claimsPath, claims.records ?? []], [risksPath, risks.records ?? []], [incidentsPath, incidents.records ?? []],
   [exercisesPath, exercises.records ?? []], [advisoriesPath, advisories.records ?? []],
 ];
-for (const [relative, records] of relationshipDatasets) for (const record of records) errors.push(...validateRelationshipSet(record.relationships, targetFamilies, `${relative}:${record.id}`));
+for (const [relative, records] of relationshipDatasets) {
+  for (const record of records) errors.push(...validateRelationshipSet(record.relationships, targetFamilies, `${relative}:${record.id}`));
+}
 for (const record of complianceRecords) errors.push(...validateRelationshipSet(record.relationships, targetFamilies, `compliance:${record.id}`));
 for (const resource of manifestResources) {
   const data = readJson(resource.path);
