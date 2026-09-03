@@ -33,7 +33,11 @@ Changing the established order of an existing version-1 collection is treated as
 
 ## Filters
 
-Filters are exact, case-sensitive query parameters. Unsupported values return `400` rather than silently broadening a result.
+Filters are exact, case-sensitive query parameters. Active filter names come from `assurance/registry.json`; each declaration points to the canonical record field used by the shared predicate. Allowed enum values come from the registered record schemas when the field is schema-owned, or from registered resource metadata when the projected field is resource-owned. Current record contents are not an independent filter vocabulary.
+
+Each declared filter is single-valued. An empty value, unsupported value, or repeated declared filter returns `400` with `error: "invalid_filter"`; repeated filter values remain represented in that error's `value` field as an array for version-1 compatibility. Undeclared query parameters are ignored by focused collection handlers so additive clients do not accidentally narrow or broaden a released selection. Pagination and schema-version parameters retain their separate validation rules below.
+
+HTML filter forms use the same normalization, predicate, and serialization contract. Invalid or repeated declared filter values are treated as unselected in HTML presentation, valid selections are preserved, and matching-JSON links serialize only accepted registry-declared filters. Evidence full-text search is a separate search capability and is not converted into an enum filter.
 
 ### Risks
 
@@ -45,7 +49,7 @@ Filters are exact, case-sensitive query parameters. Unsupported values return `4
 | `status` | `open`, `treating` |
 | `residual` | `low`, `moderate`, `high`, `critical` |
 
-Filters are combined with logical AND.
+Filters are combined with logical AND. The released version-1 response continues to expose the selected `residual` value under the compatibility field name `residualRating`; that alias exists only at the v1 serialization boundary.
 
 ### Compliance
 
@@ -57,9 +61,9 @@ Filters are combined with logical AND.
 | `status` | `met`, `partial`, `gap`, `not-applicable`, `demonstrated`, `not-observed` |
 | `level` | `A`, `AA`, `AAA` |
 
-`level` applies only to WCAG records. Filters are combined with logical AND.
+`level` applies only to WCAG records. ISO records do not carry a WCAG level, so selecting `level` naturally excludes them through the shared field predicate. Filters are combined with logical AND.
 
-Evidence, incident/exercise, and advisory routes currently have no domain filters. They still support the common pagination and schema-version parameters described below.
+Evidence, incident/exercise, and advisory routes currently have no domain enum filters. They still support the common pagination and schema-version parameters described below. Evidence full-text search remains intentionally distinct from these declared enum filters.
 
 ## Pagination
 
@@ -114,8 +118,8 @@ Representative error codes are:
 
 | Status | `error` | Meaning |
 |---|---|---|
-| `400` | `invalid_filter` | A documented filter value is invalid. |
-| `400` | `duplicate_query_parameter` | A single-valued contract parameter was supplied more than once. |
+| `400` | `invalid_filter` | A declared filter is empty, repeated, or has an unsupported value. |
+| `400` | `duplicate_query_parameter` | A single-valued non-filter contract parameter was supplied more than once. |
 | `400` | `invalid_pagination` | `limit` or `cursor` syntax is invalid. |
 | `400` | `invalid_cursor` | The supplied cursor is not in the current filtered sequence. |
 | `400` | `invalid_compliance_record_id` | The exact-record path segment cannot be decoded. |
@@ -174,4 +178,4 @@ Additive metadata, new focused routes, and new allowed filter values may be intr
 
 ## Compatibility expectations
 
-A consumer that already calls `GET /v1/assurance` or any focused collection without the new query parameters receives the existing body shape and complete record set. DEMO-124 adds HTTP validators, explicit cross-origin read metadata, strict validation for documented filters, opt-in pagination, and explicit version negotiation around that compatibility baseline.
+A consumer that already calls `GET /v1/assurance` or any focused collection without the new query parameters receives the existing body shape and complete record set. The version-1 HTTP layer adds validators, explicit cross-origin read metadata, strict validation for declared filters, opt-in pagination, and explicit version negotiation around that compatibility baseline without introducing a second internal filter contract.

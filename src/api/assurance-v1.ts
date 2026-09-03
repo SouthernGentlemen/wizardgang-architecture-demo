@@ -1,4 +1,6 @@
 import { governanceDocumentLinks } from '../assurance/presentation';
+import type { AssuranceDataset } from '../assurance/model';
+import type { AssuranceFilterValues } from '../assurance/service';
 import type {
   PresentedPublishedEvidence,
   PublishedAssuranceRecordMap,
@@ -36,6 +38,15 @@ export type AssuranceV1ComplianceRecord = Omit<PublishedAssuranceRecordMap['comp
 };
 
 export type AssuranceV1Evidence = PresentedPublishedEvidence;
+
+export function serializeAssuranceV1Filters(
+  dataset: AssuranceDataset,
+  filters: AssuranceFilterValues,
+): Record<string, string> {
+  if (dataset !== 'risks' || filters.residual === undefined) return { ...filters };
+  const { residual, ...released } = filters;
+  return { ...released, residualRating: residual };
+}
 
 export function serializeAssuranceV1Claim(record: PublishedAssuranceRecordMap['claims']): AssuranceV1Claim {
   const { relationships, publication, ...value } = record;

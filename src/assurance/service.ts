@@ -122,6 +122,19 @@ export function assuranceFilterDefinitions(dataset: AssuranceDataset): Readonly<
   return resource.filters ?? {};
 }
 
+export function assuranceFilterNames(dataset: AssuranceDataset): string[] {
+  return Object.keys(assuranceFilterDefinitions(dataset));
+}
+
+function addFilterValue(values: string[], value: unknown): void {
+  const candidate = typeof value === 'string'
+    ? value
+    : value && typeof value === 'object' && !Array.isArray(value) && typeof (value as { id?: unknown }).id === 'string'
+      ? (value as { id: string }).id
+      : undefined;
+  if (candidate !== undefined && !values.includes(candidate)) values.push(candidate);
+}
+
 export function assuranceFilterValues(dataset: AssuranceDataset, parameter: string): string[] {
   const definition = assuranceFilterDefinitions(dataset)[parameter];
   if (!definition) return [];
@@ -130,15 +143,15 @@ export function assuranceFilterValues(dataset: AssuranceDataset, parameter: stri
     const schema = runtimeAssuranceSchema(resource);
     const collectionPath = assuranceRecordCollectionPath(resource);
     if (!collectionPath) throw new Error(`${resource.id} cannot supply filters without a declared record collection.`);
-    for (const value of schemaValues(schema, collectionPath, definition.path)) {
-      if (!values.includes(value)) values.push(value);
+    for (const value of schemaValues(schema, collectionPath, definition.path)) addFilterValue(values, value);
+  }
+  if (values.length === 0) {
+    for (const resource of assuranceRegistryResources.filter((candidate) => candidate.kind === dataset)) {
+      addFilterValue(values, valueAtPath(resource, definition.path));
     }
   }
   if (values.length === 0) {
-    for (const record of recordsForDataset(dataset)) {
-      const value = valueAtPath(record, definition.path);
-      if (typeof value === 'string' && !values.includes(value)) values.push(value);
-    }
+    throw new Error(`${dataset}.${parameter} does not resolve to an authoritative registered filter vocabulary.`);
   }
   return values;
 }
@@ -150,14 +163,62 @@ function valueAtPath(record: unknown, path: string): unknown {
   }, record);
 }
 
-export function assuranceFiltersFromUrl(dataset: AssuranceDataset, url: URL): AssuranceFilterValues {
+export interface AssuranceFilterIssue {
+  parameter: string;
+  value: string | string[];
+  allowed: string[];
+}
+
+export interface AssuranceFilterNormalization {
+  filters: AssuranceFilterValues;
+  issues: AssuranceFilterIssue[];
+}
+
+export function normalizeAssuranceFilters(
+  dataset: AssuranceDataset,
+  searchParams: URLSearchParams,
+): AssuranceFilterNormalization {
   const filters: AssuranceFilterValues = {};
-  for (const [parameter] of Object.entries(assuranceFilterDefinitions(dataset))) {
-    const values = url.searchParams.getAll(parameter);
-    if (values.length !== 1) continue;
-    if (assuranceFilterValues(dataset, parameter).includes(values[0])) filters[parameter] = values[0];
+  const issues: AssuranceFilterIssue[] = [];
+  for (const parameter of assuranceFilterNames(dataset)) {
+    const values = searchParams.getAll(parameter);
+    if (values.length === 0) continue;
+    const allowed = assuranceFilterValues(dataset, parameter);
+    if (values.length !== 1 || !allowed.includes(values[0])) {
+      issues.push({
+        parameter,
+        value: values.length === 1 ? values[0] : values,
+        allowed,
+      });
+      continue;
+    }
+    filters[parameter] = values[0];
   }
-  return filters;
+  return { filters, issues };
+}
+
+export function assuranceFiltersFromUrl(dataset: AssuranceDataset, url: URL): AssuranceFilterValues {
+  return normalizeAssuranceFilters(dataset, url.searchParams).filters;
+}
+
+export function serializeAssuranceFilters(dataset: AssuranceDataset, filters: AssuranceFilterValues): string {
+  const params = new URLSearchParams();
+  for (const parameter of assuranceFilterNames(dataset)) {
+    const value = filters[parameter];
+    if (value !== undefined) params.set(parameter, value);
+  }
+  return params.toString();
+}
+
+export function assuranceFilterPredicate(
+  dataset: AssuranceDataset,
+  filters: AssuranceFilterValues,
+): (record: AssuranceRecord) => boolean {
+  const definitions = assuranceFilterDefinitions(dataset);
+  return (record) => Object.entries(filters).every(([parameter, expected]) => {
+    const definition = definitions[parameter];
+    return definition ? valueAtPath(record, definition.path) === expected : true;
+  });
 }
 
 export function filterAssuranceRecords<
@@ -168,11 +229,8 @@ export function filterAssuranceRecords<
   filters: AssuranceFilterValues,
   records: T[] = listAssuranceRecords(dataset) as T[],
 ): T[] {
-  const definitions = assuranceFilterDefinitions(dataset);
-  return records.filter((record) => Object.entries(filters).every(([parameter, expected]) => {
-    const definition = definitions[parameter];
-    return definition ? valueAtPath(record, definition.path) === expected : true;
-  }));
+  const predicate = assuranceFilterPredicate(dataset, filters);
+  return records.filter((record) => predicate(record as AssuranceRecord));
 }
 
 export interface AssuranceFacetCounts {

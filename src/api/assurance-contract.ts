@@ -185,25 +185,6 @@ export function prepareAssuranceRequest(request: Request): AssuranceRequestConte
   return { url, schemaVersion: ASSURANCE_SCHEMA_VERSION };
 }
 
-export function assuranceEnumQuery<T extends string>(
-  request: Request,
-  url: URL,
-  parameter: string,
-  allowed: readonly T[],
-): T | undefined | Response {
-  const values = url.searchParams.getAll(parameter);
-  if (values.length === 0) return undefined;
-  if (values.length !== 1 || !allowed.includes(values[0] as T)) {
-    return assuranceErrorResponse(request, 400, {
-      error: 'invalid_filter',
-      parameter,
-      value: values.length === 1 ? values[0] : values,
-      allowed: [...allowed],
-    });
-  }
-  return values[0] as T;
-}
-
 function sliceAssurancePage<T extends { id: string }>(
   records: T[],
   options?: { limit: number; cursor?: string },

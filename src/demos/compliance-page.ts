@@ -8,6 +8,7 @@ import {
   complianceQualification,
   deriveComplianceCounts,
   labelAssuranceFilterValue,
+  serializeAssuranceFilters,
   type AssuranceFilterValues,
 } from '../assurance/service';
 import {
@@ -21,11 +22,7 @@ import { sourceUrl } from '../lib/github';
 import { referenceDetails, shell } from '../ui/page';
 
 function filterQuery(filters: AssuranceFilterValues): string {
-  const params = new URLSearchParams();
-  if (filters.framework) params.set('framework', filters.framework);
-  if (filters.status) params.set('status', filters.status);
-  if (filters.level) params.set('level', filters.level);
-  const query = params.toString();
+  const query = serializeAssuranceFilters('compliance', filters);
   return query ? `?${query}` : '';
 }
 
@@ -47,21 +44,31 @@ function recordDetail(record: PublishedAssuranceRecordMap['compliance']): string
 }
 
 function filterSelect(
-  parameter: 'framework' | 'status' | 'level',
+  parameter: string,
   current: string | undefined,
   emptyLabel: string,
   describedBy = '',
 ): string {
   const definition = assuranceFilterDefinitions('compliance')[parameter];
+  if (!definition) return '';
   const options = assuranceFilterValues('compliance', parameter).map((value) => {
     const label = labelAssuranceFilterValue('compliance', parameter, value);
     return `<option value="${escapeHtml(value)}"${current === value ? ' selected' : ''}>${escapeHtml(label)}</option>`;
   }).join('');
-  return `<label for="compliance-${parameter}">${escapeHtml(definition?.label ?? parameter)}</label>
-    <select id="compliance-${parameter}" name="${parameter}"${describedBy ? ` aria-describedby="${describedBy}"` : ''}>
+  return `<label for="compliance-${escapeHtml(parameter)}">${escapeHtml(definition.label)}</label>
+    <select id="compliance-${escapeHtml(parameter)}" name="${escapeHtml(parameter)}"${describedBy ? ` aria-describedby="${describedBy}"` : ''}>
       <option value="">${escapeHtml(emptyLabel)}</option>
       ${options}
     </select>`;
+}
+
+function filterControls(filters: AssuranceFilterValues): string {
+  return Object.keys(assuranceFilterDefinitions('compliance')).map((parameter) => filterSelect(
+    parameter,
+    filters[parameter],
+    parameter === 'framework' ? 'All frameworks' : parameter === 'status' ? 'All statuses' : parameter === 'level' ? 'All levels / ISO records' : 'All',
+    parameter === 'level' ? 'compliance-level-help' : '',
+  )).join('\n          ');
 }
 
 function countSummary(counts: ReturnType<typeof deriveComplianceCounts>, totalAvailable: number): string {
@@ -138,9 +145,7 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
       <fieldset>
         <legend class="subtle">Framework, status, and WCAG level</legend>
         <p>
-          ${filterSelect('framework', filters.framework, 'All frameworks')}
-          ${filterSelect('status', filters.status, 'All statuses')}
-          ${filterSelect('level', filters.level, 'All levels / ISO records', 'compliance-level-help')}
+          ${filterControls(filters)}
           <button type="submit">Apply filters</button>
           <a href="/compliance">Clear</a>
         </p>

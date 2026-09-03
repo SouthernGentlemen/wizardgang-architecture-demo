@@ -13,6 +13,7 @@ import {
   deriveIncidentCounts,
   deriveRiskCounts,
   labelAssuranceFilterValue,
+  serializeAssuranceFilters,
   type AssuranceFilterValues,
 } from '../assurance/service';
 import { governanceDocumentLinks } from '../assurance/presentation';
@@ -59,22 +60,25 @@ function titleCase(value: string): string {
 }
 
 function riskFilterQuery(filters: AssuranceFilterValues): string {
-  const params = new URLSearchParams();
-  if (filters.framework) params.set('framework', filters.framework);
-  if (filters.status) params.set('status', filters.status);
-  if (filters.residual) params.set('residual', filters.residual);
-  const query = params.toString();
+  const query = serializeAssuranceFilters('risks', filters);
   return query ? `?${query}` : '';
 }
 
-function riskFilterSelect(parameter: 'framework' | 'status' | 'residual', current?: string): string {
+function riskFilterSelect(parameter: string, current?: string): string {
   const definition = assuranceFilterDefinitions('risks')[parameter];
+  if (!definition) return '';
   const options = assuranceFilterValues('risks', parameter).map((value) =>
     `<option value="${escapeHtml(value)}"${current === value ? ' selected' : ''}>${escapeHtml(labelAssuranceFilterValue('risks', parameter, value))}</option>`,
   ).join('');
-  return `<label>${escapeHtml(definition?.label ?? parameter)}
-    <select name="${parameter}"><option value="">All</option>${options}</select>
+  return `<label>${escapeHtml(definition.label)}
+    <select name="${escapeHtml(parameter)}"><option value="">All</option>${options}</select>
   </label>`;
+}
+
+function riskFilterControls(filters: AssuranceFilterValues): string {
+  return Object.keys(assuranceFilterDefinitions('risks'))
+    .map((parameter) => riskFilterSelect(parameter, filters[parameter]))
+    .join('\n        ');
 }
 
 function riskCard(env: Env, risk: PublishedAssuranceRecordMap['risks']): string {
@@ -125,9 +129,7 @@ export function renderRisks(request: Request, env: Env): Response {
     <h2 id="risk-filter-heading">Filter records</h2>
     <form method="get" action="/governance/risks">
       <p>
-        ${riskFilterSelect('framework', filters.framework)}
-        ${riskFilterSelect('status', filters.status)}
-        ${riskFilterSelect('residual', filters.residual)}
+        ${riskFilterControls(filters)}
         <button type="submit">Apply filters</button>
         <a href="/governance/risks">Clear</a>
       </p>
