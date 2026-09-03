@@ -15,10 +15,17 @@ const allowedRiskFrameworks = new Set(['security', 'ai']);
 const allowedRiskStatuses = new Set(['open', 'treating']);
 const allowedRiskTreatments = new Set(['avoid', 'reduce', 'share']);
 const allowedRatings = new Set(['low', 'moderate', 'high', 'critical']);
+const allowedIncidentStatuses = new Set(['investigating', 'contained', 'recovering', 'monitoring', 'closed', 'superseded']);
+const allowedExerciseStatuses = new Set(['planned', 'in-progress', 'completed', 'follow-up-open', 'closed', 'superseded']);
+const allowedIncidentCategories = new Set(['security', 'ai-mcp', 'supplier', 'data', 'operational', 'privacy-confidentiality', 'accessibility', 'governance-evidence']);
 const evidenceIdPattern = /^EVD-[A-Z]+-[0-9]{3,}$/;
 const claimIdPattern = /^CLM-[A-Z]+-[0-9]{3,}$/;
 const riskIdPattern = /^(SEC|AI)-RISK-[0-9]{3}$/;
+const incidentIdPattern = /^INC-[0-9]{3,}$/;
+const exerciseIdPattern = /^EX-[0-9]{3,}$/;
 const allowedRiskKeys = new Set(['id', 'framework', 'title', 'inherent', 'residual', 'treatment', 'status', 'controls', 'evidence', 'reviewDue']);
+const allowedIncidentKeys = new Set(['id', 'recordType', 'simulated', 'title', 'status', 'detectedAt', 'initialSeverity', 'finalSeverity', 'categories', 'summary', 'riskLinks', 'controlLinks', 'evidence', 'closedAt']);
+const allowedExerciseKeys = new Set(['id', 'recordType', 'simulated', 'exerciseType', 'scenario', 'scope', 'owner', 'status', 'dueDate', 'completedAt', 'riskLinks', 'objectiveLinks', 'evidence', 'resultSummary', 'publicNote']);
 
 function ratingFor(score) {
   if (score <= 4) return 'low';
@@ -47,6 +54,30 @@ function parseRegisterSummary(relative, prefix) {
   return rows;
 }
 
+function normalizeStatus(value) {
+  return String(value).trim().toLowerCase().replaceAll(' ', '-');
+}
+
+function parseExerciseRows(source) {
+  const rows = new Map();
+  for (const line of source.split(/\r?\n/)) {
+    if (!/^\|\s*EX-[0-9]{3,}\s*\|/.test(line)) continue;
+    const cells = line.split('|').slice(1, -1).map((cell) => cell.trim());
+    if (cells.length < 8) continue;
+    const dueMatch = /\b(\d{4}-\d{2}-\d{2})\b/.exec(cells[4]);
+    rows.set(cells[0], {
+      exerciseType: cells[1],
+      scenario: cells[2],
+      scope: cells[3],
+      dueDate: dueMatch?.[1],
+      owner: cells[5],
+      status: normalizeStatus(cells[6]),
+      evidence: cells[7],
+    });
+  }
+  return rows;
+}
+
 if (registry.schemaVersion !== 1) errors.push('assurance/registry.json: schemaVersion must be 1');
 if (registry.visibility !== 'public') errors.push('assurance/registry.json: registry must be explicitly public');
 if ('counts' in registry) errors.push('assurance/registry.json: counts must be derived, not stored');
@@ -67,7 +98,7 @@ for (const dataset of registry.datasets ?? []) {
   if (schema.$schema !== 'https://json-schema.org/draft/2020-12/schema') errors.push(`${dataset.schema}: expected JSON Schema draft 2020-12`);
 }
 
-for (const required of ['evidence', 'claims', 'risks']) {
+for (const required of ['evidence', 'claims', 'risks', 'incidents', 'exercises']) {
   if (!datasets.has(required)) errors.push(`assurance/registry.json: missing ${required} dataset`);
 }
 
@@ -174,10 +205,85 @@ for (const record of risks.records ?? []) {
 for (const sourceId of registerRows.keys()) if (!riskIds.has(sourceId)) errors.push(`risks: source-register record is missing from public assurance JSON: ${sourceId}`);
 if (riskIds.size !== registerRows.size) errors.push(`risks: expected ${registerRows.size} controlled records, found ${riskIds.size}`);
 
+const incidentRegisterPath = 'docs/governance/registers/INCIDENT-REGISTER.md';
+const incidentRegister = fs.readFileSync(path.join(root, incidentRegisterPath), 'utf8');
+const sourceIncidentIds = new Set(incidentRegister.match(/\bINC-[0-9]{3,}\b/g) ?? []);
+const sourceExercises = parseExerciseRows(incidentRegister);
+
+const incidents = read(datasets.get('incidents') ?? 'assurance/incidents/incidents.json');
+const incidentIds = new Set();
+if (incidents.schemaVersion !== registry.schemaVersion) errors.push('incidents: schemaVersion must match the registry');
+if (incidents.sourceRegister !== incidentRegisterPath) errors.push(`incidents: sourceRegister must be ${incidentRegisterPath}`);
+if ('counts' in incidents) errors.push('incidents: counts must be derived, not stored');
+for (const record of incidents.records ?? []) {
+  if (!incidentIdPattern.test(record.id)) errors.push(`incidents: invalid stable ID ${record.id}`);
+  if (incidentIds.has(record.id)) errors.push(`incidents: duplicate stable ID ${record.id}`);
+  incidentIds.add(record.id);
+  const extraKeys = Object.keys(record).filter((key) => !allowedIncidentKeys.has(key));
+  if (extraKeys.length) errors.push(`${record.id}: disclosure-safe incident contains unsupported fields: ${extraKeys.join(', ')}`);
+  if (record.recordType !== 'incident') errors.push(`${record.id}: recordType must be incident`);
+  if (record.simulated !== false) errors.push(`${record.id}: actual incidents must be explicitly simulated=false`);
+  if (!allowedIncidentStatuses.has(record.status)) errors.push(`${record.id}: unsupported incident status ${record.status}`);
+  if (!sourceIncidentIds.has(record.id)) errors.push(`${record.id}: no retained incident with this permanent ID exists in ${incidentRegisterPath}`);
+  if (!Array.isArray(record.categories) || record.categories.length === 0) errors.push(`${record.id}: at least one public-safe incident category is required`);
+  for (const category of record.categories ?? []) if (!allowedIncidentCategories.has(category)) errors.push(`${record.id}: unsupported incident category ${category}`);
+  if (new Set(record.categories ?? []).size !== record.categories?.length) errors.push(`${record.id}: duplicate incident category`);
+  for (const riskId of record.riskLinks ?? []) if (!riskIds.has(riskId)) errors.push(`${record.id}: unresolved risk ${riskId}`);
+  for (const evidenceId of record.evidence ?? []) if (!evidenceIds.has(evidenceId)) errors.push(`${record.id}: unresolved evidence ${evidenceId}`);
+  if (record.status === 'closed' && !record.closedAt) errors.push(`${record.id}: closed incidents require closedAt`);
+}
+
+const exercises = read(datasets.get('exercises') ?? 'assurance/incidents/exercises.json');
+const exerciseIds = new Set();
+if (exercises.schemaVersion !== registry.schemaVersion) errors.push('exercises: schemaVersion must match the registry');
+if (exercises.sourceRegister !== incidentRegisterPath) errors.push(`exercises: sourceRegister must be ${incidentRegisterPath}`);
+if ('counts' in exercises) errors.push('exercises: counts must be derived, not stored');
+for (const record of exercises.records ?? []) {
+  if (!exerciseIdPattern.test(record.id)) errors.push(`exercises: invalid stable ID ${record.id}`);
+  if (exerciseIds.has(record.id)) errors.push(`exercises: duplicate stable ID ${record.id}`);
+  exerciseIds.add(record.id);
+  const extraKeys = Object.keys(record).filter((key) => !allowedExerciseKeys.has(key));
+  if (extraKeys.length) errors.push(`${record.id}: disclosure-safe exercise contains unsupported fields: ${extraKeys.join(', ')}`);
+  if (record.recordType !== 'exercise') errors.push(`${record.id}: recordType must be exercise`);
+  if (record.simulated !== true) errors.push(`${record.id}: exercises must be explicitly simulated=true`);
+  if (!allowedExerciseStatuses.has(record.status)) errors.push(`${record.id}: unsupported exercise status ${record.status}`);
+  for (const riskId of record.riskLinks ?? []) if (!riskIds.has(riskId)) errors.push(`${record.id}: unresolved risk ${riskId}`);
+  for (const objectiveId of record.objectiveLinks ?? []) if (!incidentRegister.includes(objectiveId)) errors.push(`${record.id}: objective link is not established by the source register: ${objectiveId}`);
+  for (const evidenceId of record.evidence ?? []) if (!evidenceIds.has(evidenceId)) errors.push(`${record.id}: unresolved evidence ${evidenceId}`);
+
+  const source = sourceExercises.get(record.id);
+  if (!source) {
+    errors.push(`${record.id}: stable ID is missing from the controlled exercise table`);
+  } else {
+    if (source.exerciseType !== record.exerciseType) errors.push(`${record.id}: exercise type differs from source register`);
+    if (source.scenario !== record.scenario) errors.push(`${record.id}: scenario differs from source register`);
+    if (source.scope !== record.scope) errors.push(`${record.id}: scope differs from source register`);
+    if (source.owner !== record.owner) errors.push(`${record.id}: owner differs from source register`);
+    if (source.status !== record.status) errors.push(`${record.id}: status differs from source register`);
+    if (source.dueDate !== record.dueDate) errors.push(`${record.id}: due date differs from source register`);
+  }
+
+  if (record.status === 'planned') {
+    if (!record.dueDate) errors.push(`${record.id}: planned exercises require dueDate`);
+    if (record.completedAt) errors.push(`${record.id}: planned exercise cannot have completedAt`);
+    if (record.resultSummary) errors.push(`${record.id}: planned exercise cannot have resultSummary`);
+    if ((record.evidence ?? []).length !== 0) errors.push(`${record.id}: planned exercise cannot carry completion evidence`);
+  }
+  if (['completed', 'follow-up-open', 'closed'].includes(record.status)) {
+    if (!record.completedAt) errors.push(`${record.id}: completed/post-exercise status requires completedAt`);
+    if (!record.resultSummary) errors.push(`${record.id}: completed/post-exercise status requires resultSummary`);
+    if (!Array.isArray(record.evidence) || record.evidence.length === 0) errors.push(`${record.id}: completed/post-exercise status requires evidence`);
+  }
+}
+
+for (const id of incidentIds) if (exerciseIds.has(id)) errors.push(`${id}: record cannot be both an actual incident and an exercise`);
+for (const sourceId of sourceExercises.keys()) if (!exerciseIds.has(sourceId)) errors.push(`exercises: source-register exercise is missing from public assurance JSON: ${sourceId}`);
+if (exerciseIds.size !== sourceExercises.size) errors.push(`exercises: expected ${sourceExercises.size} controlled records, found ${exerciseIds.size}`);
+
 if (errors.length) {
   console.error('Public assurance validation failed:');
   for (const error of errors) console.error(`- ${error}`);
   process.exit(1);
 }
 
-console.log(`Public assurance validation passed: ${claimIds.size} claims, ${evidenceIds.size} evidence records, ${riskIds.size} risk records, ${datasets.size} datasets.`);
+console.log(`Public assurance validation passed: ${claimIds.size} claims, ${evidenceIds.size} evidence records, ${riskIds.size} risk records, ${incidentIds.size} incidents, ${exerciseIds.size} exercises, ${datasets.size} datasets.`);

@@ -5,8 +5,8 @@ import { sitemapResponse } from '../src/api/sitemap';
 import { readFileSync } from 'node:fs';
 
 describe('architecture demo registry', () => {
-  it('publishes 23 HTML routes in five architecture groups', () => {
-    expect(demos).toHaveLength(23);
+  it('publishes 24 HTML routes in five architecture groups', () => {
+    expect(demos).toHaveLength(24);
     expect([...new Set(demos.map((demo) => demo.group))]).toEqual([
       'Platform', 'Interfaces', 'Standards', 'Delivery & Governance', 'Operations',
     ]);
@@ -32,7 +32,7 @@ describe('architecture demo registry', () => {
     expect(routes.has('/dashboard/health')).toBe(false);
   });
 
-  it('places the canonical compliance and risk routes in delivery and governance', () => {
+  it('places the canonical compliance, risk, and incident routes in delivery and governance', () => {
     const compliance = demos.find((demo) => demo.route === '/compliance');
     expect(compliance).toMatchObject({
       group: 'Delivery & Governance',
@@ -43,6 +43,12 @@ describe('architecture demo registry', () => {
     expect(risks).toMatchObject({
       group: 'Delivery & Governance',
       sourcePath: 'src/demos/risks.ts',
+      status: 'working',
+    });
+    const incidents = demos.find((demo) => demo.route === '/governance/incidents');
+    expect(incidents).toMatchObject({
+      group: 'Delivery & Governance',
+      sourcePath: 'src/demos/incidents.ts',
       status: 'working',
     });
     expect(demos.some((demo) => demo.route === '/dashboard/compliance')).toBe(false);
@@ -57,7 +63,7 @@ describe('architecture demo registry', () => {
       expect(entry?.status).toBe(demo.status);
     }
     expect(demos.every((demo) => demo.status === 'working')).toBe(true);
-    expect(manifest.filter((entry) => entry.source.startsWith('src/demos/'))).toHaveLength(23);
+    expect(manifest.filter((entry) => entry.source.startsWith('src/demos/'))).toHaveLength(24);
   });
 });
 
@@ -69,7 +75,7 @@ describe('intentional offline gate', () => {
   });
 
   it('does not bypass ordinary demo routes', () => {
-    for (const route of ['/edge', '/d1', '/api', '/graphql', '/webhooks', '/identity', '/mcp', '/governance/risks']) {
+    for (const route of ['/edge', '/d1', '/api', '/graphql', '/webhooks', '/identity', '/mcp', '/governance/risks', '/governance/incidents']) {
       expect(bypassOfflineGate(route)).toBe(false);
     }
   });
@@ -78,6 +84,7 @@ describe('intentional offline gate', () => {
     expect(isApiLike('/__api/edge/inspect')).toBe(true);
     expect(isApiLike('/v1/things')).toBe(true);
     expect(isApiLike('/v1/assurance/risks')).toBe(true);
+    expect(isApiLike('/v1/assurance/incidents')).toBe(true);
     expect(isApiLike('/__api/operations/logs')).toBe(true);
     expect(isApiLike('/graphql')).toBe(true);
     expect(isApiLike('/mcp/server')).toBe(true);

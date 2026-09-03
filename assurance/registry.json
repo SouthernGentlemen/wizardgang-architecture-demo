@@ -20,6 +20,16 @@
       "kind": "risks",
       "path": "assurance/risks/risks.json",
       "schema": "contracts/assurance/risk.schema.json"
+    },
+    {
+      "kind": "incidents",
+      "path": "assurance/incidents/incidents.json",
+      "schema": "contracts/assurance/incident.schema.json"
+    },
+    {
+      "kind": "exercises",
+      "path": "assurance/incidents/exercises.json",
+      "schema": "contracts/assurance/exercise.schema.json"
     }
   ]
 }
