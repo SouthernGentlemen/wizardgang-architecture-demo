@@ -1,8 +1,9 @@
 import type { DemoDefinition } from '../types';
+import { assuranceCollectionApiRoute, assuranceHtmlRoute, assuranceRegistryApiRoute } from '../assurance/routes';
 
 const demo: DemoDefinition = {
   id: 'evidence',
-  route: '/evidence',
+  route: assuranceHtmlRoute('evidence'),
   title: 'Assurance Evidence',
   group: 'Delivery & Governance',
   sourcePath: 'src/demos/evidence.ts',
@@ -22,8 +23,8 @@ const demo: DemoDefinition = {
     { label: 'View assurance validation', path: 'scripts/validate-assurance-projection.mjs' },
   ],
   interfaces: [
-    { method: 'GET', path: '/v1/assurance', description: 'Derived public assurance registry with exact-deployment evidence resolution.' },
-    { method: 'GET', path: '/v1/assurance/evidence', description: 'Derived public evidence records with usedBy and freshness semantics.' },
+    { method: 'GET', path: assuranceRegistryApiRoute(), description: 'Derived public assurance registry with exact-deployment evidence resolution.' },
+    { method: 'GET', path: assuranceCollectionApiRoute('evidence'), description: 'Derived public evidence records with usedBy and freshness semantics.' },
   ],
 };
 

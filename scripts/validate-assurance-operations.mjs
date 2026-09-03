@@ -5,6 +5,7 @@ import {
   loadAssuranceRegistry,
   requireRegistryResource,
 } from './lib/assurance-registry.mjs';
+import { matchAssuranceRoute } from '../src/assurance/route-contract.js';
 
 const root = process.cwd();
 const live = process.argv.includes('--live');
@@ -46,8 +47,15 @@ for (const [label, value] of [
 ]) {
   if (!value || !securityDoc.includes(value)) errors.push(`SECURITY.md is missing the configured ${label}: ${value}`);
 }
-for (const route of [reporting.policyRoute, reporting.securityTxtRoute]) {
-  if (!route || !router.includes(`'${route}'`)) errors.push(`src/router.ts is missing configured reporting route ${route}`);
+
+const policyRoute = reporting.policyRoute;
+const policyRouteMatch = policyRoute ? matchAssuranceRoute(registry, policyRoute) : null;
+if (!policyRoute || policyRouteMatch?.kind !== 'html') {
+  errors.push(`configured security policy route is not a canonical assurance HTML route: ${policyRoute}`);
+}
+const securityTxtRoute = reporting.securityTxtRoute;
+if (!securityTxtRoute || !router.includes(`'${securityTxtRoute}'`)) {
+  errors.push(`src/router.ts is missing configured reporting route ${securityTxtRoute}`);
 }
 
 const expirySource = reporting.expirySource;

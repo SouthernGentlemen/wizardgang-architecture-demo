@@ -1,7 +1,21 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { loadAssuranceRegistry } from './lib/assurance-registry.mjs';
+import {
+  assuranceRouteDeclarations,
+  assuranceRoutesForDataset,
+} from '../src/assurance/route-contract.js';
 
 const root = process.cwd();
+const assuranceRegistry = loadAssuranceRegistry(root);
+const assuranceDeclarations = assuranceRouteDeclarations(assuranceRegistry);
+const assuranceDemoKinds = new Map([
+  ['src/demos/evidence.ts', 'evidence'],
+  ['src/demos/compliance.ts', 'compliance'],
+  ['src/demos/security.ts', 'advisories'],
+  ['src/demos/risks.ts', 'risks'],
+  ['src/demos/incidents.ts', 'incidents'],
+]);
 const registrySource = fs.readFileSync(path.join(root, 'src/demos/registry.ts'), 'utf8');
 const imports = new Map(
   [...registrySource.matchAll(/import\s+(\w+)\s+from\s+'\.\/([^']+)'/g)]
@@ -16,12 +30,20 @@ function stringField(source, field) {
   return value;
 }
 
+function assuranceDemoRoute(sourcePath) {
+  const kind = assuranceDemoKinds.get(sourcePath);
+  if (!kind) return undefined;
+  const route = assuranceRoutesForDataset(assuranceRegistry, kind)?.html;
+  if (!route) throw new Error(`${sourcePath} is registered as an assurance demo without a canonical HTML route.`);
+  return route;
+}
+
 const demos = registryList.split(',').map((value) => value.trim()).filter(Boolean).map((symbol) => {
   const sourcePath = imports.get(symbol);
   if (!sourcePath) throw new Error(`Missing import for registered demo ${symbol}.`);
   const source = fs.readFileSync(path.join(root, sourcePath), 'utf8');
   const entry = {
-    route: stringField(source, 'route'),
+    route: assuranceDemoRoute(sourcePath) ?? stringField(source, 'route'),
     title: stringField(source, 'title'),
     group: stringField(source, 'group'),
     source: stringField(source, 'sourcePath'),
@@ -30,6 +52,19 @@ const demos = registryList.split(',').map((value) => value.trim()).filter(Boolea
   if (entry.route === '/graphql') entry.method = 'GET, POST';
   return entry;
 });
+
+function assuranceMachineRoute(owner, routeKind, metadata) {
+  const declaration = assuranceDeclarations.find((candidate) => candidate.owner === owner);
+  const route = routeKind === 'apiRecord' ? declaration?.routes?.apiRecord : declaration?.routes?.api;
+  if (!route) throw new Error(`Missing canonical assurance ${routeKind} route for ${owner}.`);
+  return {
+    route: routeKind === 'apiRecord' ? route.replace('{id}', '{recordId}') : route,
+    ...metadata,
+    method: 'GET',
+    machine: true,
+    offline_behavior: '503',
+  };
+}
 
 const machine = [
   { route: '/admin', title: 'Demo Admin', group: 'Operations', source: 'src/ui/admin.ts', protected: true },
@@ -90,14 +125,14 @@ const machine = [
   { route: '/identity/session', title: 'Identity Session', group: 'Identity', source: 'src/api/identity.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/identity/logout', title: 'Identity Logout', group: 'Identity', source: 'src/api/identity.ts', method: 'POST', machine: true, offline_behavior: '503' },
   { route: '/__api/operations/billing', title: 'Synthetic Budget Scenario', group: 'Operations', source: 'src/api/billing.ts', method: 'POST', machine: true, offline_reachable: true },
-  { route: '/v1/assurance', title: 'Public Assurance Registry', group: 'Delivery & Governance API', source: 'src/api/assurance-registry.ts', method: 'GET', machine: true, offline_behavior: '503' },
-  { route: '/v1/assurance/evidence', title: 'Public Assurance Evidence', group: 'Delivery & Governance API', source: 'src/api/assurance-registry.ts', method: 'GET', machine: true, offline_behavior: '503' },
-  { route: '/v1/assurance/compliance', title: 'Public Compliance Assurance JSON', group: 'Delivery & Governance API', source: 'src/api/assurance.ts', method: 'GET', machine: true, offline_behavior: '503' },
-  { route: '/v1/assurance/compliance/{recordId}', title: 'Public Compliance Assurance Record', group: 'Delivery & Governance API', source: 'src/api/assurance.ts', method: 'GET', machine: true, offline_behavior: '503' },
+  assuranceMachineRoute('registry', 'api', { title: 'Public Assurance Registry', group: 'Delivery & Governance API', source: 'src/api/assurance-registry.ts' }),
+  assuranceMachineRoute('evidence', 'api', { title: 'Public Assurance Evidence', group: 'Delivery & Governance API', source: 'src/api/assurance-registry.ts' }),
+  assuranceMachineRoute('compliance', 'api', { title: 'Public Compliance Assurance JSON', group: 'Delivery & Governance API', source: 'src/api/assurance.ts' }),
+  assuranceMachineRoute('compliance', 'apiRecord', { title: 'Public Compliance Assurance Record', group: 'Delivery & Governance API', source: 'src/api/assurance.ts' }),
   { route: '/__api/evidence/traceability', title: 'Traceability Evidence JSON', group: 'Delivery & Governance API', source: 'src/api/governance.ts', method: 'GET', machine: true, offline_behavior: '503' },
-  { route: '/v1/assurance/risks', title: 'Disclosure-safe Risk Assurance JSON', group: 'Delivery & Governance API', source: 'src/api/assurance.ts', method: 'GET', machine: true, offline_behavior: '503' },
-  { route: '/v1/assurance/incidents', title: 'Disclosure-safe Incident and Exercise Assurance JSON', group: 'Delivery & Governance API', source: 'src/api/assurance.ts', method: 'GET', machine: true, offline_behavior: '503' },
-  { route: '/v1/assurance/advisories', title: 'Published Security Advisories', group: 'Delivery & Governance API', source: 'src/api/advisories.ts', method: 'GET', machine: true, offline_behavior: '503' },
+  assuranceMachineRoute('risks', 'api', { title: 'Disclosure-safe Risk Assurance JSON', group: 'Delivery & Governance API', source: 'src/api/assurance.ts' }),
+  assuranceMachineRoute('incidents', 'api', { title: 'Disclosure-safe Incident and Exercise Assurance JSON', group: 'Delivery & Governance API', source: 'src/api/assurance.ts' }),
+  assuranceMachineRoute('advisories', 'api', { title: 'Published Security Advisories', group: 'Delivery & Governance API', source: 'src/api/advisories.ts' }),
   { route: '/__api/governance/security-controls', title: 'Security Control Evidence JSON', group: 'Delivery & Governance API', source: 'src/api/governance.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/__api/governance/ai-evaluation', title: 'AI Boundary Evaluation', group: 'Delivery & Governance API', source: 'src/api/governance.ts', method: 'POST', machine: true, offline_behavior: '503' },
 ].map((entry) => ({ ...entry, status: 'working' }));

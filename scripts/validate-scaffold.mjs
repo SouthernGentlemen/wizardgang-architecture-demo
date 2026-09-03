@@ -1,15 +1,29 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { loadAssuranceRegistry } from './lib/assurance-registry.mjs';
+import {
+  assuranceRouteAliases,
+  assuranceRouteDeclarations,
+} from '../src/assurance/route-contract.js';
 
 const root = process.cwd();
 const manifestPath = path.join(root, 'docs', 'route-manifest.json');
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 const routes = new Set(manifest.map((entry) => entry.route));
+const assuranceRegistry = loadAssuranceRegistry(root);
+const assuranceRequiredRoutes = assuranceRouteDeclarations(assuranceRegistry).flatMap((declaration) => {
+  const declared = declaration.routes ?? {};
+  return [
+    declared.html,
+    declared.api,
+    declared.apiRecord?.replace('{id}', '{recordId}'),
+  ].filter(Boolean);
+});
 
 const requiredRoutes = [
   '/', '/edge', '/workers', '/durable-objects', '/d1', '/r2',
   '/api', '/identity', '/mcp', '/i18n', '/accessibility', '/git',
-  '/governance', '/evidence', '/compliance', '/security', '/governance/concerns', '/governance/risks', '/governance/incidents', '/dashboard', '/dashboard/uptime', '/dashboard/docs',
+  '/governance', '/governance/concerns', '/dashboard', '/dashboard/uptime', '/dashboard/docs',
   '/dashboard/logs', '/dashboard/billing', '/admin', '/offline', '/health', '/version',
   '/sitemap.xml', '/og.png', '/robots.txt', '/.well-known/security.txt', '/__api/operations/logs',
   '/__api/operations/cloudflare-usage',
@@ -23,16 +37,18 @@ const requiredRoutes = [
   '/__api/identity/sso', '/identity/saml/metadata', '/__api/identity/saml/inspect',
   '/identity/microsoft', '/identity/microsoft/callback', '/identity/google', '/identity/google/callback',
   '/identity/github', '/identity/github/callback', '/identity/saml', '/identity/saml/acs', '/identity/session', '/identity/logout',
-  '/__api/operations/billing', '/__api/evidence/traceability', '/v1/assurance', '/v1/assurance/evidence', '/v1/assurance/risks', '/v1/assurance/incidents', '/v1/assurance/advisories',
-  '/__api/governance/security-controls', '/__api/governance/ai-evaluation'
+  '/__api/operations/billing', '/__api/evidence/traceability',
+  '/__api/governance/security-controls', '/__api/governance/ai-evaluation',
+  ...assuranceRequiredRoutes,
 ];
 
 const retiredRoutes = [
   '/api/rest', '/api/openapi', '/api/graphql', '/api/webhooks',
   '/identity/oauth', '/identity/sso',
   '/git/versioning', '/git/branching', '/git/releases', '/git/actions', '/environments',
-  '/governance/iso-27001', '/governance/iso-42001', '/traceability',
+  '/governance/iso-27001', '/governance/iso-42001',
   '/dashboard/health', '/__api/demo/run', '/__api/demo/events',
+  ...assuranceRouteAliases(assuranceRegistry).map((alias) => alias.path),
 ];
 
 const failures = [];
@@ -73,6 +89,8 @@ for (const requiredFile of [
   'src/api/advisories.ts',
   'src/api/assurance-registry.ts',
   'src/assurance/model.ts',
+  'src/assurance/route-contract.js',
+  'src/assurance/routes.ts',
   'src/assurance/service.ts',
   'src/assurance/publication.ts',
   'src/assurance/presentation.ts',
@@ -126,7 +144,7 @@ function walk(dir) {
 walk(root);
 
 const router = fs.readFileSync(path.join(root, 'src/router.ts'), 'utf8');
-for (const token of ['/dashboard', '/dashboard/logs', '/__api/operations/logs', '/__api/operations/cloudflare-usage', '/admin', '/offline', '/health', '/version', '/robots.txt', '/evidence', '/v1/assurance', '/v1/assurance/evidence', '/governance/risks', '/v1/assurance/risks', '/governance/incidents', '/v1/assurance/incidents', '/v1/assurance/advisories', 'offlineApiResponse', 'wantsHtml']) {
+for (const token of ['/dashboard', '/dashboard/logs', '/__api/operations/logs', '/__api/operations/cloudflare-usage', '/admin', '/offline', '/health', '/version', '/robots.txt', 'routeAssuranceRequest', 'matchAssuranceRoute', 'assuranceRouteAliases', 'offlineApiResponse', 'wantsHtml']) {
   if (!router.includes(token)) failures.push(`router missing operations/admin invariant: ${token}`);
 }
 

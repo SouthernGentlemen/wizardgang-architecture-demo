@@ -1,4 +1,8 @@
 import { assuranceRegistryMetadata } from '../assurance/model';
+import {
+  assuranceCollectionApiRoute,
+  assuranceRegistryApiRoute,
+} from '../assurance/routes';
 import { assuranceDeploymentContext } from '../assurance/presentation';
 import {
   listPublishedAssuranceRecords,
@@ -42,8 +46,8 @@ export function assuranceResponse(request: Request, env: Env): Response {
     publication: publishedAssuranceSummary.publication,
     deployment: assuranceDeploymentContext(env),
     links: {
-      self: new URL('/v1/assurance', request.url).toString(),
-      evidence: new URL('/v1/assurance/evidence', request.url).toString(),
+      self: new URL(assuranceRegistryApiRoute(), request.url).toString(),
+      evidence: new URL(assuranceCollectionApiRoute('evidence'), request.url).toString(),
     },
   });
 }

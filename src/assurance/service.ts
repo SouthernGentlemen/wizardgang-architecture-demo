@@ -24,6 +24,11 @@ import {
   type RiskStatus,
 } from './model';
 import { assuranceRecordCollectionPath } from './record-discovery.js';
+import {
+  assuranceAnchor as canonicalAssuranceAnchor,
+  assuranceRecordUrls as canonicalAssuranceRecordUrls,
+  assuranceRoutesForDataset,
+} from './routes';
 
 export type AssuranceRecordMap = CanonicalAssuranceRecordMap;
 export type AssuranceRecord = CanonicalAssuranceRecordMap[AssuranceDataset];
@@ -340,33 +345,19 @@ export function evidenceUsedBy(evidenceId: string): string[] {
   return reverseAssuranceRelationships(evidenceId, 'evidence').map((reference) => reference.sourceId);
 }
 
-export function assuranceAnchor(recordId: string): string {
-  return encodeURIComponent(recordId);
-}
-
-function routeForDataset(dataset: AssuranceDataset) {
-  return primaryAssuranceResource(dataset).routes;
-}
+export const assuranceAnchor = canonicalAssuranceAnchor;
 
 export function assuranceRecordUrls(
   dataset: AssuranceDataset,
   recordId?: string,
 ): { html?: string; api?: string } {
-  const routes = routeForDataset(dataset);
-  if (!routes) return {};
-  const encodedId = recordId ? encodeURIComponent(recordId) : undefined;
-  const html = routes.html
-    ? recordId ? `${routes.html}#${assuranceAnchor(recordId)}` : routes.html
-    : undefined;
-  const api = recordId && routes.apiRecord
-    ? routes.apiRecord.replace('{id}', encodedId ?? '')
-    : routes.api;
-  return { html, api };
+  return canonicalAssuranceRecordUrls(dataset, recordId);
 }
 
 export function assuranceRecordUrlsById(recordId: string): { html?: string; api?: string } {
   const dataset = assuranceDatasetForRecordId(recordId);
-  return dataset ? assuranceRecordUrls(dataset, recordId) : {};
+  if (!dataset || !assuranceRoutesForDataset(dataset)) return {};
+  return assuranceRecordUrls(dataset, recordId);
 }
 
 export const complianceFrameworks = assuranceComplianceFrameworks;

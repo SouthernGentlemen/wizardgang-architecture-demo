@@ -1,8 +1,9 @@
 import type { DemoDefinition } from '../types';
+import { assuranceHtmlRoute } from '../assurance/routes';
 
 const demo: DemoDefinition = {
   id: 'governance-risks',
-  route: '/governance/risks',
+  route: assuranceHtmlRoute('risks'),
   title: 'Risk Assurance',
   group: 'Delivery & Governance',
   sourcePath: 'src/demos/risks.ts',

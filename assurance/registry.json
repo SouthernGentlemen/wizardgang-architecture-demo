@@ -5,6 +5,9 @@
   "scope": "Public, disclosure-safe assurance records for demo.wizardgang.ai",
   "qualification": "Alignment and engineering evidence only; no certification is claimed.",
   "visibility": "public",
+  "routes": {
+    "api": "/v1/assurance"
+  },
   "lifecycle": {
     "id": "lifecycle.records",
     "kind": "lifecycle",
@@ -39,7 +42,13 @@
       },
       "routes": {
         "html": "/evidence",
-        "api": "/v1/assurance/evidence"
+        "api": "/v1/assurance/evidence",
+        "aliases": [
+          {
+            "path": "/traceability",
+            "fragment": "traceability"
+          }
+        ]
       }
     },
     {
@@ -371,10 +380,7 @@
           "scenario"
         ]
       },
-      "routes": {
-        "html": "/governance/incidents",
-        "api": "/v1/assurance/incidents"
-      }
+      "routeOwner": "incidents"
     },
     {
       "id": "advisories",

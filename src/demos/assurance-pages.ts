@@ -16,6 +16,10 @@ import {
   serializeAssuranceFilters,
   type AssuranceFilterValues,
 } from '../assurance/service';
+import {
+  assuranceCollectionApiRoute,
+  assuranceHtmlRoute,
+} from '../assurance/routes';
 import { governanceDocumentLinks } from '../assurance/presentation';
 import {
   filterPublishedAssuranceRecords,
@@ -23,6 +27,11 @@ import {
   type PublishedAssuranceRecordMap,
 } from '../assurance/publication';
 
+const RISK_ROUTE = assuranceHtmlRoute('risks');
+const RISK_API_ROUTE = assuranceCollectionApiRoute('risks');
+const INCIDENT_ROUTE = assuranceHtmlRoute('incidents');
+const INCIDENT_API_ROUTE = assuranceCollectionApiRoute('incidents');
+const SECURITY_ROUTE = assuranceHtmlRoute('advisories');
 const issueUrl = (env: Env, template: string) => `${repoUrl(env)}/issues/new?template=${encodeURIComponent(template)}`;
 const privateReportUrl = (env: Env) => `${repoUrl(env)}/security/advisories/new`;
 
@@ -112,11 +121,11 @@ export function renderRisks(request: Request, env: Env): Response {
 
   return shell(env, 'Risk Assurance', `
   <section class="page-header assurance-header">
-    <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / /governance/risks</p>
+    <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / ${escapeHtml(RISK_ROUTE)}</p>
     <h1>Review the public risk assurance record.</h1>
     <p class="lede">This disclosure-safe view carries stable security and AI risk identifiers, current scores, treatment direction, lifecycle state, and reviewable evidence/control links from the controlled registers.</p>
     <p class="assurance-notice"><strong>Public assurance boundary:</strong> private treatment actions, risk-owner and acceptance detail, sensitive infrastructure context, and acceptance rationale are intentionally omitted. These records do not claim certification or residual-risk acceptance.</p>
-    <div class="page-tools"><a class="button button-primary" href="/v1/assurance/risks${escapeHtml(query)}">View v1 JSON</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/risks.ts'))}">Route source</a><a class="text-link" href="${escapeHtml(sourceUrl(env, assuranceDatasetSource('risks')))}">Dataset source</a>${referenceDetails([
+    <div class="page-tools"><a class="button button-primary" href="${escapeHtml(RISK_API_ROUTE)}${escapeHtml(query)}">View v1 JSON</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/risks.ts'))}">Route source</a><a class="text-link" href="${escapeHtml(sourceUrl(env, assuranceDatasetSource('risks')))}">Dataset source</a>${referenceDetails([
       { label: 'Risk schema', href: sourceUrl(env, assuranceDatasetSchema('risks')) },
       { label: 'Canonical assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
       { label: 'Shared assurance presentation', href: sourceUrl(env, 'src/assurance/presentation.ts') },
@@ -127,17 +136,17 @@ export function renderRisks(request: Request, env: Env): Response {
   </section>
   <section class="info-card" aria-labelledby="risk-filter-heading">
     <h2 id="risk-filter-heading">Filter records</h2>
-    <form method="get" action="/governance/risks">
+    <form method="get" action="${escapeHtml(RISK_ROUTE)}">
       <p>
         ${riskFilterControls(filters)}
         <button type="submit">Apply filters</button>
-        <a href="/governance/risks">Clear</a>
+        <a href="${escapeHtml(RISK_ROUTE)}">Clear</a>
       </p>
     </form>
     <p><strong>${counts.total}</strong> matching records · ${counts.byFramework.security} security · ${counts.byFramework.ai} AI · ${counts.byResidualRating.high} high residual · ${counts.byResidualRating.moderate} moderate residual · ${counts.byResidualRating.low} low residual.</p>
   </section>
   <div class="info-grid">${results}</div>`, {
-    activeRoute: '/governance/risks',
+    activeRoute: RISK_ROUTE,
     description: 'Disclosure-safe security and AI risk assurance with stable identifiers, lifecycle state, evidence links, control references, and derived counts.',
   });
 }
@@ -189,11 +198,11 @@ export function renderIncidents(env: Env): Response {
 
   return shell(env, 'Incidents & Exercises', `
   <section class="page-header assurance-header">
-    <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / /governance/incidents</p>
+    <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / ${escapeHtml(INCIDENT_ROUTE)}</p>
     <h1>Incidents and exercises stay distinct.</h1>
     <p class="lede">This public register exposes disclosure-safe incident and response-exercise records without turning vulnerabilities, advisories, simulations, or unknown history into incidents.</p>
     <p class="assurance-notice"><strong>Current retained posture:</strong> ${counts.actualIncidents} established actual incident records; ${counts.exercises} exercise record, of which ${counts.plannedExercises} is planned and ${counts.completedExercises} is completed or in post-exercise follow-up. Zero retained incident records is not a claim that an incident has never occurred.</p>
-    <div class="page-tools"><a class="button button-primary" href="/v1/assurance/incidents">View v1 JSON</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/incidents.ts'))}">Route source</a>${referenceDetails([
+    <div class="page-tools"><a class="button button-primary" href="${escapeHtml(INCIDENT_API_ROUTE)}">View v1 JSON</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/incidents.ts'))}">Route source</a>${referenceDetails([
       { label: 'Incident dataset', href: sourceUrl(env, assuranceDatasetSource('incidents')) },
       { label: 'Exercise dataset', href: sourceUrl(env, assuranceDatasetSource('exercises')) },
       { label: 'Canonical assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
@@ -209,7 +218,7 @@ export function renderIncidents(env: Env): Response {
     <div class="info-grid">
       <article class="info-card"><h3>Actual incidents · INC-*</h3><p>Only established real incident records receive permanent <code>INC-*</code> IDs and matching page anchors. No placeholder incident ID is created merely to prove the route.</p></article>
       <article class="info-card"><h3>Exercises · EX-*</h3><p>Exercises are simulated readiness activities. Permanent <code>EX-*</code> anchors identify the exercise record, not a historical incident.</p></article>
-      <article class="info-card"><h3>Vulnerabilities</h3><p>Suspected or confirmed vulnerabilities use the private security-reporting lifecycle. A vulnerability is not automatically an operational incident.</p><p><a href="/security">Security reporting →</a></p></article>
+      <article class="info-card"><h3>Vulnerabilities</h3><p>Suspected or confirmed vulnerabilities use the private security-reporting lifecycle. A vulnerability is not automatically an operational incident.</p><p><a href="${escapeHtml(SECURITY_ROUTE)}">Security reporting →</a></p></article>
       <article class="info-card"><h3>Advisories</h3><p>Published security advisories and CVEs are disclosure artifacts for confirmed vulnerabilities. They remain separate from incident and exercise records.</p></article>
     </div>
   </section>
@@ -223,7 +232,7 @@ export function renderIncidents(env: Env): Response {
     <h2 id="response-exercises">Response exercises</h2>
     <div class="info-grid">${exerciseCards}</div>
   </section>`, {
-    activeRoute: '/governance/incidents',
+    activeRoute: INCIDENT_ROUTE,
     description: 'Disclosure-safe public incident and response-exercise register with lifecycle presentation and permanent INC-* and EX-* record anchors.',
   });
 }
