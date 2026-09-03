@@ -1,15 +1,23 @@
 import { publicAssuranceRegistry } from '../assurance/registry';
-import { json, methodNotAllowed } from '../lib/http';
+import {
+  assuranceJsonResponse,
+  paginateAssuranceRecords,
+  prepareAssuranceRequest,
+} from './assurance-contract';
 
 export function assuranceAdvisoriesResponse(request: Request): Response {
-  if (request.method !== 'GET') return methodNotAllowed(['GET']);
-  return json({
-    schemaVersion: publicAssuranceRegistry.schemaVersion,
+  const context = prepareAssuranceRequest(request);
+  if (context instanceof Response) return context;
+
+  const page = paginateAssuranceRecords(request, context.url, publicAssuranceRegistry.advisories);
+  if (page instanceof Response) return page;
+
+  return assuranceJsonResponse(request, {
+    schemaVersion: context.schemaVersion,
     dataset: 'advisories',
     qualification: publicAssuranceRegistry.advisoryQualification,
     count: publicAssuranceRegistry.advisories.length,
-    records: publicAssuranceRegistry.advisories,
-  }, {
-    headers: { 'cache-control': 'public, max-age=300' },
+    records: page.records,
+    ...(page.pagination ? { pagination: page.pagination } : {}),
   });
 }
