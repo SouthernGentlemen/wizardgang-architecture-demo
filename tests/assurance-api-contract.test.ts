@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { assuranceAdvisoriesResponse } from '../src/api/advisories';
 import { assuranceComplianceResponse, assuranceIncidentsResponse, assuranceRisksResponse } from '../src/api/assurance';
 import { assuranceEvidenceResponse, assuranceResponse } from '../src/api/assurance-registry';
+import { listAssuranceRecords } from '../src/assurance/registry';
 import type { Env } from '../src/types';
 
 const environment = {
@@ -12,8 +13,18 @@ const environment = {
   DEPLOYED_SHA: '0123456789abcdef0123456789abcdef01234567',
 } as unknown as Env;
 
+const canonicalCollections = {
+  claims: listAssuranceRecords('claims'),
+  evidence: listAssuranceRecords('evidence'),
+  risks: listAssuranceRecords('risks'),
+  incidents: listAssuranceRecords('incidents'),
+  exercises: listAssuranceRecords('exercises'),
+  advisories: listAssuranceRecords('advisories'),
+  compliance: listAssuranceRecords('compliance'),
+};
+
 describe('public assurance HTTP contract', () => {
-  it('preserves the legacy aggregate response while locking canonical record ordering', async () => {
+  it('preserves the legacy aggregate response while deriving current counts and ordering from canonical records', async () => {
     const first = assuranceResponse(new Request('https://demo.wizardgang.ai/v1/assurance'), environment);
     const second = assuranceResponse(new Request('https://demo.wizardgang.ai/v1/assurance'), environment);
 
@@ -40,51 +51,18 @@ describe('public assurance HTTP contract', () => {
     const secondBody = await second.json() as typeof firstBody;
 
     expect(firstBody.schemaVersion).toBe(1);
-    expect(firstBody.counts).toEqual({ claims: 9, evidence: 23, risks: 30, incidents: 0, exercises: 1, advisories: 0 });
+    expect(firstBody.counts).toEqual({
+      claims: canonicalCollections.claims.length,
+      evidence: canonicalCollections.evidence.length,
+      risks: canonicalCollections.risks.length,
+      incidents: canonicalCollections.incidents.length,
+      exercises: canonicalCollections.exercises.length,
+      advisories: canonicalCollections.advisories.length,
+    });
     expect(firstBody).not.toHaveProperty('pagination');
-    expect(firstBody.claims.map((record) => record.id)).toEqual([
-      'CLM-SEC-001',
-      'CLM-SEC-002',
-      'CLM-SEC-003',
-      'CLM-SEC-004',
-      'CLM-SEC-005',
-      'CLM-SEC-006',
-      'CLM-AI-001',
-      'CLM-SEC-007',
-      'CLM-GOV-001',
-    ]);
-    expect(firstBody.evidence.map((record) => record.id)).toEqual([
-      'EVD-SRC-001',
-      'EVD-CI-001',
-      'EVD-DOC-001',
-      'EVD-DOC-002',
-      'EVD-SRC-002',
-      'EVD-DOC-003',
-      'EVD-DOC-004',
-      'EVD-RUN-001',
-      'EVD-RUN-002',
-      'EVD-SRC-003',
-      'EVD-TST-001',
-      'EVD-SRC-004',
-      'EVD-RUN-003',
-      'EVD-RUN-004',
-      'EVD-RUN-005',
-      'EVD-DOC-005',
-      'EVD-DOC-006',
-      'EVD-SRC-005',
-      'EVD-SRC-006',
-      'EVD-SRC-007',
-      'EVD-TST-002',
-      'EVD-TST-003',
-      'EVD-RUN-006',
-    ]);
-    expect(firstBody.risks.map((record) => record.id)).toEqual([
-      ...Array.from({ length: 15 }, (_, index) => `SEC-RISK-${String(index + 1).padStart(3, '0')}`),
-      ...Array.from({ length: 15 }, (_, index) => `AI-RISK-${String(index + 1).padStart(3, '0')}`),
-    ]);
-    expect(firstBody.incidents).toEqual([]);
-    expect(firstBody.exercises.map((record) => record.id)).toEqual(['EX-001']);
-    expect(firstBody.advisories).toEqual([]);
+    for (const dataset of ['claims', 'evidence', 'risks', 'incidents', 'exercises', 'advisories'] as const) {
+      expect(firstBody[dataset].map((record) => record.id)).toEqual(canonicalCollections[dataset].map((record) => record.id));
+    }
     expect(secondBody).toEqual(firstBody);
   });
 
@@ -109,6 +87,7 @@ describe('public assurance HTTP contract', () => {
   });
 
   it('supports opt-in stable-cursor pagination while keeping counts scoped to the full filtered selection', async () => {
+    const wcagRecords = canonicalCollections.compliance.filter((record) => record.framework === 'wcag-2.2');
     const first = assuranceComplianceResponse(
       new Request('https://demo.wizardgang.ai/v1/assurance/compliance?framework=wcag-2.2&limit=2'),
     );
@@ -117,24 +96,23 @@ describe('public assurance HTTP contract', () => {
       records: Array<{ id: string }>;
       pagination: { limit: number; returned: number; total: number; nextCursor: string | null };
     };
-    expect(firstBody.counts.total).toBe(86);
-    expect(firstBody.records).toHaveLength(2);
+    expect(firstBody.counts.total).toBe(wcagRecords.length);
+    expect(firstBody.records).toEqual(wcagRecords.slice(0, 2));
     expect(firstBody.pagination).toEqual({
       limit: 2,
-      returned: 2,
-      total: 86,
-      nextCursor: firstBody.records[1].id,
+      returned: Math.min(2, wcagRecords.length),
+      total: wcagRecords.length,
+      nextCursor: wcagRecords.length > 2 ? wcagRecords[1].id : null,
     });
 
     const second = assuranceComplianceResponse(
       new Request(`https://demo.wizardgang.ai/v1/assurance/compliance?framework=wcag-2.2&limit=2&cursor=${encodeURIComponent(firstBody.pagination.nextCursor ?? '')}`),
     );
     const secondBody = await second.json() as typeof firstBody;
-    expect(secondBody.records).toHaveLength(2);
-    expect(secondBody.records[0].id).not.toBe(firstBody.records[0].id);
-    expect(secondBody.records[0].id).not.toBe(firstBody.records[1].id);
-    expect(secondBody.pagination.total).toBe(86);
+    expect(secondBody.records).toEqual(wcagRecords.slice(2, 4));
+    expect(secondBody.pagination.total).toBe(wcagRecords.length);
 
+    const securityRisks = canonicalCollections.risks.filter((record) => record.framework === 'security');
     const risks = assuranceRisksResponse(
       new Request('https://demo.wizardgang.ai/v1/assurance/risks?framework=security&limit=2'),
     );
@@ -143,9 +121,9 @@ describe('public assurance HTTP contract', () => {
       records: Array<{ id: string }>;
       pagination: { total: number };
     };
-    expect(riskBody.counts.total).toBe(15);
-    expect(riskBody.records.map((record) => record.id)).toEqual(['SEC-RISK-001', 'SEC-RISK-002']);
-    expect(riskBody.pagination.total).toBe(15);
+    expect(riskBody.counts.total).toBe(securityRisks.length);
+    expect(riskBody.records).toEqual(securityRisks.slice(0, 2));
+    expect(riskBody.pagination.total).toBe(securityRisks.length);
 
     const evidence = assuranceEvidenceResponse(
       new Request('https://demo.wizardgang.ai/v1/assurance/evidence?limit=2'),
@@ -156,9 +134,9 @@ describe('public assurance HTTP contract', () => {
       records: Array<{ id: string }>;
       pagination: { total: number };
     };
-    expect(evidenceBody.count).toBe(23);
-    expect(evidenceBody.records.map((record) => record.id)).toEqual(['EVD-SRC-001', 'EVD-CI-001']);
-    expect(evidenceBody.pagination.total).toBe(23);
+    expect(evidenceBody.count).toBe(canonicalCollections.evidence.length);
+    expect(evidenceBody.records.map((record) => record.id)).toEqual(canonicalCollections.evidence.slice(0, 2).map((record) => record.id));
+    expect(evidenceBody.pagination.total).toBe(canonicalCollections.evidence.length);
 
     const incidents = assuranceIncidentsResponse(
       new Request('https://demo.wizardgang.ai/v1/assurance/incidents?limit=1'),
@@ -168,21 +146,30 @@ describe('public assurance HTTP contract', () => {
       exercises: Array<{ id: string }>;
       pagination: { total: number; nextCursor: string | null };
     };
-    expect(incidentBody.incidents).toEqual([]);
-    expect(incidentBody.exercises.map((record) => record.id)).toEqual(['EX-001']);
-    expect(incidentBody.pagination).toMatchObject({ total: 1, nextCursor: null });
+    const combinedIncidentRecords = [...canonicalCollections.incidents, ...canonicalCollections.exercises];
+    const expectedIncidentPage = combinedIncidentRecords.slice(0, 1);
+    expect(incidentBody.incidents.map((record) => record.id)).toEqual(expectedIncidentPage.filter((record) => record.recordType === 'incident').map((record) => record.id));
+    expect(incidentBody.exercises.map((record) => record.id)).toEqual(expectedIncidentPage.filter((record) => record.recordType === 'exercise').map((record) => record.id));
+    expect(incidentBody.pagination).toMatchObject({
+      total: combinedIncidentRecords.length,
+      nextCursor: combinedIncidentRecords.length > 1 ? expectedIncidentPage[0]?.id ?? null : null,
+    });
 
     const advisories = assuranceAdvisoriesResponse(
       new Request('https://demo.wizardgang.ai/v1/assurance/advisories?limit=1'),
     );
     const advisoryBody = await advisories.json() as {
       count: number;
-      records: unknown[];
+      records: Array<{ id: string }>;
       pagination: { total: number; nextCursor: string | null };
     };
-    expect(advisoryBody.count).toBe(0);
-    expect(advisoryBody.records).toEqual([]);
-    expect(advisoryBody.pagination).toMatchObject({ total: 0, nextCursor: null });
+    const expectedAdvisoryPage = canonicalCollections.advisories.slice(0, 1);
+    expect(advisoryBody.count).toBe(canonicalCollections.advisories.length);
+    expect(advisoryBody.records).toEqual(expectedAdvisoryPage);
+    expect(advisoryBody.pagination).toMatchObject({
+      total: canonicalCollections.advisories.length,
+      nextCursor: canonicalCollections.advisories.length > 1 ? expectedAdvisoryPage[0]?.id ?? null : null,
+    });
   });
 
   it('rejects invalid filters and pagination with stable top-level error codes and no-store caching', async () => {

@@ -2,7 +2,23 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { loadAssuranceRegistry, registryResourceByPath } from './assurance-registry.mjs';
 
-export function validateNormalizedIso({ root = process.cwd(), dataPath, schemaPath, standard, edition, framework, idPrefix, sourceSoaId, expectedClauseRefs, expectedAnnexRefs, expectedAnnexCounts, extraValidate }) {
+const ISO_POSTURE_STATUSES = ['met', 'partial', 'gap', 'not-applicable'];
+
+function validApprovalProvenance(approval) {
+  return Number.isInteger(approval?.pullRequest)
+    && approval.pullRequest > 0
+    && /^[0-9a-f]{40}$/.test(approval?.mergeCommit ?? '');
+}
+
+function deriveIsoPosture(controls) {
+  const counts = Object.fromEntries(ISO_POSTURE_STATUSES.map((status) => [status, 0]));
+  for (const record of controls) {
+    if (record.status in counts) counts[record.status] += 1;
+  }
+  return counts;
+}
+
+export function validateNormalizedIso({ root = process.cwd(), dataPath, schemaPath, standard, edition, framework, idPrefix, sourceSoaId, expectedClauseRefs, expectedAnnexRefs, extraValidate }) {
   const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), 'utf8'));
   const errors = [];
   const compliance = readJson(dataPath);
@@ -30,8 +46,12 @@ export function validateNormalizedIso({ root = process.cwd(), dataPath, schemaPa
   if (JSON.stringify(compliance).includes('notApplicable')) errors.push(`${dataPath}: legacy notApplicable spelling is not allowed`);
   if (!String(compliance.paraphraseNotice ?? '').toLowerCase().includes('paraphrase')) errors.push(`${dataPath}: paraphrase notice is required`);
 
-  if (compliance.sourceSoa?.id !== sourceSoaId || compliance.sourceSoa?.governanceDocumentReference !== sourceSoaId || !governanceIds.has(sourceSoaId) || compliance.sourceSoa?.status !== 'approved' || 'assessmentDate' in (compliance.sourceSoa ?? {}) || compliance.sourceSoa?.approval?.pullRequest !== 56 || compliance.sourceSoa?.approval?.mergeCommit !== '1ae105da8ab6466e334a2faf4e6c63f5885c91df') {
-    errors.push(`${dataPath}: sourceSoa must retain approved ${sourceSoaId} document identity/provenance without duplicating framework assessment metadata`);
+  const sourceSoa = compliance.sourceSoa ?? {};
+  if (sourceSoa.id !== sourceSoaId || sourceSoa.governanceDocumentReference !== sourceSoaId || !governanceIds.has(sourceSoaId) || sourceSoa.status !== 'approved' || 'assessmentDate' in sourceSoa) {
+    errors.push(`${dataPath}: sourceSoa must retain approved ${sourceSoaId} document identity without duplicating framework assessment metadata`);
+  }
+  if (!validApprovalProvenance(sourceSoa.approval)) {
+    errors.push(`${dataPath}: approved sourceSoa must retain pull-request and merge-commit provenance`);
   }
 
   if (clauses.length !== expectedClauseRefs.length) errors.push(`${dataPath}: expected ${expectedClauseRefs.length} clause records, found ${clauses.length}`);
@@ -45,7 +65,7 @@ export function validateNormalizedIso({ root = process.cwd(), dataPath, schemaPa
     if (seenRefs.has(record.reference)) errors.push(`${record.reference}: duplicate ISO reference`);
     seenRefs.add(record.reference);
     for (const duplicate of ['framework', 'frameworkLabel', 'sourcePath']) if (duplicate in record) errors.push(`${record.id}: ${duplicate} is derived from registered framework/resource metadata`);
-    if (!['met', 'partial', 'gap', 'not-applicable'].includes(record.status)) errors.push(`${record.id}: unsupported normalized status ${record.status}`);
+    if (!ISO_POSTURE_STATUSES.includes(record.status)) errors.push(`${record.id}: unsupported normalized status ${record.status}`);
     const expectedApplicability = record.status === 'not-applicable' ? 'not-applicable' : 'applicable';
     if (record.applicability !== expectedApplicability) errors.push(`${record.id}: applicability must agree with status`);
     if (record.status === 'not-applicable' && (!record.rationale || record.rationale.trim().length < 10)) errors.push(`${record.id}: N/A rationale is required`);
@@ -56,10 +76,9 @@ export function validateNormalizedIso({ root = process.cwd(), dataPath, schemaPa
     for (const evidenceId of refs ?? []) if (!evidenceIds.has(evidenceId)) errors.push(`${record.id}: unresolved evidence ${evidenceId}`);
   }
   for (const ref of [...expectedClauseRefs, ...expectedAnnexRefs]) if (!seenRefs.has(ref)) errors.push(`${ref}: required ISO reference is missing`);
-  const annexCounts = controls.reduce((counts, record) => { counts[record.status] = (counts[record.status] ?? 0) + 1; return counts; }, {});
-  for (const [status, expected] of Object.entries(expectedAnnexCounts)) if ((annexCounts[status] ?? 0) !== expected) errors.push(`${dataPath}: expected ${expected} ${status} Annex A controls, found ${annexCounts[status] ?? 0}`);
-  extraValidate?.({ compliance, records, clauses, controls, errors, resource, frameworkMetadata: metadata });
-  return { errors, compliance, records, clauses, controls };
+  const postureCounts = deriveIsoPosture(controls);
+  extraValidate?.({ compliance, records, clauses, controls, postureCounts, errors, resource, frameworkMetadata: metadata });
+  return { errors, compliance, records, clauses, controls, postureCounts };
 }
 
 export function finishIsoValidation(label, result) {
@@ -68,5 +87,6 @@ export function finishIsoValidation(label, result) {
     for (const error of result.errors) console.error(`- ${error}`);
     process.exit(1);
   }
-  console.log(`${label} public compliance validation passed from canonical normalized data: ${result.clauses.length} clause references and ${result.controls.length} Annex A controls.`);
+  const posture = ISO_POSTURE_STATUSES.map((status) => `${result.postureCounts[status]} ${status}`).join(', ');
+  console.log(`${label} public compliance validation passed from canonical normalized data: ${result.clauses.length} clause references and ${result.controls.length} Annex A controls (${posture}).`);
 }

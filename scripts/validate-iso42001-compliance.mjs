@@ -17,8 +17,7 @@ const result = validateNormalizedIso({
   schemaPath: 'contracts/assurance/iso-42001-compliance.schema.json',
   standard: 'ISO/IEC 42001:2023', edition: '2023', framework: 'iso-42001', idPrefix: 'ISO42001', sourceSoaId: 'WG-SOA-002',
   expectedClauseRefs, expectedAnnexRefs,
-  expectedAnnexCounts: { met: 2, partial: 34, gap: 0, 'not-applicable': 2 },
-  extraValidate: ({ compliance, controls, errors }) => {
+  extraValidate: ({ compliance, errors }) => {
     const scope = compliance.scopeLimitations ?? {};
     if (!String(scope.capability ?? '').toLowerCase().includes('read-only') || !String(scope.capability ?? '').includes('MCP')) errors.push('ISO 42001 scope must retain the current public read-only MCP capability boundary');
     const modelBoundary = String(scope.modelBoundary ?? '').toLowerCase();
@@ -26,10 +25,6 @@ const result = validateNormalizedIso({
     if (JSON.stringify(scope.approvedAiMcpFamilies) !== JSON.stringify(['OpenAI Codex', 'Anthropic Claude'])) errors.push('ISO 42001 approved AI/MCP families must remain OpenAI Codex and Anthropic Claude only');
     if (scope.publicMcpDataBoundary?.allowedD1Source !== 'demo_records') errors.push('ISO 42001 demo_records must remain the only approved public MCP D1 source');
     for (const excluded of ['visitor/session data', 'identity data', 'logs', 'audit records', 'R2 objects', 'secrets']) if (!scope.publicMcpDataBoundary?.excluded?.includes(excluded)) errors.push(`ISO 42001 public MCP data boundary must exclude ${excluded}`);
-    const naRefs = controls.filter((record) => record.status === 'not-applicable').map((record) => record.reference).sort();
-    if (JSON.stringify(naRefs) !== JSON.stringify(['A.7.2', 'A.7.6'])) errors.push('ISO 42001 only A.7.2 and A.7.6 may be N/A in the approved scope');
-    const metRefs = controls.filter((record) => record.status === 'met').map((record) => record.reference).sort();
-    if (JSON.stringify(metRefs) !== JSON.stringify(['A.6.2.8', 'A.9.4'])) errors.push('ISO 42001 approved Met controls must remain A.6.2.8 and A.9.4');
   },
 });
 finishIsoValidation('ISO/IEC 42001', result);

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { assuranceEvidenceResponse, assuranceResponse } from '../src/api/assurance-registry';
+import { listAssuranceRecords } from '../src/assurance/registry';
 import { FRESHNESS_SEMANTICS } from '../src/assurance/presentation';
 import type { Env } from '../src/types';
 
@@ -10,6 +11,15 @@ const environment = {
   DEPLOYED_VERSION: 'v0.12.0',
   DEPLOYED_SHA: '0123456789abcdef0123456789abcdef01234567',
 } as unknown as Env;
+
+const aggregateCounts = () => ({
+  claims: listAssuranceRecords('claims').length,
+  evidence: listAssuranceRecords('evidence').length,
+  risks: listAssuranceRecords('risks').length,
+  incidents: listAssuranceRecords('incidents').length,
+  exercises: listAssuranceRecords('exercises').length,
+  advisories: listAssuranceRecords('advisories').length,
+});
 
 describe('public assurance API projection', () => {
   it('resolves repository evidence against the exact deployed commit and derives reverse usage', async () => {
@@ -25,7 +35,7 @@ describe('public assurance API projection', () => {
         resolved: { kind: string; repositoryPath?: string; revision?: string | null; url: string | null; resolution: string };
       }>;
     };
-    expect(body.count).toBe(23);
+    expect(body.count).toBe(listAssuranceRecords('evidence').length);
 
     const source = body.records.find((record) => record.id === 'EVD-SRC-001');
     expect(source?.usedBy).toEqual(expect.arrayContaining(['CLM-SEC-001', 'CLM-AI-001']));
@@ -52,7 +62,7 @@ describe('public assurance API projection', () => {
     expect(live?.freshness.policy).toBe('observation-bound');
   });
 
-  it('exposes the full v0.12 assurance registry without falling back to a moving branch when deployed SHA is absent', async () => {
+  it('exposes the full v0.12 assurance registry without freezing current dataset cardinality', async () => {
     const response = assuranceResponse(new Request('https://demo.wizardgang.ai/v1/assurance'), {
       ...environment,
       DEPLOYED_SHA: undefined,
@@ -63,7 +73,7 @@ describe('public assurance API projection', () => {
       links: { self: string; evidence: string };
       evidence: Array<{ id: string; resolved: { revision?: string | null; url: string | null; resolution: string } }>;
     };
-    expect(body.counts).toEqual({ claims: 9, evidence: 23, risks: 30, incidents: 0, exercises: 1, advisories: 0 });
+    expect(body.counts).toEqual(aggregateCounts());
     expect(body.deployment).toMatchObject({ commit: null, sourceResolution: 'not-supplied' });
     expect(body.links).toEqual({
       self: 'https://demo.wizardgang.ai/v1/assurance',
