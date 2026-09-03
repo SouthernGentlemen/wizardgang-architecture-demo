@@ -1,18 +1,25 @@
 import {
+  assuranceFilterValues,
   deriveComplianceCounts,
   deriveRiskCounts,
   filterPublicCompliance,
   filterPublicRisks,
-  findPublicComplianceRecord,
+  findAssuranceRecord,
+  listAssuranceRecords,
   publicAssuranceRegistry,
   publicComplianceFrameworks,
   publicComplianceQualification,
-  publicComplianceRecords,
+  type ComplianceFramework,
+  type ComplianceLevel,
+  type ComplianceStatus,
   type PublicComplianceFilters,
   type PublicExercise,
   type PublicIncident,
   type PublicRiskFilters,
-} from '../assurance/registry';
+  type RiskFramework,
+  type RiskRating,
+  type RiskStatus,
+} from '../assurance/service';
 import {
   assuranceEnumQuery,
   assuranceErrorResponse,
@@ -21,38 +28,31 @@ import {
   prepareAssuranceRequest,
 } from './assurance-contract';
 
-const RISK_FRAMEWORKS = ['security', 'ai'] as const;
-const RISK_STATUSES = ['open', 'treating'] as const;
-const RISK_RATINGS = ['low', 'moderate', 'high', 'critical'] as const;
-const COMPLIANCE_FRAMEWORKS = ['iso-27001', 'iso-42001', 'wcag-2.2'] as const;
-const COMPLIANCE_STATUSES = ['met', 'partial', 'gap', 'not-applicable', 'demonstrated', 'not-observed'] as const;
-const COMPLIANCE_LEVELS = ['A', 'AA', 'AAA'] as const;
-
 function riskFilters(request: Request, url: URL): PublicRiskFilters | Response {
-  const framework = assuranceEnumQuery(request, url, 'framework', RISK_FRAMEWORKS);
+  const framework = assuranceEnumQuery(request, url, 'framework', assuranceFilterValues('risks', 'framework'));
   if (framework instanceof Response) return framework;
-  const status = assuranceEnumQuery(request, url, 'status', RISK_STATUSES);
+  const status = assuranceEnumQuery(request, url, 'status', assuranceFilterValues('risks', 'status'));
   if (status instanceof Response) return status;
-  const residualRating = assuranceEnumQuery(request, url, 'residual', RISK_RATINGS);
+  const residualRating = assuranceEnumQuery(request, url, 'residual', assuranceFilterValues('risks', 'residual'));
   if (residualRating instanceof Response) return residualRating;
   return {
-    ...(framework ? { framework } : {}),
-    ...(status ? { status } : {}),
-    ...(residualRating ? { residualRating } : {}),
+    ...(framework ? { framework: framework as RiskFramework } : {}),
+    ...(status ? { status: status as RiskStatus } : {}),
+    ...(residualRating ? { residualRating: residualRating as RiskRating } : {}),
   };
 }
 
 function complianceFilters(request: Request, url: URL): PublicComplianceFilters | Response {
-  const framework = assuranceEnumQuery(request, url, 'framework', COMPLIANCE_FRAMEWORKS);
+  const framework = assuranceEnumQuery(request, url, 'framework', assuranceFilterValues('compliance', 'framework'));
   if (framework instanceof Response) return framework;
-  const status = assuranceEnumQuery(request, url, 'status', COMPLIANCE_STATUSES);
+  const status = assuranceEnumQuery(request, url, 'status', assuranceFilterValues('compliance', 'status'));
   if (status instanceof Response) return status;
-  const level = assuranceEnumQuery(request, url, 'level', COMPLIANCE_LEVELS);
+  const level = assuranceEnumQuery(request, url, 'level', assuranceFilterValues('compliance', 'level'));
   if (level instanceof Response) return level;
   return {
-    ...(framework ? { framework } : {}),
-    ...(status ? { status } : {}),
-    ...(level ? { level } : {}),
+    ...(framework ? { framework: framework as ComplianceFramework } : {}),
+    ...(status ? { status: status as ComplianceStatus } : {}),
+    ...(level ? { level: level as ComplianceLevel } : {}),
   };
 }
 
@@ -72,7 +72,7 @@ export function assuranceRisksResponse(request: Request): Response {
     qualification: publicAssuranceRegistry.qualification,
     filters,
     counts: deriveRiskCounts(filteredRecords),
-    totalAvailable: publicAssuranceRegistry.counts.risks,
+    totalAvailable: listAssuranceRecords('risks').length,
     records: page.records,
     ...(page.pagination ? { pagination: page.pagination } : {}),
   });
@@ -89,7 +89,7 @@ export function assuranceComplianceResponse(request: Request, recordId?: string)
     } catch {
       return assuranceErrorResponse(request, 400, { error: 'invalid_compliance_record_id' });
     }
-    const record = findPublicComplianceRecord(decodedId);
+    const record = findAssuranceRecord('compliance', decodedId);
     if (!record) {
       return assuranceErrorResponse(request, 404, { error: 'compliance_record_not_found', recordId: decodedId });
     }
@@ -114,7 +114,7 @@ export function assuranceComplianceResponse(request: Request, recordId?: string)
     qualification: publicComplianceQualification,
     filters,
     counts: deriveComplianceCounts(filteredRecords),
-    totalAvailable: publicComplianceRecords.length,
+    totalAvailable: listAssuranceRecords('compliance').length,
     frameworks: publicComplianceFrameworks,
     records: page.records,
     ...(page.pagination ? { pagination: page.pagination } : {}),
@@ -126,8 +126,8 @@ export function assuranceIncidentsResponse(request: Request): Response {
   if (context instanceof Response) return context;
 
   const combined = [
-    ...publicAssuranceRegistry.incidents,
-    ...publicAssuranceRegistry.exercises,
+    ...listAssuranceRecords('incidents'),
+    ...listAssuranceRecords('exercises'),
   ] as Array<PublicIncident | PublicExercise>;
   const page = paginateAssuranceRecords(request, context.url, combined);
   if (page instanceof Response) return page;

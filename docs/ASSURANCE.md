@@ -2,9 +2,15 @@
 
 The `assurance/` directory is the canonical public, disclosure-safe data layer for assurance claims, compliance mappings, risks, incidents, exercises, published security advisories, and their evidence. It is not the complete private operational or forensic record and does not claim certification or formal conformance.
 
-`assurance/registry.json` indexes controlled datasets, their JSON Schema contracts, and the record-lifecycle control plane. Counts, reverse `usedBy` relationships, resolved source URLs, and freshness presentation are derived in code; they are not duplicated in canonical JSON.
+`assurance/registry.json` is the authoritative inventory for controlled assurance resources. It declares each dataset's schema and public presentation/API routes, and it declares queryable record paths where filtering is supported. Allowed filter values remain owned by the registered dataset schemas rather than being copied into API or HTML code. Counts, exact lookup, pagination, stable anchors, forward/reverse relationships, resolved record URLs, evidence `usedBy`, and freshness/deployment presentation are derived by `src/assurance/service.ts`; they are not duplicated in canonical JSON.
 
 `/evidence` is the canonical human-searchable evidence route. `/compliance` is the canonical human-readable compliance registry projection. `GET /v1/assurance` exposes the full disclosure-safe public registry projection, `GET /v1/assurance/evidence` exposes the evidence-only projection, and `GET /v1/assurance/compliance` exposes the normalized compliance projection. Focused APIs remain available at `/v1/assurance/risks`, `/v1/assurance/incidents`, and `/v1/assurance/advisories`.
+
+## Common query and presentation service
+
+`src/assurance/model.ts` is the runtime binding/projection boundary for registry-declared canonical data. `src/assurance/service.ts` is the shared query and presentation layer used by assurance HTML and API consumers. It owns listing records by logical dataset, canonical-ID lookup, schema-backed filtering, derived facet counts, cursor pagination, stable anchors, registry-backed HTML/API URL resolution, generic forward/reverse relationship resolution, and evidence deployment/freshness presentation.
+
+The service intentionally does not erase domain meaning. Incident versus exercise classification and completion grouping remain incident-domain behavior; private vulnerability reporting and public advisory disclosure remain security-domain behavior; governance-document source resolution remains governance-specific. The compatibility exports in `src/assurance/registry.ts` and `src/assurance/presentation.ts` preserve existing internal imports while routing behavior through the common service.
 
 ## Record lifecycle and disclosure review
 
@@ -18,13 +24,9 @@ The lifecycle validator compares current records with the pinned release baselin
 
 ## Compliance projection
 
-The public compliance view is derived from the three canonical datasets introduced by DEMO-117 through DEMO-119:
+The public compliance view is derived from the registry-declared ISO/IEC 27001, ISO/IEC 42001, and WCAG 2.2 resources and partitions. Presentation code does not import those framework files directly. Framework metadata comes from canonical dataset metadata, query fields come from `assurance/registry.json`, and allowed framework/status/level values are derived from the registered JSON Schemas.
 
-- `assurance/compliance/iso-27001-2022.json`
-- `assurance/compliance/iso-42001-2023.json`
-- `assurance/compliance/wcag-2.2.json` and its four principle partitions
-
-The source JSON remains framework-specific. `src/assurance/registry.ts` normalizes those records only for public presentation and API filtering. ISO clauses and Annex A controls use their approved public mapping status. WCAG criteria retain their engineering-evidence status and A/AA/AAA level. The status vocabularies are not converted into pass/fail or certification claims.
+The source JSON remains framework-specific. `src/assurance/model.ts` normalizes those records for common public query/presentation behavior while preserving their domain fields. ISO clauses and Annex A controls use their approved public mapping status. WCAG criteria retain their engineering-evidence status and A/AA/AAA level. The status vocabularies are not converted into pass/fail or certification claims.
 
 Public record IDs are stable lookup and anchor keys:
 
@@ -32,7 +34,7 @@ Public record IDs are stable lookup and anchor keys:
 - `ISO42001-<reference>` for ISO/IEC 42001 clauses and Annex A controls
 - `WCAG-<criterionId>` for WCAG 2.2 success criteria
 
-`GET /v1/assurance/compliance` accepts `framework`, `status`, and `level` query parameters. `level` applies only to WCAG records. `GET /v1/assurance/compliance/{recordId}` returns one exact normalized record or `404` when the stable ID is unknown. Counts in both the API and `/compliance` page are derived from the selected records; canonical JSON does not store totals or generated URLs.
+`GET /v1/assurance/compliance` accepts `framework`, `status`, and `level` query parameters. `level` applies only to WCAG records. `GET /v1/assurance/compliance/{recordId}` returns one exact normalized record or `404` when the stable ID is unknown. The API and `/compliance` page use the same service selection and count primitives. Canonical JSON does not store totals, generated anchors, or generated URLs.
 
 ### SoA source of truth
 
@@ -74,6 +76,6 @@ Each annotated semantic-version release generates an assurance registry snapshot
 
 `npm run validate:assurance` includes lifecycle validation plus the cross-dataset integrity pass after the framework-specific validators. It fails closed on unreviewed public records, unsupported lifecycle states, silent record deletion, immutable ID reuse, invalid supersession/withdrawal metadata, sensitive disclosure fields, globally duplicated public IDs, unsupported status vocabularies, missing ISO N/A rationales, unresolved evidence/risk/incident/advisory links, stale time-bound observation evidence, missing assurance routes, stored derived counts, public fields reserved for private or sensitive detail, stale generated SoA summaries, expired security-reporting metadata, and missing accountable owners.
 
-`npm run test:assurance-integrity` runs mutation-based negative tests against isolated repository copies so each important failure mode is proven to return a non-zero validator result. Lifecycle tests explicitly prove rejection of unsupported states, unreviewed records, missing supersession/withdrawal requirements, silent deletion, immutable ID reuse, and sensitive public fields. The targeted suite also compares the compliance, risk, and incident/exercise APIs against their HTML projections, including filter-specific record identity and derived counts, with negative assertions that deliberately introduce row and count drift. The normal unit suite additionally proves generated-summary drift rejection, owner/expiry gates, and deterministic release snapshot metadata/digests.
+`npm run test:assurance-integrity` runs mutation-based negative tests against isolated repository copies so each important failure mode is proven to return a non-zero validator result. Lifecycle tests explicitly prove rejection of unsupported states, unreviewed records, missing supersession/withdrawal requirements, silent deletion, immutable ID reuse, and sensitive public fields. The targeted suite also compares the compliance, risk, and incident/exercise APIs against their HTML projections, including filter-specific record identity and derived counts, with negative assertions that deliberately introduce row and count drift. The normal unit suite additionally proves generated-summary drift rejection, owner/expiry gates, deterministic release snapshot metadata/digests, shared query behavior, registry/schema-driven filters, resolver-backed links, and reverse evidence completeness.
 
 Run `npm run validate:assurance` to enforce paths, identifiers, visibility, schemas, lifecycle, disclosure review, immutable identity, retention, duplicates, referential integrity, freshness, public disclosure boundaries, route coverage, generated SoA consistency, operational ownership, reporting metadata, and the separation between canonical assurance data and derived presentation fields.

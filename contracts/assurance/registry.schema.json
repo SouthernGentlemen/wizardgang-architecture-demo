@@ -15,12 +15,7 @@
     "lifecycle": {
       "allOf": [
         { "$ref": "#/$defs/resource" },
-        {
-          "properties": {
-            "kind": { "const": "lifecycle" },
-            "role": { "const": "control-plane" }
-          }
-        }
+        { "properties": { "kind": { "const": "lifecycle" }, "role": { "const": "control-plane" } } }
       ]
     },
     "datasets": {
@@ -34,12 +29,7 @@
       "items": {
         "allOf": [
           { "$ref": "#/$defs/resource" },
-          {
-            "properties": {
-              "kind": { "const": "documents" },
-              "role": { "const": "presentation" }
-            }
-          }
+          { "properties": { "kind": { "const": "documents" }, "role": { "const": "presentation" } } }
         ]
       }
     },
@@ -49,17 +39,34 @@
       "items": {
         "allOf": [
           { "$ref": "#/$defs/resource" },
-          {
-            "properties": {
-              "kind": { "const": "operations" },
-              "role": { "const": "operations" }
-            }
-          }
+          { "properties": { "kind": { "const": "operations" }, "role": { "const": "operations" } } }
         ]
       }
     }
   },
   "$defs": {
+    "routes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "html": { "type": "string", "pattern": "^/" },
+        "api": { "type": "string", "pattern": "^/" },
+        "apiRecord": { "type": "string", "pattern": "^/.+\\{id\\}" }
+      }
+    },
+    "filter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "label"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9]*(\\.[A-Za-z][A-Za-z0-9]*)*$" },
+        "label": { "type": "string", "minLength": 1 }
+      }
+    },
+    "filters": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/filter" }
+    },
     "resource": {
       "type": "object",
       "additionalProperties": false,
@@ -76,7 +83,10 @@
           "minItems": 1,
           "uniqueItems": true,
           "items": { "enum": ["runtime", "records", "api-index", "summary-source", "manifest", "lifecycle", "monitoring"] }
-        }
+        },
+        "qualification": { "type": "string", "minLength": 1 },
+        "routes": { "$ref": "#/$defs/routes" },
+        "filters": { "$ref": "#/$defs/filters" }
       }
     },
     "dataset": {
@@ -96,6 +106,9 @@
           "uniqueItems": true,
           "items": { "enum": ["runtime", "records", "api-index", "summary-source", "manifest", "lifecycle", "monitoring"] }
         },
+        "qualification": { "type": "string", "minLength": 1 },
+        "routes": { "$ref": "#/$defs/routes" },
+        "filters": { "$ref": "#/$defs/filters" },
         "resources": {
           "type": "array",
           "items": { "$ref": "#/$defs/resource" }

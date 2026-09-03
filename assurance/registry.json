@@ -12,7 +12,9 @@
     "path": "assurance/lifecycle/records.json",
     "schema": "contracts/assurance/lifecycle.schema.json",
     "visibility": "public",
-    "capabilities": ["lifecycle"]
+    "capabilities": [
+      "lifecycle"
+    ]
   },
   "datasets": [
     {
@@ -22,7 +24,15 @@
       "path": "assurance/evidence/evidence.json",
       "schema": "contracts/assurance/evidence.schema.json",
       "visibility": "public",
-      "capabilities": ["runtime", "records", "api-index"]
+      "capabilities": [
+        "runtime",
+        "records",
+        "api-index"
+      ],
+      "routes": {
+        "html": "/evidence",
+        "api": "/v1/assurance/evidence"
+      }
     },
     {
       "id": "claims",
@@ -31,7 +41,11 @@
       "path": "assurance/claims/claims.json",
       "schema": "contracts/assurance/claim.schema.json",
       "visibility": "public",
-      "capabilities": ["runtime", "records", "api-index"]
+      "capabilities": [
+        "runtime",
+        "records",
+        "api-index"
+      ]
     },
     {
       "id": "compliance.iso-27001",
@@ -40,7 +54,32 @@
       "path": "assurance/compliance/iso-27001-2022.json",
       "schema": "contracts/assurance/iso-27001-compliance.schema.json",
       "visibility": "public",
-      "capabilities": ["runtime", "records", "api-index", "summary-source"],
+      "capabilities": [
+        "runtime",
+        "records",
+        "api-index",
+        "summary-source"
+      ],
+      "qualification": "Public engineering-evidence projection only. Framework-specific qualifications remain authoritative; certification and formal conformance are not claimed.",
+      "routes": {
+        "html": "/compliance",
+        "api": "/v1/assurance/compliance",
+        "apiRecord": "/v1/assurance/compliance/{id}"
+      },
+      "filters": {
+        "framework": {
+          "path": "framework",
+          "label": "Framework"
+        },
+        "status": {
+          "path": "status",
+          "label": "Status"
+        },
+        "level": {
+          "path": "level",
+          "label": "WCAG level"
+        }
+      },
       "resources": [
         {
           "id": "compliance.iso-42001",
@@ -49,7 +88,11 @@
           "path": "assurance/compliance/iso-42001-2023.json",
           "schema": "contracts/assurance/iso-42001-compliance.schema.json",
           "visibility": "public",
-          "capabilities": ["runtime", "records", "summary-source"]
+          "capabilities": [
+            "runtime",
+            "records",
+            "summary-source"
+          ]
         },
         {
           "id": "compliance.wcag-2.2",
@@ -58,7 +101,10 @@
           "path": "assurance/compliance/wcag-2.2.json",
           "schema": "contracts/assurance/wcag-2.2-registry.schema.json",
           "visibility": "public",
-          "capabilities": ["runtime", "manifest"]
+          "capabilities": [
+            "runtime",
+            "manifest"
+          ]
         },
         {
           "id": "compliance.wcag-2.2.perceivable",
@@ -67,7 +113,10 @@
           "path": "assurance/compliance/wcag-2.2/perceivable.json",
           "schema": "contracts/assurance/wcag-2.2-criteria.schema.json",
           "visibility": "public",
-          "capabilities": ["runtime", "records"]
+          "capabilities": [
+            "runtime",
+            "records"
+          ]
         },
         {
           "id": "compliance.wcag-2.2.operable",
@@ -76,7 +125,10 @@
           "path": "assurance/compliance/wcag-2.2/operable.json",
           "schema": "contracts/assurance/wcag-2.2-criteria.schema.json",
           "visibility": "public",
-          "capabilities": ["runtime", "records"]
+          "capabilities": [
+            "runtime",
+            "records"
+          ]
         },
         {
           "id": "compliance.wcag-2.2.understandable",
@@ -85,7 +137,10 @@
           "path": "assurance/compliance/wcag-2.2/understandable.json",
           "schema": "contracts/assurance/wcag-2.2-criteria.schema.json",
           "visibility": "public",
-          "capabilities": ["runtime", "records"]
+          "capabilities": [
+            "runtime",
+            "records"
+          ]
         },
         {
           "id": "compliance.wcag-2.2.robust",
@@ -94,7 +149,10 @@
           "path": "assurance/compliance/wcag-2.2/robust.json",
           "schema": "contracts/assurance/wcag-2.2-criteria.schema.json",
           "visibility": "public",
-          "capabilities": ["runtime", "records"]
+          "capabilities": [
+            "runtime",
+            "records"
+          ]
         }
       ]
     },
@@ -105,7 +163,29 @@
       "path": "assurance/risks/risks.json",
       "schema": "contracts/assurance/risk.schema.json",
       "visibility": "public",
-      "capabilities": ["runtime", "records", "api-index"]
+      "capabilities": [
+        "runtime",
+        "records",
+        "api-index"
+      ],
+      "routes": {
+        "html": "/governance/risks",
+        "api": "/v1/assurance/risks"
+      },
+      "filters": {
+        "framework": {
+          "path": "framework",
+          "label": "Framework"
+        },
+        "status": {
+          "path": "status",
+          "label": "Status"
+        },
+        "residual": {
+          "path": "residual.rating",
+          "label": "Residual rating"
+        }
+      }
     },
     {
       "id": "incidents",
@@ -114,7 +194,15 @@
       "path": "assurance/incidents/incidents.json",
       "schema": "contracts/assurance/incident.schema.json",
       "visibility": "public",
-      "capabilities": ["runtime", "records", "api-index"]
+      "capabilities": [
+        "runtime",
+        "records",
+        "api-index"
+      ],
+      "routes": {
+        "html": "/governance/incidents",
+        "api": "/v1/assurance/incidents"
+      }
     },
     {
       "id": "exercises",
@@ -123,7 +211,15 @@
       "path": "assurance/incidents/exercises.json",
       "schema": "contracts/assurance/exercise.schema.json",
       "visibility": "public",
-      "capabilities": ["runtime", "records", "api-index"]
+      "capabilities": [
+        "runtime",
+        "records",
+        "api-index"
+      ],
+      "routes": {
+        "html": "/governance/incidents",
+        "api": "/v1/assurance/incidents"
+      }
     },
     {
       "id": "advisories",
@@ -132,7 +228,15 @@
       "path": "assurance/advisories/advisories.json",
       "schema": "contracts/assurance/advisory.schema.json",
       "visibility": "public",
-      "capabilities": ["runtime", "records", "api-index"]
+      "capabilities": [
+        "runtime",
+        "records",
+        "api-index"
+      ],
+      "routes": {
+        "html": "/security",
+        "api": "/v1/assurance/advisories"
+      }
     }
   ],
   "presentations": [
@@ -143,7 +247,9 @@
       "path": "assurance/presentation/documents.json",
       "schema": "contracts/assurance/presentation-document.schema.json",
       "visibility": "public",
-      "capabilities": ["summary-source"]
+      "capabilities": [
+        "summary-source"
+      ]
     }
   ],
   "operations": [
@@ -154,7 +260,9 @@
       "path": "assurance/operations/monitoring.json",
       "schema": "contracts/assurance/operations.schema.json",
       "visibility": "public",
-      "capabilities": ["monitoring"]
+      "capabilities": [
+        "monitoring"
+      ]
     }
   ]
 }
