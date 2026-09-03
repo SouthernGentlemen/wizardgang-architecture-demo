@@ -17,6 +17,11 @@
       "schema": "contracts/assurance/claim.schema.json"
     },
     {
+      "kind": "compliance",
+      "path": "assurance/compliance/iso-27001-2022.json",
+      "schema": "contracts/assurance/iso-27001-compliance.schema.json"
+    },
+    {
       "kind": "risks",
       "path": "assurance/risks/risks.json",
       "schema": "contracts/assurance/risk.schema.json"

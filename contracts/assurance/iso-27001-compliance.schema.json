@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://demo.wizardgang.ai/contracts/assurance/iso-27001-compliance.schema.json",
+  "title": "Public ISO/IEC 27001:2022 compliance mapping",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "standard",
+    "edition",
+    "visibility",
+    "qualification",
+    "paraphraseNotice",
+    "sourceSoa",
+    "clauses",
+    "annexA"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "const": "iso-iec-27001-2022-public-compliance" },
+    "standard": { "const": "ISO/IEC 27001:2022" },
+    "edition": { "const": "2022" },
+    "visibility": { "const": "public" },
+    "qualification": { "type": "string", "minLength": 20, "maxLength": 240 },
+    "paraphraseNotice": { "type": "string", "minLength": 20, "maxLength": 180 },
+    "sourceSoa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "repositoryPath", "status", "assessmentDate", "approval"],
+      "properties": {
+        "id": { "const": "WG-SOA-001" },
+        "repositoryPath": { "const": "docs/governance/soa/ISO-27001-SOA.md" },
+        "status": { "const": "approved" },
+        "assessmentDate": { "type": "string", "format": "date" },
+        "approval": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["pullRequest", "mergeCommit"],
+          "properties": {
+            "pullRequest": { "type": "integer", "minimum": 1 },
+            "mergeCommit": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
+          }
+        }
+      }
+    },
+    "clauses": { "$ref": "#/$defs/clausePostures" },
+    "annexA": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["organizational", "people", "physical", "technological"],
+      "properties": {
+        "organizational": { "$ref": "#/$defs/annexPostures" },
+        "people": { "$ref": "#/$defs/annexPostures" },
+        "physical": { "$ref": "#/$defs/annexPostures" },
+        "technological": { "$ref": "#/$defs/annexPostures" }
+      }
+    }
+  },
+  "$defs": {
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^EVD-[A-Z]+-[0-9]{3,}$" }
+    },
+    "baseRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference", "title", "evidence"],
+      "properties": {
+        "reference": { "type": "string" },
+        "title": { "type": "string", "minLength": 3, "maxLength": 80 },
+        "evidence": { "$ref": "#/$defs/evidence" }
+      }
+    },
+    "naRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference", "title", "evidence", "rationale"],
+      "properties": {
+        "reference": { "type": "string", "pattern": "^A\\.(?:5|6|7|8)\\.[0-9]+$" },
+        "title": { "type": "string", "minLength": 3, "maxLength": 80 },
+        "evidence": { "$ref": "#/$defs/evidence" },
+        "rationale": { "type": "string", "minLength": 10, "maxLength": 220 }
+      }
+    },
+    "clauseRecord": {
+      "allOf": [
+        { "$ref": "#/$defs/baseRecord" },
+        { "properties": { "reference": { "pattern": "^(?:[4-9]|10)(?:\\.[0-9]+){1,2}$" } } }
+      ]
+    },
+    "annexRecord": {
+      "allOf": [
+        { "$ref": "#/$defs/baseRecord" },
+        { "properties": { "reference": { "pattern": "^A\\.(?:5|6|7|8)\\.[0-9]+$" } } }
+      ]
+    },
+    "clausePostures": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["partial", "gap", "met"],
+      "properties": {
+        "partial": { "type": "array", "items": { "$ref": "#/$defs/clauseRecord" } },
+        "gap": { "type": "array", "items": { "$ref": "#/$defs/clauseRecord" } },
+        "met": { "type": "array", "items": { "$ref": "#/$defs/clauseRecord" } }
+      }
+    },
+    "annexPostures": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["partial", "gap", "met", "notApplicable"],
+      "properties": {
+        "partial": { "type": "array", "items": { "$ref": "#/$defs/annexRecord" } },
+        "gap": { "type": "array", "items": { "$ref": "#/$defs/annexRecord" } },
+        "met": { "type": "array", "items": { "$ref": "#/$defs/annexRecord" } },
+        "notApplicable": { "type": "array", "items": { "$ref": "#/$defs/naRecord" } }
+      }
+    }
+  }
+}
