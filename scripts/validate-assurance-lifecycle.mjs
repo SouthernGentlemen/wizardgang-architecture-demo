@@ -2,7 +2,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import {
-  flattenAssuranceRegistry,
+  assuranceRecordIdentity,
+  assuranceRecordResources,
+  assuranceRecordsFromDocument,
   loadAssuranceRegistry,
   requireRegistryResource,
 } from './lib/assurance-registry.mjs';
@@ -98,16 +100,8 @@ function normalizeKey(key) {
   return String(key).replaceAll('-', '').replaceAll('_', '').toLowerCase();
 }
 
-function normalizeHistoricalClaimReference(reference) {
-  if (typeof reference !== 'string') return '';
-  if (reference.startsWith('ISO27001:')) return reference.replace('ISO27001:', 'ISO27001-');
-  if (reference.startsWith('ISO42001:')) return reference.replace('ISO42001:', 'ISO42001-');
-  if (reference === 'WCAG22:feedback-support') return 'wcag-2.2';
-  return reference;
-}
-
 const registry = loadAssuranceRegistry(root);
-const registryResources = flattenAssuranceRegistry(registry);
+const recordResources = assuranceRecordResources(registry);
 const lifecycleResource = requireRegistryResource(
   registry,
   (resource) => resource.capabilities?.includes('lifecycle'),
@@ -115,6 +109,35 @@ const lifecycleResource = requireRegistryResource(
 );
 const lifecyclePath = lifecycleResource.path;
 const lifecycleSchemaPath = lifecycleResource.schema;
+
+function legacyComplianceRecords(data) {
+  if (data?.clauses && data?.annexA) {
+    const is27001 = String(data.standard).includes('27001');
+    const is42001 = String(data.standard).includes('42001');
+    const prefix = is27001 ? 'ISO27001' : is42001 ? 'ISO42001' : null;
+    const framework = is27001 ? 'iso-27001' : is42001 ? 'iso-42001' : null;
+    if (!prefix || !framework) return null;
+    const records = [];
+    const sections = [data.clauses, ...Object.values(data.annexA ?? {})];
+    for (const groups of sections) {
+      for (const rows of Object.values(groups ?? {})) {
+        for (const record of rows ?? []) {
+          records.push({ id: `${prefix}-${record.reference}`, framework, reference: record.reference });
+        }
+      }
+    }
+    return records;
+  }
+
+  if (Array.isArray(data?.criteria) && data.criteria.some((record) => !record.id && record.criterionId)) {
+    return data.criteria.map((record) => ({
+      id: record.id ?? (record.criterionId ? `WCAG-${record.criterionId}` : null),
+      framework: record.framework ?? 'wcag-2.2',
+      reference: record.reference ?? record.criterionId,
+    }));
+  }
+  return null;
+}
 
 function collectSnapshot(read, { allowMissing = false } = {}) {
   const records = new Map();
@@ -141,85 +164,22 @@ function collectSnapshot(read, { allowMissing = false } = {}) {
     records.set(id, { id, domain, identity, sourcePath });
   }
 
-  function primary(kind) {
-    return registry.datasets.find((dataset) => dataset.kind === kind && dataset.capabilities?.includes('api-index'));
-  }
-
-  const evidenceResource = primary('evidence');
-  const evidence = evidenceResource ? load(evidenceResource.path) : null;
-  for (const record of evidence?.records ?? []) {
-    const locator = record.locator?.repositoryPath ?? record.locator?.route ?? '';
-    add(record.id, 'evidence', `evidence|${record.kind ?? ''}|${locator}`, evidenceResource.path);
-  }
-
-  const claimsResource = primary('claims');
-  const claims = claimsResource ? load(claimsResource.path) : null;
-  for (const record of claims?.records ?? []) {
-    const references = [
-      ...(record.frameworkReferences ?? []),
-      ...(record.relationships?.compliance ?? []),
-      ...(record.relationships?.frameworks ?? []),
-    ]
-      .map(normalizeHistoricalClaimReference)
-      .filter(Boolean);
-    const canonicalReferences = [...new Set(references)].sort().join(',');
-    add(record.id, 'claims', `claim|${record.area ?? ''}|${canonicalReferences}`, claimsResource.path);
-  }
-
-  const risksResource = primary('risks');
-  const risks = risksResource ? load(risksResource.path) : null;
-  for (const record of risks?.records ?? []) {
-    add(record.id, 'risks', `risk|${record.framework ?? ''}|${record.title ?? ''}`, risksResource.path);
-  }
-
-  const incidentsResource = primary('incidents');
-  const incidents = incidentsResource ? load(incidentsResource.path) : null;
-  for (const record of incidents?.records ?? []) {
-    add(record.id, 'incidents', `incident|${record.recordType ?? ''}|${record.detectedAt ?? ''}|${record.title ?? ''}`, incidentsResource.path);
-  }
-
-  const exercisesResource = primary('exercises');
-  const exercises = exercisesResource ? load(exercisesResource.path) : null;
-  for (const record of exercises?.records ?? []) {
-    add(record.id, 'exercises', `exercise|${record.recordType ?? ''}|${record.exerciseType ?? ''}|${record.scenario ?? ''}`, exercisesResource.path);
-  }
-
-  const advisoriesResource = primary('advisories');
-  const advisories = advisoriesResource ? load(advisoriesResource.path) : null;
-  for (const record of advisories?.records ?? []) {
-    add(record.id, 'advisories', `advisory|${record.recordType ?? ''}|${record.publishedAt ?? ''}`, advisoriesResource.path);
-  }
-
-  for (const resource of registryResources.filter((entry) => entry.kind === 'compliance' && entry.capabilities?.includes('records'))) {
+  for (const resource of recordResources) {
     const data = load(resource.path);
     if (!data) continue;
-    if (Array.isArray(data.records)) {
-      for (const record of data.records) {
-        add(record.id, 'compliance', `compliance|${record.framework ?? data.framework?.id ?? ''}|${record.reference ?? ''}`, resource.path);
+    let discovered;
+    if (resource.kind === 'compliance') discovered = legacyComplianceRecords(data);
+    if (!discovered) {
+      try {
+        discovered = assuranceRecordsFromDocument(resource, data);
+      } catch (error) {
+        if (allowMissing) continue;
+        errors.push(`${resource.path}: ${error instanceof Error ? error.message : String(error)}`);
+        continue;
       }
-      continue;
     }
-    if (data.clauses && data.annexA) {
-      const is27001 = String(data.standard).includes('27001');
-      const is42001 = String(data.standard).includes('42001');
-      const prefix = is27001 ? 'ISO27001' : is42001 ? 'ISO42001' : null;
-      const framework = is27001 ? 'iso-27001' : is42001 ? 'iso-42001' : null;
-      if (!prefix || !framework) continue;
-      const sections = [data.clauses, ...Object.values(data.annexA ?? {})];
-      for (const groups of sections) {
-        for (const rows of Object.values(groups ?? {})) {
-          for (const record of rows ?? []) {
-            const id = `${prefix}-${record.reference}`;
-            add(id, 'compliance', `compliance|${framework}|${record.reference}`, resource.path);
-          }
-        }
-      }
-      continue;
-    }
-    for (const record of data.criteria ?? []) {
-      const reference = record.reference ?? record.criterionId;
-      const id = record.id ?? (record.criterionId ? `WCAG-${record.criterionId}` : null);
-      add(id, 'compliance', `compliance|wcag-2.2|${reference ?? ''}`, resource.path);
+    for (const record of discovered) {
+      add(record.id, resource.kind, assuranceRecordIdentity(resource, record), resource.path);
     }
   }
 
@@ -425,4 +385,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`Assurance lifecycle validation passed: ${current.records.size} current IDs from registry discovery, ${recordsMetadata.size} explicit lifecycle records, ${retiredMetadata.size} retired IDs.`);
+console.log(`Assurance lifecycle validation passed: ${current.records.size} current IDs from registry-driven record discovery, ${recordsMetadata.size} explicit lifecycle records, ${retiredMetadata.size} retired IDs.`);

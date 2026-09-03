@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {
   ASSURANCE_REGISTRY_PATH,
+  assuranceRecordResources,
+  assuranceRecordsFromDocument,
   canonicalAssuranceDatasetPaths,
   discoverCanonicalAssuranceJson,
   flattenAssuranceRegistry,
@@ -18,6 +20,7 @@ import { renderRuntimeBinding, RUNTIME_BINDING_PATH } from './generate-assurance
 const root = process.cwd();
 const errors = [];
 const registrySchemaPath = 'contracts/assurance/registry.schema.json';
+const releasedV1Kinds = new Set(['evidence', 'claims', 'compliance', 'risks', 'incidents', 'exercises', 'advisories']);
 
 function fail(message) {
   errors.push(message);
@@ -48,6 +51,15 @@ if (registry) {
     if (registeredPaths.has(resource.path)) fail(`${ASSURANCE_REGISTRY_PATH}: duplicate registered path ${resource.path}`);
     else registeredPaths.set(resource.path, resource.id);
 
+    const hasRecords = resource.capabilities?.includes('records');
+    const hasRuntime = resource.capabilities?.includes('runtime');
+    if (hasRecords && !hasRuntime) fail(`${ASSURANCE_REGISTRY_PATH}: ${resource.id} records capability requires runtime capability for shared Worker/Node record discovery`);
+    if (hasRecords && !resource.recordCollection) fail(`${ASSURANCE_REGISTRY_PATH}: ${resource.id} records capability requires recordCollection metadata`);
+    if (!hasRecords && resource.recordCollection) fail(`${ASSURANCE_REGISTRY_PATH}: ${resource.id} declares recordCollection without records capability`);
+    if (resource.capabilities?.includes('api-index') && !releasedV1Kinds.has(resource.kind)) {
+      fail(`${ASSURANCE_REGISTRY_PATH}: ${resource.id} declares unsupported api-index capability for unreleased family ${resource.kind}`);
+    }
+
     if (!exists(resource.path)) fail(`${ASSURANCE_REGISTRY_PATH}: registered dataset is missing: ${resource.path}`);
     if (!exists(resource.schema)) fail(`${ASSURANCE_REGISTRY_PATH}: registered schema is missing for ${resource.path}: ${resource.schema}`);
     if (!exists(resource.path) || !exists(resource.schema)) continue;
@@ -60,6 +72,13 @@ if (registry) {
       continue;
     }
     errors.push(...validateRegisteredAssuranceResource(root, resource, data));
+    if (hasRecords) {
+      try {
+        assuranceRecordsFromDocument(resource, data);
+      } catch (error) {
+        fail(`${resource.path}: ${error instanceof Error ? error.message : String(error)}`);
+      }
+    }
   }
 
   const canonicalFiles = discoverCanonicalAssuranceJson(root);
@@ -77,10 +96,12 @@ if (registry) {
   for (const dataset of registry.datasets ?? []) {
     if (primaryKinds.has(dataset.kind)) fail(`${ASSURANCE_REGISTRY_PATH}: duplicate primary dataset family ${dataset.kind}`);
     else primaryKinds.set(dataset.kind, dataset.id);
-    if (!dataset.capabilities?.includes('api-index')) fail(`${ASSURANCE_REGISTRY_PATH}: primary dataset ${dataset.id} must declare api-index capability`);
+    if (releasedV1Kinds.has(dataset.kind) && !dataset.capabilities?.includes('api-index')) {
+      fail(`${ASSURANCE_REGISTRY_PATH}: released v1 primary dataset ${dataset.id} must declare api-index capability`);
+    }
   }
-  for (const kind of ['evidence', 'claims', 'compliance', 'risks', 'incidents', 'exercises', 'advisories']) {
-    if (!primaryKinds.has(kind)) fail(`${ASSURANCE_REGISTRY_PATH}: missing primary dataset family ${kind}`);
+  for (const kind of releasedV1Kinds) {
+    if (!primaryKinds.has(kind)) fail(`${ASSURANCE_REGISTRY_PATH}: missing released v1 primary dataset family ${kind}`);
   }
 
   const lifecycle = resources.filter((resource) => resource.capabilities?.includes('lifecycle'));
@@ -105,6 +126,11 @@ if (registry) {
 
   const runtimeIds = resources.filter((resource) => resource.capabilities?.includes('runtime')).map((resource) => resource.id).sort();
   if (new Set(runtimeIds).size !== runtimeIds.length) fail(`${ASSURANCE_REGISTRY_PATH}: duplicate runtime dataset identity`);
+
+  for (const resource of assuranceRecordResources(registry)) {
+    if (!resource.capabilities?.includes('runtime')) continue;
+    if (!resource.recordCollection?.identity?.length) fail(`${ASSURANCE_REGISTRY_PATH}: ${resource.id} recordCollection.identity must declare immutable identity fields`);
+  }
 
   const expectedBinding = renderRuntimeBinding(registry);
   const bindingPath = path.join(root, RUNTIME_BINDING_PATH);
