@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import registry from '../assurance/registry.json';
 import manifest from '../assurance/compliance/wcag-2.2.json';
 import perceivable from '../assurance/compliance/wcag-2.2/perceivable.json';
 import operable from '../assurance/compliance/wcag-2.2/operable.json';
@@ -8,6 +9,9 @@ import evidenceData from '../assurance/evidence/evidence.json';
 
 const criteria = [...perceivable.criteria, ...operable.criteria, ...understandable.criteria, ...robust.criteria];
 const evidenceIds = new Set(evidenceData.records.map((record) => record.id));
+
+const complianceOwner = (registry as any).datasets.find((resource: any) => resource.id === 'compliance.iso-27001');
+const frameworkOwner = complianceOwner.resources.find((resource: any) => resource.id === 'compliance.wcag-2.2');
 
 describe('WCAG 2.2 canonical public criterion registry', () => {
   it('preserves all current criterion IDs explicitly without removed 4.1.1', () => {
@@ -23,10 +27,10 @@ describe('WCAG 2.2 canonical public criterion registry', () => {
   it('uses W3C primary sources and explicitly avoids conformance claims', () => {
     expect(manifest.sources.normative).toBe('https://www.w3.org/TR/WCAG22/');
     expect(manifest.sources.machineReadable).toBe('https://www.w3.org/WAI/WCAG22/wcag.json');
-    expect(manifest.framework).toMatchObject({ id: 'wcag-2.2', label: 'WCAG 2.2', sourcePath: 'assurance/compliance/wcag-2.2.json' });
-    expect(manifest.qualification.toLowerCase()).toContain('does not claim');
-    expect(manifest.qualification.toLowerCase()).toContain('conformance');
-    expect(manifest.qualification.toLowerCase()).toContain('certification');
+    expect({ ...frameworkOwner.framework, sourcePath: frameworkOwner.path }).toMatchObject({ id: 'wcag-2.2', label: 'WCAG 2.2', sourcePath: 'assurance/compliance/wcag-2.2.json' });
+    expect(frameworkOwner.framework.qualification.toLowerCase()).toContain('does not claim');
+    expect(frameworkOwner.framework.qualification.toLowerCase()).toContain('conformance');
+    expect(frameworkOwner.framework.qualification.toLowerCase()).toContain('certification');
     expect(JSON.stringify({ manifest, criteria }).toLowerCase()).not.toContain('wcag 2.2 conformant');
     expect(JSON.stringify({ manifest, criteria }).toLowerCase()).not.toContain('wcag 2.2 compliant');
   });

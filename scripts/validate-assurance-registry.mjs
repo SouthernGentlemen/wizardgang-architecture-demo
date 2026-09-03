@@ -112,15 +112,15 @@ if (registry) {
   const manifests = resources.filter((resource) => resource.kind === 'compliance' && resource.capabilities?.includes('manifest'));
   if (manifests.length !== 1) {
     fail(`${ASSURANCE_REGISTRY_PATH}: expected exactly one compliance manifest resource; found ${manifests.length}`);
-  } else if (exists(manifests[0].path)) {
-    const manifest = readJsonFile(root, manifests[0].path);
-    const manifestPartitions = (manifest.partitions ?? []).map((partition) => partition.path).sort();
+  } else {
+    const manifestResource = manifests[0];
+    const ownedPartitions = (manifestResource.resources ?? [])
+      .filter((resource) => resource.kind === 'compliance' && resource.role === 'partition');
     const registeredPartitions = resources
-      .filter((resource) => resource.kind === 'compliance' && resource.role === 'partition')
-      .map((resource) => resource.path)
-      .sort();
-    if (JSON.stringify(manifestPartitions) !== JSON.stringify(registeredPartitions)) {
-      fail(`${manifests[0].path}: partition inventory does not agree with ${ASSURANCE_REGISTRY_PATH}`);
+      .filter((resource) => resource.kind === 'compliance' && resource.role === 'partition');
+    if (ownedPartitions.length !== registeredPartitions.length
+      || !registeredPartitions.every((resource) => ownedPartitions.some((owned) => owned.id === resource.id && owned.path === resource.path))) {
+      fail(`${ASSURANCE_REGISTRY_PATH}: WCAG partition membership must be owned by the compliance manifest resource hierarchy`);
     }
   }
 

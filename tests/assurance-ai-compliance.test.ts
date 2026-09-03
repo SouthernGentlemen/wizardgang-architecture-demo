@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import registry from '../assurance/registry.json';
 import complianceData from '../assurance/compliance/iso-42001-2023.json';
 import evidenceData from '../assurance/evidence/evidence.json';
 
@@ -13,6 +14,9 @@ const expectedAnnexRefs = [
   'A.6.2.6', 'A.6.2.7', 'A.6.2.8', 'A.7.2', 'A.7.3', 'A.7.4', 'A.7.5', 'A.7.6', 'A.8.2', 'A.8.3', 'A.8.4', 'A.8.5',
   'A.9.2', 'A.9.3', 'A.9.4', 'A.10.2', 'A.10.3', 'A.10.4',
 ];
+
+const complianceOwner = (registry as any).datasets.find((resource: any) => resource.id === 'compliance.iso-27001');
+const frameworkOwner = complianceOwner.resources.find((resource: any) => resource.id === 'compliance.iso-42001');
 
 describe('ISO/IEC 42001:2023 canonical public compliance records', () => {
   const clauses = complianceData.records.filter((record) => record.kind === 'clause');
@@ -34,7 +38,7 @@ describe('ISO/IEC 42001:2023 canonical public compliance records', () => {
     expect(counts).toEqual({ partial: 34, met: 2, 'not-applicable': 2 });
     expect(JSON.stringify(complianceData)).not.toContain('notApplicable');
     expect(complianceData.sourceSoa).toMatchObject({
-      id: 'WG-SOA-002', governanceDocumentReference: 'WG-SOA-002', status: 'approved', assessmentDate: '2026-09-02',
+      id: 'WG-SOA-002', governanceDocumentReference: 'WG-SOA-002', status: 'approved',
       approval: { pullRequest: 56, mergeCommit: '1ae105da8ab6466e334a2faf4e6c63f5885c91df' },
     });
     expect(annex.filter((record) => record.status === 'met').map((record) => record.reference).sort()).toEqual(['A.6.2.8', 'A.9.4']);
@@ -71,10 +75,10 @@ describe('ISO/IEC 42001:2023 canonical public compliance records', () => {
     expect(complianceData.scopeLimitations.trainingBoundary.toLowerCase()).toContain('fine-tuning');
   });
 
-  it('owns framework presentation metadata and paraphrased labels in source', () => {
-    expect(complianceData.framework).toMatchObject({ id: 'iso-42001', label: 'ISO/IEC 42001:2023', sourcePath: 'assurance/compliance/iso-42001-2023.json' });
+  it('reads framework presentation metadata from the canonical registry owner', () => {
+    expect({ ...frameworkOwner.framework, sourcePath: frameworkOwner.path }).toMatchObject({ id: 'iso-42001', label: 'ISO/IEC 42001:2023', sourcePath: 'assurance/compliance/iso-42001-2023.json' });
     expect(complianceData.paraphraseNotice.toLowerCase()).toContain('paraphrase');
-    expect(complianceData.qualification.toLowerCase()).toContain('not claimed');
+    expect(frameworkOwner.framework.qualification.toLowerCase()).toContain('not claimed');
     for (const record of complianceData.records) expect(record.title.length).toBeLessThanOrEqual(80);
   });
 });

@@ -81,10 +81,40 @@ function annexCounts(data) {
   return { ...counts, total: Object.values(counts).reduce((sum, value) => sum + value, 0) };
 }
 
-export function renderSoaSummary(document, sourcePath, data) {
+export function renderSoaSummary(document, resource, data) {
   const counts = annexCounts(data);
-  const soa = data.sourceSoa;
-  return `# ${data.standard} Statement of Applicability\n\n<!-- GENERATED FILE: scripts/generate-assurance-summaries.mjs; DO NOT EDIT. CANONICAL JSON IS THE ONLY ASSURANCE STATE AUTHORITY. -->\n\n${renderDocumentMetadata(document, soa)}\n\n## Authority\n\nThis Markdown file is a deterministic presentation of canonical structured assurance data. Per-control applicability, status, N/A rationale, title, and evidence relationships are maintained only in \`${sourcePath}\`. Document ownership and review cadence are maintained in \`assurance/presentation/documents.json\`.\n\nGenerated Markdown is not an input to runtime, validation, APIs, or dashboards.\n\n## Summary\n\n| Controls | Met | Partial | Gap | N/A |\n|---:|---:|---:|---:|---:|\n| ${counts.total} | ${counts.met} | ${counts.partial} | ${counts.gap} | ${counts['not-applicable']} |\n\n## Interpretation\n\n- Status is evidence posture only and is not a certification score.\n- N/A rationales are required and live only in the canonical structured record for the affected control.\n- Missing implementation remains \`Gap\` or \`Partial\`; it is never converted to N/A merely because evidence is incomplete.\n- This repository remains aligned — uncertified; no status implies certification, control effectiveness, or residual-risk acceptance.\n\n## Regeneration\n\nRun \`npm run generate:assurance-summaries\` after an approved structured assurance change. CI runs the same generator in check mode and rejects stale or independently edited generated presentation.\n`;
+  const framework = resource.framework;
+  if (!framework) throw new Error(`${resource.id}: Statement of Applicability source requires canonical registry framework metadata`);
+  const soa = { ...data.sourceSoa, assessmentDate: framework.assessmentDate };
+  return `# ${framework.label} Statement of Applicability
+
+<!-- GENERATED FILE: scripts/generate-assurance-summaries.mjs; DO NOT EDIT. CANONICAL JSON IS THE ONLY ASSURANCE STATE AUTHORITY. -->
+
+${renderDocumentMetadata(document, soa)}
+
+## Authority
+
+This Markdown file is a deterministic presentation of canonical structured assurance data. Per-control applicability, status, N/A rationale, title, and evidence relationships are maintained only in \`${resource.path}\`. Framework identity, qualification, edition, assessment date, and source-path ownership are maintained in \`assurance/registry.json\`; document ownership, lifecycle state, approval provenance, and review cadence are maintained by the SoA document/source metadata and \`assurance/presentation/documents.json\`.
+
+Generated Markdown is not an input to runtime, validation, APIs, or dashboards.
+
+## Summary
+
+| Controls | Met | Partial | Gap | N/A |
+|---:|---:|---:|---:|---:|
+| ${counts.total} | ${counts.met} | ${counts.partial} | ${counts.gap} | ${counts['not-applicable']} |
+
+## Interpretation
+
+- Status is evidence posture only and is not a certification score.
+- N/A rationales are required and live only in the canonical structured record for the affected control.
+- Missing implementation remains \`Gap\` or \`Partial\`; it is never converted to N/A merely because evidence is incomplete.
+- This repository remains aligned — uncertified; no status implies certification, control effectiveness, or residual-risk acceptance.
+
+## Regeneration
+
+Run \`npm run generate:assurance-summaries\` after an approved structured assurance change. CI runs the same generator in check mode and rejects stale or independently edited generated presentation.
+`;
 }
 
 export function applyGeneratedProjection(current, projection, outputPath) {
@@ -127,7 +157,7 @@ function main() {
         if (!incidents || !exercises) throw new Error(`${document.id}: incident/exercise projection requires incident and exercise datasets`);
         rendered = applyGeneratedProjection(current, renderIncidentProjection(document, incidents, exercises), outputPath);
       } else if (document.type === 'soa') {
-        rendered = renderSoaSummary(document, sources[0].resource.path, sources[0].data);
+        rendered = renderSoaSummary(document, sources[0].resource, sources[0].data);
       } else {
         throw new Error(`${document.id}: unsupported presentation type ${document.type}`);
       }

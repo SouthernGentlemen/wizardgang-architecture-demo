@@ -1,18 +1,11 @@
 {
   "schemaVersion": 1,
-  "principle": {
-    "number": "1",
-    "name": "Perceivable"
-  },
   "criteria": [
     {
       "id": "WCAG-1.1.1",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.1.1",
       "title": "Non-text Content",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "demonstrated",
       "level": "A",
       "applicability": "applicable",
@@ -47,17 +40,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.2.1",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.2.1",
       "title": "Audio-only and Video-only (Prerecorded)",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "not-observed",
       "level": "A",
       "applicability": "applicable",
@@ -90,17 +79,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.2.2",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.2.2",
       "title": "Captions (Prerecorded)",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "not-observed",
       "level": "A",
       "applicability": "applicable",
@@ -133,17 +118,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.2.3",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.2.3",
       "title": "Audio Description or Media Alternative (Prerecorded)",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "not-observed",
       "level": "A",
       "applicability": "applicable",
@@ -176,17 +157,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.2.4",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.2.4",
       "title": "Captions (Live)",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "not-observed",
       "level": "AA",
       "applicability": "applicable",
@@ -219,17 +196,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.2.5",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.2.5",
       "title": "Audio Description (Prerecorded)",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "not-observed",
       "level": "AA",
       "applicability": "applicable",
@@ -262,17 +235,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.2.6",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.2.6",
       "title": "Sign Language (Prerecorded)",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "not-observed",
       "level": "AAA",
       "applicability": "applicable",
@@ -305,17 +274,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.2.7",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.2.7",
       "title": "Extended Audio Description (Prerecorded)",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "not-observed",
       "level": "AAA",
       "applicability": "applicable",
@@ -348,17 +313,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.2.8",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.2.8",
       "title": "Media Alternative (Prerecorded)",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "not-observed",
       "level": "AAA",
       "applicability": "applicable",
@@ -391,17 +352,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.2.9",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.2.9",
       "title": "Audio-only (Live)",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "not-observed",
       "level": "AAA",
       "applicability": "applicable",
@@ -434,17 +391,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.3.1",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.3.1",
       "title": "Info and Relationships",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "demonstrated",
       "level": "A",
       "applicability": "applicable",
@@ -479,17 +432,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.3.2",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.3.2",
       "title": "Meaningful Sequence",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "partial",
       "level": "A",
       "applicability": "applicable",
@@ -523,17 +472,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.3.3",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.3.3",
       "title": "Sensory Characteristics",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "partial",
       "level": "A",
       "applicability": "applicable",
@@ -568,17 +513,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.3.4",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.3.4",
       "title": "Orientation",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "partial",
       "level": "AA",
       "applicability": "applicable",
@@ -612,17 +553,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.3.5",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.3.5",
       "title": "Identify Input Purpose",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "partial",
       "level": "AA",
       "applicability": "applicable",
@@ -657,17 +594,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.3.6",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.3.6",
       "title": "Identify Purpose",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -700,17 +633,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.4.1",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.4.1",
       "title": "Use of Color",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "partial",
       "level": "A",
       "applicability": "applicable",
@@ -745,17 +674,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.4.2",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.4.2",
       "title": "Audio Control",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "not-observed",
       "level": "A",
       "applicability": "applicable",
@@ -788,17 +713,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.4.3",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.4.3",
       "title": "Contrast (Minimum)",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "demonstrated",
       "level": "AA",
       "applicability": "applicable",
@@ -833,17 +754,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.4.4",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.4.4",
       "title": "Resize Text",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "partial",
       "level": "AA",
       "applicability": "applicable",
@@ -877,17 +794,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.4.5",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.4.5",
       "title": "Images of Text",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "partial",
       "level": "AA",
       "applicability": "applicable",
@@ -921,17 +834,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.4.6",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.4.6",
       "title": "Contrast (Enhanced)",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -964,17 +873,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.4.7",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.4.7",
       "title": "Low or No Background Audio",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "not-observed",
       "level": "AAA",
       "applicability": "applicable",
@@ -1007,17 +912,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.4.8",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.4.8",
       "title": "Visual Presentation",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -1050,17 +951,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.4.9",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.4.9",
       "title": "Images of Text (No Exception)",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -1093,17 +990,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.4.10",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.4.10",
       "title": "Reflow",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "partial",
       "level": "AA",
       "applicability": "applicable",
@@ -1137,17 +1030,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.4.11",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.4.11",
       "title": "Non-text Contrast",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "demonstrated",
       "level": "AA",
       "applicability": "applicable",
@@ -1182,17 +1071,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.4.12",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.4.12",
       "title": "Text Spacing",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "partial",
       "level": "AA",
       "applicability": "applicable",
@@ -1226,17 +1111,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     },
     {
       "id": "WCAG-1.4.13",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "1.4.13",
       "title": "Content on Hover or Focus",
       "kind": "criterion",
-      "section": "1. Perceivable",
       "status": "partial",
       "level": "AA",
       "applicability": "applicable",
@@ -1270,11 +1151,7 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+      }
     }
-  ],
-  "framework": "wcag-2.2",
-  "frameworkLabel": "WCAG 2.2",
-  "sourcePath": "assurance/compliance/wcag-2.2/perceivable.json"
+  ]
 }

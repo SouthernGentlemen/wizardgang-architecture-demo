@@ -1,34 +1,20 @@
 {
   "schemaVersion": 1,
   "id": "iso-iec-27001-2022-public-compliance",
-  "standard": "ISO/IEC 27001:2022",
-  "edition": "2022",
   "visibility": "public",
-  "qualification": "Public alignment and engineering-evidence mapping only; independent certification or formal conformance is not claimed.",
   "paraphraseNotice": "Clause and control labels are short original paraphrases; normative ISO text is not reproduced.",
   "sourceSoa": {
     "id": "WG-SOA-001",
     "governanceDocumentReference": "WG-SOA-001",
     "status": "approved",
-    "assessmentDate": "2026-09-02",
     "approval": {
       "pullRequest": 56,
       "mergeCommit": "1ae105da8ab6466e334a2faf4e6c63f5885c91df"
     }
   },
-  "framework": {
-    "id": "iso-27001",
-    "label": "ISO/IEC 27001:2022",
-    "edition": "2022",
-    "qualification": "Public alignment and engineering-evidence mapping only; independent certification or formal conformance is not claimed.",
-    "assessmentDate": "2026-09-02",
-    "sourcePath": "assurance/compliance/iso-27001-2022.json"
-  },
   "records": [
     {
       "id": "ISO27001-4.1",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "4.1",
       "title": "Understand the operating environment",
       "kind": "clause",
@@ -49,13 +35,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-4.2",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "4.2",
       "title": "Identify stakeholder security needs",
       "kind": "clause",
@@ -76,13 +59,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-4.3",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "4.3",
       "title": "Define the security management scope",
       "kind": "clause",
@@ -103,13 +83,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-4.4",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "4.4",
       "title": "Operate the security management system",
       "kind": "clause",
@@ -130,13 +107,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-5.1",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "5.1",
       "title": "Leadership accountability for security",
       "kind": "clause",
@@ -157,13 +131,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-5.2",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "5.2",
       "title": "Set and maintain security policy",
       "kind": "clause",
@@ -184,13 +155,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-5.3",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "5.3",
       "title": "Assign security roles and authority",
       "kind": "clause",
@@ -211,13 +179,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-6.1",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "6.1",
       "title": "Plan for security risks and opportunities",
       "kind": "clause",
@@ -238,13 +203,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-6.1.1",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "6.1.1",
       "title": "Plan responses to risks and opportunities",
       "kind": "clause",
@@ -265,13 +227,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-6.1.2",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "6.1.2",
       "title": "Assess information-security risk consistently",
       "kind": "clause",
@@ -292,13 +251,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-6.1.3",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "6.1.3",
       "title": "Select and treat security risks",
       "kind": "clause",
@@ -319,13 +275,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-6.2",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "6.2",
       "title": "Set measurable security objectives",
       "kind": "clause",
@@ -346,13 +299,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-6.3",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "6.3",
       "title": "Control management-system changes",
       "kind": "clause",
@@ -373,13 +323,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-7.1",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "7.1",
       "title": "Provide management-system resources",
       "kind": "clause",
@@ -400,13 +347,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-7.2",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "7.2",
       "title": "Maintain required security competence",
       "kind": "clause",
@@ -427,13 +371,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-7.3",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "7.3",
       "title": "Maintain security awareness",
       "kind": "clause",
@@ -454,13 +395,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-7.4",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "7.4",
       "title": "Manage security communications",
       "kind": "clause",
@@ -481,13 +419,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-7.5",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "7.5",
       "title": "Control management-system documentation",
       "kind": "clause",
@@ -508,13 +443,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-7.5.1",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "7.5.1",
       "title": "Maintain the required documentation set",
       "kind": "clause",
@@ -535,13 +467,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-7.5.2",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "7.5.2",
       "title": "Create and update controlled records",
       "kind": "clause",
@@ -562,13 +491,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-7.5.3",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "7.5.3",
       "title": "Protect and govern controlled records",
       "kind": "clause",
@@ -589,13 +515,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-8.1",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "8.1",
       "title": "Plan and control security operations",
       "kind": "clause",
@@ -616,13 +539,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-8.2",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "8.2",
       "title": "Reassess security risk during operation",
       "kind": "clause",
@@ -643,13 +563,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-8.3",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "8.3",
       "title": "Execute security risk treatment",
       "kind": "clause",
@@ -670,13 +587,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-9.1",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "9.1",
       "title": "Measure and evaluate security performance",
       "kind": "clause",
@@ -697,13 +611,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-9.3",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "9.3",
       "title": "Conduct management-system reviews",
       "kind": "clause",
@@ -724,13 +635,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-9.3.1",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "9.3.1",
       "title": "Set management-review cadence",
       "kind": "clause",
@@ -751,13 +659,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-9.3.2",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "9.3.2",
       "title": "Use defined management-review inputs",
       "kind": "clause",
@@ -778,13 +683,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-9.3.3",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "9.3.3",
       "title": "Record management-review decisions",
       "kind": "clause",
@@ -805,13 +707,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-10.1",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "10.1",
       "title": "Improve the management system over time",
       "kind": "clause",
@@ -832,13 +731,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-10.2",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "10.2",
       "title": "Correct and learn from nonconformities",
       "kind": "clause",
@@ -859,13 +755,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-9.2",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "9.2",
       "title": "Run objective internal security audits",
       "kind": "clause",
@@ -886,13 +779,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-9.2.1",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "9.2.1",
       "title": "Maintain an internal audit program",
       "kind": "clause",
@@ -913,13 +803,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-9.2.2",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "9.2.2",
       "title": "Perform and report internal audits",
       "kind": "clause",
@@ -940,13 +827,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.1",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.1",
       "title": "Security policy governance",
       "kind": "control",
@@ -967,13 +851,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.2",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.2",
       "title": "Assigned security accountabilities",
       "kind": "control",
@@ -994,13 +875,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.3",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.3",
       "title": "Separation of conflicting duties",
       "kind": "control",
@@ -1021,13 +899,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.4",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.4",
       "title": "Leadership security responsibilities",
       "kind": "control",
@@ -1048,13 +923,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.5",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.5",
       "title": "Authority contact readiness",
       "kind": "control",
@@ -1075,13 +947,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.6",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.6",
       "title": "Security community contacts",
       "kind": "control",
@@ -1102,13 +971,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.7",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.7",
       "title": "Threat information handling",
       "kind": "control",
@@ -1129,13 +995,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.8",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.8",
       "title": "Security in managed projects",
       "kind": "control",
@@ -1156,13 +1019,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.9",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.9",
       "title": "Asset and information inventory",
       "kind": "control",
@@ -1183,13 +1043,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.10",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.10",
       "title": "Acceptable use expectations",
       "kind": "control",
@@ -1210,13 +1067,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.12",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.12",
       "title": "Information classification model",
       "kind": "control",
@@ -1237,13 +1091,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.13",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.13",
       "title": "Classification labels and handling",
       "kind": "control",
@@ -1264,13 +1115,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.14",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.14",
       "title": "Protected information transfer",
       "kind": "control",
@@ -1291,13 +1139,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.15",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.15",
       "title": "Access governance",
       "kind": "control",
@@ -1318,13 +1163,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.16",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.16",
       "title": "Identity lifecycle management",
       "kind": "control",
@@ -1345,13 +1187,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.17",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.17",
       "title": "Authentication secret management",
       "kind": "control",
@@ -1372,13 +1211,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.18",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.18",
       "title": "Access provisioning and review",
       "kind": "control",
@@ -1399,13 +1235,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.19",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.19",
       "title": "Supplier security governance",
       "kind": "control",
@@ -1426,13 +1259,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.20",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.20",
       "title": "Security terms for suppliers",
       "kind": "control",
@@ -1453,13 +1283,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.21",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.21",
       "title": "ICT supply-chain security",
       "kind": "control",
@@ -1480,13 +1307,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.22",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.22",
       "title": "Supplier service review and change",
       "kind": "control",
@@ -1507,13 +1331,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.23",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.23",
       "title": "Cloud service security governance",
       "kind": "control",
@@ -1534,13 +1355,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.24",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.24",
       "title": "Incident response preparation",
       "kind": "control",
@@ -1561,13 +1379,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.25",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.25",
       "title": "Security event triage",
       "kind": "control",
@@ -1588,13 +1403,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.26",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.26",
       "title": "Incident response execution",
       "kind": "control",
@@ -1615,13 +1427,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.27",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.27",
       "title": "Learning from incidents",
       "kind": "control",
@@ -1642,13 +1451,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.28",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.28",
       "title": "Preserving investigative evidence",
       "kind": "control",
@@ -1669,13 +1475,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.29",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.29",
       "title": "Secure operation during disruption",
       "kind": "control",
@@ -1696,13 +1499,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.30",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.30",
       "title": "Technology continuity readiness",
       "kind": "control",
@@ -1723,13 +1523,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.31",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.31",
       "title": "Legal and contractual obligations",
       "kind": "control",
@@ -1750,13 +1547,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.32",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.32",
       "title": "Intellectual property safeguards",
       "kind": "control",
@@ -1777,13 +1571,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.33",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.33",
       "title": "Protected business records",
       "kind": "control",
@@ -1804,13 +1595,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.34",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.34",
       "title": "Privacy and personal-data safeguards",
       "kind": "control",
@@ -1831,13 +1619,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.36",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.36",
       "title": "Compliance with security rules",
       "kind": "control",
@@ -1858,13 +1643,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.37",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.37",
       "title": "Documented operating procedures",
       "kind": "control",
@@ -1885,13 +1667,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.35",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.35",
       "title": "Independent security review",
       "kind": "control",
@@ -1912,13 +1691,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.5.11",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.5.11",
       "title": "Return of issued assets",
       "kind": "control",
@@ -1940,13 +1716,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.6.3",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.6.3",
       "title": "Security awareness and learning",
       "kind": "control",
@@ -1967,13 +1740,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.6.8",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.6.8",
       "title": "Security event reporting",
       "kind": "control",
@@ -1994,13 +1764,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.6.1",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.6.1",
       "title": "Pre-engagement screening",
       "kind": "control",
@@ -2022,13 +1789,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.6.2",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.6.2",
       "title": "Security terms of engagement",
       "kind": "control",
@@ -2050,13 +1814,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.6.4",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.6.4",
       "title": "Workforce disciplinary process",
       "kind": "control",
@@ -2078,13 +1839,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.6.5",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.6.5",
       "title": "Security duties after role changes",
       "kind": "control",
@@ -2106,13 +1864,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.6.6",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.6.6",
       "title": "Confidentiality commitments",
       "kind": "control",
@@ -2134,13 +1889,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.6.7",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.6.7",
       "title": "Secure remote work",
       "kind": "control",
@@ -2162,13 +1914,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.7.1",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.7.1",
       "title": "Physical boundary protection",
       "kind": "control",
@@ -2190,13 +1939,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.7.2",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.7.2",
       "title": "Controlled physical entry",
       "kind": "control",
@@ -2218,13 +1964,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.7.3",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.7.3",
       "title": "Secure rooms and facilities",
       "kind": "control",
@@ -2246,13 +1989,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.7.4",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.7.4",
       "title": "Physical security monitoring",
       "kind": "control",
@@ -2274,13 +2014,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.7.5",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.7.5",
       "title": "Protection from environmental hazards",
       "kind": "control",
@@ -2302,13 +2039,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.7.6",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.7.6",
       "title": "Working securely in restricted areas",
       "kind": "control",
@@ -2330,13 +2064,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.7.7",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.7.7",
       "title": "Clear desk and display practices",
       "kind": "control",
@@ -2358,13 +2089,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.7.8",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.7.8",
       "title": "Safe equipment placement",
       "kind": "control",
@@ -2386,13 +2114,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.7.9",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.7.9",
       "title": "Protecting equipment away from sites",
       "kind": "control",
@@ -2414,13 +2139,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.7.10",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.7.10",
       "title": "Physical media lifecycle",
       "kind": "control",
@@ -2442,13 +2164,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.7.11",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.7.11",
       "title": "Supporting utility resilience",
       "kind": "control",
@@ -2470,13 +2189,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.7.12",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.7.12",
       "title": "Cabling protection",
       "kind": "control",
@@ -2498,13 +2214,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.7.13",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.7.13",
       "title": "Equipment upkeep",
       "kind": "control",
@@ -2526,13 +2239,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.7.14",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.7.14",
       "title": "Secure disposal or reuse of equipment",
       "kind": "control",
@@ -2554,13 +2264,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.2",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.2",
       "title": "Privileged access restrictions",
       "kind": "control",
@@ -2581,13 +2288,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.3",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.3",
       "title": "Information access restrictions",
       "kind": "control",
@@ -2608,13 +2312,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.4",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.4",
       "title": "Source-code access restrictions",
       "kind": "control",
@@ -2635,13 +2336,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.5",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.5",
       "title": "Strong authentication",
       "kind": "control",
@@ -2662,13 +2360,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.6",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.6",
       "title": "Capacity and resource planning",
       "kind": "control",
@@ -2689,13 +2384,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.7",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.7",
       "title": "Malware defenses",
       "kind": "control",
@@ -2716,13 +2408,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.8",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.8",
       "title": "Technical vulnerability handling",
       "kind": "control",
@@ -2743,13 +2432,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.9",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.9",
       "title": "Configuration baseline management",
       "kind": "control",
@@ -2770,13 +2456,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.10",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.10",
       "title": "Secure information deletion",
       "kind": "control",
@@ -2797,13 +2480,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.11",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.11",
       "title": "Sensitive-data masking",
       "kind": "control",
@@ -2824,13 +2504,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.12",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.12",
       "title": "Data-loss controls",
       "kind": "control",
@@ -2851,13 +2528,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.13",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.13",
       "title": "Information backups",
       "kind": "control",
@@ -2878,13 +2552,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.14",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.14",
       "title": "Service redundancy",
       "kind": "control",
@@ -2905,13 +2576,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.16",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.16",
       "title": "Security monitoring",
       "kind": "control",
@@ -2932,13 +2600,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.18",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.18",
       "title": "Privileged utility restrictions",
       "kind": "control",
@@ -2959,13 +2624,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.19",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.19",
       "title": "Controlled software installation",
       "kind": "control",
@@ -2986,13 +2648,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.20",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.20",
       "title": "Network security controls",
       "kind": "control",
@@ -3013,13 +2672,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.21",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.21",
       "title": "Security of networked services",
       "kind": "control",
@@ -3040,13 +2696,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.24",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.24",
       "title": "Cryptography and key governance",
       "kind": "control",
@@ -3067,13 +2720,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.26",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.26",
       "title": "Application security requirements",
       "kind": "control",
@@ -3094,13 +2744,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.27",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.27",
       "title": "Secure architecture principles",
       "kind": "control",
@@ -3121,13 +2768,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.28",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.28",
       "title": "Secure coding practices",
       "kind": "control",
@@ -3148,13 +2792,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.29",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.29",
       "title": "Security testing before acceptance",
       "kind": "control",
@@ -3175,13 +2816,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.31",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.31",
       "title": "Separate development, test, and production",
       "kind": "control",
@@ -3202,13 +2840,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.33",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.33",
       "title": "Test-data safeguards",
       "kind": "control",
@@ -3229,13 +2864,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.1",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.1",
       "title": "Managed user endpoints",
       "kind": "control",
@@ -3256,13 +2888,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.34",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.34",
       "title": "Safe audit testing in production",
       "kind": "control",
@@ -3283,13 +2912,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.15",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.15",
       "title": "Security-relevant logging",
       "kind": "control",
@@ -3310,13 +2936,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.25",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.25",
       "title": "Secure development lifecycle",
       "kind": "control",
@@ -3337,13 +2960,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.32",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.32",
       "title": "Controlled technical changes",
       "kind": "control",
@@ -3364,13 +2984,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.17",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.17",
       "title": "Reliable system time",
       "kind": "control",
@@ -3392,13 +3009,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.22",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.22",
       "title": "Network separation",
       "kind": "control",
@@ -3420,13 +3034,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.23",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.23",
       "title": "Web access filtering",
       "kind": "control",
@@ -3448,13 +3059,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     },
     {
       "id": "ISO27001-A.8.30",
-      "framework": "iso-27001",
-      "frameworkLabel": "ISO/IEC 27001:2022",
       "reference": "A.8.30",
       "title": "Outsourced development oversight",
       "kind": "control",
@@ -3476,8 +3084,7 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+      }
     }
   ]
 }

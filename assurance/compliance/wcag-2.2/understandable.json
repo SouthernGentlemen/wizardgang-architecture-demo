@@ -1,18 +1,11 @@
 {
   "schemaVersion": 1,
-  "principle": {
-    "number": "3",
-    "name": "Understandable"
-  },
   "criteria": [
     {
       "id": "WCAG-3.1.1",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.1.1",
       "title": "Language of Page",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "partial",
       "level": "A",
       "applicability": "applicable",
@@ -47,17 +40,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.1.2",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.1.2",
       "title": "Language of Parts",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "partial",
       "level": "AA",
       "applicability": "applicable",
@@ -91,17 +80,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.1.3",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.1.3",
       "title": "Unusual Words",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -134,17 +119,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.1.4",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.1.4",
       "title": "Abbreviations",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -177,17 +158,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.1.5",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.1.5",
       "title": "Reading Level",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -220,17 +197,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.1.6",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.1.6",
       "title": "Pronunciation",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -263,17 +236,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.2.1",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.2.1",
       "title": "On Focus",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "partial",
       "level": "A",
       "applicability": "applicable",
@@ -307,17 +276,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.2.2",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.2.2",
       "title": "On Input",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "partial",
       "level": "A",
       "applicability": "applicable",
@@ -351,17 +316,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.2.3",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.2.3",
       "title": "Consistent Navigation",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "partial",
       "level": "AA",
       "applicability": "applicable",
@@ -395,17 +356,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.2.4",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.2.4",
       "title": "Consistent Identification",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "partial",
       "level": "AA",
       "applicability": "applicable",
@@ -439,17 +396,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.2.5",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.2.5",
       "title": "Change on Request",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -482,17 +435,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.2.6",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.2.6",
       "title": "Consistent Help",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "demonstrated",
       "level": "A",
       "applicability": "applicable",
@@ -527,17 +476,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.3.1",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.3.1",
       "title": "Error Identification",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "partial",
       "level": "A",
       "applicability": "applicable",
@@ -571,17 +516,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.3.2",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.3.2",
       "title": "Labels or Instructions",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "demonstrated",
       "level": "A",
       "applicability": "applicable",
@@ -616,17 +557,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.3.3",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.3.3",
       "title": "Error Suggestion",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "partial",
       "level": "AA",
       "applicability": "applicable",
@@ -660,17 +597,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.3.4",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.3.4",
       "title": "Error Prevention (Legal, Financial, Data)",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "not-observed",
       "level": "AA",
       "applicability": "applicable",
@@ -703,17 +636,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.3.5",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.3.5",
       "title": "Help",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -746,17 +675,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.3.6",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.3.6",
       "title": "Error Prevention (All)",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -789,17 +714,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.3.7",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.3.7",
       "title": "Redundant Entry",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "demonstrated",
       "level": "A",
       "applicability": "applicable",
@@ -834,17 +755,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.3.8",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.3.8",
       "title": "Accessible Authentication (Minimum)",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "demonstrated",
       "level": "AA",
       "applicability": "applicable",
@@ -879,17 +796,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     },
     {
       "id": "WCAG-3.3.9",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "3.3.9",
       "title": "Accessible Authentication (Enhanced)",
       "kind": "criterion",
-      "section": "3. Understandable",
       "status": "demonstrated",
       "level": "AAA",
       "applicability": "applicable",
@@ -924,11 +837,7 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+      }
     }
-  ],
-  "framework": "wcag-2.2",
-  "frameworkLabel": "WCAG 2.2",
-  "sourcePath": "assurance/compliance/wcag-2.2/understandable.json"
+  ]
 }

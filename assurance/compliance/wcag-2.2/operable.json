@@ -1,18 +1,11 @@
 {
   "schemaVersion": 1,
-  "principle": {
-    "number": "2",
-    "name": "Operable"
-  },
   "criteria": [
     {
       "id": "WCAG-2.1.1",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.1.1",
       "title": "Keyboard",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "demonstrated",
       "level": "A",
       "applicability": "applicable",
@@ -47,17 +40,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.1.2",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.1.2",
       "title": "No Keyboard Trap",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "partial",
       "level": "A",
       "applicability": "applicable",
@@ -91,17 +80,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.1.3",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.1.3",
       "title": "Keyboard (No Exception)",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -134,17 +119,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.1.4",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.1.4",
       "title": "Character Key Shortcuts",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "not-observed",
       "level": "A",
       "applicability": "applicable",
@@ -177,17 +158,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.2.1",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.2.1",
       "title": "Timing Adjustable",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "partial",
       "level": "A",
       "applicability": "applicable",
@@ -221,17 +198,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.2.2",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.2.2",
       "title": "Pause, Stop, Hide",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "not-observed",
       "level": "A",
       "applicability": "applicable",
@@ -264,17 +237,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.2.3",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.2.3",
       "title": "No Timing",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -307,17 +276,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.2.4",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.2.4",
       "title": "Interruptions",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -350,17 +315,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.2.5",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.2.5",
       "title": "Re-authenticating",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -393,17 +354,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.2.6",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.2.6",
       "title": "Timeouts",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -436,17 +393,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.3.1",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.3.1",
       "title": "Three Flashes or Below Threshold",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "not-observed",
       "level": "A",
       "applicability": "applicable",
@@ -479,17 +432,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.3.2",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.3.2",
       "title": "Three Flashes",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "not-observed",
       "level": "AAA",
       "applicability": "applicable",
@@ -522,17 +471,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.3.3",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.3.3",
       "title": "Animation from Interactions",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -565,17 +510,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.4.1",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.4.1",
       "title": "Bypass Blocks",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "partial",
       "level": "A",
       "applicability": "applicable",
@@ -610,17 +551,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.4.2",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.4.2",
       "title": "Page Titled",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "partial",
       "level": "A",
       "applicability": "applicable",
@@ -655,17 +592,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.4.3",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.4.3",
       "title": "Focus Order",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "demonstrated",
       "level": "A",
       "applicability": "applicable",
@@ -700,17 +633,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.4.4",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.4.4",
       "title": "Link Purpose (In Context)",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "partial",
       "level": "A",
       "applicability": "applicable",
@@ -745,17 +674,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.4.5",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.4.5",
       "title": "Multiple Ways",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "partial",
       "level": "AA",
       "applicability": "applicable",
@@ -789,17 +714,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.4.6",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.4.6",
       "title": "Headings and Labels",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "partial",
       "level": "AA",
       "applicability": "applicable",
@@ -834,17 +755,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.4.7",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.4.7",
       "title": "Focus Visible",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "demonstrated",
       "level": "AA",
       "applicability": "applicable",
@@ -879,17 +796,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.4.8",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.4.8",
       "title": "Location",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -922,17 +835,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.4.9",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.4.9",
       "title": "Link Purpose (Link Only)",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -965,17 +874,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.4.10",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.4.10",
       "title": "Section Headings",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -1008,17 +913,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.4.11",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.4.11",
       "title": "Focus Not Obscured (Minimum)",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "demonstrated",
       "level": "AA",
       "applicability": "applicable",
@@ -1053,17 +954,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.4.12",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.4.12",
       "title": "Focus Not Obscured (Enhanced)",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -1096,17 +993,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.4.13",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.4.13",
       "title": "Focus Appearance",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "demonstrated",
       "level": "AAA",
       "applicability": "applicable",
@@ -1141,17 +1034,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.5.1",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.5.1",
       "title": "Pointer Gestures",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "not-observed",
       "level": "A",
       "applicability": "applicable",
@@ -1184,17 +1073,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.5.2",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.5.2",
       "title": "Pointer Cancellation",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "partial",
       "level": "A",
       "applicability": "applicable",
@@ -1228,17 +1113,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.5.3",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.5.3",
       "title": "Label in Name",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "partial",
       "level": "A",
       "applicability": "applicable",
@@ -1273,17 +1154,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.5.4",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.5.4",
       "title": "Motion Actuation",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "not-observed",
       "level": "A",
       "applicability": "applicable",
@@ -1316,17 +1193,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.5.5",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.5.5",
       "title": "Target Size (Enhanced)",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -1359,17 +1232,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.5.6",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.5.6",
       "title": "Concurrent Input Mechanisms",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "gap",
       "level": "AAA",
       "applicability": "applicable",
@@ -1402,17 +1271,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.5.7",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.5.7",
       "title": "Dragging Movements",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "demonstrated",
       "level": "AA",
       "applicability": "applicable",
@@ -1447,17 +1312,13 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     },
     {
       "id": "WCAG-2.5.8",
-      "framework": "wcag-2.2",
-      "frameworkLabel": "WCAG 2.2",
       "reference": "2.5.8",
       "title": "Target Size (Minimum)",
       "kind": "criterion",
-      "section": "2. Operable",
       "status": "demonstrated",
       "level": "AA",
       "applicability": "applicable",
@@ -1492,11 +1353,7 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+      }
     }
-  ],
-  "framework": "wcag-2.2",
-  "frameworkLabel": "WCAG 2.2",
-  "sourcePath": "assurance/compliance/wcag-2.2/operable.json"
+  ]
 }

@@ -18,7 +18,7 @@
 
 ## Authority
 
-This Markdown file is a deterministic presentation of canonical structured assurance data. Per-control applicability, status, N/A rationale, title, and evidence relationships are maintained only in `assurance/compliance/iso-42001-2023.json`. Document ownership and review cadence are maintained in `assurance/presentation/documents.json`.
+This Markdown file is a deterministic presentation of canonical structured assurance data. Per-control applicability, status, N/A rationale, title, and evidence relationships are maintained only in `assurance/compliance/iso-42001-2023.json`. Framework identity, qualification, edition, assessment date, and source-path ownership are maintained in `assurance/registry.json`; document ownership, lifecycle state, approval provenance, and review cadence are maintained by the SoA document/source metadata and `assurance/presentation/documents.json`.
 
 Generated Markdown is not an input to runtime, validation, APIs, or dashboards.
 

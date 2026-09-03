@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import registry from '../assurance/registry.json';
 import complianceData from '../assurance/compliance/iso-27001-2022.json';
 import evidenceData from '../assurance/evidence/evidence.json';
 
@@ -13,6 +14,8 @@ const expectedAnnexRefs = [
   ...Array.from({ length: 14 }, (_, index) => `A.7.${index + 1}`),
   ...Array.from({ length: 34 }, (_, index) => `A.8.${index + 1}`),
 ];
+
+const frameworkOwner = (registry as any).datasets.find((resource: any) => resource.id === 'compliance.iso-27001');
 
 describe('ISO/IEC 27001:2022 canonical public compliance records', () => {
   const clauses = complianceData.records.filter((record) => record.kind === 'clause');
@@ -34,7 +37,7 @@ describe('ISO/IEC 27001:2022 canonical public compliance records', () => {
     expect(counts).toEqual({ partial: 62, gap: 3, 'not-applicable': 25, met: 3 });
     expect(JSON.stringify(complianceData)).not.toContain('notApplicable');
     expect(complianceData.sourceSoa).toMatchObject({
-      id: 'WG-SOA-001', governanceDocumentReference: 'WG-SOA-001', status: 'approved', assessmentDate: '2026-09-02',
+      id: 'WG-SOA-001', governanceDocumentReference: 'WG-SOA-001', status: 'approved',
       approval: { pullRequest: 56, mergeCommit: '1ae105da8ab6466e334a2faf4e6c63f5885c91df' },
     });
   });
@@ -58,10 +61,10 @@ describe('ISO/IEC 27001:2022 canonical public compliance records', () => {
     }
   });
 
-  it('owns framework presentation metadata in the canonical source', () => {
-    expect(complianceData.framework).toMatchObject({ id: 'iso-27001', label: 'ISO/IEC 27001:2022', sourcePath: 'assurance/compliance/iso-27001-2022.json' });
+  it('reads framework presentation metadata from the canonical registry owner', () => {
+    expect({ ...frameworkOwner.framework, sourcePath: frameworkOwner.path }).toMatchObject({ id: 'iso-27001', label: 'ISO/IEC 27001:2022', sourcePath: 'assurance/compliance/iso-27001-2022.json' });
     expect(complianceData.paraphraseNotice.toLowerCase()).toContain('paraphrase');
-    expect(complianceData.qualification.toLowerCase()).toContain('not claimed');
+    expect(frameworkOwner.framework.qualification.toLowerCase()).toContain('not claimed');
     for (const record of complianceData.records) expect(record.title.length).toBeLessThanOrEqual(80);
   });
 });
