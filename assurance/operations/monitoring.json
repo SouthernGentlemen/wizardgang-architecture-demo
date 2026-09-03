@@ -11,6 +11,7 @@
     "incidents": "Incident Response Owner",
     "exercises": "Incident Response Owner",
     "advisories": "Security Owner",
+    "documents": "Management-System Owner / Evidence Custodian",
     "securityReporting": "Security Owner"
   },
   "securityReporting": {

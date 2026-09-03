@@ -1,6 +1,6 @@
 # ISO/IEC 27001:2022 Statement of Applicability
 
-<!-- GENERATED FILE: scripts/generate-assurance-summaries.mjs; DO NOT EDIT STATUS, COUNTS, OR RATIONALES HERE. -->
+<!-- GENERATED FILE: scripts/generate-assurance-summaries.mjs; DO NOT EDIT. CANONICAL JSON IS THE ONLY ASSURANCE STATE AUTHORITY. -->
 
 **Reference:** WG-SOA-001
 
@@ -14,13 +14,13 @@
 
 **Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 
-**Review:** At least annually and after material scope, risk, supplier, architecture, data, personnel, or AI-capability change
+**Review cadence:** At least annually and after material scope, risk, supplier, architecture, data, personnel, or AI-capability change
 
 ## Authority
 
-This Markdown file is a deterministic summary of the structured assurance registry. The canonical per-control applicability, status, N/A rationale, title, and evidence links are maintained only in `assurance/compliance/iso-27001-2022.json`. Do not maintain a second control-state table in Markdown.
+This Markdown file is a deterministic presentation of canonical structured assurance data. Per-control applicability, status, N/A rationale, title, and evidence relationships are maintained only in `assurance/compliance/iso-27001-2022.json`. Document ownership and review cadence are maintained in `assurance/presentation/documents.json`.
 
-The `sourceSoa` metadata retained in the structured dataset preserves this controlled document's identity, assessment date, and approval provenance; it does not make this generated presentation a second source of truth.
+Generated Markdown is not an input to runtime, validation, APIs, or dashboards.
 
 ## Summary
 
@@ -37,4 +37,4 @@ The `sourceSoa` metadata retained in the structured dataset preserves this contr
 
 ## Regeneration
 
-Run `npm run generate:assurance-summaries` after an approved structured assurance change. CI runs the same generator in check mode and rejects any independently edited or stale Markdown summary.
+Run `npm run generate:assurance-summaries` after an approved structured assurance change. CI runs the same generator in check mode and rejects stale or independently edited generated presentation.

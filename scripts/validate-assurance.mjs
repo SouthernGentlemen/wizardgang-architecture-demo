@@ -34,50 +34,6 @@ function ratingFor(score) {
   return 'critical';
 }
 
-function normalizeTreatment(value) {
-  return String(value).toLowerCase().split('/').map((item) => item.trim()).filter(Boolean).sort();
-}
-
-function parseRegisterSummary(relative, prefix) {
-  const source = fs.readFileSync(path.join(root, relative), 'utf8');
-  const rows = new Map();
-  const pattern = new RegExp(`^\\| (${prefix}-RISK-[0-9]{3}) \\| (.*?) \\| ([0-9]+) (Low|Moderate|High|Critical) \\| ([0-9]+) (Low|Moderate|High|Critical) \\| (.*?) \\| (.*?) \\|$`, 'gm');
-  for (const match of source.matchAll(pattern)) {
-    rows.set(match[1], {
-      title: match[2],
-      inherent: { score: Number(match[3]), rating: match[4].toLowerCase() },
-      residual: { score: Number(match[5]), rating: match[6].toLowerCase() },
-      treatment: normalizeTreatment(match[7]),
-      status: match[8].toLowerCase(),
-    });
-  }
-  return rows;
-}
-
-function normalizeStatus(value) {
-  return String(value).trim().toLowerCase().replaceAll(' ', '-');
-}
-
-function parseExerciseRows(source) {
-  const rows = new Map();
-  for (const line of source.split(/\r?\n/)) {
-    if (!/^\|\s*EX-[0-9]{3,}\s*\|/.test(line)) continue;
-    const cells = line.split('|').slice(1, -1).map((cell) => cell.trim());
-    if (cells.length < 8) continue;
-    const dueMatch = /\b(\d{4}-\d{2}-\d{2})\b/.exec(cells[4]);
-    rows.set(cells[0], {
-      exerciseType: cells[1],
-      scenario: cells[2],
-      scope: cells[3],
-      dueDate: dueMatch?.[1],
-      owner: cells[5],
-      status: normalizeStatus(cells[6]),
-      evidence: cells[7],
-    });
-  }
-  return rows;
-}
-
 if (registry.schemaVersion !== 1) errors.push('assurance/registry.json: schemaVersion must be 1');
 if (registry.visibility !== 'public') errors.push('assurance/registry.json: registry must be explicitly public');
 if ('counts' in registry) errors.push('assurance/registry.json: counts must be derived, not stored');
@@ -145,30 +101,22 @@ for (const source of risks.sourceRegisters ?? []) {
   if (!source.id || sourceRegisters.has(source.id)) errors.push(`risks: invalid or duplicate source register ${source.id}`);
   const repositoryPath = governancePaths.get(source.governanceDocumentReference);
   sourceRegisters.set(source.id, repositoryPath);
-  if (!repositoryPath || !fs.existsSync(path.join(root, repositoryPath))) errors.push(`risks: governance source register does not resolve: ${source.governanceDocumentReference}`);
+  if (!repositoryPath || !fs.existsSync(path.join(root, repositoryPath))) errors.push(`risks: governance presentation register does not resolve: ${source.governanceDocumentReference}`);
 }
-if (sourceRegisters.get('WG-REG-001') !== 'docs/governance/registers/SECURITY-RISK-REGISTER.md') errors.push('risks: WG-REG-001 source register is missing');
-if (sourceRegisters.get('WG-REG-002') !== 'docs/governance/registers/AI-RISK-REGISTER.md') errors.push('risks: WG-REG-002 source register is missing');
-
-const registerRows = new Map([
-  ...parseRegisterSummary('docs/governance/registers/SECURITY-RISK-REGISTER.md', 'SEC'),
-  ...parseRegisterSummary('docs/governance/registers/AI-RISK-REGISTER.md', 'AI'),
-]);
+if (sourceRegisters.get('WG-REG-001') !== 'docs/governance/registers/SECURITY-RISK-REGISTER.md') errors.push('risks: WG-REG-001 presentation register is missing');
+if (sourceRegisters.get('WG-REG-002') !== 'docs/governance/registers/AI-RISK-REGISTER.md') errors.push('risks: WG-REG-002 presentation register is missing');
 
 for (const record of risks.records ?? []) {
   if (!riskIdPattern.test(record.id)) errors.push(`risks: invalid stable ID ${record.id}`);
   if (riskIds.has(record.id)) errors.push(`risks: duplicate stable ID ${record.id}`);
   riskIds.add(record.id);
-
   const extraKeys = Object.keys(record).filter((key) => !allowedRiskKeys.has(key));
   if (extraKeys.length) errors.push(`${record.id}: disclosure-safe record contains unsupported fields: ${extraKeys.join(', ')}`);
-
   if (!allowedRiskFrameworks.has(record.framework)) errors.push(`${record.id}: unsupported framework ${record.framework}`);
   if (record.framework === 'security' && !record.id.startsWith('SEC-RISK-')) errors.push(`${record.id}: framework must match SEC-RISK prefix`);
   if (record.framework === 'ai' && !record.id.startsWith('AI-RISK-')) errors.push(`${record.id}: framework must match AI-RISK prefix`);
   if (!record.title || record.title.length > 160) errors.push(`${record.id}: invalid public title`);
   if (!allowedRiskStatuses.has(record.status)) errors.push(`${record.id}: unsupported public status ${record.status}`);
-
   for (const field of ['inherent', 'residual']) {
     const score = record[field]?.score;
     const rating = record[field]?.rating;
@@ -176,41 +124,20 @@ for (const record of risks.records ?? []) {
     if (!allowedRatings.has(rating)) errors.push(`${record.id}: invalid ${field} rating ${rating}`);
     if (Number.isInteger(score) && ratingFor(score) !== rating) errors.push(`${record.id}: ${field} rating does not match score ${score}`);
   }
-
   if (!Array.isArray(record.treatment) || record.treatment.length === 0) errors.push(`${record.id}: treatment direction is required`);
   if (new Set(record.treatment).size !== record.treatment?.length) errors.push(`${record.id}: duplicate treatment direction`);
   for (const treatment of record.treatment ?? []) if (!allowedRiskTreatments.has(treatment)) errors.push(`${record.id}: unsupported treatment direction ${treatment}`);
-
   const riskEvidence = record.relationships?.evidence ?? [];
   if (riskEvidence.length === 0) errors.push(`${record.id}: evidence relationships are required`);
   for (const evidenceId of riskEvidence) if (!evidenceIds.has(evidenceId)) errors.push(`${record.id}: unresolved evidence ${evidenceId}`);
-
   if (!/^\d{4}-\d{2}-\d{2}$/.test(record.reviewDue ?? '')) errors.push(`${record.id}: reviewDue must be an ISO date`);
-
-  const source = registerRows.get(record.id);
-  if (!source) {
-    errors.push(`${record.id}: stable ID is missing from the controlled source-register summary`);
-  } else {
-    if (source.title.toLowerCase() !== record.title.toLowerCase()) errors.push(`${record.id}: title differs from source register`);
-    if (source.inherent.score !== record.inherent?.score || source.inherent.rating !== record.inherent?.rating) errors.push(`${record.id}: inherent assessment differs from source register`);
-    if (source.residual.score !== record.residual?.score || source.residual.rating !== record.residual?.rating) errors.push(`${record.id}: residual assessment differs from source register`);
-    if (source.status !== record.status) errors.push(`${record.id}: status differs from source register`);
-    if (JSON.stringify(source.treatment) !== JSON.stringify([...(record.treatment ?? [])].sort())) errors.push(`${record.id}: treatment direction differs from source register`);
-  }
 }
 
-for (const sourceId of registerRows.keys()) if (!riskIds.has(sourceId)) errors.push(`risks: source-register record is missing from public assurance JSON: ${sourceId}`);
-if (riskIds.size !== registerRows.size) errors.push(`risks: expected ${registerRows.size} controlled records, found ${riskIds.size}`);
-
 const incidentRegisterPath = 'docs/governance/registers/INCIDENT-REGISTER.md';
-const incidentRegister = fs.readFileSync(path.join(root, incidentRegisterPath), 'utf8');
-const sourceIncidentIds = new Set(incidentRegister.match(/\bINC-[0-9]{3,}\b/g) ?? []);
-const sourceExercises = parseExerciseRows(incidentRegister);
-
 const incidents = read(datasets.get('incidents') ?? 'assurance/incidents/incidents.json');
 const incidentIds = new Set();
 if (incidents.schemaVersion !== registry.schemaVersion) errors.push('incidents: schemaVersion must match the registry');
-if (incidents.sourceRegister !== incidentRegisterPath) errors.push(`incidents: sourceRegister must be ${incidentRegisterPath}`);
+if (incidents.sourceRegister !== incidentRegisterPath) errors.push(`incidents: sourceRegister presentation locator must be ${incidentRegisterPath}`);
 if ('counts' in incidents) errors.push('incidents: counts must be derived, not stored');
 for (const record of incidents.records ?? []) {
   if (!incidentIdPattern.test(record.id)) errors.push(`incidents: invalid stable ID ${record.id}`);
@@ -221,7 +148,6 @@ for (const record of incidents.records ?? []) {
   if (record.recordType !== 'incident') errors.push(`${record.id}: recordType must be incident`);
   if (record.simulated !== false) errors.push(`${record.id}: actual incidents must be explicitly simulated=false`);
   if (!allowedIncidentStatuses.has(record.status)) errors.push(`${record.id}: unsupported incident status ${record.status}`);
-  if (!sourceIncidentIds.has(record.id)) errors.push(`${record.id}: no retained incident with this permanent ID exists in ${incidentRegisterPath}`);
   if (!Array.isArray(record.categories) || record.categories.length === 0) errors.push(`${record.id}: at least one public-safe incident category is required`);
   for (const category of record.categories ?? []) if (!allowedIncidentCategories.has(category)) errors.push(`${record.id}: unsupported incident category ${category}`);
   if (new Set(record.categories ?? []).size !== record.categories?.length) errors.push(`${record.id}: duplicate incident category`);
@@ -233,7 +159,7 @@ for (const record of incidents.records ?? []) {
 const exercises = read(datasets.get('exercises') ?? 'assurance/incidents/exercises.json');
 const exerciseIds = new Set();
 if (exercises.schemaVersion !== registry.schemaVersion) errors.push('exercises: schemaVersion must match the registry');
-if (exercises.sourceRegister !== incidentRegisterPath) errors.push(`exercises: sourceRegister must be ${incidentRegisterPath}`);
+if (exercises.sourceRegister !== incidentRegisterPath) errors.push(`exercises: sourceRegister presentation locator must be ${incidentRegisterPath}`);
 if ('counts' in exercises) errors.push('exercises: counts must be derived, not stored');
 for (const record of exercises.records ?? []) {
   if (!exerciseIdPattern.test(record.id)) errors.push(`exercises: invalid stable ID ${record.id}`);
@@ -246,19 +172,6 @@ for (const record of exercises.records ?? []) {
   if (!allowedExerciseStatuses.has(record.status)) errors.push(`${record.id}: unsupported exercise status ${record.status}`);
   for (const riskId of record.relationships?.risks ?? []) if (!riskIds.has(riskId)) errors.push(`${record.id}: unresolved risk ${riskId}`);
   for (const evidenceId of record.relationships?.evidence ?? []) if (!evidenceIds.has(evidenceId)) errors.push(`${record.id}: unresolved evidence ${evidenceId}`);
-
-  const source = sourceExercises.get(record.id);
-  if (!source) {
-    errors.push(`${record.id}: stable ID is missing from the controlled exercise table`);
-  } else {
-    if (source.exerciseType !== record.exerciseType) errors.push(`${record.id}: exercise type differs from source register`);
-    if (source.scenario !== record.scenario) errors.push(`${record.id}: scenario differs from source register`);
-    if (source.scope !== record.scope) errors.push(`${record.id}: scope differs from source register`);
-    if (source.owner !== record.owner) errors.push(`${record.id}: owner differs from source register`);
-    if (source.status !== record.status) errors.push(`${record.id}: status differs from source register`);
-    if (source.dueDate !== record.dueDate) errors.push(`${record.id}: due date differs from source register`);
-  }
-
   if (record.status === 'planned') {
     if (!record.dueDate) errors.push(`${record.id}: planned exercises require dueDate`);
     if (record.completedAt) errors.push(`${record.id}: planned exercise cannot have completedAt`);
@@ -273,8 +186,6 @@ for (const record of exercises.records ?? []) {
 }
 
 for (const id of incidentIds) if (exerciseIds.has(id)) errors.push(`${id}: record cannot be both an actual incident and an exercise`);
-for (const sourceId of sourceExercises.keys()) if (!exerciseIds.has(sourceId)) errors.push(`exercises: source-register exercise is missing from public assurance JSON: ${sourceId}`);
-if (exerciseIds.size !== sourceExercises.size) errors.push(`exercises: expected ${sourceExercises.size} controlled records, found ${exerciseIds.size}`);
 
 if (errors.length) {
   console.error('Public assurance validation failed:');
@@ -282,4 +193,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`Public assurance validation passed: ${claimIds.size} claims, ${evidenceIds.size} evidence records, ${riskIds.size} risk records, ${incidentIds.size} incidents, ${exerciseIds.size} exercises, ${datasets.size} datasets.`);
+console.log(`Public assurance validation passed: ${claimIds.size} claims, ${evidenceIds.size} evidence records, ${riskIds.size} risk records, ${incidentIds.size} incidents, ${exerciseIds.size} exercises, ${datasets.size} datasets. Markdown is presentation-only and is not parsed for assurance state.`);
