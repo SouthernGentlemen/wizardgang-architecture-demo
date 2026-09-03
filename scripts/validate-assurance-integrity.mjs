@@ -1,5 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {
+  canonicalAssuranceDatasetPaths,
+  flattenAssuranceRegistry,
+  loadAssuranceRegistry,
+  primaryRegistryDataset,
+} from './lib/assurance-registry.mjs';
 
 const root = process.cwd();
 const nowValue = process.env.ASSURANCE_VALIDATION_NOW ?? new Date().toISOString();
@@ -8,14 +14,12 @@ const errors = [];
 const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), 'utf8'));
 const exists = (relative) => Boolean(relative) && !path.isAbsolute(relative) && !relative.includes('..') && fs.existsSync(path.join(root, relative));
 
-if (Number.isNaN(validationNow)) {
-  errors.push(`ASSURANCE_VALIDATION_NOW is not a valid date-time: ${nowValue}`);
-}
+if (Number.isNaN(validationNow)) errors.push(`ASSURANCE_VALIDATION_NOW is not a valid date-time: ${nowValue}`);
 
-const registry = readJson('assurance/registry.json');
+const registry = loadAssuranceRegistry(root);
+const resources = flattenAssuranceRegistry(registry);
 const routeManifest = readJson('docs/route-manifest.json');
 const publicRoutes = new Set(routeManifest.map((entry) => entry.route));
-const allowedDatasetKinds = new Set(['evidence', 'claims', 'compliance', 'risks', 'incidents', 'exercises', 'advisories']);
 const requiredRoutes = [
   '/evidence',
   '/compliance',
@@ -31,34 +35,11 @@ const requiredRoutes = [
   '/v1/assurance/compliance/{recordId}',
 ];
 
-const datasets = new Map();
-for (const dataset of registry.datasets ?? []) {
-  if (!allowedDatasetKinds.has(dataset.kind)) errors.push(`unsupported assurance dataset kind ${dataset.kind}`);
-  if (datasets.has(dataset.kind)) errors.push(`duplicate assurance dataset kind ${dataset.kind}`);
-  datasets.set(dataset.kind, dataset.path);
-  if (!exists(dataset.path)) errors.push(`unresolved assurance dataset path ${dataset.path}`);
-  if (!exists(dataset.schema)) errors.push(`unresolved assurance schema path ${dataset.schema}`);
-}
-for (const kind of allowedDatasetKinds) {
-  if (!datasets.has(kind)) errors.push(`missing required assurance dataset reference: ${kind}`);
-}
 for (const route of requiredRoutes) {
   if (!publicRoutes.has(route)) errors.push(`required public assurance route is missing: ${route}`);
 }
 
-const wcagManifestPath = 'assurance/compliance/wcag-2.2.json';
-const wcagManifest = readJson(wcagManifestPath);
-const canonicalPaths = new Set([
-  ...[...datasets.values()].filter((relative) => exists(relative)),
-  'assurance/compliance/iso-27001-2022.json',
-  'assurance/compliance/iso-42001-2023.json',
-  wcagManifestPath,
-]);
-for (const partition of wcagManifest.partitions ?? []) {
-  if (!exists(partition.path)) errors.push(`unresolved WCAG partition path ${partition.path}`);
-  else canonicalPaths.add(partition.path);
-}
-
+const canonicalPaths = new Set(canonicalAssuranceDatasetPaths(registry).filter((relative) => exists(relative)));
 const derivedOnlyKeys = new Set(['counts', 'usedBy', 'url', 'urls', 'href', 'hrefs', 'resolved']);
 const unsafePublicKeys = new Set([
   'acceptanceauthority',
@@ -114,14 +95,18 @@ function registerPublicId(id, owner) {
   else idOwners.set(id, owner);
 }
 
-const evidence = readJson(datasets.get('evidence') ?? 'assurance/evidence/evidence.json');
-const claims = readJson(datasets.get('claims') ?? 'assurance/claims/claims.json');
-const risks = readJson(datasets.get('risks') ?? 'assurance/risks/risks.json');
-const incidents = readJson(datasets.get('incidents') ?? 'assurance/incidents/incidents.json');
-const exercises = readJson(datasets.get('exercises') ?? 'assurance/incidents/exercises.json');
-const advisories = readJson(datasets.get('advisories') ?? 'assurance/advisories/advisories.json');
-const iso27001 = readJson('assurance/compliance/iso-27001-2022.json');
-const iso42001 = readJson('assurance/compliance/iso-42001-2023.json');
+const evidencePath = primaryRegistryDataset(registry, 'evidence').path;
+const claimsPath = primaryRegistryDataset(registry, 'claims').path;
+const risksPath = primaryRegistryDataset(registry, 'risks').path;
+const incidentsPath = primaryRegistryDataset(registry, 'incidents').path;
+const exercisesPath = primaryRegistryDataset(registry, 'exercises').path;
+const advisoriesPath = primaryRegistryDataset(registry, 'advisories').path;
+const evidence = readJson(evidencePath);
+const claims = readJson(claimsPath);
+const risks = readJson(risksPath);
+const incidents = readJson(incidentsPath);
+const exercises = readJson(exercisesPath);
+const advisories = readJson(advisoriesPath);
 
 const allowedFreshnessPolicies = new Set(['release-bound', 'event-driven', 'observation-bound']);
 const allowedClaimPostures = new Set(['met', 'partial', 'gap', 'not-applicable']);
@@ -189,15 +174,20 @@ function validateIsoGroups(data, idPrefix, label) {
     }
   }
 }
-validateIsoGroups(iso27001, 'ISO27001', 'ISO/IEC 27001');
-validateIsoGroups(iso42001, 'ISO42001', 'ISO/IEC 42001');
 
-for (const partition of wcagManifest.partitions ?? []) {
-  if (!exists(partition.path)) continue;
-  const data = readJson(partition.path);
-  for (const record of data.criteria ?? []) {
-    registerPublicId(`WCAG-${record.criterionId}`, 'WCAG compliance');
-    if (!allowedWcagStatuses.has(record.status)) errors.push(`WCAG ${record.criterionId}: unsupported compliance status ${record.status}`);
+for (const resource of resources.filter((entry) => entry.kind === 'compliance' && entry.capabilities?.includes('records'))) {
+  const data = readJson(resource.path);
+  if (data.clauses && data.annexA) {
+    if (String(data.standard).includes('27001')) validateIsoGroups(data, 'ISO27001', 'ISO/IEC 27001');
+    else if (String(data.standard).includes('42001')) validateIsoGroups(data, 'ISO42001', 'ISO/IEC 42001');
+    else errors.push(`${resource.path}: unsupported ISO compliance dataset identity ${data.standard}`);
+    continue;
+  }
+  if (Array.isArray(data.criteria)) {
+    for (const record of data.criteria) {
+      registerPublicId(`WCAG-${record.criterionId}`, 'WCAG compliance');
+      if (!allowedWcagStatuses.has(record.status)) errors.push(`WCAG ${record.criterionId}: unsupported compliance status ${record.status}`);
+    }
   }
 }
 
@@ -237,7 +227,11 @@ function validateReferences(relative, value, pointer = '$') {
     validateReferences(relative, child, `${pointer}.${key}`);
   }
 }
-for (const relative of canonicalPaths) validateReferences(relative, readJson(relative));
+const referencePaths = resources
+  .filter((entry) => entry.kind !== 'lifecycle' && entry.kind !== 'operations')
+  .map((entry) => entry.path)
+  .filter((relative) => exists(relative));
+for (const relative of referencePaths) validateReferences(relative, readJson(relative));
 
 if (errors.length) {
   console.error('Assurance integrity validation failed:');
@@ -245,4 +239,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`Assurance integrity validation passed: ${idOwners.size} globally unique public IDs, ${canonicalPaths.size} canonical files, ${requiredRoutes.length} required routes.`);
+console.log(`Assurance integrity validation passed: ${idOwners.size} globally unique public IDs, ${canonicalPaths.size} registry-discovered canonical files, ${requiredRoutes.length} required routes.`);

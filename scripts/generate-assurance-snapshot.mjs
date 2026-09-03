@@ -1,6 +1,11 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import {
+  ASSURANCE_REGISTRY_PATH,
+  canonicalAssuranceDatasetPaths,
+  loadAssuranceRegistry,
+} from './lib/assurance-registry.mjs';
 
 const root = process.cwd();
 const args = process.argv.slice(2);
@@ -20,14 +25,6 @@ const errors = [];
 if (!tag || !/^v\d+\.\d+\.\d+$/.test(tag)) errors.push('--tag must be an exact semantic version tag such as v0.15.0');
 if (!commit || !/^[0-9a-f]{40}$/.test(commit)) errors.push('--commit must be the exact 40-character lowercase Git commit SHA');
 if (!generatedAt || Number.isNaN(Date.parse(generatedAt))) errors.push('--generated-at must be a valid ISO date-time');
-
-function walk(dir) {
-  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
-    const absolute = path.join(dir, entry.name);
-    if (entry.isDirectory()) return walk(absolute);
-    return [absolute];
-  });
-}
 
 function countComplianceRecords(data) {
   let total = 0;
@@ -49,13 +46,8 @@ function countRecords(data) {
 }
 
 if (errors.length === 0) {
-  const assuranceRoot = path.join(root, 'assurance');
-  const files = walk(assuranceRoot)
-    .filter((absolute) => absolute.endsWith('.json'))
-    .map((absolute) => path.relative(root, absolute).split(path.sep).join('/'))
-    .filter((relative) => !relative.startsWith('assurance/snapshots/'))
-    .sort();
-
+  const registry = loadAssuranceRegistry(root);
+  const files = [ASSURANCE_REGISTRY_PATH, ...canonicalAssuranceDatasetPaths(registry)].sort();
   const digest = crypto.createHash('sha256');
   const byPath = {};
   let total = 0;
@@ -75,7 +67,6 @@ if (errors.length === 0) {
     }
   }
 
-  const registry = JSON.parse(fs.readFileSync(path.join(root, 'assurance/registry.json'), 'utf8'));
   const snapshot = {
     schemaVersion: 1,
     registryId: registry.id,
@@ -88,7 +79,7 @@ if (errors.length === 0) {
     },
     contentDigest: {
       algorithm: 'sha256',
-      scope: 'Sorted assurance/**/*.json path + NUL + exact file bytes + NUL, excluding assurance/snapshots/**',
+      scope: 'Sorted assurance/registry.json plus registry-declared canonical dataset paths; path + NUL + exact file bytes + NUL',
       fileCount: files.length,
       value: digest.digest('hex'),
     },

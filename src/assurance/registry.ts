@@ -1,17 +1,4 @@
-import registryData from '../../assurance/registry.json';
-import evidenceData from '../../assurance/evidence/evidence.json';
-import claimsData from '../../assurance/claims/claims.json';
-import risksData from '../../assurance/risks/risks.json';
-import incidentsData from '../../assurance/incidents/incidents.json';
-import exercisesData from '../../assurance/incidents/exercises.json';
-import advisoriesData from '../../assurance/advisories/advisories.json';
-import iso27001Data from '../../assurance/compliance/iso-27001-2022.json';
-import iso42001Data from '../../assurance/compliance/iso-42001-2023.json';
-import wcagData from '../../assurance/compliance/wcag-2.2.json';
-import wcagPerceivableData from '../../assurance/compliance/wcag-2.2/perceivable.json';
-import wcagOperableData from '../../assurance/compliance/wcag-2.2/operable.json';
-import wcagUnderstandableData from '../../assurance/compliance/wcag-2.2/understandable.json';
-import wcagRobustData from '../../assurance/compliance/wcag-2.2/robust.json';
+import { assuranceRegistryData, assuranceRuntimeDatasets } from './generated/registry-bindings';
 
 export type EvidenceKind = 'source' | 'test' | 'workflow' | 'governance-record' | 'release' | 'live-route' | 'observation';
 export type FreshnessPolicy = 'release-bound' | 'event-driven' | 'observation-bound';
@@ -173,8 +160,39 @@ export interface PublicComplianceCounts {
   byLevel: Record<ComplianceLevel, number>;
 }
 
+type RawRegistryResource = {
+  id: string;
+  kind: string;
+  role: 'dataset' | 'partition' | 'control-plane' | 'operations';
+  path: string;
+  schema: string;
+  visibility: 'public' | 'private';
+  capabilities: string[];
+  resources?: RawRegistryResource[];
+};
+
+type RawRegistry = {
+  schemaVersion: 1;
+  id: string;
+  title: string;
+  scope: string;
+  qualification: string;
+  visibility: 'public';
+  lifecycle: RawRegistryResource;
+  datasets: RawRegistryResource[];
+  operations: RawRegistryResource[];
+};
+
 type RawIsoRecord = { reference: string; title: string; evidence: string[]; rationale?: string };
 type RawIsoGroups = Record<string, RawIsoRecord[]>;
+type RawIsoDataset = {
+  standard: string;
+  edition: string;
+  qualification: string;
+  sourceSoa: { assessmentDate: string };
+  clauses: RawIsoGroups;
+  annexA: Record<string, RawIsoGroups>;
+};
 type RawWcagCriterion = {
   criterionId: string;
   name: string;
@@ -187,18 +205,93 @@ type RawWcagCriterion = {
   owner: string;
   freshnessRules: string[];
 };
-
 type RawWcagPartition = {
   principle: { number: string; name: string };
   criteria: RawWcagCriterion[];
 };
+type RawWcagManifest = {
+  edition: string;
+  qualification: string;
+  assessmentDate: string;
+  partitions: Array<{ principle: string; path: string }>;
+};
 
-const evidence = evidenceData.records as PublicEvidence[];
-const claims = claimsData.records as PublicAssuranceClaim[];
-const risks = risksData.records as PublicRisk[];
-const incidents = incidentsData.records as PublicIncident[];
-const exercises = exercisesData.records as PublicExercise[];
-const advisories = advisoriesData.records as PublicAdvisory[];
+type RecordsDataset<T> = { records: T[]; qualification?: string };
+
+const registryData = assuranceRegistryData as unknown as RawRegistry;
+const runtimeData = assuranceRuntimeDatasets as Record<string, unknown>;
+
+function flattenRegistryResources(): RawRegistryResource[] {
+  return [
+    ...registryData.datasets.flatMap((dataset) => [dataset, ...(dataset.resources ?? [])]),
+    registryData.lifecycle,
+    ...registryData.operations,
+  ];
+}
+
+const registryResources = flattenRegistryResources();
+
+function requireResource(predicate: (resource: RawRegistryResource) => boolean, label: string): RawRegistryResource {
+  const matches = registryResources.filter(predicate);
+  if (matches.length !== 1) throw new Error(`Assurance registry binding expected exactly one ${label}; found ${matches.length}.`);
+  return matches[0];
+}
+
+function runtimeDataset<T>(resource: RawRegistryResource): T {
+  if (!resource.capabilities.includes('runtime')) throw new Error(`${resource.id} is not declared runtime-capable.`);
+  const data = runtimeData[resource.id];
+  if (!data) throw new Error(`Runtime assurance binding is missing ${resource.id}.`);
+  return data as T;
+}
+
+function primaryDataset(kind: string): RawRegistryResource {
+  return requireResource(
+    (resource) => resource.kind === kind && resource.capabilities.includes('api-index'),
+    `primary ${kind} dataset`,
+  );
+}
+
+const evidenceResource = primaryDataset('evidence');
+const claimsResource = primaryDataset('claims');
+const risksResource = primaryDataset('risks');
+const incidentsResource = primaryDataset('incidents');
+const exercisesResource = primaryDataset('exercises');
+const advisoriesResource = primaryDataset('advisories');
+
+const evidenceData = runtimeDataset<RecordsDataset<PublicEvidence>>(evidenceResource);
+const claimsData = runtimeDataset<RecordsDataset<PublicAssuranceClaim>>(claimsResource);
+const risksData = runtimeDataset<RecordsDataset<PublicRisk>>(risksResource);
+const incidentsData = runtimeDataset<RecordsDataset<PublicIncident>>(incidentsResource);
+const exercisesData = runtimeDataset<RecordsDataset<PublicExercise>>(exercisesResource);
+const advisoriesData = runtimeDataset<RecordsDataset<PublicAdvisory>>(advisoriesResource);
+
+const complianceResources = registryResources.filter((resource) => resource.kind === 'compliance');
+const summarySources = complianceResources
+  .filter((resource) => resource.capabilities.includes('summary-source'))
+  .map((resource) => ({ resource, data: runtimeDataset<RawIsoDataset>(resource) }));
+const iso27001Source = summarySources.find(({ data }) => data.standard.includes('27001'));
+const iso42001Source = summarySources.find(({ data }) => data.standard.includes('42001'));
+if (!iso27001Source || !iso42001Source) throw new Error('Assurance registry must provide both ISO/IEC 27001 and ISO/IEC 42001 runtime datasets.');
+
+const wcagManifestResource = requireResource(
+  (resource) => resource.kind === 'compliance' && resource.capabilities.includes('manifest'),
+  'WCAG compliance manifest',
+);
+const wcagData = runtimeDataset<RawWcagManifest>(wcagManifestResource);
+const wcagPartitions = wcagData.partitions.map((partition) => {
+  const resource = requireResource(
+    (candidate) => candidate.kind === 'compliance' && candidate.role === 'partition' && candidate.path === partition.path,
+    `registered WCAG partition ${partition.path}`,
+  );
+  return { sourcePath: resource.path, data: runtimeDataset<RawWcagPartition>(resource) };
+});
+
+const evidence = evidenceData.records;
+const claims = claimsData.records;
+const risks = risksData.records;
+const incidents = incidentsData.records;
+const exercises = exercisesData.records;
+const advisories = advisoriesData.records;
 const usedBy = new Map<string, Set<string>>();
 
 function addEvidenceUsage(recordId: string, evidenceIds: string[] = []): void {
@@ -263,13 +356,6 @@ function normalizeIsoDataset(
   ];
 }
 
-const wcagPartitions: Array<{ sourcePath: string; data: RawWcagPartition }> = [
-  { sourcePath: 'assurance/compliance/wcag-2.2/perceivable.json', data: wcagPerceivableData as unknown as RawWcagPartition },
-  { sourcePath: 'assurance/compliance/wcag-2.2/operable.json', data: wcagOperableData as unknown as RawWcagPartition },
-  { sourcePath: 'assurance/compliance/wcag-2.2/understandable.json', data: wcagUnderstandableData as unknown as RawWcagPartition },
-  { sourcePath: 'assurance/compliance/wcag-2.2/robust.json', data: wcagRobustData as unknown as RawWcagPartition },
-];
-
 const frameworkOrder = new Map<ComplianceFramework, number>([
   ['iso-27001', 0],
   ['iso-42001', 1],
@@ -279,19 +365,19 @@ const frameworkOrder = new Map<ComplianceFramework, number>([
 export const publicComplianceRecords: PublicComplianceRecord[] = [
   ...normalizeIsoDataset(
     'iso-27001',
-    iso27001Data.standard,
+    iso27001Source.data.standard,
     'ISO27001',
-    'assurance/compliance/iso-27001-2022.json',
-    iso27001Data.clauses as unknown as RawIsoGroups,
-    iso27001Data.annexA as unknown as Record<string, RawIsoGroups>,
+    iso27001Source.resource.path,
+    iso27001Source.data.clauses,
+    iso27001Source.data.annexA,
   ),
   ...normalizeIsoDataset(
     'iso-42001',
-    iso42001Data.standard,
+    iso42001Source.data.standard,
     'ISO42001',
-    'assurance/compliance/iso-42001-2023.json',
-    iso42001Data.clauses as unknown as RawIsoGroups,
-    iso42001Data.annexA as unknown as Record<string, RawIsoGroups>,
+    iso42001Source.resource.path,
+    iso42001Source.data.clauses,
+    iso42001Source.data.annexA,
   ),
   ...wcagPartitions.flatMap(({ sourcePath, data }) => data.criteria.map((criterion): PublicComplianceRecord => ({
     id: `WCAG-${criterion.criterionId}`,
@@ -320,19 +406,19 @@ export const publicComplianceRecords: PublicComplianceRecord[] = [
 export const publicComplianceFrameworks: PublicComplianceFramework[] = [
   {
     id: 'iso-27001',
-    label: iso27001Data.standard,
-    edition: iso27001Data.edition,
-    qualification: iso27001Data.qualification,
-    assessmentDate: iso27001Data.sourceSoa.assessmentDate,
-    sourcePath: 'assurance/compliance/iso-27001-2022.json',
+    label: iso27001Source.data.standard,
+    edition: iso27001Source.data.edition,
+    qualification: iso27001Source.data.qualification,
+    assessmentDate: iso27001Source.data.sourceSoa.assessmentDate,
+    sourcePath: iso27001Source.resource.path,
   },
   {
     id: 'iso-42001',
-    label: iso42001Data.standard,
-    edition: iso42001Data.edition,
-    qualification: iso42001Data.qualification,
-    assessmentDate: iso42001Data.sourceSoa.assessmentDate,
-    sourcePath: 'assurance/compliance/iso-42001-2023.json',
+    label: iso42001Source.data.standard,
+    edition: iso42001Source.data.edition,
+    qualification: iso42001Source.data.qualification,
+    assessmentDate: iso42001Source.data.sourceSoa.assessmentDate,
+    sourcePath: iso42001Source.resource.path,
   },
   {
     id: 'wcag-2.2',
@@ -340,7 +426,7 @@ export const publicComplianceFrameworks: PublicComplianceFramework[] = [
     edition: wcagData.edition,
     qualification: wcagData.qualification,
     assessmentDate: wcagData.assessmentDate,
-    sourcePath: 'assurance/compliance/wcag-2.2.json',
+    sourcePath: wcagManifestResource.path,
   },
 ];
 
@@ -445,8 +531,26 @@ export const publicComplianceRegistry = {
   records: publicComplianceRecords,
 };
 
+const publicRegistryMetadata = {
+  schemaVersion: registryData.schemaVersion,
+  id: registryData.id,
+  title: registryData.title,
+  scope: registryData.scope,
+  qualification: registryData.qualification,
+  visibility: registryData.visibility,
+  lifecycle: {
+    path: registryData.lifecycle.path,
+    schema: registryData.lifecycle.schema,
+  },
+  datasets: registryData.datasets.map((dataset) => ({
+    kind: dataset.kind,
+    path: dataset.path,
+    schema: dataset.schema,
+  })),
+};
+
 export const publicAssuranceRegistry = {
-  ...registryData,
+  ...publicRegistryMetadata,
   counts: {
     claims: claims.length,
     evidence: evidence.length,

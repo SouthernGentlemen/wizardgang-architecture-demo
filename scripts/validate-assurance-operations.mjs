@@ -1,5 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {
+  flattenAssuranceRegistry,
+  loadAssuranceRegistry,
+  requireRegistryResource,
+} from './lib/assurance-registry.mjs';
 
 const root = process.cwd();
 const live = process.argv.includes('--live');
@@ -11,11 +16,18 @@ const readJson = (relative) => JSON.parse(read(relative));
 
 if (Number.isNaN(validationNow)) errors.push(`ASSURANCE_VALIDATION_NOW is not a valid date-time: ${nowValue}`);
 
-const config = readJson('assurance/operations/monitoring.json');
-const registry = readJson('assurance/registry.json');
+const registry = loadAssuranceRegistry(root);
+const monitoringResource = requireRegistryResource(
+  registry,
+  (resource) => resource.capabilities?.includes('monitoring'),
+  'operational monitoring dataset',
+);
+const config = readJson(monitoringResource.path);
 const owners = config.accountableOwners ?? {};
 const requiredOwnerKeys = new Set(['registry', 'lifecycle', 'securityReporting']);
-for (const dataset of registry.datasets ?? []) requiredOwnerKeys.add(dataset.kind);
+for (const kind of new Set(flattenAssuranceRegistry(registry).map((resource) => resource.kind))) {
+  if (!['lifecycle', 'operations'].includes(kind)) requiredOwnerKeys.add(kind);
+}
 for (const key of requiredOwnerKeys) {
   if (typeof owners[key] !== 'string' || owners[key].trim().length < 3) errors.push(`missing accountable owner for ${key}`);
 }

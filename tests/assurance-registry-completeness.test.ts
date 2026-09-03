@@ -1,0 +1,133 @@
+import { spawnSync, type SpawnSyncReturns } from 'node:child_process';
+import { cpSync, mkdtempSync, readFileSync, renameSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, relative, sep } from 'node:path';
+import { afterEach, describe, expect, it } from 'vitest';
+
+const repositoryRoot = process.cwd();
+const fixtureRoots: string[] = [];
+const ignoredFixtureParts = new Set(['.git', 'node_modules', '.wrangler', 'dist', 'coverage', 'artifacts']);
+
+function createFixture(): string {
+  const fixtureRoot = mkdtempSync(join(tmpdir(), 'demo-126-registry-'));
+  cpSync(repositoryRoot, fixtureRoot, {
+    recursive: true,
+    filter(source) {
+      const pathFromRoot = relative(repositoryRoot, source);
+      if (!pathFromRoot) return true;
+      return !pathFromRoot.split(sep).some((part) => ignoredFixtureParts.has(part));
+    },
+  });
+  fixtureRoots.push(fixtureRoot);
+  return fixtureRoot;
+}
+
+function readJson<T = any>(root: string, relativePath: string): T {
+  return JSON.parse(readFileSync(join(root, relativePath), 'utf8')) as T;
+}
+
+function writeJson(root: string, relativePath: string, value: unknown): void {
+  writeFileSync(join(root, relativePath), `${JSON.stringify(value, null, 2)}\n`);
+}
+
+function run(root: string, script: string, args: string[] = []): SpawnSyncReturns<string> {
+  return spawnSync(process.execPath, [script, ...args], { cwd: root, encoding: 'utf8' });
+}
+
+function output(result: SpawnSyncReturns<string>): string {
+  return `${result.stdout}\n${result.stderr}`;
+}
+
+function expectRejected(result: SpawnSyncReturns<string>, message: string): void {
+  expect(result.status).not.toBe(0);
+  expect(output(result)).toContain(message);
+}
+
+afterEach(() => {
+  while (fixtureRoots.length) rmSync(fixtureRoots.pop()!, { recursive: true, force: true });
+});
+
+describe('assurance registry completeness and schema enforcement', () => {
+  it('registers every canonical assurance JSON file and validates every registered dataset against its declared schema', () => {
+    const result = run(repositoryRoot, 'scripts/validate-assurance-registry.mjs');
+    expect(result.status, output(result)).toBe(0);
+    expect(result.stdout).toContain('all canonical assurance JSON registered and schema-valid');
+  });
+
+  it('reports dataset path and schema violation for invalid registered structured data', () => {
+    const fixtureRoot = createFixture();
+    const claims = readJson(fixtureRoot, 'assurance/claims/claims.json');
+    claims.records[0].id = 'invalid-claim-id';
+    writeJson(fixtureRoot, 'assurance/claims/claims.json', claims);
+    const result = run(fixtureRoot, 'scripts/validate-assurance-registry.mjs');
+    expectRejected(result, 'assurance/claims/claims.json: $.records[0].id must match pattern');
+    expect(output(result)).toContain('contracts/assurance/claim.schema.json');
+  });
+
+  it('rejects duplicate registry identity and duplicate registered paths', () => {
+    const fixtureRoot = createFixture();
+    const registry = readJson(fixtureRoot, 'assurance/registry.json');
+    registry.datasets[1].id = registry.datasets[0].id;
+    registry.datasets[1].path = registry.datasets[0].path;
+    writeJson(fixtureRoot, 'assurance/registry.json', registry);
+    const result = run(fixtureRoot, 'scripts/validate-assurance-registry.mjs');
+    expectRejected(result, 'duplicate dataset identity');
+    expect(output(result)).toContain('duplicate registered path');
+  });
+
+  it('rejects an unregistered canonical assurance dataset', () => {
+    const fixtureRoot = createFixture();
+    writeJson(fixtureRoot, 'assurance/unregistered-demo126.json', { schemaVersion: 1, records: [] });
+    expectRejected(run(fixtureRoot, 'scripts/validate-assurance-registry.mjs'), 'unregistered canonical assurance file assurance/unregistered-demo126.json');
+  });
+
+  it('rejects missing registered files and schemas', () => {
+    const fixtureRoot = createFixture();
+    const registry = readJson(fixtureRoot, 'assurance/registry.json');
+    const evidence = registry.datasets.find((dataset: any) => dataset.kind === 'evidence');
+    unlinkSync(join(fixtureRoot, evidence.path));
+    evidence.schema = 'contracts/assurance/missing-demo126.schema.json';
+    writeJson(fixtureRoot, 'assurance/registry.json', registry);
+    const result = run(fixtureRoot, 'scripts/validate-assurance-registry.mjs');
+    expectRejected(result, 'registered dataset is missing');
+    expect(output(result)).toContain('registered schema is missing');
+  });
+
+  it('keeps the generated Worker runtime import binding mechanically aligned with the registry', () => {
+    const current = run(repositoryRoot, 'scripts/generate-assurance-runtime-binding.mjs', ['--check']);
+    expect(current.status, output(current)).toBe(0);
+
+    const fixtureRoot = createFixture();
+    const bindingPath = join(fixtureRoot, 'src/assurance/generated/registry-bindings.ts');
+    writeFileSync(bindingPath, `${readFileSync(bindingPath, 'utf8')}\n// drift\n`);
+    expectRejected(run(fixtureRoot, 'scripts/generate-assurance-runtime-binding.mjs', ['--check']), 'generated runtime import binding is stale');
+  });
+
+  it('builds release snapshots from registry discovery rather than a directory walk inventory', () => {
+    const fixtureRoot = createFixture();
+    const registry = readJson(fixtureRoot, 'assurance/registry.json');
+    const monitoring = registry.operations.find((resource: any) => resource.capabilities.includes('monitoring'));
+    const movedPath = 'assurance/operations/monitoring-registry-test.json';
+    renameSync(join(fixtureRoot, monitoring.path), join(fixtureRoot, movedPath));
+    monitoring.path = movedPath;
+    writeJson(fixtureRoot, 'assurance/registry.json', registry);
+
+    const result = run(fixtureRoot, 'scripts/generate-assurance-snapshot.mjs', [
+      '--tag', 'v0.14.0',
+      '--commit', '0123456789abcdef0123456789abcdef01234567',
+      '--generated-at', '2026-09-03T12:00:00Z',
+    ]);
+    expect(result.status, output(result)).toBe(0);
+    const snapshot = JSON.parse(result.stdout);
+    expect(snapshot.contentDigest.scope).toContain('registry-declared canonical dataset paths');
+  });
+
+  it('routes lifecycle and integrity validation through the shared registry discovery layer', () => {
+    for (const script of ['scripts/validate-assurance-lifecycle.mjs', 'scripts/validate-assurance-integrity.mjs']) {
+      const source = readFileSync(join(repositoryRoot, script), 'utf8');
+      expect(source).toContain("from './lib/assurance-registry.mjs'");
+      expect(source).not.toContain("'assurance/compliance/iso-42001-2023.json'");
+      expect(source).not.toContain("'assurance/compliance/wcag-2.2/perceivable.json'");
+    }
+  });
+});

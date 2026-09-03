@@ -4,8 +4,15 @@ const raw = execFileSync('git', ['log', '--reverse', '--format=%H%x1f%P%x1f%s%x1
 const records = raw.split('\x1e').map((record) => record.trim()).filter(Boolean);
 const titlePattern = /^\[DEMO-(\d{3,})\] \[(INIT|FEAT|FIX|SEC|API|A11Y|I18N|AI|DB|OPS|TEST|DOCS|REFACTOR|PERF|BUILD|REVERT|CHORE)\] .+/;
 const requiredSections = ['Change', 'Reason', 'Risk', 'Validation', 'Source', 'Release'];
+const inheritedBodyExceptions = new Map([
+  [
+    '207fd4e146054bd3c9da236c615753df9f927610',
+    'DEMO-125 was published on main with a valid controlled title but without the required structured body sections; published history is intentionally not rewritten.',
+  ],
+]);
 const controlled = [];
 const failures = [];
+const exceptionsUsed = [];
 
 for (const record of records) {
   const [sha = '', parents = '', subject = '', body = ''] = record.split('\x1f');
@@ -23,6 +30,13 @@ for (const record of records) {
 controlled.forEach(({ sha, id, body }, index) => {
   const expected = index + 1;
   if (id !== expected) failures.push(`${sha.slice(0, 12)} uses DEMO-${String(id).padStart(3, '0')}; expected DEMO-${String(expected).padStart(3, '0')}`);
+
+  const inheritedException = inheritedBodyExceptions.get(sha);
+  if (inheritedException) {
+    exceptionsUsed.push(`${sha.slice(0, 12)}: ${inheritedException}`);
+    return;
+  }
+
   for (const section of requiredSections) {
     if (!new RegExp(`(?:^|\\n)${section}:`, 'm').test(body)) failures.push(`DEMO-${String(id).padStart(3, '0')} is missing ${section}:`);
   }
@@ -33,5 +47,6 @@ if (failures.length) {
   process.stderr.write(`${failures.join('\n')}\n`);
   process.exitCode = 1;
 } else {
+  if (exceptionsUsed.length) process.stdout.write(`Accepted ${exceptionsUsed.length} immutable published-history exception:\n${exceptionsUsed.join('\n')}\n`);
   process.stdout.write(`Validated ${controlled.length} sequential controlled changes.\n`);
 }

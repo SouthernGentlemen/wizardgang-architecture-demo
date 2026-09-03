@@ -4,7 +4,7 @@
   "title": "Public Assurance Registry",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "id", "title", "scope", "qualification", "visibility", "lifecycle", "datasets"],
+  "required": ["schemaVersion", "id", "title", "scope", "qualification", "visibility", "lifecycle", "datasets", "operations"],
   "properties": {
     "schemaVersion": { "const": 1 },
     "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
@@ -13,25 +13,77 @@
     "qualification": { "type": "string", "minLength": 1 },
     "visibility": { "const": "public" },
     "lifecycle": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["path", "schema"],
-      "properties": {
-        "path": { "const": "assurance/lifecycle/records.json" },
-        "schema": { "const": "contracts/assurance/lifecycle.schema.json" }
-      }
+      "allOf": [
+        { "$ref": "#/$defs/resource" },
+        {
+          "properties": {
+            "kind": { "const": "lifecycle" },
+            "role": { "const": "control-plane" }
+          }
+        }
+      ]
     },
     "datasets": {
       "type": "array",
       "minItems": 1,
+      "items": { "$ref": "#/$defs/dataset" }
+    },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
       "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["kind", "path", "schema"],
-        "properties": {
-          "kind": { "enum": ["evidence", "claims", "compliance", "risks", "incidents", "exercises", "advisories"] },
-          "path": { "type": "string", "pattern": "^assurance/" },
-          "schema": { "type": "string", "pattern": "^contracts/assurance/" }
+        "allOf": [
+          { "$ref": "#/$defs/resource" },
+          {
+            "properties": {
+              "kind": { "const": "operations" },
+              "role": { "const": "operations" }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "role", "path", "schema", "visibility", "capabilities"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9.-]+$" },
+        "kind": { "enum": ["evidence", "claims", "compliance", "risks", "incidents", "exercises", "advisories", "lifecycle", "operations"] },
+        "role": { "enum": ["dataset", "partition", "control-plane", "operations"] },
+        "path": { "type": "string", "pattern": "^assurance/.+\\.json$" },
+        "schema": { "type": "string", "pattern": "^contracts/assurance/.+\\.schema\\.json$" },
+        "visibility": { "enum": ["public", "private"] },
+        "capabilities": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["runtime", "records", "api-index", "summary-source", "manifest", "lifecycle", "monitoring"] }
+        }
+      }
+    },
+    "dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "role", "path", "schema", "visibility", "capabilities"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9.-]+$" },
+        "kind": { "enum": ["evidence", "claims", "compliance", "risks", "incidents", "exercises", "advisories"] },
+        "role": { "const": "dataset" },
+        "path": { "type": "string", "pattern": "^assurance/.+\\.json$" },
+        "schema": { "type": "string", "pattern": "^contracts/assurance/.+\\.schema\\.json$" },
+        "visibility": { "enum": ["public", "private"] },
+        "capabilities": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["runtime", "records", "api-index", "summary-source", "manifest", "lifecycle", "monitoring"] }
+        },
+        "resources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/resource" }
         }
       }
     }

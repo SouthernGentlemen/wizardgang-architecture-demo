@@ -6,44 +6,144 @@
   "qualification": "Alignment and engineering evidence only; no certification is claimed.",
   "visibility": "public",
   "lifecycle": {
+    "id": "lifecycle.records",
+    "kind": "lifecycle",
+    "role": "control-plane",
     "path": "assurance/lifecycle/records.json",
-    "schema": "contracts/assurance/lifecycle.schema.json"
+    "schema": "contracts/assurance/lifecycle.schema.json",
+    "visibility": "public",
+    "capabilities": ["lifecycle"]
   },
   "datasets": [
     {
+      "id": "evidence",
       "kind": "evidence",
+      "role": "dataset",
       "path": "assurance/evidence/evidence.json",
-      "schema": "contracts/assurance/evidence.schema.json"
+      "schema": "contracts/assurance/evidence.schema.json",
+      "visibility": "public",
+      "capabilities": ["runtime", "records", "api-index"]
     },
     {
+      "id": "claims",
       "kind": "claims",
+      "role": "dataset",
       "path": "assurance/claims/claims.json",
-      "schema": "contracts/assurance/claim.schema.json"
+      "schema": "contracts/assurance/claim.schema.json",
+      "visibility": "public",
+      "capabilities": ["runtime", "records", "api-index"]
     },
     {
+      "id": "compliance.iso-27001",
       "kind": "compliance",
+      "role": "dataset",
       "path": "assurance/compliance/iso-27001-2022.json",
-      "schema": "contracts/assurance/iso-27001-compliance.schema.json"
+      "schema": "contracts/assurance/iso-27001-compliance.schema.json",
+      "visibility": "public",
+      "capabilities": ["runtime", "records", "api-index", "summary-source"],
+      "resources": [
+        {
+          "id": "compliance.iso-42001",
+          "kind": "compliance",
+          "role": "dataset",
+          "path": "assurance/compliance/iso-42001-2023.json",
+          "schema": "contracts/assurance/iso-42001-compliance.schema.json",
+          "visibility": "public",
+          "capabilities": ["runtime", "records", "summary-source"]
+        },
+        {
+          "id": "compliance.wcag-2.2",
+          "kind": "compliance",
+          "role": "dataset",
+          "path": "assurance/compliance/wcag-2.2.json",
+          "schema": "contracts/assurance/wcag-2.2-registry.schema.json",
+          "visibility": "public",
+          "capabilities": ["runtime", "manifest"]
+        },
+        {
+          "id": "compliance.wcag-2.2.perceivable",
+          "kind": "compliance",
+          "role": "partition",
+          "path": "assurance/compliance/wcag-2.2/perceivable.json",
+          "schema": "contracts/assurance/wcag-2.2-criteria.schema.json",
+          "visibility": "public",
+          "capabilities": ["runtime", "records"]
+        },
+        {
+          "id": "compliance.wcag-2.2.operable",
+          "kind": "compliance",
+          "role": "partition",
+          "path": "assurance/compliance/wcag-2.2/operable.json",
+          "schema": "contracts/assurance/wcag-2.2-criteria.schema.json",
+          "visibility": "public",
+          "capabilities": ["runtime", "records"]
+        },
+        {
+          "id": "compliance.wcag-2.2.understandable",
+          "kind": "compliance",
+          "role": "partition",
+          "path": "assurance/compliance/wcag-2.2/understandable.json",
+          "schema": "contracts/assurance/wcag-2.2-criteria.schema.json",
+          "visibility": "public",
+          "capabilities": ["runtime", "records"]
+        },
+        {
+          "id": "compliance.wcag-2.2.robust",
+          "kind": "compliance",
+          "role": "partition",
+          "path": "assurance/compliance/wcag-2.2/robust.json",
+          "schema": "contracts/assurance/wcag-2.2-criteria.schema.json",
+          "visibility": "public",
+          "capabilities": ["runtime", "records"]
+        }
+      ]
     },
     {
+      "id": "risks",
       "kind": "risks",
+      "role": "dataset",
       "path": "assurance/risks/risks.json",
-      "schema": "contracts/assurance/risk.schema.json"
+      "schema": "contracts/assurance/risk.schema.json",
+      "visibility": "public",
+      "capabilities": ["runtime", "records", "api-index"]
     },
     {
+      "id": "incidents",
       "kind": "incidents",
+      "role": "dataset",
       "path": "assurance/incidents/incidents.json",
-      "schema": "contracts/assurance/incident.schema.json"
+      "schema": "contracts/assurance/incident.schema.json",
+      "visibility": "public",
+      "capabilities": ["runtime", "records", "api-index"]
     },
     {
+      "id": "exercises",
       "kind": "exercises",
+      "role": "dataset",
       "path": "assurance/incidents/exercises.json",
-      "schema": "contracts/assurance/exercise.schema.json"
+      "schema": "contracts/assurance/exercise.schema.json",
+      "visibility": "public",
+      "capabilities": ["runtime", "records", "api-index"]
     },
     {
+      "id": "advisories",
       "kind": "advisories",
+      "role": "dataset",
       "path": "assurance/advisories/advisories.json",
-      "schema": "contracts/assurance/advisory.schema.json"
+      "schema": "contracts/assurance/advisory.schema.json",
+      "visibility": "public",
+      "capabilities": ["runtime", "records", "api-index"]
+    }
+  ],
+  "operations": [
+    {
+      "id": "operations.monitoring",
+      "kind": "operations",
+      "role": "operations",
+      "path": "assurance/operations/monitoring.json",
+      "schema": "contracts/assurance/operations.schema.json",
+      "visibility": "public",
+      "capabilities": ["monitoring"]
     }
   ]
 }
