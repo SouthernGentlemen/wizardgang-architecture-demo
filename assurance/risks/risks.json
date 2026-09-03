@@ -1,1 +1,1124 @@
-{"schemaVersion":1,"sourceRegisters":[{"id":"WG-REG-001","repositoryPath":"docs/governance/registers/SECURITY-RISK-REGISTER.md"},{"id":"WG-REG-002","repositoryPath":"docs/governance/registers/AI-RISK-REGISTER.md"}],"records":[{"id":"SEC-RISK-001","framework":"security","title":"Credential or secret exposure","inherent":{"score":20,"rating":"critical"},"residual":{"score":10,"rating":"high"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 27001 SoA","repositoryPath":"docs/governance/soa/ISO-27001-SOA.md"}],"evidence":["EVD-DOC-003","EVD-CI-001"],"reviewDue":"2026-12-02"},{"id":"SEC-RISK-002","framework":"security","title":"Unauthorized privileged administration","inherent":{"score":20,"rating":"critical"},"residual":{"score":10,"rating":"high"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 27001 SoA","repositoryPath":"docs/governance/soa/ISO-27001-SOA.md"}],"evidence":["EVD-DOC-003","EVD-SRC-004"],"reviewDue":"2026-12-02"},{"id":"SEC-RISK-003","framework":"security","title":"Source-control or delivery-pipeline compromise","inherent":{"score":20,"rating":"critical"},"residual":{"score":15,"rating":"high"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 27001 SoA","repositoryPath":"docs/governance/soa/ISO-27001-SOA.md"}],"evidence":["EVD-DOC-001","EVD-DOC-002","EVD-CI-001","EVD-RUN-002"],"reviewDue":"2026-12-02"},{"id":"SEC-RISK-004","framework":"security","title":"Open-source dependency or software supply-chain compromise","inherent":{"score":16,"rating":"high"},"residual":{"score":12,"rating":"high"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 27001 SoA","repositoryPath":"docs/governance/soa/ISO-27001-SOA.md"}],"evidence":["EVD-CI-001","EVD-DOC-002"],"reviewDue":"2026-12-02"},{"id":"SEC-RISK-005","framework":"security","title":"Forged or replayed webhook requests","inherent":{"score":16,"rating":"high"},"residual":{"score":8,"rating":"moderate"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 27001 SoA","repositoryPath":"docs/governance/soa/ISO-27001-SOA.md"}],"evidence":["EVD-CI-001","EVD-DOC-003"],"reviewDue":"2026-12-02"},{"id":"SEC-RISK-006","framework":"security","title":"Sensitive information disclosed through public diagnostics","inherent":{"score":16,"rating":"high"},"residual":{"score":8,"rating":"moderate"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 27001 SoA","repositoryPath":"docs/governance/soa/ISO-27001-SOA.md"}],"evidence":["EVD-SRC-002","EVD-DOC-004"],"reviewDue":"2026-12-02"},{"id":"SEC-RISK-007","framework":"security","title":"Persistent data loss or corruption without demonstrated recovery","inherent":{"score":12,"rating":"high"},"residual":{"score":12,"rating":"high"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 27001 SoA","repositoryPath":"docs/governance/soa/ISO-27001-SOA.md"}],"evidence":["EVD-DOC-004","EVD-DOC-002"],"reviewDue":"2026-12-02"},{"id":"SEC-RISK-008","framework":"security","title":"Cloudflare service or platform dependency disrupts operation","inherent":{"score":12,"rating":"high"},"residual":{"score":9,"rating":"moderate"},"treatment":["reduce","share"],"status":"open","controls":[{"reference":"ISO/IEC 27001 SoA","repositoryPath":"docs/governance/soa/ISO-27001-SOA.md"}],"evidence":["EVD-RUN-001","EVD-DOC-004"],"reviewDue":"2026-12-02"},{"id":"SEC-RISK-009","framework":"security","title":"GitHub dependency disrupts source, CI/CD, or release operations","inherent":{"score":9,"rating":"moderate"},"residual":{"score":9,"rating":"moderate"},"treatment":["reduce","share"],"status":"open","controls":[{"reference":"ISO/IEC 27001 SoA","repositoryPath":"docs/governance/soa/ISO-27001-SOA.md"}],"evidence":["EVD-DOC-001","EVD-DOC-002","EVD-RUN-002"],"reviewDue":"2026-12-02"},{"id":"SEC-RISK-010","framework":"security","title":"Identity-provider failure or misconfiguration affects authentication","inherent":{"score":12,"rating":"high"},"residual":{"score":8,"rating":"moderate"},"treatment":["reduce","share"],"status":"treating","controls":[{"reference":"ISO/IEC 27001 SoA","repositoryPath":"docs/governance/soa/ISO-27001-SOA.md"}],"evidence":["EVD-SRC-001","EVD-DOC-003"],"reviewDue":"2026-12-02"},{"id":"SEC-RISK-011","framework":"security","title":"Authorization-scope bypass across application interfaces","inherent":{"score":20,"rating":"critical"},"residual":{"score":10,"rating":"high"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 27001 SoA","repositoryPath":"docs/governance/soa/ISO-27001-SOA.md"}],"evidence":["EVD-SRC-001","EVD-TST-001"],"reviewDue":"2026-12-02"},{"id":"SEC-RISK-012","framework":"security","title":"Resource exhaustion, abusive traffic, or cost pressure degrades service","inherent":{"score":16,"rating":"high"},"residual":{"score":9,"rating":"moderate"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 27001 SoA","repositoryPath":"docs/governance/soa/ISO-27001-SOA.md"}],"evidence":["EVD-DOC-004","EVD-RUN-001"],"reviewDue":"2026-12-02"},{"id":"SEC-RISK-013","framework":"security","title":"Security incident response is incomplete or unexercised","inherent":{"score":12,"rating":"high"},"residual":{"score":12,"rating":"high"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 27001 SoA","repositoryPath":"docs/governance/soa/ISO-27001-SOA.md"}],"evidence":["EVD-RUN-003","EVD-SRC-004","EVD-DOC-004"],"reviewDue":"2026-12-02"},{"id":"SEC-RISK-014","framework":"security","title":"Release or deployment drift causes unauthorized or untraceable production state","inherent":{"score":12,"rating":"high"},"residual":{"score":6,"rating":"moderate"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 27001 SoA","repositoryPath":"docs/governance/soa/ISO-27001-SOA.md"}],"evidence":["EVD-DOC-001","EVD-DOC-002","EVD-RUN-002"],"reviewDue":"2026-12-02"},{"id":"SEC-RISK-015","framework":"security","title":"Stale or inaccurate assurance evidence causes false security conclusions","inherent":{"score":9,"rating":"moderate"},"residual":{"score":9,"rating":"moderate"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 27001 SoA","repositoryPath":"docs/governance/soa/ISO-27001-SOA.md"}],"evidence":["EVD-DOC-001","EVD-CI-001"],"reviewDue":"2026-12-02"},{"id":"AI-RISK-001","framework":"ai","title":"Unauthorized expansion of AI tool authority","inherent":{"score":20,"rating":"critical"},"residual":{"score":8,"rating":"moderate"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 42001 SoA","repositoryPath":"docs/governance/soa/ISO-42001-SOA.md"},{"reference":"AI policy","repositoryPath":"docs/governance/AI-POLICY.md"}],"evidence":["EVD-SRC-003","EVD-SRC-001","EVD-TST-001"],"reviewDue":"2026-12-02"},{"id":"AI-RISK-002","framework":"ai","title":"Authorization mismatch between AI and non-AI interfaces","inherent":{"score":16,"rating":"high"},"residual":{"score":8,"rating":"moderate"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 42001 SoA","repositoryPath":"docs/governance/soa/ISO-42001-SOA.md"},{"reference":"AI policy","repositoryPath":"docs/governance/AI-POLICY.md"}],"evidence":["EVD-SRC-001","EVD-SRC-003","EVD-TST-001"],"reviewDue":"2026-12-02"},{"id":"AI-RISK-003","framework":"ai","title":"Indirect prompt or instruction injection through returned content","inherent":{"score":12,"rating":"high"},"residual":{"score":9,"rating":"moderate"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 42001 SoA","repositoryPath":"docs/governance/soa/ISO-42001-SOA.md"},{"reference":"AI policy","repositoryPath":"docs/governance/AI-POLICY.md"}],"evidence":["EVD-SRC-003","EVD-TST-001"],"reviewDue":"2026-12-02"},{"id":"AI-RISK-004","framework":"ai","title":"Sensitive or unintended data exposure through AI-accessible tools","inherent":{"score":15,"rating":"high"},"residual":{"score":6,"rating":"moderate"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 42001 SoA","repositoryPath":"docs/governance/soa/ISO-42001-SOA.md"},{"reference":"AI policy","repositoryPath":"docs/governance/AI-POLICY.md"}],"evidence":["EVD-SRC-003","EVD-DOC-003","EVD-TST-001"],"reviewDue":"2026-12-02"},{"id":"AI-RISK-005","framework":"ai","title":"Malformed or unsupported MCP requests bypass intended controls","inherent":{"score":12,"rating":"high"},"residual":{"score":4,"rating":"low"},"treatment":["reduce"],"status":"open","controls":[{"reference":"ISO/IEC 42001 SoA","repositoryPath":"docs/governance/soa/ISO-42001-SOA.md"},{"reference":"AI policy","repositoryPath":"docs/governance/AI-POLICY.md"}],"evidence":["EVD-SRC-003","EVD-TST-001"],"reviewDue":"2026-12-02"},{"id":"AI-RISK-006","framework":"ai","title":"Incorrect, stale, or incomplete data is over-trusted by an AI caller","inherent":{"score":12,"rating":"high"},"residual":{"score":9,"rating":"moderate"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 42001 SoA","repositoryPath":"docs/governance/soa/ISO-42001-SOA.md"},{"reference":"AI policy","repositoryPath":"docs/governance/AI-POLICY.md"}],"evidence":["EVD-SRC-003","EVD-DOC-001"],"reviewDue":"2026-12-02"},{"id":"AI-RISK-007","framework":"ai","title":"AI evaluation coverage is too narrow to detect regressions","inherent":{"score":16,"rating":"high"},"residual":{"score":9,"rating":"moderate"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 42001 SoA","repositoryPath":"docs/governance/soa/ISO-42001-SOA.md"},{"reference":"AI policy","repositoryPath":"docs/governance/AI-POLICY.md"}],"evidence":["EVD-TST-001","EVD-CI-001"],"reviewDue":"2026-12-02"},{"id":"AI-RISK-008","framework":"ai","title":"AI logging or evidence is insufficient or discloses inappropriate content","inherent":{"score":12,"rating":"high"},"residual":{"score":6,"rating":"moderate"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 42001 SoA","repositoryPath":"docs/governance/soa/ISO-42001-SOA.md"},{"reference":"AI policy","repositoryPath":"docs/governance/AI-POLICY.md"}],"evidence":["EVD-SRC-004","EVD-SRC-002"],"reviewDue":"2026-12-02"},{"id":"AI-RISK-009","framework":"ai","title":"AI/MCP capability drift occurs without risk reassessment","inherent":{"score":16,"rating":"high"},"residual":{"score":8,"rating":"moderate"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 42001 SoA","repositoryPath":"docs/governance/soa/ISO-42001-SOA.md"},{"reference":"AI policy","repositoryPath":"docs/governance/AI-POLICY.md"}],"evidence":["EVD-DOC-001","EVD-CI-001"],"reviewDue":"2026-12-02"},{"id":"AI-RISK-010","framework":"ai","title":"External agent/model behavior causes misleading or unintended downstream use","inherent":{"score":12,"rating":"high"},"residual":{"score":8,"rating":"moderate"},"treatment":["reduce","share"],"status":"treating","controls":[{"reference":"ISO/IEC 42001 SoA","repositoryPath":"docs/governance/soa/ISO-42001-SOA.md"},{"reference":"AI policy","repositoryPath":"docs/governance/AI-POLICY.md"}],"evidence":["EVD-SRC-003","EVD-DOC-001"],"reviewDue":"2026-12-02"},{"id":"AI-RISK-011","framework":"ai","title":"MCP protocol, client, or integration changes cause unsafe or misleading behavior","inherent":{"score":12,"rating":"high"},"residual":{"score":6,"rating":"moderate"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 42001 SoA","repositoryPath":"docs/governance/soa/ISO-42001-SOA.md"},{"reference":"AI policy","repositoryPath":"docs/governance/AI-POLICY.md"}],"evidence":["EVD-SRC-003","EVD-TST-001","EVD-CI-001"],"reviewDue":"2026-12-02"},{"id":"AI-RISK-012","framework":"ai","title":"Human oversight is bypassed if privileged actions become AI-callable","inherent":{"score":20,"rating":"critical"},"residual":{"score":8,"rating":"moderate"},"treatment":["avoid","reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 42001 SoA","repositoryPath":"docs/governance/soa/ISO-42001-SOA.md"},{"reference":"AI policy","repositoryPath":"docs/governance/AI-POLICY.md"}],"evidence":["EVD-SRC-001","EVD-SRC-003"],"reviewDue":"2026-12-02"},{"id":"AI-RISK-013","framework":"ai","title":"Data quality or provenance weaknesses degrade AI-assisted interpretation","inherent":{"score":12,"rating":"high"},"residual":{"score":9,"rating":"moderate"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 42001 SoA","repositoryPath":"docs/governance/soa/ISO-42001-SOA.md"},{"reference":"AI policy","repositoryPath":"docs/governance/AI-POLICY.md"}],"evidence":["EVD-SRC-003","EVD-DOC-001"],"reviewDue":"2026-12-02"},{"id":"AI-RISK-014","framework":"ai","title":"Public AI-assurance claims are misunderstood as certification or complete safety","inherent":{"score":12,"rating":"high"},"residual":{"score":6,"rating":"moderate"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 42001 SoA","repositoryPath":"docs/governance/soa/ISO-42001-SOA.md"},{"reference":"AI policy","repositoryPath":"docs/governance/AI-POLICY.md"}],"evidence":["EVD-DOC-001","EVD-RUN-005"],"reviewDue":"2026-12-02"},{"id":"AI-RISK-015","framework":"ai","title":"AI incidents, concerns, or unexpected behavior are not handled consistently","inherent":{"score":12,"rating":"high"},"residual":{"score":9,"rating":"moderate"},"treatment":["reduce"],"status":"treating","controls":[{"reference":"ISO/IEC 42001 SoA","repositoryPath":"docs/governance/soa/ISO-42001-SOA.md"},{"reference":"AI policy","repositoryPath":"docs/governance/AI-POLICY.md"}],"evidence":["EVD-RUN-005","EVD-SRC-004"],"reviewDue":"2026-12-02"}]}
+{
+  "schemaVersion": 1,
+  "sourceRegisters": [
+    {
+      "id": "WG-REG-001",
+      "governanceDocumentReference": "WG-REG-001"
+    },
+    {
+      "id": "WG-REG-002",
+      "governanceDocumentReference": "WG-REG-002"
+    }
+  ],
+  "records": [
+    {
+      "id": "SEC-RISK-001",
+      "framework": "security",
+      "title": "Credential or secret exposure",
+      "inherent": {
+        "score": 20,
+        "rating": "critical"
+      },
+      "residual": {
+        "score": 10,
+        "rating": "high"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003",
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-001"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "SEC-RISK-002",
+      "framework": "security",
+      "title": "Unauthorized privileged administration",
+      "inherent": {
+        "score": 20,
+        "rating": "critical"
+      },
+      "residual": {
+        "score": 10,
+        "rating": "high"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003",
+          "EVD-SRC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-001"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "SEC-RISK-003",
+      "framework": "security",
+      "title": "Source-control or delivery-pipeline compromise",
+      "inherent": {
+        "score": 20,
+        "rating": "critical"
+      },
+      "residual": {
+        "score": 15,
+        "rating": "high"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001",
+          "EVD-DOC-002",
+          "EVD-CI-001",
+          "EVD-RUN-002"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-001"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "SEC-RISK-004",
+      "framework": "security",
+      "title": "Open-source dependency or software supply-chain compromise",
+      "inherent": {
+        "score": 16,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 12,
+        "rating": "high"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-CI-001",
+          "EVD-DOC-002"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-001"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "SEC-RISK-005",
+      "framework": "security",
+      "title": "Forged or replayed webhook requests",
+      "inherent": {
+        "score": 16,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 8,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-CI-001",
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-001"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "SEC-RISK-006",
+      "framework": "security",
+      "title": "Sensitive information disclosed through public diagnostics",
+      "inherent": {
+        "score": 16,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 8,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-002",
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-001"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "SEC-RISK-007",
+      "framework": "security",
+      "title": "Persistent data loss or corruption without demonstrated recovery",
+      "inherent": {
+        "score": 12,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 12,
+        "rating": "high"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004",
+          "EVD-DOC-002"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-001"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "SEC-RISK-008",
+      "framework": "security",
+      "title": "Cloudflare service or platform dependency disrupts operation",
+      "inherent": {
+        "score": 12,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 9,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce",
+        "share"
+      ],
+      "status": "open",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-RUN-001",
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-001"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "SEC-RISK-009",
+      "framework": "security",
+      "title": "GitHub dependency disrupts source, CI/CD, or release operations",
+      "inherent": {
+        "score": 9,
+        "rating": "moderate"
+      },
+      "residual": {
+        "score": 9,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce",
+        "share"
+      ],
+      "status": "open",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001",
+          "EVD-DOC-002",
+          "EVD-RUN-002"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-001"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "SEC-RISK-010",
+      "framework": "security",
+      "title": "Identity-provider failure or misconfiguration affects authentication",
+      "inherent": {
+        "score": 12,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 8,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce",
+        "share"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-001",
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-001"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "SEC-RISK-011",
+      "framework": "security",
+      "title": "Authorization-scope bypass across application interfaces",
+      "inherent": {
+        "score": 20,
+        "rating": "critical"
+      },
+      "residual": {
+        "score": 10,
+        "rating": "high"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-001",
+          "EVD-TST-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-001"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "SEC-RISK-012",
+      "framework": "security",
+      "title": "Resource exhaustion, abusive traffic, or cost pressure degrades service",
+      "inherent": {
+        "score": 16,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 9,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004",
+          "EVD-RUN-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-001"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "SEC-RISK-013",
+      "framework": "security",
+      "title": "Security incident response is incomplete or unexercised",
+      "inherent": {
+        "score": 12,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 12,
+        "rating": "high"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-RUN-003",
+          "EVD-SRC-004",
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-001"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "SEC-RISK-014",
+      "framework": "security",
+      "title": "Release or deployment drift causes unauthorized or untraceable production state",
+      "inherent": {
+        "score": 12,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 6,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001",
+          "EVD-DOC-002",
+          "EVD-RUN-002"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-001"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "SEC-RISK-015",
+      "framework": "security",
+      "title": "Stale or inaccurate assurance evidence causes false security conclusions",
+      "inherent": {
+        "score": 9,
+        "rating": "moderate"
+      },
+      "residual": {
+        "score": 9,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001",
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-001"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "AI-RISK-001",
+      "framework": "ai",
+      "title": "Unauthorized expansion of AI tool authority",
+      "inherent": {
+        "score": 20,
+        "rating": "critical"
+      },
+      "residual": {
+        "score": 8,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-003",
+          "EVD-SRC-001",
+          "EVD-TST-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-002",
+          "WG-POL-002"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "AI-RISK-002",
+      "framework": "ai",
+      "title": "Authorization mismatch between AI and non-AI interfaces",
+      "inherent": {
+        "score": 16,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 8,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-001",
+          "EVD-SRC-003",
+          "EVD-TST-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-002",
+          "WG-POL-002"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "AI-RISK-003",
+      "framework": "ai",
+      "title": "Indirect prompt or instruction injection through returned content",
+      "inherent": {
+        "score": 12,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 9,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-003",
+          "EVD-TST-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-002",
+          "WG-POL-002"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "AI-RISK-004",
+      "framework": "ai",
+      "title": "Sensitive or unintended data exposure through AI-accessible tools",
+      "inherent": {
+        "score": 15,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 6,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-003",
+          "EVD-DOC-003",
+          "EVD-TST-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-002",
+          "WG-POL-002"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "AI-RISK-005",
+      "framework": "ai",
+      "title": "Malformed or unsupported MCP requests bypass intended controls",
+      "inherent": {
+        "score": 12,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 4,
+        "rating": "low"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "open",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-003",
+          "EVD-TST-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-002",
+          "WG-POL-002"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "AI-RISK-006",
+      "framework": "ai",
+      "title": "Incorrect, stale, or incomplete data is over-trusted by an AI caller",
+      "inherent": {
+        "score": 12,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 9,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-003",
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-002",
+          "WG-POL-002"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "AI-RISK-007",
+      "framework": "ai",
+      "title": "AI evaluation coverage is too narrow to detect regressions",
+      "inherent": {
+        "score": 16,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 9,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-TST-001",
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-002",
+          "WG-POL-002"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "AI-RISK-008",
+      "framework": "ai",
+      "title": "AI logging or evidence is insufficient or discloses inappropriate content",
+      "inherent": {
+        "score": 12,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 6,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-004",
+          "EVD-SRC-002"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-002",
+          "WG-POL-002"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "AI-RISK-009",
+      "framework": "ai",
+      "title": "AI/MCP capability drift occurs without risk reassessment",
+      "inherent": {
+        "score": 16,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 8,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001",
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-002",
+          "WG-POL-002"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "AI-RISK-010",
+      "framework": "ai",
+      "title": "External agent/model behavior causes misleading or unintended downstream use",
+      "inherent": {
+        "score": 12,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 8,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce",
+        "share"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-003",
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-002",
+          "WG-POL-002"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "AI-RISK-011",
+      "framework": "ai",
+      "title": "MCP protocol, client, or integration changes cause unsafe or misleading behavior",
+      "inherent": {
+        "score": 12,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 6,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-003",
+          "EVD-TST-001",
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-002",
+          "WG-POL-002"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "AI-RISK-012",
+      "framework": "ai",
+      "title": "Human oversight is bypassed if privileged actions become AI-callable",
+      "inherent": {
+        "score": 20,
+        "rating": "critical"
+      },
+      "residual": {
+        "score": 8,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "avoid",
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-001",
+          "EVD-SRC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-002",
+          "WG-POL-002"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "AI-RISK-013",
+      "framework": "ai",
+      "title": "Data quality or provenance weaknesses degrade AI-assisted interpretation",
+      "inherent": {
+        "score": 12,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 9,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-003",
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-002",
+          "WG-POL-002"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "AI-RISK-014",
+      "framework": "ai",
+      "title": "Public AI-assurance claims are misunderstood as certification or complete safety",
+      "inherent": {
+        "score": 12,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 6,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001",
+          "EVD-RUN-005"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-002",
+          "WG-POL-002"
+        ],
+        "objectives": []
+      }
+    },
+    {
+      "id": "AI-RISK-015",
+      "framework": "ai",
+      "title": "AI incidents, concerns, or unexpected behavior are not handled consistently",
+      "inherent": {
+        "score": 12,
+        "rating": "high"
+      },
+      "residual": {
+        "score": 9,
+        "rating": "moderate"
+      },
+      "treatment": [
+        "reduce"
+      ],
+      "status": "treating",
+      "reviewDue": "2026-12-02",
+      "relationships": {
+        "evidence": [
+          "EVD-RUN-005",
+          "EVD-SRC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [
+          "WG-SOA-002",
+          "WG-POL-002"
+        ],
+        "objectives": []
+      }
+    }
+  ]
+}

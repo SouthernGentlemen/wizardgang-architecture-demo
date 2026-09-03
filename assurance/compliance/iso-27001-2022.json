@@ -1,1 +1,3483 @@
-{"schemaVersion":1,"id":"iso-iec-27001-2022-public-compliance","standard":"ISO/IEC 27001:2022","edition":"2022","visibility":"public","qualification":"Public alignment and engineering-evidence mapping only; independent certification or formal conformance is not claimed.","paraphraseNotice":"Clause and control labels are short original paraphrases; normative ISO text is not reproduced.","sourceSoa":{"id":"WG-SOA-001","repositoryPath":"docs/governance/soa/ISO-27001-SOA.md","status":"approved","assessmentDate":"2026-09-02","approval":{"pullRequest":56,"mergeCommit":"1ae105da8ab6466e334a2faf4e6c63f5885c91df"}},"clauses":{"partial":[{"reference":"4.1","title":"Understand the operating environment","evidence":["EVD-DOC-003"]},{"reference":"4.2","title":"Identify stakeholder security needs","evidence":["EVD-DOC-003"]},{"reference":"4.3","title":"Define the security management scope","evidence":["EVD-DOC-003"]},{"reference":"4.4","title":"Operate the security management system","evidence":["EVD-DOC-001"]},{"reference":"5.1","title":"Leadership accountability for security","evidence":["EVD-DOC-003"]},{"reference":"5.2","title":"Set and maintain security policy","evidence":["EVD-DOC-003"]},{"reference":"5.3","title":"Assign security roles and authority","evidence":["EVD-DOC-003"]},{"reference":"6.1","title":"Plan for security risks and opportunities","evidence":["EVD-DOC-001"]},{"reference":"6.1.1","title":"Plan responses to risks and opportunities","evidence":["EVD-DOC-001"]},{"reference":"6.1.2","title":"Assess information-security risk consistently","evidence":["EVD-DOC-001"]},{"reference":"6.1.3","title":"Select and treat security risks","evidence":["EVD-DOC-001"]},{"reference":"6.2","title":"Set measurable security objectives","evidence":["EVD-DOC-004"]},{"reference":"6.3","title":"Control management-system changes","evidence":["EVD-DOC-001"]},{"reference":"7.1","title":"Provide management-system resources","evidence":["EVD-DOC-004"]},{"reference":"7.2","title":"Maintain required security competence","evidence":["EVD-DOC-003"]},{"reference":"7.3","title":"Maintain security awareness","evidence":["EVD-DOC-003"]},{"reference":"7.4","title":"Manage security communications","evidence":["EVD-RUN-003"]},{"reference":"7.5","title":"Control management-system documentation","evidence":["EVD-DOC-001"]},{"reference":"7.5.1","title":"Maintain the required documentation set","evidence":["EVD-DOC-001"]},{"reference":"7.5.2","title":"Create and update controlled records","evidence":["EVD-DOC-001"]},{"reference":"7.5.3","title":"Protect and govern controlled records","evidence":["EVD-DOC-003"]},{"reference":"8.1","title":"Plan and control security operations","evidence":["EVD-DOC-004"]},{"reference":"8.2","title":"Reassess security risk during operation","evidence":["EVD-DOC-001"]},{"reference":"8.3","title":"Execute security risk treatment","evidence":["EVD-DOC-001"]},{"reference":"9.1","title":"Measure and evaluate security performance","evidence":["EVD-DOC-004"]},{"reference":"9.3","title":"Conduct management-system reviews","evidence":["EVD-DOC-004"]},{"reference":"9.3.1","title":"Set management-review cadence","evidence":["EVD-DOC-004"]},{"reference":"9.3.2","title":"Use defined management-review inputs","evidence":["EVD-DOC-004"]},{"reference":"9.3.3","title":"Record management-review decisions","evidence":["EVD-DOC-001"]},{"reference":"10.1","title":"Improve the management system over time","evidence":["EVD-DOC-001"]},{"reference":"10.2","title":"Correct and learn from nonconformities","evidence":["EVD-DOC-001"]}],"gap":[{"reference":"9.2","title":"Run objective internal security audits","evidence":["EVD-CI-001"]},{"reference":"9.2.1","title":"Maintain an internal audit program","evidence":["EVD-CI-001"]},{"reference":"9.2.2","title":"Perform and report internal audits","evidence":["EVD-CI-001"]}],"met":[]},"annexA":{"organizational":{"partial":[{"reference":"A.5.1","title":"Security policy governance","evidence":["EVD-DOC-003"]},{"reference":"A.5.2","title":"Assigned security accountabilities","evidence":["EVD-DOC-003"]},{"reference":"A.5.3","title":"Separation of conflicting duties","evidence":["EVD-DOC-003"]},{"reference":"A.5.4","title":"Leadership security responsibilities","evidence":["EVD-DOC-003"]},{"reference":"A.5.5","title":"Authority contact readiness","evidence":["EVD-DOC-003"]},{"reference":"A.5.6","title":"Security community contacts","evidence":["EVD-DOC-003"]},{"reference":"A.5.7","title":"Threat information handling","evidence":["EVD-DOC-003"]},{"reference":"A.5.8","title":"Security in managed projects","evidence":["EVD-DOC-001"]},{"reference":"A.5.9","title":"Asset and information inventory","evidence":["EVD-DOC-003"]},{"reference":"A.5.10","title":"Acceptable use expectations","evidence":["EVD-DOC-003"]},{"reference":"A.5.12","title":"Information classification model","evidence":["EVD-DOC-003"]},{"reference":"A.5.13","title":"Classification labels and handling","evidence":["EVD-DOC-003"]},{"reference":"A.5.14","title":"Protected information transfer","evidence":["EVD-DOC-003"]},{"reference":"A.5.15","title":"Access governance","evidence":["EVD-SRC-001"]},{"reference":"A.5.16","title":"Identity lifecycle management","evidence":["EVD-SRC-001"]},{"reference":"A.5.17","title":"Authentication secret management","evidence":["EVD-SRC-001"]},{"reference":"A.5.18","title":"Access provisioning and review","evidence":["EVD-SRC-001"]},{"reference":"A.5.19","title":"Supplier security governance","evidence":["EVD-DOC-003"]},{"reference":"A.5.20","title":"Security terms for suppliers","evidence":["EVD-DOC-003"]},{"reference":"A.5.21","title":"ICT supply-chain security","evidence":["EVD-DOC-003"]},{"reference":"A.5.22","title":"Supplier service review and change","evidence":["EVD-DOC-003"]},{"reference":"A.5.23","title":"Cloud service security governance","evidence":["EVD-DOC-003"]},{"reference":"A.5.24","title":"Incident response preparation","evidence":["EVD-DOC-003"]},{"reference":"A.5.25","title":"Security event triage","evidence":["EVD-DOC-003"]},{"reference":"A.5.26","title":"Incident response execution","evidence":["EVD-DOC-003"]},{"reference":"A.5.27","title":"Learning from incidents","evidence":["EVD-DOC-003"]},{"reference":"A.5.28","title":"Preserving investigative evidence","evidence":["EVD-DOC-003"]},{"reference":"A.5.29","title":"Secure operation during disruption","evidence":["EVD-DOC-004"]},{"reference":"A.5.30","title":"Technology continuity readiness","evidence":["EVD-DOC-004"]},{"reference":"A.5.31","title":"Legal and contractual obligations","evidence":["EVD-DOC-003"]},{"reference":"A.5.32","title":"Intellectual property safeguards","evidence":["EVD-DOC-003"]},{"reference":"A.5.33","title":"Protected business records","evidence":["EVD-DOC-003"]},{"reference":"A.5.34","title":"Privacy and personal-data safeguards","evidence":["EVD-DOC-003"]},{"reference":"A.5.36","title":"Compliance with security rules","evidence":["EVD-CI-001"]},{"reference":"A.5.37","title":"Documented operating procedures","evidence":["EVD-CI-001"]}],"gap":[{"reference":"A.5.35","title":"Independent security review","evidence":["EVD-CI-001"]}],"met":[],"notApplicable":[{"reference":"A.5.11","title":"Return of issued assets","evidence":["EVD-DOC-003"],"rationale":"No issued workforce assets are in scope; reassess if managed devices are added."}]},"people":{"partial":[{"reference":"A.6.3","title":"Security awareness and learning","evidence":["EVD-DOC-003"]},{"reference":"A.6.8","title":"Security event reporting","evidence":["EVD-RUN-003"]}],"gap":[],"met":[],"notApplicable":[{"reference":"A.6.1","title":"Pre-engagement screening","evidence":["EVD-DOC-003"],"rationale":"Hiring and screening are outside system scope; reassess if personnel are added."},{"reference":"A.6.2","title":"Security terms of engagement","evidence":["EVD-DOC-003"],"rationale":"Employment and contractor terms are outside current system scope."},{"reference":"A.6.4","title":"Workforce disciplinary process","evidence":["EVD-DOC-003"],"rationale":"No workforce disciplinary process is in current system scope."},{"reference":"A.6.5","title":"Security duties after role changes","evidence":["EVD-DOC-003"],"rationale":"Personnel termination and role-change controls are outside system scope."},{"reference":"A.6.6","title":"Confidentiality commitments","evidence":["EVD-DOC-003"],"rationale":"No workforce confidentiality-agreement process is in current scope."},{"reference":"A.6.7","title":"Secure remote work","evidence":["EVD-DOC-003"],"rationale":"Workplace and remote-work controls are outside current system scope."}]},"physical":{"partial":[],"gap":[],"met":[],"notApplicable":[{"reference":"A.7.1","title":"Physical boundary protection","evidence":["EVD-DOC-004"],"rationale":"No WizardGang production facility is in scope; hosting is provider-managed."},{"reference":"A.7.2","title":"Controlled physical entry","evidence":["EVD-DOC-004"],"rationale":"No in-scope facility requires direct physical entry control."},{"reference":"A.7.3","title":"Secure rooms and facilities","evidence":["EVD-DOC-004"],"rationale":"No in-scope room or secure area requires direct facility protection."},{"reference":"A.7.4","title":"Physical security monitoring","evidence":["EVD-DOC-004"],"rationale":"No in-scope facility requires direct physical monitoring."},{"reference":"A.7.5","title":"Protection from environmental hazards","evidence":["EVD-DOC-004"],"rationale":"Provider infrastructure is outside WizardGang's physical boundary."},{"reference":"A.7.6","title":"Working securely in restricted areas","evidence":["EVD-DOC-004"],"rationale":"No in-scope restricted physical area requires secure-area rules."},{"reference":"A.7.7","title":"Clear desk and display practices","evidence":["EVD-DOC-004"],"rationale":"Managed offices and workspaces are outside system scope."},{"reference":"A.7.8","title":"Safe equipment placement","evidence":["EVD-DOC-004"],"rationale":"No in-scope physical equipment requires controlled placement."},{"reference":"A.7.9","title":"Protecting equipment away from sites","evidence":["EVD-DOC-004"],"rationale":"No in-scope equipment is used away from an organization-run site."},{"reference":"A.7.10","title":"Physical media lifecycle","evidence":["EVD-DOC-004"],"rationale":"No removable physical production media are in scope."},{"reference":"A.7.11","title":"Supporting utility resilience","evidence":["EVD-DOC-004"],"rationale":"Production utilities are provider-operated and outside direct control."},{"reference":"A.7.12","title":"Cabling protection","evidence":["EVD-DOC-004"],"rationale":"Production cabling is provider-operated and outside direct control."},{"reference":"A.7.13","title":"Equipment upkeep","evidence":["EVD-DOC-004"],"rationale":"Hardware maintenance is provider-operated and outside direct control."},{"reference":"A.7.14","title":"Secure disposal or reuse of equipment","evidence":["EVD-DOC-004"],"rationale":"Hardware disposal and reuse are provider-operated and outside direct control."}]},"technological":{"partial":[{"reference":"A.8.2","title":"Privileged access restrictions","evidence":["EVD-SRC-001"]},{"reference":"A.8.3","title":"Information access restrictions","evidence":["EVD-SRC-001"]},{"reference":"A.8.4","title":"Source-code access restrictions","evidence":["EVD-DOC-001"]},{"reference":"A.8.5","title":"Strong authentication","evidence":["EVD-SRC-001"]},{"reference":"A.8.6","title":"Capacity and resource planning","evidence":["EVD-DOC-004"]},{"reference":"A.8.7","title":"Malware defenses","evidence":["EVD-CI-001"]},{"reference":"A.8.8","title":"Technical vulnerability handling","evidence":["EVD-CI-001"]},{"reference":"A.8.9","title":"Configuration baseline management","evidence":["EVD-CI-001"]},{"reference":"A.8.10","title":"Secure information deletion","evidence":["EVD-DOC-003"]},{"reference":"A.8.11","title":"Sensitive-data masking","evidence":["EVD-SRC-002"]},{"reference":"A.8.12","title":"Data-loss controls","evidence":["EVD-DOC-003"]},{"reference":"A.8.13","title":"Information backups","evidence":["EVD-DOC-004"]},{"reference":"A.8.14","title":"Service redundancy","evidence":["EVD-DOC-004"]},{"reference":"A.8.16","title":"Security monitoring","evidence":["EVD-DOC-004"]},{"reference":"A.8.18","title":"Privileged utility restrictions","evidence":["EVD-SRC-001"]},{"reference":"A.8.19","title":"Controlled software installation","evidence":["EVD-DOC-001"]},{"reference":"A.8.20","title":"Network security controls","evidence":["EVD-SRC-001"]},{"reference":"A.8.21","title":"Security of networked services","evidence":["EVD-SRC-001"]},{"reference":"A.8.24","title":"Cryptography and key governance","evidence":["EVD-DOC-003"]},{"reference":"A.8.26","title":"Application security requirements","evidence":["EVD-CI-001"]},{"reference":"A.8.27","title":"Secure architecture principles","evidence":["EVD-DOC-003"]},{"reference":"A.8.28","title":"Secure coding practices","evidence":["EVD-CI-001"]},{"reference":"A.8.29","title":"Security testing before acceptance","evidence":["EVD-CI-001"]},{"reference":"A.8.31","title":"Separate development, test, and production","evidence":["EVD-DOC-001"]},{"reference":"A.8.33","title":"Test-data safeguards","evidence":["EVD-DOC-003"]}],"gap":[{"reference":"A.8.1","title":"Managed user endpoints","evidence":["EVD-DOC-003"]},{"reference":"A.8.34","title":"Safe audit testing in production","evidence":["EVD-CI-001"]}],"met":[{"reference":"A.8.15","title":"Security-relevant logging","evidence":["EVD-SRC-002"]},{"reference":"A.8.25","title":"Secure development lifecycle","evidence":["EVD-DOC-001"]},{"reference":"A.8.32","title":"Controlled technical changes","evidence":["EVD-DOC-001"]}],"notApplicable":[{"reference":"A.8.17","title":"Reliable system time","evidence":["EVD-DOC-004"],"rationale":"Runtime time is provider-managed; no WizardGang clock service is in scope."},{"reference":"A.8.22","title":"Network separation","evidence":["EVD-DOC-004"],"rationale":"No managed VLAN exists; isolation uses platform, app, identity, and data boundaries."},{"reference":"A.8.23","title":"Web access filtering","evidence":["EVD-DOC-003"],"rationale":"This is not a managed workforce browsing environment and has no web filter."},{"reference":"A.8.30","title":"Outsourced development oversight","evidence":["EVD-DOC-001"],"rationale":"No outsourced developer is in scope; AI assistance retains WizardGang accountability."}]}}}
+{
+  "schemaVersion": 1,
+  "id": "iso-iec-27001-2022-public-compliance",
+  "standard": "ISO/IEC 27001:2022",
+  "edition": "2022",
+  "visibility": "public",
+  "qualification": "Public alignment and engineering-evidence mapping only; independent certification or formal conformance is not claimed.",
+  "paraphraseNotice": "Clause and control labels are short original paraphrases; normative ISO text is not reproduced.",
+  "sourceSoa": {
+    "id": "WG-SOA-001",
+    "governanceDocumentReference": "WG-SOA-001",
+    "status": "approved",
+    "assessmentDate": "2026-09-02",
+    "approval": {
+      "pullRequest": 56,
+      "mergeCommit": "1ae105da8ab6466e334a2faf4e6c63f5885c91df"
+    }
+  },
+  "framework": {
+    "id": "iso-27001",
+    "label": "ISO/IEC 27001:2022",
+    "edition": "2022",
+    "qualification": "Public alignment and engineering-evidence mapping only; independent certification or formal conformance is not claimed.",
+    "assessmentDate": "2026-09-02",
+    "sourcePath": "assurance/compliance/iso-27001-2022.json"
+  },
+  "records": [
+    {
+      "id": "ISO27001-4.1",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "4.1",
+      "title": "Understand the operating environment",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-4.2",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "4.2",
+      "title": "Identify stakeholder security needs",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-4.3",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "4.3",
+      "title": "Define the security management scope",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-4.4",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "4.4",
+      "title": "Operate the security management system",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-5.1",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "5.1",
+      "title": "Leadership accountability for security",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-5.2",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "5.2",
+      "title": "Set and maintain security policy",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-5.3",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "5.3",
+      "title": "Assign security roles and authority",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-6.1",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "6.1",
+      "title": "Plan for security risks and opportunities",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-6.1.1",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "6.1.1",
+      "title": "Plan responses to risks and opportunities",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-6.1.2",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "6.1.2",
+      "title": "Assess information-security risk consistently",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-6.1.3",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "6.1.3",
+      "title": "Select and treat security risks",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-6.2",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "6.2",
+      "title": "Set measurable security objectives",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-6.3",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "6.3",
+      "title": "Control management-system changes",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-7.1",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "7.1",
+      "title": "Provide management-system resources",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-7.2",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "7.2",
+      "title": "Maintain required security competence",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-7.3",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "7.3",
+      "title": "Maintain security awareness",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-7.4",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "7.4",
+      "title": "Manage security communications",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-RUN-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-7.5",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "7.5",
+      "title": "Control management-system documentation",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-7.5.1",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "7.5.1",
+      "title": "Maintain the required documentation set",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-7.5.2",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "7.5.2",
+      "title": "Create and update controlled records",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-7.5.3",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "7.5.3",
+      "title": "Protect and govern controlled records",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-8.1",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "8.1",
+      "title": "Plan and control security operations",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-8.2",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "8.2",
+      "title": "Reassess security risk during operation",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-8.3",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "8.3",
+      "title": "Execute security risk treatment",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-9.1",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "9.1",
+      "title": "Measure and evaluate security performance",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-9.3",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "9.3",
+      "title": "Conduct management-system reviews",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-9.3.1",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "9.3.1",
+      "title": "Set management-review cadence",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-9.3.2",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "9.3.2",
+      "title": "Use defined management-review inputs",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-9.3.3",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "9.3.3",
+      "title": "Record management-review decisions",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-10.1",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "10.1",
+      "title": "Improve the management system over time",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-10.2",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "10.2",
+      "title": "Correct and learn from nonconformities",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-9.2",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "9.2",
+      "title": "Run objective internal security audits",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "gap",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-9.2.1",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "9.2.1",
+      "title": "Maintain an internal audit program",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "gap",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-9.2.2",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "9.2.2",
+      "title": "Perform and report internal audits",
+      "kind": "clause",
+      "section": "Clauses 4–10",
+      "status": "gap",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.1",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.1",
+      "title": "Security policy governance",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.2",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.2",
+      "title": "Assigned security accountabilities",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.3",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.3",
+      "title": "Separation of conflicting duties",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.4",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.4",
+      "title": "Leadership security responsibilities",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.5",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.5",
+      "title": "Authority contact readiness",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.6",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.6",
+      "title": "Security community contacts",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.7",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.7",
+      "title": "Threat information handling",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.8",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.8",
+      "title": "Security in managed projects",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.9",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.9",
+      "title": "Asset and information inventory",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.10",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.10",
+      "title": "Acceptable use expectations",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.12",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.12",
+      "title": "Information classification model",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.13",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.13",
+      "title": "Classification labels and handling",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.14",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.14",
+      "title": "Protected information transfer",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.15",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.15",
+      "title": "Access governance",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.16",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.16",
+      "title": "Identity lifecycle management",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.17",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.17",
+      "title": "Authentication secret management",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.18",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.18",
+      "title": "Access provisioning and review",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.19",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.19",
+      "title": "Supplier security governance",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.20",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.20",
+      "title": "Security terms for suppliers",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.21",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.21",
+      "title": "ICT supply-chain security",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.22",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.22",
+      "title": "Supplier service review and change",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.23",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.23",
+      "title": "Cloud service security governance",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.24",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.24",
+      "title": "Incident response preparation",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.25",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.25",
+      "title": "Security event triage",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.26",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.26",
+      "title": "Incident response execution",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.27",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.27",
+      "title": "Learning from incidents",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.28",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.28",
+      "title": "Preserving investigative evidence",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.29",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.29",
+      "title": "Secure operation during disruption",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.30",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.30",
+      "title": "Technology continuity readiness",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.31",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.31",
+      "title": "Legal and contractual obligations",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.32",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.32",
+      "title": "Intellectual property safeguards",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.33",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.33",
+      "title": "Protected business records",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.34",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.34",
+      "title": "Privacy and personal-data safeguards",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.36",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.36",
+      "title": "Compliance with security rules",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.37",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.37",
+      "title": "Documented operating procedures",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.35",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.35",
+      "title": "Independent security review",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "gap",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.5.11",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.5.11",
+      "title": "Return of issued assets",
+      "kind": "control",
+      "section": "Annex A · organizational",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "No issued workforce assets are in scope; reassess if managed devices are added.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.6.3",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.6.3",
+      "title": "Security awareness and learning",
+      "kind": "control",
+      "section": "Annex A · people",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.6.8",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.6.8",
+      "title": "Security event reporting",
+      "kind": "control",
+      "section": "Annex A · people",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-RUN-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.6.1",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.6.1",
+      "title": "Pre-engagement screening",
+      "kind": "control",
+      "section": "Annex A · people",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "Hiring and screening are outside system scope; reassess if personnel are added.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.6.2",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.6.2",
+      "title": "Security terms of engagement",
+      "kind": "control",
+      "section": "Annex A · people",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "Employment and contractor terms are outside current system scope.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.6.4",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.6.4",
+      "title": "Workforce disciplinary process",
+      "kind": "control",
+      "section": "Annex A · people",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "No workforce disciplinary process is in current system scope.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.6.5",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.6.5",
+      "title": "Security duties after role changes",
+      "kind": "control",
+      "section": "Annex A · people",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "Personnel termination and role-change controls are outside system scope.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.6.6",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.6.6",
+      "title": "Confidentiality commitments",
+      "kind": "control",
+      "section": "Annex A · people",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "No workforce confidentiality-agreement process is in current scope.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.6.7",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.6.7",
+      "title": "Secure remote work",
+      "kind": "control",
+      "section": "Annex A · people",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "Workplace and remote-work controls are outside current system scope.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.7.1",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.7.1",
+      "title": "Physical boundary protection",
+      "kind": "control",
+      "section": "Annex A · physical",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "No WizardGang production facility is in scope; hosting is provider-managed.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.7.2",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.7.2",
+      "title": "Controlled physical entry",
+      "kind": "control",
+      "section": "Annex A · physical",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "No in-scope facility requires direct physical entry control.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.7.3",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.7.3",
+      "title": "Secure rooms and facilities",
+      "kind": "control",
+      "section": "Annex A · physical",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "No in-scope room or secure area requires direct facility protection.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.7.4",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.7.4",
+      "title": "Physical security monitoring",
+      "kind": "control",
+      "section": "Annex A · physical",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "No in-scope facility requires direct physical monitoring.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.7.5",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.7.5",
+      "title": "Protection from environmental hazards",
+      "kind": "control",
+      "section": "Annex A · physical",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "Provider infrastructure is outside WizardGang's physical boundary.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.7.6",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.7.6",
+      "title": "Working securely in restricted areas",
+      "kind": "control",
+      "section": "Annex A · physical",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "No in-scope restricted physical area requires secure-area rules.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.7.7",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.7.7",
+      "title": "Clear desk and display practices",
+      "kind": "control",
+      "section": "Annex A · physical",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "Managed offices and workspaces are outside system scope.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.7.8",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.7.8",
+      "title": "Safe equipment placement",
+      "kind": "control",
+      "section": "Annex A · physical",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "No in-scope physical equipment requires controlled placement.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.7.9",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.7.9",
+      "title": "Protecting equipment away from sites",
+      "kind": "control",
+      "section": "Annex A · physical",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "No in-scope equipment is used away from an organization-run site.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.7.10",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.7.10",
+      "title": "Physical media lifecycle",
+      "kind": "control",
+      "section": "Annex A · physical",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "No removable physical production media are in scope.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.7.11",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.7.11",
+      "title": "Supporting utility resilience",
+      "kind": "control",
+      "section": "Annex A · physical",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "Production utilities are provider-operated and outside direct control.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.7.12",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.7.12",
+      "title": "Cabling protection",
+      "kind": "control",
+      "section": "Annex A · physical",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "Production cabling is provider-operated and outside direct control.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.7.13",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.7.13",
+      "title": "Equipment upkeep",
+      "kind": "control",
+      "section": "Annex A · physical",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "Hardware maintenance is provider-operated and outside direct control.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.7.14",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.7.14",
+      "title": "Secure disposal or reuse of equipment",
+      "kind": "control",
+      "section": "Annex A · physical",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "Hardware disposal and reuse are provider-operated and outside direct control.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.2",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.2",
+      "title": "Privileged access restrictions",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.3",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.3",
+      "title": "Information access restrictions",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.4",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.4",
+      "title": "Source-code access restrictions",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.5",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.5",
+      "title": "Strong authentication",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.6",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.6",
+      "title": "Capacity and resource planning",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.7",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.7",
+      "title": "Malware defenses",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.8",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.8",
+      "title": "Technical vulnerability handling",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.9",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.9",
+      "title": "Configuration baseline management",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.10",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.10",
+      "title": "Secure information deletion",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.11",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.11",
+      "title": "Sensitive-data masking",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-002"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.12",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.12",
+      "title": "Data-loss controls",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.13",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.13",
+      "title": "Information backups",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.14",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.14",
+      "title": "Service redundancy",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.16",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.16",
+      "title": "Security monitoring",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.18",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.18",
+      "title": "Privileged utility restrictions",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.19",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.19",
+      "title": "Controlled software installation",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.20",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.20",
+      "title": "Network security controls",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.21",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.21",
+      "title": "Security of networked services",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.24",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.24",
+      "title": "Cryptography and key governance",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.26",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.26",
+      "title": "Application security requirements",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.27",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.27",
+      "title": "Secure architecture principles",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.28",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.28",
+      "title": "Secure coding practices",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.29",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.29",
+      "title": "Security testing before acceptance",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.31",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.31",
+      "title": "Separate development, test, and production",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.33",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.33",
+      "title": "Test-data safeguards",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "partial",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.1",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.1",
+      "title": "Managed user endpoints",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "gap",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.34",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.34",
+      "title": "Safe audit testing in production",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "gap",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-CI-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.15",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.15",
+      "title": "Security-relevant logging",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "met",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-002"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.25",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.25",
+      "title": "Secure development lifecycle",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "met",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.32",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.32",
+      "title": "Controlled technical changes",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "met",
+      "applicability": "applicable",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.17",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.17",
+      "title": "Reliable system time",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "Runtime time is provider-managed; no WizardGang clock service is in scope.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.22",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.22",
+      "title": "Network separation",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "No managed VLAN exists; isolation uses platform, app, identity, and data boundaries.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-004"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.23",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.23",
+      "title": "Web access filtering",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "This is not a managed workforce browsing environment and has no web filter.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-003"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    },
+    {
+      "id": "ISO27001-A.8.30",
+      "framework": "iso-27001",
+      "frameworkLabel": "ISO/IEC 27001:2022",
+      "reference": "A.8.30",
+      "title": "Outsourced development oversight",
+      "kind": "control",
+      "section": "Annex A · technological",
+      "status": "not-applicable",
+      "applicability": "not-applicable",
+      "rationale": "No outsourced developer is in scope; AI assistance retains WizardGang accountability.",
+      "relationships": {
+        "evidence": [
+          "EVD-DOC-001"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/iso-27001-2022.json"
+    }
+  ]
+}

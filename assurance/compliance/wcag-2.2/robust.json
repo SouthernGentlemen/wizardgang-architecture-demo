@@ -6,20 +6,21 @@
   },
   "criteria": [
     {
-      "criterionId": "4.1.2",
-      "name": "Name, Role, Value",
-      "level": "A",
+      "id": "WCAG-4.1.2",
+      "framework": "wcag-2.2",
+      "frameworkLabel": "WCAG 2.2",
+      "reference": "4.1.2",
+      "title": "Name, Role, Value",
+      "kind": "criterion",
+      "section": "4. Robust",
       "status": "partial",
+      "level": "A",
+      "applicability": "applicable",
       "implementation": "Related shared UI support exists for Name, Role, Value; full criterion assessment remains open.",
       "validation": {
         "automated": "partial",
         "manual": "required"
       },
-      "evidenceIds": [
-        "EVD-SRC-007",
-        "EVD-DOC-005",
-        "EVD-TST-002"
-      ],
       "gaps": [
         "Full-scope criterion-specific manual evidence is not recorded."
       ],
@@ -29,22 +30,42 @@
         "content-change",
         "interaction-change",
         "quarterly-manual"
-      ]
+      ],
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-007",
+          "EVD-DOC-005",
+          "EVD-TST-002"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/wcag-2.2/robust.json"
     },
     {
-      "criterionId": "4.1.3",
-      "name": "Status Messages",
-      "level": "AA",
+      "id": "WCAG-4.1.3",
+      "framework": "wcag-2.2",
+      "frameworkLabel": "WCAG 2.2",
+      "reference": "4.1.3",
+      "title": "Status Messages",
+      "kind": "criterion",
+      "section": "4. Robust",
       "status": "partial",
+      "level": "AA",
+      "applicability": "applicable",
       "implementation": "Related shared UI support exists for Status Messages; full criterion assessment remains open.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "evidenceIds": [
-        "EVD-SRC-007",
-        "EVD-DOC-005"
-      ],
       "gaps": [
         "Full-scope criterion-specific manual evidence is not recorded."
       ],
@@ -54,7 +75,27 @@
         "content-change",
         "interaction-change",
         "quarterly-manual"
-      ]
+      ],
+      "relationships": {
+        "evidence": [
+          "EVD-SRC-007",
+          "EVD-DOC-005"
+        ],
+        "compliance": [],
+        "frameworks": [],
+        "claims": [],
+        "risks": [],
+        "controls": [],
+        "incidents": [],
+        "exercises": [],
+        "advisories": [],
+        "governanceDocuments": [],
+        "objectives": []
+      },
+      "sourcePath": "assurance/compliance/wcag-2.2/robust.json"
     }
-  ]
+  ],
+  "framework": "wcag-2.2",
+  "frameworkLabel": "WCAG 2.2",
+  "sourcePath": "assurance/compliance/wcag-2.2/robust.json"
 }

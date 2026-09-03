@@ -4,49 +4,269 @@
   "title": "Public Incident-Response Exercise Register",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "sourceRegister", "qualification", "records"],
+  "required": [
+    "schemaVersion",
+    "sourceRegister",
+    "qualification",
+    "records"
+  ],
   "properties": {
-    "schemaVersion": { "const": 1 },
-    "sourceRegister": { "const": "docs/governance/registers/INCIDENT-REGISTER.md" },
-    "qualification": { "type": "string", "minLength": 1 },
-    "records": { "type": "array", "items": { "$ref": "#/$defs/record" } }
+    "schemaVersion": {
+      "const": 1
+    },
+    "sourceRegister": {
+      "const": "docs/governance/registers/INCIDENT-REGISTER.md"
+    },
+    "qualification": {
+      "type": "string",
+      "minLength": 1
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/record"
+      }
+    }
   },
   "$defs": {
     "record": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "recordType", "simulated", "exerciseType", "scenario", "scope", "owner", "status", "riskLinks", "objectiveLinks", "evidence", "publicNote"],
+      "required": [
+        "id",
+        "recordType",
+        "simulated",
+        "exerciseType",
+        "scenario",
+        "scope",
+        "owner",
+        "status",
+        "publicNote",
+        "relationships"
+      ],
       "properties": {
-        "id": { "type": "string", "pattern": "^EX-[0-9]{3,}$" },
-        "recordType": { "const": "exercise" },
-        "simulated": { "const": true },
-        "exerciseType": { "type": "string", "minLength": 1 },
-        "scenario": { "type": "string", "minLength": 1 },
-        "scope": { "type": "string", "minLength": 1 },
-        "owner": { "type": "string", "minLength": 1 },
-        "status": { "enum": ["planned", "in-progress", "completed", "follow-up-open", "closed", "superseded"] },
-        "dueDate": { "type": "string", "format": "date" },
-        "completedAt": { "type": "string", "format": "date-time" },
-        "riskLinks": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^(SEC-RISK|AI-RISK)-[0-9]{3}$" } },
-        "objectiveLinks": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^(SEC|AI)-OBJ-[0-9]{3}$" } },
-        "evidence": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^EVD-[A-Z]+-[0-9]{3,}$" } },
-        "resultSummary": { "type": "string", "minLength": 1 },
-        "publicNote": { "type": "string", "minLength": 1 }
+        "id": {
+          "type": "string",
+          "pattern": "^EX-[0-9]{3,}$"
+        },
+        "recordType": {
+          "const": "exercise"
+        },
+        "simulated": {
+          "const": true
+        },
+        "exerciseType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scenario": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "planned",
+            "in-progress",
+            "completed",
+            "follow-up-open",
+            "closed",
+            "superseded"
+          ]
+        },
+        "dueDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "completedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "resultSummary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "publicNote": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relationships": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "evidence",
+            "compliance",
+            "frameworks",
+            "claims",
+            "risks",
+            "controls",
+            "incidents",
+            "exercises",
+            "advisories",
+            "governanceDocuments",
+            "objectives"
+          ],
+          "properties": {
+            "evidence": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^EVD-[A-Z]+-[0-9]{3,}$"
+              }
+            },
+            "compliance": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^(ISO27001|ISO42001)-[A0-9.]+$|^WCAG-[0-9.]+$"
+              }
+            },
+            "frameworks": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^(iso-27001|iso-42001|wcag-2\\.2)$"
+              }
+            },
+            "claims": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^CLM-[A-Z]+-[0-9]{3,}$"
+              }
+            },
+            "risks": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^(SEC|AI)-RISK-[0-9]{3}$"
+              }
+            },
+            "controls": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^(ISO27001|ISO42001)-A\\.[0-9.]+$"
+              }
+            },
+            "incidents": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^INC-[0-9]{3,}$"
+              }
+            },
+            "exercises": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^EX-[0-9]{3,}$"
+              }
+            },
+            "advisories": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^ADV-[0-9]{3,}$"
+              }
+            },
+            "governanceDocuments": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^WG-[A-Z]+-[0-9]{3}$"
+              }
+            },
+            "objectives": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Z]+-OBJ-[0-9]{3}$"
+              }
+            }
+          }
+        }
       },
       "allOf": [
         {
-          "if": { "properties": { "status": { "const": "planned" } }, "required": ["status"] },
+          "if": {
+            "properties": {
+              "status": {
+                "const": "planned"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
           "then": {
-            "required": ["dueDate"],
-            "properties": { "evidence": { "maxItems": 0 } },
-            "not": { "anyOf": [{ "required": ["completedAt"] }, { "required": ["resultSummary"] }] }
+            "required": [
+              "dueDate"
+            ],
+            "properties": {
+              "evidence": {
+                "maxItems": 0
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "completedAt"
+                  ]
+                },
+                {
+                  "required": [
+                    "resultSummary"
+                  ]
+                }
+              ]
+            }
           }
         },
         {
-          "if": { "properties": { "status": { "enum": ["completed", "follow-up-open", "closed"] } }, "required": ["status"] },
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "completed",
+                  "follow-up-open",
+                  "closed"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
           "then": {
-            "required": ["completedAt", "resultSummary"],
-            "properties": { "evidence": { "minItems": 1 } }
+            "required": [
+              "completedAt",
+              "resultSummary"
+            ],
+            "properties": {
+              "evidence": {
+                "minItems": 1
+              }
+            }
           }
         }
       ]

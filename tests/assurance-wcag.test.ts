@@ -9,11 +9,12 @@ import evidenceData from '../assurance/evidence/evidence.json';
 const criteria = [...perceivable.criteria, ...operable.criteria, ...understandable.criteria, ...robust.criteria];
 const evidenceIds = new Set(evidenceData.records.map((record) => record.id));
 
-describe('WCAG 2.2 public criterion registry', () => {
-  it('covers every current A, AA, and AAA success criterion without removed 4.1.1', () => {
+describe('WCAG 2.2 canonical public criterion registry', () => {
+  it('preserves all current criterion IDs explicitly without removed 4.1.1', () => {
     expect(criteria).toHaveLength(86);
-    expect(new Set(criteria.map((record) => record.criterionId)).size).toBe(86);
-    expect(criteria.some((record) => record.criterionId === '4.1.1')).toBe(false);
+    expect(new Set(criteria.map((record) => record.id)).size).toBe(86);
+    expect(criteria.some((record) => record.reference === '4.1.1')).toBe(false);
+    for (const record of criteria) expect(record.id).toBe(`WCAG-${record.reference}`);
     const counts = { A: 0, AA: 0, AAA: 0 };
     for (const record of criteria) counts[record.level as keyof typeof counts] += 1;
     expect(counts).toEqual({ A: 31, AA: 24, AAA: 31 });
@@ -22,6 +23,7 @@ describe('WCAG 2.2 public criterion registry', () => {
   it('uses W3C primary sources and explicitly avoids conformance claims', () => {
     expect(manifest.sources.normative).toBe('https://www.w3.org/TR/WCAG22/');
     expect(manifest.sources.machineReadable).toBe('https://www.w3.org/WAI/WCAG22/wcag.json');
+    expect(manifest.framework).toMatchObject({ id: 'wcag-2.2', label: 'WCAG 2.2', sourcePath: 'assurance/compliance/wcag-2.2.json' });
     expect(manifest.qualification.toLowerCase()).toContain('does not claim');
     expect(manifest.qualification.toLowerCase()).toContain('conformance');
     expect(manifest.qualification.toLowerCase()).toContain('certification');
@@ -34,17 +36,21 @@ describe('WCAG 2.2 public criterion registry', () => {
       expect(['partial', 'none']).toContain(record.validation.automated);
       expect(record.validation.manual).toBe('required');
       expect(record.gaps.length).toBeGreaterThan(0);
+      expect(record.applicability).toBe('applicable');
     }
   });
 
-  it('resolves evidence IDs, owners, and freshness rules without stored counts', () => {
+  it('resolves typed evidence relationships, owners, and freshness rules without stored counts', () => {
     expect('counts' in manifest).toBe(false);
     for (const record of criteria) {
       expect(record.owner.length).toBeGreaterThan(0);
-      expect(record.evidenceIds.length).toBeGreaterThan(0);
-      for (const evidenceId of record.evidenceIds) expect(evidenceIds.has(evidenceId), evidenceId).toBe(true);
+      expect(record.relationships.evidence.length).toBeGreaterThan(0);
+      for (const evidenceId of record.relationships.evidence) expect(evidenceIds.has(evidenceId), evidenceId).toBe(true);
       expect(record.freshnessRules).toEqual(['release-bound', 'content-change', 'interaction-change', 'quarterly-manual']);
+      expect(record).not.toHaveProperty('criterionId');
+      expect(record).not.toHaveProperty('evidenceIds');
     }
-    for (const evidenceId of manifest.registryEvidenceIds) expect(evidenceIds.has(evidenceId), evidenceId).toBe(true);
+    for (const evidenceId of manifest.registryRelationships.evidence) expect(evidenceIds.has(evidenceId), evidenceId).toBe(true);
+    expect(manifest).not.toHaveProperty('registryEvidenceIds');
   });
 });
