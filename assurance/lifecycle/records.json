@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "baseline": {
+    "commit": "c2359f00fc3bac80bfbc2e82369a86f20e522f74",
+    "lifecycle": "Published",
+    "disclosureReview": {
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-03T04:06:18Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "v0.14.0 release PR #73 and tag-bound public-assurance validation"
+    }
+  },
+  "records": [],
+  "retiredRecords": []
+}

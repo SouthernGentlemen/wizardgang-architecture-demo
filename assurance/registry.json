@@ -5,6 +5,10 @@
   "scope": "Public, disclosure-safe assurance records for demo.wizardgang.ai",
   "qualification": "Alignment and engineering evidence only; no certification is claimed.",
   "visibility": "public",
+  "lifecycle": {
+    "path": "assurance/lifecycle/records.json",
+    "schema": "contracts/assurance/lifecycle.schema.json"
+  },
   "datasets": [
     {
       "kind": "evidence",

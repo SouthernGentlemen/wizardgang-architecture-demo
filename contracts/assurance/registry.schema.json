@@ -4,7 +4,7 @@
   "title": "Public Assurance Registry",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "id", "title", "scope", "qualification", "visibility", "datasets"],
+  "required": ["schemaVersion", "id", "title", "scope", "qualification", "visibility", "lifecycle", "datasets"],
   "properties": {
     "schemaVersion": { "const": 1 },
     "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
@@ -12,6 +12,15 @@
     "scope": { "type": "string", "minLength": 1 },
     "qualification": { "type": "string", "minLength": 1 },
     "visibility": { "const": "public" },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "schema"],
+      "properties": {
+        "path": { "const": "assurance/lifecycle/records.json" },
+        "schema": { "const": "contracts/assurance/lifecycle.schema.json" }
+      }
+    },
     "datasets": {
       "type": "array",
       "minItems": 1,

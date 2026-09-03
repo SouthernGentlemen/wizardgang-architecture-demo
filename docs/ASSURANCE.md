@@ -2,9 +2,19 @@
 
 The `assurance/` directory is the canonical public, disclosure-safe data layer for assurance claims, compliance mappings, risks, incidents, exercises, published security advisories, and their evidence. It is not the complete private operational or forensic record and does not claim certification or formal conformance.
 
-`assurance/registry.json` indexes controlled datasets and their JSON Schema contracts. Counts, reverse `usedBy` relationships, resolved source URLs, and freshness presentation are derived in code; they are not duplicated in canonical JSON.
+`assurance/registry.json` indexes controlled datasets, their JSON Schema contracts, and the record-lifecycle control plane. Counts, reverse `usedBy` relationships, resolved source URLs, and freshness presentation are derived in code; they are not duplicated in canonical JSON.
 
 `/evidence` is the canonical human-searchable evidence route. `/compliance` is the canonical human-readable compliance registry projection. `GET /v1/assurance` exposes the full disclosure-safe public registry projection, `GET /v1/assurance/evidence` exposes the evidence-only projection, and `GET /v1/assurance/compliance` exposes the normalized compliance projection. Focused APIs remain available at `/v1/assurance/risks`, `/v1/assurance/incidents`, and `/v1/assurance/advisories`.
+
+## Record lifecycle and disclosure review
+
+`assurance/lifecycle/records.json` is the lifecycle control plane for every stable assurance record ID. The released `v0.14.0` registry at commit `c2359f00fc3bac80bfbc2e82369a86f20e522f74` is the immutable reviewed baseline. Those existing records inherit `Published` lifecycle state and the baseline disclosure review. Any record ID introduced after that baseline requires its own explicit lifecycle and disclosure-review metadata.
+
+Lifecycle values are `Draft`, `Approved`, `Published`, `Superseded`, and `Withdrawn`. Lifecycle state does not weaken the public disclosure boundary: because the canonical assurance package is public, every current or retained record must already have `Reviewed` disclosure metadata before it can be committed here. Draft and approval state describe record governance, not permission to place sensitive material in the repository.
+
+Stable IDs are never recycled. Approved and published record identity anchors are immutable; if the represented record changes identity, create a new ID and use `supersedes` / `supersededBy`. A `Superseded` record requires at least one reciprocal `supersededBy` relationship. A `Withdrawn` record requires a meaningful `withdrawalRationale`. Removing a previously known record requires a retained `Superseded` or `Withdrawn` tombstone in `retiredRecords`; deleting both the record and its reservation is rejected by lifecycle validation.
+
+The lifecycle validator compares current records with the pinned release baseline and the previous repository snapshot. This prevents silent deletion, detects reuse of locked IDs for a different record identity, preserves retired ID reservations, requires explicit metadata for newly introduced IDs, and verifies reciprocal supersession links. Sensitive public fields such as credentials, private treatment detail, triage notes, exploit detail, reporter identity, or unreleased vulnerability detail are rejected independently of lifecycle state.
 
 ## Compliance projection
 
@@ -48,8 +58,8 @@ Public record IDs are stable lookup and anchor keys:
 
 ## CI integrity gates
 
-`npm run validate:assurance` includes a cross-dataset integrity pass after the framework-specific validators. It fails closed on globally duplicated public IDs, unsupported status vocabularies, missing ISO N/A rationales, unresolved evidence/risk/incident/advisory links, stale time-bound observation evidence, missing assurance routes, stored derived counts, and public fields reserved for private or sensitive detail.
+`npm run validate:assurance` includes lifecycle validation plus the cross-dataset integrity pass after the framework-specific validators. It fails closed on unreviewed public records, unsupported lifecycle states, silent record deletion, immutable ID reuse, invalid supersession/withdrawal metadata, sensitive disclosure fields, globally duplicated public IDs, unsupported status vocabularies, missing ISO N/A rationales, unresolved evidence/risk/incident/advisory links, stale time-bound observation evidence, missing assurance routes, stored derived counts, and public fields reserved for private or sensitive detail.
 
-`npm run test:assurance-integrity` runs mutation-based negative tests against isolated repository copies so each important failure mode is proven to return a non-zero validator result. The targeted suite also compares the compliance, risk, and incident/exercise APIs against their HTML projections, including filter-specific record identity and derived counts, with negative assertions that deliberately introduce row and count drift.
+`npm run test:assurance-integrity` runs mutation-based negative tests against isolated repository copies so each important failure mode is proven to return a non-zero validator result. Lifecycle tests explicitly prove rejection of unsupported states, unreviewed records, missing supersession/withdrawal requirements, silent deletion, immutable ID reuse, and sensitive public fields. The targeted suite also compares the compliance, risk, and incident/exercise APIs against their HTML projections, including filter-specific record identity and derived counts, with negative assertions that deliberately introduce row and count drift.
 
-Run `npm run validate:assurance` to enforce paths, identifiers, visibility, schemas, duplicates, referential integrity, freshness, public disclosure boundaries, route coverage, and the separation between canonical assurance data and derived presentation fields.
+Run `npm run validate:assurance` to enforce paths, identifiers, visibility, schemas, lifecycle, disclosure review, immutable identity, retention, duplicates, referential integrity, freshness, public disclosure boundaries, route coverage, and the separation between canonical assurance data and derived presentation fields.
