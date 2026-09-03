@@ -3,6 +3,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {
   ASSURANCE_REGISTRY_PATH,
+  assuranceRecordResources,
+  assuranceRecordsFromDocument,
   canonicalAssuranceDatasetPaths,
   loadAssuranceRegistry,
 } from './lib/assurance-registry.mjs';
@@ -26,31 +28,11 @@ if (!tag || !/^v\d+\.\d+\.\d+$/.test(tag)) errors.push('--tag must be an exact s
 if (!commit || !/^[0-9a-f]{40}$/.test(commit)) errors.push('--commit must be the exact 40-character lowercase Git commit SHA');
 if (!generatedAt || Number.isNaN(Date.parse(generatedAt))) errors.push('--generated-at must be a valid ISO date-time');
 
-function countComplianceRecords(data) {
-  let total = 0;
-  const sections = [data.clauses, ...Object.values(data.annexA ?? {})];
-  for (const section of sections) {
-    if (!section || typeof section !== 'object') continue;
-    for (const records of Object.values(section)) {
-      if (Array.isArray(records)) total += records.length;
-    }
-  }
-  return total;
-}
-
-function countRecords(data) {
-  if (Array.isArray(data.records)) return data.records.length;
-  if (Array.isArray(data.criteria)) return data.criteria.length;
-  if (data.clauses && data.annexA) return countComplianceRecords(data);
-  return 0;
-}
-
 if (errors.length === 0) {
   const registry = loadAssuranceRegistry(root);
   const files = [ASSURANCE_REGISTRY_PATH, ...canonicalAssuranceDatasetPaths(registry)].sort();
   const digest = crypto.createHash('sha256');
-  const byPath = {};
-  let total = 0;
+  const documents = new Map();
 
   for (const relative of files) {
     const raw = fs.readFileSync(path.join(root, relative));
@@ -59,12 +41,25 @@ if (errors.length === 0) {
     digest.update(raw);
     digest.update(Buffer.from([0]));
 
-    const data = JSON.parse(raw.toString('utf8'));
-    const count = countRecords(data);
-    if (count > 0) {
-      byPath[relative] = count;
-      total += count;
+    if (relative !== ASSURANCE_REGISTRY_PATH) {
+      documents.set(relative, JSON.parse(raw.toString('utf8')));
     }
+  }
+
+  const byPath = {};
+  let total = 0;
+  const recordResources = assuranceRecordResources(registry)
+    .slice()
+    .sort((left, right) => left.path.localeCompare(right.path));
+
+  for (const resource of recordResources) {
+    const data = documents.get(resource.path);
+    if (data === undefined) {
+      throw new Error(`${resource.id}: registered record-bearing resource ${resource.path} was not included in the canonical snapshot corpus.`);
+    }
+    const count = assuranceRecordsFromDocument(resource, data).length;
+    if (count > 0) byPath[resource.path] = count;
+    total += count;
   }
 
   const snapshot = {
