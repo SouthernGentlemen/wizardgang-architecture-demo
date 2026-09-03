@@ -4,6 +4,11 @@ import {
   assuranceRuntimeDatasets,
   assuranceRuntimeSchemas,
 } from './generated/registry-bindings';
+import {
+  assuranceRecordEntries,
+  assuranceRecordsForKind,
+  flattenAssuranceResources as flattenRegistryResources,
+} from './record-discovery.js';
 
 export type EvidenceKind = 'source' | 'test' | 'workflow' | 'governance-record' | 'release' | 'live-route' | 'observation';
 export type FreshnessPolicy = 'release-bound' | 'event-driven' | 'observation-bound';
@@ -170,7 +175,6 @@ type CanonicalAdvisory = Omit<PublicAdvisory, 'incidentLinks' | 'evidence'> & { 
 type CanonicalComplianceRecord = Omit<PublicComplianceRecord, 'evidence'> & { relationships: AssuranceRelationships };
 type RecordsDataset<T> = { records: T[]; qualification?: string };
 type ComplianceDataset = { qualification?: string; framework: PublicComplianceFramework; records: CanonicalComplianceRecord[] };
-type WcagPartition = { criteria: CanonicalComplianceRecord[] };
 type WcagManifest = { qualification?: string; framework: PublicComplianceFramework; partitions: Array<{ principle: string; path: string }> };
 
 export interface AssuranceRegistryFilter {
@@ -184,6 +188,11 @@ export interface AssuranceRegistryRoutes {
   apiRecord?: string;
 }
 
+export interface AssuranceRegistryRecordCollection {
+  path: string;
+  identity: string[];
+}
+
 export interface AssuranceRegistryResource {
   id: string;
   kind: string;
@@ -192,6 +201,7 @@ export interface AssuranceRegistryResource {
   schema: string;
   visibility: 'public' | 'private';
   capabilities: string[];
+  recordCollection?: AssuranceRegistryRecordCollection;
   qualification?: string;
   routes?: AssuranceRegistryRoutes;
   filters?: Record<string, AssuranceRegistryFilter>;
@@ -215,7 +225,7 @@ export type AssuranceDataset = 'claims' | 'evidence' | 'risks' | 'incidents' | '
 
 export interface AssuranceCanonicalRelationshipRecord {
   id: string;
-  dataset: Exclude<AssuranceDataset, 'evidence'>;
+  dataset: string;
   relationships: AssuranceRelationships;
 }
 
@@ -227,12 +237,7 @@ const governanceDocuments = new Map(
 );
 
 export function flattenAssuranceResources(): AssuranceRegistryResource[] {
-  return [
-    ...assuranceRegistry.datasets.flatMap((dataset) => [dataset, ...(dataset.resources ?? [])]),
-    assuranceRegistry.lifecycle,
-    ...(assuranceRegistry.presentations ?? []),
-    ...assuranceRegistry.operations,
-  ];
+  return flattenRegistryResources(assuranceRegistry) as AssuranceRegistryResource[];
 }
 
 export const assuranceRegistryResources = flattenAssuranceResources();
@@ -250,8 +255,8 @@ export function requireAssuranceResource(
 
 export function primaryAssuranceResource(kind: string): AssuranceRegistryResource {
   return requireAssuranceResource(
-    (resource) => resource.kind === kind && resource.capabilities.includes('api-index'),
-    `primary ${kind} dataset`,
+    (resource) => resource.kind === kind && resource.role === 'dataset' && resource.capabilities.includes('api-index'),
+    `indexed ${kind} dataset`,
   );
 }
 
@@ -268,97 +273,140 @@ export function runtimeAssuranceSchema(resource: AssuranceRegistryResource): Rec
   return schema as Record<string, unknown>;
 }
 
-const evidenceData = runtimeAssuranceDataset<RecordsDataset<PublicEvidence>>(primaryAssuranceResource('evidence'));
-const claimsData = runtimeAssuranceDataset<RecordsDataset<CanonicalClaim>>(primaryAssuranceResource('claims'));
-const risksData = runtimeAssuranceDataset<RecordsDataset<CanonicalRisk>>(primaryAssuranceResource('risks'));
-const incidentsData = runtimeAssuranceDataset<RecordsDataset<CanonicalIncident>>(primaryAssuranceResource('incidents'));
-const exercisesData = runtimeAssuranceDataset<RecordsDataset<CanonicalExercise>>(primaryAssuranceResource('exercises'));
-const advisoriesData = runtimeAssuranceDataset<RecordsDataset<CanonicalAdvisory>>(primaryAssuranceResource('advisories'));
+const runtimeRecordEntries = assuranceRecordEntries(
+  assuranceRegistry,
+  (resource) => runtimeAssuranceDataset(resource as AssuranceRegistryResource),
+  { runtimeOnly: true },
+) as Array<{ resource: AssuranceRegistryResource; record: unknown }>;
+
+function canonicalRecordsForKind<T>(kind: string): T[] {
+  return assuranceRecordsForKind<T>(runtimeRecordEntries, kind);
+}
 
 const complianceResources = assuranceRegistryResources.filter((resource) => resource.kind === 'compliance');
 const isoSources = complianceResources
-  .filter((resource) => resource.capabilities.includes('summary-source'))
+  .filter((resource) => resource.capabilities.includes('summary-source') && resource.capabilities.includes('runtime'))
   .map((resource) => runtimeAssuranceDataset<ComplianceDataset>(resource));
 const wcagManifestResource = requireAssuranceResource(
   (resource) => resource.kind === 'compliance' && resource.capabilities.includes('manifest'),
   'WCAG compliance manifest',
 );
 const wcagData = runtimeAssuranceDataset<WcagManifest>(wcagManifestResource);
-const wcagPartitions = wcagData.partitions.map((partition) => runtimeAssuranceDataset<WcagPartition>(requireAssuranceResource(
-  (resource) => resource.kind === 'compliance' && resource.role === 'partition' && resource.path === partition.path,
-  `registered WCAG partition ${partition.path}`,
-)));
-
-const canonicalClaims = claimsData.records;
-const canonicalRisks = risksData.records;
-const canonicalIncidents = incidentsData.records;
-const canonicalExercises = exercisesData.records;
-const canonicalAdvisories = advisoriesData.records;
-const canonicalCompliance = [
-  ...isoSources.flatMap((source) => source.records),
-  ...wcagPartitions.flatMap((partition) => partition.criteria),
-];
-
-export const assuranceModelEvidence = evidenceData.records;
-export const assuranceModelClaims: PublicAssuranceClaim[] = canonicalClaims.map(({ relationships, ...record }) => ({
-  ...record,
-  frameworkReferences: [...relationships.compliance, ...relationships.frameworks],
-  evidence: [...relationships.evidence],
-}));
-export const assuranceModelRisks: PublicRisk[] = canonicalRisks.map(({ relationships, ...record }) => ({
-  ...record,
-  controls: relationships.governanceDocuments.map((reference) => ({
-    reference,
-    repositoryPath: governanceDocuments.get(reference) ?? '',
-  })),
-  evidence: [...relationships.evidence],
-}));
-export const assuranceModelIncidents: PublicIncident[] = canonicalIncidents.map(({ relationships, ...record }) => ({
-  ...record,
-  riskLinks: [...relationships.risks],
-  controlLinks: [...relationships.controls],
-  evidence: [...relationships.evidence],
-}));
-export const assuranceModelExercises: PublicExercise[] = canonicalExercises.map(({ relationships, ...record }) => ({
-  ...record,
-  riskLinks: [...relationships.risks],
-  objectiveLinks: [...relationships.objectives],
-  evidence: [...relationships.evidence],
-}));
-export const assuranceModelAdvisories: PublicAdvisory[] = canonicalAdvisories.map(({ relationships, ...record }) => ({
-  ...record,
-  incidentLinks: [...relationships.incidents],
-  evidence: [...relationships.evidence],
-}));
 
 export const assuranceModelComplianceFrameworks: PublicComplianceFramework[] = [
   ...isoSources.map((source) => source.framework),
   wcagData.framework,
 ];
 const frameworkOrder = new Map(assuranceModelComplianceFrameworks.map((framework, index) => [framework.id, index]));
-export const assuranceModelComplianceRecords: PublicComplianceRecord[] = canonicalCompliance
-  .map(({ relationships, ...record }) => ({ ...record, evidence: [...relationships.evidence] }))
-  .sort((left, right) => {
-    const frameworkDifference = (frameworkOrder.get(left.framework) ?? 99) - (frameworkOrder.get(right.framework) ?? 99);
-    return frameworkDifference || left.reference.localeCompare(right.reference, undefined, { numeric: true });
-  });
 
-export const assuranceCanonicalRelationshipRecords: AssuranceCanonicalRelationshipRecord[] = [
-  ...canonicalClaims.map((record) => ({ id: record.id, dataset: 'claims' as const, relationships: record.relationships })),
-  ...canonicalRisks.map((record) => ({ id: record.id, dataset: 'risks' as const, relationships: record.relationships })),
-  ...canonicalIncidents.map((record) => ({ id: record.id, dataset: 'incidents' as const, relationships: record.relationships })),
-  ...canonicalExercises.map((record) => ({ id: record.id, dataset: 'exercises' as const, relationships: record.relationships })),
-  ...canonicalAdvisories.map((record) => ({ id: record.id, dataset: 'advisories' as const, relationships: record.relationships })),
-  ...canonicalCompliance.map((record) => ({ id: record.id, dataset: 'compliance' as const, relationships: record.relationships })),
-];
+const v1BoundaryAdapters: Record<AssuranceDataset, (record: any) => { id: string }> = {
+  evidence: (record: PublicEvidence) => ({ ...record }),
+  claims: (record: CanonicalClaim) => {
+    const { relationships, ...value } = record;
+    return {
+      ...value,
+      frameworkReferences: [...relationships.compliance, ...relationships.frameworks],
+      evidence: [...relationships.evidence],
+    };
+  },
+  risks: (record: CanonicalRisk) => {
+    const { relationships, ...value } = record;
+    return {
+      ...value,
+      controls: relationships.governanceDocuments.map((reference) => ({
+        reference,
+        repositoryPath: governanceDocuments.get(reference) ?? '',
+      })),
+      evidence: [...relationships.evidence],
+    };
+  },
+  incidents: (record: CanonicalIncident) => {
+    const { relationships, ...value } = record;
+    return {
+      ...value,
+      riskLinks: [...relationships.risks],
+      controlLinks: [...relationships.controls],
+      evidence: [...relationships.evidence],
+    };
+  },
+  exercises: (record: CanonicalExercise) => {
+    const { relationships, ...value } = record;
+    return {
+      ...value,
+      riskLinks: [...relationships.risks],
+      objectiveLinks: [...relationships.objectives],
+      evidence: [...relationships.evidence],
+    };
+  },
+  advisories: (record: CanonicalAdvisory) => {
+    const { relationships, ...value } = record;
+    return {
+      ...value,
+      incidentLinks: [...relationships.incidents],
+      evidence: [...relationships.evidence],
+    };
+  },
+  compliance: (record: CanonicalComplianceRecord) => {
+    const { relationships, ...value } = record;
+    return { ...value, evidence: [...relationships.evidence] };
+  },
+};
+
+const indexedKinds = assuranceRegistry.datasets
+  .filter((resource) => resource.capabilities.includes('records') && resource.capabilities.includes('api-index'))
+  .map((resource) => resource.kind);
+const v1Collections: Partial<Record<AssuranceDataset, Array<{ id: string }>>> = {};
+for (const kind of indexedKinds) {
+  if (!(kind in v1BoundaryAdapters)) {
+    throw new Error(`Assurance registry declares unsupported api-index family ${kind}; add an explicit released-boundary adapter before indexing it.`);
+  }
+  const dataset = kind as AssuranceDataset;
+  v1Collections[dataset] = canonicalRecordsForKind<any>(kind).map(v1BoundaryAdapters[dataset]);
+}
+
+const complianceCollection = (v1Collections.compliance ?? []) as PublicComplianceRecord[];
+complianceCollection.sort((left, right) => {
+  const frameworkDifference = (frameworkOrder.get(left.framework) ?? 99) - (frameworkOrder.get(right.framework) ?? 99);
+  return frameworkDifference || left.reference.localeCompare(right.reference, undefined, { numeric: true });
+});
+
+export const assuranceModelRecordCollections = v1Collections as {
+  claims: PublicAssuranceClaim[];
+  evidence: PublicEvidence[];
+  risks: PublicRisk[];
+  incidents: PublicIncident[];
+  exercises: PublicExercise[];
+  advisories: PublicAdvisory[];
+  compliance: PublicComplianceRecord[];
+};
+
+export const assuranceModelEvidence = assuranceModelRecordCollections.evidence;
+export const assuranceModelClaims = assuranceModelRecordCollections.claims;
+export const assuranceModelRisks = assuranceModelRecordCollections.risks;
+export const assuranceModelIncidents = assuranceModelRecordCollections.incidents;
+export const assuranceModelExercises = assuranceModelRecordCollections.exercises;
+export const assuranceModelAdvisories = assuranceModelRecordCollections.advisories;
+export const assuranceModelComplianceRecords = assuranceModelRecordCollections.compliance;
+
+export const assuranceCanonicalRelationshipRecords: AssuranceCanonicalRelationshipRecord[] = runtimeRecordEntries.flatMap(({ resource, record }) => {
+  if (!record || typeof record !== 'object' || Array.isArray(record)) return [];
+  const candidate = record as { id?: unknown; relationships?: unknown };
+  if (typeof candidate.id !== 'string' || !candidate.relationships || typeof candidate.relationships !== 'object') return [];
+  return [{ id: candidate.id, dataset: resource.kind, relationships: candidate.relationships as AssuranceRelationships }];
+});
+
+function primaryQualification(kind: AssuranceDataset): string | undefined {
+  const resource = primaryAssuranceResource(kind);
+  return runtimeAssuranceDataset<RecordsDataset<unknown>>(resource).qualification ?? resource.qualification;
+}
 
 export const assuranceModelQualifications = {
   registry: assuranceRegistry.qualification,
   compliance: primaryAssuranceResource('compliance').qualification
     ?? 'Public engineering-evidence projection only. Framework-specific qualifications remain authoritative; certification and formal conformance are not claimed.',
-  incidents: incidentsData.qualification,
-  exercises: exercisesData.qualification,
-  advisories: advisoriesData.qualification,
+  incidents: primaryQualification('incidents'),
+  exercises: primaryQualification('exercises'),
+  advisories: primaryQualification('advisories'),
 };
 
 export const assurancePublicRegistryMetadata = {

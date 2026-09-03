@@ -29,6 +29,10 @@
         "records",
         "api-index"
       ],
+      "recordCollection": {
+        "path": "records",
+        "identity": ["kind", "locator.repositoryPath", "locator.route"]
+      },
       "routes": {
         "html": "/evidence",
         "api": "/v1/assurance/evidence"
@@ -45,7 +49,11 @@
         "runtime",
         "records",
         "api-index"
-      ]
+      ],
+      "recordCollection": {
+        "path": "records",
+        "identity": ["area", "title"]
+      }
     },
     {
       "id": "compliance.iso-27001",
@@ -60,6 +68,10 @@
         "api-index",
         "summary-source"
       ],
+      "recordCollection": {
+        "path": "records",
+        "identity": ["framework", "reference"]
+      },
       "qualification": "Public engineering-evidence projection only. Framework-specific qualifications remain authoritative; certification and formal conformance are not claimed.",
       "routes": {
         "html": "/compliance",
@@ -92,7 +104,11 @@
             "runtime",
             "records",
             "summary-source"
-          ]
+          ],
+          "recordCollection": {
+            "path": "records",
+            "identity": ["framework", "reference"]
+          }
         },
         {
           "id": "compliance.wcag-2.2",
@@ -116,7 +132,11 @@
           "capabilities": [
             "runtime",
             "records"
-          ]
+          ],
+          "recordCollection": {
+            "path": "criteria",
+            "identity": ["framework", "reference"]
+          }
         },
         {
           "id": "compliance.wcag-2.2.operable",
@@ -128,7 +148,11 @@
           "capabilities": [
             "runtime",
             "records"
-          ]
+          ],
+          "recordCollection": {
+            "path": "criteria",
+            "identity": ["framework", "reference"]
+          }
         },
         {
           "id": "compliance.wcag-2.2.understandable",
@@ -140,7 +164,11 @@
           "capabilities": [
             "runtime",
             "records"
-          ]
+          ],
+          "recordCollection": {
+            "path": "criteria",
+            "identity": ["framework", "reference"]
+          }
         },
         {
           "id": "compliance.wcag-2.2.robust",
@@ -152,7 +180,11 @@
           "capabilities": [
             "runtime",
             "records"
-          ]
+          ],
+          "recordCollection": {
+            "path": "criteria",
+            "identity": ["framework", "reference"]
+          }
         }
       ]
     },
@@ -168,6 +200,10 @@
         "records",
         "api-index"
       ],
+      "recordCollection": {
+        "path": "records",
+        "identity": ["framework", "title"]
+      },
       "routes": {
         "html": "/governance/risks",
         "api": "/v1/assurance/risks"
@@ -199,6 +235,10 @@
         "records",
         "api-index"
       ],
+      "recordCollection": {
+        "path": "records",
+        "identity": ["recordType", "detectedAt", "title"]
+      },
       "routes": {
         "html": "/governance/incidents",
         "api": "/v1/assurance/incidents"
@@ -216,6 +256,10 @@
         "records",
         "api-index"
       ],
+      "recordCollection": {
+        "path": "records",
+        "identity": ["recordType", "exerciseType", "scenario"]
+      },
       "routes": {
         "html": "/governance/incidents",
         "api": "/v1/assurance/incidents"
@@ -233,6 +277,10 @@
         "records",
         "api-index"
       ],
+      "recordCollection": {
+        "path": "records",
+        "identity": ["recordType", "publishedAt"]
+      },
       "routes": {
         "html": "/security",
         "api": "/v1/assurance/advisories"

@@ -1,10 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {
+  assuranceRecordResources,
+  assuranceRecordsFromDocument,
   canonicalAssuranceDatasetPaths,
   flattenAssuranceRegistry,
   loadAssuranceRegistry,
-  primaryRegistryDataset,
 } from './lib/assurance-registry.mjs';
 import { validateRelationshipSet } from './lib/assurance-relationships.mjs';
 
@@ -49,18 +50,6 @@ function scanCanonical(relative, value, pointer = '$') {
 }
 for (const relative of canonicalPaths) scanCanonical(relative, readJson(relative));
 
-const evidencePath = primaryRegistryDataset(registry, 'evidence').path;
-const claimsPath = primaryRegistryDataset(registry, 'claims').path;
-const risksPath = primaryRegistryDataset(registry, 'risks').path;
-const incidentsPath = primaryRegistryDataset(registry, 'incidents').path;
-const exercisesPath = primaryRegistryDataset(registry, 'exercises').path;
-const advisoriesPath = primaryRegistryDataset(registry, 'advisories').path;
-const evidence = readJson(evidencePath);
-const claims = readJson(claimsPath);
-const risks = readJson(risksPath);
-const incidents = readJson(incidentsPath);
-const exercises = readJson(exercisesPath);
-const advisories = readJson(advisoriesPath);
 const governance = readJson('docs/governance/REFERENCE-REGISTRY.json');
 const objectiveCatalogReference = 'WG-OBJ-001';
 const objectiveCatalogEntry = (governance.records ?? []).find((record) => record.reference === objectiveCatalogReference);
@@ -75,6 +64,41 @@ if (!objectiveCatalogEntry) {
   if (objectiveIds.size === 0) errors.push(`${objectiveCatalogReference}: no permanent objective IDs were found in ${objectiveCatalogEntry.path}`);
 }
 
+const recordResources = assuranceRecordResources(registry);
+const recordEntries = [];
+const recordsByKind = new Map();
+const documentsByResource = new Map();
+for (const resource of recordResources) {
+  if (!resource.capabilities?.includes('runtime')) {
+    errors.push(`${resource.id}: records capability is unsupported without runtime capability`);
+    continue;
+  }
+  const data = readJson(resource.path);
+  documentsByResource.set(resource.id, data);
+  let records;
+  try {
+    records = assuranceRecordsFromDocument(resource, data);
+  } catch (error) {
+    errors.push(`${resource.path}: ${error instanceof Error ? error.message : String(error)}`);
+    continue;
+  }
+  const family = recordsByKind.get(resource.kind) ?? [];
+  for (const record of records) {
+    const entry = { resource, record };
+    recordEntries.push(entry);
+    family.push(entry);
+  }
+  recordsByKind.set(resource.kind, family);
+}
+
+function recordsForKind(kind) {
+  return (recordsByKind.get(kind) ?? []).map((entry) => entry.record);
+}
+
+function idsForKind(kind) {
+  return new Set(recordsForKind(kind).map((record) => record.id).filter((id) => typeof id === 'string'));
+}
+
 const idOwners = new Map();
 function registerPublicId(id, owner) {
   if (!id || typeof id !== 'string') { errors.push(`${owner}: missing public stable ID`); return; }
@@ -83,8 +107,9 @@ function registerPublicId(id, owner) {
   else idOwners.set(id, owner);
 }
 
-for (const record of evidence.records ?? []) {
-  registerPublicId(record.id, 'evidence');
+for (const { resource, record } of recordEntries) {
+  registerPublicId(record.id, resource.id);
+  if (resource.kind !== 'evidence') continue;
   if (record.locator?.route && !publicRoutes.has(record.locator.route)) errors.push(`${record.id}: evidence route is missing from the route manifest: ${record.locator.route}`);
   const isTimeBound = record.kind === 'observation' || record.observedAt !== undefined || record.validUntil !== undefined;
   if (isTimeBound) {
@@ -97,63 +122,50 @@ for (const record of evidence.records ?? []) {
     }
   }
 }
-for (const record of claims.records ?? []) registerPublicId(record.id, 'claim');
-for (const record of risks.records ?? []) registerPublicId(record.id, 'risk');
-for (const record of incidents.records ?? []) registerPublicId(record.id, 'incident');
-for (const record of exercises.records ?? []) registerPublicId(record.id, 'exercise');
-for (const record of advisories.records ?? []) registerPublicId(record.id, 'advisory');
 
-const complianceRecords = [];
-const frameworkIds = new Set();
-for (const resource of resources.filter((entry) => entry.kind === 'compliance' && entry.capabilities?.includes('records'))) {
-  const data = readJson(resource.path);
-  if (Array.isArray(data.records)) {
-    if (data.framework?.id) frameworkIds.add(data.framework.id);
-    for (const record of data.records) complianceRecords.push(record);
-  } else if (Array.isArray(data.criteria)) {
-    if (data.framework) frameworkIds.add(data.framework);
-    for (const record of data.criteria) complianceRecords.push(record);
-  }
-}
+const complianceRecords = recordsForKind('compliance');
+const frameworkIds = new Set(complianceRecords.map((record) => record.framework).filter((value) => typeof value === 'string'));
 const manifestResources = resources.filter((entry) => entry.kind === 'compliance' && entry.capabilities?.includes('manifest'));
 for (const resource of manifestResources) {
   const data = readJson(resource.path);
   if (data.framework?.id) frameworkIds.add(data.framework.id);
 }
+const compliancePrefixes = new Map([
+  ['iso-27001', 'ISO27001'],
+  ['iso-42001', 'ISO42001'],
+  ['wcag-2.2', 'WCAG'],
+]);
 for (const record of complianceRecords) {
-  registerPublicId(record.id, 'compliance');
-  const prefix = record.framework === 'wcag-2.2' ? 'WCAG' : record.framework === 'iso-27001' ? 'ISO27001' : 'ISO42001';
-  if (record.id !== `${prefix}-${record.reference}`) errors.push(`${record.id}: compliance identity must be explicit and canonical`);
+  const prefix = compliancePrefixes.get(record.framework);
+  if (prefix && record.id !== `${prefix}-${record.reference}`) errors.push(`${record.id}: compliance identity must be explicit and canonical`);
 }
 
 const targetFamilies = new Map([
-  ['evidence', new Set((evidence.records ?? []).map((record) => record.id))],
-  ['compliance', new Set(complianceRecords.map((record) => record.id))],
+  ['evidence', idsForKind('evidence')],
+  ['compliance', idsForKind('compliance')],
   ['frameworks', frameworkIds],
-  ['claims', new Set((claims.records ?? []).map((record) => record.id))],
-  ['risks', new Set((risks.records ?? []).map((record) => record.id))],
+  ['claims', idsForKind('claims')],
+  ['risks', idsForKind('risks')],
   ['controls', new Set(complianceRecords.filter((record) => record.kind === 'control').map((record) => record.id))],
-  ['incidents', new Set((incidents.records ?? []).map((record) => record.id))],
-  ['exercises', new Set((exercises.records ?? []).map((record) => record.id))],
-  ['advisories', new Set((advisories.records ?? []).map((record) => record.id))],
+  ['incidents', idsForKind('incidents')],
+  ['exercises', idsForKind('exercises')],
+  ['advisories', idsForKind('advisories')],
   ['governanceDocuments', new Set((governance.records ?? []).map((record) => record.reference))],
   ['objectives', objectiveIds],
 ]);
 
-const relationshipDatasets = [
-  [claimsPath, claims.records ?? []], [risksPath, risks.records ?? []], [incidentsPath, incidents.records ?? []],
-  [exercisesPath, exercises.records ?? []], [advisoriesPath, advisories.records ?? []],
-];
-for (const [relative, records] of relationshipDatasets) {
-  for (const record of records) errors.push(...validateRelationshipSet(record.relationships, targetFamilies, `${relative}:${record.id}`));
+for (const { resource, record } of recordEntries) {
+  if (record?.relationships) errors.push(...validateRelationshipSet(record.relationships, targetFamilies, `${resource.path}:${record.id}`));
 }
-for (const record of complianceRecords) errors.push(...validateRelationshipSet(record.relationships, targetFamilies, `compliance:${record.id}`));
 for (const resource of manifestResources) {
   const data = readJson(resource.path);
   if (data.registryRelationships) errors.push(...validateRelationshipSet(data.registryRelationships, targetFamilies, `${resource.path}:registry`));
 }
-for (const source of risks.sourceRegisters ?? []) {
-  if (!targetFamilies.get('governanceDocuments').has(source.governanceDocumentReference)) errors.push(`${risksPath}: unresolved governance document ${source.governanceDocumentReference}`);
+for (const resource of recordResources.filter((entry) => entry.kind === 'risks')) {
+  const data = documentsByResource.get(resource.id);
+  for (const source of data?.sourceRegisters ?? []) {
+    if (!targetFamilies.get('governanceDocuments').has(source.governanceDocumentReference)) errors.push(`${resource.path}: unresolved governance document ${source.governanceDocumentReference}`);
+  }
 }
 
 if (errors.length) {
@@ -161,4 +173,4 @@ if (errors.length) {
   for (const error of errors) console.error(`- ${error}`);
   process.exit(1);
 }
-console.log(`Assurance integrity validation passed: ${idOwners.size} globally unique public IDs, ${canonicalPaths.size} registry-discovered canonical files, ${requiredRoutes.length} required routes, and ${complianceRecords.length} explicit compliance IDs.`);
+console.log(`Assurance integrity validation passed: ${idOwners.size} globally unique public IDs from ${recordEntries.length} registry-discovered records, ${canonicalPaths.size} canonical files, ${requiredRoutes.length} required routes, and ${complianceRecords.length} explicit compliance IDs.`);

@@ -1,7 +1,27 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {
+  assuranceRecordCollectionPath,
+  assuranceRecordEntries,
+  assuranceRecordIdentity,
+  assuranceRecordResources,
+  assuranceRecordsForKind,
+  assuranceRecordsFromDocument,
+  assuranceValueAtPath,
+  flattenAssuranceResources,
+} from '../../src/assurance/record-discovery.js';
 
 export const ASSURANCE_REGISTRY_PATH = 'assurance/registry.json';
+
+export {
+  assuranceRecordCollectionPath,
+  assuranceRecordEntries,
+  assuranceRecordIdentity,
+  assuranceRecordResources,
+  assuranceRecordsForKind,
+  assuranceRecordsFromDocument,
+  assuranceValueAtPath,
+};
 
 export function readJsonFile(root, relative) {
   return JSON.parse(fs.readFileSync(path.join(root, relative), 'utf8'));
@@ -19,15 +39,7 @@ export function isControlledRelativePath(relative) {
 }
 
 export function flattenAssuranceRegistry(registry) {
-  const resources = [];
-  for (const dataset of registry.datasets ?? []) {
-    resources.push(dataset);
-    for (const resource of dataset.resources ?? []) resources.push(resource);
-  }
-  if (registry.lifecycle) resources.push(registry.lifecycle);
-  for (const resource of registry.presentations ?? []) resources.push(resource);
-  for (const resource of registry.operations ?? []) resources.push(resource);
-  return resources;
+  return flattenAssuranceResources(registry);
 }
 
 export function registryResourcesByKind(registry, kind) {
@@ -55,9 +67,9 @@ export function requireRegistryResource(registry, predicate, label) {
 }
 
 export function primaryRegistryDataset(registry, kind) {
-  const matches = (registry.datasets ?? []).filter((dataset) => dataset.kind === kind);
+  const matches = (registry.datasets ?? []).filter((dataset) => dataset.kind === kind && dataset.capabilities?.includes('api-index'));
   if (matches.length !== 1) {
-    throw new Error(`assurance/registry.json: expected exactly one primary ${kind} dataset; found ${matches.length}`);
+    throw new Error(`assurance/registry.json: expected exactly one indexed ${kind} dataset; found ${matches.length}`);
   }
   return matches[0];
 }

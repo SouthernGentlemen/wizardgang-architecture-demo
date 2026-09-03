@@ -2,15 +2,9 @@ import { repoUrl } from '../lib/github';
 import type { Env } from '../types';
 import {
   assuranceCanonicalRelationshipRecords,
-  assuranceModelAdvisories,
-  assuranceModelClaims,
   assuranceModelComplianceFrameworks,
-  assuranceModelComplianceRecords,
-  assuranceModelEvidence,
-  assuranceModelExercises,
-  assuranceModelIncidents,
   assuranceModelQualifications,
-  assuranceModelRisks,
+  assuranceModelRecordCollections,
   assurancePublicRegistryMetadata,
   assuranceRegistryResources,
   primaryAssuranceResource,
@@ -18,6 +12,7 @@ import {
   type AssuranceDataset,
   type AssuranceRelationships,
   type AssuranceRegistryFilter,
+  type AssuranceRegistryResource,
   type ComplianceFramework,
   type ComplianceLevel,
   type ComplianceStatus,
@@ -39,6 +34,7 @@ import {
   type RiskRating,
   type RiskStatus,
 } from './model';
+import { assuranceRecordCollectionPath } from './record-discovery.js';
 
 export type {
   AssuranceDataset,
@@ -79,36 +75,30 @@ export interface AssuranceRecordMap {
 export type AssuranceRecord = AssuranceRecordMap[AssuranceDataset];
 export type AssuranceFilterValues = Record<string, string>;
 
-const recordsByDataset: { [K in AssuranceDataset]: AssuranceRecordMap[K][] } = {
-  claims: assuranceModelClaims,
-  evidence: assuranceModelEvidence,
-  risks: assuranceModelRisks,
-  incidents: assuranceModelIncidents,
-  exercises: assuranceModelExercises,
-  advisories: assuranceModelAdvisories,
-  compliance: assuranceModelComplianceRecords,
-};
+function recordsForDataset<K extends AssuranceDataset>(dataset: K): AssuranceRecordMap[K][] {
+  return assuranceModelRecordCollections[dataset] as AssuranceRecordMap[K][];
+}
 
 export function listAssuranceRecords<K extends AssuranceDataset>(dataset: K): AssuranceRecordMap[K][] {
-  return [...recordsByDataset[dataset]] as AssuranceRecordMap[K][];
+  return [...recordsForDataset(dataset)];
 }
 
 export function findAssuranceRecord<K extends AssuranceDataset>(
   dataset: K,
   recordId: string,
 ): AssuranceRecordMap[K] | undefined {
-  return recordsByDataset[dataset].find((record) => record.id === recordId);
+  return recordsForDataset(dataset).find((record) => record.id === recordId);
 }
 
 export function assuranceDatasetForRecordId(recordId: string): AssuranceDataset | undefined {
-  for (const dataset of Object.keys(recordsByDataset) as AssuranceDataset[]) {
-    if (recordsByDataset[dataset].some((record) => record.id === recordId)) return dataset;
+  for (const [dataset, records] of Object.entries(assuranceModelRecordCollections)) {
+    if (records.some((record) => record.id === recordId)) return dataset as AssuranceDataset;
   }
   return undefined;
 }
 
 export function assuranceDatasetCount(dataset: AssuranceDataset): number {
-  return recordsByDataset[dataset].length;
+  return recordsForDataset(dataset).length;
 }
 
 export function assuranceDatasetSource(dataset: AssuranceDataset): string {
@@ -138,21 +128,19 @@ function resolveLocalSchemaRef(root: JsonSchema, node: unknown): JsonSchema | un
   return undefined;
 }
 
-function recordSchema(root: JsonSchema): JsonSchema | undefined {
-  const properties = root.properties;
-  if (!properties || typeof properties !== 'object' || Array.isArray(properties)) return undefined;
-  const collections = properties as JsonSchema;
-  for (const key of ['records', 'criteria']) {
-    const collection = resolveLocalSchemaRef(root, collections[key]);
-    if (!collection) continue;
-    const item = resolveLocalSchemaRef(root, collection.items);
-    if (item) return item;
+function recordSchema(root: JsonSchema, collectionPath: string): JsonSchema | undefined {
+  let node: JsonSchema | undefined = root;
+  for (const segment of collectionPath.split('.')) {
+    if (!node) return undefined;
+    const properties = node.properties;
+    if (!properties || typeof properties !== 'object' || Array.isArray(properties)) return undefined;
+    node = resolveLocalSchemaRef(root, (properties as JsonSchema)[segment]);
   }
-  return undefined;
+  return node ? resolveLocalSchemaRef(root, node.items) : undefined;
 }
 
-function schemaProperty(root: JsonSchema, path: string): JsonSchema | undefined {
-  let node = recordSchema(root);
+function schemaProperty(root: JsonSchema, collectionPath: string, path: string): JsonSchema | undefined {
+  let node = recordSchema(root, collectionPath);
   for (const segment of path.split('.')) {
     if (!node) return undefined;
     const properties = node.properties;
@@ -162,14 +150,14 @@ function schemaProperty(root: JsonSchema, path: string): JsonSchema | undefined 
   return node;
 }
 
-function schemaValues(root: JsonSchema, path: string): string[] {
-  const property = schemaProperty(root, path);
+function schemaValues(root: JsonSchema, collectionPath: string, path: string): string[] {
+  const property = schemaProperty(root, collectionPath, path);
   if (!property) return [];
   if (Array.isArray(property.enum)) return property.enum.filter((value): value is string => typeof value === 'string');
   return typeof property.const === 'string' ? [property.const] : [];
 }
 
-function datasetResources(dataset: AssuranceDataset) {
+function datasetResources(dataset: AssuranceDataset): AssuranceRegistryResource[] {
   return assuranceRegistryResources.filter(
     (resource) => resource.kind === dataset && resource.capabilities.includes('records') && resource.capabilities.includes('runtime'),
   );
@@ -186,7 +174,9 @@ export function assuranceFilterValues(dataset: AssuranceDataset, parameter: stri
   const values: string[] = [];
   for (const resource of datasetResources(dataset)) {
     const schema = runtimeAssuranceSchema(resource);
-    for (const value of schemaValues(schema, definition.path)) {
+    const collectionPath = assuranceRecordCollectionPath(resource);
+    if (!collectionPath) throw new Error(`${resource.id} cannot supply filters without a declared record collection.`);
+    for (const value of schemaValues(schema, collectionPath, definition.path)) {
       if (!values.includes(value)) values.push(value);
     }
   }
@@ -364,7 +354,7 @@ export type AssuranceRelationshipName = keyof AssuranceRelationships;
 
 export interface AssuranceRelationshipReference {
   sourceId: string;
-  dataset: Exclude<AssuranceDataset, 'evidence'>;
+  dataset: string;
   relation: AssuranceRelationshipName;
 }
 
@@ -528,6 +518,7 @@ export const publicComplianceRegistry = {
 const incidents = listAssuranceRecords('incidents');
 const exercises = listAssuranceRecords('exercises');
 
+// Released v1 envelope: keep this explicit even though record discovery below it is registry-driven.
 export const publicAssuranceRegistry = {
   ...assurancePublicRegistryMetadata,
   counts: {

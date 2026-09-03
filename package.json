@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:accessibility": "vitest run tests/interface.test.ts",
-    "test:assurance-integrity": "vitest run tests/assurance-integrity.test.ts tests/assurance-lifecycle.test.ts tests/assurance-presentation-consistency.test.ts tests/assurance-registry-completeness.test.ts",
+    "test:assurance-integrity": "vitest run tests/assurance-integrity.test.ts tests/assurance-lifecycle.test.ts tests/assurance-presentation-consistency.test.ts tests/assurance-registry-completeness.test.ts tests/assurance-record-discovery.test.ts",
     "validate:contracts": "node scripts/validate-contracts.mjs",
     "validate:locales": "node scripts/validate-locales.mjs",
     "validate:history": "node scripts/validate-history.mjs",

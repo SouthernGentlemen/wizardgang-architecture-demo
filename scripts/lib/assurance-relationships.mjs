@@ -1,12 +1,21 @@
-import { primaryRegistryDataset, readJsonFile } from './assurance-registry.mjs';
+import {
+  assuranceRecordResources,
+  assuranceRecordsFromDocument,
+  primaryRegistryDataset,
+  readJsonFile,
+} from './assurance-registry.mjs';
 
 export function registeredRelationshipFamily(root, registry, kind) {
   const resource = primaryRegistryDataset(registry, kind);
-  const dataset = readJsonFile(root, resource.path);
+  const records = [];
+  for (const candidate of assuranceRecordResources(registry).filter((entry) => entry.kind === kind)) {
+    const dataset = readJsonFile(root, candidate.path);
+    records.push(...assuranceRecordsFromDocument(candidate, dataset));
+  }
   return {
     resource,
-    dataset,
-    ids: new Set((dataset.records ?? []).map((record) => record.id)),
+    dataset: { records },
+    ids: new Set(records.map((record) => record.id)),
   };
 }
 
