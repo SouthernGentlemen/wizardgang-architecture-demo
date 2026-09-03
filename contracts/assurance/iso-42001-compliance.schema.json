@@ -18,69 +18,29 @@
     "records"
   ],
   "properties": {
-    "schemaVersion": {
-      "const": 1
-    },
-    "id": {
-      "const": "iso-iec-42001-2023-public-compliance"
-    },
-    "standard": {
-      "const": "ISO/IEC 42001:2023"
-    },
-    "edition": {
-      "const": "2023"
-    },
-    "visibility": {
-      "const": "public"
-    },
-    "qualification": {
-      "type": "string",
-      "minLength": 1
-    },
-    "paraphraseNotice": {
-      "type": "string",
-      "minLength": 1
-    },
+    "schemaVersion": { "const": 1 },
+    "id": { "const": "iso-iec-42001-2023-public-compliance" },
+    "standard": { "const": "ISO/IEC 42001:2023" },
+    "edition": { "const": "2023" },
+    "visibility": { "const": "public" },
+    "qualification": { "type": "string", "minLength": 1 },
+    "paraphraseNotice": { "type": "string", "minLength": 1 },
     "sourceSoa": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "id",
-        "governanceDocumentReference",
-        "status",
-        "assessmentDate",
-        "approval"
-      ],
+      "required": ["id", "governanceDocumentReference", "status", "assessmentDate", "approval"],
       "properties": {
-        "id": {
-          "const": "WG-SOA-002"
-        },
-        "governanceDocumentReference": {
-          "const": "WG-SOA-002"
-        },
-        "status": {
-          "const": "approved"
-        },
-        "assessmentDate": {
-          "type": "string",
-          "format": "date"
-        },
+        "id": { "const": "WG-SOA-002" },
+        "governanceDocumentReference": { "const": "WG-SOA-002" },
+        "status": { "const": "approved" },
+        "assessmentDate": { "type": "string", "format": "date" },
         "approval": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "pullRequest",
-            "mergeCommit"
-          ],
+          "required": ["pullRequest", "mergeCommit"],
           "properties": {
-            "pullRequest": {
-              "type": "integer",
-              "minimum": 1
-            },
-            "mergeCommit": {
-              "type": "string",
-              "pattern": "^[0-9a-f]{40}$"
-            }
+            "pullRequest": { "type": "integer", "minimum": 1 },
+            "mergeCommit": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
           }
         }
       }
@@ -88,35 +48,14 @@
     "framework": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "id",
-        "label",
-        "edition",
-        "qualification",
-        "assessmentDate",
-        "sourcePath"
-      ],
+      "required": ["id", "label", "edition", "qualification", "assessmentDate", "sourcePath"],
       "properties": {
-        "id": {
-          "const": "iso-42001"
-        },
-        "label": {
-          "const": "ISO/IEC 42001:2023"
-        },
-        "edition": {
-          "const": "2023"
-        },
-        "qualification": {
-          "type": "string",
-          "minLength": 1
-        },
-        "assessmentDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "sourcePath": {
-          "const": "assurance/compliance/iso-42001-2023.json"
-        }
+        "id": { "const": "iso-42001" },
+        "label": { "const": "ISO/IEC 42001:2023" },
+        "edition": { "const": "2023" },
+        "qualification": { "type": "string", "minLength": 1 },
+        "assessmentDate": { "type": "string", "format": "date" },
+        "sourcePath": { "const": "assurance/compliance/iso-42001-2023.json" }
       }
     },
     "records": {
@@ -139,192 +78,36 @@
           "sourcePath"
         ],
         "properties": {
-          "id": {
-            "type": "string",
-            "pattern": "^ISO42001-[A0-9.]+$"
-          },
-          "framework": {
-            "const": "iso-42001"
-          },
-          "frameworkLabel": {
-            "const": "ISO/IEC 42001:2023"
-          },
+          "id": { "type": "string", "pattern": "^ISO42001-[A0-9.]+$" },
+          "framework": { "const": "iso-42001" },
+          "frameworkLabel": { "const": "ISO/IEC 42001:2023" },
           "reference": {
             "type": "string",
             "pattern": "^(?:[4-9]|10)\\.[0-9]+(?:\\.[0-9]+)?$|^A\\.[0-9]+(?:\\.[0-9]+)+$"
           },
-          "title": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 80
-          },
-          "kind": {
-            "enum": [
-              "clause",
-              "control"
-            ]
-          },
-          "section": {
-            "type": "string",
-            "minLength": 1
-          },
-          "status": {
-            "enum": [
-              "met",
-              "partial",
-              "gap",
-              "not-applicable"
-            ]
-          },
-          "applicability": {
-            "enum": [
-              "applicable",
-              "not-applicable"
-            ]
-          },
-          "rationale": {
-            "type": "string",
-            "minLength": 10
-          },
-          "relationships": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "evidence",
-              "compliance",
-              "frameworks",
-              "claims",
-              "risks",
-              "controls",
-              "incidents",
-              "exercises",
-              "advisories",
-              "governanceDocuments",
-              "objectives"
-            ],
-            "properties": {
-              "evidence": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^EVD-[A-Z]+-[0-9]{3,}$"
-                }
-              },
-              "compliance": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^(ISO27001|ISO42001)-[A0-9.]+$|^WCAG-[0-9.]+$"
-                }
-              },
-              "frameworks": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^(iso-27001|iso-42001|wcag-2\\.2)$"
-                }
-              },
-              "claims": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^CLM-[A-Z]+-[0-9]{3,}$"
-                }
-              },
-              "risks": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^(SEC|AI)-RISK-[0-9]{3}$"
-                }
-              },
-              "controls": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^(ISO27001|ISO42001)-A\\.[0-9.]+$"
-                }
-              },
-              "incidents": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^INC-[0-9]{3,}$"
-                }
-              },
-              "exercises": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^EX-[0-9]{3,}$"
-                }
-              },
-              "advisories": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^ADV-[0-9]{3,}$"
-                }
-              },
-              "governanceDocuments": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^WG-[A-Z]+-[0-9]{3}$"
-                }
-              },
-              "objectives": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^[A-Z]+-OBJ-[0-9]{3}$"
-                }
-              }
-            }
-          },
-          "sourcePath": {
-            "const": "assurance/compliance/iso-42001-2023.json"
-          }
+          "title": { "type": "string", "minLength": 1, "maxLength": 80 },
+          "kind": { "enum": ["clause", "control"] },
+          "section": { "type": "string", "minLength": 1 },
+          "status": { "enum": ["met", "partial", "gap", "not-applicable"] },
+          "applicability": { "enum": ["applicable", "not-applicable"] },
+          "rationale": { "type": "string", "minLength": 10 },
+          "relationships": { "$ref": "./relationships.schema.json" },
+          "sourcePath": { "const": "assurance/compliance/iso-42001-2023.json" }
         },
         "allOf": [
           {
             "if": {
-              "properties": {
-                "status": {
-                  "const": "not-applicable"
-                }
-              },
-              "required": [
-                "status"
-              ]
+              "properties": { "status": { "const": "not-applicable" } },
+              "required": ["status"]
             },
             "then": {
-              "required": [
-                "rationale"
-              ],
-              "properties": {
-                "applicability": {
-                  "const": "not-applicable"
-                }
-              }
+              "required": ["rationale"],
+              "properties": { "applicability": { "const": "not-applicable" } }
             }
           }
         ]
       }
     },
-    "scopeLimitations": {
-      "type": "object"
-    }
+    "scopeLimitations": { "type": "object" }
   }
 }

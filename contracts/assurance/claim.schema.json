@@ -4,158 +4,30 @@
   "title": "Public Assurance Claim Dataset",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "schemaVersion",
-    "records"
-  ],
+  "required": ["schemaVersion", "records"],
   "properties": {
-    "schemaVersion": {
-      "const": 1
-    },
+    "schemaVersion": { "const": 1 },
     "records": {
       "type": "array",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "id",
-          "area",
-          "title",
-          "statement",
-          "posture",
-          "relationships"
-        ],
+        "required": ["id", "area", "title", "statement", "posture", "relationships"],
         "properties": {
-          "id": {
-            "type": "string",
-            "pattern": "^CLM-[A-Z]+-[0-9]{3,}$"
-          },
-          "area": {
-            "type": "string",
-            "pattern": "^[a-z0-9-]+$"
-          },
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "statement": {
-            "type": "string",
-            "minLength": 1
-          },
-          "posture": {
-            "enum": [
-              "met",
-              "partial",
-              "gap",
-              "not-applicable"
-            ]
-          },
+          "id": { "type": "string", "pattern": "^CLM-[A-Z]+-[0-9]{3,}$" },
+          "area": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "title": { "type": "string", "minLength": 1 },
+          "statement": { "type": "string", "minLength": 1 },
+          "posture": { "enum": ["met", "partial", "gap", "not-applicable"] },
           "relationships": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "evidence",
-              "compliance",
-              "frameworks",
-              "claims",
-              "risks",
-              "controls",
-              "incidents",
-              "exercises",
-              "advisories",
-              "governanceDocuments",
-              "objectives"
-            ],
+            "$ref": "./relationships.schema.json",
             "properties": {
-              "evidence": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^EVD-[A-Z]+-[0-9]{3,}$"
-                }
-              },
-              "compliance": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^(ISO27001|ISO42001)-[A0-9.]+$|^WCAG-[0-9.]+$"
-                }
-              },
-              "frameworks": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^(iso-27001|iso-42001|wcag-2\\.2)$"
-                }
-              },
-              "claims": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^CLM-[A-Z]+-[0-9]{3,}$"
-                }
-              },
-              "risks": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^(SEC|AI)-RISK-[0-9]{3}$"
-                }
-              },
-              "controls": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^(ISO27001|ISO42001)-A\\.[0-9.]+$"
-                }
-              },
-              "incidents": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^INC-[0-9]{3,}$"
-                }
-              },
-              "exercises": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^EX-[0-9]{3,}$"
-                }
-              },
-              "advisories": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^ADV-[0-9]{3,}$"
-                }
-              },
-              "governanceDocuments": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^WG-[A-Z]+-[0-9]{3}$"
-                }
-              },
-              "objectives": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^[A-Z]+-OBJ-[0-9]{3}$"
-                }
-              }
-            }
+              "evidence": { "minItems": 1 }
+            },
+            "anyOf": [
+              { "properties": { "compliance": { "minItems": 1 } } },
+              { "properties": { "frameworks": { "minItems": 1 } } }
+            ]
           }
         }
       }

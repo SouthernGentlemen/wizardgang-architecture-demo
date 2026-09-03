@@ -1,4 +1,9 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
 const supportedFormats = new Set(['date', 'date-time', 'uri']);
+const datePattern = /^(\d{4})-(\d{2})-(\d{2})$/;
+const dateTimePattern = /^(\d{4}-\d{2}-\d{2})T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|[+-](?:[01]\d|2[0-3]):[0-5]\d)$/i;
 
 function jsonPointerToken(value) {
   return String(value).replaceAll('~', '~0').replaceAll('/', '~1');
@@ -17,12 +22,13 @@ function deepEqual(left, right) {
   return deepEqual(leftKeys, rightKeys) && leftKeys.every((key) => deepEqual(left[key], right[key]));
 }
 
-function resolveLocalRef(rootSchema, ref) {
-  if (!ref.startsWith('#/')) throw new Error(`unsupported non-local JSON Schema reference ${ref}`);
-  return ref.slice(2).split('/').reduce((value, token) => {
+function resolveJsonPointer(rootSchema, pointer) {
+  if (pointer === '#' || pointer === '') return rootSchema;
+  if (!pointer.startsWith('#/')) throw new Error(`unsupported JSON Schema fragment ${pointer}`);
+  return pointer.slice(2).split('/').reduce((value, token) => {
     const decoded = token.replaceAll('~1', '/').replaceAll('~0', '~');
     if (!value || typeof value !== 'object' || !(decoded in value)) {
-      throw new Error(`unresolved JSON Schema reference ${ref}`);
+      throw new Error(`unresolved JSON Schema reference ${pointer}`);
     }
     return value[decoded];
   }, rootSchema);
@@ -41,11 +47,26 @@ function typeMatches(value, type) {
   }
 }
 
+function validDate(value) {
+  const match = datePattern.exec(value);
+  if (!match) return false;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const parsed = new Date(0);
+  parsed.setUTCHours(0, 0, 0, 0);
+  parsed.setUTCFullYear(year, month - 1, day);
+  return parsed.getUTCFullYear() === year
+    && parsed.getUTCMonth() === month - 1
+    && parsed.getUTCDate() === day;
+}
+
 function validFormat(value, format) {
-  if (format === 'date') {
-    return /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));
+  if (format === 'date') return validDate(value);
+  if (format === 'date-time') {
+    const match = dateTimePattern.exec(value);
+    return Boolean(match) && validDate(match[1]) && !Number.isNaN(Date.parse(value));
   }
-  if (format === 'date-time') return !Number.isNaN(Date.parse(value));
   if (format === 'uri') {
     try {
       const parsed = new URL(value);
@@ -55,6 +76,42 @@ function validFormat(value, format) {
     }
   }
   return true;
+}
+
+function splitReference(ref) {
+  const hashIndex = ref.indexOf('#');
+  if (hashIndex === -1) return { document: ref, fragment: '#' };
+  return {
+    document: ref.slice(0, hashIndex),
+    fragment: `#${ref.slice(hashIndex + 1)}`,
+  };
+}
+
+function resolveReference(ref, context) {
+  const { document, fragment } = splitReference(ref);
+  if (!document) {
+    return {
+      target: resolveJsonPointer(context.rootSchema, fragment),
+      context,
+      schemaPath: fragment,
+    };
+  }
+  if (!context.loadSchema) throw new Error(`unsupported non-local JSON Schema reference ${ref}`);
+  const loaded = context.loadSchema(document, context.schemaPath);
+  if (!loaded || !loaded.schema || typeof loaded.schema !== 'object' || Array.isArray(loaded.schema)) {
+    throw new Error(`unable to load JSON Schema reference ${ref}`);
+  }
+  assertSupportedNode(loaded.schema, loaded.schemaPath);
+  const nestedContext = {
+    ...context,
+    rootSchema: loaded.schema,
+    schemaPath: loaded.schemaPath,
+  };
+  return {
+    target: resolveJsonPointer(loaded.schema, fragment),
+    context: nestedContext,
+    schemaPath: fragment,
+  };
 }
 
 function validateNode(value, schema, context, instancePath = '$', schemaPath = '#') {
@@ -72,8 +129,18 @@ function validateNode(value, schema, context, instancePath = '$', schemaPath = '
   });
 
   if (schema.$ref) {
-    const target = resolveLocalRef(context.rootSchema, schema.$ref);
-    errors.push(...validateNode(value, target, context, instancePath, schema.$ref));
+    const resolved = resolveReference(schema.$ref, context);
+    const refKey = `${resolved.context.schemaPath}${resolved.schemaPath}`;
+    if (context.refStack?.has(refKey)) throw new Error(`cyclic JSON Schema reference ${schema.$ref}`);
+    const refStack = new Set(context.refStack ?? []);
+    refStack.add(refKey);
+    errors.push(...validateNode(
+      value,
+      resolved.target,
+      { ...resolved.context, refStack },
+      instancePath,
+      resolved.schemaPath,
+    ));
   }
 
   for (const [index, child] of (schema.allOf ?? []).entries()) {
@@ -90,14 +157,14 @@ function validateNode(value, schema, context, instancePath = '$', schemaPath = '
     if (matches !== 1) push(`must match exactly one oneOf schema; matched ${matches}`, 'oneOf');
   }
 
-  if (schema.not && validateNode(value, schema.not, context, instancePath, `${schemaPath}/not`).length === 0) {
+  if (schema.not !== undefined && validateNode(value, schema.not, context, instancePath, `${schemaPath}/not`).length === 0) {
     push('must not match the prohibited schema', 'not');
   }
 
-  if (schema.if) {
+  if (schema.if !== undefined) {
     const conditionMatches = validateNode(value, schema.if, context, instancePath, `${schemaPath}/if`).length === 0;
-    if (conditionMatches && schema.then) errors.push(...validateNode(value, schema.then, context, instancePath, `${schemaPath}/then`));
-    if (!conditionMatches && schema.else) errors.push(...validateNode(value, schema.else, context, instancePath, `${schemaPath}/else`));
+    if (conditionMatches && schema.then !== undefined) errors.push(...validateNode(value, schema.then, context, instancePath, `${schemaPath}/then`));
+    if (!conditionMatches && schema.else !== undefined) errors.push(...validateNode(value, schema.else, context, instancePath, `${schemaPath}/else`));
   }
 
   if (Object.hasOwn(schema, 'const') && !deepEqual(value, schema.const)) push(`must equal ${JSON.stringify(schema.const)}`, 'const');
@@ -140,7 +207,7 @@ function validateNode(value, schema, context, instancePath = '$', schemaPath = '
         }
       }
     }
-    if (schema.items && typeof schema.items === 'object') {
+    if (Object.hasOwn(schema, 'items')) {
       value.forEach((item, index) => errors.push(...validateNode(item, schema.items, context, `${instancePath}[${index}]`, `${schemaPath}/items`)));
     }
   }
@@ -182,7 +249,7 @@ function validateNode(value, schema, context, instancePath = '$', schemaPath = '
           schemaPath: `${schemaPath}/additionalProperties`,
           message: `additional property ${key} is not allowed`,
         });
-      } else if (schema.additionalProperties && typeof schema.additionalProperties === 'object') {
+      } else if (schema.additionalProperties !== undefined && schema.additionalProperties !== true) {
         errors.push(...validateNode(value[key], schema.additionalProperties, context, `${instancePath}.${key}`, `${schemaPath}/additionalProperties`));
       }
     }
@@ -212,17 +279,37 @@ function assertSupportedNode(schema, schemaPath, pointer = '#') {
   for (const [key, child] of Object.entries(schema.properties ?? {})) assertSupportedNode(child, schemaPath, `${pointer}/properties/${jsonPointerToken(key)}`);
   for (const [key, child] of Object.entries(schema.$defs ?? {})) assertSupportedNode(child, schemaPath, `${pointer}/$defs/${jsonPointerToken(key)}`);
   for (const key of directSchemaKeywords) {
-    const child = schema[key];
-    if (child && typeof child === 'object') assertSupportedNode(child, schemaPath, `${pointer}/${key}`);
+    if (Object.hasOwn(schema, key)) assertSupportedNode(schema[key], schemaPath, `${pointer}/${key}`);
   }
   for (const key of arraySchemaKeywords) {
     for (const [index, child] of (schema[key] ?? []).entries()) assertSupportedNode(child, schemaPath, `${pointer}/${key}/${index}`);
   }
 }
 
-export function validateJsonSchema(value, schema, { schemaPath = '<schema>' } = {}) {
+export function createFileSchemaLoader(root = process.cwd()) {
+  const absoluteRoot = path.resolve(root);
+  const cache = new Map();
+  return (reference, fromSchemaPath) => {
+    if (!reference || reference.includes('#')) throw new Error(`invalid JSON Schema document reference ${reference}`);
+    if (/^[A-Za-z][A-Za-z0-9+.-]*:/.test(reference)) throw new Error(`unsupported absolute JSON Schema reference ${reference}`);
+    const fromDirectory = path.posix.dirname(fromSchemaPath);
+    const resolvedPath = path.posix.normalize(path.posix.join(fromDirectory, reference));
+    const absolutePath = path.resolve(absoluteRoot, ...resolvedPath.split('/'));
+    const relativePath = path.relative(absoluteRoot, absolutePath);
+    if (!relativePath || relativePath.startsWith('..') || path.isAbsolute(relativePath)) {
+      throw new Error(`JSON Schema reference escapes repository root: ${reference}`);
+    }
+    const normalizedPath = relativePath.split(path.sep).join('/');
+    if (!cache.has(normalizedPath)) {
+      cache.set(normalizedPath, JSON.parse(fs.readFileSync(absolutePath, 'utf8')));
+    }
+    return { schema: cache.get(normalizedPath), schemaPath: normalizedPath };
+  };
+}
+
+export function validateJsonSchema(value, schema, { schemaPath = '<schema>', loadSchema } = {}) {
   assertSupportedNode(schema, schemaPath);
-  return validateNode(value, schema, { rootSchema: schema, schemaPath });
+  return validateNode(value, schema, { rootSchema: schema, schemaPath, loadSchema, refStack: new Set() });
 }
 
 export function formatJsonSchemaErrors(dataPath, schemaPath, errors) {

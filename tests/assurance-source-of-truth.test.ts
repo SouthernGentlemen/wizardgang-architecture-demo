@@ -115,8 +115,8 @@ describe('canonical assurance Markdown presentations', () => {
     const exercises = readJson(fixtureRoot, 'assurance/incidents/exercises.json');
     exercises.records[0].relationships.risks = ['SEC-RISK-999'];
     writeJson(fixtureRoot, 'assurance/incidents/exercises.json', exercises);
-    const result = run(fixtureRoot, 'scripts/validate-assurance.mjs');
-    expect(result.status).not.toBe(0); expect(combined(result)).toContain('EX-001: unresolved risk SEC-RISK-999');
+    const result = run(fixtureRoot, 'scripts/validate-assurance-integrity.mjs');
+    expect(result.status).not.toBe(0); expect(combined(result)).toContain('unresolved risks relationship SEC-RISK-999');
   });
 
   it('keeps generated Markdown out of runtime code paths', () => {
