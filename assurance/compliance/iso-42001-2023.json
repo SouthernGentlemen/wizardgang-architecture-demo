@@ -1,16 +1,12 @@
 {
   "schemaVersion": 1,
   "id": "iso-iec-42001-2023-public-compliance",
-  "standard": "ISO/IEC 42001:2023",
-  "edition": "2023",
   "visibility": "public",
-  "qualification": "Public alignment and engineering-evidence mapping only; independent certification or formal conformance is not claimed.",
   "paraphraseNotice": "Clause and control labels are short original paraphrases; normative ISO text is not reproduced.",
   "sourceSoa": {
     "id": "WG-SOA-002",
     "governanceDocumentReference": "WG-SOA-002",
     "status": "approved",
-    "assessmentDate": "2026-09-02",
     "approval": {
       "pullRequest": 56,
       "mergeCommit": "1ae105da8ab6466e334a2faf4e6c63f5885c91df"
@@ -54,19 +50,9 @@
     ],
     "trainingBoundary": "No model training, fine-tuning, labeling, or model-enhancement pipeline is in scope."
   },
-  "framework": {
-    "id": "iso-42001",
-    "label": "ISO/IEC 42001:2023",
-    "edition": "2023",
-    "qualification": "Public alignment and engineering-evidence mapping only; independent certification or formal conformance is not claimed.",
-    "assessmentDate": "2026-09-02",
-    "sourcePath": "assurance/compliance/iso-42001-2023.json"
-  },
   "records": [
     {
       "id": "ISO42001-4.1",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "4.1",
       "title": "Understand the AI operating context",
       "kind": "clause",
@@ -87,13 +73,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-4.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "4.2",
       "title": "Identify interested-party AI expectations",
       "kind": "clause",
@@ -114,13 +97,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-4.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "4.3",
       "title": "Define the AI management-system boundary",
       "kind": "clause",
@@ -141,13 +121,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-4.4",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "4.4",
       "title": "Operate the AI management system",
       "kind": "clause",
@@ -168,13 +145,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-5.1",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "5.1",
       "title": "Establish leadership accountability for AI",
       "kind": "clause",
@@ -195,13 +169,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-5.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "5.2",
       "title": "Set and maintain AI policy",
       "kind": "clause",
@@ -222,13 +193,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-5.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "5.3",
       "title": "Assign AI governance roles and authority",
       "kind": "clause",
@@ -249,13 +217,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-6.1",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "6.1",
       "title": "Plan responses to AI risks and opportunities",
       "kind": "clause",
@@ -276,13 +241,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-6.1.1",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "6.1.1",
       "title": "Set AI risk and opportunity planning rules",
       "kind": "clause",
@@ -303,13 +265,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-6.1.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "6.1.2",
       "title": "Assess AI risk consistently",
       "kind": "clause",
@@ -330,13 +289,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-6.1.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "6.1.3",
       "title": "Select and manage AI risk treatment",
       "kind": "clause",
@@ -357,13 +313,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-6.1.4",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "6.1.4",
       "title": "Assess AI system impacts",
       "kind": "clause",
@@ -385,13 +338,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-6.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "6.2",
       "title": "Set measurable AI objectives",
       "kind": "clause",
@@ -412,13 +362,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-6.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "6.3",
       "title": "Control AI management-system changes",
       "kind": "clause",
@@ -439,13 +386,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-7.1",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "7.1",
       "title": "Provide AI management-system resources",
       "kind": "clause",
@@ -466,13 +410,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-7.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "7.2",
       "title": "Maintain AI-related competence",
       "kind": "clause",
@@ -493,13 +434,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-7.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "7.3",
       "title": "Maintain AI governance awareness",
       "kind": "clause",
@@ -520,13 +458,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-7.4",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "7.4",
       "title": "Manage AI communications",
       "kind": "clause",
@@ -547,13 +482,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-7.5",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "7.5",
       "title": "Control AI management documentation",
       "kind": "clause",
@@ -574,13 +506,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-7.5.1",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "7.5.1",
       "title": "Maintain the required AI documentation set",
       "kind": "clause",
@@ -601,13 +530,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-7.5.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "7.5.2",
       "title": "Create and update controlled AI records",
       "kind": "clause",
@@ -628,13 +554,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-7.5.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "7.5.3",
       "title": "Protect and govern controlled AI records",
       "kind": "clause",
@@ -655,13 +578,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-8.1",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "8.1",
       "title": "Plan and control AI operations",
       "kind": "clause",
@@ -682,13 +602,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-8.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "8.2",
       "title": "Reassess AI risk during operation",
       "kind": "clause",
@@ -709,13 +626,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-8.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "8.3",
       "title": "Execute and verify AI risk treatment",
       "kind": "clause",
@@ -736,13 +650,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-8.4",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "8.4",
       "title": "Reassess AI system impacts during operation",
       "kind": "clause",
@@ -764,13 +675,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-9.1",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "9.1",
       "title": "Measure and evaluate AI management performance",
       "kind": "clause",
@@ -791,13 +699,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-9.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "9.3",
       "title": "Conduct AI management-system reviews",
       "kind": "clause",
@@ -818,13 +723,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-9.3.1",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "9.3.1",
       "title": "Set management-review cadence",
       "kind": "clause",
@@ -845,13 +747,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-9.3.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "9.3.2",
       "title": "Use defined AI management-review inputs",
       "kind": "clause",
@@ -872,13 +771,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-9.3.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "9.3.3",
       "title": "Record management-review decisions",
       "kind": "clause",
@@ -899,13 +795,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-10.1",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "10.1",
       "title": "Improve the AI management system over time",
       "kind": "clause",
@@ -926,13 +819,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-10.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "10.2",
       "title": "Correct and learn from AI nonconformities",
       "kind": "clause",
@@ -953,13 +843,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-9.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "9.2",
       "title": "Run objective internal AI management audits",
       "kind": "clause",
@@ -980,13 +867,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-9.2.1",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "9.2.1",
       "title": "Maintain internal AI audit requirements",
       "kind": "clause",
@@ -1007,13 +891,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-9.2.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "9.2.2",
       "title": "Operate and report the AI audit programme",
       "kind": "clause",
@@ -1034,13 +915,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.2.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.2.2",
       "title": "Establish an AI governance policy",
       "kind": "control",
@@ -1061,13 +939,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.2.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.2.3",
       "title": "Align AI policy with related governance",
       "kind": "control",
@@ -1089,13 +964,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.2.4",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.2.4",
       "title": "Review AI policy on schedule and change",
       "kind": "control",
@@ -1116,13 +988,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.3.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.3.2",
       "title": "Assign AI governance responsibilities",
       "kind": "control",
@@ -1143,13 +1012,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.3.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.3.3",
       "title": "Provide a channel for AI concerns",
       "kind": "control",
@@ -1170,13 +1036,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.4.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.4.2",
       "title": "Inventory AI-related resources",
       "kind": "control",
@@ -1197,13 +1060,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.4.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.4.3",
       "title": "Govern AI-accessible data resources",
       "kind": "control",
@@ -1224,13 +1084,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.4.4",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.4.4",
       "title": "Govern AI tools and system resources",
       "kind": "control",
@@ -1252,13 +1109,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.4.5",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.4.5",
       "title": "Manage computing and service dependencies",
       "kind": "control",
@@ -1279,13 +1133,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.4.6",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.4.6",
       "title": "Maintain AI competence requirements",
       "kind": "control",
@@ -1306,13 +1157,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.5.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.5.2",
       "title": "Define an AI impact-assessment process",
       "kind": "control",
@@ -1333,13 +1181,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.5.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.5.3",
       "title": "Retain AI impact-assessment records",
       "kind": "control",
@@ -1360,13 +1205,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.5.4",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.5.4",
       "title": "Assess impacts on people and groups",
       "kind": "control",
@@ -1388,13 +1230,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.5.5",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.5.5",
       "title": "Assess broader societal and ecosystem impacts",
       "kind": "control",
@@ -1416,13 +1255,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.6.1.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.6.1.2",
       "title": "Set responsible AI system objectives",
       "kind": "control",
@@ -1443,13 +1279,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.6.1.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.6.1.3",
       "title": "Use controlled AI design and development",
       "kind": "control",
@@ -1471,13 +1304,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.6.2.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.6.2.2",
       "title": "Specify responsible AI system requirements",
       "kind": "control",
@@ -1499,13 +1329,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.6.2.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.6.2.3",
       "title": "Document AI system design and operation",
       "kind": "control",
@@ -1527,13 +1354,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.6.2.4",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.6.2.4",
       "title": "Verify and validate AI system behavior",
       "kind": "control",
@@ -1554,13 +1378,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.6.2.5",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.6.2.5",
       "title": "Control AI deployment and release",
       "kind": "control",
@@ -1582,13 +1403,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.6.2.6",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.6.2.6",
       "title": "Monitor AI system operation",
       "kind": "control",
@@ -1610,13 +1428,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.6.2.7",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.6.2.7",
       "title": "Maintain AI system technical documentation",
       "kind": "control",
@@ -1638,13 +1453,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.6.2.8",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.6.2.8",
       "title": "Record AI system events and traceability",
       "kind": "control",
@@ -1667,13 +1479,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.7.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.7.3",
       "title": "Track AI data acquisition and provenance",
       "kind": "control",
@@ -1694,13 +1503,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.7.4",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.7.4",
       "title": "Manage AI data quality",
       "kind": "control",
@@ -1722,13 +1528,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.7.5",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.7.5",
       "title": "Maintain AI data lineage and records",
       "kind": "control",
@@ -1750,13 +1553,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.7.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.7.2",
       "title": "Govern model-development data",
       "kind": "control",
@@ -1778,13 +1578,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.7.6",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.7.6",
       "title": "Govern AI data preparation",
       "kind": "control",
@@ -1806,13 +1603,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.8.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.8.2",
       "title": "Provide AI system information to users",
       "kind": "control",
@@ -1834,13 +1628,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.8.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.8.3",
       "title": "Define external AI reporting obligations",
       "kind": "control",
@@ -1862,13 +1653,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.8.4",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.8.4",
       "title": "Communicate AI incidents when required",
       "kind": "control",
@@ -1890,13 +1678,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.8.5",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.8.5",
       "title": "Disclose AI system limitations and boundaries",
       "kind": "control",
@@ -1918,13 +1703,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.9.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.9.2",
       "title": "Define responsible AI use rules",
       "kind": "control",
@@ -1946,13 +1728,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.9.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.9.3",
       "title": "Measure AI use objectives",
       "kind": "control",
@@ -1973,13 +1752,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.9.4",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.9.4",
       "title": "Prevent unintended AI use and authority",
       "kind": "control",
@@ -2002,13 +1778,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.10.2",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.10.2",
       "title": "Allocate AI responsibilities across suppliers",
       "kind": "control",
@@ -2030,13 +1803,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.10.3",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.10.3",
       "title": "Govern approved AI suppliers and providers",
       "kind": "control",
@@ -2058,13 +1828,10 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     },
     {
       "id": "ISO42001-A.10.4",
-      "framework": "iso-42001",
-      "frameworkLabel": "ISO/IEC 42001:2023",
       "reference": "A.10.4",
       "title": "Communicate customer and user responsibilities",
       "kind": "control",
@@ -2086,8 +1853,7 @@
         "advisories": [],
         "governanceDocuments": [],
         "objectives": []
-      },
-      "sourcePath": "assurance/compliance/iso-42001-2023.json"
+      }
     }
   ]
 }

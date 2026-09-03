@@ -66,12 +66,12 @@ describe('DEMO-127 canonical normalized assurance model', () => {
     }
   });
 
-  it('keeps framework identity and presentation metadata canonical in registered JSON', () => {
-    expect(iso27001.framework.id).toBe('iso-27001');
-    expect(iso42001.framework.id).toBe('iso-42001');
-    expect(wcagManifest.framework.id).toBe('wcag-2.2');
-    expect(iso27001.framework.sourcePath).toBe('assurance/compliance/iso-27001-2022.json');
-    expect(iso42001.framework.sourcePath).toBe('assurance/compliance/iso-42001-2023.json');
-    expect(wcagManifest.framework.sourcePath).toBe('assurance/compliance/wcag-2.2.json');
+  it('does not retain framework presentation metadata in dataset roots', () => {
+    expect(iso27001).not.toHaveProperty('framework');
+    expect(iso42001).not.toHaveProperty('framework');
+    expect(wcagManifest).not.toHaveProperty('framework');
+    expect(iso27001).not.toHaveProperty('standard');
+    expect(iso42001).not.toHaveProperty('standard');
+    expect(wcagManifest).not.toHaveProperty('partitions');
   });
 });

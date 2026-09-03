@@ -123,20 +123,29 @@ for (const { resource, record } of recordEntries) {
   }
 }
 
-const complianceRecords = recordsForKind('compliance');
-const frameworkIds = new Set(complianceRecords.map((record) => record.framework).filter((value) => typeof value === 'string'));
-const manifestResources = resources.filter((entry) => entry.kind === 'compliance' && entry.capabilities?.includes('manifest'));
-for (const resource of manifestResources) {
-  const data = readJson(resource.path);
-  if (data.framework?.id) frameworkIds.add(data.framework.id);
+const complianceEntries = recordEntries.filter(({ resource }) => resource.kind === 'compliance');
+const complianceRecords = complianceEntries.map(({ record }) => record);
+const frameworkIds = new Set(resources.map((resource) => resource.framework?.id).filter((value) => typeof value === 'string'));
+const frameworkByResourceId = new Map();
+function indexFrameworkOwnership(resource, inheritedFrameworkId) {
+  const frameworkId = resource.framework?.id ?? inheritedFrameworkId;
+  if (frameworkId) frameworkByResourceId.set(resource.id, frameworkId);
+  for (const child of resource.resources ?? []) indexFrameworkOwnership(child, frameworkId);
 }
+for (const dataset of registry.datasets ?? []) indexFrameworkOwnership(dataset);
+const manifestResources = resources.filter((entry) => entry.kind === 'compliance' && entry.capabilities?.includes('manifest'));
 const compliancePrefixes = new Map([
   ['iso-27001', 'ISO27001'],
   ['iso-42001', 'ISO42001'],
   ['wcag-2.2', 'WCAG'],
 ]);
-for (const record of complianceRecords) {
-  const prefix = compliancePrefixes.get(record.framework);
+for (const { resource, record } of complianceEntries) {
+  const frameworkId = frameworkByResourceId.get(resource.id);
+  if (!frameworkId) {
+    errors.push(`${resource.id}: compliance records require canonical registry framework ownership`);
+    continue;
+  }
+  const prefix = compliancePrefixes.get(frameworkId);
   if (prefix && record.id !== `${prefix}-${record.reference}`) errors.push(`${record.id}: compliance identity must be explicit and canonical`);
 }
 

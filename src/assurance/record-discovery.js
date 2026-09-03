@@ -2,9 +2,11 @@ function capabilities(resource) {
   return Array.isArray(resource?.capabilities) ? resource.capabilities : [];
 }
 
-function visitResource(resource, resources) {
-  resources.push(resource);
-  for (const child of resource?.resources ?? []) visitResource(child, resources);
+function visitResource(resource, resources, inheritedFramework) {
+  const framework = resource?.framework ?? inheritedFramework;
+  const resolved = framework && !resource?.framework ? { ...resource, framework } : resource;
+  resources.push(resolved);
+  for (const child of resource?.resources ?? []) visitResource(child, resources, framework);
 }
 
 export function flattenAssuranceResources(registry) {
@@ -71,10 +73,16 @@ function stableIdentityPart(value) {
   return String(value);
 }
 
+function assuranceIdentityValue(resource, record, component) {
+  if (typeof component === 'string') return assuranceValueAtPath(record, component);
+  const source = component?.source === 'resource' ? resource : record;
+  return assuranceValueAtPath(source, component?.path);
+}
+
 export function assuranceRecordIdentity(resource, record) {
   const identityPaths = resource?.recordCollection?.identity;
   if (!Array.isArray(identityPaths) || identityPaths.length === 0) {
     throw new Error(`${resource?.id ?? 'unknown assurance resource'} declares records capability without recordCollection.identity.`);
   }
-  return `${resource.kind}|${identityPaths.map((path) => stableIdentityPart(assuranceValueAtPath(record, path))).join('|')}`;
+  return `${resource.kind}|${identityPaths.map((component) => stableIdentityPart(assuranceIdentityValue(resource, record, component))).join('|')}`;
 }

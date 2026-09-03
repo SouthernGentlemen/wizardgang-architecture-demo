@@ -1,6 +1,11 @@
+export interface AssuranceRecordIdentityComponent {
+  source: 'record' | 'resource';
+  path: string;
+}
+
 export interface AssuranceRecordCollectionDeclaration {
   path: string;
-  identity: string[];
+  identity: Array<string | AssuranceRecordIdentityComponent>;
 }
 
 export interface AssuranceDiscoverableResource {

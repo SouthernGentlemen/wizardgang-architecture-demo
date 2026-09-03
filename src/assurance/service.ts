@@ -180,6 +180,12 @@ export function assuranceFilterValues(dataset: AssuranceDataset, parameter: stri
       if (!values.includes(value)) values.push(value);
     }
   }
+  if (values.length === 0) {
+    for (const record of recordsForDataset(dataset)) {
+      const value = valueAtPath(record, definition.path);
+      if (typeof value === 'string' && !values.includes(value)) values.push(value);
+    }
+  }
   return values;
 }
 

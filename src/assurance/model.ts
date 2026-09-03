@@ -172,10 +172,12 @@ type CanonicalRisk = Omit<PublicRisk, 'controls' | 'evidence'> & { relationships
 type CanonicalIncident = Omit<PublicIncident, 'riskLinks' | 'controlLinks' | 'evidence'> & { relationships: AssuranceRelationships };
 type CanonicalExercise = Omit<PublicExercise, 'riskLinks' | 'objectiveLinks' | 'evidence'> & { relationships: AssuranceRelationships };
 type CanonicalAdvisory = Omit<PublicAdvisory, 'incidentLinks' | 'evidence'> & { relationships: AssuranceRelationships };
-type CanonicalComplianceRecord = Omit<PublicComplianceRecord, 'evidence'> & { relationships: AssuranceRelationships };
+type CanonicalComplianceRecord = Omit<PublicComplianceRecord, 'evidence' | 'framework' | 'frameworkLabel' | 'sourcePath' | 'section'> & {
+  section?: string;
+  relationships: AssuranceRelationships;
+};
 type RecordsDataset<T> = { records: T[]; qualification?: string };
-type ComplianceDataset = { qualification?: string; framework: PublicComplianceFramework; records: CanonicalComplianceRecord[] };
-type WcagManifest = { qualification?: string; framework: PublicComplianceFramework; partitions: Array<{ principle: string; path: string }> };
+type ComplianceFrameworkMetadata = Omit<PublicComplianceFramework, 'sourcePath'>;
 
 export interface AssuranceRegistryFilter {
   path: string;
@@ -188,9 +190,14 @@ export interface AssuranceRegistryRoutes {
   apiRecord?: string;
 }
 
+export interface AssuranceRegistryIdentityComponent {
+  source: 'record' | 'resource';
+  path: string;
+}
+
 export interface AssuranceRegistryRecordCollection {
   path: string;
-  identity: string[];
+  identity: Array<string | AssuranceRegistryIdentityComponent>;
 }
 
 export interface AssuranceRegistryResource {
@@ -202,6 +209,8 @@ export interface AssuranceRegistryResource {
   visibility: 'public' | 'private';
   capabilities: string[];
   recordCollection?: AssuranceRegistryRecordCollection;
+  framework?: ComplianceFrameworkMetadata;
+  partition?: { number: string; label: string };
   qualification?: string;
   routes?: AssuranceRegistryRoutes;
   filters?: Record<string, AssuranceRegistryFilter>;
@@ -279,24 +288,36 @@ const runtimeRecordEntries = assuranceRecordEntries(
   { runtimeOnly: true },
 ) as Array<{ resource: AssuranceRegistryResource; record: unknown }>;
 
+function canonicalComplianceRecord(resource: AssuranceRegistryResource, record: CanonicalComplianceRecord): CanonicalComplianceRecord & Omit<PublicComplianceRecord, 'evidence'> {
+  const framework = resource.framework;
+  if (!framework) throw new Error(`${resource.id} compliance resource is missing canonical framework metadata.`);
+  const section = record.section ?? (resource.partition ? `${resource.partition.number}. ${resource.partition.label}` : undefined);
+  if (!section) throw new Error(`${resource.id} compliance record ${record.id} has no canonical section metadata.`);
+  return {
+    ...record,
+    framework: framework.id,
+    frameworkLabel: framework.label,
+    section,
+    sourcePath: resource.path,
+  };
+}
+
 function canonicalRecordsForKind<T>(kind: string): T[] {
-  return assuranceRecordsForKind<T>(runtimeRecordEntries, kind);
+  return runtimeRecordEntries
+    .filter((entry) => entry.resource.kind === kind)
+    .map((entry) => kind === 'compliance'
+      ? canonicalComplianceRecord(entry.resource, entry.record as CanonicalComplianceRecord)
+      : entry.record) as T[];
 }
 
 const complianceResources = assuranceRegistryResources.filter((resource) => resource.kind === 'compliance');
-const isoSources = complianceResources
-  .filter((resource) => resource.capabilities.includes('summary-source') && resource.capabilities.includes('runtime'))
-  .map((resource) => runtimeAssuranceDataset<ComplianceDataset>(resource));
-const wcagManifestResource = requireAssuranceResource(
-  (resource) => resource.kind === 'compliance' && resource.capabilities.includes('manifest'),
-  'WCAG compliance manifest',
-);
-const wcagData = runtimeAssuranceDataset<WcagManifest>(wcagManifestResource);
+const frameworkResources = complianceResources.filter((resource) => resource.framework
+  && (resource.capabilities.includes('summary-source') || resource.capabilities.includes('manifest')));
 
-export const assuranceModelComplianceFrameworks: PublicComplianceFramework[] = [
-  ...isoSources.map((source) => source.framework),
-  wcagData.framework,
-];
+export const assuranceModelComplianceFrameworks: PublicComplianceFramework[] = frameworkResources.map((resource) => ({
+  ...resource.framework!,
+  sourcePath: resource.path,
+}));
 const frameworkOrder = new Map(assuranceModelComplianceFrameworks.map((framework, index) => [framework.id, index]));
 
 const v1BoundaryAdapters: Record<AssuranceDataset, (record: any) => { id: string }> = {
