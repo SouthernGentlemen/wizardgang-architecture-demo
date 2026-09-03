@@ -26,6 +26,7 @@ export interface ShellOptions {
 export function shell(env: Env, title: string, body: string, options: ShellOptions = {}): Response {
   const description = options.description ?? DEFAULT_DESCRIPTION;
   const dashboardCurrent = options.activeRoute?.startsWith('/dashboard') ? ' aria-current="page"' : '';
+  const complianceCurrent = options.activeRoute === '/compliance' ? ' aria-current="page"' : '';
   const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -58,6 +59,7 @@ export function shell(env: Env, title: string, body: string, options: ShellOptio
   </a>
   <nav class="nav" aria-label="Primary">
     <a href="/dashboard"${dashboardCurrent}>Dashboard</a>
+    <a href="/compliance"${complianceCurrent}>Compliance</a>
     <a href="https://wizardgang.ai/">Main site <span aria-hidden="true">↗</span></a>
     <button type="button" data-theme-toggle aria-label="Switch to light theme" aria-pressed="false">Theme: Light</button>
   </nav>

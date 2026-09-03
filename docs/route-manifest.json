@@ -774,6 +774,26 @@
     "status": "working"
   },
   {
+    "route": "/v1/assurance/compliance",
+    "title": "Public Compliance Assurance JSON",
+    "group": "Delivery & Governance API",
+    "source": "src/api/assurance.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/v1/assurance/compliance/{recordId}",
+    "title": "Public Compliance Assurance Record",
+    "group": "Delivery & Governance API",
+    "source": "src/api/assurance.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
     "route": "/__api/evidence/traceability",
     "title": "Traceability Evidence JSON",
     "group": "Delivery & Governance API",

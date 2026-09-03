@@ -21,12 +21,12 @@ This file is the stable public URL contract for `demo.wizardgang.ai`. The public
 | Delivery & Governance | `/git` | Source, change, CI/CD, release, and environment lifecycle | `src/demos/git.ts` | Working |
 | Delivery & Governance | `/governance` | ISO alignment, traceability, and evidence | `src/demos/governance.ts` | Working |
 | Delivery & Governance | `/evidence` | Searchable public assurance evidence with exact deployed source resolution, reverse usage, and freshness semantics | `src/demos/evidence.ts` | Working |
-| Delivery & Governance | `/compliance` | Uncertified assurance posture and canonical evidence index | `src/demos/compliance.ts` | Working |
+| Delivery & Governance | `/compliance` | Filterable canonical ISO/IEC 27001, ISO/IEC 42001, and WCAG 2.2 assurance records with stable anchors and evidence links | `src/demos/compliance.ts` | Working |
 | Delivery & Governance | `/security` | Private vulnerability reporting, coordinated disclosure lifecycle, and published-advisory assurance | `src/demos/security.ts` | Working |
 | Delivery & Governance | `/governance/concerns` | Public non-security bug, feature, and other concern intake | `src/demos/concerns.ts` | Working |
 | Delivery & Governance | `/governance/risks` | Disclosure-safe security and AI risk assurance with stable anchors and evidence/control links | `src/demos/risks.ts` | Working |
 | Delivery & Governance | `/governance/incidents` | Disclosure-safe actual-incident and simulated-exercise assurance with permanent record anchors | `src/demos/incidents.ts` | Working |
-| Operations | `/dashboard` | Read-only operations center, detailed health, availability, activity, usage, and deployment | `src/demos/dashboard.ts` | Working |
+| Operations | `/dashboard` | Read-only operations center, detailed health, availability, activity, usage, deployment, and assurance entry point | `src/demos/dashboard.ts` | Working |
 | Operations | `/dashboard/uptime` | Scheduled availability history | `src/demos/uptime.ts` | Working |
 | Operations | `/dashboard/docs` | Documentation index | `src/demos/docs.ts` | Working |
 | Operations | `/dashboard/logs` | Public-safe log viewer | `src/demos/logs.ts` | Working |
@@ -129,6 +129,8 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | `/__api/operations/billing` | `POST` | Synthetic Budget Scenario | `src/api/billing.ts` |
 | `/v1/assurance` | `GET` | Public assurance registry with derived counts, reverse evidence usage, and deployed-commit resolution | `src/api/assurance-registry.ts` |
 | `/v1/assurance/evidence` | `GET` | Public assurance evidence projection with freshness semantics | `src/api/assurance-registry.ts` |
+| `/v1/assurance/compliance` | `GET` | Filterable canonical compliance projection with derived framework, status, and WCAG-level counts | `src/api/assurance.ts` |
+| `/v1/assurance/compliance/{recordId}` | `GET` | Exact normalized compliance record lookup by stable ID | `src/api/assurance.ts` |
 | `/__api/evidence/traceability` | `GET` | Traceability Evidence JSON | `src/api/governance.ts` |
 | `/v1/assurance/risks` | `GET` | Disclosure-safe Risk Assurance JSON | `src/api/assurance.ts` |
 | `/v1/assurance/incidents` | `GET` | Disclosure-safe Incident and Exercise Assurance JSON | `src/api/assurance.ts` |
@@ -150,9 +152,9 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | Application log persistence and redaction | `src/lib/logs.ts` |
 | ChatGPT crawler access and dynamic robots policy | `src/lib/crawler-control.ts` |
 | Operations APIs | `src/api/operations.ts` |
-| Public assurance registry | `src/assurance/registry.ts` |
+| Public assurance and compliance registry projection | `src/assurance/registry.ts` |
 | Assurance presentation layer | `src/assurance/presentation.ts` |
-| Disclosure-safe risk/incident APIs | `src/api/assurance.ts` |
+| Disclosure-safe risk/incident/compliance APIs | `src/api/assurance.ts` |
 | Published advisory API | `src/api/advisories.ts` |
 | Assurance registry/evidence APIs | `src/api/assurance-registry.ts` |
 | D1 base schema | `migrations/0001_demo_blob.sql` |
@@ -168,6 +170,9 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | Capability | Source |
 |---|---|
 | Public assurance registry contract | `contracts/assurance/registry.schema.json` |
+| ISO/IEC 27001 public compliance dataset | `assurance/compliance/iso-27001-2022.json` |
+| ISO/IEC 42001 public compliance dataset | `assurance/compliance/iso-42001-2023.json` |
+| WCAG 2.2 public compliance manifest and partitions | `assurance/compliance/wcag-2.2.json`, `assurance/compliance/wcag-2.2/` |
 | Public risk assurance contract | `contracts/assurance/risk.schema.json` |
 | Public risk assurance dataset | `assurance/risks/risks.json` |
 | Public incident assurance contract | `contracts/assurance/incident.schema.json` |
@@ -188,6 +193,7 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | i18n configuration | `config/i18n.json` |
 | Locale resources | `src/i18n/locales/` |
 | Accessibility plan | `docs/ACCESSIBILITY.md` |
+| Assurance guide | `docs/ASSURANCE.md` |
 | Seven-demo interaction specification | `docs/INTERACTIVE-DEMO-SPEC.md` |
 | Identity plan | `docs/IDENTITY.md` |
 | Evidence map | `docs/EVIDENCE.md` |

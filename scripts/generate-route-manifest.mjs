@@ -92,6 +92,8 @@ const machine = [
   { route: '/__api/operations/billing', title: 'Synthetic Budget Scenario', group: 'Operations', source: 'src/api/billing.ts', method: 'POST', machine: true, offline_reachable: true },
   { route: '/v1/assurance', title: 'Public Assurance Registry', group: 'Delivery & Governance API', source: 'src/api/assurance-registry.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/v1/assurance/evidence', title: 'Public Assurance Evidence', group: 'Delivery & Governance API', source: 'src/api/assurance-registry.ts', method: 'GET', machine: true, offline_behavior: '503' },
+  { route: '/v1/assurance/compliance', title: 'Public Compliance Assurance JSON', group: 'Delivery & Governance API', source: 'src/api/assurance.ts', method: 'GET', machine: true, offline_behavior: '503' },
+  { route: '/v1/assurance/compliance/{recordId}', title: 'Public Compliance Assurance Record', group: 'Delivery & Governance API', source: 'src/api/assurance.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/__api/evidence/traceability', title: 'Traceability Evidence JSON', group: 'Delivery & Governance API', source: 'src/api/governance.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/v1/assurance/risks', title: 'Disclosure-safe Risk Assurance JSON', group: 'Delivery & Governance API', source: 'src/api/assurance.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/v1/assurance/incidents', title: 'Disclosure-safe Incident and Exercise Assurance JSON', group: 'Delivery & Governance API', source: 'src/api/assurance.ts', method: 'GET', machine: true, offline_behavior: '503' },
