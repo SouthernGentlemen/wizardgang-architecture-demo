@@ -1,9 +1,11 @@
 import {
   assuranceDeploymentContext,
-  listAssuranceRecords,
-  presentedEvidenceRecords,
-  publicAssuranceRegistry,
 } from '../assurance/service';
+import {
+  listPublishedAssuranceRecords,
+  presentedPublishedEvidenceRecords,
+  publicPublishedAssuranceRegistry,
+} from '../assurance/publication';
 import {
   assuranceJsonResponse,
   paginateAssuranceRecords,
@@ -15,9 +17,9 @@ export function assuranceResponse(request: Request, env: Env): Response {
   const context = prepareAssuranceRequest(request);
   if (context instanceof Response) return context;
 
-  const evidence = presentedEvidenceRecords(env, new URL(request.url).origin);
+  const evidence = presentedPublishedEvidenceRecords(env, new URL(request.url).origin);
   return assuranceJsonResponse(request, {
-    ...publicAssuranceRegistry,
+    ...publicPublishedAssuranceRegistry,
     schemaVersion: context.schemaVersion,
     deployment: assuranceDeploymentContext(env),
     links: {
@@ -32,16 +34,16 @@ export function assuranceEvidenceResponse(request: Request, env: Env): Response 
   const context = prepareAssuranceRequest(request);
   if (context instanceof Response) return context;
 
-  const records = presentedEvidenceRecords(env, new URL(request.url).origin);
+  const records = presentedPublishedEvidenceRecords(env, new URL(request.url).origin);
   const page = paginateAssuranceRecords(request, context.url, records);
   if (page instanceof Response) return page;
 
   return assuranceJsonResponse(request, {
     schemaVersion: context.schemaVersion,
     dataset: 'evidence',
-    qualification: publicAssuranceRegistry.qualification,
+    qualification: publicPublishedAssuranceRegistry.qualification,
     deployment: assuranceDeploymentContext(env),
-    count: listAssuranceRecords('evidence').length,
+    count: listPublishedAssuranceRecords('evidence').length,
     records: page.records,
     ...(page.pagination ? { pagination: page.pagination } : {}),
   });

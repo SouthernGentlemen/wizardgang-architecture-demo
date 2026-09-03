@@ -1,8 +1,11 @@
+import { assertSupportedAssuranceResource } from './publication-policy.js';
+
 function capabilities(resource) {
   return Array.isArray(resource?.capabilities) ? resource.capabilities : [];
 }
 
 function visitResource(resource, resources, inheritedFramework) {
+  assertSupportedAssuranceResource(resource);
   const framework = resource?.framework ?? inheritedFramework;
   const resolved = framework && !resource?.framework ? { ...resource, framework } : resource;
   resources.push(resolved);
