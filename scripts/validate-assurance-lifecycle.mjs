@@ -2,12 +2,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import {
-  assuranceRecordIdentity,
-  assuranceRecordResources,
-  assuranceRecordsFromDocument,
   loadAssuranceRegistry,
   requireRegistryResource,
 } from './lib/assurance-registry.mjs';
+import {
+  collectHistoricalAssuranceSnapshot,
+  collectRegistryAssuranceSnapshot,
+  readSnapshotLifecycle,
+} from './lib/assurance-lifecycle-history.mjs';
 
 const root = process.cwd();
 const errors = [];
@@ -67,7 +69,11 @@ function createGitReader(ref) {
     if (result.status !== 0) {
       throw new Error(`unable to read ${relative} from ${ref}: ${result.stderr.trim() || result.stdout.trim()}`);
     }
-    return JSON.parse(result.stdout);
+    try {
+      return JSON.parse(result.stdout);
+    } catch (error) {
+      throw new Error(`unable to decode ${relative} from ${ref}: ${error instanceof Error ? error.message : String(error)}`);
+    }
   };
 }
 
@@ -100,8 +106,11 @@ function normalizeKey(key) {
   return String(key).replaceAll('-', '').replaceAll('_', '').toLowerCase();
 }
 
+function emptySnapshot(registry = null) {
+  return { registry, records: new Map(), documents: new Map() };
+}
+
 const registry = loadAssuranceRegistry(root);
-const recordResources = assuranceRecordResources(registry);
 const lifecycleResource = requireRegistryResource(
   registry,
   (resource) => resource.capabilities?.includes('lifecycle'),
@@ -109,82 +118,6 @@ const lifecycleResource = requireRegistryResource(
 );
 const lifecyclePath = lifecycleResource.path;
 const lifecycleSchemaPath = lifecycleResource.schema;
-
-function legacyComplianceRecords(data) {
-  if (data?.clauses && data?.annexA) {
-    const is27001 = String(data.standard).includes('27001');
-    const is42001 = String(data.standard).includes('42001');
-    const prefix = is27001 ? 'ISO27001' : is42001 ? 'ISO42001' : null;
-    const framework = is27001 ? 'iso-27001' : is42001 ? 'iso-42001' : null;
-    if (!prefix || !framework) return null;
-    const records = [];
-    const sections = [data.clauses, ...Object.values(data.annexA ?? {})];
-    for (const groups of sections) {
-      for (const rows of Object.values(groups ?? {})) {
-        for (const record of rows ?? []) {
-          records.push({ id: `${prefix}-${record.reference}`, framework, reference: record.reference });
-        }
-      }
-    }
-    return records;
-  }
-
-  if (Array.isArray(data?.criteria) && data.criteria.some((record) => !record.id && record.criterionId)) {
-    return data.criteria.map((record) => ({
-      id: record.id ?? (record.criterionId ? `WCAG-${record.criterionId}` : null),
-      framework: record.framework ?? 'wcag-2.2',
-      reference: record.reference ?? record.criterionId,
-    }));
-  }
-  return null;
-}
-
-function collectSnapshot(read, { allowMissing = false } = {}) {
-  const records = new Map();
-  const documents = new Map();
-
-  function load(relative) {
-    if (documents.has(relative)) return documents.get(relative);
-    try {
-      const document = read(relative);
-      documents.set(relative, document);
-      return document;
-    } catch (error) {
-      if (allowMissing) return null;
-      throw error;
-    }
-  }
-
-  function add(id, domain, identity, sourcePath) {
-    if (!id || typeof id !== 'string') return;
-    if (records.has(id)) {
-      errors.push(`lifecycle snapshot contains duplicate public ID ${id}`);
-      return;
-    }
-    records.set(id, { id, domain, identity, sourcePath });
-  }
-
-  for (const resource of recordResources) {
-    const data = load(resource.path);
-    if (!data) continue;
-    let discovered;
-    if (resource.kind === 'compliance') discovered = legacyComplianceRecords(data);
-    if (!discovered) {
-      try {
-        discovered = assuranceRecordsFromDocument(resource, data);
-      } catch (error) {
-        if (allowMissing) continue;
-        errors.push(`${resource.path}: ${error instanceof Error ? error.message : String(error)}`);
-        continue;
-      }
-    }
-    for (const record of discovered) {
-      add(record.id, resource.kind, assuranceRecordIdentity(resource, record), resource.path);
-    }
-  }
-
-  return { records, documents };
-}
 
 function scanSensitive(relative, value, pointer = '$') {
   if (Array.isArray(value)) {
@@ -264,15 +197,23 @@ for (const entry of lifecycle.retiredRecords ?? []) {
   if (recordsMetadata.has(entry.id)) errors.push(`${lifecyclePath}: ${entry.id} cannot be both current lifecycle metadata and retired`);
 }
 
-const current = collectSnapshot(currentReader);
+let current = emptySnapshot(registry);
+try {
+  current = collectRegistryAssuranceSnapshot(registry, currentReader, 'current assurance snapshot');
+} catch (error) {
+  errors.push(error instanceof Error ? error.message : String(error));
+}
 for (const [relative, document] of current.documents) scanSensitive(relative, document);
 
 let baseline = null;
 const baselineDirectoryReader = directoryReaderFromEnv('ASSURANCE_BASELINE_DIR');
 try {
-  baseline = collectSnapshot(baselineDirectoryReader ?? createGitReader(lifecycle.baseline?.commit), { allowMissing: true });
+  baseline = collectHistoricalAssuranceSnapshot(
+    baselineDirectoryReader ?? createGitReader(lifecycle.baseline?.commit),
+    'published lifecycle baseline',
+  );
 } catch (error) {
-  errors.push(`${lifecyclePath}: unable to load lifecycle baseline: ${error.message}`);
+  errors.push(`${lifecyclePath}: unable to load lifecycle baseline: ${error instanceof Error ? error.message : String(error)}`);
 }
 
 let previous = null;
@@ -280,23 +221,24 @@ let previousLifecycle = null;
 const previousDirectoryReader = directoryReaderFromEnv('ASSURANCE_PREVIOUS_DIR');
 try {
   if (previousDirectoryReader) {
-    previous = collectSnapshot(previousDirectoryReader, { allowMissing: true });
-    try { previousLifecycle = previousDirectoryReader(lifecyclePath); } catch { previousLifecycle = null; }
+    previous = collectHistoricalAssuranceSnapshot(previousDirectoryReader, 'previous assurance snapshot');
+    previousLifecycle = readSnapshotLifecycle(previous, previousDirectoryReader, 'previous assurance snapshot');
   } else {
     const previousRef = determinePreviousRef();
     if (previousRef) {
       const reader = createGitReader(previousRef);
-      previous = collectSnapshot(reader, { allowMissing: true });
-      try { previousLifecycle = reader(lifecyclePath); } catch { previousLifecycle = null; }
+      previous = collectHistoricalAssuranceSnapshot(reader, `previous assurance snapshot ${previousRef}`);
+      previousLifecycle = readSnapshotLifecycle(previous, reader, `previous assurance snapshot ${previousRef}`);
     }
   }
 } catch (error) {
-  errors.push(`${lifecyclePath}: unable to load previous assurance snapshot: ${error.message}`);
+  errors.push(`${lifecyclePath}: unable to load previous assurance snapshot: ${error instanceof Error ? error.message : String(error)}`);
 }
 
 const baselineIds = new Set(baseline ? baseline.records.keys() : []);
+
 function effectiveMetadata(id, metadata = recordsMetadata, retired = retiredMetadata, lifecycleData = lifecycle) {
-  return metadata.get(id) ?? retired.get(id) ?? (baselineIds.has(id) ? lifecycleData.baseline : null);
+  return metadata.get(id) ?? retired.get(id) ?? (baselineIds.has(id) ? lifecycleData?.baseline ?? lifecycle.baseline : null);
 }
 
 for (const [id] of current.records) {
@@ -322,14 +264,14 @@ function requireRetirementForMissing(snapshot, label) {
 requireRetirementForMissing(baseline, 'the published lifecycle baseline');
 requireRetirementForMissing(previous, 'the previous assurance snapshot');
 
-function previousMetadataMaps(data) {
+function lifecycleMetadataMaps(data) {
   const currentMap = new Map((data?.records ?? []).map((entry) => [entry.id, entry]));
   const retiredMap = new Map((data?.retiredRecords ?? []).map((entry) => [entry.id, entry]));
   return { currentMap, retiredMap };
 }
 
+const previousMaps = lifecycleMetadataMaps(previousLifecycle);
 if (previousLifecycle) {
-  const previousMaps = previousMetadataMaps(previousLifecycle);
   for (const [id] of previousMaps.currentMap) {
     if (!recordsMetadata.has(id) && !retiredMetadata.has(id)) errors.push(`${id}: lifecycle reservation cannot be deleted from history`);
   }
@@ -338,19 +280,34 @@ if (previousLifecycle) {
   }
 }
 
+function immutableIdentityError(id, label) {
+  errors.push(`${id}: immutable public ID identity changed from ${label}; supersede with a new ID instead of reusing the existing ID`);
+}
+
+if (baseline) {
+  for (const [id, baselineRecord] of baseline.records) {
+    const currentRecord = current.records.get(id);
+    if (currentRecord && baselineRecord.identity !== currentRecord.identity) {
+      immutableIdentityError(id, 'the published lifecycle baseline');
+    }
+  }
+}
+
 if (previous) {
-  const previousMaps = previousMetadataMaps(previousLifecycle);
-  const previousBaselineIds = baselineIds;
   const previousEffective = (id) => previousMaps.currentMap.get(id)
     ?? previousMaps.retiredMap.get(id)
-    ?? (previousBaselineIds.has(id) ? lifecycle.baseline : null);
+    ?? (baselineIds.has(id) ? previousLifecycle?.baseline ?? lifecycle.baseline : null);
 
   for (const [id, previousRecord] of previous.records) {
     const currentRecord = current.records.get(id);
     if (!currentRecord) continue;
     const metadata = previousEffective(id);
-    if (metadata && lockedIdentityLifecycles.has(metadata.lifecycle) && previousRecord.identity !== currentRecord.identity) {
-      errors.push(`${id}: immutable public ID identity changed; supersede with a new ID instead of reusing the existing ID`);
+    if (!metadata) {
+      errors.push(`${id}: previous assurance snapshot has no lifecycle reservation; historical identity cannot be validated safely`);
+      continue;
+    }
+    if (lockedIdentityLifecycles.has(metadata.lifecycle) && previousRecord.identity !== currentRecord.identity) {
+      immutableIdentityError(id, 'the previous assurance snapshot');
     }
   }
 }
