@@ -6,6 +6,7 @@ import {
   loadAssuranceRegistry,
   primaryRegistryDataset,
 } from './lib/assurance-registry.mjs';
+import { validateRelationshipSet } from './lib/assurance-relationships.mjs';
 
 const root = process.cwd();
 const nowValue = process.env.ASSURANCE_VALIDATION_NOW ?? new Date().toISOString();
@@ -138,17 +139,6 @@ const targetFamilies = new Map([
   ['governanceDocuments', new Set((governance.records ?? []).map((record) => record.reference))],
   ['objectives', objectiveIds],
 ]);
-
-export function validateRelationshipSet(relationships, families = targetFamilies, label = 'relationships') {
-  const relationshipErrors = [];
-  for (const [family, targets] of families) {
-    const values = Array.isArray(relationships?.[family]) ? relationships[family] : [];
-    for (const id of values) {
-      if (!targets.has(id)) relationshipErrors.push(`${label}.${family}: unresolved ${family} relationship ${id}`);
-    }
-  }
-  return relationshipErrors;
-}
 
 const relationshipDatasets = [
   [claimsPath, claims.records ?? []], [risksPath, risks.records ?? []], [incidentsPath, incidents.records ?? []],
