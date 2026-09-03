@@ -10,6 +10,7 @@ const posture = [
 ] as const;
 
 const evidence = [
+  ['Public assurance evidence', 'Search stable evidence IDs, reverse claim usage, exact deployed source links, and freshness semantics.', [['Search evidence', '/evidence'], ['Evidence API', '/v1/assurance/evidence']]],
   ['WCAG 2.2', 'Accessible and intentionally broken behavior comparisons, partial automated analysis, and a manual verification matrix.', [['Accessibility demonstration', '/accessibility']]],
   ['Internationalization', 'Locale, direction, fallback, plural, number, date, and currency behavior relevant to accessible interfaces.', [['Internationalization demonstration', '/i18n']]],
   ['ISO/IEC 27001 controls', 'Inspectable access, secure-development, change, logging, secrets, availability, and evidence mappings.', [['Governance controls', '/governance#iso-27001'], ['Change evidence', '/git']]],
@@ -40,7 +41,7 @@ export function renderComplianceDemo(env: Env): Response {
     <h1>Compliance evidence, not a badge.</h1>
     <p class="lede">This index connects assurance statements to the working controls and evidence that already have canonical owners across the architecture demo.</p>
     <p class="assurance-notice"><strong>Scope:</strong> public architecture demonstration. These are alignment and support statements, not third-party certifications.</p>
-    <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/compliance.ts'))}">Route source</a>${referenceDetails([
+    <div class="page-tools"><a class="text-link" href="/evidence">Search evidence</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/compliance.ts'))}">Route source</a>${referenceDetails([
       { label: 'Rendered assurance index', href: sourceUrl(env, 'src/demos/compliance-page.ts') },
       { label: 'Evidence map', href: sourceUrl(env, 'docs/EVIDENCE.md') },
       { label: 'Route contract', href: sourceUrl(env, 'docs/ROUTES.md') },

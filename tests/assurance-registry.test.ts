@@ -7,9 +7,13 @@ describe('public assurance registry foundation', () => {
     expect(Object.hasOwn(publicAssuranceRegistry, 'storedCounts')).toBe(false);
   });
 
-  it('derives reverse evidence relationships without duplicating them in JSON', () => {
+  it('derives reverse evidence relationships across public assurance records without duplicating them in JSON', () => {
     const authorization = publicAssuranceRegistry.evidence.find((record) => record.id === 'EVD-SRC-001');
-    expect(authorization?.usedBy).toEqual(['CLM-SEC-001', 'CLM-AI-001']);
+    const usedBy = authorization?.usedBy ?? [];
+    expect(usedBy).toEqual(expect.arrayContaining(['CLM-SEC-001', 'CLM-AI-001']));
+    expect(usedBy.length).toBeGreaterThan(2);
+    expect(usedBy).toEqual([...usedBy].sort());
+    expect(new Set(usedBy).size).toBe(usedBy.length);
   });
 
   it('contains only explicitly public evidence', () => {

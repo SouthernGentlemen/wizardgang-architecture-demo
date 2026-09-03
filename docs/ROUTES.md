@@ -1,6 +1,6 @@
 # Route-to-source map
 
-This file is the stable public URL contract for `demo.wizardgang.ai`. The public architecture map contains 24 HTML routes in five groups. Retired page URLs remain stable through exact permanent redirects to focused routes or anchored sections; machine interfaces keep their existing paths and response shapes.
+This file is the stable public URL contract for `demo.wizardgang.ai`. The public architecture map contains 25 HTML routes in five groups. Retired page URLs remain stable through exact permanent redirects to focused routes or anchored sections; machine interfaces keep their existing paths and response shapes.
 
 ## Public architecture routes
 
@@ -20,6 +20,7 @@ This file is the stable public URL contract for `demo.wizardgang.ai`. The public
 | Standards | `/accessibility` | WCAG 2.2 | `src/demos/accessibility.ts` | Working |
 | Delivery & Governance | `/git` | Source, change, CI/CD, release, and environment lifecycle | `src/demos/git.ts` | Working |
 | Delivery & Governance | `/governance` | ISO alignment, traceability, and evidence | `src/demos/governance.ts` | Working |
+| Delivery & Governance | `/evidence` | Searchable public assurance evidence with exact deployed source resolution, reverse usage, and freshness semantics | `src/demos/evidence.ts` | Working |
 | Delivery & Governance | `/compliance` | Uncertified assurance posture and canonical evidence index | `src/demos/compliance.ts` | Working |
 | Delivery & Governance | `/security` | Vulnerability disclosure policy and private reporting path | `src/demos/security.ts` | Working |
 | Delivery & Governance | `/governance/concerns` | Public non-security bug, feature, and other concern intake | `src/demos/concerns.ts` | Working |
@@ -31,11 +32,11 @@ This file is the stable public URL contract for `demo.wizardgang.ai`. The public
 | Operations | `/dashboard/logs` | Public-safe log viewer | `src/demos/logs.ts` | Working |
 | Operations | `/dashboard/billing` | Cloudflare usage, cost evidence, and separate guardrail simulator | `src/demos/billing.ts` | Working |
 
-The architecture map at `/` and `/sitemap.xml` are generated from this 24-route registry.
+The architecture map at `/` and `/sitemap.xml` are generated from this 25-route registry.
 
 ## Retired page redirects
 
-These are exact-path `301` redirects. `/identity/saml` is now the live Entra SAML sign-in route rather than a redirect.
+These are exact-path `301` redirects. `/identity/saml` is now the live Entra SAML sign-in route rather than a redirect. `/evidence` is no longer retired; it is a canonical public route.
 
 | Retired route | Permanent destination |
 |---|---|
@@ -52,8 +53,7 @@ These are exact-path `301` redirects. `/identity/saml` is now the live Entra SAM
 | `/environments` | `/git#environments` |
 | `/governance/iso-27001` | `/governance#iso-27001` |
 | `/governance/iso-42001` | `/governance#iso-42001` |
-| `/traceability` | `/governance#traceability` |
-| `/evidence` | `/governance#evidence` |
+| `/traceability` | `/evidence#traceability` |
 | `/dashboard/health` | `/dashboard#health` |
 
 ## Operations and control routes
@@ -127,6 +127,8 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | `/identity/session` | `GET` | Identity Session | `src/api/identity.ts` |
 | `/identity/logout` | `POST` | Identity Logout | `src/api/identity.ts` |
 | `/__api/operations/billing` | `POST` | Synthetic Budget Scenario | `src/api/billing.ts` |
+| `/v1/assurance` | `GET` | Public assurance registry with derived counts, reverse evidence usage, and deployed-commit resolution | `src/api/assurance-registry.ts` |
+| `/v1/assurance/evidence` | `GET` | Public assurance evidence projection with freshness semantics | `src/api/assurance-registry.ts` |
 | `/__api/evidence/traceability` | `GET` | Traceability Evidence JSON | `src/api/governance.ts` |
 | `/v1/assurance/risks` | `GET` | Disclosure-safe Risk Assurance JSON | `src/api/assurance.ts` |
 | `/v1/assurance/incidents` | `GET` | Disclosure-safe Incident and Exercise Assurance JSON | `src/api/assurance.ts` |
@@ -148,7 +150,9 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | ChatGPT crawler access and dynamic robots policy | `src/lib/crawler-control.ts` |
 | Operations APIs | `src/api/operations.ts` |
 | Public assurance registry | `src/assurance/registry.ts` |
-| Disclosure-safe assurance APIs | `src/api/assurance.ts` |
+| Assurance presentation layer | `src/assurance/presentation.ts` |
+| Disclosure-safe risk/incident APIs | `src/api/assurance.ts` |
+| Assurance registry/evidence APIs | `src/api/assurance-registry.ts` |
 | D1 base schema | `migrations/0001_demo_blob.sql` |
 | Operations, log, and Cloudflare usage schemas | `migrations/0002_operations_dashboard.sql`, `migrations/0004_application_logs.sql`, `migrations/0011_cloudflare_usage.sql` |
 | ChatGPT crawler-control schema | `migrations/0009_crawler_control.sql` |

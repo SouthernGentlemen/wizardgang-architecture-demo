@@ -9,7 +9,7 @@ const routes = new Set(manifest.map((entry) => entry.route));
 const requiredRoutes = [
   '/', '/edge', '/workers', '/durable-objects', '/d1', '/r2',
   '/api', '/identity', '/mcp', '/i18n', '/accessibility', '/git',
-  '/governance', '/compliance', '/security', '/governance/concerns', '/governance/risks', '/governance/incidents', '/dashboard', '/dashboard/uptime', '/dashboard/docs',
+  '/governance', '/evidence', '/compliance', '/security', '/governance/concerns', '/governance/risks', '/governance/incidents', '/dashboard', '/dashboard/uptime', '/dashboard/docs',
   '/dashboard/logs', '/dashboard/billing', '/admin', '/offline', '/health', '/version',
   '/sitemap.xml', '/og.png', '/robots.txt', '/.well-known/security.txt', '/__api/operations/logs',
   '/__api/operations/cloudflare-usage',
@@ -24,7 +24,7 @@ const requiredRoutes = [
   '/__api/identity/sso', '/identity/saml/metadata', '/__api/identity/saml/inspect',
   '/identity/microsoft', '/identity/microsoft/callback', '/identity/google', '/identity/google/callback',
   '/identity/github', '/identity/github/callback', '/identity/saml', '/identity/saml/acs', '/identity/session', '/identity/logout',
-  '/__api/operations/billing', '/__api/evidence/traceability', '/v1/assurance/risks', '/v1/assurance/incidents',
+  '/__api/operations/billing', '/__api/evidence/traceability', '/v1/assurance', '/v1/assurance/evidence', '/v1/assurance/risks', '/v1/assurance/incidents',
   '/__api/governance/security-controls', '/__api/governance/ai-evaluation'
 ];
 
@@ -32,14 +32,14 @@ const retiredRoutes = [
   '/api/rest', '/api/openapi', '/api/graphql', '/api/webhooks',
   '/identity/oauth', '/identity/sso',
   '/git/versioning', '/git/branching', '/git/releases', '/git/actions', '/environments',
-  '/governance/iso-27001', '/governance/iso-42001', '/traceability', '/evidence',
+  '/governance/iso-27001', '/governance/iso-42001', '/traceability',
   '/dashboard/health', '/__api/demo/run', '/__api/demo/events',
 ];
 
 const failures = [];
 if (routes.size !== manifest.length) failures.push('manifest contains duplicate routes');
 const htmlDemos = manifest.filter((entry) => entry.source?.startsWith('src/demos/'));
-if (htmlDemos.length !== 24) failures.push(`expected 24 registered HTML demos; found ${htmlDemos.length}`);
+if (htmlDemos.length !== 25) failures.push(`expected 25 registered HTML demos; found ${htmlDemos.length}`);
 const expectedGroups = ['Platform', 'Interfaces', 'Standards', 'Delivery & Governance', 'Operations'];
 const actualGroups = [...new Set(htmlDemos.map((entry) => entry.group))];
 if (JSON.stringify(actualGroups) !== JSON.stringify(expectedGroups)) failures.push(`unexpected HTML demo groups: ${actualGroups.join(', ')}`);
@@ -61,16 +61,23 @@ for (const requiredFile of [
   'docs/ARCHITECTURE-STANDARD.md',
   'docs/OPERATIONS.md',
   'docs/ROUTES.md',
+  'docs/ASSURANCE.md',
+  'docs/EVIDENCE.md',
   'docs/IMPLEMENTATION-PLAN.md',
   'src/ui/admin.ts',
   'src/lib/demo-control.ts',
   'src/lib/crawler-control.ts',
   'src/api/operations.ts',
   'src/api/assurance.ts',
+  'src/api/assurance-registry.ts',
+  'src/assurance/presentation.ts',
+  'src/demos/evidence.ts',
+  'src/demos/evidence-page.ts',
   'src/demos/risks.ts',
   'src/demos/incidents.ts',
   'src/demos/logs.ts',
   'src/lib/logs.ts',
+  'scripts/validate-assurance-projection.mjs',
   'assurance/risks/risks.json',
   'assurance/incidents/incidents.json',
   'assurance/incidents/exercises.json',
@@ -101,7 +108,7 @@ function walk(dir) {
 walk(root);
 
 const router = fs.readFileSync(path.join(root, 'src/router.ts'), 'utf8');
-for (const token of ['/dashboard', '/dashboard/logs', '/__api/operations/logs', '/__api/operations/cloudflare-usage', '/admin', '/offline', '/health', '/version', '/robots.txt', '/governance/risks', '/v1/assurance/risks', '/governance/incidents', '/v1/assurance/incidents', 'offlineApiResponse', 'wantsHtml']) {
+for (const token of ['/dashboard', '/dashboard/logs', '/__api/operations/logs', '/__api/operations/cloudflare-usage', '/admin', '/offline', '/health', '/version', '/robots.txt', '/evidence', '/v1/assurance', '/v1/assurance/evidence', '/governance/risks', '/v1/assurance/risks', '/governance/incidents', '/v1/assurance/incidents', 'offlineApiResponse', 'wantsHtml']) {
   if (!router.includes(token)) failures.push(`router missing operations/admin invariant: ${token}`);
 }
 

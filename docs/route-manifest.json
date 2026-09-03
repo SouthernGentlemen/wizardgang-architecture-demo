@@ -106,6 +106,13 @@
     "status": "working"
   },
   {
+    "route": "/evidence",
+    "title": "Assurance Evidence",
+    "group": "Delivery & Governance",
+    "source": "src/demos/evidence.ts",
+    "status": "working"
+  },
+  {
     "route": "/compliance",
     "title": "Compliance & Assurance",
     "group": "Delivery & Governance",
@@ -744,6 +751,26 @@
     "method": "POST",
     "machine": true,
     "offline_reachable": true,
+    "status": "working"
+  },
+  {
+    "route": "/v1/assurance",
+    "title": "Public Assurance Registry",
+    "group": "Delivery & Governance API",
+    "source": "src/api/assurance-registry.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
+    "status": "working"
+  },
+  {
+    "route": "/v1/assurance/evidence",
+    "title": "Public Assurance Evidence",
+    "group": "Delivery & Governance API",
+    "source": "src/api/assurance-registry.ts",
+    "method": "GET",
+    "machine": true,
+    "offline_behavior": "503",
     "status": "working"
   },
   {
