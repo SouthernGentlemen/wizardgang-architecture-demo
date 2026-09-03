@@ -1,6 +1,9 @@
 {
   "schemaVersion": 1,
-  "sourceRegister": "docs/governance/registers/INCIDENT-REGISTER.md",
+  "sourceRegister": {
+    "type": "governance-document",
+    "id": "WG-REG-004"
+  },
   "qualification": "Exercises are simulated readiness activities, not historical incidents. Planned exercises are not completion evidence.",
   "records": [
     {
@@ -14,7 +17,13 @@
       "status": "planned",
       "dueDate": "2026-12-02",
       "riskLinks": [],
-      "objectiveLinks": ["SEC-OBJ-005"],
+      "objectiveLinks": [
+        {
+          "type": "objective",
+          "id": "SEC-OBJ-005",
+          "documentId": "WG-OBJ-001"
+        }
+      ],
       "evidence": [],
       "publicNote": "Planned only. This record is not evidence that the exercise has occurred."
     }

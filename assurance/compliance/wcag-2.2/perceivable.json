@@ -4,35 +4,990 @@
     "number": "1",
     "name": "Perceivable"
   },
-  "criteria": [
-    {"criterionId":"1.1.1","name":"Non-text Content","level":"A","status":"demonstrated","implementation":"Lab compares useful alt text with a missing-alt failure.","validation":{"automated":"partial","manual":"required"},"evidenceIds":["EVD-SRC-005","EVD-TST-002","EVD-DOC-005"],"gaps":["Full-scope manual review remains open; no criterion pass is asserted."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.2.1","name":"Audio-only and Video-only (Prerecorded)","level":"A","status":"not-observed","implementation":"No time-based media is intentionally registered in the current public scope.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-006"],"gaps":["Reassess applicability when relevant public scope changes."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.2.2","name":"Captions (Prerecorded)","level":"A","status":"not-observed","implementation":"No time-based media is intentionally registered in the current public scope.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-006"],"gaps":["Reassess applicability when relevant public scope changes."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.2.3","name":"Audio Description or Media Alternative (Prerecorded)","level":"A","status":"not-observed","implementation":"No time-based media is intentionally registered in the current public scope.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-006"],"gaps":["Reassess applicability when relevant public scope changes."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.2.4","name":"Captions (Live)","level":"AA","status":"not-observed","implementation":"No time-based media is intentionally registered in the current public scope.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-006"],"gaps":["Reassess applicability when relevant public scope changes."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.2.5","name":"Audio Description (Prerecorded)","level":"AA","status":"not-observed","implementation":"No time-based media is intentionally registered in the current public scope.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-006"],"gaps":["Reassess applicability when relevant public scope changes."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.2.6","name":"Sign Language (Prerecorded)","level":"AAA","status":"not-observed","implementation":"No time-based media is intentionally registered in the current public scope.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-006"],"gaps":["Reassess applicability when relevant public scope changes."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.2.7","name":"Extended Audio Description (Prerecorded)","level":"AAA","status":"not-observed","implementation":"No time-based media is intentionally registered in the current public scope.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-006"],"gaps":["Reassess applicability when relevant public scope changes."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.2.8","name":"Media Alternative (Prerecorded)","level":"AAA","status":"not-observed","implementation":"No time-based media is intentionally registered in the current public scope.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-006"],"gaps":["Reassess applicability when relevant public scope changes."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.2.9","name":"Audio-only (Live)","level":"AAA","status":"not-observed","implementation":"No time-based media is intentionally registered in the current public scope.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-006"],"gaps":["Reassess applicability when relevant public scope changes."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.3.1","name":"Info and Relationships","level":"A","status":"demonstrated","implementation":"Lab compares semantic regions/labels with generic unlabeled markup.","validation":{"automated":"partial","manual":"required"},"evidenceIds":["EVD-SRC-005","EVD-TST-002","EVD-DOC-005"],"gaps":["Full-scope manual review remains open; no criterion pass is asserted."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.3.2","name":"Meaningful Sequence","level":"A","status":"partial","implementation":"Related shared UI support exists for Meaningful Sequence; full criterion assessment remains open.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.3.3","name":"Sensory Characteristics","level":"A","status":"partial","implementation":"Related shared UI support exists for Sensory Characteristics; full criterion assessment remains open.","validation":{"automated":"partial","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005","EVD-TST-002"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.3.4","name":"Orientation","level":"AA","status":"partial","implementation":"Related shared UI support exists for Orientation; full criterion assessment remains open.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.3.5","name":"Identify Input Purpose","level":"AA","status":"partial","implementation":"Related shared UI support exists for Identify Input Purpose; full criterion assessment remains open.","validation":{"automated":"partial","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005","EVD-TST-002"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.3.6","name":"Identify Purpose","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Identify Purpose.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.4.1","name":"Use of Color","level":"A","status":"partial","implementation":"Related shared UI support exists for Use of Color; full criterion assessment remains open.","validation":{"automated":"partial","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005","EVD-TST-002"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.4.2","name":"Audio Control","level":"A","status":"not-observed","implementation":"No page-authored audio playback is intentionally registered in the current public scope.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-006"],"gaps":["Reassess applicability when relevant public scope changes."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.4.3","name":"Contrast (Minimum)","level":"AA","status":"demonstrated","implementation":"Lab compares shared contrast tokens with a known low-contrast pair.","validation":{"automated":"partial","manual":"required"},"evidenceIds":["EVD-SRC-005","EVD-TST-002","EVD-DOC-005"],"gaps":["Full-scope manual review remains open; no criterion pass is asserted."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.4.4","name":"Resize Text","level":"AA","status":"partial","implementation":"Related shared UI support exists for Resize Text; full criterion assessment remains open.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.4.5","name":"Images of Text","level":"AA","status":"partial","implementation":"Related shared UI support exists for Images of Text; full criterion assessment remains open.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.4.6","name":"Contrast (Enhanced)","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Contrast (Enhanced).","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.4.7","name":"Low or No Background Audio","level":"AAA","status":"not-observed","implementation":"No page-authored audio playback is intentionally registered in the current public scope.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-006"],"gaps":["Reassess applicability when relevant public scope changes."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.4.8","name":"Visual Presentation","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Visual Presentation.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.4.9","name":"Images of Text (No Exception)","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Images of Text (No Exception).","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.4.10","name":"Reflow","level":"AA","status":"partial","implementation":"Related shared UI support exists for Reflow; full criterion assessment remains open.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.4.11","name":"Non-text Contrast","level":"AA","status":"demonstrated","implementation":"Lab demonstrates control/focus contrast with a failing comparison.","validation":{"automated":"partial","manual":"required"},"evidenceIds":["EVD-SRC-005","EVD-TST-002","EVD-DOC-005"],"gaps":["Full-scope manual review remains open; no criterion pass is asserted."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.4.12","name":"Text Spacing","level":"AA","status":"partial","implementation":"Related shared UI support exists for Text Spacing; full criterion assessment remains open.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},
-    {"criterionId":"1.4.13","name":"Content on Hover or Focus","level":"AA","status":"partial","implementation":"Related shared UI support exists for Content on Hover or Focus; full criterion assessment remains open.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]}
+  "framework": "wcag-2.2",
+  "records": [
+    {
+      "id": "WCAG-1.1.1",
+      "framework": "wcag-2.2",
+      "reference": "1.1.1",
+      "title": "Non-text Content",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "A",
+      "status": "demonstrated",
+      "implementation": "Lab compares useful alt text with a missing-alt failure.",
+      "validation": {
+        "automated": "partial",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope manual review remains open; no criterion pass is asserted."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.2.1",
+      "framework": "wcag-2.2",
+      "reference": "1.2.1",
+      "title": "Audio-only and Video-only (Prerecorded)",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "A",
+      "status": "not-observed",
+      "implementation": "No time-based media is intentionally registered in the current public scope.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-006"
+        }
+      ],
+      "gaps": [
+        "Reassess applicability when relevant public scope changes."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.2.2",
+      "framework": "wcag-2.2",
+      "reference": "1.2.2",
+      "title": "Captions (Prerecorded)",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "A",
+      "status": "not-observed",
+      "implementation": "No time-based media is intentionally registered in the current public scope.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-006"
+        }
+      ],
+      "gaps": [
+        "Reassess applicability when relevant public scope changes."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.2.3",
+      "framework": "wcag-2.2",
+      "reference": "1.2.3",
+      "title": "Audio Description or Media Alternative (Prerecorded)",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "A",
+      "status": "not-observed",
+      "implementation": "No time-based media is intentionally registered in the current public scope.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-006"
+        }
+      ],
+      "gaps": [
+        "Reassess applicability when relevant public scope changes."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.2.4",
+      "framework": "wcag-2.2",
+      "reference": "1.2.4",
+      "title": "Captions (Live)",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AA",
+      "status": "not-observed",
+      "implementation": "No time-based media is intentionally registered in the current public scope.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-006"
+        }
+      ],
+      "gaps": [
+        "Reassess applicability when relevant public scope changes."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.2.5",
+      "framework": "wcag-2.2",
+      "reference": "1.2.5",
+      "title": "Audio Description (Prerecorded)",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AA",
+      "status": "not-observed",
+      "implementation": "No time-based media is intentionally registered in the current public scope.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-006"
+        }
+      ],
+      "gaps": [
+        "Reassess applicability when relevant public scope changes."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.2.6",
+      "framework": "wcag-2.2",
+      "reference": "1.2.6",
+      "title": "Sign Language (Prerecorded)",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AAA",
+      "status": "not-observed",
+      "implementation": "No time-based media is intentionally registered in the current public scope.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-006"
+        }
+      ],
+      "gaps": [
+        "Reassess applicability when relevant public scope changes."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.2.7",
+      "framework": "wcag-2.2",
+      "reference": "1.2.7",
+      "title": "Extended Audio Description (Prerecorded)",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AAA",
+      "status": "not-observed",
+      "implementation": "No time-based media is intentionally registered in the current public scope.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-006"
+        }
+      ],
+      "gaps": [
+        "Reassess applicability when relevant public scope changes."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.2.8",
+      "framework": "wcag-2.2",
+      "reference": "1.2.8",
+      "title": "Media Alternative (Prerecorded)",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AAA",
+      "status": "not-observed",
+      "implementation": "No time-based media is intentionally registered in the current public scope.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-006"
+        }
+      ],
+      "gaps": [
+        "Reassess applicability when relevant public scope changes."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.2.9",
+      "framework": "wcag-2.2",
+      "reference": "1.2.9",
+      "title": "Audio-only (Live)",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AAA",
+      "status": "not-observed",
+      "implementation": "No time-based media is intentionally registered in the current public scope.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-006"
+        }
+      ],
+      "gaps": [
+        "Reassess applicability when relevant public scope changes."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.3.1",
+      "framework": "wcag-2.2",
+      "reference": "1.3.1",
+      "title": "Info and Relationships",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "A",
+      "status": "demonstrated",
+      "implementation": "Lab compares semantic regions/labels with generic unlabeled markup.",
+      "validation": {
+        "automated": "partial",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope manual review remains open; no criterion pass is asserted."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.3.2",
+      "framework": "wcag-2.2",
+      "reference": "1.3.2",
+      "title": "Meaningful Sequence",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "A",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Meaningful Sequence; full criterion assessment remains open.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.3.3",
+      "framework": "wcag-2.2",
+      "reference": "1.3.3",
+      "title": "Sensory Characteristics",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "A",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Sensory Characteristics; full criterion assessment remains open.",
+      "validation": {
+        "automated": "partial",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.3.4",
+      "framework": "wcag-2.2",
+      "reference": "1.3.4",
+      "title": "Orientation",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AA",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Orientation; full criterion assessment remains open.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.3.5",
+      "framework": "wcag-2.2",
+      "reference": "1.3.5",
+      "title": "Identify Input Purpose",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AA",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Identify Input Purpose; full criterion assessment remains open.",
+      "validation": {
+        "automated": "partial",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.3.6",
+      "framework": "wcag-2.2",
+      "reference": "1.3.6",
+      "title": "Identify Purpose",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Identify Purpose.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.4.1",
+      "framework": "wcag-2.2",
+      "reference": "1.4.1",
+      "title": "Use of Color",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "A",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Use of Color; full criterion assessment remains open.",
+      "validation": {
+        "automated": "partial",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.4.2",
+      "framework": "wcag-2.2",
+      "reference": "1.4.2",
+      "title": "Audio Control",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "A",
+      "status": "not-observed",
+      "implementation": "No page-authored audio playback is intentionally registered in the current public scope.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-006"
+        }
+      ],
+      "gaps": [
+        "Reassess applicability when relevant public scope changes."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.4.3",
+      "framework": "wcag-2.2",
+      "reference": "1.4.3",
+      "title": "Contrast (Minimum)",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AA",
+      "status": "demonstrated",
+      "implementation": "Lab compares shared contrast tokens with a known low-contrast pair.",
+      "validation": {
+        "automated": "partial",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope manual review remains open; no criterion pass is asserted."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.4.4",
+      "framework": "wcag-2.2",
+      "reference": "1.4.4",
+      "title": "Resize Text",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AA",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Resize Text; full criterion assessment remains open.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.4.5",
+      "framework": "wcag-2.2",
+      "reference": "1.4.5",
+      "title": "Images of Text",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AA",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Images of Text; full criterion assessment remains open.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.4.6",
+      "framework": "wcag-2.2",
+      "reference": "1.4.6",
+      "title": "Contrast (Enhanced)",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Contrast (Enhanced).",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.4.7",
+      "framework": "wcag-2.2",
+      "reference": "1.4.7",
+      "title": "Low or No Background Audio",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AAA",
+      "status": "not-observed",
+      "implementation": "No page-authored audio playback is intentionally registered in the current public scope.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-006"
+        }
+      ],
+      "gaps": [
+        "Reassess applicability when relevant public scope changes."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.4.8",
+      "framework": "wcag-2.2",
+      "reference": "1.4.8",
+      "title": "Visual Presentation",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Visual Presentation.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.4.9",
+      "framework": "wcag-2.2",
+      "reference": "1.4.9",
+      "title": "Images of Text (No Exception)",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Images of Text (No Exception).",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.4.10",
+      "framework": "wcag-2.2",
+      "reference": "1.4.10",
+      "title": "Reflow",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AA",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Reflow; full criterion assessment remains open.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.4.11",
+      "framework": "wcag-2.2",
+      "reference": "1.4.11",
+      "title": "Non-text Contrast",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AA",
+      "status": "demonstrated",
+      "implementation": "Lab demonstrates control/focus contrast with a failing comparison.",
+      "validation": {
+        "automated": "partial",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope manual review remains open; no criterion pass is asserted."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.4.12",
+      "framework": "wcag-2.2",
+      "reference": "1.4.12",
+      "title": "Text Spacing",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AA",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Text Spacing; full criterion assessment remains open.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-1.4.13",
+      "framework": "wcag-2.2",
+      "reference": "1.4.13",
+      "title": "Content on Hover or Focus",
+      "kind": "criterion",
+      "section": "1. Perceivable",
+      "level": "AA",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Content on Hover or Focus; full criterion assessment remains open.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    }
   ]
 }

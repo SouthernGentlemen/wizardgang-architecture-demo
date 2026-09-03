@@ -1,1 +1,737 @@
-{"schemaVersion":1,"principle":{"number":"3","name":"Understandable"},"criteria":[{"criterionId":"3.1.1","name":"Language of Page","level":"A","status":"partial","implementation":"Related shared UI support exists for Language of Page; full criterion assessment remains open.","validation":{"automated":"partial","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005","EVD-TST-002"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.1.2","name":"Language of Parts","level":"AA","status":"partial","implementation":"Related shared UI support exists for Language of Parts; full criterion assessment remains open.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.1.3","name":"Unusual Words","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Unusual Words.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.1.4","name":"Abbreviations","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Abbreviations.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.1.5","name":"Reading Level","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Reading Level.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.1.6","name":"Pronunciation","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Pronunciation.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.2.1","name":"On Focus","level":"A","status":"partial","implementation":"Related shared UI support exists for On Focus; full criterion assessment remains open.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.2.2","name":"On Input","level":"A","status":"partial","implementation":"Related shared UI support exists for On Input; full criterion assessment remains open.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.2.3","name":"Consistent Navigation","level":"AA","status":"partial","implementation":"Related shared UI support exists for Consistent Navigation; full criterion assessment remains open.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.2.4","name":"Consistent Identification","level":"AA","status":"partial","implementation":"Related shared UI support exists for Consistent Identification; full criterion assessment remains open.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.2.5","name":"Change on Request","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Change on Request.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.2.6","name":"Consistent Help","level":"A","status":"demonstrated","implementation":"Lab compares consistently placed help with missing-help failure behavior.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-005","EVD-TST-002","EVD-DOC-005"],"gaps":["Full-scope manual review remains open; no criterion pass is asserted."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.3.1","name":"Error Identification","level":"A","status":"partial","implementation":"Related shared UI support exists for Error Identification; full criterion assessment remains open.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.3.2","name":"Labels or Instructions","level":"A","status":"demonstrated","implementation":"Lab compares explicit labels/instructions with an unlabeled-input failure.","validation":{"automated":"partial","manual":"required"},"evidenceIds":["EVD-SRC-005","EVD-TST-002","EVD-DOC-005"],"gaps":["Full-scope manual review remains open; no criterion pass is asserted."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.3.3","name":"Error Suggestion","level":"AA","status":"partial","implementation":"Related shared UI support exists for Error Suggestion; full criterion assessment remains open.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.3.4","name":"Error Prevention (Legal, Financial, Data)","level":"AA","status":"not-observed","implementation":"No legal, financial, or irreversible real-world transaction is intentionally executed by the public demo.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-006"],"gaps":["Reassess applicability when relevant public scope changes."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.3.5","name":"Help","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Help.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.3.6","name":"Error Prevention (All)","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Error Prevention (All).","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.3.7","name":"Redundant Entry","level":"A","status":"demonstrated","implementation":"Lab reuses supplied email data and compares forced re-entry.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-005","EVD-TST-002","EVD-DOC-005"],"gaps":["Full-scope manual review remains open; no criterion pass is asserted."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.3.8","name":"Accessible Authentication (Minimum)","level":"AA","status":"demonstrated","implementation":"Lab preserves paste/password-manager/passkey paths and compares a cognitive puzzle.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-005","EVD-TST-002","EVD-DOC-005"],"gaps":["Full-scope manual review remains open; no criterion pass is asserted."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"3.3.9","name":"Accessible Authentication (Enhanced)","level":"AAA","status":"demonstrated","implementation":"Lab shows enhanced authentication guidance without asserting AAA conformance.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-005","EVD-TST-002","EVD-DOC-005"],"gaps":["Full-scope manual review remains open; no criterion pass is asserted."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]}]}
+{
+  "schemaVersion": 1,
+  "principle": {
+    "number": "3",
+    "name": "Understandable"
+  },
+  "framework": "wcag-2.2",
+  "records": [
+    {
+      "id": "WCAG-3.1.1",
+      "framework": "wcag-2.2",
+      "reference": "3.1.1",
+      "title": "Language of Page",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "A",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Language of Page; full criterion assessment remains open.",
+      "validation": {
+        "automated": "partial",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.1.2",
+      "framework": "wcag-2.2",
+      "reference": "3.1.2",
+      "title": "Language of Parts",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "AA",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Language of Parts; full criterion assessment remains open.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.1.3",
+      "framework": "wcag-2.2",
+      "reference": "3.1.3",
+      "title": "Unusual Words",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Unusual Words.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.1.4",
+      "framework": "wcag-2.2",
+      "reference": "3.1.4",
+      "title": "Abbreviations",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Abbreviations.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.1.5",
+      "framework": "wcag-2.2",
+      "reference": "3.1.5",
+      "title": "Reading Level",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Reading Level.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.1.6",
+      "framework": "wcag-2.2",
+      "reference": "3.1.6",
+      "title": "Pronunciation",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Pronunciation.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.2.1",
+      "framework": "wcag-2.2",
+      "reference": "3.2.1",
+      "title": "On Focus",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "A",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for On Focus; full criterion assessment remains open.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.2.2",
+      "framework": "wcag-2.2",
+      "reference": "3.2.2",
+      "title": "On Input",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "A",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for On Input; full criterion assessment remains open.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.2.3",
+      "framework": "wcag-2.2",
+      "reference": "3.2.3",
+      "title": "Consistent Navigation",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "AA",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Consistent Navigation; full criterion assessment remains open.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.2.4",
+      "framework": "wcag-2.2",
+      "reference": "3.2.4",
+      "title": "Consistent Identification",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "AA",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Consistent Identification; full criterion assessment remains open.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.2.5",
+      "framework": "wcag-2.2",
+      "reference": "3.2.5",
+      "title": "Change on Request",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Change on Request.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.2.6",
+      "framework": "wcag-2.2",
+      "reference": "3.2.6",
+      "title": "Consistent Help",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "A",
+      "status": "demonstrated",
+      "implementation": "Lab compares consistently placed help with missing-help failure behavior.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope manual review remains open; no criterion pass is asserted."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.3.1",
+      "framework": "wcag-2.2",
+      "reference": "3.3.1",
+      "title": "Error Identification",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "A",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Error Identification; full criterion assessment remains open.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.3.2",
+      "framework": "wcag-2.2",
+      "reference": "3.3.2",
+      "title": "Labels or Instructions",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "A",
+      "status": "demonstrated",
+      "implementation": "Lab compares explicit labels/instructions with an unlabeled-input failure.",
+      "validation": {
+        "automated": "partial",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope manual review remains open; no criterion pass is asserted."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.3.3",
+      "framework": "wcag-2.2",
+      "reference": "3.3.3",
+      "title": "Error Suggestion",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "AA",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Error Suggestion; full criterion assessment remains open.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.3.4",
+      "framework": "wcag-2.2",
+      "reference": "3.3.4",
+      "title": "Error Prevention (Legal, Financial, Data)",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "AA",
+      "status": "not-observed",
+      "implementation": "No legal, financial, or irreversible real-world transaction is intentionally executed by the public demo.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-006"
+        }
+      ],
+      "gaps": [
+        "Reassess applicability when relevant public scope changes."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.3.5",
+      "framework": "wcag-2.2",
+      "reference": "3.3.5",
+      "title": "Help",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Help.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.3.6",
+      "framework": "wcag-2.2",
+      "reference": "3.3.6",
+      "title": "Error Prevention (All)",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Error Prevention (All).",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.3.7",
+      "framework": "wcag-2.2",
+      "reference": "3.3.7",
+      "title": "Redundant Entry",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "A",
+      "status": "demonstrated",
+      "implementation": "Lab reuses supplied email data and compares forced re-entry.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope manual review remains open; no criterion pass is asserted."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.3.8",
+      "framework": "wcag-2.2",
+      "reference": "3.3.8",
+      "title": "Accessible Authentication (Minimum)",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "AA",
+      "status": "demonstrated",
+      "implementation": "Lab preserves paste/password-manager/passkey paths and compares a cognitive puzzle.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope manual review remains open; no criterion pass is asserted."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-3.3.9",
+      "framework": "wcag-2.2",
+      "reference": "3.3.9",
+      "title": "Accessible Authentication (Enhanced)",
+      "kind": "criterion",
+      "section": "3. Understandable",
+      "level": "AAA",
+      "status": "demonstrated",
+      "implementation": "Lab shows enhanced authentication guidance without asserting AAA conformance.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope manual review remains open; no criterion pass is asserted."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    }
+  ]
+}

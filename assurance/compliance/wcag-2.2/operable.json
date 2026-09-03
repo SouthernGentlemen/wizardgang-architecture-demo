@@ -1,1 +1,1176 @@
-{"schemaVersion":1,"principle":{"number":"2","name":"Operable"},"criteria":[{"criterionId":"2.1.1","name":"Keyboard","level":"A","status":"demonstrated","implementation":"Lab uses native keyboard controls and a click-only failure comparison.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-005","EVD-TST-002","EVD-DOC-005"],"gaps":["Full-scope manual review remains open; no criterion pass is asserted."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.1.2","name":"No Keyboard Trap","level":"A","status":"partial","implementation":"Related shared UI support exists for No Keyboard Trap; full criterion assessment remains open.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.1.3","name":"Keyboard (No Exception)","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Keyboard (No Exception).","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.1.4","name":"Character Key Shortcuts","level":"A","status":"not-observed","implementation":"No single-character shortcut is intentionally registered in the current public interaction model.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-006"],"gaps":["Reassess applicability when relevant public scope changes."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.2.1","name":"Timing Adjustable","level":"A","status":"partial","implementation":"Related shared UI support exists for Timing Adjustable; full criterion assessment remains open.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.2.2","name":"Pause, Stop, Hide","level":"A","status":"not-observed","implementation":"No moving/blinking/scrolling content requiring pause-stop-hide is intentionally registered.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-006"],"gaps":["Reassess applicability when relevant public scope changes."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.2.3","name":"No Timing","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for No Timing.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.2.4","name":"Interruptions","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Interruptions.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.2.5","name":"Re-authenticating","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Re-authenticating.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.2.6","name":"Timeouts","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Timeouts.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.3.1","name":"Three Flashes or Below Threshold","level":"A","status":"not-observed","implementation":"No flashing content is intentionally registered in the current public scope.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-006"],"gaps":["Reassess applicability when relevant public scope changes."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.3.2","name":"Three Flashes","level":"AAA","status":"not-observed","implementation":"No flashing content is intentionally registered in the current public scope.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-006"],"gaps":["Reassess applicability when relevant public scope changes."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.3.3","name":"Animation from Interactions","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Animation from Interactions.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.4.1","name":"Bypass Blocks","level":"A","status":"partial","implementation":"Related shared UI support exists for Bypass Blocks; full criterion assessment remains open.","validation":{"automated":"partial","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005","EVD-TST-002"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.4.2","name":"Page Titled","level":"A","status":"partial","implementation":"Related shared UI support exists for Page Titled; full criterion assessment remains open.","validation":{"automated":"partial","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005","EVD-TST-002"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.4.3","name":"Focus Order","level":"A","status":"demonstrated","implementation":"Lab demonstrates logical focus order and dialog focus management.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-005","EVD-TST-002","EVD-DOC-005"],"gaps":["Full-scope manual review remains open; no criterion pass is asserted."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.4.4","name":"Link Purpose (In Context)","level":"A","status":"partial","implementation":"Related shared UI support exists for Link Purpose (In Context); full criterion assessment remains open.","validation":{"automated":"partial","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005","EVD-TST-002"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.4.5","name":"Multiple Ways","level":"AA","status":"partial","implementation":"Related shared UI support exists for Multiple Ways; full criterion assessment remains open.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.4.6","name":"Headings and Labels","level":"AA","status":"partial","implementation":"Related shared UI support exists for Headings and Labels; full criterion assessment remains open.","validation":{"automated":"partial","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005","EVD-TST-002"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.4.7","name":"Focus Visible","level":"AA","status":"demonstrated","implementation":"Lab demonstrates a visible 3 CSS-pixel focus token and removed-outline failure.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-005","EVD-TST-002","EVD-DOC-005"],"gaps":["Full-scope manual review remains open; no criterion pass is asserted."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.4.8","name":"Location","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Location.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.4.9","name":"Link Purpose (Link Only)","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Link Purpose (Link Only).","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.4.10","name":"Section Headings","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Section Headings.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.4.11","name":"Focus Not Obscured (Minimum)","level":"AA","status":"demonstrated","implementation":"Lab demonstrates content clearance and a focus-obscuring sticky-footer failure.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-005","EVD-TST-002","EVD-DOC-005"],"gaps":["Full-scope manual review remains open; no criterion pass is asserted."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.4.12","name":"Focus Not Obscured (Enhanced)","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Focus Not Obscured (Enhanced).","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.4.13","name":"Focus Appearance","level":"AAA","status":"demonstrated","implementation":"Lab demonstrates enhanced focus appearance as AAA-oriented guidance only.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-005","EVD-TST-002","EVD-DOC-005"],"gaps":["Full-scope manual review remains open; no criterion pass is asserted."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.5.1","name":"Pointer Gestures","level":"A","status":"not-observed","implementation":"No multipoint or path-based pointer gesture is intentionally required in current public interactions.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-006"],"gaps":["Reassess applicability when relevant public scope changes."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.5.2","name":"Pointer Cancellation","level":"A","status":"partial","implementation":"Related shared UI support exists for Pointer Cancellation; full criterion assessment remains open.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.5.3","name":"Label in Name","level":"A","status":"partial","implementation":"Related shared UI support exists for Label in Name; full criterion assessment remains open.","validation":{"automated":"partial","manual":"required"},"evidenceIds":["EVD-SRC-007","EVD-DOC-005","EVD-TST-002"],"gaps":["Full-scope criterion-specific manual evidence is not recorded."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.5.4","name":"Motion Actuation","level":"A","status":"not-observed","implementation":"No motion-actuation control is intentionally registered in the current public scope.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-006"],"gaps":["Reassess applicability when relevant public scope changes."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.5.5","name":"Target Size (Enhanced)","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Target Size (Enhanced).","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.5.6","name":"Concurrent Input Mechanisms","level":"AAA","status":"gap","implementation":"No criterion-specific implementation evidence is registered for Concurrent Input Mechanisms.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-DOC-005"],"gaps":["Implementation and manual evaluation remain open."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.5.7","name":"Dragging Movements","level":"AA","status":"demonstrated","implementation":"Lab provides move buttons as a non-drag alternative.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-005","EVD-TST-002","EVD-DOC-005"],"gaps":["Full-scope manual review remains open; no criterion pass is asserted."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]},{"criterionId":"2.5.8","name":"Target Size (Minimum)","level":"AA","status":"demonstrated","implementation":"Lab demonstrates 24×24 CSS-pixel targets or the spacing exception.","validation":{"automated":"none","manual":"required"},"evidenceIds":["EVD-SRC-005","EVD-TST-002","EVD-DOC-005"],"gaps":["Full-scope manual review remains open; no criterion pass is asserted."],"owner":"Repository maintainer","freshnessRules":["release-bound","content-change","interaction-change","quarterly-manual"]}]}
+{
+  "schemaVersion": 1,
+  "principle": {
+    "number": "2",
+    "name": "Operable"
+  },
+  "framework": "wcag-2.2",
+  "records": [
+    {
+      "id": "WCAG-2.1.1",
+      "framework": "wcag-2.2",
+      "reference": "2.1.1",
+      "title": "Keyboard",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "A",
+      "status": "demonstrated",
+      "implementation": "Lab uses native keyboard controls and a click-only failure comparison.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope manual review remains open; no criterion pass is asserted."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.1.2",
+      "framework": "wcag-2.2",
+      "reference": "2.1.2",
+      "title": "No Keyboard Trap",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "A",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for No Keyboard Trap; full criterion assessment remains open.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.1.3",
+      "framework": "wcag-2.2",
+      "reference": "2.1.3",
+      "title": "Keyboard (No Exception)",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Keyboard (No Exception).",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.1.4",
+      "framework": "wcag-2.2",
+      "reference": "2.1.4",
+      "title": "Character Key Shortcuts",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "A",
+      "status": "not-observed",
+      "implementation": "No single-character shortcut is intentionally registered in the current public interaction model.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-006"
+        }
+      ],
+      "gaps": [
+        "Reassess applicability when relevant public scope changes."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.2.1",
+      "framework": "wcag-2.2",
+      "reference": "2.2.1",
+      "title": "Timing Adjustable",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "A",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Timing Adjustable; full criterion assessment remains open.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.2.2",
+      "framework": "wcag-2.2",
+      "reference": "2.2.2",
+      "title": "Pause, Stop, Hide",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "A",
+      "status": "not-observed",
+      "implementation": "No moving/blinking/scrolling content requiring pause-stop-hide is intentionally registered.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-006"
+        }
+      ],
+      "gaps": [
+        "Reassess applicability when relevant public scope changes."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.2.3",
+      "framework": "wcag-2.2",
+      "reference": "2.2.3",
+      "title": "No Timing",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for No Timing.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.2.4",
+      "framework": "wcag-2.2",
+      "reference": "2.2.4",
+      "title": "Interruptions",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Interruptions.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.2.5",
+      "framework": "wcag-2.2",
+      "reference": "2.2.5",
+      "title": "Re-authenticating",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Re-authenticating.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.2.6",
+      "framework": "wcag-2.2",
+      "reference": "2.2.6",
+      "title": "Timeouts",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Timeouts.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.3.1",
+      "framework": "wcag-2.2",
+      "reference": "2.3.1",
+      "title": "Three Flashes or Below Threshold",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "A",
+      "status": "not-observed",
+      "implementation": "No flashing content is intentionally registered in the current public scope.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-006"
+        }
+      ],
+      "gaps": [
+        "Reassess applicability when relevant public scope changes."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.3.2",
+      "framework": "wcag-2.2",
+      "reference": "2.3.2",
+      "title": "Three Flashes",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AAA",
+      "status": "not-observed",
+      "implementation": "No flashing content is intentionally registered in the current public scope.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-006"
+        }
+      ],
+      "gaps": [
+        "Reassess applicability when relevant public scope changes."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.3.3",
+      "framework": "wcag-2.2",
+      "reference": "2.3.3",
+      "title": "Animation from Interactions",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Animation from Interactions.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.4.1",
+      "framework": "wcag-2.2",
+      "reference": "2.4.1",
+      "title": "Bypass Blocks",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "A",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Bypass Blocks; full criterion assessment remains open.",
+      "validation": {
+        "automated": "partial",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.4.2",
+      "framework": "wcag-2.2",
+      "reference": "2.4.2",
+      "title": "Page Titled",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "A",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Page Titled; full criterion assessment remains open.",
+      "validation": {
+        "automated": "partial",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.4.3",
+      "framework": "wcag-2.2",
+      "reference": "2.4.3",
+      "title": "Focus Order",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "A",
+      "status": "demonstrated",
+      "implementation": "Lab demonstrates logical focus order and dialog focus management.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope manual review remains open; no criterion pass is asserted."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.4.4",
+      "framework": "wcag-2.2",
+      "reference": "2.4.4",
+      "title": "Link Purpose (In Context)",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "A",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Link Purpose (In Context); full criterion assessment remains open.",
+      "validation": {
+        "automated": "partial",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.4.5",
+      "framework": "wcag-2.2",
+      "reference": "2.4.5",
+      "title": "Multiple Ways",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AA",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Multiple Ways; full criterion assessment remains open.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.4.6",
+      "framework": "wcag-2.2",
+      "reference": "2.4.6",
+      "title": "Headings and Labels",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AA",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Headings and Labels; full criterion assessment remains open.",
+      "validation": {
+        "automated": "partial",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.4.7",
+      "framework": "wcag-2.2",
+      "reference": "2.4.7",
+      "title": "Focus Visible",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AA",
+      "status": "demonstrated",
+      "implementation": "Lab demonstrates a visible 3 CSS-pixel focus token and removed-outline failure.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope manual review remains open; no criterion pass is asserted."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.4.8",
+      "framework": "wcag-2.2",
+      "reference": "2.4.8",
+      "title": "Location",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Location.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.4.9",
+      "framework": "wcag-2.2",
+      "reference": "2.4.9",
+      "title": "Link Purpose (Link Only)",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Link Purpose (Link Only).",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.4.10",
+      "framework": "wcag-2.2",
+      "reference": "2.4.10",
+      "title": "Section Headings",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Section Headings.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.4.11",
+      "framework": "wcag-2.2",
+      "reference": "2.4.11",
+      "title": "Focus Not Obscured (Minimum)",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AA",
+      "status": "demonstrated",
+      "implementation": "Lab demonstrates content clearance and a focus-obscuring sticky-footer failure.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope manual review remains open; no criterion pass is asserted."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.4.12",
+      "framework": "wcag-2.2",
+      "reference": "2.4.12",
+      "title": "Focus Not Obscured (Enhanced)",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Focus Not Obscured (Enhanced).",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.4.13",
+      "framework": "wcag-2.2",
+      "reference": "2.4.13",
+      "title": "Focus Appearance",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AAA",
+      "status": "demonstrated",
+      "implementation": "Lab demonstrates enhanced focus appearance as AAA-oriented guidance only.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope manual review remains open; no criterion pass is asserted."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.5.1",
+      "framework": "wcag-2.2",
+      "reference": "2.5.1",
+      "title": "Pointer Gestures",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "A",
+      "status": "not-observed",
+      "implementation": "No multipoint or path-based pointer gesture is intentionally required in current public interactions.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-006"
+        }
+      ],
+      "gaps": [
+        "Reassess applicability when relevant public scope changes."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.5.2",
+      "framework": "wcag-2.2",
+      "reference": "2.5.2",
+      "title": "Pointer Cancellation",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "A",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Pointer Cancellation; full criterion assessment remains open.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.5.3",
+      "framework": "wcag-2.2",
+      "reference": "2.5.3",
+      "title": "Label in Name",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "A",
+      "status": "partial",
+      "implementation": "Related shared UI support exists for Label in Name; full criterion assessment remains open.",
+      "validation": {
+        "automated": "partial",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-007"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        }
+      ],
+      "gaps": [
+        "Full-scope criterion-specific manual evidence is not recorded."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.5.4",
+      "framework": "wcag-2.2",
+      "reference": "2.5.4",
+      "title": "Motion Actuation",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "A",
+      "status": "not-observed",
+      "implementation": "No motion-actuation control is intentionally registered in the current public scope.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-006"
+        }
+      ],
+      "gaps": [
+        "Reassess applicability when relevant public scope changes."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.5.5",
+      "framework": "wcag-2.2",
+      "reference": "2.5.5",
+      "title": "Target Size (Enhanced)",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Target Size (Enhanced).",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.5.6",
+      "framework": "wcag-2.2",
+      "reference": "2.5.6",
+      "title": "Concurrent Input Mechanisms",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AAA",
+      "status": "gap",
+      "implementation": "No criterion-specific implementation evidence is registered for Concurrent Input Mechanisms.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Implementation and manual evaluation remain open."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.5.7",
+      "framework": "wcag-2.2",
+      "reference": "2.5.7",
+      "title": "Dragging Movements",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AA",
+      "status": "demonstrated",
+      "implementation": "Lab provides move buttons as a non-drag alternative.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope manual review remains open; no criterion pass is asserted."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    },
+    {
+      "id": "WCAG-2.5.8",
+      "framework": "wcag-2.2",
+      "reference": "2.5.8",
+      "title": "Target Size (Minimum)",
+      "kind": "criterion",
+      "section": "2. Operable",
+      "level": "AA",
+      "status": "demonstrated",
+      "implementation": "Lab demonstrates 24×24 CSS-pixel targets or the spacing exception.",
+      "validation": {
+        "automated": "none",
+        "manual": "required"
+      },
+      "evidence": [
+        {
+          "type": "evidence",
+          "id": "EVD-SRC-005"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-TST-002"
+        },
+        {
+          "type": "evidence",
+          "id": "EVD-DOC-005"
+        }
+      ],
+      "gaps": [
+        "Full-scope manual review remains open; no criterion pass is asserted."
+      ],
+      "owner": "Repository maintainer",
+      "freshnessRules": [
+        "release-bound",
+        "content-change",
+        "interaction-change",
+        "quarterly-manual"
+      ]
+    }
+  ]
+}

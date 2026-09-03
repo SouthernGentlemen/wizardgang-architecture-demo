@@ -1,12 +1,8 @@
 {
   "schemaVersion": 1,
   "id": "wcag-2-2-public-registry",
-  "standard": "Web Content Accessibility Guidelines (WCAG) 2.2",
-  "edition": "2.2",
   "visibility": "public",
-  "assessmentDate": "2026-09-02",
   "scope": "Current public demo routes and repository implementations; statuses describe implementation/evidence inventory, not WCAG conformance.",
-  "qualification": "This registry does not claim WCAG 2.2 conformance at Level A, AA, or AAA, certification, or that any full page satisfies a WCAG conformance level.",
   "statusDefinitions": {
     "demonstrated": "Deliberate implementation or teaching evidence exists; no criterion pass is asserted.",
     "partial": "Related implementation exists; criterion-specific scope or manual evidence is incomplete.",
@@ -31,26 +27,40 @@
     "interaction-change": "Reassess when focus, keyboard, pointer, authentication, form, timing, status-message, or other interaction behavior changes.",
     "quarterly-manual": "Repeat the documented manual browser and assistive-technology review at least every 90 days."
   },
-  "registryEvidenceIds": [
-    "EVD-TST-003",
-    "EVD-CI-001"
-  ],
   "partitions": [
     {
       "principle": "Perceivable",
-      "path": "assurance/compliance/wcag-2.2/perceivable.json"
+      "resourceId": "compliance.wcag-2.2.perceivable"
     },
     {
       "principle": "Operable",
-      "path": "assurance/compliance/wcag-2.2/operable.json"
+      "resourceId": "compliance.wcag-2.2.operable"
     },
     {
       "principle": "Understandable",
-      "path": "assurance/compliance/wcag-2.2/understandable.json"
+      "resourceId": "compliance.wcag-2.2.understandable"
     },
     {
       "principle": "Robust",
-      "path": "assurance/compliance/wcag-2.2/robust.json"
+      "resourceId": "compliance.wcag-2.2.robust"
+    }
+  ],
+  "framework": {
+    "id": "wcag-2.2",
+    "label": "WCAG 2.2",
+    "edition": "2.2",
+    "qualification": "This registry does not claim WCAG 2.2 conformance at Level A, AA, or AAA, certification, or that any full page satisfies a WCAG conformance level.",
+    "assessmentDate": "2026-09-02",
+    "order": 2
+  },
+  "registryEvidence": [
+    {
+      "type": "evidence",
+      "id": "EVD-TST-003"
+    },
+    {
+      "type": "evidence",
+      "id": "EVD-CI-001"
     }
   ]
 }

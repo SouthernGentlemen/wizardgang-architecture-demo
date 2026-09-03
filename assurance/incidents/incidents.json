@@ -1,6 +1,9 @@
 {
   "schemaVersion": 1,
-  "sourceRegister": "docs/governance/registers/INCIDENT-REGISTER.md",
+  "sourceRegister": {
+    "type": "governance-document",
+    "id": "WG-REG-004"
+  },
   "qualification": "No actual incident records are established in the current retained register. This is not a claim that defects, outages, vulnerabilities, near misses, or incidents have never occurred.",
   "records": []
 }

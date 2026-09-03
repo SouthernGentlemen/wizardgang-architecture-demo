@@ -1,0 +1,33 @@
+name: DEMO-127 Canonical Data Migration
+
+on:
+  push:
+    branches: [demo-127-canonical-normalized-assurance-model]
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Normalize canonical assurance JSON
+        run: node scripts/migrate-demo-127-assurance.mjs
+      - name: Amend the single controlled change when data changed
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Canonical data is already normalized."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assurance
+          git commit --amend --no-edit
+          git push --force-with-lease origin HEAD:demo-127-canonical-normalized-assurance-model
