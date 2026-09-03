@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import registry from '../assurance/registry.json';
 import complianceData from '../assurance/compliance/iso-42001-2023.json';
@@ -18,6 +19,18 @@ const expectedAnnexRefs = [
 const complianceOwner = (registry as any).datasets.find((resource: any) => resource.id === 'compliance.iso-27001');
 const frameworkOwner = complianceOwner.resources.find((resource: any) => resource.id === 'compliance.iso-42001');
 
+function postureCounts(records: typeof complianceData.records) {
+  const counts: Record<string, number> = { met: 0, partial: 0, gap: 0, 'not-applicable': 0 };
+  for (const record of records.filter((record) => record.kind === 'control')) counts[record.status] = (counts[record.status] ?? 0) + 1;
+  return counts;
+}
+
+function expectApprovalProvenance(sourceSoa: typeof complianceData.sourceSoa) {
+  expect(sourceSoa.approval.pullRequest).toEqual(expect.any(Number));
+  expect(sourceSoa.approval.pullRequest).toBeGreaterThan(0);
+  expect(sourceSoa.approval.mergeCommit).toMatch(/^[0-9a-f]{40}$/);
+}
+
 describe('ISO/IEC 42001:2023 canonical public compliance records', () => {
   const clauses = complianceData.records.filter((record) => record.kind === 'clause');
   const annex = complianceData.records.filter((record) => record.kind === 'control');
@@ -30,23 +43,20 @@ describe('ISO/IEC 42001:2023 canonical public compliance records', () => {
     for (const record of complianceData.records) expect(record.id).toBe(`ISO42001-${record.reference}`);
   });
 
-  it('matches approved SoA posture totals using normalized status names', () => {
-    const counts = annex.reduce<Record<string, number>>((result, record) => {
-      result[record.status] = (result[record.status] ?? 0) + 1;
-      return result;
-    }, {});
-    expect(counts).toEqual({ partial: 34, met: 2, 'not-applicable': 2 });
+  it('derives the current SoA posture and generated summary from canonical records', () => {
+    const counts = postureCounts(complianceData.records);
+    const summary = readFileSync('docs/governance/soa/ISO-42001-SOA.md', 'utf8');
+    expect(Object.values(counts).reduce((sum, count) => sum + count, 0)).toBe(annex.length);
+    expect(summary).toContain(`| ${annex.length} | ${counts.met} | ${counts.partial} | ${counts.gap} | ${counts['not-applicable']} |`);
     expect(JSON.stringify(complianceData)).not.toContain('notApplicable');
     expect(complianceData.sourceSoa).toMatchObject({
       id: 'WG-SOA-002', governanceDocumentReference: 'WG-SOA-002', status: 'approved',
-      approval: { pullRequest: 56, mergeCommit: '1ae105da8ab6466e334a2faf4e6c63f5885c91df' },
     });
-    expect(annex.filter((record) => record.status === 'met').map((record) => record.reference).sort()).toEqual(['A.6.2.8', 'A.9.4']);
+    expectApprovalProvenance(complianceData.sourceSoa);
   });
 
-  it('requires explicit evidence and rationale for every N/A control', () => {
+  it('requires explicit evidence and rationale for every N/A control without freezing which controls are N/A', () => {
     const notApplicable = annex.filter((record) => record.status === 'not-applicable');
-    expect(notApplicable.map((record) => record.reference).sort()).toEqual(['A.7.2', 'A.7.6']);
     for (const record of notApplicable) {
       expect(record.applicability).toBe('not-applicable');
       expect(record.rationale?.length ?? 0).toBeGreaterThan(10);

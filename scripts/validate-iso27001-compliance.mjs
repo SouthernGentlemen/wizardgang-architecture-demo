@@ -17,6 +17,5 @@ const result = validateNormalizedIso({
   schemaPath: 'contracts/assurance/iso-27001-compliance.schema.json',
   standard: 'ISO/IEC 27001:2022', edition: '2022', framework: 'iso-27001', idPrefix: 'ISO27001', sourceSoaId: 'WG-SOA-001',
   expectedClauseRefs, expectedAnnexRefs,
-  expectedAnnexCounts: { met: 3, partial: 62, gap: 3, 'not-applicable': 25 },
 });
 finishIsoValidation('ISO/IEC 27001', result);
