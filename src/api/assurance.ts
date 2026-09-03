@@ -1,5 +1,4 @@
 import {
-  complianceFiltersFromUrl,
   deriveComplianceCounts,
   deriveRiskCounts,
   filterPublicCompliance,
@@ -9,72 +8,139 @@ import {
   publicComplianceFrameworks,
   publicComplianceQualification,
   publicComplianceRecords,
-  riskFiltersFromUrl,
+  type PublicComplianceFilters,
+  type PublicExercise,
+  type PublicIncident,
+  type PublicRiskFilters,
 } from '../assurance/registry';
-import { json, methodNotAllowed } from '../lib/http';
+import {
+  assuranceEnumQuery,
+  assuranceErrorResponse,
+  assuranceJsonResponse,
+  paginateAssuranceRecords,
+  prepareAssuranceRequest,
+} from './assurance-contract';
 
-const assuranceCache = { headers: { 'cache-control': 'public, max-age=300' } };
+const RISK_FRAMEWORKS = ['security', 'ai'] as const;
+const RISK_STATUSES = ['open', 'treating'] as const;
+const RISK_RATINGS = ['low', 'moderate', 'high', 'critical'] as const;
+const COMPLIANCE_FRAMEWORKS = ['iso-27001', 'iso-42001', 'wcag-2.2'] as const;
+const COMPLIANCE_STATUSES = ['met', 'partial', 'gap', 'not-applicable', 'demonstrated', 'not-observed'] as const;
+const COMPLIANCE_LEVELS = ['A', 'AA', 'AAA'] as const;
+
+function riskFilters(request: Request, url: URL): PublicRiskFilters | Response {
+  const framework = assuranceEnumQuery(request, url, 'framework', RISK_FRAMEWORKS);
+  if (framework instanceof Response) return framework;
+  const status = assuranceEnumQuery(request, url, 'status', RISK_STATUSES);
+  if (status instanceof Response) return status;
+  const residualRating = assuranceEnumQuery(request, url, 'residual', RISK_RATINGS);
+  if (residualRating instanceof Response) return residualRating;
+  return {
+    ...(framework ? { framework } : {}),
+    ...(status ? { status } : {}),
+    ...(residualRating ? { residualRating } : {}),
+  };
+}
+
+function complianceFilters(request: Request, url: URL): PublicComplianceFilters | Response {
+  const framework = assuranceEnumQuery(request, url, 'framework', COMPLIANCE_FRAMEWORKS);
+  if (framework instanceof Response) return framework;
+  const status = assuranceEnumQuery(request, url, 'status', COMPLIANCE_STATUSES);
+  if (status instanceof Response) return status;
+  const level = assuranceEnumQuery(request, url, 'level', COMPLIANCE_LEVELS);
+  if (level instanceof Response) return level;
+  return {
+    ...(framework ? { framework } : {}),
+    ...(status ? { status } : {}),
+    ...(level ? { level } : {}),
+  };
+}
 
 export function assuranceRisksResponse(request: Request): Response {
-  if (request.method !== 'GET') return methodNotAllowed(['GET']);
-  const filters = riskFiltersFromUrl(new URL(request.url));
-  const records = filterPublicRisks(filters);
-  return json({
-    schemaVersion: publicAssuranceRegistry.schemaVersion,
+  const context = prepareAssuranceRequest(request);
+  if (context instanceof Response) return context;
+
+  const filters = riskFilters(request, context.url);
+  if (filters instanceof Response) return filters;
+  const filteredRecords = filterPublicRisks(filters);
+  const page = paginateAssuranceRecords(request, context.url, filteredRecords);
+  if (page instanceof Response) return page;
+
+  return assuranceJsonResponse(request, {
+    schemaVersion: context.schemaVersion,
     dataset: 'risks',
     qualification: publicAssuranceRegistry.qualification,
     filters,
-    counts: deriveRiskCounts(records),
+    counts: deriveRiskCounts(filteredRecords),
     totalAvailable: publicAssuranceRegistry.counts.risks,
-    records,
-  }, assuranceCache);
+    records: page.records,
+    ...(page.pagination ? { pagination: page.pagination } : {}),
+  });
 }
 
 export function assuranceComplianceResponse(request: Request, recordId?: string): Response {
-  if (request.method !== 'GET') return methodNotAllowed(['GET']);
+  const context = prepareAssuranceRequest(request);
+  if (context instanceof Response) return context;
 
   if (recordId !== undefined) {
     let decodedId: string;
     try {
       decodedId = decodeURIComponent(recordId);
     } catch {
-      return json({ error: 'invalid_compliance_record_id' }, { status: 400, ...assuranceCache });
+      return assuranceErrorResponse(request, 400, { error: 'invalid_compliance_record_id' });
     }
     const record = findPublicComplianceRecord(decodedId);
     if (!record) {
-      return json({ error: 'compliance_record_not_found', recordId: decodedId }, { status: 404, ...assuranceCache });
+      return assuranceErrorResponse(request, 404, { error: 'compliance_record_not_found', recordId: decodedId });
     }
-    return json({
-      schemaVersion: 1,
+    return assuranceJsonResponse(request, {
+      schemaVersion: context.schemaVersion,
       dataset: 'compliance',
       qualification: publicComplianceQualification,
       framework: publicComplianceFrameworks.find((candidate) => candidate.id === record.framework),
       record,
-    }, assuranceCache);
+    });
   }
 
-  const filters = complianceFiltersFromUrl(new URL(request.url));
-  const records = filterPublicCompliance(filters);
-  return json({
-    schemaVersion: 1,
+  const filters = complianceFilters(request, context.url);
+  if (filters instanceof Response) return filters;
+  const filteredRecords = filterPublicCompliance(filters);
+  const page = paginateAssuranceRecords(request, context.url, filteredRecords);
+  if (page instanceof Response) return page;
+
+  return assuranceJsonResponse(request, {
+    schemaVersion: context.schemaVersion,
     dataset: 'compliance',
     qualification: publicComplianceQualification,
     filters,
-    counts: deriveComplianceCounts(records),
+    counts: deriveComplianceCounts(filteredRecords),
     totalAvailable: publicComplianceRecords.length,
     frameworks: publicComplianceFrameworks,
-    records,
-  }, assuranceCache);
+    records: page.records,
+    ...(page.pagination ? { pagination: page.pagination } : {}),
+  });
 }
 
 export function assuranceIncidentsResponse(request: Request): Response {
-  if (request.method !== 'GET') return methodNotAllowed(['GET']);
-  return json({
-    schemaVersion: publicAssuranceRegistry.schemaVersion,
+  const context = prepareAssuranceRequest(request);
+  if (context instanceof Response) return context;
+
+  const combined = [
+    ...publicAssuranceRegistry.incidents,
+    ...publicAssuranceRegistry.exercises,
+  ] as Array<PublicIncident | PublicExercise>;
+  const page = paginateAssuranceRecords(request, context.url, combined);
+  if (page instanceof Response) return page;
+  const incidents = page.records.filter((record): record is PublicIncident => record.recordType === 'incident');
+  const exercises = page.records.filter((record): record is PublicExercise => record.recordType === 'exercise');
+
+  return assuranceJsonResponse(request, {
+    schemaVersion: context.schemaVersion,
     dataset: 'incidents',
     qualification: publicAssuranceRegistry.incidentQualifications,
     counts: publicAssuranceRegistry.incidentCounts,
-    incidents: publicAssuranceRegistry.incidents,
-    exercises: publicAssuranceRegistry.exercises,
-  }, assuranceCache);
+    incidents,
+    exercises,
+    ...(page.pagination ? { pagination: page.pagination } : {}),
+  });
 }
