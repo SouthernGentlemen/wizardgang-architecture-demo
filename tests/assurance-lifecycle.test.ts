@@ -1,16 +1,19 @@
 import { spawnSync, type SpawnSyncReturns } from 'node:child_process';
-import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, relative, sep } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { dirname, join, relative, sep } from 'node:path';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 const repositoryRoot = process.cwd();
 const fixtureRoots: string[] = [];
 const ignoredFixtureParts = new Set(['.git', 'node_modules', '.wrangler', 'dist', 'coverage', 'artifacts']);
 const lifecyclePath = 'assurance/lifecycle/records.json';
+const registryPath = 'assurance/registry.json';
+const baselineCommit = 'c2359f00fc3bac80bfbc2e82369a86f20e522f74';
+let pinnedBaselineRoot = '';
 
 function createFixture(): string {
-  const fixtureRoot = mkdtempSync(join(tmpdir(), 'demo-123-lifecycle-'));
+  const fixtureRoot = mkdtempSync(join(tmpdir(), 'demo-133-lifecycle-'));
   cpSync(repositoryRoot, fixtureRoot, {
     recursive: true,
     filter(source) {
@@ -23,12 +26,48 @@ function createFixture(): string {
   return fixtureRoot;
 }
 
+function gitOutput(args: string[]): string {
+  const result = spawnSync('git', args, { cwd: repositoryRoot, encoding: 'utf8' });
+  if (result.status !== 0) {
+    throw new Error(`git ${args.join(' ')} failed: ${result.stderr || result.stdout}`);
+  }
+  return result.stdout;
+}
+
+function materializePinnedBaseline(): string {
+  const fixtureRoot = mkdtempSync(join(tmpdir(), 'demo-133-v014-baseline-'));
+  const assurancePaths = gitOutput(['ls-tree', '-r', '--name-only', baselineCommit, 'assurance'])
+    .split('\n')
+    .filter((relativePath) => relativePath.endsWith('.json'));
+
+  for (const relativePath of assurancePaths) {
+    const absolutePath = join(fixtureRoot, relativePath);
+    mkdirSync(dirname(absolutePath), { recursive: true });
+    writeFileSync(absolutePath, gitOutput(['show', `${baselineCommit}:${relativePath}`]));
+  }
+  return fixtureRoot;
+}
+
 function readJson<T = any>(fixtureRoot: string, relativePath: string): T {
   return JSON.parse(readFileSync(join(fixtureRoot, relativePath), 'utf8')) as T;
 }
 
 function writeJson(fixtureRoot: string, relativePath: string, value: unknown): void {
-  writeFileSync(join(fixtureRoot, relativePath), `${JSON.stringify(value, null, 2)}\n`);
+  const absolutePath = join(fixtureRoot, relativePath);
+  mkdirSync(dirname(absolutePath), { recursive: true });
+  writeFileSync(absolutePath, `${JSON.stringify(value, null, 2)}\n`);
+}
+
+function moveRegisteredDataset(fixtureRoot: string, datasetId: string, destination: string): void {
+  const registry = readJson(fixtureRoot, registryPath);
+  const dataset = registry.datasets.find((candidate: { id?: string }) => candidate.id === datasetId);
+  expect(dataset).toBeDefined();
+
+  const destinationPath = join(fixtureRoot, destination);
+  mkdirSync(dirname(destinationPath), { recursive: true });
+  renameSync(join(fixtureRoot, dataset.path), destinationPath);
+  dataset.path = destination;
+  writeJson(fixtureRoot, registryPath, registry);
 }
 
 function runLifecycle(fixtureRoot: string, previousRoot = repositoryRoot): SpawnSyncReturns<string> {
@@ -37,7 +76,7 @@ function runLifecycle(fixtureRoot: string, previousRoot = repositoryRoot): Spawn
     encoding: 'utf8',
     env: {
       ...process.env,
-      ASSURANCE_BASELINE_DIR: repositoryRoot,
+      ASSURANCE_BASELINE_DIR: pinnedBaselineRoot,
       ASSURANCE_PREVIOUS_DIR: previousRoot,
     },
   });
@@ -55,16 +94,81 @@ const reviewed = {
   basis: 'Synthetic review metadata used only by lifecycle validator tests.',
 };
 
+beforeAll(() => {
+  pinnedBaselineRoot = materializePinnedBaseline();
+});
+
 afterEach(() => {
   while (fixtureRoots.length) rmSync(fixtureRoots.pop()!, { recursive: true, force: true });
 });
 
+afterAll(() => {
+  if (pinnedBaselineRoot) rmSync(pinnedBaselineRoot, { recursive: true, force: true });
+});
+
 describe('assurance record lifecycle controls', () => {
-  it('accepts the released registry as a reviewed Published baseline', () => {
+  it('decodes the actual immutable v0.14.0 assurance format as the Published baseline', () => {
+    const baselineRegistry = readJson(pinnedBaselineRoot, registryPath);
+    const baselineIso = readJson(pinnedBaselineRoot, 'assurance/compliance/iso-27001-2022.json');
+    const baselineWcag = readJson(pinnedBaselineRoot, 'assurance/compliance/wcag-2.2.json');
+
+    expect(baselineRegistry.lifecycle).toBeUndefined();
+    expect(baselineRegistry.datasets.every((dataset: { recordCollection?: unknown }) => dataset.recordCollection === undefined)).toBe(true);
+    expect(baselineIso.clauses).toBeDefined();
+    expect(baselineIso.annexA).toBeDefined();
+    expect(baselineWcag.partitions.length).toBeGreaterThan(0);
+
     const fixtureRoot = createFixture();
     const result = runLifecycle(fixtureRoot);
     expect(result.status).toBe(0);
     expect(result.stdout).toContain('Assurance lifecycle validation passed');
+  });
+
+  it('preserves identity when a registered dataset moves to a new path', () => {
+    const fixtureRoot = createFixture();
+    moveRegisteredDataset(fixtureRoot, 'claims', 'assurance/moved/claims.json');
+
+    const result = runLifecycle(fixtureRoot);
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('Assurance lifecycle validation passed');
+  });
+
+  it('rejects immutable identity changes hidden inside a registered dataset move', () => {
+    const fixtureRoot = createFixture();
+    const movedPath = 'assurance/moved/claims.json';
+    moveRegisteredDataset(fixtureRoot, 'claims', movedPath);
+
+    const claims = readJson(fixtureRoot, movedPath);
+    const target = claims.records.find((record: { id: string }) => record.id === 'CLM-GOV-001');
+    expect(target).toBeDefined();
+    target.title = `${target.title} changed identity`;
+    writeJson(fixtureRoot, movedPath, claims);
+
+    expectRejected(runLifecycle(fixtureRoot), 'immutable public ID identity changed');
+  });
+
+  it('rejects registry removal that would hide previously published records', () => {
+    const fixtureRoot = createFixture();
+    const registry = readJson(fixtureRoot, registryPath);
+    registry.datasets = registry.datasets.filter((dataset: { id?: string }) => dataset.id !== 'claims');
+    writeJson(fixtureRoot, registryPath, registry);
+
+    expectRejected(runLifecycle(fixtureRoot), 'silent deletion');
+  });
+
+  it('fails closed when a historical registry declares a record dataset that cannot be read', () => {
+    const fixtureRoot = createFixture();
+    const previousRoot = createFixture();
+    const registry = readJson(previousRoot, registryPath);
+    const claims = registry.datasets.find((dataset: { id?: string }) => dataset.id === 'claims');
+    expect(claims).toBeDefined();
+    claims.path = 'assurance/claims/missing.json';
+    writeJson(previousRoot, registryPath, registry);
+
+    expectRejected(
+      runLifecycle(fixtureRoot, previousRoot),
+      'unable to read registered assurance resource assurance/claims/missing.json',
+    );
   });
 
   it('treats legacy claim framework aliases as the same immutable identity', () => {
@@ -139,6 +243,49 @@ describe('assurance record lifecycle controls', () => {
     claims.records = claims.records.filter((record: { id: string }) => record.id !== 'CLM-SEC-001');
     writeJson(fixtureRoot, 'assurance/claims/claims.json', claims);
     expectRejected(runLifecycle(fixtureRoot), 'silent deletion');
+  });
+
+  it('accepts an explicit Withdrawn tombstone for a removed published record', () => {
+    const fixtureRoot = createFixture();
+    const claims = readJson(fixtureRoot, 'assurance/claims/claims.json');
+    claims.records = claims.records.filter((record: { id: string }) => record.id !== 'CLM-SEC-001');
+    writeJson(fixtureRoot, 'assurance/claims/claims.json', claims);
+
+    const lifecycle = readJson(fixtureRoot, lifecyclePath);
+    lifecycle.retiredRecords.push({
+      id: 'CLM-SEC-001',
+      lifecycle: 'Withdrawn',
+      withdrawalRationale: 'The synthetic lifecycle fixture intentionally retires this published record.',
+      disclosureReview: reviewed,
+    });
+    writeJson(fixtureRoot, lifecyclePath, lifecycle);
+
+    const result = runLifecycle(fixtureRoot);
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('Assurance lifecycle validation passed');
+  });
+
+  it('accepts a genuinely new record with explicit lifecycle and disclosure metadata', () => {
+    const fixtureRoot = createFixture();
+    const claims = readJson(fixtureRoot, 'assurance/claims/claims.json');
+    claims.records.push({
+      id: 'CLM-NEW-001',
+      area: 'lifecycle-validation',
+      title: 'New lifecycle-governed public claim',
+    });
+    writeJson(fixtureRoot, 'assurance/claims/claims.json', claims);
+
+    const lifecycle = readJson(fixtureRoot, lifecyclePath);
+    lifecycle.records.push({
+      id: 'CLM-NEW-001',
+      lifecycle: 'Draft',
+      disclosureReview: reviewed,
+    });
+    writeJson(fixtureRoot, lifecyclePath, lifecycle);
+
+    const result = runLifecycle(fixtureRoot);
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('Assurance lifecycle validation passed');
   });
 
   it('rejects reuse of an immutable published ID for a different identity', () => {
