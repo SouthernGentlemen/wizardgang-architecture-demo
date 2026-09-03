@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { assuranceEvidenceResponse, assuranceResponse } from '../src/api/assurance-registry';
-import { listAssuranceRecords } from '../src/assurance/registry';
+import { listAssuranceRecords } from '../src/assurance/service';
 import { FRESHNESS_SEMANTICS } from '../src/assurance/presentation';
 import type { Env } from '../src/types';
 

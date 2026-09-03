@@ -1,7 +1,8 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { assuranceIncidentsResponse, assuranceRisksResponse } from '../src/api/assurance';
-import { deriveRiskCounts, type PublicIncident, type PublicExercise, type PublicRisk } from '../src/assurance/registry';
-import type { AssuranceLifecyclePresentation } from '../src/assurance/publication-policy.js';
+import type { AssuranceV1Exercise, AssuranceV1Incident, AssuranceV1Risk } from '../src/api/assurance-v1';
+import { deriveRiskCounts } from '../src/assurance/service';
 import { renderIncidents, renderRisks } from '../src/demos/assurance-pages';
 import type { Env } from '../src/types';
 
@@ -11,12 +12,10 @@ const environment = {
   DEPLOYED_SHA: '0123456789abcdef0123456789abcdef01234567',
 } as unknown as Env;
 
-type WithPublication<T> = T & { publication: AssuranceLifecyclePresentation };
-
 type RiskApiBody = {
   counts: ReturnType<typeof deriveRiskCounts>;
   totalAvailable: number;
-  records: Array<WithPublication<PublicRisk>>;
+  records: AssuranceV1Risk[];
 };
 
 type IncidentApiBody = {
@@ -26,11 +25,11 @@ type IncidentApiBody = {
     plannedExercises: number;
     completedExercises: number;
   };
-  incidents: Array<WithPublication<PublicIncident>>;
-  exercises: Array<WithPublication<PublicExercise>>;
+  incidents: AssuranceV1Incident[];
+  exercises: AssuranceV1Exercise[];
 };
 
-function lifecycleLine(record: { publication: AssuranceLifecyclePresentation }): string {
+function lifecycleLine(record: { publication: { lifecycle: string; disclosureReview: string } }): string {
   return `<strong>Lifecycle:</strong> ${record.publication.lifecycle} · <strong>Disclosure:</strong> ${record.publication.disclosureReview}`;
 }
 
@@ -84,6 +83,18 @@ describe('public assurance API and HTML projection consistency', () => {
     const htmlResponse = renderIncidents(environment);
     const html = await htmlResponse.text();
     expect(incidentProjectionErrors(body, html)).toEqual([]);
+  });
+
+  it('proves HTML consumers use canonical relationship fields instead of released v1 aliases', () => {
+    const assurancePages = readFileSync('src/demos/assurance-pages.ts', 'utf8');
+    const compliancePage = readFileSync('src/demos/compliance-page.ts', 'utf8');
+    for (const source of [assurancePages, compliancePage]) {
+      expect(source).toContain('.relationships.');
+      expect(source).not.toContain('.riskLinks');
+      expect(source).not.toContain('.controlLinks');
+      expect(source).not.toContain('.objectiveLinks');
+      expect(source).not.toContain('.controls.map');
+    }
   });
 
   it('proves the risk and incident consistency assertions reject drift', async () => {

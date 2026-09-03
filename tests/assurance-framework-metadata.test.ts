@@ -11,7 +11,9 @@ import robust from '../assurance/compliance/wcag-2.2/robust.json';
 import presentation from '../assurance/presentation/documents.json';
 import governance from '../docs/governance/REFERENCE-REGISTRY.json';
 import { assuranceComplianceResponse } from '../src/api/assurance';
-import { publicComplianceFrameworks, publicComplianceRecords } from '../src/assurance/registry';
+import { serializeAssuranceV1Compliance } from '../src/api/assurance-v1';
+import { complianceFrameworks, listAssuranceRecords } from '../src/assurance/service';
+import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import { renderComplianceDemo } from '../src/demos/compliance-page';
 import type { Env } from '../src/types';
 
@@ -51,21 +53,27 @@ describe('DEMO-135 canonical framework metadata ownership', () => {
     for (const record of partitions.flatMap((partition) => partition.criteria)) expect(record).not.toHaveProperty('section');
   });
 
-  it('preserves released v1 framework and record fields through derived serialization', () => {
-    expect(publicComplianceFrameworks).toEqual(frameworkOwners.map((resource) => ({ ...resource.framework, sourcePath: resource.path })));
-    expect(publicComplianceRecords).toHaveLength(287);
-    for (const record of publicComplianceRecords) {
+  it('enriches canonical records from registry metadata and preserves released v1 fields only through serialization', () => {
+    const records = listAssuranceRecords('compliance');
+    expect(complianceFrameworks).toEqual(frameworkOwners.map((resource) => ({ ...resource.framework, sourcePath: resource.path })));
+    expect(records).toHaveLength(287);
+    for (const record of records) {
       const owner = frameworkById.get(record.framework) as any;
       expect(owner).toBeDefined();
       expect(record.frameworkLabel).toBe(owner.framework.label);
       expect(record.sourcePath).toBeTruthy();
       expect(record.section).toBeTruthy();
+      expect(record).toHaveProperty('relationships.evidence');
+      expect(record).not.toHaveProperty('evidence');
     }
+    const released = listPublishedAssuranceRecords('compliance').map(serializeAssuranceV1Compliance);
+    expect(released.every((record) => Array.isArray(record.evidence))).toBe(true);
+    expect(released.every((record) => !('relationships' in record))).toBe(true);
   });
 
   it('keeps API and HTML framework metadata aligned with the registry owner', async () => {
     const body = await assuranceComplianceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/compliance')).json() as any;
-    expect(body.frameworks).toEqual(publicComplianceFrameworks);
+    expect(body.frameworks).toEqual(complianceFrameworks);
     const exactBody = await assuranceComplianceResponse(
       new Request('https://demo.wizardgang.ai/v1/assurance/compliance/ISO27001-4.1'),
       'ISO27001-4.1',
@@ -74,7 +82,7 @@ describe('DEMO-135 canonical framework metadata ownership', () => {
     expect(exactBody.framework).toEqual({ ...isoOwner.framework, sourcePath: isoOwner.path });
 
     const html = await renderComplianceDemo(new Request('https://demo.wizardgang.ai/compliance'), environment).text();
-    for (const framework of publicComplianceFrameworks) {
+    for (const framework of complianceFrameworks) {
       expect(html).toContain(framework.label);
       expect(html).toContain(`Assessed ${framework.assessmentDate}`);
     }

@@ -1,7 +1,8 @@
 import {
   listPublishedAssuranceRecords,
-  publicPublishedAssuranceRegistry,
+  publishedAssuranceSummary,
 } from '../assurance/publication';
+import { serializeAssuranceV1Advisory } from './assurance-v1';
 import {
   assuranceJsonResponse,
   paginateAssuranceRecords,
@@ -19,9 +20,9 @@ export function assuranceAdvisoriesResponse(request: Request): Response {
   return assuranceJsonResponse(request, {
     schemaVersion: context.schemaVersion,
     dataset: 'advisories',
-    qualification: publicPublishedAssuranceRegistry.advisoryQualification,
+    qualification: publishedAssuranceSummary.advisoryQualification,
     count: records.length,
-    records: page.records,
+    records: page.records.map(serializeAssuranceV1Advisory),
     ...(page.pagination ? { pagination: page.pagination } : {}),
   });
 }

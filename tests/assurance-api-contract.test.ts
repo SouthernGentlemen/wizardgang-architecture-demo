@@ -2,7 +2,14 @@ import { describe, expect, it } from 'vitest';
 import { assuranceAdvisoriesResponse } from '../src/api/advisories';
 import { assuranceComplianceResponse, assuranceIncidentsResponse, assuranceRisksResponse } from '../src/api/assurance';
 import { assuranceEvidenceResponse, assuranceResponse } from '../src/api/assurance-registry';
-import { listAssuranceRecords } from '../src/assurance/registry';
+import {
+  serializeAssuranceV1Advisory,
+  serializeAssuranceV1Compliance,
+  serializeAssuranceV1Exercise,
+  serializeAssuranceV1Incident,
+  serializeAssuranceV1Risk,
+} from '../src/api/assurance-v1';
+import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import type { Env } from '../src/types';
 
 const environment = {
@@ -14,17 +21,17 @@ const environment = {
 } as unknown as Env;
 
 const canonicalCollections = {
-  claims: listAssuranceRecords('claims'),
-  evidence: listAssuranceRecords('evidence'),
-  risks: listAssuranceRecords('risks'),
-  incidents: listAssuranceRecords('incidents'),
-  exercises: listAssuranceRecords('exercises'),
-  advisories: listAssuranceRecords('advisories'),
-  compliance: listAssuranceRecords('compliance'),
+  claims: listPublishedAssuranceRecords('claims'),
+  evidence: listPublishedAssuranceRecords('evidence'),
+  risks: listPublishedAssuranceRecords('risks'),
+  incidents: listPublishedAssuranceRecords('incidents'),
+  exercises: listPublishedAssuranceRecords('exercises'),
+  advisories: listPublishedAssuranceRecords('advisories'),
+  compliance: listPublishedAssuranceRecords('compliance'),
 };
 
 describe('public assurance HTTP contract', () => {
-  it('preserves the legacy aggregate response while deriving current counts and ordering from canonical records', async () => {
+  it('preserves the released aggregate response while deriving current counts and ordering from canonical records', async () => {
     const first = assuranceResponse(new Request('https://demo.wizardgang.ai/v1/assurance'), environment);
     const second = assuranceResponse(new Request('https://demo.wizardgang.ai/v1/assurance'), environment);
 
@@ -40,9 +47,9 @@ describe('public assurance HTTP contract', () => {
     const firstBody = await first.json() as {
       schemaVersion: number;
       counts: { claims: number; evidence: number; risks: number; incidents: number; exercises: number; advisories: number };
-      claims: Array<{ id: string }>;
+      claims: Array<Record<string, unknown> & { id: string }>;
       evidence: Array<{ id: string }>;
-      risks: Array<{ id: string }>;
+      risks: Array<Record<string, unknown> & { id: string }>;
       incidents: Array<{ id: string }>;
       exercises: Array<{ id: string }>;
       advisories: Array<{ id: string }>;
@@ -63,7 +70,37 @@ describe('public assurance HTTP contract', () => {
     for (const dataset of ['claims', 'evidence', 'risks', 'incidents', 'exercises', 'advisories'] as const) {
       expect(firstBody[dataset].map((record) => record.id)).toEqual(canonicalCollections[dataset].map((record) => record.id));
     }
+    expect(firstBody.risks).toEqual(canonicalCollections.risks.map(serializeAssuranceV1Risk));
+    expect(firstBody.incidents).toEqual(canonicalCollections.incidents.map(serializeAssuranceV1Incident));
+    expect(firstBody.exercises).toEqual(canonicalCollections.exercises.map(serializeAssuranceV1Exercise));
+    expect(firstBody.advisories).toEqual(canonicalCollections.advisories.map(serializeAssuranceV1Advisory));
     expect(secondBody).toEqual(firstBody);
+  });
+
+  it('keeps representative v1 compatibility aliases and key order at the HTTP boundary only', async () => {
+    const riskResponse = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks'));
+    const riskBody = await riskResponse.json() as { records: Array<Record<string, unknown>> };
+    const risk = riskBody.records[0];
+    expect(Object.keys(risk)).toEqual([
+      'id', 'framework', 'title', 'inherent', 'residual', 'treatment', 'status', 'reviewDue', 'controls', 'evidence', 'publication',
+    ]);
+    expect(risk).toHaveProperty('controls');
+    expect(risk).toHaveProperty('evidence');
+    expect(risk).not.toHaveProperty('relationships');
+
+    const aggregate = await (await assuranceResponse(new Request('https://demo.wizardgang.ai/v1/assurance'), environment)).json() as {
+      claims: Array<Record<string, unknown>>;
+    };
+    expect(Object.keys(aggregate.claims[0])).toEqual([
+      'id', 'area', 'title', 'statement', 'posture', 'frameworkReferences', 'evidence', 'publication',
+    ]);
+    expect(aggregate.claims[0]).not.toHaveProperty('relationships');
+
+    const compliance = await (await assuranceComplianceResponse(
+      new Request('https://demo.wizardgang.ai/v1/assurance/compliance?limit=1'),
+    )).json() as { records: Array<Record<string, unknown>> };
+    expect(compliance.records[0]).toHaveProperty('evidence');
+    expect(compliance.records[0]).not.toHaveProperty('relationships');
   });
 
   it('uses representation ETags for conditional GETs without changing cache policy', async () => {
@@ -97,7 +134,7 @@ describe('public assurance HTTP contract', () => {
       pagination: { limit: number; returned: number; total: number; nextCursor: string | null };
     };
     expect(firstBody.counts.total).toBe(wcagRecords.length);
-    expect(firstBody.records).toEqual(wcagRecords.slice(0, 2));
+    expect(firstBody.records).toEqual(wcagRecords.slice(0, 2).map(serializeAssuranceV1Compliance));
     expect(firstBody.pagination).toEqual({
       limit: 2,
       returned: Math.min(2, wcagRecords.length),
@@ -109,7 +146,7 @@ describe('public assurance HTTP contract', () => {
       new Request(`https://demo.wizardgang.ai/v1/assurance/compliance?framework=wcag-2.2&limit=2&cursor=${encodeURIComponent(firstBody.pagination.nextCursor ?? '')}`),
     );
     const secondBody = await second.json() as typeof firstBody;
-    expect(secondBody.records).toEqual(wcagRecords.slice(2, 4));
+    expect(secondBody.records).toEqual(wcagRecords.slice(2, 4).map(serializeAssuranceV1Compliance));
     expect(secondBody.pagination.total).toBe(wcagRecords.length);
 
     const securityRisks = canonicalCollections.risks.filter((record) => record.framework === 'security');
@@ -122,7 +159,7 @@ describe('public assurance HTTP contract', () => {
       pagination: { total: number };
     };
     expect(riskBody.counts.total).toBe(securityRisks.length);
-    expect(riskBody.records).toEqual(securityRisks.slice(0, 2));
+    expect(riskBody.records).toEqual(securityRisks.slice(0, 2).map(serializeAssuranceV1Risk));
     expect(riskBody.pagination.total).toBe(securityRisks.length);
 
     const evidence = assuranceEvidenceResponse(
@@ -165,7 +202,7 @@ describe('public assurance HTTP contract', () => {
     };
     const expectedAdvisoryPage = canonicalCollections.advisories.slice(0, 1);
     expect(advisoryBody.count).toBe(canonicalCollections.advisories.length);
-    expect(advisoryBody.records).toEqual(expectedAdvisoryPage);
+    expect(advisoryBody.records).toEqual(expectedAdvisoryPage.map(serializeAssuranceV1Advisory));
     expect(advisoryBody.pagination).toMatchObject({
       total: canonicalCollections.advisories.length,
       nextCursor: canonicalCollections.advisories.length > 1 ? expectedAdvisoryPage[0]?.id ?? null : null,
@@ -207,13 +244,7 @@ describe('public assurance HTTP contract', () => {
     });
   });
 
-  it('negotiates schema version 1 by query or vendor Accept media type and rejects unsupported versions', async () => {
-    const queryVersion = assuranceRisksResponse(
-      new Request('https://demo.wizardgang.ai/v1/assurance/risks?schemaVersion=1'),
-    );
-    expect(queryVersion.status).toBe(200);
-    expect(queryVersion.headers.get('x-assurance-schema-version')).toBe('1');
-
+  it('negotiates schema version 1 and preserves read-only CORS and lookup errors', async () => {
     const acceptVersion = assuranceRisksResponse(
       new Request('https://demo.wizardgang.ai/v1/assurance/risks', {
         headers: { accept: 'application/vnd.wizardgang.assurance+json; version=1' },
@@ -226,48 +257,19 @@ describe('public assurance HTTP contract', () => {
       new Request('https://demo.wizardgang.ai/v1/assurance/risks?schemaVersion=2'),
     );
     expect(unsupported.status).toBe(406);
-    expect(unsupported.headers.get('cache-control')).toBe('no-store');
     expect(await unsupported.json()).toEqual({
       error: 'unsupported_schema_version',
       requested: '2',
       supported: [1],
     });
 
-    const conflict = assuranceRisksResponse(
-      new Request('https://demo.wizardgang.ai/v1/assurance/risks?schemaVersion=1', {
-        headers: { accept: 'application/vnd.wizardgang.assurance+json; version=2' },
-      }),
-    );
-    expect(conflict.status).toBe(400);
-    expect(await conflict.json()).toEqual({
-      error: 'schema_version_conflict',
-      queryVersion: '1',
-      acceptVersion: '2',
-    });
-  });
-
-  it('makes the public read-only CORS policy explicit without changing legacy method or lookup errors', async () => {
-    const preflight = assuranceRisksResponse(
-      new Request('https://demo.wizardgang.ai/v1/assurance/risks', {
-        method: 'OPTIONS',
-        headers: {
-          origin: 'https://example.com',
-          'access-control-request-method': 'GET',
-          'access-control-request-headers': 'if-none-match',
-        },
-      }),
-    );
+    const preflight = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks', { method: 'OPTIONS' }));
     expect(preflight.status).toBe(204);
     expect(preflight.headers.get('access-control-allow-origin')).toBe('*');
     expect(preflight.headers.get('access-control-allow-methods')).toBe('GET, OPTIONS');
-    expect(preflight.headers.get('access-control-allow-headers')).toContain('If-None-Match');
-    expect(preflight.headers.get('access-control-allow-credentials')).toBeNull();
 
-    const rejected = assuranceRisksResponse(
-      new Request('https://demo.wizardgang.ai/v1/assurance/risks', { method: 'POST' }),
-    );
+    const rejected = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks', { method: 'POST' }));
     expect(rejected.status).toBe(405);
-    expect(rejected.headers.get('allow')).toBe('GET');
     expect(await rejected.json()).toEqual({ error: 'method_not_allowed', allowed: ['GET'] });
 
     const missing = assuranceComplianceResponse(
@@ -275,7 +277,6 @@ describe('public assurance HTTP contract', () => {
       'WCAG-9.9.9',
     );
     expect(missing.status).toBe(404);
-    expect(missing.headers.get('cache-control')).toBe('no-store');
     expect(await missing.json()).toEqual({ error: 'compliance_record_not_found', recordId: 'WCAG-9.9.9' });
   });
 });

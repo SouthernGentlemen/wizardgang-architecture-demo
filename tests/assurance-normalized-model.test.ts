@@ -10,19 +10,22 @@ import operable from '../assurance/compliance/wcag-2.2/operable.json';
 import understandable from '../assurance/compliance/wcag-2.2/understandable.json';
 import robust from '../assurance/compliance/wcag-2.2/robust.json';
 import governance from '../docs/governance/REFERENCE-REGISTRY.json';
-import { publicAssuranceRegistry, publicComplianceRecords } from '../src/assurance/registry';
+import { listAssuranceRecords } from '../src/assurance/service';
+import { listPublishedAssuranceRecords } from '../src/assurance/publication';
+import { serializeAssuranceV1Risk } from '../src/api/assurance-v1';
 
 const wcag = [...perceivable.criteria, ...operable.criteria, ...understandable.criteria, ...robust.criteria];
 const compliance = [...iso27001.records, ...iso42001.records, ...wcag];
 
 describe('DEMO-127 canonical normalized assurance model', () => {
   it('keeps all previously published compliance IDs unchanged while making them source-owned', () => {
+    const runtimeCompliance = listAssuranceRecords('compliance');
     expect(compliance).toHaveLength(287);
     for (const record of iso27001.records) expect(record.id).toBe(`ISO27001-${record.reference}`);
     for (const record of iso42001.records) expect(record.id).toBe(`ISO42001-${record.reference}`);
     for (const record of wcag) expect(record.id).toBe(`WCAG-${record.reference}`);
-    expect(publicComplianceRecords.map((record) => record.id)).toEqual(expect.arrayContaining(compliance.map((record) => record.id)));
-    expect(new Set(publicComplianceRecords.map((record) => record.id)).size).toBe(287);
+    expect(runtimeCompliance.map((record) => record.id)).toEqual(expect.arrayContaining(compliance.map((record) => record.id)));
+    expect(new Set(runtimeCompliance.map((record) => record.id)).size).toBe(287);
   });
 
   it('stores only canonical normalized status spelling and explicit applicability', () => {
@@ -35,13 +38,16 @@ describe('DEMO-127 canonical normalized assurance model', () => {
     }
   });
 
-  it('does not construct compliance IDs or compatibility statuses at runtime', () => {
-    const source = readFileSync('src/assurance/registry.ts', 'utf8');
+  it('does not construct compatibility fields inside the canonical assurance model', () => {
+    const source = readFileSync('src/assurance/model.ts', 'utf8');
     expect(source).not.toContain('normalizeComplianceStatus');
     expect(source).not.toContain('normalizeIsoDataset');
     expect(source).not.toContain('normalizeIsoGroups');
     expect(source).not.toMatch(/ISO27001-\$\{|ISO42001-\$\{|WCAG-\$\{/);
     expect(source).not.toContain("=== 'notApplicable'");
+    expect(source).not.toContain('v1BoundaryAdapters');
+    expect(source).not.toContain('frameworkReferences:');
+    expect(source).not.toContain('riskLinks:');
   });
 
   it('repairs framework aliases into canonical typed relationships without dangling WCAG pseudo-criteria', () => {
@@ -54,15 +60,21 @@ describe('DEMO-127 canonical normalized assurance model', () => {
     expect(compliance.some((record) => record.id === 'WCAG-feedback-support')).toBe(false);
   });
 
-  it('resolves risk governance document references through the separate governance catalog', () => {
+  it('keeps governance-document relationships canonical and resolves v1 controls only at the HTTP serializer', () => {
     const catalog = new Map(governance.records.map((record) => [record.reference, record.path]));
     for (const source of risks.sourceRegisters) expect(catalog.has(source.governanceDocumentReference)).toBe(true);
     for (const risk of risks.records) {
       expect(risk).not.toHaveProperty('controls');
       for (const reference of risk.relationships.governanceDocuments) expect(catalog.has(reference), reference).toBe(true);
     }
-    for (const risk of publicAssuranceRegistry.risks) {
-      for (const control of risk.controls) expect(control.repositoryPath).toBe(catalog.get(control.reference));
+    for (const risk of listAssuranceRecords('risks')) {
+      expect(risk).toHaveProperty('relationships.governanceDocuments');
+      expect(risk).not.toHaveProperty('controls');
+    }
+    for (const risk of listPublishedAssuranceRecords('risks')) {
+      const released = serializeAssuranceV1Risk(risk);
+      for (const control of released.controls) expect(control.repositoryPath).toBe(catalog.get(control.reference));
+      expect(released).not.toHaveProperty('relationships');
     }
   });
 

@@ -5,16 +5,15 @@ import {
   assuranceFilterDefinitions,
   assuranceFilterValues,
   assuranceRecordUrls,
+  complianceFrameworks,
   deriveAssuranceCounts,
   evidenceUsedBy,
   filterAssuranceRecords,
   findAssuranceRecord,
   listAssuranceRecords,
-  paginateAssuranceRecords,
-  publicAssuranceRegistry,
-  publicComplianceFrameworks,
   reverseAssuranceRelationships,
 } from '../src/assurance/service';
+import { listPublishedAssuranceRecords, presentedPublishedEvidenceRecords } from '../src/assurance/publication';
 import { renderComplianceDemo } from '../src/demos/compliance-page';
 import type { Env } from '../src/types';
 
@@ -28,7 +27,7 @@ function idsFromComplianceHtml(html: string): string[] {
   return [...html.matchAll(/<tr id="((?:ISO27001|ISO42001|WCAG)-[^"]+)">/g)].map((match) => match[1]);
 }
 
-describe('common assurance query and presentation service', () => {
+describe('common canonical assurance query and presentation service', () => {
   it('selects the same canonical compliance records for API and HTML views', async () => {
     const url = 'https://demo.wizardgang.ai/compliance?framework=wcag-2.2&status=partial&level=AA';
     const expected = filterAssuranceRecords('compliance', {
@@ -46,7 +45,7 @@ describe('common assurance query and presentation service', () => {
   });
 
   it('resolves every rendered compliance record and evidence link through registry routes', async () => {
-    const records = listAssuranceRecords('compliance');
+    const records = listPublishedAssuranceRecords('compliance');
     const html = await renderComplianceDemo(new Request('https://demo.wizardgang.ai/compliance'), environment).text();
 
     for (const record of records) {
@@ -54,17 +53,17 @@ describe('common assurance query and presentation service', () => {
       expect(recordUrls.api).toBe(`/v1/assurance/compliance/${encodeURIComponent(record.id)}`);
       expect(html).toContain(`id="${record.id}"`);
       expect(html).toContain(`href="${recordUrls.api}"`);
-      for (const evidenceId of record.evidence) {
+      for (const evidenceId of record.relationships.evidence) {
         expect(html).toContain(`href="${assuranceRecordUrls('evidence', evidenceId).html}"`);
       }
     }
   });
 
-  it('derives framework cards and counts from the records rather than stored count tables', async () => {
+  it('derives framework cards and counts from canonical records rather than stored count tables', async () => {
     const records = listAssuranceRecords('compliance');
     const html = await renderComplianceDemo(new Request('https://demo.wizardgang.ai/compliance'), environment).text();
 
-    for (const framework of publicComplianceFrameworks) {
+    for (const framework of complianceFrameworks) {
       const expected = records.filter((record) => record.framework === framework.id).length;
       expect(html).toContain(`<h2>${framework.label}</h2>`);
       expect(html).toContain(`<strong>${expected} records</strong>`);
@@ -90,28 +89,25 @@ describe('common assurance query and presentation service', () => {
     expect(assuranceFilterValues('compliance', 'level')).toEqual(wcagSchema.properties.criteria.items.properties.level.enum);
   });
 
-  it('uses common exact lookup and cursor pagination behavior', async () => {
+  it('uses common exact lookup while keeping pagination out of the internal service', async () => {
     const records = listAssuranceRecords('compliance');
     expect(findAssuranceRecord('compliance', records[10].id)).toEqual(records[10]);
 
-    const first = paginateAssuranceRecords(records, { limit: 2 });
-    expect(first?.records.map((record) => record.id)).toEqual(records.slice(0, 2).map((record) => record.id));
-    const cursor = first?.pagination?.nextCursor;
-    expect(cursor).toBe(records[1].id);
-    const second = paginateAssuranceRecords(records, { limit: 2, cursor: cursor! });
-    expect(second?.records.map((record) => record.id)).toEqual(records.slice(2, 4).map((record) => record.id));
-    expect(paginateAssuranceRecords(records, { limit: 2, cursor: 'UNKNOWN-ID' })).toBeUndefined();
+    const serviceSource = readFileSync('src/assurance/service.ts', 'utf8');
+    expect(serviceSource).not.toContain('paginateAssuranceRecords');
+    expect(serviceSource).not.toContain('interface AssurancePage');
 
-    const api = assuranceComplianceResponse(new Request(`https://demo.wizardgang.ai/v1/assurance/compliance?limit=2&cursor=${encodeURIComponent(cursor!)}`));
-    const body = await api.json() as { records: Array<{ id: string }> };
-    expect(body.records.map((record) => record.id)).toEqual(second?.records.map((record) => record.id));
+    const api = assuranceComplianceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/compliance?limit=2'));
+    const body = await api.json() as { records: Array<{ id: string }>; pagination: { nextCursor: string | null } };
+    expect(body.records.map((record) => record.id)).toEqual(records.slice(0, 2).map((record) => record.id));
+    expect(body.pagination.nextCursor).toBe(records[1].id);
   });
 
-  it('keeps reverse evidence relationships complete for every public record family', () => {
+  it('keeps reverse evidence relationships complete for every canonical relationship-bearing family', () => {
     const recordFamilies = ['claims', 'risks', 'incidents', 'exercises', 'advisories', 'compliance'] as const;
     for (const dataset of recordFamilies) {
       for (const record of listAssuranceRecords(dataset)) {
-        for (const evidenceId of record.evidence) {
+        for (const evidenceId of record.relationships.evidence) {
           expect(reverseAssuranceRelationships(evidenceId, 'evidence')).toEqual(
             expect.arrayContaining([expect.objectContaining({ sourceId: record.id, dataset, relation: 'evidence' })]),
           );
@@ -119,12 +115,12 @@ describe('common assurance query and presentation service', () => {
       }
     }
 
-    for (const evidence of publicAssuranceRegistry.evidence) {
+    for (const evidence of presentedPublishedEvidenceRecords(environment, 'https://demo.wizardgang.ai')) {
       expect(evidence.usedBy).toEqual(evidenceUsedBy(evidence.id));
     }
   });
 
-  it('keeps presentation and API consumers free of direct canonical imports and duplicated filter tables', () => {
+  it('keeps HTML consumers on canonical relationships and released aliases at the API boundary', () => {
     const presentationFiles = [
       'src/demos/compliance-page.ts',
       'src/demos/evidence-page.ts',
@@ -136,10 +132,17 @@ describe('common assurance query and presentation service', () => {
       const source = readFileSync(path, 'utf8');
       expect(source).not.toMatch(/from ['"][^'"]*assurance\/(?:compliance|evidence|risks|incidents|advisories)\/[^'"]+\.json['"]/);
       expect(source).not.toMatch(/byFramework\s*:\s*\{|byStatus\s*:\s*\{|byLevel\s*:\s*\{/);
+      expect(source).not.toContain('.riskLinks');
+      expect(source).not.toContain('.controlLinks');
+      expect(source).not.toContain('.objectiveLinks');
+      expect(source).not.toContain('.incidentLinks');
     }
 
     const apiSource = readFileSync('src/api/assurance.ts', 'utf8');
+    const serializerSource = readFileSync('src/api/assurance-v1.ts', 'utf8');
     expect(apiSource).not.toMatch(/RISK_(?:FRAMEWORKS|STATUSES|RATINGS)|COMPLIANCE_(?:FRAMEWORKS|STATUSES|LEVELS)/);
+    expect(serializerSource).toContain('riskLinks:');
+    expect(serializerSource).toContain('frameworkReferences:');
     const complianceSource = readFileSync('src/demos/compliance-page.ts', 'utf8');
     expect(complianceSource).not.toContain('/evidence#');
     expect(complianceSource).not.toMatch(/iso-27001-2022\.json|iso-42001-2023\.json|wcag-2\.2\/(?:perceivable|operable|understandable|robust)\.json/);

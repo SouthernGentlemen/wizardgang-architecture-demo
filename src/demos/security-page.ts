@@ -21,9 +21,10 @@ function advisoryCard(env: Env, advisory: PublishedAssuranceRecordMap['advisorie
   const releases = advisory.fixedReleases
     .map((release) => `<a href="${escapeHtml(`${repoUrl(env)}/releases/tag/${encodeURIComponent(release)}`)}">${escapeHtml(release)}</a>`)
     .join(', ');
-  const incidentLinks = advisory.incidentLinks.length === 0
+  const incidentIds = advisory.relationships.incidents;
+  const incidentLinks = incidentIds.length === 0
     ? 'None'
-    : advisory.incidentLinks.map((id) => {
+    : incidentIds.map((id) => {
       const href = assuranceRecordUrlsById(id).html;
       return href ? `<a href="${escapeHtml(href)}">${escapeHtml(id)}</a>` : `<code>${escapeHtml(id)}</code>`;
     }).join(', ');
@@ -61,7 +62,8 @@ export function renderSecurity(env: Env): Response {
       { label: 'Published repository advisories', href: publishedAdvisoriesUrl(env) },
       { label: 'Advisory dataset', href: sourceUrl(env, assuranceDatasetSource('advisories')) },
       { label: 'Advisory schema', href: sourceUrl(env, assuranceDatasetSchema('advisories')) },
-      { label: 'Common assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
+      { label: 'Canonical assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
+      { label: 'v1 HTTP serializer', href: sourceUrl(env, 'src/api/assurance-v1.ts') },
       { label: 'Publication policy', href: sourceUrl(env, 'src/assurance/publication-policy.js') },
     ])}</div>
   </section>

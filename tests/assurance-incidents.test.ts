@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { assuranceIncidentsResponse } from '../src/api/assurance';
-import { deriveIncidentCounts, publicAssuranceRegistry } from '../src/assurance/registry';
+import { serializeAssuranceV1Exercise, serializeAssuranceV1Incident } from '../src/api/assurance-v1';
+import { deriveIncidentCounts } from '../src/assurance/service';
+import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import { renderIncidents } from '../src/demos/assurance-pages';
 import type { Env } from '../src/types';
 
@@ -10,20 +12,29 @@ const env = {
 } as Env;
 
 describe('public incident and exercise assurance', () => {
-  it('derives truthful counts and lifecycle invariants from whatever canonical records are established', () => {
-    const incidents = publicAssuranceRegistry.incidents;
-    const exercises = publicAssuranceRegistry.exercises;
-    expect(publicAssuranceRegistry.incidentCounts).toEqual(deriveIncidentCounts(incidents, exercises));
+  it('derives truthful counts and lifecycle invariants from canonical records', () => {
+    const incidents = listPublishedAssuranceRecords('incidents');
+    const exercises = listPublishedAssuranceRecords('exercises');
+    expect(deriveIncidentCounts(incidents, exercises)).toEqual({
+      actualIncidents: incidents.length,
+      exercises: exercises.length,
+      plannedExercises: exercises.filter((record) => record.status === 'planned').length,
+      completedExercises: exercises.filter((record) => ['completed', 'follow-up-open', 'closed'].includes(record.status)).length,
+    });
 
     for (const incident of incidents) {
       expect(incident.id).toMatch(/^INC-[0-9]{3,}$/);
       expect(incident.recordType).toBe('incident');
       expect(incident.simulated).toBe(false);
+      expect(incident).toHaveProperty('relationships');
+      expect(incident).not.toHaveProperty('riskLinks');
     }
     for (const exercise of exercises) {
       expect(exercise.id).toMatch(/^EX-[0-9]{3,}$/);
       expect(exercise.recordType).toBe('exercise');
       expect(exercise.simulated).toBe(true);
+      expect(exercise).toHaveProperty('relationships');
+      expect(exercise).not.toHaveProperty('objectiveLinks');
       if (exercise.status === 'planned') {
         expect(exercise).not.toHaveProperty('completedAt');
         expect(exercise).not.toHaveProperty('resultSummary');
@@ -31,20 +42,22 @@ describe('public incident and exercise assurance', () => {
     }
   });
 
-  it('publishes the combined read-only assurance API from the same canonical records', async () => {
+  it('publishes the combined read-only v1 API from canonical records', async () => {
+    const incidents = listPublishedAssuranceRecords('incidents');
+    const exercises = listPublishedAssuranceRecords('exercises');
     const response = assuranceIncidentsResponse(new Request('https://demo.wizardgang.ai/v1/assurance/incidents'));
     expect(response.status).toBe(200);
     expect(response.headers.get('content-type')).toContain('application/json');
     const body = await response.json() as {
       dataset: string;
-      counts: typeof publicAssuranceRegistry.incidentCounts;
-      incidents: typeof publicAssuranceRegistry.incidents;
-      exercises: typeof publicAssuranceRegistry.exercises;
+      counts: ReturnType<typeof deriveIncidentCounts>;
+      incidents: ReturnType<typeof serializeAssuranceV1Incident>[];
+      exercises: ReturnType<typeof serializeAssuranceV1Exercise>[];
     };
     expect(body.dataset).toBe('incidents');
-    expect(body.counts).toEqual(deriveIncidentCounts(publicAssuranceRegistry.incidents, publicAssuranceRegistry.exercises));
-    expect(body.incidents).toEqual(publicAssuranceRegistry.incidents);
-    expect(body.exercises).toEqual(publicAssuranceRegistry.exercises);
+    expect(body.counts).toEqual(deriveIncidentCounts(incidents, exercises));
+    expect(body.incidents).toEqual(incidents.map(serializeAssuranceV1Incident));
+    expect(body.exercises).toEqual(exercises.map(serializeAssuranceV1Exercise));
 
     const rejected = assuranceIncidentsResponse(new Request('https://demo.wizardgang.ai/v1/assurance/incidents', { method: 'POST' }));
     expect(rejected.status).toBe(405);
@@ -52,17 +65,17 @@ describe('public incident and exercise assurance', () => {
   });
 
   it('renders permanent anchors only for canonical records and uses empty-state copy only when the dataset is empty', async () => {
+    const incidents = listPublishedAssuranceRecords('incidents');
+    const exercises = listPublishedAssuranceRecords('exercises');
     const response = renderIncidents(env);
     const html = await response.text();
     const renderedIncidentIds = [...html.matchAll(/id="(INC-[0-9]{3,})"/g)].map((match) => match[1]);
     const renderedExerciseIds = [...html.matchAll(/id="(EX-[0-9]{3,})"/g)].map((match) => match[1]);
-    expect(renderedIncidentIds).toEqual(publicAssuranceRegistry.incidents.map((record) => record.id));
-    expect(renderedExerciseIds).toEqual(publicAssuranceRegistry.exercises.map((record) => record.id));
+    expect(renderedIncidentIds).toEqual(incidents.map((record) => record.id));
+    expect(renderedExerciseIds).toEqual(exercises.map((record) => record.id));
 
-    if (publicAssuranceRegistry.incidents.length === 0) {
-      expect(html).toContain('No actual incident records are established');
-    }
-    if (publicAssuranceRegistry.exercises.some((record) => record.status === 'planned')) {
+    if (incidents.length === 0) expect(html).toContain('No actual incident records are established');
+    if (exercises.some((record) => record.status === 'planned')) {
       expect(html).toContain('Planned only. This record is not evidence that the exercise has occurred.');
     }
     expect(html).toContain('Vulnerabilities');
