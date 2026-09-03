@@ -2,6 +2,7 @@ import type { Env } from '../types';
 import { collectHealth, type HealthSnapshot } from '../api/operations';
 import { currentBudgetState, recentUsage } from '../lib/billing';
 import { latestCloudflareUsage, recentCloudflareUsage, type CloudflareUsageSnapshot } from '../lib/cloudflare-usage';
+import { publicComplianceRegistry } from '../assurance/registry';
 import { getDemoControl } from '../lib/demo-control';
 import { getCrawlerControl } from '../lib/crawler-control';
 import { escapeHtml } from '../lib/html';
@@ -216,13 +217,13 @@ export async function renderDashboard(env: Env): Promise<Response> {
 
   <section class="operations-section assurance-dashboard-card" aria-labelledby="assurance-heading">
     <div>
-      <p class="eyebrow">Assurance / evidence index</p>
+      <p class="eyebrow">Assurance / canonical registry</p>
       <h2 id="assurance-heading">Compliance &amp; Assurance</h2>
       <p>WCAG 2.2 · ISO/IEC 27001 · ISO/IEC 42001</p>
     </div>
     <div>
-      <strong>Aligned / uncertified</strong>
-      <a href="/compliance">View controls and evidence <span aria-hidden="true">→</span></a>
+      <strong>${publicComplianceRegistry.counts.total} canonical records</strong>
+      <div class="link-row"><a href="/compliance">Browse records <span aria-hidden="true">→</span></a><a href="/v1/assurance/compliance">Compliance JSON <span aria-hidden="true">→</span></a></div>
     </div>
   </section>
 
@@ -232,6 +233,7 @@ export async function renderDashboard(env: Env): Promise<Response> {
   </section>
   ${referenceDetails([
     { label: 'Dashboard implementation', href: sourceUrl(env, 'src/demos/operations-pages.ts') },
+    { label: 'Compliance registry projection', href: sourceUrl(env, 'src/assurance/registry.ts') },
     { label: 'Scheduled collection', href: sourceUrl(env, 'src/index.ts') },
     { label: 'Cloudflare usage collector', href: sourceUrl(env, 'src/lib/cloudflare-usage.ts') },
     { label: 'Operations standard', href: sourceUrl(env, 'docs/OPERATIONS.md') },
@@ -261,9 +263,9 @@ export async function renderUptime(env: Env): Promise<Response> {
 
 export function renderDocs(env: Env): Response {
   const links: Array<[string, string]> = [
-    ['Architecture standard', 'docs/ARCHITECTURE-STANDARD.md'], ['Operations standard', 'docs/OPERATIONS.md'], ['Stable route map', 'docs/ROUTES.md'], ['Machine route manifest', 'docs/route-manifest.json'], ['Router', 'src/router.ts'], ['Implementation plan', 'docs/IMPLEMENTATION-PLAN.md'], ['Interactive demo specification', 'docs/INTERACTIVE-DEMO-SPEC.md'], ['Evidence map', 'docs/EVIDENCE.md'], ['Accessibility guidance', 'docs/ACCESSIBILITY.md'], ['Identity guidance', 'docs/IDENTITY.md'], ['README', 'README.md'], ['Contributing', 'CONTRIBUTING.md'], ['Agent guidance', 'AGENTS.md'], ['Security', 'SECURITY.md'], ['Changelog', 'CHANGELOG.md'], ['Swagger 2.0 contract', 'contracts/openapi/swagger.json'], ['GraphQL schema', 'contracts/graphql/schema.graphql'], ['MCP tools', 'contracts/mcp/tools.json'], ['Webhook events', 'contracts/webhooks/events.json'], ['CI workflow', '.github/workflows/ci.yml'], ['Deploy workflow', '.github/workflows/deploy.yml'], ['D1 migrations', 'migrations/0001_demo_blob.sql'],
+    ['Architecture standard', 'docs/ARCHITECTURE-STANDARD.md'], ['Operations standard', 'docs/OPERATIONS.md'], ['Assurance guide', 'docs/ASSURANCE.md'], ['Stable route map', 'docs/ROUTES.md'], ['Machine route manifest', 'docs/route-manifest.json'], ['Router', 'src/router.ts'], ['Implementation plan', 'docs/IMPLEMENTATION-PLAN.md'], ['Interactive demo specification', 'docs/INTERACTIVE-DEMO-SPEC.md'], ['Evidence map', 'docs/EVIDENCE.md'], ['Accessibility guidance', 'docs/ACCESSIBILITY.md'], ['ISO/IEC 27001 compliance dataset', 'assurance/compliance/iso-27001-2022.json'], ['ISO/IEC 42001 compliance dataset', 'assurance/compliance/iso-42001-2023.json'], ['WCAG 2.2 compliance manifest', 'assurance/compliance/wcag-2.2.json'], ['Identity guidance', 'docs/IDENTITY.md'], ['README', 'README.md'], ['Contributing', 'CONTRIBUTING.md'], ['Agent guidance', 'AGENTS.md'], ['Security', 'SECURITY.md'], ['Changelog', 'CHANGELOG.md'], ['Swagger 2.0 contract', 'contracts/openapi/swagger.json'], ['GraphQL schema', 'contracts/graphql/schema.graphql'], ['MCP tools', 'contracts/mcp/tools.json'], ['Webhook events', 'contracts/webhooks/events.json'], ['CI workflow', '.github/workflows/ci.yml'], ['Deploy workflow', '.github/workflows/deploy.yml'], ['D1 migrations', 'migrations/0001_demo_blob.sql'],
   ];
-  return operationalPage(env, '/dashboard/docs', 'Documentation', 'OPERATIONS / DOCS', 'Documentation', 'Repository-native standards, contracts, implementation sources, and live machine interfaces.', 'src/demos/docs.ts', `<section class="resource-list" aria-label="Repository documentation">${links.map(([label, path]) => `<a href="${escapeHtml(sourceUrl(env, path))}"><strong>${escapeHtml(label)}</strong><code>${escapeHtml(path)}</code></a>`).join('')}</section><section class="machine-links"><h2>Live interfaces</h2><nav class="link-row" aria-label="Live machine interfaces"><a href="/v1/openapi.json">Swagger JSON</a><a href="/graphql/schema">GraphQL schema</a><a href="/health">Health JSON</a><a href="/version">Version JSON</a><a href="/__api/operations/logs">Logs JSON</a><a href="/__api/operations/cloudflare-usage">Usage JSON</a><a href="${escapeHtml(repoUrl(env))}/releases">Releases</a><a href="${escapeHtml(repoUrl(env))}/tags">Tags</a></nav></section>`);
+  return operationalPage(env, '/dashboard/docs', 'Documentation', 'OPERATIONS / DOCS', 'Documentation', 'Repository-native standards, contracts, implementation sources, and live machine interfaces.', 'src/demos/docs.ts', `<section class="resource-list" aria-label="Repository documentation">${links.map(([label, path]) => `<a href="${escapeHtml(sourceUrl(env, path))}"><strong>${escapeHtml(label)}</strong><code>${escapeHtml(path)}</code></a>`).join('')}</section><section class="machine-links"><h2>Live interfaces</h2><nav class="link-row" aria-label="Live machine interfaces"><a href="/v1/openapi.json">Swagger JSON</a><a href="/graphql/schema">GraphQL schema</a><a href="/v1/assurance/compliance">Compliance JSON</a><a href="/health">Health JSON</a><a href="/version">Version JSON</a><a href="/__api/operations/logs">Logs JSON</a><a href="/__api/operations/cloudflare-usage">Usage JSON</a><a href="${escapeHtml(repoUrl(env))}/releases">Releases</a><a href="${escapeHtml(repoUrl(env))}/tags">Tags</a></nav></section>`);
 }
 
 function productCard(label: string, state: boolean, metrics: Array<[string, string]>): string {

@@ -1,19 +1,38 @@
 # Public assurance registry
 
-The `assurance/` directory is the canonical public, disclosure-safe data layer for assurance claims, risks, incidents, exercises, published security advisories, and their evidence. It is not the complete private operational or forensic record and does not claim certification.
+The `assurance/` directory is the canonical public, disclosure-safe data layer for assurance claims, compliance mappings, risks, incidents, exercises, published security advisories, and their evidence. It is not the complete private operational or forensic record and does not claim certification or formal conformance.
 
 `assurance/registry.json` indexes controlled datasets and their JSON Schema contracts. Counts, reverse `usedBy` relationships, resolved source URLs, and freshness presentation are derived in code; they are not duplicated in canonical JSON.
 
-`/evidence` is the canonical human-searchable evidence route. `GET /v1/assurance` exposes the full disclosure-safe public registry projection and `GET /v1/assurance/evidence` exposes the evidence-only projection. Focused APIs remain available at `/v1/assurance/risks`, `/v1/assurance/incidents`, and `/v1/assurance/advisories`.
+`/evidence` is the canonical human-searchable evidence route. `/compliance` is the canonical human-readable compliance registry projection. `GET /v1/assurance` exposes the full disclosure-safe public registry projection, `GET /v1/assurance/evidence` exposes the evidence-only projection, and `GET /v1/assurance/compliance` exposes the normalized compliance projection. Focused APIs remain available at `/v1/assurance/risks`, `/v1/assurance/incidents`, and `/v1/assurance/advisories`.
+
+## Compliance projection
+
+The public compliance view is derived from the three canonical datasets introduced by DEMO-117 through DEMO-119:
+
+- `assurance/compliance/iso-27001-2022.json`
+- `assurance/compliance/iso-42001-2023.json`
+- `assurance/compliance/wcag-2.2.json` and its four principle partitions
+
+The source JSON remains framework-specific. `src/assurance/registry.ts` normalizes those records only for public presentation and API filtering. ISO clauses and Annex A controls use their approved public mapping status. WCAG criteria retain their engineering-evidence status and A/AA/AAA level. The status vocabularies are not converted into pass/fail or certification claims.
+
+Public record IDs are stable lookup and anchor keys:
+
+- `ISO27001-<reference>` for ISO/IEC 27001 clauses and Annex A controls
+- `ISO42001-<reference>` for ISO/IEC 42001 clauses and Annex A controls
+- `WCAG-<criterionId>` for WCAG 2.2 success criteria
+
+`GET /v1/assurance/compliance` accepts `framework`, `status`, and `level` query parameters. `level` applies only to WCAG records. `GET /v1/assurance/compliance/{recordId}` returns one exact normalized record or `404` when the stable ID is unknown. Counts in both the API and `/compliance` page are derived from the selected records; canonical JSON does not store totals or generated URLs.
 
 ## Evidence rules
 
 - Evidence IDs are stable `EVD-<KIND>-###` identifiers.
 - Claim IDs are stable `CLM-<AREA>-###` identifiers.
+- Compliance record IDs are stable `ISO27001-*`, `ISO42001-*`, and `WCAG-*` identifiers.
 - Repository evidence records paths, not branch-dependent GitHub URLs.
 - Repository evidence URLs are resolved only against the exact `DEPLOYED_SHA`; a moving branch is never substituted when deployment identity is unavailable.
 - Source/test evidence is release-bound, governance evidence is event-driven, and live observations are observation-bound.
-- Reverse `usedBy` relationships are derived from all public assurance records that reference evidence, including claims, risks, incidents, exercises, and published advisories.
+- Reverse `usedBy` relationships are derived from all public assurance records that reference evidence, including claims, compliance records, risks, incidents, exercises, and published advisories.
 - Counts are derived from canonical datasets at presentation time.
 - No secret, reporter identity, private infrastructure detail, unreviewed request content, or unreleased vulnerability detail belongs in this registry.
 

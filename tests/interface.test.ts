@@ -125,16 +125,20 @@ describe('accessible interaction surface', () => {
 });
 
 describe('compliance assurance index', () => {
-  it('uses a single heading hierarchy, labelled evidence sections, and descriptive links', async () => {
-    const html = await renderComplianceDemo(env).text();
+  it('renders the canonical registry with accessible filters, stable anchors, and descriptive evidence links', async () => {
+    const html = await renderComplianceDemo(new Request('https://demo.example/compliance'), env).text();
     expect(html.match(/<h1\b/g)).toHaveLength(1);
-    expect(html).toContain('aria-labelledby="posture-heading"');
-    expect(html).toContain('aria-labelledby="evidence-heading"');
+    expect(html).toContain('aria-labelledby="framework-heading"');
+    expect(html).toContain('aria-labelledby="compliance-filter-heading"');
+    expect(html).toContain('aria-labelledby="compliance-records-heading"');
     expect(html.match(/class="assurance-posture-card"/g)).toHaveLength(3);
-    expect(html.match(/class="assurance-evidence-card"/g)).toHaveLength(10);
-    for (const label of ['Accessibility demonstration', 'Governance controls', 'MCP boundary', 'Availability history', 'Public logs', 'Documentation index', 'Operations dashboard', 'Search evidence']) {
-      expect(html).toContain(`${label} <span aria-hidden="true">→</span>`);
-    }
+    expect(html).toContain('<label for="compliance-framework">Framework</label>');
+    expect(html).toContain('<label for="compliance-status">Status</label>');
+    expect(html).toContain('<label for="compliance-level">WCAG level</label>');
+    expect(html).toContain('id="ISO27001-4.1"');
+    expect(html).toContain('id="WCAG-4.1.2"');
+    expect(html).toContain('href="/v1/assurance/compliance/WCAG-4.1.2"');
+    expect(html).toContain('href="/evidence#EVD-');
     expect(html).not.toMatch(/>\s*(?:COMPLIANT|CERTIFIED)\s*</i);
   });
 });

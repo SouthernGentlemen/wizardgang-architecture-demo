@@ -28,7 +28,7 @@ import { securityTxtResponse } from './api/security-policy';
 import { billingScenarioResponse } from './api/billing';
 import { renderBilling, renderDashboard, renderDocs, renderUptime } from './demos/operations-pages';
 import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } from './api/governance';
-import { assuranceIncidentsResponse, assuranceRisksResponse } from './api/assurance';
+import { assuranceComplianceResponse, assuranceIncidentsResponse, assuranceRisksResponse } from './api/assurance';
 import { assuranceAdvisoriesResponse } from './api/advisories';
 import { assuranceEvidenceResponse, assuranceResponse } from './api/assurance-registry';
 import { d1LabResponse } from './api/d1-lab';
@@ -195,6 +195,8 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
 
   if (path === '/v1/assurance') return assuranceResponse(request, env);
   if (path === '/v1/assurance/evidence') return assuranceEvidenceResponse(request, env);
+  if (path === '/v1/assurance/compliance') return assuranceComplianceResponse(request);
+  if (path.startsWith('/v1/assurance/compliance/')) return assuranceComplianceResponse(request, path.slice('/v1/assurance/compliance/'.length));
   if (path === '/v1/assurance/risks') return assuranceRisksResponse(request);
   if (path === '/v1/assurance/incidents') return assuranceIncidentsResponse(request);
   if (path === '/v1/assurance/advisories') return assuranceAdvisoriesResponse(request);
@@ -268,7 +270,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (request.method === 'GET' && path === '/i18n') return renderI18nDemo(request, env);
   if (request.method === 'GET' && path === '/accessibility') return renderAccessibilityDemo(request, env);
   if (request.method === 'GET' && path === '/evidence') return renderEvidenceDemo(request, env);
-  if (request.method === 'GET' && path === '/compliance') return renderComplianceDemo(env);
+  if (request.method === 'GET' && path === '/compliance') return renderComplianceDemo(request, env);
   if (request.method === 'GET' && path === '/security') return renderSecurity(env);
   if (request.method === 'GET' && path === '/governance/concerns') return renderConcerns(env);
   if (request.method === 'GET' && path === '/governance/risks') return renderRisks(request, env);

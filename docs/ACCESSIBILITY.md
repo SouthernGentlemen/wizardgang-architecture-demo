@@ -8,6 +8,8 @@ Status language is **WCAG 2.2 engineering evidence — no conformance claim**. T
 
 `assurance/compliance/wcag-2.2.json` is the canonical public registry manifest. It points to four principle partitions under `assurance/compliance/wcag-2.2/` containing all current WCAG 2.2 Level A, AA, and AAA success criteria from W3C, excluding obsolete and removed 4.1.1 Parsing. Each criterion record carries the W3C criterion ID, name, level, implementation/evidence status, implementation note, automated/manual validation split, evidence IDs, known gaps, owner, and freshness rules.
 
+`/compliance?framework=wcag-2.2` is the human-readable projection of those criterion records. Its framework, status, and level filters use native labeled controls; each criterion row has a stable `WCAG-<criterionId>` anchor, links back to its canonical partition, and links each evidence ID to `/evidence`. The same normalized records are available from `GET /v1/assurance/compliance?framework=wcag-2.2`, with exact lookup at `GET /v1/assurance/compliance/WCAG-<criterionId>`. The projection derives counts at request time and does not add conformance meaning to the source status.
+
 W3C remains the primary source for criterion identity and meaning:
 
 - WCAG 2.2 Recommendation: `https://www.w3.org/TR/WCAG22/`
@@ -49,6 +51,6 @@ The isolated frame bundles `axe-core` from the locked application dependency and
 
 ## Repository checks
 
-`tests/interface.test.ts` verifies the sandbox boundary, accessible and broken fixtures, locally executed axe protocol, default mode, and all twelve criterion cards. `tests/assurance-wcag.test.ts` verifies registry exhaustiveness, A/AA/AAA level counts, removal of obsolete 4.1.1, evidence resolution, W3C source identity, non-conformance wording, validation distinction, and freshness metadata. `npm run validate:wcag` repeats the canonical ID/name/level validation and evidence checks from a standalone repository validator.
+`tests/interface.test.ts` verifies the sandbox boundary, accessible and broken fixtures, locally executed axe protocol, default mode, and all twelve criterion cards. `tests/assurance-wcag.test.ts` verifies registry exhaustiveness, A/AA/AAA level counts, removal of obsolete 4.1.1, evidence resolution, W3C source identity, non-conformance wording, validation distinction, and freshness metadata. `tests/assurance-compliance-api.test.ts` verifies the accessible compliance projection, stable WCAG anchors, shared filters, derived counts, and exact-record API lookup. `npm run validate:wcag` repeats the canonical ID/name/level validation and evidence checks from a standalone repository validator.
 
 CI also validates types, localization, contracts, security, dependencies, migrations, and the Worker build. Browser and assistive-technology results must be recorded separately for a release; CI evidence does not replace those tests.

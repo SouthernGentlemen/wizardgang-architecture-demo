@@ -190,19 +190,23 @@ describe('public route contract', () => {
     expect(await edge.text()).not.toContain('alignment targets, not certification claims');
   });
 
-  it('renders compliance as an uncertified assurance index into canonical evidence', async () => {
+  it('renders compliance as a canonical record registry without certification claims', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/compliance', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     expect(response.status).toBe(200);
-    for (const statement of ['WCAG 2.2', 'Aligned / supported, uncertified', 'ISO/IEC 27001', 'ISO/IEC 42001', 'Aligned, uncertified']) {
+    for (const statement of ['WCAG 2.2', 'ISO/IEC 27001:2022', 'ISO/IEC 42001:2023', 'Canonical frameworks', 'Filter records', 'Compliance records']) {
       expect(html).toContain(statement);
     }
-    for (const route of ['/accessibility', '/i18n', '/governance#iso-27001', '/governance#iso-42001', '/mcp', '/dashboard/uptime', '/dashboard/logs', '/git', '/dashboard/docs', '/dashboard']) {
-      expect(html).toContain(`href="${route}"`);
+    for (const control of ['compliance-framework', 'compliance-status', 'compliance-level']) {
+      expect(html).toContain(`id="${control}"`);
     }
+    for (const anchor of ['ISO27001-4.1', 'ISO42001-4.1', 'WCAG-4.1.2']) {
+      expect(html).toContain(`id="${anchor}"`);
+    }
+    expect(html).toContain('href="/v1/assurance/compliance"');
+    expect(html).toContain('href="/v1/assurance/compliance/WCAG-4.1.2"');
+    expect(html).toContain('href="/evidence"');
     expect(html).not.toMatch(/>\s*(?:COMPLIANT|CERTIFIED)\s*</i);
-    expect(html).not.toContain('Met</span>');
-    expect(html).not.toContain('Partial</span>');
   });
 
   it('keeps source context without repeating global route chrome or interface lists', async () => {
@@ -239,8 +243,9 @@ describe('public route contract', () => {
     expect(dashboard).toContain('Model-training crawl');
     expect(dashboard).not.toContain('name="control" value="chatgpt-crawl"');
     expect(dashboard).toContain('Compliance &amp; Assurance');
-    expect(dashboard).toContain('Aligned / uncertified');
+    expect(dashboard).toContain('287 canonical records');
     expect(dashboard).toContain('href="/compliance"');
+    expect(dashboard).toContain('href="/v1/assurance/compliance"');
 
     const docs = await (await routeRequest(new Request('https://demo.wizardgang.ai/dashboard/docs'), environment)).text();
     expect(docs).toContain('src/router.ts');

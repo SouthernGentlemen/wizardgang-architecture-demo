@@ -6,17 +6,19 @@ const demo: DemoDefinition = {
   title: 'Compliance & Assurance',
   group: 'Delivery & Governance',
   sourcePath: 'src/demos/compliance.ts',
-  summary: 'Assurance index connecting WCAG 2.2, ISO/IEC 27001, and ISO/IEC 42001 alignment statements to the working evidence elsewhere in the demo.',
-  notice: 'All standards references describe alignment and support, not third-party certification.',
+  summary: 'Filterable canonical ISO/IEC 27001, ISO/IEC 42001, and WCAG 2.2 public assurance records with stable anchors, derived counts, and evidence links.',
+  notice: 'Framework statuses describe public engineering evidence and approved mapping posture; certification and formal conformance are not claimed.',
   proves: [
-    'Compliance posture is stated without compliant or certified badges',
-    'Each assurance area links to the canonical working demonstration or operational evidence',
-    'The route consolidates evidence without duplicating accessibility, governance, Git, MCP, documentation, or operations content',
+    'The rendered registry is derived from the canonical compliance datasets rather than duplicate hardcoded cards',
+    'Framework, status, and WCAG level filters use the same normalized records as the public assurance API',
+    'Every record has a stable page anchor, exact JSON lookup, canonical dataset source, and evidence links',
+    'Counts are derived at presentation time rather than stored in canonical JSON',
   ],
   status: 'working',
   supportingSources: [
-    { label: 'View rendered assurance index', path: 'src/demos/compliance-page.ts' },
-    { label: 'View route contract tests', path: 'tests/route-contract.test.ts' },
+    { label: 'View rendered compliance registry', path: 'src/demos/compliance-page.ts' },
+    { label: 'View assurance registry projection', path: 'src/assurance/registry.ts' },
+    { label: 'View compliance contract tests', path: 'tests/assurance-compliance-api.test.ts' },
   ],
 };
 
