@@ -1,8 +1,30 @@
-# Accessibility demonstration and manual matrix
+# Accessibility demonstration, criterion registry, and manual matrix
 
 The whole site follows WCAG 2.2-oriented engineering practices. `/accessibility` makes twelve behaviors explicit through an accessible default and an opt-in broken teaching preset. Broken content runs in a titled `srcdoc` frame with `sandbox="allow-scripts allow-forms"`; it is not evidence about the surrounding site.
 
-Status language remains **WCAG 2.2 AA demonstration — uncertified** until independent certification exists. AAA behavior is labeled enhanced guidance and is not counted toward the AA statement.
+Status language is **WCAG 2.2 engineering evidence — no conformance claim**. The repository does not claim Level A, AA, or AAA conformance or certification. Criterion-level status describes implementation and evidence only; a demonstrated or partial record is not a success-criterion result.
+
+## Public WCAG 2.2 criterion registry
+
+`assurance/compliance/wcag-2.2.json` is the canonical public registry manifest. It points to four principle partitions under `assurance/compliance/wcag-2.2/` containing all current WCAG 2.2 Level A, AA, and AAA success criteria from W3C, excluding obsolete and removed 4.1.1 Parsing. Each criterion record carries the W3C criterion ID, name, level, implementation/evidence status, implementation note, automated/manual validation split, evidence IDs, known gaps, owner, and freshness rules.
+
+W3C remains the primary source for criterion identity and meaning:
+
+- WCAG 2.2 Recommendation: `https://www.w3.org/TR/WCAG22/`
+- W3C machine-readable WCAG 2.2 data: `https://www.w3.org/WAI/WCAG22/wcag.json`
+- Understanding Conformance: `https://www.w3.org/WAI/WCAG22/Understanding/conformance.html`
+- Understanding Techniques: `https://www.w3.org/WAI/WCAG22/Understanding/understanding-techniques.html`
+
+The W3C criterion IDs, names, and levels are kept distinct from WizardGang-added implementation/evidence annotations. Techniques are informative; they are not substituted for the success criteria. Automated evidence is always marked partial or absent, and manual evaluation remains explicitly required.
+
+### Registry status vocabulary
+
+- `demonstrated` — a deliberate implementation or teaching comparison exists with repository evidence; no criterion pass is asserted.
+- `partial` — related implementation exists, but criterion-specific scope or manual evidence is incomplete.
+- `gap` — criterion-specific implementation or evaluation evidence is known to be incomplete.
+- `not-observed` — triggering content or behavior was not observed in the documented current scope; applicability must be reassessed when that scope changes.
+
+The registry is reassessed before releases that change public accessibility behavior, on relevant content or interaction changes, and at least every 90 days for the documented manual review. These freshness rules describe when evidence must be revisited; they do not create a conformance claim.
 
 ## Automated evidence
 
@@ -27,4 +49,6 @@ The isolated frame bundles `axe-core` from the locked application dependency and
 
 ## Repository checks
 
-`tests/interface.test.ts` verifies the sandbox boundary, accessible and broken fixtures, locally executed axe protocol, default mode, and all twelve criterion cards. CI also validates types, localization, contracts, security, dependencies, migrations, and the Worker build. Browser and assistive-technology results must be recorded separately for a release; CI evidence does not replace those tests.
+`tests/interface.test.ts` verifies the sandbox boundary, accessible and broken fixtures, locally executed axe protocol, default mode, and all twelve criterion cards. `tests/assurance-wcag.test.ts` verifies registry exhaustiveness, A/AA/AAA level counts, removal of obsolete 4.1.1, evidence resolution, W3C source identity, non-conformance wording, validation distinction, and freshness metadata. `npm run validate:wcag` repeats the canonical ID/name/level validation and evidence checks from a standalone repository validator.
+
+CI also validates types, localization, contracts, security, dependencies, migrations, and the Worker build. Browser and assistive-technology results must be recorded separately for a release; CI evidence does not replace those tests.

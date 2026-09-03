@@ -25,7 +25,7 @@ describe('public assurance API projection', () => {
         resolved: { kind: string; repositoryPath?: string; revision?: string | null; url: string | null; resolution: string };
       }>;
     };
-    expect(body.count).toBe(15);
+    expect(body.count).toBe(23);
 
     const source = body.records.find((record) => record.id === 'EVD-SRC-001');
     expect(source?.usedBy).toEqual(expect.arrayContaining(['CLM-SEC-001', 'CLM-AI-001']));
@@ -63,7 +63,7 @@ describe('public assurance API projection', () => {
       links: { self: string; evidence: string };
       evidence: Array<{ id: string; resolved: { revision?: string | null; url: string | null; resolution: string } }>;
     };
-    expect(body.counts).toEqual({ claims: 9, evidence: 15, risks: 30, incidents: 0, exercises: 1, advisories: 0 });
+    expect(body.counts).toEqual({ claims: 9, evidence: 23, risks: 30, incidents: 0, exercises: 1, advisories: 0 });
     expect(body.deployment).toMatchObject({ commit: null, sourceResolution: 'not-supplied' });
     expect(body.links).toEqual({
       self: 'https://demo.wizardgang.ai/v1/assurance',
