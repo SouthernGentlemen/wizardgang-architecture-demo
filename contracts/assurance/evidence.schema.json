@@ -31,8 +31,23 @@
             ]
           },
           "freshnessPolicy": { "enum": ["release-bound", "event-driven", "observation-bound"] },
+          "observedAt": { "type": "string", "format": "date-time" },
+          "validUntil": { "type": "string", "format": "date-time" },
           "visibility": { "const": "public" }
-        }
+        },
+        "dependentRequired": {
+          "observedAt": ["validUntil"],
+          "validUntil": ["observedAt"]
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": { "kind": { "const": "observation" } },
+              "required": ["kind"]
+            },
+            "then": { "required": ["observedAt", "validUntil"] }
+          }
+        ]
       }
     }
   }
