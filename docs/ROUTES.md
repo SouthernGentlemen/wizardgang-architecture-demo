@@ -22,7 +22,7 @@ This file is the stable public URL contract for `demo.wizardgang.ai`. The public
 | Delivery & Governance | `/governance` | ISO alignment, traceability, and evidence | `src/demos/governance.ts` | Working |
 | Delivery & Governance | `/evidence` | Searchable public assurance evidence with exact deployed source resolution, reverse usage, and freshness semantics | `src/demos/evidence.ts` | Working |
 | Delivery & Governance | `/compliance` | Uncertified assurance posture and canonical evidence index | `src/demos/compliance.ts` | Working |
-| Delivery & Governance | `/security` | Vulnerability disclosure policy and private reporting path | `src/demos/security.ts` | Working |
+| Delivery & Governance | `/security` | Private vulnerability reporting, coordinated disclosure lifecycle, and published-advisory assurance | `src/demos/security.ts` | Working |
 | Delivery & Governance | `/governance/concerns` | Public non-security bug, feature, and other concern intake | `src/demos/concerns.ts` | Working |
 | Delivery & Governance | `/governance/risks` | Disclosure-safe security and AI risk assurance with stable anchors and evidence/control links | `src/demos/risks.ts` | Working |
 | Delivery & Governance | `/governance/incidents` | Disclosure-safe actual-incident and simulated-exercise assurance with permanent record anchors | `src/demos/incidents.ts` | Working |
@@ -132,6 +132,7 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | `/__api/evidence/traceability` | `GET` | Traceability Evidence JSON | `src/api/governance.ts` |
 | `/v1/assurance/risks` | `GET` | Disclosure-safe Risk Assurance JSON | `src/api/assurance.ts` |
 | `/v1/assurance/incidents` | `GET` | Disclosure-safe Incident and Exercise Assurance JSON | `src/api/assurance.ts` |
+| `/v1/assurance/advisories` | `GET` | Published, disclosure-safe Security Advisory Assurance JSON | `src/api/advisories.ts` |
 | `/__api/governance/security-controls` | `GET` | Security Control Evidence JSON | `src/api/governance.ts` |
 | `/__api/governance/ai-evaluation` | `POST` | AI Boundary Evaluation | `src/api/governance.ts` |
 
@@ -152,6 +153,7 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | Public assurance registry | `src/assurance/registry.ts` |
 | Assurance presentation layer | `src/assurance/presentation.ts` |
 | Disclosure-safe risk/incident APIs | `src/api/assurance.ts` |
+| Published advisory API | `src/api/advisories.ts` |
 | Assurance registry/evidence APIs | `src/api/assurance-registry.ts` |
 | D1 base schema | `migrations/0001_demo_blob.sql` |
 | Operations, log, and Cloudflare usage schemas | `migrations/0002_operations_dashboard.sql`, `migrations/0004_application_logs.sql`, `migrations/0011_cloudflare_usage.sql` |
@@ -172,6 +174,8 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | Public exercise assurance contract | `contracts/assurance/exercise.schema.json` |
 | Public incident assurance dataset | `assurance/incidents/incidents.json` |
 | Public exercise assurance dataset | `assurance/incidents/exercises.json` |
+| Public advisory assurance contract | `contracts/assurance/advisory.schema.json` |
+| Public advisory assurance dataset | `assurance/advisories/advisories.json` |
 | R2 helper and object boundary | `src/storage/r2.ts` |
 | Durable Object class | `src/durable/demo-coordinator.ts` |
 | REST OpenAPI / Swagger 2.x contract | `contracts/openapi/swagger.json` |

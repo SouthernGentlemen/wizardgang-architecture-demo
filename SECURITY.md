@@ -46,3 +46,18 @@ Do not open a public issue for a suspected vulnerability, active security incide
 The public disclosure policy and reporting boundary are available at `https://demo.wizardgang.ai/security`. Machine-readable contact information is available at `https://demo.wizardgang.ai/.well-known/security.txt`.
 
 Include the affected route, component, or release; observed behavior and impact; safe reproduction steps; and any supporting evidence that can be shared privately. A report may be rejected as non-security, accepted into a draft GitHub Security Advisory, coordinated through remediation, and later published in sanitized form. Not every report is a vulnerability, security incident, GHSA, or CVE.
+
+### Coordinated disclosure lifecycle
+
+The controlled path is **private report → triage → GHSA → fix/release → eligible CVE → public advisory**.
+
+1. **Private report.** Reporter identity, private reproduction steps, attachments, exploit detail, credentials, and sensitive infrastructure information stay in GitHub private vulnerability reporting.
+2. **Triage.** Maintainers validate whether the report is a security vulnerability, determine scope and impact, and request clarification as needed. Triage notes remain private.
+3. **GHSA.** A confirmed vulnerability may be coordinated in a draft GitHub Security Advisory. Draft advisory content is private and is not public assurance evidence.
+4. **Fix and release.** Remediation is completed and a fixed release is published before a public advisory record is added to this repository's assurance dataset.
+5. **Eligible CVE.** A CVE is requested or associated only when appropriate. The public dataset records a CVE only after an actual identifier has been assigned; no placeholder CVE is permitted.
+6. **Public advisory.** After the sanitized GitHub Security Advisory is published, its public GHSA identity, severity, summary, fixed release, optional assigned CVE, public evidence, and optional incident linkage may be projected through `GET /v1/assurance/advisories` and the `#published-advisories` section of `/security`.
+
+Published advisories and operational incidents remain separate records. A public advisory may link to an `INC-*` identifier only when that actual incident already exists in the retained incident register. A vulnerability or advisory never creates an incident record by implication.
+
+The canonical advisory dataset contains only public disclosure material. Private report contents, draft GHSA data, reporter identity, exploit details, private treatment notes, and unreleased vulnerability detail are prohibited. An empty advisory dataset does not claim that no vulnerabilities, private reports, defects, or security investigations have existed.

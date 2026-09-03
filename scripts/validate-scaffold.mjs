@@ -24,7 +24,7 @@ const requiredRoutes = [
   '/__api/identity/sso', '/identity/saml/metadata', '/__api/identity/saml/inspect',
   '/identity/microsoft', '/identity/microsoft/callback', '/identity/google', '/identity/google/callback',
   '/identity/github', '/identity/github/callback', '/identity/saml', '/identity/saml/acs', '/identity/session', '/identity/logout',
-  '/__api/operations/billing', '/__api/evidence/traceability', '/v1/assurance', '/v1/assurance/evidence', '/v1/assurance/risks', '/v1/assurance/incidents',
+  '/__api/operations/billing', '/__api/evidence/traceability', '/v1/assurance', '/v1/assurance/evidence', '/v1/assurance/risks', '/v1/assurance/incidents', '/v1/assurance/advisories',
   '/__api/governance/security-controls', '/__api/governance/ai-evaluation'
 ];
 
@@ -69,21 +69,26 @@ for (const requiredFile of [
   'src/lib/crawler-control.ts',
   'src/api/operations.ts',
   'src/api/assurance.ts',
+  'src/api/advisories.ts',
   'src/api/assurance-registry.ts',
   'src/assurance/presentation.ts',
   'src/demos/evidence.ts',
   'src/demos/evidence-page.ts',
+  'src/demos/security-page.ts',
   'src/demos/risks.ts',
   'src/demos/incidents.ts',
   'src/demos/logs.ts',
   'src/lib/logs.ts',
+  'scripts/validate-advisories.mjs',
   'scripts/validate-assurance-projection.mjs',
   'assurance/risks/risks.json',
   'assurance/incidents/incidents.json',
   'assurance/incidents/exercises.json',
+  'assurance/advisories/advisories.json',
   'contracts/assurance/risk.schema.json',
   'contracts/assurance/incident.schema.json',
   'contracts/assurance/exercise.schema.json',
+  'contracts/assurance/advisory.schema.json',
   'migrations/0002_operations_dashboard.sql',
   'migrations/0003_demo_control.sql',
   'migrations/0004_application_logs.sql',
@@ -108,7 +113,7 @@ function walk(dir) {
 walk(root);
 
 const router = fs.readFileSync(path.join(root, 'src/router.ts'), 'utf8');
-for (const token of ['/dashboard', '/dashboard/logs', '/__api/operations/logs', '/__api/operations/cloudflare-usage', '/admin', '/offline', '/health', '/version', '/robots.txt', '/evidence', '/v1/assurance', '/v1/assurance/evidence', '/governance/risks', '/v1/assurance/risks', '/governance/incidents', '/v1/assurance/incidents', 'offlineApiResponse', 'wantsHtml']) {
+for (const token of ['/dashboard', '/dashboard/logs', '/__api/operations/logs', '/__api/operations/cloudflare-usage', '/admin', '/offline', '/health', '/version', '/robots.txt', '/evidence', '/v1/assurance', '/v1/assurance/evidence', '/governance/risks', '/v1/assurance/risks', '/governance/incidents', '/v1/assurance/incidents', '/v1/assurance/advisories', 'offlineApiResponse', 'wantsHtml']) {
   if (!router.includes(token)) failures.push(`router missing operations/admin invariant: ${token}`);
 }
 

@@ -33,7 +33,7 @@ for (const dataset of registry.datasets ?? []) {
   if (dataset.path) validateCanonical(dataset.path, read(dataset.path));
 }
 
-for (const route of ['/evidence', '/v1/assurance', '/v1/assurance/evidence']) {
+for (const route of ['/evidence', '/v1/assurance', '/v1/assurance/evidence', '/v1/assurance/advisories']) {
   if (!routes.has(route)) errors.push(`public assurance route is missing from the route manifest: ${route}`);
 }
 

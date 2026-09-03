@@ -23,7 +23,7 @@ Primary sources:
 - R2: actual demo objects/artifacts plus D1 references;
 - application UI: accessibility/i18n behavior, AI evaluations/fallback demonstrations, operational views.
 
-The controlled public assurance data layer lives under `assurance/` and is described in `docs/ASSURANCE.md`. It assigns stable identifiers to disclosure-safe evidence and derives counts, claim/risk/incident/exercise-to-evidence relationships, and reverse `usedBy` relationships without duplicating URLs or counts in canonical JSON. Narrative governance records remain authoritative for policy and method; the registry is authoritative for the public machine-readable projection.
+The controlled public assurance data layer lives under `assurance/` and is described in `docs/ASSURANCE.md`. It assigns stable identifiers to disclosure-safe evidence and derives counts, claim/risk/incident/exercise/advisory-to-evidence relationships, and reverse `usedBy` relationships without duplicating URLs or counts in canonical JSON. Narrative governance records remain authoritative for policy and method; the registry is authoritative for the public machine-readable projection.
 
 `/evidence` is the canonical searchable human evidence surface. `GET /v1/assurance` exposes the complete public assurance projection and `GET /v1/assurance/evidence` exposes the evidence-only projection. Repository locators resolve only against the exact deployed commit identified by `DEPLOYED_SHA`; when that identity is unavailable, the projection reports `not-supplied` rather than falling back to `main`. Route evidence resolves against the current request origin.
 
