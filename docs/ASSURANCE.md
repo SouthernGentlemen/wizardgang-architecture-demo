@@ -34,6 +34,12 @@ Public record IDs are stable lookup and anchor keys:
 
 `GET /v1/assurance/compliance` accepts `framework`, `status`, and `level` query parameters. `level` applies only to WCAG records. `GET /v1/assurance/compliance/{recordId}` returns one exact normalized record or `404` when the stable ID is unknown. Counts in both the API and `/compliance` page are derived from the selected records; canonical JSON does not store totals or generated URLs.
 
+### SoA source of truth
+
+The ISO/IEC 27001 and ISO/IEC 42001 structured compliance files are the sole canonical source for per-control applicability, status, N/A rationale, title, and evidence links. The corresponding `docs/governance/soa/ISO-27001-SOA.md` and `docs/governance/soa/ISO-42001-SOA.md` files are deterministic summaries generated from that structured state; they do not maintain independent control tables.
+
+Run `npm run generate:assurance-summaries` after an approved structured compliance change. `npm run validate:assurance-summaries` regenerates the expected bytes in memory and fails when a checked-in summary is stale or was edited independently. This makes status/count/rationale drift a CI failure rather than a documentation reconciliation task.
+
 ## Evidence rules
 
 - Evidence IDs are stable `EVD-<KIND>-###` identifiers.
@@ -47,6 +53,14 @@ Public record IDs are stable lookup and anchor keys:
 - Counts are derived from canonical datasets at presentation time.
 - No secret, reporter identity, private infrastructure detail, unreviewed request content, or unreleased vulnerability detail belongs in this registry.
 
+## Release snapshots and recurring monitoring
+
+Each annotated semantic-version release generates an assurance registry snapshot before the GitHub release is published. The snapshot is attached to the release and retained as a workflow artifact. It records the exact tag, the 40-character commit resolved from that tag, the UTC generation time, per-file and total assurance-record counts, and a SHA-256 digest over the sorted exact bytes of the release's `assurance/**/*.json` corpus. Snapshot outputs are excluded from their own digest scope.
+
+`assurance/operations/monitoring.json` assigns accountable owners for the registry, lifecycle control plane, each indexed dataset kind, and security reporting. Missing assignments fail assurance validation.
+
+`.github/workflows/assurance-monitor.yml` runs daily and can also be dispatched manually. It re-runs assurance validation so time-bound evidence becomes a failure when it expires, validates that `security.txt` has not expired, checks the configured security policy and machine-readable reporting routes, follows the advertised reporting links, and verifies through GitHub's public repository metadata API that private vulnerability reporting remains enabled. The workflow is contents-read-only and does not request access to advisory contents.
+
 ## Published advisory rules
 
 - `assurance/advisories/advisories.json` contains only published, sanitized GitHub Security Advisories. Private vulnerability reports, triage notes, draft advisory content, reporter identity, exploit detail, and private remediation discussion never enter this dataset.
@@ -58,8 +72,8 @@ Public record IDs are stable lookup and anchor keys:
 
 ## CI integrity gates
 
-`npm run validate:assurance` includes lifecycle validation plus the cross-dataset integrity pass after the framework-specific validators. It fails closed on unreviewed public records, unsupported lifecycle states, silent record deletion, immutable ID reuse, invalid supersession/withdrawal metadata, sensitive disclosure fields, globally duplicated public IDs, unsupported status vocabularies, missing ISO N/A rationales, unresolved evidence/risk/incident/advisory links, stale time-bound observation evidence, missing assurance routes, stored derived counts, and public fields reserved for private or sensitive detail.
+`npm run validate:assurance` includes lifecycle validation plus the cross-dataset integrity pass after the framework-specific validators. It fails closed on unreviewed public records, unsupported lifecycle states, silent record deletion, immutable ID reuse, invalid supersession/withdrawal metadata, sensitive disclosure fields, globally duplicated public IDs, unsupported status vocabularies, missing ISO N/A rationales, unresolved evidence/risk/incident/advisory links, stale time-bound observation evidence, missing assurance routes, stored derived counts, public fields reserved for private or sensitive detail, stale generated SoA summaries, expired security-reporting metadata, and missing accountable owners.
 
-`npm run test:assurance-integrity` runs mutation-based negative tests against isolated repository copies so each important failure mode is proven to return a non-zero validator result. Lifecycle tests explicitly prove rejection of unsupported states, unreviewed records, missing supersession/withdrawal requirements, silent deletion, immutable ID reuse, and sensitive public fields. The targeted suite also compares the compliance, risk, and incident/exercise APIs against their HTML projections, including filter-specific record identity and derived counts, with negative assertions that deliberately introduce row and count drift.
+`npm run test:assurance-integrity` runs mutation-based negative tests against isolated repository copies so each important failure mode is proven to return a non-zero validator result. Lifecycle tests explicitly prove rejection of unsupported states, unreviewed records, missing supersession/withdrawal requirements, silent deletion, immutable ID reuse, and sensitive public fields. The targeted suite also compares the compliance, risk, and incident/exercise APIs against their HTML projections, including filter-specific record identity and derived counts, with negative assertions that deliberately introduce row and count drift. The normal unit suite additionally proves generated-summary drift rejection, owner/expiry gates, and deterministic release snapshot metadata/digests.
 
-Run `npm run validate:assurance` to enforce paths, identifiers, visibility, schemas, lifecycle, disclosure review, immutable identity, retention, duplicates, referential integrity, freshness, public disclosure boundaries, route coverage, and the separation between canonical assurance data and derived presentation fields.
+Run `npm run validate:assurance` to enforce paths, identifiers, visibility, schemas, lifecycle, disclosure review, immutable identity, retention, duplicates, referential integrity, freshness, public disclosure boundaries, route coverage, generated SoA consistency, operational ownership, reporting metadata, and the separation between canonical assurance data and derived presentation fields.

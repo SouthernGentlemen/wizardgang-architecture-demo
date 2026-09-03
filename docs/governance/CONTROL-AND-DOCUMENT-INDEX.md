@@ -20,7 +20,7 @@ It answers five questions:
 4. **Where should a public reviewer inspect that evidence?**
 5. **What remains incomplete and requires actual recurring evidence rather than another policy document?**
 
-This index does not replace the ISO Statements of Applicability, the exhaustive WCAG/ISO compliance registry, risk registers, technical evidence, or actual management-system activities. It connects them.
+This index does not replace the structured assurance registry, its generated ISO SoA summaries, risk registers, technical evidence, or actual management-system activities. It connects them.
 
 The repository is engineered toward WCAG 2.2, ISO/IEC 27001:2022, and ISO/IEC 42001:2023 as **aligned — uncertified** references. Nothing in this index represents certification.
 
@@ -47,7 +47,8 @@ The management system distinguishes different record types because a policy, reg
 |---|---|---|---|
 | **Architecture / engineering standard** | Defines system and delivery baseline | `docs/ARCHITECTURE-STANDARD.md`, `SECURITY.md`, `docs/CHANGE-MANAGEMENT.md` | Intended architecture and controlled engineering rules |
 | **Policy / governance procedure** | Defines management-system expectation and decision process | `docs/governance/*.md` | What must be done and who owns the decision |
-| **Risk / SoA / assessment / register** | Records current applicability, state, risk, objective, inventory, plan, or evaluation | `registers/**`, `soa/**`, `assessments/**` | Current documented assessment at a point in time |
+| **Structured assurance / risk / assessment / register** | Records current applicability, state, risk, objective, inventory, plan, or evaluation | `assurance/compliance/**`, `registers/**`, `assessments/**` | Current controlled assessment at a point in time; ISO control status/rationale is canonical only in structured assurance data |
+| **Generated SoA summary** | Presents ISO Annex A assessment identity and derived counts without duplicating row state | `soa/ISO-27001-SOA.md`, `soa/ISO-42001-SOA.md` | Human-readable summary of the canonical structured compliance state only |
 | **Implementation evidence** | Demonstrates a technical control exists | `src/**`, `migrations/**`, `contracts/**`, workflow/config files | Implemented behavior/configuration within the verified source state |
 | **Validation evidence** | Demonstrates a check was executed for a specific state | tests, CI run, validation artifact, manual accessibility record, MCP evaluation | The tested condition at the stated commit/release/date |
 | **Release / deployment evidence** | Connects accepted source to production | PR, merge, annotated tag, release, deploy run, `/version` | What source was accepted and deployed |
@@ -67,12 +68,13 @@ The authoritative identity model is now:
 2. `DEMO-###` history identifies the controlled change that introduced or materially changed it;
 3. the `**Reference:**` header provides a unique stable management-system identifier;
 4. `docs/governance/REFERENCE-REGISTRY.json` is the machine-readable inventory of those identifiers;
-5. SoA control references remain authoritative for individual ISO Annex A rows;
-6. the future exhaustive compliance registry remains authoritative for WCAG criteria and ISO clause/checklist rows.
+5. `assurance/compliance/iso-27001-2022.json` and `assurance/compliance/iso-42001-2023.json` are authoritative for individual ISO Annex A applicability, status, rationale, title, and evidence links;
+6. `soa/ISO-27001-SOA.md` and `soa/ISO-42001-SOA.md` are generated summaries and cannot independently change control state;
+7. the structured WCAG registry and partitions are authoritative for WCAG criteria.
 
 Reference namespaces are separated by record type: `WG-GOV-*`, `WG-POL-*`, `WG-REG-*`, `WG-OBJ-*`, `WG-SOA-*`, and `WG-AIA-*`.
 
-CI validates reference uniqueness, registry/header agreement, governed-file existence, and local file links in this control/document index. A duplicate or mismatched canonical reference is a repository validation failure rather than a tolerated metadata ambiguity.
+CI validates reference uniqueness, registry/header agreement, governed-file existence, generated SoA agreement with structured assurance state, and local file links in this control/document index. A duplicate, mismatched reference, or independently edited generated SoA summary is a repository validation failure rather than a tolerated metadata ambiguity.
 
 ## 5. Core Governance Document Inventory
 
@@ -107,7 +109,7 @@ CI validates reference uniqueness, registry/header agreement, governed-file exis
 | DEMO-100 | `CRYPTOGRAPHY-SECRETS-KEY-MANAGEMENT.md` | Cryptographic mechanisms, authentication information and secret lifecycle | cryptography-secrets register |
 | DEMO-101 | `SECURE-ENGINEERING-TESTING.md` | Risk-scaled secure engineering and security testing | security-testing register, CI/tests |
 | DEMO-102 | `CONTINUITY-RESILIENCE.md` | Safe continuity, degradation, supplier disruption and return to service | incident/recovery exercises, operations evidence |
-| DEMO-103 | `CONTROL-AND-DOCUMENT-INDEX.md` | Authoritative navigation and traceability index | `assurance/registry.json`, future `/compliance` registry and consistency checks |
+| DEMO-103 | `CONTROL-AND-DOCUMENT-INDEX.md` | Authoritative navigation and traceability index | `assurance/registry.json`, `/compliance` registry and consistency checks |
 
 ## 6. Assessment, SoA, and Register Inventory
 
@@ -116,8 +118,8 @@ CI validates reference uniqueness, registry/header agreement, governed-file exis
 | Record | Purpose | Authority |
 |---|---|---|
 | `assessments/MCP-AI-IMPACT-ASSESSMENT.md` | Current read-only public MCP impact assessment | Authoritative only for the assessed current capability; material AI changes require reassessment |
-| `soa/ISO-27001-SOA.md` | All 93 ISO/IEC 27001:2022 Annex A controls | Canonical ISO 27001 Annex A applicability/rationale/status record |
-| `soa/ISO-42001-SOA.md` | All 38 ISO/IEC 42001:2023 Annex A controls | Canonical ISO 42001 Annex A applicability/rationale/status record |
+| `soa/ISO-27001-SOA.md` | Generated ISO/IEC 27001:2022 Annex A summary | Generated presentation only; canonical applicability/rationale/status is `assurance/compliance/iso-27001-2022.json` |
+| `soa/ISO-42001-SOA.md` | Generated ISO/IEC 42001:2023 Annex A summary | Generated presentation only; canonical applicability/rationale/status is `assurance/compliance/iso-42001-2023.json` |
 
 ### 6.2 Registers
 
@@ -172,18 +174,18 @@ The management clauses remain distinct from Annex A controls.
 
 ### ISO 27001 Annex A
 
-Per-control applicability and status are governed by `soa/ISO-27001-SOA.md`.
+Per-control applicability, status, N/A rationale, title, and evidence links are governed by `assurance/compliance/iso-27001-2022.json`; `soa/ISO-27001-SOA.md` is generated from that source.
 
 The principal evidence-owner map by Annex A theme is:
 
 | Theme | Primary evidence owners |
 |---|---|
-| **A.5 Organizational** | policies, roles, risk, supplier, incident, asset/access, legal/obligations, data, continuity, SoA |
+| **A.5 Organizational** | policies, roles, risk, supplier, incident, asset/access, legal/obligations, data, continuity, structured SoA data |
 | **A.6 People** | roles, competence/awareness, access lifecycle; physical/personnel controls may be N/A to current serverless/public-demo scope with rationale |
-| **A.7 Physical** | largely provider/scope dependent; N/A/Partial rationales live in the SoA and must be revisited if physical scope changes |
+| **A.7 Physical** | largely provider/scope dependent; N/A/Partial rationales live in structured compliance data and must be revisited if physical scope changes |
 | **A.8 Technological** | `SECURITY.md`, source, tests, CI, identity/webhook/MCP code, configuration, cryptography, secure engineering, logging, backup/recovery, operations |
 
-No thematic mapping above overrides an individual SoA row.
+No thematic mapping above overrides an individual canonical structured compliance record.
 
 ## 8. ISO/IEC 42001:2023 Clause Map
 
@@ -215,7 +217,7 @@ No thematic mapping above overrides an individual SoA row.
 
 ### ISO 42001 Annex A
 
-Per-control applicability/status are governed by `soa/ISO-42001-SOA.md`.
+Per-control applicability, status, N/A rationale, title, and evidence links are governed by `assurance/compliance/iso-42001-2023.json`; `soa/ISO-42001-SOA.md` is generated from that source.
 
 | Annex A family | Principal evidence owners |
 |---|---|
@@ -242,7 +244,7 @@ The detailed accessibility owner is:
 - `tests/interface.test.ts` and other applicable interface tests;
 - automated axe evidence where implemented;
 - dated browser/assistive-technology manual results when actually completed;
-- future exhaustive `/compliance` checklist rows for every WCAG 2.2 A/AA/AAA criterion.
+- the exhaustive `/compliance` checklist rows for every WCAG 2.2 A/AA/AAA criterion.
 
 | WCAG principle | Primary evidence concerns |
 |---|---|
@@ -288,7 +290,7 @@ The intended public assurance architecture is:
 
 | Route | Ownership |
 |---|---|
-| **`/compliance`** | Canonical exhaustive WCAG/ISO checklist and current evidence posture; one row per criterion/clause/control |
+| **`/compliance`** | Canonical human-readable projection of the structured WCAG/ISO checklist and current evidence posture |
 | **`/accessibility`** | Detailed WCAG interactive, automated and manual evidence |
 | **`/governance`** | Governance, security-management and AI-management evidence summaries |
 | **`/governance/concerns`** | Public, non-sensitive bug, feature, accessibility, AI/MCP and other concern intake |
@@ -302,11 +304,11 @@ The intended public assurance architecture is:
 | **`/version`** | Deployed version/SHA identity |
 | **`/mcp/server`** | Current bounded MCP implementation surface |
 
-`/compliance` must not duplicate every detailed interactive demonstration. It should deep-link evidence owners and retain the canonical exhaustive requirement status.
+`/compliance` must not duplicate canonical state in a second data store. It derives presentation from structured assurance data and may deep-link evidence owners and detailed interactive demonstrations.
 
-## 12. Future Exhaustive Compliance Registry
+## 12. Exhaustive Compliance Registry
 
-The rebuilt `/compliance` registry must include all of:
+The structured `/compliance` registry covers:
 
 - WCAG 2.2 Level A, AA and AAA success criteria;
 - ISO/IEC 27001:2022 clauses 4-10;
@@ -314,23 +316,19 @@ The rebuilt `/compliance` registry must include all of:
 - ISO/IEC 42001:2023 clauses 4-10;
 - all 38 ISO/IEC 42001 Annex A controls.
 
-Each row must retain at minimum:
-
-`framework`, `reference`, `level/domain`, `shortRequirement`, `status`, `applicability`, `applicabilityRationale`, `implementation`, `evidence[]`, `currentGap`, `validationMethod`, `owner`, `lastVerified`, `notes`.
-
 Rules:
 
-- statuses are `Met`, `Partial`, `Gap`, `N/A`;
-- `N/A` requires rationale and scope-change review;
-- counts represent evidence posture, never certification score;
-- evidence links should trace requirement -> source/change -> validation -> release/deployment -> operation where applicable;
+- canonical statuses and rationales are stored only in structured assurance data;
+- generated ISO SoA Markdown summaries must exactly match the structured source;
+- N/A requires rationale and scope-change review;
+- counts represent evidence posture, never certification score, and are derived rather than stored;
+- evidence links trace to stable assurance evidence IDs;
 - WCAG rows distinguish automated from manual evidence;
 - ISO management clauses remain separate from technical controls;
-- ISO applicability/rationale mirrors the SoA model;
-- every row has `lastVerified` and an evidence-staleness rule;
-- CI validates identifiers/status vocabulary/N/A rationale/internal evidence links.
+- stale time-bound evidence is rejected by validation;
+- CI validates identifiers, status vocabulary, N/A rationale, evidence-link integrity, generated-summary agreement, and disclosure safety.
 
-The SoAs remain canonical for Annex A applicability until the registry is generated/synchronized from a controlled common source.
+The generated SoA Markdown files preserve their WG-SOA identities and approval provenance, but they are not independent status/rationale authorities.
 
 ## 13. Evidence Status Semantics
 
@@ -349,7 +347,7 @@ A `Planned` exercise is not a `Met` control.
 
 Evidence is not timeless.
 
-The future compliance registry and recurring management-system reviews must account for freshness based on the type of evidence:
+The compliance registry and recurring management-system reviews account for freshness based on the type of evidence:
 
 - source/config evidence: revalidate after material source/configuration change;
 - release evidence: release-specific;
@@ -361,7 +359,7 @@ The future compliance registry and recurring management-system reviews must acco
 - SoA/applicability: review after scope/control/environment change;
 - legal/contractual obligations: review when jurisdiction, data, supplier, contract or use facts change.
 
-Stale evidence remains visible but must not be silently treated as current proof.
+Time-bound evidence includes an explicit validity window and becomes a validation failure when stale. Event-driven and release-bound evidence remains subject to its applicable review/change trigger rather than being silently treated as timeless proof.
 
 ## 15. Planned Operating Evidence
 
@@ -397,8 +395,6 @@ These remain Planned/Partial until dated evidence exists.
 Absence of an incident or finding does not prove readiness or control effectiveness.
 
 ## 16. Approval and Signoff Model
-
-Documents on this branch remain `Status: Proposed` while the draft pull request is open.
 
 The normal repository approval record is:
 
@@ -448,8 +444,8 @@ No continuity event, incident, or convenience requirement overrides this boundar
 This index intentionally preserves the following known gaps for cleanup or operation:
 
 1. Canonical governance/register metadata references are unique and CI-validated; future drift is treated as a validation failure.
-2. The exhaustive 280-row WCAG/ISO public compliance registry still needs to be restored and synchronized with the new evidence baseline.
-3. Current SoA statuses were established before all governance documents DEMO-082 through DEMO-103 existed and require a controlled evidence/status refresh.
+2. The exhaustive structured WCAG/ISO compliance registry is present and generated/presentation drift is CI-validated, but many rows remain operating-evidence constrained rather than independently demonstrated.
+3. ISO SoA Markdown is generated from canonical structured compliance data; future status/rationale changes must be made in that structured source and pass generation checks.
 4. GitHub ruleset/classic branch-protection enforcement remains unverified through the available integration.
 5. No completed formal internal audit is claimed.
 6. No completed management review is claimed.
@@ -467,17 +463,17 @@ These gaps are not reasons to invent new evidence or change a row to `Met`.
 
 ## 19. Post-Baseline Work Sequence
 
-After DEMO-103, the recommended controlled work sequence is:
+The controlled baseline has progressed beyond the original DEMO-103 documentation milestone:
 
-1. **Governance metadata consistency pass — complete in DEMO-104.** Canonical references are normalized, registered, and CI-validated.
-2. **SoA refresh** — reassess all 93 ISO27001 and 38 ISO42001 Annex A rows against the completed DEMO-070 through DEMO-103 documentation/implementation evidence.
-3. **Exhaustive compliance registry rebuild** — restore all WCAG + ISO clauses/controls with canonical structured data, filters, evidence links, last-verified dates and N/A rationales.
-4. **CI compliance-registry validation** — enforce unique references, valid statuses, N/A rationale, evidence-link integrity and staleness metadata.
-5. **Public `/compliance` UI** — posture summary + full searchable/filterable checklist, deep-linked to `/accessibility`, `/governance`, dashboard, source, tests and releases.
-6. **Operating evidence** — complete actual access/supplier/competence/threat/recovery/incident/accessibility/objective review activities as they become due.
-7. **Self-assessment/audit and management review** — evaluate the complete operating system once sufficient evidence exists; label owner-only review correctly as self-assessment.
-8. **Corrective action** — create findings only against defined applicable requirements and verify effectiveness after implementation.
-9. **Release/public assurance update** — publish the updated evidence posture without certification overclaim.
+1. **Governance metadata consistency — DEMO-104 complete.** Canonical references are normalized, registered, and CI-validated.
+2. **SoA refresh — DEMO-105 complete.** ISO Annex A rows were reassessed against the completed governance baseline without upgrading unsupported effectiveness claims.
+3. **Structured public assurance and exhaustive compliance — DEMO-114 through DEMO-120 complete.** Evidence, ISO/WCAG compliance, risk, incident/exercise, and public projections are structured and linked.
+4. **Integrity, lifecycle, and API hardening — DEMO-121 through DEMO-124 complete.** Cross-dataset validation, stable record lifecycle/disclosure review, and the public API contract are enforced.
+5. **Canonical SoA authority, release snapshots, and recurring monitoring — DEMO-125.** Structured compliance data is the only per-control status/rationale authority; Markdown is generated, releases carry digest-bound registry snapshots, and scheduled checks cover expiry/freshness/reporting/ownership.
+6. **Operating evidence.** Complete actual access/supplier/competence/threat/recovery/incident/accessibility/objective review activities as they become due.
+7. **Self-assessment/audit and management review.** Evaluate the operating system once sufficient evidence exists; label owner-only review correctly as self-assessment.
+8. **Corrective action.** Create findings only against defined applicable requirements and verify effectiveness after implementation.
+9. **Release/public assurance updates.** Continue publishing evidence posture without certification overclaim.
 
 ## 20. Traceability Standard
 
@@ -485,22 +481,22 @@ The target evidence chain is:
 
 ```text
 Requirement / criterion / control
--> applicability and rationale
+-> canonical structured applicability and rationale
 -> policy / procedure / risk / objective
 -> implementation source or controlled action
 -> DEMO change / branch / commit / PR
 -> validation
--> merge / tag / release
+-> merge / tag / release + registry snapshot
 -> deployment
 -> runtime / manual / management evidence
--> compliance row + last verified
+-> public compliance projection
 ```
 
 Not every requirement needs every link. A policy clause may terminate in management-review evidence; a technical control may include source/tests/deployment/runtime evidence; an N/A control requires scope rationale rather than fake implementation.
 
 ## 21. Baseline Completion Statement
 
-`DEMO-070` through `DEMO-103` establish the initial repository-native governance documentation layer for the WizardGang Architecture Demo.
+`DEMO-070` through `DEMO-103` established the initial repository-native governance documentation layer for the WizardGang Architecture Demo. Subsequent DEMO changes added the structured assurance registry, exhaustive compliance projections, lifecycle/disclosure controls, API contract, and release/monitoring integrity controls described above.
 
 The system now has controlled documentation for:
 
@@ -509,7 +505,7 @@ The system now has controlled documentation for:
 - leadership, policies and roles;
 - security and AI risk;
 - AI impact assessment;
-- ISO Statements of Applicability;
+- generated ISO Statement of Applicability summaries backed by canonical structured data;
 - objectives and management-system change planning;
 - competence, awareness, communications and concerns;
 - operational control and risk reassessment;
@@ -526,6 +522,8 @@ The system now has controlled documentation for:
 - cryptography/secrets;
 - secure engineering/testing;
 - continuity/resilience;
-- and this final control/document index.
+- public structured assurance/compliance data with stable lifecycle controls;
+- release-bound registry snapshots and scheduled assurance monitoring;
+- and this control/document index.
 
-The next maturity gain comes from **exhaustive requirement mapping, current evidence, completed reviews/exercises, and public traceability**—not from expanding the policy stack.
+The next maturity gain comes from **current operating evidence, completed reviews/exercises, independent assurance, and measured effectiveness**—not from duplicating state or expanding the policy stack.
