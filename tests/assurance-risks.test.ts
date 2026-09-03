@@ -11,7 +11,7 @@ const environment = {
 
 describe('disclosure-safe public risk assurance', () => {
   it('preserves stable source IDs and derives counts from canonical records', () => {
-    expect(publicAssuranceRegistry.counts).toEqual({ claims: 9, evidence: 15, risks: 30 });
+    expect(publicAssuranceRegistry.counts).toEqual({ claims: 9, evidence: 15, risks: 30, incidents: 0, exercises: 1 });
     expect(publicAssuranceRegistry.riskCounts).toEqual({
       total: 30,
       byFramework: { security: 15, ai: 15 },

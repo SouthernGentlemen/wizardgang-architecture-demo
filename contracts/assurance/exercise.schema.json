@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://demo.wizardgang.ai/contracts/assurance/exercise.schema.json",
+  "title": "Public Incident-Response Exercise Register",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "sourceRegister", "qualification", "records"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "sourceRegister": { "const": "docs/governance/registers/INCIDENT-REGISTER.md" },
+    "qualification": { "type": "string", "minLength": 1 },
+    "records": { "type": "array", "items": { "$ref": "#/$defs/record" } }
+  },
+  "$defs": {
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "recordType", "simulated", "exerciseType", "scenario", "scope", "owner", "status", "riskLinks", "objectiveLinks", "evidence", "publicNote"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^EX-[0-9]{3,}$" },
+        "recordType": { "const": "exercise" },
+        "simulated": { "const": true },
+        "exerciseType": { "type": "string", "minLength": 1 },
+        "scenario": { "type": "string", "minLength": 1 },
+        "scope": { "type": "string", "minLength": 1 },
+        "owner": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["planned", "in-progress", "completed", "follow-up-open", "closed", "superseded"] },
+        "dueDate": { "type": "string", "format": "date" },
+        "completedAt": { "type": "string", "format": "date-time" },
+        "riskLinks": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^(SEC-RISK|AI-RISK)-[0-9]{3}$" } },
+        "objectiveLinks": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^(SEC|AI)-OBJ-[0-9]{3}$" } },
+        "evidence": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^EVD-[A-Z]+-[0-9]{3,}$" } },
+        "resultSummary": { "type": "string", "minLength": 1 },
+        "publicNote": { "type": "string", "minLength": 1 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "planned" } }, "required": ["status"] },
+          "then": {
+            "required": ["dueDate"],
+            "properties": { "evidence": { "maxItems": 0 } },
+            "not": { "anyOf": [{ "required": ["completedAt"] }, { "required": ["resultSummary"] }] }
+          }
+        },
+        {
+          "if": { "properties": { "status": { "enum": ["completed", "follow-up-open", "closed"] } }, "required": ["status"] },
+          "then": {
+            "required": ["completedAt", "resultSummary"],
+            "properties": { "evidence": { "minItems": 1 } }
+          }
+        }
+      ]
+    }
+  }
+}

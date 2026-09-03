@@ -17,3 +17,17 @@ export function assuranceRisksResponse(request: Request): Response {
     headers: { 'cache-control': 'public, max-age=300' },
   });
 }
+
+export function assuranceIncidentsResponse(request: Request): Response {
+  if (request.method !== 'GET') return methodNotAllowed(['GET']);
+  return json({
+    schemaVersion: publicAssuranceRegistry.schemaVersion,
+    dataset: 'incidents',
+    qualification: publicAssuranceRegistry.incidentQualifications,
+    counts: publicAssuranceRegistry.incidentCounts,
+    incidents: publicAssuranceRegistry.incidents,
+    exercises: publicAssuranceRegistry.exercises,
+  }, {
+    headers: { 'cache-control': 'public, max-age=300' },
+  });
+}

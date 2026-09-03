@@ -157,3 +157,72 @@ export function renderRisks(request: Request, env: Env): Response {
     description: 'Disclosure-safe security and AI risk assurance with stable identifiers, evidence links, control references, and derived counts.',
   });
 }
+
+function recordTags(values: string[]): string {
+  if (values.length === 0) return '<span class="status-pill">None recorded</span>';
+  return values.map((value) => `<span class="status-pill">${escapeHtml(value)}</span>`).join(' ');
+}
+
+export function renderIncidents(env: Env): Response {
+  const incidentCards = publicAssuranceRegistry.incidents.map((record) => `
+    <article class="info-card" id="${escapeHtml(record.id)}">
+      <p class="eyebrow">Actual incident · <a href="#${escapeHtml(record.id)}">${escapeHtml(record.id)}</a></p>
+      <h2>${escapeHtml(record.title)}</h2>
+      <p><strong>Status:</strong> ${escapeHtml(titleCase(record.status))}</p>
+      <p>${escapeHtml(record.summary)}</p>
+      <p><strong>Categories:</strong> ${recordTags(record.categories)}</p>
+      <p><strong>Risk links:</strong> ${recordTags(record.riskLinks)}</p>
+      <p><strong>Control links:</strong> ${recordTags(record.controlLinks)}</p>
+    </article>`).join('');
+
+  const exerciseCards = publicAssuranceRegistry.exercises.map((record) => `
+    <article class="info-card" id="${escapeHtml(record.id)}">
+      <p class="eyebrow">Simulated exercise · <a href="#${escapeHtml(record.id)}">${escapeHtml(record.id)}</a></p>
+      <h2>${escapeHtml(record.exerciseType)}</h2>
+      <p><strong>Status:</strong> ${escapeHtml(titleCase(record.status.replaceAll('-', ' ')))} · <strong>Simulated:</strong> yes${record.dueDate ? ` · <strong>Due:</strong> <time datetime="${escapeHtml(record.dueDate)}">${escapeHtml(record.dueDate)}</time>` : ''}</p>
+      <p><strong>Scenario:</strong> ${escapeHtml(record.scenario)}</p>
+      <p><strong>Scope:</strong> ${escapeHtml(record.scope)}</p>
+      <p><strong>Owner:</strong> ${escapeHtml(record.owner)}</p>
+      <p><strong>Objective links:</strong> ${recordTags(record.objectiveLinks)}</p>
+      <p><strong>Evidence:</strong> ${record.evidence.length === 0 ? 'None yet; completion evidence is created only when the exercise is performed.' : recordTags(record.evidence)}</p>
+      <p>${escapeHtml(record.publicNote)}</p>
+    </article>`).join('');
+
+  return shell(env, 'Incidents & Exercises', `
+  <section class="page-header assurance-header">
+    <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / /governance/incidents</p>
+    <h1>Incidents and exercises stay distinct.</h1>
+    <p class="lede">This public register exposes disclosure-safe incident and response-exercise records without turning vulnerabilities, advisories, simulations, or unknown history into incidents.</p>
+    <p class="assurance-notice"><strong>Current retained posture:</strong> ${publicAssuranceRegistry.incidentCounts.actualIncidents} established actual incident records; ${publicAssuranceRegistry.incidentCounts.exercises} exercise record, of which ${publicAssuranceRegistry.incidentCounts.plannedExercises} is planned and ${publicAssuranceRegistry.incidentCounts.completedExercises} is completed or in post-exercise follow-up. Zero retained incident records is not a claim that an incident has never occurred.</p>
+    <div class="page-tools"><a class="button button-primary" href="/v1/assurance/incidents">View canonical JSON API</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/incidents.ts'))}">Route source</a>${referenceDetails([
+      { label: 'Incident register source', href: sourceUrl(env, 'docs/governance/registers/INCIDENT-REGISTER.md') },
+      { label: 'Incident JSON', href: sourceUrl(env, 'assurance/incidents/incidents.json') },
+      { label: 'Exercise JSON', href: sourceUrl(env, 'assurance/incidents/exercises.json') },
+      { label: 'Incident schema', href: sourceUrl(env, 'contracts/assurance/incident.schema.json') },
+      { label: 'Exercise schema', href: sourceUrl(env, 'contracts/assurance/exercise.schema.json') },
+    ])}</div>
+  </section>
+
+  <section aria-labelledby="record-boundaries">
+    <h2 id="record-boundaries">Record boundaries</h2>
+    <div class="info-grid">
+      <article class="info-card"><h3>Actual incidents · INC-*</h3><p>Only established real incident records receive permanent <code>INC-*</code> IDs and matching page anchors. No placeholder incident ID is created merely to prove the route.</p></article>
+      <article class="info-card"><h3>Exercises · EX-*</h3><p>Exercises are simulated readiness activities. Permanent <code>EX-*</code> anchors identify the exercise record, not a historical incident.</p></article>
+      <article class="info-card"><h3>Vulnerabilities</h3><p>Suspected or confirmed vulnerabilities use the private security-reporting lifecycle. A vulnerability is not automatically an operational incident.</p><p><a href="/security">Security reporting →</a></p></article>
+      <article class="info-card"><h3>Advisories</h3><p>Published security advisories and CVEs are disclosure artifacts for confirmed vulnerabilities. They remain separate from incident and exercise records.</p></article>
+    </div>
+  </section>
+
+  <section aria-labelledby="actual-incidents">
+    <h2 id="actual-incidents">Actual incidents</h2>
+    ${incidentCards || '<div class="assurance-notice"><p><strong>No actual incident records are established in the current retained register.</strong> Future disclosure-safe records will appear here under permanent <code>INC-*</code> anchors only after they are actually established.</p></div>'}
+  </section>
+
+  <section aria-labelledby="response-exercises">
+    <h2 id="response-exercises">Response exercises</h2>
+    <div class="info-grid">${exerciseCards}</div>
+  </section>`, {
+    activeRoute: '/governance/incidents',
+    description: 'Disclosure-safe public incident and response-exercise register with permanent INC-* and EX-* record anchors.',
+  });
+}

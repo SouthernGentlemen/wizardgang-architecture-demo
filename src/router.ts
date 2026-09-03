@@ -21,12 +21,12 @@ import { authorizationDecisionResponse, demoAccessTokenResponse, identityLogoutR
 import { renderI18nDemo } from './demos/i18n-page';
 import { renderAccessibilityDemo } from './demos/accessibility-page';
 import { renderComplianceDemo } from './demos/compliance-page';
-import { renderConcerns, renderRisks, renderSecurity } from './demos/assurance-pages';
+import { renderConcerns, renderIncidents, renderRisks, renderSecurity } from './demos/assurance-pages';
 import { securityTxtResponse } from './api/security-policy';
 import { billingScenarioResponse } from './api/billing';
 import { renderBilling, renderDashboard, renderDocs, renderUptime } from './demos/operations-pages';
 import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } from './api/governance';
-import { assuranceRisksResponse } from './api/assurance';
+import { assuranceIncidentsResponse, assuranceRisksResponse } from './api/assurance';
 import { d1LabResponse } from './api/d1-lab';
 import { renderD1Demo } from './demos/d1-page';
 import { renderGraphqlDemo } from './demos/graphql-console';
@@ -191,6 +191,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   }
 
   if (path === '/v1/assurance/risks') return assuranceRisksResponse(request);
+  if (path === '/v1/assurance/incidents') return assuranceIncidentsResponse(request);
   if (path === '/v1/demo-records') return recordsResponse(request, env);
   if (path.startsWith('/v1/demo-records/')) return recordsResponse(request, env, path.slice('/v1/demo-records/'.length));
   if (path === '/__api/api-sandbox/reset') return resetRecordSandboxResponse(request, env);
@@ -264,6 +265,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (request.method === 'GET' && path === '/security') return renderSecurity(env);
   if (request.method === 'GET' && path === '/governance/concerns') return renderConcerns(env);
   if (request.method === 'GET' && path === '/governance/risks') return renderRisks(request, env);
+  if (request.method === 'GET' && path === '/governance/incidents') return renderIncidents(env);
   if (request.method === 'GET' && path === '/git') return renderGitDemo(env);
   if (request.method === 'GET' && path === '/mcp') return renderMcpDemo(request, env);
   if (request.method === 'GET' && path === '/dashboard') return renderDashboard(env);

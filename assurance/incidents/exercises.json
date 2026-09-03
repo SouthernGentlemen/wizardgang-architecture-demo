@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "sourceRegister": "docs/governance/registers/INCIDENT-REGISTER.md",
+  "qualification": "Exercises are simulated readiness activities, not historical incidents. Planned exercises are not completion evidence.",
+  "records": [
+    {
+      "id": "EX-001",
+      "recordType": "exercise",
+      "simulated": true,
+      "exerciseType": "Tabletop / response exercise",
+      "scenario": "Combined security + AI/MCP incident scenario",
+      "scope": "Credential/authorization containment, MCP boundary, supplier communication, recovery, evidence, corrective action",
+      "owner": "Incident and Corrective-Action Owner",
+      "status": "planned",
+      "dueDate": "2026-12-02",
+      "riskLinks": [],
+      "objectiveLinks": ["SEC-OBJ-005"],
+      "evidence": [],
+      "publicNote": "Planned only. This record is not evidence that the exercise has occurred."
+    }
+  ]
+}

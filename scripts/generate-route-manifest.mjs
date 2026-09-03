@@ -92,6 +92,7 @@ const machine = [
   { route: '/__api/operations/billing', title: 'Synthetic Budget Scenario', group: 'Operations', source: 'src/api/billing.ts', method: 'POST', machine: true, offline_reachable: true },
   { route: '/__api/evidence/traceability', title: 'Traceability Evidence JSON', group: 'Delivery & Governance API', source: 'src/api/governance.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/v1/assurance/risks', title: 'Disclosure-safe Risk Assurance JSON', group: 'Delivery & Governance API', source: 'src/api/assurance.ts', method: 'GET', machine: true, offline_behavior: '503' },
+  { route: '/v1/assurance/incidents', title: 'Disclosure-safe Incident and Exercise Assurance JSON', group: 'Delivery & Governance API', source: 'src/api/assurance.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/__api/governance/security-controls', title: 'Security Control Evidence JSON', group: 'Delivery & Governance API', source: 'src/api/governance.ts', method: 'GET', machine: true, offline_behavior: '503' },
   { route: '/__api/governance/ai-evaluation', title: 'AI Boundary Evaluation', group: 'Delivery & Governance API', source: 'src/api/governance.ts', method: 'POST', machine: true, offline_behavior: '503' },
 ].map((entry) => ({ ...entry, status: 'working' }));
