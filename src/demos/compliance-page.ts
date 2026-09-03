@@ -5,14 +5,16 @@ import {
   assuranceRecordUrls,
   complianceFiltersFromUrl,
   deriveComplianceCounts,
-  filterPublicCompliance,
   labelAssuranceFilterValue,
-  listAssuranceRecords,
   publicComplianceFrameworks,
   publicComplianceQualification,
   type PublicComplianceFilters,
   type PublicComplianceRecord,
 } from '../assurance/service';
+import {
+  filterPublishedCompliance,
+  listPublishedAssuranceRecords,
+} from '../assurance/publication';
 import type { Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
@@ -69,12 +71,12 @@ function countSummary(counts: ReturnType<typeof deriveComplianceCounts>, totalAv
 
 export function renderComplianceDemo(request: Request, env: Env): Response {
   const filters = complianceFiltersFromUrl(new URL(request.url));
-  const records = filterPublicCompliance(filters);
-  const allRecords = listAssuranceRecords('compliance');
+  const records = filterPublishedCompliance(filters);
+  const allRecords = listPublishedAssuranceRecords('compliance');
   const counts = deriveComplianceCounts(records);
   const query = filterQuery(filters);
   const frameworkCards = publicComplianceFrameworks.map((framework) => {
-    const frameworkRecords = filterPublicCompliance({ framework: framework.id });
+    const frameworkRecords = filterPublishedCompliance({ framework: framework.id });
     return `<a class="assurance-posture-card" href="/compliance?framework=${encodeURIComponent(framework.id)}">
       <p class="eyebrow">Canonical dataset</p>
       <h2>${escapeHtml(framework.label)}</h2>
@@ -93,7 +95,7 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
       <span class="subtle">${escapeHtml(record.section)} · ${escapeHtml(record.kind)}</span>
     </th>
     <td>${escapeHtml(record.frameworkLabel)}</td>
-    <td><span class="status-pill">${escapeHtml(titleCase(record.status))}</span>${record.level ? ` <span class="status-pill">Level ${escapeHtml(record.level)}</span>` : ''}</td>
+    <td><span class="status-pill">${escapeHtml(titleCase(record.status))}</span>${record.level ? ` <span class="status-pill">Level ${escapeHtml(record.level)}</span>` : ''}<br><span class="subtle">Lifecycle: ${escapeHtml(record.publication.lifecycle)} · ${escapeHtml(record.publication.disclosureReview)}</span></td>
     <td>${recordEvidence(record)}</td>
     <td>${recordDetail(record)}</td>
     <td><a href="${escapeHtml(urls.api ?? '/v1/assurance/compliance')}">JSON</a><br><a href="${escapeHtml(sourceUrl(env, record.sourcePath))}">Dataset source</a></td>
@@ -118,6 +120,7 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
       <a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/compliance.ts'))}">Route source</a>
       ${referenceDetails([
         { label: 'Common assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
+        { label: 'Publication policy', href: sourceUrl(env, 'src/assurance/publication-policy.js') },
         ...frameworkReferences,
         { label: 'Assurance guide', href: sourceUrl(env, 'docs/ASSURANCE.md') },
       ])}
@@ -155,6 +158,6 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
     </div>
   </section>`, {
     activeRoute: '/compliance',
-    description: `Filterable canonical ${frameworkNames} public assurance records with stable anchors, derived counts, and evidence links.`,
+    description: `Filterable canonical ${frameworkNames} public assurance records with stable anchors, derived counts, lifecycle presentation, and evidence links.`,
   });
 }

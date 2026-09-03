@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { assuranceIncidentsResponse, assuranceRisksResponse } from '../src/api/assurance';
 import { deriveRiskCounts, type PublicIncident, type PublicExercise, type PublicRisk } from '../src/assurance/registry';
+import type { AssuranceLifecyclePresentation } from '../src/assurance/publication-policy.js';
 import { renderIncidents, renderRisks } from '../src/demos/assurance-pages';
 import type { Env } from '../src/types';
 
@@ -10,10 +11,12 @@ const environment = {
   DEPLOYED_SHA: '0123456789abcdef0123456789abcdef01234567',
 } as unknown as Env;
 
+type WithPublication<T> = T & { publication: AssuranceLifecyclePresentation };
+
 type RiskApiBody = {
   counts: ReturnType<typeof deriveRiskCounts>;
   totalAvailable: number;
-  records: PublicRisk[];
+  records: Array<WithPublication<PublicRisk>>;
 };
 
 type IncidentApiBody = {
@@ -23,9 +26,13 @@ type IncidentApiBody = {
     plannedExercises: number;
     completedExercises: number;
   };
-  incidents: PublicIncident[];
-  exercises: PublicExercise[];
+  incidents: Array<WithPublication<PublicIncident>>;
+  exercises: Array<WithPublication<PublicExercise>>;
 };
+
+function lifecycleLine(record: { publication: AssuranceLifecyclePresentation }): string {
+  return `<strong>Lifecycle:</strong> ${record.publication.lifecycle} · <strong>Disclosure:</strong> ${record.publication.disclosureReview}`;
+}
 
 function riskProjectionErrors(body: RiskApiBody, html: string): string[] {
   const errors: string[] = [];
@@ -36,6 +43,9 @@ function riskProjectionErrors(body: RiskApiBody, html: string): string[] {
   const counts = body.counts;
   const summary = `<strong>${counts.total}</strong> matching records · ${counts.byFramework.security} security · ${counts.byFramework.ai} AI · ${counts.byResidualRating.high} high residual · ${counts.byResidualRating.moderate} moderate residual · ${counts.byResidualRating.low} low residual.`;
   if (!html.includes(summary)) errors.push('risk HTML counts do not match API counts');
+  for (const record of body.records) {
+    if (!html.includes(lifecycleLine(record))) errors.push(`risk HTML lifecycle does not match API for ${record.id}`);
+  }
   return errors;
 }
 
@@ -48,6 +58,9 @@ function incidentProjectionErrors(body: IncidentApiBody, html: string): string[]
   const counts = body.counts;
   const summary = `<strong>Current retained posture:</strong> ${counts.actualIncidents} established actual incident records; ${counts.exercises} exercise record, of which ${counts.plannedExercises} is planned and ${counts.completedExercises} is completed or in post-exercise follow-up.`;
   if (!html.includes(summary)) errors.push('incident/exercise HTML counts do not match API counts');
+  for (const record of [...body.incidents, ...body.exercises]) {
+    if (!html.includes(lifecycleLine(record))) errors.push(`incident/exercise HTML lifecycle does not match API for ${record.id}`);
+  }
   return errors;
 }
 

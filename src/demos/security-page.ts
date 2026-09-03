@@ -4,9 +4,11 @@ import {
   assuranceDatasetSchema,
   assuranceDatasetSource,
   assuranceRecordUrlsById,
-  listAssuranceRecords,
-  type PublicAdvisory,
 } from '../assurance/service';
+import {
+  listPublishedAssuranceRecords,
+  type PublishedAssuranceRecordMap,
+} from '../assurance/publication';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
 import { referenceDetails, shell } from '../ui/page';
@@ -14,7 +16,7 @@ import { referenceDetails, shell } from '../ui/page';
 const privateReportUrl = (env: Env) => `${repoUrl(env)}/security/advisories/new`;
 const publishedAdvisoriesUrl = (env: Env) => `${repoUrl(env)}/security/advisories`;
 
-function advisoryCard(env: Env, advisory: PublicAdvisory): string {
+function advisoryCard(env: Env, advisory: PublishedAssuranceRecordMap['advisories']): string {
   const advisoryUrl = `${publishedAdvisoriesUrl(env)}/${encodeURIComponent(advisory.id)}`;
   const releases = advisory.fixedReleases
     .map((release) => `<a href="${escapeHtml(`${repoUrl(env)}/releases/tag/${encodeURIComponent(release)}`)}">${escapeHtml(release)}</a>`)
@@ -30,6 +32,7 @@ function advisoryCard(env: Env, advisory: PublicAdvisory): string {
     <p class="eyebrow">Published advisory · <a href="${escapeHtml(advisoryUrl)}">${escapeHtml(advisory.id)}</a></p>
     <h3>${escapeHtml(advisory.title)}</h3>
     <p><strong>Severity:</strong> ${escapeHtml(advisory.severity)} · <strong>Published:</strong> <time datetime="${escapeHtml(advisory.publishedAt)}">${escapeHtml(advisory.publishedAt)}</time>${advisory.cveId ? ` · <strong>CVE:</strong> ${escapeHtml(advisory.cveId)}` : ''}</p>
+    <p><strong>Lifecycle:</strong> ${escapeHtml(advisory.publication.lifecycle)} · <strong>Disclosure:</strong> ${escapeHtml(advisory.publication.disclosureReview)}</p>
     <p>${escapeHtml(advisory.summary)}</p>
     <p><strong>Fixed release${advisory.fixedReleases.length === 1 ? '' : 's'}:</strong> ${releases}</p>
     <p><strong>Incident linkage:</strong> ${incidentLinks}</p>
@@ -38,7 +41,7 @@ function advisoryCard(env: Env, advisory: PublicAdvisory): string {
 
 export function renderSecurity(env: Env): Response {
   const reportUrl = escapeHtml(privateReportUrl(env));
-  const advisories = listAssuranceRecords('advisories');
+  const advisories = listPublishedAssuranceRecords('advisories');
   const advisoryCards = advisories.map((record) => advisoryCard(env, record)).join('');
   const published = advisoryCards || `<article class="info-card">
     <h3>No published advisories are established</h3>
@@ -59,6 +62,7 @@ export function renderSecurity(env: Env): Response {
       { label: 'Advisory dataset', href: sourceUrl(env, assuranceDatasetSource('advisories')) },
       { label: 'Advisory schema', href: sourceUrl(env, assuranceDatasetSchema('advisories')) },
       { label: 'Common assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
+      { label: 'Publication policy', href: sourceUrl(env, 'src/assurance/publication-policy.js') },
     ])}</div>
   </section>
   <div class="info-grid">
@@ -86,7 +90,7 @@ export function renderSecurity(env: Env): Response {
     <div class="section-heading">
       <p class="eyebrow">Published disclosure</p>
       <h2 id="published-advisories-heading">Published advisories</h2>
-      <p>${advisories.length} public advisory record${advisories.length === 1 ? '' : 's'} in the canonical assurance dataset. Private reports and draft advisories are deliberately excluded.</p>
+      <p>${advisories.length} public advisory record${advisories.length === 1 ? '' : 's'} in the canonical assurance dataset. Private reports and private GitHub draft advisories are deliberately excluded; reviewed public assurance records may use the Draft lifecycle state.</p>
     </div>
     <div class="info-grid">${published}</div>
   </section>`, {

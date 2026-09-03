@@ -11,12 +11,14 @@ import {
   assuranceRecordUrlsById,
   deriveIncidentCounts,
   deriveRiskCounts,
-  filterPublicRisks,
   labelAssuranceFilterValue,
-  listAssuranceRecords,
   riskFiltersFromUrl,
-  type PublicRisk,
 } from '../assurance/service';
+import {
+  filterPublishedRisks,
+  listPublishedAssuranceRecords,
+  type PublishedAssuranceRecordMap,
+} from '../assurance/publication';
 
 const issueUrl = (env: Env, template: string) => `${repoUrl(env)}/issues/new?template=${encodeURIComponent(template)}`;
 const privateReportUrl = (env: Env) => `${repoUrl(env)}/security/advisories/new`;
@@ -73,7 +75,7 @@ function riskFilterSelect(parameter: 'framework' | 'status' | 'residual', curren
   </label>`;
 }
 
-function riskCard(env: Env, risk: PublicRisk): string {
+function riskCard(env: Env, risk: PublishedAssuranceRecordMap['risks']): string {
   const evidenceLinks = risk.evidence.map((id) => {
     const href = assuranceRecordUrlsById(id).html;
     return href ? `<a href="${escapeHtml(href)}">${escapeHtml(id)}</a>` : `<code>${escapeHtml(id)}</code>`;
@@ -85,6 +87,7 @@ function riskCard(env: Env, risk: PublicRisk): string {
     <h2>${escapeHtml(risk.title)}</h2>
     <p><strong>Inherent:</strong> ${risk.inherent.score} ${escapeHtml(titleCase(risk.inherent.rating))} · <strong>Residual:</strong> ${risk.residual.score} ${escapeHtml(titleCase(risk.residual.rating))}</p>
     <p><strong>Status:</strong> ${escapeHtml(titleCase(risk.status))} · <strong>Treatment direction:</strong> ${escapeHtml(risk.treatment.map(titleCase).join(' / '))}</p>
+    <p><strong>Lifecycle:</strong> ${escapeHtml(risk.publication.lifecycle)} · <strong>Disclosure:</strong> ${escapeHtml(risk.publication.disclosureReview)}</p>
     <p><strong>Review due:</strong> <time datetime="${escapeHtml(risk.reviewDue)}">${escapeHtml(risk.reviewDue)}</time></p>
     <p><strong>Evidence:</strong> ${evidenceLinks}</p>
     <p><strong>Control references:</strong> ${controlLinks}</p>
@@ -93,7 +96,7 @@ function riskCard(env: Env, risk: PublicRisk): string {
 
 export function renderRisks(request: Request, env: Env): Response {
   const filters = riskFiltersFromUrl(new URL(request.url));
-  const records = filterPublicRisks(filters);
+  const records = filterPublishedRisks(filters);
   const counts = deriveRiskCounts(records);
   const query = riskFilterQuery(filters);
   const cards = records.map((record) => riskCard(env, record)).join('');
@@ -103,11 +106,12 @@ export function renderRisks(request: Request, env: Env): Response {
   <section class="page-header assurance-header">
     <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / /governance/risks</p>
     <h1>Review the public risk assurance record.</h1>
-    <p class="lede">This disclosure-safe view carries stable security and AI risk identifiers, current scores, treatment direction, and reviewable evidence/control links from the controlled registers.</p>
+    <p class="lede">This disclosure-safe view carries stable security and AI risk identifiers, current scores, treatment direction, lifecycle state, and reviewable evidence/control links from the controlled registers.</p>
     <p class="assurance-notice"><strong>Public assurance boundary:</strong> private treatment actions, risk-owner and acceptance detail, sensitive infrastructure context, and acceptance rationale are intentionally omitted. These records do not claim certification or residual-risk acceptance.</p>
     <div class="page-tools"><a class="button button-primary" href="/v1/assurance/risks${escapeHtml(query)}">View JSON</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/risks.ts'))}">Route source</a><a class="text-link" href="${escapeHtml(sourceUrl(env, assuranceDatasetSource('risks')))}">Dataset source</a>${referenceDetails([
       { label: 'Risk schema', href: sourceUrl(env, assuranceDatasetSchema('risks')) },
       { label: 'Common assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
+      { label: 'Publication policy', href: sourceUrl(env, 'src/assurance/publication-policy.js') },
       { label: 'Risk-management method', href: sourceUrl(env, 'docs/governance/RISK-MANAGEMENT.md') },
     ])}</div>
   </section>
@@ -126,7 +130,7 @@ export function renderRisks(request: Request, env: Env): Response {
   </section>
   <div class="info-grid">${results}</div>`, {
     activeRoute: '/governance/risks',
-    description: 'Disclosure-safe security and AI risk assurance with stable identifiers, evidence links, control references, and derived counts.',
+    description: 'Disclosure-safe security and AI risk assurance with stable identifiers, lifecycle state, evidence links, control references, and derived counts.',
   });
 }
 
@@ -141,8 +145,8 @@ function recordTags(values: string[], linkRecords = false): string {
 }
 
 export function renderIncidents(env: Env): Response {
-  const incidents = listAssuranceRecords('incidents');
-  const exercises = listAssuranceRecords('exercises');
+  const incidents = listPublishedAssuranceRecords('incidents');
+  const exercises = listPublishedAssuranceRecords('exercises');
   const counts = deriveIncidentCounts(incidents, exercises);
   const incidentCards = incidents.map((record) => {
     const anchor = assuranceAnchor(record.id);
@@ -150,6 +154,7 @@ export function renderIncidents(env: Env): Response {
       <p class="eyebrow">Actual incident · <a href="#${escapeHtml(anchor)}">${escapeHtml(record.id)}</a></p>
       <h2>${escapeHtml(record.title)}</h2>
       <p><strong>Status:</strong> ${escapeHtml(titleCase(record.status))}</p>
+      <p><strong>Lifecycle:</strong> ${escapeHtml(record.publication.lifecycle)} · <strong>Disclosure:</strong> ${escapeHtml(record.publication.disclosureReview)}</p>
       <p>${escapeHtml(record.summary)}</p>
       <p><strong>Categories:</strong> ${recordTags(record.categories)}</p>
       <p><strong>Risk links:</strong> ${recordTags(record.riskLinks, true)}</p>
@@ -164,6 +169,7 @@ export function renderIncidents(env: Env): Response {
       <p class="eyebrow">Simulated exercise · <a href="#${escapeHtml(anchor)}">${escapeHtml(record.id)}</a></p>
       <h2>${escapeHtml(record.exerciseType)}</h2>
       <p><strong>Status:</strong> ${escapeHtml(titleCase(record.status))} · <strong>Simulated:</strong> yes${record.dueDate ? ` · <strong>Due:</strong> <time datetime="${escapeHtml(record.dueDate)}">${escapeHtml(record.dueDate)}</time>` : ''}</p>
+      <p><strong>Lifecycle:</strong> ${escapeHtml(record.publication.lifecycle)} · <strong>Disclosure:</strong> ${escapeHtml(record.publication.disclosureReview)}</p>
       <p><strong>Scenario:</strong> ${escapeHtml(record.scenario)}</p>
       <p><strong>Scope:</strong> ${escapeHtml(record.scope)}</p>
       <p><strong>Owner:</strong> ${escapeHtml(record.owner)}</p>
@@ -183,6 +189,7 @@ export function renderIncidents(env: Env): Response {
       { label: 'Incident dataset', href: sourceUrl(env, assuranceDatasetSource('incidents')) },
       { label: 'Exercise dataset', href: sourceUrl(env, assuranceDatasetSource('exercises')) },
       { label: 'Common assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
+      { label: 'Publication policy', href: sourceUrl(env, 'src/assurance/publication-policy.js') },
       { label: 'Incident schema', href: sourceUrl(env, assuranceDatasetSchema('incidents')) },
       { label: 'Exercise schema', href: sourceUrl(env, assuranceDatasetSchema('exercises')) },
     ])}</div>
@@ -208,6 +215,6 @@ export function renderIncidents(env: Env): Response {
     <div class="info-grid">${exerciseCards}</div>
   </section>`, {
     activeRoute: '/governance/incidents',
-    description: 'Disclosure-safe public incident and response-exercise register with permanent INC-* and EX-* record anchors.',
+    description: 'Disclosure-safe public incident and response-exercise register with lifecycle presentation and permanent INC-* and EX-* record anchors.',
   });
 }

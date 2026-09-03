@@ -2,10 +2,14 @@ export {
   FRESHNESS_SEMANTICS,
   assuranceDeploymentContext,
   presentPublicEvidence,
-  presentedEvidenceRecords,
 } from './service';
+export {
+  presentedPublishedEvidenceRecords as presentedEvidenceRecords,
+} from './publication';
 export type {
   AssuranceDeploymentContext,
-  PresentedPublicEvidence,
   ResolvedEvidenceLocator,
 } from './service';
+export type {
+  PresentedPublishedEvidence as PresentedPublicEvidence,
+} from './publication';

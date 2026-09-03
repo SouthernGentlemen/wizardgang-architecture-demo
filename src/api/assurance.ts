@@ -2,24 +2,24 @@ import {
   assuranceFilterValues,
   deriveComplianceCounts,
   deriveRiskCounts,
-  filterPublicCompliance,
-  filterPublicRisks,
-  findAssuranceRecord,
-  listAssuranceRecords,
-  publicAssuranceRegistry,
   publicComplianceFrameworks,
   publicComplianceQualification,
   type ComplianceFramework,
   type ComplianceLevel,
   type ComplianceStatus,
   type PublicComplianceFilters,
-  type PublicExercise,
-  type PublicIncident,
   type PublicRiskFilters,
   type RiskFramework,
   type RiskRating,
   type RiskStatus,
 } from '../assurance/service';
+import {
+  filterPublishedCompliance,
+  filterPublishedRisks,
+  findPublishedAssuranceRecord,
+  listPublishedAssuranceRecords,
+  publicPublishedAssuranceRegistry,
+} from '../assurance/publication';
 import {
   assuranceEnumQuery,
   assuranceErrorResponse,
@@ -62,17 +62,17 @@ export function assuranceRisksResponse(request: Request): Response {
 
   const filters = riskFilters(request, context.url);
   if (filters instanceof Response) return filters;
-  const filteredRecords = filterPublicRisks(filters);
+  const filteredRecords = filterPublishedRisks(filters);
   const page = paginateAssuranceRecords(request, context.url, filteredRecords);
   if (page instanceof Response) return page;
 
   return assuranceJsonResponse(request, {
     schemaVersion: context.schemaVersion,
     dataset: 'risks',
-    qualification: publicAssuranceRegistry.qualification,
+    qualification: publicPublishedAssuranceRegistry.qualification,
     filters,
     counts: deriveRiskCounts(filteredRecords),
-    totalAvailable: listAssuranceRecords('risks').length,
+    totalAvailable: listPublishedAssuranceRecords('risks').length,
     records: page.records,
     ...(page.pagination ? { pagination: page.pagination } : {}),
   });
@@ -89,7 +89,7 @@ export function assuranceComplianceResponse(request: Request, recordId?: string)
     } catch {
       return assuranceErrorResponse(request, 400, { error: 'invalid_compliance_record_id' });
     }
-    const record = findAssuranceRecord('compliance', decodedId);
+    const record = findPublishedAssuranceRecord('compliance', decodedId);
     if (!record) {
       return assuranceErrorResponse(request, 404, { error: 'compliance_record_not_found', recordId: decodedId });
     }
@@ -104,7 +104,7 @@ export function assuranceComplianceResponse(request: Request, recordId?: string)
 
   const filters = complianceFilters(request, context.url);
   if (filters instanceof Response) return filters;
-  const filteredRecords = filterPublicCompliance(filters);
+  const filteredRecords = filterPublishedCompliance(filters);
   const page = paginateAssuranceRecords(request, context.url, filteredRecords);
   if (page instanceof Response) return page;
 
@@ -114,7 +114,7 @@ export function assuranceComplianceResponse(request: Request, recordId?: string)
     qualification: publicComplianceQualification,
     filters,
     counts: deriveComplianceCounts(filteredRecords),
-    totalAvailable: listAssuranceRecords('compliance').length,
+    totalAvailable: listPublishedAssuranceRecords('compliance').length,
     frameworks: publicComplianceFrameworks,
     records: page.records,
     ...(page.pagination ? { pagination: page.pagination } : {}),
@@ -126,19 +126,19 @@ export function assuranceIncidentsResponse(request: Request): Response {
   if (context instanceof Response) return context;
 
   const combined = [
-    ...listAssuranceRecords('incidents'),
-    ...listAssuranceRecords('exercises'),
-  ] as Array<PublicIncident | PublicExercise>;
+    ...listPublishedAssuranceRecords('incidents'),
+    ...listPublishedAssuranceRecords('exercises'),
+  ];
   const page = paginateAssuranceRecords(request, context.url, combined);
   if (page instanceof Response) return page;
-  const incidents = page.records.filter((record): record is PublicIncident => record.recordType === 'incident');
-  const exercises = page.records.filter((record): record is PublicExercise => record.recordType === 'exercise');
+  const incidents = page.records.filter((record) => record.recordType === 'incident');
+  const exercises = page.records.filter((record) => record.recordType === 'exercise');
 
   return assuranceJsonResponse(request, {
     schemaVersion: context.schemaVersion,
     dataset: 'incidents',
-    qualification: publicAssuranceRegistry.incidentQualifications,
-    counts: publicAssuranceRegistry.incidentCounts,
+    qualification: publicPublishedAssuranceRegistry.incidentQualifications,
+    counts: publicPublishedAssuranceRegistry.incidentCounts,
     incidents,
     exercises,
     ...(page.pagination ? { pagination: page.pagination } : {}),

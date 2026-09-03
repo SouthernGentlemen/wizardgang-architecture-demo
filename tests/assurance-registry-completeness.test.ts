@@ -75,6 +75,16 @@ describe('assurance registry completeness and schema enforcement', () => {
     expect(output(result)).toContain('duplicate registered path');
   });
 
+  it('rejects private assurance resource classification in the public repository', () => {
+    const fixtureRoot = createFixture();
+    const registry = readJson(fixtureRoot, 'assurance/registry.json');
+    const risks = registry.datasets.find((dataset: any) => dataset.kind === 'risks');
+    risks.visibility = 'private';
+    writeJson(fixtureRoot, 'assurance/registry.json', registry);
+    const result = run(fixtureRoot, 'scripts/validate-assurance-registry.mjs');
+    expectRejected(result, 'risks uses unsupported assurance visibility private');
+  });
+
   it('rejects an unregistered canonical assurance dataset', () => {
     const fixtureRoot = createFixture();
     writeJson(fixtureRoot, 'assurance/unregistered-demo126.json', { schemaVersion: 1, records: [] });
