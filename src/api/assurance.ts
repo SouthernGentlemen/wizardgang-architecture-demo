@@ -1,19 +1,12 @@
 import {
-  assuranceFilterValues,
   complianceFrameworks,
   complianceQualification,
   deriveComplianceCounts,
   deriveRiskCounts,
+  normalizeAssuranceFilters,
   type AssuranceFilterValues,
 } from '../assurance/service';
-import type {
-  ComplianceFramework,
-  ComplianceLevel,
-  ComplianceStatus,
-  RiskFramework,
-  RiskRating,
-  RiskStatus,
-} from '../assurance/model';
+import type { AssuranceDataset } from '../assurance/model';
 import {
   filterPublishedAssuranceRecords,
   findPublishedAssuranceRecord,
@@ -23,68 +16,42 @@ import {
 import {
   serializeAssuranceV1Compliance,
   serializeAssuranceV1Exercise,
+  serializeAssuranceV1Filters,
   serializeAssuranceV1Incident,
   serializeAssuranceV1Risk,
 } from './assurance-v1';
 import {
-  assuranceEnumQuery,
   assuranceErrorResponse,
   assuranceJsonResponse,
   paginateAssuranceRecords,
   prepareAssuranceRequest,
 } from './assurance-contract';
 
-interface RiskRequestFilters {
-  canonical: AssuranceFilterValues;
-  released: {
-    framework?: RiskFramework;
-    status?: RiskStatus;
-    residualRating?: RiskRating;
-  };
-}
-
-function riskFilters(request: Request, url: URL): RiskRequestFilters | Response {
-  const framework = assuranceEnumQuery(request, url, 'framework', assuranceFilterValues('risks', 'framework'));
-  if (framework instanceof Response) return framework;
-  const status = assuranceEnumQuery(request, url, 'status', assuranceFilterValues('risks', 'status'));
-  if (status instanceof Response) return status;
-  const residual = assuranceEnumQuery(request, url, 'residual', assuranceFilterValues('risks', 'residual'));
-  if (residual instanceof Response) return residual;
-  return {
-    canonical: {
-      ...(framework ? { framework } : {}),
-      ...(status ? { status } : {}),
-      ...(residual ? { residual } : {}),
-    },
-    released: {
-      ...(framework ? { framework: framework as RiskFramework } : {}),
-      ...(status ? { status: status as RiskStatus } : {}),
-      ...(residual ? { residualRating: residual as RiskRating } : {}),
-    },
-  };
-}
-
-function complianceFilters(request: Request, url: URL): AssuranceFilterValues | Response {
-  const framework = assuranceEnumQuery(request, url, 'framework', assuranceFilterValues('compliance', 'framework'));
-  if (framework instanceof Response) return framework;
-  const status = assuranceEnumQuery(request, url, 'status', assuranceFilterValues('compliance', 'status'));
-  if (status instanceof Response) return status;
-  const level = assuranceEnumQuery(request, url, 'level', assuranceFilterValues('compliance', 'level'));
-  if (level instanceof Response) return level;
-  return {
-    ...(framework ? { framework: framework as ComplianceFramework } : {}),
-    ...(status ? { status: status as ComplianceStatus } : {}),
-    ...(level ? { level: level as ComplianceLevel } : {}),
-  };
+function assuranceFilters(
+  request: Request,
+  url: URL,
+  dataset: AssuranceDataset,
+): AssuranceFilterValues | Response {
+  const normalized = normalizeAssuranceFilters(dataset, url.searchParams);
+  const issue = normalized.issues[0];
+  if (issue) {
+    return assuranceErrorResponse(request, 400, {
+      error: 'invalid_filter',
+      parameter: issue.parameter,
+      value: issue.value,
+      allowed: issue.allowed,
+    });
+  }
+  return normalized.filters;
 }
 
 export function assuranceRisksResponse(request: Request): Response {
   const context = prepareAssuranceRequest(request);
   if (context instanceof Response) return context;
 
-  const filters = riskFilters(request, context.url);
+  const filters = assuranceFilters(request, context.url, 'risks');
   if (filters instanceof Response) return filters;
-  const filteredRecords = filterPublishedAssuranceRecords('risks', filters.canonical);
+  const filteredRecords = filterPublishedAssuranceRecords('risks', filters);
   const page = paginateAssuranceRecords(request, context.url, filteredRecords);
   if (page instanceof Response) return page;
 
@@ -92,7 +59,7 @@ export function assuranceRisksResponse(request: Request): Response {
     schemaVersion: context.schemaVersion,
     dataset: 'risks',
     qualification: publishedAssuranceSummary.qualification,
-    filters: filters.released,
+    filters: serializeAssuranceV1Filters('risks', filters),
     counts: deriveRiskCounts(filteredRecords),
     totalAvailable: listPublishedAssuranceRecords('risks').length,
     records: page.records.map(serializeAssuranceV1Risk),
@@ -124,7 +91,7 @@ export function assuranceComplianceResponse(request: Request, recordId?: string)
     });
   }
 
-  const filters = complianceFilters(request, context.url);
+  const filters = assuranceFilters(request, context.url, 'compliance');
   if (filters instanceof Response) return filters;
   const filteredRecords = filterPublishedAssuranceRecords('compliance', filters);
   const page = paginateAssuranceRecords(request, context.url, filteredRecords);
@@ -134,7 +101,7 @@ export function assuranceComplianceResponse(request: Request, recordId?: string)
     schemaVersion: context.schemaVersion,
     dataset: 'compliance',
     qualification: complianceQualification,
-    filters,
+    filters: serializeAssuranceV1Filters('compliance', filters),
     counts: deriveComplianceCounts(filteredRecords),
     totalAvailable: listPublishedAssuranceRecords('compliance').length,
     frameworks: complianceFrameworks,

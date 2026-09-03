@@ -1,8 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { assuranceComplianceResponse } from '../src/api/assurance';
+import { assuranceComplianceResponse, assuranceRisksResponse } from '../src/api/assurance';
 import {
   assuranceFilterDefinitions,
+  assuranceFilterNames,
   assuranceFilterValues,
   assuranceRecordUrls,
   complianceFrameworks,
@@ -11,10 +12,17 @@ import {
   filterAssuranceRecords,
   findAssuranceRecord,
   listAssuranceRecords,
+  normalizeAssuranceFilters,
   reverseAssuranceRelationships,
+  serializeAssuranceFilters,
 } from '../src/assurance/service';
-import { listPublishedAssuranceRecords, presentedPublishedEvidenceRecords } from '../src/assurance/publication';
+import {
+  filterPublishedAssuranceRecords,
+  listPublishedAssuranceRecords,
+  presentedPublishedEvidenceRecords,
+} from '../src/assurance/publication';
 import { renderComplianceDemo } from '../src/demos/compliance-page';
+import { renderRisks } from '../src/demos/assurance-pages';
 import type { Env } from '../src/types';
 
 const environment = {
@@ -25,6 +33,10 @@ const environment = {
 
 function idsFromComplianceHtml(html: string): string[] {
   return [...html.matchAll(/<tr id="((?:ISO27001|ISO42001|WCAG)-[^"]+)">/g)].map((match) => match[1]);
+}
+
+function idsFromRiskHtml(html: string): string[] {
+  return [...html.matchAll(/<article class="info-card" id="((?:SEC|AI)-RISK-[^"]+)">/g)].map((match) => match[1]);
 }
 
 describe('common canonical assurance query and presentation service', () => {
@@ -73,9 +85,14 @@ describe('common canonical assurance query and presentation service', () => {
     expect(deriveAssuranceCounts('compliance', synthetic).total).toBe(records.length + 1);
   });
 
-  it('gets filter declarations from the registry and allowed vocabulary from registered schemas', () => {
+  it('gets filter declarations and value semantics from authoritative registered contracts', () => {
     const registry = JSON.parse(readFileSync('assurance/registry.json', 'utf8')) as {
-      datasets: Array<{ kind: string; filters?: Record<string, { path: string; label: string }> }>;
+      datasets: Array<{
+        kind: string;
+        filters?: Record<string, { path: string; label: string }>;
+        framework?: { id: string };
+        resources?: Array<{ framework?: { id: string }; resources?: Array<{ framework?: { id: string } }> }>;
+      }>;
     };
     const complianceRegistry = registry.datasets.find((dataset) => dataset.kind === 'compliance');
     const riskRegistry = registry.datasets.find((dataset) => dataset.kind === 'risks');
@@ -87,6 +104,115 @@ describe('common canonical assurance query and presentation service', () => {
     expect(assuranceFilterValues('risks', 'framework')).toEqual(riskSchema.$defs.risk.properties.framework.enum);
     expect(assuranceFilterValues('risks', 'residual')).toEqual(riskSchema.$defs.rating.enum);
     expect(assuranceFilterValues('compliance', 'level')).toEqual(wcagSchema.properties.criteria.items.properties.level.enum);
+    expect(assuranceFilterValues('compliance', 'framework')).toEqual(complianceFrameworks.map((framework) => framework.id));
+  });
+
+  it('normalizes declared filters once and serializes them in registry declaration order', () => {
+    const normalized = normalizeAssuranceFilters(
+      'compliance',
+      new URLSearchParams('level=AA&unknown=ignored&framework=wcag-2.2&status=partial'),
+    );
+    expect(normalized).toEqual({
+      filters: { framework: 'wcag-2.2', status: 'partial', level: 'AA' },
+      issues: [],
+    });
+    expect(serializeAssuranceFilters('compliance', normalized.filters)).toBe('framework=wcag-2.2&status=partial&level=AA');
+
+    expect(normalizeAssuranceFilters('compliance', new URLSearchParams('framework=')).issues[0]).toMatchObject({
+      parameter: 'framework',
+      value: '',
+    });
+    expect(normalizeAssuranceFilters('risks', new URLSearchParams('framework=security&framework=ai')).issues[0]).toMatchObject({
+      parameter: 'framework',
+      value: ['security', 'ai'],
+    });
+  });
+
+  it('lets every registry-declared filter flow through API, HTML forms, and matching-JSON links without handler parameter lists', async () => {
+    const cases = [
+      {
+        dataset: 'compliance' as const,
+        apiPath: '/v1/assurance/compliance',
+        htmlPath: '/compliance',
+        api: assuranceComplianceResponse,
+        render: (request: Request) => renderComplianceDemo(request, environment),
+        ids: idsFromComplianceHtml,
+      },
+      {
+        dataset: 'risks' as const,
+        apiPath: '/v1/assurance/risks',
+        htmlPath: '/governance/risks',
+        api: assuranceRisksResponse,
+        render: (request: Request) => renderRisks(request, environment),
+        ids: idsFromRiskHtml,
+      },
+    ];
+
+    for (const entry of cases) {
+      for (const parameter of assuranceFilterNames(entry.dataset)) {
+        const value = assuranceFilterValues(entry.dataset, parameter)[0];
+        const filters = { [parameter]: value };
+        const query = serializeAssuranceFilters(entry.dataset, filters);
+        const expected = filterPublishedAssuranceRecords(entry.dataset, filters).map((record) => record.id);
+        const apiResponse = entry.api(new Request(`https://demo.wizardgang.ai${entry.apiPath}?${query}`));
+        const apiBody = await apiResponse.json() as { records: Array<{ id: string }> };
+        const html = await entry.render(new Request(`https://demo.wizardgang.ai${entry.htmlPath}?${query}`)).text();
+
+        expect(apiBody.records.map((record) => record.id)).toEqual(expected);
+        expect(entry.ids(html)).toEqual(expected);
+        expect(html).toContain(`name="${parameter}"`);
+        expect(html).toContain(`href="${entry.apiPath}?${query.replaceAll('&', '&amp;')}"`);
+      }
+    }
+
+    const apiSource = readFileSync('src/api/assurance.ts', 'utf8');
+    expect(apiSource).not.toContain('assuranceEnumQuery');
+    expect(apiSource).not.toContain("'framework', assuranceFilterValues");
+    expect(apiSource).not.toContain("'status', assuranceFilterValues");
+    expect(apiSource).not.toContain("'level', assuranceFilterValues");
+    expect(apiSource).not.toContain("'residual', assuranceFilterValues");
+  });
+
+  it('preserves v1 invalid, empty, duplicate, and unknown parameter semantics', async () => {
+    const invalid = assuranceComplianceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/compliance?framework='));
+    expect(invalid.status).toBe(400);
+    expect(await invalid.json()).toMatchObject({ error: 'invalid_filter', parameter: 'framework', value: '' });
+
+    const duplicate = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?framework=security&framework=ai'));
+    expect(duplicate.status).toBe(400);
+    expect(await duplicate.json()).toMatchObject({
+      error: 'invalid_filter',
+      parameter: 'framework',
+      value: ['security', 'ai'],
+    });
+
+    const unknown = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?futureParameter=ignored'));
+    expect(unknown.status).toBe(200);
+    const body = await unknown.json() as { filters: Record<string, string>; records: Array<{ id: string }> };
+    expect(body.filters).toEqual({});
+    expect(body.records.map((record) => record.id)).toEqual(listPublishedAssuranceRecords('risks').map((record) => record.id));
+  });
+
+  it('applies combined filters before pagination and preserves the filtered cursor identity', async () => {
+    const filters = { framework: 'wcag-2.2', status: 'partial', level: 'AA' };
+    const expected = filterPublishedAssuranceRecords('compliance', filters);
+    expect(expected.length).toBeGreaterThan(2);
+    const query = serializeAssuranceFilters('compliance', filters);
+
+    const first = assuranceComplianceResponse(new Request(`https://demo.wizardgang.ai/v1/assurance/compliance?${query}&limit=2`));
+    const firstBody = await first.json() as {
+      records: Array<{ id: string }>;
+      pagination: { total: number; nextCursor: string | null };
+    };
+    expect(firstBody.records.map((record) => record.id)).toEqual(expected.slice(0, 2).map((record) => record.id));
+    expect(firstBody.pagination.total).toBe(expected.length);
+    expect(firstBody.pagination.nextCursor).toBe(expected[1].id);
+
+    const second = assuranceComplianceResponse(new Request(
+      `https://demo.wizardgang.ai/v1/assurance/compliance?${query}&limit=2&cursor=${encodeURIComponent(expected[1].id)}`,
+    ));
+    const secondBody = await second.json() as { records: Array<{ id: string }> };
+    expect(secondBody.records.map((record) => record.id)).toEqual(expected.slice(2, 4).map((record) => record.id));
   });
 
   it('uses common exact lookup while keeping pagination out of the internal service', async () => {
@@ -143,6 +269,7 @@ describe('common canonical assurance query and presentation service', () => {
     expect(apiSource).not.toMatch(/RISK_(?:FRAMEWORKS|STATUSES|RATINGS)|COMPLIANCE_(?:FRAMEWORKS|STATUSES|LEVELS)/);
     expect(serializerSource).toContain('riskLinks:');
     expect(serializerSource).toContain('frameworkReferences:');
+    expect(serializerSource).toContain('residualRating: residual');
     const complianceSource = readFileSync('src/demos/compliance-page.ts', 'utf8');
     expect(complianceSource).not.toContain('/evidence#');
     expect(complianceSource).not.toMatch(/iso-27001-2022\.json|iso-42001-2023\.json|wcag-2\.2\/(?:perceivable|operable|understandable|robust)\.json/);
