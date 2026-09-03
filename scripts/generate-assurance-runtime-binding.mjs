@@ -28,11 +28,21 @@ export function renderRuntimeBinding(registry) {
 
   runtimeResources.forEach((resource, index) => {
     lines.push(`import dataset${index} from '${modulePath(RUNTIME_BINDING_PATH, resource.path)}';`);
+    lines.push(`import schema${index} from '${modulePath(RUNTIME_BINDING_PATH, resource.schema)}';`);
   });
 
-  lines.push('', 'export const assuranceRegistryData = registryData;', '', 'export const assuranceRuntimeDatasets: Record<string, unknown> = {');
+  lines.push(
+    '',
+    'export const assuranceRegistryData = registryData;',
+    '',
+    'export const assuranceRuntimeDatasets: Record<string, unknown> = {',
+  );
   runtimeResources.forEach((resource, index) => {
     lines.push(`  ${JSON.stringify(resource.id)}: dataset${index},`);
+  });
+  lines.push('};', '', 'export const assuranceRuntimeSchemas: Record<string, unknown> = {');
+  runtimeResources.forEach((resource, index) => {
+    lines.push(`  ${JSON.stringify(resource.id)}: schema${index},`);
   });
   lines.push('};', '');
   return lines.join('\n');

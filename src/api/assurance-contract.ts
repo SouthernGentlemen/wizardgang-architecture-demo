@@ -1,3 +1,4 @@
+import { paginateAssuranceRecords as paginateAssurancePage } from '../assurance/service';
 import { withSecurityHeaders } from '../lib/http';
 
 export const ASSURANCE_SCHEMA_VERSION = 1;
@@ -213,7 +214,7 @@ export function paginateAssuranceRecords<T extends { id: string }>(
   const cursorValues = url.searchParams.getAll('cursor');
   const paginationRequested = limitValues.length > 0 || cursorValues.length > 0;
 
-  if (!paginationRequested) return { records };
+  if (!paginationRequested) return paginateAssurancePage(records) as AssurancePage<T>;
 
   if (limitValues.length > 1 || cursorValues.length > 1) {
     return assuranceErrorResponse(request, 400, {
@@ -240,38 +241,20 @@ export function paginateAssuranceRecords<T extends { id: string }>(
   }
 
   const cursor = cursorValues[0];
-  let start = 0;
-  if (cursor !== undefined) {
-    if (!cursor) {
-      return assuranceErrorResponse(request, 400, {
-        error: 'invalid_pagination',
-        parameter: 'cursor',
-        value: cursor,
-      });
-    }
-    const index = records.findIndex((record) => record.id === cursor);
-    if (index < 0) {
-      return assuranceErrorResponse(request, 400, {
-        error: 'invalid_cursor',
-        cursor,
-      });
-    }
-    start = index + 1;
+  if (cursor !== undefined && !cursor) {
+    return assuranceErrorResponse(request, 400, {
+      error: 'invalid_pagination',
+      parameter: 'cursor',
+      value: cursor,
+    });
   }
 
-  const pageRecords = records.slice(start, start + limit);
-  const hasMore = start + pageRecords.length < records.length;
-  const nextCursor = hasMore && pageRecords.length > 0
-    ? pageRecords[pageRecords.length - 1].id
-    : null;
-
-  return {
-    records: pageRecords,
-    pagination: {
-      limit,
-      returned: pageRecords.length,
-      total: records.length,
-      nextCursor,
-    },
-  };
+  const page = paginateAssurancePage(records, { limit, ...(cursor !== undefined ? { cursor } : {}) });
+  if (!page) {
+    return assuranceErrorResponse(request, 400, {
+      error: 'invalid_cursor',
+      cursor,
+    });
+  }
+  return page;
 }
