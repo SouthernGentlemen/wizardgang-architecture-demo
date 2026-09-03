@@ -1,5 +1,5 @@
 import { spawnSync, type SpawnSyncReturns } from 'node:child_process';
-import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -8,8 +8,16 @@ const repositoryRoot = process.cwd();
 const fixtureRoots: string[] = [];
 const ignoredFixtureParts = new Set(['.git', 'node_modules', '.wrangler', 'dist', 'coverage', 'artifacts']);
 const validationNow = '2026-09-03T04:40:00Z';
+const generatedMarkdownPaths = [
+  'docs/governance/registers/SECURITY-RISK-REGISTER.md',
+  'docs/governance/registers/AI-RISK-REGISTER.md',
+  'docs/governance/registers/INCIDENT-REGISTER.md',
+  'docs/governance/soa/ISO-27001-SOA.md',
+  'docs/governance/soa/ISO-42001-SOA.md',
+];
+
 function createFixture(): string {
-  const fixtureRoot = mkdtempSync(join(tmpdir(), 'demo-125-assurance-'));
+  const fixtureRoot = mkdtempSync(join(tmpdir(), 'demo-128-assurance-'));
   cpSync(repositoryRoot, fixtureRoot, { recursive: true, filter(source) {
     const pathFromRoot = relative(repositoryRoot, source); if (!pathFromRoot) return true;
     return !pathFromRoot.split(sep).some((part) => ignoredFixtureParts.has(part));
@@ -20,26 +28,102 @@ function run(fixtureRoot: string, script: string, args: string[] = []): SpawnSyn
 function combined(result: SpawnSyncReturns<string>): string { return `${result.stdout}\n${result.stderr}`; }
 function readJson<T = any>(fixtureRoot: string, relativePath: string): T { return JSON.parse(readFileSync(join(fixtureRoot, relativePath), 'utf8')) as T; }
 function writeJson(fixtureRoot: string, relativePath: string, value: unknown): void { writeFileSync(join(fixtureRoot, relativePath), `${JSON.stringify(value, null, 2)}\n`); }
+function sourceFiles(root: string): string[] {
+  const files: string[] = [];
+  for (const entry of readdirSync(root)) {
+    const absolute = join(root, entry);
+    if (statSync(absolute).isDirectory()) files.push(...sourceFiles(absolute));
+    else if (/\.(?:ts|mjs)$/.test(entry)) files.push(absolute);
+  }
+  return files;
+}
 afterEach(() => { while (fixtureRoots.length) rmSync(fixtureRoots.pop()!, { recursive: true, force: true }); });
 
-describe('canonical assurance summaries', () => {
-  it('accepts checked-in summaries generated from structured assurance data', () => {
+describe('canonical assurance Markdown presentations', () => {
+  it('accepts checked-in presentations generated from structured assurance data', () => {
     const fixtureRoot = createFixture(); const result = run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs', ['--check']); expect(result.status, combined(result)).toBe(0);
   });
-  it('rejects structured status drift until the Markdown summary is regenerated', () => {
+
+  it('detects independently edited generated risk state as stale', () => {
     const fixtureRoot = createFixture();
-    const compliance = readJson(fixtureRoot, 'assurance/compliance/iso-27001-2022.json');
-    const record = compliance.records.find((candidate: any) => candidate.kind === 'control' && candidate.status === 'partial');
-    expect(record).toBeDefined(); record.status = 'gap';
-    writeJson(fixtureRoot, 'assurance/compliance/iso-27001-2022.json', compliance);
+    const target = join(fixtureRoot, 'docs/governance/registers/SECURITY-RISK-REGISTER.md');
+    const current = readFileSync(target, 'utf8');
+    writeFileSync(target, current.replace('| SEC-RISK-001 | Credential or secret exposure | 20 Critical | 10 High | Reduce | Treating | 2026-12-02 |', '| SEC-RISK-001 | Credential or secret exposure | 20 Critical | 10 High | Reduce | Open | 2026-12-02 |'));
     const result = run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs', ['--check']);
-    expect(result.status).not.toBe(0); expect(combined(result)).toContain('generated summary is stale or was edited independently');
+    expect(result.status).not.toBe(0); expect(combined(result)).toContain('generated assurance presentation is stale or was edited independently');
   });
-  it('rejects hand-edited Markdown status or rationale presentation', () => {
-    const fixtureRoot = createFixture(); const target = join(fixtureRoot, 'docs/governance/soa/ISO-42001-SOA.md');
-    writeFileSync(target, readFileSync(target, 'utf8').replace('| 38 | 2 | 34 | 0 | 2 |', '| 38 | 3 | 33 | 0 | 2 |'));
-    const result = run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs', ['--check']);
-    expect(result.status).not.toBe(0); expect(combined(result)).toContain('generated summary is stale or was edited independently');
+
+  it('projects canonical JSON changes into Markdown', () => {
+    const fixtureRoot = createFixture();
+    const risks = readJson(fixtureRoot, 'assurance/risks/risks.json');
+    const record = risks.records.find((candidate: any) => candidate.id === 'SEC-RISK-001');
+    expect(record).toBeDefined(); record.status = 'open';
+    writeJson(fixtureRoot, 'assurance/risks/risks.json', risks);
+    const generate = run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs');
+    expect(generate.status, combined(generate)).toBe(0);
+    const markdown = readFileSync(join(fixtureRoot, 'docs/governance/registers/SECURITY-RISK-REGISTER.md'), 'utf8');
+    expect(markdown).toContain('| SEC-RISK-001 | Credential or secret exposure | 20 Critical | 10 High | Reduce | Open | 2026-12-02 |');
+    expect(run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs', ['--check']).status).toBe(0);
+  });
+
+  it('keeps generated counts and statuses aligned with canonical records, including empty incidents and planned exercises', () => {
+    const fixtureRoot = createFixture();
+    const risks = readJson(fixtureRoot, 'assurance/risks/risks.json');
+    const security = risks.records.filter((record: any) => record.framework === 'security');
+    const securityMarkdown = readFileSync(join(fixtureRoot, 'docs/governance/registers/SECURITY-RISK-REGISTER.md'), 'utf8');
+    expect(securityMarkdown).toContain(`**Records:** ${security.length}`);
+    for (const record of security) {
+      const status = String(record.status).replaceAll('-', ' ').replace(/\b\w/g, (letter: string) => letter.toUpperCase());
+      expect(securityMarkdown).toContain(`| ${record.id} | ${record.title} |`);
+      expect(securityMarkdown).toContain(`| ${status} | ${record.reviewDue} |`);
+    }
+
+    const incidents = readJson(fixtureRoot, 'assurance/incidents/incidents.json');
+    const exercises = readJson(fixtureRoot, 'assurance/incidents/exercises.json');
+    const incidentMarkdown = readFileSync(join(fixtureRoot, 'docs/governance/registers/INCIDENT-REGISTER.md'), 'utf8');
+    expect(incidentMarkdown).toContain(`**Actual incident records:** ${incidents.records.length}`);
+    expect(incidentMarkdown).toContain(`**Exercise records:** ${exercises.records.length}`);
+    expect(incidents.records).toHaveLength(0);
+    expect(incidentMarkdown).toContain('| EX-001 | Tabletop / response exercise | Combined security + AI/MCP incident scenario |');
+    expect(incidentMarkdown).toContain('| Planned | 0 |');
+  });
+
+  it('is byte-stable across repeated generation', () => {
+    const fixtureRoot = createFixture();
+    expect(run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs').status).toBe(0);
+    const first = generatedMarkdownPaths.map((relativePath) => readFileSync(join(fixtureRoot, relativePath)));
+    expect(run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs').status).toBe(0);
+    const second = generatedMarkdownPaths.map((relativePath) => readFileSync(join(fixtureRoot, relativePath)));
+    expect(second).toEqual(first);
+  });
+
+  it('does not parse Markdown to validate assurance state', () => {
+    const fixtureRoot = createFixture();
+    const target = join(fixtureRoot, 'docs/governance/registers/AI-RISK-REGISTER.md');
+    writeFileSync(target, readFileSync(target, 'utf8').replace('| AI-RISK-001 | Unauthorized expansion of AI tool authority | 20 Critical | 8 Moderate | Reduce | Treating | 2026-12-02 |', '| AI-RISK-001 | Unauthorized expansion of AI tool authority | 20 Critical | 8 Moderate | Reduce | Open | 2026-12-02 |'));
+    const validation = run(fixtureRoot, 'scripts/validate-assurance.mjs');
+    expect(validation.status, combined(validation)).toBe(0);
+    expect(run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs', ['--check']).status).not.toBe(0);
+    const validator = readFileSync(join(fixtureRoot, 'scripts/validate-assurance.mjs'), 'utf8');
+    expect(validator).not.toContain('parseRegisterSummary');
+    expect(validator).not.toContain('parseExerciseRows');
+    expect(validator).not.toContain('matchAll');
+  });
+
+  it('preserves incident and exercise relationship validation in canonical JSON', () => {
+    const fixtureRoot = createFixture();
+    const exercises = readJson(fixtureRoot, 'assurance/incidents/exercises.json');
+    exercises.records[0].relationships.risks = ['SEC-RISK-999'];
+    writeJson(fixtureRoot, 'assurance/incidents/exercises.json', exercises);
+    const result = run(fixtureRoot, 'scripts/validate-assurance.mjs');
+    expect(result.status).not.toBe(0); expect(combined(result)).toContain('EX-001: unresolved risk SEC-RISK-999');
+  });
+
+  it('keeps generated Markdown out of runtime code paths', () => {
+    const runtime = sourceFiles(join(repositoryRoot, 'src')).map((absolute) => readFileSync(absolute, 'utf8')).join('\n');
+    expect(runtime).not.toMatch(/readFileSync\([^)]*\.md/);
+    expect(runtime).not.toMatch(/from\s+['"][^'"]+\.md['"]/);
+    expect(runtime).not.toMatch(/import\s*\([^)]*\.md/);
   });
 });
 

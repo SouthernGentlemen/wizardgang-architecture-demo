@@ -135,6 +135,17 @@
       "capabilities": ["runtime", "records", "api-index"]
     }
   ],
+  "presentations": [
+    {
+      "id": "presentation.documents",
+      "kind": "documents",
+      "role": "presentation",
+      "path": "assurance/presentation/documents.json",
+      "schema": "contracts/assurance/presentation-document.schema.json",
+      "visibility": "public",
+      "capabilities": ["summary-source"]
+    }
+  ],
   "operations": [
     {
       "id": "operations.monitoring",

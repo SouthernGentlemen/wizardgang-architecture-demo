@@ -26,6 +26,20 @@ Each architecture demo change must:
 10. Preserve WCAG/i18n readiness and accurately qualify ISO/WCAG alignment claims as uncertified.
 11. Update the architecture/operations documentation when behavior changes.
 
+## Assurance editing workflow
+
+Canonical assurance JSON is the only authority for assurance record state. `assurance/registry.json` inventories every canonical structured resource, including the non-runtime document metadata used to project governance Markdown.
+
+For the security risk register, AI risk register, incident/exercise register, and ISO 27001/42001 SoAs:
+
+1. Edit record state only in the canonical JSON dataset registered for that resource.
+2. Edit document ownership, review cadence, approval method, or presentation-document identity in `assurance/presentation/documents.json` when those fields are not already owned by the record dataset.
+3. Keep manually authored Markdown outside generated markers limited to narrative such as purpose, methodology, interpretation, and governance process. Do not restate status, applicability, rationale, evidence, ownership, lifecycle/review state, or counts there.
+4. Run `npm run generate:assurance-summaries` to refresh deterministic Markdown projections.
+5. Run `npm run validate:assurance-summaries` or the full `npm run check` before review. Check mode rejects stale or independently edited generated presentation.
+
+The ISO SoA Markdown files are fully generated. Risk and incident/exercise Markdown preserves narrative around explicitly delimited generated sections. Generated Markdown must never become an input to runtime code, APIs, dashboards, or assurance-state validators.
+
 Before opening a pull request, run:
 
 ```text

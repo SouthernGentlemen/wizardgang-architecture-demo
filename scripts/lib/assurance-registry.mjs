@@ -25,6 +25,7 @@ export function flattenAssuranceRegistry(registry) {
     for (const resource of dataset.resources ?? []) resources.push(resource);
   }
   if (registry.lifecycle) resources.push(registry.lifecycle);
+  for (const resource of registry.presentations ?? []) resources.push(resource);
   for (const resource of registry.operations ?? []) resources.push(resource);
   return resources;
 }
