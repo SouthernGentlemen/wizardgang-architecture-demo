@@ -4,6 +4,7 @@ import claimsData from '../../assurance/claims/claims.json';
 import risksData from '../../assurance/risks/risks.json';
 import incidentsData from '../../assurance/incidents/incidents.json';
 import exercisesData from '../../assurance/incidents/exercises.json';
+import advisoriesData from '../../assurance/advisories/advisories.json';
 
 export type EvidenceKind = 'source' | 'test' | 'workflow' | 'governance-record' | 'release' | 'live-route' | 'observation';
 export type FreshnessPolicy = 'release-bound' | 'event-driven' | 'observation-bound';
@@ -14,6 +15,7 @@ export type RiskStatus = 'open' | 'treating';
 export type RiskTreatment = 'avoid' | 'reduce' | 'share';
 export type IncidentStatus = 'investigating' | 'contained' | 'recovering' | 'monitoring' | 'closed' | 'superseded';
 export type ExerciseStatus = 'planned' | 'in-progress' | 'completed' | 'follow-up-open' | 'closed' | 'superseded';
+export type AdvisorySeverity = 'low' | 'moderate' | 'high' | 'critical';
 
 export interface PublicEvidence {
   id: string;
@@ -83,6 +85,20 @@ export interface PublicExercise {
   publicNote: string;
 }
 
+export interface PublicAdvisory {
+  id: string;
+  recordType: 'advisory';
+  title: string;
+  severity: AdvisorySeverity;
+  summary: string;
+  publishedAt: string;
+  updatedAt?: string;
+  fixedReleases: string[];
+  cveId?: string;
+  incidentLinks: string[];
+  evidence: string[];
+}
+
 export interface PublicRiskFilters {
   framework?: RiskFramework;
   status?: RiskStatus;
@@ -108,6 +124,7 @@ const claims = claimsData.records as PublicAssuranceClaim[];
 const risks = risksData.records as PublicRisk[];
 const incidents = incidentsData.records as PublicIncident[];
 const exercises = exercisesData.records as PublicExercise[];
+const advisories = advisoriesData.records as PublicAdvisory[];
 const usedBy = new Map<string, Set<string>>();
 
 function addEvidenceUsage(recordId: string, evidenceIds: string[] = []): void {
@@ -122,6 +139,7 @@ for (const claim of claims) addEvidenceUsage(claim.id, claim.evidence);
 for (const risk of risks) addEvidenceUsage(risk.id, risk.evidence);
 for (const incident of incidents) addEvidenceUsage(incident.id, incident.evidence);
 for (const exercise of exercises) addEvidenceUsage(exercise.id, exercise.evidence);
+for (const advisory of advisories) addEvidenceUsage(advisory.id, advisory.evidence);
 
 export function deriveRiskCounts(records: PublicRisk[]): PublicRiskCounts {
   const counts: PublicRiskCounts = {
@@ -176,6 +194,7 @@ export const publicAssuranceRegistry = {
     risks: risks.length,
     incidents: incidents.length,
     exercises: exercises.length,
+    advisories: advisories.length,
   },
   riskCounts: deriveRiskCounts(risks),
   incidentCounts: deriveIncidentCounts(incidents, exercises),
@@ -183,9 +202,11 @@ export const publicAssuranceRegistry = {
     incidents: incidentsData.qualification,
     exercises: exercisesData.qualification,
   },
+  advisoryQualification: advisoriesData.qualification,
   claims,
   risks,
   incidents,
   exercises,
+  advisories,
   evidence: evidence.map((record) => ({ ...record, usedBy: [...(usedBy.get(record.id) ?? [])].sort() })),
 };

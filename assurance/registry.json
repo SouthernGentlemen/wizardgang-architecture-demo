@@ -30,6 +30,11 @@
       "kind": "exercises",
       "path": "assurance/incidents/exercises.json",
       "schema": "contracts/assurance/exercise.schema.json"
+    },
+    {
+      "kind": "advisories",
+      "path": "assurance/advisories/advisories.json",
+      "schema": "contracts/assurance/advisory.schema.json"
     }
   ]
 }

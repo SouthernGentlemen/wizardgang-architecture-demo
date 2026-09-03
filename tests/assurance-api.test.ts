@@ -58,12 +58,12 @@ describe('public assurance API projection', () => {
       DEPLOYED_SHA: undefined,
     });
     const body = await response.json() as {
-      counts: { claims: number; evidence: number; risks: number; incidents: number; exercises: number };
+      counts: { claims: number; evidence: number; risks: number; incidents: number; exercises: number; advisories: number };
       deployment: { commit: string | null; sourceResolution: string };
       links: { self: string; evidence: string };
       evidence: Array<{ id: string; resolved: { revision?: string | null; url: string | null; resolution: string } }>;
     };
-    expect(body.counts).toEqual({ claims: 9, evidence: 15, risks: 30, incidents: 0, exercises: 1 });
+    expect(body.counts).toEqual({ claims: 9, evidence: 15, risks: 30, incidents: 0, exercises: 1, advisories: 0 });
     expect(body.deployment).toMatchObject({ commit: null, sourceResolution: 'not-supplied' });
     expect(body.links).toEqual({
       self: 'https://demo.wizardgang.ai/v1/assurance',
