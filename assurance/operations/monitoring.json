@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "baseUrl": "https://demo.wizardgang.ai",
+  "accountableOwners": {
+    "registry": "Management-System Owner",
+    "lifecycle": "Management-System Owner",
+    "evidence": "Evidence Custodian",
+    "claims": "Management-System Owner",
+    "compliance": "Management-System Owner / Evidence Custodian",
+    "risks": "Risk Owner",
+    "incidents": "Incident Response Owner",
+    "exercises": "Incident Response Owner",
+    "advisories": "Security Owner",
+    "securityReporting": "Security Owner"
+  },
+  "securityReporting": {
+    "policyRoute": "/security",
+    "securityTxtRoute": "/.well-known/security.txt",
+    "privateReportingUrl": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/security/advisories/new",
+    "privateReportingApi": "https://api.github.com/repos/SouthernGentlemen/wizardgang-architecture-demo/private-vulnerability-reporting",
+    "expirySource": "src/api/security-policy.ts"
+  }
+}

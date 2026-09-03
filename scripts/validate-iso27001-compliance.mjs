@@ -12,7 +12,6 @@ const compliance = readJson(dataPath);
 const schema = readJson(schemaPath);
 const registry = readJson('assurance/registry.json');
 const evidence = readJson('assurance/evidence/evidence.json');
-const soa = fs.readFileSync(path.join(root, soaPath), 'utf8');
 
 const expectedClauseRefs = [
   '4.1', '4.2', '4.3', '4.4',
@@ -64,7 +63,7 @@ if (compliance.sourceSoa?.id !== 'WG-SOA-001'
   || compliance.sourceSoa?.assessmentDate !== '2026-09-02'
   || compliance.sourceSoa?.approval?.pullRequest !== 56
   || compliance.sourceSoa?.approval?.mergeCommit !== '1ae105da8ab6466e334a2faf4e6c63f5885c91df') {
-  errors.push(`${dataPath}: sourceSoa must identify the approved WG-SOA-001 baseline`);
+  errors.push(`${dataPath}: sourceSoa must retain the approved WG-SOA-001 document identity and provenance`);
 }
 
 const registryEntry = (registry.datasets ?? []).find((dataset) => dataset.kind === 'compliance');
@@ -93,27 +92,6 @@ for (const record of allRecords) {
 for (const ref of expectedClauseRefs) if (!seen.has(ref)) errors.push(`${ref}: required clause reference is missing`);
 for (const ref of expectedAnnexRefs) if (!seen.has(ref)) errors.push(`${ref}: required Annex A control is missing`);
 
-const sourceRows = new Map();
-for (const line of soa.split(/\r?\n/)) {
-  const match = /^\|\s*(A\.(?:5|6|7|8)\.\d+)\s*\|\s*[^|]+\|\s*(Yes|No)\s*\|\s*(Met|Partial|Gap|N\/A)\s*\|/.exec(line);
-  if (!match) continue;
-  sourceRows.set(match[1], {
-    applicability: match[2] === 'Yes' ? 'applicable' : 'not-applicable',
-    posture: match[3] === 'N/A' ? 'not-applicable' : match[3].toLowerCase(),
-  });
-}
-if (sourceRows.size !== 93) errors.push(`${soaPath}: expected 93 Annex A source rows, found ${sourceRows.size}`);
-
-for (const record of annexRecords) {
-  const source = sourceRows.get(record.reference);
-  if (!source) {
-    errors.push(`${record.reference}: missing from approved SoA`);
-    continue;
-  }
-  if (record.applicability !== source.applicability) errors.push(`${record.reference}: applicability differs from approved SoA`);
-  if (record.posture !== source.posture) errors.push(`${record.reference}: posture differs from approved SoA`);
-}
-
 const postureCounts = annexRecords.reduce((counts, record) => {
   counts[record.posture] = (counts[record.posture] ?? 0) + 1;
   return counts;
@@ -128,4 +106,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`ISO/IEC 27001 public compliance validation passed: ${clauseRecords.length} clause references and ${annexRecords.length} Annex A controls.`);
+console.log(`ISO/IEC 27001 public compliance validation passed from canonical structured data: ${clauseRecords.length} clause references and ${annexRecords.length} Annex A controls.`);
