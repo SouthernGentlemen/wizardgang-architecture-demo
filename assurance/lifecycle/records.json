@@ -10,6 +10,127 @@
       "basis": "v0.14.0 release PR #73 and tag-bound public-assurance validation"
     }
   },
-  "records": [],
+  "records": [
+    {
+      "id": "AI-OBJ-001",
+      "lifecycle": "Approved",
+      "disclosureReview": {
+        "status": "Reviewed",
+        "reviewedAt": "2026-09-02T22:37:55Z",
+        "reviewer": "Controlled pull request and merge",
+        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
+      }
+    },
+    {
+      "id": "AI-OBJ-002",
+      "lifecycle": "Approved",
+      "disclosureReview": {
+        "status": "Reviewed",
+        "reviewedAt": "2026-09-02T22:37:55Z",
+        "reviewer": "Controlled pull request and merge",
+        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
+      }
+    },
+    {
+      "id": "AI-OBJ-003",
+      "lifecycle": "Approved",
+      "disclosureReview": {
+        "status": "Reviewed",
+        "reviewedAt": "2026-09-02T22:37:55Z",
+        "reviewer": "Controlled pull request and merge",
+        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
+      }
+    },
+    {
+      "id": "AI-OBJ-004",
+      "lifecycle": "Approved",
+      "disclosureReview": {
+        "status": "Reviewed",
+        "reviewedAt": "2026-09-02T22:37:55Z",
+        "reviewer": "Controlled pull request and merge",
+        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
+      }
+    },
+    {
+      "id": "AI-OBJ-005",
+      "lifecycle": "Approved",
+      "disclosureReview": {
+        "status": "Reviewed",
+        "reviewedAt": "2026-09-02T22:37:55Z",
+        "reviewer": "Controlled pull request and merge",
+        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
+      }
+    },
+    {
+      "id": "GOV-OBJ-001",
+      "lifecycle": "Approved",
+      "disclosureReview": {
+        "status": "Reviewed",
+        "reviewedAt": "2026-09-02T22:37:55Z",
+        "reviewer": "Controlled pull request and merge",
+        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
+      }
+    },
+    {
+      "id": "SEC-OBJ-001",
+      "lifecycle": "Approved",
+      "disclosureReview": {
+        "status": "Reviewed",
+        "reviewedAt": "2026-09-02T22:37:55Z",
+        "reviewer": "Controlled pull request and merge",
+        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
+      }
+    },
+    {
+      "id": "SEC-OBJ-002",
+      "lifecycle": "Approved",
+      "disclosureReview": {
+        "status": "Reviewed",
+        "reviewedAt": "2026-09-02T22:37:55Z",
+        "reviewer": "Controlled pull request and merge",
+        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
+      }
+    },
+    {
+      "id": "SEC-OBJ-003",
+      "lifecycle": "Approved",
+      "disclosureReview": {
+        "status": "Reviewed",
+        "reviewedAt": "2026-09-02T22:37:55Z",
+        "reviewer": "Controlled pull request and merge",
+        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
+      }
+    },
+    {
+      "id": "SEC-OBJ-004",
+      "lifecycle": "Approved",
+      "disclosureReview": {
+        "status": "Reviewed",
+        "reviewedAt": "2026-09-02T22:37:55Z",
+        "reviewer": "Controlled pull request and merge",
+        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
+      }
+    },
+    {
+      "id": "SEC-OBJ-005",
+      "lifecycle": "Approved",
+      "disclosureReview": {
+        "status": "Reviewed",
+        "reviewedAt": "2026-09-02T22:37:55Z",
+        "reviewer": "Controlled pull request and merge",
+        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
+      }
+    },
+    {
+      "id": "SEC-OBJ-006",
+      "lifecycle": "Approved",
+      "disclosureReview": {
+        "status": "Reviewed",
+        "reviewedAt": "2026-09-02T22:37:55Z",
+        "reviewer": "Controlled pull request and merge",
+        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
+      }
+    }
+  ],
   "retiredRecords": []
 }

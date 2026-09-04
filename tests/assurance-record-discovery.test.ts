@@ -95,6 +95,19 @@ describe('registry-driven assurance record discovery', () => {
     expect(assuranceRecordsForKind<{ id: string }>(entries, 'risks').map((record) => record.id)).toEqual(['RISK-001', 'RISK-002']);
   });
 
+  it('discovers canonical objective records solely through registry declarations', () => {
+    const fixtureRoot = createFixture();
+    const registry = readJson(fixtureRoot, 'assurance/registry.json');
+    const entries = assuranceRecordEntries(
+      registry,
+      (resource) => readJson(fixtureRoot, resource.path),
+      { runtimeOnly: true },
+    );
+    const objectives = assuranceRecordsForKind<{ id: string }>(entries, 'objectives');
+    expect(objectives).toHaveLength(12);
+    expect(objectives.map((record) => record.id)).toContain('SEC-OBJ-005');
+  });
+
   it('supports a compatible new record family without changing central discovery or registry validation switches', () => {
     const fixtureRoot = createFixture();
     const registry = readJson(fixtureRoot, 'assurance/registry.json');

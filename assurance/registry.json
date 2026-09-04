@@ -72,6 +72,26 @@
       }
     },
     {
+      "id": "objectives",
+      "kind": "objectives",
+      "role": "dataset",
+      "path": "assurance/objectives/objectives.json",
+      "schema": "contracts/assurance/objective.schema.json",
+      "visibility": "public",
+      "capabilities": [
+        "runtime",
+        "records",
+        "summary-source"
+      ],
+      "recordCollection": {
+        "path": "records",
+        "identity": [
+          "area",
+          "objective"
+        ]
+      }
+    },
+    {
       "id": "compliance.iso-27001",
       "kind": "compliance",
       "role": "dataset",

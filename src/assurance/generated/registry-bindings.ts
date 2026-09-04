@@ -24,8 +24,10 @@ import dataset10 from '../../../assurance/incidents/exercises.json';
 import schema10 from '../../../contracts/assurance/exercise.schema.json';
 import dataset11 from '../../../assurance/incidents/incidents.json';
 import schema11 from '../../../contracts/assurance/incident.schema.json';
-import dataset12 from '../../../assurance/risks/risks.json';
-import schema12 from '../../../contracts/assurance/risk.schema.json';
+import dataset12 from '../../../assurance/objectives/objectives.json';
+import schema12 from '../../../contracts/assurance/objective.schema.json';
+import dataset13 from '../../../assurance/risks/risks.json';
+import schema13 from '../../../contracts/assurance/risk.schema.json';
 
 export const assuranceRegistryData = registryData;
 
@@ -42,7 +44,8 @@ export const assuranceRuntimeDatasets: Record<string, unknown> = {
   "evidence": dataset9,
   "exercises": dataset10,
   "incidents": dataset11,
-  "risks": dataset12,
+  "objectives": dataset12,
+  "risks": dataset13,
 };
 
 export const assuranceRuntimeSchemas: Record<string, unknown> = {
@@ -58,5 +61,6 @@ export const assuranceRuntimeSchemas: Record<string, unknown> = {
   "evidence": schema9,
   "exercises": schema10,
   "incidents": schema11,
-  "risks": schema12,
+  "objectives": schema12,
+  "risks": schema13,
 };

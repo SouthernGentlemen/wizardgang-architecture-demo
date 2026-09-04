@@ -81,11 +81,11 @@
       "properties": {
         "id": {
           "type": "string",
-          "pattern": "^WG-(REG|SOA)-[0-9]{3}$"
+          "pattern": "^WG-(REG|SOA|OBJ)-[0-9]{3}$"
         },
         "governanceDocumentReference": {
           "type": "string",
-          "pattern": "^WG-(REG|SOA)-[0-9]{3}$"
+          "pattern": "^WG-(REG|SOA|OBJ)-[0-9]{3}$"
         },
         "title": {
           "type": "string",
@@ -95,6 +95,7 @@
           "enum": [
             "risk-register",
             "incident-exercise-register",
+            "objectives",
             "soa"
           ]
         },

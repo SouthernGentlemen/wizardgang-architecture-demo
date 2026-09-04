@@ -62,6 +62,12 @@ export function renderRiskProjection(document, data) {
   return `${GENERATED_BEGIN}\n\n${renderDocumentMetadata(document)}\n\n## Current Register\n\n**Records:** ${records.length}\n\n| ID | Risk | Inherent | Residual | Treatment | Status | Review due |\n|---|---|---:|---:|---|---|---|\n${rows.join('\n')}\n\n${GENERATED_END}`;
 }
 
+export function renderObjectiveProjection(data) {
+  const records = [...(data.records ?? [])].sort((left, right) => left.id.localeCompare(right.id));
+  const rows = records.map((record) => `| ${record.id} | ${record.area} | ${record.objective} | ${record.metric} | ${record.initialTarget} | ${record.owner} | ${record.evidenceSources.join(', ')} | ${record.reviewCadence} | ${titleCase(record.initialState.status)} |`);
+  return `${GENERATED_BEGIN}\n\n| ID | Area | Objective | Metric | Initial target | Owner | Evidence | Review | Initial status |\n|---|---|---|---|---|---|---|---|---|\n${rows.join('\n')}\n\n${GENERATED_END}`;
+}
+
 export function renderIncidentProjection(document, incidents, exercises) {
   const incidentRows = [...(incidents.records ?? [])]
     .sort((left, right) => left.id.localeCompare(right.id))
@@ -156,6 +162,8 @@ function main() {
         const exercises = sources.find(({ resource }) => resource.kind === 'exercises')?.data;
         if (!incidents || !exercises) throw new Error(`${document.id}: incident/exercise projection requires incident and exercise datasets`);
         rendered = applyGeneratedProjection(current, renderIncidentProjection(document, incidents, exercises), outputPath);
+      } else if (document.type === 'objectives') {
+        rendered = applyGeneratedProjection(current, renderObjectiveProjection(sources[0].data), outputPath);
       } else if (document.type === 'soa') {
         rendered = renderSoaSummary(document, sources[0].resource, sources[0].data);
       } else {
