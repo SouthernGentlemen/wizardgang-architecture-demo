@@ -48,20 +48,29 @@ afterEach(() => {
 });
 
 describe('canonical governance objectives', () => {
-  it('gives every canonical objective explicit approved lifecycle and disclosure coverage', () => {
+  it('gives every canonical objective explicit approved lifecycle and shared disclosure coverage', () => {
     const objectives = readJson(repositoryRoot, 'assurance/objectives/objectives.json');
     const lifecycle = readJson(repositoryRoot, 'assurance/lifecycle/records.json');
     const metadata = new Map(lifecycle.records.map((entry: any) => [entry.id, entry]));
+    const reviews = new Map(lifecycle.reviewEvents.map((entry: any) => [entry.id, entry]));
 
     expect(objectives.records).toHaveLength(12);
+    const objectiveReviewRefs = new Set<string>();
     for (const objective of objectives.records) {
       const entry = metadata.get(objective.id) as any;
       expect(entry).toBeDefined();
       expect(entry.lifecycle).toBe('Approved');
-      expect(entry.disclosureReview.status).toBe('Reviewed');
-      expect(entry.disclosureReview.basis).toContain('PR #56');
-      expect(entry.disclosureReview.basis).toContain('1ae105da8ab6466e334a2faf4e6c63f5885c91df');
+      expect(entry.disclosureReview).toBeUndefined();
+      expect(entry.reviewRef).toBe('review-objectives-pr56');
+      objectiveReviewRefs.add(entry.reviewRef);
+
+      const review = reviews.get(entry.reviewRef) as any;
+      expect(review).toBeDefined();
+      expect(review.status).toBe('Reviewed');
+      expect(review.basis).toContain('PR #56');
+      expect(review.basis).toContain('1ae105da8ab6466e334a2faf4e6c63f5885c91df');
     }
+    expect([...objectiveReviewRefs]).toEqual(['review-objectives-pr56']);
   });
 
   it('rejects generated objective-table drift and regenerates from canonical JSON', () => {

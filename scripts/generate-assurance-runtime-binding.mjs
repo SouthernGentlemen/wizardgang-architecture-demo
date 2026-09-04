@@ -1,5 +1,4 @@
 import { createHash } from 'node:crypto';
-import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -13,7 +12,6 @@ import {
   requireAssuranceCapabilityResource,
   resolveAssuranceResourceOwner,
 } from './lib/assurance-registry.mjs';
-import { collectHistoricalAssuranceSnapshot } from './lib/assurance-lifecycle-history.mjs';
 import { createAssuranceSchemaLoader } from './lib/assurance-validation.mjs';
 import {
   collectJsonSchemaDependencies,
@@ -23,12 +21,26 @@ import { RISK_RATING_VALUES } from '../src/assurance/risk-rating.js';
 
 export const RUNTIME_BINDING_PATH = 'src/assurance/generated/registry-bindings.ts';
 export const LIFECYCLE_BASELINE_MEMBERSHIP_PATH = 'src/assurance/generated/lifecycle-baseline-membership.json';
+export const LIFECYCLE_BASELINE_MEMBERSHIP_BLOB = 'e2f4aad3146649fdfe2063abc780dc73a99bdd64';
+export const LIFECYCLE_HISTORICAL_COMMIT = 'c2359f00fc3bac80bfbc2e82369a86f20e522f74';
 
 function modulePath(fromFile, targetFile) {
   const fromDirectory = path.dirname(fromFile);
   let relative = path.relative(fromDirectory, targetFile).split(path.sep).join('/');
   if (!relative.startsWith('.')) relative = `./${relative}`;
   return relative;
+}
+
+function gitBlobSha(source) {
+  const bytes = Buffer.isBuffer(source) ? source : Buffer.from(source);
+  return createHash('sha1')
+    .update(Buffer.from(`blob ${bytes.length}\0`))
+    .update(bytes)
+    .digest('hex');
+}
+
+export function gitBlobShaForFile(root, relative) {
+  return gitBlobSha(fs.readFileSync(path.join(root, relative)));
 }
 
 function addFilterValue(values, value) {
@@ -119,76 +131,49 @@ export function deriveRuntimeSchemaDependencyDigests(registry, root = process.cw
   }));
 }
 
-function historicalDirectoryReader(directory) {
-  return (relative) => readJsonFile(directory, relative);
+export function deriveRuntimeSourceRevisions(registry, root = process.cwd()) {
+  const runtimeResources = flattenAssuranceRegistry(registry)
+    .filter((resource) => resource.capabilities?.includes('runtime'))
+    .sort((left, right) => left.id.localeCompare(right.id));
+  return Object.fromEntries(runtimeResources.map((resource) => [
+    resource.id,
+    gitBlobShaForFile(root, resource.path),
+  ]));
 }
 
-function historicalGitReader(root, ref) {
-  if (!fs.existsSync(path.join(root, '.git'))) return null;
-
-  const probe = spawnSync('git', ['cat-file', '-e', `${ref}^{commit}`], { cwd: root, encoding: 'utf8' });
-  if (probe.status !== 0) {
-    throw new Error(
-      `unable to verify lifecycle baseline ${ref} from repository history: ${probe.stderr.trim() || probe.stdout.trim() || 'git cat-file failed'}`,
-    );
-  }
-
-  return (relative) => {
-    const result = spawnSync('git', ['show', `${ref}:${relative}`], { cwd: root, encoding: 'utf8' });
-    if (result.status !== 0) {
-      throw new Error(`unable to read ${relative} from lifecycle baseline ${ref}: ${result.stderr.trim() || result.stdout.trim()}`);
-    }
-    try {
-      return JSON.parse(result.stdout);
-    } catch (error) {
-      throw new Error(`unable to decode ${relative} from lifecycle baseline ${ref}: ${error instanceof Error ? error.message : String(error)}`);
-    }
-  };
-}
-
-function normalizedGeneratedMembership(value, expectedCommit) {
-  if (value?.schemaVersion !== 1 || value?.commit !== expectedCommit || !Array.isArray(value?.recordIds)) return null;
-  if (value.recordIds.some((id) => typeof id !== 'string' || !id)) return null;
-  const sorted = [...value.recordIds].sort();
-  if (new Set(sorted).size !== sorted.length) return null;
-  if (sorted.some((id, index) => id !== value.recordIds[index])) return null;
-  return { schemaVersion: 1, commit: expectedCommit, recordIds: sorted };
-}
-
-export function deriveLifecycleBaselineMembership(registry, root = process.cwd()) {
+export function verifyLifecycleBaselineMembership(registry, root = process.cwd()) {
   const lifecycleResource = requireAssuranceCapabilityResource(registry, 'lifecycle');
   const lifecycle = readJsonFile(root, lifecycleResource.path);
-  const commit = lifecycle?.baseline?.commit;
-  if (!/^[0-9a-f]{40}$/.test(commit ?? '')) {
-    throw new Error(`${lifecycleResource.path}: baseline.commit must be an immutable 40-character Git commit SHA.`);
+  const baseline = lifecycle?.baseline;
+  if (baseline?.historicalCommit !== LIFECYCLE_HISTORICAL_COMMIT) {
+    throw new Error(`${lifecycleResource.path}: baseline historicalCommit must remain pinned to ${LIFECYCLE_HISTORICAL_COMMIT}.`);
+  }
+  if (baseline?.membership?.path !== LIFECYCLE_BASELINE_MEMBERSHIP_PATH) {
+    throw new Error(`${lifecycleResource.path}: baseline membership path must remain ${LIFECYCLE_BASELINE_MEMBERSHIP_PATH}.`);
+  }
+  if (baseline?.membership?.blob !== LIFECYCLE_BASELINE_MEMBERSHIP_BLOB) {
+    throw new Error(`${lifecycleResource.path}: baseline membership blob must remain ${LIFECYCLE_BASELINE_MEMBERSHIP_BLOB}.`);
   }
 
-  const baselineDirectory = process.env.ASSURANCE_BASELINE_DIR;
-  const readHistorical = baselineDirectory
-    ? historicalDirectoryReader(baselineDirectory)
-    : historicalGitReader(root, commit);
-
-  if (readHistorical) {
-    const snapshot = collectHistoricalAssuranceSnapshot(
-      readHistorical,
-      `generated lifecycle baseline ${commit}`,
-    );
-    return {
-      schemaVersion: 1,
-      commit,
-      recordIds: [...snapshot.records.keys()].sort(),
-    };
+  const absolute = path.join(root, LIFECYCLE_BASELINE_MEMBERSHIP_PATH);
+  const source = fs.readFileSync(absolute);
+  const actualBlob = gitBlobSha(source);
+  if (actualBlob !== LIFECYCLE_BASELINE_MEMBERSHIP_BLOB) {
+    throw new Error(`${LIFECYCLE_BASELINE_MEMBERSHIP_PATH}: frozen membership artifact changed; expected Git blob ${LIFECYCLE_BASELINE_MEMBERSHIP_BLOB}, found ${actualBlob}.`);
   }
 
-  const generatedPath = path.join(root, LIFECYCLE_BASELINE_MEMBERSHIP_PATH);
-  if (fs.existsSync(generatedPath)) {
-    const generated = normalizedGeneratedMembership(readJsonFile(root, LIFECYCLE_BASELINE_MEMBERSHIP_PATH), commit);
-    if (generated) return generated;
+  const membership = JSON.parse(source.toString('utf8'));
+  if (membership?.schemaVersion !== 1 || membership?.commit !== LIFECYCLE_HISTORICAL_COMMIT || !Array.isArray(membership?.recordIds)) {
+    throw new Error(`${LIFECYCLE_BASELINE_MEMBERSHIP_PATH}: frozen membership artifact is invalid.`);
   }
-
-  throw new Error(
-    `${LIFECYCLE_BASELINE_MEMBERSHIP_PATH}: unable to derive baseline membership for ${commit}; Git history or ASSURANCE_BASELINE_DIR is required when no verified generated artifact exists.`,
-  );
+  if (membership.recordIds.some((id) => typeof id !== 'string' || !id)) {
+    throw new Error(`${LIFECYCLE_BASELINE_MEMBERSHIP_PATH}: frozen membership contains an invalid stable ID.`);
+  }
+  const sorted = [...membership.recordIds].sort();
+  if (new Set(sorted).size !== sorted.length || sorted.some((id, index) => id !== membership.recordIds[index])) {
+    throw new Error(`${LIFECYCLE_BASELINE_MEMBERSHIP_PATH}: frozen membership IDs must remain unique and sorted.`);
+  }
+  return membership;
 }
 
 export function renderRuntimeBinding(registry, root = process.cwd()) {
@@ -196,12 +181,14 @@ export function renderRuntimeBinding(registry, root = process.cwd()) {
   if (!lifecycleResource.capabilities?.includes('runtime')) {
     throw new Error(`${lifecycleResource.id}: lifecycle capability owner must declare runtime capability for Worker binding.`);
   }
+  verifyLifecycleBaselineMembership(registry, root);
 
   const runtimeResources = flattenAssuranceRegistry(registry)
     .filter((resource) => resource.capabilities?.includes('runtime'))
     .sort((left, right) => left.id.localeCompare(right.id));
   const filterVocabularies = deriveRuntimeFilterVocabularies(registry, root);
   const dependencyDigests = deriveRuntimeSchemaDependencyDigests(registry, root);
+  const sourceRevisions = deriveRuntimeSourceRevisions(registry, root);
 
   const lines = [
     '// GENERATED FILE: scripts/generate-assurance-runtime-binding.mjs; DO NOT EDIT BY HAND.',
@@ -224,7 +211,14 @@ export function renderRuntimeBinding(registry, root = process.cwd()) {
   runtimeResources.forEach((resource, index) => {
     lines.push(`  ${JSON.stringify(resource.id)}: dataset${index},`);
   });
-  lines.push('};', '', 'export const assuranceRuntimeSchemas: Record<string, unknown> = {');
+  lines.push(
+    '};',
+    '',
+    'export const assuranceRuntimeSourceRevisions: Readonly<Record<string, string>> =',
+    `${JSON.stringify(sourceRevisions, null, 2)};`,
+    '',
+    'export const assuranceRuntimeSchemas: Record<string, unknown> = {',
+  );
   runtimeResources.forEach((resource, index) => {
     lines.push(`  ${JSON.stringify(resource.id)}: schema${index},`);
   });
@@ -246,31 +240,23 @@ function main() {
   const checkOnly = process.argv.includes('--check');
   const registry = loadAssuranceRegistry(root);
   const renderedBinding = renderRuntimeBinding(registry, root);
-  const renderedMembership = `${JSON.stringify(deriveLifecycleBaselineMembership(registry, root), null, 2)}\n`;
   const bindingAbsolute = path.join(root, RUNTIME_BINDING_PATH);
-  const membershipAbsolute = path.join(root, LIFECYCLE_BASELINE_MEMBERSHIP_PATH);
 
   if (checkOnly) {
     const currentBinding = fs.existsSync(bindingAbsolute) ? fs.readFileSync(bindingAbsolute, 'utf8') : '';
     if (currentBinding !== renderedBinding) {
-      console.error(`${RUNTIME_BINDING_PATH}: generated runtime import binding is stale or does not agree with ${ASSURANCE_REGISTRY_PATH} and its schema dependencies`);
+      console.error(`${RUNTIME_BINDING_PATH}: generated runtime import binding is stale or does not agree with ${ASSURANCE_REGISTRY_PATH}, source revisions, and schema dependencies`);
       process.exit(1);
     }
-    const currentMembership = fs.existsSync(membershipAbsolute) ? fs.readFileSync(membershipAbsolute, 'utf8') : '';
-    if (currentMembership !== renderedMembership) {
-      console.error(`${LIFECYCLE_BASELINE_MEMBERSHIP_PATH}: generated lifecycle baseline membership is stale or does not agree with the immutable lifecycle baseline`);
-      process.exit(1);
-    }
-    console.log(`Assurance runtime import binding agrees with ${ASSURANCE_REGISTRY_PATH} and its schema dependencies.`);
-    console.log(`Lifecycle baseline membership agrees with the immutable baseline referenced by the registry-owned lifecycle resource.`);
+    console.log(`Assurance runtime import binding agrees with ${ASSURANCE_REGISTRY_PATH}, source revisions, and schema dependencies.`);
+    console.log(`Frozen lifecycle baseline membership remains pinned to Git blob ${LIFECYCLE_BASELINE_MEMBERSHIP_BLOB}.`);
     return;
   }
 
   fs.mkdirSync(path.dirname(bindingAbsolute), { recursive: true });
   fs.writeFileSync(bindingAbsolute, renderedBinding);
-  fs.writeFileSync(membershipAbsolute, renderedMembership);
-  console.log(`Generated ${RUNTIME_BINDING_PATH} from ${ASSURANCE_REGISTRY_PATH} and its schema dependencies.`);
-  console.log(`Generated ${LIFECYCLE_BASELINE_MEMBERSHIP_PATH} from the immutable lifecycle baseline.`);
+  console.log(`Generated ${RUNTIME_BINDING_PATH} from ${ASSURANCE_REGISTRY_PATH}, source revisions, and schema dependencies.`);
+  console.log(`Verified frozen lifecycle baseline membership at Git blob ${LIFECYCLE_BASELINE_MEMBERSHIP_BLOB}.`);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();

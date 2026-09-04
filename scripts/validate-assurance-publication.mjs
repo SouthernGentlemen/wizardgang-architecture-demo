@@ -6,8 +6,8 @@ import {
   requireAssuranceCapabilityResource,
 } from './lib/assurance-registry.mjs';
 import {
-  deriveLifecycleBaselineMembership,
-  LIFECYCLE_BASELINE_MEMBERSHIP_PATH,
+  deriveRuntimeSourceRevisions,
+  verifyLifecycleBaselineMembership,
 } from './generate-assurance-runtime-binding.mjs';
 import {
   assurancePublicationDecision,
@@ -22,22 +22,22 @@ try {
   const registry = loadAssuranceRegistry(root);
   const lifecycleResource = requireAssuranceCapabilityResource(registry, 'lifecycle');
   const lifecycle = readJsonFile(root, lifecycleResource.path);
-  const generatedMembership = readJsonFile(root, LIFECYCLE_BASELINE_MEMBERSHIP_PATH);
-  const baselineMembership = deriveLifecycleBaselineMembership(registry, root);
-  const lifecycleResolutionOptions = { baselineMembership };
+  const baselineMembership = verifyLifecycleBaselineMembership(registry, root);
+  const sourceRevisions = deriveRuntimeSourceRevisions(registry, root);
   const entries = assuranceRecordEntries(registry, (resource) => readJsonFile(root, resource.path));
-
-  if (JSON.stringify(generatedMembership) !== JSON.stringify(baselineMembership)) {
-    errors.push(`${LIFECYCLE_BASELINE_MEMBERSHIP_PATH}: generated baseline membership does not match the immutable lifecycle baseline`);
-  }
 
   for (const { resource, record } of entries) {
     if (!record || typeof record !== 'object' || Array.isArray(record) || typeof record.id !== 'string') continue;
+    const resourceRevision = sourceRevisions[resource.id];
+    if (!resourceRevision) {
+      errors.push(`${record.id}: registered source revision is unresolved for ${resource.id}`);
+      continue;
+    }
     const decision = assurancePublicationDecision(
       resource,
       lifecycle,
       record.id,
-      lifecycleResolutionOptions,
+      { baselineMembership, resourceRevision },
     );
     if (!decision.selected) {
       errors.push(`${record.id}: public assurance record is not publishable (${decision.reason})`);
@@ -45,13 +45,13 @@ try {
   }
 
   for (const retired of lifecycle.retiredRecords ?? []) {
-    const resolved = resolveAssuranceLifecycle(lifecycle, retired.id, lifecycleResolutionOptions);
+    const resolved = resolveAssuranceLifecycle(lifecycle, retired.id, { baselineMembership });
     if (!resolved || resolved.source !== 'retired') {
       errors.push(`${retired.id}: retained lifecycle record could not be resolved`);
       continue;
     }
     if (!disclosureReviewIsPublishable(resolved.disclosureReview)) {
-      errors.push(`${retired.id}: retained lifecycle record requires Reviewed disclosure metadata`);
+      errors.push(`${retired.id}: retained lifecycle record requires a Reviewed disclosure review reference`);
     }
   }
 } catch (error) {
@@ -64,4 +64,4 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log('Assurance publication policy validation passed: public visibility, disclosure review, and verified lifecycle baseline membership are consistent.');
+console.log('Assurance publication policy validation passed: public visibility, lifecycle authority, frozen historical membership, and exact source-revision disclosure approvals are consistent.');

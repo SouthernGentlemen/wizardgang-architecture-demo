@@ -161,7 +161,7 @@ describe('registry-driven assurance record discovery', () => {
     });
     const env = {
       ...process.env,
-      ASSURANCE_BASELINE_DIR: repositoryRoot,
+      ASSURANCE_MIGRATION_DIR: repositoryRoot,
       ASSURANCE_PREVIOUS_DIR: repositoryRoot,
     };
     expectRejected(

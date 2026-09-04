@@ -11,14 +11,20 @@ import {
 } from './service';
 import {
   assuranceRegistry,
-  primaryAssuranceResource,
+  assuranceRegistryResources,
   runtimeAssuranceDataset,
   type AssuranceDataset,
   type AssuranceRegistryResource,
   type AssuranceRuntimeRecord,
 } from './model';
-import { assuranceLifecycleBaselineMembership } from './generated/registry-bindings';
-import { requireAssuranceCapabilityResource } from './record-discovery.js';
+import {
+  assuranceLifecycleBaselineMembership,
+  assuranceRuntimeSourceRevisions,
+} from './generated/registry-bindings';
+import {
+  assuranceRecordsFromDocument,
+  requireAssuranceCapabilityResource,
+} from './record-discovery.js';
 import { presentEvidence, type PresentedEvidence } from './presentation';
 import {
   assuranceObservedState,
@@ -39,6 +45,21 @@ const lifecycleResource = requireAssuranceCapabilityResource(
 const lifecycleRegistry = runtimeAssuranceDataset<AssuranceLifecycleRegistry>(lifecycleResource);
 const lifecycleResolutionOptions = { baselineMembership: assuranceLifecycleBaselineMembership };
 
+const publicationResourceByRecordId = new Map<string, AssuranceRegistryResource>();
+for (const resource of assuranceRegistryResources) {
+  if (!resource.capabilities.includes('runtime') || !resource.capabilities.includes('records')) continue;
+  const records = assuranceRecordsFromDocument(resource, runtimeAssuranceDataset(resource));
+  for (const value of records) {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) continue;
+    const id = (value as { id?: unknown }).id;
+    if (typeof id !== 'string' || !id) continue;
+    if (publicationResourceByRecordId.has(id)) {
+      throw new Error(`Assurance publication source index contains duplicate stable ID ${id}.`);
+    }
+    publicationResourceByRecordId.set(id, resource);
+  }
+}
+
 export type PublishedAssuranceRecord<T> = T & {
   publication: AssuranceLifecyclePresentation;
 };
@@ -53,15 +74,26 @@ export type PresentedPublishedEvidence = PresentedEvidence<PublishedAssuranceRec
   observation?: AssuranceObservedState;
 };
 
+function publicationResource(dataset: string, recordId: string): AssuranceRegistryResource {
+  const resource = publicationResourceByRecordId.get(recordId);
+  if (!resource || resource.kind !== dataset) {
+    throw new Error(`Assurance publication source for ${dataset}/${recordId} is unresolved.`);
+  }
+  return resource;
+}
+
 function publishRuntimeRecord(
   dataset: string,
   record: AssuranceRuntimeRecord,
 ): PublishedAssuranceRuntimeRecord | undefined {
+  const resource = publicationResource(dataset, record.id);
+  const resourceRevision = assuranceRuntimeSourceRevisions[resource.id];
+  if (!resourceRevision) throw new Error(`Assurance publication source revision for ${resource.id} is unresolved.`);
   const decision = assurancePublicationDecision(
-    primaryAssuranceResource(dataset),
+    resource,
     lifecycleRegistry,
     record.id,
-    lifecycleResolutionOptions,
+    { ...lifecycleResolutionOptions, resourceRevision },
   );
   if (!decision.selected || !decision.presentation) return undefined;
   return { ...record, publication: decision.presentation };
@@ -107,12 +139,17 @@ export function assurancePublicationForRecord(
   dataset: string,
   recordId: string,
 ): AssuranceLifecyclePresentation | null {
-  primaryAssuranceResource(dataset);
-  return assuranceLifecyclePresentation(resolveAssuranceLifecycle(
+  const record = listAssuranceRecords(dataset).find((candidate) => candidate.id === recordId);
+  if (!record) return null;
+  const resource = publicationResource(dataset, recordId);
+  const resourceRevision = assuranceRuntimeSourceRevisions[resource.id];
+  if (!resourceRevision) throw new Error(`Assurance publication source revision for ${resource.id} is unresolved.`);
+  return assurancePublicationDecision(
+    resource,
     lifecycleRegistry,
     recordId,
-    lifecycleResolutionOptions,
-  ));
+    { ...lifecycleResolutionOptions, resourceRevision },
+  ).presentation;
 }
 
 export function presentedPublishedEvidenceRecords(
@@ -132,11 +169,10 @@ export function presentedPublishedEvidenceRecords(
 }
 
 function retainedLifecyclePresentation(record: AssuranceLifecycleRecord): AssuranceLifecyclePresentation {
-  const presentation = assuranceLifecyclePresentation({
-    ...record,
-    source: 'retired',
-    retained: true,
-  });
+  const resolved = resolveAssuranceLifecycle(lifecycleRegistry, record.id, lifecycleResolutionOptions);
+  const presentation = resolved?.source === 'retired'
+    ? assuranceLifecyclePresentation(resolved)
+    : null;
   if (!presentation?.id) {
     throw new Error(`Retained assurance record ${record.id} lost its stable identity during publication.`);
   }
