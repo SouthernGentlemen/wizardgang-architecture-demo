@@ -11,6 +11,8 @@ import {
   assuranceRouteDeclarations as contractRouteDeclarations,
   assuranceRoutesForDataset as contractRoutesForDataset,
   matchAssuranceRoute as contractMatchRoute,
+  validateAssuranceRouteContract as contractValidateRouteContract,
+  validateAssuranceRouteHandlerSupport as contractValidateRouteHandlerSupport,
 } from './route-contract.js';
 
 export interface AssuranceRouteDeclaration {
@@ -24,6 +26,17 @@ export interface AssuranceRouteMatch {
   kind: 'html' | 'api-collection' | 'api-record' | 'alias';
   recordId?: string;
   target?: string;
+}
+
+export interface AssuranceRouteHandlerSupport {
+  html?: boolean;
+  apiCollection?: boolean;
+  apiRecord?: boolean;
+}
+
+const routeContractErrors = contractValidateRouteContract(assuranceRegistry);
+if (routeContractErrors.length > 0) {
+  throw new Error(`Invalid assurance route contract:\n${routeContractErrors.join('\n')}`);
 }
 
 export function assuranceRoutesForDataset(dataset: AssuranceDataset): AssuranceRegistryRoutes | null {
@@ -69,6 +82,12 @@ export function assuranceRouteAliases(): Array<{ owner: AssuranceDataset; path: 
 
 export function matchAssuranceRoute(path: string): AssuranceRouteMatch | null {
   return contractMatchRoute(assuranceRegistry, path) as AssuranceRouteMatch | null;
+}
+
+export function validateAssuranceRouteHandlerSupport(
+  support: Record<string, AssuranceRouteHandlerSupport>,
+): string[] {
+  return contractValidateRouteHandlerSupport(assuranceRegistry, support);
 }
 
 export const assuranceAnchor: (recordId: string) => string = contractAnchor;

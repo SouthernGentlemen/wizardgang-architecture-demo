@@ -14,6 +14,14 @@ Release snapshots use the registry-declared dataset paths plus `assurance/regist
 
 Use `npm run generate:assurance-runtime-binding` after changing runtime-capable registry entries. Run `npm run validate:assurance` to enforce registry completeness, JSON Schema validation, binding agreement, lifecycle and integrity semantics, deterministic summaries, and operational monitoring controls.
 
+## Route ownership and matching
+
+Assurance route ownership is derived from the same registry declarations used by Worker dispatch and route-manifest generation. Matching does not depend on declaration order. Every exact static path—canonical HTML, canonical collection API, or alias—takes precedence over every `apiRecord` template. Exact static paths must still be globally unique, so an alias cannot silently replace a canonical collection or HTML route. This allows a declared nested collection such as `/v1/assurance/compliance/risks` to own that literal path even when `/v1/assurance/compliance/{id}` also exists.
+
+An `apiRecord` placeholder must be exactly one complete path segment. Matching preserves that segment in its encoded form until the owning handler decodes it, so percent-encoded characters such as `%2F` remain part of one record identifier during route selection. Extra path segments are not absorbed into the identifier. Record templates whose possible matches intersect are rejected by the shared route-contract validator rather than resolved by declaration order.
+
+Route owners must also declare the registry capabilities needed by their routes: runtime-backed routes require `runtime`, collection APIs require `api-index`, and exact-record APIs require `records`. Worker handler registrations separately declare whether they can serve HTML, collection API, and exact-record API requests; startup fails when a registry route asks an owner for a handler capability it does not implement. `scripts/generate-route-manifest.mjs` consumes the same route declarations and dataset routes when generating or checking `docs/route-manifest.json`; `validate:assurance` enforces the shared route contract before the generated artifact is accepted. Registry validation, matching, runtime dispatch, and generated route artifacts therefore share the same ownership source and precedence rules.
+
 ## Published DEMO-125 history exception
 
 The published main-branch commit `207fd4e146054bd3c9da236c615753df9f927610` has the valid controlled title `[DEMO-125] [OPS] Canonicalize assurance data and release snapshots`, but its commit body predates this correction and omits the required `Change:`, `Reason:`, `Risk:`, `Validation:`, `Source:`, and `Release:` sections. Rewriting that published commit would alter shared history, so DEMO-126 does not rewrite it.
