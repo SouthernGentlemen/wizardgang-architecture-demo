@@ -31,6 +31,7 @@ describe('public assurance API projection', () => {
       records: Array<{
         id: string;
         usedBy: string[];
+        publication: { lifecycle: string; source: string; disclosureReview: string; retained: boolean };
         freshness: { policy: string; scope: string; meaning: string };
         resolved: { kind: string; repositoryPath?: string; revision?: string | null; url: string | null; resolution: string };
       }>;
@@ -41,6 +42,12 @@ describe('public assurance API projection', () => {
     expect(source?.usedBy).toEqual(expect.arrayContaining(['CLM-SEC-001', 'CLM-AI-001']));
     expect(source?.usedBy.length).toBeGreaterThan(2);
     expect(source?.usedBy).toEqual([...(source?.usedBy ?? [])].sort());
+    expect(source?.publication).toMatchObject({
+      lifecycle: 'Published',
+      source: 'baseline',
+      disclosureReview: 'Reviewed',
+      retained: false,
+    });
     expect(source?.resolved).toEqual({
       kind: 'repository',
       repositoryPath: 'src/lib/authorization.ts',

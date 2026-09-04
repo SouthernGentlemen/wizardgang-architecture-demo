@@ -16,6 +16,7 @@ import {
   type AssuranceDataset,
   type AssuranceRegistryResource,
 } from './model';
+import { assuranceLifecycleBaselineMembership } from './generated/registry-bindings';
 import { requireAssuranceCapabilityResource } from './record-discovery.js';
 import { presentEvidence, type PresentedEvidence } from './presentation';
 import {
@@ -34,6 +35,7 @@ const lifecycleResource = requireAssuranceCapabilityResource(
   'lifecycle',
 ) as AssuranceRegistryResource;
 const lifecycleRegistry = runtimeAssuranceDataset<AssuranceLifecycleRegistry>(lifecycleResource);
+const lifecycleResolutionOptions = { baselineMembership: assuranceLifecycleBaselineMembership };
 
 export type PublishedAssuranceRecord<T> = T & {
   publication: AssuranceLifecyclePresentation;
@@ -55,6 +57,7 @@ function publishRecord<K extends AssuranceDataset>(
     primaryAssuranceResource(dataset),
     lifecycleRegistry,
     record.id,
+    lifecycleResolutionOptions,
   );
   if (!decision.selected || !decision.presentation) return undefined;
   return { ...record, publication: decision.presentation } as PublishedAssuranceRecordMap[K];
@@ -95,7 +98,11 @@ export function assurancePublicationForRecord(
   dataset: AssuranceDataset,
   recordId: string,
 ): AssuranceLifecyclePresentation | null {
-  return assuranceLifecyclePresentation(resolveAssuranceLifecycle(lifecycleRegistry, recordId));
+  return assuranceLifecyclePresentation(resolveAssuranceLifecycle(
+    lifecycleRegistry,
+    recordId,
+    lifecycleResolutionOptions,
+  ));
 }
 
 export function presentedPublishedEvidenceRecords(

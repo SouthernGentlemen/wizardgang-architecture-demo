@@ -29,6 +29,12 @@ function findLifecycleRecord(records, recordId) {
   return Array.isArray(records) ? records.find((record) => record?.id === recordId) : undefined;
 }
 
+export function assuranceLifecycleBaselineEligible(lifecycleRegistry, baselineMembership, recordId) {
+  if (!lifecycleRegistry?.baseline || baselineMembership?.schemaVersion !== 1) return false;
+  if (lifecycleRegistry.baseline.commit !== baselineMembership.commit) return false;
+  return Array.isArray(baselineMembership.recordIds) && baselineMembership.recordIds.includes(recordId);
+}
+
 export function resolveAssuranceLifecycle(lifecycleRegistry, recordId, options = {}) {
   const explicit = findLifecycleRecord(lifecycleRegistry?.records, recordId);
   if (explicit) return { ...explicit, source: 'explicit', retained: false };
@@ -36,7 +42,7 @@ export function resolveAssuranceLifecycle(lifecycleRegistry, recordId, options =
   const retired = findLifecycleRecord(lifecycleRegistry?.retiredRecords, recordId);
   if (retired) return { ...retired, source: 'retired', retained: true };
 
-  if (options.baselineEligible !== false && lifecycleRegistry?.baseline) {
+  if (assuranceLifecycleBaselineEligible(lifecycleRegistry, options.baselineMembership, recordId)) {
     return {
       id: recordId,
       lifecycle: lifecycleRegistry.baseline.lifecycle ?? 'Published',

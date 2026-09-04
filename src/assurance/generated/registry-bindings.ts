@@ -1,5 +1,6 @@
 // GENERATED FILE: scripts/generate-assurance-runtime-binding.mjs; DO NOT EDIT BY HAND.
 import registryData from '../../../assurance/registry.json';
+import lifecycleBaselineMembership from './lifecycle-baseline-membership.json';
 import dataset0 from '../../../assurance/advisories/advisories.json';
 import schema0 from '../../../contracts/assurance/advisory.schema.json';
 import dataset1 from '../../../assurance/claims/claims.json';
@@ -32,6 +33,7 @@ import dataset14 from '../../../assurance/risks/risks.json';
 import schema14 from '../../../contracts/assurance/risk.schema.json';
 
 export const assuranceRegistryData = registryData;
+export const assuranceLifecycleBaselineMembership = lifecycleBaselineMembership;
 
 export const assuranceRuntimeDatasets: Record<string, unknown> = {
   "advisories": dataset0,

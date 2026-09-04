@@ -17,6 +17,12 @@ const repositoryRoot = process.cwd();
 const fixtureRoots: string[] = [];
 const ignoredFixtureParts = new Set(['.git', 'node_modules', '.wrangler', 'dist', 'coverage', 'artifacts']);
 const validationNow = '2026-09-03T03:59:00Z';
+const reviewed = {
+  status: 'Reviewed',
+  reviewedAt: '2026-09-04T10:00:00Z',
+  reviewer: 'fixture-reviewer',
+  basis: 'Synthetic disclosure review for publication-policy fixture coverage.',
+};
 
 function createFixture(): string {
   const fixtureRoot = mkdtempSync(join(tmpdir(), 'demo-146-assurance-'));
@@ -104,7 +110,7 @@ afterEach(() => {
 });
 
 describe('registry-driven assurance semantic validation', () => {
-  it('keeps evidence relationships valid when an existing record moves to a registered partition', () => {
+  it('keeps evidence relationships and verified baseline publication valid when an existing record moves to a registered partition', () => {
     const fixtureRoot = createFixture();
     moveRecordToPartition(fixtureRoot, 'evidence', 'EVD-DOC-003', 'assurance/evidence/governance-evidence.json');
 
@@ -115,6 +121,68 @@ describe('registry-driven assurance semantic validation', () => {
     expectPassed(runScript(fixtureRoot, 'scripts/validate-iso27001-compliance.mjs'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-iso42001-compliance.mjs'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-wcag-compliance.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-publication.mjs'));
+  });
+
+  it('fails publication closed for an ungoverned record added to a registered partition, then accepts explicit reviewed Draft metadata', () => {
+    const fixtureRoot = createFixture();
+    const partitionPath = 'assurance/evidence/governance-evidence.json';
+    moveRecordToPartition(fixtureRoot, 'evidence', 'EVD-DOC-003', partitionPath);
+
+    const partition = readJson(fixtureRoot, partitionPath);
+    partition.records.push({
+      ...structuredClone(partition.records[0]),
+      id: 'EVD-NEW-148',
+      title: 'Synthetic partition record requiring explicit lifecycle metadata',
+    });
+    writeJson(fixtureRoot, partitionPath, partition);
+
+    expectRejected(
+      runScript(fixtureRoot, 'scripts/validate-assurance-publication.mjs'),
+      'EVD-NEW-148: public assurance record is not publishable (missing-lifecycle)',
+    );
+
+    const lifecycle = readJson(fixtureRoot, 'assurance/lifecycle/records.json');
+    lifecycle.records.push({
+      id: 'EVD-NEW-148',
+      lifecycle: 'Draft',
+      disclosureReview: reviewed,
+    });
+    writeJson(fixtureRoot, 'assurance/lifecycle/records.json', lifecycle);
+
+    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-publication.mjs'));
+  });
+
+  it('applies the same fail-closed publication rule to a newly registered record family', () => {
+    const fixtureRoot = createFixture();
+    const registryPath = 'assurance/registry.json';
+    const registry = readJson(fixtureRoot, registryPath);
+    const evidenceResource = registryResource(registry, 'evidence');
+    const evidence = readJson(fixtureRoot, evidenceResource.path);
+    const familyPath = 'assurance/fixture-publication-family.json';
+    const familyRecord = {
+      ...structuredClone(evidence.records[0]),
+      id: 'FIXTURE-NEW-148',
+      title: 'Synthetic newly registered assurance family record',
+    };
+
+    writeJson(fixtureRoot, familyPath, { ...evidence, records: [familyRecord] });
+    registry.datasets.push({
+      id: 'fixture-publication-family',
+      kind: 'fixture-publication-family',
+      role: 'dataset',
+      path: familyPath,
+      schema: evidenceResource.schema,
+      visibility: 'public',
+      capabilities: ['runtime', 'records'],
+      recordCollection: structuredClone(evidenceResource.recordCollection),
+    });
+    writeJson(fixtureRoot, registryPath, registry);
+
+    expectRejected(
+      runScript(fixtureRoot, 'scripts/validate-assurance-publication.mjs'),
+      'FIXTURE-NEW-148: public assurance record is not publishable (missing-lifecycle)',
+    );
   });
 
   it('applies evidence locator and risk-domain semantics to additional registered partitions', () => {
