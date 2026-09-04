@@ -1,211 +1,240 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { gitEvidenceResponse } from '../src/api/git-evidence';
-import { clearGitHubEvidenceCacheForTest, collectGitHubEvidence } from '../src/lib/github-api';
-import { createIdentitySession, revokeIdentitySession, type IdentitySession } from '../src/lib/identity-session';
+import {
+  GitHubReportingError,
+  importGitHubReporting,
+  queryGitHubReporting,
+} from '../src/reporting/github';
+import type { Principal } from '../src/lib/authorization';
 import type { D1Database, Env } from '../src/types';
 
-const repo = 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo';
-const repoPath = '/repos/SouthernGentlemen/wizardgang-architecture-demo';
-const identitySecret = 'a-test-secret-that-is-at-least-thirty-two-characters';
+const repo = 'SouthernGentlemen/wizardgang-architecture-demo';
+const repoUrl = `https://github.com/${repo}`;
+const repoApi = `/repos/${repo}`;
+const fixture = JSON.parse(readFileSync('tests/fixtures/github-reporting.json', 'utf8')) as {
+  repository: Record<string, unknown>;
+  issues: Array<Record<string, unknown>>;
+  workflowRun: Record<string, unknown>;
+  expiredArtifact: Record<string, unknown>;
+  securityAdvisory: Record<string, unknown>;
+};
+
+const publicPrincipal: Principal = { subject: 'public', authentication: 'anonymous', permissions: ['demo:read'] };
+const viewerPrincipal: Principal = { subject: 'viewer', authentication: 'oidc', provider: 'microsoft', permissions: ['demo:read'] };
+const operatorPrincipal: Principal = { subject: 'operator', authentication: 'oidc', provider: 'microsoft', permissions: ['demo:read', 'demo:write', 'reporting:private', 'reporting:write'] };
 
 function memoryDb(): D1Database {
-  const sessions = new Map<string, { payload: string; expiresAt: string; revokedAt: string | null }>();
-  return {
-    prepare(sql: string) {
-      let values: unknown[] = [];
-      return {
-        bind(...bound: unknown[]) { values = bound; return this; },
-        async run() {
-          if (sql.includes('INSERT INTO identity_sessions')) sessions.set(String(values[0]), { payload: String(values[1]), expiresAt: String(values[3]), revokedAt: null });
-          if (sql.includes('UPDATE identity_sessions')) {
-            const row = sessions.get(String(values[1]));
-            if (row) row.revokedAt = String(values[0]);
-          }
-          return { meta: { changes: 1 } };
-        },
-        async all<T>() {
-          if (sql.includes('FROM identity_sessions')) {
-            const row = sessions.get(String(values[0]));
-            const results = row && !row.revokedAt && row.expiresAt > String(values[1]) ? [{ payload_ciphertext: row.payload, expires_at: row.expiresAt }] : [];
-            return { results: results as T[] };
-          }
-          return { results: [] as T[] };
-        },
-      };
-    },
-  };
+  return { prepare: () => ({ bind() { return this; }, async run() { return { meta: { changes: 0 } }; }, async all<T>() { return { results: [] as T[] }; } }) };
 }
 
 function environment(overrides: Partial<Env> = {}): Env {
-  return {
-    DEMO_DB: memoryDb(),
-    GITHUB_REPO_URL: repo,
-    GITHUB_BRANCH: 'main',
-    ...overrides,
-  };
+  return { DEMO_DB: memoryDb(), GITHUB_REPO_URL: repoUrl, GITHUB_BRANCH: 'main', ...overrides };
 }
 
-function session(role: 'operator' | 'viewer', subject = role): IdentitySession {
-  const now = new Date();
-  const expiresAt = new Date(now.getTime() + 30 * 60_000).toISOString();
-  return {
-    identity: {
-      provider: 'microsoft', protocol: 'oidc', subject, displayName: subject, assurance: 'mfa', role,
-      authenticatedAt: now.toISOString(), expiresAt,
-    },
-    providerPayloadLabel: 'Validated ID token claims', providerPayload: {}, validation: [],
-    protocol: { name: 'OpenID Connect', steps: ['Validated'] }, issuedAt: now.toISOString(), expiresAt,
-  };
+function response(value: unknown, status = 200, headers: Record<string, string> = {}): Response {
+  return new Response(JSON.stringify(value), { status, headers: { 'content-type': 'application/json', ...headers } });
 }
 
-function json(value: unknown, status = 200): Response {
-  return new Response(JSON.stringify(value), { status, headers: { 'content-type': 'application/json' } });
+function requestKey(input: RequestInfo | URL): string {
+  const url = new URL(String(input));
+  return `${url.pathname}${url.search}`;
 }
 
-interface FixtureOptions {
-  privateRepo?: boolean;
-  overrides?: Partial<Record<string, Response | Error>>;
-}
-
-function installFixtures(options: FixtureOptions = {}) {
-  const state = { revision: 'a'.repeat(40), commitMessage: options.privateRepo ? 'private commit detail' : 'Controlled change' };
-  const mock = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
-    const url = new URL(String(input));
-    const key = url.pathname === repoPath ? 'repository' : `${url.pathname.slice(repoPath.length)}${url.search}`;
-    const authorization = new Headers(init?.headers).get('authorization');
-    if (options.privateRepo && !authorization) return json({ message: 'Not Found' }, 404);
-    const override = options.overrides?.[key];
-    if (override instanceof Error) throw override;
-    if (override) return override.clone();
-
-    if (key === 'repository') return json({ default_branch: 'main', private: options.privateRepo === true });
-    if (key === '/branches/main') return json({ name: 'main', commit: { sha: state.revision } });
-    if (key === '/branches?per_page=10') return json([{ name: 'main', protected: true, commit: { sha: state.revision } }, { name: 'feature/demo', protected: false, commit: { sha: 'b'.repeat(40) } }]);
-    if (key === '/commits?sha=main&per_page=5') return json([{ sha: state.revision, html_url: `${repo}/commit/${state.revision}`, commit: { message: state.commitMessage, author: { name: 'Jacob', date: '2026-09-01T12:00:00Z' } }, author: { login: 'SouthernGentlemen' } }]);
-    if (key === '/pulls?state=open&sort=updated&direction=desc&per_page=1') return json([{ number: 43, title: 'Open evidence PR', state: 'open', html_url: `${repo}/pull/43`, user: { login: 'SouthernGentlemen' }, base: { ref: 'main' }, head: { ref: 'feature/evidence' } }]);
-    if (key === '/pulls?state=closed&sort=updated&direction=desc&per_page=10') return json([{ number: 42, title: 'Merged webhook PR', state: 'closed', merged_at: '2026-09-01T12:30:00Z', html_url: `${repo}/pull/42`, user: { login: 'SouthernGentlemen' }, base: { ref: 'main' }, head: { ref: 'feature/webhooks' } }]);
-    if (key === '/actions/runs?per_page=5') return json({ workflow_runs: [{ name: 'CI', event: 'pull_request', status: 'completed', conclusion: 'success', head_branch: 'feature/evidence', head_sha: state.revision, updated_at: '2026-09-01T12:40:00Z', html_url: `${repo}/actions/runs/1`, actor: { login: 'SouthernGentlemen' } }] });
-    if (key === '/tags?per_page=5') return json([{ name: 'v0.4.1', commit: { sha: 'c'.repeat(40) } }]);
-    if (key === '/releases?per_page=1') return json([{ name: 'v0.4.1', tag_name: 'v0.4.1', published_at: '2026-08-31T12:00:00Z', prerelease: false, html_url: `${repo}/releases/tag/v0.4.1` }]);
-    if (key === '/branches/main/protection') return json({ required_pull_request_reviews: {}, required_status_checks: {}, allow_force_pushes: { enabled: false }, allow_deletions: { enabled: false } });
-    return json({ error: 'fixture missing', key }, 500);
-  });
-  return { mock, state };
-}
-
-beforeEach(() => clearGitHubEvidenceCacheForTest());
 afterEach(() => vi.restoreAllMocks());
 
-describe('GitHub delivery evidence', () => {
-  it('uses only the public GitHub context for a public repository and caches by current revision', async () => {
-    const env = environment({ GITHUB_READ_TOKEN: 'server-token-must-not-be-used-for-public' });
-    const { mock } = installFixtures();
-    const evidence = await collectGitHubEvidence(env);
-    expect(evidence.repository).toMatchObject({ fullName: 'SouthernGentlemen/wizardgang-architecture-demo', defaultBranch: 'main', private: false });
-    expect(evidence.cards.commits.items[0]).toMatchObject({ message: 'Controlled change' });
-    expect(mock).toHaveBeenCalledTimes(10);
-    await collectGitHubEvidence(env);
-    expect(mock).toHaveBeenCalledTimes(12);
-    for (const [, init] of mock.mock.calls) expect(new Headers(init?.headers).get('authorization')).toBeNull();
+describe('registered GitHub reporting provider', () => {
+  it('preserves native identity, repository scope, revision, URL, timestamps, and closed provider state', async () => {
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
+      const key = requestKey(input);
+      if (key === repoApi) return response(fixture.repository);
+      if (key.startsWith(`${repoApi}/issues?`)) return response(fixture.issues);
+      return response({ error: 'missing fixture', key }, 500);
+    });
+    const outcome = await queryGitHubReporting(environment(), publicPrincipal, { sourceIds: ['github.issues'], mode: 'export' });
+    expect(outcome.protected).toBe(false);
+    expect(outcome.result.contract).toBe('contracts/assurance/reporting.schema.json');
+    expect(outcome.result.records).toHaveLength(2);
+    expect(outcome.result.records[0]).toMatchObject({
+      source: 'github.issues', repository: repo, nativeId: '158', status: 'open',
+      revision: '2026-09-04T19:00:00Z', url: `${repoUrl}/issues/158`,
+      createdAt: '2026-09-04T18:00:00Z', updatedAt: '2026-09-04T19:00:00Z',
+    });
+    expect(outcome.result.records[1]).toMatchObject({ nativeId: '157', status: 'closed' });
+    expect(outcome.result.records[0].identity.native).toBe(`${repo}|github.issues|158`);
   });
 
-  it('reports public empty and partial-failure states without leaking upstream details', async () => {
-    installFixtures({ overrides: {
-      '/pulls?state=open&sort=updated&direction=desc&per_page=1': json([]),
-      '/releases?per_page=1': json([]),
-      '/actions/runs?per_page=5': new Error('upstream details must not leak'),
-      '/branches/main/protection': json({ message: 'Not Found' }, 404),
-    } });
-    const response = await gitEvidenceResponse(new Request('https://demo.example/__api/git/evidence'), environment());
-    const evidence = await response.json() as Awaited<ReturnType<typeof collectGitHubEvidence>>;
-    expect(response.status).toBe(200);
-    expect(response.headers.get('cache-control')).toContain('public');
-    expect(evidence.cards.openPullRequest.status).toBe('empty');
-    expect(evidence.cards.release.status).toBe('empty');
-    expect(evidence.cards.actions).toMatchObject({ status: 'unavailable', error: 'GitHub evidence unavailable' });
-    expect(JSON.stringify(evidence)).not.toContain('upstream details must not leak');
+  it('marks a dashboard page partial and follows complete bounded pagination for export', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
+      const url = new URL(String(input));
+      if (url.pathname === repoApi) return response(fixture.repository);
+      if (url.pathname === `${repoApi}/issues`) {
+        const page = url.searchParams.get('page');
+        if (page === '1') return response([fixture.issues[0]], 200, { link: `<${repoUrl.replace('github.com', 'api.github.com/repos')}/issues?page=2>; rel="next"` });
+        return response([fixture.issues[1]]);
+      }
+      return response({}, 500);
+    });
+
+    const sample = await queryGitHubReporting(environment(), publicPrincipal, { sourceIds: ['github.issues'], mode: 'sample', limit: 1 });
+    expect(sample.result.records).toHaveLength(1);
+    expect(sample.result.availability['github.issues']).toBe('partial');
+    expect(sample.result.qualifications['github.issues.completeness']).toBe('partial');
+    expect(sample.result.query.pagination?.nextCursor).not.toBeNull();
+
+    const exported = await queryGitHubReporting(environment(), publicPrincipal, { sourceIds: ['github.issues'], mode: 'export', limit: 1 });
+    expect(exported.result.records.map((record) => record.nativeId)).toEqual(['158', '157']);
+    expect(exported.result.availability['github.issues']).toBe('available');
+    expect(exported.result.qualifications['github.issues.completeness']).toBe('complete');
+    expect(fetchMock.mock.calls.filter(([input]) => new URL(String(input)).pathname.endsWith('/issues')).length).toBe(3);
   });
 
-  it('rejects a configured repository outside the GitHub allowlist', async () => {
-    const response = await gitEvidenceResponse(new Request('https://demo.example/__api/git/evidence'), environment({ GITHUB_REPO_URL: 'https://example.com/owner/repo' }));
-    expect(response.status).toBe(503);
-    expect(await response.json()).toEqual({ error: 'github_evidence_unavailable', detail: 'The configured repository could not be queried.' });
+  it('prevents duplicate native identities across provider pages', async () => {
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
+      const url = new URL(String(input));
+      if (url.pathname === repoApi) return response(fixture.repository);
+      if (url.pathname === `${repoApi}/issues`) {
+        if (url.searchParams.get('page') === '1') return response([fixture.issues[0]], 200, { link: '<https://api.github.com/next>; rel="next"' });
+        return response([fixture.issues[0]]);
+      }
+      return response({}, 500);
+    });
+    const outcome = await queryGitHubReporting(environment(), publicPrincipal, { sourceIds: ['github.issues'], mode: 'export' });
+    expect(outcome.result.records).toHaveLength(1);
+    expect(outcome.result.availability['github.issues']).toBe('partial');
+    expect(outcome.result.qualifications['github.issues.detail']).toBe('duplicate_native_identity');
   });
 
-  it('does not fetch private report content for an anonymous visitor even when a server credential exists', async () => {
-    const { mock } = installFixtures({ privateRepo: true });
-    const response = await gitEvidenceResponse(new Request('https://demo.example/__api/git/evidence'), environment({ GITHUB_READ_TOKEN: 'github-private-read-token' }));
-    expect(response.status).toBe(401);
-    expect(response.headers.get('cache-control')).toBe('no-store');
-    expect(await response.json()).toEqual({ error: 'authentication_required' });
-    expect(mock).toHaveBeenCalledTimes(2);
+  it('surfaces rate-limited and expired provider states without replacing provider meaning', async () => {
+    let phase: 'rate' | 'artifact' = 'rate';
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
+      const url = new URL(String(input));
+      if (url.pathname === repoApi) return response(fixture.repository);
+      if (phase === 'rate' && url.pathname === `${repoApi}/issues`) return response({ message: 'rate' }, 403, { 'x-ratelimit-remaining': '0' });
+      if (phase === 'artifact' && url.pathname === `${repoApi}/actions/artifacts`) return response({ total_count: 1, artifacts: [fixture.expiredArtifact] });
+      return response({}, 500);
+    });
+    const limited = await queryGitHubReporting(environment(), publicPrincipal, { sourceIds: ['github.issues'] });
+    expect(limited.result.availability['github.issues']).toBe('rate-limited');
+    phase = 'artifact';
+    const artifacts = await queryGitHubReporting(environment(), publicPrincipal, { sourceIds: ['github.workflow-artifacts'], mode: 'export' });
+    expect(artifacts.result.records[0]).toMatchObject({ nativeId: '8001', availability: 'expired', status: 'expired' });
+    expect(artifacts.result.records[0].relationships[0]?.to.native).toBe(`${repo}|github.workflow-runs|7001`);
   });
 
-  it('allows a verified operator session and keeps the protected HTTP response out of shared caches', async () => {
-    const env = environment({ GITHUB_READ_TOKEN: 'github-private-read-token', IDENTITY_SESSION_SECRET: identitySecret });
-    const cookie = (await createIdentitySession(env, session('operator'))).split(';')[0];
-    const { mock } = installFixtures({ privateRepo: true });
-    const response = await gitEvidenceResponse(new Request('https://demo.example/__api/git/evidence', { headers: { cookie } }), env);
-    const body = await response.json() as Awaited<ReturnType<typeof collectGitHubEvidence>>;
-    expect(response.status).toBe(200);
-    expect(response.headers.get('cache-control')).toBe('private, no-store');
-    expect(response.headers.get('vary')).toContain('Authorization');
-    expect(body.repository.private).toBe(true);
-    expect(body.cards.commits.items[0]).toMatchObject({ message: 'private commit detail' });
-    expect(JSON.stringify(body)).not.toContain('github-private-read-token');
-    expect(mock).toHaveBeenCalledTimes(11);
+  it('keeps repository-security advisories protected and never converts them into issues', async () => {
+    const calls: Array<{ key: string; authorization: string | null }> = [];
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
+      const key = requestKey(input);
+      calls.push({ key, authorization: new Headers(init?.headers).get('authorization') });
+      if (key === repoApi) return response(fixture.repository);
+      if (key.startsWith(`${repoApi}/security-advisories?`)) return response([fixture.securityAdvisory]);
+      return response({}, 500);
+    });
+
+    await expect(queryGitHubReporting(environment({ GITHUB_READ_TOKEN: 'protected-read' }), publicPrincipal, { sourceIds: ['github.repository-security-advisories'] }))
+      .rejects.toMatchObject({ code: 'authentication_required' });
+    expect(calls).toHaveLength(0);
+
+    await expect(queryGitHubReporting(environment({ GITHUB_READ_TOKEN: 'protected-read' }), viewerPrincipal, { sourceIds: ['github.repository-security-advisories'] }))
+      .rejects.toMatchObject({ code: 'permission_denied' });
+    expect(calls).toHaveLength(0);
+
+    const outcome = await queryGitHubReporting(environment({ GITHUB_READ_TOKEN: 'protected-read' }), operatorPrincipal, { sourceIds: ['github.repository-security-advisories'], mode: 'export' });
+    expect(outcome.protected).toBe(true);
+    expect(outcome.result.records[0]).toMatchObject({ source: 'github.repository-security-advisories', nativeId: 'GHSA-abcd-1234-5678', status: 'draft' });
+    expect(outcome.result.records.every((record) => record.source !== 'github.issues')).toBe(true);
+    expect(calls.some((call) => call.key.includes('/security-advisories') && call.authorization === 'Bearer protected-read')).toBe(true);
   });
 
-  it('denies an authenticated viewer and a legacy static demo token as insufficient permission', async () => {
-    const viewerEnv = environment({ GITHUB_READ_TOKEN: 'github-private-read-token', IDENTITY_SESSION_SECRET: identitySecret });
-    const viewerCookie = (await createIdentitySession(viewerEnv, session('viewer'))).split(';')[0];
-    let fixtures = installFixtures({ privateRepo: true });
-    const viewerResponse = await gitEvidenceResponse(new Request('https://demo.example/__api/git/evidence', { headers: { cookie: viewerCookie } }), viewerEnv);
-    expect(viewerResponse.status).toBe(403);
-    expect(await viewerResponse.json()).toEqual({ error: 'permission_denied' });
-    expect(fixtures.mock).toHaveBeenCalledTimes(2);
+  it('isolates private repositories before content fetch and reports missing credentials precisely', async () => {
+    const calls: Array<{ key: string; authorization: string | null }> = [];
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
+      const key = requestKey(input);
+      const authorization = new Headers(init?.headers).get('authorization');
+      calls.push({ key, authorization });
+      if (key === repoApi && !authorization) return response({ message: 'Not Found' }, 404);
+      if (key === repoApi && authorization) return response({ ...fixture.repository, private: true });
+      if (key.startsWith(`${repoApi}/issues?`) && authorization) return response(fixture.issues);
+      return response({}, 500);
+    });
 
-    vi.restoreAllMocks();
-    fixtures = installFixtures({ privateRepo: true });
-    const staticEnv = environment({ GITHUB_READ_TOKEN: 'github-private-read-token', DEMO_API_TOKEN: 'legacy-static-token' });
-    const staticResponse = await gitEvidenceResponse(new Request('https://demo.example/__api/git/evidence', { headers: { authorization: 'Bearer legacy-static-token' } }), staticEnv);
-    expect(staticResponse.status).toBe(403);
-    expect(fixtures.mock).toHaveBeenCalledTimes(2);
+    await expect(queryGitHubReporting(environment({ GITHUB_READ_TOKEN: 'private-read' }), publicPrincipal, { sourceIds: ['github.issues'] }))
+      .rejects.toMatchObject({ code: 'authentication_required' });
+    expect(calls).toEqual([{ key: repoApi, authorization: null }]);
+
+    calls.length = 0;
+    await expect(queryGitHubReporting(environment(), operatorPrincipal, { sourceIds: ['github.issues'] }))
+      .rejects.toMatchObject({ code: 'github_read_credential_missing' });
+    expect(calls).toEqual([{ key: repoApi, authorization: null }]);
+
+    calls.length = 0;
+    const outcome = await queryGitHubReporting(environment({ GITHUB_READ_TOKEN: 'private-read' }), operatorPrincipal, { sourceIds: ['github.issues'], mode: 'export' });
+    expect(outcome.protected).toBe(true);
+    expect(calls.some((call) => call.key.includes('/issues?') && call.authorization === 'Bearer private-read')).toBe(true);
   });
 
-  it('treats a revoked operator session as anonymous before private content is fetched', async () => {
-    const env = environment({ GITHUB_READ_TOKEN: 'github-private-read-token', IDENTITY_SESSION_SECRET: identitySecret });
-    const cookie = (await createIdentitySession(env, session('operator', 'revoked-operator'))).split(';')[0];
-    await revokeIdentitySession(new Request('https://demo.example/identity/logout', { headers: { cookie } }), env);
-    const { mock } = installFixtures({ privateRepo: true });
-    const response = await gitEvidenceResponse(new Request('https://demo.example/__api/git/evidence', { headers: { cookie } }), env);
-    expect(response.status).toBe(401);
-    expect(mock).toHaveBeenCalledTimes(2);
+  it('updates only supported issue fields with optimistic native revision and rejects create-like or unsupported writes', async () => {
+    const patched: unknown[] = [];
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
+      const url = new URL(String(input));
+      if (url.pathname === `${repoApi}/issues/158` && (init?.method || 'GET') === 'GET') return response(fixture.issues[0]);
+      if (url.pathname === `${repoApi}/issues/158` && init?.method === 'PATCH') {
+        patched.push(JSON.parse(String(init.body)));
+        return response({ ...fixture.issues[0], title: 'Updated corrective action', updated_at: '2026-09-04T19:10:00Z' });
+      }
+      return response({}, 500);
+    });
+    const env = environment({ GITHUB_REPORTING_WRITE_TOKEN: 'issues-write' });
+    const record = await importGitHubReporting(env, operatorPrincipal, {
+      source: 'github.issues', repository: repo, operation: 'update', nativeId: '158', revision: '2026-09-04T19:00:00Z', fields: { title: 'Updated corrective action', state: 'open' },
+    });
+    expect(patched).toEqual([{ title: 'Updated corrective action', state: 'open' }]);
+    expect(record.revision).toBe('2026-09-04T19:10:00Z');
+
+    await expect(importGitHubReporting(env, operatorPrincipal, {
+      source: 'github.issues', repository: repo, operation: 'update', nativeId: '158', revision: '2026-09-04T19:00:00Z', fields: { url: 'https://example.com' },
+    })).rejects.toMatchObject({ code: 'github_import_field_unsupported' });
+
+    await expect(importGitHubReporting(env, operatorPrincipal, {
+      source: 'github.releases', repository: repo, operation: 'update', nativeId: '1', revision: 'x', fields: { name: 'nope' },
+    })).rejects.toMatchObject({ code: 'github_import_not_supported' });
+
+    await expect(importGitHubReporting(env, operatorPrincipal, {
+      source: 'github.issues', repository: repo, operation: 'update', nativeId: '158', revision: 'stale', fields: { title: 'stale' },
+    })).rejects.toMatchObject({ code: 'github_revision_conflict' });
   });
 
-  it('isolates private caches across source revisions and server-credential changes, and never serves cache after credential removal', async () => {
-    const env = environment({ GITHUB_READ_TOKEN: 'github-private-read-token-a', IDENTITY_SESSION_SECRET: identitySecret });
-    const cookie = (await createIdentitySession(env, session('operator', 'cache-operator'))).split(';')[0];
-    const { mock, state } = installFixtures({ privateRepo: true });
-    const request = (environmentValue: Env) => gitEvidenceResponse(new Request('https://demo.example/__api/git/evidence', { headers: { cookie } }), environmentValue);
+  it('returns the current query contract from the existing Git evidence route without legacy cards', async () => {
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
+      const key = requestKey(input);
+      if (key === repoApi) return response(fixture.repository);
+      if (key.startsWith(`${repoApi}/issues?`)) return response(fixture.issues);
+      return response([], 200);
+    });
+    const responseValue = await gitEvidenceResponse(new Request('https://demo.example/__api/git/evidence?source=github.issues&mode=export'), environment());
+    const body = await responseValue.json() as Record<string, unknown>;
+    expect(responseValue.status).toBe(200);
+    expect(responseValue.headers.get('cache-control')).toContain('public');
+    expect(body.contract).toBe('contracts/assurance/reporting.schema.json');
+    expect(body.dataset).toBe('github');
+    expect(body).not.toHaveProperty('cards');
+    expect(body).not.toHaveProperty('controls');
+  });
 
-    expect((await request(env)).status).toBe(200);
-    expect(mock).toHaveBeenCalledTimes(11);
+  it('does not add internal pagination metadata to the native repository object', async () => {
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => requestKey(input) === repoApi ? response(fixture.repository) : response([], 200));
+    const outcome = await queryGitHubReporting(environment({ GITHUB_REPORTING_MAX_PAGES: '2' }), publicPrincipal, { sourceIds: ['github.repositories'], mode: 'export' });
+    expect(outcome.result.records[0].native).toEqual(fixture.repository);
+    expect(outcome.result.records[0].native).not.toHaveProperty('__reportingMaxPages');
+  });
 
-    state.revision = 'd'.repeat(40);
-    state.commitMessage = 'new private source revision';
-    const revised = await request(env);
-    expect((await revised.json() as Awaited<ReturnType<typeof collectGitHubEvidence>>).cards.commits.items[0]).toMatchObject({ message: 'new private source revision' });
-    expect(mock).toHaveBeenCalledTimes(22);
-
-    const changedCredential = { ...env, GITHUB_READ_TOKEN: 'github-private-read-token-b' };
-    expect((await request(changedCredential)).status).toBe(200);
-    expect(mock).toHaveBeenCalledTimes(33);
-
-    const removedCredential = { ...env, GITHUB_READ_TOKEN: undefined };
-    const unavailable = await request(removedCredential);
-    expect(unavailable.status).toBe(503);
-    expect(await unavailable.json()).toEqual({ error: 'github_evidence_unavailable', detail: 'The configured repository could not be queried.' });
-    expect(mock).toHaveBeenCalledTimes(34);
+  it('requires a dedicated reporting write credential and operator permission', async () => {
+    await expect(importGitHubReporting(environment(), operatorPrincipal, {
+      source: 'github.issues', repository: repo, operation: 'update', nativeId: '158', revision: '2026-09-04T19:00:00Z', fields: { title: 'x' },
+    })).rejects.toMatchObject({ code: 'github_write_credential_missing' });
+    await expect(importGitHubReporting(environment({ GITHUB_REPORTING_WRITE_TOKEN: 'x' }), viewerPrincipal, {
+      source: 'github.issues', repository: repo, operation: 'update', nativeId: '158', revision: '2026-09-04T19:00:00Z', fields: { title: 'x' },
+    })).rejects.toBeInstanceOf(GitHubReportingError);
   });
 });

@@ -207,7 +207,7 @@
         },
         "window": { "$ref": "#/$defs/observationWindow" },
         "observedAt": { "type": "string", "format": "date-time" },
-        "availability": { "enum": ["available", "partial", "unavailable"] },
+        "availability": { "enum": ["available", "partial", "unavailable", "rate-limited", "expired"] },
         "value": {}
       }
     },

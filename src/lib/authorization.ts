@@ -2,7 +2,7 @@ import type { Env } from '../types';
 import { json } from './http';
 import { readDemoAccessToken, readIdentitySession, sha256, type IdentitySession } from './identity-session';
 
-export type Permission = 'demo:read' | 'demo:write' | 'reporting:private';
+export type Permission = 'demo:read' | 'demo:write' | 'reporting:private' | 'reporting:write';
 
 export interface Principal {
   subject: string;
@@ -33,7 +33,7 @@ async function secretMatches(actual: string, expected: string): Promise<boolean>
 export async function principalFromIdentitySession(session: IdentitySession): Promise<Principal> {
   const subject = `${session.identity.provider}:${session.identity.subject}`;
   const permissions: Permission[] = ['demo:read', 'demo:write'];
-  if (session.identity.role === 'operator') permissions.push('reporting:private');
+  if (session.identity.role === 'operator') permissions.push('reporting:private', 'reporting:write');
   return {
     subject,
     authentication: session.identity.protocol,

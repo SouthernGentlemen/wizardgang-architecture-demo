@@ -46,11 +46,14 @@ function copySource(source: ReportingSource): ReportingSource {
   };
 }
 
+export function registeredReportingSources(): readonly ReportingSource[] {
+  return [...reporting.nativeObjects, ...reporting.observations, ...reporting.privateSources].map(copySource);
+}
+
 export function registeredReportingSource(id: string): ReportingSource {
-  const source = [...reporting.nativeObjects, ...reporting.observations, ...reporting.privateSources]
-    .find((candidate) => candidate.id === id);
+  const source = registeredReportingSources().find((candidate) => candidate.id === id);
   if (!source) throw new Error(`Reporting source ${id} is not declared in assurance/registry.json.`);
-  return copySource(source);
+  return source;
 }
 
 export function structuredReportingSource(resource: AssuranceRegistryResource): ReportingSource {
