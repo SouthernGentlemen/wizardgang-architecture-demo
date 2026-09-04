@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://demo.wizardgang.ai/contracts/assurance/governance-record.schema.json",
+  "title": "Governance register records",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "qualification",
+    "views",
+    "records"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "qualification": {
+      "type": "string",
+      "minLength": 1
+    },
+    "views": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/view"
+      }
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/record"
+      }
+    }
+  },
+  "$defs": {
+    "column": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "label"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9]*$"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "view": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "document",
+        "section",
+        "columns"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9.-]+$"
+        },
+        "document": {
+          "type": "string",
+          "pattern": "^docs/governance/registers/.+\\.md$"
+        },
+        "section": {
+          "type": "string",
+          "minLength": 1
+        },
+        "columns": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/column"
+          }
+        }
+      }
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "view",
+        "order",
+        "fields"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9-]*-[0-9]{3}$"
+        },
+        "view": {
+          "type": "string",
+          "pattern": "^[a-z0-9.-]+$"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "fields": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
