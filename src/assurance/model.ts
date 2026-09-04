@@ -244,6 +244,22 @@ export interface CanonicalAssuranceRecordMap {
   compliance: ComplianceRecord;
 }
 
+export interface AssuranceRuntimeRecord {
+  id: string;
+  relationships?: AssuranceRelationships;
+}
+
+export interface AssuranceRuntimeRecordReference {
+  dataset: string;
+  record: AssuranceRuntimeRecord;
+}
+
+export interface AssuranceRuntimeRelationshipReference {
+  sourceId: string;
+  dataset: string;
+  relation: keyof AssuranceRelationships;
+}
+
 export const assuranceRegistry = assuranceRegistryData as unknown as AssuranceRegistry;
 const runtimeData = assuranceRuntimeDatasets as Record<string, unknown>;
 const runtimeSchemas = assuranceRuntimeSchemas as Record<string, unknown>;
@@ -329,21 +345,55 @@ complianceRecords.sort((left, right) => {
   return frameworkDifference || left.reference.localeCompare(right.reference, undefined, { numeric: true });
 });
 
-export const assuranceCanonicalRecordCollections: { [K in AssuranceDataset]: CanonicalAssuranceRecordMap[K][] } = {
-  claims: canonicalRecordsForKind<AssuranceClaimRecord>('claims'),
-  evidence: canonicalRecordsForKind<EvidenceRecord>('evidence'),
-  risks: canonicalRecordsForKind<RiskRecord>('risks'),
-  incidents: canonicalRecordsForKind<IncidentRecord>('incidents'),
-  exercises: canonicalRecordsForKind<ExerciseRecord>('exercises'),
-  advisories: canonicalRecordsForKind<AdvisoryRecord>('advisories'),
-  compliance: complianceRecords,
-};
+const runtimeRecordKinds = [...new Set(runtimeRecordEntries.map((entry) => entry.resource.kind))];
+const runtimeRecordCollections = Object.fromEntries(runtimeRecordKinds.map((kind) => [
+  kind,
+  kind === 'compliance'
+    ? complianceRecords as AssuranceRuntimeRecord[]
+    : canonicalRecordsForKind<AssuranceRuntimeRecord>(kind),
+])) as Record<string, AssuranceRuntimeRecord[]>;
 
-for (const resource of assuranceRegistry.datasets.filter((candidate) => candidate.capabilities.includes('api-index'))) {
-  if (!(resource.kind in assuranceCanonicalRecordCollections)) {
-    throw new Error(`Assurance registry declares unsupported api-index family ${resource.kind}; add it to the canonical record map before indexing it.`);
+export const assuranceRuntimeRecordCollections: Readonly<Record<string, AssuranceRuntimeRecord[]>> = runtimeRecordCollections;
+export const assuranceRuntimeRecordCounts: Readonly<Record<string, number>> = Object.fromEntries(
+  Object.entries(runtimeRecordCollections).map(([kind, records]) => [kind, records.length]),
+);
+
+const runtimeRecordIndex = new Map<string, AssuranceRuntimeRecordReference>();
+const forwardRelationshipIndex = new Map<string, AssuranceRelationships>();
+const reverseRelationshipIndex = new Map<string, AssuranceRuntimeRelationshipReference[]>();
+
+for (const [dataset, records] of Object.entries(runtimeRecordCollections)) {
+  for (const record of records) {
+    if (!record || typeof record.id !== 'string' || record.id.length === 0) {
+      throw new Error(`Assurance runtime dataset ${dataset} contains a record without a canonical string id.`);
+    }
+    if (runtimeRecordIndex.has(record.id)) {
+      throw new Error(`Assurance runtime record index contains duplicate canonical ID ${record.id}.`);
+    }
+    runtimeRecordIndex.set(record.id, { dataset, record });
+    if (!record.relationships) continue;
+    forwardRelationshipIndex.set(record.id, record.relationships);
+    for (const [relation, targetIds] of Object.entries(record.relationships) as Array<[keyof AssuranceRelationships, string[]]>) {
+      for (const targetId of targetIds) {
+        const references = reverseRelationshipIndex.get(targetId) ?? [];
+        references.push({ sourceId: record.id, dataset, relation });
+        reverseRelationshipIndex.set(targetId, references);
+      }
+    }
   }
 }
+
+for (const references of reverseRelationshipIndex.values()) {
+  references.sort((left, right) => left.sourceId.localeCompare(right.sourceId) || left.relation.localeCompare(right.relation));
+}
+
+export const assuranceRuntimeRecordIndex: ReadonlyMap<string, AssuranceRuntimeRecordReference> = runtimeRecordIndex;
+export const assuranceRuntimeForwardRelationshipIndex: ReadonlyMap<string, AssuranceRelationships> = forwardRelationshipIndex;
+export const assuranceRuntimeReverseRelationshipIndex: ReadonlyMap<string, readonly AssuranceRuntimeRelationshipReference[]> = reverseRelationshipIndex;
+
+export const assuranceCanonicalRecordCollections = assuranceRuntimeRecordCollections as unknown as {
+  [K in AssuranceDataset]: CanonicalAssuranceRecordMap[K][];
+};
 
 function primaryQualification(kind: AssuranceDataset): string | undefined {
   const resource = primaryAssuranceResource(kind);
