@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://demo.wizardgang.ai/contracts/assurance/report.schema.json",
+  "title": "Retained assurance report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "source",
+    "reportType",
+    "producer",
+    "sourceRevision",
+    "observedAt",
+    "status",
+    "qualification",
+    "checks",
+    "evidence",
+    "relationships"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^RPT-[A-Z0-9-]+$" },
+    "source": { "const": "github.retained-reports" },
+    "reportType": { "enum": ["ci-validation", "assurance-monitor"] },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "repository", "workflow", "workflowRunId", "runAttempt", "event"],
+      "properties": {
+        "provider": { "const": "github-actions" },
+        "repository": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$" },
+        "workflow": { "enum": ["CI", "Assurance Monitor"] },
+        "workflowRunId": { "type": "integer", "minimum": 1 },
+        "runAttempt": { "type": "integer", "minimum": 1 },
+        "event": { "enum": ["push", "schedule", "workflow_dispatch"] }
+      }
+    },
+    "sourceRevision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit", "branch"],
+      "properties": {
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "branch": { "type": "string", "minLength": 1 }
+      }
+    },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "status": { "$ref": "#/$defs/outcome" },
+    "qualification": { "type": "string", "minLength": 1 },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/check" }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/$defs/evidenceReference" }
+    },
+    "relationships": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "./reporting.schema.json#/$defs/relationship" }
+    }
+  },
+  "$defs": {
+    "outcome": {
+      "enum": ["passed", "failed", "cancelled", "skipped", "incomplete"]
+    },
+    "evidenceReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "url"],
+      "properties": {
+        "kind": { "enum": ["workflow-run", "job", "source-revision"] },
+        "url": { "type": "string", "format": "uri" }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["number", "name", "status", "outcome"],
+      "properties": {
+        "number": { "type": "integer", "minimum": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "status": { "type": "string", "minLength": 1 },
+        "outcome": { "$ref": "#/$defs/outcome" },
+        "startedAt": { "type": ["string", "null"], "format": "date-time" },
+        "completedAt": { "type": ["string", "null"], "format": "date-time" }
+      }
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "status", "outcome", "startedAt", "completedAt", "evidence", "steps"],
+      "properties": {
+        "id": { "type": "integer", "minimum": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "status": { "type": "string", "minLength": 1 },
+        "outcome": { "$ref": "#/$defs/outcome" },
+        "startedAt": { "type": ["string", "null"], "format": "date-time" },
+        "completedAt": { "type": ["string", "null"], "format": "date-time" },
+        "evidence": { "$ref": "#/$defs/evidenceReference" },
+        "steps": { "type": "array", "items": { "$ref": "#/$defs/step" } }
+      }
+    }
+  }
+}
