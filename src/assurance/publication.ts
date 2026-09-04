@@ -25,6 +25,7 @@ import {
   resolveAssuranceLifecycle,
   assuranceLifecyclePresentation,
   type AssuranceLifecyclePresentation,
+  type AssuranceLifecycleRecord,
   type AssuranceLifecycleRegistry,
   type AssuranceObservedState,
 } from './publication-policy.js';
@@ -121,6 +122,18 @@ export function presentedPublishedEvidenceRecords(
   });
 }
 
+function retainedLifecyclePresentation(record: AssuranceLifecycleRecord): AssuranceLifecyclePresentation {
+  const presentation = assuranceLifecyclePresentation({
+    ...record,
+    source: 'retired',
+    retained: true,
+  });
+  if (!presentation?.id) {
+    throw new Error(`Retained assurance record ${record.id} lost its stable identity during publication.`);
+  }
+  return presentation;
+}
+
 const claims = listPublishedAssuranceRecords('claims');
 const evidence = listPublishedAssuranceRecords('evidence');
 const risks = listPublishedAssuranceRecords('risks');
@@ -143,10 +156,6 @@ export const publishedAssuranceSummary = {
   incidentQualifications,
   advisoryQualification,
   publication: {
-    retainedRecords: (lifecycleRegistry.retiredRecords ?? []).map((record) => assuranceLifecyclePresentation({
-      ...record,
-      source: 'retired',
-      retained: true,
-    })).filter((record): record is AssuranceLifecyclePresentation => record !== null),
+    retainedRecords: (lifecycleRegistry.retiredRecords ?? []).map(retainedLifecyclePresentation),
   },
 };
