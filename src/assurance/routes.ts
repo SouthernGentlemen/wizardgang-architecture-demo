@@ -1,6 +1,6 @@
 import {
   assuranceRegistry,
-  type AssuranceDataset,
+  type AssuranceRegistryResource,
   type AssuranceRegistryRoutes,
 } from './model';
 import {
@@ -9,6 +9,7 @@ import {
   assuranceRegistryApiRoute as contractRegistryApiRoute,
   assuranceRouteAliases as contractRouteAliases,
   assuranceRouteDeclarations as contractRouteDeclarations,
+  assuranceRouteOwnerResource as contractRouteOwnerResource,
   assuranceRoutesForDataset as contractRoutesForDataset,
   matchAssuranceRoute as contractMatchRoute,
   validateAssuranceRouteContract as contractValidateRouteContract,
@@ -16,13 +17,13 @@ import {
 } from './route-contract.js';
 
 export interface AssuranceRouteDeclaration {
-  owner: 'registry' | AssuranceDataset;
+  owner: string;
   ownerId: string;
   routes: AssuranceRegistryRoutes;
 }
 
 export interface AssuranceRouteMatch {
-  owner: 'registry' | AssuranceDataset;
+  owner: string;
   kind: 'html' | 'api-collection' | 'api-record' | 'alias';
   recordId?: string;
   target?: string;
@@ -39,23 +40,27 @@ if (routeContractErrors.length > 0) {
   throw new Error(`Invalid assurance route contract:\n${routeContractErrors.join('\n')}`);
 }
 
-export function assuranceRoutesForDataset(dataset: AssuranceDataset): AssuranceRegistryRoutes | null {
+export function assuranceRouteOwnerResource(dataset: string): AssuranceRegistryResource | null {
+  return contractRouteOwnerResource(assuranceRegistry, dataset) as AssuranceRegistryResource | null;
+}
+
+export function assuranceRoutesForDataset(dataset: string): AssuranceRegistryRoutes | null {
   return contractRoutesForDataset(assuranceRegistry, dataset) as AssuranceRegistryRoutes | null;
 }
 
-export function requireAssuranceRoutesForDataset(dataset: AssuranceDataset): AssuranceRegistryRoutes {
+export function requireAssuranceRoutesForDataset(dataset: string): AssuranceRegistryRoutes {
   const routes = assuranceRoutesForDataset(dataset);
   if (!routes) throw new Error(`${dataset} has no canonical assurance route owner.`);
   return routes;
 }
 
-export function assuranceHtmlRoute(dataset: AssuranceDataset): string {
+export function assuranceHtmlRoute(dataset: string): string {
   const route = requireAssuranceRoutesForDataset(dataset).html;
   if (!route) throw new Error(`${dataset} has no canonical assurance HTML route.`);
   return route;
 }
 
-export function assuranceCollectionApiRoute(dataset: AssuranceDataset): string {
+export function assuranceCollectionApiRoute(dataset: string): string {
   const route = requireAssuranceRoutesForDataset(dataset).api;
   if (!route) throw new Error(`${dataset} has no canonical assurance collection API route.`);
   return route;
@@ -66,7 +71,7 @@ export function assuranceRegistryApiRoute(): string {
 }
 
 export function assuranceRecordUrls(
-  dataset: AssuranceDataset,
+  dataset: string,
   recordId?: string,
 ): { html?: string; api?: string } {
   return contractRecordUrls(assuranceRegistry, dataset, recordId) as { html?: string; api?: string };
@@ -76,8 +81,8 @@ export function assuranceRouteDeclarations(): AssuranceRouteDeclaration[] {
   return contractRouteDeclarations(assuranceRegistry) as AssuranceRouteDeclaration[];
 }
 
-export function assuranceRouteAliases(): Array<{ owner: AssuranceDataset; path: string; target: string }> {
-  return contractRouteAliases(assuranceRegistry) as Array<{ owner: AssuranceDataset; path: string; target: string }>;
+export function assuranceRouteAliases(): Array<{ owner: string; path: string; target: string }> {
+  return contractRouteAliases(assuranceRegistry) as Array<{ owner: string; path: string; target: string }>;
 }
 
 export function matchAssuranceRoute(path: string): AssuranceRouteMatch | null {

@@ -8,7 +8,10 @@ import {
   flattenAssuranceRegistry,
   loadAssuranceRegistry,
 } from './lib/assurance-registry.mjs';
-import { validateRelationshipSet } from './lib/assurance-relationships.mjs';
+import {
+  registeredRelationshipTargets,
+  validateRelationshipSet,
+} from './lib/assurance-relationships.mjs';
 
 const root = process.cwd();
 const nowValue = process.env.ASSURANCE_VALIDATION_NOW ?? new Date().toISOString();
@@ -54,7 +57,6 @@ for (const relative of canonicalPaths) scanCanonical(relative, readJson(relative
 const governance = readJson('docs/governance/REFERENCE-REGISTRY.json');
 const recordResources = assuranceRecordResources(registry);
 const recordEntries = [];
-const recordsByKind = new Map();
 const documentsByResource = new Map();
 for (const resource of recordResources) {
   if (!resource.capabilities?.includes('runtime')) {
@@ -70,21 +72,7 @@ for (const resource of recordResources) {
     errors.push(`${resource.path}: ${error instanceof Error ? error.message : String(error)}`);
     continue;
   }
-  const family = recordsByKind.get(resource.kind) ?? [];
-  for (const record of records) {
-    const entry = { resource, record };
-    recordEntries.push(entry);
-    family.push(entry);
-  }
-  recordsByKind.set(resource.kind, family);
-}
-
-function recordsForKind(kind) {
-  return (recordsByKind.get(kind) ?? []).map((entry) => entry.record);
-}
-
-function idsForKind(kind) {
-  return new Set(recordsForKind(kind).map((record) => record.id).filter((id) => typeof id === 'string'));
+  for (const record of records) recordEntries.push({ resource, record });
 }
 
 const idOwners = new Map();
@@ -154,19 +142,10 @@ for (const { resource, record } of complianceEntries) {
   if (prefix && record.id !== `${prefix}-${record.reference}`) errors.push(`${record.id}: compliance identity must be explicit and canonical`);
 }
 
-const targetFamilies = new Map([
-  ['evidence', idsForKind('evidence')],
-  ['compliance', idsForKind('compliance')],
-  ['frameworks', frameworkIds],
-  ['claims', idsForKind('claims')],
-  ['risks', idsForKind('risks')],
-  ['controls', new Set(complianceRecords.filter((record) => record.kind === 'control').map((record) => record.id))],
-  ['incidents', idsForKind('incidents')],
-  ['exercises', idsForKind('exercises')],
-  ['advisories', idsForKind('advisories')],
-  ['governanceDocuments', new Set((governance.records ?? []).map((record) => record.reference))],
-  ['objectives', idsForKind('objectives')],
-]);
+const targetFamilies = registeredRelationshipTargets(recordEntries, {
+  frameworkIds,
+  governanceDocumentIds: (governance.records ?? []).map((record) => record.reference),
+});
 
 for (const { resource, record } of recordEntries) {
   if (record?.relationships) errors.push(...validateRelationshipSet(record.relationships, targetFamilies, `${resource.path}:${record.id}`));

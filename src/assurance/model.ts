@@ -6,7 +6,14 @@ import {
 import {
   assuranceRecordEntries,
   flattenAssuranceResources as flattenRegistryResources,
+  primaryAssuranceDatasetResource,
 } from './record-discovery.js';
+import {
+  assuranceRelationshipDefinition,
+  assuranceRelationshipNames,
+  assuranceRelationshipTargetIds,
+  unknownAssuranceRelationshipNames,
+} from './relationship-contract.js';
 import { deriveRiskRecord } from './risk-rating.js';
 import type { RiskRating as DerivedRiskRating } from './risk-rating.js';
 
@@ -288,10 +295,7 @@ export function requireAssuranceResource(
 }
 
 export function primaryAssuranceResource(kind: string): AssuranceRegistryResource {
-  return requireAssuranceResource(
-    (resource) => resource.kind === kind && resource.role === 'dataset' && resource.capabilities.includes('api-index'),
-    `indexed ${kind} dataset`,
-  );
+  return primaryAssuranceDatasetResource(assuranceRegistry, kind) as AssuranceRegistryResource;
 }
 
 export function runtimeAssuranceDataset<T>(resource: AssuranceRegistryResource): T {
@@ -302,6 +306,7 @@ export function runtimeAssuranceDataset<T>(resource: AssuranceRegistryResource):
 }
 
 export function runtimeAssuranceSchema(resource: AssuranceRegistryResource): Record<string, unknown> {
+  if (!resource.capabilities.includes('runtime')) throw new Error(`${resource.id} is not declared runtime-capable.`);
   const schema = runtimeSchemas[resource.id];
   if (!schema) throw new Error(`Runtime assurance schema binding is missing ${resource.id}.`);
   return schema as Record<string, unknown>;
@@ -353,7 +358,9 @@ complianceRecords.sort((left, right) => {
   return frameworkDifference || left.reference.localeCompare(right.reference, undefined, { numeric: true });
 });
 
-const runtimeRecordKinds = [...new Set(runtimeRecordEntries.map((entry) => entry.resource.kind))];
+const runtimeRecordKinds = [...new Set(assuranceRegistryResources
+  .filter((resource) => resource.capabilities.includes('runtime') && resource.capabilities.includes('records'))
+  .map((resource) => resource.kind))];
 const runtimeRecordCollections = Object.fromEntries(runtimeRecordKinds.map((kind) => [
   kind,
   kind === 'compliance'
@@ -380,12 +387,32 @@ for (const [dataset, records] of Object.entries(runtimeRecordCollections)) {
     }
     runtimeRecordIndex.set(record.id, { dataset, record });
     if (!record.relationships) continue;
+    const unknownRelationships = unknownAssuranceRelationshipNames(record.relationships);
+    if (unknownRelationships.length > 0) {
+      throw new Error(`Assurance runtime record ${record.id} declares unknown relationship semantics: ${unknownRelationships.join(', ')}.`);
+    }
     forwardRelationshipIndex.set(record.id, record.relationships);
-    for (const [relation, targetIds] of Object.entries(record.relationships) as Array<[keyof AssuranceRelationships, string[]]>) {
+    for (const relation of assuranceRelationshipNames() as Array<keyof AssuranceRelationships>) {
+      const targetIds = record.relationships[relation];
+      if (!Array.isArray(targetIds)) throw new Error(`Assurance runtime record ${record.id} relationship ${relation} must be an array.`);
       for (const targetId of targetIds) {
         const references = reverseRelationshipIndex.get(targetId) ?? [];
         references.push({ sourceId: record.id, dataset, relation });
         reverseRelationshipIndex.set(targetId, references);
+      }
+    }
+  }
+}
+
+const relationshipRecordsByKind = new Map<string, AssuranceRuntimeRecord[]>(Object.entries(runtimeRecordCollections));
+for (const [sourceId, relationships] of forwardRelationshipIndex) {
+  for (const relation of assuranceRelationshipNames() as Array<keyof AssuranceRelationships>) {
+    const definition = assuranceRelationshipDefinition(relation);
+    if (definition?.target !== 'records') continue;
+    const targets = assuranceRelationshipTargetIds(relation, { recordsByKind: relationshipRecordsByKind });
+    for (const targetId of relationships[relation]) {
+      if (!targets.has(targetId)) {
+        throw new Error(`Assurance runtime record ${sourceId} has dangling ${relation} relationship ${targetId}.`);
       }
     }
   }
@@ -403,7 +430,7 @@ export const assuranceCanonicalRecordCollections = assuranceRuntimeRecordCollect
   [K in AssuranceDataset]: CanonicalAssuranceRecordMap[K][];
 };
 
-function primaryQualification(kind: AssuranceDataset): string | undefined {
+function primaryQualification(kind: string): string | undefined {
   const resource = primaryAssuranceResource(kind);
   return runtimeAssuranceDataset<RecordsDataset<unknown>>(resource).qualification ?? resource.qualification;
 }

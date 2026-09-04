@@ -28,19 +28,22 @@ export function validateNormalizedIso({ root = process.cwd(), standard, edition,
   const resource = requireRegistryResource(
     registry,
     (entry) => entry.kind === 'compliance'
-      && entry.capabilities?.includes('records')
+      && entry.role === 'dataset'
       && entry.framework?.id === framework,
-    `${framework} compliance record resource`,
+    `${framework} compliance framework owner`,
   );
+  const recordEntries = inventory.entriesForKind('compliance')
+    .filter((entry) => entry.resource.framework?.id === framework);
+  if (recordEntries.length === 0) errors.push(`${resource.path}: ${framework} framework owns no registered compliance records`);
   const dataPath = resource.path;
   const schemaPath = resource.schema;
-  const compliance = inventory.documentForResource(resource);
+  const compliance = readJsonFile(root, dataPath);
   const schema = readJsonFile(root, schemaPath);
   const governance = readJsonFile(root, 'docs/governance/REFERENCE-REGISTRY.json');
   const metadata = resource.framework;
   const evidenceIds = inventory.idsForKind('evidence');
   const governanceIds = new Set((governance.records ?? []).map((record) => record.reference));
-  const records = compliance.records ?? [];
+  const records = recordEntries.map((entry) => entry.record);
   const clauses = records.filter((record) => record.kind === 'clause');
   const controls = records.filter((record) => record.kind === 'control');
 

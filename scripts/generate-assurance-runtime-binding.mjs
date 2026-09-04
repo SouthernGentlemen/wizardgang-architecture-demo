@@ -11,6 +11,7 @@ import {
   loadAssuranceRegistry,
   readJsonFile,
   requireAssuranceCapabilityResource,
+  resolveAssuranceResourceOwner,
 } from './lib/assurance-registry.mjs';
 import { collectHistoricalAssuranceSnapshot } from './lib/assurance-lifecycle-history.mjs';
 import { createAssuranceSchemaLoader } from './lib/assurance-validation.mjs';
@@ -57,25 +58,27 @@ function schemaFilterValues(root, resource, definition, loadSchema) {
   return typeof property.const === 'string' ? [property.const] : [];
 }
 
+function resourceUsesFilterOwner(registry, resource, owner) {
+  if (resource.kind === owner.kind) return true;
+  if (!resource.routeOwner) return false;
+  return resolveAssuranceResourceOwner(registry, resource, 'routeOwner').id === owner.id;
+}
+
 export function deriveRuntimeFilterVocabularies(registry, root = process.cwd()) {
   const resources = flattenAssuranceRegistry(registry);
   const runtimeRecordResources = resources.filter(
     (resource) => resource.capabilities?.includes('runtime') && resource.capabilities?.includes('records'),
   );
-  const owners = resources
-    .filter((resource) => resource.capabilities?.includes('api-index') && resource.filters)
+  const owners = (registry.datasets ?? [])
+    .filter((resource) => resource.filters)
     .sort((left, right) => left.id.localeCompare(right.id));
   const loadSchema = createAssuranceSchemaLoader(root);
   const vocabularies = {};
 
   for (const owner of owners) {
     const filters = {};
-    const routeResources = runtimeRecordResources.filter(
-      (resource) => resource.kind === owner.kind || resource.routeOwner === owner.kind,
-    );
-    const allRouteResources = resources.filter(
-      (resource) => resource.kind === owner.kind || resource.routeOwner === owner.kind,
-    );
+    const routeResources = runtimeRecordResources.filter((resource) => resourceUsesFilterOwner(registry, resource, owner));
+    const allRouteResources = resources.filter((resource) => resourceUsesFilterOwner(registry, resource, owner));
     for (const [parameter, definition] of Object.entries(owner.filters ?? {})) {
       const values = [];
       for (const resource of routeResources) {
@@ -86,7 +89,7 @@ export function deriveRuntimeFilterVocabularies(registry, root = process.cwd()) 
         for (const resource of allRouteResources) addFilterValue(values, assuranceValueAtPath(resource, definition.path));
       }
       if (values.length === 0) {
-        throw new Error(`${owner.kind}.${parameter} does not resolve to an authoritative registered filter vocabulary.`);
+        throw new Error(`${owner.id}.${parameter} does not resolve to an authoritative registered filter vocabulary.`);
       }
       filters[parameter] = values;
     }
@@ -177,9 +180,6 @@ export function deriveLifecycleBaselineMembership(registry, root = process.cwd()
     };
   }
 
-  // Fixture copies intentionally omit .git. Reuse only a previously generated,
-  // commit-matched artifact there; repository/CI generation always verifies the
-  // artifact against the immutable Git baseline above.
   const generatedPath = path.join(root, LIFECYCLE_BASELINE_MEMBERSHIP_PATH);
   if (fs.existsSync(generatedPath)) {
     const generated = normalizedGeneratedMembership(readJsonFile(root, LIFECYCLE_BASELINE_MEMBERSHIP_PATH), commit);

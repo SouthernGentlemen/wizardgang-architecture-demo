@@ -15,6 +15,7 @@ import {
   runtimeAssuranceDataset,
   type AssuranceDataset,
   type AssuranceRegistryResource,
+  type AssuranceRuntimeRecord,
 } from './model';
 import { assuranceLifecycleBaselineMembership } from './generated/registry-bindings';
 import { requireAssuranceCapabilityResource } from './record-discovery.js';
@@ -46,14 +47,16 @@ export type PublishedAssuranceRecordMap = {
   [K in AssuranceDataset]: PublishedAssuranceRecord<AssuranceRecordMap[K]>;
 };
 
+export type PublishedAssuranceRuntimeRecord = PublishedAssuranceRecord<AssuranceRuntimeRecord>;
+
 export type PresentedPublishedEvidence = PresentedEvidence<PublishedAssuranceRecordMap['evidence']> & {
   observation?: AssuranceObservedState;
 };
 
-function publishRecord<K extends AssuranceDataset>(
-  dataset: K,
-  record: AssuranceRecordMap[K],
-): PublishedAssuranceRecordMap[K] | undefined {
+function publishRuntimeRecord(
+  dataset: string,
+  record: AssuranceRuntimeRecord,
+): PublishedAssuranceRuntimeRecord | undefined {
   const decision = assurancePublicationDecision(
     primaryAssuranceResource(dataset),
     lifecycleRegistry,
@@ -61,44 +64,50 @@ function publishRecord<K extends AssuranceDataset>(
     lifecycleResolutionOptions,
   );
   if (!decision.selected || !decision.presentation) return undefined;
-  return { ...record, publication: decision.presentation } as PublishedAssuranceRecordMap[K];
-}
-
-function publishRecords<K extends AssuranceDataset>(
-  dataset: K,
-  records: AssuranceRecordMap[K][],
-): PublishedAssuranceRecordMap[K][] {
-  return records.flatMap((record) => {
-    const published = publishRecord(dataset, record);
-    return published ? [published] : [];
-  });
+  return { ...record, publication: decision.presentation };
 }
 
 export function listPublishedAssuranceRecords<K extends AssuranceDataset>(
   dataset: K,
-): PublishedAssuranceRecordMap[K][] {
-  return publishRecords(dataset, listAssuranceRecords(dataset));
+): PublishedAssuranceRecordMap[K][];
+export function listPublishedAssuranceRecords(dataset: string): PublishedAssuranceRuntimeRecord[];
+export function listPublishedAssuranceRecords(dataset: string): PublishedAssuranceRuntimeRecord[] {
+  return listAssuranceRecords(dataset).flatMap((record) => {
+    const published = publishRuntimeRecord(dataset, record);
+    return published ? [published] : [];
+  });
 }
 
 export function findPublishedAssuranceRecord<K extends AssuranceDataset>(
   dataset: K,
   recordId: string,
-): PublishedAssuranceRecordMap[K] | undefined {
+): PublishedAssuranceRecordMap[K] | undefined;
+export function findPublishedAssuranceRecord(dataset: string, recordId: string): PublishedAssuranceRuntimeRecord | undefined;
+export function findPublishedAssuranceRecord(dataset: string, recordId: string): PublishedAssuranceRuntimeRecord | undefined {
   const record = listAssuranceRecords(dataset).find((candidate) => candidate.id === recordId);
-  return record ? publishRecord(dataset, record) : undefined;
+  return record ? publishRuntimeRecord(dataset, record) : undefined;
 }
 
 export function filterPublishedAssuranceRecords<K extends AssuranceDataset>(
   dataset: K,
   filters: AssuranceFilterValues,
-): PublishedAssuranceRecordMap[K][] {
+): PublishedAssuranceRecordMap[K][];
+export function filterPublishedAssuranceRecords(
+  dataset: string,
+  filters: AssuranceFilterValues,
+): PublishedAssuranceRuntimeRecord[];
+export function filterPublishedAssuranceRecords(
+  dataset: string,
+  filters: AssuranceFilterValues,
+): PublishedAssuranceRuntimeRecord[] {
   return filterAssuranceRecords(dataset, filters, listPublishedAssuranceRecords(dataset));
 }
 
 export function assurancePublicationForRecord(
-  dataset: AssuranceDataset,
+  dataset: string,
   recordId: string,
 ): AssuranceLifecyclePresentation | null {
+  primaryAssuranceResource(dataset);
   return assuranceLifecyclePresentation(resolveAssuranceLifecycle(
     lifecycleRegistry,
     recordId,

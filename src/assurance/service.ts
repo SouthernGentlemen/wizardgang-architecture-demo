@@ -1,7 +1,7 @@
 import {
-  assuranceCanonicalRecordCollections,
   assuranceComplianceFrameworks,
   assuranceQualifications,
+  assuranceRegistry,
   assuranceRegistryResources,
   assuranceRuntimeForwardRelationshipIndex,
   assuranceRuntimeRecordCollections,
@@ -29,7 +29,10 @@ import {
   type RiskRecord,
   type RiskStatus,
 } from './model';
-import { assuranceRecordsFromDocument } from './record-discovery.js';
+import {
+  assuranceRecordFamilyRegistration,
+  assuranceRecordsFromDocument,
+} from './record-discovery.js';
 import { assuranceRuntimeFilterVocabularies } from './generated/registry-bindings';
 import {
   assuranceAnchor as canonicalAssuranceAnchor,
@@ -45,9 +48,13 @@ import { structuredReportingSource } from '../reporting/registry';
 export type AssuranceRecordMap = CanonicalAssuranceRecordMap;
 export type AssuranceRecord = CanonicalAssuranceRecordMap[AssuranceDataset];
 export type AssuranceFilterValues = Record<string, string>;
+export type AssuranceCollectionStatus = 'unknown' | 'unsupported' | 'unavailable' | 'partial' | 'empty' | 'available';
 
-function recordsForDataset<K extends AssuranceDataset>(dataset: K): CanonicalAssuranceRecordMap[K][] {
-  return assuranceCanonicalRecordCollections[dataset];
+export interface AssuranceCollectionState {
+  dataset: string;
+  status: AssuranceCollectionStatus;
+  resourceIds: string[];
+  records: AssuranceRuntimeRecord[];
 }
 
 function reportingResourcesForDataset(dataset: string): AssuranceRegistryResource[] {
@@ -68,6 +75,28 @@ function recordsForReportingResource(dataset: string, resource: AssuranceRegistr
   return (assuranceRuntimeRecordCollections[dataset] ?? []).filter((record) => sourceIds.has(record.id));
 }
 
+export function assuranceCollectionState(dataset: string): AssuranceCollectionState {
+  const registration = assuranceRecordFamilyRegistration(assuranceRegistry, dataset);
+  const records = [...(assuranceRuntimeRecordCollections[dataset] ?? [])];
+  const status: AssuranceCollectionStatus = registration.status === 'registered'
+    ? (records.length === 0 ? 'empty' : 'available')
+    : registration.status;
+  return {
+    dataset,
+    status,
+    resourceIds: registration.runtimeResources.map((resource) => resource.id),
+    records,
+  };
+}
+
+function assertReadableCollection(dataset: string): AssuranceCollectionState {
+  const state = assuranceCollectionState(dataset);
+  if (state.status === 'unknown') throw new Error(`Unknown assurance record family ${dataset}.`);
+  if (state.status === 'unsupported') throw new Error(`Assurance family ${dataset} does not declare records capability.`);
+  if (state.status === 'unavailable') throw new Error(`Assurance family ${dataset} has no runtime-available record resource.`);
+  return state;
+}
+
 export function assuranceReportingCollections(dataset: string): ReportingCollectionResult<AssuranceRuntimeRecord>[] {
   return reportingResourcesForDataset(dataset).map((resource) => createReportingCollection(
     structuredReportingSource(resource),
@@ -78,12 +107,14 @@ export function assuranceReportingCollections(dataset: string): ReportingCollect
 export function listAssuranceRecords<K extends AssuranceDataset>(dataset: K): CanonicalAssuranceRecordMap[K][];
 export function listAssuranceRecords(dataset: string): AssuranceRuntimeRecord[];
 export function listAssuranceRecords(dataset: string): AssuranceRuntimeRecord[] {
+  assertReadableCollection(dataset);
   return assuranceReportingCollections(dataset).flatMap((collection) => collection.records);
 }
 
 export function findAssuranceRecord<K extends AssuranceDataset>(dataset: K, recordId: string): CanonicalAssuranceRecordMap[K] | undefined;
 export function findAssuranceRecord(dataset: string, recordId: string): AssuranceRuntimeRecord | undefined;
 export function findAssuranceRecord(dataset: string, recordId: string): AssuranceRuntimeRecord | undefined {
+  assertReadableCollection(dataset);
   const indexed = assuranceRuntimeRecordIndex.get(recordId);
   return indexed?.dataset === dataset ? indexed.record : undefined;
 }
@@ -93,27 +124,35 @@ export function assuranceDatasetForRecordId(recordId: string): string | undefine
 }
 
 export function assuranceDatasetCount(dataset: string): number {
+  assertReadableCollection(dataset);
   return assuranceReportingCollections(dataset).reduce((total, collection) => total + collection.derived.count, 0);
 }
 
-export function assuranceDatasetSource(dataset: AssuranceDataset): string {
+export function assuranceDatasetSource(dataset: string): string {
   return primaryAssuranceResource(dataset).path;
 }
 
-export function assuranceDatasetSchema(dataset: AssuranceDataset): string {
+export function assuranceDatasetSchema(dataset: string): string {
   return primaryAssuranceResource(dataset).schema;
 }
 
-export function assuranceFilterDefinitions(dataset: AssuranceDataset): Readonly<Record<string, AssuranceRegistryFilter>> {
+export function assuranceDatasetQualification(dataset: string): string | undefined {
+  const resource = primaryAssuranceResource(dataset);
+  if (!resource.capabilities.includes('runtime')) return resource.qualification;
+  const data = runtimeAssuranceDataset<{ qualification?: string }>(resource);
+  return data.qualification ?? resource.qualification;
+}
+
+export function assuranceFilterDefinitions(dataset: string): Readonly<Record<string, AssuranceRegistryFilter>> {
   const resource = primaryAssuranceResource(dataset);
   return resource.filters ?? {};
 }
 
-export function assuranceFilterNames(dataset: AssuranceDataset): string[] {
+export function assuranceFilterNames(dataset: string): string[] {
   return Object.keys(assuranceFilterDefinitions(dataset));
 }
 
-export function assuranceFilterValues(dataset: AssuranceDataset, parameter: string): string[] {
+export function assuranceFilterValues(dataset: string, parameter: string): string[] {
   const definition = assuranceFilterDefinitions(dataset)[parameter];
   if (!definition) return [];
   const values = assuranceRuntimeFilterVocabularies[dataset]?.[parameter];
@@ -141,7 +180,7 @@ export interface AssuranceFilterNormalization {
   issues: AssuranceFilterIssue[];
 }
 
-export function normalizeAssuranceFilters(dataset: AssuranceDataset, searchParams: URLSearchParams): AssuranceFilterNormalization {
+export function normalizeAssuranceFilters(dataset: string, searchParams: URLSearchParams): AssuranceFilterNormalization {
   const filters: AssuranceFilterValues = {};
   const issues: AssuranceFilterIssue[] = [];
   for (const parameter of assuranceFilterNames(dataset)) {
@@ -157,11 +196,11 @@ export function normalizeAssuranceFilters(dataset: AssuranceDataset, searchParam
   return { filters, issues };
 }
 
-export function assuranceFiltersFromUrl(dataset: AssuranceDataset, url: URL): AssuranceFilterValues {
+export function assuranceFiltersFromUrl(dataset: string, url: URL): AssuranceFilterValues {
   return normalizeAssuranceFilters(dataset, url.searchParams).filters;
 }
 
-export function serializeAssuranceFilters(dataset: AssuranceDataset, filters: AssuranceFilterValues): string {
+export function serializeAssuranceFilters(dataset: string, filters: AssuranceFilterValues): string {
   const params = new URLSearchParams();
   for (const parameter of assuranceFilterNames(dataset)) {
     const value = filters[parameter];
@@ -170,7 +209,7 @@ export function serializeAssuranceFilters(dataset: AssuranceDataset, filters: As
   return params.toString();
 }
 
-export function assuranceFilterPredicate(dataset: AssuranceDataset, filters: AssuranceFilterValues): (record: AssuranceRecord) => boolean {
+export function assuranceFilterPredicate(dataset: string, filters: AssuranceFilterValues): (record: unknown) => boolean {
   const definitions = assuranceFilterDefinitions(dataset);
   return (record) => Object.entries(filters).every(([parameter, expected]) => {
     const definition = definitions[parameter];
@@ -181,10 +220,20 @@ export function assuranceFilterPredicate(dataset: AssuranceDataset, filters: Ass
 export function filterAssuranceRecords<K extends AssuranceDataset, T extends CanonicalAssuranceRecordMap[K]>(
   dataset: K,
   filters: AssuranceFilterValues,
+  records?: T[],
+): T[];
+export function filterAssuranceRecords<T extends { id: string }>(
+  dataset: string,
+  filters: AssuranceFilterValues,
+  records?: T[],
+): T[];
+export function filterAssuranceRecords<T extends { id: string }>(
+  dataset: string,
+  filters: AssuranceFilterValues,
   records: T[] = listAssuranceRecords(dataset) as T[],
 ): T[] {
   const predicate = assuranceFilterPredicate(dataset, filters);
-  return records.filter((record) => predicate(record as AssuranceRecord));
+  return records.filter((record) => predicate(record));
 }
 
 export interface AssuranceFacetCounts {
@@ -192,7 +241,7 @@ export interface AssuranceFacetCounts {
   byFilter: Record<string, Record<string, number>>;
 }
 
-export function deriveAssuranceCounts<K extends AssuranceDataset>(dataset: K, records: CanonicalAssuranceRecordMap[K][]): AssuranceFacetCounts {
+export function deriveAssuranceCounts<T extends { id: string }>(dataset: string, records: T[]): AssuranceFacetCounts {
   const byFilter: Record<string, Record<string, number>> = {};
   for (const [parameter, definition] of Object.entries(assuranceFilterDefinitions(dataset))) {
     const counts = Object.fromEntries(assuranceFilterValues(dataset, parameter).map((value) => [value, 0])) as Record<string, number>;
@@ -205,7 +254,7 @@ export function deriveAssuranceCounts<K extends AssuranceDataset>(dataset: K, re
   return { total: records.length, byFilter };
 }
 
-export function labelAssuranceFilterValue(dataset: AssuranceDataset, parameter: string, value: string): string {
+export function labelAssuranceFilterValue(dataset: string, parameter: string, value: string): string {
   if (dataset === 'compliance' && parameter === 'framework') {
     return assuranceComplianceFrameworks.find((framework) => framework.id === value)?.label ?? value;
   }
@@ -261,18 +310,14 @@ export function evidenceUsedBy(evidenceId: string): string[] {
 
 export const assuranceAnchor = canonicalAssuranceAnchor;
 
-export function assuranceRecordUrls(dataset: AssuranceDataset, recordId?: string): { html?: string; api?: string } {
+export function assuranceRecordUrls(dataset: string, recordId?: string): { html?: string; api?: string } {
   return canonicalAssuranceRecordUrls(dataset, recordId);
 }
 
 export function assuranceRecordUrlsById(recordId: string): { html?: string; api?: string } {
   const dataset = assuranceDatasetForRecordId(recordId);
-  if (!dataset) return {};
-  const indexedForHttp = assuranceRegistryResources.some(
-    (resource) => resource.kind === dataset && resource.role === 'dataset' && resource.capabilities.includes('api-index'),
-  );
-  if (!indexedForHttp || !assuranceRoutesForDataset(dataset as AssuranceDataset)) return {};
-  return canonicalAssuranceRecordUrls(dataset as AssuranceDataset, recordId);
+  if (!dataset || !assuranceRoutesForDataset(dataset)) return {};
+  return canonicalAssuranceRecordUrls(dataset, recordId);
 }
 
 export const complianceFrameworks = assuranceComplianceFrameworks;

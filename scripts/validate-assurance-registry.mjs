@@ -22,7 +22,7 @@ import { renderRuntimeBinding, RUNTIME_BINDING_PATH } from './generate-assurance
 const root = process.cwd();
 const errors = [];
 const registrySchemaPath = 'contracts/assurance/registry.schema.json';
-const releasedV1Kinds = new Set(['evidence', 'claims', 'compliance', 'risks', 'incidents', 'exercises', 'advisories']);
+const stableV1Kinds = new Set(['evidence', 'claims', 'compliance', 'risks', 'incidents', 'exercises', 'advisories']);
 const reportingDomains = new Set(['evidence', 'reports', 'issues', 'risks', 'security', 'governance', 'operations']);
 const cloudflareObservationIdentity = ['resource', 'metric', 'dimensions', 'window.start', 'window.end'];
 
@@ -66,11 +66,12 @@ if (registry) {
 
     const hasRecords = resource.capabilities?.includes('records');
     const hasRuntime = resource.capabilities?.includes('runtime');
+    const hasApiIndex = resource.capabilities?.includes('api-index');
     if (hasRecords && !hasRuntime) fail(`${ASSURANCE_REGISTRY_PATH}: ${resource.id} records capability requires runtime capability for shared Worker/Node record discovery`);
     if (hasRecords && !resource.recordCollection) fail(`${ASSURANCE_REGISTRY_PATH}: ${resource.id} records capability requires recordCollection metadata`);
     if (!hasRecords && resource.recordCollection) fail(`${ASSURANCE_REGISTRY_PATH}: ${resource.id} declares recordCollection without records capability`);
-    if (resource.capabilities?.includes('api-index') && !releasedV1Kinds.has(resource.kind)) {
-      fail(`${ASSURANCE_REGISTRY_PATH}: ${resource.id} declares unsupported api-index capability for unreleased family ${resource.kind}`);
+    if (hasApiIndex && (!hasRuntime || !hasRecords)) {
+      fail(`${ASSURANCE_REGISTRY_PATH}: ${resource.id} api-index capability requires runtime and records capabilities`);
     }
 
     if (!exists(resource.path)) fail(`${ASSURANCE_REGISTRY_PATH}: registered dataset is missing: ${resource.path}`);
@@ -198,11 +199,11 @@ if (registry) {
   for (const dataset of registry.datasets ?? []) {
     if (primaryKinds.has(dataset.kind)) fail(`${ASSURANCE_REGISTRY_PATH}: duplicate primary dataset family ${dataset.kind}`);
     else primaryKinds.set(dataset.kind, dataset.id);
-    if (releasedV1Kinds.has(dataset.kind) && !dataset.capabilities?.includes('api-index')) {
+    if (stableV1Kinds.has(dataset.kind) && !dataset.capabilities?.includes('api-index')) {
       fail(`${ASSURANCE_REGISTRY_PATH}: released v1 primary dataset ${dataset.id} must declare api-index capability`);
     }
   }
-  for (const kind of releasedV1Kinds) {
+  for (const kind of stableV1Kinds) {
     if (!primaryKinds.has(kind)) fail(`${ASSURANCE_REGISTRY_PATH}: missing released v1 primary dataset family ${kind}`);
   }
 
@@ -221,18 +222,19 @@ if (registry) {
   const monitoring = resources.filter((resource) => resource.capabilities?.includes('monitoring'));
   if (monitoring.length !== 1) fail(`${ASSURANCE_REGISTRY_PATH}: expected exactly one monitoring resource; found ${monitoring.length}`);
 
-  const manifests = resources.filter((resource) => resource.kind === 'compliance' && resource.capabilities?.includes('manifest'));
-  if (manifests.length !== 1) {
-    fail(`${ASSURANCE_REGISTRY_PATH}: expected exactly one compliance manifest resource; found ${manifests.length}`);
+  const wcagResources = resources.filter((resource) => resource.kind === 'compliance' && resource.framework?.id === 'wcag-2.2');
+  const wcagManifests = wcagResources.filter((resource) => resource.capabilities?.includes('manifest'));
+  if (wcagManifests.length !== 1) {
+    fail(`${ASSURANCE_REGISTRY_PATH}: expected exactly one WCAG compliance manifest resource; found ${wcagManifests.length}`);
   } else {
-    const manifestResource = manifests[0];
+    const manifestResource = wcagManifests[0];
     const ownedPartitions = (manifestResource.resources ?? [])
       .filter((resource) => resource.kind === 'compliance' && resource.role === 'partition');
-    const registeredPartitions = resources
-      .filter((resource) => resource.kind === 'compliance' && resource.role === 'partition');
+    const registeredPartitions = wcagResources
+      .filter((resource) => resource.role === 'partition');
     if (ownedPartitions.length !== registeredPartitions.length
       || !registeredPartitions.every((resource) => ownedPartitions.some((owned) => owned.id === resource.id && owned.path === resource.path))) {
-      fail(`${ASSURANCE_REGISTRY_PATH}: WCAG partition membership must be owned by the compliance manifest resource hierarchy`);
+      fail(`${ASSURANCE_REGISTRY_PATH}: WCAG partition membership must be owned by the WCAG compliance manifest resource hierarchy`);
     }
   }
 

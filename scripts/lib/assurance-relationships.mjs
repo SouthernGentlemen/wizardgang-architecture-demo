@@ -4,6 +4,11 @@ import {
   primaryRegistryDataset,
   readJsonFile,
 } from './assurance-registry.mjs';
+import {
+  assuranceRelationshipNames,
+  assuranceRelationshipTargetIds,
+  validateAssuranceRelationshipSet,
+} from '../../src/assurance/relationship-contract.js';
 
 export function registeredRelationshipFamily(root, registry, kind) {
   const resource = primaryRegistryDataset(registry, kind);
@@ -19,13 +24,21 @@ export function registeredRelationshipFamily(root, registry, kind) {
   };
 }
 
-export function validateRelationshipSet(relationships, families, label = 'relationships') {
-  const errors = [];
-  for (const [family, targets] of families) {
-    const values = Array.isArray(relationships?.[family]) ? relationships[family] : [];
-    for (const id of values) {
-      if (!targets.has(id)) errors.push(`${label}.${family}: unresolved ${family} relationship ${id}`);
-    }
+export function registeredRelationshipTargets(recordEntries, { frameworkIds = [], governanceDocumentIds = [] } = {}) {
+  const recordsByKind = new Map();
+  for (const { resource, record } of recordEntries) {
+    const records = recordsByKind.get(resource.kind) ?? [];
+    records.push(record);
+    recordsByKind.set(resource.kind, records);
   }
-  return errors;
+  const context = { recordsByKind, frameworkIds, governanceDocumentIds };
+  return new Map(assuranceRelationshipNames().map((name) => [name, assuranceRelationshipTargetIds(name, context)]));
+}
+
+export function validateRelationshipSet(relationships, families, label = 'relationships') {
+  return validateAssuranceRelationshipSet(
+    relationships,
+    { targetIdsByRelationship: families },
+    label,
+  );
 }
