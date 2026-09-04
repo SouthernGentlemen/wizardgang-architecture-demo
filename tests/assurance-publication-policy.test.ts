@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { evaluateAssuranceObservationWindow } from '../src/assurance/observation-window.js';
 import {
   assuranceLifecycleBaselineEligible,
   assuranceLifecyclePresentation,
@@ -172,21 +173,60 @@ describe('shared assurance publication policy', () => {
     expect(decision.reason).toBe('retained-record');
   });
 
-  it('derives time-sensitive observation state from an explicit clock without changing freshness policy', () => {
+  it.each([
+    ['before observedAt', '2026-09-03T11:59:59.999Z', 'not-yet-observed'],
+    ['exactly observedAt', '2026-09-03T12:00:00.000Z', 'current'],
+    ['inside the window', '2026-09-03T13:00:00.000Z', 'current'],
+    ['exactly validUntil', '2026-09-03T14:00:00.000Z', 'expired'],
+    ['after validUntil', '2026-09-03T14:00:00.001Z', 'expired'],
+  ])('derives %s with one half-open observation-window interpretation', (_label, clock, expectedState) => {
+    const observation = {
+      freshnessPolicy: 'observation-bound',
+      observedAt: '2026-09-03T12:00:00.000Z',
+      validUntil: '2026-09-03T14:00:00.000Z',
+    };
+
+    expect(evaluateAssuranceObservationWindow(observation, clock)?.state).toBe(expectedState);
+    expect(assuranceObservedState(observation, clock)).toMatchObject({
+      state: expectedState,
+      observedAt: observation.observedAt,
+      validUntil: observation.validUntil,
+    });
+    expect(observation.freshnessPolicy).toBe('observation-bound');
+  });
+
+  it.each([
+    ['reversed', { observedAt: '2026-09-03T14:00:00Z', validUntil: '2026-09-03T12:00:00Z' }, 'non-positive-window'],
+    ['zero-length', { observedAt: '2026-09-03T12:00:00Z', validUntil: '2026-09-03T12:00:00Z' }, 'non-positive-window'],
+    ['missing validUntil', { observedAt: '2026-09-03T12:00:00Z' }, 'incomplete-window'],
+    ['missing observedAt', { validUntil: '2026-09-03T14:00:00Z' }, 'incomplete-window'],
+    ['invalid observedAt', { observedAt: 'invalid', validUntil: '2026-09-03T14:00:00Z' }, 'invalid-observed-at'],
+    ['invalid validUntil', { observedAt: '2026-09-03T12:00:00Z', validUntil: 'invalid' }, 'invalid-valid-until'],
+  ])('rejects a %s observation window through the shared evaluator', (_label, observation, expectedReason) => {
+    expect(evaluateAssuranceObservationWindow(observation, '2026-09-03T13:00:00Z')).toEqual({
+      state: 'invalid-window',
+      reason: expectedReason,
+    });
+    expect(assuranceObservedState(observation, '2026-09-03T13:00:00Z')?.state).toBe('invalid-window');
+  });
+
+  it('rejects an invalid explicit clock without changing the window or freshness policy', () => {
     const observation = {
       freshnessPolicy: 'observation-bound',
       observedAt: '2026-09-03T12:00:00Z',
       validUntil: '2026-09-03T14:00:00Z',
     };
-
-    expect(assuranceObservedState(observation, new Date('2026-09-03T11:00:00Z'))).toMatchObject({
-      state: 'not-yet-observed',
-      observedAt: observation.observedAt,
-      validUntil: observation.validUntil,
+    expect(evaluateAssuranceObservationWindow(observation, 'invalid')).toEqual({
+      state: 'invalid-window',
+      reason: 'invalid-clock',
     });
-    expect(assuranceObservedState(observation, new Date('2026-09-03T13:00:00Z'))?.state).toBe('current');
-    expect(assuranceObservedState(observation, new Date('2026-09-03T15:00:00Z'))?.state).toBe('expired');
     expect(observation.freshnessPolicy).toBe('observation-bound');
+  });
+
+  it('preserves records that do not declare an observation window', () => {
+    const liveRoute = { freshnessPolicy: 'observation-bound', locator: { route: '/health' } };
+    expect(evaluateAssuranceObservationWindow(liveRoute, '2026-09-03T13:00:00Z')).toBeNull();
+    expect(assuranceObservedState(liveRoute, '2026-09-03T13:00:00Z')).toBeNull();
   });
 
   it('projects verified baseline lifecycle presentation on current public runtime records', () => {

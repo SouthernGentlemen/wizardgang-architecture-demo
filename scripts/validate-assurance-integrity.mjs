@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { evaluateAssuranceObservationWindow } from '../src/assurance/observation-window.js';
 import {
   assuranceRecordResources,
   assuranceRecordsFromDocument,
@@ -94,6 +95,26 @@ function registerPublicId(id, owner) {
   else idOwners.set(id, owner);
 }
 
+function reportObservationWindowError(recordId, evaluation) {
+  if (evaluation?.state !== 'invalid-window') return;
+  switch (evaluation.reason) {
+    case 'incomplete-window':
+      errors.push(`${recordId}: observation window must declare both observedAt and validUntil`);
+      break;
+    case 'invalid-observed-at':
+      errors.push(`${recordId}: observedAt is not a valid date-time`);
+      break;
+    case 'invalid-valid-until':
+      errors.push(`${recordId}: validUntil is not a valid date-time`);
+      break;
+    case 'non-positive-window':
+      errors.push(`${recordId}: validUntil must be after observedAt`);
+      break;
+    case 'invalid-clock':
+      break;
+  }
+}
+
 for (const { resource, record } of recordEntries) {
   registerPublicId(record.id, resource.id);
   if (resource.kind !== 'evidence') continue;
@@ -101,12 +122,9 @@ for (const { resource, record } of recordEntries) {
   const isTimeBound = record.kind === 'observation' || record.observedAt !== undefined || record.validUntil !== undefined;
   if (isTimeBound) {
     if (record.freshnessPolicy !== 'observation-bound') errors.push(`${record.id}: time-bound evidence must use observation-bound freshness`);
-    if (record.observedAt && record.validUntil) {
-      const observedAt = Date.parse(record.observedAt);
-      const validUntil = Date.parse(record.validUntil);
-      if (!Number.isNaN(observedAt) && !Number.isNaN(validUntil) && validUntil <= observedAt) errors.push(`${record.id}: validUntil must be after observedAt`);
-      if (!Number.isNaN(validUntil) && !Number.isNaN(validationNow) && validUntil <= validationNow) errors.push(`${record.id}: time-bound evidence is stale as of ${nowValue}`);
-    }
+    const observation = evaluateAssuranceObservationWindow(record, nowValue);
+    reportObservationWindowError(record.id, observation);
+    if (observation?.state === 'expired') errors.push(`${record.id}: time-bound evidence is stale as of ${nowValue}`);
   }
 }
 

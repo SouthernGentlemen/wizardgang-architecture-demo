@@ -1,6 +1,17 @@
+import type { AssuranceObservationClock, AssuranceObservationWindowStateName } from './observation-window.js';
+
+export type {
+  AssuranceObservationClock,
+  AssuranceObservationWindowEvaluation,
+  AssuranceObservationWindowInput,
+  AssuranceObservationWindowInvalidReason,
+  AssuranceObservationWindowStateName,
+} from './observation-window.js';
+export { evaluateAssuranceObservationWindow } from './observation-window.js';
+
 export type AssuranceLifecycle = 'Draft' | 'Approved' | 'Published' | 'Superseded' | 'Withdrawn';
 export type AssuranceLifecycleSource = 'baseline' | 'explicit' | 'retired';
-export type AssuranceObservedStateName = 'not-yet-observed' | 'current' | 'expired' | 'invalid-window';
+export type AssuranceObservedStateName = AssuranceObservationWindowStateName;
 
 export interface AssuranceDisclosureReview {
   status?: string;
@@ -91,6 +102,6 @@ export function assurancePublicationDecision(
   options?: AssuranceLifecycleResolutionOptions,
 ): AssurancePublicationDecision;
 export function assuranceObservedState(
-  record: { observedAt?: string; validUntil?: string },
-  now?: Date | string | number,
+  record: { observedAt?: unknown; validUntil?: unknown },
+  now?: AssuranceObservationClock,
 ): AssuranceObservedState | null;
