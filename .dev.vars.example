@@ -6,6 +6,10 @@ WEBHOOK_DEMO_SECRET=replace-me-with-a-local-only-webhook-secret
 GITHUB_WEBHOOK_SECRET=replace-me-with-a-local-only-github-webhook-secret
 DEMO_SESSION_SECRET=replace-me-with-at-least-32-local-only-characters
 
+# Optional protected GitHub reporting. Leave unset for public repositories.
+# Use a dedicated fine-grained, read-only credential scoped only to the configured repository.
+# GITHUB_READ_TOKEN=replace-me-with-a-local-only-read-token
+
 # Real identity providers. Register localhost callback URLs separately for local testing.
 IDENTITY_SESSION_SECRET=replace-me-with-at-least-32-local-only-characters
 MICROSOFT_CLIENT_ID=replace-me

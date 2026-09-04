@@ -2,7 +2,7 @@ import type { Env } from '../types';
 import { json } from './http';
 import { readDemoAccessToken, readIdentitySession, sha256, type IdentitySession } from './identity-session';
 
-export type Permission = 'demo:read' | 'demo:write';
+export type Permission = 'demo:read' | 'demo:write' | 'reporting:private';
 
 export interface Principal {
   subject: string;
@@ -32,11 +32,13 @@ async function secretMatches(actual: string, expected: string): Promise<boolean>
 
 export async function principalFromIdentitySession(session: IdentitySession): Promise<Principal> {
   const subject = `${session.identity.provider}:${session.identity.subject}`;
+  const permissions: Permission[] = ['demo:read', 'demo:write'];
+  if (session.identity.role === 'operator') permissions.push('reporting:private');
   return {
     subject,
     authentication: session.identity.protocol,
     provider: session.identity.provider,
-    permissions: ['demo:read', 'demo:write'],
+    permissions,
     namespace: `sandbox-${(await sha256(subject)).slice(0, 24)}`,
     expiresAt: session.expiresAt,
   };
@@ -49,22 +51,28 @@ function rejected(): Response {
   });
 }
 
+function denied(): Response {
+  return json({ error: 'permission_denied' }, { status: 403, headers: { 'cache-control': 'no-store' } });
+}
+
 export async function authorize(request: Request, env: Env, permission: Permission, options: AuthorizationOptions = {}): Promise<Principal | Response> {
   const header = request.headers.get('authorization');
   if (header?.startsWith('Bearer ')) {
     const token = header.slice(7);
     const visitor = await readDemoAccessToken(env, token);
     if (visitor) {
-      if (!visitor.permissions.includes(permission)) return json({ error: 'permission_denied' }, { status: 403, headers: { 'cache-control': 'no-store' } });
+      if (!visitor.permissions.some((candidate) => candidate === permission)) return denied();
       return visitor;
     }
     if (env.DEMO_API_TOKEN && await secretMatches(token, env.DEMO_API_TOKEN)) {
-      return {
+      const operator: Principal = {
         subject: 'demo-api-operator',
         authentication: 'bearer',
         provider: 'operator',
         permissions: ['demo:read', 'demo:write'],
       };
+      if (!operator.permissions.includes(permission)) return denied();
+      return operator;
     }
     return rejected();
   }
@@ -74,6 +82,7 @@ export async function authorize(request: Request, env: Env, permission: Permissi
     if (session) {
       const principal = await principalFromIdentitySession(session);
       if (principal.permissions.includes(permission)) return principal;
+      return denied();
     }
   }
 
