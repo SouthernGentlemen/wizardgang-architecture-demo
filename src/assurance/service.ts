@@ -5,13 +5,14 @@ import {
   assuranceRegistryResources,
   assuranceRuntimeForwardRelationshipIndex,
   assuranceRuntimeRecordCollections,
-  assuranceRuntimeRecordCounts,
   assuranceRuntimeRecordIndex,
   assuranceRuntimeReverseRelationshipIndex,
   primaryAssuranceResource,
+  runtimeAssuranceDataset,
   type AssuranceDataset,
   type AssuranceRelationships,
   type AssuranceRegistryFilter,
+  type AssuranceRegistryResource,
   type AssuranceRuntimeRecord,
   type AssuranceRuntimeRelationshipReference,
   type CanonicalAssuranceRecordMap,
@@ -28,12 +29,18 @@ import {
   type RiskRecord,
   type RiskStatus,
 } from './model';
+import { assuranceRecordsFromDocument } from './record-discovery.js';
 import { assuranceRuntimeFilterVocabularies } from './generated/registry-bindings';
 import {
   assuranceAnchor as canonicalAssuranceAnchor,
   assuranceRecordUrls as canonicalAssuranceRecordUrls,
   assuranceRoutesForDataset,
 } from './routes';
+import {
+  createReportingCollection,
+  type ReportingCollectionResult,
+} from '../reporting/contracts';
+import { structuredReportingSource } from '../reporting/registry';
 
 export type AssuranceRecordMap = CanonicalAssuranceRecordMap;
 export type AssuranceRecord = CanonicalAssuranceRecordMap[AssuranceDataset];
@@ -43,10 +50,35 @@ function recordsForDataset<K extends AssuranceDataset>(dataset: K): CanonicalAss
   return assuranceCanonicalRecordCollections[dataset];
 }
 
+function reportingResourcesForDataset(dataset: string): AssuranceRegistryResource[] {
+  return assuranceRegistryResources.filter((resource) => resource.kind === dataset
+    && resource.capabilities.includes('runtime')
+    && resource.capabilities.includes('records'));
+}
+
+function recordsForReportingResource(dataset: string, resource: AssuranceRegistryResource): AssuranceRuntimeRecord[] {
+  const sourceIds = new Set(
+    assuranceRecordsFromDocument(resource, runtimeAssuranceDataset(resource))
+      .flatMap((record) => {
+        if (!record || typeof record !== 'object' || Array.isArray(record)) return [];
+        const id = (record as { id?: unknown }).id;
+        return typeof id === 'string' && id.length > 0 ? [id] : [];
+      }),
+  );
+  return (assuranceRuntimeRecordCollections[dataset] ?? []).filter((record) => sourceIds.has(record.id));
+}
+
+export function assuranceReportingCollections(dataset: string): ReportingCollectionResult<AssuranceRuntimeRecord>[] {
+  return reportingResourcesForDataset(dataset).map((resource) => createReportingCollection(
+    structuredReportingSource(resource),
+    recordsForReportingResource(dataset, resource),
+  ));
+}
+
 export function listAssuranceRecords<K extends AssuranceDataset>(dataset: K): CanonicalAssuranceRecordMap[K][];
 export function listAssuranceRecords(dataset: string): AssuranceRuntimeRecord[];
 export function listAssuranceRecords(dataset: string): AssuranceRuntimeRecord[] {
-  return [...(assuranceRuntimeRecordCollections[dataset] ?? [])];
+  return assuranceReportingCollections(dataset).flatMap((collection) => collection.records);
 }
 
 export function findAssuranceRecord<K extends AssuranceDataset>(dataset: K, recordId: string): CanonicalAssuranceRecordMap[K] | undefined;
@@ -61,7 +93,7 @@ export function assuranceDatasetForRecordId(recordId: string): string | undefine
 }
 
 export function assuranceDatasetCount(dataset: string): number {
-  return assuranceRuntimeRecordCounts[dataset] ?? 0;
+  return assuranceReportingCollections(dataset).reduce((total, collection) => total + collection.derived.count, 0);
 }
 
 export function assuranceDatasetSource(dataset: AssuranceDataset): string {

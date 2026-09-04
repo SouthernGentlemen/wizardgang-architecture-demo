@@ -1,7 +1,6 @@
 import type { Env } from './types';
 import { routeRequest } from './router';
 import { collectHealth } from './api/operations';
-import { collectCloudflareUsage } from './lib/cloudflare-usage';
 export { DemoCoordinator } from './durable/demo-coordinator';
 
 interface ScheduledController {
@@ -13,9 +12,8 @@ interface ExecutionContext {
 }
 
 export async function runScheduledOperations(env: Env, scheduledTime = Date.now()): Promise<void> {
+  void scheduledTime;
   await collectHealth(env, true);
-  const minute = new Date(scheduledTime).getUTCMinutes();
-  if (minute % 15 === 0) await collectCloudflareUsage(env, minute === 0);
 }
 
 export default {
