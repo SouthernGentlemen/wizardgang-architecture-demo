@@ -16,12 +16,10 @@
       "framework": "security",
       "title": "Credential or secret exposure",
       "inherent": {
-        "score": 20,
-        "rating": "critical"
+        "score": 20
       },
       "residual": {
-        "score": 10,
-        "rating": "high"
+        "score": 10
       },
       "treatment": [
         "reduce"
@@ -52,12 +50,10 @@
       "framework": "security",
       "title": "Unauthorized privileged administration",
       "inherent": {
-        "score": 20,
-        "rating": "critical"
+        "score": 20
       },
       "residual": {
-        "score": 10,
-        "rating": "high"
+        "score": 10
       },
       "treatment": [
         "reduce"
@@ -88,12 +84,10 @@
       "framework": "security",
       "title": "Source-control or delivery-pipeline compromise",
       "inherent": {
-        "score": 20,
-        "rating": "critical"
+        "score": 20
       },
       "residual": {
-        "score": 15,
-        "rating": "high"
+        "score": 15
       },
       "treatment": [
         "reduce"
@@ -126,12 +120,10 @@
       "framework": "security",
       "title": "Open-source dependency or software supply-chain compromise",
       "inherent": {
-        "score": 16,
-        "rating": "high"
+        "score": 16
       },
       "residual": {
-        "score": 12,
-        "rating": "high"
+        "score": 12
       },
       "treatment": [
         "reduce"
@@ -162,12 +154,10 @@
       "framework": "security",
       "title": "Forged or replayed webhook requests",
       "inherent": {
-        "score": 16,
-        "rating": "high"
+        "score": 16
       },
       "residual": {
-        "score": 8,
-        "rating": "moderate"
+        "score": 8
       },
       "treatment": [
         "reduce"
@@ -198,12 +188,10 @@
       "framework": "security",
       "title": "Sensitive information disclosed through public diagnostics",
       "inherent": {
-        "score": 16,
-        "rating": "high"
+        "score": 16
       },
       "residual": {
-        "score": 8,
-        "rating": "moderate"
+        "score": 8
       },
       "treatment": [
         "reduce"
@@ -234,12 +222,10 @@
       "framework": "security",
       "title": "Persistent data loss or corruption without demonstrated recovery",
       "inherent": {
-        "score": 12,
-        "rating": "high"
+        "score": 12
       },
       "residual": {
-        "score": 12,
-        "rating": "high"
+        "score": 12
       },
       "treatment": [
         "reduce"
@@ -270,12 +256,10 @@
       "framework": "security",
       "title": "Cloudflare service or platform dependency disrupts operation",
       "inherent": {
-        "score": 12,
-        "rating": "high"
+        "score": 12
       },
       "residual": {
-        "score": 9,
-        "rating": "moderate"
+        "score": 9
       },
       "treatment": [
         "reduce",
@@ -307,12 +291,10 @@
       "framework": "security",
       "title": "GitHub dependency disrupts source, CI/CD, or release operations",
       "inherent": {
-        "score": 9,
-        "rating": "moderate"
+        "score": 9
       },
       "residual": {
-        "score": 9,
-        "rating": "moderate"
+        "score": 9
       },
       "treatment": [
         "reduce",
@@ -345,12 +327,10 @@
       "framework": "security",
       "title": "Identity-provider failure or misconfiguration affects authentication",
       "inherent": {
-        "score": 12,
-        "rating": "high"
+        "score": 12
       },
       "residual": {
-        "score": 8,
-        "rating": "moderate"
+        "score": 8
       },
       "treatment": [
         "reduce",
@@ -382,12 +362,10 @@
       "framework": "security",
       "title": "Authorization-scope bypass across application interfaces",
       "inherent": {
-        "score": 20,
-        "rating": "critical"
+        "score": 20
       },
       "residual": {
-        "score": 10,
-        "rating": "high"
+        "score": 10
       },
       "treatment": [
         "reduce"
@@ -418,12 +396,10 @@
       "framework": "security",
       "title": "Resource exhaustion, abusive traffic, or cost pressure degrades service",
       "inherent": {
-        "score": 16,
-        "rating": "high"
+        "score": 16
       },
       "residual": {
-        "score": 9,
-        "rating": "moderate"
+        "score": 9
       },
       "treatment": [
         "reduce"
@@ -454,12 +430,10 @@
       "framework": "security",
       "title": "Security incident response is incomplete or unexercised",
       "inherent": {
-        "score": 12,
-        "rating": "high"
+        "score": 12
       },
       "residual": {
-        "score": 12,
-        "rating": "high"
+        "score": 12
       },
       "treatment": [
         "reduce"
@@ -491,12 +465,10 @@
       "framework": "security",
       "title": "Release or deployment drift causes unauthorized or untraceable production state",
       "inherent": {
-        "score": 12,
-        "rating": "high"
+        "score": 12
       },
       "residual": {
-        "score": 6,
-        "rating": "moderate"
+        "score": 6
       },
       "treatment": [
         "reduce"
@@ -528,12 +500,10 @@
       "framework": "security",
       "title": "Stale or inaccurate assurance evidence causes false security conclusions",
       "inherent": {
-        "score": 9,
-        "rating": "moderate"
+        "score": 9
       },
       "residual": {
-        "score": 9,
-        "rating": "moderate"
+        "score": 9
       },
       "treatment": [
         "reduce"
@@ -564,12 +534,10 @@
       "framework": "ai",
       "title": "Unauthorized expansion of AI tool authority",
       "inherent": {
-        "score": 20,
-        "rating": "critical"
+        "score": 20
       },
       "residual": {
-        "score": 8,
-        "rating": "moderate"
+        "score": 8
       },
       "treatment": [
         "reduce"
@@ -602,12 +570,10 @@
       "framework": "ai",
       "title": "Authorization mismatch between AI and non-AI interfaces",
       "inherent": {
-        "score": 16,
-        "rating": "high"
+        "score": 16
       },
       "residual": {
-        "score": 8,
-        "rating": "moderate"
+        "score": 8
       },
       "treatment": [
         "reduce"
@@ -640,12 +606,10 @@
       "framework": "ai",
       "title": "Indirect prompt or instruction injection through returned content",
       "inherent": {
-        "score": 12,
-        "rating": "high"
+        "score": 12
       },
       "residual": {
-        "score": 9,
-        "rating": "moderate"
+        "score": 9
       },
       "treatment": [
         "reduce"
@@ -677,12 +641,10 @@
       "framework": "ai",
       "title": "Sensitive or unintended data exposure through AI-accessible tools",
       "inherent": {
-        "score": 15,
-        "rating": "high"
+        "score": 15
       },
       "residual": {
-        "score": 6,
-        "rating": "moderate"
+        "score": 6
       },
       "treatment": [
         "reduce"
@@ -715,12 +677,10 @@
       "framework": "ai",
       "title": "Malformed or unsupported MCP requests bypass intended controls",
       "inherent": {
-        "score": 12,
-        "rating": "high"
+        "score": 12
       },
       "residual": {
-        "score": 4,
-        "rating": "low"
+        "score": 4
       },
       "treatment": [
         "reduce"
@@ -752,12 +712,10 @@
       "framework": "ai",
       "title": "Incorrect, stale, or incomplete data is over-trusted by an AI caller",
       "inherent": {
-        "score": 12,
-        "rating": "high"
+        "score": 12
       },
       "residual": {
-        "score": 9,
-        "rating": "moderate"
+        "score": 9
       },
       "treatment": [
         "reduce"
@@ -789,12 +747,10 @@
       "framework": "ai",
       "title": "AI evaluation coverage is too narrow to detect regressions",
       "inherent": {
-        "score": 16,
-        "rating": "high"
+        "score": 16
       },
       "residual": {
-        "score": 9,
-        "rating": "moderate"
+        "score": 9
       },
       "treatment": [
         "reduce"
@@ -826,12 +782,10 @@
       "framework": "ai",
       "title": "AI logging or evidence is insufficient or discloses inappropriate content",
       "inherent": {
-        "score": 12,
-        "rating": "high"
+        "score": 12
       },
       "residual": {
-        "score": 6,
-        "rating": "moderate"
+        "score": 6
       },
       "treatment": [
         "reduce"
@@ -863,12 +817,10 @@
       "framework": "ai",
       "title": "AI/MCP capability drift occurs without risk reassessment",
       "inherent": {
-        "score": 16,
-        "rating": "high"
+        "score": 16
       },
       "residual": {
-        "score": 8,
-        "rating": "moderate"
+        "score": 8
       },
       "treatment": [
         "reduce"
@@ -900,12 +852,10 @@
       "framework": "ai",
       "title": "External agent/model behavior causes misleading or unintended downstream use",
       "inherent": {
-        "score": 12,
-        "rating": "high"
+        "score": 12
       },
       "residual": {
-        "score": 8,
-        "rating": "moderate"
+        "score": 8
       },
       "treatment": [
         "reduce",
@@ -938,12 +888,10 @@
       "framework": "ai",
       "title": "MCP protocol, client, or integration changes cause unsafe or misleading behavior",
       "inherent": {
-        "score": 12,
-        "rating": "high"
+        "score": 12
       },
       "residual": {
-        "score": 6,
-        "rating": "moderate"
+        "score": 6
       },
       "treatment": [
         "reduce"
@@ -976,12 +924,10 @@
       "framework": "ai",
       "title": "Human oversight is bypassed if privileged actions become AI-callable",
       "inherent": {
-        "score": 20,
-        "rating": "critical"
+        "score": 20
       },
       "residual": {
-        "score": 8,
-        "rating": "moderate"
+        "score": 8
       },
       "treatment": [
         "avoid",
@@ -1014,12 +960,10 @@
       "framework": "ai",
       "title": "Data quality or provenance weaknesses degrade AI-assisted interpretation",
       "inherent": {
-        "score": 12,
-        "rating": "high"
+        "score": 12
       },
       "residual": {
-        "score": 9,
-        "rating": "moderate"
+        "score": 9
       },
       "treatment": [
         "reduce"
@@ -1051,12 +995,10 @@
       "framework": "ai",
       "title": "Public AI-assurance claims are misunderstood as certification or complete safety",
       "inherent": {
-        "score": 12,
-        "rating": "high"
+        "score": 12
       },
       "residual": {
-        "score": 6,
-        "rating": "moderate"
+        "score": 6
       },
       "treatment": [
         "reduce"
@@ -1088,12 +1030,10 @@
       "framework": "ai",
       "title": "AI incidents, concerns, or unexpected behavior are not handled consistently",
       "inherent": {
-        "score": 12,
-        "rating": "high"
+        "score": 12
       },
       "residual": {
-        "score": 9,
-        "rating": "moderate"
+        "score": 9
       },
       "treatment": [
         "reduce"

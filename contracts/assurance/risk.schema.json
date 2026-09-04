@@ -28,14 +28,12 @@
     }
   },
   "$defs": {
-    "rating": { "enum": ["low", "moderate", "high", "critical"] },
     "score": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["score", "rating"],
+      "required": ["score"],
       "properties": {
-        "score": { "type": "integer", "minimum": 1, "maximum": 25 },
-        "rating": { "$ref": "#/$defs/rating" }
+        "score": { "type": "integer", "minimum": 1, "maximum": 25 }
       }
     },
     "risk": {
@@ -68,9 +66,7 @@
         "reviewDue": { "type": "string", "format": "date" },
         "relationships": {
           "$ref": "./relationships.schema.json",
-          "properties": {
-            "evidence": { "minItems": 1 }
-          }
+          "properties": { "evidence": { "minItems": 1 } }
         }
       }
     }
