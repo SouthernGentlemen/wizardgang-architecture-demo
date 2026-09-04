@@ -22,6 +22,7 @@ import {
   paginateAssuranceRecords,
   prepareAssuranceRequest,
 } from './assurance-contract';
+import { selectFocusedAssuranceRecords } from './assurance-filtering';
 import type { Env } from '../types';
 
 export function assuranceResponse(request: Request, env: Env): Response {
@@ -56,8 +57,10 @@ export function assuranceEvidenceResponse(request: Request, env: Env): Response 
   const context = prepareAssuranceRequest(request);
   if (context instanceof Response) return context;
 
-  const records = presentedPublishedEvidenceRecords(env, new URL(request.url).origin);
-  const page = paginateAssuranceRecords(request, context.url, records);
+  const sourceRecords = presentedPublishedEvidenceRecords(env, new URL(request.url).origin);
+  const selection = selectFocusedAssuranceRecords(request, context.url, ['evidence'], sourceRecords);
+  if (selection instanceof Response) return selection;
+  const page = paginateAssuranceRecords(request, context.url, selection.records);
   if (page instanceof Response) return page;
 
   return assuranceJsonResponse(request, {
@@ -65,7 +68,7 @@ export function assuranceEvidenceResponse(request: Request, env: Env): Response 
     dataset: 'evidence',
     qualification: publishedAssuranceSummary.qualification,
     deployment: assuranceDeploymentContext(env),
-    count: records.length,
+    count: selection.records.length,
     records: page.records.map(serializeAssuranceV1Evidence),
     ...(page.pagination ? { pagination: page.pagination } : {}),
   });
