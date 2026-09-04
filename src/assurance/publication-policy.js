@@ -29,28 +29,57 @@ export function disclosureReviewIsPublishable(review) {
   return disclosureStatus(review) === 'Reviewed';
 }
 
-function findLifecycleRecord(records, recordId) {
-  return Array.isArray(records) ? records.find((record) => record?.id === recordId) : undefined;
+function findById(values, id) {
+  return Array.isArray(values) ? values.find((value) => value?.id === id) : undefined;
+}
+
+function reviewForRef(lifecycleRegistry, reviewRef) {
+  return typeof reviewRef === 'string'
+    ? findById(lifecycleRegistry?.reviewEvents, reviewRef)
+    : undefined;
+}
+
+function sourceApprovalFor(lifecycleRegistry, resourceId, revision) {
+  if (typeof resourceId !== 'string' || typeof revision !== 'string') return undefined;
+  return Array.isArray(lifecycleRegistry?.sourceApprovals)
+    ? lifecycleRegistry.sourceApprovals.find((approval) =>
+      approval?.resource === resourceId && approval?.revision === revision)
+    : undefined;
 }
 
 export function assuranceLifecycleBaselineEligible(lifecycleRegistry, baselineMembership, recordId) {
   if (!lifecycleRegistry?.baseline || baselineMembership?.schemaVersion !== 1) return false;
-  if (lifecycleRegistry.baseline.commit !== baselineMembership.commit) return false;
+  if (lifecycleRegistry.baseline.historicalCommit !== baselineMembership.commit) return false;
   return Array.isArray(baselineMembership.recordIds) && baselineMembership.recordIds.includes(recordId);
 }
 
 export function resolveAssuranceLifecycle(lifecycleRegistry, recordId, options = {}) {
-  const explicit = findLifecycleRecord(lifecycleRegistry?.records, recordId);
-  if (explicit) return { ...explicit, source: 'explicit', retained: false };
+  const explicit = findById(lifecycleRegistry?.records, recordId);
+  if (explicit) {
+    return {
+      ...explicit,
+      disclosureReview: reviewForRef(lifecycleRegistry, explicit.reviewRef),
+      source: 'explicit',
+      retained: false,
+    };
+  }
 
-  const retired = findLifecycleRecord(lifecycleRegistry?.retiredRecords, recordId);
-  if (retired) return { ...retired, source: 'retired', retained: true };
+  const retired = findById(lifecycleRegistry?.retiredRecords, recordId);
+  if (retired) {
+    return {
+      ...retired,
+      disclosureReview: reviewForRef(lifecycleRegistry, retired.reviewRef),
+      source: 'retired',
+      retained: true,
+    };
+  }
 
   if (assuranceLifecycleBaselineEligible(lifecycleRegistry, options.baselineMembership, recordId)) {
     return {
       id: recordId,
       lifecycle: lifecycleRegistry.baseline.lifecycle ?? 'Published',
-      disclosureReview: lifecycleRegistry.baseline.disclosureReview,
+      reviewRef: lifecycleRegistry.baseline.reviewRef,
+      disclosureReview: reviewForRef(lifecycleRegistry, lifecycleRegistry.baseline.reviewRef),
       source: 'baseline',
       retained: false,
     };
@@ -59,13 +88,13 @@ export function resolveAssuranceLifecycle(lifecycleRegistry, recordId, options =
   return null;
 }
 
-export function assuranceLifecyclePresentation(resolved) {
+export function assuranceLifecyclePresentation(resolved, disclosureReview = resolved?.disclosureReview) {
   if (!resolved) return null;
   return {
     ...(resolved.retained === true ? { id: resolved.id } : {}),
     lifecycle: resolved.lifecycle,
     source: resolved.source,
-    disclosureReview: disclosureStatus(resolved.disclosureReview),
+    disclosureReview: disclosureStatus(disclosureReview),
     retained: resolved.retained === true,
     ...(resolved.supersedes ? { supersedes: resolved.supersedes } : {}),
     ...(resolved.supersededBy ? { supersededBy: resolved.supersededBy } : {}),
@@ -76,19 +105,49 @@ export function assuranceLifecyclePresentation(resolved) {
 export function assurancePublicationDecision(resource, lifecycleRegistry, recordId, options = {}) {
   assertSupportedAssuranceResource(resource);
   const resolved = resolveAssuranceLifecycle(lifecycleRegistry, recordId, options);
-  const reviewed = disclosureReviewIsPublishable(resolved?.disclosureReview);
-  const selected = Boolean(resolved && reviewed && !resolved.retained);
+  if (!resolved) {
+    return {
+      selected: false,
+      reason: 'missing-lifecycle',
+      lifecycle: null,
+      presentation: null,
+    };
+  }
+
+  if (!disclosureReviewIsPublishable(resolved.disclosureReview)) {
+    return {
+      selected: false,
+      reason: 'disclosure-review-required',
+      lifecycle: resolved,
+      presentation: assuranceLifecyclePresentation(resolved),
+    };
+  }
+
+  if (resolved.retained) {
+    return {
+      selected: false,
+      reason: 'retained-record',
+      lifecycle: resolved,
+      presentation: assuranceLifecyclePresentation(resolved),
+    };
+  }
+
+  const sourceApproval = sourceApprovalFor(lifecycleRegistry, resource?.id, options.resourceRevision);
+  const sourceReview = reviewForRef(lifecycleRegistry, sourceApproval?.reviewRef);
+  if (!sourceApproval || !disclosureReviewIsPublishable(sourceReview)) {
+    return {
+      selected: false,
+      reason: 'source-approval-required',
+      lifecycle: resolved,
+      presentation: assuranceLifecyclePresentation(resolved, sourceReview ?? null),
+    };
+  }
+
   return {
-    selected,
-    reason: !resolved
-      ? 'missing-lifecycle'
-      : !reviewed
-        ? 'disclosure-review-required'
-        : resolved.retained
-          ? 'retained-record'
-          : 'publishable',
+    selected: true,
+    reason: 'publishable',
     lifecycle: resolved,
-    presentation: assuranceLifecyclePresentation(resolved),
+    presentation: assuranceLifecyclePresentation(resolved, sourceReview),
   };
 }
 

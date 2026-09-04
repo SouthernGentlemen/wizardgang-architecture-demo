@@ -22,28 +22,8 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
-      - name: Route validation
-        run: npm run validate:routes
-      - name: Scaffold validation
-        run: npm run validate:scaffold
-      - name: History validation
-        run: npm run validate:history
-      - name: Governance metadata validation
-        run: npm run validate:governance
-      - name: Public assurance registry validation
-        run: npm run validate:assurance
-      - name: Lint
-        run: npm run lint
-      - name: Typecheck
-        run: npm run typecheck
-      - name: Unit tests
-        run: npm run test
-      - name: Contracts
-        run: npm run validate:contracts
-      - name: Localization
-        run: npm run validate:locales
-      - name: Security source validation
-        run: npm run validate:security
+      - name: Full repository check
+        run: npm run check
       - name: Apply D1 migrations to a clean local database
         run: npm run validate:migrations
       - name: Audit dependencies

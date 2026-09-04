@@ -12,17 +12,12 @@ import {
 import { tmpdir } from 'node:os';
 import { dirname, join, relative, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
+import { gitBlobShaForFile } from '../scripts/generate-assurance-runtime-binding.mjs';
 
 const repositoryRoot = process.cwd();
 const fixtureRoots: string[] = [];
 const ignoredFixtureParts = new Set(['.git', 'node_modules', '.wrangler', 'dist', 'coverage', 'artifacts']);
 const validationNow = '2026-09-03T03:59:00Z';
-const reviewed = {
-  status: 'Reviewed',
-  reviewedAt: '2026-09-04T10:00:00Z',
-  reviewer: 'fixture-reviewer',
-  basis: 'Synthetic disclosure review for publication-policy fixture coverage.',
-};
 
 function createFixture(): string {
   const fixtureRoot = mkdtempSync(join(tmpdir(), 'demo-146-assurance-'));
@@ -87,11 +82,31 @@ function moveRecordToPartition(fixtureRoot: string, parentId: string, recordId: 
   writeJson(fixtureRoot, 'assurance/registry.json', registry);
 }
 
+function approveResourceRevision(fixtureRoot: string, resourceId: string, relativePath: string): void {
+  const lifecyclePath = 'assurance/lifecycle/records.json';
+  const lifecycle = readJson(fixtureRoot, lifecyclePath);
+  const revision = gitBlobShaForFile(fixtureRoot, relativePath);
+  if (!lifecycle.sourceApprovals.some((approval: any) => approval.resource === resourceId && approval.revision === revision)) {
+    lifecycle.sourceApprovals.push({
+      id: `fixture-${resourceId.replaceAll('.', '-')}-${revision.slice(0, 12)}`,
+      resource: resourceId,
+      revision,
+      reviewRef: 'review-demo155-current-sources',
+    });
+  }
+  writeJson(fixtureRoot, lifecyclePath, lifecycle);
+}
+
 function runScript(fixtureRoot: string, script: string): SpawnSyncReturns<string> {
   return spawnSync(process.execPath, [script], {
     cwd: fixtureRoot,
     encoding: 'utf8',
-    env: { ...process.env, ASSURANCE_VALIDATION_NOW: validationNow },
+    env: {
+      ...process.env,
+      ASSURANCE_VALIDATION_NOW: validationNow,
+      ASSURANCE_MIGRATION_DIR: repositoryRoot,
+      ASSURANCE_PREVIOUS_DIR: repositoryRoot,
+    },
   });
 }
 
@@ -110,9 +125,12 @@ afterEach(() => {
 });
 
 describe('registry-driven assurance semantic validation', () => {
-  it('keeps evidence relationships and verified baseline publication valid when an existing record moves to a registered partition', () => {
+  it('keeps evidence relationships and publication valid after a registered partition move only with exact source-revision approvals', () => {
     const fixtureRoot = createFixture();
-    moveRecordToPartition(fixtureRoot, 'evidence', 'EVD-DOC-003', 'assurance/evidence/governance-evidence.json');
+    const partitionPath = 'assurance/evidence/governance-evidence.json';
+    moveRecordToPartition(fixtureRoot, 'evidence', 'EVD-DOC-003', partitionPath);
+    approveResourceRevision(fixtureRoot, 'evidence', 'assurance/evidence/evidence.json');
+    approveResourceRevision(fixtureRoot, 'evidence.fixture-partition', partitionPath);
 
     expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.mjs'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.mjs'));
@@ -124,7 +142,7 @@ describe('registry-driven assurance semantic validation', () => {
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-publication.mjs'));
   });
 
-  it('fails publication closed for an ungoverned record added to a registered partition, then accepts explicit reviewed Draft metadata', () => {
+  it('fails publication closed for an ungoverned partition record, then accepts explicit reviewed lifecycle metadata', () => {
     const fixtureRoot = createFixture();
     const partitionPath = 'assurance/evidence/governance-evidence.json';
     moveRecordToPartition(fixtureRoot, 'evidence', 'EVD-DOC-003', partitionPath);
@@ -136,6 +154,8 @@ describe('registry-driven assurance semantic validation', () => {
       title: 'Synthetic partition record requiring explicit lifecycle metadata',
     });
     writeJson(fixtureRoot, partitionPath, partition);
+    approveResourceRevision(fixtureRoot, 'evidence', 'assurance/evidence/evidence.json');
+    approveResourceRevision(fixtureRoot, 'evidence.fixture-partition', partitionPath);
 
     expectRejected(
       runScript(fixtureRoot, 'scripts/validate-assurance-publication.mjs'),
@@ -146,7 +166,7 @@ describe('registry-driven assurance semantic validation', () => {
     lifecycle.records.push({
       id: 'EVD-NEW-148',
       lifecycle: 'Draft',
-      disclosureReview: reviewed,
+      reviewRef: 'review-demo155-current-sources',
     });
     writeJson(fixtureRoot, 'assurance/lifecycle/records.json', lifecycle);
 
@@ -178,6 +198,7 @@ describe('registry-driven assurance semantic validation', () => {
       recordCollection: structuredClone(evidenceResource.recordCollection),
     });
     writeJson(fixtureRoot, registryPath, registry);
+    approveResourceRevision(fixtureRoot, 'fixture-publication-family', familyPath);
 
     expectRejected(
       runScript(fixtureRoot, 'scripts/validate-assurance-publication.mjs'),

@@ -5,11 +5,12 @@ import type { Env } from '../src/types';
 const retirementFixtures = vi.hoisted(() => ({
   withdrawnId: 'CLM-SEC-001',
   supersededId: 'CLM-AI-001',
-  disclosureReview: {
+  reviewEvent: {
+    id: 'retirement-fixture-review',
     status: 'Reviewed',
     reviewedAt: '2026-09-04T13:00:00Z',
     reviewer: 'retirement-fixture-review',
-    basis: 'Synthetic review metadata used only by retired publication API tests.',
+    basis: 'Synthetic review event used only by retired publication API tests.',
   },
 }));
 
@@ -17,6 +18,7 @@ vi.mock('../src/assurance/generated/registry-bindings', async (importOriginal) =
   const original = await importOriginal<typeof import('../src/assurance/generated/registry-bindings')>();
   const datasets = original.assuranceRuntimeDatasets as Record<string, unknown>;
   const lifecycle = datasets['lifecycle.records'] as {
+    reviewEvents?: unknown[];
     retiredRecords?: unknown[];
     [key: string]: unknown;
   };
@@ -27,18 +29,22 @@ vi.mock('../src/assurance/generated/registry-bindings', async (importOriginal) =
       ...datasets,
       'lifecycle.records': {
         ...lifecycle,
+        reviewEvents: [
+          ...(lifecycle.reviewEvents ?? []),
+          retirementFixtures.reviewEvent,
+        ],
         retiredRecords: [
           ...(lifecycle.retiredRecords ?? []),
           {
             id: retirementFixtures.withdrawnId,
             lifecycle: 'Withdrawn',
-            disclosureReview: retirementFixtures.disclosureReview,
+            reviewRef: retirementFixtures.reviewEvent.id,
             withdrawalRationale: 'The retired fixture no longer represents the current assurance claim.',
           },
           {
             id: retirementFixtures.supersededId,
             lifecycle: 'Superseded',
-            disclosureReview: retirementFixtures.disclosureReview,
+            reviewRef: retirementFixtures.reviewEvent.id,
             supersededBy: ['CLM-GOV-001'],
           },
         ],

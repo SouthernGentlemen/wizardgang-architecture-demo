@@ -14,27 +14,40 @@ export type AssuranceLifecycleSource = 'baseline' | 'explicit' | 'retired';
 export type AssuranceObservedStateName = AssuranceObservationWindowStateName;
 
 export interface AssuranceDisclosureReview {
+  id?: string;
   status?: string;
   reviewedAt?: string;
   reviewer?: string;
   basis?: string;
 }
 
+export interface AssuranceSourceApproval {
+  id: string;
+  resource: string;
+  revision: string;
+  reviewRef: string;
+}
+
 export interface AssuranceLifecycleRecord {
   id: string;
   lifecycle: AssuranceLifecycle;
-  disclosureReview?: AssuranceDisclosureReview;
-  supersedes?: string;
-  supersededBy?: string;
+  reviewRef: string;
+  supersedes?: string[];
+  supersededBy?: string[];
   withdrawalRationale?: string;
 }
 
 export interface AssuranceLifecycleRegistry {
+  schemaVersion?: number;
   baseline?: {
-    commit?: string;
+    historicalCommit?: string;
+    migrationCommit?: string;
+    membership?: { path?: string; blob?: string };
     lifecycle?: AssuranceLifecycle;
-    disclosureReview?: AssuranceDisclosureReview;
+    reviewRef?: string;
   };
+  reviewEvents?: AssuranceDisclosureReview[];
+  sourceApprovals?: AssuranceSourceApproval[];
   records?: AssuranceLifecycleRecord[];
   retiredRecords?: AssuranceLifecycleRecord[];
 }
@@ -47,9 +60,11 @@ export interface AssuranceLifecycleBaselineMembership {
 
 export interface AssuranceLifecycleResolutionOptions {
   baselineMembership?: AssuranceLifecycleBaselineMembership;
+  resourceRevision?: string;
 }
 
 export interface ResolvedAssuranceLifecycle extends AssuranceLifecycleRecord {
+  disclosureReview?: AssuranceDisclosureReview;
   source: AssuranceLifecycleSource;
   retained: boolean;
 }
@@ -60,14 +75,14 @@ export interface AssuranceLifecyclePresentation {
   source: AssuranceLifecycleSource;
   disclosureReview: string;
   retained: boolean;
-  supersedes?: string;
-  supersededBy?: string;
+  supersedes?: string[];
+  supersededBy?: string[];
   withdrawalRationale?: string;
 }
 
 export interface AssurancePublicationDecision {
   selected: boolean;
-  reason: 'missing-lifecycle' | 'disclosure-review-required' | 'retained-record' | 'publishable';
+  reason: 'missing-lifecycle' | 'disclosure-review-required' | 'source-approval-required' | 'retained-record' | 'publishable';
   lifecycle: ResolvedAssuranceLifecycle | null;
   presentation: AssuranceLifecyclePresentation | null;
 }
@@ -94,6 +109,7 @@ export function resolveAssuranceLifecycle(
 ): ResolvedAssuranceLifecycle | null;
 export function assuranceLifecyclePresentation(
   resolved: ResolvedAssuranceLifecycle | null | undefined,
+  disclosureReview?: AssuranceDisclosureReview | null,
 ): AssuranceLifecyclePresentation | null;
 export function assurancePublicationDecision(
   resource: { id?: string; visibility?: string },

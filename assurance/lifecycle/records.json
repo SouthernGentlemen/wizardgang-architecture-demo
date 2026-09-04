@@ -1,136 +1,137 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "baseline": {
-    "commit": "c2359f00fc3bac80bfbc2e82369a86f20e522f74",
+    "historicalCommit": "c2359f00fc3bac80bfbc2e82369a86f20e522f74",
+    "migrationCommit": "6f8383cd6a318e0fe03506bc96401f5161c6e222",
+    "membership": {
+      "path": "src/assurance/generated/lifecycle-baseline-membership.json",
+      "blob": "e2f4aad3146649fdfe2063abc780dc73a99bdd64"
+    },
     "lifecycle": "Published",
-    "disclosureReview": {
+    "reviewRef": "review-v014-public-assurance"
+  },
+  "reviewEvents": [
+    {
+      "id": "review-v014-public-assurance",
       "status": "Reviewed",
       "reviewedAt": "2026-09-03T04:06:18Z",
       "reviewer": "controlled-repository-review",
       "basis": "v0.14.0 release PR #73 and tag-bound public-assurance validation"
+    },
+    {
+      "id": "review-objectives-pr56",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-02T22:37:55Z",
+      "reviewer": "Controlled pull request and merge",
+      "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
+    },
+    {
+      "id": "review-demo155-current-sources",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-04T13:00:00Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-155 migration review binds disclosure approval to the exact registry-driven public source revisions present at commit 6f8383cd6a318e0fe03506bc96401f5161c6e222; later source revisions require a new disclosure decision."
     }
-  },
+  ],
+  "sourceApprovals": [
+    {
+      "id": "source-advisories-88a0999d1cea",
+      "resource": "advisories",
+      "revision": "88a0999d1ceae96e02cbc7861de3ab35779f5495",
+      "reviewRef": "review-v014-public-assurance"
+    },
+    {
+      "id": "source-claims-02437024489c",
+      "resource": "claims",
+      "revision": "02437024489cbeb3d9bb34ac056c21e6c98d42f9",
+      "reviewRef": "review-demo155-current-sources"
+    },
+    {
+      "id": "source-iso27001-da2050341003",
+      "resource": "compliance.iso-27001",
+      "revision": "da20503410039977988c41282901c26ee5e016bf",
+      "reviewRef": "review-demo155-current-sources"
+    },
+    {
+      "id": "source-iso42001-ecb55b9ca8c7",
+      "resource": "compliance.iso-42001",
+      "revision": "ecb55b9ca8c746b97dcec6c2133b4df25896fdf8",
+      "reviewRef": "review-demo155-current-sources"
+    },
+    {
+      "id": "source-wcag-manifest-84a173a127f1",
+      "resource": "compliance.wcag-2.2",
+      "revision": "84a173a127f175783d61ddf2f71952a6351b8405",
+      "reviewRef": "review-demo155-current-sources"
+    },
+    {
+      "id": "source-wcag-operable-b74451ffe863",
+      "resource": "compliance.wcag-2.2.operable",
+      "revision": "b74451ffe863fb83e1a0f01274806260172e47cc",
+      "reviewRef": "review-demo155-current-sources"
+    },
+    {
+      "id": "source-wcag-perceivable-b0925cf7b71c",
+      "resource": "compliance.wcag-2.2.perceivable",
+      "revision": "b0925cf7b71c20dd2547451c371366988d4288fb",
+      "reviewRef": "review-demo155-current-sources"
+    },
+    {
+      "id": "source-wcag-robust-c6675be44aab",
+      "resource": "compliance.wcag-2.2.robust",
+      "revision": "c6675be44aab01eb6dd8fdc36f045e95d12e1db1",
+      "reviewRef": "review-demo155-current-sources"
+    },
+    {
+      "id": "source-wcag-understandable-2815ed1a9bfb",
+      "resource": "compliance.wcag-2.2.understandable",
+      "revision": "2815ed1a9bfb0e5048871fa386a9629db2c18e05",
+      "reviewRef": "review-demo155-current-sources"
+    },
+    {
+      "id": "source-evidence-c56635f6fdc9",
+      "resource": "evidence",
+      "revision": "c56635f6fdc93c1efd0100e8e1bf252935cc6912",
+      "reviewRef": "review-v014-public-assurance"
+    },
+    {
+      "id": "source-exercises-293517054656",
+      "resource": "exercises",
+      "revision": "293517054656f966e860df3fa8d34beabce43644",
+      "reviewRef": "review-demo155-current-sources"
+    },
+    {
+      "id": "source-incidents-1ff3b01fe534",
+      "resource": "incidents",
+      "revision": "1ff3b01fe53498e0bfd4b0af369bc8f1cfb8614e",
+      "reviewRef": "review-v014-public-assurance"
+    },
+    {
+      "id": "source-objectives-bbd7ffc46259",
+      "resource": "objectives",
+      "revision": "bbd7ffc46259c27a2bc104b626391b689693a9f9",
+      "reviewRef": "review-demo155-current-sources"
+    },
+    {
+      "id": "source-risks-6900031bbd1e",
+      "resource": "risks",
+      "revision": "6900031bbd1e974cfb1d80ce43bf937419591ea9",
+      "reviewRef": "review-demo155-current-sources"
+    }
+  ],
   "records": [
-    {
-      "id": "AI-OBJ-001",
-      "lifecycle": "Approved",
-      "disclosureReview": {
-        "status": "Reviewed",
-        "reviewedAt": "2026-09-02T22:37:55Z",
-        "reviewer": "Controlled pull request and merge",
-        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
-      }
-    },
-    {
-      "id": "AI-OBJ-002",
-      "lifecycle": "Approved",
-      "disclosureReview": {
-        "status": "Reviewed",
-        "reviewedAt": "2026-09-02T22:37:55Z",
-        "reviewer": "Controlled pull request and merge",
-        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
-      }
-    },
-    {
-      "id": "AI-OBJ-003",
-      "lifecycle": "Approved",
-      "disclosureReview": {
-        "status": "Reviewed",
-        "reviewedAt": "2026-09-02T22:37:55Z",
-        "reviewer": "Controlled pull request and merge",
-        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
-      }
-    },
-    {
-      "id": "AI-OBJ-004",
-      "lifecycle": "Approved",
-      "disclosureReview": {
-        "status": "Reviewed",
-        "reviewedAt": "2026-09-02T22:37:55Z",
-        "reviewer": "Controlled pull request and merge",
-        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
-      }
-    },
-    {
-      "id": "AI-OBJ-005",
-      "lifecycle": "Approved",
-      "disclosureReview": {
-        "status": "Reviewed",
-        "reviewedAt": "2026-09-02T22:37:55Z",
-        "reviewer": "Controlled pull request and merge",
-        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
-      }
-    },
-    {
-      "id": "GOV-OBJ-001",
-      "lifecycle": "Approved",
-      "disclosureReview": {
-        "status": "Reviewed",
-        "reviewedAt": "2026-09-02T22:37:55Z",
-        "reviewer": "Controlled pull request and merge",
-        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
-      }
-    },
-    {
-      "id": "SEC-OBJ-001",
-      "lifecycle": "Approved",
-      "disclosureReview": {
-        "status": "Reviewed",
-        "reviewedAt": "2026-09-02T22:37:55Z",
-        "reviewer": "Controlled pull request and merge",
-        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
-      }
-    },
-    {
-      "id": "SEC-OBJ-002",
-      "lifecycle": "Approved",
-      "disclosureReview": {
-        "status": "Reviewed",
-        "reviewedAt": "2026-09-02T22:37:55Z",
-        "reviewer": "Controlled pull request and merge",
-        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
-      }
-    },
-    {
-      "id": "SEC-OBJ-003",
-      "lifecycle": "Approved",
-      "disclosureReview": {
-        "status": "Reviewed",
-        "reviewedAt": "2026-09-02T22:37:55Z",
-        "reviewer": "Controlled pull request and merge",
-        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
-      }
-    },
-    {
-      "id": "SEC-OBJ-004",
-      "lifecycle": "Approved",
-      "disclosureReview": {
-        "status": "Reviewed",
-        "reviewedAt": "2026-09-02T22:37:55Z",
-        "reviewer": "Controlled pull request and merge",
-        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
-      }
-    },
-    {
-      "id": "SEC-OBJ-005",
-      "lifecycle": "Approved",
-      "disclosureReview": {
-        "status": "Reviewed",
-        "reviewedAt": "2026-09-02T22:37:55Z",
-        "reviewer": "Controlled pull request and merge",
-        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
-      }
-    },
-    {
-      "id": "SEC-OBJ-006",
-      "lifecycle": "Approved",
-      "disclosureReview": {
-        "status": "Reviewed",
-        "reviewedAt": "2026-09-02T22:37:55Z",
-        "reviewer": "Controlled pull request and merge",
-        "basis": "WG-OBJ-001 approval record: PR #56 and merge commit 1ae105da8ab6466e334a2faf4e6c63f5885c91df"
-      }
-    }
+    { "id": "AI-OBJ-001", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
+    { "id": "AI-OBJ-002", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
+    { "id": "AI-OBJ-003", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
+    { "id": "AI-OBJ-004", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
+    { "id": "AI-OBJ-005", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
+    { "id": "GOV-OBJ-001", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
+    { "id": "SEC-OBJ-001", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
+    { "id": "SEC-OBJ-002", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
+    { "id": "SEC-OBJ-003", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
+    { "id": "SEC-OBJ-004", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
+    { "id": "SEC-OBJ-005", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
+    { "id": "SEC-OBJ-006", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" }
   ],
   "retiredRecords": []
 }
