@@ -27,6 +27,12 @@ export interface AssuranceRouteContractMatch {
   target?: string;
 }
 
+export interface AssuranceRouteHandlerSupport {
+  html?: boolean;
+  apiCollection?: boolean;
+  apiRecord?: boolean;
+}
+
 export function assuranceRouteOwnerResource(registry: unknown, kind: string): unknown | null;
 export function assuranceRoutesForDataset(registry: unknown, kind: string): AssuranceRouteContractRoutes | null;
 export function assuranceRouteDeclarations(registry: unknown): AssuranceRouteContractDeclaration[];
@@ -39,4 +45,8 @@ export function assuranceRecordUrls(
 ): { html?: string; api?: string };
 export function assuranceRegistryApiRoute(registry: unknown): string;
 export function matchAssuranceRoute(registry: unknown, path: string): AssuranceRouteContractMatch | null;
+export function validateAssuranceRouteHandlerSupport(
+  registry: unknown,
+  support: Record<string, AssuranceRouteHandlerSupport>,
+): string[];
 export function validateAssuranceRouteContract(registry: unknown): string[];

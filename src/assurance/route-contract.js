@@ -83,22 +83,63 @@ export function assuranceRegistryApiRoute(registry) {
   return route;
 }
 
+function routeSegments(path) {
+  return path === '/' ? [] : path.slice(1).split('/');
+}
+
+function matchRecordTemplate(template, path) {
+  const templateSegments = routeSegments(template);
+  const pathSegments = routeSegments(path);
+  if (templateSegments.length !== pathSegments.length) return null;
+
+  let recordId;
+  for (let index = 0; index < templateSegments.length; index += 1) {
+    const templateSegment = templateSegments[index];
+    const pathSegment = pathSegments[index];
+    if (templateSegment === '{id}') {
+      if (pathSegment.length === 0) return null;
+      recordId = pathSegment;
+    } else if (templateSegment !== pathSegment) {
+      return null;
+    }
+  }
+  return recordId ?? null;
+}
+
+function recordTemplateIntersection(left, right) {
+  const leftSegments = routeSegments(left);
+  const rightSegments = routeSegments(right);
+  if (leftSegments.length !== rightSegments.length) return null;
+
+  const witness = [];
+  for (let index = 0; index < leftSegments.length; index += 1) {
+    const leftSegment = leftSegments[index];
+    const rightSegment = rightSegments[index];
+    if (leftSegment !== '{id}' && rightSegment !== '{id}' && leftSegment !== rightSegment) return null;
+    witness.push(leftSegment === '{id}' ? (rightSegment === '{id}' ? 'record-id' : rightSegment) : leftSegment);
+  }
+  return `/${witness.join('/')}`;
+}
+
 export function matchAssuranceRoute(registry, path) {
+  // Exact static paths always own a request before a record template. This makes
+  // nested collections and aliases deterministic regardless of declaration order.
   for (const alias of assuranceRouteAliases(registry)) {
     if (alias.path === path) return { owner: alias.owner, kind: 'alias', target: alias.target };
   }
 
-  for (const declaration of assuranceRouteDeclarations(registry)) {
+  const declarations = assuranceRouteDeclarations(registry);
+  for (const declaration of declarations) {
     const routes = declaration.routes ?? {};
     if (routes.html === path) return { owner: declaration.owner, kind: 'html' };
     if (routes.api === path) return { owner: declaration.owner, kind: 'api-collection' };
-    if (routes.apiRecord) {
-      const [prefix, suffix = ''] = routes.apiRecord.split('{id}');
-      if (path.startsWith(prefix) && path.endsWith(suffix)) {
-        const recordId = path.slice(prefix.length, path.length - suffix.length || undefined);
-        if (recordId.length > 0) return { owner: declaration.owner, kind: 'api-record', recordId };
-      }
-    }
+  }
+
+  for (const declaration of declarations) {
+    const template = declaration.routes?.apiRecord;
+    if (!template) continue;
+    const recordId = matchRecordTemplate(template, path);
+    if (recordId !== null) return { owner: declaration.owner, kind: 'api-record', recordId };
   }
   return null;
 }
@@ -109,6 +150,31 @@ function validRoutePath(value) {
     && !value.includes('?')
     && !value.includes('#')
     && (value === '/' || !value.endsWith('/'));
+}
+
+export function validateAssuranceRouteHandlerSupport(registry, support) {
+  const errors = [];
+  let declarations = [];
+  try {
+    declarations = assuranceRouteDeclarations(registry);
+  } catch (error) {
+    return [error instanceof Error ? error.message : String(error)];
+  }
+
+  for (const declaration of declarations) {
+    const routes = declaration.routes ?? {};
+    const ownerSupport = support?.[declaration.owner] ?? {};
+    if (routes.html && !ownerSupport.html) {
+      errors.push(`${declaration.ownerId} declares routes.html without an HTML handler`);
+    }
+    if (routes.api && !ownerSupport.apiCollection) {
+      errors.push(`${declaration.ownerId} declares routes.api without a collection API handler`);
+    }
+    if (routes.apiRecord && !ownerSupport.apiRecord) {
+      errors.push(`${declaration.ownerId} declares routes.apiRecord without an exact-record API handler`);
+    }
+  }
+  return errors;
 }
 
 export function validateAssuranceRouteContract(registry) {
@@ -138,6 +204,7 @@ export function validateAssuranceRouteContract(registry) {
   }
 
   const claimedPaths = new Map();
+  const recordTemplates = [];
   const claim = (path, label) => {
     const existing = claimedPaths.get(path);
     if (existing) errors.push(`${label} collides with ${existing} at ${path}`);
@@ -146,6 +213,8 @@ export function validateAssuranceRouteContract(registry) {
 
   for (const declaration of declarations) {
     const routes = declaration.routes ?? {};
+    const resource = declaration.owner === 'registry' ? null : ids.get(declaration.ownerId);
+    const capabilities = new Set(resource?.capabilities ?? []);
     if (!routes.html && !routes.api) errors.push(`${declaration.ownerId} routes must declare html or api`);
     for (const [name, value] of [['html', routes.html], ['api', routes.api]]) {
       if (value === undefined) continue;
@@ -153,14 +222,30 @@ export function validateAssuranceRouteContract(registry) {
       else claim(value, `${declaration.ownerId} routes.${name}`);
     }
 
+    if (resource && (routes.html || routes.api || routes.apiRecord) && !capabilities.has('runtime')) {
+      errors.push(`${declaration.ownerId} route owner must declare runtime capability`);
+    }
+    if (resource && routes.api && !capabilities.has('api-index')) {
+      errors.push(`${declaration.ownerId} routes.api requires api-index capability`);
+    }
+
     if (routes.apiRecord !== undefined) {
       const markerCount = routes.apiRecord.split('{id}').length - 1;
-      if (!validRoutePath(routes.apiRecord.replace('{id}', 'record-id')) || markerCount !== 1) {
-        errors.push(`${declaration.ownerId} routes.apiRecord must contain exactly one {id} path placeholder`);
+      const placeholderSegments = validRoutePath(routes.apiRecord) ? routeSegments(routes.apiRecord).filter((segment) => segment === '{id}').length : 0;
+      const validTemplate = validRoutePath(routes.apiRecord.replace('{id}', 'record-id'))
+        && markerCount === 1
+        && placeholderSegments === 1;
+      if (!validTemplate) {
+        errors.push(`${declaration.ownerId} routes.apiRecord must contain exactly one {id} path-segment placeholder`);
+      } else {
+        recordTemplates.push({ path: routes.apiRecord, label: `${declaration.ownerId} routes.apiRecord` });
       }
       if (!routes.api) errors.push(`${declaration.ownerId} routes.apiRecord requires routes.api`);
       else if (!routes.apiRecord.startsWith(`${routes.api}/`)) {
         errors.push(`${declaration.ownerId} routes.apiRecord must be nested beneath routes.api`);
+      }
+      if (resource && !capabilities.has('records')) {
+        errors.push(`${declaration.ownerId} routes.apiRecord requires records capability`);
       }
     }
 
@@ -173,6 +258,15 @@ export function validateAssuranceRouteContract(registry) {
       if (alias.fragment !== undefined && (typeof alias.fragment !== 'string' || alias.fragment.length === 0 || alias.fragment.includes('#'))) {
         errors.push(`${declaration.ownerId} alias fragment must be a non-empty fragment id without #`);
       }
+    }
+  }
+
+  for (let leftIndex = 0; leftIndex < recordTemplates.length; leftIndex += 1) {
+    for (let rightIndex = leftIndex + 1; rightIndex < recordTemplates.length; rightIndex += 1) {
+      const left = recordTemplates[leftIndex];
+      const right = recordTemplates[rightIndex];
+      const witness = recordTemplateIntersection(left.path, right.path);
+      if (witness) errors.push(`${left.label} intersects ${right.label} at ${witness}`);
     }
   }
 

@@ -51,6 +51,8 @@ import {
   assuranceRouteAliases,
   assuranceRouteDeclarations,
   matchAssuranceRoute,
+  validateAssuranceRouteHandlerSupport,
+  type AssuranceRouteHandlerSupport,
   type AssuranceRouteMatch,
 } from './assurance/routes';
 
@@ -61,13 +63,21 @@ const SECURITY_ROUTE = assuranceHtmlRoute('advisories');
 
 type AssuranceHandler = (request: Request, env: Env, match: AssuranceRouteMatch) => Response | Promise<Response>;
 
-const ASSURANCE_API_HANDLERS: Record<string, AssuranceHandler> = {
-  registry: (request, env) => assuranceResponse(request, env),
-  evidence: (request, env) => assuranceEvidenceResponse(request, env),
-  compliance: (request, _env, match) => assuranceComplianceResponse(request, match.kind === 'api-record' ? match.recordId : undefined),
-  risks: (request) => assuranceRisksResponse(request),
-  incidents: (request) => assuranceIncidentsResponse(request),
-  advisories: (request) => assuranceAdvisoriesResponse(request),
+interface AssuranceApiHandlerRegistration {
+  handler: AssuranceHandler;
+  apiRecord?: boolean;
+}
+
+const ASSURANCE_API_HANDLERS: Record<string, AssuranceApiHandlerRegistration> = {
+  registry: { handler: (request, env) => assuranceResponse(request, env) },
+  evidence: { handler: (request, env) => assuranceEvidenceResponse(request, env) },
+  compliance: {
+    handler: (request, _env, match) => assuranceComplianceResponse(request, match.kind === 'api-record' ? match.recordId : undefined),
+    apiRecord: true,
+  },
+  risks: { handler: (request) => assuranceRisksResponse(request) },
+  incidents: { handler: (request) => assuranceIncidentsResponse(request) },
+  advisories: { handler: (request) => assuranceAdvisoriesResponse(request) },
 };
 
 const ASSURANCE_HTML_HANDLERS: Record<string, AssuranceHandler> = {
@@ -78,13 +88,22 @@ const ASSURANCE_HTML_HANDLERS: Record<string, AssuranceHandler> = {
   advisories: (_request, env) => renderSecurity(env),
 };
 
-for (const declaration of assuranceRouteDeclarations()) {
-  if ((declaration.routes.api || declaration.routes.apiRecord) && !ASSURANCE_API_HANDLERS[declaration.owner]) {
-    throw new Error(`Missing assurance API handler for route owner ${declaration.owner}.`);
-  }
-  if (declaration.routes.html && !ASSURANCE_HTML_HANDLERS[declaration.owner]) {
-    throw new Error(`Missing assurance HTML handler for route owner ${declaration.owner}.`);
-  }
+const assuranceHandlerOwners = new Set([
+  ...Object.keys(ASSURANCE_API_HANDLERS),
+  ...Object.keys(ASSURANCE_HTML_HANDLERS),
+]);
+
+export const ASSURANCE_ROUTE_HANDLER_SUPPORT: Record<string, AssuranceRouteHandlerSupport> = Object.fromEntries(
+  [...assuranceHandlerOwners].map((owner) => [owner, {
+    html: Boolean(ASSURANCE_HTML_HANDLERS[owner]),
+    apiCollection: Boolean(ASSURANCE_API_HANDLERS[owner]),
+    apiRecord: Boolean(ASSURANCE_API_HANDLERS[owner]?.apiRecord),
+  }]),
+);
+
+const assuranceHandlerErrors = validateAssuranceRouteHandlerSupport(ASSURANCE_ROUTE_HANDLER_SUPPORT);
+if (assuranceHandlerErrors.length > 0) {
+  throw new Error(`Invalid assurance route handler support:\n${assuranceHandlerErrors.join('\n')}`);
 }
 
 async function routeAssuranceRequest(request: Request, env: Env, path: string, origin: string): Promise<Response | undefined> {
@@ -98,7 +117,7 @@ async function routeAssuranceRequest(request: Request, env: Env, path: string, o
     if (request.method !== 'GET') return undefined;
     return ASSURANCE_HTML_HANDLERS[match.owner](request, env, match);
   }
-  return ASSURANCE_API_HANDLERS[match.owner](request, env, match);
+  return ASSURANCE_API_HANDLERS[match.owner].handler(request, env, match);
 }
 
 export const RETIRED_PAGE_REDIRECTS = new Map<string, string>([
