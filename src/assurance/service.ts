@@ -9,11 +9,9 @@ import {
   assuranceRuntimeRecordIndex,
   assuranceRuntimeReverseRelationshipIndex,
   primaryAssuranceResource,
-  runtimeAssuranceSchema,
   type AssuranceDataset,
   type AssuranceRelationships,
   type AssuranceRegistryFilter,
-  type AssuranceRegistryResource,
   type AssuranceRuntimeRecord,
   type AssuranceRuntimeRelationshipReference,
   type CanonicalAssuranceRecordMap,
@@ -30,7 +28,7 @@ import {
   type RiskRecord,
   type RiskStatus,
 } from './model';
-import { assuranceRecordCollectionPath } from './record-discovery.js';
+import { assuranceRuntimeFilterVocabularies } from './generated/registry-bindings';
 import {
   assuranceAnchor as canonicalAssuranceAnchor,
   assuranceRecordUrls as canonicalAssuranceRecordUrls,
@@ -74,60 +72,6 @@ export function assuranceDatasetSchema(dataset: AssuranceDataset): string {
   return primaryAssuranceResource(dataset).schema;
 }
 
-type JsonSchema = Record<string, unknown>;
-
-function resolveLocalSchemaRef(root: JsonSchema, node: unknown): JsonSchema | undefined {
-  let current = node;
-  const seen = new Set<string>();
-  while (current && typeof current === 'object' && !Array.isArray(current)) {
-    const object = current as JsonSchema;
-    const ref = object.$ref;
-    if (typeof ref !== 'string' || !ref.startsWith('#/')) return object;
-    if (seen.has(ref)) return undefined;
-    seen.add(ref);
-    current = ref.slice(2).split('/').reduce<unknown>((value, segment) => {
-      if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined;
-      return (value as JsonSchema)[segment.replaceAll('~1', '/').replaceAll('~0', '~')];
-    }, root);
-  }
-  return undefined;
-}
-
-function recordSchema(root: JsonSchema, collectionPath: string): JsonSchema | undefined {
-  let node: JsonSchema | undefined = root;
-  for (const segment of collectionPath.split('.')) {
-    if (!node) return undefined;
-    const properties = node.properties;
-    if (!properties || typeof properties !== 'object' || Array.isArray(properties)) return undefined;
-    node = resolveLocalSchemaRef(root, (properties as JsonSchema)[segment]);
-  }
-  return node ? resolveLocalSchemaRef(root, node.items) : undefined;
-}
-
-function schemaProperty(root: JsonSchema, collectionPath: string, path: string): JsonSchema | undefined {
-  let node = recordSchema(root, collectionPath);
-  for (const segment of path.split('.')) {
-    if (!node) return undefined;
-    const properties = node.properties;
-    if (!properties || typeof properties !== 'object' || Array.isArray(properties)) return undefined;
-    node = resolveLocalSchemaRef(root, (properties as JsonSchema)[segment]);
-  }
-  return node;
-}
-
-function schemaValues(root: JsonSchema, collectionPath: string, path: string): string[] {
-  const property = schemaProperty(root, collectionPath, path);
-  if (!property) return [];
-  if (Array.isArray(property.enum)) return property.enum.filter((value): value is string => typeof value === 'string');
-  return typeof property.const === 'string' ? [property.const] : [];
-}
-
-function datasetResources(dataset: AssuranceDataset): AssuranceRegistryResource[] {
-  return assuranceRegistryResources.filter(
-    (resource) => resource.kind === dataset && resource.capabilities.includes('records') && resource.capabilities.includes('runtime'),
-  );
-}
-
 export function assuranceFilterDefinitions(dataset: AssuranceDataset): Readonly<Record<string, AssuranceRegistryFilter>> {
   const resource = primaryAssuranceResource(dataset);
   return resource.filters ?? {};
@@ -137,32 +81,14 @@ export function assuranceFilterNames(dataset: AssuranceDataset): string[] {
   return Object.keys(assuranceFilterDefinitions(dataset));
 }
 
-function addFilterValue(values: string[], value: unknown): void {
-  const candidate = typeof value === 'string'
-    ? value
-    : value && typeof value === 'object' && !Array.isArray(value) && typeof (value as { id?: unknown }).id === 'string'
-      ? (value as { id: string }).id
-      : undefined;
-  if (candidate !== undefined && !values.includes(candidate)) values.push(candidate);
-}
-
 export function assuranceFilterValues(dataset: AssuranceDataset, parameter: string): string[] {
   const definition = assuranceFilterDefinitions(dataset)[parameter];
   if (!definition) return [];
-  const values: string[] = [];
-  for (const resource of datasetResources(dataset)) {
-    const schema = runtimeAssuranceSchema(resource);
-    const collectionPath = assuranceRecordCollectionPath(resource);
-    if (!collectionPath) throw new Error(`${resource.id} cannot supply filters without a declared record collection.`);
-    for (const value of schemaValues(schema, collectionPath, definition.path)) addFilterValue(values, value);
+  const values = assuranceRuntimeFilterVocabularies[dataset]?.[parameter];
+  if (!values || values.length === 0) {
+    throw new Error(`${dataset}.${parameter} does not resolve to an authoritative registered filter vocabulary.`);
   }
-  if (values.length === 0) {
-    for (const resource of assuranceRegistryResources.filter((candidate) => candidate.kind === dataset)) {
-      addFilterValue(values, valueAtPath(resource, definition.path));
-    }
-  }
-  if (values.length === 0) throw new Error(`${dataset}.${parameter} does not resolve to an authoritative registered filter vocabulary.`);
-  return values;
+  return [...values];
 }
 
 function valueAtPath(record: unknown, path: string): unknown {

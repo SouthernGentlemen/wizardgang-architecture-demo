@@ -64,3 +64,49 @@ export const assuranceRuntimeSchemas: Record<string, unknown> = {
   "objectives": schema12,
   "risks": schema13,
 };
+
+export const assuranceRuntimeFilterVocabularies: Readonly<Record<string, Readonly<Record<string, readonly string[]>>>> =
+{
+  "compliance": {
+    "framework": [
+      "iso-27001",
+      "iso-42001",
+      "wcag-2.2"
+    ],
+    "status": [
+      "met",
+      "partial",
+      "gap",
+      "not-applicable",
+      "demonstrated",
+      "not-observed"
+    ],
+    "level": [
+      "A",
+      "AA",
+      "AAA"
+    ]
+  },
+  "risks": {
+    "framework": [
+      "security",
+      "ai"
+    ],
+    "status": [
+      "open",
+      "treating"
+    ],
+    "residual": [
+      "low",
+      "moderate",
+      "high",
+      "critical"
+    ]
+  }
+};
+
+export const assuranceRuntimeSchemaDependencyDigests: Readonly<Record<string, string>> =
+{
+  "contracts/assurance/relationships.schema.json": "ca54cd2288262998b7bfc88547a7db9c69a926ed23df0fa739a9532c3e9b6617",
+  "contracts/assurance/risk-vocabulary.schema.json": "603a4d5e058f6fbab154f70ba12169ba66d0fd1c8a0a5085cda85d2be304181a"
+};

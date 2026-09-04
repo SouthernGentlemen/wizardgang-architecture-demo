@@ -1,16 +1,33 @@
 import { spawnSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
-import { describe, expect, it } from 'vitest';
 import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { describe, expect, it } from 'vitest';
+import { deriveRuntimeSchemaDependencyDigests } from '../scripts/generate-assurance-runtime-binding.mjs';
+import { createAssuranceSchemaLoader } from '../scripts/lib/assurance-validation.mjs';
+import {
+  collectJsonSchemaDependencies,
   createFileSchemaLoader,
+  resolveJsonSchemaProperty,
   validateJsonSchema,
 } from '../scripts/lib/json-schema.mjs';
 
 const root = process.cwd();
 const loadSchema = createFileSchemaLoader(root);
+const loadAssuranceSchema = createAssuranceSchemaLoader(root);
 const readJson = (relative) => JSON.parse(readFileSync(relative, 'utf8'));
 const advisorySchemaPath = 'contracts/assurance/advisory.schema.json';
 const advisorySchema = readJson(advisorySchemaPath);
+const riskSchemaPath = 'contracts/assurance/risk.schema.json';
+const riskSchema = readJson(riskSchemaPath);
+const riskVocabularySchemaPath = 'contracts/assurance/risk-vocabulary.schema.json';
+const riskVocabularySchema = readJson(riskVocabularySchemaPath);
 
 function relationshipsFixture() {
   return {
@@ -60,6 +77,94 @@ describe('shared assurance schema contracts', () => {
     });
     expect(`${result.stdout}\n${result.stderr}`).not.toContain('unsupported non-local JSON Schema reference');
     expect(result.status).toBe(0);
+  });
+
+  it('resolves metadata through the same local and external reference semantics as structural validation', () => {
+    const localSchema = {
+      type: 'object',
+      properties: {
+        records: {
+          type: 'array',
+          items: { $ref: '#/$defs/record' },
+        },
+      },
+      $defs: {
+        record: {
+          type: 'object',
+          properties: {
+            status: { $ref: '#/$defs/status' },
+          },
+        },
+        status: { enum: ['open', 'treating'] },
+      },
+    };
+    expect(resolveJsonSchemaProperty(localSchema, 'records', 'status')).toEqual(localSchema.$defs.status);
+    expect(resolveJsonSchemaProperty(riskSchema, 'records', 'status', {
+      schemaPath: riskSchemaPath,
+      loadSchema: loadAssuranceSchema,
+    })).toEqual(riskVocabularySchema.$defs.status);
+
+    const dependencies = collectJsonSchemaDependencies(riskSchema, {
+      schemaPath: riskSchemaPath,
+      loadSchema: loadAssuranceSchema,
+    });
+    expect(dependencies).toContain(riskVocabularySchemaPath);
+    expect(dependencies).toContain('contracts/assurance/relationships.schema.json');
+  });
+
+  it('fails unresolved metadata references deterministically', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        records: {
+          type: 'array',
+          items: { $ref: '#/$defs/missing' },
+        },
+      },
+    };
+    expect(() => resolveJsonSchemaProperty(schema, 'records', 'status'))
+      .toThrow('unresolved JSON Schema reference #/$defs/missing');
+  });
+
+  it('changes generated dependency digests when a referenced schema changes', () => {
+    const directory = mkdtempSync(join(tmpdir(), 'assurance-schema-dependency-'));
+    try {
+      const contracts = join(directory, 'contracts', 'assurance');
+      mkdirSync(contracts, { recursive: true });
+      writeFileSync(join(contracts, 'root.schema.json'), JSON.stringify({
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        type: 'object',
+        properties: {
+          value: { $ref: './dependency.schema.json#/$defs/value' },
+        },
+      }));
+      const dependencyPath = join(contracts, 'dependency.schema.json');
+      writeFileSync(dependencyPath, JSON.stringify({
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $defs: { value: { enum: ['one'] } },
+      }));
+      const registry = {
+        datasets: [{
+          id: 'fixture',
+          kind: 'fixture',
+          role: 'dataset',
+          path: 'assurance/fixture.json',
+          schema: 'contracts/assurance/root.schema.json',
+          visibility: 'public',
+          capabilities: ['runtime'],
+        }],
+      };
+      const first = deriveRuntimeSchemaDependencyDigests(registry, directory);
+      writeFileSync(dependencyPath, JSON.stringify({
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $defs: { value: { enum: ['two'] } },
+      }));
+      const second = deriveRuntimeSchemaDependencyDigests(registry, directory);
+      expect(first['contracts/assurance/dependency.schema.json'])
+        .not.toBe(second['contracts/assurance/dependency.schema.json']);
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
   });
 
   it('accepts canonical GHSA advisory IDs in shared relationships', () => {

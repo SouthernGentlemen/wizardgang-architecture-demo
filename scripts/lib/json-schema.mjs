@@ -315,3 +315,85 @@ export function validateJsonSchema(value, schema, { schemaPath = '<schema>', loa
 export function formatJsonSchemaErrors(dataPath, schemaPath, errors) {
   return errors.map((error) => `${dataPath}: ${error.instancePath} ${error.message} (${schemaPath}${error.schemaPath})`);
 }
+
+function resolveSchemaNode(node, context) {
+  let current = node;
+  let currentContext = context;
+  const refStack = new Set(context.refStack ?? []);
+  while (current && typeof current === 'object' && !Array.isArray(current) && typeof current.$ref === 'string') {
+    const resolved = resolveReference(current.$ref, currentContext);
+    const refKey = `${resolved.context.schemaPath}${resolved.schemaPath}`;
+    if (refStack.has(refKey)) throw new Error(`cyclic JSON Schema reference ${current.$ref}`);
+    refStack.add(refKey);
+    current = resolved.target;
+    currentContext = { ...resolved.context, refStack };
+  }
+  return { node: current, context: currentContext };
+}
+
+function schemaProperty(resolved, key) {
+  const normalized = resolveSchemaNode(resolved.node, resolved.context);
+  const properties = normalized.node?.properties;
+  if (!properties || typeof properties !== 'object' || Array.isArray(properties) || !Object.hasOwn(properties, key)) return undefined;
+  return resolveSchemaNode(properties[key], normalized.context);
+}
+
+export function resolveJsonSchemaProperty(
+  schema,
+  collectionPath,
+  propertyPath,
+  { schemaPath = '<schema>', loadSchema } = {},
+) {
+  assertSupportedNode(schema, schemaPath);
+  let resolved = resolveSchemaNode(schema, { rootSchema: schema, schemaPath, loadSchema, refStack: new Set() });
+  for (const segment of collectionPath.split('.')) {
+    resolved = schemaProperty(resolved, segment);
+    if (!resolved) return undefined;
+  }
+  resolved = resolveSchemaNode(resolved.node?.items, resolved.context);
+  if (!resolved.node) return undefined;
+  for (const segment of propertyPath.split('.')) {
+    resolved = schemaProperty(resolved, segment);
+    if (!resolved) return undefined;
+  }
+  return resolved.node;
+}
+
+function schemaChildren(schema) {
+  if (!schema || typeof schema !== 'object' || Array.isArray(schema)) return [];
+  const children = [
+    ...Object.values(schema.properties ?? {}),
+    ...Object.values(schema.$defs ?? {}),
+  ];
+  for (const key of directSchemaKeywords) {
+    if (Object.hasOwn(schema, key) && schema[key] !== true && schema[key] !== false) children.push(schema[key]);
+  }
+  for (const key of arraySchemaKeywords) children.push(...(schema[key] ?? []));
+  return children;
+}
+
+export function collectJsonSchemaDependencies(schema, { schemaPath = '<schema>', loadSchema } = {}) {
+  assertSupportedNode(schema, schemaPath);
+  const dependencies = new Set([schemaPath]);
+  const visitedDocuments = new Set([schemaPath]);
+
+  function visit(node, context) {
+    if (!node || typeof node !== 'object' || Array.isArray(node)) return;
+    if (typeof node.$ref === 'string') {
+      const { document } = splitReference(node.$ref);
+      if (document) {
+        const resolved = resolveReference(node.$ref, context);
+        const dependencyPath = resolved.context.schemaPath;
+        dependencies.add(dependencyPath);
+        if (!visitedDocuments.has(dependencyPath)) {
+          visitedDocuments.add(dependencyPath);
+          visit(resolved.context.rootSchema, resolved.context);
+        }
+      }
+    }
+    for (const child of schemaChildren(node)) visit(child, context);
+  }
+
+  visit(schema, { rootSchema: schema, schemaPath, loadSchema, refStack: new Set() });
+  return [...dependencies].sort();
+}
