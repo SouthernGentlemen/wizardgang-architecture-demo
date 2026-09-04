@@ -75,12 +75,19 @@ export function assuranceDeploymentContext(env: Env): AssuranceDeploymentContext
   };
 }
 
+export function assuranceDeploymentCommitUrl(
+  env: Env,
+  context: AssuranceDeploymentContext = assuranceDeploymentContext(env),
+): string | null {
+  return context.commit ? `${repoUrl(env)}/commit/${encodeURIComponent(context.commit)}` : null;
+}
+
 export function presentEvidence<T extends EvidenceRecord>(record: T, env: Env, origin: string): PresentedEvidence<T> {
   const freshness = {
     policy: record.freshnessPolicy,
     ...FRESHNESS_SEMANTICS[record.freshnessPolicy],
   };
-  const commit = env.DEPLOYED_SHA?.trim() || null;
+  const deployment = assuranceDeploymentContext(env);
   const usedBy = evidenceUsedBy(record.id);
 
   if (record.locator.repositoryPath) {
@@ -92,9 +99,9 @@ export function presentEvidence<T extends EvidenceRecord>(record: T, env: Env, o
       resolved: {
         kind: 'repository',
         repositoryPath,
-        revision: commit,
-        url: commit ? `${repoUrl(env)}/blob/${encodeURIComponent(commit)}/${repositoryPath}` : null,
-        resolution: commit ? 'deployed-commit' : 'not-supplied',
+        revision: deployment.commit,
+        url: deployment.commit ? `${repoUrl(env)}/blob/${encodeURIComponent(deployment.commit)}/${repositoryPath}` : null,
+        resolution: deployment.sourceResolution,
       },
     };
   }
