@@ -1,7 +1,8 @@
 import {
+  assuranceRegistry,
   primaryAssuranceResource,
-  type AssuranceDataset,
 } from '../assurance/model';
+import { resolveAssuranceResourceOwner } from '../assurance/record-discovery.js';
 import {
   assuranceFilterPredicate,
   normalizeAssuranceFilters,
@@ -10,21 +11,20 @@ import {
 import { assuranceErrorResponse } from './assurance-contract';
 
 export interface FocusedAssuranceSelection<T> {
-  filterOwner: AssuranceDataset;
+  filterOwner: string;
   filters: AssuranceFilterValues;
   records: T[];
 }
 
-function filterOwnerForDataset(dataset: AssuranceDataset): AssuranceDataset {
+function filterOwnerForDataset(dataset: string): string {
   const resource = primaryAssuranceResource(dataset);
-  const owner = (resource.routeOwner ?? resource.kind) as AssuranceDataset;
-  primaryAssuranceResource(owner);
-  return owner;
+  const owner = resolveAssuranceResourceOwner(assuranceRegistry, resource, 'routeOwner');
+  return owner.kind;
 }
 
 export function focusedAssuranceFilterOwner(
-  datasets: readonly AssuranceDataset[],
-): AssuranceDataset {
+  datasets: readonly string[],
+): string {
   if (datasets.length === 0) {
     throw new Error('A focused assurance route must declare at least one dataset.');
   }
@@ -39,7 +39,7 @@ export function focusedAssuranceFilterOwner(
 export function selectFocusedAssuranceRecords<T>(
   request: Request,
   url: URL,
-  datasets: readonly AssuranceDataset[],
+  datasets: readonly string[],
   records: T[],
 ): FocusedAssuranceSelection<T> | Response {
   const filterOwner = focusedAssuranceFilterOwner(datasets);
@@ -58,6 +58,6 @@ export function selectFocusedAssuranceRecords<T>(
   return {
     filterOwner,
     filters: normalized.filters,
-    records: records.filter((record) => predicate(record as Parameters<typeof predicate>[0])),
+    records: records.filter((record) => predicate(record)),
   };
 }

@@ -1,31 +1,25 @@
-import { flattenAssuranceResources } from './record-discovery.js';
+import {
+  assuranceResourceById,
+  flattenAssuranceResources,
+  resolveAssuranceResourceOwner,
+} from './record-discovery.js';
 
 function indexedDataset(registry, kind) {
   const matches = (registry?.datasets ?? []).filter(
     (dataset) => dataset?.kind === kind && dataset?.role === 'dataset' && dataset?.capabilities?.includes('api-index'),
   );
+  if (matches.length === 0) return null;
   if (matches.length !== 1) {
     throw new Error(`assurance route contract expected exactly one indexed ${kind} dataset; found ${matches.length}`);
   }
   return matches[0];
 }
 
-function resourceById(registry, id) {
-  return flattenAssuranceResources(registry).find((resource) => resource.id === id);
-}
-
 export function assuranceRouteOwnerResource(registry, kind) {
-  let current = indexedDataset(registry, kind);
-  const seen = new Set();
-  while (current?.routeOwner) {
-    if (seen.has(current.id)) throw new Error(`assurance route ownership cycle includes ${current.id}`);
-    seen.add(current.id);
-    const owner = resourceById(registry, current.routeOwner);
-    if (!owner) throw new Error(`${current.id} declares unknown route owner ${current.routeOwner}`);
-    current = owner;
-  }
-  if (!current?.routes) return null;
-  return current;
+  const indexed = indexedDataset(registry, kind);
+  if (!indexed) return null;
+  const owner = resolveAssuranceResourceOwner(registry, indexed, 'routeOwner');
+  return owner?.routes ? owner : null;
 }
 
 export function assuranceRoutesForDataset(registry, kind) {
@@ -122,8 +116,6 @@ function recordTemplateIntersection(left, right) {
 }
 
 export function matchAssuranceRoute(registry, path) {
-  // Exact static paths always own a request before a record template. This makes
-  // nested collections and aliases deterministic regardless of declaration order.
   for (const alias of assuranceRouteAliases(registry)) {
     if (alias.path === path) return { owner: alias.owner, kind: 'alias', target: alias.target };
   }
@@ -163,7 +155,7 @@ export function validateAssuranceRouteHandlerSupport(registry, support) {
 
   for (const declaration of declarations) {
     const routes = declaration.routes ?? {};
-    const ownerSupport = support?.[declaration.owner] ?? {};
+    const ownerSupport = support?.[declaration.owner] ?? support?.['*'] ?? {};
     if (routes.html && !ownerSupport.html) {
       errors.push(`${declaration.ownerId} declares routes.html without an HTML handler`);
     }
@@ -184,14 +176,14 @@ export function validateAssuranceRouteContract(registry) {
 
   if (!registry?.routes?.api) errors.push('registry must declare routes.api');
 
-  for (const dataset of registry?.datasets ?? []) {
-    if (dataset.routes && dataset.routeOwner) {
-      errors.push(`${dataset.id} cannot declare both routes and routeOwner`);
+  for (const resource of resources.filter((entry) => entry.role === 'dataset')) {
+    if (resource.routes && resource.routeOwner) {
+      errors.push(`${resource.id} cannot declare both routes and routeOwner`);
     }
-    if (dataset.routeOwner) {
-      const owner = ids.get(dataset.routeOwner);
-      if (!owner) errors.push(`${dataset.id} declares unknown routeOwner ${dataset.routeOwner}`);
-      else if (!owner.routes) errors.push(`${dataset.id} routeOwner ${dataset.routeOwner} does not own routes`);
+    if (resource.routeOwner) {
+      const owner = assuranceResourceById(registry, resource.routeOwner);
+      if (!owner) errors.push(`${resource.id} declares unknown routeOwner ${resource.routeOwner}`);
+      else if (!owner.routes) errors.push(`${resource.id} routeOwner ${resource.routeOwner} does not own routes`);
     }
   }
 
@@ -227,6 +219,9 @@ export function validateAssuranceRouteContract(registry) {
     }
     if (resource && routes.api && !capabilities.has('api-index')) {
       errors.push(`${declaration.ownerId} routes.api requires api-index capability`);
+    }
+    if (resource && routes.api && !capabilities.has('records')) {
+      errors.push(`${declaration.ownerId} routes.api requires records capability`);
     }
 
     if (routes.apiRecord !== undefined) {

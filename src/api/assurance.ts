@@ -1,6 +1,11 @@
 import {
+  assuranceCollectionState,
+  assuranceDatasetQualification,
+  assuranceDatasetSchema,
+  assuranceDatasetSource,
   complianceFrameworks,
   complianceQualification,
+  deriveAssuranceCounts,
   deriveComplianceCounts,
   deriveIncidentCounts,
   deriveRiskCounts,
@@ -127,6 +132,68 @@ export function assuranceIncidentsResponse(request: Request): Response {
     counts: deriveIncidentCounts(filteredIncidents, filteredExercises),
     incidents,
     exercises,
+    ...(page.pagination ? { pagination: page.pagination } : {}),
+  });
+}
+
+function unavailableCollectionResponse(request: Request, dataset: string): Response | undefined {
+  const state = assuranceCollectionState(dataset);
+  if (state.status === 'unknown') {
+    return assuranceErrorResponse(request, 404, { error: 'assurance_dataset_not_found', dataset, availability: state.status });
+  }
+  if (state.status === 'unsupported') {
+    return assuranceErrorResponse(request, 409, { error: 'assurance_dataset_unsupported', dataset, availability: state.status });
+  }
+  if (state.status === 'unavailable') {
+    return assuranceErrorResponse(request, 503, { error: 'assurance_dataset_unavailable', dataset, availability: state.status });
+  }
+  return undefined;
+}
+
+export function genericAssuranceResponse(request: Request, dataset: string, recordId?: string): Response {
+  const context = prepareAssuranceRequest(request);
+  if (context instanceof Response) return context;
+  const unavailable = unavailableCollectionResponse(request, dataset);
+  if (unavailable) return unavailable;
+  const state = assuranceCollectionState(dataset);
+
+  if (recordId !== undefined) {
+    let decodedId: string;
+    try {
+      decodedId = decodeURIComponent(recordId);
+    } catch {
+      return assuranceErrorResponse(request, 400, { error: 'invalid_assurance_record_id', dataset });
+    }
+    const record = findPublishedAssuranceRecord(dataset, decodedId);
+    if (!record) {
+      return assuranceErrorResponse(request, 404, { error: 'assurance_record_not_found', dataset, recordId: decodedId });
+    }
+    return assuranceJsonResponse(request, {
+      schemaVersion: context.schemaVersion,
+      dataset,
+      availability: state.status,
+      qualification: assuranceDatasetQualification(dataset),
+      source: { path: assuranceDatasetSource(dataset), schema: assuranceDatasetSchema(dataset) },
+      record,
+    });
+  }
+
+  const sourceRecords = listPublishedAssuranceRecords(dataset);
+  const selection = selectFocusedAssuranceRecords(request, context.url, [dataset], sourceRecords);
+  if (selection instanceof Response) return selection;
+  const page = paginateAssuranceRecords(request, context.url, selection.records);
+  if (page instanceof Response) return page;
+
+  return assuranceJsonResponse(request, {
+    schemaVersion: context.schemaVersion,
+    dataset,
+    availability: state.status,
+    qualification: assuranceDatasetQualification(dataset),
+    source: { path: assuranceDatasetSource(dataset), schema: assuranceDatasetSchema(dataset) },
+    filters: selection.filters,
+    counts: deriveAssuranceCounts(selection.filterOwner, selection.records),
+    totalAvailable: sourceRecords.length,
+    records: page.records,
     ...(page.pagination ? { pagination: page.pagination } : {}),
   });
 }

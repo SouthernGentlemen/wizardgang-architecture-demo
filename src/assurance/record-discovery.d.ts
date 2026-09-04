@@ -11,7 +11,15 @@ export interface AssuranceRecordCollectionDeclaration {
 export interface AssuranceDiscoverableResource {
   id: string;
   kind: string;
+  role?: string;
+  path?: string;
+  schema?: string;
+  visibility?: 'public' | 'private';
   capabilities?: string[];
+  routeOwner?: string;
+  routes?: unknown;
+  filters?: unknown;
+  framework?: unknown;
   recordCollection?: AssuranceRecordCollectionDeclaration;
   resources?: AssuranceDiscoverableResource[];
 }
@@ -28,7 +36,28 @@ export interface AssuranceRecordEntry<T = unknown> {
   record: T;
 }
 
+export type AssuranceRecordFamilyRegistrationStatus = 'unknown' | 'unsupported' | 'unavailable' | 'partial' | 'registered';
+export interface AssuranceRecordFamilyRegistration {
+  kind: string;
+  status: AssuranceRecordFamilyRegistrationStatus;
+  resources: AssuranceDiscoverableResource[];
+  recordResources: AssuranceDiscoverableResource[];
+  runtimeResources: AssuranceDiscoverableResource[];
+}
+
 export function flattenAssuranceResources(registry: AssuranceDiscoverableRegistry): AssuranceDiscoverableResource[];
+export function assuranceResourceById(registry: AssuranceDiscoverableRegistry, id: string): AssuranceDiscoverableResource | undefined;
+export function assuranceResourcesForKind(registry: AssuranceDiscoverableRegistry, kind: string): AssuranceDiscoverableResource[];
+export function primaryAssuranceDatasetResource(registry: AssuranceDiscoverableRegistry, kind: string): AssuranceDiscoverableResource;
+export function resolveAssuranceResourceOwner(
+  registry: AssuranceDiscoverableRegistry,
+  resourceOrId: AssuranceDiscoverableResource | string,
+  ownerProperty?: string,
+): AssuranceDiscoverableResource;
+export function assuranceRecordFamilyRegistration(
+  registry: AssuranceDiscoverableRegistry,
+  kind: string,
+): AssuranceRecordFamilyRegistration;
 export function assuranceResourcesWithCapability(
   registry: AssuranceDiscoverableRegistry,
   capability: string,

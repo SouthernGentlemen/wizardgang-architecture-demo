@@ -21,6 +21,55 @@ export function flattenAssuranceResources(registry) {
   return resources;
 }
 
+export function assuranceResourceById(registry, id) {
+  return flattenAssuranceResources(registry).find((resource) => resource.id === id);
+}
+
+export function assuranceResourcesForKind(registry, kind) {
+  return flattenAssuranceResources(registry).filter((resource) => resource.kind === kind);
+}
+
+export function primaryAssuranceDatasetResource(registry, kind) {
+  const matches = (registry?.datasets ?? []).filter(
+    (resource) => resource?.kind === kind && resource?.role === 'dataset',
+  );
+  if (matches.length !== 1) {
+    throw new Error(`Assurance registry expected exactly one primary ${kind} dataset; found ${matches.length}.`);
+  }
+  return matches[0];
+}
+
+export function resolveAssuranceResourceOwner(registry, resourceOrId, ownerProperty = 'routeOwner') {
+  let current = typeof resourceOrId === 'string' ? assuranceResourceById(registry, resourceOrId) : resourceOrId;
+  if (!current) throw new Error(`Assurance registry cannot resolve resource ${String(resourceOrId)}.`);
+  const seen = new Set();
+  while (current?.[ownerProperty]) {
+    if (seen.has(current.id)) throw new Error(`Assurance ${ownerProperty} ownership cycle includes ${current.id}.`);
+    seen.add(current.id);
+    const ownerId = current[ownerProperty];
+    const owner = assuranceResourceById(registry, ownerId);
+    if (!owner) throw new Error(`${current.id} declares unknown ${ownerProperty} ${ownerId}.`);
+    current = owner;
+  }
+  return current;
+}
+
+export function assuranceRecordFamilyRegistration(registry, kind) {
+  const resources = assuranceResourcesForKind(registry, kind);
+  if (resources.length === 0) return { kind, status: 'unknown', resources: [], recordResources: [], runtimeResources: [] };
+  const recordResources = resources.filter((resource) => capabilities(resource).includes('records'));
+  if (recordResources.length === 0) return { kind, status: 'unsupported', resources, recordResources, runtimeResources: [] };
+  const runtimeResources = recordResources.filter((resource) => capabilities(resource).includes('runtime'));
+  if (runtimeResources.length === 0) return { kind, status: 'unavailable', resources, recordResources, runtimeResources };
+  return {
+    kind,
+    status: runtimeResources.length === recordResources.length ? 'registered' : 'partial',
+    resources,
+    recordResources,
+    runtimeResources,
+  };
+}
+
 export function assuranceResourcesWithCapability(registry, capability) {
   return flattenAssuranceResources(registry).filter((resource) => capabilities(resource).includes(capability));
 }
@@ -66,9 +115,7 @@ export function assuranceRecordsFromDocument(resource, document) {
 export function assuranceRecordEntries(registry, loadDocument, options = {}) {
   const entries = [];
   for (const resource of assuranceRecordResources(registry)) {
-    if (options.runtimeOnly && !capabilities(resource).includes('runtime')) {
-      throw new Error(`${resource.id} declares records capability without runtime capability; Worker record discovery cannot load it.`);
-    }
+    if (options.runtimeOnly && !capabilities(resource).includes('runtime')) continue;
     const document = loadDocument(resource);
     for (const record of assuranceRecordsFromDocument(resource, document)) entries.push({ resource, record });
   }

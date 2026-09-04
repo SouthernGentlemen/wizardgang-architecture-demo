@@ -28,7 +28,7 @@ import { securityTxtResponse } from './api/security-policy';
 import { billingScenarioResponse } from './api/billing';
 import { renderBilling, renderDashboard, renderDocs, renderUptime } from './demos/operations-pages';
 import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } from './api/governance';
-import { assuranceComplianceResponse, assuranceIncidentsResponse, assuranceRisksResponse } from './api/assurance';
+import { assuranceComplianceResponse, assuranceIncidentsResponse, assuranceRisksResponse, genericAssuranceResponse } from './api/assurance';
 import { assuranceAdvisoriesResponse } from './api/advisories';
 import { assuranceEvidenceResponse, assuranceResponse } from './api/assurance-registry';
 import { d1LabResponse } from './api/d1-lab';
@@ -49,7 +49,6 @@ import { crawlerBlockedResponse, getCrawlerControl, identifyOpenAIAgent, robotsR
 import {
   assuranceHtmlRoute,
   assuranceRouteAliases,
-  assuranceRouteDeclarations,
   matchAssuranceRoute,
   validateAssuranceRouteHandlerSupport,
   type AssuranceRouteHandlerSupport,
@@ -93,13 +92,16 @@ const assuranceHandlerOwners = new Set([
   ...Object.keys(ASSURANCE_HTML_HANDLERS),
 ]);
 
-export const ASSURANCE_ROUTE_HANDLER_SUPPORT: Record<string, AssuranceRouteHandlerSupport> = Object.fromEntries(
-  [...assuranceHandlerOwners].map((owner) => [owner, {
-    html: Boolean(ASSURANCE_HTML_HANDLERS[owner]),
-    apiCollection: Boolean(ASSURANCE_API_HANDLERS[owner]),
-    apiRecord: Boolean(ASSURANCE_API_HANDLERS[owner]?.apiRecord),
-  }]),
-);
+export const ASSURANCE_ROUTE_HANDLER_SUPPORT: Record<string, AssuranceRouteHandlerSupport> = {
+  ...Object.fromEntries(
+    [...assuranceHandlerOwners].map((owner) => [owner, {
+      html: Boolean(ASSURANCE_HTML_HANDLERS[owner]),
+      apiCollection: Boolean(ASSURANCE_API_HANDLERS[owner]),
+      apiRecord: Boolean(ASSURANCE_API_HANDLERS[owner]?.apiRecord),
+    }]),
+  ),
+  '*': { apiCollection: true, apiRecord: true },
+};
 
 const assuranceHandlerErrors = validateAssuranceRouteHandlerSupport(ASSURANCE_ROUTE_HANDLER_SUPPORT);
 if (assuranceHandlerErrors.length > 0) {
@@ -115,9 +117,12 @@ async function routeAssuranceRequest(request: Request, env: Env, path: string, o
   }
   if (match.kind === 'html') {
     if (request.method !== 'GET') return undefined;
-    return ASSURANCE_HTML_HANDLERS[match.owner](request, env, match);
+    const handler = ASSURANCE_HTML_HANDLERS[match.owner];
+    return handler ? handler(request, env, match) : undefined;
   }
-  return ASSURANCE_API_HANDLERS[match.owner].handler(request, env, match);
+  const registration = ASSURANCE_API_HANDLERS[match.owner];
+  if (registration) return registration.handler(request, env, match);
+  return genericAssuranceResponse(request, match.owner, match.kind === 'api-record' ? match.recordId : undefined);
 }
 
 export const RETIRED_PAGE_REDIRECTS = new Map<string, string>([

@@ -3,14 +3,19 @@ import path from 'node:path';
 import {
   assuranceRecordCollectionPath,
   assuranceRecordEntries,
+  assuranceRecordFamilyRegistration,
   assuranceRecordIdentity,
   assuranceRecordResources,
   assuranceRecordsForKind,
   assuranceRecordsFromDocument,
+  assuranceResourceById,
+  assuranceResourcesForKind,
   assuranceResourcesWithCapability,
   assuranceValueAtPath,
   flattenAssuranceResources,
+  primaryAssuranceDatasetResource,
   requireAssuranceCapabilityResource,
+  resolveAssuranceResourceOwner,
 } from '../../src/assurance/record-discovery.js';
 
 export const ASSURANCE_REGISTRY_PATH = 'assurance/registry.json';
@@ -18,13 +23,18 @@ export const ASSURANCE_REGISTRY_PATH = 'assurance/registry.json';
 export {
   assuranceRecordCollectionPath,
   assuranceRecordEntries,
+  assuranceRecordFamilyRegistration,
   assuranceRecordIdentity,
   assuranceRecordResources,
   assuranceRecordsForKind,
   assuranceRecordsFromDocument,
+  assuranceResourceById,
+  assuranceResourcesForKind,
   assuranceResourcesWithCapability,
   assuranceValueAtPath,
+  primaryAssuranceDatasetResource,
   requireAssuranceCapabilityResource,
+  resolveAssuranceResourceOwner,
 };
 
 export function readJsonFile(root, relative) {
@@ -73,7 +83,7 @@ export function flattenAssuranceRegistry(registry) {
 }
 
 export function registryResourcesByKind(registry, kind) {
-  return flattenAssuranceRegistry(registry).filter((resource) => resource.kind === kind);
+  return assuranceResourcesForKind(registry, kind);
 }
 
 export function registryResourcesWithCapability(registry, capability) {
@@ -81,7 +91,7 @@ export function registryResourcesWithCapability(registry, capability) {
 }
 
 export function registryResourceById(registry, id) {
-  return flattenAssuranceRegistry(registry).find((resource) => resource.id === id);
+  return assuranceResourceById(registry, id);
 }
 
 export function registryResourceByPath(registry, relative) {
@@ -97,11 +107,7 @@ export function requireRegistryResource(registry, predicate, label) {
 }
 
 export function primaryRegistryDataset(registry, kind) {
-  const matches = (registry.datasets ?? []).filter((dataset) => dataset.kind === kind && dataset.capabilities?.includes('api-index'));
-  if (matches.length !== 1) {
-    throw new Error(`assurance/registry.json: expected exactly one indexed ${kind} dataset; found ${matches.length}`);
-  }
-  return matches[0];
+  return primaryAssuranceDatasetResource(registry, kind);
 }
 
 export function canonicalAssuranceDatasetPaths(registry) {
