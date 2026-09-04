@@ -13,8 +13,6 @@ const expectedAnnexRefs = [
 ];
 
 const result = validateNormalizedIso({
-  dataPath: 'assurance/compliance/iso-42001-2023.json',
-  schemaPath: 'contracts/assurance/iso-42001-compliance.schema.json',
   standard: 'ISO/IEC 42001:2023', edition: '2023', framework: 'iso-42001', idPrefix: 'ISO42001', sourceSoaId: 'WG-SOA-002',
   expectedClauseRefs, expectedAnnexRefs,
   extraValidate: ({ compliance, errors }) => {

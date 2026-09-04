@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   flattenAssuranceRegistry,
+  loadAssuranceRecordInventory,
   loadAssuranceRegistry,
   readJsonFile,
   registryResourceById,
@@ -102,7 +103,7 @@ ${renderDocumentMetadata(document, soa)}
 
 ## Authority
 
-This Markdown file is a deterministic presentation of canonical structured assurance data. Per-control applicability, status, N/A rationale, title, and evidence relationships are maintained only in \`${resource.path}\`. Framework identity, qualification, edition, assessment date, and source-path ownership are maintained in \`assurance/registry.json\`; document ownership, lifecycle state, approval provenance, and review cadence are maintained by the SoA document/source metadata and \`assurance/presentation/documents.json\`.
+This Markdown file is a deterministic presentation of canonical structured assurance data. Per-control applicability, status, N/A rationale, title, and evidence relationships are maintained only in registry-owned structured records for ${framework.label}. Framework identity, qualification, edition, assessment date, and source-path ownership are maintained in \`assurance/registry.json\`; document ownership, lifecycle state, approval provenance, and review cadence are maintained by the SoA document/source metadata and \`assurance/presentation/documents.json\`.
 
 Generated Markdown is not an input to runtime, validation, APIs, or dashboards.
 
@@ -132,8 +133,19 @@ export function applyGeneratedProjection(current, projection, outputPath) {
   return `${current.slice(0, start)}${projection}${current.slice(end + GENERATED_END.length)}`;
 }
 
+function sourceData(resource, inventory) {
+  const data = readJsonFile(root, resource.path);
+  if (!resource.capabilities?.includes('records')) return data;
+  const frameworkId = resource.framework?.id;
+  const records = inventory.entries
+    .filter(({ resource: candidate }) => candidate.kind === resource.kind && (!frameworkId || candidate.framework?.id === frameworkId))
+    .map(({ record }) => record);
+  return { ...data, records };
+}
+
 function main() {
   const registry = loadAssuranceRegistry(root);
+  const inventory = loadAssuranceRecordInventory(root, registry);
   const governance = readJsonFile(root, 'docs/governance/REFERENCE-REGISTRY.json');
   const governancePaths = new Map(governance.records.map((record) => [record.reference, record.path]));
   const presentationResources = flattenAssuranceRegistry(registry).filter((resource) => resource.kind === 'documents' && resource.capabilities?.includes('summary-source'));
@@ -152,7 +164,7 @@ function main() {
       failures.push(`${document.id}: one or more sourceDatasets do not resolve through assurance/registry.json`);
       continue;
     }
-    const sources = sourceResources.map((resource) => ({ resource, data: readJsonFile(root, resource.path) }));
+    const sources = sourceResources.map((resource) => ({ resource, data: sourceData(resource, inventory) }));
     const absolute = path.join(root, outputPath);
     const current = fs.existsSync(absolute) ? fs.readFileSync(absolute, 'utf8') : '';
     let rendered;

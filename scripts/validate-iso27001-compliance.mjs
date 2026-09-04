@@ -13,8 +13,6 @@ const expectedAnnexRefs = [
 ];
 
 const result = validateNormalizedIso({
-  dataPath: 'assurance/compliance/iso-27001-2022.json',
-  schemaPath: 'contracts/assurance/iso-27001-compliance.schema.json',
   standard: 'ISO/IEC 27001:2022', edition: '2022', framework: 'iso-27001', idPrefix: 'ISO27001', sourceSoaId: 'WG-SOA-001',
   expectedClauseRefs, expectedAnnexRefs,
 });

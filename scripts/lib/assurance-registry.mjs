@@ -31,6 +31,32 @@ export function loadAssuranceRegistry(root = process.cwd()) {
   return readJsonFile(root, ASSURANCE_REGISTRY_PATH);
 }
 
+export function loadAssuranceRecordInventory(root = process.cwd(), registry = loadAssuranceRegistry(root)) {
+  const resources = assuranceRecordResources(registry);
+  const documentsByResourceId = new Map(resources.map((resource) => [resource.id, readJsonFile(root, resource.path)]));
+  const entries = assuranceRecordEntries(registry, (resource) => documentsByResourceId.get(resource.id));
+
+  return {
+    resources,
+    entries,
+    documentsByResourceId,
+    entriesForKind(kind) {
+      return entries.filter((entry) => entry.resource.kind === kind);
+    },
+    recordsForKind(kind) {
+      return assuranceRecordsForKind(entries, kind);
+    },
+    idsForKind(kind) {
+      return new Set(assuranceRecordsForKind(entries, kind).map((record) => record.id).filter((id) => typeof id === 'string'));
+    },
+    documentForResource(resourceOrId) {
+      const id = typeof resourceOrId === 'string' ? resourceOrId : resourceOrId?.id;
+      if (!documentsByResourceId.has(id)) throw new Error(`assurance/registry.json: record resource ${id ?? 'unknown'} is not loaded`);
+      return documentsByResourceId.get(id);
+    },
+  };
+}
+
 export function isControlledRelativePath(relative) {
   return typeof relative === 'string'
     && relative.length > 0
