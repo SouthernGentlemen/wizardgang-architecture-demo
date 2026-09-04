@@ -1,6 +1,9 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import { loadAssuranceRegistry, registryResourceByPath } from './assurance-registry.mjs';
+import {
+  loadAssuranceRecordInventory,
+  loadAssuranceRegistry,
+  readJsonFile,
+  requireRegistryResource,
+} from './assurance-registry.mjs';
 
 const ISO_POSTURE_STATUSES = ['met', 'partial', 'gap', 'not-applicable'];
 
@@ -18,17 +21,24 @@ function deriveIsoPosture(controls) {
   return counts;
 }
 
-export function validateNormalizedIso({ root = process.cwd(), dataPath, schemaPath, standard, edition, framework, idPrefix, sourceSoaId, expectedClauseRefs, expectedAnnexRefs, extraValidate }) {
-  const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), 'utf8'));
+export function validateNormalizedIso({ root = process.cwd(), standard, edition, framework, idPrefix, sourceSoaId, expectedClauseRefs, expectedAnnexRefs, extraValidate }) {
   const errors = [];
-  const compliance = readJson(dataPath);
-  const schema = readJson(schemaPath);
-  const evidence = readJson('assurance/evidence/evidence.json');
-  const governance = readJson('docs/governance/REFERENCE-REGISTRY.json');
   const registry = loadAssuranceRegistry(root);
-  const resource = registryResourceByPath(registry, dataPath);
-  const metadata = resource?.framework;
-  const evidenceIds = new Set((evidence.records ?? []).map((record) => record.id));
+  const inventory = loadAssuranceRecordInventory(root, registry);
+  const resource = requireRegistryResource(
+    registry,
+    (entry) => entry.kind === 'compliance'
+      && entry.capabilities?.includes('records')
+      && entry.framework?.id === framework,
+    `${framework} compliance record resource`,
+  );
+  const dataPath = resource.path;
+  const schemaPath = resource.schema;
+  const compliance = inventory.documentForResource(resource);
+  const schema = readJsonFile(root, schemaPath);
+  const governance = readJsonFile(root, 'docs/governance/REFERENCE-REGISTRY.json');
+  const metadata = resource.framework;
+  const evidenceIds = inventory.idsForKind('evidence');
   const governanceIds = new Set((governance.records ?? []).map((record) => record.reference));
   const records = compliance.records ?? [];
   const clauses = records.filter((record) => record.kind === 'clause');
@@ -36,7 +46,7 @@ export function validateNormalizedIso({ root = process.cwd(), dataPath, schemaPa
 
   if (schema.$schema !== 'https://json-schema.org/draft/2020-12/schema') errors.push(`${schemaPath}: expected JSON Schema draft 2020-12`);
   if (compliance.schemaVersion !== 1) errors.push(`${dataPath}: schemaVersion must be 1`);
-  if (!metadata || metadata.id !== framework || metadata.label !== standard || metadata.edition !== edition || resource.path !== dataPath) errors.push(`${dataPath}: framework identity must be owned by its registered resource`);
+  if (!metadata || metadata.id !== framework || metadata.label !== standard || metadata.edition !== edition) errors.push(`${dataPath}: framework identity must be owned by its registered resource`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(metadata?.assessmentDate ?? '')) errors.push(`${dataPath}: registered framework assessmentDate must be an ISO date`);
   if (!String(metadata?.qualification ?? '').toLowerCase().includes('not claimed')) errors.push(`${dataPath}: registered framework qualification must avoid certification/conformance claims`);
   if (compliance.visibility !== 'public') errors.push(`${dataPath}: visibility must be public`);
@@ -78,7 +88,7 @@ export function validateNormalizedIso({ root = process.cwd(), dataPath, schemaPa
   for (const ref of [...expectedClauseRefs, ...expectedAnnexRefs]) if (!seenRefs.has(ref)) errors.push(`${ref}: required ISO reference is missing`);
   const postureCounts = deriveIsoPosture(controls);
   extraValidate?.({ compliance, records, clauses, controls, postureCounts, errors, resource, frameworkMetadata: metadata });
-  return { errors, compliance, records, clauses, controls, postureCounts };
+  return { errors, compliance, records, clauses, controls, postureCounts, resource };
 }
 
 export function finishIsoValidation(label, result) {

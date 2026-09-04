@@ -1,30 +1,35 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import { loadAssuranceRegistry, registryResourceByPath } from './lib/assurance-registry.mjs';
+import {
+  loadAssuranceRecordInventory,
+  loadAssuranceRegistry,
+  readJsonFile,
+  requireRegistryResource,
+} from './lib/assurance-registry.mjs';
 
 const root = process.cwd();
-const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), 'utf8'));
 const errors = [];
-const manifestPath = 'assurance/compliance/wcag-2.2.json';
-const manifestSchemaPath = 'contracts/assurance/wcag-2.2-registry.schema.json';
-const criterionSchemaPath = 'contracts/assurance/wcag-2.2-criteria.schema.json';
-const manifest = readJson(manifestPath);
-const manifestSchema = readJson(manifestSchemaPath);
-const criterionSchema = readJson(criterionSchemaPath);
 const registry = loadAssuranceRegistry(root);
-const manifestResource = registryResourceByPath(registry, manifestPath);
-const framework = manifestResource?.framework;
-const partitionResources = manifestResource?.resources ?? [];
-const evidence = readJson('assurance/evidence/evidence.json');
-const evidenceIds = new Set((evidence.records ?? []).map((record) => record.id));
+const inventory = loadAssuranceRecordInventory(root, registry);
+const manifestResource = requireRegistryResource(
+  registry,
+  (resource) => resource.kind === 'compliance' && resource.capabilities?.includes('manifest') && resource.framework?.id === 'wcag-2.2',
+  'WCAG 2.2 manifest resource',
+);
+const manifestPath = manifestResource.path;
+const manifest = readJsonFile(root, manifestPath);
+const framework = manifestResource.framework;
+const partitionResources = (manifestResource.resources ?? []).filter((resource) => resource.kind === 'compliance' && resource.role === 'partition');
+const evidenceIds = inventory.idsForKind('evidence');
 const allowedStatuses = new Set(['demonstrated', 'partial', 'gap', 'not-observed']);
 const freshnessRules = new Set(['release-bound', 'content-change', 'interaction-change', 'quarterly-manual']);
 const principleMap = new Map([['1', 'Perceivable'], ['2', 'Operable'], ['3', 'Understandable'], ['4', 'Robust']]);
 
-if (manifestSchema.$schema !== 'https://json-schema.org/draft/2020-12/schema') errors.push(`${manifestSchemaPath}: expected JSON Schema draft 2020-12`);
-if (criterionSchema.$schema !== 'https://json-schema.org/draft/2020-12/schema') errors.push(`${criterionSchemaPath}: expected JSON Schema draft 2020-12`);
+const schemaPaths = new Set([manifestResource.schema, ...partitionResources.map((resource) => resource.schema)]);
+for (const schemaPath of schemaPaths) {
+  const schema = readJsonFile(root, schemaPath);
+  if (schema.$schema !== 'https://json-schema.org/draft/2020-12/schema') errors.push(`${schemaPath}: expected JSON Schema draft 2020-12`);
+}
 if (manifest.schemaVersion !== 1 || manifest.id !== 'wcag-2-2-public-registry') errors.push(`${manifestPath}: stable registry identity changed`);
-if (!framework || framework.id !== 'wcag-2.2' || framework.label !== 'WCAG 2.2' || framework.edition !== '2.2' || manifestResource.path !== manifestPath) errors.push(`${manifestPath}: framework metadata must be owned by the registered manifest resource`);
+if (!framework || framework.id !== 'wcag-2.2' || framework.label !== 'WCAG 2.2' || framework.edition !== '2.2') errors.push(`${manifestPath}: framework metadata must be owned by the registered manifest resource`);
 if (!/^\d{4}-\d{2}-\d{2}$/.test(framework?.assessmentDate ?? '')) errors.push(`${manifestPath}: registered framework assessmentDate must be an ISO date`);
 for (const duplicate of ['standard', 'edition', 'assessmentDate', 'qualification', 'partitions', 'framework']) if (duplicate in manifest) errors.push(`${manifestPath}: ${duplicate} is registry-owned and must not be stored in the manifest`);
 if (manifest.visibility !== 'public') errors.push(`${manifestPath}: registry must remain public`);
@@ -43,10 +48,10 @@ for (const resource of partitionResources) {
   if (!partition || principleMap.get(partition.number) !== partition.label) errors.push(`${resource.path}: invalid registry-owned principle identity`);
   if (seenPrinciples.has(partition?.number)) errors.push(`${resource.path}: duplicate principle partition`);
   seenPrinciples.add(partition?.number);
-  if (!resource.path || path.isAbsolute(resource.path) || resource.path.includes('..') || !fs.existsSync(path.join(root, resource.path))) { errors.push(`${manifestPath}: unresolved partition ${resource.path}`); continue; }
-  const data = readJson(resource.path);
+  const data = inventory.documentForResource(resource.id);
   for (const duplicate of ['principle', 'framework', 'frameworkLabel', 'sourcePath']) if (duplicate in data) errors.push(`${resource.path}: ${duplicate} is registry-owned and must not be stored in the partition`);
-  for (const record of data.criteria ?? []) {
+  const resourceRecords = inventory.entries.filter((entry) => entry.resource.id === resource.id).map((entry) => entry.record);
+  for (const record of resourceRecords) {
     if (!String(record.reference).startsWith(`${partition?.number}.`)) errors.push(`${record.id}: criterion is in the wrong principle partition`);
     for (const duplicate of ['framework', 'frameworkLabel', 'section', 'sourcePath']) if (duplicate in record) errors.push(`${record.id}: ${duplicate} is derived from registry metadata`);
     records.push(record);
