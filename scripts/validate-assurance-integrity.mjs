@@ -51,19 +51,6 @@ function scanCanonical(relative, value, pointer = '$') {
 for (const relative of canonicalPaths) scanCanonical(relative, readJson(relative));
 
 const governance = readJson('docs/governance/REFERENCE-REGISTRY.json');
-const objectiveCatalogReference = 'WG-OBJ-001';
-const objectiveCatalogEntry = (governance.records ?? []).find((record) => record.reference === objectiveCatalogReference);
-const objectiveIds = new Set();
-if (!objectiveCatalogEntry) {
-  errors.push(`governance catalog is missing ${objectiveCatalogReference} for objective relationship resolution`);
-} else if (!exists(objectiveCatalogEntry.path)) {
-  errors.push(`${objectiveCatalogReference}: governance objective catalog path is missing: ${objectiveCatalogEntry.path}`);
-} else {
-  const objectiveDocument = fs.readFileSync(path.join(root, objectiveCatalogEntry.path), 'utf8');
-  for (const match of objectiveDocument.matchAll(/\|\s*([A-Z]+-OBJ-[0-9]{3})\s*\|/g)) objectiveIds.add(match[1]);
-  if (objectiveIds.size === 0) errors.push(`${objectiveCatalogReference}: no permanent objective IDs were found in ${objectiveCatalogEntry.path}`);
-}
-
 const recordResources = assuranceRecordResources(registry);
 const recordEntries = [];
 const recordsByKind = new Map();
@@ -160,7 +147,7 @@ const targetFamilies = new Map([
   ['exercises', idsForKind('exercises')],
   ['advisories', idsForKind('advisories')],
   ['governanceDocuments', new Set((governance.records ?? []).map((record) => record.reference))],
-  ['objectives', objectiveIds],
+  ['objectives', idsForKind('objectives')],
 ]);
 
 for (const { resource, record } of recordEntries) {

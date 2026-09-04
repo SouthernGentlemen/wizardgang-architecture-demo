@@ -76,11 +76,20 @@ describe('assurance integrity validator rejection matrix', () => {
     writeJson(fixtureRoot, 'assurance/incidents/exercises.json', exercises);
     expectRejected(runIntegrity(fixtureRoot), 'unresolved risks relationship SEC-RISK-999');
   });
-  it('resolves objective relationships through the governance-cataloged objective register and rejects unknown objective IDs', () => {
+  it('resolves existing exercise/objective links through the canonical objective dataset', () => {
     const fixtureRoot = createFixture();
     const exercises = readJson(fixtureRoot, 'assurance/incidents/exercises.json');
     expect(exercises.records[0].relationships.objectives).toEqual(['SEC-OBJ-005']);
     expect(runIntegrity(fixtureRoot).status).toBe(0);
+
+    const objectives = readJson(fixtureRoot, 'assurance/objectives/objectives.json');
+    objectives.records = objectives.records.filter((record: { id: string }) => record.id !== 'SEC-OBJ-005');
+    writeJson(fixtureRoot, 'assurance/objectives/objectives.json', objectives);
+    expectRejected(runIntegrity(fixtureRoot), 'unresolved objectives relationship SEC-OBJ-005');
+  });
+  it('rejects unknown objective relationship targets', () => {
+    const fixtureRoot = createFixture();
+    const exercises = readJson(fixtureRoot, 'assurance/incidents/exercises.json');
     exercises.records[0].relationships.objectives = ['SEC-OBJ-999'];
     writeJson(fixtureRoot, 'assurance/incidents/exercises.json', exercises);
     expectRejected(runIntegrity(fixtureRoot), 'unresolved objectives relationship SEC-OBJ-999');

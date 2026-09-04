@@ -6,6 +6,7 @@
     "lifecycle": "Management-System Owner",
     "evidence": "Evidence Custodian",
     "claims": "Management-System Owner",
+    "objectives": "WizardGang",
     "compliance": "Management-System Owner / Evidence Custodian",
     "risks": "Risk Owner",
     "incidents": "Incident Response Owner",
