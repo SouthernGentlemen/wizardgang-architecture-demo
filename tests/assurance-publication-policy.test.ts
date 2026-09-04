@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  assuranceLifecycleBaselineEligible,
   assuranceLifecyclePresentation,
   assuranceObservedState,
   assurancePublicationDecision,
@@ -7,6 +8,7 @@ import {
 } from '../src/assurance/publication-policy.js';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 
+const baselineCommit = 'c2359f00fc3bac80bfbc2e82369a86f20e522f74';
 const publicResource = { id: 'risks', visibility: 'public' };
 const reviewed = {
   status: 'Reviewed',
@@ -16,12 +18,19 @@ const reviewed = {
 };
 const baselineLifecycle = {
   baseline: {
+    commit: baselineCommit,
     lifecycle: 'Published' as const,
     disclosureReview: reviewed,
   },
   records: [],
   retiredRecords: [],
 };
+const baselineMembership = {
+  schemaVersion: 1,
+  commit: baselineCommit,
+  recordIds: ['SEC-RISK-001'],
+};
+const baselineOptions = { baselineMembership };
 
 describe('shared assurance publication policy', () => {
   it('rejects unsupported private resources instead of allowing a public runtime projection', () => {
@@ -29,11 +38,13 @@ describe('shared assurance publication policy', () => {
       { id: 'risks', visibility: 'private' },
       baselineLifecycle,
       'SEC-RISK-001',
+      baselineOptions,
     )).toThrow('risks uses unsupported assurance visibility private');
   });
 
-  it('inherits reviewed Published lifecycle state from the baseline', () => {
-    const decision = assurancePublicationDecision(publicResource, baselineLifecycle, 'SEC-RISK-001');
+  it('inherits reviewed Published lifecycle state only for verified baseline members', () => {
+    expect(assuranceLifecycleBaselineEligible(baselineLifecycle, baselineMembership, 'SEC-RISK-001')).toBe(true);
+    const decision = assurancePublicationDecision(publicResource, baselineLifecycle, 'SEC-RISK-001', baselineOptions);
     expect(decision.selected).toBe(true);
     expect(decision.reason).toBe('publishable');
     expect(decision.presentation).toEqual({
@@ -44,18 +55,46 @@ describe('shared assurance publication policy', () => {
     });
   });
 
+  it('fails closed for unknown IDs instead of assuming baseline eligibility', () => {
+    const withoutMembership = assurancePublicationDecision(publicResource, baselineLifecycle, 'SEC-RISK-NEW');
+    expect(withoutMembership.selected).toBe(false);
+    expect(withoutMembership.reason).toBe('missing-lifecycle');
+    expect(withoutMembership.presentation).toBeNull();
+
+    const notInBaseline = assurancePublicationDecision(
+      publicResource,
+      baselineLifecycle,
+      'SEC-RISK-NEW',
+      baselineOptions,
+    );
+    expect(notInBaseline.selected).toBe(false);
+    expect(notInBaseline.reason).toBe('missing-lifecycle');
+  });
+
+  it('rejects baseline inheritance when generated membership belongs to a different baseline commit', () => {
+    const decision = assurancePublicationDecision(publicResource, baselineLifecycle, 'SEC-RISK-001', {
+      baselineMembership: {
+        ...baselineMembership,
+        commit: '0000000000000000000000000000000000000000',
+      },
+    });
+    expect(decision.selected).toBe(false);
+    expect(decision.reason).toBe('missing-lifecycle');
+  });
+
   it('publishes reviewed Draft records because Draft is lifecycle state, not a visibility state', () => {
     const lifecycle = {
       ...baselineLifecycle,
       records: [{
-        id: 'SEC-RISK-001',
+        id: 'SEC-RISK-NEW',
         lifecycle: 'Draft' as const,
         disclosureReview: reviewed,
       }],
     };
-    const decision = assurancePublicationDecision(publicResource, lifecycle, 'SEC-RISK-001');
+    const decision = assurancePublicationDecision(publicResource, lifecycle, 'SEC-RISK-NEW', baselineOptions);
     expect(decision.selected).toBe(true);
     expect(decision.presentation?.lifecycle).toBe('Draft');
+    expect(decision.presentation?.source).toBe('explicit');
     expect(decision.presentation?.disclosureReview).toBe('Reviewed');
   });
 
@@ -63,12 +102,12 @@ describe('shared assurance publication policy', () => {
     const lifecycle = {
       ...baselineLifecycle,
       records: [{
-        id: 'SEC-RISK-001',
+        id: 'SEC-RISK-NEW',
         lifecycle: 'Draft' as const,
         disclosureReview: { status: 'Pending' },
       }],
     };
-    const decision = assurancePublicationDecision(publicResource, lifecycle, 'SEC-RISK-001');
+    const decision = assurancePublicationDecision(publicResource, lifecycle, 'SEC-RISK-NEW', baselineOptions);
     expect(decision.selected).toBe(false);
     expect(decision.reason).toBe('disclosure-review-required');
     expect(decision.presentation?.lifecycle).toBe('Draft');
@@ -93,15 +132,16 @@ describe('shared assurance publication policy', () => {
       ],
     };
 
-    const superseded = assurancePublicationDecision(publicResource, lifecycle, 'SEC-RISK-001');
+    const superseded = assurancePublicationDecision(publicResource, lifecycle, 'SEC-RISK-001', baselineOptions);
     expect(superseded.selected).toBe(true);
     expect(superseded.presentation).toMatchObject({
       lifecycle: 'Superseded',
+      source: 'explicit',
       supersededBy: 'SEC-RISK-002',
       retained: false,
     });
 
-    const withdrawn = assurancePublicationDecision(publicResource, lifecycle, 'SEC-RISK-003');
+    const withdrawn = assurancePublicationDecision(publicResource, lifecycle, 'SEC-RISK-003', baselineOptions);
     expect(withdrawn.selected).toBe(true);
     expect(withdrawn.presentation).toMatchObject({
       lifecycle: 'Withdrawn',
@@ -110,24 +150,24 @@ describe('shared assurance publication policy', () => {
     });
   });
 
-  it('resolves retained tombstones separately from current-record selection', () => {
+  it('keeps retired tombstones authoritative even when the ID was a baseline member', () => {
     const lifecycle = {
       ...baselineLifecycle,
       retiredRecords: [{
-        id: 'SEC-RISK-OLD',
+        id: 'SEC-RISK-001',
         lifecycle: 'Withdrawn' as const,
         disclosureReview: reviewed,
         withdrawalRationale: 'Retained for identifier history.',
       }],
     };
-    const resolved = resolveAssuranceLifecycle(lifecycle, 'SEC-RISK-OLD', { baselineEligible: false });
+    const resolved = resolveAssuranceLifecycle(lifecycle, 'SEC-RISK-001', baselineOptions);
     expect(assuranceLifecyclePresentation(resolved)).toMatchObject({
       lifecycle: 'Withdrawn',
       source: 'retired',
       retained: true,
       withdrawalRationale: 'Retained for identifier history.',
     });
-    const decision = assurancePublicationDecision(publicResource, lifecycle, 'SEC-RISK-OLD', { baselineEligible: false });
+    const decision = assurancePublicationDecision(publicResource, lifecycle, 'SEC-RISK-001', baselineOptions);
     expect(decision.selected).toBe(false);
     expect(decision.reason).toBe('retained-record');
   });
@@ -149,10 +189,11 @@ describe('shared assurance publication policy', () => {
     expect(observation.freshnessPolicy).toBe('observation-bound');
   });
 
-  it('projects lifecycle presentation on current public runtime records', () => {
+  it('projects verified baseline lifecycle presentation on current public runtime records', () => {
     const risks = listPublishedAssuranceRecords('risks');
     expect(risks.length).toBeGreaterThan(0);
     expect(risks.every((record) => record.publication.lifecycle === 'Published')).toBe(true);
+    expect(risks.every((record) => record.publication.source === 'baseline')).toBe(true);
     expect(risks.every((record) => record.publication.disclosureReview === 'Reviewed')).toBe(true);
   });
 });

@@ -20,11 +20,22 @@ export interface AssuranceLifecycleRecord {
 
 export interface AssuranceLifecycleRegistry {
   baseline?: {
+    commit?: string;
     lifecycle?: AssuranceLifecycle;
     disclosureReview?: AssuranceDisclosureReview;
   };
   records?: AssuranceLifecycleRecord[];
   retiredRecords?: AssuranceLifecycleRecord[];
+}
+
+export interface AssuranceLifecycleBaselineMembership {
+  schemaVersion?: number;
+  commit?: string;
+  recordIds?: readonly string[];
+}
+
+export interface AssuranceLifecycleResolutionOptions {
+  baselineMembership?: AssuranceLifecycleBaselineMembership;
 }
 
 export interface ResolvedAssuranceLifecycle extends AssuranceLifecycleRecord {
@@ -59,10 +70,15 @@ export const ASSURANCE_LIFECYCLE_STATES: readonly AssuranceLifecycle[];
 
 export function assertSupportedAssuranceResource<T extends { id?: string; visibility?: string }>(resource: T): T;
 export function disclosureReviewIsPublishable(review: AssuranceDisclosureReview | null | undefined): boolean;
+export function assuranceLifecycleBaselineEligible(
+  lifecycleRegistry: AssuranceLifecycleRegistry,
+  baselineMembership: AssuranceLifecycleBaselineMembership | null | undefined,
+  recordId: string,
+): boolean;
 export function resolveAssuranceLifecycle(
   lifecycleRegistry: AssuranceLifecycleRegistry,
   recordId: string,
-  options?: { baselineEligible?: boolean },
+  options?: AssuranceLifecycleResolutionOptions,
 ): ResolvedAssuranceLifecycle | null;
 export function assuranceLifecyclePresentation(
   resolved: ResolvedAssuranceLifecycle | null | undefined,
@@ -71,7 +87,7 @@ export function assurancePublicationDecision(
   resource: { id?: string; visibility?: string },
   lifecycleRegistry: AssuranceLifecycleRegistry,
   recordId: string,
-  options?: { baselineEligible?: boolean },
+  options?: AssuranceLifecycleResolutionOptions,
 ): AssurancePublicationDecision;
 export function assuranceObservedState(
   record: { observedAt?: string; validUntil?: string },
