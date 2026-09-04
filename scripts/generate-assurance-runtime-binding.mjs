@@ -15,6 +15,7 @@ import {
   collectJsonSchemaDependencies,
   resolveJsonSchemaProperty,
 } from './lib/json-schema.mjs';
+import { RISK_RATING_VALUES } from '../src/assurance/risk-rating.js';
 
 export const RUNTIME_BINDING_PATH = 'src/assurance/generated/registry-bindings.ts';
 
@@ -32,6 +33,11 @@ function addFilterValue(values, value) {
       ? value.id
       : undefined;
   if (candidate !== undefined && !values.includes(candidate)) values.push(candidate);
+}
+
+function derivedFilterValues(resource, definition) {
+  if (resource.kind === 'risks' && definition.path === 'residual.rating') return RISK_RATING_VALUES;
+  return [];
 }
 
 function schemaFilterValues(root, resource, definition, loadSchema) {
@@ -65,6 +71,7 @@ export function deriveRuntimeFilterVocabularies(registry, root = process.cwd()) 
     for (const [parameter, definition] of Object.entries(owner.filters ?? {})) {
       const values = [];
       for (const resource of kindResources) {
+        for (const value of derivedFilterValues(resource, definition)) addFilterValue(values, value);
         for (const value of schemaFilterValues(root, resource, definition, loadSchema)) addFilterValue(values, value);
       }
       if (values.length === 0) {

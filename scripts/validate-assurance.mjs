@@ -7,13 +7,6 @@ const read = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative),
 const registry = loadAssuranceRegistry(root);
 const errors = [];
 
-function ratingFor(score) {
-  if (score <= 4) return 'low';
-  if (score <= 9) return 'moderate';
-  if (score <= 16) return 'high';
-  return 'critical';
-}
-
 const evidencePath = primaryRegistryDataset(registry, 'evidence').path;
 const risksPath = primaryRegistryDataset(registry, 'risks').path;
 const evidence = read(evidencePath);
@@ -49,11 +42,6 @@ for (const record of risks.records ?? []) {
   }
   if (record.framework === 'ai' && !record.id.startsWith('AI-RISK-')) {
     errors.push(`${record.id}: framework must match AI-RISK prefix`);
-  }
-  for (const field of ['inherent', 'residual']) {
-    if (ratingFor(record[field].score) !== record[field].rating) {
-      errors.push(`${record.id}: ${field} rating does not match score ${record[field].score}`);
-    }
   }
 }
 

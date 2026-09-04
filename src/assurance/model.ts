@@ -7,12 +7,14 @@ import {
   assuranceRecordEntries,
   flattenAssuranceResources as flattenRegistryResources,
 } from './record-discovery.js';
+import { deriveRiskRecord } from './risk-rating.js';
+import type { RiskRating as DerivedRiskRating } from './risk-rating.js';
 
 export type EvidenceKind = 'source' | 'test' | 'workflow' | 'governance-record' | 'release' | 'live-route' | 'observation';
 export type FreshnessPolicy = 'release-bound' | 'event-driven' | 'observation-bound';
 export type AssurancePosture = 'met' | 'partial' | 'gap' | 'not-applicable';
 export type RiskFramework = 'security' | 'ai';
-export type RiskRating = 'low' | 'moderate' | 'high' | 'critical';
+export type RiskRating = DerivedRiskRating;
 export type RiskStatus = 'open' | 'treating';
 export type RiskTreatment = 'avoid' | 'reduce' | 'share';
 export type IncidentStatus = 'investigating' | 'contained' | 'recovering' | 'monitoring' | 'closed' | 'superseded';
@@ -171,6 +173,10 @@ export interface ComplianceCounts {
 type SourceComplianceRecord = Omit<ComplianceRecord, 'framework' | 'frameworkLabel' | 'sourcePath' | 'section'> & {
   section?: string;
 };
+type SourceRiskRecord = Omit<RiskRecord, 'inherent' | 'residual'> & {
+  inherent: { score: number };
+  residual: { score: number };
+};
 type RecordsDataset<T> = { records: T[]; qualification?: string };
 
 export interface AssuranceRegistryFilter {
@@ -324,9 +330,11 @@ function canonicalComplianceRecord(resource: AssuranceRegistryResource, record: 
 function canonicalRecordsForKind<T>(kind: string): T[] {
   return runtimeRecordEntries
     .filter((entry) => entry.resource.kind === kind)
-    .map((entry) => kind === 'compliance'
-      ? canonicalComplianceRecord(entry.resource, entry.record as SourceComplianceRecord)
-      : entry.record) as T[];
+    .map((entry) => {
+      if (kind === 'compliance') return canonicalComplianceRecord(entry.resource, entry.record as SourceComplianceRecord);
+      if (kind === 'risks') return deriveRiskRecord(entry.record as SourceRiskRecord);
+      return entry.record;
+    }) as T[];
 }
 
 const complianceResources = assuranceRegistryResources.filter((resource) => resource.kind === 'compliance');

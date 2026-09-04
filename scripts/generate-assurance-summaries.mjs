@@ -7,6 +7,7 @@ import {
   readJsonFile,
   registryResourceById,
 } from './lib/assurance-registry.mjs';
+import { deriveRiskRecord } from '../src/assurance/risk-rating.js';
 
 const root = process.cwd();
 const checkOnly = process.argv.includes('--check');
@@ -53,6 +54,7 @@ function riskRecords(document, data) {
   const framework = document.recordSelector?.framework;
   return (data.records ?? [])
     .filter((record) => !framework || record.framework === framework)
+    .map((record) => deriveRiskRecord(record))
     .sort((left, right) => left.id.localeCompare(right.id));
 }
 

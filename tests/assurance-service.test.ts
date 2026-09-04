@@ -21,6 +21,7 @@ import {
   listPublishedAssuranceRecords,
   presentedPublishedEvidenceRecords,
 } from '../src/assurance/publication';
+import { RISK_RATING_VALUES } from '../src/assurance/risk-rating.js';
 import { renderComplianceDemo } from '../src/demos/compliance-page';
 import { renderRisks } from '../src/demos/assurance-pages';
 import type { Env } from '../src/types';
@@ -102,7 +103,7 @@ describe('common canonical assurance query and presentation service', () => {
     const riskSchema = JSON.parse(readFileSync('contracts/assurance/risk.schema.json', 'utf8'));
     const wcagSchema = JSON.parse(readFileSync('contracts/assurance/wcag-2.2-criteria.schema.json', 'utf8'));
     expect(assuranceFilterValues('risks', 'framework')).toEqual(riskSchema.$defs.risk.properties.framework.enum);
-    expect(assuranceFilterValues('risks', 'residual')).toEqual(riskSchema.$defs.rating.enum);
+    expect(assuranceFilterValues('risks', 'residual')).toEqual(RISK_RATING_VALUES);
     expect(assuranceFilterValues('compliance', 'level')).toEqual(wcagSchema.properties.criteria.items.properties.level.enum);
     expect(assuranceFilterValues('compliance', 'framework')).toEqual(complianceFrameworks.map((framework) => framework.id));
   });

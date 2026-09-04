@@ -33,7 +33,7 @@ Changing the established order of an existing version-1 collection is treated as
 
 ## Filters
 
-Filters are exact, case-sensitive query parameters. Active filter names come from `assurance/registry.json`; each declaration points to the canonical record field used by the shared predicate. Allowed enum values come from the registered record schemas when the field is schema-owned, or from registered resource metadata when the projected field is resource-owned. Current record contents are not an independent filter vocabulary.
+Filters are exact, case-sensitive query parameters. Active filter names come from `assurance/registry.json`; each declaration points to the runtime record field used by the shared predicate. Allowed enum values come from registered record schemas when the field is stored, from registered resource metadata when the projected field is resource-owned, or from the same shared derivation that produces a runtime-only field. Current record contents are not an independent filter vocabulary.
 
 Each declared filter is single-valued. An empty value, unsupported value, or repeated declared filter returns `400` with `error: "invalid_filter"`; repeated filter values remain represented in that error's `value` field as an array for version-1 compatibility. Undeclared query parameters are ignored by focused collection handlers so additive clients do not accidentally narrow or broaden a released selection. Pagination and schema-version parameters retain their separate validation rules below.
 
@@ -48,6 +48,8 @@ HTML filter forms use the same normalization, predicate, and serialization contr
 | `framework` | `security`, `ai` |
 | `status` | `open`, `treating` |
 | `residual` | `low`, `moderate`, `high`, `critical` |
+
+Canonical current risk records store the inherent and residual numeric scores only. The runtime derives `inherent.rating` and `residual.rating` from the controlled risk-method bands (1–4 low, 5–9 moderate, 10–16 high, 17–25 critical) before filtering, counting, presentation, and serialization. Version 1 continues to expose both rating fields with their established meanings; derivation removes redundant storage without changing the public contract.
 
 Filters are combined with logical AND. The released version-1 response continues to expose the selected `residual` value under the compatibility field name `residualRating`; that alias exists only at the v1 serialization boundary.
 
