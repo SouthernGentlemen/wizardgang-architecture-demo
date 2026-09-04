@@ -9,6 +9,7 @@ import {
   flattenAssuranceRegistry,
   loadAssuranceRegistry,
   readJsonFile,
+  requireAssuranceCapabilityResource,
 } from './lib/assurance-registry.mjs';
 import { createAssuranceSchemaLoader } from './lib/assurance-validation.mjs';
 import {
@@ -109,6 +110,11 @@ export function deriveRuntimeSchemaDependencyDigests(registry, root = process.cw
 }
 
 export function renderRuntimeBinding(registry, root = process.cwd()) {
+  const lifecycleResource = requireAssuranceCapabilityResource(registry, 'lifecycle');
+  if (!lifecycleResource.capabilities?.includes('runtime')) {
+    throw new Error(`${lifecycleResource.id}: lifecycle capability owner must declare runtime capability for Worker binding.`);
+  }
+
   const runtimeResources = flattenAssuranceRegistry(registry)
     .filter((resource) => resource.capabilities?.includes('runtime'))
     .sort((left, right) => left.id.localeCompare(right.id));

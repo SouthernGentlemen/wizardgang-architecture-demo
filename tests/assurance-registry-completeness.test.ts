@@ -1,5 +1,5 @@
 import { spawnSync, type SpawnSyncReturns } from 'node:child_process';
-import { cpSync, mkdtempSync, readFileSync, renameSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdtempSync, readFileSync, renameSync, rmSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -18,6 +18,11 @@ function createFixture(): string {
       return !pathFromRoot.split(sep).some((part) => ignoredFixtureParts.has(part));
     },
   });
+  symlinkSync(
+    join(repositoryRoot, 'node_modules'),
+    join(fixtureRoot, 'node_modules'),
+    process.platform === 'win32' ? 'junction' : 'dir',
+  );
   fixtureRoots.push(fixtureRoot);
   return fixtureRoot;
 }
@@ -32,6 +37,10 @@ function writeJson(root: string, relativePath: string, value: unknown): void {
 
 function run(root: string, script: string, args: string[] = []): SpawnSyncReturns<string> {
   return spawnSync(process.execPath, [script, ...args], { cwd: root, encoding: 'utf8' });
+}
+
+function runNpm(root: string, args: string[]): SpawnSyncReturns<string> {
+  return spawnSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', args, { cwd: root, encoding: 'utf8' });
 }
 
 function output(result: SpawnSyncReturns<string>): string {
@@ -111,6 +120,68 @@ describe('assurance registry completeness and schema enforcement', () => {
     const bindingPath = join(fixtureRoot, 'src/assurance/generated/registry-bindings.ts');
     writeFileSync(bindingPath, `${readFileSync(bindingPath, 'utf8')}\n// drift\n`);
     expectRejected(run(fixtureRoot, 'scripts/generate-assurance-runtime-binding.mjs', ['--check']), 'generated runtime import binding is stale');
+  });
+
+  it('loads relocated lifecycle control-plane data through the registry binding without counting it as assurance records', () => {
+    const fixtureRoot = createFixture();
+    const registryPath = 'assurance/registry.json';
+    const registry = readJson(fixtureRoot, registryPath);
+    const originalLifecyclePath = registry.lifecycle.path as string;
+    const movedLifecyclePath = 'assurance/lifecycle/relocated-records.json';
+    renameSync(join(fixtureRoot, originalLifecyclePath), join(fixtureRoot, movedLifecyclePath));
+    registry.lifecycle.path = movedLifecyclePath;
+    writeJson(fixtureRoot, registryPath, registry);
+
+    const generation = run(fixtureRoot, 'scripts/generate-assurance-runtime-binding.mjs');
+    expect(generation.status, output(generation)).toBe(0);
+
+    const validation = run(fixtureRoot, 'scripts/validate-assurance-registry.mjs');
+    expect(validation.status, output(validation)).toBe(0);
+
+    const publication = run(fixtureRoot, 'scripts/validate-assurance-publication.mjs');
+    expect(publication.status, output(publication)).toBe(0);
+
+    const build = runNpm(fixtureRoot, ['run', 'build']);
+    expect(build.status, output(build)).toBe(0);
+
+    const binding = readFileSync(join(fixtureRoot, 'src/assurance/generated/registry-bindings.ts'), 'utf8');
+    expect(binding).toContain("../../../assurance/lifecycle/relocated-records.json");
+    expect(binding).not.toContain("../../../assurance/lifecycle/records.json");
+
+    const publicationSource = readFileSync(join(fixtureRoot, 'src/assurance/publication.ts'), 'utf8');
+    expect(publicationSource).not.toContain('assurance/lifecycle/records.json');
+
+    const snapshotResult = run(fixtureRoot, 'scripts/generate-assurance-snapshot.mjs', [
+      '--tag', 'v0.14.0',
+      '--commit', '0123456789abcdef0123456789abcdef01234567',
+      '--generated-at', '2026-09-04T12:00:00Z',
+    ]);
+    expect(snapshotResult.status, output(snapshotResult)).toBe(0);
+    const snapshot = JSON.parse(snapshotResult.stdout);
+    expect(snapshot.recordCounts.byPath[movedLifecyclePath]).toBeUndefined();
+    expect(snapshot.recordCounts.total).toBe(
+      Object.values(snapshot.recordCounts.byPath).reduce((total: number, count) => total + Number(count), 0),
+    );
+  });
+
+  it('requires exactly one lifecycle capability owner', () => {
+    const missingRoot = createFixture();
+    const missingRegistry = readJson(missingRoot, 'assurance/registry.json');
+    missingRegistry.lifecycle.capabilities = ['runtime'];
+    writeJson(missingRoot, 'assurance/registry.json', missingRegistry);
+    expectRejected(
+      run(missingRoot, 'scripts/generate-assurance-runtime-binding.mjs'),
+      'expected exactly one lifecycle capability owner; found 0',
+    );
+
+    const ambiguousRoot = createFixture();
+    const ambiguousRegistry = readJson(ambiguousRoot, 'assurance/registry.json');
+    ambiguousRegistry.datasets[0].capabilities.push('lifecycle');
+    writeJson(ambiguousRoot, 'assurance/registry.json', ambiguousRegistry);
+    expectRejected(
+      run(ambiguousRoot, 'scripts/generate-assurance-runtime-binding.mjs'),
+      'expected exactly one lifecycle capability owner; found 2',
+    );
   });
 
   it('builds release snapshots from registry discovery rather than a directory walk inventory', () => {

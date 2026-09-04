@@ -16,6 +16,7 @@
     "schema": "contracts/assurance/lifecycle.schema.json",
     "visibility": "public",
     "capabilities": [
+      "runtime",
       "lifecycle"
     ]
   },

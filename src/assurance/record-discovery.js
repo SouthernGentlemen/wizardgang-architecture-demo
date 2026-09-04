@@ -21,8 +21,20 @@ export function flattenAssuranceResources(registry) {
   return resources;
 }
 
+export function assuranceResourcesWithCapability(registry, capability) {
+  return flattenAssuranceResources(registry).filter((resource) => capabilities(resource).includes(capability));
+}
+
+export function requireAssuranceCapabilityResource(registry, capability) {
+  const matches = assuranceResourcesWithCapability(registry, capability);
+  if (matches.length !== 1) {
+    throw new Error(`Assurance registry expected exactly one ${capability} capability owner; found ${matches.length}.`);
+  }
+  return matches[0];
+}
+
 export function assuranceRecordResources(registry) {
-  return flattenAssuranceResources(registry).filter((resource) => capabilities(resource).includes('records'));
+  return assuranceResourcesWithCapability(registry, 'records');
 }
 
 export function assuranceRecordCollectionPath(resource) {

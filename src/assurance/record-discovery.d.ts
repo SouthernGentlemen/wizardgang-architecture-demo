@@ -29,6 +29,14 @@ export interface AssuranceRecordEntry<T = unknown> {
 }
 
 export function flattenAssuranceResources(registry: AssuranceDiscoverableRegistry): AssuranceDiscoverableResource[];
+export function assuranceResourcesWithCapability(
+  registry: AssuranceDiscoverableRegistry,
+  capability: string,
+): AssuranceDiscoverableResource[];
+export function requireAssuranceCapabilityResource(
+  registry: AssuranceDiscoverableRegistry,
+  capability: string,
+): AssuranceDiscoverableResource;
 export function assuranceRecordResources(registry: AssuranceDiscoverableRegistry): AssuranceDiscoverableResource[];
 export function assuranceRecordCollectionPath(resource: AssuranceDiscoverableResource): string | null;
 export function assuranceValueAtPath(value: unknown, dottedPath: string): unknown;
