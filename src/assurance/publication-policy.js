@@ -1,3 +1,7 @@
+import { evaluateAssuranceObservationWindow } from './observation-window.js';
+
+export { evaluateAssuranceObservationWindow } from './observation-window.js';
+
 export const ASSURANCE_LIFECYCLE_STATES = Object.freeze([
   'Draft',
   'Approved',
@@ -88,31 +92,13 @@ export function assurancePublicationDecision(resource, lifecycleRegistry, record
   };
 }
 
-function instant(value) {
-  if (value instanceof Date) return value.getTime();
-  if (typeof value === 'string' || typeof value === 'number') return new Date(value).getTime();
-  return Number.NaN;
-}
-
 export function assuranceObservedState(record, now = new Date()) {
-  const observedAt = record?.observedAt;
-  const validUntil = record?.validUntil;
-  if (observedAt === undefined && validUntil === undefined) return null;
-
-  const observedAtMs = instant(observedAt);
-  const validUntilMs = instant(validUntil);
-  const nowMs = instant(now);
-  if (!Number.isFinite(observedAtMs) || !Number.isFinite(validUntilMs) || !Number.isFinite(nowMs) || observedAtMs > validUntilMs) {
-    return {
-      state: 'invalid-window',
-      ...(typeof observedAt === 'string' ? { observedAt } : {}),
-      ...(typeof validUntil === 'string' ? { validUntil } : {}),
-    };
-  }
+  const evaluation = evaluateAssuranceObservationWindow(record, now);
+  if (!evaluation) return null;
 
   return {
-    state: nowMs < observedAtMs ? 'not-yet-observed' : nowMs > validUntilMs ? 'expired' : 'current',
-    observedAt,
-    validUntil,
+    state: evaluation.state,
+    ...(typeof record?.observedAt === 'string' ? { observedAt: record.observedAt } : {}),
+    ...(typeof record?.validUntil === 'string' ? { validUntil: record.validUntil } : {}),
   };
 }
