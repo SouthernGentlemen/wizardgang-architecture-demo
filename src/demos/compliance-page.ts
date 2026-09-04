@@ -12,6 +12,10 @@ import {
   type AssuranceFilterValues,
 } from '../assurance/service';
 import {
+  assuranceCollectionApiRoute,
+  assuranceHtmlRoute,
+} from '../assurance/routes';
+import {
   filterPublishedAssuranceRecords,
   listPublishedAssuranceRecords,
   type PublishedAssuranceRecordMap,
@@ -20,6 +24,10 @@ import type { Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
 import { referenceDetails, shell } from '../ui/page';
+
+const COMPLIANCE_ROUTE = assuranceHtmlRoute('compliance');
+const COMPLIANCE_API_ROUTE = assuranceCollectionApiRoute('compliance');
+const EVIDENCE_ROUTE = assuranceHtmlRoute('evidence');
 
 function filterQuery(filters: AssuranceFilterValues): string {
   const query = serializeAssuranceFilters('compliance', filters);
@@ -32,7 +40,8 @@ function titleCase(value: string): string {
 
 function recordEvidence(record: PublishedAssuranceRecordMap['compliance']): string {
   return record.relationships.evidence.map((id) => {
-    const href = assuranceRecordUrls('evidence', id).html ?? '/evidence';
+    const href = assuranceRecordUrls('evidence', id).html;
+    if (!href) throw new Error(`Evidence record ${id} has no canonical HTML route.`);
     return `<a href="${escapeHtml(href)}"><code>${escapeHtml(id)}</code></a>`;
   }).join(', ');
 }
@@ -84,7 +93,7 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
   const query = filterQuery(filters);
   const frameworkCards = complianceFrameworks.map((framework) => {
     const frameworkRecords = filterPublishedAssuranceRecords('compliance', { framework: framework.id });
-    return `<a class="assurance-posture-card" href="/compliance?framework=${encodeURIComponent(framework.id)}">
+    return `<a class="assurance-posture-card" href="${escapeHtml(COMPLIANCE_ROUTE)}?framework=${encodeURIComponent(framework.id)}">
       <p class="eyebrow">Canonical dataset</p>
       <h2>${escapeHtml(framework.label)}</h2>
       <strong>${frameworkRecords.length} records</strong>
@@ -95,6 +104,7 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
   const rows = records.map((record) => {
     const anchor = assuranceAnchor(record.id);
     const urls = assuranceRecordUrls('compliance', record.id);
+    if (!urls.api) throw new Error(`Compliance record ${record.id} has no canonical exact-record API route.`);
     return `<tr id="${escapeHtml(anchor)}">
     <th scope="row">
       <a href="#${escapeHtml(anchor)}"><code>${escapeHtml(record.id)}</code></a>
@@ -105,7 +115,7 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
     <td><span class="status-pill">${escapeHtml(titleCase(record.status))}</span>${record.level ? ` <span class="status-pill">Level ${escapeHtml(record.level)}</span>` : ''}<br><span class="subtle">Lifecycle: ${escapeHtml(record.publication.lifecycle)} · ${escapeHtml(record.publication.disclosureReview)}</span></td>
     <td>${recordEvidence(record)}</td>
     <td>${recordDetail(record)}</td>
-    <td><a href="${escapeHtml(urls.api ?? '/v1/assurance/compliance')}">JSON</a><br><a href="${escapeHtml(sourceUrl(env, record.sourcePath))}">Dataset source</a></td>
+    <td><a href="${escapeHtml(urls.api)}">JSON</a><br><a href="${escapeHtml(sourceUrl(env, record.sourcePath))}">Dataset source</a></td>
   </tr>`;
   }).join('');
 
@@ -117,13 +127,13 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
 
   return shell(env, 'Compliance & Assurance', `
   <section class="page-header assurance-header">
-    <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / /compliance</p>
+    <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / ${escapeHtml(COMPLIANCE_ROUTE)}</p>
     <h1>Compliance evidence, record by record.</h1>
     <p class="lede">Browse the canonical ${escapeHtml(frameworkNames)} public assurance datasets through one derived view with stable record anchors and evidence links.</p>
     <p class="assurance-notice"><strong>Scope:</strong> ${escapeHtml(complianceQualification)} WCAG statuses are engineering-evidence states, while ISO statuses reflect the approved public mapping; they are not interchangeable pass/fail claims.</p>
     <div class="page-tools">
-      <a class="button button-primary" href="/v1/assurance/compliance${escapeHtml(query)}">View matching v1 JSON</a>
-      <a class="text-link" href="/evidence">Search evidence</a>
+      <a class="button button-primary" href="${escapeHtml(COMPLIANCE_API_ROUTE)}${escapeHtml(query)}">View matching v1 JSON</a>
+      <a class="text-link" href="${escapeHtml(EVIDENCE_ROUTE)}">Search evidence</a>
       <a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/compliance.ts'))}">Route source</a>
       ${referenceDetails([
         { label: 'Canonical assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
@@ -141,13 +151,13 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
   </section>
   <section class="info-card" aria-labelledby="compliance-filter-heading">
     <h2 id="compliance-filter-heading">Filter records</h2>
-    <form method="get" action="/compliance">
+    <form method="get" action="${escapeHtml(COMPLIANCE_ROUTE)}">
       <fieldset>
         <legend class="subtle">Framework, status, and WCAG level</legend>
         <p>
           ${filterControls(filters)}
           <button type="submit">Apply filters</button>
-          <a href="/compliance">Clear</a>
+          <a href="${escapeHtml(COMPLIANCE_ROUTE)}">Clear</a>
         </p>
         <p class="subtle" id="compliance-level-help">A level filter matches WCAG criteria only; ISO records do not carry WCAG levels.</p>
       </fieldset>
@@ -164,7 +174,7 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
       </table>
     </div>
   </section>`, {
-    activeRoute: '/compliance',
+    activeRoute: COMPLIANCE_ROUTE,
     description: `Filterable canonical ${frameworkNames} public assurance records with stable anchors, derived counts, lifecycle presentation, and evidence links.`,
   });
 }

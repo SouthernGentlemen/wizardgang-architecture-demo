@@ -178,10 +178,16 @@ export interface AssuranceRegistryFilter {
   label: string;
 }
 
+export interface AssuranceRegistryRouteAlias {
+  path: string;
+  fragment?: string;
+}
+
 export interface AssuranceRegistryRoutes {
   html?: string;
   api?: string;
   apiRecord?: string;
+  aliases?: AssuranceRegistryRouteAlias[];
 }
 
 export interface AssuranceRegistryIdentityComponent {
@@ -207,6 +213,7 @@ export interface AssuranceRegistryResource {
   partition?: { number: string; label: string };
   qualification?: string;
   routes?: AssuranceRegistryRoutes;
+  routeOwner?: string;
   filters?: Record<string, AssuranceRegistryFilter>;
   resources?: AssuranceRegistryResource[];
 }
@@ -218,6 +225,7 @@ export interface AssuranceRegistry {
   scope: string;
   qualification: string;
   visibility: 'public';
+  routes: AssuranceRegistryRoutes;
   lifecycle: AssuranceRegistryResource;
   datasets: AssuranceRegistryResource[];
   presentations: AssuranceRegistryResource[];

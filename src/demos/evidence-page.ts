@@ -3,6 +3,11 @@ import {
   assuranceDatasetSource,
   assuranceRecordUrlsById,
 } from '../assurance/service';
+import {
+  assuranceCollectionApiRoute,
+  assuranceHtmlRoute,
+  assuranceRegistryApiRoute,
+} from '../assurance/routes';
 import { FRESHNESS_SEMANTICS } from '../assurance/presentation';
 import {
   presentedPublishedEvidenceRecords,
@@ -12,6 +17,10 @@ import { sourceUrl } from '../lib/github';
 import { escapeHtml } from '../lib/html';
 import type { Env } from '../types';
 import { referenceDetails, shell } from '../ui/page';
+
+const EVIDENCE_ROUTE = assuranceHtmlRoute('evidence');
+const EVIDENCE_API_ROUTE = assuranceCollectionApiRoute('evidence');
+const ASSURANCE_API_ROUTE = assuranceRegistryApiRoute();
 
 function titleCase(value: string): string {
   return value.split('-').map((part) => part ? `${part[0].toUpperCase()}${part.slice(1)}` : '').join(' ');
@@ -84,14 +93,14 @@ export function renderEvidenceDemo(request: Request, env: Env): Response {
 
   return shell(env, 'Evidence Registry', `
   <section class="page-header assurance-header">
-    <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / /evidence</p>
+    <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / ${escapeHtml(EVIDENCE_ROUTE)}</p>
     <h1>Evidence you can trace.</h1>
     <p class="lede">Search stable public evidence IDs, see which assurance records use them, understand how freshness is determined, and open repository evidence at the exact deployed commit.</p>
     <p class="assurance-notice"><strong>Projection rule:</strong> canonical JSON stores IDs, paths, routes, and policies. Counts, URLs, exact source revisions, lifecycle presentation, time-sensitive observation state, and reverse <code>usedBy</code> relationships are derived when this route or the assurance API is served.</p>
     <div class="page-tools">
       <a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/evidence.ts'))}">Route source</a>
-      <a class="text-link" href="/v1/assurance">Assurance API</a>
-      <a class="text-link" href="/v1/assurance/evidence">Evidence JSON</a>
+      <a class="text-link" href="${escapeHtml(ASSURANCE_API_ROUTE)}">Assurance API</a>
+      <a class="text-link" href="${escapeHtml(EVIDENCE_API_ROUTE)}">Evidence JSON</a>
       ${referenceDetails([
         { label: 'Canonical assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
         { label: 'Shared assurance presentation', href: sourceUrl(env, 'src/assurance/presentation.ts') },
@@ -139,7 +148,7 @@ export function renderEvidenceDemo(request: Request, env: Env): Response {
     apply();
   })();
   </script>`, {
-    activeRoute: '/evidence',
+    activeRoute: EVIDENCE_ROUTE,
     description: 'Searchable public assurance evidence with lifecycle presentation, exact deployed-commit source resolution, reverse record usage, and freshness policy separated from observed state.',
   });
 }

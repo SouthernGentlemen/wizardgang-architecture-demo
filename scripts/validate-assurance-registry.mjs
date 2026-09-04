@@ -15,6 +15,7 @@ import {
   validateAssuranceSchemaValue,
   validateRegisteredAssuranceResource,
 } from './lib/assurance-validation.mjs';
+import { validateAssuranceRouteContract } from '../src/assurance/route-contract.js';
 import { renderRuntimeBinding, RUNTIME_BINDING_PATH } from './generate-assurance-runtime-binding.mjs';
 
 const root = process.cwd();
@@ -39,6 +40,7 @@ try {
 
 if (registry) {
   errors.push(...validateAssuranceSchemaValue(root, ASSURANCE_REGISTRY_PATH, registrySchemaPath, registry));
+  for (const error of validateAssuranceRouteContract(registry)) fail(`${ASSURANCE_REGISTRY_PATH}: ${error}`);
 
   const resources = flattenAssuranceRegistry(registry);
   const identities = new Map();

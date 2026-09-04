@@ -46,10 +46,60 @@ import { graphiqlAssetResponse, localGraphiqlResponse } from './ui/graphiql-asse
 import { renderApiDemo } from './demos/api-page';
 import { socialCardResponse } from './ui/brand-assets';
 import { crawlerBlockedResponse, getCrawlerControl, identifyOpenAIAgent, robotsResponse, setCrawlerControl } from './lib/crawler-control';
+import {
+  assuranceHtmlRoute,
+  assuranceRouteAliases,
+  assuranceRouteDeclarations,
+  matchAssuranceRoute,
+  type AssuranceRouteMatch,
+} from './assurance/routes';
 
 const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
 const API_PATHS = new Set([MCP_SERVER_PATH]);
+const SECURITY_ROUTE = assuranceHtmlRoute('advisories');
+
+type AssuranceHandler = (request: Request, env: Env, match: AssuranceRouteMatch) => Response | Promise<Response>;
+
+const ASSURANCE_API_HANDLERS: Record<string, AssuranceHandler> = {
+  registry: (request, env) => assuranceResponse(request, env),
+  evidence: (request, env) => assuranceEvidenceResponse(request, env),
+  compliance: (request, _env, match) => assuranceComplianceResponse(request, match.kind === 'api-record' ? match.recordId : undefined),
+  risks: (request) => assuranceRisksResponse(request),
+  incidents: (request) => assuranceIncidentsResponse(request),
+  advisories: (request) => assuranceAdvisoriesResponse(request),
+};
+
+const ASSURANCE_HTML_HANDLERS: Record<string, AssuranceHandler> = {
+  evidence: (request, env) => renderEvidenceDemo(request, env),
+  compliance: (request, env) => renderComplianceDemo(request, env),
+  risks: (request, env) => renderRisks(request, env),
+  incidents: (_request, env) => renderIncidents(env),
+  advisories: (_request, env) => renderSecurity(env),
+};
+
+for (const declaration of assuranceRouteDeclarations()) {
+  if ((declaration.routes.api || declaration.routes.apiRecord) && !ASSURANCE_API_HANDLERS[declaration.owner]) {
+    throw new Error(`Missing assurance API handler for route owner ${declaration.owner}.`);
+  }
+  if (declaration.routes.html && !ASSURANCE_HTML_HANDLERS[declaration.owner]) {
+    throw new Error(`Missing assurance HTML handler for route owner ${declaration.owner}.`);
+  }
+}
+
+async function routeAssuranceRequest(request: Request, env: Env, path: string, origin: string): Promise<Response | undefined> {
+  const match = matchAssuranceRoute(path);
+  if (!match) return undefined;
+  if (match.kind === 'alias') {
+    if (request.method !== 'GET' || !match.target) return undefined;
+    return Response.redirect(new URL(match.target, origin).toString(), 301);
+  }
+  if (match.kind === 'html') {
+    if (request.method !== 'GET') return undefined;
+    return ASSURANCE_HTML_HANDLERS[match.owner](request, env, match);
+  }
+  return ASSURANCE_API_HANDLERS[match.owner](request, env, match);
+}
 
 export const RETIRED_PAGE_REDIRECTS = new Map<string, string>([
   ['/api/rest', '/api#rest'],
@@ -65,7 +115,7 @@ export const RETIRED_PAGE_REDIRECTS = new Map<string, string>([
   ['/environments', '/git#environments'],
   ['/governance/iso-27001', '/governance#iso-27001'],
   ['/governance/iso-42001', '/governance#iso-42001'],
-  ['/traceability', '/evidence#traceability'],
+  ...assuranceRouteAliases().map((alias) => [alias.path, alias.target] as [string, string]),
   ['/dashboard/health', '/dashboard#health'],
 ]);
 
@@ -76,7 +126,7 @@ export function bypassOfflineGate(path: string): boolean {
     || path === '/robots.txt'
     || path === '/health'
     || path === '/version'
-    || path === '/security'
+    || path === SECURITY_ROUTE
     || path === '/.well-known/security.txt'
     || path === '/__api/operations/logs'
     || path === '/__api/operations/cloudflare-usage'
@@ -193,13 +243,9 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
     return offlineApiResponse(control.publicMessage);
   }
 
-  if (path === '/v1/assurance') return assuranceResponse(request, env);
-  if (path === '/v1/assurance/evidence') return assuranceEvidenceResponse(request, env);
-  if (path === '/v1/assurance/compliance') return assuranceComplianceResponse(request);
-  if (path.startsWith('/v1/assurance/compliance/')) return assuranceComplianceResponse(request, path.slice('/v1/assurance/compliance/'.length));
-  if (path === '/v1/assurance/risks') return assuranceRisksResponse(request);
-  if (path === '/v1/assurance/incidents') return assuranceIncidentsResponse(request);
-  if (path === '/v1/assurance/advisories') return assuranceAdvisoriesResponse(request);
+  const assuranceResponseMatch = await routeAssuranceRequest(request, env, path, url.origin);
+  if (assuranceResponseMatch) return assuranceResponseMatch;
+
   if (path === '/v1/demo-records') return recordsResponse(request, env);
   if (path.startsWith('/v1/demo-records/')) return recordsResponse(request, env, path.slice('/v1/demo-records/'.length));
   if (path === '/__api/api-sandbox/reset') return resetRecordSandboxResponse(request, env);
@@ -269,12 +315,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (request.method === 'GET' && path === '/identity') return renderIdentityDemo(env);
   if (request.method === 'GET' && path === '/i18n') return renderI18nDemo(request, env);
   if (request.method === 'GET' && path === '/accessibility') return renderAccessibilityDemo(request, env);
-  if (request.method === 'GET' && path === '/evidence') return renderEvidenceDemo(request, env);
-  if (request.method === 'GET' && path === '/compliance') return renderComplianceDemo(request, env);
-  if (request.method === 'GET' && path === '/security') return renderSecurity(env);
   if (request.method === 'GET' && path === '/governance/concerns') return renderConcerns(env);
-  if (request.method === 'GET' && path === '/governance/risks') return renderRisks(request, env);
-  if (request.method === 'GET' && path === '/governance/incidents') return renderIncidents(env);
   if (request.method === 'GET' && path === '/git') return renderGitDemo(env);
   if (request.method === 'GET' && path === '/mcp') return renderMcpDemo(request, env);
   if (request.method === 'GET' && path === '/dashboard') return renderDashboard(env);
