@@ -134,10 +134,16 @@ if (registry) {
     if (!resource.recordCollection?.identity?.length) fail(`${ASSURANCE_REGISTRY_PATH}: ${resource.id} recordCollection.identity must declare immutable identity fields`);
   }
 
-  const expectedBinding = renderRuntimeBinding(registry);
-  const bindingPath = path.join(root, RUNTIME_BINDING_PATH);
-  const currentBinding = fs.existsSync(bindingPath) ? fs.readFileSync(bindingPath, 'utf8') : '';
-  if (currentBinding !== expectedBinding) fail(`${RUNTIME_BINDING_PATH}: runtime import binding does not agree with ${ASSURANCE_REGISTRY_PATH}`);
+  if (errors.length === 0) {
+    try {
+      const expectedBinding = renderRuntimeBinding(registry);
+      const bindingPath = path.join(root, RUNTIME_BINDING_PATH);
+      const currentBinding = fs.existsSync(bindingPath) ? fs.readFileSync(bindingPath, 'utf8') : '';
+      if (currentBinding !== expectedBinding) fail(`${RUNTIME_BINDING_PATH}: runtime import binding does not agree with ${ASSURANCE_REGISTRY_PATH}`);
+    } catch (error) {
+      fail(`${RUNTIME_BINDING_PATH}: unable to derive runtime binding: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
 }
 
 if (errors.length) {

@@ -64,7 +64,7 @@
           "uniqueItems": true,
           "items": { "enum": ["avoid", "reduce", "share"] }
         },
-        "status": { "enum": ["open", "treating"] },
+        "status": { "$ref": "./risk-vocabulary.schema.json#/$defs/status" },
         "reviewDue": { "type": "string", "format": "date" },
         "relationships": {
           "$ref": "./relationships.schema.json",
