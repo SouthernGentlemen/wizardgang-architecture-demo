@@ -43,7 +43,9 @@ Filters are exact, case-sensitive query parameters. Active filter names come fro
 
 Each declared filter is single-valued. An empty value, unsupported value, or repeated declared filter returns `400` with `error: "invalid_filter"`; repeated filter values remain represented in that error's `value` field as an array for version-1 compatibility. Undeclared query parameters are ignored by focused collection handlers so additive clients do not accidentally narrow or broaden a released selection. Pagination and schema-version parameters retain their separate validation rules below.
 
-HTML filter forms use the same normalization, predicate, and serialization contract. Invalid or repeated declared filter values are treated as unselected in HTML presentation, valid selections are preserved, and matching-JSON links serialize only accepted registry-declared filters. Evidence full-text search is a separate search capability and is not converted into an enum filter.
+Every focused collection handler runs the same registry-driven normalization, validation, and selection pipeline before pagination and serialization. A route with multiple record families has one filter owner: the indexed route resource itself plus any registry resources whose `routeOwner` points to it contribute authoritative schema vocabulary. `/v1/assurance/incidents` therefore uses the `incidents` resource as the filter owner for both actual incidents and exercise members instead of maintaining separate handler parameter lists.
+
+HTML filter forms use the same normalization, predicate, and serialization contract. Invalid or repeated declared filter values are treated as unselected in HTML presentation, valid selections are preserved, and matching-JSON links serialize only accepted registry-declared filters. Evidence full-text search remains a separate search capability and is not converted into an enum filter.
 
 ### Risks
 
@@ -71,7 +73,7 @@ Filters are combined with logical AND. The released version-1 response continues
 
 `level` applies only to WCAG records. ISO records do not carry a WCAG level, so selecting `level` naturally excludes them through the shared field predicate. Filters are combined with logical AND.
 
-Evidence, incident/exercise, and advisory routes currently have no domain enum filters. They still support the common pagination and schema-version parameters described below. Evidence full-text search remains intentionally distinct from these declared enum filters.
+Evidence, incident/exercise, and advisory routes currently declare no production domain enum filters, so their plain version-1 responses remain unchanged. If those route owners declare filters later, the focused handlers honor them automatically through the same contract rather than requiring route-specific parsing. Evidence full-text search remains intentionally distinct from these declared enum filters.
 
 ## Pagination
 
@@ -99,7 +101,7 @@ When pagination is active, the existing collection fields remain in place and an
 }
 ```
 
-Counts continue to describe the complete filtered selection, not only the current page. For example, risk `counts.total` and compliance `counts.total` are calculated before the pagination slice. Existing `totalAvailable` values continue to describe the full unfiltered dataset.
+Counts continue to describe the complete filtered selection, not only the current page. Risk and compliance `counts`, evidence/advisory `count`, incident/exercise `counts`, and `pagination.total` are all derived before the pagination slice. Existing `totalAvailable` values continue to describe the full unfiltered dataset where that field is already part of the version-1 response.
 
 The aggregate `GET /v1/assurance` route intentionally ignores collection pagination parameters because its complete shape is the compatibility baseline. Consumers that need bounded responses should use the focused collection routes.
 

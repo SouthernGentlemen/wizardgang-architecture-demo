@@ -70,16 +70,20 @@ export function deriveRuntimeFilterVocabularies(registry, root = process.cwd()) 
 
   for (const owner of owners) {
     const filters = {};
-    const kindResources = runtimeRecordResources.filter((resource) => resource.kind === owner.kind);
-    const allKindResources = resources.filter((resource) => resource.kind === owner.kind);
+    const routeResources = runtimeRecordResources.filter(
+      (resource) => resource.kind === owner.kind || resource.routeOwner === owner.kind,
+    );
+    const allRouteResources = resources.filter(
+      (resource) => resource.kind === owner.kind || resource.routeOwner === owner.kind,
+    );
     for (const [parameter, definition] of Object.entries(owner.filters ?? {})) {
       const values = [];
-      for (const resource of kindResources) {
+      for (const resource of routeResources) {
         for (const value of derivedFilterValues(resource, definition)) addFilterValue(values, value);
         for (const value of schemaFilterValues(root, resource, definition, loadSchema)) addFilterValue(values, value);
       }
       if (values.length === 0) {
-        for (const resource of allKindResources) addFilterValue(values, assuranceValueAtPath(resource, definition.path));
+        for (const resource of allRouteResources) addFilterValue(values, assuranceValueAtPath(resource, definition.path));
       }
       if (values.length === 0) {
         throw new Error(`${owner.kind}.${parameter} does not resolve to an authoritative registered filter vocabulary.`);
