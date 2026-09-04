@@ -1,89 +1,53 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import claims from '../assurance/claims/claims.json';
-import risks from '../assurance/risks/risks.json';
-import iso27001 from '../assurance/compliance/iso-27001-2022.json';
-import iso42001 from '../assurance/compliance/iso-42001-2023.json';
-import wcagManifest from '../assurance/compliance/wcag-2.2.json';
-import perceivable from '../assurance/compliance/wcag-2.2/perceivable.json';
-import operable from '../assurance/compliance/wcag-2.2/operable.json';
-import understandable from '../assurance/compliance/wcag-2.2/understandable.json';
-import robust from '../assurance/compliance/wcag-2.2/robust.json';
-import governance from '../docs/governance/REFERENCE-REGISTRY.json';
+import { assuranceRisksResponse } from '../src/api/assurance';
 import { listAssuranceRecords } from '../src/assurance/service';
-import { listPublishedAssuranceRecords } from '../src/assurance/publication';
-import { serializeAssuranceV1Risk } from '../src/api/assurance-v1';
 
-const wcag = [...perceivable.criteria, ...operable.criteria, ...understandable.criteria, ...robust.criteria];
-const compliance = [...iso27001.records, ...iso42001.records, ...wcag];
-
-describe('DEMO-127 canonical normalized assurance model', () => {
-  it('keeps all previously published compliance IDs unchanged while making them source-owned', () => {
-    const runtimeCompliance = listAssuranceRecords('compliance');
-    expect(compliance).toHaveLength(287);
-    for (const record of iso27001.records) expect(record.id).toBe(`ISO27001-${record.reference}`);
-    for (const record of iso42001.records) expect(record.id).toBe(`ISO42001-${record.reference}`);
-    for (const record of wcag) expect(record.id).toBe(`WCAG-${record.reference}`);
-    expect(runtimeCompliance.map((record) => record.id)).toEqual(expect.arrayContaining(compliance.map((record) => record.id)));
-    expect(new Set(runtimeCompliance.map((record) => record.id)).size).toBe(287);
-  });
-
-  it('stores only canonical normalized status spelling and explicit applicability', () => {
-    const serialized = JSON.stringify({ iso27001, iso42001, wcag });
-    expect(serialized).not.toContain('notApplicable');
-    for (const record of [...iso27001.records, ...iso42001.records]) {
-      expect(['met', 'partial', 'gap', 'not-applicable']).toContain(record.status);
-      expect(record.applicability).toBe(record.status === 'not-applicable' ? 'not-applicable' : 'applicable');
-      if (record.status === 'not-applicable') expect(record.rationale?.trim().length ?? 0).toBeGreaterThan(10);
+describe('normalized assurance model', () => {
+  it('uses one normalized relationships object across canonical record families', () => {
+    for (const dataset of ['claims', 'risks', 'incidents', 'exercises', 'advisories', 'compliance'] as const) {
+      for (const record of listAssuranceRecords(dataset)) {
+        expect(record.relationships).toBeDefined();
+        for (const [relation, targets] of Object.entries(record.relationships)) {
+          expect(relation.length).toBeGreaterThan(0);
+          expect(Array.isArray(targets)).toBe(true);
+        }
+        for (const alias of ['evidence', 'controls', 'riskLinks', 'controlLinks', 'objectiveLinks', 'incidentLinks', 'frameworkReferences']) {
+          expect(record).not.toHaveProperty(alias);
+        }
+      }
     }
   });
 
-  it('does not construct compatibility fields inside the canonical assurance model', () => {
-    const source = readFileSync('src/assurance/model.ts', 'utf8');
-    expect(source).not.toContain('normalizeComplianceStatus');
-    expect(source).not.toContain('normalizeIsoDataset');
-    expect(source).not.toContain('normalizeIsoGroups');
-    expect(source).not.toMatch(/ISO27001-\$\{|ISO42001-\$\{|WCAG-\$\{/);
-    expect(source).not.toContain("=== 'notApplicable'");
-    expect(source).not.toContain('v1BoundaryAdapters');
-    expect(source).not.toContain('frameworkReferences:');
-    expect(source).not.toContain('riskLinks:');
-  });
-
-  it('repairs framework aliases into canonical typed relationships without dangling WCAG pseudo-criteria', () => {
-    const serialized = JSON.stringify(claims);
-    expect(serialized).not.toContain('ISO27001:');
-    expect(serialized).not.toContain('ISO42001:');
-    expect(serialized).not.toContain('WCAG22:feedback-support');
-    expect(claims.records.some((record) => record.relationships.compliance.includes('ISO27001-A.5.15'))).toBe(true);
-    expect(claims.records.some((record) => record.relationships.frameworks.includes('wcag-2.2'))).toBe(true);
-    expect(compliance.some((record) => record.id === 'WCAG-feedback-support')).toBe(false);
-  });
-
-  it('keeps governance-document relationships canonical and resolves v1 controls only at the HTTP serializer', () => {
-    const catalog = new Map(governance.records.map((record) => [record.reference, record.path]));
-    for (const source of risks.sourceRegisters) expect(catalog.has(source.governanceDocumentReference)).toBe(true);
-    for (const risk of risks.records) {
-      expect(risk).not.toHaveProperty('controls');
-      for (const reference of risk.relationships.governanceDocuments) expect(catalog.has(reference), reference).toBe(true);
-    }
-    for (const risk of listAssuranceRecords('risks')) {
-      expect(risk).toHaveProperty('relationships.governanceDocuments');
-      expect(risk).not.toHaveProperty('controls');
-    }
-    for (const risk of listPublishedAssuranceRecords('risks')) {
-      const released = serializeAssuranceV1Risk(risk);
-      for (const control of released.controls) expect(control.repositoryPath).toBe(catalog.get(control.reference));
-      expect(released).not.toHaveProperty('relationships');
+  it('derives risk ratings at runtime while canonical JSON stores only scores', () => {
+    const raw = JSON.parse(readFileSync('assurance/risks/risks.json', 'utf8')) as {
+      records: Array<{ id: string; inherent: { score: number; rating?: string }; residual: { score: number; rating?: string } }>;
+    };
+    const runtime = listAssuranceRecords('risks');
+    expect(runtime).toHaveLength(raw.records.length);
+    for (const source of raw.records) {
+      expect(source.inherent).not.toHaveProperty('rating');
+      expect(source.residual).not.toHaveProperty('rating');
+      const presented = runtime.find((record) => record.id === source.id);
+      expect(presented?.inherent.rating).toMatch(/^(low|moderate|high|critical)$/);
+      expect(presented?.residual.rating).toMatch(/^(low|moderate|high|critical)$/);
     }
   });
 
-  it('does not retain framework presentation metadata in dataset roots', () => {
-    expect(iso27001).not.toHaveProperty('framework');
-    expect(iso42001).not.toHaveProperty('framework');
-    expect(wcagManifest).not.toHaveProperty('framework');
-    expect(iso27001).not.toHaveProperty('standard');
-    expect(iso42001).not.toHaveProperty('standard');
-    expect(wcagManifest).not.toHaveProperty('partitions');
+  it('returns normalized runtime records directly at the HTTP boundary', async () => {
+    const response = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?limit=2'));
+    const body = await response.json() as { records: Array<Record<string, unknown> & { relationships: Record<string, string[]> }> };
+    expect(body.records).toHaveLength(2);
+    for (const record of body.records) {
+      expect(record.relationships).toBeDefined();
+      expect(record).not.toHaveProperty('riskLinks');
+      expect(record).not.toHaveProperty('controls');
+      expect(record).not.toHaveProperty('evidence');
+    }
+  });
+
+  it('has removed the legacy assurance serializer entirely', () => {
+    expect(existsSync('src/api/assurance-v1.ts')).toBe(false);
+    expect(readFileSync('src/api/assurance.ts', 'utf8')).not.toContain('serializeAssuranceV1');
   });
 });

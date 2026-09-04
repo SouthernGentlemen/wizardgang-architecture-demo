@@ -125,11 +125,11 @@ export function renderRisks(request: Request, env: Env): Response {
     <h1>Review the public risk assurance record.</h1>
     <p class="lede">This disclosure-safe view carries stable security and AI risk identifiers, current scores, treatment direction, lifecycle state, and reviewable evidence/control links from the controlled registers.</p>
     <p class="assurance-notice"><strong>Public assurance boundary:</strong> private treatment actions, risk-owner and acceptance detail, sensitive infrastructure context, and acceptance rationale are intentionally omitted. These records do not claim certification or residual-risk acceptance.</p>
-    <div class="page-tools"><a class="button button-primary" href="${escapeHtml(RISK_API_ROUTE)}${escapeHtml(query)}">View v1 JSON</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/risks.ts'))}">Route source</a><a class="text-link" href="${escapeHtml(sourceUrl(env, assuranceDatasetSource('risks')))}">Dataset source</a>${referenceDetails([
+    <div class="page-tools"><a class="button button-primary" href="${escapeHtml(RISK_API_ROUTE)}${escapeHtml(query)}">View JSON</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/risks.ts'))}">Route source</a><a class="text-link" href="${escapeHtml(sourceUrl(env, assuranceDatasetSource('risks')))}">Dataset source</a>${referenceDetails([
       { label: 'Risk schema', href: sourceUrl(env, assuranceDatasetSchema('risks')) },
       { label: 'Canonical assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
       { label: 'Shared assurance presentation', href: sourceUrl(env, 'src/assurance/presentation.ts') },
-      { label: 'v1 HTTP serializer', href: sourceUrl(env, 'src/api/assurance-v1.ts') },
+      { label: 'Current assurance API contract', href: sourceUrl(env, 'src/api/assurance.ts') },
       { label: 'Publication policy', href: sourceUrl(env, 'src/assurance/publication-policy.js') },
       { label: 'Risk-management method', href: sourceUrl(env, 'docs/governance/RISK-MANAGEMENT.md') },
     ])}</div>
@@ -202,11 +202,11 @@ export function renderIncidents(env: Env): Response {
     <h1>Incidents and exercises stay distinct.</h1>
     <p class="lede">This public register exposes disclosure-safe incident and response-exercise records without turning vulnerabilities, advisories, simulations, or unknown history into incidents.</p>
     <p class="assurance-notice"><strong>Current retained posture:</strong> ${counts.actualIncidents} established actual incident records; ${counts.exercises} exercise record, of which ${counts.plannedExercises} is planned and ${counts.completedExercises} is completed or in post-exercise follow-up. Zero retained incident records is not a claim that an incident has never occurred.</p>
-    <div class="page-tools"><a class="button button-primary" href="${escapeHtml(INCIDENT_API_ROUTE)}">View v1 JSON</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/incidents.ts'))}">Route source</a>${referenceDetails([
+    <div class="page-tools"><a class="button button-primary" href="${escapeHtml(INCIDENT_API_ROUTE)}">View JSON</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/incidents.ts'))}">Route source</a>${referenceDetails([
       { label: 'Incident dataset', href: sourceUrl(env, assuranceDatasetSource('incidents')) },
       { label: 'Exercise dataset', href: sourceUrl(env, assuranceDatasetSource('exercises')) },
       { label: 'Canonical assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
-      { label: 'v1 HTTP serializer', href: sourceUrl(env, 'src/api/assurance-v1.ts') },
+      { label: 'Current assurance API contract', href: sourceUrl(env, 'src/api/assurance.ts') },
       { label: 'Publication policy', href: sourceUrl(env, 'src/assurance/publication-policy.js') },
       { label: 'Incident schema', href: sourceUrl(env, assuranceDatasetSchema('incidents')) },
       { label: 'Exercise schema', href: sourceUrl(env, assuranceDatasetSchema('exercises')) },

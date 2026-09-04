@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import { assuranceAdvisoriesResponse } from '../src/api/advisories';
-import { serializeAssuranceV1Advisory } from '../src/api/assurance-v1';
 import { advisoryQualification } from '../src/assurance/service';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import { renderSecurity } from '../src/demos/security-page';
@@ -26,24 +25,22 @@ describe('published security advisory assurance', () => {
     }
   });
 
-  it('publishes the documented read-only advisory API shape without private report state', async () => {
+  it('publishes the current common advisory record collection without private report state', async () => {
     const records = listPublishedAssuranceRecords('advisories');
     const response = assuranceAdvisoriesResponse(new Request('https://demo.wizardgang.ai/v1/assurance/advisories'));
     expect(response.status).toBe(200);
     expect(response.headers.get('content-type')).toContain('application/json');
     expect(response.headers.get('cache-control')).toContain('max-age=300');
     const body = await response.json() as {
-      schemaVersion: number;
       dataset: string;
-      count: number;
-      qualification: string;
-      records: ReturnType<typeof serializeAssuranceV1Advisory>[];
-      pagination?: unknown;
+      qualifications: Record<string, string | null>;
+      records: typeof records;
+      derived: { count: number };
     };
     expect(body.dataset).toBe('advisories');
-    expect(body.count).toBe(records.length);
-    expect(body.records).toEqual(records.map(serializeAssuranceV1Advisory));
-    expect(body.qualification).toBe(advisoryQualification);
+    expect(body.derived.count).toBe(records.length);
+    expect(body.records).toEqual(records);
+    expect(body.qualifications.advisories).toBe(advisoryQualification);
     expect(JSON.stringify(body)).not.toMatch(unsafePublicAdvisoryFields);
 
     const rejected = assuranceAdvisoriesResponse(new Request('https://demo.wizardgang.ai/v1/assurance/advisories', { method: 'POST' }));

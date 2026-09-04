@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import { assuranceRisksResponse } from '../src/api/assurance';
-import { serializeAssuranceV1Risk } from '../src/api/assurance-v1';
 import {
   deriveRiskCounts,
   filterAssuranceRecords,
@@ -64,20 +63,22 @@ describe('disclosure-safe public risk assurance', () => {
     }
   });
 
-  it('serves filtered GET JSON with derived counts and boundary serialization', async () => {
+  it('serves filtered GET JSON through the current shared query contract', async () => {
     const published = listPublishedAssuranceRecords('risks');
     const response = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?framework=ai&status=open&residual=low'));
     expect(response.status).toBe(200);
     expect(response.headers.get('cache-control')).toBe('public, max-age=300');
     const body = await response.json() as {
-      counts: { total: number };
-      totalAvailable: number;
-      records: ReturnType<typeof serializeAssuranceV1Risk>[];
+      query: { filters: Record<string, string> };
+      derived: { count: number; totalAvailable: number };
+      records: typeof published;
     };
     const expected = published.filter((risk) => risk.framework === 'ai' && risk.status === 'open' && risk.residual.rating === 'low');
-    expect(body.counts.total).toBe(expected.length);
-    expect(body.totalAvailable).toBe(published.length);
-    expect(body.records).toEqual(expected.map(serializeAssuranceV1Risk));
+    expect(body.query.filters).toEqual({ framework: 'ai', status: 'open', residual: 'low' });
+    expect(body.derived.count).toBe(expected.length);
+    expect(body.derived.totalAvailable).toBe(published.length);
+    expect(body.records).toEqual(expected);
+    expect(body.records.every((record) => Boolean(record.relationships))).toBe(true);
 
     const rejected = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks', { method: 'POST' }));
     expect(rejected.status).toBe(405);

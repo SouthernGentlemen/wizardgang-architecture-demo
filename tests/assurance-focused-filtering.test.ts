@@ -5,10 +5,7 @@ import { selectFocusedAssuranceRecords } from '../src/api/assurance-filtering';
 import { assuranceEvidenceResponse } from '../src/api/assurance-registry';
 import { assuranceRuntimeFilterVocabularies } from '../src/assurance/generated/registry-bindings';
 import { primaryAssuranceResource, type AssuranceDataset } from '../src/assurance/model';
-import {
-  listPublishedAssuranceRecords,
-  presentedPublishedEvidenceRecords,
-} from '../src/assurance/publication';
+import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import type { Env } from '../src/types';
 
 const environment = {
@@ -67,8 +64,7 @@ describe('focused assurance registry-declared filtering', () => {
     );
 
     const origin = 'https://demo.wizardgang.ai';
-    const expected = presentedPublishedEvidenceRecords(environment, origin)
-      .filter((record) => record.kind === 'source');
+    const expected = listPublishedAssuranceRecords('evidence').filter((record) => record.kind === 'source');
     expect(expected).toHaveLength(7);
 
     const response = assuranceEvidenceResponse(
@@ -77,20 +73,20 @@ describe('focused assurance registry-declared filtering', () => {
     );
     expect(response.status).toBe(200);
     const body = await response.json() as {
-      count: number;
       records: Array<{ id: string; kind: string }>;
-      pagination: { total: number; returned: number; nextCursor: string | null };
+      query: { pagination: { total: number; returned: number; nextCursor: string | null } };
+      derived: { count: number };
     };
 
-    expect(body.count).toBe(expected.length);
+    expect(body.derived.count).toBe(expected.length);
     expect(body.records.map((record) => record.id)).toEqual(expected.slice(0, 2).map((record) => record.id));
     expect(body.records.every((record) => record.kind === 'source')).toBe(true);
-    expect(body.pagination.total).toBe(expected.length);
-    expect(body.pagination.returned).toBe(2);
-    expect(body.pagination.nextCursor).toBe(expected[1].id);
+    expect(body.query.pagination.total).toBe(expected.length);
+    expect(body.query.pagination.returned).toBe(2);
+    expect(body.query.pagination.nextCursor).toBe(expected[1].id);
   });
 
-  it('rejects invalid, empty, and repeated declared evidence filters while ignoring undeclared parameters', async () => {
+  it('rejects invalid, empty, repeated, and undeclared filter/query parameters', async () => {
     declareFixtureFilter(
       'evidence',
       'kind',
@@ -124,15 +120,17 @@ describe('focused assurance registry-declared filtering', () => {
       value: ['source', 'test'],
     });
 
-    const allRecords = presentedPublishedEvidenceRecords(environment, origin);
-    const undeclared = assuranceEvidenceResponse(
-      new Request(`${origin}/v1/assurance/evidence?futureParameter=ignored&q=source`),
-      environment,
-    );
-    expect(undeclared.status).toBe(200);
-    const undeclaredBody = await undeclared.json() as { count: number; records: Array<{ id: string }> };
-    expect(undeclaredBody.count).toBe(allRecords.length);
-    expect(undeclaredBody.records.map((record) => record.id)).toEqual(allRecords.map((record) => record.id));
+    for (const parameter of ['futureParameter', 'q']) {
+      const undeclared = assuranceEvidenceResponse(
+        new Request(`${origin}/v1/assurance/evidence?${parameter}=source`),
+        environment,
+      );
+      expect(undeclared.status).toBe(400);
+      expect(await undeclared.json()).toEqual({
+        error: 'unsupported_query_parameter',
+        parameter,
+      });
+    }
   });
 
   it('uses the incident route owner for a shared incident and exercise filter contract', async () => {
@@ -145,17 +143,15 @@ describe('focused assurance registry-declared filtering', () => {
     ));
     expect(response.status).toBe(200);
     const body = await response.json() as {
-      counts: { actualIncidents: number; exercises: number; plannedExercises: number; completedExercises: number };
-      incidents: Array<{ id: string }>;
-      exercises: Array<{ id: string }>;
-      pagination: { total: number };
+      records: Array<{ id: string; recordType: string }>;
+      derived: { count: number };
+      query: { pagination: { total: number } };
     };
 
-    expect(body.incidents).toEqual([]);
-    expect(body.exercises.map((record) => record.id)).toEqual(expectedExercises.slice(0, 1).map((record) => record.id));
-    expect(body.counts.actualIncidents).toBe(0);
-    expect(body.counts.exercises).toBe(expectedExercises.length);
-    expect(body.pagination.total).toBe(expectedExercises.length);
+    expect(body.records.map((record) => record.id)).toEqual(expectedExercises.slice(0, 1).map((record) => record.id));
+    expect(body.records.every((record) => record.recordType === 'exercise')).toBe(true);
+    expect(body.derived.count).toBe(expectedExercises.length);
+    expect(body.query.pagination.total).toBe(expectedExercises.length);
 
     const invalid = assuranceIncidentsResponse(new Request(
       'https://demo.wizardgang.ai/v1/assurance/incidents?recordType=advisory',

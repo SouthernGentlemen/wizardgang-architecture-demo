@@ -6,14 +6,11 @@ export const ASSURANCE_PAGINATION_DEFAULT_LIMIT = 50;
 export const ASSURANCE_PAGINATION_MAX_LIMIT = 100;
 export const ASSURANCE_CORS_ALLOW_ORIGIN = '*';
 
-const ASSURANCE_VENDOR_MEDIA_TYPE = 'application/vnd.wizardgang.assurance+json';
+const LEGACY_ASSURANCE_VENDOR_MEDIA_TYPE = 'application/vnd.wizardgang.assurance+json';
 const ASSURANCE_CORS_EXPOSE_HEADERS = [
   'ETag',
   'Cache-Control',
   'X-Assurance-Schema-Version',
-  'Deprecation',
-  'Sunset',
-  'Link',
 ].join(', ');
 
 export interface AssuranceRequestContext {
@@ -38,11 +35,6 @@ interface AssuranceResponseOptions {
   headers?: HeadersInit;
   cacheControl?: string;
   etag?: boolean;
-  deprecation?: {
-    deprecation: string;
-    sunset: string;
-    link: string;
-  };
 }
 
 function contractHeaders(init?: HeadersInit, cacheControl = ASSURANCE_CACHE_CONTROL): Headers {
@@ -52,12 +44,6 @@ function contractHeaders(init?: HeadersInit, cacheControl = ASSURANCE_CACHE_CONT
   headers.set('access-control-allow-origin', ASSURANCE_CORS_ALLOW_ORIGIN);
   headers.set('access-control-expose-headers', ASSURANCE_CORS_EXPOSE_HEADERS);
   headers.set('x-assurance-schema-version', String(ASSURANCE_SCHEMA_VERSION));
-  const vary = headers.get('vary');
-  if (!vary) {
-    headers.set('vary', 'Accept');
-  } else if (!vary.split(',').map((value) => value.trim().toLowerCase()).includes('accept')) {
-    headers.set('vary', `${vary}, Accept`);
-  }
   return headers;
 }
 
@@ -81,20 +67,6 @@ function matchesEtag(ifNoneMatch: string | null, etag: string): boolean {
   });
 }
 
-function vendorSchemaVersion(accept: string | null): string | undefined {
-  if (!accept) return undefined;
-  for (const mediaRange of accept.split(',')) {
-    const [type, ...parameters] = mediaRange.split(';').map((value) => value.trim());
-    if (type.toLowerCase() !== ASSURANCE_VENDOR_MEDIA_TYPE) continue;
-    for (const parameter of parameters) {
-      const [name, rawValue] = parameter.split('=').map((value) => value.trim());
-      if (name?.toLowerCase() !== 'version' || rawValue === undefined) continue;
-      return rawValue.replace(/^"|"$/g, '');
-    }
-  }
-  return undefined;
-}
-
 export function assuranceJsonResponse(
   request: Request,
   data: unknown,
@@ -104,14 +76,8 @@ export function assuranceJsonResponse(
   const headers = contractHeaders(options.headers, options.cacheControl ?? ASSURANCE_CACHE_CONTROL);
   headers.set('content-type', 'application/json; charset=utf-8');
 
-  if (options.deprecation) {
-    headers.set('deprecation', options.deprecation.deprecation);
-    headers.set('sunset', options.deprecation.sunset);
-    headers.set('link', `<${options.deprecation.link}>; rel="deprecation"`);
-  }
-
   if (options.etag !== false && (options.status === undefined || options.status === 200)) {
-    const etag = `W/"assurance-v${ASSURANCE_SCHEMA_VERSION}-${hashRepresentation(body)}"`;
+    const etag = `W/"assurance-current-${hashRepresentation(body)}"`;
     headers.set('etag', etag);
     if (matchesEtag(request.headers.get('if-none-match'), etag)) {
       return new Response(null, { status: 304, headers });
@@ -155,30 +121,18 @@ export function prepareAssuranceRequest(request: Request): AssuranceRequestConte
   }
 
   const url = new URL(request.url);
-  const queryVersions = url.searchParams.getAll('schemaVersion');
-  if (queryVersions.length > 1) {
+  if (url.searchParams.has('schemaVersion')) {
     return assuranceErrorResponse(request, 400, {
-      error: 'duplicate_query_parameter',
+      error: 'legacy_schema_version_parameter_unsupported',
       parameter: 'schemaVersion',
     });
   }
 
-  const queryVersion = queryVersions[0];
-  const acceptVersion = vendorSchemaVersion(request.headers.get('accept'));
-  if (queryVersion !== undefined && acceptVersion !== undefined && queryVersion !== acceptVersion) {
-    return assuranceErrorResponse(request, 400, {
-      error: 'schema_version_conflict',
-      queryVersion,
-      acceptVersion,
-    });
-  }
-
-  const requestedVersion = queryVersion ?? acceptVersion;
-  if (requestedVersion !== undefined && requestedVersion !== String(ASSURANCE_SCHEMA_VERSION)) {
+  const accept = request.headers.get('accept')?.toLowerCase() ?? '';
+  if (accept.includes(LEGACY_ASSURANCE_VENDOR_MEDIA_TYPE)) {
     return assuranceErrorResponse(request, 406, {
-      error: 'unsupported_schema_version',
-      requested: requestedVersion,
-      supported: [ASSURANCE_SCHEMA_VERSION],
+      error: 'legacy_assurance_media_type_unsupported',
+      supported: ['application/json'],
     });
   }
 

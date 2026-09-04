@@ -120,7 +120,7 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
   }).join('');
 
   const frameworkNames = complianceFrameworks.map((framework) => framework.label).join(', ');
-  const frameworkReferences = complianceFrameworks.map((framework) => ({
+  const frameworkSources = complianceFrameworks.map((framework) => ({
     label: `${framework.label} canonical dataset`,
     href: sourceUrl(env, framework.sourcePath),
   }));
@@ -132,15 +132,15 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
     <p class="lede">Browse the canonical ${escapeHtml(frameworkNames)} public assurance datasets through one derived view with stable record anchors and evidence links.</p>
     <p class="assurance-notice"><strong>Scope:</strong> ${escapeHtml(complianceQualification)} WCAG statuses are engineering-evidence states, while ISO statuses reflect the approved public mapping; they are not interchangeable pass/fail claims.</p>
     <div class="page-tools">
-      <a class="button button-primary" href="${escapeHtml(COMPLIANCE_API_ROUTE)}${escapeHtml(query)}">View matching v1 JSON</a>
+      <a class="button button-primary" href="${escapeHtml(COMPLIANCE_API_ROUTE)}${escapeHtml(query)}">View matching JSON</a>
       <a class="text-link" href="${escapeHtml(EVIDENCE_ROUTE)}">Search evidence</a>
       <a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/compliance.ts'))}">Route source</a>
       ${referenceDetails([
         { label: 'Canonical assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
-        { label: 'Shared assurance presentation', href: sourceUrl(env, 'src/assurance/presentation.ts') },
-        { label: 'v1 HTTP serializer', href: sourceUrl(env, 'src/api/assurance-v1.ts') },
+        { label: 'Current assurance API contract', href: sourceUrl(env, 'src/api/assurance.ts') },
+        { label: 'Reporting interchange contract', href: sourceUrl(env, 'contracts/assurance/reporting.schema.json') },
         { label: 'Publication policy', href: sourceUrl(env, 'src/assurance/publication-policy.js') },
-        ...frameworkReferences,
+        ...frameworkSources,
         { label: 'Assurance guide', href: sourceUrl(env, 'docs/ASSURANCE.md') },
       ])}
     </div>

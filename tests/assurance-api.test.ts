@@ -1,97 +1,50 @@
 import { describe, expect, it } from 'vitest';
 import { assuranceEvidenceResponse, assuranceResponse } from '../src/api/assurance-registry';
-import { listAssuranceRecords } from '../src/assurance/service';
-import { FRESHNESS_SEMANTICS } from '../src/assurance/presentation';
+import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import type { Env } from '../src/types';
 
 const environment = {
   DEMO_DB: { prepare: () => { throw new Error('D1 should not be used by assurance projection tests'); } },
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
-  DEPLOYED_VERSION: 'v0.12.0',
+  DEPLOYED_VERSION: 'v0.14.0',
   DEPLOYED_SHA: '0123456789abcdef0123456789abcdef01234567',
 } as unknown as Env;
 
-const aggregateCounts = () => ({
-  claims: listAssuranceRecords('claims').length,
-  evidence: listAssuranceRecords('evidence').length,
-  risks: listAssuranceRecords('risks').length,
-  incidents: listAssuranceRecords('incidents').length,
-  exercises: listAssuranceRecords('exercises').length,
-  advisories: listAssuranceRecords('advisories').length,
-});
-
 describe('public assurance API projection', () => {
-  it('resolves repository evidence against the exact deployed commit and derives reverse usage', async () => {
+  it('serves canonical published evidence records through the current record/query contract', async () => {
+    const records = listPublishedAssuranceRecords('evidence');
     const response = assuranceEvidenceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/evidence'), environment);
     expect(response.status).toBe(200);
     expect(response.headers.get('cache-control')).toContain('max-age=300');
     const body = await response.json() as {
-      count: number;
-      records: Array<{
-        id: string;
-        usedBy: string[];
-        publication: { lifecycle: string; source: string; disclosureReview: string; retained: boolean };
-        freshness: { policy: string; scope: string; meaning: string };
-        resolved: { kind: string; repositoryPath?: string; revision?: string | null; url: string | null; resolution: string };
-      }>;
+      dataset: string;
+      records: typeof records;
+      derived: { count: number; totalAvailable: number };
     };
-    expect(body.count).toBe(listAssuranceRecords('evidence').length);
-
-    const source = body.records.find((record) => record.id === 'EVD-SRC-001');
-    expect(source?.usedBy).toEqual(expect.arrayContaining(['CLM-SEC-001', 'CLM-AI-001']));
-    expect(source?.usedBy.length).toBeGreaterThan(2);
-    expect(source?.usedBy).toEqual([...(source?.usedBy ?? [])].sort());
-    expect(source?.publication).toMatchObject({
-      lifecycle: 'Published',
-      source: 'baseline',
-      disclosureReview: 'Reviewed',
-      retained: false,
-    });
-    expect(source?.resolved).toEqual({
-      kind: 'repository',
-      repositoryPath: 'src/lib/authorization.ts',
-      revision: '0123456789abcdef0123456789abcdef01234567',
-      url: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/0123456789abcdef0123456789abcdef01234567/src/lib/authorization.ts',
-      resolution: 'deployed-commit',
-    });
-    expect(source?.freshness).toEqual({
-      policy: 'release-bound',
-      ...FRESHNESS_SEMANTICS['release-bound'],
-    });
-
-    const live = body.records.find((record) => record.id === 'EVD-RUN-001');
-    expect(live?.resolved).toMatchObject({
-      kind: 'route',
-      url: 'https://demo.wizardgang.ai/health',
-      resolution: 'live-route',
-    });
-    expect(live?.freshness.policy).toBe('observation-bound');
+    expect(body.dataset).toBe('evidence');
+    expect(body.records).toEqual(records);
+    expect(body.derived.count).toBe(records.length);
+    expect(body.derived.totalAvailable).toBe(records.length);
+    expect(body.records.every((record) => !('usedBy' in record))).toBe(true);
+    expect(body.records.every((record) => !('resolved' in record))).toBe(true);
+    expect(body.records.every((record) => !('freshness' in record))).toBe(true);
   });
 
-  it('exposes the full v0.12 assurance registry without freezing current dataset cardinality', async () => {
-    const response = assuranceResponse(new Request('https://demo.wizardgang.ai/v1/assurance'), {
-      ...environment,
-      DEPLOYED_SHA: undefined,
-    });
+  it('exposes the registry and current collection routes without embedding duplicate dataset copies', async () => {
+    const response = assuranceResponse(new Request('https://demo.wizardgang.ai/v1/assurance'), environment);
     const body = await response.json() as {
-      counts: { claims: number; evidence: number; risks: number; incidents: number; exercises: number; advisories: number };
-      deployment: { commit: string | null; sourceResolution: string };
-      links: { self: string; evidence: string };
-      evidence: Array<{ id: string; resolved: { revision?: string | null; url: string | null; resolution: string } }>;
+      contract: string;
+      registry: { id: string; routes: { api?: string } };
+      collections: Array<{ dataset: string; route: string }>;
+      evidence?: unknown;
+      deployment?: unknown;
     };
-    expect(body.counts).toEqual(aggregateCounts());
-    expect(body.deployment).toMatchObject({ commit: null, sourceResolution: 'not-supplied' });
-    expect(body.links).toEqual({
-      self: 'https://demo.wizardgang.ai/v1/assurance',
-      evidence: 'https://demo.wizardgang.ai/v1/assurance/evidence',
-    });
-    const source = body.evidence.find((record) => record.id === 'EVD-SRC-001');
-    expect(source?.resolved).toMatchObject({
-      revision: null,
-      url: null,
-      resolution: 'not-supplied',
-    });
+    expect(body.contract).toBe('contracts/assurance/reporting.schema.json');
+    expect(body.registry).toMatchObject({ id: 'wizardgang-public-assurance', routes: { api: '/v1/assurance' } });
+    expect(body.collections.some((collection) => collection.route === '/v1/assurance/evidence')).toBe(true);
+    expect(body).not.toHaveProperty('evidence');
+    expect(body).not.toHaveProperty('deployment');
   });
 
   it('keeps both assurance endpoints read-only', () => {

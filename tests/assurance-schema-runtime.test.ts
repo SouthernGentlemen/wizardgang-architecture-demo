@@ -1,52 +1,45 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { assuranceRisksResponse } from '../src/api/assurance';
-import {
-  assuranceFilterValues,
-  filterAssuranceRecords,
-} from '../src/assurance/service';
-import { renderRisks } from '../src/demos/assurance-pages';
-import type { Env } from '../src/types';
+import { assuranceFilterValues, filterAssuranceRecords, listAssuranceRecords } from '../src/assurance/service';
 
-const environment = {
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
-  GITHUB_BRANCH: 'main',
-  DEPLOYED_SHA: '0123456789abcdef0123456789abcdef01234567',
-} as unknown as Env;
-
-function riskIdsFromHtml(html: string): string[] {
-  return [...html.matchAll(/<article class="info-card" id="((?:SEC|AI)-RISK-[^"]+)">/g)].map((match) => match[1]);
-}
-
-describe('assurance schema-derived runtime metadata', () => {
-  it('uses the external risk status vocabulary for filters, counts, API, and HTML behavior', async () => {
+describe('runtime schema-derived assurance behavior', () => {
+  it('uses registered schema vocabulary for stored risk filters', () => {
+    const schema = JSON.parse(readFileSync('contracts/assurance/risk.schema.json', 'utf8')) as {
+      $defs: { risk: { properties: { status: { $ref: string }; framework: { enum: string[] } } } };
+    };
     const vocabulary = JSON.parse(readFileSync('contracts/assurance/risk-vocabulary.schema.json', 'utf8')) as {
       $defs: { status: { enum: string[] } };
     };
-    const statuses = vocabulary.$defs.status.enum;
-    expect(assuranceFilterValues('risks', 'status')).toEqual(statuses);
+    expect(schema.$defs.risk.properties.status.$ref).toBe('./risk-vocabulary.schema.json#/$defs/status');
+    expect(assuranceFilterValues('risks', 'status')).toEqual(vocabulary.$defs.status.enum);
+    expect(assuranceFilterValues('risks', 'framework')).toEqual(schema.$defs.risk.properties.framework.enum);
+  });
 
-    for (const status of statuses) {
-      const expected = filterAssuranceRecords('risks', { status }).map((record) => record.id);
-      const apiResponse = assuranceRisksResponse(new Request(`https://demo.wizardgang.ai/v1/assurance/risks?status=${status}`));
-      const apiBody = await apiResponse.json() as { counts: { byStatus: Record<string, number> }; records: Array<{ id: string }> };
-      const html = await renderRisks(
-        new Request(`https://demo.wizardgang.ai/governance/risks?status=${status}`),
-        environment,
-      ).text();
-
-      expect(apiBody.records.map((record) => record.id)).toEqual(expected);
-      expect(apiBody.counts.byStatus[status]).toBe(expected.length);
-      expect(riskIdsFromHtml(html)).toEqual(expected);
-      expect(html).toContain(`name="status"`);
-      expect(html).toContain(`value="${status}"`);
+  it('keeps runtime-derived risk rating vocabulary on the shared derivation', () => {
+    expect(assuranceFilterValues('risks', 'residual')).toEqual(['low', 'moderate', 'high', 'critical']);
+    for (const rating of assuranceFilterValues('risks', 'residual')) {
+      const filtered = filterAssuranceRecords('risks', { residual: rating });
+      expect(filtered.every((record) => record.residual.rating === rating)).toBe(true);
     }
   });
 
-  it('keeps schema-reference interpretation out of the Worker service', () => {
-    const source = readFileSync('src/assurance/service.ts', 'utf8');
-    expect(source).not.toContain('resolveLocalSchemaRef');
-    expect(source).not.toContain('runtimeAssuranceSchema');
-    expect(source).not.toContain("startsWith('#/')");
+  it('reports schema-driven filters as current derived facets instead of family count envelopes', async () => {
+    const response = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?status=open'));
+    const body = await response.json() as {
+      records: Array<{ status: string }>;
+      derived: { count: number; facets: Record<string, Record<string, number>> };
+      counts?: unknown;
+    };
+    expect(body.records.every((record) => record.status === 'open')).toBe(true);
+    expect(body.derived.count).toBe(body.records.length);
+    expect(body.derived.facets.status.open).toBe(body.records.length);
+    expect(body).not.toHaveProperty('counts');
+  });
+
+  it('does not store runtime-derived ratings in canonical risk JSON', () => {
+    const raw = JSON.parse(readFileSync('assurance/risks/risks.json', 'utf8')) as { records: Array<{ inherent: Record<string, unknown>; residual: Record<string, unknown> }> };
+    expect(raw.records.length).toBe(listAssuranceRecords('risks').length);
+    expect(raw.records.every((record) => !Object.hasOwn(record.inherent, 'rating') && !Object.hasOwn(record.residual, 'rating'))).toBe(true);
   });
 });
