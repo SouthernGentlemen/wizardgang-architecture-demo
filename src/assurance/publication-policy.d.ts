@@ -44,6 +44,7 @@ export interface ResolvedAssuranceLifecycle extends AssuranceLifecycleRecord {
 }
 
 export interface AssuranceLifecyclePresentation {
+  id?: string;
   lifecycle: AssuranceLifecycle;
   source: AssuranceLifecycleSource;
   disclosureReview: string;

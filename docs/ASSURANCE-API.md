@@ -31,6 +31,12 @@ Record order is part of the version-1 contract.
 
 Changing the established order of an existing version-1 collection is treated as a breaking semantic change and requires a new supported schema version.
 
+## Retained-record publication
+
+The aggregate `GET /v1/assurance` response publishes lifecycle tombstones under `publication.retainedRecords`. Each standalone retained-record entry includes its stable canonical `id` alongside the existing lifecycle presentation fields. Optional `withdrawalRationale`, `supersedes`, and `supersededBy` metadata remains attached to that same identified entry.
+
+Adding `id` to retained-record entries is an additive version-1 correction: it identifies which immutable record the already-published retirement metadata describes without changing the meaning of existing fields. Retained records remain excluded from the current record collections and from the counts derived from those collections; retirement reservations and disclosure-review policy continue to control selection independently.
+
 ## Filters
 
 Filters are exact, case-sensitive query parameters. Active filter names come from `assurance/registry.json`; each declaration points to the runtime record field used by the shared predicate. Allowed enum values come from registered record schemas when the field is stored, from registered resource metadata when the projected field is resource-owned, or from the same shared derivation that produces a runtime-only field. Current record contents are not an independent filter vocabulary.

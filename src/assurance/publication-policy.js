@@ -58,6 +58,7 @@ export function resolveAssuranceLifecycle(lifecycleRegistry, recordId, options =
 export function assuranceLifecyclePresentation(resolved) {
   if (!resolved) return null;
   return {
+    ...(resolved.retained === true ? { id: resolved.id } : {}),
     lifecycle: resolved.lifecycle,
     source: resolved.source,
     disclosureReview: disclosureStatus(resolved.disclosureReview),
