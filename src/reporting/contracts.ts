@@ -2,7 +2,7 @@ export type ReportingProvider = 'github' | 'cloudflare';
 export type ReportingAuthority = 'native-object' | 'structured-record' | 'native-observation';
 export type ReportingVisibility = 'public' | 'private';
 export type ReportingCapability = 'read' | 'query' | 'export' | 'import' | 'observe';
-export type ReportingAvailability = 'available' | 'partial' | 'unavailable';
+export type ReportingAvailability = 'available' | 'partial' | 'unavailable' | 'rate-limited' | 'expired';
 export type ReportingScalar = string | number | boolean | null;
 
 export interface ReportingSource {

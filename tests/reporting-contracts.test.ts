@@ -16,6 +16,7 @@ import {
 } from '../src/reporting/contracts';
 import {
   registeredReportingSource,
+  registeredReportingSources,
   structuredReportingSource,
 } from '../src/reporting/registry';
 import { assuranceRegistryResources } from '../src/assurance/model';
@@ -69,6 +70,25 @@ describe('authoritative reporting contracts', () => {
     }
   });
 
+  it('registers native GitHub source kinds once and limits import to supported provider writes', () => {
+    const github = registeredReportingSources().filter((source) => source.provider === 'github' && source.authority === 'native-object');
+    expect(new Set(github.map((source) => source.id)).size).toBe(github.length);
+    expect(github.map((source) => source.id)).toEqual(expect.arrayContaining([
+      'github.repositories',
+      'github.issues',
+      'github.workflow-runs',
+      'github.workflow-attempts',
+      'github.workflow-artifacts',
+      'github.releases',
+      'github.code-scanning-alerts',
+      'github.secret-scanning-alerts',
+      'github.dependabot-alerts',
+      'github.repository-security-advisories',
+    ]));
+    expect(registeredReportingSource('github.issues').capabilities).toContain('import');
+    expect(github.filter((source) => source.id !== 'github.issues').every((source) => !source.capabilities.includes('import'))).toBe(true);
+  });
+
   it('uses resource, metric, normalized dimensions, and observation window as aggregate observation identity', () => {
     const window = { start: '2026-09-04T00:00:00.000Z', end: '2026-09-04T01:00:00.000Z' };
     const first = reportingObservationIdentity('worker:demo', 'requests', { colo: 'IAD', status: 200 }, window);
@@ -114,11 +134,13 @@ describe('authoritative reporting contracts', () => {
     expect(schema.$defs).not.toHaveProperty('importCollection');
   });
 
-  it('keeps private ingestion disabled and leaves provider payloads and credentials out of the public registry', () => {
+  it('keeps protected GitHub sources payload-free and private ingestion disabled', () => {
     expect(registry.reporting.privateIngestion).toBe('disabled');
-    expect(registry.reporting.privateSources).toEqual([]);
+    expect(registry.reporting.privateSources.length).toBeGreaterThan(0);
+    expect(registry.reporting.privateSources.every((source) => source.visibility === 'private' && source.ingestion === 'disabled')).toBe(true);
+    expect(registry.reporting.privateSources.every((source) => !source.capabilities.includes('import'))).toBe(true);
     const serialized = JSON.stringify(registry.reporting);
-    expect(serialized).not.toMatch(/token|secret|credential|payload/i);
+    expect(serialized).not.toMatch(/"(?:token|secret|credential|payload)"\s*:/i);
   });
 
   it('does not use the retired D1 Cloudflare provider-state mirror in active runtime code', () => {

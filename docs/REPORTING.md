@@ -2,135 +2,146 @@
 
 ## Purpose
 
-Reporting is a projection layer, not a second system of record. Every reportable fact has one authoritative provider and native scope. The dashboard, assurance API, and import/export tooling consume the common reporting primitives while domain records keep their own meanings for status, publication, freshness, severity, and availability.
+Reporting is a projection and provider-integration layer, not a second system of record. Every reportable fact has one authoritative source. Structured assurance records remain Git-controlled JSON in this repository, native GitHub concerns remain native GitHub objects, and Cloudflare operational facts remain native observations.
 
-The common contract is `contracts/assurance/reporting.schema.json`. Source declarations live in the existing `assurance/registry.json`; there is no separate reporting registry.
+The common contract is `contracts/assurance/reporting.schema.json`. All source declarations live in the existing `assurance/registry.json`; there is no second reporting registry.
 
 ## Authority model
 
-| Domain | Authoritative source | Ownership rule |
+| Domain | Authoritative source | Rule |
 | --- | --- | --- |
-| Evidence | GitHub structured assurance records | The registered `evidence` resource owns evidence facts. |
-| Reports | GitHub structured assurance records | `presentation.documents` owns document identity, ownership, review cadence, and presentation metadata. Reported domain facts remain owned by their originating datasets. |
-| Issues | Native GitHub issues | Repository + issue number is the native identity; GitHub update time is revision identity. |
-| Risks | GitHub structured assurance records | The registered `risks` resource owns risk facts. Generated Markdown is only a projection. |
-| Security | GitHub structured assurance records | The registered `advisories` resource owns public advisory facts; native GitHub issues remain the authority for issue workflow. |
-| Governance | GitHub structured assurance records | `presentation.documents` owns governance document metadata; underlying assurance facts retain their dataset authority. |
-| Operations | Native Cloudflare observations | Cloudflare owns native Workers, D1, R2, Durable Objects, and returned billing observations. |
+| Evidence | GitHub structured assurance records | Registered evidence JSON owns assurance evidence facts. |
+| Internal reports | GitHub structured assurance records | Registered presentation documents own report metadata; underlying domain facts retain their own owner. |
+| Issues / corrective actions | Native GitHub issues | Repository + issue number is identity; GitHub `updated_at` is revision. Configured labels may select corrective-action concerns without copying them into a register. |
+| Delivery evidence | Native GitHub repository objects | Repository, branch, commit, pull request, Actions run/attempt/artifact, tag, release, and branch-protection objects remain provider-owned. |
+| Security findings | Native protected GitHub security objects | Code scanning, secret scanning, Dependabot, and repository security advisories remain provider-owned and protected. |
+| Private vulnerability reporting | Native GitHub repository security advisories | Private vulnerability reports stay on GitHub's repository-security-advisory workflow. They are never converted into public issues. |
+| Risks / public advisories / governance | GitHub structured assurance records | Registered domain JSON remains authoritative for public assurance facts. |
+| Operations | Native Cloudflare observations | Cloudflare owns native operational observations. |
 
-GitHub-hosted canonical data is not copied into reporting records. For each existing registered assurance resource, the reporting layer derives an effective source binding from the repository, registered resource path, existing schema, visibility, and capabilities. Its revision identity is the Git commit/blob pair.
+## Registered GitHub provider sources
 
-## Shared primitives
+`assurance/registry.json` declares the GitHub native object types. Runtime repository bindings are configuration, not canonical data. The provider binds each selected source to an authorized repository at request time and preserves the repository scope in every returned identity.
 
-The reporting contract defines only the cross-domain primitives needed by current consumers:
+Public native source types include repositories, branches, commits, issues, pull requests, workflow runs, workflow attempts, workflow artifacts, tags, releases, and default-branch protection. Protected source types include code-scanning alerts, secret-scanning alerts, Dependabot alerts, and repository security advisories.
 
-- **source** — provider, repository/resource scope, authority kind, native identity, revision or observation identity, schema, visibility, supported capabilities, and ingestion state;
-- **identity** — source identity plus native identity, with optional revision or observation identity;
-- **record** — the minimal canonical record identity used by collection results while the domain schema remains authoritative for domain fields;
-- **relationship** — typed source/to identities without inventing another domain status model;
-- **observation** — resource, metric, dimensions, observation window, availability, observation time, and value;
-- **query result** — source-bound canonical records with one query block and presentation-only derived counts/facets;
-- **interchange envelope** — registry/source/resource references, Git commit/blob revisions, owned records, and normalized relationship identities for repository import/export.
+Source objects advertise only capabilities the provider adapter actually supports. GitHub issues advertise `import` because update-only issue writes are implemented. Other native objects do not advertise import. Protected security sources remain read/query/export only and `privateIngestion` remains disabled.
 
-These primitives intentionally do not define a universal `status`. Risk status, publication state, freshness, severity, and provider availability are separate concepts and remain in the schema that owns each meaning.
+## Native identity and revisions
 
-`src/reporting/disclosure.ts` is the shared disclosure boundary for protected collections. Consumers first obtain a disclosed view, then derive counts, facets, search results, relationships, links, downloads, and exports from that view. A consumer must not derive an aggregate or traversal from the authoritative private collection and filter the result afterward.
+The provider does not allocate report IDs that compete with GitHub. The required reporting `id` is a deterministic serialization of the registered source identity, while the response also preserves the source-native identifier, repository, timestamps, URLs, provider status/state, revision components, and the native provider payload.
 
-## Current assurance HTTP contract
+Examples:
 
-`/v1/assurance` remains the stable registry route, but the payload format cut over in DEMO-157 to the current reporting contract. It is now discovery metadata rather than a family-shaped aggregate snapshot. Registered collection and detail routes return one shared query-result shape:
+- issue: repository + issue number, revised by `updated_at`;
+- pull request: repository + PR number, revised by head SHA and `updated_at`;
+- workflow run: repository + run ID, revised by attempt number and `updated_at`;
+- workflow attempt: repository + run ID + attempt number;
+- artifact: repository + artifact ID, revised by update/expiration metadata;
+- release: repository + release ID, revised by update time/tag;
+- repository security advisory: repository + GHSA ID, revised by `updated_at`.
 
-- `contract`, `schemaVersion`, route `dataset`, and the participating canonical `datasets`;
-- source declarations, availability, and qualifications;
-- `query.filters` and optional `query.pagination`;
-- one `records` array containing the canonical published records with normalized `relationships` intact;
-- `derived.count`, `derived.totalAvailable`, and filter facets.
+Relationships are identities, not copied register rows. For example, an artifact can point to its producing workflow run, an attempt can point to its run, a pull request can point to its head commit, and a release can point to its tag.
 
-The incident route therefore returns incident and exercise records in the same `records` array instead of separate `incidents` and `exercises` envelopes. Risk, claim, incident, exercise, advisory, and compliance relationship aliases such as `evidence`, `controls`, `riskLinks`, `objectiveLinks`, `incidentLinks`, and `frameworkReferences` are not emitted. The canonical `relationships` object is the only relationship contract.
+## Query and export behavior
 
-This is an intentional breaking cutover. The former vendor-media/schema-version negotiation and flattened v1 field projection are not supported in parallel. Requests using `schemaVersion` or `application/vnd.wizardgang.assurance+json` are rejected, and undeclared query parameters such as the former `residualRating` alias fail rather than being ignored. Existing useful route paths remain stable; route stability does not imply legacy payload compatibility.
+The existing `/__api/git/evidence` route now returns the current shared reporting `queryResult`; the legacy `GitHubEvidence`, `EvidenceCard`, `cards`, and `controls` response model is not supported in parallel.
 
-Rollback for this cutover is the parent commit recorded in the DEMO-157 controlled commit. Rollback restores the previous HTTP projection and removes the interchange CLI as one atomic repository change; do not add a compatibility shim during rollback.
+GET accepts:
 
-## Repository interchange
+- `repository` — one configured repository binding; omitted uses the first configured binding;
+- `source` — one or more registered source IDs, repeatable or comma-separated;
+- `mode=sample|export` — `sample` is intended for dashboards, `export` follows provider pagination;
+- `limit=1..100` — per-source dashboard page size.
 
-Repository interchange is intentionally a CLI boundary so writes occur in an authorized Git checkout and never in a dashboard copy:
+A sample request fetches one provider page and marks the source `partial` when GitHub reports a next page. A sample is therefore never described as a complete export. `mode=export` follows provider pagination until the source is complete or the configured hard page bound is reached. If the hard bound is reached, the result remains explicit `partial` with a provider cursor qualification.
+
+Per-source availability is explicit and may be `available`, `partial`, `unavailable`, `rate-limited`, or `expired`. Artifact records also preserve GitHub's own `expired` state. Upstream error bodies are not returned to clients.
+
+`query.pagination.total` and `derived.totalAvailable` are the number of native objects actually observed by the bounded query. When a source is partial, its qualification says so; those numbers must not be interpreted as an authoritative global total.
+
+## Configuration
+
+The existing `GITHUB_REPO_URL` and `GITHUB_BRANCH` remain the default repository binding so the functioning Git demo requires no duplicate repository configuration.
+
+Optional `GITHUB_REPORTING_BINDINGS` is a JSON array for explicit multi-repository/source bindings. Each entry accepts:
+
+```json
+{
+  "repository": "owner/repository",
+  "branch": "main",
+  "sources": ["github.issues", "github.workflow-runs"],
+  "issueLabels": ["corrective-action"]
+}
+```
+
+Bindings are fail-closed: invalid repositories, duplicate repository entries, unregistered source IDs, or a request for a source excluded by the binding produce precise configuration errors. The application never invents or creates a private repository to satisfy reporting.
+
+`GITHUB_REPORTING_MAX_PAGES` bounds `mode=export` provider pagination. The implementation clamps it to a safe maximum.
+
+## Access controls
+
+A server-side provider credential establishes the Worker's ability to query a source; it does not establish the visitor's right to receive that source.
+
+Public repositories and public source types are probed without a credential. If that probe indicates a private repository, private content is not fetched until the current application principal has `reporting:private`. Protected security source types require `reporting:private` even when the repository itself is public.
+
+`reporting:private` is granted only to a validated, revocable application identity normalized to the `operator` role. Viewer identities and the legacy static demo API token do not receive it. Protected HTTP responses are `private, no-store` and vary on `Authorization, Cookie`.
+
+### Read credential
+
+`GITHUB_READ_TOKEN` is optional for public-only reporting. Configure it as a dedicated, repository-scoped fine-grained credential when a bound repository is private or a protected GitHub security source is enabled. Grant only the native read permissions required by the configured sources, for example:
+
+- Metadata / Contents / Pull requests: read for repository/commit/PR evidence as applicable;
+- Actions: read for workflow runs, attempts, and artifacts;
+- Issues: read for issue/corrective-action reporting;
+- code scanning / secret scanning / Dependabot / repository security advisory read permissions for protected security sources;
+- Administration: read only if branch-protection retrieval is required.
+
+Do not expose the token in browser payloads, logs, registry JSON, fixtures, or report objects.
+
+## Supported source writes
+
+Native provider writes use the same registered source capability model. POST `/__api/git/evidence` requires an operator principal with `reporting:write` and a dedicated server-side `GITHUB_REPORTING_WRITE_TOKEN`.
+
+The current supported native operation is **update an existing GitHub issue**. The request supplies the registered source, configured repository, `operation: "update"`, native issue number, expected native revision, and fields.
+
+Allowed issue fields are `title`, `body`, `state`, `labels`, `assignees`, and `milestone`. Unknown fields are rejected rather than ignored. The adapter fetches the current issue and requires its `updated_at` revision to match the request before PATCH, preventing stale writes. Create, delete, repository creation, release creation, advisory creation, and security-object conversion are unsupported and rejected.
+
+The live Git demo credential is not reused for reporting writes. `GITHUB_REPORTING_WRITE_TOKEN` should be a separate fine-grained credential with only Issues: write for the configured repository. If it is not configured, the write path returns `github_write_credential_missing`; validation does not create resources or credentials.
+
+Structured-record import/export remains the repository CLI introduced by DEMO-157:
 
 ```text
 npm run assurance:interchange -- export [--output <file>]
 npm run assurance:interchange -- import --input <file> [--dry-run]
 ```
 
-`export` emits the current `interchangeEnvelope` for every registered record-bearing structured source that declares `export`. The export is deterministic and contains the registry reference, effective source declarations, registered resource/schema/collection references, Git commit/blob revisions, raw authoritative records, and record-to-record relationship identities. Derived publication presentations, risk ratings, counts, rendered evidence state, and other HTTP-only fields are not source data and are not exported as editable authority.
+That CLI continues to own Git-controlled structured records. Native provider writes occur through the provider adapter and are never rewritten into the structured assurance register.
 
-`import` accepts only the current interchange envelope. It validates the envelope, each affected registered domain document, source capabilities, canonical IDs, and relationship references before writing. `--dry-run` performs the same validation and change planning without modifying files. Writes are routed to each resource's registered canonical JSON path; generated runtime bindings and summaries are regenerated only after authoritative files change.
+## Git demo migration
 
-Imports are merge-safe for intentional subsets: omitted fields on an existing authoritative record are preserved, so importing a public projection cannot erase undisclosed private fields. Arrays and explicitly supplied fields replace their owned values. Duplicate IDs in one payload are rejected, an ID already owned by another resource is rejected, and a re-import of an already-applied payload is a no-op rather than a duplicate. A changed import must match the current source blob revision; otherwise it fails with `revision_conflict`.
+`/git` retains the functioning live branch/commit/PR/CI/release demonstration. Its source-of-truth evidence panel now consumes the shared reporting query contract directly. It groups returned native records by registered source ID and displays completeness/availability from the contract. It does not reconstruct an independent issue, finding, report, or evidence-card state model.
 
-The relationship list is an interchange integrity graph, not a second editable relationship store. Imported relationships must resolve to registered canonical records and use the current relationship vocabulary. Domain relationship values remain owned by the records and are schema/integrity validated with the rest of the canonical document.
+## Test boundaries
 
-Native GitHub objects and Cloudflare observations do not advertise `import`; the CLI rejects attempts to write them. Historical/native telemetry therefore remains provider-owned and cannot be rewritten through assurance interchange.
+Fixtures cover:
 
-## Cloudflare observations
+- native identity and revision preservation;
+- duplicate native identities across provider pages;
+- bounded sample vs complete export pagination;
+- open/closed issue status without reinterpretation;
+- rate-limited and expired states;
+- Actions run/artifact relationships;
+- protected repository-security-advisory access without issue conversion;
+- public/private repository isolation;
+- update-only issue writes, unsupported fields/operations, stale revisions, and missing write credentials.
 
-Cloudflare operational facts are read from Cloudflare when requested. The prior D1 `cloudflare_usage_snapshots` table remains only as immutable migration history; active runtime code no longer reads from or writes to that provider-state mirror.
+Live provider reads are permitted only when the deployment already has the required source configuration and authorization. CI fixture success is tested code; it is not evidence that a protected live GitHub integration is configured.
 
-Aggregate observation identity is deterministic over resource, metric, normalized dimensions, observation-window start, and observation-window end. This prevents distinct observation windows or dimension sets from being treated as the same fact.
+## Rollback
 
-Only a billed cost value returned by Cloudflare is a native Cloudflare observation. Published-rate cost estimates are derived presentation values from authoritative usage observations and never become Cloudflare authority.
+Rollback is one controlled revert of the DEMO-158 merge commit. That restores the prior Git evidence endpoint/model, registry declarations, authorization permission surface, and Git page consumer together. Do not operate the legacy card response and current native reporting response in parallel.
 
-## Authoritative and derived fields
+If rollback occurs after a permitted native issue update, reverting application code does **not** revert that provider-side issue change. Provider writes are separately auditable GitHub operations and must be reversed in GitHub through an authorized corrective update if required.
 
-Authoritative source edits are limited to fields owned by each registered domain schema. Risk ratings are derived from scores, publication state is derived from lifecycle/revision data, and HTTP counts/facets are derived from the selected records. Import rejects these rendered values as authoritative edits.
-
-The old source/records/relationships-only import payload is not a supported interchange format. The current envelope requires registry, source, resource/schema, and revision context so a write can be validated against the actual authority it intends to modify.
-
-## Protected access and disclosure
-
-A server-side GitHub credential establishes only the Worker's ability to read the configured source. It never establishes the visitor's right to receive that source. `src/api/git-evidence.ts` resolves the existing application principal first, and `src/lib/github-api.ts` refuses private repository content unless that principal carries `reporting:private`.
-
-`reporting:private` is derived only from a validated, revocable application identity whose normalized role is `operator`. The existing static `DEMO_API_TOKEN` and normalized `viewer` identities do not receive this permission. Revoking the D1-backed identity session therefore removes protected reporting access before private source content is fetched.
-
-For a private collection, public disclosure is fail-closed unless an explicit projection is bound to the exact authoritative source revision. `sourceRevision` and `approvedRevision` must match before projection. The resulting public view strips repository scope, disables ingestion, derives its count from projected records, and drops relationships that are not wholly contained in the projected record set.
-
-No private reporting source or public projection is configured by this change. `assurance/registry.json` continues to declare `privateIngestion: "disabled"`, and private source declarations remain payload-free. Private ingestion stays unavailable until a separately controlled source declaration and access policy are configured.
-
-## GitHub credential and cache boundary
-
-Public GitHub repositories are queried through the unauthenticated GitHub context even when `GITHUB_READ_TOKEN` is present. A 403/404 repository visibility probe may be retried with the server credential solely to resolve a configured private source. Private commits, pull requests, Actions, tags, releases, and protection metadata are not fetched until visitor authorization succeeds.
-
-Public and private cache contexts are separate. Protected cache keys include a one-way server-credential context, a one-way principal/permission context, and the current branch revision. The raw token and raw principal subject are not cache keys, response fields, log fields, or error text. Private HTTP responses are `private, no-store` and vary on `Authorization, Cookie`; public responses retain the existing short public cache policy.
-
-## Deployment bindings and minimum permissions
-
-Protected GitHub reporting is opt-in. Do not create credentials or point the demo at a private repository merely to satisfy validation.
-
-- `GITHUB_READ_TOKEN` — Cloudflare secret, required only when the configured authoritative GitHub repository is private. Use a dedicated read-only fine-grained credential scoped only to the configured repository. The evidence reader needs repository **Metadata: read**, **Contents: read**, **Pull requests: read**, and **Actions: read**. **Administration: read** is needed only if branch-protection verification is expected.
-- `IDENTITY_SESSION_SECRET` — existing Cloudflare secret used to encrypt identity session references/payloads and short-lived visitor tokens. It must remain server-side and at least 32 bytes.
-- `DEMO_DB` — existing D1 binding that stores revocable encrypted application sessions.
-- Identity-provider bindings — existing Microsoft Entra ID, Google, GitHub OAuth, and SAML settings documented in `docs/IDENTITY.md`. Protected reporting currently requires the normalized `operator` role.
-
-GitHub provider OAuth credentials obtained during visitor sign-in are discarded after identity normalization and are not reused as reporting source credentials. `GITHUB_READ_TOKEN` is likewise never exposed to the browser.
-
-## Private source declarations
-
-A private source may be declared with provider/resource scope, identity rules, schema, visibility, and capabilities without including its payload. Public registry/build artifacts must not contain credentials, secret values, private provider payloads, or private infrastructure metadata.
-
-Private ingestion is globally `disabled` until a protected source and its access policy are explicitly configured. Validators reject private sources that enable ingestion or advertise import capability.
-
-## Invariants
-
-`npm run check` enforces the reporting foundation and interchange contract:
-
-- authoritative source identities and provider/resource bindings are unique;
-- every structured source is backed by a registered schema;
-- every reporting domain has exactly one declared owner;
-- capabilities match authority type and native observation sources cannot be imported;
-- Cloudflare aggregate observations use the required identity components;
-- private ingestion remains disabled;
-- derived presentation fields cannot be imported as authority;
-- public and protected disclosure remains source-revision bound;
-- HTTP assurance records retain canonical `relationships` and do not expose legacy flattened aliases;
-- current interchange exports validate against the registered source schemas and reporting envelope;
-- import is dry-runnable, duplicate-safe, idempotent, revision-conflict aware, and preserves omitted fields;
-- active runtime code does not depend on the retired Cloudflare D1 mirror.
+No release or deployment is part of DEMO-158.

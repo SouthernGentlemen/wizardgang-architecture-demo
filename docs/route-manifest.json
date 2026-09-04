@@ -413,11 +413,12 @@
   },
   {
     "route": "/__api/git/evidence",
-    "title": "Live GitHub Delivery Evidence",
+    "title": "Authoritative GitHub Reporting",
     "group": "Delivery & Governance API",
     "source": "src/api/git-evidence.ts",
-    "method": "GET",
+    "method": "GET, POST",
     "machine": true,
+    "protected_write": true,
     "offline_behavior": "503",
     "status": "working"
   },
