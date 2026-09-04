@@ -27,7 +27,7 @@ const demo: DemoDefinition = {
     {
       "id": "iso-27001",
       "title": "ISO/IEC 27001 alignment",
-      "description": "Inspect access, secure-development, change, logging, secrets, availability, and evidence mappings linked to their public implementation sources.",
+      "description": "Inspect the published ISO/IEC 27001-related assurance claims and their deployment-aware canonical evidence.",
       "label": "Inspect the security-control map",
       "method": "GET",
       "path": "/__api/governance/security-controls"

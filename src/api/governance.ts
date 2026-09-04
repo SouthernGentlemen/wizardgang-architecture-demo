@@ -1,37 +1,74 @@
 import type { Env } from '../types';
 import { MCP_SERVER_PATH, mcpResponse } from './mcp';
 import { recordDemoEvent, recentDemoEvents } from '../lib/audit';
+import { repoUrl } from '../lib/github';
 import { json, methodNotAllowed } from '../lib/http';
 import { recordApplicationLog } from '../lib/logs';
+import {
+  assuranceDeploymentCommitUrl,
+  assuranceDeploymentContext,
+  presentEvidence,
+} from '../assurance/presentation';
+import {
+  findPublishedAssuranceRecord,
+  listPublishedAssuranceRecords,
+} from '../assurance/publication';
+
+const ISO_27001_FRAMEWORK = 'iso-27001';
+
+function iso27001GovernanceClaims() {
+  const compliance = listPublishedAssuranceRecords('compliance')
+    .filter((record) => record.framework === ISO_27001_FRAMEWORK);
+  if (compliance.length === 0) {
+    throw new Error('Canonical ISO/IEC 27001 compliance records are unavailable.');
+  }
+  const complianceIds = new Set(compliance.map((record) => record.id));
+  const claims = listPublishedAssuranceRecords('claims')
+    .filter((claim) => claim.relationships.compliance.some((recordId) => complianceIds.has(recordId)));
+  return { compliance, claims };
+}
+
+function firstPublishedEvidence(evidenceIds: string[]) {
+  for (const evidenceId of evidenceIds) {
+    const evidence = findPublishedAssuranceRecord('evidence', evidenceId);
+    if (evidence) return evidence;
+  }
+  return undefined;
+}
 
 export async function traceabilityResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'GET') return methodNotAllowed(['GET']);
   const events = await recentDemoEvents(env, 20);
-  const releaseEvidence = env.DEPLOYED_VERSION && env.DEPLOYED_VERSION !== 'development' && env.DEPLOYED_SHA
-    ? { status: 'traceable', version: env.DEPLOYED_VERSION, commit: env.DEPLOYED_SHA, source: `${env.GITHUB_REPO_URL}/commit/${env.DEPLOYED_SHA}` }
-    : { status: 'not-supplied', version: env.DEPLOYED_VERSION || 'development', commit: env.DEPLOYED_SHA || null, explanation: 'Deployment metadata must be injected by the release workflow.' };
+  const deployment = assuranceDeploymentContext(env);
+  const deploymentSource = assuranceDeploymentCommitUrl(env, deployment);
+  const releaseEvidence = deployment.version && deployment.version !== 'development' && deployment.commit && deploymentSource
+    ? { status: 'traceable', version: deployment.version, commit: deployment.commit, source: deploymentSource }
+    : { status: 'not-supplied', version: deployment.version || 'development', commit: deployment.commit, explanation: 'Deployment metadata must be injected by the release workflow.' };
+  const repository = repoUrl(env);
   return json({
     chain: ['requirement', 'branch/commit', 'pull request/review', 'automated validation', 'tag/release', 'deployment', 'operational observation'],
     releaseEvidence,
-    repository: env.GITHUB_REPO_URL,
-    workflows: [`${env.GITHUB_REPO_URL}/actions`, `${env.GITHUB_REPO_URL}/releases`],
+    repository,
+    workflows: [`${repository}/actions`, `${repository}/releases`],
     recentApplicationAuditEvents: events,
   }, { headers: { 'cache-control': 'no-store' } });
 }
 
 export function securityControlsResponse(request: Request, env: Env): Response {
   if (request.method !== 'GET') return methodNotAllowed(['GET']);
-  const source = (path: string) => `${env.GITHUB_REPO_URL}/blob/${encodeURIComponent(env.GITHUB_BRANCH || 'main')}/${path}`;
+  const { compliance, claims } = iso27001GovernanceClaims();
+  const origin = new URL(request.url).origin;
+  const frameworkLabel = compliance[0].frameworkLabel.replace(/:\d{4}$/, '');
   return json({
-    alignment: 'ISO/IEC 27001 aligned — uncertified',
-    controls: [
-      { area: 'access control', implementation: 'separate authentication and authorization, least-privilege write access', evidence: source('src/lib/authorization.ts') },
-      { area: 'secure development', implementation: 'type checking, tests, contract/migration/localization/security validation', evidence: source('.github/workflows/ci.yml') },
-      { area: 'change and release management', implementation: 'reviewed main, semantic tags/releases, tag-bound deployment workflow', evidence: source('docs/RELEASE.md') },
-      { area: 'logging and investigation', implementation: 'bounded redacted diagnostics separated from audit events', evidence: source('src/lib/logs.ts') },
-      { area: 'configuration and secrets', implementation: 'managed secrets; examples contain placeholders only', evidence: source('SECURITY.md') },
-      { area: 'availability', implementation: 'health history, intentional offline distinction, graceful synthetic budget degradation', evidence: source('docs/OPERATIONS.md') },
-    ],
+    alignment: `${frameworkLabel} aligned — uncertified`,
+    controls: claims.map((claim) => {
+      const evidence = firstPublishedEvidence(claim.relationships.evidence);
+      return {
+        area: claim.area.replaceAll('-', ' '),
+        implementation: claim.statement,
+        evidence: evidence ? presentEvidence(evidence, env, origin).resolved.url : null,
+      };
+    }),
     limitations: ['This evidence demonstrates engineering alignment only.', 'No certification or complete information-security management system is claimed.'],
   }, { headers: { 'cache-control': 'no-store' } });
 }
