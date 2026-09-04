@@ -23,6 +23,8 @@ const root = process.cwd();
 const errors = [];
 const registrySchemaPath = 'contracts/assurance/registry.schema.json';
 const releasedV1Kinds = new Set(['evidence', 'claims', 'compliance', 'risks', 'incidents', 'exercises', 'advisories']);
+const reportingDomains = new Set(['evidence', 'reports', 'issues', 'risks', 'security', 'governance', 'operations']);
+const cloudflareObservationIdentity = ['resource', 'metric', 'dimensions', 'window.start', 'window.end'];
 
 function fail(message) {
   errors.push(message);
@@ -30,6 +32,14 @@ function fail(message) {
 
 function exists(relative) {
   return isControlledRelativePath(relative) && fs.existsSync(path.join(root, relative));
+}
+
+function sourceBindingKey(source) {
+  return [source.provider, source.scope?.repository ?? '', source.scope?.resource ?? ''].join('|');
+}
+
+function schemaFile(reference) {
+  return typeof reference === 'string' ? reference.split('#', 1)[0] : '';
 }
 
 let registry;
@@ -81,6 +91,95 @@ if (registry) {
       } catch (error) {
         fail(`${resource.path}: ${error instanceof Error ? error.message : String(error)}`);
       }
+    }
+  }
+
+  const reporting = registry.reporting;
+  if (!reporting) {
+    fail(`${ASSURANCE_REGISTRY_PATH}: common reporting contract declaration is required`);
+  } else {
+    if (!exists(reporting.contract)) fail(`${ASSURANCE_REGISTRY_PATH}: reporting contract is missing: ${reporting.contract}`);
+
+    const declaredSources = [
+      ...(reporting.nativeObjects ?? []),
+      ...(reporting.observations ?? []),
+      ...(reporting.privateSources ?? []),
+    ];
+    const sourceIds = new Map();
+    const sourceBindings = new Map();
+    const structured = reporting.structuredRecords;
+
+    if (structured) {
+      sourceIds.set(structured.id, 'structured records');
+      if (structured.provider !== 'github' || structured.authority !== 'structured-record') {
+        fail(`${ASSURANCE_REGISTRY_PATH}: structured reporting records must be GitHub structured-record authority`);
+      }
+      for (const capability of ['read', 'query', 'export', 'import']) {
+        if (!structured.capabilities?.includes(capability)) fail(`${ASSURANCE_REGISTRY_PATH}: structured reporting source requires ${capability} capability`);
+      }
+      if (structured.capabilities?.includes('observe')) fail(`${ASSURANCE_REGISTRY_PATH}: structured reporting source must not declare observe capability`);
+      if (structured.ingestion !== 'enabled') fail(`${ASSURANCE_REGISTRY_PATH}: public GitHub structured reporting ingestion must be enabled`);
+      for (const resource of resources) {
+        if (!resource.path.startsWith(structured.resourceRoot ?? '')) {
+          fail(`${ASSURANCE_REGISTRY_PATH}: ${resource.id} is outside the structured reporting resource root ${structured.resourceRoot}`);
+          continue;
+        }
+        const binding = ['github', structured.repository, resource.path].join('|');
+        if (sourceBindings.has(binding)) {
+          fail(`${ASSURANCE_REGISTRY_PATH}: authoritative structured source binding ${binding} is shared by ${sourceBindings.get(binding)} and ${resource.id}`);
+        } else {
+          sourceBindings.set(binding, resource.id);
+        }
+        if (!exists(resource.schema)) fail(`${ASSURANCE_REGISTRY_PATH}: reporting source ${resource.id} has no schema coverage at ${resource.schema}`);
+        if (resource.visibility === 'private' && reporting.privateIngestion !== 'disabled') {
+          fail(`${ASSURANCE_REGISTRY_PATH}: private structured resource ${resource.id} requires disabled private ingestion`);
+        }
+      }
+    }
+
+    for (const source of declaredSources) {
+      if (sourceIds.has(source.id)) fail(`${ASSURANCE_REGISTRY_PATH}: duplicate authoritative reporting source identity ${source.id}`);
+      else sourceIds.set(source.id, sourceBindingKey(source));
+
+      const binding = sourceBindingKey(source);
+      if (sourceBindings.has(binding)) {
+        fail(`${ASSURANCE_REGISTRY_PATH}: duplicate authoritative reporting source binding ${binding}`);
+      } else {
+        sourceBindings.set(binding, source.id);
+      }
+
+      const sourceSchema = schemaFile(source.schema);
+      if (!sourceSchema || !exists(sourceSchema)) fail(`${ASSURANCE_REGISTRY_PATH}: reporting source ${source.id} has missing schema ${source.schema}`);
+      if (source.visibility === 'private' && source.ingestion !== 'disabled') fail(`${ASSURANCE_REGISTRY_PATH}: private reporting source ${source.id} must keep ingestion disabled`);
+      if (source.visibility === 'private' && source.capabilities?.includes('import')) fail(`${ASSURANCE_REGISTRY_PATH}: private reporting source ${source.id} must not expose import capability before protected consumption exists`);
+      if (source.authority === 'native-object' && source.capabilities?.includes('observe')) fail(`${ASSURANCE_REGISTRY_PATH}: native GitHub object ${source.id} must not declare observe capability`);
+      if (source.authority === 'native-observation') {
+        if (!source.capabilities?.includes('observe')) fail(`${ASSURANCE_REGISTRY_PATH}: observation source ${source.id} requires observe capability`);
+        if (source.capabilities?.includes('import')) fail(`${ASSURANCE_REGISTRY_PATH}: observation source ${source.id} must not declare import capability`);
+        if (JSON.stringify(source.observationIdentity) !== JSON.stringify(cloudflareObservationIdentity)) {
+          fail(`${ASSURANCE_REGISTRY_PATH}: aggregate observation source ${source.id} identity must be resource + metric + dimensions + observation window`);
+        }
+      }
+    }
+
+    if (reporting.privateIngestion !== 'disabled') fail(`${ASSURANCE_REGISTRY_PATH}: private reporting ingestion must remain disabled until protected consumption is implemented`);
+
+    const seenDomains = new Set();
+    for (const ownership of reporting.ownership ?? []) {
+      if (seenDomains.has(ownership.domain)) fail(`${ASSURANCE_REGISTRY_PATH}: duplicate reporting ownership for ${ownership.domain}`);
+      else seenDomains.add(ownership.domain);
+      if (!reportingDomains.has(ownership.domain)) fail(`${ASSURANCE_REGISTRY_PATH}: unsupported reporting ownership domain ${ownership.domain}`);
+      if (!sourceIds.has(ownership.source)) fail(`${ASSURANCE_REGISTRY_PATH}: ${ownership.domain} references unknown reporting source ${ownership.source}`);
+      if (ownership.source === structured?.id) {
+        if (!ownership.resource || !identities.has(ownership.resource)) {
+          fail(`${ASSURANCE_REGISTRY_PATH}: ${ownership.domain} structured ownership must identify one registered resource`);
+        }
+      } else if (ownership.resource) {
+        fail(`${ASSURANCE_REGISTRY_PATH}: ${ownership.domain} native-source ownership must not shadow provider scope with a registry resource`);
+      }
+    }
+    for (const domain of reportingDomains) {
+      if (!seenDomains.has(domain)) fail(`${ASSURANCE_REGISTRY_PATH}: missing reporting ownership for ${domain}`);
     }
   }
 

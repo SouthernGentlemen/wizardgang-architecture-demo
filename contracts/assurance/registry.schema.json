@@ -12,6 +12,7 @@
     "qualification",
     "visibility",
     "routes",
+    "reporting",
     "lifecycle",
     "datasets",
     "presentations",
@@ -42,6 +43,9 @@
     },
     "routes": {
       "$ref": "#/$defs/routes"
+    },
+    "reporting": {
+      "$ref": "./reporting.schema.json#/$defs/registryReporting"
     },
     "lifecycle": {
       "allOf": [

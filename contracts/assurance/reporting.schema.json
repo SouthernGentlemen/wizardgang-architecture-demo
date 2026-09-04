@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://demo.wizardgang.ai/contracts/assurance/reporting.schema.json",
+  "title": "Common Reporting Primitives",
+  "type": "object",
+  "$defs": {
+    "capability": {
+      "enum": ["read", "query", "export", "import", "observe"]
+    },
+    "visibility": {
+      "enum": ["public", "private"]
+    },
+    "sourceScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["resource"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "resource": { "type": "string", "minLength": 1 }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "provider", "authority", "scope", "nativeIdentity", "schema", "visibility", "capabilities", "ingestion"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9.-]+$" },
+        "provider": { "enum": ["github", "cloudflare"] },
+        "authority": { "enum": ["native-object", "structured-record", "native-observation"] },
+        "scope": { "$ref": "#/$defs/sourceScope" },
+        "nativeIdentity": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "revisionIdentity": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "observationIdentity": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "schema": { "type": "string", "pattern": "^contracts/assurance/.+\\.schema\\.json(?:#/.+)?$" },
+        "visibility": { "$ref": "#/$defs/visibility" },
+        "capabilities": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/capability" }
+        },
+        "ingestion": { "enum": ["enabled", "disabled"] }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "authority": { "const": "native-observation" } }, "required": ["authority"] },
+          "then": { "required": ["observationIdentity"] }
+        },
+        {
+          "if": { "properties": { "authority": { "enum": ["native-object", "structured-record"] } }, "required": ["authority"] },
+          "then": { "required": ["revisionIdentity"] }
+        }
+      ]
+    },
+    "structuredRecordSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "provider", "authority", "repository", "resourceRoot", "nativeIdentity", "revisionIdentity", "capabilities", "ingestion"],
+      "properties": {
+        "id": { "const": "github.structured-records" },
+        "provider": { "const": "github" },
+        "authority": { "const": "structured-record" },
+        "repository": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$" },
+        "resourceRoot": { "const": "assurance/" },
+        "nativeIdentity": { "const": ["repository", "resource"] },
+        "revisionIdentity": { "const": ["commit", "blob"] },
+        "capabilities": { "const": ["read", "query", "export", "import"] },
+        "ingestion": { "const": "enabled" }
+      }
+    },
+    "privateSource": {
+      "allOf": [
+        { "$ref": "#/$defs/source" },
+        {
+          "properties": {
+            "visibility": { "const": "private" },
+            "ingestion": { "const": "disabled" }
+          }
+        }
+      ]
+    },
+    "ownership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain", "source"],
+      "properties": {
+        "domain": { "enum": ["evidence", "reports", "issues", "risks", "security", "governance", "operations"] },
+        "source": { "type": "string", "pattern": "^[a-z0-9.-]+$" },
+        "resource": { "type": "string", "pattern": "^[a-z0-9.-]+$" }
+      }
+    },
+    "registryReporting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract", "structuredRecords", "nativeObjects", "observations", "privateSources", "ownership", "privateIngestion"],
+      "properties": {
+        "contract": { "const": "contracts/assurance/reporting.schema.json" },
+        "structuredRecords": { "$ref": "#/$defs/structuredRecordSource" },
+        "nativeObjects": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/source" },
+              {
+                "properties": {
+                  "provider": { "const": "github" },
+                  "authority": { "const": "native-object" }
+                }
+              }
+            ]
+          }
+        },
+        "observations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/source" },
+              {
+                "properties": {
+                  "provider": { "const": "cloudflare" },
+                  "authority": { "const": "native-observation" },
+                  "observationIdentity": { "const": ["resource", "metric", "dimensions", "window.start", "window.end"] }
+                }
+              }
+            ]
+          }
+        },
+        "privateSources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/privateSource" }
+        },
+        "ownership": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "items": { "$ref": "#/$defs/ownership" }
+        },
+        "privateIngestion": { "const": "disabled" }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "native"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "native": { "type": "string", "minLength": 1 },
+        "revision": { "type": "string", "minLength": 1 },
+        "observation": { "type": "string", "minLength": 1 }
+      }
+    },
+    "record": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "relationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relation", "from", "to"],
+      "properties": {
+        "relation": { "type": "string", "minLength": 1 },
+        "from": { "$ref": "#/$defs/identity" },
+        "to": { "$ref": "#/$defs/identity" }
+      }
+    },
+    "observationWindow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "start": { "type": "string", "format": "date-time" },
+        "end": { "type": "string", "format": "date-time" }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identity", "source", "resource", "metric", "dimensions", "window", "observedAt", "availability", "value"],
+      "properties": {
+        "identity": { "$ref": "#/$defs/identity" },
+        "source": { "type": "string", "minLength": 1 },
+        "resource": { "type": "string", "minLength": 1 },
+        "metric": { "type": "string", "minLength": 1 },
+        "dimensions": {
+          "type": "object",
+          "additionalProperties": { "type": ["string", "number", "boolean", "null"] }
+        },
+        "window": { "$ref": "#/$defs/observationWindow" },
+        "observedAt": { "type": "string", "format": "date-time" },
+        "availability": { "enum": ["available", "partial", "unavailable"] },
+        "value": {}
+      }
+    },
+    "collectionResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "records", "relationships", "derived"],
+      "properties": {
+        "source": { "$ref": "#/$defs/source" },
+        "records": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/record" }
+        },
+        "relationships": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/relationship" }
+        },
+        "derived": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["count"],
+          "properties": {
+            "count": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "importCollection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "records", "relationships"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "records": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/record" }
+        },
+        "relationships": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/relationship" }
+        }
+      }
+    }
+  }
+}

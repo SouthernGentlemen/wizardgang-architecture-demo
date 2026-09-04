@@ -1,5 +1,9 @@
 import type { Env } from '../types';
-import { recordApplicationLog } from './logs';
+import {
+  createReportingObservation,
+  type ReportingObservation,
+} from '../reporting/contracts';
+import { registeredReportingSource } from '../reporting/registry';
 
 export type CloudflareTelemetryStatus = 'live' | 'partial' | 'unavailable' | 'unconfigured';
 
@@ -31,11 +35,6 @@ export interface CloudflareUsageSnapshot {
   };
   trend: UsageTrendPoint[];
   failures: string[];
-}
-
-interface StoredSnapshotRow {
-  data_json: string;
-  captured_at: string;
 }
 
 interface GraphqlResponse {
@@ -281,36 +280,58 @@ function emptySnapshot(env: Env, status: CloudflareTelemetryStatus): CloudflareU
     cost: {
       kind: 'unavailable', amountUsd: null, currency: null,
       periodStart: current.startDate, periodEnd: current.endDate,
-      note: configured(env) ? 'Waiting for the next scheduled Cloudflare refresh.' : 'Cloudflare analytics credentials are not configured for this environment.',
+      note: configured(env) ? 'Cloudflare did not return a current operational observation.' : 'Cloudflare analytics credentials are not configured for this environment.',
       breakdown: [],
     },
     trend: [], failures: [],
   };
 }
 
+function observationAvailability(available: boolean): 'available' | 'unavailable' {
+  return available ? 'available' : 'unavailable';
+}
+
+export function cloudflareUsageObservations(env: Env, snapshot: CloudflareUsageSnapshot): ReportingObservation<number | null>[] {
+  const source = registeredReportingSource('cloudflare.operations');
+  const window = { start: snapshot.windowStart, end: snapshot.windowEnd };
+  const observedAt = snapshot.capturedAt ?? snapshot.windowEnd;
+  const observation = (resource: string, metric: string, available: boolean, value: number | null) => createReportingObservation({
+    source,
+    resource,
+    metric,
+    dimensions: {},
+    window,
+    observedAt,
+    availability: observationAvailability(available),
+    value,
+  });
+  return [
+    observation(`worker:${env.CLOUDFLARE_WORKER_NAME ?? 'unconfigured'}`, 'requests', snapshot.products.workers.available, snapshot.products.workers.requests),
+    observation(`worker:${env.CLOUDFLARE_WORKER_NAME ?? 'unconfigured'}`, 'errors', snapshot.products.workers.available, snapshot.products.workers.errors),
+    observation(`d1:${env.CLOUDFLARE_D1_DATABASE_ID ?? 'unconfigured'}`, 'rows-read', snapshot.products.d1.available, snapshot.products.d1.rowsRead),
+    observation(`d1:${env.CLOUDFLARE_D1_DATABASE_ID ?? 'unconfigured'}`, 'rows-written', snapshot.products.d1.available, snapshot.products.d1.rowsWritten),
+    observation(`d1:${env.CLOUDFLARE_D1_DATABASE_ID ?? 'unconfigured'}`, 'storage-bytes', snapshot.products.d1.available, snapshot.products.d1.storageBytes),
+    observation(`r2:${env.CLOUDFLARE_R2_BUCKET ?? 'unconfigured'}`, 'class-a-operations', snapshot.products.r2.available, snapshot.products.r2.classAOperations),
+    observation(`r2:${env.CLOUDFLARE_R2_BUCKET ?? 'unconfigured'}`, 'class-b-operations', snapshot.products.r2.available, snapshot.products.r2.classBOperations),
+    observation(`r2:${env.CLOUDFLARE_R2_BUCKET ?? 'unconfigured'}`, 'storage-bytes', snapshot.products.r2.available, snapshot.products.r2.storageBytes),
+    observation(`durable-object:${env.CLOUDFLARE_DO_NAMESPACE ?? 'unconfigured'}`, 'requests', snapshot.products.durableObjects.available, snapshot.products.durableObjects.requests),
+    observation(`durable-object:${env.CLOUDFLARE_DO_NAMESPACE ?? 'unconfigured'}`, 'cpu-time-ms', snapshot.products.durableObjects.available, snapshot.products.durableObjects.cpuTimeMs),
+    observation(`durable-object:${env.CLOUDFLARE_DO_NAMESPACE ?? 'unconfigured'}`, 'storage-bytes', snapshot.products.durableObjects.available, snapshot.products.durableObjects.storageBytes),
+    ...(snapshot.cost.kind === 'billed'
+      ? [observation(`account:${env.CLOUDFLARE_ACCOUNT_ID ?? 'unconfigured'}`, 'cost-usd', true, snapshot.cost.amountUsd)]
+      : []),
+  ];
+}
+
 export async function latestCloudflareUsage(env: Env): Promise<CloudflareUsageSnapshot> {
-  try {
-    const result = await env.DEMO_DB.prepare(
-      `SELECT data_json, captured_at FROM cloudflare_usage_snapshots ORDER BY id DESC LIMIT 1`,
-    ).all<StoredSnapshotRow>();
-    const row = result.results[0];
-    if (!row) return emptySnapshot(env, configured(env) ? 'unavailable' : 'unconfigured');
-    const parsed = JSON.parse(row.data_json) as CloudflareUsageSnapshot;
-    return { ...parsed, capturedAt: parsed.capturedAt || row.captured_at };
-  } catch {
-    return emptySnapshot(env, configured(env) ? 'unavailable' : 'unconfigured');
-  }
+  return collectCloudflareUsage(env, true);
 }
 
 export async function recentCloudflareUsage(env: Env, limit = 20): Promise<CloudflareUsageSnapshot[]> {
-  try {
-    const result = await env.DEMO_DB.prepare(
-      `SELECT data_json, captured_at FROM cloudflare_usage_snapshots ORDER BY id DESC LIMIT ?`,
-    ).bind(Math.max(1, Math.min(limit, 100))).all<StoredSnapshotRow>();
-    return result.results.flatMap((row) => {
-      try { const snapshot = JSON.parse(row.data_json) as CloudflareUsageSnapshot; return [{ ...snapshot, capturedAt: snapshot.capturedAt || row.captured_at }]; } catch { return []; }
-    });
-  } catch { return []; }
+  void env;
+  void limit;
+  // Provider history is represented by Cloudflare's returned trend observations; no local provider-state mirror is retained.
+  return [];
 }
 
 export async function collectCloudflareUsage(env: Env, includeBilling = true): Promise<CloudflareUsageSnapshot> {
@@ -362,9 +383,6 @@ export async function collectCloudflareUsage(env: Env, includeBilling = true): P
         cost.note = 'Cloudflare billable usage is accessible, but its restricted alpha cost fields are not populated and product analytics did not return enough data for an estimate.';
       }
     } catch { failures.push('Billable usage'); }
-  } else {
-    const previous = await latestCloudflareUsage(env);
-    if (previous.cost.kind === 'billed') cost = previous.cost;
   }
 
   const snapshot: CloudflareUsageSnapshot = {
@@ -372,17 +390,6 @@ export async function collectCloudflareUsage(env: Env, includeBilling = true): P
     capturedAt, windowStart: current.start.toISOString(), windowEnd: capturedAt,
     products, cost, trend, failures,
   };
-  try {
-    await env.DEMO_DB.prepare(
-      `INSERT INTO cloudflare_usage_snapshots (status, source, data_json, captured_at) VALUES (?, 'cloudflare', ?, ?)`,
-    ).bind(snapshot.status, JSON.stringify(snapshot), capturedAt).run();
-    await recordApplicationLog(env, {
-      level: snapshot.status === 'unavailable' ? 'warn' : 'info', source: 'cloudflare', eventKey: 'cloudflare_usage_collected',
-      message: snapshot.status === 'live' ? 'Cloudflare usage telemetry refreshed.' : `Cloudflare usage telemetry refreshed with ${failures.length} unavailable source${failures.length === 1 ? '' : 's'}.`,
-      route: '/__api/operations/cloudflare-usage', detail: { status: snapshot.status, unavailable: failures },
-    });
-  } catch {
-    // External telemetry collection should not fail solely because cache persistence is unavailable.
-  }
+  cloudflareUsageObservations(env, snapshot);
   return snapshot;
 }

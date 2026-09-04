@@ -8,6 +8,148 @@
   "routes": {
     "api": "/v1/assurance"
   },
+  "reporting": {
+    "contract": "contracts/assurance/reporting.schema.json",
+    "structuredRecords": {
+      "id": "github.structured-records",
+      "provider": "github",
+      "authority": "structured-record",
+      "repository": "SouthernGentlemen/wizardgang-architecture-demo",
+      "resourceRoot": "assurance/",
+      "nativeIdentity": [
+        "repository",
+        "resource"
+      ],
+      "revisionIdentity": [
+        "commit",
+        "blob"
+      ],
+      "capabilities": [
+        "read",
+        "query",
+        "export",
+        "import"
+      ],
+      "ingestion": "enabled"
+    },
+    "nativeObjects": [
+      {
+        "id": "github.issues",
+        "provider": "github",
+        "authority": "native-object",
+        "scope": {
+          "repository": "SouthernGentlemen/wizardgang-architecture-demo",
+          "resource": "issues"
+        },
+        "nativeIdentity": [
+          "repository",
+          "number"
+        ],
+        "revisionIdentity": [
+          "updatedAt"
+        ],
+        "schema": "contracts/assurance/reporting.schema.json#/$defs/record",
+        "visibility": "public",
+        "capabilities": [
+          "read",
+          "query",
+          "export"
+        ],
+        "ingestion": "enabled"
+      },
+      {
+        "id": "github.pull-requests",
+        "provider": "github",
+        "authority": "native-object",
+        "scope": {
+          "repository": "SouthernGentlemen/wizardgang-architecture-demo",
+          "resource": "pull-requests"
+        },
+        "nativeIdentity": [
+          "repository",
+          "number"
+        ],
+        "revisionIdentity": [
+          "headSha",
+          "updatedAt"
+        ],
+        "schema": "contracts/assurance/reporting.schema.json#/$defs/record",
+        "visibility": "public",
+        "capabilities": [
+          "read",
+          "query",
+          "export"
+        ],
+        "ingestion": "enabled"
+      }
+    ],
+    "observations": [
+      {
+        "id": "cloudflare.operations",
+        "provider": "cloudflare",
+        "authority": "native-observation",
+        "scope": {
+          "resource": "account-operational-observations"
+        },
+        "nativeIdentity": [
+          "resource"
+        ],
+        "observationIdentity": [
+          "resource",
+          "metric",
+          "dimensions",
+          "window.start",
+          "window.end"
+        ],
+        "schema": "contracts/assurance/reporting.schema.json#/$defs/observation",
+        "visibility": "public",
+        "capabilities": [
+          "read",
+          "query",
+          "export",
+          "observe"
+        ],
+        "ingestion": "enabled"
+      }
+    ],
+    "privateSources": [],
+    "ownership": [
+      {
+        "domain": "evidence",
+        "source": "github.structured-records",
+        "resource": "evidence"
+      },
+      {
+        "domain": "reports",
+        "source": "github.structured-records",
+        "resource": "presentation.documents"
+      },
+      {
+        "domain": "issues",
+        "source": "github.issues"
+      },
+      {
+        "domain": "risks",
+        "source": "github.structured-records",
+        "resource": "risks"
+      },
+      {
+        "domain": "security",
+        "source": "github.structured-records",
+        "resource": "advisories"
+      },
+      {
+        "domain": "governance",
+        "source": "github.structured-records",
+        "resource": "presentation.documents"
+      },
+      {
+        "domain": "operations",
+        "source": "cloudflare.operations"
+      }
+    ],
+    "privateIngestion": "disabled"
+  },
   "lifecycle": {
     "id": "lifecycle.records",
     "kind": "lifecycle",
