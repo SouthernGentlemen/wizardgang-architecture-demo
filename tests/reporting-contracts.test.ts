@@ -9,11 +9,9 @@ import {
   cloudflareUsageObservations,
   type CloudflareUsageSnapshot,
 } from '../src/lib/cloudflare-usage';
+import * as reportingContracts from '../src/reporting/contracts';
 import {
-  createReportingCollection,
   createReportingObservation,
-  exportAuthoritativeReportingCollection,
-  importAuthoritativeReportingCollection,
   reportingObservationIdentity,
 } from '../src/reporting/contracts';
 import {
@@ -108,21 +106,12 @@ describe('authoritative reporting contracts', () => {
     expect(billed.find((observation) => observation.metric === 'cost-usd')?.value).toBe(0.25);
   });
 
-  it('keeps derived presentation fields out of authoritative import/export payloads', () => {
-    const source = structuredReportingSource(assuranceRegistryResources.find((resource) => resource.id === 'risks')!);
-    const result = createReportingCollection(source, [{ id: 'SEC-RISK-TEST' }]);
-    expect(result.derived).toEqual({ count: 1 });
-    expect(exportAuthoritativeReportingCollection(result)).toEqual({
-      source: source.id,
-      records: [{ id: 'SEC-RISK-TEST' }],
-      relationships: [],
-    });
-    expect(() => importAuthoritativeReportingCollection({
-      source: source.id,
-      records: [{ id: 'SEC-RISK-TEST' }],
-      relationships: [],
-      derived: { count: 999 },
-    })).toThrow(/Derived reporting fields/);
+  it('has one current interchange type surface and no legacy source/records-only import helper', () => {
+    expect(reportingContracts).not.toHaveProperty('importAuthoritativeReportingCollection');
+    expect(reportingContracts).not.toHaveProperty('exportAuthoritativeReportingCollection');
+    const schema = JSON.parse(readFileSync('contracts/assurance/reporting.schema.json', 'utf8')) as { $defs: Record<string, unknown> };
+    expect(schema.$defs).toHaveProperty('interchangeEnvelope');
+    expect(schema.$defs).not.toHaveProperty('importCollection');
   });
 
   it('keeps private ingestion disabled and leaves provider payloads and credentials out of the public registry', () => {

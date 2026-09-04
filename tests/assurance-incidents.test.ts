@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import { assuranceIncidentsResponse } from '../src/api/assurance';
-import { serializeAssuranceV1Exercise, serializeAssuranceV1Incident } from '../src/api/assurance-v1';
 import { deriveIncidentCounts } from '../src/assurance/service';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import { renderIncidents } from '../src/demos/assurance-pages';
@@ -42,7 +41,7 @@ describe('public incident and exercise assurance', () => {
     }
   });
 
-  it('publishes the combined read-only v1 API from canonical records', async () => {
+  it('publishes incidents and exercises in one common read-only record collection', async () => {
     const incidents = listPublishedAssuranceRecords('incidents');
     const exercises = listPublishedAssuranceRecords('exercises');
     const response = assuranceIncidentsResponse(new Request('https://demo.wizardgang.ai/v1/assurance/incidents'));
@@ -50,14 +49,19 @@ describe('public incident and exercise assurance', () => {
     expect(response.headers.get('content-type')).toContain('application/json');
     const body = await response.json() as {
       dataset: string;
-      counts: ReturnType<typeof deriveIncidentCounts>;
-      incidents: ReturnType<typeof serializeAssuranceV1Incident>[];
-      exercises: ReturnType<typeof serializeAssuranceV1Exercise>[];
+      datasets: string[];
+      records: Array<{ id: string; recordType: string; relationships: Record<string, string[]> }>;
+      derived: { count: number; totalAvailable: number };
+      incidents?: unknown;
+      exercises?: unknown;
     };
     expect(body.dataset).toBe('incidents');
-    expect(body.counts).toEqual(deriveIncidentCounts(incidents, exercises));
-    expect(body.incidents).toEqual(incidents.map(serializeAssuranceV1Incident));
-    expect(body.exercises).toEqual(exercises.map(serializeAssuranceV1Exercise));
+    expect(body.datasets).toEqual(['incidents', 'exercises']);
+    expect(body.records).toEqual([...incidents, ...exercises]);
+    expect(body.derived.count).toBe(incidents.length + exercises.length);
+    expect(body.derived.totalAvailable).toBe(incidents.length + exercises.length);
+    expect(body).not.toHaveProperty('incidents');
+    expect(body).not.toHaveProperty('exercises');
 
     const rejected = assuranceIncidentsResponse(new Request('https://demo.wizardgang.ai/v1/assurance/incidents', { method: 'POST' }));
     expect(rejected.status).toBe(405);

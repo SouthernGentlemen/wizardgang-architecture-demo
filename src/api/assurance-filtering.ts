@@ -4,6 +4,7 @@ import {
 } from '../assurance/model';
 import { resolveAssuranceResourceOwner } from '../assurance/record-discovery.js';
 import {
+  assuranceFilterNames,
   assuranceFilterPredicate,
   normalizeAssuranceFilters,
   type AssuranceFilterValues,
@@ -43,6 +44,22 @@ export function selectFocusedAssuranceRecords<T>(
   records: T[],
 ): FocusedAssuranceSelection<T> | Response {
   const filterOwner = focusedAssuranceFilterOwner(datasets);
+  const allowedParameters = new Set([
+    ...assuranceFilterNames(filterOwner),
+    'limit',
+    'cursor',
+  ]);
+  let unsupported: string | undefined;
+  url.searchParams.forEach((_value, parameter) => {
+    if (unsupported === undefined && !allowedParameters.has(parameter)) unsupported = parameter;
+  });
+  if (unsupported) {
+    return assuranceErrorResponse(request, 400, {
+      error: 'unsupported_query_parameter',
+      parameter: unsupported,
+    });
+  }
+
   const normalized = normalizeAssuranceFilters(filterOwner, url.searchParams);
   const issue = normalized.issues[0];
   if (issue) {

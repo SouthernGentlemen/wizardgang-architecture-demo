@@ -235,19 +235,115 @@
         }
       }
     },
-    "importCollection": {
+    "pagination": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["source", "records", "relationships"],
+      "required": ["limit", "returned", "total", "nextCursor"],
       "properties": {
-        "source": { "type": "string", "minLength": 1 },
-        "records": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/record" }
+        "limit": { "type": "integer", "minimum": 1 },
+        "returned": { "type": "integer", "minimum": 0 },
+        "total": { "type": "integer", "minimum": 0 },
+        "nextCursor": { "type": ["string", "null"] }
+      }
+    },
+    "query": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filters"],
+      "properties": {
+        "filters": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
         },
-        "relationships": {
+        "pagination": { "$ref": "#/$defs/pagination" }
+      }
+    },
+    "queryDerived": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["count", "totalAvailable", "facets"],
+      "properties": {
+        "count": { "type": "integer", "minimum": 0 },
+        "totalAvailable": { "type": "integer", "minimum": 0 },
+        "facets": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "queryResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "contract", "dataset", "datasets", "availability", "sources", "qualifications", "query", "records", "derived"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "contract": { "const": "contracts/assurance/reporting.schema.json" },
+        "dataset": { "type": "string", "minLength": 1 },
+        "datasets": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "availability": { "type": "object", "additionalProperties": { "type": "string", "minLength": 1 } },
+        "sources": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/source" } },
+        "qualifications": { "type": "object", "additionalProperties": { "type": ["string", "null"] } },
+        "query": { "$ref": "#/$defs/query" },
+        "records": { "type": "array", "items": { "$ref": "#/$defs/record" } },
+        "derived": { "$ref": "#/$defs/queryDerived" }
+      }
+    },
+    "registryReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "schemaVersion"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "schemaVersion": { "const": 1 }
+      }
+    },
+    "resourceReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "schema", "collectionPath", "visibility"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "pattern": "^assurance/.+\\.json$" },
+        "schema": { "type": "string", "pattern": "^contracts/assurance/.+\\.schema\\.json$" },
+        "collectionPath": { "type": "string", "minLength": 1 },
+        "visibility": { "$ref": "#/$defs/visibility" }
+      }
+    },
+    "sourceRevision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit", "blob"],
+      "properties": {
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "blob": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
+      }
+    },
+    "interchangeCollection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "resource", "revision", "records", "relationships"],
+      "properties": {
+        "source": { "$ref": "#/$defs/source" },
+        "resource": { "$ref": "#/$defs/resourceReference" },
+        "revision": { "$ref": "#/$defs/sourceRevision" },
+        "records": { "type": "array", "items": { "$ref": "#/$defs/record" } },
+        "relationships": { "type": "array", "items": { "$ref": "#/$defs/relationship" } }
+      }
+    },
+    "interchangeEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract", "registry", "collections"],
+      "properties": {
+        "contract": { "const": "contracts/assurance/reporting.schema.json" },
+        "registry": { "$ref": "#/$defs/registryReference" },
+        "collections": {
           "type": "array",
-          "items": { "$ref": "#/$defs/relationship" }
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/interchangeCollection" }
         }
       }
     }

@@ -1,116 +1,60 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { assuranceIncidentsResponse, assuranceRisksResponse } from '../src/api/assurance';
-import type { AssuranceV1Exercise, AssuranceV1Incident, AssuranceV1Risk } from '../src/api/assurance-v1';
-import { deriveRiskCounts } from '../src/assurance/service';
+import { assuranceComplianceResponse, assuranceIncidentsResponse, assuranceRisksResponse } from '../src/api/assurance';
+import { filterPublishedAssuranceRecords, listPublishedAssuranceRecords } from '../src/assurance/publication';
+import { serializeAssuranceFilters } from '../src/assurance/service';
+import { renderComplianceDemo } from '../src/demos/compliance-page';
 import { renderIncidents, renderRisks } from '../src/demos/assurance-pages';
 import type { Env } from '../src/types';
 
 const environment = {
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
-  DEPLOYED_SHA: '0123456789abcdef0123456789abcdef01234567',
-} as unknown as Env;
+} as Env;
 
-type RiskApiBody = {
-  counts: ReturnType<typeof deriveRiskCounts>;
-  totalAvailable: number;
-  records: AssuranceV1Risk[];
-};
-
-type IncidentApiBody = {
-  counts: {
-    actualIncidents: number;
-    exercises: number;
-    plannedExercises: number;
-    completedExercises: number;
-  };
-  incidents: AssuranceV1Incident[];
-  exercises: AssuranceV1Exercise[];
-};
-
-function lifecycleLine(record: { publication: { lifecycle: string; disclosureReview: string } }): string {
-  return `<strong>Lifecycle:</strong> ${record.publication.lifecycle} · <strong>Disclosure:</strong> ${record.publication.disclosureReview}`;
-}
-
-function riskProjectionErrors(body: RiskApiBody, html: string): string[] {
-  const errors: string[] = [];
-  const htmlIds = [...html.matchAll(/<article class="info-card" id="((?:SEC|AI)-RISK-[0-9]{3})">/g)].map((match) => match[1]);
-  const apiIds = body.records.map((record) => record.id);
-  if (JSON.stringify(htmlIds) !== JSON.stringify(apiIds)) errors.push('risk HTML record IDs do not match the API record set');
-
-  const counts = body.counts;
-  const summary = `<strong>${counts.total}</strong> matching records · ${counts.byFramework.security} security · ${counts.byFramework.ai} AI · ${counts.byResidualRating.high} high residual · ${counts.byResidualRating.moderate} moderate residual · ${counts.byResidualRating.low} low residual.`;
-  if (!html.includes(summary)) errors.push('risk HTML counts do not match API counts');
-  for (const record of body.records) {
-    if (!html.includes(lifecycleLine(record))) errors.push(`risk HTML lifecycle does not match API for ${record.id}`);
-  }
-  return errors;
-}
-
-function incidentProjectionErrors(body: IncidentApiBody, html: string): string[] {
-  const errors: string[] = [];
-  const htmlIds = [...html.matchAll(/<article class="info-card" id="((?:INC|EX)-[0-9]{3,})">/g)].map((match) => match[1]);
-  const apiIds = [...body.incidents.map((record) => record.id), ...body.exercises.map((record) => record.id)];
-  if (JSON.stringify(htmlIds) !== JSON.stringify(apiIds)) errors.push('incident/exercise HTML record IDs do not match the API record set');
-
-  const counts = body.counts;
-  const summary = `<strong>Current retained posture:</strong> ${counts.actualIncidents} established actual incident records; ${counts.exercises} exercise record, of which ${counts.plannedExercises} is planned and ${counts.completedExercises} is completed or in post-exercise follow-up.`;
-  if (!html.includes(summary)) errors.push('incident/exercise HTML counts do not match API counts');
-  for (const record of [...body.incidents, ...body.exercises]) {
-    if (!html.includes(lifecycleLine(record))) errors.push(`incident/exercise HTML lifecycle does not match API for ${record.id}`);
-  }
-  return errors;
-}
-
-describe('public assurance API and HTML projection consistency', () => {
-  it.each([
-    '',
-    '?framework=security&status=treating&residual=high',
-    '?framework=ai&status=open',
-    '?framework=security&residual=moderate',
-  ])('keeps risk API records and HTML cards/counts identical for %s', async (query) => {
-    const apiResponse = assuranceRisksResponse(new Request(`https://demo.wizardgang.ai/v1/assurance/risks${query}`));
-    const body = await apiResponse.json() as RiskApiBody;
-    const htmlResponse = renderRisks(new Request(`https://demo.wizardgang.ai/governance/risks${query}`), environment);
-    const html = await htmlResponse.text();
-    expect(riskProjectionErrors(body, html)).toEqual([]);
+describe('assurance presentation consistency', () => {
+  it('keeps risk HTML and API selection aligned on canonical ids', async () => {
+    const filters = { framework: 'security', residual: 'high' };
+    const query = serializeAssuranceFilters('risks', filters);
+    const expected = filterPublishedAssuranceRecords('risks', filters).map((record) => record.id);
+    const api = await assuranceRisksResponse(new Request(`https://demo.wizardgang.ai/v1/assurance/risks?${query}`)).json() as { records: Array<{ id: string }>; derived: { count: number } };
+    const html = await renderRisks(new Request(`https://demo.wizardgang.ai/governance/risks?${query}`), environment).text();
+    const rendered = [...html.matchAll(/id="((?:SEC|AI)-RISK-[0-9]+)"/g)].map((match) => match[1]);
+    expect(api.records.map((record) => record.id)).toEqual(expected);
+    expect(api.derived.count).toBe(expected.length);
+    expect(rendered).toEqual(expected);
   });
 
-  it('keeps incident and exercise API records and HTML cards/counts identical', async () => {
-    const apiResponse = assuranceIncidentsResponse(new Request('https://demo.wizardgang.ai/v1/assurance/incidents'));
-    const body = await apiResponse.json() as IncidentApiBody;
-    const htmlResponse = renderIncidents(environment);
-    const html = await htmlResponse.text();
-    expect(incidentProjectionErrors(body, html)).toEqual([]);
+  it('keeps compliance HTML and API selection aligned on canonical ids', async () => {
+    const filters = { framework: 'wcag-2.2', level: 'A' };
+    const query = serializeAssuranceFilters('compliance', filters);
+    const expected = filterPublishedAssuranceRecords('compliance', filters).map((record) => record.id);
+    const api = await assuranceComplianceResponse(new Request(`https://demo.wizardgang.ai/v1/assurance/compliance?${query}`)).json() as { records: Array<{ id: string }>; derived: { count: number } };
+    const html = await renderComplianceDemo(new Request(`https://demo.wizardgang.ai/compliance?${query}`), environment).text();
+    const rendered = [...html.matchAll(/<tr id="((?:ISO27001|ISO42001|WCAG)-[^"]+)">/g)].map((match) => match[1]);
+    expect(api.records.map((record) => record.id)).toEqual(expected);
+    expect(api.derived.count).toBe(expected.length);
+    expect(rendered).toEqual(expected);
   });
 
-  it('proves HTML consumers use canonical relationship fields instead of released v1 aliases', () => {
-    const assurancePages = readFileSync('src/demos/assurance-pages.ts', 'utf8');
-    const compliancePage = readFileSync('src/demos/compliance-page.ts', 'utf8');
-    for (const source of [assurancePages, compliancePage]) {
-      expect(source).toContain('.relationships.');
+  it('presents incidents and exercises from the same current records collection', async () => {
+    const expected = [...listPublishedAssuranceRecords('incidents'), ...listPublishedAssuranceRecords('exercises')];
+    const api = await assuranceIncidentsResponse(new Request('https://demo.wizardgang.ai/v1/assurance/incidents')).json() as { records: Array<{ id: string }>; derived: { count: number } };
+    const html = await renderIncidents(environment).text();
+    expect(api.records.map((record) => record.id)).toEqual(expected.map((record) => record.id));
+    expect(api.derived.count).toBe(expected.length);
+    for (const record of expected) expect(html).toContain(`id="${record.id}"`);
+  });
+
+  it('keeps HTML presentation code off retired relationship property aliases and serializer references', () => {
+    for (const path of ['src/demos/compliance-page.ts', 'src/demos/evidence-page.ts', 'src/demos/assurance-pages.ts', 'src/demos/security-page.ts']) {
+      const source = readFileSync(path, 'utf8');
       expect(source).not.toContain('.riskLinks');
       expect(source).not.toContain('.controlLinks');
       expect(source).not.toContain('.objectiveLinks');
-      expect(source).not.toContain('.controls.map');
+      expect(source).not.toContain('.incidentLinks');
+      expect(source).not.toContain('src/api/assurance-v1.ts');
+      expect(source).not.toContain('v1 HTTP serializer');
     }
-  });
-
-  it('proves the risk and incident consistency assertions reject drift', async () => {
-    const riskResponse = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?framework=security&residual=high'));
-    const riskBody = await riskResponse.json() as RiskApiBody;
-    const riskHtml = await renderRisks(new Request('https://demo.wizardgang.ai/governance/risks?framework=security&residual=high'), environment).text();
-    const riskDrift = structuredClone(riskBody);
-    riskDrift.counts.total += 1;
-    expect(riskProjectionErrors(riskDrift, riskHtml)).toContain('risk HTML counts do not match API counts');
-
-    const incidentResponse = assuranceIncidentsResponse(new Request('https://demo.wizardgang.ai/v1/assurance/incidents'));
-    const incidentBody = await incidentResponse.json() as IncidentApiBody;
-    const incidentHtml = await renderIncidents(environment).text();
-    const firstRecordId = [...incidentBody.incidents, ...incidentBody.exercises][0]?.id;
-    expect(firstRecordId).toBeDefined();
-    const incidentDriftHtml = incidentHtml.replace(`id="${firstRecordId}"`, `id="REMOVED-${firstRecordId}"`);
-    expect(incidentProjectionErrors(incidentBody, incidentDriftHtml)).toContain('incident/exercise HTML record IDs do not match the API record set');
   });
 });

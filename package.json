@@ -24,6 +24,7 @@
     "validate:assurance-operations": "node scripts/validate-assurance-operations.mjs",
     "monitor:assurance": "node scripts/validate-assurance-operations.mjs --live",
     "snapshot:assurance": "node scripts/generate-assurance-snapshot.mjs",
+    "assurance:interchange": "node scripts/assurance-interchange.mjs",
     "validate:assurance": "node scripts/validate-assurance-registry.mjs && npm run validate:assurance-runtime-binding && node scripts/validate-assurance.mjs && node scripts/validate-advisories.mjs && node scripts/validate-assurance-projection.mjs && node scripts/validate-iso27001-compliance.mjs && node scripts/validate-iso42001-compliance.mjs && node scripts/validate-wcag-compliance.mjs && npm run validate:assurance-publication && node scripts/validate-assurance-lifecycle.mjs && node scripts/validate-assurance-integrity.mjs && npm run validate:assurance-summaries && npm run validate:assurance-operations",
     "validate:assurance-publication": "node scripts/validate-assurance-publication.mjs",
     "validate:migrations": "wrangler d1 migrations apply demo-blob --local",

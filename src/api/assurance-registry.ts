@@ -1,75 +1,33 @@
-import { assuranceRegistryMetadata } from '../assurance/model';
-import {
-  assuranceCollectionApiRoute,
-  assuranceRegistryApiRoute,
-} from '../assurance/routes';
-import { assuranceDeploymentContext } from '../assurance/presentation';
-import {
-  listPublishedAssuranceRecords,
-  presentedPublishedEvidenceRecords,
-  publishedAssuranceSummary,
-} from '../assurance/publication';
-import {
-  serializeAssuranceV1Advisory,
-  serializeAssuranceV1Claim,
-  serializeAssuranceV1Evidence,
-  serializeAssuranceV1Exercise,
-  serializeAssuranceV1Incident,
-  serializeAssuranceV1Risk,
-} from './assurance-v1';
+import { assuranceRegistry } from '../assurance/model';
+import { assuranceRouteDeclarations } from '../assurance/routes';
+import { reportingContractPath } from '../reporting/registry';
+import { genericAssuranceResponse } from './assurance';
 import {
   assuranceJsonResponse,
-  paginateAssuranceRecords,
   prepareAssuranceRequest,
 } from './assurance-contract';
-import { selectFocusedAssuranceRecords } from './assurance-filtering';
 import type { Env } from '../types';
 
-export function assuranceResponse(request: Request, env: Env): Response {
+export function assuranceResponse(request: Request, _env: Env): Response {
   const context = prepareAssuranceRequest(request);
   if (context instanceof Response) return context;
 
-  const evidence = presentedPublishedEvidenceRecords(env, new URL(request.url).origin).map(serializeAssuranceV1Evidence);
+  const collections = assuranceRouteDeclarations()
+    .filter((declaration) => Boolean(declaration.routes.api))
+    .map((declaration) => ({
+      dataset: declaration.owner,
+      route: declaration.routes.api!,
+      ...(declaration.routes.apiRecord ? { recordRoute: declaration.routes.apiRecord } : {}),
+    }));
+
   return assuranceJsonResponse(request, {
-    ...assuranceRegistryMetadata,
     schemaVersion: context.schemaVersion,
-    counts: publishedAssuranceSummary.counts,
-    riskCounts: publishedAssuranceSummary.riskCounts,
-    incidentCounts: publishedAssuranceSummary.incidentCounts,
-    incidentQualifications: publishedAssuranceSummary.incidentQualifications,
-    advisoryQualification: publishedAssuranceSummary.advisoryQualification,
-    claims: listPublishedAssuranceRecords('claims').map(serializeAssuranceV1Claim),
-    risks: listPublishedAssuranceRecords('risks').map(serializeAssuranceV1Risk),
-    incidents: listPublishedAssuranceRecords('incidents').map(serializeAssuranceV1Incident),
-    exercises: listPublishedAssuranceRecords('exercises').map(serializeAssuranceV1Exercise),
-    advisories: listPublishedAssuranceRecords('advisories').map(serializeAssuranceV1Advisory),
-    evidence,
-    publication: publishedAssuranceSummary.publication,
-    deployment: assuranceDeploymentContext(env),
-    links: {
-      self: new URL(assuranceRegistryApiRoute(), request.url).toString(),
-      evidence: new URL(assuranceCollectionApiRoute('evidence'), request.url).toString(),
-    },
+    contract: reportingContractPath,
+    registry: assuranceRegistry,
+    collections,
   });
 }
 
-export function assuranceEvidenceResponse(request: Request, env: Env): Response {
-  const context = prepareAssuranceRequest(request);
-  if (context instanceof Response) return context;
-
-  const sourceRecords = presentedPublishedEvidenceRecords(env, new URL(request.url).origin);
-  const selection = selectFocusedAssuranceRecords(request, context.url, ['evidence'], sourceRecords);
-  if (selection instanceof Response) return selection;
-  const page = paginateAssuranceRecords(request, context.url, selection.records);
-  if (page instanceof Response) return page;
-
-  return assuranceJsonResponse(request, {
-    schemaVersion: context.schemaVersion,
-    dataset: 'evidence',
-    qualification: publishedAssuranceSummary.qualification,
-    deployment: assuranceDeploymentContext(env),
-    count: selection.records.length,
-    records: page.records.map(serializeAssuranceV1Evidence),
-    ...(page.pagination ? { pagination: page.pagination } : {}),
-  });
+export function assuranceEvidenceResponse(request: Request, _env: Env): Response {
+  return genericAssuranceResponse(request, 'evidence');
 }

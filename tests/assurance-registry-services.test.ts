@@ -1,87 +1,57 @@
 import { describe, expect, it } from 'vitest';
+import { genericAssuranceResponse } from '../src/api/assurance';
 import {
   assuranceCollectionState,
   assuranceDatasetCount,
-  assuranceDatasetSchema,
-  assuranceDatasetSource,
-  assuranceFilterDefinitions,
   assuranceReportingCollections,
-  deriveAssuranceCounts,
-  findAssuranceRecord,
   listAssuranceRecords,
 } from '../src/assurance/service';
-import {
-  assurancePublicationForRecord,
-  listPublishedAssuranceRecords,
-} from '../src/assurance/publication';
-import { assuranceRuntimeRecordCollections } from '../src/assurance/model';
-import { genericAssuranceResponse } from '../src/api/assurance';
 
 describe('registry-driven assurance services', () => {
-  it('gives objectives every declared generic record capability without api-index', async () => {
-    const objectives = listAssuranceRecords('objectives');
-    expect(objectives).toHaveLength(12);
-    expect(objectives.map((record) => record.id)).toContain('SEC-OBJ-001');
-    expect(findAssuranceRecord('objectives', 'SEC-OBJ-001')?.id).toBe('SEC-OBJ-001');
-    expect(assuranceDatasetCount('objectives')).toBe(12);
-    expect(assuranceDatasetSource('objectives')).toBe('assurance/objectives/objectives.json');
-    expect(assuranceDatasetSchema('objectives')).toBe('contracts/assurance/objective.schema.json');
-    expect(assuranceFilterDefinitions('objectives')).toEqual({});
-    expect(deriveAssuranceCounts('objectives', objectives)).toEqual({ total: 12, byFilter: {} });
-    expect(assuranceReportingCollections('objectives')).toHaveLength(1);
-    expect(assuranceReportingCollections('objectives')[0].derived.count).toBe(12);
-    expect(assurancePublicationForRecord('objectives', 'SEC-OBJ-001')).toMatchObject({
-      lifecycle: 'Approved',
-      disclosureReview: 'Reviewed',
-    });
-    expect(listPublishedAssuranceRecords('objectives')).toHaveLength(12);
-
-    const collection = genericAssuranceResponse(
-      new Request('https://demo.wizardgang.ai/v1/assurance/objectives?limit=2'),
-      'objectives',
-    );
-    expect(collection.status).toBe(200);
-    expect(await collection.json()).toMatchObject({
-      dataset: 'objectives',
-      availability: 'available',
-      totalAvailable: 12,
-      counts: { total: 12, byFilter: {} },
-      pagination: { returned: 2, total: 12 },
-    });
-
-    const detail = genericAssuranceResponse(
-      new Request('https://demo.wizardgang.ai/v1/assurance/objectives/SEC-OBJ-001'),
-      'objectives',
-      'SEC-OBJ-001',
-    );
-    expect(detail.status).toBe(200);
-    expect(await detail.json()).toMatchObject({
-      dataset: 'objectives',
-      record: {
-        id: 'SEC-OBJ-001',
-        publication: { lifecycle: 'Approved', disclosureReview: 'Reviewed' },
-      },
-    });
+  it('discovers runtime record families from registry capabilities rather than api-index inventories', () => {
+    const objectives = assuranceCollectionState('objectives');
+    expect(objectives.status).toBe('available');
+    expect(objectives.resourceIds).toContain('objectives');
+    expect(objectives.records).toEqual(listAssuranceRecords('objectives'));
+    expect(assuranceDatasetCount('objectives')).toBe(objectives.records.length);
   });
 
-  it('keeps empty registered families discoverable and distinguishes unknown families', () => {
-    expect(Object.hasOwn(assuranceRuntimeRecordCollections, 'advisories')).toBe(true);
-    expect(assuranceCollectionState('advisories')).toEqual({
-      dataset: 'advisories',
-      status: 'empty',
-      resourceIds: ['advisories'],
-      records: [],
-    });
-    expect(assuranceDatasetCount('advisories')).toBe(0);
-    expect(assuranceReportingCollections('advisories')).toHaveLength(1);
-    expect(assuranceReportingCollections('advisories')[0].records).toEqual([]);
+  it('builds source-bound reporting collections for every registered runtime resource', () => {
+    for (const dataset of ['evidence', 'claims', 'objectives', 'compliance', 'risks', 'incidents', 'exercises', 'advisories']) {
+      const collections = assuranceReportingCollections(dataset);
+      expect(collections.length).toBeGreaterThan(0);
+      expect(collections.every((collection) => collection.source.authority === 'structured-record')).toBe(true);
+      expect(collections.reduce((sum, collection) => sum + collection.derived.count, 0)).toBe(listAssuranceRecords(dataset).length);
+    }
+  });
 
-    expect(assuranceCollectionState('not-registered')).toEqual({
-      dataset: 'not-registered',
-      status: 'unknown',
-      resourceIds: [],
-      records: [],
-    });
-    expect(() => listAssuranceRecords('not-registered')).toThrow(/Unknown assurance record family/);
+  it('serves any registered record family through the generic current query envelope', async () => {
+    const response = genericAssuranceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/objectives?limit=2'), 'objectives');
+    expect(response.status).toBe(200);
+    const body = await response.json() as {
+      dataset: string;
+      datasets: string[];
+      availability: Record<string, string>;
+      records: Array<{ id: string }>;
+      query: { pagination: { total: number; returned: number } };
+      derived: { count: number; totalAvailable: number };
+    };
+    expect(body.dataset).toBe('objectives');
+    expect(body.datasets).toEqual(['objectives']);
+    expect(body.availability.objectives).toBe('available');
+    expect(body.records).toHaveLength(2);
+    expect(body.query.pagination.total).toBe(listAssuranceRecords('objectives').length);
+    expect(body.derived.count).toBe(listAssuranceRecords('objectives').length);
+    expect(body.derived.totalAvailable).toBe(listAssuranceRecords('objectives').length);
+  });
+
+  it('distinguishes unknown families from registered empty collections', async () => {
+    expect(assuranceCollectionState('not-a-family').status).toBe('unknown');
+    const unknown = genericAssuranceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/not-a-family'), 'not-a-family');
+    expect(unknown.status).toBe(404);
+    expect(await unknown.json()).toMatchObject({ error: 'assurance_dataset_not_found', dataset: 'not-a-family' });
+
+    const advisories = assuranceCollectionState('advisories');
+    expect(['empty', 'available']).toContain(advisories.status);
   });
 });

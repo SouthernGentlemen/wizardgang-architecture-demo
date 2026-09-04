@@ -85,7 +85,6 @@ for (const requiredFile of [
   'src/lib/crawler-control.ts',
   'src/api/operations.ts',
   'src/api/assurance.ts',
-  'src/api/assurance-v1.ts',
   'src/api/advisories.ts',
   'src/api/assurance-registry.ts',
   'src/assurance/model.ts',
@@ -101,12 +100,14 @@ for (const requiredFile of [
   'src/demos/incidents.ts',
   'src/demos/logs.ts',
   'src/lib/logs.ts',
+  'scripts/assurance-interchange.mjs',
   'scripts/validate-advisories.mjs',
   'scripts/validate-assurance-projection.mjs',
   'assurance/risks/risks.json',
   'assurance/incidents/incidents.json',
   'assurance/incidents/exercises.json',
   'assurance/advisories/advisories.json',
+  'contracts/assurance/reporting.schema.json',
   'contracts/assurance/risk.schema.json',
   'contracts/assurance/incident.schema.json',
   'contracts/assurance/exercise.schema.json',
@@ -152,9 +153,11 @@ const assuranceModel = fs.readFileSync(path.join(root, 'src/assurance/model.ts')
 for (const legacyToken of ['v1BoundaryAdapters', 'frameworkReferences:', 'riskLinks:', 'objectiveLinks:', 'incidentLinks:']) {
   if (assuranceModel.includes(legacyToken)) failures.push(`canonical assurance model still contains v1 compatibility token: ${legacyToken}`);
 }
-const assuranceSerializer = fs.readFileSync(path.join(root, 'src/api/assurance-v1.ts'), 'utf8');
-for (const requiredToken of ['serializeAssuranceV1Claim', 'serializeAssuranceV1Risk', 'serializeAssuranceV1Compliance']) {
-  if (!assuranceSerializer.includes(requiredToken)) failures.push(`v1 assurance serializer missing boundary adapter: ${requiredToken}`);
+const retiredSerializerPath = path.join(root, 'src/api/assurance-v1.ts');
+if (fs.existsSync(retiredSerializerPath)) failures.push('retired v1 assurance serializer must not remain in the current contract');
+for (const apiFile of ['src/api/assurance.ts', 'src/api/advisories.ts', 'src/api/assurance-registry.ts']) {
+  const apiSource = fs.readFileSync(path.join(root, apiFile), 'utf8');
+  if (apiSource.includes('serializeAssuranceV1')) failures.push(`${apiFile} still references the retired v1 assurance serializer`);
 }
 
 const adminUi = fs.readFileSync(path.join(root, 'src/ui/admin.ts'), 'utf8');

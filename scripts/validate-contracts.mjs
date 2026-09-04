@@ -2,13 +2,24 @@ import fs from 'node:fs';
 
 const failures = [];
 const swagger = JSON.parse(fs.readFileSync('contracts/openapi/swagger.json', 'utf8'));
-const router = fs.readFileSync('src/router.ts', 'utf8');
+const routeManifest = JSON.parse(fs.readFileSync('docs/route-manifest.json', 'utf8'));
+const routed = new Map(routeManifest.map((entry) => [entry.route, entry]));
 
 if (swagger.swagger !== '2.0') failures.push('REST contract must remain Swagger 2.0');
 if (swagger.basePath !== '/v1') failures.push('REST basePath must remain /v1');
-for (const path of Object.keys(swagger.paths || {})) {
-  const prefix = `/v1${path}`.replace('/{key}', '/');
-  if (!router.includes(prefix)) failures.push(`contract path is not routed: ${prefix}`);
+for (const [path, operations] of Object.entries(swagger.paths || {})) {
+  const route = `${swagger.basePath}${path}`.replace(/\/+/g, '/');
+  const entry = routed.get(route);
+  if (!entry) {
+    failures.push(`contract path is not routed: ${route}`);
+    continue;
+  }
+  const routedMethods = new Set(String(entry.method || 'GET').split(',').map((method) => method.trim().toUpperCase()));
+  for (const method of Object.keys(operations || {})) {
+    const normalizedMethod = method.toUpperCase();
+    if (!['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'].includes(normalizedMethod)) continue;
+    if (!routedMethods.has(normalizedMethod)) failures.push(`contract method is not routed: ${normalizedMethod} ${route}`);
+  }
 }
 if (!swagger.securityDefinitions?.BearerToken) failures.push('BearerToken security definition is missing');
 

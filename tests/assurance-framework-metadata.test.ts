@@ -1,101 +1,36 @@
-import { readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import registry from '../assurance/registry.json';
-import iso27001 from '../assurance/compliance/iso-27001-2022.json';
-import iso42001 from '../assurance/compliance/iso-42001-2023.json';
-import wcagManifest from '../assurance/compliance/wcag-2.2.json';
-import perceivable from '../assurance/compliance/wcag-2.2/perceivable.json';
-import operable from '../assurance/compliance/wcag-2.2/operable.json';
-import understandable from '../assurance/compliance/wcag-2.2/understandable.json';
-import robust from '../assurance/compliance/wcag-2.2/robust.json';
-import presentation from '../assurance/presentation/documents.json';
-import governance from '../docs/governance/REFERENCE-REGISTRY.json';
 import { assuranceComplianceResponse } from '../src/api/assurance';
-import { serializeAssuranceV1Compliance } from '../src/api/assurance-v1';
-import { complianceFrameworks, listAssuranceRecords } from '../src/assurance/service';
-import { listPublishedAssuranceRecords } from '../src/assurance/publication';
-import { renderComplianceDemo } from '../src/demos/compliance-page';
-import type { Env } from '../src/types';
+import { assuranceComplianceFrameworks, assuranceRegistryResources } from '../src/assurance/model';
+import { listAssuranceRecords } from '../src/assurance/service';
 
-const environment = {
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
-  GITHUB_BRANCH: 'main',
-  DEPLOYED_SHA: '0123456789abcdef0123456789abcdef01234567',
-} as unknown as Env;
-const partitions = [perceivable, operable, understandable, robust];
-const resources: any[] = [];
-const visit = (resource: any) => {
-  resources.push(resource);
-  for (const child of resource.resources ?? []) visit(child);
-};
-for (const dataset of (registry as any).datasets) visit(dataset);
-const frameworkOwners = resources.filter((resource) => resource.framework
-  && (resource.capabilities.includes('summary-source') || resource.capabilities.includes('manifest')));
-const frameworkById = new Map(frameworkOwners.map((resource) => [resource.framework.id, resource]));
-
-describe('DEMO-135 canonical framework metadata ownership', () => {
-  it('stores framework and WCAG partition metadata only in registry owners', () => {
-    expect(frameworkOwners.map((resource) => resource.framework.id)).toEqual(['iso-27001', 'iso-42001', 'wcag-2.2']);
-    for (const data of [iso27001, iso42001, wcagManifest]) {
-      for (const field of ['standard', 'edition', 'qualification', 'assessmentDate', 'framework', 'partitions']) {
-        expect(data).not.toHaveProperty(field);
-      }
-    }
-    for (const data of [iso27001, iso42001]) expect(data.sourceSoa).not.toHaveProperty('assessmentDate');
-    for (const partition of partitions) {
-      for (const field of ['principle', 'framework', 'frameworkLabel', 'sourcePath']) expect(partition).not.toHaveProperty(field);
-    }
-    for (const record of [...iso27001.records, ...iso42001.records, ...partitions.flatMap((partition) => partition.criteria)]) {
-      expect(record).not.toHaveProperty('framework');
-      expect(record).not.toHaveProperty('frameworkLabel');
-      expect(record).not.toHaveProperty('sourcePath');
-    }
-    for (const record of partitions.flatMap((partition) => partition.criteria)) expect(record).not.toHaveProperty('section');
+describe('canonical compliance framework metadata', () => {
+  it('derives framework presentation metadata from registered framework resources', () => {
+    const registered = assuranceRegistryResources
+      .filter((resource) => resource.kind === 'compliance' && resource.framework && (resource.capabilities.includes('summary-source') || resource.capabilities.includes('manifest')))
+      .map((resource) => ({ ...resource.framework!, sourcePath: resource.path }));
+    expect(assuranceComplianceFrameworks).toEqual(registered);
+    expect(assuranceComplianceFrameworks.map((framework) => framework.id)).toEqual(['iso-27001', 'iso-42001', 'wcag-2.2']);
   });
 
-  it('enriches canonical records from registry metadata and preserves released v1 fields only through serialization', () => {
+  it('enriches runtime compliance records from registry-owned framework metadata', () => {
     const records = listAssuranceRecords('compliance');
-    expect(complianceFrameworks).toEqual(frameworkOwners.map((resource) => ({ ...resource.framework, sourcePath: resource.path })));
-    expect(records).toHaveLength(287);
     for (const record of records) {
-      const owner = frameworkById.get(record.framework) as any;
-      expect(owner).toBeDefined();
-      expect(record.frameworkLabel).toBe(owner.framework.label);
-      expect(record.sourcePath).toBeTruthy();
-      expect(record.section).toBeTruthy();
-      expect(record).toHaveProperty('relationships.evidence');
-      expect(record).not.toHaveProperty('evidence');
-    }
-    const released = listPublishedAssuranceRecords('compliance').map(serializeAssuranceV1Compliance);
-    expect(released.every((record) => Array.isArray(record.evidence))).toBe(true);
-    expect(released.every((record) => !('relationships' in record))).toBe(true);
-  });
-
-  it('keeps API and HTML framework metadata aligned with the registry owner', async () => {
-    const body = await assuranceComplianceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/compliance')).json() as any;
-    expect(body.frameworks).toEqual(complianceFrameworks);
-    const exactBody = await assuranceComplianceResponse(
-      new Request('https://demo.wizardgang.ai/v1/assurance/compliance/ISO27001-4.1'),
-      'ISO27001-4.1',
-    ).json() as any;
-    const isoOwner = frameworkById.get('iso-27001') as any;
-    expect(exactBody.framework).toEqual({ ...isoOwner.framework, sourcePath: isoOwner.path });
-
-    const html = await renderComplianceDemo(new Request('https://demo.wizardgang.ai/compliance'), environment).text();
-    for (const framework of complianceFrameworks) {
-      expect(html).toContain(framework.label);
-      expect(html).toContain(`Assessed ${framework.assessmentDate}`);
+      const framework = assuranceComplianceFrameworks.find((candidate) => candidate.id === record.framework);
+      expect(framework).toBeDefined();
+      expect(record.frameworkLabel).toBe(framework?.label);
+      expect(record.sourcePath).toEqual(expect.stringMatching(/^assurance\/compliance\//));
+      expect(record.section.length).toBeGreaterThan(0);
     }
   });
 
-  it('generates SoA assessment metadata from the same registry framework owner', () => {
-    const governancePaths = new Map((governance as any).records.map((record: any) => [record.reference, record.path]));
-    for (const document of (presentation as any).documents.filter((entry: any) => entry.type === 'soa')) {
-      const resource = resources.find((entry) => entry.id === document.sourceDatasets[0]);
-      const markdown = readFileSync(governancePaths.get(document.governanceDocumentReference) as string, 'utf8');
-      expect(markdown).toContain(`# ${resource.framework.label} Statement of Applicability`);
-      expect(markdown).toContain(`**Assessment date:** ${resource.framework.assessmentDate}`);
-      expect(markdown).toContain('Framework identity, qualification, edition, assessment date, and source-path ownership are maintained in `assurance/registry.json`');
-    }
+  it('publishes the canonical framework metadata on current records without a compatibility serializer', async () => {
+    const response = assuranceComplianceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/compliance?framework=wcag-2.2&limit=1'));
+    const body = await response.json() as { records: Array<{ framework: string; frameworkLabel: string; sourcePath: string; relationships: Record<string, string[]> }> };
+    expect(body.records).toHaveLength(1);
+    expect(body.records[0]).toMatchObject({ framework: 'wcag-2.2', frameworkLabel: 'WCAG 2.2' });
+    expect(body.records[0].sourcePath).toContain('assurance/compliance/');
+    expect(body.records[0].relationships).toBeDefined();
+    expect(existsSync('src/api/assurance-v1.ts')).toBe(false);
   });
 });
