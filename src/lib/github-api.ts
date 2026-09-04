@@ -1,6 +1,8 @@
 import type { Env } from '../types';
+import type { Principal } from './authorization';
 
 type CardStatus = 'available' | 'empty' | 'unavailable';
+type GitHubCredential = 'public' | 'server';
 
 interface EvidenceCard<T> {
   status: CardStatus;
@@ -21,8 +23,19 @@ interface CachedEvidence {
   value: GitHubEvidence;
 }
 
+interface RepositoryProbe {
+  result: GitHubResult<Record<string, unknown>>;
+  credential: GitHubCredential;
+}
+
+export class GitHubEvidenceAccessError extends Error {
+  constructor(readonly status: 401 | 403, readonly code: 'authentication_required' | 'permission_denied') {
+    super(code);
+  }
+}
+
 export interface GitHubEvidence {
-  repository: { fullName: string; url: string; defaultBranch: string | null };
+  repository: { fullName: string; url: string; defaultBranch: string | null; private: boolean };
   generatedAt: string;
   cacheSeconds: number;
   cards: Record<string, EvidenceCard<Record<string, unknown>>>;
@@ -35,6 +48,7 @@ const responseCache = new Map<string, CachedEvidence>();
 const GITHUB_API = 'https://api.github.com';
 const CACHE_SECONDS = 60;
 const REQUEST_TIMEOUT_MS = 4_000;
+const encoder = new TextEncoder();
 
 function repositoryIdentity(env: Env): { fullName: string; url: string } | null {
   try {
@@ -63,7 +77,12 @@ function safeRepoUrl(value: unknown, repositoryUrl: string): string | null {
   }
 }
 
-async function githubJson<T>(path: string, env: Env): Promise<GitHubResult<T>> {
+async function digest(value: string): Promise<string> {
+  const bytes = new Uint8Array(await crypto.subtle.digest('SHA-256', encoder.encode(value)));
+  return [...bytes].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function githubJson<T>(path: string, env: Env, credential: GitHubCredential): Promise<GitHubResult<T>> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
@@ -72,7 +91,11 @@ async function githubJson<T>(path: string, env: Env): Promise<GitHubResult<T>> {
       'user-agent': 'wizardgang-architecture-demo',
       'x-github-api-version': '2022-11-28',
     };
-    if (env.GITHUB_READ_TOKEN) headers.authorization = `Bearer ${env.GITHUB_READ_TOKEN}`;
+    if (credential === 'server') {
+      const token = env.GITHUB_READ_TOKEN?.trim();
+      if (!token) return { ok: false, status: 503, error: 'GitHub evidence unavailable' };
+      headers.authorization = `Bearer ${token}`;
+    }
     const response = await fetch(`${GITHUB_API}${path}`, { headers, signal: controller.signal });
     if (!response.ok) return { ok: false, status: response.status, error: `GitHub returned HTTP ${response.status}` };
     return { ok: true, value: await response.json() as T, status: response.status };
@@ -81,6 +104,14 @@ async function githubJson<T>(path: string, env: Env): Promise<GitHubResult<T>> {
   } finally {
     clearTimeout(timer);
   }
+}
+
+async function probeRepository(path: string, env: Env): Promise<RepositoryProbe> {
+  const publicResult = await githubJson<Record<string, unknown>>(path, env, 'public');
+  if (publicResult.ok || ![403, 404].includes(publicResult.status ?? 0) || !env.GITHUB_READ_TOKEN?.trim()) {
+    return { result: publicResult, credential: 'public' };
+  }
+  return { result: await githubJson<Record<string, unknown>>(path, env, 'server'), credential: 'server' };
 }
 
 function card<T extends Record<string, unknown>>(result: GitHubResult<unknown>, items: T[], checkedAt: string): EvidenceCard<T> {
@@ -96,26 +127,62 @@ function object(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
 }
 
-export async function collectGitHubEvidence(env: Env): Promise<GitHubEvidence> {
+function requirePrivateAccess(principal: Principal | undefined): void {
+  if (principal?.permissions.includes('reporting:private')) return;
+  if (principal && principal.authentication !== 'anonymous') throw new GitHubEvidenceAccessError(403, 'permission_denied');
+  throw new GitHubEvidenceAccessError(401, 'authentication_required');
+}
+
+async function cacheContext(
+  credential: GitHubCredential,
+  env: Env,
+  principal: Principal | undefined,
+  privateRepository: boolean,
+): Promise<string> {
+  const credentialKey = credential === 'public'
+    ? 'public'
+    : `server-${(await digest(env.GITHUB_READ_TOKEN?.trim() || '')).slice(0, 24)}`;
+  if (!privateRepository) return credentialKey;
+  const principalKey = await digest([
+    principal?.subject ?? 'anonymous',
+    principal?.authentication ?? 'anonymous',
+    ...(principal?.permissions ?? []).slice().sort(),
+    principal?.expiresAt ?? '',
+  ].join('|'));
+  return `${credentialKey}|principal-${principalKey.slice(0, 24)}`;
+}
+
+export async function collectGitHubEvidence(env: Env, principal?: Principal): Promise<GitHubEvidence> {
   const identity = repositoryIdentity(env);
   if (!identity) throw new Error('Configured GitHub repository is invalid.');
-  const cached = responseCache.get(identity.fullName);
-  if (cached && cached.expiresAt > Date.now()) return cached.value;
 
   const encodedRepo = identity.fullName.split('/').map(encodeURIComponent).join('/');
-  const repoResult = await githubJson<Record<string, unknown>>(`/repos/${encodedRepo}`, env);
-  const repo = object(repoResult.value);
+  const probe = await probeRepository(`/repos/${encodedRepo}`, env);
+  if (!probe.result.ok) throw new Error('Configured GitHub repository could not be queried.');
+  const repo = object(probe.result.value);
+  const privateRepository = repo.private === true;
+  if (privateRepository) requirePrivateAccess(principal);
+
   const defaultBranch = bounded(repo.default_branch, 120) ?? env.GITHUB_BRANCH ?? null;
-  const branchPath = defaultBranch ? encodeURIComponent(defaultBranch) : encodeURIComponent(env.GITHUB_BRANCH || 'main');
+  const branchPath = encodeURIComponent(defaultBranch || env.GITHUB_BRANCH || 'main');
+  const revisionResult = await githubJson<Record<string, unknown>>(`/repos/${encodedRepo}/branches/${branchPath}`, env, probe.credential);
+  const revision = bounded(object(object(revisionResult.value).commit).sha, 40);
+  const context = await cacheContext(probe.credential, env, principal, privateRepository);
+  const cacheKey = `${identity.fullName}|${privateRepository ? 'private' : 'public'}|${context}|${revision ?? 'unresolved'}`;
+  if (revision) {
+    const cached = responseCache.get(cacheKey);
+    if (cached && cached.expiresAt > Date.now()) return cached.value;
+  }
+
   const [branchesResult, commitsResult, openPrsResult, closedPrsResult, runsResult, tagsResult, releasesResult, protectionResult] = await Promise.all([
-    githubJson<unknown[]>(`/repos/${encodedRepo}/branches?per_page=10`, env),
-    githubJson<unknown[]>(`/repos/${encodedRepo}/commits?sha=${branchPath}&per_page=5`, env),
-    githubJson<unknown[]>(`/repos/${encodedRepo}/pulls?state=open&sort=updated&direction=desc&per_page=1`, env),
-    githubJson<unknown[]>(`/repos/${encodedRepo}/pulls?state=closed&sort=updated&direction=desc&per_page=10`, env),
-    githubJson<{ workflow_runs?: unknown[] }>(`/repos/${encodedRepo}/actions/runs?per_page=5`, env),
-    githubJson<unknown[]>(`/repos/${encodedRepo}/tags?per_page=5`, env),
-    githubJson<unknown[]>(`/repos/${encodedRepo}/releases?per_page=1`, env),
-    githubJson<Record<string, unknown>>(`/repos/${encodedRepo}/branches/${branchPath}/protection`, env),
+    githubJson<unknown[]>(`/repos/${encodedRepo}/branches?per_page=10`, env, probe.credential),
+    githubJson<unknown[]>(`/repos/${encodedRepo}/commits?sha=${branchPath}&per_page=5`, env, probe.credential),
+    githubJson<unknown[]>(`/repos/${encodedRepo}/pulls?state=open&sort=updated&direction=desc&per_page=1`, env, probe.credential),
+    githubJson<unknown[]>(`/repos/${encodedRepo}/pulls?state=closed&sort=updated&direction=desc&per_page=10`, env, probe.credential),
+    githubJson<{ workflow_runs?: unknown[] }>(`/repos/${encodedRepo}/actions/runs?per_page=5`, env, probe.credential),
+    githubJson<unknown[]>(`/repos/${encodedRepo}/tags?per_page=5`, env, probe.credential),
+    githubJson<unknown[]>(`/repos/${encodedRepo}/releases?per_page=1`, env, probe.credential),
+    githubJson<Record<string, unknown>>(`/repos/${encodedRepo}/branches/${branchPath}/protection`, env, probe.credential),
   ]);
   const checkedAt = new Date().toISOString();
 
@@ -171,17 +238,16 @@ export async function collectGitHubEvidence(env: Env): Promise<GitHubEvidence> {
     release: card(releasesResult, releases, checkedAt),
   };
   const partialFailures = Object.entries(cards).filter(([, value]) => value.status === 'unavailable').map(([name]) => name);
-  if (!repoResult.ok) partialFailures.unshift('repository');
   const value: GitHubEvidence = {
-    repository: { fullName: identity.fullName, url: identity.url, defaultBranch },
+    repository: { fullName: identity.fullName, url: identity.url, defaultBranch, private: privateRepository },
     generatedAt: checkedAt,
-    cacheSeconds: CACHE_SECONDS,
+    cacheSeconds: privateRepository ? 0 : CACHE_SECONDS,
     cards,
     controls,
     pipeline: ['Commit', 'Pull request', 'Typecheck', 'Unit tests', 'WCAG scan', 'Build', 'Annotated tag', 'Deploy', 'Health check', 'GitHub Release'],
     partialFailures: [...new Set(partialFailures)],
   };
-  responseCache.set(identity.fullName, { expiresAt: Date.now() + CACHE_SECONDS * 1_000, value });
+  if (revision) responseCache.set(cacheKey, { expiresAt: Date.now() + CACHE_SECONDS * 1_000, value });
   return value;
 }
 
