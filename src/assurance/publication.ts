@@ -1,4 +1,3 @@
-import lifecycleData from '../../assurance/lifecycle/records.json';
 import {
   advisoryQualification,
   assuranceQualification,
@@ -10,7 +9,14 @@ import {
   type AssuranceFilterValues,
   type AssuranceRecordMap,
 } from './service';
-import { primaryAssuranceResource, type AssuranceDataset } from './model';
+import {
+  assuranceRegistry,
+  primaryAssuranceResource,
+  runtimeAssuranceDataset,
+  type AssuranceDataset,
+  type AssuranceRegistryResource,
+} from './model';
+import { requireAssuranceCapabilityResource } from './record-discovery.js';
 import { presentEvidence, type PresentedEvidence } from './presentation';
 import {
   assuranceObservedState,
@@ -23,7 +29,11 @@ import {
 } from './publication-policy.js';
 import type { Env } from '../types';
 
-const lifecycleRegistry = lifecycleData as unknown as AssuranceLifecycleRegistry;
+const lifecycleResource = requireAssuranceCapabilityResource(
+  assuranceRegistry,
+  'lifecycle',
+) as AssuranceRegistryResource;
+const lifecycleRegistry = runtimeAssuranceDataset<AssuranceLifecycleRegistry>(lifecycleResource);
 
 export type PublishedAssuranceRecord<T> = T & {
   publication: AssuranceLifecyclePresentation;

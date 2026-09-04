@@ -7,8 +7,10 @@ import {
   assuranceRecordResources,
   assuranceRecordsForKind,
   assuranceRecordsFromDocument,
+  assuranceResourcesWithCapability,
   assuranceValueAtPath,
   flattenAssuranceResources,
+  requireAssuranceCapabilityResource,
 } from '../../src/assurance/record-discovery.js';
 
 export const ASSURANCE_REGISTRY_PATH = 'assurance/registry.json';
@@ -20,7 +22,9 @@ export {
   assuranceRecordResources,
   assuranceRecordsForKind,
   assuranceRecordsFromDocument,
+  assuranceResourcesWithCapability,
   assuranceValueAtPath,
+  requireAssuranceCapabilityResource,
 };
 
 export function readJsonFile(root, relative) {
@@ -73,7 +77,7 @@ export function registryResourcesByKind(registry, kind) {
 }
 
 export function registryResourcesWithCapability(registry, capability) {
-  return flattenAssuranceRegistry(registry).filter((resource) => resource.capabilities?.includes(capability));
+  return assuranceResourcesWithCapability(registry, capability);
 }
 
 export function registryResourceById(registry, id) {

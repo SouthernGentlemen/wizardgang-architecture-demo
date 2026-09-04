@@ -10,6 +10,7 @@ import {
   isControlledRelativePath,
   loadAssuranceRegistry,
   readJsonFile,
+  requireAssuranceCapabilityResource,
 } from './lib/assurance-registry.mjs';
 import {
   validateAssuranceSchemaValue,
@@ -106,8 +107,18 @@ if (registry) {
     if (!primaryKinds.has(kind)) fail(`${ASSURANCE_REGISTRY_PATH}: missing released v1 primary dataset family ${kind}`);
   }
 
-  const lifecycle = resources.filter((resource) => resource.capabilities?.includes('lifecycle'));
-  if (lifecycle.length !== 1) fail(`${ASSURANCE_REGISTRY_PATH}: expected exactly one lifecycle resource; found ${lifecycle.length}`);
+  try {
+    const lifecycleResource = requireAssuranceCapabilityResource(registry, 'lifecycle');
+    if (!lifecycleResource.capabilities?.includes('runtime')) {
+      fail(`${ASSURANCE_REGISTRY_PATH}: ${lifecycleResource.id} lifecycle capability owner must declare runtime capability for shared Worker/Node loading`);
+    }
+    if (lifecycleResource.capabilities?.includes('records')) {
+      fail(`${ASSURANCE_REGISTRY_PATH}: ${lifecycleResource.id} lifecycle control-plane resource must not declare records capability`);
+    }
+  } catch (error) {
+    fail(`${ASSURANCE_REGISTRY_PATH}: ${error instanceof Error ? error.message : String(error)}`);
+  }
+
   const monitoring = resources.filter((resource) => resource.capabilities?.includes('monitoring'));
   if (monitoring.length !== 1) fail(`${ASSURANCE_REGISTRY_PATH}: expected exactly one monitoring resource; found ${monitoring.length}`);
 

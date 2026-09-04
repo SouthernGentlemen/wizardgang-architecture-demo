@@ -14,6 +14,14 @@ The shared runtime derives, in registry order:
 
 Framework-specific canonical derivations remain domain-owned. In particular, compliance records retain their normalized framework metadata, source path, section derivation, and deterministic framework/reference ordering before entering the common indexes.
 
+## Lifecycle control plane
+
+Lifecycle metadata is a registry-owned control-plane resource, not a canonical assurance record collection. Exactly one registered resource must own the `lifecycle` capability, and that owner must also declare `runtime` so the generated Worker binding imports the registry-declared path and schema. Worker publication and Node publication validation resolve the same capability owner; neither owns a filesystem path independently.
+
+The `records` capability remains the only admission contract for canonical assurance record discovery, IDs, relationships, counts, and release snapshot record totals. The lifecycle resource therefore remains outside those collections even though it is Worker-bound. Moving lifecycle data requires moving the file and updating its registry declaration, then regenerating the runtime binding; no runtime source import changes are permitted.
+
+Missing or multiple lifecycle capability owners fail binding generation and registry validation. The lifecycle control-plane owner is also rejected if it declares `records`, preventing lifecycle metadata from silently becoming assurance records.
+
 ## Schema-derived runtime metadata
 
 Structural assurance validation and runtime metadata generation share the same JSON Schema reference semantics. Supported local references and repository-relative external references are resolved from each registered root schema through its reachable dependency graph. Assurance schema dependencies remain confined to `contracts/assurance/`, use JSON Schema draft 2020-12, and retain the existing rejection of absolute references, repository escapes, unsupported keywords, cycles, and unresolved references.
@@ -31,5 +39,7 @@ A runtime dataset may therefore be available to shared listing, exact-ID, count,
 ## Validation expectations
 
 Tests should exercise the shared runtime services, not only the record-discovery helper or generated import text. Coverage includes registered objectives and a generated synthetic family with an additional partition to prove that collection aggregation, canonical-ID lookup, counts, and relationship traversal remain registry-driven.
+
+Lifecycle coverage additionally relocates the lifecycle file through the registry, regenerates the Worker binding, validates Node publication selection, bundles the Worker, and proves lifecycle control-plane metadata remains excluded from release snapshot record totals. Missing and ambiguous lifecycle capability ownership are negative cases.
 
 Schema-reference coverage additionally exercises inline/local/external filter vocabulary forms, existing shared relationship references, deterministic missing-reference failures, generated dependency-digest drift, and filtered API/HTML behavior.

@@ -24,10 +24,12 @@ import dataset10 from '../../../assurance/incidents/exercises.json';
 import schema10 from '../../../contracts/assurance/exercise.schema.json';
 import dataset11 from '../../../assurance/incidents/incidents.json';
 import schema11 from '../../../contracts/assurance/incident.schema.json';
-import dataset12 from '../../../assurance/objectives/objectives.json';
-import schema12 from '../../../contracts/assurance/objective.schema.json';
-import dataset13 from '../../../assurance/risks/risks.json';
-import schema13 from '../../../contracts/assurance/risk.schema.json';
+import dataset12 from '../../../assurance/lifecycle/records.json';
+import schema12 from '../../../contracts/assurance/lifecycle.schema.json';
+import dataset13 from '../../../assurance/objectives/objectives.json';
+import schema13 from '../../../contracts/assurance/objective.schema.json';
+import dataset14 from '../../../assurance/risks/risks.json';
+import schema14 from '../../../contracts/assurance/risk.schema.json';
 
 export const assuranceRegistryData = registryData;
 
@@ -44,8 +46,9 @@ export const assuranceRuntimeDatasets: Record<string, unknown> = {
   "evidence": dataset9,
   "exercises": dataset10,
   "incidents": dataset11,
-  "objectives": dataset12,
-  "risks": dataset13,
+  "lifecycle.records": dataset12,
+  "objectives": dataset13,
+  "risks": dataset14,
 };
 
 export const assuranceRuntimeSchemas: Record<string, unknown> = {
@@ -61,8 +64,9 @@ export const assuranceRuntimeSchemas: Record<string, unknown> = {
   "evidence": schema9,
   "exercises": schema10,
   "incidents": schema11,
-  "objectives": schema12,
-  "risks": schema13,
+  "lifecycle.records": schema12,
+  "objectives": schema13,
+  "risks": schema14,
 };
 
 export const assuranceRuntimeFilterVocabularies: Readonly<Record<string, Readonly<Record<string, readonly string[]>>>> =
