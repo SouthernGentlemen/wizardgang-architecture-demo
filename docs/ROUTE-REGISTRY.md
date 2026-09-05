@@ -1,6 +1,6 @@
 # Declarative route registry
 
-DEMO-166 introduced the typed route declaration and matching foundation. DEMO-167 adopted it for global administration, recovery, operations, protocol, and asset routes. DEMO-168 extends active adoption to assurance HTML and API routes by compiling `assurance/registry.json` route ownership into declarative route modules. `src/router.ts` remains the single top-level Worker dispatcher; domain routing is delegated to registered modules rather than duplicated in central path or owner switches.
+DEMO-166 introduced the typed route declaration and matching foundation. DEMO-167 adopted it for global administration, recovery, operations, protocol, and asset routes. DEMO-168 extended active adoption to assurance HTML and API routes by compiling `assurance/registry.json` route ownership into declarative route modules. DEMO-169 registers the platform laboratory pages and APIs as capability-owned declarations. `src/router.ts` remains the single top-level Worker dispatcher; domain routing is delegated to registered modules rather than duplicated in central path or owner switches.
 
 ## Declaration contract
 
@@ -58,6 +58,16 @@ The declarative matcher supplies exact-before-parameter precedence. Assurance ex
 
 Assurance request/response semantics remain owned by the existing assurance HTTP contract. Focused APIs are thin adapters over the shared query handler, and successful/error responses continue to preserve disclosure selection, filters, pagination, exact record lookup, CORS, ETags, and cache headers. The `/security` recovery availability exception is now local route metadata on the advisory presentation capability rather than a path exception in `src/router.ts`.
 
+## Active platform laboratory modules
+
+`src/routing/platform-laboratory-routes.ts` composes capability modules from `src/platform/route-capabilities/` for the edge inspection, Worker computation, Durable Object counter, D1, R2, and accessibility laboratories. The top-level router makes one generic platform-laboratory dispatch call and contains no individual path literals for these migrated pages or APIs.
+
+Each platform laboratory declaration carries the normal route contract plus explicit request-limit and storage-boundary metadata. Request limits mirror the existing handler controls: Worker compute remains bounded to a 4 KiB JSON request and 100 numeric inputs, D1 JSON handlers retain the shared 16 KiB body bound, record values remain capped at 4 KiB, and R2 file uploads retain the 5 MiB object, 10-object, and 20 MiB per-session limits.
+
+Storage ownership remains intentionally non-interchangeable. D1 owns relational users, tasks, records, and R2 metadata; R2 owns object bytes; Durable Object storage owns coordinated counter state; Worker computation remains stateless, with D1 used only for separate audit/log evidence. The accessibility and edge inspection routes do not introduce persistent application state.
+
+The production router composes the current capability list, while `createPlatformLaboratoryRouteRouter` accepts any compatible capability set. Tests add a synthetic laboratory declaration through that composition seam without modifying `src/router.ts`, and unknown laboratory paths remain ordinary 404s.
+
 ## Incremental adoption boundary
 
-Non-operational, non-assurance demo routes remain on the existing imperative sections of `src/router.ts` until their capability migrations. `docs/ROUTES.md` and `docs/route-manifest.json` remain the canonical public URL contract. DEMO-168 changes assurance route ownership and dispatch representation, not released paths, representations, aliases, storage, release state, or deployment behavior.
+Remaining non-operational, non-assurance, non-platform-laboratory demo routes stay on the existing imperative sections of `src/router.ts` until their capability migrations. `docs/ROUTES.md` and `docs/route-manifest.json` remain the canonical public URL contract. DEMO-169 changes platform laboratory route ownership and dispatch representation without changing released URLs, storage primitives, release state, or deployment behavior.

@@ -77,6 +77,8 @@ for (const requiredFile of [
   'src/routing/registry.ts',
   'src/routing/operational-routes.ts',
   'src/routing/assurance-routes.ts',
+  'src/routing/platform-laboratory-routes.ts',
+  'src/platform/route-capability.ts',
   'src/api/assurance.ts',
   'src/api/advisories.ts',
   'src/api/assurance-registry.ts',
@@ -139,7 +141,7 @@ function walk(dir) {
 walk(root);
 
 const router = fs.readFileSync(path.join(root, 'src/router.ts'), 'utf8');
-for (const token of ['routeOperationalRequest', 'routeAssuranceRequest', 'offlineApiResponse', 'wantsHtml']) {
+for (const token of ['routeOperationalRequest', 'routeAssuranceRequest', 'routePlatformLaboratoryRequest', 'offlineApiResponse', 'wantsHtml']) {
   if (!router.includes(token)) failures.push(`router missing routing invariant: ${token}`);
 }
 for (const retiredToken of [
@@ -151,6 +153,32 @@ for (const retiredToken of [
   'matchAssuranceRoute',
 ]) {
   if (router.includes(retiredToken)) failures.push(`router still contains retired routing heuristic or dispatch inventory: ${retiredToken}`);
+}
+
+for (const migratedPlatformPath of [
+  '/edge',
+  '/workers',
+  '/durable-objects',
+  '/d1',
+  '/r2',
+  '/accessibility',
+  '/__api/edge/inspect',
+  '/__api/workers/compute',
+  '/__api/durable/counter',
+  '/__api/d1/users',
+  '/__api/d1/tasks',
+  '/__api/d1/reset',
+  '/v1/demo-records',
+  '/__api/api-sandbox/reset',
+  '/__api/r2/demo',
+  '/__api/r2/object',
+  '/__api/r2/files',
+  '/__api/r2/reset',
+  '/__api/accessibility/lab',
+]) {
+  if (router.includes(`'${migratedPlatformPath}'`) || router.includes(`"${migratedPlatformPath}"`)) {
+    failures.push(`router still contains migrated platform path: ${migratedPlatformPath}`);
+  }
 }
 
 const operationalRoutes = fs.readFileSync(path.join(root, 'src/routing/operational-routes.ts'), 'utf8');
@@ -175,6 +203,17 @@ for (const token of [
   'contractValidateRouteContract',
 ]) {
   if (!assuranceRoutes.includes(token)) failures.push(`assurance route module missing registry invariant: ${token}`);
+}
+
+const platformRoutes = fs.readFileSync(path.join(root, 'src/routing/platform-laboratory-routes.ts'), 'utf8');
+for (const token of [
+  'createPlatformLaboratoryRouteRouter',
+  'platformLaboratoryRouteRegistry',
+  'routePlatformLaboratoryRequest',
+  'defineRouteModule',
+  'platformLaboratoryCapabilities',
+]) {
+  if (!platformRoutes.includes(token)) failures.push(`platform laboratory route module missing registry invariant: ${token}`);
 }
 
 const assuranceModel = fs.readFileSync(path.join(root, 'src/assurance/model.ts'), 'utf8');
@@ -210,4 +249,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Scaffold validation passed: ${manifest.length} route entries, operations/admin/assurance registry invariants present, no PDFs.`);
+console.log(`Scaffold validation passed: ${manifest.length} route entries, operations/admin/assurance/platform registry invariants present, no PDFs.`);
