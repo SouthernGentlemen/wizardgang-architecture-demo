@@ -29,6 +29,7 @@ Evidence status uses **Met / Partial / Gap / N/A** and does not represent certif
 
 ## 3. Current Register
 
+<!-- GENERATED:governance-records:obligations-register:start -->
 | ID | Obligation area | Source type | Applicability | Current evidence status | Owner | Current basis / remaining work |
 |---|---|---|---|---|---|---|
 | OBL-001 | Repository MIT License | License | Applicable | Met | Repository / Management-System Owner | Root `LICENSE` exists and identifies MIT terms. Preserve copyright + permission notice in copies/substantial portions as required. |
@@ -61,6 +62,7 @@ Evidence status uses **Met / Partial / Gap / N/A** and does not represent certif
 | OBL-028 | Provider/subprocessor/data-transfer requirements | Contractual/privacy | Conditional | Gap | Data / Supplier Owner | Determine if personal/confidential data is intentionally transferred to an external provider in a way that creates contractual/privacy requirements. Current public MCP boundary is limited to public demo records. |
 | OBL-029 | Government/law-enforcement request handling | Legal | Conditional | Gap | Management-System Owner | No current request is claimed. If received, verify authority/scope, preserve required evidence, protect unnecessary data, and seek legal review as appropriate. |
 | OBL-030 | Insurance notification/cooperation duties | Contractual | Conditional | N/A | Management-System Owner | No insurance-policy obligation is asserted in current scope. Reassess if a relevant policy covers the system/business. |
+<!-- GENERATED:governance-records:obligations-register:end -->
 
 ## 4. Immediate Action Items
 

@@ -27,6 +27,7 @@ A status in this register is management-system evidence status, not a profession
 
 ## 3. Initial Competence Baseline
 
+<!-- GENERATED:governance-records:competence-baseline:start -->
 | ID | Role / activity | Required competence | Current evidence | Current status | Required next evidence |
 |---|---|---|---|---|---|
 | COMP-001 | Management-System Owner | Scope, policy, risk, objectives, SoA, controlled documented information, management review, corrective action | Controlled management-system artifacts `DEMO-070` onward demonstrate active implementation of the defined governance model | Partial | Complete the initial competence/self-assessment review and retain rationale for areas requiring specialist or independent support |
@@ -38,11 +39,13 @@ A status in this register is management-system evidence status, not a profession
 | COMP-007 | Supplier Owner | Provider responsibility boundary, permissions, data/AI exposure, continuity, review triggers | Supplier-management procedure and initial supplier register | Partial | Complete initial periodic supplier review for GitHub, Cloudflare, Codex, and Claude by the scheduled review date |
 | COMP-008 | Incident / Corrective-Action Owner | Severity, evidence preservation, containment, investigation, communication, corrective action, effectiveness | Incident and Clause 10 procedures | Planned | Complete `EX-001` incident exercise and retain lessons/actions |
 | COMP-009 | Internal Auditor / Independent Reviewer | Audit method, sampling, evidence evaluation, findings, impartiality | Audit program defines requirements and self-assessment distinction | Restricted | Formal internal-audit claims require a reviewer with sufficient objectivity from the audited work; self-review remains self-assessment |
+<!-- GENERATED:governance-records:competence-baseline:end -->
 
 ## 4. Initial Awareness Baseline
 
 The initial awareness cycle is **Planned**. Approval of this register does not mark it complete.
 
+<!-- GENERATED:governance-records:awareness-baseline:start -->
 | ID | Awareness topic | Audience | Required evidence | Target date | Status |
 |---|---|---|---|---|---|
 | AW-001 | Information Security Policy and secret/public-evidence boundaries | All people performing material in-scope work | Dated acknowledgement, briefing, or attributable review record | 2026-12-02 | Planned |
@@ -52,6 +55,7 @@ The initial awareness cycle is **Planned**. Approval of this register does not m
 | AW-005 | Incident, vulnerability, AI concern, and sensitive-evidence reporting routes | All material roles | Exercise/briefing acknowledgement; can be combined with `EX-001` | 2026-12-02 | Planned |
 | AW-006 | WCAG evidence expectations and no-certification/no-overclaim posture | Accessibility, change, evidence, management roles | Dated review/briefing record | 2026-12-02 | Planned |
 | AW-007 | Recovery limitations: source reconstruction is not D1/R2 restore assurance | Operations, release, security, management roles | Dated review or `RT-001` exercise participation | 2026-12-02 | Planned |
+<!-- GENERATED:governance-records:awareness-baseline:end -->
 
 ## 5. Evidence Rules
 

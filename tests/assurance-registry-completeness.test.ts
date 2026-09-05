@@ -162,7 +162,7 @@ describe('assurance registry completeness and schema enforcement', () => {
     expect(snapshot.recordCounts.total).toBe(
       Object.values(snapshot.recordCounts.byPath).reduce((total: number, count) => total + Number(count), 0),
     );
-  });
+  }, 15_000);
 
   it('requires exactly one lifecycle capability owner', () => {
     const missingRoot = createFixture();

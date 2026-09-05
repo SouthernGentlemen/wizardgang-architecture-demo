@@ -314,7 +314,7 @@ The current pull-request/main CI baseline runs:
 11. D1 migrations against a clean local database;
 12. high-severity dependency audit;
 13. Worker dry-run build;
-14. commit-bound validation evidence generation/upload;
+14. provider-derived validation report generation and durable Git retention;
 15. pull-request title/change-ID validation for pull-request events.
 
 A required check that is missing, cancelled, or has not posted is not treated as passed.
@@ -434,7 +434,7 @@ Security engineering evidence may include:
 - code diff;
 - test source;
 - GitHub Actions result;
-- validation evidence artifact;
+- retained validation report and its provider-native workflow relationships;
 - dependency audit result;
 - release/tag;
 - deployment/version result;

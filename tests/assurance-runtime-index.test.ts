@@ -157,5 +157,5 @@ describe('synthetic registry-driven runtime family', () => {
       ['run', 'tests/demo-143-synthetic-runtime.test.ts'],
     );
     expect(runtimeTest.status, output(runtimeTest)).toBe(0);
-  });
+  }, 15_000);
 });

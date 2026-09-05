@@ -415,7 +415,7 @@ Evidence may include:
 
 - controlled source files and Git history;
 - PR review/CI results;
-- validation evidence artifact;
+- provider-derived retained validation report;
 - tagged release and deployment history;
 - `/version` and `/health` verification;
 - D1 audit events;

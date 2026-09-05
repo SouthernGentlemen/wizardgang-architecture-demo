@@ -229,6 +229,7 @@ Crawler transitions use the same safe evidence boundaries with event type `chatg
 | Concern | Primary source |
 |---|---|
 | Reporting authority and shared observation contracts | `assurance/registry.json`, `contracts/assurance/reporting.schema.json`, `docs/REPORTING.md` |
+| Retained CI / assurance-monitor reports | `.github/workflows/report-publisher.yml`, `scripts/generate-retained-report.mjs`, `contracts/assurance/report.schema.json`, `assurance-reports` branch |
 | Dashboard metadata | `src/demos/dashboard.ts` |
 | Uptime metadata | `src/demos/uptime.ts` |
 | Health metadata | `src/demos/health.ts` |

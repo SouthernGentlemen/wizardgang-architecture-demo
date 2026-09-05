@@ -28,6 +28,7 @@ Status is an evidence posture, not a certification score.
 
 ## 3. Current Inventory Summary
 
+<!-- GENERATED:governance-records:data-inventory:start -->
 | ID | Store / surface | Classification | Public exposure | MCP exposure | Retention / deletion posture | Status |
 |---|---|---|---|---|---|---|
 | DATA-001 | `demo_records` | PUBLIC / PUBLIC-DEMO | Yes, through approved app/API surfaces | **Yes — approved bounded source** | Persistent until controlled update/delete; provenance/freshness improvement pending | Partial |
@@ -48,6 +49,7 @@ Status is an evidence posture, not a certification score.
 | DATA-016 | R2 objects + `r2_object_metadata` | Varies by object set; PUBLIC-DEMO / VISITOR-SCOPED / CONFIDENTIAL possible | Only when explicitly routed | No by default | Object expiry/backup/deletion depends on set; restore/deletion evidence incomplete | Partial |
 | DATA-017 | Git source, governance, tags, releases | PUBLIC + AUDIT-EVIDENCE | Yes by design | Not an MCP data source | Retained through Git/release history; superseded records remain reconstructable | Met |
 | DATA-018 | Managed secret values | SECRET | No | No | Managed outside source/runtime public data; rotation/re-provisioning by authorized operator | Partial |
+<!-- GENERATED:governance-records:data-inventory:end -->
 
 ## 4. DATA-001 — Public Demo Records
 
@@ -525,6 +527,7 @@ Any proposal to expose an additional data record class or store to MCP is a mate
 
 The following work remains required to strengthen current data-control status:
 
+<!-- GENERATED:governance-records:data-retention-worklist:start -->
 | Work item | Affected data | Expected evidence | Current state |
 |---|---|---|---|
 | Define/verify expired session cleanup | DATA-007–010 | Implementation + test showing expired session and dependent records handled as designed | Planned |
@@ -537,6 +540,7 @@ The following work remains required to strengthen current data-control status:
 | Add MCP sensitive-field exclusion tests | DATA-001 | Automated evaluation/contract tests | Planned |
 | Add provenance/freshness coverage | DATA-001 | Field/namespace documentation or metadata + evaluation | Planned |
 | Test deletion from public/API/MCP views | Applicable records | Test proving deleted/expired data is not returned through active surfaces | Planned |
+<!-- GENERATED:governance-records:data-retention-worklist:end -->
 
 No item above is marked complete by approval of this register.
 

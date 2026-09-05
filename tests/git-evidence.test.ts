@@ -44,6 +44,66 @@ function requestKey(input: RequestInfo | URL): string {
 afterEach(() => vi.restoreAllMocks());
 
 describe('registered GitHub reporting provider', () => {
+  it('discovers canonical retained reports from their Git branch and preserves report relationships', async () => {
+    const report = {
+      schemaVersion: 1,
+      id: 'RPT-CI-7001-A2',
+      source: 'github.retained-reports',
+      status: 'failed',
+      observedAt: '2026-09-04T18:00:00Z',
+      sourceRevision: { commit: '1'.repeat(40), branch: 'main' },
+      relationships: [{
+        relation: 'producedBy',
+        from: { source: 'github.retained-reports', native: `${repo}|github.retained-reports|RPT-CI-7001-A2` },
+        to: { source: 'github.workflow-runs', native: `${repo}|github.workflow-runs|7001`, revision: '2' },
+      }],
+    };
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
+      const key = requestKey(input);
+      if (key === repoApi) return response(fixture.repository);
+      if (key === `${repoApi}/branches/assurance-reports`) return response({ commit: { sha: '2'.repeat(40) } });
+      if (key === `${repoApi}/git/trees/${'2'.repeat(40)}?recursive=1`) return response({
+        truncated: false,
+        tree: [{ path: 'reports/2026/09/ci-7001-attempt-2.json', type: 'blob', sha: '3'.repeat(40) }],
+      });
+      if (key === `${repoApi}/git/blobs/${'3'.repeat(40)}`) return response({ encoding: 'base64', content: btoa(JSON.stringify(report)) });
+      return response({ error: 'missing fixture', key }, 500);
+    });
+    const outcome = await queryGitHubReporting(environment(), publicPrincipal, { sourceIds: ['github.retained-reports'] });
+    expect(outcome.result.availability['github.retained-reports']).toBe('available');
+    expect(outcome.result.records[0]).toMatchObject({
+      source: 'github.retained-reports',
+      nativeId: 'RPT-CI-7001-A2',
+      status: 'failed',
+      revision: '3'.repeat(40),
+    });
+    expect(outcome.result.records[0].relationships[0].to.native).toBe(`${repo}|github.workflow-runs|7001`);
+    expect(outcome.result.records[0].native.sourceRevision).toEqual({ commit: '1'.repeat(40), branch: 'main' });
+  });
+
+  it('distinguishes a missing retained-report source from an available empty source', async () => {
+    let branchExists = false;
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
+      const key = requestKey(input);
+      if (key === repoApi) return response(fixture.repository);
+      if (key === `${repoApi}/branches/assurance-reports`) {
+        return branchExists ? response({ commit: { sha: '4'.repeat(40) } }) : response({ message: 'Not Found' }, 404);
+      }
+      if (key === `${repoApi}/git/trees/${'4'.repeat(40)}?recursive=1`) {
+        return response({ truncated: false, tree: [{ path: 'README.md', type: 'blob', sha: '5'.repeat(40) }] });
+      }
+      return response({ error: 'missing fixture', key }, 500);
+    });
+    const missing = await queryGitHubReporting(environment(), publicPrincipal, { sourceIds: ['github.retained-reports'] });
+    expect(missing.result.availability['github.retained-reports']).toBe('unavailable');
+    expect(missing.result.qualifications['github.retained-reports.detail']).toBe('github_retained_report_branch_missing');
+    branchExists = true;
+    const empty = await queryGitHubReporting(environment(), publicPrincipal, { sourceIds: ['github.retained-reports'] });
+    expect(empty.result.availability['github.retained-reports']).toBe('available');
+    expect(empty.result.qualifications['github.retained-reports.completeness']).toBe('complete');
+    expect(empty.result.records).toEqual([]);
+  });
+
   it('preserves native identity, repository scope, revision, URL, timestamps, and closed provider state', async () => {
     vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
       const key = requestKey(input);

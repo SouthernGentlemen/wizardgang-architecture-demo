@@ -9,7 +9,7 @@ export interface ReportingSource {
   id: string;
   provider: ReportingProvider;
   authority: ReportingAuthority;
-  scope: { repository?: string; resource: string };
+  scope: { repository?: string; branch?: string; resource: string };
   nativeIdentity: readonly string[];
   revisionIdentity?: readonly string[];
   observationIdentity?: readonly string[];

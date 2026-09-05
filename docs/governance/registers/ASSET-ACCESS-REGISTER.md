@@ -29,6 +29,7 @@ Status is an evidence posture, not a certification score.
 
 ## 3. Asset Inventory Summary
 
+<!-- GENERATED:governance-records:asset-inventory:start -->
 | ID | Asset / class | Category | Primary owner | Principal access / exposure | Status |
 |---|---|---|---|---|---|
 | AST-001 | GitHub repository/source | Source & delivery | Change / Release Authority | Public read; authenticated controlled write | Partial |
@@ -56,6 +57,7 @@ Status is an evidence posture, not a certification score.
 | AST-023 | npm/open-source dependency set + lockfile | Supplier / software | Technical / Security Owner | Public dependency metadata; controlled update/CI audit | Partial |
 | AST-024 | Developer/admin endpoint(s) capable of privileged operations | Administrative endpoint | Management-System / Security Owner | Restricted to authorized operator; evidence not publicly inventoried | Gap |
 | AST-025 | External identity provider configuration | Conditional supplier/identity | Security / Technical Owner | Not active unless provider-specific configuration approved | N/A / Conditional |
+<!-- GENERATED:governance-records:asset-inventory:end -->
 
 ## 4. Asset Notes
 
@@ -177,6 +179,7 @@ These are the only approved AI/MCP connection families.
 
 ## 5. Access-Class Inventory
 
+<!-- GENERATED:governance-records:access-classes:start -->
 | ID | Access class | Asset boundary | Minimum intended authority | Public record posture | Review state |
 |---|---|---|---|---|---|
 | ACC-001 | Public source/site read | GitHub/site/docs | Read only | Public by design | Met |
@@ -199,6 +202,7 @@ These are the only approved AI/MCP connection families.
 | ACC-018 | D1/R2 provider administration | Cloudflare data resources | Privileged data/resource operations | Account details private | Partial |
 | ACC-019 | Management-system approval authority | Governance records | Policy/scope/risk/SoA/review approvals according to roles | Functional authority public | Partial |
 | ACC-020 | Developer/admin endpoint privileged session | GitHub/Cloudflare/admin | Whatever authorized privilege the operator invokes | Device/account specifics private | Gap |
+<!-- GENERATED:governance-records:access-classes:end -->
 
 ## 6. First Access Review Plan
 
@@ -238,9 +242,11 @@ When a review occurs, append or link a sanitized result using:
 
 No completed consolidated `AR-###` access review is claimed yet.
 
+<!-- GENERATED:governance-records:access-reviews:start -->
 | ID | Scope | State | Due | Notes |
 |---|---|---|---|---|
 | AR-001 | Initial privileged/provider/source/admin access review | Planned | 2026-12-02 | Must review GitHub, Cloudflare, app admin/API, managed credentials, data administration, governance approval authority, endpoint privilege, and current MCP/Codex/Claude authority. |
+<!-- GENERATED:governance-records:access-reviews:end -->
 
 `AR-001` being Planned is not evidence that access has been reviewed.
 
