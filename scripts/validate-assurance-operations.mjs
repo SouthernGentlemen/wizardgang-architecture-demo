@@ -38,7 +38,7 @@ const baseUrl = String(config.baseUrl ?? '').replace(/\/$/, '');
 const policyUrl = `${baseUrl}${reporting.policyRoute ?? ''}`;
 const securityTxtUrl = `${baseUrl}${reporting.securityTxtRoute ?? ''}`;
 const securityDoc = read('SECURITY.md');
-const router = read('src/router.ts');
+const operationalRoutes = read('src/routing/operational-routes.ts');
 
 for (const [label, value] of [
   ['policy URL', policyUrl],
@@ -54,8 +54,8 @@ if (!policyRoute || policyRouteMatch?.kind !== 'html') {
   errors.push(`configured security policy route is not a canonical assurance HTML route: ${policyRoute}`);
 }
 const securityTxtRoute = reporting.securityTxtRoute;
-if (!securityTxtRoute || !router.includes(`'${securityTxtRoute}'`)) {
-  errors.push(`src/router.ts is missing configured reporting route ${securityTxtRoute}`);
+if (!securityTxtRoute || !operationalRoutes.includes(`pattern: '${securityTxtRoute}'`)) {
+  errors.push(`operational route registry is missing configured reporting route ${securityTxtRoute}`);
 }
 
 const expirySource = reporting.expirySource;
