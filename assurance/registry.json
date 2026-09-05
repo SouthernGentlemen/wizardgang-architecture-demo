@@ -186,7 +186,7 @@
       "path": "assurance/evidence/evidence.json", "schema": "contracts/assurance/evidence.schema.json",
       "visibility": "public", "capabilities": ["runtime", "records", "api-index"],
       "recordCollection": { "path": "records", "identity": ["kind", "locator.repositoryPath", "locator.route"] },
-      "routes": { "html": "/evidence", "api": "/v1/assurance/evidence", "aliases": [{ "path": "/traceability", "fragment": "traceability" }] }
+      "routes": { "html": "/evidence", "api": "/v1/assurance/evidence" }
     },
     {
       "id": "claims", "kind": "claims", "role": "dataset",

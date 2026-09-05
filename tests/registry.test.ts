@@ -26,10 +26,9 @@ describe('architecture demo registry', () => {
 
   it('includes the complete operations dashboard route family', () => {
     const routes = new Set(demos.map((demo) => demo.route));
-    for (const route of ['/dashboard', '/dashboard/uptime', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing']) {
-      expect(routes.has(route)).toBe(true);
-    }
-    expect(routes.has('/dashboard/health')).toBe(false);
+    expect([...routes].filter((route) => route.startsWith('/dashboard'))).toEqual([
+      '/dashboard', '/dashboard/uptime', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing',
+    ]);
   });
 
   it('places the canonical compliance, evidence, risk, and incident routes in delivery and governance', () => {
@@ -59,7 +58,7 @@ describe('architecture demo registry', () => {
 
 describe('intentional offline gate', () => {
   it('keeps operations, status, offline, and admin routes reachable', () => {
-    for (const route of ['/dashboard', '/dashboard/uptime', '/dashboard/health', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing', '/health', '/version', '/__api/operations/logs', '/__api/operations/billing', '/offline', '/admin', '/security', '/.well-known/security.txt']) {
+    for (const route of ['/dashboard', '/dashboard/uptime', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing', '/health', '/version', '/__api/operations/logs', '/__api/operations/billing', '/offline', '/admin', '/security', '/.well-known/security.txt']) {
       expect(bypassOfflineGate(route)).toBe(true);
     }
   });
@@ -105,8 +104,5 @@ describe('public sitemap', () => {
       expect(xml, demo.route).toContain(`<loc>https://demo.wizardgang.ai${demo.route}</loc>`);
     }
     expect((xml.match(/<loc>/g) ?? []).length).toBe(demos.length + 1);
-    for (const retired of ['/api/rest', '/identity/oauth', '/git/versioning', '/governance/iso-27001', '/dashboard/health']) {
-      expect(xml).not.toContain(`<loc>https://demo.wizardgang.ai${retired}</loc>`);
-    }
   });
 });

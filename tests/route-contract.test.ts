@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { demos } from '../src/demos/registry';
-import { RETIRED_PAGE_REDIRECTS, routeRequest } from '../src/router';
+import { routeRequest } from '../src/router';
 import type { D1PreparedStatement, Env } from '../src/types';
 
 class ContractStatement implements D1PreparedStatement {
@@ -47,7 +47,6 @@ describe('public link and route contract', () => {
   it('keeps every registered HTML route implemented, sourced, and canonical', async () => {
     const manifest = JSON.parse(readFileSync('docs/route-manifest.json', 'utf8')) as Array<{ route: string; source: string }>;
     for (const demo of demos) {
-      expect(RETIRED_PAGE_REDIRECTS.has(demo.route), `${demo.route} is both canonical and retired`).toBe(false);
       expect(readFileSync(demo.sourcePath, 'utf8').length, `${demo.route} source is empty`).toBeGreaterThan(0);
       expect(manifest.filter((entry) => entry.route === demo.route), `${demo.route} manifest entry`).toHaveLength(1);
       const response = await get(demo.route);
@@ -55,14 +54,13 @@ describe('public link and route contract', () => {
     }
   });
 
-  it('resolves every internal page link and linked fragment without using retired routes', async () => {
+  it('resolves every internal page link and linked fragment', async () => {
     const pages = ['/', ...demos.map((demo) => demo.route)];
     const targets = new Map<string, Set<string>>();
     for (const page of pages) {
       const response = await get(page);
       const html = await response.text();
       for (const link of internalLinks(html, page)) {
-        expect(RETIRED_PAGE_REDIRECTS.has(link.pathname), `${page} links retired route ${link.pathname}`).toBe(false);
         const fragments = targets.get(link.pathname + link.search) ?? new Set<string>();
         if (link.hash) fragments.add(decodeURIComponent(link.hash.slice(1)));
         targets.set(link.pathname + link.search, fragments);
@@ -87,6 +85,5 @@ describe('public link and route contract', () => {
     const locations = [...xml.matchAll(/<loc>https:\/\/demo\.wizardgang\.ai([^<]*)<\/loc>/g)].map((match) => match[1]);
     expect(locations).toEqual(['/', ...demos.map((demo) => demo.route)]);
     expect(new Set(locations).size).toBe(locations.length);
-    for (const retired of RETIRED_PAGE_REDIRECTS.keys()) expect(locations).not.toContain(retired);
   });
 });

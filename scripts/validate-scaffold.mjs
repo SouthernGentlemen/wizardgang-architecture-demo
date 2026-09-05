@@ -1,10 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { loadAssuranceRegistry } from './lib/assurance-registry.mjs';
-import {
-  assuranceRouteAliases,
-  assuranceRouteDeclarations,
-} from '../src/assurance/route-contract.js';
+import { assuranceRouteDeclarations } from '../src/assurance/route-contract.js';
 
 const root = process.cwd();
 const manifestPath = path.join(root, 'docs', 'route-manifest.json');
@@ -42,14 +39,7 @@ const requiredRoutes = [
   ...assuranceRequiredRoutes,
 ];
 
-const retiredRoutes = [
-  '/api/rest', '/api/openapi', '/api/graphql', '/api/webhooks',
-  '/identity/oauth', '/identity/sso',
-  '/git/versioning', '/git/branching', '/git/releases', '/git/actions', '/environments',
-  '/governance/iso-27001', '/governance/iso-42001',
-  '/dashboard/health', '/__api/demo/run', '/__api/demo/events',
-  ...assuranceRouteAliases(assuranceRegistry).map((alias) => alias.path),
-];
+const disallowedManifestRoutes = ['/__api/demo/run', '/__api/demo/events'];
 
 const failures = [];
 if (routes.size !== manifest.length) failures.push('manifest contains duplicate routes');
@@ -61,8 +51,8 @@ if (JSON.stringify(actualGroups) !== JSON.stringify(expectedGroups)) failures.pu
 for (const route of requiredRoutes) {
   if (!routes.has(route)) failures.push(`missing route in manifest: ${route}`);
 }
-for (const route of retiredRoutes) {
-  if (routes.has(route)) failures.push(`retired route remains in manifest: ${route}`);
+for (const route of disallowedManifestRoutes) {
+  if (routes.has(route)) failures.push(`removed route remains in manifest: ${route}`);
 }
 
 for (const entry of manifest) {
@@ -145,7 +135,7 @@ function walk(dir) {
 walk(root);
 
 const router = fs.readFileSync(path.join(root, 'src/router.ts'), 'utf8');
-for (const token of ['/dashboard', '/dashboard/logs', '/__api/operations/logs', '/__api/operations/cloudflare-usage', '/admin', '/offline', '/health', '/version', '/robots.txt', 'routeAssuranceRequest', 'matchAssuranceRoute', 'assuranceRouteAliases', 'offlineApiResponse', 'wantsHtml']) {
+for (const token of ['/dashboard', '/dashboard/logs', '/__api/operations/logs', '/__api/operations/cloudflare-usage', '/admin', '/offline', '/health', '/version', '/robots.txt', 'routeAssuranceRequest', 'matchAssuranceRoute', 'offlineApiResponse', 'wantsHtml']) {
   if (!router.includes(token)) failures.push(`router missing operations/admin invariant: ${token}`);
 }
 

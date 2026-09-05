@@ -67,7 +67,7 @@ Cloudflare usage and returned billing observations are queried from Cloudflare o
 
 ## Health
 
-`/dashboard#health` is the human-readable view. `/health` is the machine-readable endpoint. The retired `/dashboard/health` page permanently redirects to that dashboard card.
+`/dashboard#health` is the human-readable view. `/health` is the machine-readable endpoint.
 
 Health should report separately:
 
