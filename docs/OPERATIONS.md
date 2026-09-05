@@ -18,7 +18,7 @@ This document makes the operational surface a first-class part of the architectu
 /version     machine-readable release/build metadata
 /robots.txt  dynamic ChatGPT crawler policy
 /__api/operations/logs  machine-readable public-safe logs
-/__api/operations/cloudflare-usage  sanitized current Cloudflare usage observation
+/__api/operations/cloudflare-usage  sanitized common-contract Cloudflare observations
 ```
 
 The operational routes remain reachable while ordinary demos are intentionally offline.
@@ -128,9 +128,15 @@ Public log safety is mandatory. Do not log or render passwords, authorization he
 1. Sanitized, current Cloudflare usage observations for the configured Worker, D1 database, R2 bucket, and Durable Objects namespace.
 2. The controlled `normal -> warning -> degraded` application-behavior simulator.
 
-The Worker queries Cloudflare server-side and returns only normalized metrics through `GET /__api/operations/cloudflare-usage`. The browser never receives an API token, account identifier, resource identifier, invoice identifier, account name, customer profile, subscription identifier, or payment data. The historical `cloudflare_usage_snapshots` table remains in immutable migration history, but active runtime code does not read from or write to it and it is not an authoritative provider-state source.
+The Worker queries Cloudflare server-side. Internally, each observation identifies the exact configured account/resource scope, metric, normalized dimensions, unit, observation window, collection time, freshness bound, and Cloudflare dataset/transport provenance. `GET /__api/operations/cloudflare-usage` projects those observations through the common reporting query-result contract using approved public resource aliases. The browser never receives an API token, account identifier, resource identifier, invoice identifier, account name, customer profile, subscription identifier, or payment data.
 
-GraphQL Analytics is labeled **live usage**, never billed cost. When the restricted account billable-usage API returns populated `BilledCost` values, the UI labels the total **billed** and treats it as authoritative usage-based overage. If access or cost fields are unavailable, the UI uses a clearly labeled **estimated** overage from published Workers Paid, D1, R2 Standard, and Durable Objects request rates. That estimate is a derived presentation value, not a native Cloudflare observation. Current storage bytes serve only as a GB-month proxy in that fallback; fixed plan fees and unsupported CPU/duration dimensions are excluded and disclosed. Missing credentials or an unavailable dataset produces an honest setup/partial/unavailable state; illustrative values are never substituted.
+Provider responses are validated before a dataset is marked available. A matched account with a valid empty dataset is legitimate zero activity. A missing account match, malformed payload, unauthorized response, unconfigured resource, rate limit, partial collection, unavailable dataset, or expired observation remains distinguishable and is never converted into a live zero.
+
+GraphQL Analytics is **usage telemetry**, not billing. Account billable usage is a separate account-scoped dataset. When Cloudflare returns populated `BilledCost` values, the cost observation is labeled **billed**, retains the provider billing period and its own collection/freshness time, and is never attributed to an individual Worker, D1 database, R2 bucket, or Durable Objects namespace. If Cloudflare billing is unavailable, authoritative cost is unavailable: there is no local pricing/rate fallback. A still-current derived billing cache may be reused only for the same account and billing period, and its original observation time is preserved rather than advanced with newer telemetry.
+
+Transient runtime caches are non-authoritative and are keyed by the exact account/resource source identity plus observation context. Both newly collected and reused observations are evaluated by the shared assurance observation-window evaluator. The machine endpoint sends `Cache-Control: no-store` so a shared HTTP cache cannot replay one runtime source scope as another.
+
+The historical `cloudflare_usage_snapshots` table was a redundant local provider-state mirror. Active runtime code already stopped reading and writing it; migration `0012_retire_cloudflare_usage_snapshots.sql` removes that retired table/index. Raw operational observations remain authoritative in Cloudflare. Retained assessment reports may live in GitHub with source references under the common reporting contract.
 
 The common reporting source and observation ownership contract is defined in `docs/REPORTING.md` and `contracts/assurance/reporting.schema.json`. Cloudflare aggregate observation identity is derived from resource, metric, normalized dimensions, and the observation window.
 
@@ -145,9 +151,9 @@ CLOUDFLARE_R2_BUCKET
 CLOUDFLARE_DO_NAMESPACE
 ```
 
-The account and resource identifiers are environment-owned inputs even though the API response never displays them. Store `CLOUDFLARE_API_TOKEN` as an encrypted Worker secret with `wrangler secret put CLOUDFLARE_API_TOKEN` (or the Cloudflare dashboard), never as a plaintext Wrangler variable. Use a dedicated read-only token rather than the deployment token; the deploy workflow supplies only the non-secret resource identifiers.
+The account and resource identifiers are environment-owned inputs even though the public API response never displays them. Store `CLOUDFLARE_API_TOKEN` as an encrypted Worker secret with `wrangler secret put CLOUDFLARE_API_TOKEN` (or the Cloudflare dashboard), never as a plaintext Wrangler variable. Use a dedicated read-only token rather than the deployment token; the deploy workflow supplies only the non-secret resource identifiers.
 
-Use `usage_snapshots` to demonstrate:
+Use `usage_snapshots` only for the synthetic graceful-degradation demonstration:
 
 ```text
 normal -> warning -> degraded
@@ -155,13 +161,13 @@ normal -> warning -> degraded
 
 Suggested default demonstration policy:
 
-- **Normal:** estimated spend < 70% of synthetic monthly budget.
+- **Normal:** synthetic scenario spend < 70% of synthetic monthly budget.
 - **Warning:** 70% to < 90%.
 - **Degraded:** >= 90%.
 
-The live controlled scenario endpoint is `/__api/operations/billing`. In degraded state it pauses the optional stateless Worker compute action with a structured response while status, documentation, logs, admin, and health remain available. Selecting a scenario never writes Cloudflare account configuration or changes real billing thresholds.
+This simulator is not authoritative Cloudflare billing and does not derive its state from the provider observation contract. The live controlled scenario endpoint is `/__api/operations/billing`. In degraded state it pauses the optional stateless Worker compute action with a structured response while status, documentation, logs, admin, and health remain available. Selecting a scenario never writes Cloudflare account configuration or changes real billing thresholds.
 
-The UI should show which optional behaviors would be reduced or disabled as cost rises, while keeping critical status, admin, and health routes available. The policy is a demonstration of graceful degradation, not a real billing-control integration unless explicitly wired later.
+The UI should show which optional behaviors would be reduced or disabled as synthetic scenario cost rises, while keeping critical status, admin, and health routes available. The policy is a demonstration of graceful degradation, not a real billing-control integration unless explicitly wired later.
 
 ## Admin control
 
@@ -237,16 +243,16 @@ Crawler transitions use the same safe evidence boundaries with event type `chatg
 | Log viewer | `src/demos/logs.ts` |
 | Log persistence / redaction | `src/lib/logs.ts` |
 | Billing metadata | `src/demos/billing.ts` |
-| Cloudflare usage collection and normalization | `src/lib/cloudflare-usage.ts` |
+| Cloudflare usage collection, validation, observation projection, and derived caches | `src/lib/cloudflare-usage.ts` |
 | Scheduled health collection | `src/index.ts`, `wrangler.jsonc` |
-| Machine health/version | `src/api/operations.ts` |
+| Machine health/version/Cloudflare query-result projection | `src/api/operations.ts` |
 | Admin UI/offline page | `src/ui/admin.ts` |
 | Admin authentication | `src/lib/admin-auth.ts` |
 | Online/offline state | `src/lib/demo-control.ts` |
 | ChatGPT crawler state, robots policy, and request classification | `src/lib/crawler-control.ts` |
 | Shared event audit | `src/lib/audit.ts` |
 | Operations schema | `migrations/0002_operations_dashboard.sql` |
-| Retired Cloudflare snapshot migration history | `migrations/0011_cloudflare_usage.sql` |
+| Retired Cloudflare snapshot migration history | `migrations/0011_cloudflare_usage.sql`, `migrations/0012_retire_cloudflare_usage_snapshots.sql` |
 | Application log schema | `migrations/0004_application_logs.sql` |
 | Control schema | `migrations/0003_demo_control.sql` |
 | Crawler-control schema | `migrations/0009_crawler_control.sql` |

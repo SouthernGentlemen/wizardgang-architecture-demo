@@ -231,11 +231,23 @@
         "end": { "type": "string", "format": "date-time" }
       }
     },
+    "observationProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "transport", "endpoint", "dataset"],
+      "properties": {
+        "provider": { "enum": ["github", "cloudflare"] },
+        "transport": { "enum": ["graphql", "rest"] },
+        "endpoint": { "type": "string", "minLength": 1 },
+        "dataset": { "type": "string", "minLength": 1 }
+      }
+    },
     "observation": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["identity", "source", "resource", "metric", "dimensions", "window", "observedAt", "availability", "value"],
+      "required": ["id", "identity", "source", "resource", "metric", "dimensions", "unit", "window", "observedAt", "validUntil", "provenance", "availability", "value"],
       "properties": {
+        "id": { "type": "string", "minLength": 1 },
         "identity": { "$ref": "#/$defs/identity" },
         "source": { "type": "string", "minLength": 1 },
         "resource": { "type": "string", "minLength": 1 },
@@ -244,8 +256,11 @@
           "type": "object",
           "additionalProperties": { "type": ["string", "number", "boolean", "null"] }
         },
+        "unit": { "type": "string", "minLength": 1 },
         "window": { "$ref": "#/$defs/observationWindow" },
         "observedAt": { "type": "string", "format": "date-time" },
+        "validUntil": { "type": "string", "format": "date-time" },
+        "provenance": { "$ref": "#/$defs/observationProvenance" },
         "availability": { "enum": ["available", "partial", "unavailable", "rate-limited", "expired"] },
         "value": {}
       }

@@ -34,19 +34,29 @@ export interface ReportingRelationship {
 
 export interface ReportingObservationWindow { start: string; end: string }
 
-export interface ReportingObservation<T = unknown> {
+export interface ReportingObservationProvenance {
+  provider: ReportingProvider;
+  transport: 'graphql' | 'rest';
+  endpoint: string;
+  dataset: string;
+}
+
+export interface ReportingRecord { id: string }
+
+export interface ReportingObservation<T = unknown> extends ReportingRecord {
   identity: ReportingIdentity;
   source: string;
   resource: string;
   metric: string;
   dimensions: Readonly<Record<string, ReportingScalar>>;
+  unit: string;
   window: ReportingObservationWindow;
   observedAt: string;
+  validUntil: string;
+  provenance: ReportingObservationProvenance;
   availability: ReportingAvailability;
   value: T;
 }
-
-export interface ReportingRecord { id: string }
 
 export interface ReportingCollectionResult<T extends ReportingRecord> {
   source: ReportingSource;
@@ -135,8 +145,11 @@ export function createReportingObservation<T>(input: {
   resource: string;
   metric: string;
   dimensions?: Readonly<Record<string, ReportingScalar>>;
+  unit: string;
   window: ReportingObservationWindow;
   observedAt: string;
+  validUntil: string;
+  provenance: ReportingObservationProvenance;
   availability: ReportingAvailability;
   value: T;
 }): ReportingObservation<T> {
@@ -144,13 +157,17 @@ export function createReportingObservation<T>(input: {
   const dimensions = input.dimensions ?? {};
   const observation = reportingObservationIdentity(input.resource, input.metric, dimensions, input.window);
   return {
+    id: observation,
     identity: { source: input.source.id, native: input.resource, observation },
     source: input.source.id,
     resource: input.resource,
     metric: input.metric,
     dimensions,
+    unit: input.unit,
     window: input.window,
     observedAt: input.observedAt,
+    validUntil: input.validUntil,
+    provenance: input.provenance,
     availability: input.availability,
     value: input.value,
   };

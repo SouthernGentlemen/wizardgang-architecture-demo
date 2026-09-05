@@ -49,6 +49,57 @@ function env(): Env {
   };
 }
 
+function cloudflareEnv(account = 'account-tag', worker = 'worker-name'): Env {
+  return {
+    ...env(),
+    CLOUDFLARE_ACCOUNT_ID: account,
+    CLOUDFLARE_API_TOKEN: 'read-only-token',
+    CLOUDFLARE_WORKER_NAME: worker,
+    CLOUDFLARE_D1_DATABASE_ID: 'database-id',
+    CLOUDFLARE_R2_BUCKET: 'bucket-name',
+    CLOUDFLARE_DO_NAMESPACE: 'namespace-id',
+  };
+}
+
+function providerAccount(query: string, zero = false): Record<string, unknown> {
+  if (query.includes('DashboardWorkers')) return zero
+    ? { totals: [], daily: [] }
+    : { totals: [{ sum: { requests: 100, errors: 2, subrequests: 8 }, quantiles: { cpuTimeP50: 1500, cpuTimeP99: 5500 } }], daily: [{ sum: { requests: 100 }, dimensions: { date: '2026-09-02' } }] };
+  if (query.includes('DashboardD1')) return zero
+    ? { analytics: [], storage: [] }
+    : { analytics: [{ sum: { rowsRead: 200, rowsWritten: 12 } }], storage: [{ max: { databaseSizeBytes: 4096 } }] };
+  if (query.includes('DashboardR2')) return zero
+    ? { operations: [], storage: [] }
+    : { operations: [{ sum: { requests: 3 }, dimensions: { actionType: 'PutObject' } }, { sum: { requests: 7 }, dimensions: { actionType: 'GetObject' } }], storage: [{ max: { objectCount: 4, payloadSize: 1024, metadataSize: 128 } }] };
+  return zero
+    ? { invocations: [], periodic: [], storage: [] }
+    : { invocations: [{ sum: { requests: 9 } }], periodic: [{ sum: { cpuTime: 20000 } }], storage: [{ max: { storedBytes: 512 } }] };
+}
+
+function analyticsFetch(options: { zero?: boolean; missingAccount?: boolean; malformedWorkers?: boolean; billing?: 'forbidden' | 'available' } = {}) {
+  return async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+    if (String(input).includes('/billable/usage?')) {
+      if (options.billing === 'available') {
+        return Response.json({ result: [{
+          BilledCost: 0.25,
+          BillingCurrency: 'USD',
+          BillingPeriodStart: '2026-09-01',
+          BillingPeriodEnd: '2026-09-30',
+          ChargePeriodStart: '2026-09-02T00:00:00.000Z',
+          x_ProductFamilyName: 'Workers',
+        }] });
+      }
+      return new Response('{}', { status: 403 });
+    }
+    const query = String(JSON.parse(String(init?.body)).query);
+    if (options.missingAccount) return Response.json({ data: { viewer: { accounts: [] } }, errors: null });
+    if (options.malformedWorkers && query.includes('DashboardWorkers')) {
+      return Response.json({ data: { viewer: { accounts: [{ totals: {}, daily: [] }] } }, errors: null });
+    }
+    return Response.json({ data: { viewer: { accounts: [providerAccount(query, options.zero)] } }, errors: null });
+  };
+}
+
 describe('operations proof surface', () => {
   it('renders dashboard, health, docs, uptime classification, and billing from live state', async () => {
     const environment = env();
@@ -73,7 +124,6 @@ describe('operations proof surface', () => {
     const billing = await (await renderBilling(environment)).text();
     expect(billing).toContain('Cloudflare Usage &amp; Cost');
     expect(billing).toContain('Cost guardrail simulator');
-    expect(billing).toContain('Scheduled collection has not stored a Cloudflare snapshot yet.');
   });
 
   it('moves controlled usage through degraded state and pauses only optional compute', async () => {
@@ -90,60 +140,157 @@ describe('operations proof surface', () => {
     expect(await compute.json()).toMatchObject({ error: 'synthetic_budget_degraded' });
   });
 
-  it('runs scheduled health independently and exposes an honest telemetry fallback', async () => {
+  it('runs scheduled health independently and exposes the common reporting contract when Cloudflare is unconfigured', async () => {
     const environment = env();
     await runScheduledOperations(environment, Date.parse('2026-09-02T12:05:00.000Z'));
     expect((environment.DEMO_DB as OperationsD1).persistedHealth).toBe(1);
 
     const response = await cloudflareUsageResponse(new Request('https://demo.example/__api/operations/cloudflare-usage'), environment);
     expect(response.status).toBe(200);
+    expect(response.headers.get('cache-control')).toBe('no-store');
     expect(await response.json()).toMatchObject({
-      status: 'unconfigured',
-      capturedAt: null,
-      cost: { kind: 'unavailable' },
+      schemaVersion: 1,
+      dataset: 'cloudflare.operations',
+      availability: { 'cloudflare.operations': 'unavailable' },
     });
   });
 
-  it('normalizes Cloudflare product analytics without downgrading live usage when optional billing is restricted', async () => {
-    const environment = {
-      ...env(),
-      CLOUDFLARE_ACCOUNT_ID: 'account-tag',
-      CLOUDFLARE_API_TOKEN: 'read-only-token',
-      CLOUDFLARE_WORKER_NAME: 'worker-name',
-      CLOUDFLARE_D1_DATABASE_ID: 'database-id',
-      CLOUDFLARE_R2_BUCKET: 'bucket-name',
-      CLOUDFLARE_DO_NAMESPACE: 'namespace-id',
-    };
+  it('treats a matched account with empty provider datasets as valid zero activity', async () => {
+    const environment = cloudflareEnv('zero-account');
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-09-02T12:00:00.000Z'));
-    vi.stubGlobal('fetch', async (input: RequestInfo | URL, init?: RequestInit) => {
-      if (String(input).endsWith('/billable/usage?from=2026-09-01&to=2026-09-02')) return new Response('{}', { status: 403 });
-      const query = String(JSON.parse(String(init?.body)).query);
-      const account = query.includes('DashboardWorkers')
-        ? { totals: [{ sum: { requests: 100, errors: 2, subrequests: 8 }, quantiles: { cpuTimeP50: 1500, cpuTimeP99: 5500 } }], daily: [{ sum: { requests: 100 }, dimensions: { date: '2026-09-02' } }] }
-        : query.includes('DashboardD1')
-          ? { analytics: [{ sum: { rowsRead: 200, rowsWritten: 12 } }], storage: [{ max: { databaseSizeBytes: 4096 } }] }
-          : query.includes('DashboardR2')
-            ? { operations: [{ sum: { requests: 3 }, dimensions: { actionType: 'PutObject' } }, { sum: { requests: 7 }, dimensions: { actionType: 'GetObject' } }], storage: [{ max: { objectCount: 4, payloadSize: 1024, metadataSize: 128 } }] }
-            : { invocations: [{ sum: { requests: 9 } }], periodic: [{ sum: { cpuTime: 20000 } }], storage: [{ max: { storedBytes: 512 } }] };
-      return Response.json({ data: { viewer: { accounts: [account] } }, errors: null });
-    });
+    vi.stubGlobal('fetch', analyticsFetch({ zero: true, billing: 'forbidden' }));
     try {
       const snapshot = await collectCloudflareUsage(environment, true);
-      expect(snapshot).toMatchObject({
-        status: 'live',
-        failures: ['Billable usage'],
-        products: {
-          workers: { available: true, requests: 100, errors: 2, subrequests: 8, cpuP50Ms: 1.5, cpuP99Ms: 5.5 },
-          d1: { available: true, rowsRead: 200, rowsWritten: 12, storageBytes: 4096 },
-          r2: { available: true, classAOperations: 3, classBOperations: 7, storageBytes: 1152, objects: 4 },
-          durableObjects: { available: true, requests: 9, cpuTimeMs: 20, storageBytes: 512 },
-        },
-        cost: { kind: 'estimated', amountUsd: 0 },
+      expect(snapshot.status).toBe('live');
+      expect(snapshot.products).toMatchObject({
+        workers: { available: true, availability: 'available', requests: 0 },
+        d1: { available: true, availability: 'available', rowsRead: 0, rowsWritten: 0, storageBytes: 0 },
+        r2: { available: true, availability: 'available', classAOperations: 0, classBOperations: 0, storageBytes: 0, objects: 0 },
+        durableObjects: { available: true, availability: 'available', requests: 0, cpuTimeMs: 0, storageBytes: 0 },
       });
+      expect(snapshot.cost).toMatchObject({ kind: 'unavailable', amountUsd: null, scope: 'account' });
     } finally {
       vi.unstubAllGlobals();
       vi.useRealTimers();
+    }
+  });
+
+  it('does not convert a successful GraphQL response with no matching account into zero live usage', async () => {
+    const environment = cloudflareEnv('missing-account');
+    vi.stubGlobal('fetch', analyticsFetch({ missingAccount: true, billing: 'forbidden' }));
+    try {
+      const snapshot = await collectCloudflareUsage(environment, true);
+      expect(snapshot.status).toBe('unavailable');
+      expect(Object.values(snapshot.products).every((product) => !product.available)).toBe(true);
+      expect(snapshot.products.workers.qualification).toBe('account-scope-not-found');
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it('marks malformed provider datasets partial instead of inventing zero values', async () => {
+    const environment = cloudflareEnv('malformed-account');
+    vi.stubGlobal('fetch', analyticsFetch({ malformedWorkers: true, billing: 'forbidden' }));
+    try {
+      const snapshot = await collectCloudflareUsage(environment, true);
+      expect(snapshot.status).toBe('partial');
+      expect(snapshot.products.workers).toMatchObject({ available: false, availability: 'unavailable', qualification: 'malformed-workers-totals' });
+      expect(snapshot.products.d1.available).toBe(true);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it('expires a reused telemetry observation through the shared freshness evaluator', async () => {
+    const environment = cloudflareEnv('expiry-account');
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-09-02T12:00:00.000Z'));
+    vi.stubGlobal('fetch', analyticsFetch({ billing: 'forbidden' }));
+    try {
+      const first = await collectCloudflareUsage(environment, false);
+      expect(first.status).toBe('live');
+      const observedAt = first.capturedAt;
+      vi.setSystemTime(new Date('2026-09-02T12:11:00.000Z'));
+      vi.stubGlobal('fetch', async () => { throw new Error('network unavailable'); });
+      const cached = await collectCloudflareUsage(environment, false);
+      expect(cached.status).toBe('expired');
+      expect(cached.cache).toBe('derived-cache');
+      expect(cached.capturedAt).toBe(observedAt);
+      expect(cached.products.workers.availability).toBe('expired');
+    } finally {
+      vi.unstubAllGlobals();
+      vi.useRealTimers();
+    }
+  });
+
+  it('does not return another resource scope snapshot after the configured source changes', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-09-02T12:00:00.000Z'));
+    vi.stubGlobal('fetch', analyticsFetch({ billing: 'forbidden' }));
+    try {
+      const original = await collectCloudflareUsage(cloudflareEnv('scope-account', 'worker-a'), false);
+      expect(original.status).toBe('live');
+      vi.stubGlobal('fetch', async () => { throw new Error('network unavailable'); });
+      const changed = await collectCloudflareUsage(cloudflareEnv('scope-account', 'worker-b'), false);
+      expect(changed.status).toBe('unavailable');
+      expect(changed.cache).toBe('provider');
+    } finally {
+      vi.unstubAllGlobals();
+      vi.useRealTimers();
+    }
+  });
+
+  it('preserves the original observation time when current telemetry reuses account-wide billing', async () => {
+    const environment = cloudflareEnv('billing-reuse-account');
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-09-02T12:00:00.000Z'));
+    vi.stubGlobal('fetch', analyticsFetch({ billing: 'available' }));
+    try {
+      const first = await collectCloudflareUsage(environment, true);
+      expect(first.cost).toMatchObject({ kind: 'billed', amountUsd: 0.25, observedAt: '2026-09-02T12:00:00.000Z', scope: 'account' });
+      vi.setSystemTime(new Date('2026-09-02T12:05:00.000Z'));
+      vi.stubGlobal('fetch', analyticsFetch({ billing: 'forbidden' }));
+      const second = await collectCloudflareUsage(environment, true);
+      expect(second.capturedAt).toBe('2026-09-02T12:05:00.000Z');
+      expect(second.cost).toMatchObject({ kind: 'billed', amountUsd: 0.25, observedAt: '2026-09-02T12:00:00.000Z', qualification: 'reused-derived-billing-observation' });
+    } finally {
+      vi.unstubAllGlobals();
+      vi.useRealTimers();
+    }
+  });
+
+  it('reports unavailable provider cost without any hardcoded pricing fallback', async () => {
+    const environment = cloudflareEnv('no-cost-account');
+    vi.stubGlobal('fetch', analyticsFetch({ billing: 'forbidden' }));
+    try {
+      const snapshot = await collectCloudflareUsage(environment, true);
+      expect(snapshot.status).toBe('live');
+      expect(snapshot.cost).toMatchObject({ kind: 'unavailable', availability: 'unavailable', amountUsd: null, scope: 'account' });
+      expect(snapshot.cost.note).toContain('no local pricing fallback');
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it('keeps private account and resource identifiers out of the public machine projection', async () => {
+    const environment = cloudflareEnv('private-account-id', 'private-worker-name');
+    environment.CLOUDFLARE_D1_DATABASE_ID = 'private-d1-id';
+    environment.CLOUDFLARE_R2_BUCKET = 'private-r2-name';
+    environment.CLOUDFLARE_DO_NAMESPACE = 'private-do-id';
+    vi.stubGlobal('fetch', analyticsFetch({ billing: 'available' }));
+    try {
+      const response = await cloudflareUsageResponse(new Request('https://demo.example/__api/operations/cloudflare-usage'), environment);
+      const body = JSON.stringify(await response.json());
+      expect(body).not.toContain('private-account-id');
+      expect(body).not.toContain('private-worker-name');
+      expect(body).not.toContain('private-d1-id');
+      expect(body).not.toContain('private-r2-name');
+      expect(body).not.toContain('private-do-id');
+      expect(body).toContain('account-billing');
+      expect(body).toContain('workersInvocationsAdaptive');
+    } finally {
+      vi.unstubAllGlobals();
     }
   });
 });
