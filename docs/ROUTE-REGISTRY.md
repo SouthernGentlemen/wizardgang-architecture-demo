@@ -1,6 +1,6 @@
 # Declarative route registry
 
-DEMO-166 introduced the typed route declaration and matching foundation. DEMO-167 adopted it for global administration, recovery, operations, protocol, and asset routes. DEMO-168 extended active adoption to assurance HTML and API routes by compiling `assurance/registry.json` route ownership into declarative route modules. DEMO-169 registers the platform laboratory pages and APIs as capability-owned declarations. `src/router.ts` remains the single top-level Worker dispatcher; domain routing is delegated to registered modules rather than duplicated in central path or owner switches.
+DEMO-166 introduced the typed route declaration and matching foundation. DEMO-167 adopted it for global administration, recovery, operations, protocol, and asset routes. DEMO-168 extended active adoption to assurance HTML and API routes by compiling `assurance/registry.json` route ownership into declarative route modules. DEMO-169 registered the platform laboratory pages and APIs as capability-owned declarations. DEMO-170 registers the remaining interface, identity, delivery/governance action, i18n, and frontend routes as capability-owned declarations. `src/router.ts` remains the single top-level Worker dispatcher; domain routing is delegated to registered modules rather than duplicated in central path or owner switches.
 
 ## Declaration contract
 
@@ -68,6 +68,22 @@ Storage ownership remains intentionally non-interchangeable. D1 owns relational 
 
 The production router composes the current capability list, while `createPlatformLaboratoryRouteRouter` accepts any compatible capability set. Tests add a synthetic laboratory declaration through that composition seam without modifying `src/router.ts`, and unknown laboratory paths remain ordinary 404s.
 
-## Incremental adoption boundary
+## Active interface and identity modules
 
-Remaining non-operational, non-assurance, non-platform-laboratory demo routes stay on the existing imperative sections of `src/router.ts` until their capability migrations. `docs/ROUTES.md` and `docs/route-manifest.json` remain the canonical public URL contract. DEMO-169 changes platform laboratory route ownership and dispatch representation without changing released URLs, storage primitives, release state, or deployment behavior.
+`src/routing/interface-identity-routes.ts` composes capability modules from `src/interfaces/route-capabilities/`. These declarations own the remaining REST/OpenAPI interface page and contracts, GraphQL/GraphiQL surfaces, webhook protocols and demo controls, identity/OAuth/OIDC/SAML routes, MCP page and server, Git reporting and delivery actions, governance actions/pages, the i18n page, and the root frontend page. The top-level router performs one generic interface/identity dispatch and no longer imports the individual handlers or keeps a `demosByRoute` fallback.
+
+The migration changes dispatch ownership, not protocol enforcement. Existing handlers remain authoritative for security-sensitive details that are more granular than HTTP method metadata:
+
+- GraphQL retains HTML versus API content negotiation, request-size limits, batching and complexity controls, `demo:read`/`demo:write` authorization, and same-origin enforcement for cookie-backed mutations.
+- Webhook receivers retain exact-body HMAC validation, event and repository allowlists, delivery identifiers, and replay protection; synthetic browser webhook writes retain same-origin/session controls.
+- OAuth/OIDC callbacks retain state, nonce, PKCE, issuer, audience, signature, issued-at, and expiry validation. SAML ACS remains an intentionally cross-site IdP POST and retains XML signature, issuer, audience, destination, time-bound, RelayState, and assertion-replay validation.
+- MCP retains foreign-Origin rejection when an Origin header is supplied, `demo:read` authorization, protocol-method checks, and read-only tool authorization.
+- Git demo writes retain same-origin administrator authorization, GitHub preflight checks, exact run/PR controls, and release-readiness gates. The Git reporting endpoint retains its disclosure-aware public read boundary and separate `reporting:write` import permission.
+
+Interface declarations also own offline presentation metadata. The generic interface router preserves browser-page redirects versus API/protocol `503` responses without requiring central MCP or GraphQL path exceptions. The production router composes the current capability list, while `createInterfaceIdentityRouteRouter` accepts compatible additional capability modules for tests and future extensions.
+
+## Adoption boundary
+
+All current top-level application route families are now delegated to operational, assurance, platform-laboratory, or interface/identity registries. `src/router.ts` retains cross-cutting orchestration such as crawler control, the shared fallback offline gate for platform routes, generic dispatch calls, and the final not-found response; it does not contain individual migrated route checks.
+
+`docs/ROUTES.md` and `docs/route-manifest.json` remain the canonical public URL contract. DEMO-170 changes route ownership and dispatch representation without renaming paths, changing release state, or deploying the application.

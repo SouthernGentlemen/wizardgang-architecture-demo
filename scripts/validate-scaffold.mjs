@@ -78,7 +78,10 @@ for (const requiredFile of [
   'src/routing/operational-routes.ts',
   'src/routing/assurance-routes.ts',
   'src/routing/platform-laboratory-routes.ts',
+  'src/routing/interface-identity-routes.ts',
   'src/platform/route-capability.ts',
+  'src/interfaces/route-capability.ts',
+  'src/interfaces/route-capabilities/index.ts',
   'src/api/assurance.ts',
   'src/api/advisories.ts',
   'src/api/assurance-registry.ts',
@@ -141,7 +144,16 @@ function walk(dir) {
 walk(root);
 
 const router = fs.readFileSync(path.join(root, 'src/router.ts'), 'utf8');
-for (const token of ['routeOperationalRequest', 'routeAssuranceRequest', 'routePlatformLaboratoryRequest', 'offlineApiResponse', 'wantsHtml']) {
+for (const token of [
+  'routeOperationalRequest',
+  'routeAssuranceRequest',
+  'routePlatformLaboratoryRequest',
+  'routeInterfaceIdentityRequest',
+  'interfaceIdentityWantsHtml',
+  'isInterfaceIdentityApiLike',
+  'offlineApiResponse',
+  'wantsHtml',
+]) {
   if (!router.includes(token)) failures.push(`router missing routing invariant: ${token}`);
 }
 for (const retiredToken of [
@@ -151,6 +163,8 @@ for (const retiredToken of [
   'ASSURANCE_HTML_HANDLERS',
   'LEGACY_OFFLINE_AVAILABLE_PATHS',
   'matchAssuranceRoute',
+  'demosByRoute',
+  'MCP_SERVER_PATH',
 ]) {
   if (router.includes(retiredToken)) failures.push(`router still contains retired routing heuristic or dispatch inventory: ${retiredToken}`);
 }
@@ -178,6 +192,55 @@ for (const migratedPlatformPath of [
 ]) {
   if (router.includes(`'${migratedPlatformPath}'`) || router.includes(`"${migratedPlatformPath}"`)) {
     failures.push(`router still contains migrated platform path: ${migratedPlatformPath}`);
+  }
+}
+
+for (const migratedInterfacePath of [
+  '/api',
+  '/v1/openapi.json',
+  '/v1/openapi.yaml',
+  '/graphql',
+  '/graphql/console',
+  '/graphql/schema',
+  '/__assets/graphiql/:asset',
+  '/webhooks',
+  '/v1/webhooks/demo',
+  '/v1/webhooks/github',
+  '/__api/webhooks/demo',
+  '/__api/webhooks/events',
+  '/__api/webhooks/reset',
+  '/identity',
+  '/__api/identity/oauth-pkce',
+  '/__api/identity/authorize',
+  '/__api/identity/token',
+  '/__api/identity/sso',
+  '/identity/microsoft',
+  '/identity/microsoft/callback',
+  '/identity/google',
+  '/identity/google/callback',
+  '/identity/github',
+  '/identity/github/callback',
+  '/identity/saml',
+  '/identity/saml/acs',
+  '/identity/saml/metadata',
+  '/identity/session',
+  '/identity/logout',
+  '/__api/identity/saml/inspect',
+  '/mcp',
+  '/mcp/server',
+  '/git',
+  '/__api/git/evidence',
+  '/__api/git/demo',
+  '/__api/git/demo/release',
+  '/governance',
+  '/governance/concerns',
+  '/__api/evidence/traceability',
+  '/__api/governance/security-controls',
+  '/__api/governance/ai-evaluation',
+  '/i18n',
+]) {
+  if (router.includes(`'${migratedInterfacePath}'`) || router.includes(`"${migratedInterfacePath}"`)) {
+    failures.push(`router still contains migrated interface/identity path: ${migratedInterfacePath}`);
   }
 }
 
@@ -216,6 +279,17 @@ for (const token of [
   if (!platformRoutes.includes(token)) failures.push(`platform laboratory route module missing registry invariant: ${token}`);
 }
 
+const interfaceIdentityRoutes = fs.readFileSync(path.join(root, 'src/routing/interface-identity-routes.ts'), 'utf8');
+for (const token of [
+  'createInterfaceIdentityRouteRouter',
+  'interfaceIdentityRouteRegistry',
+  'routeInterfaceIdentityRequest',
+  'defineRouteModule',
+  'interfaceIdentityCapabilities',
+]) {
+  if (!interfaceIdentityRoutes.includes(token)) failures.push(`interface/identity route module missing registry invariant: ${token}`);
+}
+
 const assuranceModel = fs.readFileSync(path.join(root, 'src/assurance/model.ts'), 'utf8');
 for (const legacyToken of ['v1BoundaryAdapters', 'frameworkReferences:', 'riskLinks:', 'objectiveLinks:', 'incidentLinks:']) {
   if (assuranceModel.includes(legacyToken)) failures.push(`canonical assurance model still contains v1 compatibility token: ${legacyToken}`);
@@ -249,4 +323,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Scaffold validation passed: ${manifest.length} route entries, operations/admin/assurance/platform registry invariants present, no PDFs.`);
+console.log(`Scaffold validation passed: ${manifest.length} route entries, operations/admin/assurance/platform/interface-identity registry invariants present, no PDFs.`);
