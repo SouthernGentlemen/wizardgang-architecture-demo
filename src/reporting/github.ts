@@ -148,13 +148,14 @@ function normalizedStringList(value: unknown): string[] | undefined {
   return values.length > 0 ? [...new Set(values)] : undefined;
 }
 
-function githubNativeSources(): ReportingSource[] {
+function githubProviderSources(): ReportingSource[] {
   return registeredReportingSources()
-    .filter((source) => source.provider === 'github' && source.authority === 'native-object');
+    .filter((source) => source.provider === 'github'
+      && (source.authority === 'native-object' || source.id === 'github.retained-reports'));
 }
 
 export function configuredGitHubReportingBindings(env: Env): readonly GitHubReportingBinding[] {
-  const registeredIds = new Set(githubNativeSources().map((source) => source.id));
+  const registeredIds = new Set(githubProviderSources().map((source) => source.id));
   if (env.GITHUB_REPORTING_BINDINGS) {
     let parsed: unknown;
     try {
@@ -201,7 +202,7 @@ function boundSource(source: ReportingSource, repository: string): ReportingSour
 }
 
 function sourceFor(id: string, repository: string): ReportingSource {
-  const source = githubNativeSources().find((candidate) => candidate.id === id);
+  const source = githubProviderSources().find((candidate) => candidate.id === id);
   if (!source) throw new GitHubReportingError(400, 'github_reporting_source_unregistered', id);
   return boundSource(source, repository);
 }
@@ -468,6 +469,148 @@ function providerUrl(raw: JsonObject): string | null {
   return text(raw.html_url) || text(raw.archive_download_url) || text(raw.url) || null;
 }
 
+function decodeGitBlob(value: unknown): string | null {
+  const object = asObject(value);
+  if (!object || object.encoding !== 'base64' || typeof object.content !== 'string') return null;
+  try {
+    const encoded = object.content.replace(/\s/g, '');
+    const bytes = Uint8Array.from(atob(encoded), (character) => character.charCodeAt(0));
+    return new TextDecoder().decode(bytes);
+  } catch {
+    return null;
+  }
+}
+
+function retainedReportRecord(
+  source: ReportingSource,
+  repository: string,
+  branch: string,
+  path: string,
+  blobSha: string,
+  report: JsonObject,
+): GitHubReportingRecord | null {
+  const reportId = text(report.id);
+  if (!reportId || report.source !== source.id) return null;
+  const identity = reportingIdentity(source.id, repository, [reportId], blobSha);
+  const reportRelationships = Array.isArray(report.relationships)
+    ? report.relationships.map(asObject).filter((value): value is JsonObject => Boolean(value))
+      .filter((value) => asObject(value.from) && asObject(value.to) && text(value.relation)) as unknown as ReportingRelationship[]
+    : [];
+  return {
+    id: identity.native,
+    source: source.id,
+    provider: 'github',
+    repository,
+    resource: source.scope.resource,
+    nativeId: reportId,
+    identity,
+    revision: blobSha,
+    url: `https://github.com/${repository}/blob/${encodeURIComponent(branch)}/${path.split('/').map(encodeURIComponent).join('/')}`,
+    status: text(report.status),
+    createdAt: text(report.observedAt),
+    updatedAt: text(report.observedAt),
+    availability: 'available',
+    relationships: structuredClone(reportRelationships),
+    native: { ...structuredClone(report), path, blobSha },
+  };
+}
+
+async function fetchRetainedReports(
+  context: RepositoryContext,
+  source: ReportingSource,
+  mode: GitHubReportingMode,
+  limit: number,
+): Promise<SourceFetchResult> {
+  const branch = source.scope.branch || 'assurance-reports';
+  const branchResult = await githubJson(
+    `${GITHUB_API_ROOT}/repos/${context.binding.repository}/branches/${encodeURIComponent(branch)}`,
+    context.readToken,
+  );
+  if (!branchResult.response.ok) {
+    const failure = classifyFailure(branchResult.response);
+    return {
+      source,
+      records: [],
+      availability: failure.availability,
+      complete: false,
+      nextCursor: null,
+      detail: branchResult.response.status === 404 ? 'github_retained_report_branch_missing' : failure.detail,
+    };
+  }
+  const treeSha = text(nested(asObject(branchResult.value) ?? {}, 'commit', 'sha'));
+  if (!treeSha) {
+    return { source, records: [], availability: 'unavailable', complete: false, nextCursor: null, detail: 'github_provider_invalid_response' };
+  }
+
+  const treeResult = await githubJson(
+    `${GITHUB_API_ROOT}/repos/${context.binding.repository}/git/trees/${encodeURIComponent(treeSha)}?recursive=1`,
+    context.readToken,
+  );
+  if (!treeResult.response.ok) {
+    const failure = classifyFailure(treeResult.response);
+    return { source, records: [], availability: failure.availability, complete: false, nextCursor: null, detail: failure.detail };
+  }
+  const tree = asObject(treeResult.value);
+  if (!tree) {
+    return { source, records: [], availability: 'unavailable', complete: false, nextCursor: null, detail: 'github_provider_invalid_response' };
+  }
+  const reportEntries = asObjects(tree.tree)
+    .filter((entry) => entry.type === 'blob' && /^reports\/.+\.json$/.test(text(entry.path) ?? '') && text(entry.sha))
+    .sort((left, right) => String(right.path).localeCompare(String(left.path), undefined, { numeric: true }));
+  const maximum = mode === 'sample' ? limit : context.maxPages * MAX_PAGE_LIMIT;
+  const selected = reportEntries.slice(0, maximum);
+  let complete = tree.truncated !== true && selected.length === reportEntries.length;
+  let availability: ReportingAvailability = complete ? 'available' : 'partial';
+  let detail: string | null = tree.truncated === true
+    ? 'github_tree_truncated'
+    : selected.length < reportEntries.length ? (mode === 'sample' ? 'dashboard_sample' : 'pagination_bound_reached') : null;
+  const records: GitHubReportingRecord[] = [];
+
+  const blobs = await Promise.all(selected.map(async (entry) => ({
+    entry,
+    result: await githubJson(
+      `${GITHUB_API_ROOT}/repos/${context.binding.repository}/git/blobs/${encodeURIComponent(String(entry.sha))}`,
+      context.readToken,
+    ),
+  })));
+  for (const { entry, result } of blobs) {
+    if (!result.response.ok) {
+      const failure = classifyFailure(result.response);
+      availability = failure.availability;
+      complete = false;
+      detail = detail || failure.detail;
+      continue;
+    }
+    const decoded = decodeGitBlob(result.value);
+    let report: JsonObject | null = null;
+    try { report = decoded ? asObject(JSON.parse(decoded)) : null; } catch { report = null; }
+    const record = report && retainedReportRecord(
+      source,
+      context.binding.repository,
+      branch,
+      String(entry.path),
+      String(entry.sha),
+      report,
+    );
+    if (!record) {
+      if (availability === 'available') availability = 'partial';
+      complete = false;
+      detail = detail || 'retained_report_invalid';
+      continue;
+    }
+    records.push(record);
+  }
+
+  return {
+    source,
+    records,
+    availability,
+    complete,
+    nextCursor: complete ? null : selected.length < reportEntries.length ? `report:${selected.length}` : null,
+    detail,
+  };
+}
+
 function mapRecord(
   source: ReportingSource,
   repository: string,
@@ -559,6 +702,7 @@ async function fetchSource(
   mode: GitHubReportingMode,
   limit: number,
 ): Promise<SourceFetchResult> {
+  if (source.id === 'github.retained-reports') return fetchRetainedReports(context, source, mode, limit);
   let page: PageResult;
   if (source.id === 'github.workflow-attempts') {
     page = await workflowAttempts(context, mode, limit);
@@ -618,7 +762,7 @@ export async function queryGitHubReporting(
   const limit = Math.max(1, Math.min(MAX_PAGE_LIMIT, requestedLimit));
   const requested = query.sourceIds?.length
     ? [...new Set(query.sourceIds)]
-    : githubNativeSources().filter((source) => source.visibility === 'public').map((source) => source.id);
+    : githubProviderSources().filter((source) => source.visibility === 'public').map((source) => source.id);
   if (requested.length === 0) throw new GitHubReportingError(400, 'github_reporting_source_required');
 
   const selected = requested.map((id) => sourceFor(id, binding.repository));

@@ -6,7 +6,7 @@ const demo: DemoDefinition = {
   "title": "Git / GitHub",
   "group": "Delivery & Governance",
   "sourcePath": "src/demos/git.ts",
-  "summary": "An authenticated, two-stage live release lifecycle backed by real branches, commits, pull requests, CI jobs, semantic tags, deployment, and public GitHub evidence.",
+  "summary": "An authenticated, two-stage live release lifecycle backed by real branches, commits, pull requests, CI jobs, retained reports, semantic tags, deployment, and public GitHub evidence.",
   "proves": [
     "Same-origin demo-admin authorization can dispatch one allowlisted GitHub workflow without exposing credentials",
     "A real patch, minor, or major change remains open as a pull request while its actual CI jobs run",
@@ -14,6 +14,7 @@ const demo: DemoDefinition = {
     "One active live-demo pull request and one serialized controller workflow prevent version collisions",
     "Bounded live GitHub queries for the configured repository only",
     "Explicit available, empty, partial-failure, and unavailable evidence states",
+    "Canonical CI and assurance-monitor reports retained in Git history beyond transient artifact retention",
     "No branch-protection claim unless GitHub exposes the supporting response"
   ],
   "status": "working",
@@ -22,6 +23,7 @@ const demo: DemoDefinition = {
     { "label": "View change management", "path": "docs/CHANGE-MANAGEMENT.md" },
     { "label": "View release procedure", "path": "docs/RELEASE.md" },
     { "label": "View CI workflow", "path": ".github/workflows/ci.yml" },
+    { "label": "View retained-report publisher", "path": ".github/workflows/report-publisher.yml" },
     { "label": "View live lifecycle workflow", "path": ".github/workflows/git-demo.yml" },
     { "label": "View deploy workflow", "path": ".github/workflows/deploy.yml" },
     { "label": "View Cloudflare bindings", "path": "wrangler.jsonc" },

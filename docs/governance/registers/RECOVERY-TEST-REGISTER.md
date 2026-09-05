@@ -47,9 +47,11 @@ A record must not be marked `Passed` merely because a deployment succeeded.
 
 ## 3. Current Summary
 
+<!-- GENERATED:governance-records:recovery-tests:start -->
 | ID | Scenario | Scope | Due | Status | Evidence state |
 |---|---|---|---|---|---|
 | RT-001 | Clean reconstruction + D1/R2 restore exercise | Known-good release, runtime/config, D1, selected R2, health/version, admin/security/MCP validation | 2026-12-02 | Planned | No completed restore evidence yet |
+<!-- GENERATED:governance-records:recovery-tests:end -->
 
 There are currently **no completed recovery tests** recorded in this register.
 

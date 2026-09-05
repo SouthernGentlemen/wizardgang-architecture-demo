@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "source": "governance.records",
+  "qualification": "Canonical reportable register facts projected into Markdown; narrative policy, rationale, templates, and professional judgment remain authored in the presentation document.",
+  "views": [
+    {
+      "id": "recovery-tests",
+      "document": "docs/governance/registers/RECOVERY-TEST-REGISTER.md",
+      "section": "3. Current Summary",
+      "columns": [
+        {
+          "key": "id",
+          "label": "ID"
+        },
+        {
+          "key": "scenario",
+          "label": "Scenario"
+        },
+        {
+          "key": "scope",
+          "label": "Scope"
+        },
+        {
+          "key": "due",
+          "label": "Due"
+        },
+        {
+          "key": "status",
+          "label": "Status"
+        },
+        {
+          "key": "evidenceState",
+          "label": "Evidence state"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "RT-001",
+      "view": "recovery-tests",
+      "order": 1,
+      "fields": {
+        "scenario": "Clean reconstruction + D1/R2 restore exercise",
+        "scope": "Known-good release, runtime/config, D1, selected R2, health/version, admin/security/MCP validation",
+        "due": "2026-12-02",
+        "status": "Planned",
+        "evidenceState": "No completed restore evidence yet"
+      }
+    }
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "schemaVersion": 1,
+  "source": "governance.records",
+  "qualification": "Canonical reportable register facts projected into Markdown; narrative policy, rationale, templates, and professional judgment remain authored in the presentation document.",
+  "views": [
+    {
+      "id": "data-inventory",
+      "document": "docs/governance/registers/DATA-REGISTER.md",
+      "section": "3. Current Inventory Summary",
+      "columns": [
+        {
+          "key": "id",
+          "label": "ID"
+        },
+        {
+          "key": "storeSurface",
+          "label": "Store / surface"
+        },
+        {
+          "key": "classification",
+          "label": "Classification"
+        },
+        {
+          "key": "publicExposure",
+          "label": "Public exposure"
+        },
+        {
+          "key": "mcpExposure",
+          "label": "MCP exposure"
+        },
+        {
+          "key": "retentionDeletionPosture",
+          "label": "Retention / deletion posture"
+        },
+        {
+          "key": "status",
+          "label": "Status"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "DATA-001",
+      "view": "data-inventory",
+      "order": 1,
+      "fields": {
+        "storeSurface": "`demo_records`",
+        "classification": "PUBLIC / PUBLIC-DEMO",
+        "publicExposure": "Yes, through approved app/API surfaces",
+        "mcpExposure": "**Yes — approved bounded source**",
+        "retentionDeletionPosture": "Persistent until controlled update/delete; provenance/freshness improvement pending",
+        "status": "Partial"
+      }
+    },
+    {
+      "id": "DATA-002",
+      "view": "data-inventory",
+      "order": 2,
+      "fields": {
+        "storeSurface": "`demo_events`",
+        "classification": "AUDIT-EVIDENCE",
+        "publicExposure": "Bounded evidence may be exposed; raw event store is not inherently public",
+        "mcpExposure": "No",
+        "retentionDeletionPosture": "Evidence-oriented retention; no blanket pruning rule yet",
+        "status": "Partial"
+      }
+    },
+    {
+      "id": "DATA-003",
+      "view": "data-inventory",
+      "order": 3,
+      "fields": {
+        "storeSurface": "`application_logs`",
+        "classification": "OPERATIONAL / public-safe after sanitization",
+        "publicExposure": "Yes, bounded sanitized viewer/API",
+        "mcpExposure": "No",
+        "retentionDeletionPosture": "Operational retention; explicit pruning baseline pending",
+        "status": "Partial"
+      }
+    },
+    {
+      "id": "DATA-004",
+      "view": "data-inventory",
+      "order": 4,
+      "fields": {
+        "storeSurface": "`service_health_checks`",
+        "classification": "OPERATIONAL",
+        "publicExposure": "Yes, aggregate/bounded uptime views",
+        "mcpExposure": "No",
+        "retentionDeletionPosture": "Rolling operational history; pruning baseline pending",
+        "status": "Partial"
+      }
+    },
+    {
+      "id": "DATA-005",
+      "view": "data-inventory",
+      "order": 5,
+      "fields": {
+        "storeSurface": "`usage_snapshots`",
+        "classification": "OPERATIONAL / PUBLIC-DEMO",
+        "publicExposure": "Yes, synthetic degradation evidence",
+        "mcpExposure": "No",
+        "retentionDeletionPosture": "Rolling demo evidence; no universal retention duration defined",
+        "status": "Partial"
+      }
+    },
+    {
+      "id": "DATA-006",
+      "view": "data-inventory",
+      "order": 6,
+      "fields": {
+        "storeSurface": "`cloudflare_usage_snapshots`",
+        "classification": "OPERATIONAL / provider-derived / public-safe after normalization",
+        "publicExposure": "Yes, sanitized normalized view",
+        "mcpExposure": "No",
+        "retentionDeletionPosture": "Cached rolling snapshots; explicit pruning baseline pending",
+        "status": "Partial"
+      }
+    },
+    {
+      "id": "DATA-007",
+      "view": "data-inventory",
+      "order": 7,
+      "fields": {
+        "storeSurface": "`demo_sessions`",
+        "classification": "VISITOR-SCOPED",
+        "publicExposure": "No global public exposure",
+        "mcpExposure": "No",
+        "retentionDeletionPosture": "`expires_at` exists; cleanup effectiveness requires verification",
+        "status": "Partial"
+      }
+    },
+    {
+      "id": "DATA-008",
+      "view": "data-inventory",
+      "order": 8,
+      "fields": {
+        "storeSurface": "`demo_users`",
+        "classification": "VISITOR-SCOPED / potentially identifying",
+        "publicExposure": "Session-scoped only",
+        "mcpExposure": "No",
+        "retentionDeletionPosture": "Session-linked; cascade design exists; actual expiry cleanup verification pending",
+        "status": "Partial"
+      }
+    },
+    {
+      "id": "DATA-009",
+      "view": "data-inventory",
+      "order": 9,
+      "fields": {
+        "storeSurface": "`demo_tasks`",
+        "classification": "VISITOR-SCOPED",
+        "publicExposure": "Session-scoped only",
+        "mcpExposure": "No",
+        "retentionDeletionPosture": "Session-linked; cascade design exists; actual expiry cleanup verification pending",
+        "status": "Partial"
+      }
+    },
+    {
+      "id": "DATA-010",
+      "view": "data-inventory",
+      "order": 10,
+      "fields": {
+        "storeSurface": "`demo_state`",
+        "classification": "VISITOR-SCOPED",
+        "publicExposure": "Session-scoped only",
+        "mcpExposure": "No",
+        "retentionDeletionPosture": "Session-linked; cascade design exists; actual expiry cleanup verification pending",
+        "status": "Partial"
+      }
+    },
+    {
+      "id": "DATA-011",
+      "view": "data-inventory",
+      "order": 11,
+      "fields": {
+        "storeSurface": "`webhook_events`",
+        "classification": "OPERATIONAL / AUDIT-EVIDENCE",
+        "publicExposure": "Only bounded/sanitized summaries where surfaced",
+        "mcpExposure": "No",
+        "retentionDeletionPosture": "Replay/evidence value; explicit retention/pruning baseline pending",
+        "status": "Partial"
+      }
+    },
+    {
+      "id": "DATA-012",
+      "view": "data-inventory",
+      "order": 12,
+      "fields": {
+        "storeSurface": "`webhook_receipts`",
+        "classification": "AUDIT-EVIDENCE / security replay metadata",
+        "publicExposure": "Not intended for public raw exposure",
+        "mcpExposure": "No",
+        "retentionDeletionPosture": "Retain as needed for replay/evidence; pruning baseline pending",
+        "status": "Partial"
+      }
+    },
+    {
+      "id": "DATA-013",
+      "view": "data-inventory",
+      "order": 13,
+      "fields": {
+        "storeSurface": "`identity_sessions`",
+        "classification": "AUTH-SECURITY / encrypted payload",
+        "publicExposure": "No",
+        "mcpExposure": "No",
+        "retentionDeletionPosture": "Expiry/revocation fields exist; cleanup/enforcement evidence pending",
+        "status": "Partial"
+      }
+    },
+    {
+      "id": "DATA-014",
+      "view": "data-inventory",
+      "order": 14,
+      "fields": {
+        "storeSurface": "`identity_saml_requests`",
+        "classification": "AUTH-SECURITY / replay state",
+        "publicExposure": "No",
+        "mcpExposure": "No",
+        "retentionDeletionPosture": "Short-lived by purpose; cleanup enforcement evidence pending",
+        "status": "Partial"
+      }
+    },
+    {
+      "id": "DATA-015",
+      "view": "data-inventory",
+      "order": 15,
+      "fields": {
+        "storeSurface": "`identity_saml_assertions`",
+        "classification": "AUTH-SECURITY / replay state",
+        "publicExposure": "No",
+        "mcpExposure": "No",
+        "retentionDeletionPosture": "Expiry exists; cleanup enforcement evidence pending",
+        "status": "Partial"
+      }
+    },
+    {
+      "id": "DATA-016",
+      "view": "data-inventory",
+      "order": 16,
+      "fields": {
+        "storeSurface": "R2 objects + `r2_object_metadata`",
+        "classification": "Varies by object set; PUBLIC-DEMO / VISITOR-SCOPED / CONFIDENTIAL possible",
+        "publicExposure": "Only when explicitly routed",
+        "mcpExposure": "No by default",
+        "retentionDeletionPosture": "Object expiry/backup/deletion depends on set; restore/deletion evidence incomplete",
+        "status": "Partial"
+      }
+    },
+    {
+      "id": "DATA-017",
+      "view": "data-inventory",
+      "order": 17,
+      "fields": {
+        "storeSurface": "Git source, governance, tags, releases",
+        "classification": "PUBLIC + AUDIT-EVIDENCE",
+        "publicExposure": "Yes by design",
+        "mcpExposure": "Not an MCP data source",
+        "retentionDeletionPosture": "Retained through Git/release history; superseded records remain reconstructable",
+        "status": "Met"
+      }
+    },
+    {
+      "id": "DATA-018",
+      "view": "data-inventory",
+      "order": 18,
+      "fields": {
+        "storeSurface": "Managed secret values",
+        "classification": "SECRET",
+        "publicExposure": "No",
+        "mcpExposure": "No",
+        "retentionDeletionPosture": "Managed outside source/runtime public data; rotation/re-provisioning by authorized operator",
+        "status": "Partial"
+      }
+    }
+  ]
+}

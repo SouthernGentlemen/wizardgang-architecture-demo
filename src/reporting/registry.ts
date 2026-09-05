@@ -23,6 +23,7 @@ interface ReportingOwnershipDeclaration {
 interface ReportingRegistryDeclaration {
   contract: string;
   structuredRecords: StructuredRecordSourceDeclaration;
+  retainedReports: ReportingSource;
   nativeObjects: ReportingSource[];
   observations: ReportingSource[];
   privateSources: ReportingSource[];
@@ -47,7 +48,7 @@ function copySource(source: ReportingSource): ReportingSource {
 }
 
 export function registeredReportingSources(): readonly ReportingSource[] {
-  return [...reporting.nativeObjects, ...reporting.observations, ...reporting.privateSources].map(copySource);
+  return [reporting.retainedReports, ...reporting.nativeObjects, ...reporting.observations, ...reporting.privateSources].map(copySource);
 }
 
 export function registeredReportingSource(id: string): ReportingSource {

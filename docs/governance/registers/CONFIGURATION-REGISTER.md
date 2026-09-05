@@ -26,6 +26,7 @@ A repository file may be `Met` as desired-state configuration while provider enf
 
 ## 3. Current Configuration Summary
 
+<!-- GENERATED:governance-records:configuration-summary:start -->
 | ID | Configuration surface | Authority / source | Environment | Verification | Status |
 |---|---|---|---|---|---|
 | CFG-001 | Worker/runtime desired state | `wrangler.jsonc` | Production + local tooling | source review, Wrangler build/deploy | Met |
@@ -58,6 +59,7 @@ A repository file may be `Met` as desired-state configuration while provider enf
 | CFG-028 | Provider-side configuration drift monitoring | GitHub/Cloudflare external state | Production/GitHub | no complete automated reconciliation currently evidenced | Gap |
 | CFG-029 | Emergency configuration reconciliation | incident/change processes | All | process defined; recurring event evidence not yet accumulated | Partial |
 | CFG-030 | Configuration review history | this register + future review records | Management system | first formal review pending | Gap |
+<!-- GENERATED:governance-records:configuration-summary:end -->
 
 ## 4. Critical Baseline — Production Worker
 
@@ -138,7 +140,7 @@ CI source defines:
 - clean D1 migration validation;
 - dependency audit;
 - Worker build;
-- commit-bound evidence generation.
+- provider-derived retained report generation after trusted default-branch workflows.
 
 ### CFG-012 — release/deployment workflows — Met
 

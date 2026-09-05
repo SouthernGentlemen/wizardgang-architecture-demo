@@ -100,8 +100,22 @@ export async function aiEvaluationResponse(request: Request, env: Env): Promise<
     { case: 'invalid namespace validation', expected: 'tool error', actual: invalidResult?.isError === true ? 'tool error' : 'missing error', httpStatus: invalidScope.status, passed: invalidResult?.isError === true },
   ];
   const passed = results.every((result) => result.passed);
-  const event = await recordDemoEvent(env, 'iso42001', 'ai_boundary_evaluation', { passed, results });
-  await recordApplicationLog(env, { level: passed ? 'info' : 'error', source: 'governance-ai', eventKey: 'ai_boundary_evaluation', message: `AI/MCP boundary evaluation ${passed ? 'passed' : 'failed'}.`, route: '/__api/governance/ai-evaluation', detail: { passed, results, eventId: event.id } });
+  const evaluationVersion = 'mcp-boundary-v1';
+  const outcome = passed ? 'passed' : 'failed';
+  const event = await recordDemoEvent(env, 'iso42001', 'ai_boundary_evaluation', {
+    evaluationVersion,
+    outcome,
+    checkCount: results.length,
+    passedCount: results.filter((result) => result.passed).length,
+  });
+  await recordApplicationLog(env, {
+    level: passed ? 'info' : 'error',
+    source: 'governance-ai',
+    eventKey: 'ai_boundary_evaluation',
+    message: `AI/MCP boundary evaluation ${outcome}.`,
+    route: '/__api/governance/ai-evaluation',
+    detail: { auditEventId: event.id },
+  });
   return json({
     alignment: 'ISO/IEC 42001 aligned — uncertified',
     systemBoundary: 'Public MCP read tool -> shared authorization -> validation -> D1 records -> bounded result',

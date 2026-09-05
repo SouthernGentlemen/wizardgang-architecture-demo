@@ -11,19 +11,20 @@ The common contract is `contracts/assurance/reporting.schema.json`. All source d
 | Domain | Authoritative source | Rule |
 | --- | --- | --- |
 | Evidence | GitHub structured assurance records | Registered evidence JSON owns assurance evidence facts. |
-| Internal reports | GitHub structured assurance records | Registered presentation documents own report metadata; underlying domain facts retain their own owner. |
+| Internal reports | `github.retained-reports` | Schema-valid CI and assurance-monitor reports are retained once on the `assurance-reports` Git branch; the 30-day Actions artifact is transport/recovery only. |
 | Issues / corrective actions | Native GitHub issues | Repository + issue number is identity; GitHub `updated_at` is revision. Configured labels may select corrective-action concerns without copying them into a register. |
 | Delivery evidence | Native GitHub repository objects | Repository, branch, commit, pull request, Actions run/attempt/artifact, tag, release, and branch-protection objects remain provider-owned. |
 | Security findings | Native protected GitHub security objects | Code scanning, secret scanning, Dependabot, and repository security advisories remain provider-owned and protected. |
 | Private vulnerability reporting | Native GitHub repository security advisories | Private vulnerability reports stay on GitHub's repository-security-advisory workflow. They are never converted into public issues. |
-| Risks / public advisories / governance | GitHub structured assurance records | Registered domain JSON remains authoritative for public assurance facts. |
+| Risks / public advisories | GitHub structured assurance records | Registered domain JSON remains authoritative for public assurance facts. |
+| Governance registers | `governance.records` structured partitions | Reportable table facts live in registry-declared JSON and Markdown tables are deterministic views; policy prose and professional judgment remain authored in Markdown. |
 | Operations | Native Cloudflare observations | Cloudflare owns native operational observations. |
 
 ## Registered GitHub provider sources
 
 `assurance/registry.json` declares the GitHub native object types. Runtime repository bindings are configuration, not canonical data. The provider binds each selected source to an authorized repository at request time and preserves the repository scope in every returned identity.
 
-Public native source types include repositories, branches, commits, issues, pull requests, workflow runs, workflow attempts, workflow artifacts, tags, releases, and default-branch protection. Protected source types include code-scanning alerts, secret-scanning alerts, Dependabot alerts, and repository security advisories.
+Public source types include repositories, branches, commits, issues, pull requests, workflow runs, workflow attempts, workflow artifacts, tags, releases, default-branch protection, and the `github.retained-reports` structured source. Protected source types include code-scanning alerts, secret-scanning alerts, Dependabot alerts, and repository security advisories.
 
 Source objects advertise only capabilities the provider adapter actually supports. GitHub issues advertise `import` because update-only issue writes are implemented. Other native objects do not advertise import. Protected security sources remain read/query/export only and `privateIngestion` remains disabled.
 
@@ -43,6 +44,14 @@ Examples:
 
 Relationships are identities, not copied register rows. For example, an artifact can point to its producing workflow run, an attempt can point to its run, a pull request can point to its head commit, and a release can point to its tag.
 
+## Retained report production
+
+`.github/workflows/report-publisher.yml` runs only after completion of the approved `CI` or `Assurance Monitor` workflows on the trusted default branch. It checks out publisher code from the default branch—not the producer revision or pull-request checkout—and queries the GitHub run/job/step APIs directly. CI push runs are accepted only for the `push` event; assurance-monitor runs are accepted only for `schedule` or `workflow_dispatch`. A repository mismatch, unapproved producer/event, non-default branch, incomplete run, invalid provenance, incomplete job pagination, or schema-invalid report fails publication.
+
+Provider conclusions map without reinterpretation: `success` is `passed`; `failure`, `timed_out`, `action_required`, and `startup_failure` are `failed`; `cancelled` is `cancelled`; `skipped` is `skipped`; and any other or unfinished outcome is `incomplete`. A completed run with zero observed jobs remains representable and explicitly says that no check execution was inferred.
+
+The publisher writes each run attempt once to `reports/YYYY/MM/<family>-<run>-attempt-<attempt>.json` on the `assurance-reports` branch. That Git history is the durable authority with a minimum 400-day retention policy and controlled-change deletion. Its 30-day Actions artifact is not a second report authority. If GitHub repository Actions settings do not grant `GITHUB_TOKEN` write authority, the publisher fails at the branch push and the setting must be corrected; no Worker token, D1 copy, external storage, or invented credential is used as a fallback.
+
 ## Query and export behavior
 
 The existing `/__api/git/evidence` route now returns the current shared reporting `queryResult`; the legacy `GitHubEvidence`, `EvidenceCard`, `cards`, and `controls` response model is not supported in parallel.
@@ -56,7 +65,7 @@ GET accepts:
 
 A sample request fetches one provider page and marks the source `partial` when GitHub reports a next page. A sample is therefore never described as a complete export. `mode=export` follows provider pagination until the source is complete or the configured hard page bound is reached. If the hard bound is reached, the result remains explicit `partial` with a provider cursor qualification.
 
-Per-source availability is explicit and may be `available`, `partial`, `unavailable`, `rate-limited`, or `expired`. Artifact records also preserve GitHub's own `expired` state. Upstream error bodies are not returned to clients.
+Per-source availability is explicit and may be `available`, `partial`, `unavailable`, `rate-limited`, or `expired`. Artifact records preserve GitHub's own `expired` state. A missing or inaccessible `assurance-reports` branch is `unavailable`, while an existing branch with no report files is an available empty source. Upstream error bodies are not returned to clients.
 
 `query.pagination.total` and `derived.totalAvailable` are the number of native objects actually observed by the bounded query. When a source is partial, its qualification says so; those numbers must not be interpreted as an authoritative global total.
 
@@ -120,7 +129,7 @@ That CLI continues to own Git-controlled structured records. Native provider wri
 
 ## Git demo migration
 
-`/git` retains the functioning live branch/commit/PR/CI/release demonstration. Its source-of-truth evidence panel now consumes the shared reporting query contract directly. It groups returned native records by registered source ID and displays completeness/availability from the contract. It does not reconstruct an independent issue, finding, report, or evidence-card state model.
+`/git` retains the functioning live branch/commit/PR/CI/release demonstration. Its source-of-truth evidence panel consumes the shared reporting query contract directly. It groups returned native records and canonical retained reports by registered source ID and displays completeness/availability from the contract. It does not reconstruct an independent issue, finding, report, or evidence-card state model.
 
 ## Test boundaries
 
@@ -132,6 +141,8 @@ Fixtures cover:
 - open/closed issue status without reinterpretation;
 - rate-limited and expired states;
 - Actions run/artifact relationships;
+- retained-report branch discovery, report relationships, and missing-source versus empty-source behavior;
+- successful, failed, skipped, cancelled, zero-job, incomplete, and rejected report production;
 - protected repository-security-advisory access without issue conversion;
 - public/private repository isolation;
 - update-only issue writes, unsupported fields/operations, stale revisions, and missing write credentials.
@@ -140,8 +151,10 @@ Live provider reads are permitted only when the deployment already has the requi
 
 ## Rollback
 
-Rollback is one controlled revert of the DEMO-158 merge commit. That restores the prior Git evidence endpoint/model, registry declarations, authorization permission surface, and Git page consumer together. Do not operate the legacy card response and current native reporting response in parallel.
+Rollback of the native provider integration remains one controlled revert of DEMO-158. Rollback of retained reports and governance projections is one controlled revert of DEMO-159; do not operate the retired validation-artifact producer or independently edited Markdown state in parallel with the canonical sources.
+
+Reverting publisher code does not delete already retained reports. Any deletion from `assurance-reports` is a separate controlled change so durable evidence is not silently erased.
 
 If rollback occurs after a permitted native issue update, reverting application code does **not** revert that provider-side issue change. Provider writes are separately auditable GitHub operations and must be reversed in GitHub through an authorized corrective update if required.
 
-No release or deployment is part of DEMO-158.
+No release or deployment is part of DEMO-159.

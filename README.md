@@ -14,7 +14,7 @@ Twenty public HTML routes organize the architecture into five layers. Each layer
 - **Platform:** safe edge-context inspection, bounded stateless Worker compute, a session-isolated D1 users-and-tasks lab, a bounded R2 mini file manager with D1 metadata, and a coordinated Durable Object counter.
 - **Interfaces:** focused REST/OpenAPI, GraphQL/GraphiQL, signed-webhook, identity, and MCP routes converging on explicit application policies and shared D1/logging boundaries.
 - **Standards:** English, Spanish, French, German, Japanese, and Arabic resources; instant switching and `Intl` inspection; RTL rendering; and accessible/broken comparison labs with locally bundled axe-core analysis.
-- **Delivery and governance:** live GitHub branch/commit/pull-request/Actions/tag/release evidence, runtime traceability, CI and tag-only deployment workflows, security-control mapping, an executable MCP boundary evaluation, and a compact compliance and assurance index linking those canonical proofs.
+- **Delivery and governance:** live GitHub branch/commit/pull-request/Actions/tag/release evidence, durable provider-derived CI and assurance reports, runtime traceability, generated governance-register views, security-control mapping, an executable MCP boundary evaluation, and a compact compliance and assurance index linking those canonical proofs.
 - **Operations:** five-minute scheduled dependency health, measured availability, live documentation, sanitized D1 logs, cached Cloudflare usage telemetry, progressive billable-cost evidence, observable graceful degradation, and authenticated D1-backed demo control.
 
 Core invariants:
@@ -98,7 +98,7 @@ npm run security:dependencies
 npm run build
 ```
 
-CI repeats those controls and uploads commit-bound validation evidence.
+CI repeats those controls. A separate trusted `workflow_run` publisher derives the actual default-branch run/job/step outcomes from GitHub and retains the schema-valid report on the `assurance-reports` branch; its 30-day Actions artifact is transport/recovery only.
 
 ## Delivery
 

@@ -30,6 +30,7 @@ This register contains no fabricated penetration-test, external-assessment, fuzz
 
 ## 3. Testing Inventory
 
+<!-- GENERATED:governance-records:security-testing:start -->
 | ID | Category | Test / control | Current evidence | Status | Trigger / cadence | Current limitation / next action |
 |---|---|---|---|---|---|---|
 | ST-001 | Change control | Permanent `DEMO-###` identity and risk-scaled controlled record | `docs/CHANGE-MANAGEMENT.md`, `validate:history` | Active | Every controlled change | Provider enforcement of review gates remains separately unverified |
@@ -45,7 +46,7 @@ This register contains no fabricated penetration-test, external-assessment, fuzz
 | ST-011 | Database | Apply D1 migrations to clean local database | CI `validate:migrations` | Active | PR / main CI | Does not prove production backup/restore or migration rollback |
 | ST-012 | Dependency | `npm audit --audit-level=high` | CI `security:dependencies` | Active | PR / main CI | Does not cover all supply-chain or lower-severity risks |
 | ST-013 | Build | Wrangler production-style dry-run build | CI `npm run build` | Active | PR / main CI | Build success does not prove runtime security |
-| ST-014 | Evidence | Commit-bound validation evidence artifact | `scripts/generate-evidence.mjs`, CI artifact upload | Active | PR / main CI | Artifact retention currently workflow-limited; results must be tied to a run |
+| ST-014 | Evidence | Provider-derived retained CI report | `scripts/generate-retained-report.mjs`, `.github/workflows/report-publisher.yml`, `github.retained-reports` | Active | PR / main CI | Durable Git history is authoritative; the 30-day Actions artifact is transport/recovery only |
 | ST-015 | PR governance | Pull-request title/change-ID format check | CI `change-id` job | Active | PR | Does not independently verify required reviewer/branch rules |
 | ST-016 | Admin auth | Missing/incorrect admin credential rejection | `tests/security.test.ts` | Active | Relevant code change / full tests | Test uses synthetic credentials, as intended |
 | ST-017 | Browser mutation | Exact same-origin rejection for admin mutation | `tests/security.test.ts` | Active | Relevant auth/admin change | Must be extended to new browser state-change boundaries as added |
@@ -82,6 +83,7 @@ This register contains no fabricated penetration-test, external-assessment, fuzz
 | ST-048 | External AI evaluation | External-model reasoning/harm quality evaluation | MCP impact assessment / current bounded integration | Partial | Material AI change | Application authority is tested; model reasoning remains provider/external behavior |
 | ST-049 | Production abuse test | Safe targeted production security-boundary verification | Deployment verification framework | Partial | High-risk release | Must avoid destructive testing against public production |
 | ST-050 | Provider configuration | Verify GitHub/Cloudflare/identity provider security settings against desired state | Configuration/access/supplier governance | Partial | Quarterly/material change | Provider-side evidence incomplete; GitHub branch/ruleset enforcement unverified |
+<!-- GENERATED:governance-records:security-testing:end -->
 
 ## 4. Current Coverage Summary
 

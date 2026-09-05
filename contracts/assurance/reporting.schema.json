@@ -16,6 +16,7 @@
       "required": ["resource"],
       "properties": {
         "repository": { "type": "string", "minLength": 1 },
+        "branch": { "type": "string", "minLength": 1 },
         "resource": { "type": "string", "minLength": 1 }
       }
     },
@@ -83,6 +84,43 @@
         "ingestion": { "const": "enabled" }
       }
     },
+    "retainedReportSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "provider", "authority", "scope", "nativeIdentity", "revisionIdentity", "schema", "visibility", "capabilities", "ingestion", "retention"],
+      "properties": {
+        "id": { "const": "github.retained-reports" },
+        "provider": { "const": "github" },
+        "authority": { "const": "structured-record" },
+        "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["repository", "branch", "resource"],
+          "properties": {
+            "repository": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$" },
+            "branch": { "const": "assurance-reports" },
+            "resource": { "const": "reports/" }
+          }
+        },
+        "nativeIdentity": { "const": ["repository", "reportId"] },
+        "revisionIdentity": { "const": ["branch", "blob"] },
+        "schema": { "const": "contracts/assurance/report.schema.json" },
+        "visibility": { "const": "public" },
+        "capabilities": { "const": ["read", "query", "export"] },
+        "ingestion": { "const": "disabled" },
+        "retention": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "minimumDays", "transportDays", "deletion"],
+          "properties": {
+            "mode": { "const": "git-history" },
+            "minimumDays": { "type": "integer", "minimum": 400 },
+            "transportDays": { "const": 30 },
+            "deletion": { "const": "controlled-change" }
+          }
+        }
+      }
+    },
     "privateSource": {
       "allOf": [
         { "$ref": "#/$defs/source" },
@@ -107,10 +145,11 @@
     "registryReporting": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["contract", "structuredRecords", "nativeObjects", "observations", "privateSources", "ownership", "privateIngestion"],
+      "required": ["contract", "structuredRecords", "retainedReports", "nativeObjects", "observations", "privateSources", "ownership", "privateIngestion"],
       "properties": {
         "contract": { "const": "contracts/assurance/reporting.schema.json" },
         "structuredRecords": { "$ref": "#/$defs/structuredRecordSource" },
+        "retainedReports": { "$ref": "#/$defs/retainedReportSource" },
         "nativeObjects": {
           "type": "array",
           "minItems": 1,

@@ -40,6 +40,8 @@ For the security risk register, AI risk register, incident/exercise register, an
 
 The ISO SoA Markdown files are fully generated. Risk and incident/exercise Markdown preserves narrative around explicitly delimited generated sections. Generated Markdown must never become an input to runtime code, APIs, dashboards, or assurance-state validators.
 
+Reportable rows in the asset/access, competence/awareness, configuration, cryptography/secrets, data/retention, obligations, recovery-test, security-maintenance, security-testing, and supplier registers are owned by the registry-declared `assurance/governance/*.json` partitions. Edit those JSON records, then run `npm run generate:governance-registers`. Rating rules, templates, trigger matrices, policy prose, rationale, and professional judgment remain authored in Markdown outside the deterministic governance markers. `npm run validate:governance-registers` rejects stale or independently edited generated tables.
+
 Before opening a pull request, run:
 
 ```text
@@ -50,6 +52,6 @@ npm run security:dependencies
 npm run build
 ```
 
-CI repeats these checks, validates the controlled history and pull-request title, and uploads commit-bound validation evidence. Never edit an applied migration; add the next numbered migration. Releases and production deployment follow [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md) and [`docs/RELEASE.md`](docs/RELEASE.md).
+CI repeats these checks and validates the controlled history and pull-request title. After accepted default-branch CI completes, the trusted retained-report publisher derives the actual provider outcomes and writes the schema-valid report to the `assurance-reports` branch. Never edit an applied migration; add the next numbered migration. Releases and production deployment follow [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md) and [`docs/RELEASE.md`](docs/RELEASE.md).
 
 Do not add PDF documentation to this project unless explicitly requested; architecture and operational standards are maintained in reviewable Markdown/text.

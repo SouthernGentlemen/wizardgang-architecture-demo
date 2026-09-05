@@ -7,7 +7,8 @@ const cards = [
   ['github.commits', 'Recent commits', 'Native commit objects from the configured default branch.'],
   ['github.pull-requests', 'Pull requests', 'Native open and closed pull requests with provider state unchanged.'],
   ['github.workflow-runs', 'Actions runs', 'Native workflow runs and current attempt numbers.'],
-  ['github.workflow-artifacts', 'Report artifacts', 'Workflow artifact metadata, including GitHub expiration state.'],
+  ['github.retained-reports', 'Retained reports', 'Canonical CI and assurance-monitor reports retained on the assurance-reports branch.'],
+  ['github.workflow-artifacts', 'Transient artifacts', 'Workflow artifact metadata, including GitHub expiration state.'],
   ['github.tags', 'Tags', 'Native repository tags and target revisions.'],
   ['github.releases', 'Releases', 'Native GitHub Releases and their tag bindings.'],
 ] as const;
@@ -66,7 +67,7 @@ export function renderGitDemo(env: Env): Response {
       </section>
     </div>
   </section>
-  <section class="panel" id="source-of-truth"><div class="lab-heading"><div><p class="eyebrow">Shared reporting contract</p><h2>GitHub source of truth</h2></div><button type="button" data-evidence-refresh>Refresh evidence</button></div><p>Each row is a native GitHub object. This page intentionally requests a bounded sample; source completeness and provider availability are shown explicitly instead of presenting the sample as an export.</p><p data-evidence-meta aria-live="polite">Connecting to GitHub…</p></section>
+  <section class="panel" id="source-of-truth"><div class="lab-heading"><div><p class="eyebrow">Shared reporting contract</p><h2>GitHub source of truth</h2></div><button type="button" data-evidence-refresh>Refresh evidence</button></div><p>Each row is either a provider-native GitHub object or a canonical retained report derived from provider outcomes. This page intentionally requests a bounded sample; source completeness and provider availability are shown explicitly instead of presenting the sample as an export.</p><p data-evidence-meta aria-live="polite">Connecting to GitHub…</p></section>
   <span id="versioning" aria-hidden="true"></span><span id="branching" aria-hidden="true"></span><span id="actions" aria-hidden="true"></span><span id="releases" aria-hidden="true"></span>
   <div class="evidence-grid">${cardMarkup}</div>
   <section class="panel" id="environments"><div class="lab-heading"><div><p class="eyebrow">Native repository control object</p><h2>Default-branch controls</h2></div><span class="badge" data-controls-state>Not publicly verifiable</span></div><div data-controls-detail><p class="subtle">Loading branch-protection source…</p></div></section>
@@ -131,6 +132,7 @@ export function renderGitDemo(env: Env): Response {
       'github.commits':['sha','commit'],
       'github.pull-requests':['title','state','updated_at'],
       'github.workflow-runs':['name','status','conclusion','run_attempt'],
+      'github.retained-reports':['id','status','observedAt'],
       'github.workflow-artifacts':['name','expired','expires_at'],
       'github.tags':['name','commit'],
       'github.releases':['name','tag_name','published_at']

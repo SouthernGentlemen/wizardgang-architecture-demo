@@ -27,6 +27,7 @@ Approval is service-specific. Approval of a supplier does not approve every prod
 
 ## 3. Current Supplier Summary
 
+<!-- GENERATED:governance-records:suppliers:start -->
 | ID | Supplier / service | Class | Role | Approval state | Owner | Initial review state |
 |---|---|---|---|---|---|---|
 | SUP-001 | GitHub | Critical | Source control, pull requests, Actions, release/evidence history | Approved | Change / Release owner | Baseline documented; recurring supplier review pending |
@@ -35,6 +36,7 @@ Approval is service-specific. Approval of a supplier does not approve every prod
 | SUP-004 | Anthropic Claude | Material AI/MCP | Approved external AI/MCP client/provider family connecting to WizardGang's public MCP server | Approved | AI Governance owner | Approved only for existing bounded MCP interface; periodic review pending |
 | SUP-005 | External identity provider | Conditional | OAuth/OIDC/SSO/SAML provider when a scenario is configured | Conditional | Security / Technical owner | Provider-specific review required before activation |
 | SUP-006 | npm / open-source package ecosystem | Material | Dependency distribution and third-party application/build components | Supporting | Technical / Security owner | Lockfile/audit controls exist; supplier/ecosystem review remains partial |
+<!-- GENERATED:governance-records:suppliers:end -->
 
 **AI/MCP restriction:** `SUP-003` and `SUP-004` are the only approved AI/MCP connection families in the current scope. Any additional AI/MCP provider or client family requires a controlled management-system change before approval.
 

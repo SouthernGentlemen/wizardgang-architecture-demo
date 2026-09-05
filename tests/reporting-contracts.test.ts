@@ -17,6 +17,7 @@ import {
 import {
   registeredReportingSource,
   registeredReportingSources,
+  reportingSourceForOwnership,
   structuredReportingSource,
 } from '../src/reporting/registry';
 import { assuranceRegistryResources } from '../src/assurance/model';
@@ -87,6 +88,29 @@ describe('authoritative reporting contracts', () => {
     ]));
     expect(registeredReportingSource('github.issues').capabilities).toContain('import');
     expect(github.filter((source) => source.id !== 'github.issues').every((source) => !source.capabilities.includes('import'))).toBe(true);
+  });
+
+  it('resolves report ownership to durable retained reports and governance to canonical structured partitions', () => {
+    const retained = registeredReportingSource('github.retained-reports');
+    expect(retained).toMatchObject({
+      authority: 'structured-record',
+      scope: { branch: 'assurance-reports', resource: 'reports/' },
+      capabilities: ['read', 'query', 'export'],
+      ingestion: 'disabled',
+    });
+    expect(registry.reporting.ownership.find((owner) => owner.domain === 'reports')).toEqual({
+      domain: 'reports',
+      source: 'github.retained-reports',
+    });
+    expect(registry.reporting.ownership.find((owner) => owner.domain === 'governance')).toEqual({
+      domain: 'governance',
+      source: 'github.structured-records',
+      resource: 'governance.records',
+    });
+    expect(reportingSourceForOwnership('reports').id).toBe('github.retained-reports');
+    const governance = assuranceRegistryResources.find((resource) => resource.id === 'governance.records');
+    expect(governance).toBeDefined();
+    expect(reportingSourceForOwnership('governance', governance).id).toBe('github.structured-records.governance.records');
   });
 
   it('uses resource, metric, normalized dimensions, and observation window as aggregate observation identity', () => {

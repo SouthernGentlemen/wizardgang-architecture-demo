@@ -19,6 +19,28 @@
       "capabilities": ["read", "query", "export", "import"],
       "ingestion": "enabled"
     },
+    "retainedReports": {
+      "id": "github.retained-reports",
+      "provider": "github",
+      "authority": "structured-record",
+      "scope": {
+        "repository": "SouthernGentlemen/wizardgang-architecture-demo",
+        "branch": "assurance-reports",
+        "resource": "reports/"
+      },
+      "nativeIdentity": ["repository", "reportId"],
+      "revisionIdentity": ["branch", "blob"],
+      "schema": "contracts/assurance/report.schema.json",
+      "visibility": "public",
+      "capabilities": ["read", "query", "export"],
+      "ingestion": "disabled",
+      "retention": {
+        "mode": "git-history",
+        "minimumDays": 400,
+        "transportDays": 30,
+        "deletion": "controlled-change"
+      }
+    },
     "nativeObjects": [
       {
         "id": "github.repositories", "provider": "github", "authority": "native-object",
@@ -144,11 +166,11 @@
     ],
     "ownership": [
       { "domain": "evidence", "source": "github.structured-records", "resource": "evidence" },
-      { "domain": "reports", "source": "github.structured-records", "resource": "presentation.documents" },
+      { "domain": "reports", "source": "github.retained-reports" },
       { "domain": "issues", "source": "github.issues" },
       { "domain": "risks", "source": "github.structured-records", "resource": "risks" },
       { "domain": "security", "source": "github.structured-records", "resource": "advisories" },
-      { "domain": "governance", "source": "github.structured-records", "resource": "presentation.documents" },
+      { "domain": "governance", "source": "github.structured-records", "resource": "governance.records" },
       { "domain": "operations", "source": "cloudflare.operations" }
     ],
     "privateIngestion": "disabled"
@@ -248,6 +270,79 @@
         "qualification": "Public alignment and engineering-evidence mapping only; independent certification or formal conformance is not claimed.",
         "assessmentDate": "2026-09-02"
       }
+    },
+    {
+      "id": "governance.records", "kind": "governance-records", "role": "dataset",
+      "path": "assurance/governance/asset-inventory.json", "schema": "contracts/assurance/governance-record.schema.json",
+      "visibility": "public", "capabilities": ["summary-source"],
+      "qualification": "Reportable governance register facts are canonical structured records; generated Markdown remains a presentation layer and policy prose remains authored in Markdown.",
+      "resources": [
+        {
+          "id": "governance.records.access-classes", "kind": "governance-records", "role": "partition",
+          "path": "assurance/governance/access-classes.json", "schema": "contracts/assurance/governance-record.schema.json",
+          "visibility": "public", "capabilities": ["summary-source"]
+        },
+        {
+          "id": "governance.records.access-reviews", "kind": "governance-records", "role": "partition",
+          "path": "assurance/governance/access-reviews.json", "schema": "contracts/assurance/governance-record.schema.json",
+          "visibility": "public", "capabilities": ["summary-source"]
+        },
+        {
+          "id": "governance.records.competence", "kind": "governance-records", "role": "partition",
+          "path": "assurance/governance/competence.json", "schema": "contracts/assurance/governance-record.schema.json",
+          "visibility": "public", "capabilities": ["summary-source"]
+        },
+        {
+          "id": "governance.records.awareness", "kind": "governance-records", "role": "partition",
+          "path": "assurance/governance/awareness.json", "schema": "contracts/assurance/governance-record.schema.json",
+          "visibility": "public", "capabilities": ["summary-source"]
+        },
+        {
+          "id": "governance.records.configuration", "kind": "governance-records", "role": "partition",
+          "path": "assurance/governance/configuration.json", "schema": "contracts/assurance/governance-record.schema.json",
+          "visibility": "public", "capabilities": ["summary-source"]
+        },
+        {
+          "id": "governance.records.cryptography-secrets", "kind": "governance-records", "role": "partition",
+          "path": "assurance/governance/cryptography-secrets.json", "schema": "contracts/assurance/governance-record.schema.json",
+          "visibility": "public", "capabilities": ["summary-source"]
+        },
+        {
+          "id": "governance.records.data-inventory", "kind": "governance-records", "role": "partition",
+          "path": "assurance/governance/data-inventory.json", "schema": "contracts/assurance/governance-record.schema.json",
+          "visibility": "public", "capabilities": ["summary-source"]
+        },
+        {
+          "id": "governance.records.data-retention", "kind": "governance-records", "role": "partition",
+          "path": "assurance/governance/data-retention.json", "schema": "contracts/assurance/governance-record.schema.json",
+          "visibility": "public", "capabilities": ["summary-source"]
+        },
+        {
+          "id": "governance.records.obligations", "kind": "governance-records", "role": "partition",
+          "path": "assurance/governance/obligations.json", "schema": "contracts/assurance/governance-record.schema.json",
+          "visibility": "public", "capabilities": ["summary-source"]
+        },
+        {
+          "id": "governance.records.recovery-tests", "kind": "governance-records", "role": "partition",
+          "path": "assurance/governance/recovery-tests.json", "schema": "contracts/assurance/governance-record.schema.json",
+          "visibility": "public", "capabilities": ["summary-source"]
+        },
+        {
+          "id": "governance.records.security-maintenance", "kind": "governance-records", "role": "partition",
+          "path": "assurance/governance/security-maintenance.json", "schema": "contracts/assurance/governance-record.schema.json",
+          "visibility": "public", "capabilities": ["summary-source"]
+        },
+        {
+          "id": "governance.records.security-testing", "kind": "governance-records", "role": "partition",
+          "path": "assurance/governance/security-testing.json", "schema": "contracts/assurance/governance-record.schema.json",
+          "visibility": "public", "capabilities": ["summary-source"]
+        },
+        {
+          "id": "governance.records.suppliers", "kind": "governance-records", "role": "partition",
+          "path": "assurance/governance/suppliers.json", "schema": "contracts/assurance/governance-record.schema.json",
+          "visibility": "public", "capabilities": ["summary-source"]
+        }
+      ]
     },
     {
       "id": "risks", "kind": "risks", "role": "dataset",
