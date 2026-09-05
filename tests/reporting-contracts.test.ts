@@ -7,6 +7,7 @@ import {
 } from '../src/assurance/service';
 import {
   cloudflareUsageObservations,
+  cloudflareUsageQueryResult,
   type CloudflareUsageSnapshot,
 } from '../src/lib/cloudflare-usage';
 import * as reportingContracts from '../src/reporting/contracts';
@@ -31,20 +32,27 @@ function cloudflareSnapshot(costKind: CloudflareUsageSnapshot['cost']['kind']): 
   return {
     status: 'live',
     capturedAt: '2026-09-04T01:00:00.000Z',
+    validUntil: '2026-09-04T01:10:00.000Z',
+    cache: 'provider',
     windowStart: '2026-09-04T00:00:00.000Z',
     windowEnd: '2026-09-04T01:00:00.000Z',
     products: {
-      workers: { available: true, requests: 12, errors: 0, subrequests: 1, cpuP50Ms: 1, cpuP99Ms: 2 },
-      d1: { available: true, rowsRead: 3, rowsWritten: 1, storageBytes: 4 },
-      r2: { available: true, classAOperations: 1, classBOperations: 2, storageBytes: 5, objects: 1 },
-      durableObjects: { available: true, requests: 2, cpuTimeMs: 3, storageBytes: 4 },
+      workers: { available: true, availability: 'available', qualification: null, requests: 12, errors: 0, subrequests: 1, cpuP50Ms: 1, cpuP99Ms: 2 },
+      d1: { available: true, availability: 'available', qualification: null, rowsRead: 3, rowsWritten: 1, storageBytes: 4 },
+      r2: { available: true, availability: 'available', qualification: null, classAOperations: 1, classBOperations: 2, storageBytes: 5, objects: 1 },
+      durableObjects: { available: true, availability: 'available', qualification: null, requests: 2, cpuTimeMs: 3, storageBytes: 4 },
     },
     cost: {
       kind: costKind,
-      amountUsd: costKind === 'unavailable' ? null : 0.25,
-      currency: costKind === 'unavailable' ? null : 'USD',
+      availability: costKind === 'billed' ? 'available' : 'unavailable',
+      qualification: costKind === 'billed' ? null : 'test-unavailable',
+      observedAt: costKind === 'billed' ? '2026-09-04T00:45:00.000Z' : null,
+      validUntil: costKind === 'billed' ? '2026-09-04T00:55:00.000Z' : null,
+      amountUsd: costKind === 'billed' ? 0.25 : null,
+      currency: costKind === 'billed' ? 'USD' : null,
       periodStart: '2026-09-01',
       periodEnd: '2026-09-04',
+      scope: 'account',
       note: 'test',
       breakdown: [],
     },
@@ -127,27 +135,58 @@ describe('authoritative reporting contracts', () => {
       resource: 'worker:demo',
       metric: 'requests',
       dimensions: { colo: 'IAD', status: 200 },
+      unit: 'requests',
       window,
       observedAt: window.end,
+      validUntil: '2026-09-04T01:10:00.000Z',
+      provenance: { provider: 'cloudflare', transport: 'graphql', endpoint: 'https://api.cloudflare.com/client/v4/graphql', dataset: 'workersInvocationsAdaptive' },
       availability: 'available',
       value: 12,
     });
+    expect(observation.id).toBe(first);
     expect(observation.identity.observation).toBe(first);
     expect(observation.source).toBe('cloudflare.operations');
+    expect(observation.unit).toBe('requests');
+    expect(observation.provenance.dataset).toBe('workersInvocationsAdaptive');
   });
 
-  it('keeps published-rate cost estimates derived while accepting Cloudflare-returned billed cost as native observation', () => {
+  it('keeps exact Cloudflare account/resource scope internally and billing account-scoped', () => {
     const environment = {
-      CLOUDFLARE_ACCOUNT_ID: 'account',
-      CLOUDFLARE_WORKER_NAME: 'worker',
-      CLOUDFLARE_D1_DATABASE_ID: 'database',
-      CLOUDFLARE_R2_BUCKET: 'bucket',
-      CLOUDFLARE_DO_NAMESPACE: 'namespace',
+      CLOUDFLARE_ACCOUNT_ID: 'private-account',
+      CLOUDFLARE_WORKER_NAME: 'private-worker',
+      CLOUDFLARE_D1_DATABASE_ID: 'private-database',
+      CLOUDFLARE_R2_BUCKET: 'private-bucket',
+      CLOUDFLARE_DO_NAMESPACE: 'private-namespace',
     } as Env;
-    const estimated = cloudflareUsageObservations(environment, cloudflareSnapshot('estimated'));
-    expect(estimated.some((observation) => observation.metric === 'cost-usd')).toBe(false);
+    const unavailable = cloudflareUsageObservations(environment, cloudflareSnapshot('unavailable'));
+    expect(unavailable.some((observation) => observation.metric === 'billed-cost')).toBe(false);
     const billed = cloudflareUsageObservations(environment, cloudflareSnapshot('billed'));
-    expect(billed.find((observation) => observation.metric === 'cost-usd')?.value).toBe(0.25);
+    const worker = billed.find((observation) => observation.resource === 'workers:private-worker' && observation.metric === 'requests');
+    expect(worker?.dimensions).toEqual({ scope: 'resource', account: 'private-account' });
+    const cost = billed.find((observation) => observation.metric === 'billed-cost');
+    expect(cost?.value).toBe(0.25);
+    expect(cost?.dimensions).toEqual({ scope: 'account' });
+    expect(cost?.resource).toBe('account-billing:private-account');
+  });
+
+  it('projects Cloudflare observations through the same query result primitive without exposing source identifiers publicly', () => {
+    const environment = {
+      CLOUDFLARE_ACCOUNT_ID: 'private-account',
+      CLOUDFLARE_WORKER_NAME: 'private-worker',
+      CLOUDFLARE_D1_DATABASE_ID: 'private-database',
+      CLOUDFLARE_R2_BUCKET: 'private-bucket',
+      CLOUDFLARE_DO_NAMESPACE: 'private-namespace',
+    } as Env;
+    const result = cloudflareUsageQueryResult(environment, cloudflareSnapshot('billed'));
+    expect(result).toMatchObject({ schemaVersion: 1, dataset: 'cloudflare.operations', availability: { 'cloudflare.operations': 'available' } });
+    expect(result.records.length).toBeGreaterThan(0);
+    const serialized = JSON.stringify(result);
+    expect(serialized).not.toContain('private-account');
+    expect(serialized).not.toContain('private-worker');
+    expect(serialized).not.toContain('private-database');
+    expect(serialized).not.toContain('private-bucket');
+    expect(serialized).not.toContain('private-namespace');
+    expect(result.records.every((record) => record.provenance.provider === 'cloudflare')).toBe(true);
   });
 
   it('has one current interchange type surface and no legacy source/records-only import helper', () => {
@@ -155,6 +194,7 @@ describe('authoritative reporting contracts', () => {
     expect(reportingContracts).not.toHaveProperty('exportAuthoritativeReportingCollection');
     const schema = JSON.parse(readFileSync('contracts/assurance/reporting.schema.json', 'utf8')) as { $defs: Record<string, unknown> };
     expect(schema.$defs).toHaveProperty('interchangeEnvelope');
+    expect(schema.$defs).toHaveProperty('observationProvenance');
     expect(schema.$defs).not.toHaveProperty('importCollection');
   });
 
@@ -167,10 +207,13 @@ describe('authoritative reporting contracts', () => {
     expect(serialized).not.toMatch(/"(?:token|secret|credential|payload)"\s*:/i);
   });
 
-  it('does not use the retired D1 Cloudflare provider-state mirror in active runtime code', () => {
+  it('does not use the retired D1 Cloudflare provider-state mirror or a hardcoded cost estimator', () => {
     const usageSource = readFileSync('src/lib/cloudflare-usage.ts', 'utf8');
     const workerSource = readFileSync('src/index.ts', 'utf8');
     expect(usageSource).not.toContain('cloudflare_usage_snapshots');
+    expect(usageSource).not.toContain('function estimate(');
+    expect(usageSource).not.toContain('10_000_000');
+    expect(usageSource).not.toContain('25_000_000_000');
     expect(workerSource).not.toContain('collectCloudflareUsage');
   });
 });
