@@ -14,14 +14,8 @@ import { MCP_SERVER_PATH, mcpResponse } from './api/mcp';
 import { authorizationDecisionResponse, demoAccessTokenResponse, identityLogoutResponse, identitySessionResponse, oauthPkceResponse, providerCallbackResponse, providerStartResponse, samlCallbackResponse, samlInspectionResponse, samlMetadataResponse, samlStartResponse, ssoBoundaryResponse } from './api/identity';
 import { renderI18nDemo } from './demos/i18n-page';
 import { renderAccessibilityDemo } from './demos/accessibility-page';
-import { renderComplianceDemo } from './demos/compliance-page';
-import { renderEvidenceDemo } from './demos/evidence-page';
-import { renderConcerns, renderIncidents, renderRisks } from './demos/assurance-pages';
-import { renderSecurity } from './demos/security-page';
+import { renderConcerns } from './demos/assurance-pages';
 import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } from './api/governance';
-import { assuranceComplianceResponse, assuranceIncidentsResponse, assuranceRisksResponse, genericAssuranceResponse } from './api/assurance';
-import { assuranceAdvisoriesResponse } from './api/advisories';
-import { assuranceEvidenceResponse, assuranceResponse } from './api/assurance-registry';
 import { d1LabResponse } from './api/d1-lab';
 import { renderD1Demo } from './demos/d1-page';
 import { renderGraphqlDemo } from './demos/graphql-console';
@@ -36,79 +30,11 @@ import { renderMcpDemo } from './demos/mcp-page';
 import { graphiqlAssetResponse, localGraphiqlResponse } from './ui/graphiql-assets';
 import { renderApiDemo } from './demos/api-page';
 import { crawlerBlockedResponse, getCrawlerControl, identifyOpenAIAgent } from './lib/crawler-control';
-import {
-  assuranceHtmlRoute,
-  matchAssuranceRoute,
-  validateAssuranceRouteHandlerSupport,
-  type AssuranceRouteHandlerSupport,
-  type AssuranceRouteMatch,
-} from './assurance/routes';
 import { routeOperationalRequest } from './routing/operational-routes';
+import { routeAssuranceRequest } from './routing/assurance-routes';
 
 const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
 const API_PATHS = new Set([MCP_SERVER_PATH]);
-const LEGACY_OFFLINE_AVAILABLE_PATHS = new Set([assuranceHtmlRoute('advisories')]);
-
-type AssuranceHandler = (request: Request, env: Env, match: AssuranceRouteMatch) => Response | Promise<Response>;
-
-interface AssuranceApiHandlerRegistration {
-  handler: AssuranceHandler;
-  apiRecord?: boolean;
-}
-
-const ASSURANCE_API_HANDLERS: Record<string, AssuranceApiHandlerRegistration> = {
-  registry: { handler: (request, env) => assuranceResponse(request, env) },
-  evidence: { handler: (request, env) => assuranceEvidenceResponse(request, env) },
-  compliance: {
-    handler: (request, _env, match) => assuranceComplianceResponse(request, match.kind === 'api-record' ? match.recordId : undefined),
-    apiRecord: true,
-  },
-  risks: { handler: (request) => assuranceRisksResponse(request) },
-  incidents: { handler: (request) => assuranceIncidentsResponse(request) },
-  advisories: { handler: (request) => assuranceAdvisoriesResponse(request) },
-};
-
-const ASSURANCE_HTML_HANDLERS: Record<string, AssuranceHandler> = {
-  evidence: (request, env) => renderEvidenceDemo(request, env),
-  compliance: (request, env) => renderComplianceDemo(request, env),
-  risks: (request, env) => renderRisks(request, env),
-  incidents: (_request, env) => renderIncidents(env),
-  advisories: (_request, env) => renderSecurity(env),
-};
-
-const assuranceHandlerOwners = new Set([
-  ...Object.keys(ASSURANCE_API_HANDLERS),
-  ...Object.keys(ASSURANCE_HTML_HANDLERS),
-]);
-
-export const ASSURANCE_ROUTE_HANDLER_SUPPORT: Record<string, AssuranceRouteHandlerSupport> = {
-  ...Object.fromEntries(
-    [...assuranceHandlerOwners].map((owner) => [owner, {
-      html: Boolean(ASSURANCE_HTML_HANDLERS[owner]),
-      apiCollection: Boolean(ASSURANCE_API_HANDLERS[owner]),
-      apiRecord: Boolean(ASSURANCE_API_HANDLERS[owner]?.apiRecord),
-    }]),
-  ),
-  '*': { apiCollection: true, apiRecord: true },
-};
-
-const assuranceHandlerErrors = validateAssuranceRouteHandlerSupport(ASSURANCE_ROUTE_HANDLER_SUPPORT);
-if (assuranceHandlerErrors.length > 0) {
-  throw new Error(`Invalid assurance route handler support:\n${assuranceHandlerErrors.join('\n')}`);
-}
-
-async function routeAssuranceRequest(request: Request, env: Env, path: string): Promise<Response | undefined> {
-  const match = matchAssuranceRoute(path);
-  if (!match || match.kind === 'alias') return undefined;
-  if (match.kind === 'html') {
-    if (request.method !== 'GET') return undefined;
-    const handler = ASSURANCE_HTML_HANDLERS[match.owner];
-    return handler ? handler(request, env, match) : undefined;
-  }
-  const registration = ASSURANCE_API_HANDLERS[match.owner];
-  if (registration) return registration.handler(request, env, match);
-  return genericAssuranceResponse(request, match.owner, match.kind === 'api-record' ? match.recordId : undefined);
-}
 
 export function isApiLike(path: string): boolean {
   return API_PATHS.has(path) || API_PREFIXES.some((prefix) => path.startsWith(prefix));
@@ -153,8 +79,11 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
     return crawlerBlockedResponse(openAIAgent);
   }
 
+  const assuranceResponseMatch = await routeAssuranceRequest(request, env, path);
+  if (assuranceResponseMatch) return assuranceResponseMatch;
+
   const control = await getDemoControl(env);
-  if (control.state === 'offline' && !LEGACY_OFFLINE_AVAILABLE_PATHS.has(path)) {
+  if (control.state === 'offline') {
     if (wantsHtml(request, path)) {
       const target = new URL('/offline', url.origin);
       target.searchParams.set('from', path);
@@ -162,9 +91,6 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
     }
     return offlineApiResponse(control.publicMessage);
   }
-
-  const assuranceResponseMatch = await routeAssuranceRequest(request, env, path);
-  if (assuranceResponseMatch) return assuranceResponseMatch;
 
   if (path === '/v1/demo-records') return recordsResponse(request, env);
   if (path.startsWith('/v1/demo-records/')) return recordsResponse(request, env, path.slice('/v1/demo-records/'.length));
