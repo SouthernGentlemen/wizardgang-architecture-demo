@@ -76,11 +76,13 @@ for (const requiredFile of [
   'src/api/operations.ts',
   'src/routing/registry.ts',
   'src/routing/operational-routes.ts',
+  'src/routing/assurance-routes.ts',
   'src/api/assurance.ts',
   'src/api/advisories.ts',
   'src/api/assurance-registry.ts',
   'src/assurance/model.ts',
   'src/assurance/route-contract.js',
+  'src/assurance/route-capability.ts',
   'src/assurance/routes.ts',
   'src/assurance/service.ts',
   'src/assurance/publication.ts',
@@ -137,11 +139,18 @@ function walk(dir) {
 walk(root);
 
 const router = fs.readFileSync(path.join(root, 'src/router.ts'), 'utf8');
-for (const token of ['routeOperationalRequest', 'routeAssuranceRequest', 'matchAssuranceRoute', 'offlineApiResponse', 'wantsHtml']) {
+for (const token of ['routeOperationalRequest', 'routeAssuranceRequest', 'offlineApiResponse', 'wantsHtml']) {
   if (!router.includes(token)) failures.push(`router missing routing invariant: ${token}`);
 }
-for (const retiredToken of ['bypassOfflineGate', 'OPERATIONS_PREFIX']) {
-  if (router.includes(retiredToken)) failures.push(`router still contains retired operational route heuristic: ${retiredToken}`);
+for (const retiredToken of [
+  'bypassOfflineGate',
+  'OPERATIONS_PREFIX',
+  'ASSURANCE_API_HANDLERS',
+  'ASSURANCE_HTML_HANDLERS',
+  'LEGACY_OFFLINE_AVAILABLE_PATHS',
+  'matchAssuranceRoute',
+]) {
+  if (router.includes(retiredToken)) failures.push(`router still contains retired routing heuristic or dispatch inventory: ${retiredToken}`);
 }
 
 const operationalRoutes = fs.readFileSync(path.join(root, 'src/routing/operational-routes.ts'), 'utf8');
@@ -154,6 +163,18 @@ for (const route of [
   '/__api/operations/logs', '/__api/operations/cloudflare-usage', '/__api/operations/billing',
 ]) {
   if (!operationalRoutes.includes(`pattern: '${route}'`)) failures.push(`operational route registry missing migrated route: ${route}`);
+}
+
+const assuranceRoutes = fs.readFileSync(path.join(root, 'src/routing/assurance-routes.ts'), 'utf8');
+for (const token of [
+  'createAssuranceRouteRouter',
+  'assuranceDeclarativeRouteRegistry',
+  'routeAssuranceRequest',
+  'genericAssuranceResponse',
+  'defineRouteModule',
+  'contractValidateRouteContract',
+]) {
+  if (!assuranceRoutes.includes(token)) failures.push(`assurance route module missing registry invariant: ${token}`);
 }
 
 const assuranceModel = fs.readFileSync(path.join(root, 'src/assurance/model.ts'), 'utf8');
@@ -189,4 +210,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Scaffold validation passed: ${manifest.length} route entries, operations/admin invariants present, no PDFs.`);
+console.log(`Scaffold validation passed: ${manifest.length} route entries, operations/admin/assurance registry invariants present, no PDFs.`);

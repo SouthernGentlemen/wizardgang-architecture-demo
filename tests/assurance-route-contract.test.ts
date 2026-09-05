@@ -5,12 +5,12 @@ import {
   assuranceCollectionApiRoute,
   assuranceRecordUrls,
   assuranceRouteDeclarations,
-  matchAssuranceRoute,
-  validateAssuranceRouteHandlerSupport,
 } from '../src/assurance/routes';
+import { assuranceDeclarativeRouteRegistry } from '../src/routing/assurance-routes';
+import { matchRoute } from '../src/routing/registry';
 
 describe('assurance route contract', () => {
-  it('derives stable public routes and route ownership from the registry', () => {
+  it('derives stable public routes and route ownership from the assurance registry', () => {
     const declarations = assuranceRouteDeclarations();
     expect(declarations.map((entry) => entry.owner)).toEqual(expect.arrayContaining(['evidence', 'compliance', 'risks', 'incidents', 'advisories']));
     expect(assuranceCollectionApiRoute('compliance')).toBe('/v1/assurance/compliance');
@@ -20,10 +20,20 @@ describe('assurance route contract', () => {
     });
   });
 
-  it('matches collection and detail routes without family-specific dispatch inventories', () => {
-    expect(matchAssuranceRoute('/v1/assurance/risks')).toMatchObject({ owner: 'risks', kind: 'api-collection' });
-    expect(matchAssuranceRoute('/v1/assurance/compliance/WCAG-4.1.2')).toMatchObject({ owner: 'compliance', kind: 'api-record', recordId: 'WCAG-4.1.2' });
-    expect(matchAssuranceRoute('/v1/assurance/compliance/WCAG-4.1.2/extra')).toBeNull();
+  it('matches registry-derived routes through the declarative matcher', () => {
+    expect(matchRoute(assuranceDeclarativeRouteRegistry, 'GET', '/v1/assurance/risks')).toMatchObject({
+      status: 'matched',
+      route: { id: 'assurance.risks.collection' },
+    });
+    expect(matchRoute(assuranceDeclarativeRouteRegistry, 'GET', '/v1/assurance/compliance/WCAG-4.1.2')).toMatchObject({
+      status: 'matched',
+      route: { id: 'assurance.compliance.iso-27001.detail' },
+      params: { id: 'WCAG-4.1.2' },
+    });
+    expect(matchRoute(assuranceDeclarativeRouteRegistry, 'GET', '/v1/assurance/compliance/WCAG-4.1.2/extra')).toEqual({
+      status: 'not-found',
+      statusCode: 404,
+    });
   });
 
   it('serves exact records through the same current envelope as collection queries', async () => {
@@ -39,17 +49,13 @@ describe('assurance route contract', () => {
     expect(body).not.toHaveProperty('record');
   });
 
-  it('validates handler support without requiring compatibility serializers', () => {
-    expect(validateAssuranceRouteHandlerSupport({
-      'wizardgang-public-assurance': { apiCollection: true },
-      evidence: { html: true, apiCollection: true },
-      compliance: { html: true, apiCollection: true, apiRecord: true },
-      risks: { html: true, apiCollection: true },
-      incidents: { html: true, apiCollection: true },
-      advisories: { html: true, apiCollection: true },
-      '*': { apiCollection: true, apiRecord: true },
-    })).toEqual([]);
-    expect(readFileSync('src/router.ts', 'utf8')).toContain('matchAssuranceRoute');
-    expect(readFileSync('src/router.ts', 'utf8')).not.toContain('serializeAssuranceV1');
+  it('keeps assurance family dispatch out of the main router', () => {
+    const source = readFileSync('src/router.ts', 'utf8');
+    expect(source).toContain("routeAssuranceRequest");
+    expect(source).not.toContain('ASSURANCE_API_HANDLERS');
+    expect(source).not.toContain('ASSURANCE_HTML_HANDLERS');
+    expect(source).not.toContain('matchAssuranceRoute');
+    expect(source).not.toContain('genericAssuranceResponse');
+    expect(source).not.toContain("'/v1/assurance");
   });
 });
