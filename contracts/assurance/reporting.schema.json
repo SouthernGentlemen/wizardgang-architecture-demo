@@ -10,6 +10,9 @@
     "visibility": {
       "enum": ["public", "private"]
     },
+    "availability": {
+      "enum": ["available", "partial", "unavailable", "rate-limited", "stale", "expired"]
+    },
     "sourceScope": {
       "type": "object",
       "additionalProperties": false,
@@ -37,7 +40,6 @@
         },
         "revisionIdentity": {
           "type": "array",
-          "minItems": 1,
           "uniqueItems": true,
           "items": { "type": "string", "minLength": 1 }
         },
@@ -64,7 +66,10 @@
         },
         {
           "if": { "properties": { "authority": { "enum": ["native-object", "structured-record"] } }, "required": ["authority"] },
-          "then": { "required": ["revisionIdentity"] }
+          "then": {
+            "required": ["revisionIdentity"],
+            "properties": { "revisionIdentity": { "minItems": 1 } }
+          }
         }
       ]
     },
@@ -261,7 +266,7 @@
         "observedAt": { "type": "string", "format": "date-time" },
         "validUntil": { "type": "string", "format": "date-time" },
         "provenance": { "$ref": "#/$defs/observationProvenance" },
-        "availability": { "enum": ["available", "partial", "unavailable", "rate-limited", "expired"] },
+        "availability": { "$ref": "#/$defs/availability" },
         "value": {}
       }
     },
@@ -337,7 +342,7 @@
         "contract": { "const": "contracts/assurance/reporting.schema.json" },
         "dataset": { "type": "string", "minLength": 1 },
         "datasets": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
-        "availability": { "type": "object", "additionalProperties": { "type": "string", "minLength": 1 } },
+        "availability": { "type": "object", "additionalProperties": { "$ref": "#/$defs/availability" } },
         "sources": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/source" } },
         "qualifications": { "type": "object", "additionalProperties": { "type": ["string", "null"] } },
         "query": { "$ref": "#/$defs/query" },

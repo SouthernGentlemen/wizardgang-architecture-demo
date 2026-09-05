@@ -10,6 +10,7 @@ export type ReportingPresentationAvailability =
   | 'partial'
   | 'unavailable'
   | 'rate-limited'
+  | 'stale'
   | 'expired'
   | 'unconfigured';
 
@@ -84,7 +85,7 @@ function scalarText(value: unknown): string | null {
 
 function normalizedAvailability(value: unknown): ReportingPresentationAvailability | null {
   if (value === 'available' || value === 'empty' || value === 'partial' || value === 'unavailable'
-    || value === 'rate-limited' || value === 'expired' || value === 'unconfigured') return value;
+    || value === 'rate-limited' || value === 'stale' || value === 'expired' || value === 'unconfigured') return value;
   if (value === 'live') return 'available';
   return null;
 }
