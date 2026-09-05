@@ -24,22 +24,23 @@ The common contract is `contracts/assurance/reporting.schema.json`. All source d
 
 `assurance/registry.json` declares the GitHub native object types. Runtime repository bindings are configuration, not canonical data. The provider binds each selected source to an authorized repository at request time and preserves the repository scope in every returned identity.
 
-Public source types include repositories, branches, commits, issues, pull requests, workflow runs, workflow attempts, workflow artifacts, tags, releases, default-branch protection, and the `github.retained-reports` structured source. Protected source types include code-scanning alerts, secret-scanning alerts, Dependabot alerts, and repository security advisories.
+Public source types include repositories, branches, commits, issues, pull requests, workflow runs, workflow attempts, workflow artifacts, tags, releases, configured-branch protection, and the `github.retained-reports` structured source. Protected source types include code-scanning alerts, secret-scanning alerts, Dependabot alerts, and repository security advisories.
 
 Source objects advertise only capabilities the provider adapter actually supports. GitHub issues advertise `import` because update-only issue writes are implemented. Other native objects do not advertise import. Protected security sources remain read/query/export only and `privateIngestion` remains disabled.
 
 ## Native identity and revisions
 
-The provider does not allocate report IDs that compete with GitHub. The required reporting `id` is a deterministic serialization of the registered source identity, while the response also preserves the source-native identifier, repository, timestamps, URLs, provider status/state, revision components, and the native provider payload.
+The provider does not allocate report IDs that compete with GitHub. The required reporting `id` is a deterministic serialization of the registered source identity, while the response also preserves the source-native identifier, repository, timestamps, URLs, provider status/state, revision components, and the native provider payload. Missing required native identity or revision components qualify the source as partial instead of creating fallback identity.
 
 Examples:
 
 - issue: repository + issue number, revised by `updated_at`;
 - pull request: repository + PR number, revised by head SHA and `updated_at`;
 - workflow run: repository + run ID, revised by attempt number and `updated_at`;
-- workflow attempt: repository + run ID + attempt number;
+- workflow attempt: repository + run ID + attempt number, revised by `updated_at`;
 - artifact: repository + artifact ID, revised by update/expiration metadata;
 - release: repository + release ID, revised by update time/tag;
+- branch protection: repository + configured branch, revised by that branch's commit SHA;
 - repository security advisory: repository + GHSA ID, revised by `updated_at`.
 
 Relationships are identities, not copied register rows. For example, an artifact can point to its producing workflow run, an attempt can point to its run, a pull request can point to its head commit, and a release can point to its tag.
@@ -54,7 +55,7 @@ The publisher writes each run attempt once to `reports/YYYY/MM/<family>-<run>-at
 
 ## Query and export behavior
 
-The existing `/__api/git/evidence` route now returns the current shared reporting `queryResult`; the legacy `GitHubEvidence`, `EvidenceCard`, `cards`, and `controls` response model is not supported in parallel.
+The existing `/__api/git/evidence` route returns the current shared reporting `queryResult`; the legacy `GitHubEvidence`, `EvidenceCard`, `cards`, and `controls` response model is not supported in parallel.
 
 GET accepts:
 
@@ -65,7 +66,7 @@ GET accepts:
 
 A sample request fetches one provider page and marks the source `partial` when GitHub reports a next page. A sample is therefore never described as a complete export. `mode=export` follows provider pagination until the source is complete or the configured hard page bound is reached. If the hard bound is reached, the result remains explicit `partial` with a provider cursor qualification.
 
-Per-source availability is explicit and may be `available`, `partial`, `unavailable`, `rate-limited`, or `expired`. Artifact records preserve GitHub's own `expired` state. A missing or inaccessible `assurance-reports` branch is `unavailable`, while an existing branch with no report files is an available empty source. Upstream error bodies are not returned to clients.
+The common schema-defined provider availability vocabulary is `available`, `partial`, `unavailable`, `rate-limited`, `stale`, and `expired`. `stale` means an authoritative observation is retained but its freshness window has elapsed; it is not counted as currently available. `expired` is reserved for provider resources that are themselves expired, such as an expired GitHub Actions artifact. `empty` and `unconfigured` are presentation states derived from an available zero-record result or an unavailable source with explicit configuration qualification; they are not provider availability values. A missing or inaccessible `assurance-reports` branch is `unavailable`, while an existing branch with no report files is an available empty source. Upstream error bodies are not returned to clients.
 
 `query.pagination.total` and `derived.totalAvailable` are the number of native objects actually observed by the bounded query. When a source is partial, its qualification says so; those numbers must not be interpreted as an authoritative global total.
 
@@ -139,7 +140,7 @@ Fixtures cover:
 - duplicate native identities across provider pages;
 - bounded sample vs complete export pagination;
 - open/closed issue status without reinterpretation;
-- rate-limited and expired states;
+- unavailable, rate-limited, stale, and provider-expired states;
 - Actions run/artifact relationships;
 - retained-report branch discovery, report relationships, and missing-source versus empty-source behavior;
 - successful, failed, skipped, cancelled, zero-job, incomplete, and rejected report production;
@@ -157,4 +158,4 @@ Reverting publisher code does not delete already retained reports. Any deletion 
 
 If rollback occurs after a permitted native issue update, reverting application code does **not** revert that provider-side issue change. Provider writes are separately auditable GitHub operations and must be reversed in GitHub through an authorized corrective update if required.
 
-No release or deployment is part of DEMO-159.
+No release or deployment is part of this reporting refactor series.

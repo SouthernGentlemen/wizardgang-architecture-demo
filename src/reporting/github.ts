@@ -323,6 +323,15 @@ async function repositoryContext(
   };
 }
 
+function effectiveBranch(context: RepositoryContext): string {
+  return context.binding.branch || context.defaultBranch;
+}
+
+function sourceWithResolvedScope(source: ReportingSource, context: RepositoryContext): ReportingSource {
+  if (source.id !== 'github.commits' && source.id !== 'github.branch-protection') return source;
+  return { ...source, scope: { ...source.scope, branch: effectiveBranch(context) } };
+}
+
 function linkHasNext(header: string | null): boolean {
   return Boolean(header?.split(',').some((part) => /rel="next"/.test(part)));
 }
@@ -387,23 +396,23 @@ async function fetchSingle(context: RepositoryContext, path: string): Promise<Pa
   return { items: [object], availability: 'available', complete: true, nextCursor: null, detail: null };
 }
 
-function nativeParts(sourceId: string, raw: JsonObject, repository: string, defaultBranch: string): string[] | null {
+function nativeParts(sourceId: string, raw: JsonObject, branch: string): string[] | null {
   switch (sourceId) {
-    case 'github.repositories': return [text(raw.id) || repository];
+    case 'github.repositories': return [text(raw.id) || ''];
     case 'github.branches': return [text(raw.name) || ''];
     case 'github.commits': return [text(raw.sha) || ''];
     case 'github.issues': return [text(raw.number) || ''];
     case 'github.pull-requests': return [text(raw.number) || ''];
     case 'github.workflow-runs': return [text(raw.id) || ''];
-    case 'github.workflow-attempts': return [text(raw.id) || '', text(raw.run_attempt) || '1'];
+    case 'github.workflow-attempts': return [text(raw.id) || '', text(raw.run_attempt) || ''];
     case 'github.workflow-artifacts': return [text(raw.id) || ''];
     case 'github.tags': return [text(raw.name) || ''];
-    case 'github.releases': return [text(raw.id) || text(raw.tag_name) || ''];
-    case 'github.branch-protection': return [defaultBranch];
+    case 'github.releases': return [text(raw.id) || ''];
+    case 'github.branch-protection': return [branch];
     case 'github.code-scanning-alerts': return [text(raw.number) || ''];
     case 'github.secret-scanning-alerts': return [text(raw.number) || ''];
     case 'github.dependabot-alerts': return [text(raw.number) || ''];
-    case 'github.repository-security-advisories': return [text(raw.ghsa_id) || text(raw.cve_id) || ''];
+    case 'github.repository-security-advisories': return [text(raw.ghsa_id) || ''];
     default: return null;
   }
 }
@@ -414,8 +423,8 @@ function revisionParts(sourceId: string, raw: JsonObject): string[] {
     case 'github.branches': return [text(nested(raw, 'commit', 'sha'))].filter((value): value is string => Boolean(value));
     case 'github.commits': return [text(raw.sha)].filter((value): value is string => Boolean(value));
     case 'github.pull-requests': return [text(nested(raw, 'head', 'sha')), text(raw.updated_at)].filter((value): value is string => Boolean(value));
-    case 'github.workflow-runs':
-    case 'github.workflow-attempts': return [text(raw.run_attempt), text(raw.updated_at)].filter((value): value is string => Boolean(value));
+    case 'github.workflow-runs': return [text(raw.run_attempt), text(raw.updated_at)].filter((value): value is string => Boolean(value));
+    case 'github.workflow-attempts': return [text(raw.updated_at)].filter((value): value is string => Boolean(value));
     case 'github.workflow-artifacts': return [text(raw.updated_at), text(raw.expires_at)].filter((value): value is string => Boolean(value));
     case 'github.tags': return [text(nested(raw, 'commit', 'sha'))].filter((value): value is string => Boolean(value));
     case 'github.releases': return [text(raw.updated_at), text(raw.tag_name)].filter((value): value is string => Boolean(value));
@@ -615,11 +624,13 @@ function mapRecord(
   source: ReportingSource,
   repository: string,
   raw: JsonObject,
-  defaultBranch: string,
+  branch: string,
+  revisionOverride?: readonly string[],
 ): GitHubReportingRecord | null {
-  const parts = nativeParts(source.id, raw, repository, defaultBranch);
+  const parts = nativeParts(source.id, raw, branch);
   if (!parts || parts.some((part) => !part)) return null;
-  const revisions = revisionParts(source.id, raw);
+  const revisions = revisionOverride ? [...revisionOverride] : revisionParts(source.id, raw);
+  if (source.revisionIdentity.length > 0 && revisions.length !== source.revisionIdentity.length) return null;
   const revision = revisions.length > 0 ? revisions.join('|') : null;
   const identity = reportingIdentity(source.id, repository, parts, revision);
   return {
@@ -642,7 +653,7 @@ function mapRecord(
 }
 
 function sourceDescriptor(sourceId: string, context: RepositoryContext): { path: string; key?: string; single?: boolean } {
-  const branch = encodeURIComponent(context.binding.branch || context.defaultBranch);
+  const branch = encodeURIComponent(effectiveBranch(context));
   const labels = context.binding.issueLabels?.length ? `&labels=${encodeURIComponent(context.binding.issueLabels.join(','))}` : '';
   switch (sourceId) {
     case 'github.repositories': return { path: '', single: true };
@@ -696,6 +707,32 @@ async function workflowAttempts(
   return { items: attempts, availability, complete, nextCursor: runs.nextCursor, detail };
 }
 
+async function branchProtectionPage(
+  context: RepositoryContext,
+  source: ReportingSource,
+): Promise<{ page: PageResult; revisionOverride?: readonly string[] }> {
+  const descriptor = sourceDescriptor(source.id, context);
+  const page = await fetchSingle(context, descriptor.path);
+  if (page.items.length === 0) return { page };
+
+  const branch = effectiveBranch(context);
+  const branchState = await fetchSingle(context, `/branches/${encodeURIComponent(branch)}`);
+  const branchCommitSha = branchState.items[0]
+    ? text(nested(branchState.items[0], 'commit', 'sha'))
+    : null;
+  if (branchCommitSha) return { page, revisionOverride: [branchCommitSha] };
+
+  const availability = branchState.availability === 'available' ? 'partial' : branchState.availability;
+  return {
+    page: {
+      ...page,
+      availability,
+      complete: false,
+      detail: branchState.detail || 'native_revision_missing',
+    },
+  };
+}
+
 async function fetchSource(
   context: RepositoryContext,
   source: ReportingSource,
@@ -704,10 +741,15 @@ async function fetchSource(
 ): Promise<SourceFetchResult> {
   if (source.id === 'github.retained-reports') return fetchRetainedReports(context, source, mode, limit);
   let page: PageResult;
+  let revisionOverride: readonly string[] | undefined;
   if (source.id === 'github.workflow-attempts') {
     page = await workflowAttempts(context, mode, limit);
   } else if (source.id === 'github.repositories') {
     page = { items: [context.repository], availability: 'available', complete: true, nextCursor: null, detail: null };
+  } else if (source.id === 'github.branch-protection') {
+    const result = await branchProtectionPage(context, source);
+    page = result.page;
+    revisionOverride = result.revisionOverride;
   } else {
     const descriptor = sourceDescriptor(source.id, context);
     page = descriptor.single
@@ -722,7 +764,21 @@ async function fetchSource(
   let detail = page.detail;
   for (const raw of page.items) {
     if (source.id === 'github.issues' && asObject(raw.pull_request)) continue;
-    const record = mapRecord(source, context.binding.repository, raw, context.defaultBranch);
+    const parts = nativeParts(source.id, raw, effectiveBranch(context));
+    if (!parts || parts.some((part) => !part)) {
+      complete = false;
+      if (availability === 'available') availability = 'partial';
+      detail = detail || 'native_identity_missing';
+      continue;
+    }
+    const revisions = revisionOverride ? [...revisionOverride] : revisionParts(source.id, raw);
+    if (source.revisionIdentity.length > 0 && revisions.length !== source.revisionIdentity.length) {
+      complete = false;
+      if (availability === 'available') availability = 'partial';
+      detail = detail || 'native_revision_missing';
+      continue;
+    }
+    const record = mapRecord(source, context.binding.repository, raw, effectiveBranch(context), revisions);
     if (!record) {
       complete = false;
       if (availability === 'available') availability = 'partial';
@@ -771,8 +827,9 @@ export async function queryGitHubReporting(
   if (needsProtectedSource) requirePrivate(principal);
   const context = await repositoryContext(env, principal, binding, needsProtectedSource);
   if (context.private) requirePrivate(principal);
+  const scopedSources = selected.map((source) => sourceWithResolvedScope(source, context));
 
-  const results = await Promise.all(selected.map((source) => fetchSource(context, source, mode, limit)));
+  const results = await Promise.all(scopedSources.map((source) => fetchSource(context, source, mode, limit)));
   const records = results.flatMap((entry) => mode === 'sample' ? entry.records.slice(0, limit) : entry.records);
   const availability = Object.fromEntries(results.map((entry) => [entry.source.id, entry.availability]));
   const qualifications: Record<string, string | null> = {
@@ -792,15 +849,15 @@ export async function queryGitHubReporting(
     schemaVersion: 1,
     contract: REPORTING_CONTRACT,
     dataset: 'github',
-    datasets: selected.map((source) => source.id),
+    datasets: scopedSources.map((source) => source.id),
     availability,
-    sources: selected,
+    sources: scopedSources,
     qualifications,
     query: {
       filters: {
         repository: binding.repository,
         mode,
-        source: selected.map((source) => source.id).join(','),
+        source: scopedSources.map((source) => source.id).join(','),
       },
       pagination: {
         limit,

@@ -25,6 +25,7 @@ import { sourceUrl } from '../lib/github';
 import { escapeHtml } from '../lib/html';
 import type { Env } from '../types';
 import type {
+  ReportingAvailability,
   ReportingQueryResult,
   ReportingRecord,
   ReportingSource,
@@ -68,6 +69,12 @@ function structuredKinds(): string[] {
   return kinds;
 }
 
+function structuredAvailability(status: ReturnType<typeof assuranceCollectionState>['status']): ReportingAvailability {
+  if (status === 'available' || status === 'empty') return 'available';
+  if (status === 'partial') return 'partial';
+  return 'unavailable';
+}
+
 function structuredResult(dataset: string): ReportingQueryResult<PublishedAssuranceRuntimeRecord> {
   const state = assuranceCollectionState(dataset);
   const records = listPublishedAssuranceRecords(dataset);
@@ -78,7 +85,7 @@ function structuredResult(dataset: string): ReportingQueryResult<PublishedAssura
     contract: reportingContractPath,
     dataset,
     datasets: [dataset],
-    availability: { [dataset]: state.status },
+    availability: { [dataset]: structuredAvailability(state.status) },
     sources: [...sources.values()],
     qualifications: { [dataset]: assuranceDatasetQualification(dataset) ?? null },
     query: { filters: {} },
@@ -175,7 +182,7 @@ function availabilityLabel(availability: ReportingPresentationAvailability): str
 
 function badgeTone(availability: ReportingPresentationAvailability): string {
   if (availability === 'available') return 'badge badge-ok';
-  if (availability === 'partial' || availability === 'empty' || availability === 'unconfigured' || availability === 'rate-limited') return 'badge badge-warn';
+  if (availability === 'partial' || availability === 'empty' || availability === 'unconfigured' || availability === 'rate-limited' || availability === 'stale') return 'badge badge-warn';
   return 'badge badge-down';
 }
 

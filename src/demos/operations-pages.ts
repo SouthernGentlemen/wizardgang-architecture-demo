@@ -1,7 +1,7 @@
 import type { Env } from '../types';
 import { collectHealth, type HealthSnapshot } from '../api/operations';
 import { currentBudgetState, recentUsage } from '../lib/billing';
-import { latestCloudflareUsage, recentCloudflareUsage, type CloudflareUsageSnapshot } from '../lib/cloudflare-usage';
+import { latestCloudflareUsage, recentCloudflareUsage, type CloudflareTelemetryStatus, type CloudflareUsageSnapshot } from '../lib/cloudflare-usage';
 import { getDemoControl } from '../lib/demo-control';
 import { getCrawlerControl } from '../lib/crawler-control';
 import { escapeHtml } from '../lib/html';
@@ -40,13 +40,24 @@ export function operationsNavigation(active: string): string {
 
 function tone(value: string): 'ok' | 'warn' | 'down' | '' {
   if (value === 'operational' || value === 'online' || value === 'normal' || value === 'live') return 'ok';
-  if (value === 'degraded' || value === 'warning' || value === 'partial' || value === 'planned') return 'warn';
-  if (value === 'down' || value === 'offline' || value === 'unavailable') return 'down';
+  if (value === 'degraded' || value === 'warning' || value === 'partial' || value === 'planned' || value === 'stale' || value === 'rate-limited') return 'warn';
+  if (value === 'down' || value === 'offline' || value === 'unavailable' || value === 'expired') return 'down';
   return '';
 }
 
 const statusClass = (value: string) => `stat${tone(value) ? ` stat-${tone(value)}` : ''}`;
 const badgeClass = (value: string) => `badge${tone(value) ? ` badge-${tone(value)}` : ''}`;
+
+function telemetryStatusLabel(status: CloudflareTelemetryStatus): string {
+  switch (status) {
+    case 'live': return 'LIVE';
+    case 'partial': return 'PARTIAL';
+    case 'stale': return 'STALE';
+    case 'rate-limited': return 'RATE LIMITED';
+    case 'unconfigured': return 'SETUP NEEDED';
+    case 'unavailable': return 'UNAVAILABLE';
+  }
+}
 
 function operationalPage(
   env: Env,
@@ -166,7 +177,7 @@ export async function renderDashboard(env: Env): Promise<Response> {
   ];
   const healthy = services.filter((service) => service.state === 'operational').length;
   const usageReady = usage.status === 'live' || usage.status === 'partial';
-  const usageState = usageReady ? usage.status.toUpperCase() : usage.status === 'unconfigured' ? 'SETUP NEEDED' : 'STALE';
+  const usageState = telemetryStatusLabel(usage.status);
   const availabilityValue = availability.excludingPlanned === null ? 'AWAITING DATA' : `${availability.excludingPlanned.toFixed(3)}%`;
   const sha = env.DEPLOYED_SHA || '';
   const commitUrl = sha ? `${repoUrl(env)}/commit/${encodeURIComponent(sha)}` : `${repoUrl(env)}/commits/${encodeURIComponent(env.GITHUB_BRANCH || 'main')}`;
@@ -248,7 +259,7 @@ export async function renderUptime(env: Env): Promise<Response> {
   const liveState = `<div class="operations-live-state"><span class="status-pulse" data-state="${state}"></span><strong>${statusLabel}</strong><span>${latest ? `Last observation ${relativeTime(latest.checked_at)}` : 'Cron monitoring has not stored an observation yet'}</span></div>`;
   return operationalPage(env, '/dashboard/uptime', 'Availability', 'OPERATIONS / AVAILABILITY', 'Availability', 'Measured runtime availability with planned maintenance kept separate from unexpected dependency failures.', 'src/demos/uptime.ts', `
   <section class="availability-kpis"><article><p class="eyebrow">Current window</p><strong>${summary.excludingPlanned === null ? '—' : `${summary.excludingPlanned.toFixed(3)}%`}</strong><span>excluding planned maintenance</span></article><article><p class="eyebrow">Raw observations</p><strong>${summary.raw === null ? '—' : `${summary.raw.toFixed(3)}%`}</strong><span>all stored states included</span></article><article><p class="eyebrow">Events</p><strong>${summary.intentional} / ${summary.unexpected}</strong><span>planned / unexpected</span></article></section>
-  <section class="operations-section"><div class="operations-section-heading"><div><p class="eyebrow">Latest ${Math.min(rows.length, 40)} observations</p><h2>Availability history</h2></div><span class="subtle">Every 5 minutes</span></div>${availabilityTimeline(rows)}<div class="availability-legend"><span><i data-state="operational"></i>Operational</span><span><i data-state="planned"></i>Planned maintenance</span><span><i data-state="degraded"></i>Unexpected failure</span></div><p class="subtle">This is measured history, not an SLA.</p></section>
+  <section class="operations-section"><div class="operations-section-heading"><div><p class="eyebrow">Latest ${Math.min(rows.length, 40)} observations</p><h2 id="availability-heading">Availability history</h2></div><span class="subtle">Every 5 minutes</span></div>${availabilityTimeline(rows)}<div class="availability-legend"><span><i data-state="operational"></i>Operational</span><span><i data-state="planned"></i>Planned maintenance</span><span><i data-state="degraded"></i>Unexpected failure</span></div><p class="subtle">This is measured history, not an SLA.</p></section>
   <section class="operations-section"><div class="operations-section-heading"><div><p class="eyebrow">Most recent first</p><h2>Observations</h2></div><span class="subtle">Showing ${recent.length} of ${rows.length}</span></div><div class="table-wrap"><table><thead><tr><th>Checked</th><th>State</th><th>D1 latency</th><th>Classification</th></tr></thead><tbody>${historyRows(recent) || '<tr><td colspan="4">Scheduled monitoring will populate this history after deployment.</td></tr>'}</tbody></table></div>${remainder.length ? `<details class="full-history"><summary>Show full history</summary><div class="table-wrap"><table><thead><tr><th>Checked</th><th>State</th><th>D1 latency</th><th>Classification</th></tr></thead><tbody>${historyRows(remainder)}</tbody></table></div></details>` : ''}<p><a href="${escapeHtml(sourceUrl(env, 'migrations/0002_operations_dashboard.sql'))}">View history schema</a></p></section>`, liveState);
 }
 
@@ -259,8 +270,20 @@ export function renderDocs(env: Env): Response {
   return operationalPage(env, '/dashboard/docs', 'Documentation', 'OPERATIONS / DOCS', 'Documentation', 'Repository-native standards, contracts, implementation sources, and live machine interfaces.', 'src/demos/docs.ts', `<section class="resource-list" aria-label="Repository documentation">${links.map(([label, path]) => `<a href="${escapeHtml(sourceUrl(env, path))}"><strong>${escapeHtml(label)}</strong><code>${escapeHtml(path)}</code></a>`).join('')}</section><section class="machine-links"><h2>Live interfaces</h2><nav class="link-row" aria-label="Live machine interfaces"><a href="/v1/openapi.json">Swagger JSON</a><a href="/graphql/schema">GraphQL schema</a><a href="/v1/assurance/compliance">Compliance JSON</a><a href="/health">Health JSON</a><a href="/version">Version JSON</a><a href="/__api/operations/logs">Logs JSON</a><a href="/__api/operations/cloudflare-usage">Usage JSON</a><a href="${escapeHtml(repoUrl(env))}/releases">Releases</a><a href="${escapeHtml(repoUrl(env))}/tags">Tags</a></nav></section>`);
 }
 
-function productCard(label: string, state: boolean, metrics: Array<[string, string]>): string {
-  return `<article class="usage-product"><div><p class="eyebrow">Cloudflare</p><h3>${escapeHtml(label)}</h3><span class="${badgeClass(state ? 'live' : 'unavailable')}">${state ? 'Live usage' : 'Unavailable'}</span></div><dl>${metrics.map(([name, value]) => `<dt>${escapeHtml(name)}</dt><dd>${escapeHtml(state ? value : '—')}</dd>`).join('')}</dl></article>`;
+type CloudflareMetricAvailability = CloudflareUsageSnapshot['products']['workers']['availability'];
+
+function metricAvailabilityLabel(availability: CloudflareMetricAvailability): string {
+  if (availability === 'available') return 'Live usage';
+  if (availability === 'partial') return 'Partial';
+  if (availability === 'rate-limited') return 'Rate limited';
+  if (availability === 'stale') return 'Stale';
+  if (availability === 'expired') return 'Expired';
+  return 'Unavailable';
+}
+
+function productCard(label: string, availability: CloudflareMetricAvailability, metrics: Array<[string, string]>): string {
+  const current = availability === 'available';
+  return `<article class="usage-product"><div><p class="eyebrow">Cloudflare</p><h3>${escapeHtml(label)}</h3><span class="${badgeClass(current ? 'live' : availability)}">${metricAvailabilityLabel(availability)}</span></div><dl>${metrics.map(([name, value]) => `<dt>${escapeHtml(name)}</dt><dd>${escapeHtml(current ? value : '—')}</dd>`).join('')}</dl></article>`;
 }
 
 function usageTrend(usage: CloudflareUsageSnapshot): string {
@@ -279,17 +302,21 @@ export async function renderBilling(env: Env): Promise<Response> {
   const syntheticRows = syntheticHistory.map((row) => `<tr><td>${escapeHtml(row.captured_at)}</td><td>${row.quantity.toLocaleString('en-US')} ${escapeHtml(row.unit)}</td><td>$${row.estimated_cost_usd.toFixed(4)}</td><td>$${(row.budget_limit_usd ?? 0).toFixed(2)}</td><td>${budgetLabel(row.estimated_cost_usd, row.budget_limit_usd ?? 0)}</td></tr>`).join('');
   const usageRows = snapshots.map((row) => `<tr><td>${escapeHtml(row.capturedAt || '—')}</td><td><span class="${badgeClass(row.status)}">${escapeHtml(row.status)}</span></td><td>${row.products.workers.available ? formatNumber(row.products.workers.requests, false) : '—'}</td><td>${row.products.d1.available ? formatNumber(row.products.d1.rowsRead, false) : '—'}</td><td>${row.products.r2.available ? formatBytes(row.products.r2.storageBytes) : '—'}</td><td>${row.cost.amountUsd === null ? '—' : `$${row.cost.amountUsd.toFixed(4)}`} ${row.cost.kind}</td></tr>`).join('');
   const telemetryReady = usage.status === 'live' || usage.status === 'partial';
-  const costLabel = usage.cost.kind === 'billed' ? 'Usage-based spend' : usage.cost.kind === 'estimated' ? 'Estimated overage' : 'Usage-based spend';
+  const costLabel = 'Usage-based spend';
   const costValue = usage.cost.amountUsd === null ? '—' : `$${usage.cost.amountUsd.toFixed(2)}`;
+  const costBadgeState = usage.cost.availability === 'available' ? 'live' : usage.cost.availability;
+  const costStateLabel = usage.cost.availability === 'available'
+    ? usage.cost.kind
+    : usage.cost.kind === 'unavailable' ? usage.cost.availability : `${usage.cost.kind} · ${usage.cost.availability}`;
   const breakdownMaximum = Math.max(0.0001, ...usage.cost.breakdown.map((row) => row.amountUsd));
-  const liveState = `<div class="operations-live-state"><span class="status-pulse" data-state="${usage.status}"></span><strong>${telemetryReady ? usage.status.toUpperCase() : usage.status === 'unconfigured' ? 'SETUP NEEDED' : 'TELEMETRY UNAVAILABLE'}</strong><span>${usage.capturedAt ? `Updated ${relativeTime(usage.capturedAt)}` : escapeHtml(usage.cost.note)}</span></div>`;
+  const liveState = `<div class="operations-live-state"><span class="status-pulse" data-state="${usage.status}"></span><strong>${telemetryStatusLabel(usage.status)}</strong><span>${usage.capturedAt ? `Updated ${relativeTime(usage.capturedAt)}` : escapeHtml(usage.cost.note)}</span></div>`;
   return operationalPage(env, '/dashboard/billing', 'Cloudflare Usage & Cost', 'OPERATIONS / USAGE', 'Cloudflare Usage & Cost', 'Live Cloudflare resource consumption with controlled cost-degradation scenarios.', 'src/demos/billing.ts', `
-  <section class="billing-period"><div><p class="eyebrow">Current usage window</p><strong>${escapeHtml(usage.cost.periodStart.slice(0, 10))} → ${escapeHtml(usage.cost.periodEnd.slice(0, 10))}</strong></div><div><p class="eyebrow">${escapeHtml(costLabel)}</p><strong>${costValue}</strong><span class="${badgeClass(usage.cost.kind === 'billed' ? 'live' : usage.cost.kind === 'estimated' ? 'warning' : 'unavailable')}">${escapeHtml(usage.cost.kind)}</span></div><p>${escapeHtml(usage.cost.note)}</p></section>
+  <section class="billing-period"><div><p class="eyebrow">Current usage window</p><strong>${escapeHtml(usage.cost.periodStart.slice(0, 10))} → ${escapeHtml(usage.cost.periodEnd.slice(0, 10))}</strong></div><div><p class="eyebrow">${escapeHtml(costLabel)}</p><strong>${costValue}</strong><span class="${badgeClass(costBadgeState)}">${escapeHtml(costStateLabel)}</span></div><p>${escapeHtml(usage.cost.note)}</p></section>
   <section class="operations-section"><div class="operations-section-heading"><div><p class="eyebrow">Normalized, public-safe metrics</p><h2>Resource usage</h2></div><span class="subtle">${usage.capturedAt ? `Updated ${relativeTime(usage.capturedAt)}` : 'Awaiting first refresh'}</span></div><div class="usage-products">
-    ${productCard('Workers', usage.products.workers.available, [['Requests', formatNumber(usage.products.workers.requests, false)], ['Errors', formatNumber(usage.products.workers.errors, false)], ['Success rate', usage.products.workers.requests ? `${((usage.products.workers.requests - usage.products.workers.errors) / usage.products.workers.requests * 100).toFixed(3)}%` : '—'], ['CPU p50', usage.products.workers.cpuP50Ms === null ? '—' : `${usage.products.workers.cpuP50Ms.toFixed(1)} ms`], ['CPU p99', usage.products.workers.cpuP99Ms === null ? '—' : `${usage.products.workers.cpuP99Ms.toFixed(1)} ms`], ['Subrequests', formatNumber(usage.products.workers.subrequests, false)]])}
-    ${productCard('D1', usage.products.d1.available, [['Rows read', formatNumber(usage.products.d1.rowsRead, false)], ['Rows written', formatNumber(usage.products.d1.rowsWritten, false)], ['Storage', formatBytes(usage.products.d1.storageBytes)], ['Published paid allowance', '25B read · 50M written · 5 GB']])}
-    ${productCard('R2', usage.products.r2.available, [['Storage', formatBytes(usage.products.r2.storageBytes)], ['Objects', formatNumber(usage.products.r2.objects, false)], ['Class A', formatNumber(usage.products.r2.classAOperations, false)], ['Class B', formatNumber(usage.products.r2.classBOperations, false)], ['Egress', '$0']])}
-    ${productCard('Durable Objects', usage.products.durableObjects.available, [['Requests', formatNumber(usage.products.durableObjects.requests, false)], ['CPU', `${formatNumber(usage.products.durableObjects.cpuTimeMs, false)} ms`], ['Storage', formatBytes(usage.products.durableObjects.storageBytes)]])}
+    ${productCard('Workers', usage.products.workers.availability, [['Requests', formatNumber(usage.products.workers.requests, false)], ['Errors', formatNumber(usage.products.workers.errors, false)], ['Success rate', usage.products.workers.requests ? `${((usage.products.workers.requests - usage.products.workers.errors) / usage.products.workers.requests * 100).toFixed(3)}%` : '—'], ['CPU p50', usage.products.workers.cpuP50Ms === null ? '—' : `${usage.products.workers.cpuP50Ms.toFixed(1)} ms`], ['CPU p99', usage.products.workers.cpuP99Ms === null ? '—' : `${usage.products.workers.cpuP99Ms.toFixed(1)} ms`], ['Subrequests', formatNumber(usage.products.workers.subrequests, false)]])}
+    ${productCard('D1', usage.products.d1.availability, [['Rows read', formatNumber(usage.products.d1.rowsRead, false)], ['Rows written', formatNumber(usage.products.d1.rowsWritten, false)], ['Storage', formatBytes(usage.products.d1.storageBytes)], ['Published paid allowance', '25B read · 50M written · 5 GB']])}
+    ${productCard('R2', usage.products.r2.availability, [['Storage', formatBytes(usage.products.r2.storageBytes)], ['Objects', formatNumber(usage.products.r2.objects, false)], ['Class A', formatNumber(usage.products.r2.classAOperations, false)], ['Class B', formatNumber(usage.products.r2.classBOperations, false)], ['Egress', '$0']])}
+    ${productCard('Durable Objects', usage.products.durableObjects.availability, [['Requests', formatNumber(usage.products.durableObjects.requests, false)], ['CPU', `${formatNumber(usage.products.durableObjects.cpuTimeMs, false)} ms`], ['Storage', formatBytes(usage.products.durableObjects.storageBytes)]])}
   </div>${usage.failures.length ? `<p class="telemetry-notice"><strong>${usage.status === 'partial' ? 'Partial telemetry:' : 'Refresh detail:'}</strong> ${escapeHtml(usage.failures.join(', '))} did not return a usable dataset in the latest refresh.</p>` : ''}</section>
   <section class="operations-split"><article class="operations-section"><div class="operations-section-heading"><div><p class="eyebrow">Last 7 days</p><h2>Usage trend</h2></div><span class="subtle">${usage.trend.some((point) => point.costUsd !== null) ? 'Usage-based cost' : 'Worker requests'}</span></div>${usageTrend(usage)}</article><article class="operations-section"><div class="operations-section-heading"><div><p class="eyebrow">${escapeHtml(usage.cost.kind)}</p><h2>Cost breakdown</h2></div></div><div class="cost-breakdown">${usage.cost.breakdown.map((row) => `<div><span>${escapeHtml(row.product)}</span><span class="cost-track" aria-hidden="true"><i style="width:${row.amountUsd ? Math.max(3, row.amountUsd / breakdownMaximum * 100) : 0}%"></i></span><strong>$${row.amountUsd.toFixed(4)}</strong></div>`).join('') || '<p class="subtle">Cost fields are not available from this account.</p>'}</div></article></section>
   <section class="operations-section guardrail-simulator"><div class="operations-section-heading"><div><p class="eyebrow">Controlled demonstration</p><h2>Cost guardrail simulator</h2></div><span class="${badgeClass(current.state)}">${escapeHtml(current.state)} · ${current.percent.toFixed(1)}%</span></div><p>Simulate application behavior when cost thresholds are crossed. This does not change Cloudflare billing, thresholds, or account configuration.</p><div class="guardrail-states"><div data-state="normal"><strong>Normal</strong><span>40%</span><p>Optional workloads available.</p></div><div data-state="warning"><strong>Warning</strong><span>75%</span><p>Operators warned. Core behavior unchanged.</p></div><div data-state="degraded"><strong>Degraded</strong><span>95%</span><p>Optional compute paused. Operations stay online.</p></div></div><div class="button-row" aria-label="Guardrail scenario"><button type="button" data-budget="normal" aria-pressed="${current.state === 'normal'}">Normal</button><button type="button" data-budget="warning" aria-pressed="${current.state === 'warning'}">Warning</button><button type="button" data-budget="degraded" aria-pressed="${current.state === 'degraded'}">Degraded</button></div><pre aria-live="polite" data-budget-output hidden></pre></section>

@@ -9,7 +9,7 @@ import {
 } from '../reporting/contracts';
 import { registeredReportingSource, reportingContractPath } from '../reporting/registry';
 
-export type CloudflareTelemetryStatus = 'live' | 'partial' | 'unavailable' | 'unconfigured' | 'rate-limited' | 'expired';
+export type CloudflareTelemetryStatus = 'live' | 'partial' | 'unavailable' | 'unconfigured' | 'rate-limited' | 'stale';
 export type CloudflareObservationProjection = 'internal' | 'public';
 
 interface DatasetState {
@@ -38,9 +38,7 @@ export interface CloudflareUsageSnapshot {
     durableObjects: DatasetState & { requests: number; cpuTimeMs: number; storageBytes: number };
   };
   cost: {
-    // `estimated` is retained only as a presentation compatibility discriminator. The authoritative
-    // collector never produces it and has no local pricing model.
-    kind: 'billed' | 'estimated' | 'unavailable';
+    kind: 'billed' | 'unavailable';
     availability: ReportingAvailability;
     qualification: string | null;
     observedAt: string | null;
@@ -415,13 +413,17 @@ function applySnapshotFreshness(snapshot: CloudflareUsageSnapshot, clock = new D
   if (evaluation?.state === 'current') return snapshot;
   if (evaluation?.state === 'expired') {
     const copy = cloneSnapshot(snapshot);
-    copy.status = 'expired';
+    copy.status = 'stale';
     for (const product of Object.values(copy.products)) {
       if (product.available) {
         product.available = false;
-        product.availability = 'expired';
-        product.qualification = 'observation-expired';
+        product.availability = 'stale';
+        product.qualification = 'observation-stale';
       }
+    }
+    if (copy.cost.availability === 'available') {
+      copy.cost.availability = 'stale';
+      copy.cost.qualification = 'observation-stale';
     }
     return copy;
   }
@@ -526,7 +528,7 @@ function publicAvailability(status: CloudflareTelemetryStatus): ReportingAvailab
   if (status === 'live') return 'available';
   if (status === 'partial') return 'partial';
   if (status === 'rate-limited') return 'rate-limited';
-  if (status === 'expired') return 'expired';
+  if (status === 'stale') return 'stale';
   return 'unavailable';
 }
 
@@ -537,7 +539,9 @@ export function cloudflareUsageQueryResult(env: Env, snapshot: CloudflareUsageSn
   for (const record of records) metricFacets[record.metric] = (metricFacets[record.metric] ?? 0) + 1;
   const qualification = snapshot.status === 'unconfigured'
     ? 'Cloudflare analytics is not configured for this environment.'
-    : snapshot.failures.length ? `One or more provider datasets were unavailable: ${snapshot.failures.join(', ')}.` : null;
+    : snapshot.status === 'stale'
+      ? 'The last authoritative Cloudflare observation is outside its freshness window.'
+      : snapshot.failures.length ? `One or more provider datasets were unavailable: ${snapshot.failures.join(', ')}.` : null;
   return {
     schemaVersion: 1,
     contract: reportingContractPath,
@@ -630,7 +634,7 @@ export async function collectCloudflareUsage(env: Env, includeBilling = true): P
   const cached = derivedSnapshotCache.get(key);
   if (cached) {
     const reused = applySnapshotFreshness({ ...cloneSnapshot(cached), cache: 'derived-cache' }, now);
-    if (reused.status === 'expired') reused.failures = [...new Set([...reused.failures, ...failures, 'Derived cache expired'])];
+    if (reused.status === 'stale') reused.failures = [...new Set([...reused.failures, ...failures, 'Derived cache stale'])];
     else reused.failures = [...new Set([...reused.failures, ...failures, 'Provider refresh unavailable; using current derived cache'])];
     return reused;
   }

@@ -2,7 +2,7 @@ export type ReportingProvider = 'github' | 'cloudflare';
 export type ReportingAuthority = 'native-object' | 'structured-record' | 'native-observation';
 export type ReportingVisibility = 'public' | 'private';
 export type ReportingCapability = 'read' | 'query' | 'export' | 'import' | 'observe';
-export type ReportingAvailability = 'available' | 'partial' | 'unavailable' | 'rate-limited' | 'expired';
+export type ReportingAvailability = 'available' | 'partial' | 'unavailable' | 'rate-limited' | 'stale' | 'expired';
 export type ReportingScalar = string | number | boolean | null;
 
 export interface ReportingSource {
@@ -11,7 +11,7 @@ export interface ReportingSource {
   authority: ReportingAuthority;
   scope: { repository?: string; branch?: string; resource: string };
   nativeIdentity: readonly string[];
-  revisionIdentity?: readonly string[];
+  revisionIdentity: readonly string[];
   observationIdentity?: readonly string[];
   schema: string;
   visibility: ReportingVisibility;
@@ -80,7 +80,7 @@ export interface ReportingQueryResult<T extends ReportingRecord> {
   contract: string;
   dataset: string;
   datasets: readonly string[];
-  availability: Readonly<Record<string, string>>;
+  availability: Readonly<Record<string, ReportingAvailability>>;
   sources: readonly ReportingSource[];
   qualifications: Readonly<Record<string, string | null>>;
   query: ReportingQuery;

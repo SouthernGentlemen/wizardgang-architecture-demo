@@ -184,6 +184,9 @@ describe('operations proof surface', () => {
       expect(snapshot.status).toBe('unavailable');
       expect(Object.values(snapshot.products).every((product) => !product.available)).toBe(true);
       expect(snapshot.products.workers.qualification).toBe('account-scope-not-found');
+      const dashboard = await (await renderDashboard(environment)).text();
+      expect(dashboard).toContain('>UNAVAILABLE<');
+      expect(dashboard).not.toContain('>STALE<');
     } finally {
       vi.unstubAllGlobals();
     }
@@ -202,8 +205,8 @@ describe('operations proof surface', () => {
     }
   });
 
-  it('expires a reused telemetry observation through the shared freshness evaluator', async () => {
-    const environment = cloudflareEnv('expiry-account');
+  it('marks a reused authoritative telemetry observation stale after its freshness window', async () => {
+    const environment = cloudflareEnv('stale-account');
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-09-02T12:00:00.000Z'));
     vi.stubGlobal('fetch', analyticsFetch({ billing: 'forbidden' }));
@@ -214,10 +217,20 @@ describe('operations proof surface', () => {
       vi.setSystemTime(new Date('2026-09-02T12:11:00.000Z'));
       vi.stubGlobal('fetch', async () => { throw new Error('network unavailable'); });
       const cached = await collectCloudflareUsage(environment, false);
-      expect(cached.status).toBe('expired');
+      expect(cached.status).toBe('stale');
       expect(cached.cache).toBe('derived-cache');
       expect(cached.capturedAt).toBe(observedAt);
-      expect(cached.products.workers.availability).toBe('expired');
+      expect(cached.products.workers).toMatchObject({ availability: 'stale', qualification: 'observation-stale' });
+
+      const response = await cloudflareUsageResponse(new Request('https://demo.example/__api/operations/cloudflare-usage'), environment);
+      const body = await response.json() as { availability: Record<string, string>; records: Array<{ availability: string }> };
+      expect(body.availability['cloudflare.operations']).toBe('stale');
+      expect(body.records.length).toBeGreaterThan(0);
+      expect(body.records.every((record) => record.availability === 'stale')).toBe(true);
+
+      const dashboard = await (await renderDashboard(environment)).text();
+      expect(dashboard).toContain('>STALE<');
+      expect(dashboard).not.toContain('>UNAVAILABLE<');
     } finally {
       vi.unstubAllGlobals();
       vi.useRealTimers();

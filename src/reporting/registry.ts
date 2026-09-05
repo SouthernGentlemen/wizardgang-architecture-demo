@@ -41,7 +41,7 @@ function copySource(source: ReportingSource): ReportingSource {
     ...source,
     scope: { ...source.scope },
     nativeIdentity: [...source.nativeIdentity],
-    ...(source.revisionIdentity ? { revisionIdentity: [...source.revisionIdentity] } : {}),
+    revisionIdentity: source.revisionIdentity ? [...source.revisionIdentity] : [],
     ...(source.observationIdentity ? { observationIdentity: [...source.observationIdentity] } : {}),
     capabilities: [...source.capabilities],
   };
