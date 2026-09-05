@@ -2,13 +2,13 @@ import type { Env } from '../types';
 import { collectHealth, type HealthSnapshot } from '../api/operations';
 import { currentBudgetState, recentUsage } from '../lib/billing';
 import { latestCloudflareUsage, recentCloudflareUsage, type CloudflareUsageSnapshot } from '../lib/cloudflare-usage';
-import { publicComplianceRegistry } from '../assurance/registry';
 import { getDemoControl } from '../lib/demo-control';
 import { getCrawlerControl } from '../lib/crawler-control';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
 import { recentApplicationLogs, type ApplicationLogRow } from '../lib/logs';
 import { referenceDetails, shell } from '../ui/page';
+import { renderUnifiedReportingPresentation } from './reporting-dashboard';
 
 interface HealthRow {
   id: number;
@@ -172,7 +172,7 @@ export async function renderDashboard(env: Env): Promise<Response> {
   const commitUrl = sha ? `${repoUrl(env)}/commit/${encodeURIComponent(sha)}` : `${repoUrl(env)}/commits/${encodeURIComponent(env.GITHUB_BRANCH || 'main')}`;
   const currentStatus = `<div class="operations-live-state"><span class="status-pulse" data-state="${overall}"></span><strong>${escapeHtml(overallLabel)}</strong><span>Checked ${relativeTime(health.checkedAt)}</span><span>${escapeHtml(env.DEPLOYMENT_ENVIRONMENT || 'local')} · ${escapeHtml(version)}</span></div>`;
 
-  return operationalPage(env, '/dashboard', 'System Operations', 'OPERATIONS / LIVE', 'System Operations', 'Live health, availability, deployment, Cloudflare usage, activity, and cost-control evidence for the architecture demo.', 'src/demos/dashboard.ts', `
+  return operationalPage(env, '/dashboard', 'System Operations', 'OPERATIONS / LIVE', 'System Operations', 'Live health, availability, deployment, shared reporting, activity, and cost-control evidence for the architecture demo.', 'src/demos/dashboard.ts', `
   <section class="operations-kpis" aria-label="Current operational state">
     <article><p class="eyebrow">System</p><strong class="${statusClass(overall)}">${escapeHtml(overallLabel)}</strong><span>${healthy} / 4 dependencies healthy</span></article>
     <article><p class="eyebrow">Availability</p><strong>${availabilityValue}</strong><span>${availability.unexpected} unexpected outage${availability.unexpected === 1 ? '' : 's'}</span></article>
@@ -215,17 +215,7 @@ export async function renderDashboard(env: Env): Promise<Response> {
     </article>
   </section>
 
-  <section class="operations-section assurance-dashboard-card" aria-labelledby="assurance-heading">
-    <div>
-      <p class="eyebrow">Assurance / canonical registry</p>
-      <h2 id="assurance-heading">Compliance &amp; Assurance</h2>
-      <p>WCAG 2.2 · ISO/IEC 27001 · ISO/IEC 42001</p>
-    </div>
-    <div>
-      <strong>${publicComplianceRegistry.counts.total} canonical records</strong>
-      <div class="link-row"><a href="/compliance">Browse records <span aria-hidden="true">→</span></a><a href="/v1/assurance/compliance">Compliance JSON <span aria-hidden="true">→</span></a></div>
-    </div>
-  </section>
+  ${renderUnifiedReportingPresentation(env, usage)}
 
   <section class="operations-section policy-card" aria-labelledby="policy-heading">
     <div class="operations-section-heading"><div><p class="eyebrow">Read-only public state</p><h2 id="policy-heading">Operational policy</h2></div><a href="/admin">Admin controls <span aria-hidden="true">→</span></a></div>
@@ -233,7 +223,8 @@ export async function renderDashboard(env: Env): Promise<Response> {
   </section>
   ${referenceDetails([
     { label: 'Dashboard implementation', href: sourceUrl(env, 'src/demos/operations-pages.ts') },
-    { label: 'Compliance registry projection', href: sourceUrl(env, 'src/assurance/registry.ts') },
+    { label: 'Unified reporting presentation', href: sourceUrl(env, 'src/demos/reporting-dashboard.ts') },
+    { label: 'Shared reporting presentation model', href: sourceUrl(env, 'src/reporting/presentation.ts') },
     { label: 'Scheduled collection', href: sourceUrl(env, 'src/index.ts') },
     { label: 'Cloudflare usage collector', href: sourceUrl(env, 'src/lib/cloudflare-usage.ts') },
     { label: 'Operations standard', href: sourceUrl(env, 'docs/OPERATIONS.md') },
