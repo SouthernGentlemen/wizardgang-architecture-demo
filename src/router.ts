@@ -48,7 +48,6 @@ import { socialCardResponse } from './ui/brand-assets';
 import { crawlerBlockedResponse, getCrawlerControl, identifyOpenAIAgent, robotsResponse, setCrawlerControl } from './lib/crawler-control';
 import {
   assuranceHtmlRoute,
-  assuranceRouteAliases,
   matchAssuranceRoute,
   validateAssuranceRouteHandlerSupport,
   type AssuranceRouteHandlerSupport,
@@ -108,13 +107,9 @@ if (assuranceHandlerErrors.length > 0) {
   throw new Error(`Invalid assurance route handler support:\n${assuranceHandlerErrors.join('\n')}`);
 }
 
-async function routeAssuranceRequest(request: Request, env: Env, path: string, origin: string): Promise<Response | undefined> {
+async function routeAssuranceRequest(request: Request, env: Env, path: string): Promise<Response | undefined> {
   const match = matchAssuranceRoute(path);
-  if (!match) return undefined;
-  if (match.kind === 'alias') {
-    if (request.method !== 'GET' || !match.target) return undefined;
-    return Response.redirect(new URL(match.target, origin).toString(), 301);
-  }
+  if (!match || match.kind === 'alias') return undefined;
   if (match.kind === 'html') {
     if (request.method !== 'GET') return undefined;
     const handler = ASSURANCE_HTML_HANDLERS[match.owner];
@@ -124,24 +119,6 @@ async function routeAssuranceRequest(request: Request, env: Env, path: string, o
   if (registration) return registration.handler(request, env, match);
   return genericAssuranceResponse(request, match.owner, match.kind === 'api-record' ? match.recordId : undefined);
 }
-
-export const RETIRED_PAGE_REDIRECTS = new Map<string, string>([
-  ['/api/rest', '/api#rest'],
-  ['/api/openapi', '/api#openapi'],
-  ['/api/graphql', '/graphql#graphql'],
-  ['/api/webhooks', '/webhooks#webhooks'],
-  ['/identity/oauth', '/identity#oauth'],
-  ['/identity/sso', '/identity#sso'],
-  ['/git/versioning', '/git#versioning'],
-  ['/git/branching', '/git#branching'],
-  ['/git/releases', '/git#releases'],
-  ['/git/actions', '/git#actions'],
-  ['/environments', '/git#environments'],
-  ['/governance/iso-27001', '/governance#iso-27001'],
-  ['/governance/iso-42001', '/governance#iso-42001'],
-  ...assuranceRouteAliases().map((alias) => [alias.path, alias.target] as [string, string]),
-  ['/dashboard/health', '/dashboard#health'],
-]);
 
 export function bypassOfflineGate(path: string): boolean {
   return path === '/admin'
@@ -267,7 +244,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
     return offlineApiResponse(control.publicMessage);
   }
 
-  const assuranceResponseMatch = await routeAssuranceRequest(request, env, path, url.origin);
+  const assuranceResponseMatch = await routeAssuranceRequest(request, env, path);
   if (assuranceResponseMatch) return assuranceResponseMatch;
 
   if (path === '/v1/demo-records') return recordsResponse(request, env);
@@ -324,11 +301,6 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/__api/git/evidence') return gitEvidenceResponse(request, env);
   if (path === '/__api/git/demo') return request.method === 'GET' ? gitDemoStatusResponse(request, env) : gitDemoStartResponse(request, env);
   if (path === '/__api/git/demo/release') return gitDemoReleaseResponse(request, env);
-
-  if (request.method === 'GET') {
-    const redirect = RETIRED_PAGE_REDIRECTS.get(path);
-    if (redirect) return Response.redirect(new URL(redirect, url.origin).toString(), 301);
-  }
 
   if (request.method === 'GET' && path === '/sitemap.xml') return sitemapResponse(request, demos);
   if (request.method === 'GET' && path === '/') return renderIndex(env, demos);

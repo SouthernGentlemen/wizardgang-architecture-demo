@@ -1,6 +1,6 @@
 # Route-to-source map
 
-This file is the stable public URL contract for `demo.wizardgang.ai`. The public architecture map contains 25 HTML routes in five groups. Retired page URLs remain stable through exact permanent redirects to focused routes or anchored sections; machine interfaces keep their existing paths and response shapes.
+This file is the stable public URL contract for `demo.wizardgang.ai`. The public architecture map contains 25 HTML routes in five groups. Machine interfaces keep their documented paths and response shapes.
 
 ## Public architecture routes
 
@@ -33,28 +33,6 @@ This file is the stable public URL contract for `demo.wizardgang.ai`. The public
 | Operations | `/dashboard/billing` | Cloudflare usage, cost evidence, and separate guardrail simulator | `src/demos/billing.ts` | Working |
 
 The architecture map at `/` and `/sitemap.xml` are generated from this 25-route registry.
-
-## Retired page redirects
-
-These are exact-path `301` redirects. `/identity/saml` is now the live Entra SAML sign-in route rather than a redirect. `/evidence` is no longer retired; it is a canonical public route.
-
-| Retired route | Permanent destination |
-|---|---|
-| `/api/rest` | `/api#rest` |
-| `/api/openapi` | `/api#openapi` |
-| `/api/graphql` | `/graphql#graphql` |
-| `/api/webhooks` | `/webhooks#webhooks` |
-| `/identity/oauth` | `/identity#oauth` |
-| `/identity/sso` | `/identity#sso` |
-| `/git/versioning` | `/git#versioning` |
-| `/git/branching` | `/git#branching` |
-| `/git/releases` | `/git#releases` |
-| `/git/actions` | `/git#actions` |
-| `/environments` | `/git#environments` |
-| `/governance/iso-27001` | `/governance#iso-27001` |
-| `/governance/iso-42001` | `/governance#iso-42001` |
-| `/traceability` | `/evidence#traceability` |
-| `/dashboard/health` | `/dashboard#health` |
 
 ## Operations and control routes
 
@@ -143,7 +121,7 @@ Ordinary interfaces return structured `503` responses during an intentional offl
 | Concern | Source |
 |---|---|
 | Worker entry point | `src/index.ts` |
-| Router and retired-page redirects | `src/router.ts` |
+| Router | `src/router.ts` |
 | Demo registry | `src/demos/registry.ts` |
 | Route-manifest generator | `scripts/generate-route-manifest.mjs` |
 | HTML renderer | `src/ui/page.ts` |

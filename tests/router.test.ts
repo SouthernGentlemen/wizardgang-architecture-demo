@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import swagger from '../contracts/openapi/swagger.json';
 import { demos } from '../src/demos/registry';
-import { RETIRED_PAGE_REDIRECTS, routeRequest } from '../src/router';
+import { routeRequest } from '../src/router';
 import type { D1PreparedStatement, Env } from '../src/types';
 
 class RouterStatement implements D1PreparedStatement {
@@ -41,29 +41,11 @@ describe('public route contract', () => {
   it('resolves every registered human demo route and links to its exact primary source', async () => {
     const environment = env();
     for (const demo of demos) {
-      if (RETIRED_PAGE_REDIRECTS.has(demo.route)) continue;
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${demo.route}`, { headers: { accept: 'text/html' } }), environment);
       expect(response.status, demo.route).toBe(200);
       const html = await response.text();
       expect(html, demo.route).toContain(`https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/main/${demo.sourcePath}`);
     }
-  });
-
-  it('redirects retired page routes to exact anchors without intercepting SAML metadata', async () => {
-    const environment = env();
-    for (const [route, destination] of RETIRED_PAGE_REDIRECTS) {
-      const response = await routeRequest(new Request(`https://demo.wizardgang.ai${route}`, { headers: { accept: 'text/html' } }), environment);
-      expect(response.status, route).toBe(301);
-      expect(response.headers.get('location'), route).toBe(`https://demo.wizardgang.ai${destination}`);
-      const target = new URL(destination, 'https://demo.wizardgang.ai');
-      const targetResponse = await routeRequest(new Request(target, { headers: { accept: 'text/html' } }), environment);
-      expect(targetResponse.status, destination).toBe(200);
-      expect(await targetResponse.text(), destination).toContain(`id="${target.hash.slice(1)}"`);
-    }
-
-    const metadata = await routeRequest(new Request('https://demo.wizardgang.ai/identity/saml/metadata'), environment);
-    expect(metadata.status).toBe(200);
-    expect(metadata.headers.get('content-type')).toContain('application/samlmetadata+xml');
   });
 
   it('resolves root, protected admin, offline, health, version, and logs surfaces', async () => {
@@ -140,6 +122,10 @@ describe('public route contract', () => {
     for (const endpoint of ['/identity/microsoft', '/identity/google', '/identity/github', '/identity/saml', '/identity/session', '/__api/identity/authorize', '/identity/saml/metadata']) expect(html).toContain(endpoint);
     for (const view of ['Provider payload', 'Normalized identity', 'Authorization', 'Protocol']) expect(html).toContain(view);
     expect(html).not.toContain('visitor@example.test');
+
+    const metadata = await routeRequest(new Request('https://demo.wizardgang.ai/identity/saml/metadata'), env());
+    expect(metadata.status).toBe(200);
+    expect(metadata.headers.get('content-type')).toContain('application/samlmetadata+xml');
   });
 
   it('separates the MCP guide from the interoperable Streamable HTTP endpoint', async () => {

@@ -4,7 +4,6 @@ import { assuranceComplianceResponse } from '../src/api/assurance';
 import {
   assuranceCollectionApiRoute,
   assuranceRecordUrls,
-  assuranceRouteAliases,
   assuranceRouteDeclarations,
   matchAssuranceRoute,
   validateAssuranceRouteHandlerSupport,
@@ -21,12 +20,9 @@ describe('assurance route contract', () => {
     });
   });
 
-  it('matches collection, detail, and alias routes without family-specific dispatch inventories', () => {
+  it('matches collection and detail routes without family-specific dispatch inventories', () => {
     expect(matchAssuranceRoute('/v1/assurance/risks')).toMatchObject({ owner: 'risks', kind: 'api-collection' });
     expect(matchAssuranceRoute('/v1/assurance/compliance/WCAG-4.1.2')).toMatchObject({ owner: 'compliance', kind: 'api-record', recordId: 'WCAG-4.1.2' });
-    for (const alias of assuranceRouteAliases()) {
-      expect(matchAssuranceRoute(alias.path)).toMatchObject({ owner: alias.owner, kind: 'alias', target: alias.target });
-    }
     expect(matchAssuranceRoute('/v1/assurance/compliance/WCAG-4.1.2/extra')).toBeNull();
   });
 
