@@ -52,4 +52,18 @@ describe('final common reporting audit guards', () => {
     expect(collector).not.toContain("'estimated'");
     expect(presentation).not.toContain("usage.cost.kind === 'estimated'");
   });
+
+  it('does not leak internal assurance statuses into the schema-defined reporting availability map', () => {
+    const dashboard = readFileSync('src/demos/reporting-dashboard.ts', 'utf8');
+    expect(dashboard).toContain('availability: { [dataset]: structuredAvailability(state.status) }');
+    expect(dashboard).not.toContain('availability: { [dataset]: state.status }');
+  });
+
+  it('renders Cloudflare product and billed-cost state from common availability rather than boolean or kind shortcuts', () => {
+    const presentation = readFileSync('src/demos/operations-pages.ts', 'utf8');
+    expect(presentation).toContain("productCard('Workers', usage.products.workers.availability");
+    expect(presentation).toContain("const costBadgeState = usage.cost.availability === 'available' ? 'live' : usage.cost.availability");
+    expect(presentation).not.toContain("productCard('Workers', usage.products.workers.available");
+    expect(presentation).not.toContain("usage.cost.kind === 'billed' ? 'live' : 'unavailable'");
+  });
 });
