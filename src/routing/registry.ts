@@ -16,10 +16,14 @@ export type OfflinePolicy =
   | { mode: 'available' }
   | { mode: 'gated' };
 
+export type SameOriginPolicy =
+  | { mode: 'not-required' }
+  | { mode: 'required'; methods: readonly RouteMethod[] };
+
 export type CachePolicy =
   | { mode: 'no-store' }
   | { mode: 'private'; maxAgeSeconds?: number }
-  | { mode: 'public'; maxAgeSeconds: number; staleWhileRevalidateSeconds?: number };
+  | { mode: 'public'; maxAgeSeconds: number; staleWhileRevalidateSeconds?: number; immutable?: boolean };
 
 export interface CrawlerPolicy {
   crawling: 'allow' | 'deny' | 'controlled';
@@ -53,6 +57,7 @@ export interface RouteDeclaration<TContext = unknown> {
   authentication: AuthenticationPolicy;
   authorization: AuthorizationPolicy;
   visibility: RouteVisibility;
+  sameOrigin: SameOriginPolicy;
   offline: OfflinePolicy;
   cache: CachePolicy;
   crawler: CrawlerPolicy;
@@ -178,6 +183,27 @@ function normalizeMethods(methods: readonly RouteMethod[], routeId: string): rea
   return Object.freeze(normalized);
 }
 
+function validateSameOriginPolicy(
+  policy: SameOriginPolicy,
+  allowedMethods: readonly RouteMethod[],
+  routeId: string,
+): void {
+  if (policy.mode === 'not-required') return;
+  if (policy.methods.length === 0) {
+    throw new Error(`Route '${routeId}' same-origin policy must declare at least one method`);
+  }
+  const seen = new Set<RouteMethod>();
+  for (const method of policy.methods) {
+    if (!allowedMethods.includes(method)) {
+      throw new Error(`Route '${routeId}' requires same-origin for undeclared method '${method}'`);
+    }
+    if (seen.has(method)) {
+      throw new Error(`Route '${routeId}' same-origin policy declares duplicate method '${method}'`);
+    }
+    seen.add(method);
+  }
+}
+
 function parameterPatternsOverlap(left: CompiledPattern, right: CompiledPattern): boolean {
   if (left.segments.length !== right.segments.length) return false;
   return left.segments.every((leftSegment, index) => {
@@ -272,10 +298,12 @@ export class RouteRegistry<TContext = unknown> {
         }
         routePatterns.add(pattern.normalized);
 
+        const allowedMethods = normalizeMethods(declaration.methods, declaration.id);
+        validateSameOriginPolicy(declaration.sameOrigin, allowedMethods, declaration.id);
         const route: CompiledRoute<TContext> = {
           declaration,
           pattern,
-          allowedMethods: normalizeMethods(declaration.methods, declaration.id),
+          allowedMethods,
         };
 
         if (pattern.parameterized) {

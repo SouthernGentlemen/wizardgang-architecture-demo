@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { demos } from '../src/demos/registry';
-import { bypassOfflineGate, isApiLike, wantsHtml } from '../src/router';
+import { isApiLike, wantsHtml } from '../src/router';
 import { sitemapResponse } from '../src/api/sitemap';
+import { operationalRouteRegistry } from '../src/routing/operational-routes';
+import { matchRoute } from '../src/routing/registry';
 import { readFileSync } from 'node:fs';
 
 describe('architecture demo registry', () => {
@@ -56,16 +58,25 @@ describe('architecture demo registry', () => {
   });
 });
 
-describe('intentional offline gate', () => {
-  it('keeps operations, status, offline, and admin routes reachable', () => {
-    for (const route of ['/dashboard', '/dashboard/uptime', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing', '/health', '/version', '/__api/operations/logs', '/__api/operations/billing', '/offline', '/admin', '/security', '/.well-known/security.txt']) {
-      expect(bypassOfflineGate(route)).toBe(true);
+describe('intentional offline route policies', () => {
+  it('keeps registered operational recovery surfaces reachable', () => {
+    for (const route of [
+      '/dashboard', '/dashboard/uptime', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing',
+      '/health', '/version', '/__api/operations/logs', '/__api/operations/cloudflare-usage',
+      '/__api/operations/billing', '/offline', '/admin', '/robots.txt', '/.well-known/security.txt', '/og.png',
+    ]) {
+      const declaration = operationalRouteRegistry.declarations.find((candidate) => candidate.pattern === route);
+      expect(declaration, route).toBeDefined();
+      expect(declaration?.offline.mode, route).toBe('available');
     }
   });
 
-  it('does not bypass ordinary demo routes', () => {
+  it('keeps sitemap gated and ordinary demo routes outside the operational registry', () => {
+    const sitemap = operationalRouteRegistry.declarations.find((candidate) => candidate.pattern === '/sitemap.xml');
+    expect(sitemap?.offline.mode).toBe('gated');
+
     for (const route of ['/edge', '/d1', '/api', '/graphql', '/webhooks', '/identity', '/mcp', '/evidence', '/governance/risks', '/governance/incidents']) {
-      expect(bypassOfflineGate(route)).toBe(false);
+      expect(matchRoute(operationalRouteRegistry, 'GET', route), route).toEqual({ status: 'not-found', statusCode: 404 });
     }
   });
 

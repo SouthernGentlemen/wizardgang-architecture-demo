@@ -1,13 +1,7 @@
 import type { Env } from './types';
 import { demos, demosByRoute } from './demos/registry';
 import { renderDemo, renderIndex, renderNotFound } from './ui/page';
-import { sitemapResponse } from './api/sitemap';
-import { renderAdmin, renderOffline } from './ui/admin';
-import { cloudflareUsageResponse, healthResponse, logsResponse, versionResponse } from './api/operations';
-import { renderLogsDemo } from './demos/logs';
-import { requireAdmin } from './lib/admin-auth';
-import { requireSameOrigin } from './lib/admin-auth';
-import { getDemoControl, setDemoControl } from './lib/demo-control';
+import { getDemoControl } from './lib/demo-control';
 import { json, methodNotAllowed, safeError } from './lib/http';
 import { recordsResponse, resetRecordSandboxResponse } from './api/records';
 import { edgeInspectionResponse, workerComputeResponse } from './api/runtime';
@@ -24,9 +18,6 @@ import { renderComplianceDemo } from './demos/compliance-page';
 import { renderEvidenceDemo } from './demos/evidence-page';
 import { renderConcerns, renderIncidents, renderRisks } from './demos/assurance-pages';
 import { renderSecurity } from './demos/security-page';
-import { securityTxtResponse } from './api/security-policy';
-import { billingScenarioResponse } from './api/billing';
-import { renderBilling, renderDashboard, renderDocs, renderUptime } from './demos/operations-pages';
 import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } from './api/governance';
 import { assuranceComplianceResponse, assuranceIncidentsResponse, assuranceRisksResponse, genericAssuranceResponse } from './api/assurance';
 import { assuranceAdvisoriesResponse } from './api/advisories';
@@ -44,8 +35,7 @@ import { renderIdentityDemo } from './demos/identity-page';
 import { renderMcpDemo } from './demos/mcp-page';
 import { graphiqlAssetResponse, localGraphiqlResponse } from './ui/graphiql-assets';
 import { renderApiDemo } from './demos/api-page';
-import { socialCardResponse } from './ui/brand-assets';
-import { crawlerBlockedResponse, getCrawlerControl, identifyOpenAIAgent, robotsResponse, setCrawlerControl } from './lib/crawler-control';
+import { crawlerBlockedResponse, getCrawlerControl, identifyOpenAIAgent } from './lib/crawler-control';
 import {
   assuranceHtmlRoute,
   matchAssuranceRoute,
@@ -53,11 +43,11 @@ import {
   type AssuranceRouteHandlerSupport,
   type AssuranceRouteMatch,
 } from './assurance/routes';
+import { routeOperationalRequest } from './routing/operational-routes';
 
-const OPERATIONS_PREFIX = '/dashboard';
 const API_PREFIXES = ['/__api/', '/v1/', '/graphql'];
 const API_PATHS = new Set([MCP_SERVER_PATH]);
-const SECURITY_ROUTE = assuranceHtmlRoute('advisories');
+const LEGACY_OFFLINE_AVAILABLE_PATHS = new Set([assuranceHtmlRoute('advisories')]);
 
 type AssuranceHandler = (request: Request, env: Env, match: AssuranceRouteMatch) => Response | Promise<Response>;
 
@@ -120,22 +110,6 @@ async function routeAssuranceRequest(request: Request, env: Env, path: string): 
   return genericAssuranceResponse(request, match.owner, match.kind === 'api-record' ? match.recordId : undefined);
 }
 
-export function bypassOfflineGate(path: string): boolean {
-  return path === '/admin'
-    || path === '/offline'
-    || path === '/og.png'
-    || path === '/robots.txt'
-    || path === '/health'
-    || path === '/version'
-    || path === SECURITY_ROUTE
-    || path === '/.well-known/security.txt'
-    || path === '/__api/operations/logs'
-    || path === '/__api/operations/cloudflare-usage'
-    || path === '/__api/operations/billing'
-    || path === OPERATIONS_PREFIX
-    || path.startsWith(`${OPERATIONS_PREFIX}/`);
-}
-
 export function isApiLike(path: string): boolean {
   return API_PATHS.has(path) || API_PREFIXES.some((prefix) => path.startsWith(prefix));
 }
@@ -170,53 +144,8 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   const url = new URL(request.url);
   const path = url.pathname.length > 1 ? url.pathname.replace(/\/+$/, '') : '/';
 
-  if (path === '/admin') {
-    const identity = await requireAdmin(request, env);
-    if (identity instanceof Response) return identity;
-    if (request.method === 'POST') {
-      const originFailure = requireSameOrigin(request);
-      if (originFailure) return originFailure;
-      const form = await request.formData();
-      const requestedControl = form.get('control');
-      if (requestedControl === 'chatgpt-crawl') {
-        const requestedState = form.get('state');
-        if (requestedState !== 'enabled' && requestedState !== 'disabled') {
-          return json({ error: 'invalid_crawler_state' }, { status: 400, headers: { 'cache-control': 'no-store' } });
-        }
-        await setCrawlerControl(env, requestedState, identity.username);
-        const location = new URL('/admin', url.origin);
-        location.searchParams.set('changed', `chatgpt-crawl-${requestedState}`);
-        location.hash = 'chatgpt-crawl';
-        return new Response(null, { status: 303, headers: { location: location.toString(), 'cache-control': 'no-store' } });
-      }
-      if (requestedControl !== null && requestedControl !== 'demo') {
-        return json({ error: 'invalid_admin_control' }, { status: 400, headers: { 'cache-control': 'no-store' } });
-      }
-      const state = form.get('state') === 'offline' ? 'offline' : 'online';
-      const fallback = state === 'offline' ? 'The demo is temporarily unavailable.' : 'The architecture demo is available.';
-      const message = String(form.get('message') || fallback).trim().slice(0, 500) || fallback;
-      await setDemoControl(env, state, message, identity.username);
-      const location = new URL('/admin', url.origin);
-      location.searchParams.set('changed', state);
-      return new Response(null, { status: 303, headers: { location: location.toString(), 'cache-control': 'no-store' } });
-    }
-    if (request.method === 'GET') {
-      const changed = url.searchParams.get('changed');
-      const [demoControl, crawlerControl] = await Promise.all([getDemoControl(env), getCrawlerControl(env)]);
-      const notice = changed === 'online' || changed === 'offline'
-        ? `Demo is now ${changed}.`
-        : changed === 'chatgpt-crawl-enabled' || changed === 'chatgpt-crawl-disabled'
-          ? `ChatGPT crawl access is now ${changed.endsWith('enabled') ? 'enabled' : 'disabled'}.`
-          : '';
-      return renderAdmin(env, demoControl, crawlerControl, notice);
-    }
-    return methodNotAllowed(['GET', 'POST']);
-  }
-
-  if ((request.method === 'GET' || request.method === 'HEAD') && path === '/robots.txt') {
-    return robotsResponse(request, await getCrawlerControl(env));
-  }
-  if (path === '/.well-known/security.txt') return securityTxtResponse(request, env);
+  const operationalResponse = await routeOperationalRequest(request, env, path);
+  if (operationalResponse) return operationalResponse;
 
   const openAIAgent = identifyOpenAIAgent(request.headers.get('user-agent'));
   if (openAIAgent === 'GPTBot') return crawlerBlockedResponse(openAIAgent);
@@ -224,18 +153,8 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
     return crawlerBlockedResponse(openAIAgent);
   }
 
-  if (request.method === 'GET' && path === '/health') return healthResponse(env);
-  if (request.method === 'GET' && path === '/version') return versionResponse(env);
-  if ((request.method === 'GET' || request.method === 'HEAD') && path === '/og.png') return socialCardResponse(request);
-  if (request.method === 'GET' && path === '/__api/operations/logs') return logsResponse(request, env);
-  if (path === '/__api/operations/cloudflare-usage') return cloudflareUsageResponse(request, env);
-
   const control = await getDemoControl(env);
-  if (request.method === 'GET' && path === '/offline') {
-    return renderOffline(env, control, url.searchParams.get('from') || '/');
-  }
-
-  if (control.state === 'offline' && !bypassOfflineGate(path)) {
+  if (control.state === 'offline' && !LEGACY_OFFLINE_AVAILABLE_PATHS.has(path)) {
     if (wantsHtml(request, path)) {
       const target = new URL('/offline', url.origin);
       target.searchParams.set('from', path);
@@ -293,7 +212,6 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/identity/session') return identitySessionResponse(request, env);
   if (path === '/identity/logout') return identityLogoutResponse(request, env);
   if (path === '/__api/identity/saml/inspect') return samlInspectionResponse(request, env);
-  if (path === '/__api/operations/billing') return billingScenarioResponse(request, env);
   if (path === '/__api/evidence/traceability') return traceabilityResponse(request, env);
   if (path === '/__api/governance/security-controls') return securityControlsResponse(request, env);
   if (path === '/__api/governance/ai-evaluation') return aiEvaluationResponse(request, env);
@@ -302,7 +220,6 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (path === '/__api/git/demo') return request.method === 'GET' ? gitDemoStatusResponse(request, env) : gitDemoStartResponse(request, env);
   if (path === '/__api/git/demo/release') return gitDemoReleaseResponse(request, env);
 
-  if (request.method === 'GET' && path === '/sitemap.xml') return sitemapResponse(request, demos);
   if (request.method === 'GET' && path === '/') return renderIndex(env, demos);
   if (request.method === 'GET' && path === '/d1') return renderD1Demo(env);
   if (request.method === 'GET' && path === '/r2') return renderR2Demo(env);
@@ -314,11 +231,6 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   if (request.method === 'GET' && path === '/governance/concerns') return renderConcerns(env);
   if (request.method === 'GET' && path === '/git') return renderGitDemo(env);
   if (request.method === 'GET' && path === '/mcp') return renderMcpDemo(request, env);
-  if (request.method === 'GET' && path === '/dashboard') return renderDashboard(env);
-  if (request.method === 'GET' && path === '/dashboard/uptime') return renderUptime(env);
-  if (request.method === 'GET' && path === '/dashboard/docs') return renderDocs(env);
-  if (request.method === 'GET' && path === '/dashboard/billing') return renderBilling(env);
-  if (request.method === 'GET' && path === '/dashboard/logs') return renderLogsDemo(request, env);
 
   if (request.method === 'GET') {
     const demo = demosByRoute.get(path);

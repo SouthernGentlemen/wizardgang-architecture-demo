@@ -23,6 +23,7 @@ function route(
     authentication: { mode: 'anonymous' },
     authorization: { mode: 'none' },
     visibility: 'public',
+    sameOrigin: { mode: 'not-required' },
     offline: { mode: 'gated' },
     cache: { mode: 'no-store' },
     crawler: { crawling: 'allow', indexing: 'allow' },
@@ -142,6 +143,17 @@ describe('declarative route registry', () => {
       statusCode: 405,
       allowedMethods: ['GET', 'POST'],
     });
+  });
+
+  it('validates same-origin methods against the supported method contract', () => {
+    const declaration = route('records.write', '/records', ['GET', 'POST']);
+    declaration.sameOrigin = { mode: 'required', methods: ['POST'] };
+    expect(() => createRouteRegistry([defineRouteModule('records', [declaration])])).not.toThrow();
+
+    const invalid = route('records.invalid', '/invalid', ['GET']);
+    invalid.sameOrigin = { mode: 'required', methods: ['POST'] };
+    expect(() => createRouteRegistry([defineRouteModule('invalid', [invalid])]))
+      .toThrow("requires same-origin for undeclared method 'POST'");
   });
 
   it('returns a standard 404 result for unknown and malformed parameter paths', () => {

@@ -74,6 +74,8 @@ for (const requiredFile of [
   'src/lib/demo-control.ts',
   'src/lib/crawler-control.ts',
   'src/api/operations.ts',
+  'src/routing/registry.ts',
+  'src/routing/operational-routes.ts',
   'src/api/assurance.ts',
   'src/api/advisories.ts',
   'src/api/assurance-registry.ts',
@@ -135,8 +137,23 @@ function walk(dir) {
 walk(root);
 
 const router = fs.readFileSync(path.join(root, 'src/router.ts'), 'utf8');
-for (const token of ['/dashboard', '/dashboard/logs', '/__api/operations/logs', '/__api/operations/cloudflare-usage', '/admin', '/offline', '/health', '/version', '/robots.txt', 'routeAssuranceRequest', 'matchAssuranceRoute', 'offlineApiResponse', 'wantsHtml']) {
-  if (!router.includes(token)) failures.push(`router missing operations/admin invariant: ${token}`);
+for (const token of ['routeOperationalRequest', 'routeAssuranceRequest', 'matchAssuranceRoute', 'offlineApiResponse', 'wantsHtml']) {
+  if (!router.includes(token)) failures.push(`router missing routing invariant: ${token}`);
+}
+for (const retiredToken of ['bypassOfflineGate', 'OPERATIONS_PREFIX']) {
+  if (router.includes(retiredToken)) failures.push(`router still contains retired operational route heuristic: ${retiredToken}`);
+}
+
+const operationalRoutes = fs.readFileSync(path.join(root, 'src/routing/operational-routes.ts'), 'utf8');
+for (const token of ['defineRouteModule', 'operationalRouteRegistry', 'routeOperationalRequest']) {
+  if (!operationalRoutes.includes(token)) failures.push(`operational route module missing registry invariant: ${token}`);
+}
+for (const route of [
+  '/admin', '/offline', '/health', '/version', '/robots.txt', '/.well-known/security.txt', '/og.png', '/sitemap.xml',
+  '/dashboard', '/dashboard/uptime', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing',
+  '/__api/operations/logs', '/__api/operations/cloudflare-usage', '/__api/operations/billing',
+]) {
+  if (!operationalRoutes.includes(`pattern: '${route}'`)) failures.push(`operational route registry missing migrated route: ${route}`);
 }
 
 const assuranceModel = fs.readFileSync(path.join(root, 'src/assurance/model.ts'), 'utf8');
