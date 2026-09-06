@@ -383,13 +383,12 @@
     "interchangeCollection": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["source", "resource", "revision", "records", "relationships"],
+      "required": ["source", "resource", "revision", "records"],
       "properties": {
         "source": { "$ref": "#/$defs/source" },
         "resource": { "$ref": "#/$defs/resourceReference" },
         "revision": { "$ref": "#/$defs/sourceRevision" },
-        "records": { "type": "array", "items": { "$ref": "#/$defs/record" } },
-        "relationships": { "type": "array", "items": { "$ref": "#/$defs/relationship" } }
+        "records": { "type": "array", "items": { "$ref": "#/$defs/record" } }
       }
     },
     "interchangeEnvelope": {

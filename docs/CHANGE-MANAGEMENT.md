@@ -12,6 +12,12 @@ Every controlled change to WizardGang Architecture Demo receives exactly one per
 
 Allowed primary types are `INIT`, `FEAT`, `FIX`, `SEC`, `API`, `A11Y`, `I18N`, `AI`, `DB`, `OPS`, `TEST`, `DOCS`, `REFACTOR`, `PERF`, `BUILD`, `REVERT`, and `CHORE`.
 
+### Published identity correction
+
+Commit `45f2ff42d2b92ea1f820e037306f07104480f8b5` was published through pull request #124 with `DEMO-175` in its title, but its controlled record identifies it as the completion of DEMO-174 in the same pull request. Rewriting published `main` history would invalidate shared commit identities, so `scripts/validate-history.mjs` excludes that exact SHA from the sequential count while continuing to validate its structured body. DEMO-175 is therefore assigned to the subsequent removal of duplicate relationship graphs.
+
+This is a SHA-exact correction of one published operator error, not a general allowance to reuse IDs. A different commit cannot claim the exception, and future corrections continue to receive new sequential IDs.
+
 ## Controlled record
 
 Rigor scales with risk. A meaningful commit records:

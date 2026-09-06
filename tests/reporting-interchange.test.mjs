@@ -30,7 +30,7 @@ describe('current reporting interchange', () => {
       expect(collection.revision.commit).toMatch(/^[0-9a-f]{40}$/);
       expect(collection.revision.blob).toMatch(/^[0-9a-f]{40}$/);
       expect(Array.isArray(collection.records)).toBe(true);
-      expect(Array.isArray(collection.relationships)).toBe(true);
+      expect(Object.hasOwn(collection, 'relationships')).toBe(false);
     }
     const risks = riskCollection(first);
     expect(risks.records.length).toBeGreaterThan(0);
@@ -51,7 +51,6 @@ describe('current reporting interchange', () => {
     const risks = copy(riskCollection(envelope));
     const current = risks.records[0];
     risks.records = [{ id: current.id, title: current.title }];
-    risks.relationships = [];
     const subset = {
       contract: envelope.contract,
       registry: envelope.registry,
@@ -63,7 +62,7 @@ describe('current reporting interchange', () => {
     expect(next).toEqual(current);
   });
 
-  it('rejects duplicate IDs, derived fields, stale conflicting revisions, and invalid relationships', () => {
+  it('rejects duplicate IDs, derived fields, stale conflicting revisions, and invalid canonical relationships', () => {
     const envelope = buildInterchangeEnvelope(process.cwd());
 
     const duplicate = copy(envelope);
@@ -84,22 +83,27 @@ describe('current reporting interchange', () => {
 
     const invalid = copy(envelope);
     const invalidRisks = riskCollection(invalid);
-    invalidRisks.relationships.push({
+    const invalidRisk = invalidRisks.records[0];
+    invalidRisk.relationships = [{
       relation: 'risks',
-      from: { source: invalidRisks.source.id, native: invalidRisks.records[0].id },
-      to: { source: invalidRisks.source.id, native: 'SEC-RISK-NOT-REAL' },
-    });
+      from: { source: invalidRisks.source.id, native: invalidRisk.id },
+      to: { source: invalidRisks.source.id, native: 'SEC-RISK-999' },
+    }];
     expect(() => planInterchangeImport(process.cwd(), invalid)).toThrow(/invalid_relationship/);
   });
 
-  it('rejects legacy interchange payloads and native observation writes', () => {
+  it('rejects removed duplicate relationship graphs, legacy payloads, and native observation writes', () => {
+    const envelope = buildInterchangeEnvelope(process.cwd());
+    const duplicateGraph = copy(envelope);
+    riskCollection(duplicateGraph).relationships = [];
+    expect(() => planInterchangeImport(process.cwd(), duplicateGraph)).toThrow(/schema_validation_failed/);
+
     expect(() => planInterchangeImport(process.cwd(), {
       source: 'github.structured-records.risks',
       records: [],
       relationships: [],
     })).toThrow(/legacy_interchange_contract_rejected/);
 
-    const envelope = buildInterchangeEnvelope(process.cwd());
     const native = copy(envelope);
     const registry = JSON.parse(readFileSync('assurance/registry.json', 'utf8'));
     riskCollection(native).source = registry.reporting.observations[0];

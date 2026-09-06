@@ -15,7 +15,11 @@ import {
   formatJsonSchemaErrors,
   validateJsonSchema,
 } from './lib/json-schema.mjs';
-import { assuranceRelationshipNames } from '../src/assurance/relationship-contract.js';
+import {
+  recordRelationshipIdentity,
+  registeredRelationshipTargets,
+  validateRelationshipSet,
+} from './lib/assurance-relationships.mjs';
 
 const CURRENT_CONTRACT = 'contracts/assurance/reporting.schema.json';
 const DERIVED_RECORD_FIELDS = new Set([
@@ -35,7 +39,6 @@ const DERIVED_RECORD_FIELDS = new Set([
   'freshness',
   'observation',
 ]);
-const RELATIONSHIP_NAMES = new Set(assuranceRelationshipNames());
 
 export class ReportingInterchangeError extends Error {
   constructor(code, detail) {
@@ -182,47 +185,6 @@ function currentInventory(root, registry) {
   return { inventory, recordOwner };
 }
 
-function relationshipGraph(collections) {
-  const recordLocation = new Map();
-  for (const collection of collections) {
-    for (const record of collection.records) {
-      recordLocation.set(record.id, {
-        source: collection.source.id,
-        revision: collection.revision.blob,
-      });
-    }
-  }
-
-  for (const collection of collections) {
-    const relationships = [];
-    for (const record of collection.records) {
-      const declared = record.relationships;
-      if (!declared || typeof declared !== 'object' || Array.isArray(declared)) continue;
-      for (const relation of [...RELATIONSHIP_NAMES].sort()) {
-        const targets = declared[relation];
-        if (!Array.isArray(targets)) continue;
-        for (const targetId of targets) {
-          const target = recordLocation.get(targetId);
-          if (!target) continue;
-          relationships.push({
-            relation,
-            from: { source: collection.source.id, native: record.id, revision: collection.revision.blob },
-            to: { source: target.source, native: targetId, revision: target.revision },
-          });
-        }
-      }
-    }
-    relationships.sort((left, right) => (
-      left.from.source.localeCompare(right.from.source)
-      || left.from.native.localeCompare(right.from.native)
-      || left.relation.localeCompare(right.relation)
-      || left.to.source.localeCompare(right.to.source)
-      || left.to.native.localeCompare(right.to.native)
-    ));
-    collection.relationships = relationships;
-  }
-}
-
 export function buildInterchangeEnvelope(root = process.cwd()) {
   const registry = loadAssuranceRegistry(root);
   const commit = gitHead(root);
@@ -247,11 +209,9 @@ export function buildInterchangeEnvelope(root = process.cwd()) {
       },
       revision: { commit, blob: gitBlobSha(text) },
       records: clone(records),
-      relationships: [],
     };
   });
 
-  relationshipGraph(collections);
   const envelope = {
     contract: CURRENT_CONTRACT,
     registry: { id: registry.id, schemaVersion: registry.schemaVersion },
@@ -282,24 +242,36 @@ function assertCurrentSource(registry, resource, collection) {
   }
 }
 
-function validateRelationshipReferences(collections, futureOwner, sourceToResource) {
-  for (const collection of collections) {
-    const incomingIds = new Set(collection.records.map((record) => record.id));
-    for (const relationship of collection.relationships) {
-      if (!RELATIONSHIP_NAMES.has(relationship.relation)) {
-        fail('invalid_relationship', `Unknown relation ${relationship.relation}.`);
-      }
-      if (relationship.from.source !== collection.source.id || !incomingIds.has(relationship.from.native)) {
-        fail('invalid_relationship', `Unowned source ${relationship.from.source}/${relationship.from.native}.`);
-      }
-      const targetResource = sourceToResource.get(relationship.to.source);
-      if (!targetResource) {
-        fail('invalid_relationship', `Unknown target source ${relationship.to.source}.`);
-      }
-      if (futureOwner.get(relationship.to.native) !== targetResource.id) {
-        fail('invalid_relationship', `Unresolved target ${relationship.to.source}/${relationship.to.native}.`);
-      }
-    }
+function futureRecordEntries(inventory, planned) {
+  const plannedByResourceId = new Map(planned.map((entry) => [entry.resource.id, entry]));
+  return inventory.resources.flatMap((resource) => {
+    const document = plannedByResourceId.get(resource.id)?.nextDocument ?? inventory.documentForResource(resource);
+    const records = valueAtPath(document, resource.recordCollection.path);
+    if (!Array.isArray(records)) fail('invalid_record_collection_path', resource.id);
+    return records.map((record) => ({ resource, record }));
+  });
+}
+
+function validateRelationshipReferences(root, registry, inventory, planned) {
+  const recordEntries = futureRecordEntries(inventory, planned);
+  const resources = flattenAssuranceRegistry(registry);
+  const governance = readJsonFile(root, 'docs/governance/REFERENCE-REGISTRY.json');
+  const frameworkIds = new Set(resources.map((resource) => resource.framework?.id).filter((value) => typeof value === 'string'));
+  const governanceDocumentIds = new Set((governance.records ?? []).map((record) => record.reference));
+  const targetFamilies = registeredRelationshipTargets(registry, recordEntries, {
+    frameworkIds,
+    governanceDocumentIds,
+  });
+
+  for (const { resource, record } of recordEntries) {
+    if (!record?.relationships) continue;
+    const errors = validateRelationshipSet(
+      record.relationships,
+      targetFamilies,
+      `${resource.path}:${record.id}`,
+      recordRelationshipIdentity(registry, resource, record),
+    );
+    if (errors.length > 0) fail('invalid_relationship', errors.join('; '));
   }
 }
 
@@ -316,10 +288,8 @@ export function planInterchangeImport(root = process.cwd(), envelope) {
   const resources = new Map(recordResources(registry).map((resource) => [resource.id, resource]));
   const { inventory, recordOwner } = currentInventory(root, registry);
   const payloadIds = new Set();
-  const sourceToResource = new Map([...resources.values()].map((resource) => [effectiveStructuredSource(registry, resource).id, resource]));
   const importedSources = new Set();
   const planned = [];
-  const futureOwner = new Map(recordOwner);
 
   for (const collection of envelope.collections) {
     const resource = resources.get(collection.resource.id);
@@ -341,7 +311,6 @@ export function planInterchangeImport(root = process.cwd(), envelope) {
       if (existingOwner && existingOwner !== resource.id) {
         fail('duplicate_canonical_id', `${incoming.id} is owned by ${existingOwner}.`);
       }
-      futureOwner.set(incoming.id, resource.id);
     }
 
     const mergedRecords = [...currentRecords];
@@ -374,7 +343,7 @@ export function planInterchangeImport(root = process.cwd(), envelope) {
     });
   }
 
-  validateRelationshipReferences(envelope.collections, futureOwner, sourceToResource);
+  validateRelationshipReferences(root, registry, inventory, planned);
 
   return {
     changedResources: planned.filter((entry) => entry.changed).map((entry) => entry.resource.id),
