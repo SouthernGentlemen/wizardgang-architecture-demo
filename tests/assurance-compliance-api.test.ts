@@ -5,6 +5,7 @@ import { deriveComplianceCounts } from '../src/assurance/service';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import { renderComplianceDemo } from '../src/demos/compliance-page';
 import type { Env } from '../src/types';
+import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
 
 const environment = {
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
@@ -25,7 +26,7 @@ describe('canonical compliance presentation and API contract', () => {
     });
     expect(counts.byLevel).toEqual({ A: 31, AA: 24, AAA: 31 });
     expect(new Set(canonicalComplianceRecords.map((record) => record.id)).size).toBe(canonicalComplianceRecords.length);
-    expect(canonicalComplianceRecords.every((record) => record.relationships.evidence.length > 0)).toBe(true);
+    expect(canonicalComplianceRecords.every((record) => assuranceRelationshipIds(record.relationships, 'evidence').length > 0)).toBe(true);
     expect(canonicalComplianceRecords.every((record) => !('evidence' in record))).toBe(true);
   });
 
@@ -93,7 +94,7 @@ describe('canonical compliance presentation and API contract', () => {
     expect(html).toContain('/v1/assurance/compliance/WCAG-4.1.2');
     const criterion = canonicalComplianceRecords.find((record) => record.id === 'WCAG-4.1.2');
     expect(criterion).toBeDefined();
-    expect(html).toContain(`/evidence#${criterion?.relationships.evidence[0]}`);
+    expect(html).toContain(`/evidence#${assuranceRelationshipIds(criterion?.relationships, 'evidence')[0]}`);
     expect(html).toContain('<a href="/compliance" aria-current="page">Compliance</a>');
     expect(html).not.toContain('id="ISO27001-4.1"');
   });

@@ -4,30 +4,54 @@
   "title": "Public Assurance Claim Dataset",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "records"],
+  "required": [
+    "schemaVersion",
+    "records"
+  ],
   "properties": {
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": {
+      "const": 1
+    },
     "records": {
       "type": "array",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "area", "title", "statement", "posture", "relationships"],
+        "required": [
+          "id",
+          "area",
+          "title",
+          "statement",
+          "posture",
+          "relationships"
+        ],
         "properties": {
-          "id": { "type": "string", "pattern": "^CLM-[A-Z]+-[0-9]{3,}$" },
-          "area": { "type": "string", "pattern": "^[a-z0-9-]+$" },
-          "title": { "type": "string", "minLength": 1 },
-          "statement": { "type": "string", "minLength": 1 },
-          "posture": { "enum": ["met", "partial", "gap", "not-applicable"] },
-          "relationships": {
-            "$ref": "./relationships.schema.json",
-            "properties": {
-              "evidence": { "minItems": 1 }
-            },
-            "anyOf": [
-              { "properties": { "compliance": { "minItems": 1 } } },
-              { "properties": { "frameworks": { "minItems": 1 } } }
+          "id": {
+            "type": "string",
+            "pattern": "^CLM-[A-Z]+-[0-9]{3,}$"
+          },
+          "area": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "posture": {
+            "enum": [
+              "met",
+              "partial",
+              "gap",
+              "not-applicable"
             ]
+          },
+          "relationships": {
+            "$ref": "./relationships.schema.json"
           }
         }
       }

@@ -46,7 +46,8 @@
         "environment": "Production + local tooling",
         "verification": "source review, Wrangler build/deploy",
         "status": "Met"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-002",
@@ -58,7 +59,8 @@
         "environment": "Production",
         "verification": "`/version` expected version/SHA",
         "status": "Met"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-003",
@@ -70,7 +72,8 @@
         "environment": "Production",
         "verification": "`/health` post-deploy + monitoring",
         "status": "Met"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-004",
@@ -82,7 +85,8 @@
         "environment": "Production",
         "verification": "build/deploy/health/migrations; provider reconciliation incomplete",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-005",
@@ -94,7 +98,8 @@
         "environment": "Production/preview",
         "verification": "build/runtime tests; provider reconciliation incomplete",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-006",
@@ -106,7 +111,8 @@
         "environment": "Production",
         "verification": "build/tests/runtime behavior",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-007",
@@ -118,7 +124,8 @@
         "environment": "Production",
         "verification": "live route reachable; provider-side DNS/TLS review incomplete",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-008",
@@ -130,7 +137,8 @@
         "environment": "Production",
         "verification": "operational records indicate scheduled behavior; provider trigger reconciliation incomplete",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-009",
@@ -142,7 +150,8 @@
         "environment": "Local/Production",
         "verification": "deploy command + runtime surfaces where safe",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-010",
@@ -154,7 +163,8 @@
         "environment": "Local/Production",
         "verification": "names/purpose documented; values intentionally unverifiable publicly",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-011",
@@ -166,7 +176,8 @@
         "environment": "GitHub Actions",
         "verification": "workflow source + runs when available",
         "status": "Met"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-012",
@@ -178,7 +189,8 @@
         "environment": "GitHub Actions/Production",
         "verification": "source + tagged deployment evidence",
         "status": "Met"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-013",
@@ -190,7 +202,8 @@
         "environment": "GitHub",
         "verification": "rulesets query/classic protection evidence incomplete",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-014",
@@ -202,7 +215,8 @@
         "environment": "GitHub",
         "verification": "workflow references exist; full provider-state inventory not public/evidenced",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-015",
@@ -214,7 +228,8 @@
         "environment": "Production",
         "verification": "least-privilege intent documented; recurring provider reconciliation pending",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-016",
@@ -226,7 +241,8 @@
         "environment": "All",
         "verification": "source/CI/tests",
         "status": "Met"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-017",
@@ -238,7 +254,8 @@
         "environment": "All",
         "verification": "contract validation/tests",
         "status": "Met"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-018",
@@ -250,7 +267,8 @@
         "environment": "Production",
         "verification": "tests/evaluation/risk-impact records",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-019",
@@ -262,7 +280,8 @@
         "environment": "Local/Production",
         "verification": "clean local migration validation + tagged production apply",
         "status": "Met"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-020",
@@ -274,7 +293,8 @@
         "environment": "CI/build",
         "verification": "`npm ci`, audit, build/tests",
         "status": "Met"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-021",
@@ -286,7 +306,8 @@
         "environment": "CI/local",
         "verification": "typecheck/tests",
         "status": "Met"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-022",
@@ -298,7 +319,8 @@
         "environment": "Source",
         "verification": "`validate:routes`",
         "status": "Met"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-023",
@@ -310,7 +332,8 @@
         "environment": "Production",
         "verification": "audit/events/runtime routes",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-024",
@@ -322,7 +345,8 @@
         "environment": "Conditional",
         "verification": "implementation/tests exist; provider activation varies",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-025",
@@ -334,7 +358,8 @@
         "environment": "Production",
         "verification": "source validation/tests/runtime logs",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-026",
@@ -346,7 +371,8 @@
         "environment": "Production",
         "verification": "tests/usage/degradation evidence",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-027",
@@ -358,7 +384,8 @@
         "environment": "All",
         "verification": "locale validation/tests",
         "status": "Met"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-028",
@@ -370,7 +397,8 @@
         "environment": "Production/GitHub",
         "verification": "no complete automated reconciliation currently evidenced",
         "status": "Gap"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-029",
@@ -382,7 +410,8 @@
         "environment": "All",
         "verification": "process defined; recurring event evidence not yet accumulated",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "CFG-030",
@@ -394,7 +423,8 @@
         "environment": "Management system",
         "verification": "first formal review pending",
         "status": "Gap"
-      }
+      },
+      "relationships": []
     }
   ]
 }

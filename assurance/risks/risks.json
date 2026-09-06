@@ -26,24 +26,41 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-003",
-          "EVD-CI-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-001"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-001"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-CI-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-001"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-001"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-001"
+          }
+        }
+      ]
     },
     {
       "id": "SEC-RISK-002",
@@ -60,24 +77,41 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-003",
-          "EVD-SRC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-001"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-002"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-002"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-004"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-002"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-001"
+          }
+        }
+      ]
     },
     {
       "id": "SEC-RISK-003",
@@ -94,26 +128,63 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001",
-          "EVD-DOC-002",
-          "EVD-CI-001",
-          "EVD-RUN-002"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-001"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-003"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-CI-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-003"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-003"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-002"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-003"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-003"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-001"
+          }
+        }
+      ]
     },
     {
       "id": "SEC-RISK-004",
@@ -130,24 +201,41 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-CI-001",
-          "EVD-DOC-002"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-001"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-004"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-CI-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-004"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-004"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-001"
+          }
+        }
+      ]
     },
     {
       "id": "SEC-RISK-005",
@@ -164,24 +252,41 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-CI-001",
-          "EVD-DOC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-001"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-005"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-CI-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-005"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-005"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-001"
+          }
+        }
+      ]
     },
     {
       "id": "SEC-RISK-006",
@@ -198,24 +303,41 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-002",
-          "EVD-DOC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-001"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-006"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-006"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-006"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-001"
+          }
+        }
+      ]
     },
     {
       "id": "SEC-RISK-007",
@@ -232,24 +354,41 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-004",
-          "EVD-DOC-002"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-001"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-007"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-002"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-007"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-007"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-001"
+          }
+        }
+      ]
     },
     {
       "id": "SEC-RISK-008",
@@ -267,24 +406,41 @@
       ],
       "status": "open",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-RUN-001",
-          "EVD-DOC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-001"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-008"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-008"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-001"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-008"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-001"
+          }
+        }
+      ]
     },
     {
       "id": "SEC-RISK-009",
@@ -302,25 +458,52 @@
       ],
       "status": "open",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001",
-          "EVD-DOC-002",
-          "EVD-RUN-002"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-001"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-009"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-009"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-002"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-009"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-009"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-001"
+          }
+        }
+      ]
     },
     {
       "id": "SEC-RISK-010",
@@ -338,24 +521,41 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-001",
-          "EVD-DOC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-001"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-010"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-010"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-001"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-010"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-001"
+          }
+        }
+      ]
     },
     {
       "id": "SEC-RISK-011",
@@ -372,24 +572,41 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-001",
-          "EVD-TST-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-001"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-011"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-011"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-TST-001"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-011"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-001"
+          }
+        }
+      ]
     },
     {
       "id": "SEC-RISK-012",
@@ -406,24 +623,41 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-004",
-          "EVD-RUN-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-001"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-012"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-012"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-001"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-012"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-001"
+          }
+        }
+      ]
     },
     {
       "id": "SEC-RISK-013",
@@ -440,25 +674,52 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-RUN-003",
-          "EVD-SRC-004",
-          "EVD-DOC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-001"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-013"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-013"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-013"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-004"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-013"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-001"
+          }
+        }
+      ]
     },
     {
       "id": "SEC-RISK-014",
@@ -475,25 +736,52 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001",
-          "EVD-DOC-002",
-          "EVD-RUN-002"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-001"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-014"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-014"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-002"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-014"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-014"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-001"
+          }
+        }
+      ]
     },
     {
       "id": "SEC-RISK-015",
@@ -510,24 +798,41 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001",
-          "EVD-CI-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-001"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-015"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-CI-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-015"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "SEC-RISK-015"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-001"
+          }
+        }
+      ]
     },
     {
       "id": "AI-RISK-001",
@@ -544,26 +849,63 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-SRC-001",
-          "EVD-TST-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-002",
-          "WG-POL-002"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-001"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-001"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-001"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-TST-001"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-001"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-POL-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-001"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-002"
+          }
+        }
+      ]
     },
     {
       "id": "AI-RISK-002",
@@ -580,26 +922,63 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-001",
-          "EVD-SRC-003",
-          "EVD-TST-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-002",
-          "WG-POL-002"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-002"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-002"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-002"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-TST-001"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-002"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-POL-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-002"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-002"
+          }
+        }
+      ]
     },
     {
       "id": "AI-RISK-003",
@@ -616,25 +995,52 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-TST-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-002",
-          "WG-POL-002"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-003"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-003"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-TST-001"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-003"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-POL-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-003"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-002"
+          }
+        }
+      ]
     },
     {
       "id": "AI-RISK-004",
@@ -651,26 +1057,63 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-DOC-003",
-          "EVD-TST-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-002",
-          "WG-POL-002"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-004"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-004"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-004"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-TST-001"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-004"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-POL-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-004"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-002"
+          }
+        }
+      ]
     },
     {
       "id": "AI-RISK-005",
@@ -687,25 +1130,52 @@
       ],
       "status": "open",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-TST-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-002",
-          "WG-POL-002"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-005"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-005"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-TST-001"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-005"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-POL-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-005"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-002"
+          }
+        }
+      ]
     },
     {
       "id": "AI-RISK-006",
@@ -722,25 +1192,52 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-002",
-          "WG-POL-002"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-006"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-006"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-006"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-POL-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-006"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-002"
+          }
+        }
+      ]
     },
     {
       "id": "AI-RISK-007",
@@ -757,25 +1254,52 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-TST-001",
-          "EVD-CI-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-002",
-          "WG-POL-002"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-007"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-CI-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-007"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-TST-001"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-007"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-POL-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-007"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-002"
+          }
+        }
+      ]
     },
     {
       "id": "AI-RISK-008",
@@ -792,25 +1316,52 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-004",
-          "EVD-SRC-002"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-002",
-          "WG-POL-002"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-008"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-002"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-008"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-004"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-008"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-POL-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-008"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-002"
+          }
+        }
+      ]
     },
     {
       "id": "AI-RISK-009",
@@ -827,25 +1378,52 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001",
-          "EVD-CI-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-002",
-          "WG-POL-002"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-009"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-CI-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-009"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-009"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-POL-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-009"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-002"
+          }
+        }
+      ]
     },
     {
       "id": "AI-RISK-010",
@@ -863,25 +1441,52 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-002",
-          "WG-POL-002"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-010"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-010"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-010"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-POL-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-010"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-002"
+          }
+        }
+      ]
     },
     {
       "id": "AI-RISK-011",
@@ -898,26 +1503,63 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-TST-001",
-          "EVD-CI-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-002",
-          "WG-POL-002"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-011"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-CI-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-011"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-011"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-TST-001"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-011"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-POL-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-011"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-002"
+          }
+        }
+      ]
     },
     {
       "id": "AI-RISK-012",
@@ -935,25 +1577,52 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-001",
-          "EVD-SRC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-002",
-          "WG-POL-002"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-012"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-012"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-012"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-POL-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-012"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-002"
+          }
+        }
+      ]
     },
     {
       "id": "AI-RISK-013",
@@ -970,25 +1639,52 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-002",
-          "WG-POL-002"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-013"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-013"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-013"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-POL-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-013"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-002"
+          }
+        }
+      ]
     },
     {
       "id": "AI-RISK-014",
@@ -1005,25 +1701,52 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001",
-          "EVD-RUN-005"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-002",
-          "WG-POL-002"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-014"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-014"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-005"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-014"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-POL-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-014"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-002"
+          }
+        }
+      ]
     },
     {
       "id": "AI-RISK-015",
@@ -1040,25 +1763,52 @@
       ],
       "status": "treating",
       "reviewDue": "2026-12-02",
-      "relationships": {
-        "evidence": [
-          "EVD-RUN-005",
-          "EVD-SRC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-SOA-002",
-          "WG-POL-002"
-        ],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-015"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-005"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-015"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-004"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-015"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-POL-002"
+          }
+        },
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.risks",
+            "native": "AI-RISK-015"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-SOA-002"
+          }
+        }
+      ]
     }
   ]
 }

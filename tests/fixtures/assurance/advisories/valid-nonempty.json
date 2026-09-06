@@ -12,21 +12,19 @@
       "fixedReleases": [
         "v0.14.0"
       ],
-      "relationships": {
-        "evidence": [
-          "EVD-CI-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.advisories",
+            "native": "GHSA-aaaa-bbbb-cccc"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-CI-001"
+          }
+        }
+      ]
     }
   ]
 }

@@ -6,6 +6,7 @@ import operable from '../assurance/compliance/wcag-2.2/operable.json';
 import understandable from '../assurance/compliance/wcag-2.2/understandable.json';
 import robust from '../assurance/compliance/wcag-2.2/robust.json';
 import evidenceData from '../assurance/evidence/evidence.json';
+import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
 
 const criteria = [...perceivable.criteria, ...operable.criteria, ...understandable.criteria, ...robust.criteria];
 const evidenceIds = new Set(evidenceData.records.map((record) => record.id));
@@ -48,13 +49,14 @@ describe('WCAG 2.2 canonical public criterion registry', () => {
     expect('counts' in manifest).toBe(false);
     for (const record of criteria) {
       expect(record.owner.length).toBeGreaterThan(0);
-      expect(record.relationships.evidence.length).toBeGreaterThan(0);
-      for (const evidenceId of record.relationships.evidence) expect(evidenceIds.has(evidenceId), evidenceId).toBe(true);
+      const relationshipEvidenceIds = assuranceRelationshipIds(record.relationships, 'evidence');
+      expect(relationshipEvidenceIds.length).toBeGreaterThan(0);
+      for (const evidenceId of relationshipEvidenceIds) expect(evidenceIds.has(evidenceId), evidenceId).toBe(true);
       expect(record.freshnessRules).toEqual(['release-bound', 'content-change', 'interaction-change', 'quarterly-manual']);
       expect(record).not.toHaveProperty('criterionId');
       expect(record).not.toHaveProperty('evidenceIds');
     }
-    for (const evidenceId of manifest.registryRelationships.evidence) expect(evidenceIds.has(evidenceId), evidenceId).toBe(true);
+    for (const evidenceId of assuranceRelationshipIds(manifest.registryRelationships, 'evidence')) expect(evidenceIds.has(evidenceId), evidenceId).toBe(true);
     expect(manifest).not.toHaveProperty('registryEvidenceIds');
   });
 });

@@ -51,7 +51,8 @@
         "status": "Active",
         "triggerCadence": "Every controlled change",
         "currentLimitationNextAction": "Provider enforcement of review gates remains separately unverified"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-002",
@@ -64,7 +65,8 @@
         "status": "Active",
         "triggerCadence": "PR / main CI",
         "currentLimitationNextAction": "Lockfile integrity does not eliminate malicious dependency risk"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-003",
@@ -77,7 +79,8 @@
         "status": "Active",
         "triggerCadence": "PR / main CI",
         "currentLimitationNextAction": "Type safety is not authorization/security proof"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-004",
@@ -90,7 +93,8 @@
         "status": "Active",
         "triggerCadence": "PR / main CI",
         "currentLimitationNextAction": "Custom lint coverage is narrower than a dedicated security linter"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-005",
@@ -103,7 +107,8 @@
         "status": "Active",
         "triggerCadence": "PR / main CI",
         "currentLimitationNextAction": "Valid route inventory does not prove route authorization"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-006",
@@ -116,7 +121,8 @@
         "status": "Active",
         "triggerCadence": "PR / main CI",
         "currentLimitationNextAction": "Structure validation does not prove control effectiveness"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-007",
@@ -129,7 +135,8 @@
         "status": "Active",
         "triggerCadence": "PR / main CI",
         "currentLimitationNextAction": "Branch/ruleset enforcement remains unverified"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-008",
@@ -142,7 +149,8 @@
         "status": "Active",
         "triggerCadence": "PR / main CI",
         "currentLimitationNextAction": "Contract validity alone is not behavioral security evidence"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-009",
@@ -155,7 +163,8 @@
         "status": "Active",
         "triggerCadence": "PR / main CI",
         "currentLimitationNextAction": "Not a security test except where locale behavior affects controls"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-010",
@@ -168,7 +177,8 @@
         "status": "Active",
         "triggerCadence": "PR / main CI",
         "currentLimitationNextAction": "Not full secret scanning/SAST; selected patterns only"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-011",
@@ -181,7 +191,8 @@
         "status": "Active",
         "triggerCadence": "PR / main CI",
         "currentLimitationNextAction": "Does not prove production backup/restore or migration rollback"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-012",
@@ -194,7 +205,8 @@
         "status": "Active",
         "triggerCadence": "PR / main CI",
         "currentLimitationNextAction": "Does not cover all supply-chain or lower-severity risks"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-013",
@@ -207,7 +219,8 @@
         "status": "Active",
         "triggerCadence": "PR / main CI",
         "currentLimitationNextAction": "Build success does not prove runtime security"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-014",
@@ -220,7 +233,8 @@
         "status": "Active",
         "triggerCadence": "PR / main CI",
         "currentLimitationNextAction": "Durable Git history is authoritative; the 30-day Actions artifact is transport/recovery only"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-015",
@@ -233,7 +247,8 @@
         "status": "Active",
         "triggerCadence": "PR",
         "currentLimitationNextAction": "Does not independently verify required reviewer/branch rules"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-016",
@@ -246,7 +261,8 @@
         "status": "Active",
         "triggerCadence": "Relevant code change / full tests",
         "currentLimitationNextAction": "Test uses synthetic credentials, as intended"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-017",
@@ -259,7 +275,8 @@
         "status": "Active",
         "triggerCadence": "Relevant auth/admin change",
         "currentLimitationNextAction": "Must be extended to new browser state-change boundaries as added"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-018",
@@ -272,7 +289,8 @@
         "status": "Active",
         "triggerCadence": "Control/availability change",
         "currentLimitationNextAction": "Does not simulate every Cloudflare/provider outage mode"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-019",
@@ -285,7 +303,8 @@
         "status": "Active",
         "triggerCadence": "HTTP boundary change",
         "currentLimitationNextAction": "Coverage varies by specialized endpoint"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-020",
@@ -298,7 +317,8 @@
         "status": "Active",
         "triggerCadence": "Identity/auth change",
         "currentLimitationNextAction": "Mock/application evidence, not provider production assurance"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-021",
@@ -311,7 +331,8 @@
         "status": "Active",
         "triggerCadence": "Identity/authz change",
         "currentLimitationNextAction": "New roles/scopes require new tests"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-022",
@@ -324,7 +345,8 @@
         "status": "Active",
         "triggerCadence": "Session/crypto change",
         "currentLimitationNextAction": "Does not substitute for cryptographic independent review"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-023",
@@ -337,7 +359,8 @@
         "status": "Active",
         "triggerCadence": "Identity state-change change",
         "currentLimitationNextAction": "New cross-site flows require explicit design/testing"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-024",
@@ -350,7 +373,8 @@
         "status": "Active",
         "triggerCadence": "Identity/provider change",
         "currentLimitationNextAction": "Public-output tests cannot prove logs/provider consoles contain no secret"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-025",
@@ -363,7 +387,8 @@
         "status": "Active",
         "triggerCadence": "OIDC change",
         "currentLimitationNextAction": "Provider responses are mocked; live provider configuration is separate evidence"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-026",
@@ -376,7 +401,8 @@
         "status": "Active",
         "triggerCadence": "GitHub identity change",
         "currentLimitationNextAction": "Live OAuth application settings are provider-side evidence"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-027",
@@ -389,7 +415,8 @@
         "status": "Partial",
         "triggerCadence": "SAML change",
         "currentLimitationNextAction": "Full adversarial SAML parser/signature test breadth remains limited"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-028",
@@ -402,7 +429,8 @@
         "status": "Active",
         "triggerCadence": "Webhook change",
         "currentLimitationNextAction": "External sender/provider configuration remains separate evidence"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-029",
@@ -415,7 +443,8 @@
         "status": "Active",
         "triggerCadence": "MCP protocol/tool change",
         "currentLimitationNextAction": "Does not evaluate external model reasoning quality"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-030",
@@ -428,7 +457,8 @@
         "status": "Active",
         "triggerCadence": "MCP protocol/tool change",
         "currentLimitationNextAction": "Additional abuse cases required if authority expands"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-031",
@@ -441,7 +471,8 @@
         "status": "Active",
         "triggerCadence": "MCP tool catalog change",
         "currentLimitationNextAction": "A future write/admin tool would require material reassessment"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-032",
@@ -454,7 +485,8 @@
         "status": "Active",
         "triggerCadence": "REST/data boundary change",
         "currentLimitationNextAction": "Review required when data classes or scopes change"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-033",
@@ -467,7 +499,8 @@
         "status": "Active",
         "triggerCadence": "GraphQL schema/resolver change",
         "currentLimitationNextAction": "Must continue matching REST/application authorization policy"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-034",
@@ -480,7 +513,8 @@
         "status": "Active",
         "triggerCadence": "R2/storage change",
         "currentLimitationNextAction": "Production object classification and restore remain separate evidence"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-035",
@@ -493,7 +527,8 @@
         "status": "Active",
         "triggerCadence": "Operations/log change",
         "currentLimitationNextAction": "Does not prove all production telemetry is complete/retained"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-036",
@@ -506,7 +541,8 @@
         "status": "Partial",
         "triggerCadence": "UI/security-control change",
         "currentLimitationNextAction": "Manual browser/AT validation remains required for claims beyond automation"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-037",
@@ -519,7 +555,8 @@
         "status": "Active",
         "triggerCadence": "Every production deploy",
         "currentLimitationNextAction": "Requires actual workflow evidence for each release"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-038",
@@ -532,7 +569,8 @@
         "status": "Active",
         "triggerCadence": "Every production deploy",
         "currentLimitationNextAction": "Checks release identity, not every feature/control"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-039",
@@ -545,7 +583,8 @@
         "status": "Active",
         "triggerCadence": "Every production deploy",
         "currentLimitationNextAction": "Health coverage is bounded; service-specific verification may be needed"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-040",
@@ -558,7 +597,8 @@
         "status": "Partial",
         "triggerCadence": "Every High-risk change",
         "currentLimitationNextAction": "Requirement now formalized; historical consistency not asserted"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-041",
@@ -571,7 +611,8 @@
         "status": "Planned",
         "triggerCadence": "Each reproducible security fix",
         "currentLimitationNextAction": "No fabricated remediation history exists"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-042",
@@ -584,7 +625,8 @@
         "status": "Planned",
         "triggerCadence": "Quarterly / management review",
         "currentLimitationNextAction": "No recurring trend history yet"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-043",
@@ -597,7 +639,8 @@
         "status": "Gap",
         "triggerCadence": "Risk/contract trigger",
         "currentLimitationNextAction": "Current type/lint/secret scan is narrower than SAST"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-044",
@@ -610,7 +653,8 @@
         "status": "Gap",
         "triggerCadence": "Risk/contract trigger",
         "currentLimitationNextAction": "Consider before stronger external assurance claims"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-045",
@@ -623,7 +667,8 @@
         "status": "Gap",
         "triggerCadence": "Material parser/protocol risk",
         "currentLimitationNextAction": "Target identity/webhook/MCP/schema inputs if risk justifies"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-046",
@@ -636,7 +681,8 @@
         "status": "Gap",
         "triggerCadence": "Risk/customer/management trigger",
         "currentLimitationNextAction": "Do not claim pentest until independent evidence exists"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-047",
@@ -649,7 +695,8 @@
         "status": "Gap",
         "triggerCadence": "High assurance trigger",
         "currentLimitationNextAction": "Ordinary author/owner review is not automatically independent"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-048",
@@ -662,7 +709,8 @@
         "status": "Partial",
         "triggerCadence": "Material AI change",
         "currentLimitationNextAction": "Application authority is tested; model reasoning remains provider/external behavior"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-049",
@@ -675,7 +723,8 @@
         "status": "Partial",
         "triggerCadence": "High-risk release",
         "currentLimitationNextAction": "Must avoid destructive testing against public production"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ST-050",
@@ -688,7 +737,8 @@
         "status": "Partial",
         "triggerCadence": "Quarterly/material change",
         "currentLimitationNextAction": "Provider-side evidence incomplete; GitHub branch/ruleset enforcement unverified"
-      }
+      },
+      "relationships": []
     }
   ]
 }

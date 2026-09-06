@@ -31,6 +31,13 @@
       "reviewedAt": "2026-09-04T13:00:00Z",
       "reviewer": "controlled-repository-review",
       "basis": "DEMO-155 migration review binds disclosure approval to the exact registry-driven public source revisions present at commit 6f8383cd6a318e0fe03506bc96401f5161c6e222; later source revisions require a new disclosure decision."
+    },
+    {
+      "id": "review-demo174-relationship-sources",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-06T18:53:26Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-174 review approves the exact public source revisions produced by the canonical identity-edge relationship migration; later source revisions require a new disclosure decision."
     }
   ],
   "sourceApprovals": [
@@ -117,6 +124,78 @@
       "resource": "risks",
       "revision": "6900031bbd1e974cfb1d80ce43bf937419591ea9",
       "reviewRef": "review-demo155-current-sources"
+    },
+    {
+      "id": "source-claims-4725b49f1da8",
+      "resource": "claims",
+      "revision": "4725b49f1da878c345921f60b64afbb04ebabe33",
+      "reviewRef": "review-demo174-relationship-sources"
+    },
+    {
+      "id": "source-iso27001-705a4ac4e80a",
+      "resource": "compliance.iso-27001",
+      "revision": "705a4ac4e80a24ae63d6ae344b620ab9dd1c5a6f",
+      "reviewRef": "review-demo174-relationship-sources"
+    },
+    {
+      "id": "source-iso42001-a46b3387ff2e",
+      "resource": "compliance.iso-42001",
+      "revision": "a46b3387ff2ed48962db9fc6d38cd5b74c8b72f8",
+      "reviewRef": "review-demo174-relationship-sources"
+    },
+    {
+      "id": "source-wcag-manifest-437326a0ce5f",
+      "resource": "compliance.wcag-2.2",
+      "revision": "437326a0ce5fb3d5132df35d71fbd80181064256",
+      "reviewRef": "review-demo174-relationship-sources"
+    },
+    {
+      "id": "source-wcag-operable-4d33a4fd6915",
+      "resource": "compliance.wcag-2.2.operable",
+      "revision": "4d33a4fd6915abc2a2545443359922ded0b0b4bd",
+      "reviewRef": "review-demo174-relationship-sources"
+    },
+    {
+      "id": "source-wcag-perceivable-164da8b3a1b7",
+      "resource": "compliance.wcag-2.2.perceivable",
+      "revision": "164da8b3a1b7f4633b9e15fcddcf7c69b4465e54",
+      "reviewRef": "review-demo174-relationship-sources"
+    },
+    {
+      "id": "source-wcag-robust-0ee0623d42fc",
+      "resource": "compliance.wcag-2.2.robust",
+      "revision": "0ee0623d42fcd08489630fff421dca7ca45444a0",
+      "reviewRef": "review-demo174-relationship-sources"
+    },
+    {
+      "id": "source-wcag-understandable-f369390e8795",
+      "resource": "compliance.wcag-2.2.understandable",
+      "revision": "f369390e8795f4c42fa0bd97e5f81fc6da9eeca9",
+      "reviewRef": "review-demo174-relationship-sources"
+    },
+    {
+      "id": "source-evidence-184667921683",
+      "resource": "evidence",
+      "revision": "18466792168382223d1ae119c476cf3d21678a90",
+      "reviewRef": "review-demo174-relationship-sources"
+    },
+    {
+      "id": "source-exercises-6c6e8f646a69",
+      "resource": "exercises",
+      "revision": "6c6e8f646a696ce66599f45c8e7c15776f01ad6b",
+      "reviewRef": "review-demo174-relationship-sources"
+    },
+    {
+      "id": "source-objectives-e0b741ec1d79",
+      "resource": "objectives",
+      "revision": "e0b741ec1d793f1711669b30e615b7b492898cdc",
+      "reviewRef": "review-demo174-relationship-sources"
+    },
+    {
+      "id": "source-risks-df96a37d913c",
+      "resource": "risks",
+      "revision": "df96a37d913c5452e875ac3d2adbceaa5c674650",
+      "reviewRef": "review-demo174-relationship-sources"
     }
   ],
   "records": [

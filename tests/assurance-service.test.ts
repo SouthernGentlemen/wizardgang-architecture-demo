@@ -22,6 +22,7 @@ import {
 import { renderComplianceDemo } from '../src/demos/compliance-page';
 import { renderRisks } from '../src/demos/assurance-pages';
 import type { Env } from '../src/types';
+import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
 
 const environment = {
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
@@ -102,7 +103,7 @@ describe('common canonical assurance query and presentation service', () => {
   it('keeps reverse evidence relationships complete for canonical relationship-bearing families', () => {
     for (const dataset of ['claims', 'risks', 'incidents', 'exercises', 'advisories', 'compliance'] as const) {
       for (const record of listAssuranceRecords(dataset)) {
-        for (const evidenceId of record.relationships.evidence) {
+        for (const evidenceId of assuranceRelationshipIds(record.relationships, 'evidence')) {
           expect(reverseAssuranceRelationships(evidenceId, 'evidence')).toEqual(
             expect.arrayContaining([expect.objectContaining({ sourceId: record.id, dataset, relation: 'evidence' })]),
           );

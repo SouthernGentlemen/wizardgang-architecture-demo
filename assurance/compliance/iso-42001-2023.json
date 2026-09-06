@@ -59,21 +59,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-4.1"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-4.2",
@@ -83,21 +81,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-RUN-005"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-4.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-005"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-4.3",
@@ -107,21 +103,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-4.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-4.4",
@@ -131,21 +125,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-4.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-5.1",
@@ -155,21 +147,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-5.1"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-5.2",
@@ -179,21 +169,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-5.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-5.3",
@@ -203,21 +191,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-5.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-6.1",
@@ -227,21 +213,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.1"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-6.1.1",
@@ -251,21 +235,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.1.1"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-6.1.2",
@@ -275,21 +257,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.1.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-6.1.3",
@@ -299,21 +279,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.1.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-6.1.4",
@@ -323,22 +301,30 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-TST-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.1.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.1.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-TST-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-6.2",
@@ -348,21 +334,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-6.3",
@@ -372,21 +356,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-7.1",
@@ -396,21 +378,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-7.1"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-7.2",
@@ -420,21 +400,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-7.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-7.3",
@@ -444,21 +422,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-7.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-7.4",
@@ -468,21 +444,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-RUN-005"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-7.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-005"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-7.5",
@@ -492,21 +466,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-7.5"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-7.5.1",
@@ -516,21 +488,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-7.5.1"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-7.5.2",
@@ -540,21 +510,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-7.5.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-7.5.3",
@@ -564,21 +532,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-7.5.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-8.1",
@@ -588,21 +554,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-8.1"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-8.2",
@@ -612,21 +576,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-8.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-8.3",
@@ -636,21 +598,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-8.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-8.4",
@@ -660,22 +620,30 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-TST-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-8.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-8.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-TST-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-9.1",
@@ -685,21 +653,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-9.1"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-9.3",
@@ -709,21 +675,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-9.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-9.3.1",
@@ -733,21 +697,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-9.3.1"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-9.3.2",
@@ -757,21 +719,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-9.3.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-9.3.3",
@@ -781,21 +741,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-9.3.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-10.1",
@@ -805,21 +763,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-10.1"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-10.2",
@@ -829,21 +785,19 @@
       "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-10.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-9.2",
@@ -853,21 +807,19 @@
       "section": "Clauses 4–10",
       "status": "gap",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-CI-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-9.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-CI-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-9.2.1",
@@ -877,21 +829,19 @@
       "section": "Clauses 4–10",
       "status": "gap",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-CI-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-9.2.1"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-CI-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-9.2.2",
@@ -901,21 +851,19 @@
       "section": "Clauses 4–10",
       "status": "gap",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-CI-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-9.2.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-CI-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.2.2",
@@ -925,21 +873,19 @@
       "section": "Annex A · policies",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.2.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.2.3",
@@ -949,22 +895,30 @@
       "section": "Annex A · policies",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001",
-          "EVD-DOC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.2.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.2.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.2.4",
@@ -974,21 +928,19 @@
       "section": "Annex A · policies",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.2.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.3.2",
@@ -998,21 +950,19 @@
       "section": "Annex A · organization",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.3.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.3.3",
@@ -1022,21 +972,19 @@
       "section": "Annex A · organization",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-RUN-005"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.3.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-005"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.4.2",
@@ -1046,21 +994,19 @@
       "section": "Annex A · resources",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.4.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.4.3",
@@ -1070,21 +1016,19 @@
       "section": "Annex A · resources",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.4.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.4.4",
@@ -1094,22 +1038,30 @@
       "section": "Annex A · resources",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-TST-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.4.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.4.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-TST-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.4.5",
@@ -1119,21 +1071,19 @@
       "section": "Annex A · resources",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.4.5"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.4.6",
@@ -1143,21 +1093,19 @@
       "section": "Annex A · resources",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.4.6"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.5.2",
@@ -1167,21 +1115,19 @@
       "section": "Annex A · impact",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.5.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.5.3",
@@ -1191,21 +1137,19 @@
       "section": "Annex A · impact",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.5.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.5.4",
@@ -1215,22 +1159,30 @@
       "section": "Annex A · impact",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-RUN-005",
-          "EVD-TST-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.5.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-005"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.5.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-TST-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.5.5",
@@ -1240,22 +1192,30 @@
       "section": "Annex A · impact",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-RUN-005",
-          "EVD-DOC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.5.5"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.5.5"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-005"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.6.1.2",
@@ -1265,21 +1225,19 @@
       "section": "Annex A · lifecycle",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.1.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.6.1.3",
@@ -1289,22 +1247,30 @@
       "section": "Annex A · lifecycle",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001",
-          "EVD-TST-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.1.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.1.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-TST-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.6.2.2",
@@ -1314,22 +1280,30 @@
       "section": "Annex A · lifecycle",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-SRC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.6.2.3",
@@ -1339,22 +1313,30 @@
       "section": "Annex A · lifecycle",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-DOC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.6.2.4",
@@ -1364,21 +1346,19 @@
       "section": "Annex A · lifecycle",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-TST-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-TST-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.6.2.5",
@@ -1388,22 +1368,30 @@
       "section": "Annex A · lifecycle",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001",
-          "EVD-DOC-002"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.5"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.5"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-002"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.6.2.6",
@@ -1413,22 +1401,30 @@
       "section": "Annex A · lifecycle",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-004",
-          "EVD-SRC-002"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.6"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.6"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-002"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.6.2.7",
@@ -1438,22 +1434,30 @@
       "section": "Annex A · lifecycle",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001",
-          "EVD-SRC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.7"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.7"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.6.2.8",
@@ -1463,23 +1467,41 @@
       "section": "Annex A · lifecycle",
       "status": "met",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-SRC-004",
-          "EVD-SRC-002"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.8"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-002"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.8"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.8"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-004"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.7.3",
@@ -1489,21 +1511,19 @@
       "section": "Annex A · data",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.7.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.7.4",
@@ -1513,22 +1533,30 @@
       "section": "Annex A · data",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-TST-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.7.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.7.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-TST-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.7.5",
@@ -1538,22 +1566,30 @@
       "section": "Annex A · data",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-SRC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.7.5"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.7.5"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-004"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.7.2",
@@ -1564,21 +1600,19 @@
       "status": "not-applicable",
       "applicability": "not-applicable",
       "rationale": "No model training, fine-tuning, or model-enhancement activity is in scope; reassess before model development is introduced.",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.7.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.7.6",
@@ -1589,21 +1623,19 @@
       "status": "not-applicable",
       "applicability": "not-applicable",
       "rationale": "No model-training data preparation, labeling, or enhancement pipeline is in scope; reassess before introducing one.",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.7.6"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.8.2",
@@ -1613,22 +1645,30 @@
       "section": "Annex A · interested Parties",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-RUN-005",
-          "EVD-SRC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.8.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-005"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.8.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.8.3",
@@ -1638,22 +1678,30 @@
       "section": "Annex A · interested Parties",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-RUN-005",
-          "EVD-DOC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.8.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.8.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-005"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.8.4",
@@ -1663,22 +1711,30 @@
       "section": "Annex A · interested Parties",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-RUN-005",
-          "EVD-RUN-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.8.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.8.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-005"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.8.5",
@@ -1688,22 +1744,30 @@
       "section": "Annex A · interested Parties",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-DOC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.8.5"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.8.5"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.9.2",
@@ -1713,22 +1777,30 @@
       "section": "Annex A · use",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-SRC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.9.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.9.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.9.3",
@@ -1738,21 +1810,19 @@
       "section": "Annex A · use",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.9.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.9.4",
@@ -1762,23 +1832,41 @@
       "section": "Annex A · use",
       "status": "met",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-TST-001",
-          "EVD-SRC-001"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.9.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.9.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.9.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-TST-001"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.10.2",
@@ -1788,22 +1876,30 @@
       "section": "Annex A · third Parties",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-003",
-          "EVD-DOC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.10.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.10.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.10.3",
@@ -1813,22 +1909,30 @@
       "section": "Annex A · third Parties",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-003",
-          "EVD-DOC-004"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.10.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.10.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        }
+      ]
     },
     {
       "id": "ISO42001-A.10.4",
@@ -1838,22 +1942,30 @@
       "section": "Annex A · third Parties",
       "status": "partial",
       "applicability": "applicable",
-      "relationships": {
-        "evidence": [
-          "EVD-RUN-005",
-          "EVD-DOC-003"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.10.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.10.4"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-005"
+          }
+        }
+      ]
     }
   ]
 }

@@ -3,6 +3,7 @@ import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } f
 import { tmpdir } from 'node:os';
 import { dirname, join, relative, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
+import { rebindRelationshipSource, setRelationshipTargets } from './helpers/assurance-relationships';
 
 const repositoryRoot = process.cwd();
 const fixtureRoots: string[] = [];
@@ -75,6 +76,7 @@ function registerSyntheticReportFamily(fixtureRoot: string, mutate?: (record: an
   record.id = 'SEC-RISK-999';
   record.title = 'Synthetic registered report fixture';
   mutate?.(record);
+  rebindRelationshipSource(record, 'github.structured-records.report-register-v2');
   const reportPath = 'assurance/reports/demo-154-report.json';
   writeJson(fixtureRoot, reportPath, { ...riskData, records: [record] });
   registry.datasets.push({
@@ -112,7 +114,7 @@ describe('registry-driven assurance validation fixtures', () => {
   it('rejects a dangling relationship introduced by the synthetic report family', () => {
     const fixtureRoot = createFixture();
     registerSyntheticReportFamily(fixtureRoot, (record) => {
-      record.relationships.evidence = ['EVD-MISSING-999'];
+      setRelationshipTargets(record, 'evidence', 'github.structured-records.evidence', ['EVD-MISSING-999']);
     });
 
     expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.mjs'));

@@ -1,3 +1,4 @@
+import { assuranceRelationshipIds } from '../assurance/relationship-contract.js';
 import type { Env } from '../types';
 import {
   assuranceAnchor,
@@ -27,7 +28,7 @@ function advisoryCard(env: Env, advisory: PublishedAssuranceRecordMap['advisorie
   const releases = advisory.fixedReleases
     .map((release) => `<a href="${escapeHtml(`${repoUrl(env)}/releases/tag/${encodeURIComponent(release)}`)}">${escapeHtml(release)}</a>`)
     .join(', ');
-  const incidentIds = advisory.relationships.incidents;
+  const incidentIds = assuranceRelationshipIds(advisory.relationships, 'incidents');
   const incidentLinks = incidentIds.length === 0
     ? 'None'
     : incidentIds.map((id) => {

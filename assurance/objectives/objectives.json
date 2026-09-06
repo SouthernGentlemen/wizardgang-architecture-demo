@@ -20,7 +20,8 @@
       "reviewCadence": "Each release + quarterly",
       "initialState": {
         "status": "active"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "SEC-OBJ-002",
@@ -38,7 +39,8 @@
       "reviewCadence": "Continuous + quarterly",
       "initialState": {
         "status": "active"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "SEC-OBJ-003",
@@ -55,7 +57,8 @@
       "reviewCadence": "Monthly + management review",
       "initialState": {
         "status": "active"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "SEC-OBJ-004",
@@ -72,7 +75,8 @@
       "reviewCadence": "Quarterly",
       "initialState": {
         "status": "planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "SEC-OBJ-005",
@@ -90,7 +94,8 @@
       "reviewCadence": "After each incident + quarterly",
       "initialState": {
         "status": "planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "SEC-OBJ-006",
@@ -108,7 +113,8 @@
       "reviewCadence": "Quarterly progress + annual review",
       "initialState": {
         "status": "planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AI-OBJ-001",
@@ -125,7 +131,8 @@
       "reviewCadence": "Each MCP change + quarterly",
       "initialState": {
         "status": "active"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AI-OBJ-002",
@@ -143,7 +150,8 @@
       "reviewCadence": "Each material AI change",
       "initialState": {
         "status": "active"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AI-OBJ-003",
@@ -160,7 +168,8 @@
       "reviewCadence": "Each release + quarterly",
       "initialState": {
         "status": "planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AI-OBJ-004",
@@ -178,7 +187,8 @@
       "reviewCadence": "Quarterly + schema/data changes",
       "initialState": {
         "status": "planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AI-OBJ-005",
@@ -195,7 +205,8 @@
       "reviewCadence": "Monthly + management review",
       "initialState": {
         "status": "active"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "GOV-OBJ-001",
@@ -212,7 +223,8 @@
       "reviewCadence": "Monthly + quarterly",
       "initialState": {
         "status": "planned"
-      }
+      },
+      "relationships": []
     }
   ]
 }

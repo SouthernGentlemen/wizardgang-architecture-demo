@@ -46,7 +46,8 @@
         "minimumIntendedAuthority": "Read only",
         "publicRecordPosture": "Public by design",
         "reviewState": "Met"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-002",
@@ -58,7 +59,8 @@
         "minimumIntendedAuthority": "Controlled source change",
         "publicRecordPosture": "Named account details may remain private",
         "reviewState": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-003",
@@ -70,7 +72,8 @@
         "minimumIntendedAuthority": "Merge/tag/release under controlled process",
         "publicRecordPosture": "Function documented",
         "reviewState": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-004",
@@ -82,7 +85,8 @@
         "minimumIntendedAuthority": "Restricted checked-in workflow dispatch",
         "publicRecordPosture": "Secret value private; purpose public",
         "reviewState": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-005",
@@ -94,7 +98,8 @@
         "minimumIntendedAuthority": "Controlled branch/PR/status/merge/tag tasks",
         "publicRecordPosture": "Secret value private; purpose public",
         "reviewState": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-006",
@@ -106,7 +111,8 @@
         "minimumIntendedAuthority": "Read only",
         "publicRecordPosture": "Secret value private",
         "reviewState": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-007",
@@ -118,7 +124,8 @@
         "minimumIntendedAuthority": "Deployment/configuration according to token/account scope",
         "publicRecordPosture": "Account details private",
         "reviewState": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-008",
@@ -130,7 +137,8 @@
         "minimumIntendedAuthority": "Read only; Billing Read only when needed",
         "publicRecordPosture": "Account/token details private",
         "reviewState": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-009",
@@ -142,7 +150,8 @@
         "minimumIntendedAuthority": "Administrative app actions",
         "publicRecordPosture": "Credential private",
         "reviewState": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-010",
@@ -154,7 +163,8 @@
         "minimumIntendedAuthority": "Scoped application write",
         "publicRecordPosture": "Credential private",
         "reviewState": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-011",
@@ -166,7 +176,8 @@
         "minimumIntendedAuthority": "10-minute bounded visitor write authority",
         "publicRecordPosture": "Runtime-derived; no public token detail",
         "reviewState": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-012",
@@ -178,7 +189,8 @@
         "minimumIntendedAuthority": "Signature verification only",
         "publicRecordPosture": "Secret private",
         "reviewState": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-013",
@@ -190,7 +202,8 @@
         "minimumIntendedAuthority": "Session integrity/encryption",
         "publicRecordPosture": "Secret private",
         "reviewState": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-014",
@@ -202,7 +215,8 @@
         "minimumIntendedAuthority": "Provider-specific admin",
         "publicRecordPosture": "Conditional until provider activation",
         "reviewState": "N/A / Conditional"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-015",
@@ -214,7 +228,8 @@
         "minimumIntendedAuthority": "`demo:read`, approved read-only tools only",
         "publicRecordPosture": "Public interface",
         "reviewState": "Met"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-016",
@@ -226,7 +241,8 @@
         "minimumIntendedAuthority": "Same public MCP read boundary; no provider-specific privilege",
         "publicRecordPosture": "Approved family",
         "reviewState": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-017",
@@ -238,7 +254,8 @@
         "minimumIntendedAuthority": "Same public MCP read boundary; no provider-specific privilege",
         "publicRecordPosture": "Approved family",
         "reviewState": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-018",
@@ -250,7 +267,8 @@
         "minimumIntendedAuthority": "Privileged data/resource operations",
         "publicRecordPosture": "Account details private",
         "reviewState": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-019",
@@ -262,7 +280,8 @@
         "minimumIntendedAuthority": "Policy/scope/risk/SoA/review approvals according to roles",
         "publicRecordPosture": "Functional authority public",
         "reviewState": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "ACC-020",
@@ -274,7 +293,8 @@
         "minimumIntendedAuthority": "Whatever authorized privilege the operator invokes",
         "publicRecordPosture": "Device/account specifics private",
         "reviewState": "Gap"
-      }
+      },
+      "relationships": []
     }
   ]
 }

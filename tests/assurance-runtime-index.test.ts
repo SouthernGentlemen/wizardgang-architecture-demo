@@ -12,6 +12,8 @@ import {
   listAssuranceRecords,
   reverseAssuranceRelationships,
 } from '../src/assurance/service';
+import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
+import { rebindRelationshipSource, setRelationshipTargets } from './helpers/assurance-relationships';
 
 const repositoryRoot = process.cwd();
 const fixtureRoots: string[] = [];
@@ -63,7 +65,7 @@ describe('registry-driven assurance runtime indexes', () => {
     expect(assuranceDatasetForRecordId('SEC-OBJ-001')).toBe('objectives');
     expect(assuranceRecordUrlsById('SEC-OBJ-001')).toEqual({});
 
-    expect(forwardAssuranceRelationships('EX-001')?.objectives).toContain('SEC-OBJ-005');
+    expect(assuranceRelationshipIds(forwardAssuranceRelationships('EX-001'), 'objectives')).toContain('SEC-OBJ-005');
     expect(reverseAssuranceRelationships('SEC-OBJ-005', 'objectives')).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ sourceId: 'EX-001', dataset: 'exercises', relation: 'objectives' }),
@@ -80,12 +82,14 @@ describe('registry-driven assurance runtime indexes', () => {
     const primaryRecord = structuredClone(riskData.records[0]);
     primaryRecord.id = 'SEC-RISK-998';
     primaryRecord.title = 'Synthetic runtime family primary';
-    primaryRecord.relationships.objectives = ['SEC-OBJ-001'];
+    rebindRelationshipSource(primaryRecord, 'github.structured-records.findings.demo-143');
+    setRelationshipTargets(primaryRecord, 'objectives', 'github.structured-records.objectives', ['SEC-OBJ-001']);
 
     const partitionRecord = structuredClone(riskData.records[0]);
     partitionRecord.id = 'SEC-RISK-999';
     partitionRecord.title = 'Synthetic runtime family partition';
-    partitionRecord.relationships.objectives = ['SEC-OBJ-001'];
+    rebindRelationshipSource(partitionRecord, 'github.structured-records.findings.demo-143.partition');
+    setRelationshipTargets(partitionRecord, 'objectives', 'github.structured-records.objectives', ['SEC-OBJ-001']);
 
     const familyPath = 'assurance/risks/findings-demo-143.json';
     const partitionPath = 'assurance/risks/findings-demo-143-partition.json';
@@ -123,6 +127,7 @@ describe('registry-driven assurance runtime indexes', () => {
 
     writeFileSync(join(fixtureRoot, 'tests/demo-143-synthetic-runtime.test.ts'), `
 import { describe, expect, it } from 'vitest';
+import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
 import {
   assuranceDatasetCount,
   assuranceDatasetForRecordId,
@@ -139,7 +144,7 @@ describe('synthetic registry-driven runtime family', () => {
     expect(assuranceDatasetCount('findings')).toBe(2);
     expect(assuranceDatasetForRecordId('SEC-RISK-999')).toBe('findings');
     expect(findAssuranceRecord('findings', 'SEC-RISK-999')?.id).toBe('SEC-RISK-999');
-    expect(forwardAssuranceRelationships('SEC-RISK-999')?.objectives).toContain('SEC-OBJ-001');
+    expect(assuranceRelationshipIds(forwardAssuranceRelationships('SEC-RISK-999'), 'objectives')).toContain('SEC-OBJ-001');
     expect(reverseAssuranceRelationships('SEC-OBJ-001', 'objectives')).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ sourceId: 'SEC-RISK-998', dataset: 'findings', relation: 'objectives' }),

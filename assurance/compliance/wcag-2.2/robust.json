@@ -24,23 +24,41 @@
         "interaction-change",
         "quarterly-manual"
       ],
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-007",
-          "EVD-DOC-005",
-          "EVD-TST-002"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.robust",
+            "native": "WCAG-4.1.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-005"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.robust",
+            "native": "WCAG-4.1.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-007"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.robust",
+            "native": "WCAG-4.1.2"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-TST-002"
+          }
+        }
+      ]
     },
     {
       "id": "WCAG-4.1.3",
@@ -65,22 +83,30 @@
         "interaction-change",
         "quarterly-manual"
       ],
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-007",
-          "EVD-DOC-005"
-        ],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.robust",
+            "native": "WCAG-4.1.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-005"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.robust",
+            "native": "WCAG-4.1.3"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-007"
+          }
+        }
+      ]
     }
   ]
 }

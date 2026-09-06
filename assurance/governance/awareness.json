@@ -46,7 +46,8 @@
         "requiredEvidence": "Dated acknowledgement, briefing, or attributable review record",
         "targetDate": "2026-12-02",
         "status": "Planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AW-002",
@@ -58,7 +59,8 @@
         "requiredEvidence": "Dated acknowledgement/briefing and any questions/actions",
         "targetDate": "2026-12-02",
         "status": "Planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AW-003",
@@ -70,7 +72,8 @@
         "requiredEvidence": "Dated acknowledgement/briefing",
         "targetDate": "2026-12-02",
         "status": "Planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AW-004",
@@ -82,7 +85,8 @@
         "requiredEvidence": "Attributable review or onboarding evidence",
         "targetDate": "2026-12-02",
         "status": "Planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AW-005",
@@ -94,7 +98,8 @@
         "requiredEvidence": "Exercise/briefing acknowledgement; can be combined with `EX-001`",
         "targetDate": "2026-12-02",
         "status": "Planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AW-006",
@@ -106,7 +111,8 @@
         "requiredEvidence": "Dated review/briefing record",
         "targetDate": "2026-12-02",
         "status": "Planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AW-007",
@@ -118,7 +124,8 @@
         "requiredEvidence": "Dated review or `RT-001` exercise participation",
         "targetDate": "2026-12-02",
         "status": "Planned"
-      }
+      },
+      "relationships": []
     }
   ]
 }

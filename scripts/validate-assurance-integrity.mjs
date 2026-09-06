@@ -9,6 +9,7 @@ import {
   loadAssuranceRegistry,
 } from './lib/assurance-registry.mjs';
 import {
+  recordRelationshipIdentity,
   registeredRelationshipTargets,
   validateRelationshipSet,
 } from './lib/assurance-relationships.mjs';
@@ -119,6 +120,7 @@ for (const { resource, record } of recordEntries) {
 const complianceEntries = recordEntries.filter(({ resource }) => resource.kind === 'compliance');
 const complianceRecords = complianceEntries.map(({ record }) => record);
 const frameworkIds = new Set(resources.map((resource) => resource.framework?.id).filter((value) => typeof value === 'string'));
+const governanceDocumentIds = new Set((governance.records ?? []).map((record) => record.reference));
 const frameworkByResourceId = new Map();
 function indexFrameworkOwnership(resource, inheritedFrameworkId) {
   const frameworkId = resource.framework?.id ?? inheritedFrameworkId;
@@ -142,22 +144,32 @@ for (const { resource, record } of complianceEntries) {
   if (prefix && record.id !== `${prefix}-${record.reference}`) errors.push(`${record.id}: compliance identity must be explicit and canonical`);
 }
 
-const targetFamilies = registeredRelationshipTargets(recordEntries, {
+const targetFamilies = registeredRelationshipTargets(registry, recordEntries, {
   frameworkIds,
-  governanceDocumentIds: (governance.records ?? []).map((record) => record.reference),
+  governanceDocumentIds,
 });
 
 for (const { resource, record } of recordEntries) {
-  if (record?.relationships) errors.push(...validateRelationshipSet(record.relationships, targetFamilies, `${resource.path}:${record.id}`));
+  if (record?.relationships) errors.push(...validateRelationshipSet(
+    record.relationships,
+    targetFamilies,
+    `${resource.path}:${record.id}`,
+    recordRelationshipIdentity(registry, resource, record),
+  ));
 }
 for (const resource of manifestResources) {
   const data = readJson(resource.path);
-  if (data.registryRelationships) errors.push(...validateRelationshipSet(data.registryRelationships, targetFamilies, `${resource.path}:registry`));
+  if (data.registryRelationships) errors.push(...validateRelationshipSet(
+    data.registryRelationships,
+    targetFamilies,
+    `${resource.path}:registry`,
+    { source: `${registry.reporting.structuredRecords.id}.${resource.id}`, native: data.id },
+  ));
 }
 for (const resource of recordResources.filter((entry) => entry.kind === 'risks')) {
   const data = documentsByResource.get(resource.id);
   for (const source of data?.sourceRegisters ?? []) {
-    if (!targetFamilies.get('governanceDocuments').has(source.governanceDocumentReference)) errors.push(`${resource.path}: unresolved governance document ${source.governanceDocumentReference}`);
+    if (!governanceDocumentIds.has(source.governanceDocumentReference)) errors.push(`${resource.path}: unresolved governance document ${source.governanceDocumentReference}`);
   }
 }
 

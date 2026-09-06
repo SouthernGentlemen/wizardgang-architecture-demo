@@ -1,72 +1,46 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://demo.wizardgang.ai/contracts/assurance/relationships.schema.json",
-  "title": "Canonical Assurance Relationships",
-  "type": "object",
-  "additionalProperties": false,
-  "required": [
-    "evidence",
-    "compliance",
-    "frameworks",
-    "claims",
-    "risks",
-    "controls",
-    "incidents",
-    "exercises",
-    "advisories",
-    "governanceDocuments",
-    "objectives"
-  ],
-  "properties": {
-    "evidence": {
-      "$ref": "#/$defs/relationshipArray",
-      "items": { "$ref": "#/$defs/evidenceId" }
-    },
-    "compliance": {
-      "$ref": "#/$defs/relationshipArray",
-      "items": { "$ref": "#/$defs/complianceId" }
-    },
-    "frameworks": {
-      "$ref": "#/$defs/relationshipArray",
-      "items": { "$ref": "#/$defs/frameworkId" }
-    },
-    "claims": {
-      "$ref": "#/$defs/relationshipArray",
-      "items": { "$ref": "#/$defs/claimId" }
-    },
-    "risks": {
-      "$ref": "#/$defs/relationshipArray",
-      "items": { "$ref": "#/$defs/riskId" }
-    },
-    "controls": {
-      "$ref": "#/$defs/relationshipArray",
-      "items": { "$ref": "#/$defs/controlId" }
-    },
-    "incidents": {
-      "$ref": "#/$defs/relationshipArray",
-      "items": { "$ref": "#/$defs/incidentId" }
-    },
-    "exercises": {
-      "$ref": "#/$defs/relationshipArray",
-      "items": { "$ref": "#/$defs/exerciseId" }
-    },
-    "advisories": {
-      "$ref": "#/$defs/relationshipArray",
-      "items": { "$ref": "#/$defs/advisoryId" }
-    },
-    "governanceDocuments": {
-      "$ref": "#/$defs/relationshipArray",
-      "items": { "$ref": "#/$defs/governanceDocumentId" }
-    },
-    "objectives": {
-      "$ref": "#/$defs/relationshipArray",
-      "items": { "$ref": "#/$defs/objectiveId" }
-    }
+  "title": "Canonical record-local reporting relationships",
+  "description": "Identity-based reporting edges. Record-local canonical identities are logical source/native identities; revisions are supplied by reporting envelopes rather than duplicated into the edge.",
+  "type": "array",
+  "uniqueItems": true,
+  "items": {
+    "$ref": "#/$defs/relationship"
   },
   "$defs": {
-    "relationshipArray": {
-      "type": "array",
-      "uniqueItems": true
+    "relation": {
+      "enum": [
+        "evidence",
+        "compliance",
+        "frameworks",
+        "claims",
+        "risks",
+        "controls",
+        "incidents",
+        "exercises",
+        "advisories",
+        "governanceDocuments",
+        "objectives"
+      ]
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "native"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "native": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
     },
     "evidenceId": {
       "type": "string",
@@ -111,6 +85,72 @@
     "objectiveId": {
       "type": "string",
       "pattern": "^[A-Z]+-OBJ-[0-9]{3}$"
+    },
+    "relationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relation",
+        "from",
+        "to"
+      ],
+      "properties": {
+        "relation": {
+          "$ref": "#/$defs/relation"
+        },
+        "from": {
+          "$ref": "#/$defs/identity"
+        },
+        "to": {
+          "$ref": "#/$defs/identity"
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "relation": { "const": "evidence" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/evidenceId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "compliance" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/complianceId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "frameworks" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/frameworkId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "claims" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/claimId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "risks" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/riskId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "controls" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/controlId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "incidents" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/incidentId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "exercises" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/exerciseId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "advisories" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/advisoryId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "governanceDocuments" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/governanceDocumentId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "objectives" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/objectiveId" } } } } }
+        }
+      ]
     }
   }
 }

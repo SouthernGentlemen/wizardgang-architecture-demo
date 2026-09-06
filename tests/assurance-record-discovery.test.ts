@@ -7,6 +7,7 @@ import {
   assuranceRecordEntries,
   assuranceRecordsForKind,
 } from '../src/assurance/record-discovery.js';
+import { rebindRelationshipSource, setRelationshipTargets } from './helpers/assurance-relationships';
 
 const repositoryRoot = process.cwd();
 const fixtureRoots: string[] = [];
@@ -53,6 +54,7 @@ function addRiskPartition(root: string, mutate: (record: any) => void): void {
   const riskData = readJson(root, risks.path);
   const record = structuredClone(riskData.records[0]);
   mutate(record);
+  rebindRelationshipSource(record, 'github.structured-records.risks.demo-132-partition');
   const partitionPath = 'assurance/risks/demo-132-partition.json';
   writeJson(root, partitionPath, { ...riskData, records: [record] });
   risks.resources = [
@@ -148,7 +150,7 @@ describe('registry-driven assurance record discovery', () => {
     addRiskPartition(fixtureRoot, (record) => {
       record.id = 'SEC-RISK-999';
       record.title = 'Unresolved relationship fixture';
-      record.relationships.evidence = ['EVD-SRC-999'];
+      setRelationshipTargets(record, 'evidence', 'github.structured-records.evidence', ['EVD-SRC-999']);
     });
     expectRejected(run(fixtureRoot, 'scripts/validate-assurance-integrity.mjs'), 'unresolved evidence relationship EVD-SRC-999');
   });

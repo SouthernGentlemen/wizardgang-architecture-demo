@@ -75,19 +75,32 @@ describe('registry capability contracts', () => {
   it('rejects a dangling synthetic report reference and unknown relationship semantics through the shared resolver', () => {
     const report = {
       id: 'RPT-001',
-      relationships: {
-        evidence: ['EVD-MISSING-999'],
-        futureRelationship: ['FUTURE-001'],
-      },
+      relationships: [
+        {
+          relation: 'evidence',
+          from: { source: 'github.structured-records.report-register-v2', native: 'RPT-001' },
+          to: { source: 'github.structured-records.evidence', native: 'EVD-MISSING-999' },
+        },
+        {
+          relation: 'futureRelationship',
+          from: { source: 'github.structured-records.report-register-v2', native: 'RPT-001' },
+          to: { source: 'github.structured-records.future', native: 'FUTURE-001' },
+        },
+      ],
     };
     const errors = validateAssuranceRelationshipSet(
       report.relationships,
-      { recordsByKind: new Map([['reports', [report]]]) },
+      {
+        sourceIdentity: { source: 'github.structured-records.report-register-v2', native: 'RPT-001' },
+        targetIdentitiesByRelationship: new Map([['evidence', new Set()]]),
+      },
       'reports:RPT-001',
       { internalTargetsOnly: true },
     );
-    expect(errors).toContain('reports:RPT-001.futureRelationship: unknown assurance relationship semantic');
-    expect(errors).toContain('reports:RPT-001.evidence: unresolved evidence relationship EVD-MISSING-999');
+    expect(errors).toEqual(expect.arrayContaining([
+      expect.stringContaining('reports:RPT-001[1].relation: invalid assurance relationship relation futureRelationship'),
+      expect.stringContaining('reports:RPT-001[0].to: unresolved evidence relationship EVD-MISSING-999'),
+    ]));
   });
 
   it('distinguishes unsupported, unavailable, partial, registered, and unknown family registrations', () => {

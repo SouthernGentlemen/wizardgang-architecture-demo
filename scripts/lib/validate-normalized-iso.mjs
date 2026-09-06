@@ -4,6 +4,7 @@ import {
   readJsonFile,
   requireRegistryResource,
 } from './assurance-registry.mjs';
+import { assuranceRelationshipIds } from '../../src/assurance/relationship-contract.js';
 
 const ISO_POSTURE_STATUSES = ['met', 'partial', 'gap', 'not-applicable'];
 
@@ -83,10 +84,10 @@ export function validateNormalizedIso({ root = process.cwd(), standard, edition,
     if (record.applicability !== expectedApplicability) errors.push(`${record.id}: applicability must agree with status`);
     if (record.status === 'not-applicable' && (!record.rationale || record.rationale.trim().length < 10)) errors.push(`${record.id}: N/A rationale is required`);
     if (record.status !== 'not-applicable' && record.rationale) errors.push(`${record.id}: rationale is reserved for N/A controls`);
-    const refs = record.relationships?.evidence;
-    if (!Array.isArray(refs) || refs.length === 0) errors.push(`${record.id}: at least one evidence relationship is required`);
-    if (new Set(refs ?? []).size !== (refs ?? []).length) errors.push(`${record.id}: duplicate evidence relationship`);
-    for (const evidenceId of refs ?? []) if (!evidenceIds.has(evidenceId)) errors.push(`${record.id}: unresolved evidence ${evidenceId}`);
+    const refs = assuranceRelationshipIds(record.relationships, 'evidence');
+    if (refs.length === 0) errors.push(`${record.id}: at least one evidence relationship is required`);
+    if (new Set(refs).size !== refs.length) errors.push(`${record.id}: duplicate evidence relationship`);
+    for (const evidenceId of refs) if (!evidenceIds.has(evidenceId)) errors.push(`${record.id}: unresolved evidence ${evidenceId}`);
   }
   for (const ref of [...expectedClauseRefs, ...expectedAnnexRefs]) if (!seenRefs.has(ref)) errors.push(`${ref}: required ISO reference is missing`);
   const postureCounts = deriveIsoPosture(controls);

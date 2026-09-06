@@ -9,11 +9,11 @@ import {
   primaryAssuranceDatasetResource,
 } from './record-discovery.js';
 import {
+  assuranceIdentityKey,
   assuranceRelationshipDefinition,
-  assuranceRelationshipNames,
-  assuranceRelationshipTargetIds,
-  unknownAssuranceRelationshipNames,
+  validateAssuranceRelationshipSet,
 } from './relationship-contract.js';
+import { structuredReportingSource } from '../reporting/registry';
 import { deriveRiskRecord } from './risk-rating.js';
 import type { RiskRating as DerivedRiskRating } from './risk-rating.js';
 
@@ -32,19 +32,31 @@ export type ComplianceStatus = AssurancePosture | 'demonstrated' | 'not-observed
 export type ComplianceLevel = 'A' | 'AA' | 'AAA';
 export type ComplianceKind = 'clause' | 'control' | 'criterion';
 
-export interface AssuranceRelationships {
-  evidence: string[];
-  compliance: string[];
-  frameworks: string[];
-  claims: string[];
-  risks: string[];
-  controls: string[];
-  incidents: string[];
-  exercises: string[];
-  advisories: string[];
-  governanceDocuments: string[];
-  objectives: string[];
+export type AssuranceRelationshipName =
+  | 'evidence'
+  | 'compliance'
+  | 'frameworks'
+  | 'claims'
+  | 'risks'
+  | 'controls'
+  | 'incidents'
+  | 'exercises'
+  | 'advisories'
+  | 'governanceDocuments'
+  | 'objectives';
+
+export interface AssuranceReportingIdentity {
+  source: string;
+  native: string;
 }
+
+export interface AssuranceRelationship {
+  relation: AssuranceRelationshipName;
+  from: AssuranceReportingIdentity;
+  to: AssuranceReportingIdentity;
+}
+
+export type AssuranceRelationships = AssuranceRelationship[];
 
 export interface EvidenceRecord {
   id: string;
@@ -56,6 +68,7 @@ export interface EvidenceRecord {
   visibility: 'public';
   observedAt?: string;
   validUntil?: string;
+  relationships: AssuranceRelationships;
 }
 
 export interface AssuranceClaimRecord {
@@ -270,7 +283,7 @@ export interface AssuranceRuntimeRecordReference {
 export interface AssuranceRuntimeRelationshipReference {
   sourceId: string;
   dataset: string;
-  relation: keyof AssuranceRelationships;
+  relation: AssuranceRelationshipName;
 }
 
 export const assuranceRegistry = assuranceRegistryData as unknown as AssuranceRegistry;
@@ -374,8 +387,17 @@ export const assuranceRuntimeRecordCounts: Readonly<Record<string, number>> = Ob
 );
 
 const runtimeRecordIndex = new Map<string, AssuranceRuntimeRecordReference>();
+const runtimeRecordResourceIndex = new Map<string, AssuranceRegistryResource>();
+const runtimeIdentityIndex = new Map<string, { dataset: string; record: AssuranceRuntimeRecord; resource: AssuranceRegistryResource }>();
 const forwardRelationshipIndex = new Map<string, AssuranceRelationships>();
 const reverseRelationshipIndex = new Map<string, AssuranceRuntimeRelationshipReference[]>();
+const resourceByReportingSource = new Map(assuranceRegistryResources.map((resource) => [structuredReportingSource(resource).id, resource]));
+
+for (const entry of runtimeRecordEntries) {
+  const record = entry.record as { id?: unknown };
+  if (typeof record?.id !== 'string' || record.id.length === 0) continue;
+  runtimeRecordResourceIndex.set(record.id, entry.resource);
+}
 
 for (const [dataset, records] of Object.entries(runtimeRecordCollections)) {
   for (const record of records) {
@@ -385,35 +407,49 @@ for (const [dataset, records] of Object.entries(runtimeRecordCollections)) {
     if (runtimeRecordIndex.has(record.id)) {
       throw new Error(`Assurance runtime record index contains duplicate canonical ID ${record.id}.`);
     }
+    const resource = runtimeRecordResourceIndex.get(record.id);
+    if (!resource) throw new Error(`Assurance runtime record ${record.id} has no registry resource identity.`);
+    const reportingIdentity = { source: structuredReportingSource(resource).id, native: record.id };
+    const identityKey = assuranceIdentityKey(reportingIdentity);
+    if (runtimeIdentityIndex.has(identityKey)) throw new Error(`Duplicate assurance reporting identity ${reportingIdentity.source}:${record.id}.`);
     runtimeRecordIndex.set(record.id, { dataset, record });
-    if (!record.relationships) continue;
-    const unknownRelationships = unknownAssuranceRelationshipNames(record.relationships);
-    if (unknownRelationships.length > 0) {
-      throw new Error(`Assurance runtime record ${record.id} declares unknown relationship semantics: ${unknownRelationships.join(', ')}.`);
-    }
-    forwardRelationshipIndex.set(record.id, record.relationships);
-    for (const relation of assuranceRelationshipNames() as Array<keyof AssuranceRelationships>) {
-      const targetIds = record.relationships[relation];
-      if (!Array.isArray(targetIds)) throw new Error(`Assurance runtime record ${record.id} relationship ${relation} must be an array.`);
-      for (const targetId of targetIds) {
-        const references = reverseRelationshipIndex.get(targetId) ?? [];
-        references.push({ sourceId: record.id, dataset, relation });
-        reverseRelationshipIndex.set(targetId, references);
-      }
-    }
+    runtimeIdentityIndex.set(identityKey, { dataset, record, resource });
   }
 }
 
-const relationshipRecordsByKind = new Map<string, AssuranceRuntimeRecord[]>(Object.entries(runtimeRecordCollections));
-for (const [sourceId, relationships] of forwardRelationshipIndex) {
-  for (const relation of assuranceRelationshipNames() as Array<keyof AssuranceRelationships>) {
-    const definition = assuranceRelationshipDefinition(relation);
-    if (definition?.target !== 'records') continue;
-    const targets = assuranceRelationshipTargetIds(relation, { recordsByKind: relationshipRecordsByKind });
-    for (const targetId of relationships[relation]) {
-      if (!targets.has(targetId)) {
-        throw new Error(`Assurance runtime record ${sourceId} has dangling ${relation} relationship ${targetId}.`);
+for (const [dataset, records] of Object.entries(runtimeRecordCollections)) {
+  for (const record of records) {
+    const resource = runtimeRecordResourceIndex.get(record.id)!;
+    const sourceIdentity = { source: structuredReportingSource(resource).id, native: record.id };
+    const relationships = record.relationships ?? [];
+    const relationshipErrors = validateAssuranceRelationshipSet(relationships, { sourceIdentity }, `${resource.path}:${record.id}`);
+    if (relationshipErrors.length > 0) throw new Error(relationshipErrors.join('; '));
+    forwardRelationshipIndex.set(record.id, relationships);
+    for (const relationship of relationships) {
+      const definition = assuranceRelationshipDefinition(relationship.relation);
+      if (!definition) throw new Error(`Assurance runtime record ${record.id} declares invalid relation ${relationship.relation}.`);
+      const targetResource = resourceByReportingSource.get(relationship.to.source);
+      if (!targetResource) {
+        throw new Error(`Assurance runtime record ${record.id} has dangling ${relationship.relation} target source ${relationship.to.source}.`);
       }
+      if (resource.visibility === 'public' && targetResource.visibility === 'private') {
+        throw new Error(`Assurance runtime record ${record.id} leaks public ${relationship.relation} relationship to private source ${relationship.to.source}.`);
+      }
+      if (definition.target === 'records') {
+        const target = runtimeIdentityIndex.get(assuranceIdentityKey(relationship.to));
+        if (!target || target.dataset !== definition.kind || (definition.recordKind && (target.record as { kind?: unknown }).kind !== definition.recordKind)) {
+          throw new Error(`Assurance runtime record ${record.id} has dangling ${relationship.relation} identity ${relationship.to.source}:${relationship.to.native}.`);
+        }
+      } else if (definition.target === 'frameworks') {
+        if (targetResource.framework?.id !== relationship.to.native) {
+          throw new Error(`Assurance runtime record ${record.id} has dangling framework identity ${relationship.to.source}:${relationship.to.native}.`);
+        }
+      } else if (definition.target === 'governance-documents' && targetResource.id !== 'presentation.documents') {
+        throw new Error(`Assurance runtime record ${record.id} has invalid governance document source ${relationship.to.source}.`);
+      }
+      const references = reverseRelationshipIndex.get(relationship.to.native) ?? [];
+      references.push({ sourceId: record.id, dataset, relation: relationship.relation });
+      reverseRelationshipIndex.set(relationship.to.native, references);
     }
   }
 }

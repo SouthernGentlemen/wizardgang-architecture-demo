@@ -46,7 +46,8 @@
         "primaryOwner": "Change / Release Authority",
         "principalAccessExposure": "Public read; authenticated controlled write",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-002",
@@ -58,7 +59,8 @@
         "primaryOwner": "Change / Release Authority",
         "principalAccessExposure": "Authenticated contributor/reviewer/merge roles",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-003",
@@ -70,7 +72,8 @@
         "primaryOwner": "Change / Release Authority",
         "principalAccessExposure": "Public source; workflow execution under GitHub controls",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-004",
@@ -82,7 +85,8 @@
         "primaryOwner": "Release Authority / Evidence Custodian",
         "principalAccessExposure": "Public read; controlled creation",
         "status": "Met"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-005",
@@ -94,7 +98,8 @@
         "primaryOwner": "Security / Release Owner",
         "principalAccessExposure": "Restricted provider-managed secret storage",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-006",
@@ -106,7 +111,8 @@
         "primaryOwner": "Technical / Operations Owner",
         "principalAccessExposure": "Public app surface; privileged provider/deploy access",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-007",
@@ -118,7 +124,8 @@
         "primaryOwner": "Technical Owner",
         "principalAccessExposure": "Public DNS/TLS behavior; provider admin restricted",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-008",
@@ -130,7 +137,8 @@
         "primaryOwner": "Data / Technical Owner",
         "principalAccessExposure": "Application-controlled; provider admin privileged",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-009",
@@ -142,7 +150,8 @@
         "primaryOwner": "Data / Technical Owner",
         "principalAccessExposure": "Explicit app routes only; provider admin privileged",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-010",
@@ -154,7 +163,8 @@
         "primaryOwner": "Technical Owner",
         "principalAccessExposure": "Application-internal/provider-controlled runtime",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-011",
@@ -166,7 +176,8 @@
         "primaryOwner": "Security / Operations Owner",
         "principalAccessExposure": "Restricted managed tokens/secrets",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-012",
@@ -178,7 +189,8 @@
         "primaryOwner": "Operations Owner",
         "principalAccessExposure": "Restricted read-only provider token where configured",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-013",
@@ -190,7 +202,8 @@
         "primaryOwner": "Operations / Security Owner",
         "principalAccessExposure": "Authenticated same-origin admin path",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-014",
@@ -202,7 +215,8 @@
         "primaryOwner": "Security / Technical Owner",
         "principalAccessExposure": "Managed bearer / identity-derived bounded write access",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-015",
@@ -214,7 +228,8 @@
         "primaryOwner": "Security / Technical Owner",
         "principalAccessExposure": "Managed secret; HMAC verification",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-016",
@@ -226,7 +241,8 @@
         "primaryOwner": "Security / Technical Owner",
         "principalAccessExposure": "Restricted managed secret/provider config",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-017",
@@ -238,7 +254,8 @@
         "primaryOwner": "Data / AI Capability Owner",
         "principalAccessExposure": "Approved public/API/MCP read boundary",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-018",
@@ -250,7 +267,8 @@
         "primaryOwner": "Data / Security / Operations owners",
         "principalAccessExposure": "Non-MCP; bounded app/provider access",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-019",
@@ -262,7 +280,8 @@
         "primaryOwner": "Management-System Owner / Evidence Custodian",
         "principalAccessExposure": "Public source; controlled write/approval",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-020",
@@ -274,7 +293,8 @@
         "primaryOwner": "AI Governance / Technical Owner",
         "principalAccessExposure": "Public read-only `demo:read` tool boundary",
         "status": "Met"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-021",
@@ -286,7 +306,8 @@
         "primaryOwner": "AI Governance / Supplier Owner",
         "principalAccessExposure": "Approved MCP client/provider family; no extra privilege",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-022",
@@ -298,7 +319,8 @@
         "primaryOwner": "AI Governance / Supplier Owner",
         "principalAccessExposure": "Approved MCP client/provider family; no extra privilege",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-023",
@@ -310,7 +332,8 @@
         "primaryOwner": "Technical / Security Owner",
         "principalAccessExposure": "Public dependency metadata; controlled update/CI audit",
         "status": "Partial"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-024",
@@ -322,7 +345,8 @@
         "primaryOwner": "Management-System / Security Owner",
         "principalAccessExposure": "Restricted to authorized operator; evidence not publicly inventoried",
         "status": "Gap"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AST-025",
@@ -334,7 +358,8 @@
         "primaryOwner": "Security / Technical Owner",
         "principalAccessExposure": "Not active unless provider-specific configuration approved",
         "status": "N/A / Conditional"
-      }
+      },
+      "relationships": []
     }
   ]
 }

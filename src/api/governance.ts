@@ -1,3 +1,4 @@
+import { assuranceRelationshipIds } from '../assurance/relationship-contract.js';
 import type { Env } from '../types';
 import { MCP_SERVER_PATH, mcpResponse } from './mcp';
 import { recordDemoEvent, recentDemoEvents } from '../lib/audit';
@@ -24,7 +25,7 @@ function iso27001GovernanceClaims() {
   }
   const complianceIds = new Set(compliance.map((record) => record.id));
   const claims = listPublishedAssuranceRecords('claims')
-    .filter((claim) => claim.relationships.compliance.some((recordId) => complianceIds.has(recordId)));
+    .filter((claim) => assuranceRelationshipIds(claim.relationships, 'compliance').some((recordId) => complianceIds.has(recordId)));
   return { compliance, claims };
 }
 
@@ -62,7 +63,7 @@ export function securityControlsResponse(request: Request, env: Env): Response {
   return json({
     alignment: `${frameworkLabel} aligned — uncertified`,
     controls: claims.map((claim) => {
-      const evidence = firstPublishedEvidence(claim.relationships.evidence);
+      const evidence = firstPublishedEvidence(assuranceRelationshipIds(claim.relationships, 'evidence'));
       return {
         area: claim.area.replaceAll('-', ' '),
         implementation: claim.statement,

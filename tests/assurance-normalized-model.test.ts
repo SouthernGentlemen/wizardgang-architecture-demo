@@ -4,13 +4,17 @@ import { assuranceRisksResponse } from '../src/api/assurance';
 import { listAssuranceRecords } from '../src/assurance/service';
 
 describe('normalized assurance model', () => {
-  it('uses one normalized relationships object across canonical record families', () => {
+  it('uses one normalized identity-edge relationship array across canonical record families', () => {
     for (const dataset of ['claims', 'risks', 'incidents', 'exercises', 'advisories', 'compliance'] as const) {
       for (const record of listAssuranceRecords(dataset)) {
         expect(record.relationships).toBeDefined();
-        for (const [relation, targets] of Object.entries(record.relationships)) {
-          expect(relation.length).toBeGreaterThan(0);
-          expect(Array.isArray(targets)).toBe(true);
+        expect(Array.isArray(record.relationships)).toBe(true);
+        for (const relationship of record.relationships) {
+          expect(relationship.relation.length).toBeGreaterThan(0);
+          expect(relationship.from).toMatchObject({ native: record.id });
+          expect(relationship.from.source).toMatch(/^github\.structured-records\./);
+          expect(relationship.to.source).toMatch(/^github\.structured-records\./);
+          expect(relationship.to.native.length).toBeGreaterThan(0);
         }
         for (const alias of ['evidence', 'controls', 'riskLinks', 'controlLinks', 'objectiveLinks', 'incidentLinks', 'frameworkReferences']) {
           expect(record).not.toHaveProperty(alias);
@@ -36,7 +40,7 @@ describe('normalized assurance model', () => {
 
   it('returns normalized runtime records directly at the HTTP boundary', async () => {
     const response = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?limit=2'));
-    const body = await response.json() as { records: Array<Record<string, unknown> & { relationships: Record<string, string[]> }> };
+    const body = await response.json() as { records: Array<Record<string, unknown> & { relationships: Array<{ relation: string; from: { source: string; native: string }; to: { source: string; native: string } }> }> };
     expect(body.records).toHaveLength(2);
     for (const record of body.records) {
       expect(record.relationships).toBeDefined();
