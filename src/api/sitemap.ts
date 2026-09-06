@@ -1,20 +1,16 @@
-import type { DemoDefinition } from '../types';
 import { escapeHtml } from '../lib/html';
 import { withSecurityHeaders } from '../lib/http';
+import { registeredSitemapPaths } from '../routing/navigation';
 
-/**
- * Generated from the same registry that serves the routes, so the public sitemap
- * cannot drift from the published route contract.
- */
-export function sitemapResponse(request: Request, demos: DemoDefinition[]): Response {
+/** Generate the public sitemap from registered page metadata. */
+export function sitemapResponse(request: Request, _legacyInput?: unknown): Response {
   const url = new URL(request.url);
-  // The public site is HTTPS-only; local hosts keep whatever scheme the developer used.
   const local = url.hostname === 'localhost' || url.hostname === '127.0.0.1';
   const origin = local ? url.origin : `https://${url.host}`;
-  const paths = ['/', ...demos.map((demo) => demo.route)];
+  const paths = registeredSitemapPaths();
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${paths.map((path) => `  <url><loc>${escapeHtml(`${origin}${path}`)}</loc></url>`).join('\n')}
+${paths.map((routePath) => `  <url><loc>${escapeHtml(`${origin}${routePath}`)}</loc></url>`).join('\n')}
 </urlset>
 `;
   return new Response(body, {

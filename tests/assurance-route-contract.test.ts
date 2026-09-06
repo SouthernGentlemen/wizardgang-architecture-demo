@@ -28,7 +28,7 @@ describe('assurance route contract', () => {
     expect(matchRoute(assuranceDeclarativeRouteRegistry, 'GET', '/v1/assurance/compliance/WCAG-4.1.2')).toMatchObject({
       status: 'matched',
       route: { id: 'assurance.compliance.iso-27001.detail' },
-      params: { id: 'WCAG-4.1.2' },
+      params: { recordId: 'WCAG-4.1.2' },
     });
     expect(matchRoute(assuranceDeclarativeRouteRegistry, 'GET', '/v1/assurance/compliance/WCAG-4.1.2/extra')).toEqual({
       status: 'not-found',
@@ -51,7 +51,8 @@ describe('assurance route contract', () => {
 
   it('keeps assurance family dispatch out of the main router', () => {
     const source = readFileSync('src/router.ts', 'utf8');
-    expect(source).toContain("routeAssuranceRequest");
+    expect(source).toContain('applicationRouteRegistry');
+    expect(source).not.toContain('routeAssuranceRequest');
     expect(source).not.toContain('ASSURANCE_API_HANDLERS');
     expect(source).not.toContain('ASSURANCE_HTML_HANDLERS');
     expect(source).not.toContain('matchAssuranceRoute');

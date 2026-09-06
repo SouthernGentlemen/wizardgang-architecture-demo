@@ -103,14 +103,18 @@ describe('canonical compliance presentation and API contract', () => {
     expect(post.status).toBe(405);
     expect(post.headers.get('allow')).toBe('GET');
 
-    const manifest = JSON.parse(readFileSync('docs/route-manifest.json', 'utf8')) as Array<{ route: string; method?: string; source: string }>;
+    const manifest = JSON.parse(readFileSync('docs/route-manifest.json', 'utf8')) as Array<{
+      route: string;
+      methods: string[];
+      source: { module: string };
+    }>;
     expect(manifest.filter((entry) => entry.route === '/v1/assurance/compliance')).toEqual([expect.objectContaining({
-      method: 'GET',
-      source: 'src/api/assurance.ts',
+      methods: expect.arrayContaining(['GET']),
+      source: expect.objectContaining({ module: 'src/api/assurance.ts' }),
     })]);
     expect(manifest.filter((entry) => entry.route === '/v1/assurance/compliance/{recordId}')).toEqual([expect.objectContaining({
-      method: 'GET',
-      source: 'src/api/assurance.ts',
+      methods: expect.arrayContaining(['GET']),
+      source: expect.objectContaining({ module: 'src/api/assurance.ts' }),
     })]);
   });
 });

@@ -104,8 +104,19 @@ describe('public route contract', () => {
     for (const control of ['Depth limit', 'Field limit', 'Batching', 'Request limit']) expect(graphqlHtml).toContain(control);
     expect(graphqlHtml).toContain('GraphQL ↔ D1 Users');
 
-    const graphqlApi = await routeRequest(new Request('https://demo.wizardgang.ai/graphql', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ query: '{ demoRecords { key } }' }) }), environment);
+    const graphqlApi = await routeRequest(new Request('https://demo.wizardgang.ai/graphql', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', origin: 'https://demo.wizardgang.ai' },
+      body: JSON.stringify({ query: '{ demoRecords { key } }' }),
+    }), environment);
     expect(graphqlApi.headers.get('content-type')).toContain('application/json');
+
+    const crossOriginGraphqlApi = await routeRequest(new Request('https://demo.wizardgang.ai/graphql', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: '{ demoRecords { key } }' }),
+    }), environment);
+    expect(crossOriginGraphqlApi.status).toBe(403);
 
     const webhooksPage = await routeRequest(new Request('https://demo.wizardgang.ai/webhooks', { headers: { accept: 'text/html' } }), environment);
     const webhooksHtml = await webhooksPage.text();

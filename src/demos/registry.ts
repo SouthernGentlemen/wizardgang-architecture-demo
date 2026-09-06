@@ -50,7 +50,5 @@ export const demos: DemoDefinition[] = [
   demo_uptime,
   demo_docs,
   demo_logs,
-  demo_billing
+  demo_billing,
 ];
-
-export const demosByRoute = new Map(demos.map((demo) => [demo.route, demo]));

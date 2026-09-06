@@ -1,177 +1,117 @@
 # Route-to-source map
 
-This file is the stable public URL contract for `demo.wizardgang.ai`. The public architecture map contains 25 HTML routes in five groups. Machine interfaces keep their documented paths and response shapes.
+This file is generated from the active declarative application registry. Route IDs, URL patterns, methods, policy metadata, documentation, and source ownership must be changed in route declarations rather than edited here.
 
-## Public architecture routes
+## Registered public navigation
 
-| Group | Route | Architecture concept | Primary source | Status |
-|---|---|---|---|---|
-| Platform | `/edge` | Cloudflare Edge | `src/demos/edge.ts` | Working |
-| Platform | `/workers` | Cloudflare Workers | `src/demos/workers.ts` | Working |
-| Platform | `/durable-objects` | Durable Objects | `src/demos/durable-objects.ts` | Working |
-| Platform | `/d1` | Cloudflare D1 | `src/demos/d1.ts` | Working |
-| Platform | `/r2` | Cloudflare R2 | `src/demos/r2.ts` | Working |
-| Interfaces | `/api` | REST and OpenAPI 2.0 | `src/demos/api.ts` | Working |
-| Interfaces | `/graphql` | GraphQL Yoga and locally bundled GraphiQL | `src/demos/graphql.ts` | Working |
-| Interfaces | `/webhooks` | Signed GitHub-compatible webhook verification and delivery evidence | `src/demos/webhooks.ts` | Working |
-| Interfaces | `/identity` | Real provider authentication, normalized identity, SSO, and application authorization | `src/demos/identity.ts` | Working |
-| Interfaces | `/mcp` | Model Context Protocol | `src/demos/mcp.ts` | Working |
-| Standards | `/i18n` | Internationalization | `src/demos/i18n.ts` | Working |
-| Standards | `/accessibility` | WCAG 2.2 | `src/demos/accessibility.ts` | Working |
-| Delivery & Governance | `/git` | Source, change, CI/CD, release, and environment lifecycle | `src/demos/git.ts` | Working |
-| Delivery & Governance | `/governance` | ISO alignment, traceability, and evidence | `src/demos/governance.ts` | Working |
-| Delivery & Governance | `/evidence` | Searchable public assurance evidence with exact deployed source resolution, reverse usage, and freshness semantics | `src/demos/evidence.ts` | Working |
-| Delivery & Governance | `/compliance` | Filterable canonical ISO/IEC 27001, ISO/IEC 42001, and WCAG 2.2 assurance records with stable anchors and evidence links | `src/demos/compliance.ts` | Working |
-| Delivery & Governance | `/security` | Private vulnerability reporting, coordinated disclosure lifecycle, and published-advisory assurance | `src/demos/security.ts` | Working |
-| Delivery & Governance | `/governance/concerns` | Public non-security bug, feature, and other concern intake | `src/demos/concerns.ts` | Working |
-| Delivery & Governance | `/governance/risks` | Disclosure-safe security and AI risk assurance with stable anchors and evidence/control links | `src/demos/risks.ts` | Working |
-| Delivery & Governance | `/governance/incidents` | Disclosure-safe actual-incident and simulated-exercise assurance with permanent record anchors | `src/demos/incidents.ts` | Working |
-| Operations | `/dashboard` | Read-only operations center, detailed health, availability, activity, usage, deployment, and assurance entry point | `src/demos/dashboard.ts` | Working |
-| Operations | `/dashboard/uptime` | Scheduled availability history | `src/demos/uptime.ts` | Working |
-| Operations | `/dashboard/docs` | Documentation index | `src/demos/docs.ts` | Working |
-| Operations | `/dashboard/logs` | Public-safe log viewer | `src/demos/logs.ts` | Working |
-| Operations | `/dashboard/billing` | Cloudflare usage, cost evidence, and separate guardrail simulator | `src/demos/billing.ts` | Working |
+| Route ID | Route | Methods | Kind | Visibility | Offline | Indexing | Purpose | Source |
+|---|---|---|---|---|---|---|---|---|
+| `interfaces.frontend.index` | `/` | `GET` | page | public | gated | allow | Architecture demo index | `src/ui/page.ts` |
+| `platform.accessibility.page` | `/accessibility` | `GET` | page | public | gated | allow | WCAG 2.2 | `src/platform/route-capabilities/accessibility.ts` |
+| `interfaces.rest.page` | `/api` | `GET` | page | public | gated | allow | REST API | `src/demos/api-page.ts` |
+| `assurance.compliance.iso-27001.html` | `/compliance` | `GET` | page | public | gated | allow | Assurance compliance html | `src/demos/compliance-page.ts` |
+| `platform.d1.page` | `/d1` | `GET` | page | public | gated | allow | Cloudflare D1 | `src/platform/route-capabilities/d1.ts` |
+| `operations.dashboard` | `/dashboard` | `GET` | page | public | available | allow | Operations dashboard | `src/demos/operations-pages.ts` |
+| `operations.dashboard-billing` | `/dashboard/billing` | `GET` | page | public | available | allow | Usage and cost | `src/demos/operations-pages.ts` |
+| `operations.dashboard-docs` | `/dashboard/docs` | `GET` | page | public | available | allow | Operations documentation | `src/demos/operations-pages.ts` |
+| `operations.dashboard-logs` | `/dashboard/logs` | `GET` | page | public | available | allow | Operations logs | `src/demos/logs.ts` |
+| `operations.dashboard-uptime` | `/dashboard/uptime` | `GET` | page | public | available | allow | Availability history | `src/demos/operations-pages.ts` |
+| `platform.durable-objects.page` | `/durable-objects` | `GET` | page | public | gated | allow | Durable Objects | `src/platform/route-capabilities/durable-objects.ts` |
+| `platform.edge.page` | `/edge` | `GET` | page | public | gated | allow | Cloudflare Edge | `src/platform/route-capabilities/edge.ts` |
+| `assurance.evidence.html` | `/evidence` | `GET` | page | public | gated | allow | Assurance evidence html | `src/demos/evidence-page.ts` |
+| `interfaces.git.page` | `/git` | `GET` | page | public | gated | allow | Git / GitHub | `src/demos/git-page.ts` |
+| `interfaces.governance.page` | `/governance` | `GET` | page | public | gated | allow | Governance | `src/ui/page.ts` |
+| `interfaces.governance.concerns` | `/governance/concerns` | `GET` | page | public | gated | allow | Report a Concern | `src/demos/assurance-pages.ts` |
+| `assurance.incidents.html` | `/governance/incidents` | `GET` | page | public | gated | allow | Assurance incidents html | `src/demos/assurance-pages.ts` |
+| `assurance.risks.html` | `/governance/risks` | `GET` | page | public | gated | allow | Assurance risks html | `src/demos/assurance-pages.ts` |
+| `interfaces.graphql.endpoint` | `/graphql` | `GET`, `POST` | protocol | public | gated | allow | GraphQL API | `src/api/graphql.ts` |
+| `interfaces.i18n.page` | `/i18n` | `GET` | page | public | gated | allow | Internationalization | `src/demos/i18n-page.ts` |
+| `interfaces.identity.page` | `/identity` | `GET` | page | public | gated | allow | Authentication & SSO | `src/demos/identity-page.ts` |
+| `interfaces.mcp.page` | `/mcp` | `GET` | page | public | gated | allow | Model Context Protocol | `src/demos/mcp-page.ts` |
+| `platform.r2.page` | `/r2` | `GET` | page | public | gated | allow | Cloudflare R2 | `src/platform/route-capabilities/r2.ts` |
+| `assurance.advisories.html` | `/security` | `GET` | page | public | available | allow | Assurance advisories html | `src/demos/security-page.ts` |
+| `interfaces.webhooks.page` | `/webhooks` | `GET` | page | public | gated | allow | Signed Webhooks | `src/demos/webhook-console.ts` |
+| `platform.workers.page` | `/workers` | `GET` | page | public | gated | allow | Cloudflare Workers | `src/platform/route-capabilities/workers.ts` |
 
-The architecture map at `/` and `/sitemap.xml` are generated from this 25-route registry.
+## Registered service, protocol, asset, and private routes
 
-## Operations and control routes
+| Route ID | Route | Methods | Kind | Visibility | Offline | Indexing | Purpose | Source |
+|---|---|---|---|---|---|---|---|---|
+| `platform.accessibility.lab` | `/__api/accessibility/lab` | `GET` | api | public | gated | deny | Accessibility teaching frame | `src/platform/route-capabilities/accessibility.ts` |
+| `platform.d1.records-reset` | `/__api/api-sandbox/reset` | `POST` | api | public | gated | deny | D1 record sandbox reset API | `src/platform/route-capabilities/d1.ts` |
+| `platform.d1.reset` | `/__api/d1/reset` | `POST` | api | public | gated | deny | D1 users and tasks reset API | `src/platform/route-capabilities/d1.ts` |
+| `platform.d1.tasks` | `/__api/d1/tasks` | `GET`, `POST` | api | public | gated | deny | D1 tasks laboratory API | `src/platform/route-capabilities/d1.ts` |
+| `platform.d1.task` | `/__api/d1/tasks/{id}` | `PATCH`, `DELETE` | api | public | gated | deny | D1 task item laboratory API | `src/platform/route-capabilities/d1.ts` |
+| `platform.d1.users` | `/__api/d1/users` | `GET`, `POST` | api | public | gated | deny | D1 users laboratory API | `src/platform/route-capabilities/d1.ts` |
+| `platform.d1.user` | `/__api/d1/users/{id}` | `PATCH`, `DELETE` | api | public | gated | deny | D1 user item laboratory API | `src/platform/route-capabilities/d1.ts` |
+| `platform.durable-objects.counter` | `/__api/durable/counter` | `GET`, `POST` | api | public | gated | deny | Durable Object counter API | `src/platform/route-capabilities/durable-objects.ts` |
+| `platform.edge.inspect` | `/__api/edge/inspect` | `GET` | api | public | gated | deny | Edge inspection API | `src/platform/route-capabilities/edge.ts` |
+| `interfaces.governance.traceability` | `/__api/evidence/traceability` | `GET` | api | public | gated | deny | Governance traceability evidence | `src/api/governance.ts` |
+| `interfaces.git.demo` | `/__api/git/demo` | `GET`, `POST` | api | public | gated | deny | Git delivery demonstration | `src/api/git-demo.ts` |
+| `interfaces.git.demo-release` | `/__api/git/demo/release` | `POST` | api | private | gated | deny | Git demo release action | `src/api/git-demo.ts` |
+| `interfaces.git.reporting` | `/__api/git/evidence` | `GET`, `POST` | api | public | gated | deny | GitHub assurance reporting | `src/api/git-evidence.ts` |
+| `interfaces.governance.ai-evaluation` | `/__api/governance/ai-evaluation` | `POST` | api | public | gated | deny | Governance AI boundary evaluation | `src/api/governance.ts` |
+| `interfaces.governance.security-controls` | `/__api/governance/security-controls` | `GET` | api | public | gated | deny | Governance security controls | `src/api/governance.ts` |
+| `interfaces.identity.authorize` | `/__api/identity/authorize` | `POST` | api | private | gated | deny | Identity authorization decision | `src/api/identity.ts` |
+| `interfaces.identity.oauth-pkce` | `/__api/identity/oauth-pkce` | `POST` | api | public | gated | deny | OAuth PKCE boundary demonstration | `src/api/identity.ts` |
+| `interfaces.identity.saml.inspect` | `/__api/identity/saml/inspect` | `GET` | api | public | gated | deny | SAML boundary inspection | `src/api/identity.ts` |
+| `interfaces.identity.sso-boundary` | `/__api/identity/sso` | `GET` | api | public | gated | deny | SSO boundary status | `src/api/identity.ts` |
+| `interfaces.identity.token` | `/__api/identity/token` | `POST` | api | private | gated | deny | Identity demo access token | `src/api/identity.ts` |
+| `operations.api-billing` | `/__api/operations/billing` | `POST` | api | public | available | deny | Billing scenario API | `src/api/billing.ts` |
+| `operations.api-cloudflare-usage` | `/__api/operations/cloudflare-usage` | `GET` | api | public | available | deny | Cloudflare usage API | `src/api/operations.ts` |
+| `operations.api-logs` | `/__api/operations/logs` | `GET` | api | public | available | deny | Operations logs API | `src/api/operations.ts` |
+| `platform.r2.demo-object` | `/__api/r2/demo` | `POST` | api | public | gated | deny | R2 demonstration object API | `src/platform/route-capabilities/r2.ts` |
+| `platform.r2.files` | `/__api/r2/files` | `GET`, `POST` | api | public | gated | deny | R2 files laboratory API | `src/platform/route-capabilities/r2.ts` |
+| `platform.r2.file` | `/__api/r2/files/{id}` | `GET`, `DELETE` | api | public | gated | deny | R2 file item laboratory API | `src/platform/route-capabilities/r2.ts` |
+| `platform.r2.object` | `/__api/r2/object` | `GET`, `PUT`, `DELETE` | api | public | gated | deny | R2 object API | `src/platform/route-capabilities/r2.ts` |
+| `platform.r2.reset` | `/__api/r2/reset` | `POST` | api | public | gated | deny | R2 files reset API | `src/platform/route-capabilities/r2.ts` |
+| `interfaces.webhooks.synthetic` | `/__api/webhooks/demo` | `POST` | api | public | gated | deny | Synthetic webhook action | `src/api/webhooks.ts` |
+| `interfaces.webhooks.events` | `/__api/webhooks/events` | `GET` | api | public | gated | deny | Verified webhook events | `src/api/webhooks.ts` |
+| `interfaces.webhooks.reset` | `/__api/webhooks/reset` | `POST` | api | public | gated | deny | Webhook demo reset | `src/api/webhooks.ts` |
+| `platform.workers.compute` | `/__api/workers/compute` | `POST` | api | public | gated | deny | Worker computation API | `src/platform/route-capabilities/workers.ts` |
+| `interfaces.graphql.asset` | `/__assets/graphiql/{asset}` | `GET` | asset | public | gated | deny | GraphiQL local asset | `src/ui/graphiql-assets.ts` |
+| `operations.security-txt` | `/.well-known/security.txt` | `GET`, `HEAD` | protocol | public | available | deny | Security contact | `src/api/security-policy.ts` |
+| `operations.admin` | `/admin` | `GET`, `POST` | page | private | available | deny | Demo administration | `src/ui/admin.ts` |
+| `interfaces.graphql.console` | `/graphql/console` | `GET` | page | public | gated | deny | GraphiQL console | `src/ui/graphiql-assets.ts` |
+| `interfaces.graphql.schema` | `/graphql/schema` | `GET` | protocol | public | gated | deny | GraphQL schema | `src/api/graphql.ts` |
+| `operations.health` | `/health` | `GET` | api | public | available | deny | Health | `src/api/operations.ts` |
+| `interfaces.identity.github.start` | `/identity/github` | `GET` | protocol | public | gated | deny | github authorization start | `src/api/identity.ts` |
+| `interfaces.identity.github.callback` | `/identity/github/callback` | `GET` | protocol | public | gated | deny | github authorization callback | `src/api/identity.ts` |
+| `interfaces.identity.google.start` | `/identity/google` | `GET` | protocol | public | gated | deny | google authorization start | `src/api/identity.ts` |
+| `interfaces.identity.google.callback` | `/identity/google/callback` | `GET` | protocol | public | gated | deny | google authorization callback | `src/api/identity.ts` |
+| `interfaces.identity.logout` | `/identity/logout` | `POST` | api | public | gated | deny | Identity logout | `src/api/identity.ts` |
+| `interfaces.identity.microsoft.start` | `/identity/microsoft` | `GET` | protocol | public | gated | deny | microsoft authorization start | `src/api/identity.ts` |
+| `interfaces.identity.microsoft.callback` | `/identity/microsoft/callback` | `GET` | protocol | public | gated | deny | microsoft authorization callback | `src/api/identity.ts` |
+| `interfaces.identity.saml.start` | `/identity/saml` | `GET` | protocol | public | gated | deny | SAML sign-in start | `src/api/identity.ts` |
+| `interfaces.identity.saml.acs` | `/identity/saml/acs` | `POST` | protocol | public | gated | deny | SAML assertion consumer service | `src/api/identity.ts` |
+| `interfaces.identity.saml.metadata` | `/identity/saml/metadata` | `GET` | protocol | public | gated | deny | SAML service-provider metadata | `src/api/identity.ts` |
+| `interfaces.identity.session` | `/identity/session` | `GET` | api | public | gated | deny | Identity session | `src/api/identity.ts` |
+| `interfaces.mcp.server` | `/mcp/server` | `GET`, `POST`, `DELETE` | protocol | public | gated | deny | MCP streamable HTTP server | `src/api/mcp.ts` |
+| `operations.offline` | `/offline` | `GET` | page | public | available | deny | Offline recovery page | `src/ui/admin.ts` |
+| `operations.social-card` | `/og.png` | `GET`, `HEAD` | asset | public | available | deny | Social preview image | `src/ui/brand-assets.ts` |
+| `operations.robots` | `/robots.txt` | `GET`, `HEAD` | protocol | public | available | deny | Robots policy | `src/lib/crawler-control.ts` |
+| `operations.sitemap` | `/sitemap.xml` | `GET` | protocol | public | gated | deny | Sitemap | `src/api/sitemap.ts` |
+| `assurance.wizardgang-public-assurance.collection` | `/v1/assurance` | `GET`, `OPTIONS` | api | public | gated | deny | Assurance registry collection | `src/api/assurance-registry.ts` |
+| `assurance.advisories.collection` | `/v1/assurance/advisories` | `GET`, `OPTIONS` | api | public | gated | deny | Assurance advisories collection | `src/api/advisories.ts` |
+| `assurance.compliance.iso-27001.collection` | `/v1/assurance/compliance` | `GET`, `OPTIONS` | api | public | gated | deny | Assurance compliance collection | `src/api/assurance.ts` |
+| `assurance.compliance.iso-27001.detail` | `/v1/assurance/compliance/{recordId}` | `GET`, `OPTIONS` | api | public | gated | deny | Assurance compliance detail | `src/api/assurance.ts` |
+| `assurance.evidence.collection` | `/v1/assurance/evidence` | `GET`, `OPTIONS` | api | public | gated | deny | Assurance evidence collection | `src/api/assurance-registry.ts` |
+| `assurance.incidents.collection` | `/v1/assurance/incidents` | `GET`, `OPTIONS` | api | public | gated | deny | Assurance incidents collection | `src/api/assurance.ts` |
+| `assurance.risks.collection` | `/v1/assurance/risks` | `GET`, `OPTIONS` | api | public | gated | deny | Assurance risks collection | `src/api/assurance.ts` |
+| `platform.d1.records` | `/v1/demo-records` | `GET`, `POST` | api | public | gated | deny | D1 records collection API | `src/platform/route-capabilities/d1.ts` |
+| `platform.d1.record` | `/v1/demo-records/{key}` | `GET`, `PUT`, `DELETE` | api | public | gated | deny | D1 record item API | `src/platform/route-capabilities/d1.ts` |
+| `interfaces.openapi.json` | `/v1/openapi.json` | `GET` | api | public | gated | deny | OpenAPI JSON contract | `src/api/openapi.ts` |
+| `interfaces.openapi.yaml` | `/v1/openapi.yaml` | `GET` | api | public | gated | deny | OpenAPI YAML contract | `src/api/openapi.ts` |
+| `interfaces.webhooks.demo-receipt` | `/v1/webhooks/demo` | `POST` | protocol | public | gated | deny | Signed demo webhook receiver | `src/api/webhooks.ts` |
+| `interfaces.webhooks.github` | `/v1/webhooks/github` | `POST` | protocol | public | gated | deny | GitHub webhook receiver | `src/api/webhooks.ts` |
+| `operations.version` | `/version` | `GET` | api | public | available | deny | Version | `src/api/operations.ts` |
 
-| Route | Operational concept | Primary source | Status |
-|---|---|---|---|
-| `/health` | Machine health | `src/api/operations.ts` | Working |
-| `/version` | Build and release metadata | `src/api/operations.ts` | Working |
-| `/__api/operations/logs` | Sanitized log JSON | `src/api/operations.ts` | Working |
-| `/__api/operations/cloudflare-usage` | Sanitized cached Cloudflare usage JSON | `src/api/operations.ts` | Working |
-| `/admin` | Protected demo control | `src/ui/admin.ts` | Working |
-| `/offline` | Public maintenance page | `src/ui/admin.ts` | Working |
-| `/og.png` | Branded social preview image | `src/ui/brand-assets.ts` | Working |
-| `/robots.txt` | Dynamic ChatGPT crawler policy | `src/lib/crawler-control.ts` | Working |
-| `/.well-known/security.txt` | RFC 9116 vulnerability-reporting contact | `src/api/security-policy.ts` | Working |
-| `/sitemap.xml` | Registry-generated sitemap | `src/api/sitemap.ts` | Working |
+## Generation
 
-## Machine and action interfaces
+- Runtime registry: `src/routing/application-routes.ts`
+- Route contract: `src/routing/registry.ts`
+- Artifact projection: `src/routing/artifacts.ts`
+- Regenerate: `npm run generate:routes`
+- Validate: `npm run validate:routes`
 
-Ordinary interfaces return structured `503` responses during an intentional offline window; operational interfaces explicitly marked as reachable continue to work.
-
-| Route | Methods | Capability | Primary source |
-|---|---|---|---|
-| `/__api/operations/logs` | `GET` | Operational Logs JSON | `src/api/operations.ts` |
-| `/__api/operations/cloudflare-usage` | `GET` | Sanitized Cloudflare Usage JSON | `src/api/operations.ts` |
-| `/__api/edge/inspect` | `GET` | Edge Context JSON | `src/api/runtime.ts` |
-| `/__api/workers/compute` | `POST` | Stateless Worker Compute | `src/api/runtime.ts` |
-| `/__api/durable/counter` | `GET`, `POST` | Durable Object Counter | `src/api/durable.ts` |
-| `/__api/d1/users` | `GET`, `POST` | D1 Demo Users | `src/api/d1-lab.ts` |
-| `/__api/d1/users/{id}` | `PATCH`, `DELETE` | D1 Demo User | `src/api/d1-lab.ts` |
-| `/__api/d1/tasks` | `GET`, `POST` | D1 Demo Tasks | `src/api/d1-lab.ts` |
-| `/__api/d1/tasks/{id}` | `PATCH`, `DELETE` | D1 Demo Task | `src/api/d1-lab.ts` |
-| `/__api/d1/reset` | `POST` | D1 Demo Reset | `src/api/d1-lab.ts` |
-| `/__api/r2/demo` | `POST` | Visitor R2 Object Action | `src/api/r2.ts` |
-| `/__api/r2/object` | `GET`, `PUT`, `DELETE` | R2 Object API | `src/api/r2.ts` |
-| `/__api/r2/files` | `GET`, `POST` | R2 Visitor Files | `src/api/r2.ts` |
-| `/__api/r2/files/{id}` | `GET`, `DELETE` | R2 Visitor File | `src/api/r2.ts` |
-| `/__api/r2/reset` | `POST` | R2 Visitor Reset | `src/api/r2.ts` |
-| `/__api/accessibility/lab` | `GET` | Sandboxed Accessibility Lab | `src/ui/accessibility-lab.ts` |
-| `/__api/git/evidence` | `GET` | Live GitHub Delivery Evidence | `src/api/git-evidence.ts` |
-| `/__api/git/demo` | `GET`, `POST` | Live Git Delivery Lifecycle | `src/api/git-demo.ts` |
-| `/__api/git/demo/release` | `POST` | Live Git Merge and Release | `src/api/git-demo.ts` |
-| `/v1/demo-records` | `GET`, `POST` | REST Demo Records | `src/api/records.ts` |
-| `/v1/demo-records/{key}` | `GET`, `PUT`, `DELETE` | REST Demo Record | `src/api/records.ts` |
-| `/__api/api-sandbox/reset` | `POST` | REST Visitor Sandbox Reset | `src/api/records.ts` |
-| `/v1/openapi.json` | `GET` | Swagger 2.0 Contract | `src/api/openapi.ts` |
-| `/v1/openapi.yaml` | `GET` | OpenAPI 2.0 YAML Contract | `src/api/openapi.ts` |
-| `/graphql/console` | `GET` | Embedded GraphiQL | `src/ui/graphiql-assets.ts` |
-| `/graphql/schema` | `GET` | GraphQL Schema | `src/api/graphql.ts` |
-| `/__assets/graphiql/{asset}` | `GET` | Locally Bundled GraphiQL Assets | `src/ui/graphiql-assets.ts` |
-| `/v1/webhooks/demo` | `POST` | Signed Webhook Receiver | `src/api/webhooks.ts` |
-| `/v1/webhooks/github` | `POST` | Verified GitHub Webhook Receiver | `src/api/webhooks.ts` |
-| `/__api/webhooks/demo` | `POST` | Visitor Signed Webhook Action | `src/api/webhooks.ts` |
-| `/__api/webhooks/events` | `GET` | Verified Webhook Events | `src/api/webhooks.ts` |
-| `/__api/webhooks/reset` | `POST` | Visitor Webhook Reset | `src/api/webhooks.ts` |
-| `/mcp/server` | `GET`, `POST`, `DELETE` | MCP Streamable HTTP Server | `src/api/mcp.ts` |
-| `/__api/identity/oauth-pkce` | `POST` | OAuth PKCE Material | `src/api/identity.ts` |
-| `/__api/identity/authorize` | `POST` | Authorization Policy Evaluation | `src/api/identity.ts` |
-| `/__api/identity/token` | `POST` | Short-lived Demo API Token | `src/api/identity.ts` |
-| `/__api/identity/sso` | `GET` | SSO Trust Boundary | `src/api/identity.ts` |
-| `/identity/saml/metadata` | `GET` | SAML Service Provider Metadata | `src/api/identity.ts` |
-| `/__api/identity/saml/inspect` | `GET` | SAML Validation Boundary | `src/api/identity.ts` |
-| `/identity/microsoft` | `GET` | Microsoft Entra ID OIDC Start | `src/api/identity.ts` |
-| `/identity/microsoft/callback` | `GET` | Microsoft Entra ID OIDC Callback | `src/api/identity.ts` |
-| `/identity/google` | `GET` | Google OIDC Start | `src/api/identity.ts` |
-| `/identity/google/callback` | `GET` | Google OIDC Callback | `src/api/identity.ts` |
-| `/identity/github` | `GET` | GitHub OAuth Start | `src/api/identity.ts` |
-| `/identity/github/callback` | `GET` | GitHub OAuth Callback | `src/api/identity.ts` |
-| `/identity/saml` | `GET` | Microsoft Entra ID SAML Start | `src/api/identity.ts` |
-| `/identity/saml/acs` | `POST` | Microsoft Entra ID SAML ACS | `src/api/identity.ts` |
-| `/identity/session` | `GET` | Identity Session | `src/api/identity.ts` |
-| `/identity/logout` | `POST` | Identity Logout | `src/api/identity.ts` |
-| `/__api/operations/billing` | `POST` | Synthetic Budget Scenario | `src/api/billing.ts` |
-| `/v1/assurance` | `GET` | Public assurance registry with derived counts, reverse evidence usage, and deployed-commit resolution | `src/api/assurance-registry.ts` |
-| `/v1/assurance/evidence` | `GET` | Public assurance evidence projection with freshness semantics | `src/api/assurance-registry.ts` |
-| `/v1/assurance/compliance` | `GET` | Filterable canonical compliance projection with derived framework, status, and WCAG-level counts | `src/api/assurance.ts` |
-| `/v1/assurance/compliance/{recordId}` | `GET` | Exact normalized compliance record lookup by stable ID | `src/api/assurance.ts` |
-| `/__api/evidence/traceability` | `GET` | Traceability Evidence JSON | `src/api/governance.ts` |
-| `/v1/assurance/risks` | `GET` | Disclosure-safe Risk Assurance JSON | `src/api/assurance.ts` |
-| `/v1/assurance/incidents` | `GET` | Disclosure-safe Incident and Exercise Assurance JSON | `src/api/assurance.ts` |
-| `/v1/assurance/advisories` | `GET` | Published, disclosure-safe Security Advisory Assurance JSON | `src/api/advisories.ts` |
-| `/__api/governance/security-controls` | `GET` | Security Control Evidence JSON | `src/api/governance.ts` |
-| `/__api/governance/ai-evaluation` | `POST` | AI Boundary Evaluation | `src/api/governance.ts` |
-
-## Shared implementation
-
-| Concern | Source |
-|---|---|
-| Worker entry point | `src/index.ts` |
-| Router | `src/router.ts` |
-| Demo registry | `src/demos/registry.ts` |
-| Route-manifest generator | `scripts/generate-route-manifest.mjs` |
-| HTML renderer | `src/ui/page.ts` |
-| GitHub source-link builder | `src/lib/github.ts` |
-| Shared D1 audit functions | `src/lib/audit.ts` |
-| Application log persistence and redaction | `src/lib/logs.ts` |
-| ChatGPT crawler access and dynamic robots policy | `src/lib/crawler-control.ts` |
-| Operations APIs | `src/api/operations.ts` |
-| Public assurance and compliance registry projection | `src/assurance/registry.ts` |
-| Assurance presentation layer | `src/assurance/presentation.ts` |
-| Disclosure-safe risk/incident/compliance APIs | `src/api/assurance.ts` |
-| Published advisory API | `src/api/advisories.ts` |
-| Assurance registry/evidence APIs | `src/api/assurance-registry.ts` |
-| D1 base schema | `migrations/0001_demo_blob.sql` |
-| Operations, log, and Cloudflare usage schemas | `migrations/0002_operations_dashboard.sql`, `migrations/0004_application_logs.sql`, `migrations/0011_cloudflare_usage.sql` |
-| ChatGPT crawler-control schema | `migrations/0009_crawler_control.sql` |
-| Route-flatten seed update | `migrations/0007_flatten_demo_record_routes.sql` |
-| Cloudflare configuration | `wrangler.jsonc` |
-| CI | `.github/workflows/ci.yml` |
-| Deployment | `.github/workflows/deploy.yml` |
-
-## Working contracts and specialized primitives
-
-| Capability | Source |
-|---|---|
-| Public assurance registry contract | `contracts/assurance/registry.schema.json` |
-| ISO/IEC 27001 public compliance dataset | `assurance/compliance/iso-27001-2022.json` |
-| ISO/IEC 42001 public compliance dataset | `assurance/compliance/iso-42001-2023.json` |
-| WCAG 2.2 public compliance manifest and partitions | `assurance/compliance/wcag-2.2.json`, `assurance/compliance/wcag-2.2/` |
-| Public risk assurance contract | `contracts/assurance/risk.schema.json` |
-| Public risk assurance dataset | `assurance/risks/risks.json` |
-| Public incident assurance contract | `contracts/assurance/incident.schema.json` |
-| Public exercise assurance contract | `contracts/assurance/exercise.schema.json` |
-| Public incident assurance dataset | `assurance/incidents/incidents.json` |
-| Public exercise assurance dataset | `assurance/incidents/exercises.json` |
-| Public advisory assurance contract | `contracts/assurance/advisory.schema.json` |
-| Public advisory assurance dataset | `assurance/advisories/advisories.json` |
-| R2 helper and object boundary | `src/storage/r2.ts` |
-| Durable Object class | `src/durable/demo-coordinator.ts` |
-| REST OpenAPI / Swagger 2.x contract | `contracts/openapi/swagger.json` |
-| GraphQL schema | `contracts/graphql/schema.graphql` |
-| MCP tool manifest | `contracts/mcp/tools.json` |
-| MCP interoperability test | `tests/mcp-client.test.ts` |
-| Webhook event contract | `contracts/webhooks/events.json` |
-| SAML metadata example | `contracts/identity/saml-metadata.example.xml` |
-| Synthetic billing policy | `config/billing-demo.json` |
-| i18n configuration | `config/i18n.json` |
-| Locale resources | `src/i18n/locales/` |
-| Accessibility plan | `docs/ACCESSIBILITY.md` |
-| Assurance guide | `docs/ASSURANCE.md` |
-| Seven-demo interaction specification | `docs/INTERACTIVE-DEMO-SPEC.md` |
-| Identity plan | `docs/IDENTITY.md` |
-| Evidence map | `docs/EVIDENCE.md` |
+Unknown paths are not inferred from prefixes or aliases; they use the normal 404 response.

@@ -217,7 +217,8 @@ describe('interface and identity declarative routing', () => {
 
   it('removes migrated interface path checks and the demo fallback from the central router', () => {
     const centralRouterSource = fs.readFileSync('src/router.ts', 'utf8');
-    expect(centralRouterSource).toContain('routeInterfaceIdentityRequest');
+    expect(centralRouterSource).toContain('applicationRouteRegistry');
+    expect(centralRouterSource).not.toContain('routeInterfaceIdentityRequest');
     expect(centralRouterSource).not.toContain('demosByRoute');
 
     for (const route of routes) {

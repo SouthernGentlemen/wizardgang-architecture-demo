@@ -66,7 +66,7 @@ describe('declarative assurance routing', () => {
     const router = createAssuranceRouteRouter(registry, assuranceRouteCapabilities, jsonHandler);
 
     expect(router.registry.declarations.map((route) => route.pattern)).toContain('/v1/assurance/synthetic');
-    expect(router.registry.declarations.map((route) => route.pattern)).toContain('/v1/assurance/synthetic/:id');
+    expect(router.registry.declarations.map((route) => route.pattern)).toContain('/v1/assurance/synthetic/:recordId');
 
     const collection = await router.route(
       new Request('https://demo.wizardgang.ai/v1/assurance/synthetic'),

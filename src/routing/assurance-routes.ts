@@ -94,11 +94,11 @@ function baseRoute(
 }
 
 function detailPattern(pattern: string): string {
-  return pattern.replace('{id}', ':id');
+  return pattern.replace('{id}', ':recordId');
 }
 
 function encodedRecordId(params: Readonly<Record<string, string>>): string {
-  const recordId = params.id;
+  const recordId = params.recordId;
   if (!recordId) throw new Error('Matched assurance detail route without a record ID.');
   return encodeURIComponent(recordId);
 }

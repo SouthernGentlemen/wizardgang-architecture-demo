@@ -14,7 +14,7 @@ for (const [path, operations] of Object.entries(swagger.paths || {})) {
     failures.push(`contract path is not routed: ${route}`);
     continue;
   }
-  const routedMethods = new Set(String(entry.method || 'GET').split(',').map((method) => method.trim().toUpperCase()));
+  const routedMethods = new Set((entry.methods ?? []).map((method) => String(method).trim().toUpperCase()));
   for (const method of Object.keys(operations || {})) {
     const normalizedMethod = method.toUpperCase();
     if (!['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'].includes(normalizedMethod)) continue;

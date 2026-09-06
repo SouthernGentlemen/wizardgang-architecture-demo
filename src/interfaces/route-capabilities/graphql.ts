@@ -25,6 +25,7 @@ export const graphqlRouteCapability = defineInterfaceIdentityCapability('interfa
     authorization: { mode: 'policy', policy: 'demo:read; mutations require demo:write' },
     sameOrigin: { mode: 'required', methods: ['POST'] },
     browserHtml: 'graphql',
+    indexing: 'allow',
     tests: ['tests/graphql.test.ts', 'tests/integration-interfaces.test.ts'],
   }),
   interfaceIdentityRoute({

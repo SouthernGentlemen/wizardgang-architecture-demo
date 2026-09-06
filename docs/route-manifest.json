@@ -1,857 +1,4525 @@
 [
   {
-    "route": "/",
-    "title": "Architecture Map",
-    "group": "Navigation",
-    "source": "src/ui/page.ts",
-    "status": "working"
-  },
-  {
-    "route": "/edge",
-    "title": "Cloudflare Edge",
-    "group": "Platform",
-    "source": "src/demos/edge.ts",
-    "status": "working"
-  },
-  {
-    "route": "/workers",
-    "title": "Cloudflare Workers",
-    "group": "Platform",
-    "source": "src/demos/workers.ts",
-    "status": "working"
-  },
-  {
-    "route": "/durable-objects",
-    "title": "Durable Objects",
-    "group": "Platform",
-    "source": "src/demos/durable-objects.ts",
-    "status": "working"
-  },
-  {
-    "route": "/d1",
-    "title": "Cloudflare D1",
-    "group": "Platform",
-    "source": "src/demos/d1.ts",
-    "status": "working"
-  },
-  {
-    "route": "/r2",
-    "title": "Cloudflare R2",
-    "group": "Platform",
-    "source": "src/demos/r2.ts",
-    "status": "working"
-  },
-  {
-    "route": "/api",
-    "title": "REST API",
-    "group": "Interfaces",
-    "source": "src/demos/api.ts",
-    "status": "working"
-  },
-  {
-    "route": "/graphql",
-    "title": "GraphQL API",
-    "group": "Interfaces",
-    "source": "src/demos/graphql.ts",
-    "status": "working",
-    "method": "GET, POST"
-  },
-  {
-    "route": "/webhooks",
-    "title": "Signed Webhooks",
-    "group": "Interfaces",
-    "source": "src/demos/webhooks.ts",
-    "status": "working"
-  },
-  {
-    "route": "/identity",
-    "title": "Authentication & SSO",
-    "group": "Interfaces",
-    "source": "src/demos/identity.ts",
-    "status": "working"
-  },
-  {
-    "route": "/mcp",
-    "title": "Model Context Protocol",
-    "group": "Interfaces",
-    "source": "src/demos/mcp.ts",
-    "status": "working"
-  },
-  {
-    "route": "/i18n",
-    "title": "Internationalization",
-    "group": "Standards",
-    "source": "src/demos/i18n.ts",
-    "status": "working"
-  },
-  {
-    "route": "/accessibility",
-    "title": "WCAG 2.2",
-    "group": "Standards",
-    "source": "src/demos/accessibility.ts",
-    "status": "working"
-  },
-  {
-    "route": "/git",
-    "title": "Git / GitHub",
-    "group": "Delivery & Governance",
-    "source": "src/demos/git.ts",
-    "status": "working"
-  },
-  {
-    "route": "/governance",
-    "title": "Governance",
-    "group": "Delivery & Governance",
-    "source": "src/demos/governance.ts",
-    "status": "working"
-  },
-  {
-    "route": "/evidence",
-    "title": "Assurance Evidence",
-    "group": "Delivery & Governance",
-    "source": "src/demos/evidence.ts",
-    "status": "working"
-  },
-  {
-    "route": "/compliance",
-    "title": "Compliance & Assurance",
-    "group": "Delivery & Governance",
-    "source": "src/demos/compliance.ts",
-    "status": "working"
-  },
-  {
-    "route": "/security",
-    "title": "Security",
-    "group": "Delivery & Governance",
-    "source": "src/demos/security.ts",
-    "status": "working"
-  },
-  {
-    "route": "/governance/concerns",
-    "title": "Report a Concern",
-    "group": "Delivery & Governance",
-    "source": "src/demos/concerns.ts",
-    "status": "working"
-  },
-  {
-    "route": "/governance/risks",
-    "title": "Risk Assurance",
-    "group": "Delivery & Governance",
-    "source": "src/demos/risks.ts",
-    "status": "working"
-  },
-  {
-    "route": "/governance/incidents",
-    "title": "Incidents & Exercises",
-    "group": "Delivery & Governance",
-    "source": "src/demos/incidents.ts",
-    "status": "working"
-  },
-  {
-    "route": "/dashboard",
-    "title": "System Operations",
-    "group": "Operations",
-    "source": "src/demos/dashboard.ts",
-    "status": "working"
-  },
-  {
-    "route": "/dashboard/uptime",
-    "title": "Availability",
-    "group": "Operations",
-    "source": "src/demos/uptime.ts",
-    "status": "working"
-  },
-  {
-    "route": "/dashboard/docs",
-    "title": "Documentation",
-    "group": "Operations",
-    "source": "src/demos/docs.ts",
-    "status": "working"
-  },
-  {
-    "route": "/dashboard/logs",
-    "title": "Log Viewer",
-    "group": "Operations",
-    "source": "src/demos/logs.ts",
-    "status": "working"
-  },
-  {
-    "route": "/dashboard/billing",
-    "title": "Cloudflare Usage & Cost",
-    "group": "Operations",
-    "source": "src/demos/billing.ts",
-    "status": "working"
-  },
-  {
-    "route": "/admin",
-    "title": "Demo Admin",
-    "group": "Operations",
-    "source": "src/ui/admin.ts",
-    "protected": true,
-    "status": "working"
-  },
-  {
-    "route": "/offline",
-    "title": "Demo Offline",
-    "group": "Operations",
-    "source": "src/ui/admin.ts",
-    "status": "working"
-  },
-  {
-    "route": "/health",
-    "title": "Health JSON",
-    "group": "Operations",
-    "source": "src/api/operations.ts",
-    "machine": true,
-    "offline_reachable": true,
-    "status": "working"
-  },
-  {
-    "route": "/version",
-    "title": "Version JSON",
-    "group": "Operations",
-    "source": "src/api/operations.ts",
-    "machine": true,
-    "offline_reachable": true,
-    "status": "working"
-  },
-  {
-    "route": "/og.png",
-    "title": "WizardGang Social Preview",
-    "group": "Navigation",
-    "source": "src/ui/brand-assets.ts",
-    "method": "GET, HEAD",
-    "machine": true,
-    "offline_reachable": true,
-    "status": "working"
-  },
-  {
-    "route": "/robots.txt",
-    "title": "ChatGPT Crawler Policy",
-    "group": "Operations",
-    "source": "src/lib/crawler-control.ts",
-    "method": "GET, HEAD",
-    "machine": true,
-    "offline_reachable": true,
-    "status": "working"
-  },
-  {
-    "route": "/.well-known/security.txt",
-    "title": "Vulnerability Reporting Contact",
-    "group": "Delivery & Governance",
-    "source": "src/api/security-policy.ts",
-    "method": "GET, HEAD",
-    "machine": true,
-    "offline_reachable": true,
-    "status": "working"
-  },
-  {
-    "route": "/sitemap.xml",
-    "title": "Public Route Sitemap",
-    "group": "Navigation",
-    "source": "src/api/sitemap.ts",
-    "machine": true,
-    "status": "working"
-  },
-  {
-    "route": "/__api/operations/logs",
-    "title": "Operational Logs JSON",
-    "group": "Operations",
-    "source": "src/api/operations.ts",
-    "machine": true,
-    "offline_reachable": true,
-    "status": "working"
-  },
-  {
-    "route": "/__api/operations/cloudflare-usage",
-    "title": "Sanitized Cloudflare Usage JSON",
-    "group": "Operations",
-    "source": "src/api/operations.ts",
-    "machine": true,
-    "offline_reachable": true,
-    "status": "working"
-  },
-  {
-    "route": "/__api/edge/inspect",
-    "title": "Edge Context JSON",
-    "group": "Platform API",
-    "source": "src/api/runtime.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/workers/compute",
-    "title": "Stateless Worker Compute",
-    "group": "Platform API",
-    "source": "src/api/runtime.ts",
-    "method": "POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/durable/counter",
-    "title": "Durable Object Counter",
-    "group": "Platform API",
-    "source": "src/api/durable.ts",
-    "method": "GET, POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/d1/users",
-    "title": "D1 Demo Users",
-    "group": "Platform API",
-    "source": "src/api/d1-lab.ts",
-    "method": "GET, POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/d1/users/{id}",
-    "title": "D1 Demo User",
-    "group": "Platform API",
-    "source": "src/api/d1-lab.ts",
-    "method": "PATCH, DELETE",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/d1/tasks",
-    "title": "D1 Demo Tasks",
-    "group": "Platform API",
-    "source": "src/api/d1-lab.ts",
-    "method": "GET, POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/d1/tasks/{id}",
-    "title": "D1 Demo Task",
-    "group": "Platform API",
-    "source": "src/api/d1-lab.ts",
-    "method": "PATCH, DELETE",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/d1/reset",
-    "title": "D1 Demo Reset",
-    "group": "Platform API",
-    "source": "src/api/d1-lab.ts",
-    "method": "POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/r2/demo",
-    "title": "Visitor R2 Object Action",
-    "group": "Platform API",
-    "source": "src/api/r2.ts",
-    "method": "POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/r2/object",
-    "title": "R2 Object API",
-    "group": "Platform API",
-    "source": "src/api/r2.ts",
-    "method": "GET, PUT, DELETE",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/r2/files",
-    "title": "R2 Visitor Files",
-    "group": "Platform API",
-    "source": "src/api/r2.ts",
-    "method": "GET, POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/r2/files/{id}",
-    "title": "R2 Visitor File",
-    "group": "Platform API",
-    "source": "src/api/r2.ts",
-    "method": "GET, DELETE",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/r2/reset",
-    "title": "R2 Visitor Reset",
-    "group": "Platform API",
-    "source": "src/api/r2.ts",
-    "method": "POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/accessibility/lab",
-    "title": "Sandboxed Accessibility Lab",
-    "group": "Standards API",
-    "source": "src/ui/accessibility-lab.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/git/evidence",
-    "title": "Authoritative GitHub Reporting",
-    "group": "Delivery & Governance API",
-    "source": "src/api/git-evidence.ts",
-    "method": "GET, POST",
-    "machine": true,
-    "protected_write": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/git/demo",
-    "title": "Live Git Delivery Lifecycle",
-    "group": "Delivery & Governance API",
-    "source": "src/api/git-demo.ts",
-    "method": "GET, POST",
-    "machine": true,
-    "protected_write": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/git/demo/release",
-    "title": "Live Git Merge and Release",
-    "group": "Delivery & Governance API",
-    "source": "src/api/git-demo.ts",
-    "method": "POST",
-    "machine": true,
-    "protected": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/v1/demo-records",
-    "title": "REST Demo Records",
-    "group": "Interfaces API",
-    "source": "src/api/records.ts",
-    "method": "GET, POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/v1/demo-records/{key}",
-    "title": "REST Demo Record",
-    "group": "Interfaces API",
-    "source": "src/api/records.ts",
-    "method": "GET, PUT, DELETE",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/api-sandbox/reset",
-    "title": "REST Visitor Sandbox Reset",
-    "group": "Interfaces API",
-    "source": "src/api/records.ts",
-    "method": "POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/v1/openapi.json",
-    "title": "Swagger 2.0 Contract",
-    "group": "Interfaces API",
-    "source": "src/api/openapi.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/v1/openapi.yaml",
-    "title": "OpenAPI 2.0 YAML Contract",
-    "group": "Interfaces API",
-    "source": "src/api/openapi.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/graphql/console",
-    "title": "Embedded GraphiQL",
-    "group": "Interfaces API",
-    "source": "src/ui/graphiql-assets.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/graphql/schema",
-    "title": "GraphQL Schema",
-    "group": "Interfaces API",
-    "source": "src/api/graphql.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__assets/graphiql/{asset}",
-    "title": "Locally Bundled GraphiQL Assets",
-    "group": "Interfaces API",
-    "source": "src/ui/graphiql-assets.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/v1/webhooks/demo",
-    "title": "Signed Webhook Receiver",
-    "group": "Interfaces API",
-    "source": "src/api/webhooks.ts",
-    "method": "POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/v1/webhooks/github",
-    "title": "Verified GitHub Webhook Receiver",
-    "group": "Interfaces API",
-    "source": "src/api/webhooks.ts",
-    "method": "POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/webhooks/demo",
-    "title": "Visitor Signed Webhook Action",
-    "group": "Interfaces API",
-    "source": "src/api/webhooks.ts",
-    "method": "POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/webhooks/events",
-    "title": "Verified Webhook Events",
-    "group": "Interfaces API",
-    "source": "src/api/webhooks.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/webhooks/reset",
-    "title": "Visitor Webhook Reset",
-    "group": "Interfaces API",
-    "source": "src/api/webhooks.ts",
-    "method": "POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/mcp/server",
-    "title": "MCP Streamable HTTP Server",
-    "group": "Interfaces API",
-    "source": "src/api/mcp.ts",
-    "method": "GET, POST, DELETE",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/identity/oauth-pkce",
-    "title": "OAuth PKCE Material",
-    "group": "Interfaces API",
-    "source": "src/api/identity.ts",
-    "method": "POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/identity/authorize",
-    "title": "Authorization Policy Evaluation",
-    "group": "Interfaces API",
-    "source": "src/api/identity.ts",
-    "method": "POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/identity/token",
-    "title": "Short-lived Demo API Token",
-    "group": "Interfaces API",
-    "source": "src/api/identity.ts",
-    "method": "POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/identity/sso",
-    "title": "SSO Trust Boundary",
-    "group": "Interfaces API",
-    "source": "src/api/identity.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/identity/saml/metadata",
-    "title": "SAML Service Provider Metadata",
-    "group": "Interfaces API",
-    "source": "src/api/identity.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/identity/saml/inspect",
-    "title": "SAML Validation Boundary",
-    "group": "Interfaces API",
-    "source": "src/api/identity.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/identity/microsoft",
-    "title": "Microsoft Entra ID OIDC Start",
-    "group": "Identity",
-    "source": "src/api/identity.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/identity/microsoft/callback",
-    "title": "Microsoft Entra ID OIDC Callback",
-    "group": "Identity",
-    "source": "src/api/identity.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/identity/google",
-    "title": "Google OIDC Start",
-    "group": "Identity",
-    "source": "src/api/identity.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/identity/google/callback",
-    "title": "Google OIDC Callback",
-    "group": "Identity",
-    "source": "src/api/identity.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/identity/github",
-    "title": "GitHub OAuth Start",
-    "group": "Identity",
-    "source": "src/api/identity.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/identity/github/callback",
-    "title": "GitHub OAuth Callback",
-    "group": "Identity",
-    "source": "src/api/identity.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/identity/saml",
-    "title": "Microsoft Entra ID SAML Start",
-    "group": "Identity",
-    "source": "src/api/identity.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/identity/saml/acs",
-    "title": "Microsoft Entra ID SAML ACS",
-    "group": "Identity",
-    "source": "src/api/identity.ts",
-    "method": "POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/identity/session",
-    "title": "Identity Session",
-    "group": "Identity",
-    "source": "src/api/identity.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/identity/logout",
-    "title": "Identity Logout",
-    "group": "Identity",
-    "source": "src/api/identity.ts",
-    "method": "POST",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/operations/billing",
-    "title": "Synthetic Budget Scenario",
-    "group": "Operations",
-    "source": "src/api/billing.ts",
-    "method": "POST",
-    "machine": true,
-    "offline_reachable": true,
-    "status": "working"
-  },
-  {
-    "route": "/v1/assurance",
-    "title": "Public Assurance Registry",
-    "group": "Delivery & Governance API",
-    "source": "src/api/assurance-registry.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/v1/assurance/evidence",
-    "title": "Public Assurance Evidence",
-    "group": "Delivery & Governance API",
-    "source": "src/api/assurance-registry.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/v1/assurance/compliance",
-    "title": "Public Compliance Assurance JSON",
-    "group": "Delivery & Governance API",
-    "source": "src/api/assurance.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/v1/assurance/compliance/{recordId}",
-    "title": "Public Compliance Assurance Record",
-    "group": "Delivery & Governance API",
-    "source": "src/api/assurance.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/__api/evidence/traceability",
-    "title": "Traceability Evidence JSON",
-    "group": "Delivery & Governance API",
-    "source": "src/api/governance.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/v1/assurance/risks",
-    "title": "Disclosure-safe Risk Assurance JSON",
-    "group": "Delivery & Governance API",
-    "source": "src/api/assurance.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
-    "route": "/v1/assurance/incidents",
-    "title": "Disclosure-safe Incident and Exercise Assurance JSON",
-    "group": "Delivery & Governance API",
-    "source": "src/api/assurance.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
-    "status": "working"
-  },
-  {
+    "id": "assurance.advisories.collection",
     "route": "/v1/assurance/advisories",
-    "title": "Published Security Advisories",
-    "group": "Delivery & Governance API",
-    "source": "src/api/advisories.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
+    "methods": [
+      "GET",
+      "OPTIONS"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "public",
+      "maxAgeSeconds": 300
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Assurance advisories collection",
+    "description": "Registry-owned collection route for the advisories assurance surface.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/ASSURANCE-API.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/api/advisories.ts",
+      "exportName": "assuranceAdvisoriesResponse",
+      "tests": [
+        "tests/assurance-advisories.test.ts",
+        "tests/assurance-declarative-routing.test.ts"
+      ]
+    },
     "status": "working"
   },
   {
-    "route": "/__api/governance/security-controls",
-    "title": "Security Control Evidence JSON",
-    "group": "Delivery & Governance API",
-    "source": "src/api/governance.ts",
-    "method": "GET",
-    "machine": true,
-    "offline_behavior": "503",
+    "id": "assurance.advisories.html",
+    "route": "/security",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Assurance advisories html",
+    "description": "Registry-owned html route for the advisories assurance surface.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/ASSURANCE-API.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/demos/security-page.ts",
+      "exportName": "renderSecurity",
+      "tests": [
+        "tests/security.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Delivery & Governance",
+      "label": "Security",
+      "order": 17,
+      "index": true,
+      "sitemap": true
+    },
     "status": "working"
   },
   {
+    "id": "assurance.compliance.iso-27001.collection",
+    "route": "/v1/assurance/compliance",
+    "methods": [
+      "GET",
+      "OPTIONS"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "public",
+      "maxAgeSeconds": 300
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Assurance compliance collection",
+    "description": "Registry-owned collection route for the compliance assurance surface.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/ASSURANCE-API.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/api/assurance.ts",
+      "exportName": "assuranceComplianceResponse",
+      "tests": [
+        "tests/assurance-compliance-api.test.ts",
+        "tests/assurance-declarative-routing.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "assurance.compliance.iso-27001.detail",
+    "route": "/v1/assurance/compliance/{recordId}",
+    "methods": [
+      "GET",
+      "OPTIONS"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "public",
+      "maxAgeSeconds": 300
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Assurance compliance detail",
+    "description": "Registry-owned detail route for the compliance assurance surface.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/ASSURANCE-API.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/api/assurance.ts",
+      "exportName": "assuranceComplianceResponse",
+      "tests": [
+        "tests/assurance-compliance-api.test.ts",
+        "tests/assurance-route-intersections.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "assurance.compliance.iso-27001.html",
+    "route": "/compliance",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Assurance compliance html",
+    "description": "Registry-owned html route for the compliance assurance surface.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/ASSURANCE-API.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/demos/compliance-page.ts",
+      "exportName": "renderComplianceDemo",
+      "tests": [
+        "tests/assurance-compliance.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Delivery & Governance",
+      "label": "Compliance & Assurance",
+      "order": 16,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "assurance.evidence.collection",
+    "route": "/v1/assurance/evidence",
+    "methods": [
+      "GET",
+      "OPTIONS"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "public",
+      "maxAgeSeconds": 300
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Assurance evidence collection",
+    "description": "Registry-owned collection route for the evidence assurance surface.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/ASSURANCE-API.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/api/assurance-registry.ts",
+      "exportName": "assuranceEvidenceResponse",
+      "tests": [
+        "tests/assurance-api.test.ts",
+        "tests/assurance-declarative-routing.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "assurance.evidence.html",
+    "route": "/evidence",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Assurance evidence html",
+    "description": "Registry-owned html route for the evidence assurance surface.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/ASSURANCE-API.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/demos/evidence-page.ts",
+      "exportName": "renderEvidenceDemo",
+      "tests": [
+        "tests/assurance-route-contract.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Delivery & Governance",
+      "label": "Assurance Evidence",
+      "order": 15,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "assurance.incidents.collection",
+    "route": "/v1/assurance/incidents",
+    "methods": [
+      "GET",
+      "OPTIONS"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "public",
+      "maxAgeSeconds": 300
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Assurance incidents collection",
+    "description": "Registry-owned collection route for the incidents assurance surface.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/ASSURANCE-API.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/api/assurance.ts",
+      "exportName": "assuranceIncidentsResponse",
+      "tests": [
+        "tests/assurance-incidents.test.ts",
+        "tests/assurance-declarative-routing.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "assurance.incidents.html",
+    "route": "/governance/incidents",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Assurance incidents html",
+    "description": "Registry-owned html route for the incidents assurance surface.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/ASSURANCE-API.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/demos/assurance-pages.ts",
+      "exportName": "renderIncidents",
+      "tests": [
+        "tests/assurance-incidents.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Delivery & Governance",
+      "label": "Incidents & Exercises",
+      "order": 20,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "assurance.risks.collection",
+    "route": "/v1/assurance/risks",
+    "methods": [
+      "GET",
+      "OPTIONS"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "public",
+      "maxAgeSeconds": 300
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Assurance risks collection",
+    "description": "Registry-owned collection route for the risks assurance surface.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/ASSURANCE-API.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/api/assurance.ts",
+      "exportName": "assuranceRisksResponse",
+      "tests": [
+        "tests/assurance-risks.test.ts",
+        "tests/assurance-declarative-routing.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "assurance.risks.html",
+    "route": "/governance/risks",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Assurance risks html",
+    "description": "Registry-owned html route for the risks assurance surface.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/ASSURANCE-API.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/demos/assurance-pages.ts",
+      "exportName": "renderRisks",
+      "tests": [
+        "tests/assurance-risks.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Delivery & Governance",
+      "label": "Risk Assurance",
+      "order": 19,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "assurance.wizardgang-public-assurance.collection",
+    "route": "/v1/assurance",
+    "methods": [
+      "GET",
+      "OPTIONS"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "public",
+      "maxAgeSeconds": 300
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Assurance registry collection",
+    "description": "Registry-owned collection route for the registry assurance surface.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/ASSURANCE-API.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/api/assurance-registry.ts",
+      "exportName": "assuranceResponse",
+      "tests": [
+        "tests/assurance-api.test.ts",
+        "tests/assurance-declarative-routing.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.frontend.index",
+    "route": "/",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Architecture demo index",
+    "description": "Primary public frontend entry point assembled from registered page metadata.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/ui/page.ts",
+      "exportName": "renderIndex",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/router.test.ts",
+        "tests/interface.test.ts",
+        "tests/application-route-registry.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Navigation",
+      "label": "Architecture demo index",
+      "order": 0,
+      "index": false,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.git.demo",
+    "route": "/__api/git/demo",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "GET public status; POST admin authorization + GitHub preflight/release controls"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Git delivery demonstration",
+    "description": "Public status and same-origin administrator-controlled Git delivery demonstration start.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/git-demo.ts",
+      "exportName": "gitDemoStartResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/git-demo.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.git.demo-release",
+    "route": "/__api/git/demo/release",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "private",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "required",
+      "provider": "admin-basic"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "admin + release-ready controls"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Git demo release action",
+    "description": "Same-origin administrator-only release action gated by exact run/PR state and successful validation.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/git-demo.ts",
+      "exportName": "gitDemoReleaseResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/git-demo.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.git.page",
+    "route": "/git",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Git / GitHub",
+    "description": "An authenticated, two-stage live release lifecycle backed by real branches, commits, pull requests, CI jobs, retained reports, semantic tags, deployment, and public GitHub evidence.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/git-page.ts",
+      "exportName": "renderGitDemo",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/git-demo.test.ts",
+        "tests/interface.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Delivery & Governance",
+      "label": "Git / GitHub",
+      "order": 13,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.git.reporting",
+    "route": "/__api/git/evidence",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "GET demo:read; POST reporting:write; disclosure follows principal and source visibility"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "GitHub assurance reporting",
+    "description": "GitHub reporting boundary preserving disclosure-aware public reads and protected imports.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/git-evidence.ts",
+      "exportName": "gitEvidenceResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/git-evidence.test.ts",
+        "tests/reporting-disclosure.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.governance.ai-evaluation",
     "route": "/__api/governance/ai-evaluation",
-    "title": "AI Boundary Evaluation",
-    "group": "Delivery & Governance API",
-    "source": "src/api/governance.ts",
-    "method": "POST",
-    "machine": true,
-    "offline_behavior": "503",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "MCP method/tool authorization exercised by governance evaluation"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Governance AI boundary evaluation",
+    "description": "Controlled evaluation of approved, unknown, and invalid MCP method/tool cases.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/governance.ts",
+      "exportName": "aiEvaluationResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/governance.test.ts",
+        "tests/mcp-client.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.governance.concerns",
+    "route": "/governance/concerns",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Report a Concern",
+    "description": "Public intake for bugs, feature requests, accessibility, AI/MCP, and other non-sensitive concerns, with security disclosures routed privately.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/assurance-pages.ts",
+      "exportName": "renderConcerns",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/governance.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Delivery & Governance",
+      "label": "Report a Concern",
+      "order": 18,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.governance.page",
+    "route": "/governance",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Governance",
+    "description": "Security controls, AI-system boundary evaluation, traceability, and audit evidence implemented through ordinary engineering work and inspected together.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/ui/page.ts",
+      "exportName": "renderDemo",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/governance.test.ts",
+        "tests/interface.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Delivery & Governance",
+      "label": "Governance",
+      "order": 14,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.governance.security-controls",
+    "route": "/__api/governance/security-controls",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Governance security controls",
+    "description": "Public security-control mapping to implementation and evidence.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/governance.ts",
+      "exportName": "securityControlsResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/governance.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.governance.traceability",
+    "route": "/__api/evidence/traceability",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Governance traceability evidence",
+    "description": "Requirement-to-operation traceability over source, validation, release, deployment, and audit evidence.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/governance.ts",
+      "exportName": "traceabilityResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/governance.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.graphql.asset",
+    "route": "/__assets/graphiql/{asset}",
+    "methods": [
+      "GET"
+    ],
+    "kind": "asset",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "public",
+      "maxAgeSeconds": 31536000,
+      "immutable": true
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "GraphiQL local asset",
+    "description": "Immutable locally bundled GraphiQL script, stylesheet, or worker asset.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/ui/graphiql-assets.ts",
+      "exportName": "graphiqlAssetResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/graphql.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.graphql.console",
+    "route": "/graphql/console",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "GraphiQL console",
+    "description": "Locally bundled GraphiQL execution console for the GraphQL endpoint.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/ui/graphiql-assets.ts",
+      "exportName": "localGraphiqlResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/graphql.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.graphql.endpoint",
+    "route": "/graphql",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "kind": "protocol",
+    "visibility": "public",
+    "browser_html": "graphql",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "demo:read; mutations require demo:write"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "GraphQL API",
+    "description": "GraphQL protocol endpoint with HTML content negotiation, bounded execution, and the shared application authorization policy.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/graphql.ts",
+      "exportName": "graphqlResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/graphql.test.ts",
+        "tests/integration-interfaces.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Interfaces",
+      "label": "GraphQL API",
+      "order": 7,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.graphql.schema",
+    "route": "/graphql/schema",
+    "methods": [
+      "GET"
+    ],
+    "kind": "protocol",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "public",
+      "maxAgeSeconds": 300
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "GraphQL schema",
+    "description": "Executable GraphQL schema contract.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/graphql.ts",
+      "exportName": "graphqlSchemaResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/graphql.test.ts",
+        "tests/contracts.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.i18n.page",
+    "route": "/i18n",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Internationalization",
+    "description": "Locale-ready interface architecture including language, formatting, translation resources, and RTL readiness.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/i18n-page.ts",
+      "exportName": "renderI18nDemo",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/interface.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Standards",
+      "label": "Internationalization",
+      "order": 11,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.identity.authorize",
+    "route": "/__api/identity/authorize",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "private",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "required",
+      "provider": "identity-session"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "demo:read or demo:write"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Identity authorization decision",
+    "description": "Same-origin session-backed demo authorization decision.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/identity.ts",
+      "exportName": "authorizationDecisionResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/identity.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.identity.github.callback",
+    "route": "/identity/github/callback",
+    "methods": [
+      "GET"
+    ],
+    "kind": "protocol",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "oauth-state + PKCE + provider identity"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "github authorization callback",
+    "description": "OAuth callback validating state, PKCE-bound code exchange, and provider identity.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/identity.ts",
+      "exportName": "providerCallbackResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/identity.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.identity.github.start",
+    "route": "/identity/github",
+    "methods": [
+      "GET"
+    ],
+    "kind": "protocol",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "oauth-state + PKCE"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "github authorization start",
+    "description": "Authorization-code flow start with state and PKCE; OIDC providers also bind a nonce.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/identity.ts",
+      "exportName": "providerStartResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/identity.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.identity.google.callback",
+    "route": "/identity/google/callback",
+    "methods": [
+      "GET"
+    ],
+    "kind": "protocol",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "oidc-state + nonce + PKCE + issuer/audience/expiry"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "google authorization callback",
+    "description": "OIDC callback validating state, nonce, PKCE, issuer, audience, signature, issued-at, and expiry.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/identity.ts",
+      "exportName": "providerCallbackResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/identity.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.identity.google.start",
+    "route": "/identity/google",
+    "methods": [
+      "GET"
+    ],
+    "kind": "protocol",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "oidc-state + nonce + PKCE"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "google authorization start",
+    "description": "Authorization-code flow start with state and PKCE; OIDC providers also bind a nonce.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/identity.ts",
+      "exportName": "providerStartResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/identity.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.identity.logout",
+    "route": "/identity/logout",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "optional identity-session invalidation"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "private"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Identity logout",
+    "description": "Same-origin identity-session invalidation.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/identity.ts",
+      "exportName": "identityLogoutResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/identity.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.identity.microsoft.callback",
+    "route": "/identity/microsoft/callback",
+    "methods": [
+      "GET"
+    ],
+    "kind": "protocol",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "oidc-state + nonce + PKCE + issuer/audience/expiry"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "microsoft authorization callback",
+    "description": "OIDC callback validating state, nonce, PKCE, issuer, audience, signature, issued-at, and expiry.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/identity.ts",
+      "exportName": "providerCallbackResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/identity.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.identity.microsoft.start",
+    "route": "/identity/microsoft",
+    "methods": [
+      "GET"
+    ],
+    "kind": "protocol",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "oidc-state + nonce + PKCE"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "microsoft authorization start",
+    "description": "Authorization-code flow start with state and PKCE; OIDC providers also bind a nonce.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/identity.ts",
+      "exportName": "providerStartResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/identity.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.identity.oauth-pkce",
+    "route": "/__api/identity/oauth-pkce",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "PKCE S256 validation"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "OAuth PKCE boundary demonstration",
+    "description": "Bounded PKCE protocol demonstration and audit evidence.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/identity.ts",
+      "exportName": "oauthPkceResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/identity.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.identity.page",
+    "route": "/identity",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Authentication & SSO",
+    "description": "Real Microsoft Entra ID, Google, and GitHub authentication paths converge on one normalized identity and application authorization boundary.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/identity-page.ts",
+      "exportName": "renderIdentityDemo",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/identity.test.ts",
+        "tests/interface.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Interfaces",
+      "label": "Authentication & SSO",
+      "order": 9,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.identity.saml.acs",
+    "route": "/identity/saml/acs",
+    "methods": [
+      "POST"
+    ],
+    "kind": "protocol",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "SAML signature + audience + time bounds + replay protection"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "SAML assertion consumer service",
+    "description": "Cross-site IdP callback validating XML signature, issuer, audience, destination, time bounds, RelayState, and assertion replay.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/identity.ts",
+      "exportName": "samlCallbackResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/identity.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.identity.saml.inspect",
+    "route": "/__api/identity/saml/inspect",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "SAML boundary inspection",
+    "description": "Disclosure-safe inspection of the configured SAML trust boundary.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/identity.ts",
+      "exportName": "samlInspectionResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/identity.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.identity.saml.metadata",
+    "route": "/identity/saml/metadata",
+    "methods": [
+      "GET"
+    ],
+    "kind": "protocol",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "public",
+      "maxAgeSeconds": 300
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "SAML service-provider metadata",
+    "description": "Public SAML service-provider metadata.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/identity.ts",
+      "exportName": "samlMetadataResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/identity.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.identity.saml.start",
+    "route": "/identity/saml",
+    "methods": [
+      "GET"
+    ],
+    "kind": "protocol",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "SAML request state"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "SAML sign-in start",
+    "description": "SAML AuthnRequest creation with replay-bound flow state.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/identity.ts",
+      "exportName": "samlStartResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/identity.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.identity.session",
+    "route": "/identity/session",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "optional identity-session"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "private"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Identity session",
+    "description": "Current disclosure-safe application identity session.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/identity.ts",
+      "exportName": "identitySessionResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/identity.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.identity.sso-boundary",
+    "route": "/__api/identity/sso",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "SSO boundary status",
+    "description": "Disclosure-safe status for configured enterprise identity boundaries.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/identity.ts",
+      "exportName": "ssoBoundaryResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/identity.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.identity.token",
+    "route": "/__api/identity/token",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "private",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "required",
+      "provider": "identity-session"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "identity-session token issuance"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Identity demo access token",
+    "description": "Same-origin short-lived token issuance from a validated identity session.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/identity.ts",
+      "exportName": "demoAccessTokenResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/identity.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.mcp.page",
+    "route": "/mcp",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Model Context Protocol",
+    "description": "Connect a real MCP client to the live demo and invoke read-only tools through the same application permissions used by the rest of the platform.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/mcp-page.ts",
+      "exportName": "renderMcpDemo",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/mcp-client.test.ts",
+        "tests/interface.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Interfaces",
+      "label": "Model Context Protocol",
+      "order": 10,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.mcp.server",
+    "route": "/mcp/server",
+    "methods": [
+      "GET",
+      "POST",
+      "DELETE"
+    ],
+    "kind": "protocol",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "demo:read + MCP method/tool authorization + foreign-Origin rejection"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "MCP streamable HTTP server",
+    "description": "MCP transport endpoint retaining protocol-method validation, foreign-Origin rejection, demo:read authorization, and read-only tool policy.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/mcp.ts",
+      "exportName": "mcpResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/mcp-client.test.ts",
+        "tests/governance.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.openapi.json",
+    "route": "/v1/openapi.json",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "public",
+      "maxAgeSeconds": 300
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "OpenAPI JSON contract",
+    "description": "Canonical OpenAPI 2.0 contract exposed as JSON.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/openapi.ts",
+      "exportName": "openApiResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/contracts.test.ts",
+        "tests/integration-interfaces.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.openapi.yaml",
+    "route": "/v1/openapi.yaml",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "public",
+      "maxAgeSeconds": 300
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "OpenAPI YAML contract",
+    "description": "Canonical OpenAPI 2.0 contract exposed as YAML.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/openapi.ts",
+      "exportName": "openApiResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/contracts.test.ts",
+        "tests/integration-interfaces.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.rest.page",
+    "route": "/api",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "REST API",
+    "description": "Explore a versioned D1-backed REST API, execute live requests, and inspect the OpenAPI 2.0 contract behind it.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/api-page.ts",
+      "exportName": "renderApiDemo",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/api-records.test.ts",
+        "tests/interface.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Interfaces",
+      "label": "REST API",
+      "order": 6,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.webhooks.demo-receipt",
+    "route": "/v1/webhooks/demo",
+    "methods": [
+      "POST"
+    ],
+    "kind": "protocol",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "valid webhook HMAC and unique delivery ID"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Signed demo webhook receiver",
+    "description": "HMAC-validated bounded webhook receiver with delivery replay protection.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/webhooks.ts",
+      "exportName": "webhookReceiptResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/webhooks.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.webhooks.events",
+    "route": "/__api/webhooks/events",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "visitor-session"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Verified webhook events",
+    "description": "Sanitized delivery evidence scoped to the current visitor session.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/webhooks.ts",
+      "exportName": "webhookEventsResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/webhooks.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.webhooks.github",
+    "route": "/v1/webhooks/github",
+    "methods": [
+      "POST"
+    ],
+    "kind": "protocol",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "github-hmac + repository/event allowlists + replay protection"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "GitHub webhook receiver",
+    "description": "GitHub-compatible receiver enforcing exact-body HMAC, repository/event allowlists, and replay protection.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/webhooks.ts",
+      "exportName": "githubWebhookResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/webhooks.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.webhooks.page",
+    "route": "/webhooks",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Signed Webhooks",
+    "description": "Verify GitHub-compatible deliveries through signature, repository, event, payload, and replay controls, then inspect the sanitized evidence.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/webhook-console.ts",
+      "exportName": "renderWebhooksDemo",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/webhooks.test.ts",
+        "tests/interface.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Interfaces",
+      "label": "Signed Webhooks",
+      "order": 8,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.webhooks.reset",
+    "route": "/__api/webhooks/reset",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "visitor-session"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Webhook demo reset",
+    "description": "Same-origin reset of synthetic webhook evidence for the current visitor session.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/webhooks.ts",
+      "exportName": "webhookResetResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/webhooks.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "interfaces.webhooks.synthetic",
+    "route": "/__api/webhooks/demo",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "visitor-session"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Synthetic webhook action",
+    "description": "Same-origin browser action that signs and exercises the production webhook validation path.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/webhooks.ts",
+      "exportName": "webhookDemoResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/webhooks.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.admin",
+    "route": "/admin",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "kind": "page",
+    "visibility": "private",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "required",
+      "provider": "admin-basic"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "admin"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "allow",
+      "indexing": "deny"
+    },
+    "title": "Demo administration",
+    "description": "Protected control surface for demo availability and ChatGPT fetch policy.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/ui/admin.ts",
+      "exportName": "renderAdmin",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.api-billing",
+    "route": "/__api/operations/billing",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Billing scenario API",
+    "description": "Synthetic budget scenario control used by the operations demo.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/billing.ts",
+      "exportName": "billingScenarioResponse",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.api-cloudflare-usage",
+    "route": "/__api/operations/cloudflare-usage",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Cloudflare usage API",
+    "description": "Sanitized cached Cloudflare usage telemetry.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/operations.ts",
+      "exportName": "cloudflareUsageResponse",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.api-logs",
+    "route": "/__api/operations/logs",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Operations logs API",
+    "description": "Sanitized application log query endpoint.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/operations.ts",
+      "exportName": "logsResponse",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.dashboard",
+    "route": "/dashboard",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Operations dashboard",
+    "description": "Read-only operations center for runtime, availability, delivery, usage, and assurance.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/operations-pages.ts",
+      "exportName": "renderDashboard",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Operations",
+      "label": "System Operations",
+      "order": 21,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.dashboard-billing",
+    "route": "/dashboard/billing",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Usage and cost",
+    "description": "Cloudflare usage, cost evidence, and guardrail simulator.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/operations-pages.ts",
+      "exportName": "renderBilling",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Operations",
+      "label": "Cloudflare Usage & Cost",
+      "order": 25,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.dashboard-docs",
+    "route": "/dashboard/docs",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Operations documentation",
+    "description": "Documentation index for the live architecture demo.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/operations-pages.ts",
+      "exportName": "renderDocs",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Operations",
+      "label": "Documentation",
+      "order": 23,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.dashboard-logs",
+    "route": "/dashboard/logs",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Operations logs",
+    "description": "Public-safe application log viewer.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/logs.ts",
+      "exportName": "renderLogsDemo",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Operations",
+      "label": "Log Viewer",
+      "order": 24,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.dashboard-uptime",
+    "route": "/dashboard/uptime",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Availability history",
+    "description": "Scheduled availability and planned-maintenance history.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/operations-pages.ts",
+      "exportName": "renderUptime",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Operations",
+      "label": "Availability",
+      "order": 22,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.health",
+    "route": "/health",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Health",
+    "description": "Machine-readable runtime and dependency health.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/operations.ts",
+      "exportName": "healthResponse",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.offline",
+    "route": "/offline",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Offline recovery page",
+    "description": "Public maintenance page shown when ordinary demo routes are intentionally offline.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/ui/admin.ts",
+      "exportName": "renderOffline",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.robots",
+    "route": "/robots.txt",
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "kind": "protocol",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "allow",
+      "indexing": "deny"
+    },
+    "title": "Robots policy",
+    "description": "Dynamic crawler policy preserving ChatGPT fetch controls and GPTBot opt-out.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/lib/crawler-control.ts",
+      "exportName": "robotsResponse",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.security-txt",
+    "route": "/.well-known/security.txt",
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "kind": "protocol",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "public",
+      "maxAgeSeconds": 3600
+    },
+    "crawler": {
+      "crawling": "allow",
+      "indexing": "deny"
+    },
+    "title": "Security contact",
+    "description": "RFC 9116 vulnerability-reporting contact and policy metadata.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/security-policy.ts",
+      "exportName": "securityTxtResponse",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.sitemap",
+    "route": "/sitemap.xml",
+    "methods": [
+      "GET"
+    ],
+    "kind": "protocol",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "public",
+      "maxAgeSeconds": 3600
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Sitemap",
+    "description": "Registry-generated public sitemap.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/sitemap.ts",
+      "exportName": "sitemapResponse",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.social-card",
+    "route": "/og.png",
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "kind": "asset",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "public",
+      "maxAgeSeconds": 31536000,
+      "immutable": true
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Social preview image",
+    "description": "Branded Open Graph preview asset.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/ui/brand-assets.ts",
+      "exportName": "socialCardResponse",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.version",
+    "route": "/version",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Version",
+    "description": "Machine-readable deployed version and source metadata.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/operations.ts",
+      "exportName": "versionResponse",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.accessibility.lab",
+    "route": "/__api/accessibility/lab",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Accessibility teaching frame",
+    "description": "Renders the bounded accessible or intentionally broken teaching frame used by the accessibility laboratory.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/accessibility.ts",
+      "exportName": "accessibilityLaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/interface.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.accessibility.page",
+    "route": "/accessibility",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "WCAG 2.2",
+    "description": "Isolated WCAG 2.2 before-and-after laboratory with accessible behavior, opt-in teaching failures, axe-core output, and manual evidence.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/accessibility.ts",
+      "exportName": "accessibilityLaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/interface.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Standards",
+      "label": "WCAG 2.2",
+      "order": 12,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.d1.page",
+    "route": "/d1",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Cloudflare D1",
+    "description": "Isolated Users and Tasks CRUD with live parameterized SQL, timing, row counts, shared GraphQL data, and resettable D1 state.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/d1.ts",
+      "exportName": "d1LaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/d1-lab.test.ts",
+        "tests/api-records.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Platform",
+      "label": "Cloudflare D1",
+      "order": 4,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.d1.record",
+    "route": "/v1/demo-records/{key}",
+    "methods": [
+      "GET",
+      "PUT",
+      "DELETE"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "demo:read GET; demo:write PUT/DELETE"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "D1 record item API",
+    "description": "Reads, replaces, or deletes one authorized record in D1.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/d1.ts",
+      "exportName": "d1LaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/d1-lab.test.ts",
+        "tests/api-records.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.d1.records",
+    "route": "/v1/demo-records",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "demo:read GET; demo:write POST"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "D1 records collection API",
+    "description": "Lists readable records or creates an authorized record in D1.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/d1.ts",
+      "exportName": "d1LaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/d1-lab.test.ts",
+        "tests/api-records.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.d1.records-reset",
+    "route": "/__api/api-sandbox/reset",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "required",
+      "provider": "demo-access-token-or-operator-bearer"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "demo:write visitor sandbox"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "D1 record sandbox reset API",
+    "description": "Deletes the authenticated visitor sandbox records from D1.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/d1.ts",
+      "exportName": "d1LaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/d1-lab.test.ts",
+        "tests/api-records.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.d1.reset",
+    "route": "/__api/d1/reset",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "D1 users and tasks reset API",
+    "description": "Resets the visitor-scoped D1 users and tasks sandbox to deterministic seed rows.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/d1.ts",
+      "exportName": "d1LaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/d1-lab.test.ts",
+        "tests/api-records.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.d1.task",
+    "route": "/__api/d1/tasks/{id}",
+    "methods": [
+      "PATCH",
+      "DELETE"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "PATCH",
+        "DELETE"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "D1 task item laboratory API",
+    "description": "Updates or deletes one visitor-scoped relational task in D1.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/d1.ts",
+      "exportName": "d1LaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/d1-lab.test.ts",
+        "tests/api-records.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.d1.tasks",
+    "route": "/__api/d1/tasks",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "D1 tasks laboratory API",
+    "description": "Lists and creates visitor-scoped relational tasks in D1.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/d1.ts",
+      "exportName": "d1LaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/d1-lab.test.ts",
+        "tests/api-records.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.d1.user",
+    "route": "/__api/d1/users/{id}",
+    "methods": [
+      "PATCH",
+      "DELETE"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "PATCH",
+        "DELETE"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "D1 user item laboratory API",
+    "description": "Updates or deletes one visitor-scoped relational user in D1.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/d1.ts",
+      "exportName": "d1LaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/d1-lab.test.ts",
+        "tests/api-records.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.d1.users",
+    "route": "/__api/d1/users",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "D1 users laboratory API",
+    "description": "Lists and creates visitor-scoped relational users in D1.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/d1.ts",
+      "exportName": "d1LaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/d1-lab.test.ts",
+        "tests/api-records.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.durable-objects.counter",
+    "route": "/__api/durable/counter",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Durable Object counter API",
+    "description": "Reads or increments the public counter coordinated and persisted by a Durable Object.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/durable-objects.ts",
+      "exportName": "durableObjectsLaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/runtime.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.durable-objects.page",
+    "route": "/durable-objects",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Durable Objects",
+    "description": "Coordinated stateful compute for cases where independent Worker requests must agree on shared state.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/durable-objects.ts",
+      "exportName": "durableObjectsLaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/runtime.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Platform",
+      "label": "Durable Objects",
+      "order": 3,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.edge.inspect",
+    "route": "/__api/edge/inspect",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Edge inspection API",
+    "description": "Returns the allowlisted Cloudflare request context without client identifiers.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/edge.ts",
+      "exportName": "edgeLaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.edge.page",
+    "route": "/edge",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Cloudflare Edge",
+    "description": "Public edge boundary for DNS, TLS, CDN, routing, traffic filtering, rate controls, and security policy.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/edge.ts",
+      "exportName": "edgeLaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Platform",
+      "label": "Cloudflare Edge",
+      "order": 1,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.r2.demo-object",
+    "route": "/__api/r2/demo",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "R2 demonstration object API",
+    "description": "Writes the deterministic public demonstration object to R2 with D1 metadata.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/r2.ts",
+      "exportName": "r2LaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/r2-lab.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.r2.file",
+    "route": "/__api/r2/files/{id}",
+    "methods": [
+      "GET",
+      "DELETE"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "DELETE"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "R2 file item laboratory API",
+    "description": "Streams a visible R2 object or deletes one owned by the visitor sandbox.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/r2.ts",
+      "exportName": "r2LaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/r2-lab.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.r2.files",
+    "route": "/__api/r2/files",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "R2 files laboratory API",
+    "description": "Lists or uploads visitor-scoped files whose bytes live in R2 and metadata lives in D1.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/r2.ts",
+      "exportName": "r2LaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/r2-lab.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.r2.object",
+    "route": "/__api/r2/object",
+    "methods": [
+      "GET",
+      "PUT",
+      "DELETE"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "demo:read GET; demo:write PUT/DELETE"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "R2 object API",
+    "description": "Reads, stores, or deletes object bytes in R2 while D1 retains relational metadata.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/r2.ts",
+      "exportName": "r2LaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/r2-lab.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.r2.page",
+    "route": "/r2",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Cloudflare R2",
+    "description": "A session-isolated mini file manager backed by real R2 bytes and D1 metadata, with upload, list, preview, download, delete, and reset.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/r2.ts",
+      "exportName": "r2LaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/r2-lab.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Platform",
+      "label": "Cloudflare R2",
+      "order": 5,
+      "index": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.r2.reset",
+    "route": "/__api/r2/reset",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "R2 files reset API",
+    "description": "Deletes visitor-owned R2 objects and their D1 metadata rows.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/r2.ts",
+      "exportName": "r2LaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/r2-lab.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.workers.compute",
+    "route": "/__api/workers/compute",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Worker computation API",
+    "description": "Runs bounded stateless arithmetic in the Worker and records audit evidence separately.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/workers.ts",
+      "exportName": "workersLaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/runtime.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.workers.page",
+    "route": "/workers",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Cloudflare Workers",
+    "description": "Stateless TypeScript application compute and the mediation layer between clients, platform state, and integrations.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/workers.ts",
+      "exportName": "workersLaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/runtime.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Platform",
+      "label": "Cloudflare Workers",
+      "order": 2,
+      "index": true,
+      "sitemap": true
+    },
     "status": "working"
   }
 ]
