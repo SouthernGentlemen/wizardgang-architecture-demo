@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "id": "RPT-ASSURANCE-MONITOR-34034419358-A1",
+  "source": "github.retained-reports",
+  "reportType": "assurance-monitor",
+  "producer": {
+    "provider": "github-actions",
+    "repository": "SouthernGentlemen/wizardgang-architecture-demo",
+    "workflow": "Assurance Monitor",
+    "workflowRunId": 34034419358,
+    "runAttempt": 1,
+    "event": "schedule",
+    "status": "completed",
+    "conclusion": "failure"
+  },
+  "sourceRevision": {
+    "commit": "f1726adc2bfcec2c73b1915771f7badcb7bb9325",
+    "branch": "main"
+  },
+  "observedAt": "2026-09-06T12:53:20Z",
+  "status": "failed",
+  "qualification": "GitHub marked the workflow run failed. Failed, skipped, cancelled, and incomplete job or step outcomes remain explicit.",
+  "checks": [
+    {
+      "id": 101489766489,
+      "name": "monitor",
+      "status": "completed",
+      "conclusion": "failure",
+      "outcome": "failed",
+      "startedAt": "2026-09-06T12:53:00Z",
+      "completedAt": "2026-09-06T12:53:19Z",
+      "evidence": {
+        "kind": "job",
+        "url": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/actions/runs/34034419358/job/101489766489"
+      },
+      "steps": [
+        {
+          "number": 1,
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "outcome": "passed",
+          "startedAt": "2026-09-06T12:53:01Z",
+          "completedAt": "2026-09-06T12:53:02Z"
+        },
+        {
+          "number": 2,
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "outcome": "passed",
+          "startedAt": "2026-09-06T12:53:02Z",
+          "completedAt": "2026-09-06T12:53:03Z"
+        },
+        {
+          "number": 3,
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "outcome": "passed",
+          "startedAt": "2026-09-06T12:53:03Z",
+          "completedAt": "2026-09-06T12:53:06Z"
+        },
+        {
+          "number": 4,
+          "name": "Install locked dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "outcome": "passed",
+          "startedAt": "2026-09-06T12:53:06Z",
+          "completedAt": "2026-09-06T12:53:15Z"
+        },
+        {
+          "number": 5,
+          "name": "Validate assurance data and freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "outcome": "passed",
+          "startedAt": "2026-09-06T12:53:15Z",
+          "completedAt": "2026-09-06T12:53:16Z"
+        },
+        {
+          "number": 6,
+          "name": "Verify live disclosure and private reporting paths",
+          "status": "completed",
+          "conclusion": "failure",
+          "outcome": "failed",
+          "startedAt": "2026-09-06T12:53:16Z",
+          "completedAt": "2026-09-06T12:53:18Z"
+        },
+        {
+          "number": 11,
+          "name": "Post Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "skipped",
+          "outcome": "skipped",
+          "startedAt": "2026-09-06T12:53:18Z",
+          "completedAt": "2026-09-06T12:53:18Z"
+        },
+        {
+          "number": 12,
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "outcome": "passed",
+          "startedAt": "2026-09-06T12:53:18Z",
+          "completedAt": "2026-09-06T12:53:18Z"
+        },
+        {
+          "number": 13,
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "outcome": "passed",
+          "startedAt": "2026-09-06T12:53:18Z",
+          "completedAt": "2026-09-06T12:53:18Z"
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "kind": "workflow-run",
+      "url": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/actions/runs/34034419358"
+    },
+    {
+      "kind": "source-revision",
+      "url": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/commit/f1726adc2bfcec2c73b1915771f7badcb7bb9325"
+    },
+    {
+      "kind": "job",
+      "url": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/actions/runs/34034419358/job/101489766489"
+    }
+  ],
+  "relationships": [
+    {
+      "relation": "producedBy",
+      "from": {
+        "source": "github.retained-reports",
+        "native": "SouthernGentlemen/wizardgang-architecture-demo|github.retained-reports|RPT-ASSURANCE-MONITOR-34034419358-A1"
+      },
+      "to": {
+        "source": "github.workflow-runs",
+        "native": "SouthernGentlemen/wizardgang-architecture-demo|github.workflow-runs|34034419358",
+        "revision": "1"
+      }
+    },
+    {
+      "relation": "evaluatesRevision",
+      "from": {
+        "source": "github.retained-reports",
+        "native": "SouthernGentlemen/wizardgang-architecture-demo|github.retained-reports|RPT-ASSURANCE-MONITOR-34034419358-A1"
+      },
+      "to": {
+        "source": "github.commits",
+        "native": "SouthernGentlemen/wizardgang-architecture-demo|github.commits|f1726adc2bfcec2c73b1915771f7badcb7bb9325",
+        "revision": "f1726adc2bfcec2c73b1915771f7badcb7bb9325"
+      }
+    }
+  ]
+}
