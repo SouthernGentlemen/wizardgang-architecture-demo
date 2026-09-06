@@ -2230,53 +2230,7 @@
       "indexing": "deny"
     },
     "title": "OpenAPI JSON contract",
-    "description": "Canonical OpenAPI 2.0 contract exposed as JSON.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/api/openapi.ts",
-      "exportName": "openApiResponse",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/contracts.test.ts",
-        "tests/integration-interfaces.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "interfaces.openapi.yaml",
-    "route": "/v1/openapi.yaml",
-    "methods": [
-      "GET"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "public",
-      "maxAgeSeconds": 300
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "OpenAPI YAML contract",
-    "description": "Canonical OpenAPI 2.0 contract exposed as YAML.",
+    "description": "Canonical OpenAPI 3.1 contract exposed as JSON.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -2321,7 +2275,7 @@
       "indexing": "allow"
     },
     "title": "REST API",
-    "description": "Explore a versioned D1-backed REST API, execute live requests, and inspect the OpenAPI 2.0 contract behind it.",
+    "description": "Explore a versioned D1-backed REST API, execute live requests, and inspect the OpenAPI 3.1 contract behind it.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"

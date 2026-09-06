@@ -53,7 +53,6 @@ describe('interface and identity declarative routing', () => {
       '/',
       '/api',
       '/v1/openapi.json',
-      '/v1/openapi.yaml',
       '/graphql',
       '/graphql/console',
       '/graphql/schema',

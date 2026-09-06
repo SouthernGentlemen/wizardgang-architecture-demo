@@ -601,17 +601,17 @@ summary { cursor: pointer; }
 .api-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin: 2.75rem 0 1rem; padding-top: 1rem; border-top: 1px solid var(--line); }
 .api-heading .eyebrow { margin-bottom: .45rem; }
 .api-heading h2 { margin: 0; }
-.swagger-operation-list { display: grid; gap: .65rem; }
-.swagger-operation { overflow: hidden; border: 1px solid var(--line); border-radius: 0; background: var(--panel); scroll-margin-top: 1rem; }
-.swagger-operation > summary { display: grid; grid-template-columns: minmax(250px, auto) 1fr auto; align-items: center; gap: 1rem; min-height: 76px; padding: 1rem 1.2rem; list-style: none; }
-.swagger-operation > summary::-webkit-details-marker { display: none; }
-.swagger-operation > summary::after { content: '+'; color: var(--muted); font: 700 1.35rem/1 var(--mono); }
-.swagger-operation[open] > summary { background: var(--panel-2); }
-.swagger-operation[open] > summary::after { content: '−'; }
-.swagger-operation > summary strong { font-size: .98rem; }
-.swagger-operation-body { padding: 1.25rem; border-top: 1px solid var(--line); }
-.swagger-route { display: flex; align-items: center; gap: .65rem; }
-.swagger-route code { overflow-wrap: anywhere; color: var(--paper); font-size: 1rem; }
+.openapi-operation-list { display: grid; gap: .65rem; }
+.openapi-operation { overflow: hidden; border: 1px solid var(--line); border-radius: 0; background: var(--panel); scroll-margin-top: 1rem; }
+.openapi-operation > summary { display: grid; grid-template-columns: minmax(250px, auto) 1fr auto; align-items: center; gap: 1rem; min-height: 76px; padding: 1rem 1.2rem; list-style: none; }
+.openapi-operation > summary::-webkit-details-marker { display: none; }
+.openapi-operation > summary::after { content: '+'; color: var(--muted); font: 700 1.35rem/1 var(--mono); }
+.openapi-operation[open] > summary { background: var(--panel-2); }
+.openapi-operation[open] > summary::after { content: '−'; }
+.openapi-operation > summary strong { font-size: .98rem; }
+.openapi-operation-body { padding: 1.25rem; border-top: 1px solid var(--line); }
+.openapi-route { display: flex; align-items: center; gap: .65rem; }
+.openapi-route code { overflow-wrap: anywhere; color: var(--paper); font-size: 1rem; }
 .http-method { display: inline-flex; justify-content: center; min-width: 4.4rem; padding: .34rem .45rem; border: 1px solid currentColor; color: var(--cyan); font: 900 .68rem/1 var(--mono); letter-spacing: .1em; text-decoration: none; }
 .http-post { color: var(--acid); }
 .http-put, .http-patch { color: var(--violet); }
@@ -620,15 +620,15 @@ summary { cursor: pointer; }
 .contract-block { margin: 1.25rem 0; }
 .contract-block h4 { margin: 0 0 .65rem; color: var(--muted); font: 850 .72rem/1.5 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
 .contract-block > .subtle { margin-bottom: .6rem; }
-.swagger-operation form { margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
-.swagger-operation fieldset { margin: 0 0 1rem; padding: 1rem; border: 1px solid var(--line); }
-.swagger-operation legend { padding: 0 .45rem; }
-.swagger-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .85rem; }
-.swagger-inputs label { display: grid; align-content: start; gap: .35rem; }
-.swagger-inputs .swagger-body { grid-column: 1 / -1; }
+.openapi-operation form { margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+.openapi-operation fieldset { margin: 0 0 1rem; padding: 1rem; border: 1px solid var(--line); }
+.openapi-operation legend { padding: 0 .45rem; }
+.openapi-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .85rem; }
+.openapi-inputs label { display: grid; align-content: start; gap: .35rem; }
+.openapi-inputs .openapi-body { grid-column: 1 / -1; }
 .parameter-meta { color: var(--muted); font-weight: 500; letter-spacing: 0; text-transform: none; }
 .input-help { color: var(--muted); font: 400 .78rem/1.4 inherit; letter-spacing: 0; text-transform: none; }
-.swagger-result { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: .75rem; margin-top: 1rem; }
+.openapi-result { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: .75rem; margin-top: 1rem; }
 .schema-browser { margin-top: 1.5rem; overflow: hidden; border: 1px solid var(--line); border-radius: 0; background: var(--panel); }
 .schema-browser > summary { display: flex; align-items: center; justify-content: space-between; min-height: 62px; padding: .9rem 1.2rem; list-style: none; font-weight: 800; }
 .schema-browser > summary::-webkit-details-marker { display: none; }
@@ -637,7 +637,7 @@ summary { cursor: pointer; }
 .schema-grid { display: grid; gap: .75rem; padding: 1rem; border-top: 1px solid var(--line); }
 .schema-card { padding: 1.1rem; border: 1px solid var(--line); border-radius: 0; scroll-margin-top: 1rem; }
 .schema-card h3 { color: var(--violet); }
-.swagger-schema-table { min-width: 580px; }
+.openapi-schema-table { min-width: 580px; }
 .schema-source { min-height: 0; }
 
 .api-page-header { max-width: 920px; margin-bottom: 2rem; }
@@ -675,7 +675,7 @@ summary { cursor: pointer; }
 .api-operation-summary { margin-top: 1rem; font-size: 1rem; }
 .api-request-controls, .api-code, .api-response { margin-top: 1.35rem; padding-top: 1.2rem; border-top: 1px solid var(--line); }
 .api-request-controls > h3 { font-size: 1rem; }
-.api-request-controls .swagger-inputs { margin-bottom: 1rem; }
+.api-request-controls .openapi-inputs { margin-bottom: 1rem; }
 .api-subheading { align-items: center; margin-bottom: .65rem; }
 .api-subheading button { min-height: 38px; padding: .4rem .65rem; font-size: .72rem; }
 .api-tabs { display: flex; overflow-x: auto; border: 1px solid var(--line); border-bottom: 0; }
@@ -976,8 +976,8 @@ footer a { color: var(--paper); }
   dd { margin-bottom: .7rem; }
   .section-head { flex-direction: column; gap: .3rem; }
   .status-strip { flex-direction: column; }
-  .swagger-operation > summary { grid-template-columns: 1fr auto; gap: .55rem; }
-  .swagger-operation > summary .swagger-route { grid-column: 1 / -1; }
+  .openapi-operation > summary { grid-template-columns: 1fr auto; gap: .55rem; }
+  .openapi-operation > summary .openapi-route { grid-column: 1 / -1; }
   .info-grid, .action-grid { grid-template-columns: 1fr; }
   .assurance-evidence-grid { grid-template-columns: 1fr; }
   .lab-grid { grid-template-columns: 1fr; }

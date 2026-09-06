@@ -26,7 +26,7 @@ The standard supports modern authentication, API integration, accessibility, int
 
 **Source control and delivery:** Git, GitHub, GitHub Actions, GitHub Releases, Git tags.
 
-**Supported integration standards:** REST, JSON, OpenAPI / Swagger 2.x, GraphQL, OAuth 2.0, SSO, SAML, MCP.
+**Supported integration standards:** REST, JSON, OpenAPI 3.1, GraphQL, OAuth 2.0, SSO, SAML, MCP.
 
 Legacy web-service technologies are not part of the default WizardGang architecture. They may be integrated when an external system requires them, but that work is project-specific compatibility engineering.
 
@@ -100,7 +100,7 @@ Secrets remain outside source control and are supplied through managed GitHub or
 
 ## 09 — REST and OpenAPI
 
-REST is the default conventional system-to-system integration pattern. WizardGang applications support OpenAPI / Swagger 2.x contracts where appropriate. Contracts may define endpoints, methods, parameters, payloads, response schemas, authentication requirements, error conditions, and integration expectations.
+REST is the default conventional system-to-system integration pattern. WizardGang applications support OpenAPI 3.1 contracts where appropriate. Contracts may define endpoints, methods, parameters, payloads, response schemas, authentication requirements, error conditions, and integration expectations.
 
 ## 10 — GraphQL
 

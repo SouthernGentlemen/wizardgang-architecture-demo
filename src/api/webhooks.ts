@@ -137,7 +137,7 @@ async function acceptGitHubShape(request: Request, env: Env, options: { provider
   }
 }
 
-/** Backward-compatible executable contract used by the Swagger demo. */
+/** Executable contract used by the OpenAPI demo. */
 export async function webhookReceiptResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'POST') return methodNotAllowed(['POST']);
   try {
