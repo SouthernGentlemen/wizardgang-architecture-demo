@@ -1,6 +1,7 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { routeRequest } from '../src/router';
+import { applicationRouteRegistry } from '../src/routing/application-routes';
 import type { Env } from '../src/types';
 
 const env = {
@@ -20,14 +21,65 @@ const env = {
   },
 } as unknown as Env;
 
+type OpenApiOperation = {
+  parameters?: Array<{ name?: string }>;
+  responses?: Record<string, unknown>;
+  'x-route-id'?: string;
+};
+
+type OpenApiDocument = {
+  openapi: string;
+  servers: Array<{ url: string }>;
+  paths: Record<string, Record<string, OpenApiOperation>>;
+  components: {
+    schemas: Record<string, unknown>;
+  };
+};
+
+const HTTP_METHODS = new Set(['get', 'post', 'put', 'patch', 'delete', 'options', 'head', 'trace']);
+
+function readOpenApi(): OpenApiDocument {
+  return JSON.parse(readFileSync('contracts/openapi/openapi.json', 'utf8')) as OpenApiDocument;
+}
+
+function documentedRegistryPattern(openapi: OpenApiDocument, path: string): string {
+  const basePath = new URL(openapi.servers[0].url).pathname.replace(/\/$/, '');
+  return `${basePath}${path}`.replace(/\{([^}]+)\}/g, ':$1').replace(/\/+/g, '/');
+}
+
 describe('executable interface contracts', () => {
-  it('keeps the OpenAPI document aligned with current assurance route shapes', () => {
-    const openapi = JSON.parse(readFileSync('contracts/openapi/swagger.json', 'utf8')) as {
-      basePath: string;
-      paths: Record<string, { get?: { parameters?: Array<{ name: string }> } }>;
-      definitions: Record<string, unknown>;
-    };
-    expect(openapi.basePath).toBe('/v1');
+  it('maps every documented OpenAPI operation directly to the application route registry', () => {
+    const openapi = readOpenApi();
+    expect(openapi.openapi).toBe('3.1.0');
+
+    for (const [path, pathItem] of Object.entries(openapi.paths)) {
+      for (const [method, operation] of Object.entries(pathItem)) {
+        if (!HTTP_METHODS.has(method.toLowerCase())) continue;
+        const routeId = operation['x-route-id'];
+        expect(routeId, `${method.toUpperCase()} ${path} must declare x-route-id`).toBeTruthy();
+        const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === routeId);
+        expect(route, `${method.toUpperCase()} ${path} must reference a registered route ID`).toBeDefined();
+        expect(route?.pattern, `${routeId} must own the documented path`).toBe(documentedRegistryPattern(openapi, path));
+        expect(route?.methods, `${routeId} must own ${method.toUpperCase()}`).toContain(method.toUpperCase());
+      }
+    }
+  });
+
+  it('embeds the canonical assurance reporting schemas without drift', () => {
+    const openapi = readOpenApi();
+    const reporting = JSON.parse(readFileSync('contracts/assurance/reporting.schema.json', 'utf8')) as unknown;
+    const registry = JSON.parse(readFileSync('contracts/assurance/registry.schema.json', 'utf8')) as unknown;
+
+    expect(openapi.components.schemas.ReportingContract).toEqual(reporting);
+    expect(openapi.components.schemas.AssuranceRegistryContract).toEqual(registry);
+    expect(openapi.components.schemas.AssuranceQueryResult).toEqual({
+      $ref: '#/components/schemas/ReportingContract/$defs/queryResult',
+    });
+    expect(existsSync('contracts/openapi/swagger.json')).toBe(false);
+  });
+
+  it('keeps current assurance query shapes in the OpenAPI document', () => {
+    const openapi = readOpenApi();
     for (const path of [
       '/assurance',
       '/assurance/evidence',
@@ -37,8 +89,6 @@ describe('executable interface contracts', () => {
       '/assurance/incidents',
       '/assurance/advisories',
     ]) expect(openapi.paths[path]?.get).toBeDefined();
-    expect(openapi.definitions).toHaveProperty('AssuranceQueryResult');
-    expect(openapi.definitions).toHaveProperty('AssuranceRegistryDiscovery');
 
     const riskParameters = openapi.paths['/assurance/risks'].get?.parameters?.map((parameter) => parameter.name) ?? [];
     expect(riskParameters).toContain('residual');
@@ -46,25 +96,12 @@ describe('executable interface contracts', () => {
     expect(riskParameters).not.toContain('schemaVersion');
   });
 
-  it('keeps generated route manifest coverage for documented assurance routes', () => {
-    const manifest = JSON.parse(readFileSync('docs/route-manifest.json', 'utf8')) as Array<{ route: string; methods: string[] }>;
-    const routes = new Set(manifest.flatMap((entry) => entry.methods.map((method) => `${method} ${entry.route}`)));
-    for (const route of [
-      '/v1/assurance',
-      '/v1/assurance/evidence',
-      '/v1/assurance/compliance',
-      '/v1/assurance/compliance/{recordId}',
-      '/v1/assurance/risks',
-      '/v1/assurance/incidents',
-      '/v1/assurance/advisories',
-    ]) expect(routes.has(`GET ${route}`)).toBe(true);
-  });
-
   it('serves the current OpenAPI and assurance contracts through the router', async () => {
     const openapi = await routeRequest(new Request('https://demo.wizardgang.ai/v1/openapi.json'), env);
     expect(openapi.status).toBe(200);
     expect(openapi.headers.get('content-type')).toContain('application/json');
-    const document = await openapi.json() as { paths: Record<string, unknown> };
+    const document = await openapi.json() as { openapi: string; paths: Record<string, unknown> };
+    expect(document.openapi).toBe('3.1.0');
     expect(document.paths).toHaveProperty('/assurance/risks');
 
     const assurance = await routeRequest(new Request('https://demo.wizardgang.ai/v1/assurance/risks?limit=1'), env);

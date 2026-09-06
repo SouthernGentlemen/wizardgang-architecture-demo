@@ -116,7 +116,7 @@ describe('operations proof surface', () => {
     expect(dashboard).not.toContain('name="control" value="chatgpt-crawl"');
     expect(dashboard).not.toContain('name="state" value="enabled"');
     const docs = await renderDocs(environment).text();
-    expect(docs).toContain('Swagger JSON');
+    expect(docs).toContain('OpenAPI JSON');
     expect(docs).toContain('docs/INTERACTIVE-DEMO-SPEC.md');
     const uptime = await (await renderUptime(environment)).text();
     expect(uptime).toContain('planned/manual offline');

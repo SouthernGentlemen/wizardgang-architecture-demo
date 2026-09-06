@@ -101,7 +101,6 @@ This file is generated from the active declarative application registry. Route I
 | `platform.d1.records` | `/v1/demo-records` | `GET`, `POST` | api | public | gated | deny | D1 records collection API | `src/platform/route-capabilities/d1.ts` |
 | `platform.d1.record` | `/v1/demo-records/{key}` | `GET`, `PUT`, `DELETE` | api | public | gated | deny | D1 record item API | `src/platform/route-capabilities/d1.ts` |
 | `interfaces.openapi.json` | `/v1/openapi.json` | `GET` | api | public | gated | deny | OpenAPI JSON contract | `src/api/openapi.ts` |
-| `interfaces.openapi.yaml` | `/v1/openapi.yaml` | `GET` | api | public | gated | deny | OpenAPI YAML contract | `src/api/openapi.ts` |
 | `interfaces.webhooks.demo-receipt` | `/v1/webhooks/demo` | `POST` | protocol | public | gated | deny | Signed demo webhook receiver | `src/api/webhooks.ts` |
 | `interfaces.webhooks.github` | `/v1/webhooks/github` | `POST` | protocol | public | gated | deny | GitHub webhook receiver | `src/api/webhooks.ts` |
 | `operations.version` | `/version` | `GET` | api | public | available | deny | Version | `src/api/operations.ts` |
