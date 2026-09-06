@@ -30,19 +30,24 @@ const riskVocabularySchemaPath = 'contracts/assurance/risk-vocabulary.schema.jso
 const riskVocabularySchema = readJson(riskVocabularySchemaPath);
 
 function relationshipsFixture() {
-  return {
-    evidence: ['EVD-TEST-001'],
-    compliance: ['ISO27001-A.5.1'],
-    frameworks: ['iso-27001'],
-    claims: ['CLM-SEC-001'],
-    risks: ['SEC-RISK-001'],
-    controls: ['ISO27001-A.5.1'],
-    incidents: ['INC-001'],
-    exercises: ['EX-001'],
-    advisories: ['GHSA-aaaa-bbbb-cccc'],
-    governanceDocuments: ['WG-POL-001'],
-    objectives: ['SEC-OBJ-001'],
+  const targets = {
+    evidence: ['github.structured-records.evidence', 'EVD-TEST-001'],
+    compliance: ['github.structured-records.compliance.iso-27001', 'ISO27001-A.5.1'],
+    frameworks: ['github.structured-records.compliance.iso-27001', 'iso-27001'],
+    claims: ['github.structured-records.claims', 'CLM-SEC-001'],
+    risks: ['github.structured-records.risks', 'SEC-RISK-001'],
+    controls: ['github.structured-records.compliance.iso-27001', 'ISO27001-A.5.1'],
+    incidents: ['github.structured-records.incidents', 'INC-001'],
+    exercises: ['github.structured-records.exercises', 'EX-001'],
+    advisories: ['github.structured-records.advisories', 'GHSA-aaaa-bbbb-cccc'],
+    governanceDocuments: ['github.structured-records.presentation.documents', 'WG-POL-001'],
+    objectives: ['github.structured-records.objectives', 'SEC-OBJ-001'],
   };
+  return Object.entries(targets).map(([relation, [source, native]]) => ({
+    relation,
+    from: { source: 'github.structured-records.advisories', native: 'GHSA-aaaa-bbbb-cccc' },
+    to: { source, native },
+  }));
 }
 
 function advisoryFixture() {
@@ -178,7 +183,8 @@ describe('shared assurance schema contracts', () => {
     ['controls', 'ISO27001-5.1'],
   ])('rejects invalid %s target IDs before referential resolution', (family, invalidId) => {
     const fixture = advisoryFixture();
-    fixture.records[0].relationships[family] = [invalidId];
+    const relationship = fixture.records[0].relationships.find((candidate) => candidate.relation === family);
+    relationship.to.native = invalidId;
     expect(validateAdvisory(fixture).length).toBeGreaterThan(0);
   });
 

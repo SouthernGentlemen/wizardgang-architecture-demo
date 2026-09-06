@@ -7,6 +7,7 @@ import {
   readJsonFile,
 } from './lib/assurance-registry.mjs';
 import {
+  recordRelationshipIdentity,
   registeredRelationshipFamily,
   validateRelationshipSet,
 } from './lib/assurance-relationships.mjs';
@@ -38,7 +39,7 @@ export function validateAdvisories(root = process.cwd()) {
   for (const kind of ['evidence', 'incidents']) {
     try {
       const family = registeredRelationshipFamily(root, registry, kind);
-      relationshipFamilies.set(kind, family.ids);
+      relationshipFamilies.set(kind, family.identities);
     } catch (error) {
       errors.push(`advisories: unable to discover related ${kind} dataset through assurance/registry.json: ${error instanceof Error ? error.message : String(error)}`);
     }
@@ -53,6 +54,7 @@ export function validateAdvisories(root = process.cwd()) {
       record.relationships,
       relationshipFamilies,
       `${advisoryResource.path}:${record.id}`,
+      recordRelationshipIdentity(registry, advisoryResource, record),
     ));
 
     for (const release of record.fixedReleases ?? []) {

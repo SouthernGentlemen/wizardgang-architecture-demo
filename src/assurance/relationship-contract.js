@@ -131,7 +131,7 @@ export function validateAssuranceRelationshipSet(
     if (options.internalTargetsOnly && definition.target !== 'records') continue;
     const identityTargets = context.targetIdentitiesByRelationship?.get?.(relation);
     if (identityTargets) {
-      if (!identityTargets.has(toKey)) errors.push(`${edgeLabel}.to: unresolved ${relation} relationship ${relationship.to.source}:${relationship.to.native}`);
+      if (!identityTargets.has(toKey)) errors.push(`${edgeLabel}.to: unresolved ${relation} relationship ${relationship.to.native} at ${relationship.to.source}`);
       continue;
     }
     const targets = assuranceRelationshipTargetIds(relation, context);

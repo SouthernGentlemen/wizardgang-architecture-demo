@@ -42,6 +42,50 @@
         }
       }
     },
+    "evidenceId": {
+      "type": "string",
+      "pattern": "^EVD-[A-Z]+-[0-9]{3,}$"
+    },
+    "complianceId": {
+      "type": "string",
+      "pattern": "^(ISO27001|ISO42001)-[A0-9.]+$|^WCAG-[0-9.]+$"
+    },
+    "frameworkId": {
+      "type": "string",
+      "pattern": "^(iso-27001|iso-42001|wcag-2\\.2)$"
+    },
+    "claimId": {
+      "type": "string",
+      "pattern": "^CLM-[A-Z]+-[0-9]{3,}$"
+    },
+    "riskId": {
+      "type": "string",
+      "pattern": "^(SEC|AI)-RISK-[0-9]{3}$"
+    },
+    "controlId": {
+      "type": "string",
+      "pattern": "^(ISO27001|ISO42001)-A\\.[0-9.]+$"
+    },
+    "incidentId": {
+      "type": "string",
+      "pattern": "^INC-[0-9]{3,}$"
+    },
+    "exerciseId": {
+      "type": "string",
+      "pattern": "^EX-[0-9]{3,}$"
+    },
+    "advisoryId": {
+      "type": "string",
+      "pattern": "^GHSA-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}$"
+    },
+    "governanceDocumentId": {
+      "type": "string",
+      "pattern": "^WG-[A-Z]+-[0-9]{3}$"
+    },
+    "objectiveId": {
+      "type": "string",
+      "pattern": "^[A-Z]+-OBJ-[0-9]{3}$"
+    },
     "relationship": {
       "type": "object",
       "additionalProperties": false,
@@ -60,7 +104,53 @@
         "to": {
           "$ref": "#/$defs/identity"
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "relation": { "const": "evidence" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/evidenceId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "compliance" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/complianceId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "frameworks" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/frameworkId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "claims" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/claimId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "risks" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/riskId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "controls" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/controlId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "incidents" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/incidentId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "exercises" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/exerciseId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "advisories" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/advisoryId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "governanceDocuments" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/governanceDocumentId" } } } } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "objectives" } } },
+          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/objectiveId" } } } } }
+        }
+      ]
     }
   }
 }

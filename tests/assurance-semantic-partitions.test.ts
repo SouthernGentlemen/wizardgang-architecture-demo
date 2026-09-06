@@ -13,6 +13,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, relative, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { gitBlobShaForFile } from '../scripts/generate-assurance-runtime-binding.mjs';
+import { rebindRelationshipSource } from './helpers/assurance-relationships';
 
 const repositoryRoot = process.cwd();
 const fixtureRoots: string[] = [];
@@ -57,19 +58,35 @@ function registryResource(registry: any, id: string): any {
   throw new Error(`Missing fixture registry resource ${id}`);
 }
 
-function moveRecordToPartition(fixtureRoot: string, parentId: string, recordId: string, partitionPath: string): void {
+function registryResources(registry: any): any[] {
+  const resources: any[] = [];
+  function visit(resource: any): void {
+    resources.push(resource);
+    for (const child of resource.resources ?? []) visit(child);
+  }
+  for (const resource of registry.datasets ?? []) visit(resource);
+  return resources;
+}
+
+function collectionAtPath(document: any, dottedPath: string): any[] {
+  return dottedPath.split('.').reduce((value, segment) => value?.[segment], document) ?? [];
+}
+
+function moveRecordToPartition(fixtureRoot: string, parentId: string, recordId: string, partitionPath: string): Array<{ resourceId: string; path: string }> {
   const registry = readJson(fixtureRoot, 'assurance/registry.json');
   const parent = registryResource(registry, parentId);
   const primary = readJson(fixtureRoot, parent.path);
   const recordIndex = primary.records.findIndex((record: any) => record.id === recordId);
   expect(recordIndex).toBeGreaterThanOrEqual(0);
   const [record] = primary.records.splice(recordIndex, 1);
-  writeJson(fixtureRoot, parent.path, primary);
-  writeJson(fixtureRoot, partitionPath, { ...primary, records: [record] });
+  const partitionId = `${parentId}.fixture-partition`;
+  const oldSource = `github.structured-records.${parentId}`;
+  const newSource = `github.structured-records.${partitionId}`;
+  rebindRelationshipSource(record, newSource);
   parent.resources = [
     ...(parent.resources ?? []),
     {
-      id: `${parentId}.fixture-partition`,
+      id: partitionId,
       kind: parent.kind,
       role: 'partition',
       path: partitionPath,
@@ -79,7 +96,32 @@ function moveRecordToPartition(fixtureRoot: string, parentId: string, recordId: 
       recordCollection: structuredClone(parent.recordCollection),
     },
   ];
+  writeJson(fixtureRoot, parent.path, primary);
+  writeJson(fixtureRoot, partitionPath, { ...primary, records: [record] });
   writeJson(fixtureRoot, 'assurance/registry.json', registry);
+
+  const affected = new Map<string, string>([
+    [parent.id, parent.path],
+    [partitionId, partitionPath],
+  ]);
+  for (const resource of registryResources(registry)) {
+    if (!resource.capabilities?.includes('records')) continue;
+    const document = readJson(fixtureRoot, resource.path);
+    let changed = false;
+    for (const candidate of collectionAtPath(document, resource.recordCollection.path)) {
+      for (const relationship of candidate.relationships ?? []) {
+        if (relationship.to?.source === oldSource && relationship.to?.native === recordId) {
+          relationship.to.source = newSource;
+          changed = true;
+        }
+      }
+    }
+    if (changed) {
+      writeJson(fixtureRoot, resource.path, document);
+      affected.set(resource.id, resource.path);
+    }
+  }
+  return [...affected].map(([resourceId, path]) => ({ resourceId, path }));
 }
 
 function approveResourceRevision(fixtureRoot: string, resourceId: string, relativePath: string): void {
@@ -128,9 +170,8 @@ describe('registry-driven assurance semantic validation', () => {
   it('keeps evidence relationships and publication valid after a registered partition move only with exact source-revision approvals', () => {
     const fixtureRoot = createFixture();
     const partitionPath = 'assurance/evidence/governance-evidence.json';
-    moveRecordToPartition(fixtureRoot, 'evidence', 'EVD-DOC-003', partitionPath);
-    approveResourceRevision(fixtureRoot, 'evidence', 'assurance/evidence/evidence.json');
-    approveResourceRevision(fixtureRoot, 'evidence.fixture-partition', partitionPath);
+    const affected = moveRecordToPartition(fixtureRoot, 'evidence', 'EVD-DOC-003', partitionPath);
+    for (const resource of affected) approveResourceRevision(fixtureRoot, resource.resourceId, resource.path);
 
     expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.mjs'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.mjs'));
@@ -145,7 +186,7 @@ describe('registry-driven assurance semantic validation', () => {
   it('fails publication closed for an ungoverned partition record, then accepts explicit reviewed lifecycle metadata', () => {
     const fixtureRoot = createFixture();
     const partitionPath = 'assurance/evidence/governance-evidence.json';
-    moveRecordToPartition(fixtureRoot, 'evidence', 'EVD-DOC-003', partitionPath);
+    const affected = moveRecordToPartition(fixtureRoot, 'evidence', 'EVD-DOC-003', partitionPath);
 
     const partition = readJson(fixtureRoot, partitionPath);
     partition.records.push({
@@ -154,8 +195,7 @@ describe('registry-driven assurance semantic validation', () => {
       title: 'Synthetic partition record requiring explicit lifecycle metadata',
     });
     writeJson(fixtureRoot, partitionPath, partition);
-    approveResourceRevision(fixtureRoot, 'evidence', 'assurance/evidence/evidence.json');
-    approveResourceRevision(fixtureRoot, 'evidence.fixture-partition', partitionPath);
+    for (const resource of affected) approveResourceRevision(fixtureRoot, resource.resourceId, resource.path);
 
     expectRejected(
       runScript(fixtureRoot, 'scripts/validate-assurance-publication.mjs'),

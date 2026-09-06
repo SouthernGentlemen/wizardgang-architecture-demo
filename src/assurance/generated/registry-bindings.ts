@@ -59,7 +59,7 @@ export const assuranceRuntimeSourceRevisions: Readonly<Record<string, string>> =
   "claims": "4725b49f1da878c345921f60b64afbb04ebabe33",
   "compliance.iso-27001": "705a4ac4e80a24ae63d6ae344b620ab9dd1c5a6f",
   "compliance.iso-42001": "a46b3387ff2ed48962db9fc6d38cd5b74c8b72f8",
-  "compliance.wcag-2.2": "84a173a127f175783d61ddf2f71952a6351b8405",
+  "compliance.wcag-2.2": "437326a0ce5fb3d5132df35d71fbd80181064256",
   "compliance.wcag-2.2.operable": "4d33a4fd6915abc2a2545443359922ded0b0b4bd",
   "compliance.wcag-2.2.perceivable": "164da8b3a1b7f4633b9e15fcddcf7c69b4465e54",
   "compliance.wcag-2.2.robust": "0ee0623d42fcd08489630fff421dca7ca45444a0",
@@ -67,7 +67,7 @@ export const assuranceRuntimeSourceRevisions: Readonly<Record<string, string>> =
   "evidence": "18466792168382223d1ae119c476cf3d21678a90",
   "exercises": "6c6e8f646a696ce66599f45c8e7c15776f01ad6b",
   "incidents": "1ff3b01fe53498e0bfd4b0af369bc8f1cfb8614e",
-  "lifecycle.records": "bf1ce017ea3ff00cb37a33ca68f4bc211b937ee8",
+  "lifecycle.records": "4de67751c3102ae9bc1bf6ac86b7b1e78b2d912e",
   "objectives": "e0b741ec1d793f1711669b30e615b7b492898cdc",
   "risks": "df96a37d913c5452e875ac3d2adbceaa5c674650"
 };
@@ -132,6 +132,6 @@ export const assuranceRuntimeFilterVocabularies: Readonly<Record<string, Readonl
 
 export const assuranceRuntimeSchemaDependencyDigests: Readonly<Record<string, string>> =
 {
-  "contracts/assurance/relationships.schema.json": "16cc9892e3876eae0de616b5327f3c872c63da0c992a5ecda206b7e0748c4db1",
+  "contracts/assurance/relationships.schema.json": "600fd5c3d0d21b5d67b006425237dc4098ff37127f1b0f08ad3f55a7aa63c0c0",
   "contracts/assurance/risk-vocabulary.schema.json": "603a4d5e058f6fbab154f70ba12169ba66d0fd1c8a0a5085cda85d2be304181a"
 };

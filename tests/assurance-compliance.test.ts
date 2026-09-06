@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import registry from '../assurance/registry.json';
 import complianceData from '../assurance/compliance/iso-27001-2022.json';
 import evidenceData from '../assurance/evidence/evidence.json';
+import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
 
 const expectedClauseRefs = [
   '4.1', '4.2', '4.3', '4.4', '5.1', '5.2', '5.3', '6.1', '6.1.1', '6.1.2', '6.1.3', '6.2', '6.3',
@@ -66,9 +67,10 @@ describe('ISO/IEC 27001:2022 canonical public compliance records', () => {
     const evidenceIds = new Set(evidenceData.records.map((record) => record.id));
     expect('counts' in complianceData).toBe(false);
     for (const record of complianceData.records) {
-      expect(record.relationships.evidence.length).toBeGreaterThan(0);
-      expect(new Set(record.relationships.evidence).size).toBe(record.relationships.evidence.length);
-      for (const evidenceId of record.relationships.evidence) expect(evidenceIds.has(evidenceId), evidenceId).toBe(true);
+      const relationshipEvidenceIds = assuranceRelationshipIds(record.relationships, 'evidence');
+      expect(relationshipEvidenceIds.length).toBeGreaterThan(0);
+      expect(new Set(relationshipEvidenceIds).size).toBe(relationshipEvidenceIds.length);
+      for (const evidenceId of relationshipEvidenceIds) expect(evidenceIds.has(evidenceId), evidenceId).toBe(true);
     }
   });
 

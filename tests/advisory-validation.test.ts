@@ -3,6 +3,7 @@ import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:f
 import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
+import { setRelationshipTargets } from './helpers/assurance-relationships';
 
 const repositoryRoot = process.cwd();
 const fixtureRoots: string[] = [];
@@ -78,7 +79,12 @@ describe('canonical advisory validation', () => {
   it('rejects unresolved canonical evidence relationships', () => {
     const root = createFixtureRoot();
     const advisories = installAdvisoryFixture(root, 'valid-nonempty');
-    advisories.records[0].relationships.evidence = ['EVD-FAKE-999'];
+    setRelationshipTargets(
+      advisories.records[0],
+      'evidence',
+      'github.structured-records.evidence',
+      ['EVD-FAKE-999'],
+    );
     writeJson(root, 'assurance/advisories/advisories.json', advisories);
     expectRejected(run(root, 'scripts/validate-advisories.mjs'), 'unresolved evidence relationship EVD-FAKE-999');
   });
@@ -86,7 +92,12 @@ describe('canonical advisory validation', () => {
   it('rejects incident relationships that do not resolve to established incident records', () => {
     const root = createFixtureRoot();
     const advisories = installAdvisoryFixture(root, 'valid-nonempty');
-    advisories.records[0].relationships.incidents = ['INC-999'];
+    setRelationshipTargets(
+      advisories.records[0],
+      'incidents',
+      'github.structured-records.incidents',
+      ['INC-999'],
+    );
     writeJson(root, 'assurance/advisories/advisories.json', advisories);
     expectRejected(run(root, 'scripts/validate-advisories.mjs'), 'unresolved incidents relationship INC-999');
   });
@@ -112,7 +123,9 @@ describe('canonical advisory validation', () => {
     const advisories = installAdvisoryFixture(root, 'valid-nonempty');
     const record = advisories.records[0];
     record.incidentLinks = [];
-    record.evidence = record.relationships.evidence;
+    record.evidence = record.relationships
+      .filter((relationship: any) => relationship.relation === 'evidence')
+      .map((relationship: any) => relationship.to.native);
     delete record.relationships;
     writeJson(root, 'assurance/advisories/advisories.json', advisories);
     const result = run(root, 'scripts/validate-advisories.mjs');

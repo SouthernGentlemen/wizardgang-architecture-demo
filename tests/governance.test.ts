@@ -6,6 +6,7 @@ import {
   listPublishedAssuranceRecords,
 } from '../src/assurance/publication';
 import type { D1PreparedStatement, Env } from '../src/types';
+import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
 
 class GovernanceStatement implements D1PreparedStatement {
   private values: unknown[] = [];
@@ -41,7 +42,7 @@ function canonicalIso27001Claims() {
       .map((record) => record.id),
   );
   return listPublishedAssuranceRecords('claims')
-    .filter((claim) => claim.relationships.compliance.some((recordId) => complianceIds.has(recordId)));
+    .filter((claim) => assuranceRelationshipIds(claim.relationships, 'compliance').some((recordId) => complianceIds.has(recordId)));
 }
 
 function firstPublishedEvidence(evidenceIds: string[]) {
@@ -103,7 +104,7 @@ describe('governance evidence', () => {
     for (const claim of canonicalIso27001Claims()) {
       const control = body.controls.find((candidate) => candidate.implementation === claim.statement);
       expect(control).toBeDefined();
-      const evidence = firstPublishedEvidence(claim.relationships.evidence);
+      const evidence = firstPublishedEvidence(assuranceRelationshipIds(claim.relationships, 'evidence'));
       expect(evidence).toBeDefined();
       if (evidence?.locator.repositoryPath) {
         expect(control?.evidence).toBe(`${repository}/blob/${deployedSha}/${evidence.locator.repositoryPath}`);
@@ -122,7 +123,7 @@ describe('governance evidence', () => {
       env({ GITHUB_BRANCH: 'moving-branch', DEPLOYED_SHA: undefined }),
     ).json() as { controls: GovernanceControl[] };
     const releaseBoundClaim = canonicalIso27001Claims().find((claim) => {
-      const evidence = firstPublishedEvidence(claim.relationships.evidence);
+      const evidence = firstPublishedEvidence(assuranceRelationshipIds(claim.relationships, 'evidence'));
       return evidence?.freshnessPolicy === 'release-bound' && Boolean(evidence.locator.repositoryPath);
     });
     expect(releaseBoundClaim).toBeDefined();

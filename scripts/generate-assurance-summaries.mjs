@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
 import { fileURLToPath } from 'node:url';
 import {
   flattenAssuranceRegistry,
@@ -77,7 +78,7 @@ export function renderIncidentProjection(document, incidents, exercises) {
     .map((record) => `| ${record.id} | ${record.title} | ${titleCase(record.status)} | ${record.detectedAt ?? '—'} | ${record.finalSeverity ?? record.initialSeverity ?? '—'} |`);
   const exerciseRows = [...(exercises.records ?? [])]
     .sort((left, right) => left.id.localeCompare(right.id))
-    .map((record) => `| ${record.id} | ${record.exerciseType} | ${record.scenario} | ${record.scope} | ${record.dueDate ?? record.completedAt ?? '—'} | ${record.owner} | ${titleCase(record.status)} | ${(record.relationships?.evidence ?? []).length} |`);
+    .map((record) => `| ${record.id} | ${record.exerciseType} | ${record.scenario} | ${record.scope} | ${record.dueDate ?? record.completedAt ?? '—'} | ${record.owner} | ${titleCase(record.status)} | ${assuranceRelationshipIds(record.relationships, 'evidence').length} |`);
   return `${GENERATED_BEGIN}\n\n${renderDocumentMetadata(document)}\n\n## Current Status\n\n**Actual incident records:** ${incidentRows.length}\n\n${incidents.qualification}\n\n| ID | Title | Status | Detected | Final severity |\n|---|---|---|---|---|\n${incidentRows.join('\n')}\n\n**Exercise records:** ${exerciseRows.length}\n\n${exercises.qualification}\n\n| ID | Type | Scenario | Scope | Due / completed | Owner | Status | Evidence records |\n|---|---|---|---|---|---|---|---:|\n${exerciseRows.join('\n')}\n\n${GENERATED_END}`;
 }
 

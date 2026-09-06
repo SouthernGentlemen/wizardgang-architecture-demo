@@ -4,6 +4,7 @@ import {
   readJsonFile,
   requireRegistryResource,
 } from './lib/assurance-registry.mjs';
+import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
 
 const root = process.cwd();
 const errors = [];
@@ -34,7 +35,7 @@ if (!/^\d{4}-\d{2}-\d{2}$/.test(framework?.assessmentDate ?? '')) errors.push(`$
 for (const duplicate of ['standard', 'edition', 'assessmentDate', 'qualification', 'partitions', 'framework']) if (duplicate in manifest) errors.push(`${manifestPath}: ${duplicate} is registry-owned and must not be stored in the manifest`);
 if (manifest.visibility !== 'public') errors.push(`${manifestPath}: registry must remain public`);
 if ('counts' in manifest || 'registryEvidenceIds' in manifest) errors.push(`${manifestPath}: derived counts and legacy registryEvidenceIds are not allowed`);
-for (const evidenceId of manifest.registryRelationships?.evidence ?? []) if (!evidenceIds.has(evidenceId)) errors.push(`${manifestPath}: unresolved registry evidence ${evidenceId}`);
+for (const evidenceId of assuranceRelationshipIds(manifest.registryRelationships, 'evidence')) if (!evidenceIds.has(evidenceId)) errors.push(`${manifestPath}: unresolved registry evidence ${evidenceId}`);
 const qualification = String(framework?.qualification ?? '').toLowerCase();
 for (const phrase of ['does not claim', 'conformance', 'level a', 'aa', 'aaa', 'certification']) if (!qualification.includes(phrase)) errors.push(`${manifestPath}: qualification must preserve non-conformance wording: ${phrase}`);
 if (manifest.sources?.normative !== 'https://www.w3.org/TR/WCAG22/' || manifest.sources?.machineReadable !== 'https://www.w3.org/WAI/WCAG22/wcag.json') errors.push(`${manifestPath}: W3C WCAG 2.2 sources must remain canonical`);
@@ -70,9 +71,9 @@ for (const record of records) {
   if (!record.implementation || !record.owner) errors.push(`${record.id}: implementation and owner are required`);
   if (!Array.isArray(record.gaps) || record.gaps.length === 0) errors.push(`${record.id}: explicit gaps/limitations are required`);
   if (!['partial', 'none'].includes(record.validation?.automated) || record.validation?.manual !== 'required') errors.push(`${record.id}: validation semantics changed`);
-  const refs = record.relationships?.evidence;
-  if (!Array.isArray(refs) || refs.length === 0) errors.push(`${record.id}: evidence relationships are required`);
-  for (const evidenceId of refs ?? []) if (!evidenceIds.has(evidenceId)) errors.push(`${record.id}: unresolved evidence ${evidenceId}`);
+  const refs = assuranceRelationshipIds(record.relationships, 'evidence');
+  if (refs.length === 0) errors.push(`${record.id}: evidence relationships are required`);
+  for (const evidenceId of refs) if (!evidenceIds.has(evidenceId)) errors.push(`${record.id}: unresolved evidence ${evidenceId}`);
   for (const rule of record.freshnessRules ?? []) if (!freshnessRules.has(rule)) errors.push(`${record.id}: unknown freshness rule ${rule}`);
 }
 if (errors.length) { console.error('WCAG 2.2 public registry validation failed:'); for (const error of errors) console.error(`- ${error}`); process.exit(1); }

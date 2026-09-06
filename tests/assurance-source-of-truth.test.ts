@@ -3,6 +3,7 @@ import { cpSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, write
 import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
+import { setRelationshipTargets } from './helpers/assurance-relationships';
 
 const repositoryRoot = process.cwd();
 const fixtureRoots: string[] = [];
@@ -113,7 +114,7 @@ describe('canonical assurance Markdown presentations', () => {
   it('preserves incident and exercise relationship validation in canonical JSON', () => {
     const fixtureRoot = createFixture();
     const exercises = readJson(fixtureRoot, 'assurance/incidents/exercises.json');
-    exercises.records[0].relationships.risks = ['SEC-RISK-999'];
+    setRelationshipTargets(exercises.records[0], 'risks', 'github.structured-records.risks', ['SEC-RISK-999']);
     writeJson(fixtureRoot, 'assurance/incidents/exercises.json', exercises);
     const result = run(fixtureRoot, 'scripts/validate-assurance-integrity.mjs');
     expect(result.status).not.toBe(0); expect(combined(result)).toContain('unresolved risks relationship SEC-RISK-999');

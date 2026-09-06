@@ -27,20 +27,28 @@
     "interaction-change": "Reassess when focus, keyboard, pointer, authentication, form, timing, status-message, or other interaction behavior changes.",
     "quarterly-manual": "Repeat the documented manual browser and assistive-technology review at least every 90 days."
   },
-  "registryRelationships": {
-    "evidence": [
-      "EVD-TST-003",
-      "EVD-CI-001"
-    ],
-    "compliance": [],
-    "frameworks": [],
-    "claims": [],
-    "risks": [],
-    "controls": [],
-    "incidents": [],
-    "exercises": [],
-    "advisories": [],
-    "governanceDocuments": [],
-    "objectives": []
-  }
+  "registryRelationships": [
+    {
+      "relation": "evidence",
+      "from": {
+        "source": "github.structured-records.compliance.wcag-2.2",
+        "native": "wcag-2-2-public-registry"
+      },
+      "to": {
+        "source": "github.structured-records.evidence",
+        "native": "EVD-TST-003"
+      }
+    },
+    {
+      "relation": "evidence",
+      "from": {
+        "source": "github.structured-records.compliance.wcag-2.2",
+        "native": "wcag-2-2-public-registry"
+      },
+      "to": {
+        "source": "github.structured-records.evidence",
+        "native": "EVD-CI-001"
+      }
+    }
+  ]
 }
