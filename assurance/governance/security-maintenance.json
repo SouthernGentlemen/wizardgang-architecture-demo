@@ -51,7 +51,8 @@
         "currentGapNextAction": "Continue on PR/main validation; applicable findings still require triage, remediation, and closure evidence.",
         "owner": "Information Security Owner",
         "reviewTarget": "Every controlled CI run; monthly review summary"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "VM-002",
@@ -64,7 +65,8 @@
         "currentGapNextAction": "Maintain scope and demonstrate that the checks remain adequate as auth, webhook, identity, data, and MCP boundaries change.",
         "owner": "Information Security Owner",
         "reviewTarget": "Every controlled CI run; material security change"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "VM-003",
@@ -77,7 +79,8 @@
         "currentGapNextAction": "Retain a periodic availability/notification check without publishing sensitive report details.",
         "owner": "Information Security Owner",
         "reviewTarget": "Enabled and verified 2026-09-02; annual/material change"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "VM-004",
@@ -90,7 +93,8 @@
         "currentGapNextAction": "Produce actual finding records when applicable; do not invent a clean historical SLA record.",
         "owner": "Information Security Owner",
         "reviewTarget": "Event-driven; monthly review"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "VM-005",
@@ -103,7 +107,8 @@
         "currentGapNextAction": "First applicable vulnerability remediation must retain verification evidence.",
         "owner": "Change Owner / Security Owner",
         "reviewTarget": "Event-driven"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "TI-001",
@@ -116,7 +121,8 @@
         "currentGapNextAction": "Add an attributable monthly review record covering material direct/transitive dependencies and used runtimes.",
         "owner": "Information Security Owner",
         "reviewTarget": "Monthly; first review by 2026-12-02"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "TI-002",
@@ -129,7 +135,8 @@
         "currentGapNextAction": "Establish a lightweight monthly/event-driven review of relevant security/platform notices; retain dated conclusion/action.",
         "owner": "Supplier Owner / Security Owner",
         "reviewTarget": "Monthly + material supplier notice"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "TI-003",
@@ -142,7 +149,8 @@
         "currentGapNextAction": "Establish a lightweight review of provider/MCP security or protocol changes that could affect tool authority, data exposure, client behavior, or impact assumptions.",
         "owner": "AI Governance Owner / Security Owner",
         "reviewTarget": "Monthly + material provider/protocol notice"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "TI-004",
@@ -155,7 +163,8 @@
         "currentGapNextAction": "Record only sources relevant to the actual stack/exposure; first dated review due 2026-12-02.",
         "owner": "Information Security Owner",
         "reviewTarget": "Monthly/event-driven"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "SC-001",
@@ -168,7 +177,8 @@
         "currentGapNextAction": "Record actual subscriptions, consultations, memberships, or responsible-disclosure interactions only when they occur.",
         "owner": "Information Security Owner",
         "reviewTarget": "Annual + event-driven"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AC-001",
@@ -181,7 +191,8 @@
         "currentGapNextAction": "No fictional universal list; actual SEV-1/SEV-2 incidents must record the notification/contact decision and specialist review where needed.",
         "owner": "Management-System Owner / Incident Owner",
         "reviewTarget": "Event-driven; annual process review"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "MW-001",
@@ -194,7 +205,8 @@
         "currentGapNextAction": "No independent endpoint-hardening/anti-malware evidence is retained in the public management system. Establish proportionate evidence without publishing device-sensitive details.",
         "owner": "Information Security Owner",
         "reviewTarget": "Initial evidence by 2026-12-02; annual/material endpoint change"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "SC-002",
@@ -207,7 +219,8 @@
         "currentGapNextAction": "Add explicit review evidence for materially risky package/action changes and compromised/abandoned dependency decisions.",
         "owner": "Change Owner / Security Owner",
         "reviewTarget": "Every material dependency/workflow change"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "AISEC-001",
@@ -220,7 +233,8 @@
         "currentGapNextAction": "Accumulate provider/protocol threat-review evidence and security regression cases beyond the current narrow boundary evaluation.",
         "owner": "AI Governance Owner / Security Owner",
         "reviewTarget": "Monthly + every material MCP change"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "MET-001",
@@ -233,7 +247,8 @@
         "currentGapNextAction": "No accumulated operating history yet; summarize after first review cycle and feed management review.",
         "owner": "Evidence / Security Owner",
         "reviewTarget": "Quarterly/management review"
-      }
+      },
+      "relationships": []
     }
   ]
 }

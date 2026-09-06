@@ -41,7 +41,8 @@
         "state": "Planned",
         "due": "2026-12-02",
         "notes": "Must review GitHub, Cloudflare, app admin/API, managed credentials, data administration, governance approval authority, endpoint privilege, and current MCP/Codex/Claude authority."
-      }
+      },
+      "relationships": []
     }
   ]
 }

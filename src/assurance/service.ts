@@ -11,6 +11,7 @@ import {
   runtimeAssuranceDataset,
   type AssuranceDataset,
   type AssuranceRelationships,
+  type AssuranceRelationshipName,
   type AssuranceRegistryFilter,
   type AssuranceRegistryResource,
   type AssuranceRuntimeRecord,
@@ -292,7 +293,6 @@ export function deriveIncidentCounts(actual: IncidentRecord[], simulatedExercise
   };
 }
 
-export type AssuranceRelationshipName = keyof AssuranceRelationships;
 export type AssuranceRelationshipReference = AssuranceRuntimeRelationshipReference;
 
 export function forwardAssuranceRelationships(recordId: string): AssuranceRelationships | undefined {

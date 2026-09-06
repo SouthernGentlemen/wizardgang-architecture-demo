@@ -62,7 +62,8 @@
         "owner",
         "evidenceSources",
         "reviewCadence",
-        "initialState"
+        "initialState",
+        "relationships"
       ],
       "properties": {
         "id": {
@@ -104,6 +105,9 @@
         },
         "initialState": {
           "$ref": "#/$defs/initialState"
+        },
+        "relationships": {
+          "$ref": "./relationships.schema.json"
         }
       }
     }

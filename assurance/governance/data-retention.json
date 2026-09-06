@@ -37,7 +37,8 @@
         "affectedData": "DATA-007–010",
         "expectedEvidence": "Implementation + test showing expired session and dependent records handled as designed",
         "currentState": "Planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "DATA-RET-002",
@@ -48,7 +49,8 @@
         "affectedData": "DATA-013–015",
         "expectedEvidence": "Cleanup/enforcement logic + tests across expiry/revocation/replay windows",
         "currentState": "Planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "DATA-RET-003",
@@ -59,7 +61,8 @@
         "affectedData": "DATA-003–006",
         "expectedEvidence": "Documented cadence/basis + implementation/test where automated",
         "currentState": "Planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "DATA-RET-004",
@@ -70,7 +73,8 @@
         "affectedData": "DATA-011–012",
         "expectedEvidence": "Retention basis + pruning/replay tests",
         "currentState": "Planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "DATA-RET-005",
@@ -81,7 +85,8 @@
         "affectedData": "DATA-016",
         "expectedEvidence": "Object-set inventory/classification + exposure/expiry/backup rules",
         "currentState": "Planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "DATA-RET-006",
@@ -92,7 +97,8 @@
         "affectedData": "D1 data generally",
         "expectedEvidence": "`RT-001` and actual backup/export/restore result",
         "currentState": "Planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "DATA-RET-007",
@@ -103,7 +109,8 @@
         "affectedData": "DATA-016",
         "expectedEvidence": "`RT-001` or successor technical restore result",
         "currentState": "Planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "DATA-RET-008",
@@ -114,7 +121,8 @@
         "affectedData": "DATA-001",
         "expectedEvidence": "Automated evaluation/contract tests",
         "currentState": "Planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "DATA-RET-009",
@@ -125,7 +133,8 @@
         "affectedData": "DATA-001",
         "expectedEvidence": "Field/namespace documentation or metadata + evaluation",
         "currentState": "Planned"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "DATA-RET-010",
@@ -136,7 +145,8 @@
         "affectedData": "Applicable records",
         "expectedEvidence": "Test proving deleted/expired data is not returned through active surfaces",
         "currentState": "Planned"
-      }
+      },
+      "relationships": []
     }
   ]
 }

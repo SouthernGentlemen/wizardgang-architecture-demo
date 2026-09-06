@@ -1,3 +1,4 @@
+import { assuranceRelationshipIds } from '../assurance/relationship-contract.js';
 import {
   assuranceAnchor,
   assuranceFilterDefinitions,
@@ -39,7 +40,7 @@ function titleCase(value: string): string {
 }
 
 function recordEvidence(record: PublishedAssuranceRecordMap['compliance']): string {
-  return record.relationships.evidence.map((id) => {
+  return assuranceRelationshipIds(record.relationships, 'evidence').map((id) => {
     const href = assuranceRecordUrls('evidence', id).html;
     if (!href) throw new Error(`Evidence record ${id} has no canonical HTML route.`);
     return `<a href="${escapeHtml(href)}"><code>${escapeHtml(id)}</code></a>`;

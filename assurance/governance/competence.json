@@ -46,7 +46,8 @@
         "currentEvidence": "Controlled management-system artifacts `DEMO-070` onward demonstrate active implementation of the defined governance model",
         "currentStatus": "Partial",
         "requiredNextEvidence": "Complete the initial competence/self-assessment review and retain rationale for areas requiring specialist or independent support"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "COMP-002",
@@ -58,7 +59,8 @@
         "currentEvidence": "`CHANGE-MANAGEMENT.md`, release workflows/docs, controlled repository history",
         "currentStatus": "Partial",
         "requiredNextEvidence": "Retain periodic release-control review evidence and verify any high-risk change receives proportional specialist/security review"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "COMP-003",
@@ -70,7 +72,8 @@
         "currentEvidence": "`OPERATIONS.md`, incident process, backup/recovery procedure, runtime evidence model",
         "currentStatus": "Partial",
         "requiredNextEvidence": "Complete `RT-001` technical restore exercise and retain observed recovery results"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "COMP-004",
@@ -82,7 +85,8 @@
         "currentEvidence": "`SECURITY.md`, security risk register, incident/corrective-action procedures, security-oriented implementation evidence",
         "currentStatus": "Partial",
         "requiredNextEvidence": "Complete focused security-control review and use specialist input for unfamiliar high-impact threats where needed"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "COMP-005",
@@ -94,7 +98,8 @@
         "currentEvidence": "AI policy, AI risk register, MCP impact assessment, SoA, MCP implementation/evaluation evidence",
         "currentStatus": "Partial",
         "requiredNextEvidence": "Expand AI evaluation coverage and complete first competence/awareness review; reassess before any authority/provider expansion"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "COMP-006",
@@ -106,7 +111,8 @@
         "currentEvidence": "`ACCESSIBILITY.md` and accessibility demo/evidence structure",
         "currentStatus": "Partial",
         "requiredNextEvidence": "Retain dated manual verification evidence and obtain specialist/AT review where internal evidence is insufficient"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "COMP-007",
@@ -118,7 +124,8 @@
         "currentEvidence": "Supplier-management procedure and initial supplier register",
         "currentStatus": "Partial",
         "requiredNextEvidence": "Complete initial periodic supplier review for GitHub, Cloudflare, Codex, and Claude by the scheduled review date"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "COMP-008",
@@ -130,7 +137,8 @@
         "currentEvidence": "Incident and Clause 10 procedures",
         "currentStatus": "Planned",
         "requiredNextEvidence": "Complete `EX-001` incident exercise and retain lessons/actions"
-      }
+      },
+      "relationships": []
     },
     {
       "id": "COMP-009",
@@ -142,7 +150,8 @@
         "currentEvidence": "Audit program defines requirements and self-assessment distinction",
         "currentStatus": "Restricted",
         "requiredNextEvidence": "Formal internal-audit claims require a reviewer with sufficient objectivity from the audited work; self-review remains self-assessment"
-      }
+      },
+      "relationships": []
     }
   ]
 }

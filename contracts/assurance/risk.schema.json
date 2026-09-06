@@ -4,9 +4,15 @@
   "title": "Disclosure-safe Public Assurance Risks",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "sourceRegisters", "records"],
+  "required": [
+    "schemaVersion",
+    "sourceRegisters",
+    "records"
+  ],
   "properties": {
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": {
+      "const": 1
+    },
     "sourceRegisters": {
       "type": "array",
       "minItems": 2,
@@ -14,26 +20,43 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "governanceDocumentReference"],
+        "required": [
+          "id",
+          "governanceDocumentReference"
+        ],
         "properties": {
-          "id": { "type": "string", "pattern": "^WG-REG-[0-9]{3}$" },
-          "governanceDocumentReference": { "type": "string", "pattern": "^WG-REG-[0-9]{3}$" }
+          "id": {
+            "type": "string",
+            "pattern": "^WG-REG-[0-9]{3}$"
+          },
+          "governanceDocumentReference": {
+            "type": "string",
+            "pattern": "^WG-REG-[0-9]{3}$"
+          }
         }
       }
     },
     "records": {
       "type": "array",
       "minItems": 1,
-      "items": { "$ref": "#/$defs/risk" }
+      "items": {
+        "$ref": "#/$defs/risk"
+      }
     }
   },
   "$defs": {
     "score": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["score"],
+      "required": [
+        "score"
+      ],
       "properties": {
-        "score": { "type": "integer", "minimum": 1, "maximum": 25 }
+        "score": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 25
+        }
       }
     },
     "risk": {
@@ -51,22 +74,48 @@
         "relationships"
       ],
       "properties": {
-        "id": { "type": "string", "pattern": "^(SEC|AI)-RISK-[0-9]{3}$" },
-        "framework": { "enum": ["security", "ai"] },
-        "title": { "type": "string", "minLength": 1, "maxLength": 160 },
-        "inherent": { "$ref": "#/$defs/score" },
-        "residual": { "$ref": "#/$defs/score" },
+        "id": {
+          "type": "string",
+          "pattern": "^(SEC|AI)-RISK-[0-9]{3}$"
+        },
+        "framework": {
+          "enum": [
+            "security",
+            "ai"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "inherent": {
+          "$ref": "#/$defs/score"
+        },
+        "residual": {
+          "$ref": "#/$defs/score"
+        },
         "treatment": {
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": { "enum": ["avoid", "reduce", "share"] }
+          "items": {
+            "enum": [
+              "avoid",
+              "reduce",
+              "share"
+            ]
+          }
         },
-        "status": { "$ref": "./risk-vocabulary.schema.json#/$defs/status" },
-        "reviewDue": { "type": "string", "format": "date" },
+        "status": {
+          "$ref": "./risk-vocabulary.schema.json#/$defs/status"
+        },
+        "reviewDue": {
+          "type": "string",
+          "format": "date"
+        },
         "relationships": {
-          "$ref": "./relationships.schema.json",
-          "properties": { "evidence": { "minItems": 1 } }
+          "$ref": "./relationships.schema.json"
         }
       }
     }

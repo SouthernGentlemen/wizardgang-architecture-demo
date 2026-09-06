@@ -4,14 +4,28 @@
   "title": "Public Incident-Response Exercise Register",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "sourceRegister", "qualification", "records"],
+  "required": [
+    "schemaVersion",
+    "sourceRegister",
+    "qualification",
+    "records"
+  ],
   "properties": {
-    "schemaVersion": { "const": 1 },
-    "sourceRegister": { "const": "docs/governance/registers/INCIDENT-REGISTER.md" },
-    "qualification": { "type": "string", "minLength": 1 },
+    "schemaVersion": {
+      "const": 1
+    },
+    "sourceRegister": {
+      "const": "docs/governance/registers/INCIDENT-REGISTER.md"
+    },
+    "qualification": {
+      "type": "string",
+      "minLength": 1
+    },
     "records": {
       "type": "array",
-      "items": { "$ref": "#/$defs/record" }
+      "items": {
+        "$ref": "#/$defs/record"
+      }
     }
   },
   "$defs": {
@@ -31,55 +45,122 @@
         "relationships"
       ],
       "properties": {
-        "id": { "type": "string", "pattern": "^EX-[0-9]{3,}$" },
-        "recordType": { "const": "exercise" },
-        "simulated": { "const": true },
-        "exerciseType": { "type": "string", "minLength": 1 },
-        "scenario": { "type": "string", "minLength": 1 },
-        "scope": { "type": "string", "minLength": 1 },
-        "owner": { "type": "string", "minLength": 1 },
-        "status": { "enum": ["planned", "in-progress", "completed", "follow-up-open", "closed", "superseded"] },
-        "dueDate": { "type": "string", "format": "date" },
-        "completedAt": { "type": "string", "format": "date-time" },
-        "resultSummary": { "type": "string", "minLength": 1 },
-        "publicNote": { "type": "string", "minLength": 1 },
-        "relationships": { "$ref": "./relationships.schema.json" }
+        "id": {
+          "type": "string",
+          "pattern": "^EX-[0-9]{3,}$"
+        },
+        "recordType": {
+          "const": "exercise"
+        },
+        "simulated": {
+          "const": true
+        },
+        "exerciseType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scenario": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "planned",
+            "in-progress",
+            "completed",
+            "follow-up-open",
+            "closed",
+            "superseded"
+          ]
+        },
+        "dueDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "completedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "resultSummary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "publicNote": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relationships": {
+          "$ref": "./relationships.schema.json"
+        }
       },
       "allOf": [
         {
           "if": {
-            "properties": { "status": { "const": "planned" } },
-            "required": ["status"]
+            "properties": {
+              "status": {
+                "const": "planned"
+              }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
-            "required": ["dueDate"],
+            "required": [
+              "dueDate"
+            ],
             "properties": {
               "relationships": {
-                "properties": {
-                  "evidence": { "maxItems": 0 }
-                }
+                "$ref": "./relationships.schema.json"
               }
             },
             "not": {
               "anyOf": [
-                { "required": ["completedAt"] },
-                { "required": ["resultSummary"] }
+                {
+                  "required": [
+                    "completedAt"
+                  ]
+                },
+                {
+                  "required": [
+                    "resultSummary"
+                  ]
+                }
               ]
             }
           }
         },
         {
           "if": {
-            "properties": { "status": { "enum": ["completed", "follow-up-open", "closed"] } },
-            "required": ["status"]
+            "properties": {
+              "status": {
+                "enum": [
+                  "completed",
+                  "follow-up-open",
+                  "closed"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
-            "required": ["completedAt", "resultSummary"],
+            "required": [
+              "completedAt",
+              "resultSummary"
+            ],
             "properties": {
               "relationships": {
-                "properties": {
-                  "evidence": { "minItems": 1 }
-                }
+                "$ref": "./relationships.schema.json"
               }
             }
           }

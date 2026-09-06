@@ -1,3 +1,4 @@
+import { assuranceRelationshipIds } from '../assurance/relationship-contract.js';
 import type { Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
@@ -91,11 +92,11 @@ function riskFilterControls(filters: AssuranceFilterValues): string {
 }
 
 function riskCard(env: Env, risk: PublishedAssuranceRecordMap['risks']): string {
-  const evidenceLinks = risk.relationships.evidence.map((id) => {
+  const evidenceLinks = assuranceRelationshipIds(risk.relationships, 'evidence').map((id) => {
     const href = assuranceRecordUrlsById(id).html;
     return href ? `<a href="${escapeHtml(href)}">${escapeHtml(id)}</a>` : `<code>${escapeHtml(id)}</code>`;
   }).join(', ');
-  const controlLinks = governanceDocumentLinks(risk.relationships.governanceDocuments)
+  const controlLinks = governanceDocumentLinks(assuranceRelationshipIds(risk.relationships, 'governanceDocuments'))
     .map((control) => `<a href="${escapeHtml(sourceUrl(env, control.repositoryPath))}">${escapeHtml(control.reference)}</a>`)
     .join('; ');
   const anchor = assuranceAnchor(risk.id);
@@ -174,9 +175,9 @@ export function renderIncidents(env: Env): Response {
       <p><strong>Lifecycle:</strong> ${escapeHtml(record.publication.lifecycle)} · <strong>Disclosure:</strong> ${escapeHtml(record.publication.disclosureReview)}</p>
       <p>${escapeHtml(record.summary)}</p>
       <p><strong>Categories:</strong> ${recordTags(record.categories)}</p>
-      <p><strong>Risk links:</strong> ${recordTags(record.relationships.risks, true)}</p>
-      <p><strong>Control links:</strong> ${recordTags(record.relationships.controls, true)}</p>
-      <p><strong>Evidence:</strong> ${recordTags(record.relationships.evidence, true)}</p>
+      <p><strong>Risk links:</strong> ${recordTags(assuranceRelationshipIds(record.relationships, 'risks'), true)}</p>
+      <p><strong>Control links:</strong> ${recordTags(assuranceRelationshipIds(record.relationships, 'controls'), true)}</p>
+      <p><strong>Evidence:</strong> ${recordTags(assuranceRelationshipIds(record.relationships, 'evidence'), true)}</p>
     </article>`;
   }).join('');
 
@@ -190,8 +191,8 @@ export function renderIncidents(env: Env): Response {
       <p><strong>Scenario:</strong> ${escapeHtml(record.scenario)}</p>
       <p><strong>Scope:</strong> ${escapeHtml(record.scope)}</p>
       <p><strong>Owner:</strong> ${escapeHtml(record.owner)}</p>
-      <p><strong>Objective links:</strong> ${recordTags(record.relationships.objectives)}</p>
-      <p><strong>Evidence:</strong> ${record.relationships.evidence.length === 0 ? 'None yet; completion evidence is created only when the exercise is performed.' : recordTags(record.relationships.evidence, true)}</p>
+      <p><strong>Objective links:</strong> ${recordTags(assuranceRelationshipIds(record.relationships, 'objectives'))}</p>
+      <p><strong>Evidence:</strong> ${assuranceRelationshipIds(record.relationships, 'evidence').length === 0 ? 'None yet; completion evidence is created only when the exercise is performed.' : recordTags(assuranceRelationshipIds(record.relationships, 'evidence'), true)}</p>
       <p>${escapeHtml(record.publicNote)}</p>
     </article>`;
   }).join('');

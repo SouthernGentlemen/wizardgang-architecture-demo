@@ -14,23 +14,30 @@
       "status": "planned",
       "dueDate": "2026-12-02",
       "publicNote": "Planned only. This record is not evidence that the exercise has occurred.",
-      "relationships": {
-        "evidence": [],
-        "compliance": [],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [
-          "WG-OBJ-001"
-        ],
-        "objectives": [
-          "SEC-OBJ-005"
-        ]
-      }
+      "relationships": [
+        {
+          "relation": "governanceDocuments",
+          "from": {
+            "source": "github.structured-records.exercises",
+            "native": "EX-001"
+          },
+          "to": {
+            "source": "github.structured-records.presentation.documents",
+            "native": "WG-OBJ-001"
+          }
+        },
+        {
+          "relation": "objectives",
+          "from": {
+            "source": "github.structured-records.exercises",
+            "native": "EX-001"
+          },
+          "to": {
+            "source": "github.structured-records.objectives",
+            "native": "SEC-OBJ-005"
+          }
+        }
+      ]
     }
   ]
 }

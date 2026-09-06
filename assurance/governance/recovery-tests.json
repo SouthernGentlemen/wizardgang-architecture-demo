@@ -46,7 +46,8 @@
         "due": "2026-12-02",
         "status": "Planned",
         "evidenceState": "No completed restore evidence yet"
-      }
+      },
+      "relationships": []
     }
   ]
 }

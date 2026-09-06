@@ -7,27 +7,74 @@
       "title": "Authentication and authorization remain separate",
       "statement": "Application policy independently constrains authenticated identities and privileged operations.",
       "posture": "partial",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-001",
-          "EVD-DOC-003"
-        ],
-        "compliance": [
-          "ISO27001-A.5.15",
-          "ISO27001-A.5.18",
-          "ISO27001-A.8.2",
-          "ISO27001-A.8.3"
-        ],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-001"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.15"
+          }
+        },
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-001"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.18"
+          }
+        },
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-001"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.2"
+          }
+        },
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-001"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.3"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-001"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-001"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-001"
+          }
+        }
+      ]
     },
     {
       "id": "CLM-SEC-002",
@@ -35,25 +82,52 @@
       "title": "Changes cross automated engineering validation",
       "statement": "The controlled pipeline checks source, tests, contracts, migrations, dependencies, and the Worker build.",
       "posture": "partial",
-      "relationships": {
-        "evidence": [
-          "EVD-CI-001",
-          "EVD-DOC-001"
-        ],
-        "compliance": [
-          "ISO27001-A.8.25",
-          "ISO27001-A.8.29"
-        ],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-002"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.25"
+          }
+        },
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-002"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.29"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-002"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-CI-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-002"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        }
+      ]
     },
     {
       "id": "CLM-SEC-003",
@@ -61,25 +135,52 @@
       "title": "Production deployments are release-bound",
       "statement": "Reviewed changes are released through annotated semantic tags and exact-tag deployment verification.",
       "posture": "partial",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-001",
-          "EVD-DOC-002",
-          "EVD-RUN-002"
-        ],
-        "compliance": [
-          "ISO27001-A.8.32"
-        ],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-003"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.32"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-003"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-003"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-002"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-003"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-002"
+          }
+        }
+      ]
     },
     {
       "id": "CLM-SEC-004",
@@ -87,26 +188,63 @@
       "title": "Diagnostics and audit evidence are separated",
       "statement": "Public diagnostics are bounded and redacted while meaningful control actions use a distinct audit stream.",
       "posture": "partial",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-002",
-          "EVD-SRC-004",
-          "EVD-DOC-004"
-        ],
-        "compliance": [
-          "ISO27001-A.8.15",
-          "ISO27001-A.8.16"
-        ],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-004"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.15"
+          }
+        },
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-004"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.16"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-004"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-004"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-002"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-004"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-004"
+          }
+        }
+      ]
     },
     {
       "id": "CLM-SEC-005",
@@ -114,26 +252,63 @@
       "title": "Secret values remain environment-owned",
       "statement": "Public source contains configuration names and placeholders but excludes production credential values.",
       "posture": "partial",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-003",
-          "EVD-CI-001"
-        ],
-        "compliance": [
-          "ISO27001-A.5.17",
-          "ISO27001-A.8.9",
-          "ISO27001-A.8.24"
-        ],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-005"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.17"
+          }
+        },
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-005"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.24"
+          }
+        },
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-005"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.9"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-005"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-CI-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-005"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        }
+      ]
     },
     {
       "id": "CLM-SEC-006",
@@ -141,27 +316,74 @@
       "title": "Availability is observable and can fail safely",
       "statement": "Health, deployment identity, and intentional offline behavior expose current state without weakening protected boundaries.",
       "posture": "partial",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-004",
-          "EVD-RUN-001",
-          "EVD-RUN-002"
-        ],
-        "compliance": [
-          "ISO27001-A.5.29",
-          "ISO27001-A.5.30",
-          "ISO27001-A.8.14"
-        ],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-006"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.29"
+          }
+        },
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-006"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.30"
+          }
+        },
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-006"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.14"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-006"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-006"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-006"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-002"
+          }
+        }
+      ]
     },
     {
       "id": "CLM-AI-001",
@@ -169,26 +391,63 @@
       "title": "The public MCP capability is read-only and bounded",
       "statement": "Approved reads, invalid scopes, unknown methods, and prohibited writes cross explicit validation and authorization behavior.",
       "posture": "partial",
-      "relationships": {
-        "evidence": [
-          "EVD-SRC-003",
-          "EVD-TST-001",
-          "EVD-SRC-001"
-        ],
-        "compliance": [
-          "ISO42001-A.6.2.4",
-          "ISO42001-A.9.2"
-        ],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-AI-001"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.4"
+          }
+        },
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-AI-001"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.9.2"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-AI-001"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-001"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-AI-001"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-SRC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-AI-001"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-TST-001"
+          }
+        }
+      ]
     },
     {
       "id": "CLM-SEC-007",
@@ -196,26 +455,63 @@
       "title": "Sensitive security reports have a private intake path",
       "statement": "Researchers can discover a private reporting channel through human- and machine-readable public routes without disclosing vulnerabilities in public issues.",
       "posture": "partial",
-      "relationships": {
-        "evidence": [
-          "EVD-DOC-003",
-          "EVD-RUN-003",
-          "EVD-RUN-004"
-        ],
-        "compliance": [
-          "ISO27001-A.6.8",
-          "ISO27001-A.8.8"
-        ],
-        "frameworks": [],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-007"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.6.8"
+          }
+        },
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-007"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.8"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-007"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-007"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-SEC-007"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-004"
+          }
+        }
+      ]
     },
     {
       "id": "CLM-GOV-001",
@@ -223,27 +519,63 @@
       "title": "Non-sensitive concerns enter controlled public work",
       "statement": "Structured issue forms classify public bugs, features, accessibility, AI/MCP, governance, documentation, and other concerns while routing security matters privately.",
       "posture": "partial",
-      "relationships": {
-        "evidence": [
-          "EVD-RUN-005",
-          "EVD-RUN-003"
-        ],
-        "compliance": [
-          "ISO42001-A.8.3",
-          "ISO42001-A.8.4"
-        ],
-        "frameworks": [
-          "wcag-2.2"
-        ],
-        "claims": [],
-        "risks": [],
-        "controls": [],
-        "incidents": [],
-        "exercises": [],
-        "advisories": [],
-        "governanceDocuments": [],
-        "objectives": []
-      }
+      "relationships": [
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-GOV-001"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.8.3"
+          }
+        },
+        {
+          "relation": "compliance",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-GOV-001"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.8.4"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-GOV-001"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-003"
+          }
+        },
+        {
+          "relation": "evidence",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-GOV-001"
+          },
+          "to": {
+            "source": "github.structured-records.evidence",
+            "native": "EVD-RUN-005"
+          }
+        },
+        {
+          "relation": "frameworks",
+          "from": {
+            "source": "github.structured-records.claims",
+            "native": "CLM-GOV-001"
+          },
+          "to": {
+            "source": "github.structured-records.compliance.wcag-2.2",
+            "native": "wcag-2.2"
+          }
+        }
+      ]
     }
   ]
 }
