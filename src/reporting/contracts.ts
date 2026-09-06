@@ -65,14 +65,25 @@ export interface ReportingCollectionResult<T extends ReportingRecord> {
   derived: { readonly count: number };
 }
 
+export type ReportingPaginationCompleteness = 'complete' | 'partial';
+export type ReportingPaginationPartialReason =
+  | 'page-boundary'
+  | 'sample'
+  | 'provider-export-bound'
+  | 'provider-unavailable';
+
+export interface ReportingPagination {
+  limit: number;
+  returned: number;
+  total: number;
+  nextCursor: string | null;
+  completeness?: ReportingPaginationCompleteness;
+  partialReason?: ReportingPaginationPartialReason | null;
+}
+
 export interface ReportingQuery {
   filters: Readonly<Record<string, string>>;
-  pagination?: {
-    limit: number;
-    returned: number;
-    total: number;
-    nextCursor: string | null;
-  };
+  pagination?: ReportingPagination;
 }
 
 export interface ReportingQueryResult<T extends ReportingRecord> {
