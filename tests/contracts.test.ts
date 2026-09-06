@@ -47,8 +47,8 @@ describe('executable interface contracts', () => {
   });
 
   it('keeps generated route manifest coverage for documented assurance routes', () => {
-    const manifest = JSON.parse(readFileSync('docs/route-manifest.json', 'utf8')) as Array<{ route: string; method?: string }>;
-    const routes = new Set(manifest.map((entry) => `${entry.method ?? 'GET'} ${entry.route}`));
+    const manifest = JSON.parse(readFileSync('docs/route-manifest.json', 'utf8')) as Array<{ route: string; methods: string[] }>;
+    const routes = new Set(manifest.flatMap((entry) => entry.methods.map((method) => `${method} ${entry.route}`)));
     for (const route of [
       '/v1/assurance',
       '/v1/assurance/evidence',

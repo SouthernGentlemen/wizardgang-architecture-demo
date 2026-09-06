@@ -1,5 +1,5 @@
-import { demos } from '../../demos/registry';
 import { renderIndex } from '../../ui/page';
+import { registeredDemoNavigation } from '../../routing/navigation';
 import { defineInterfaceIdentityCapability, interfaceIdentityRoute } from '../route-capability';
 
 export const frontendRouteCapability = defineInterfaceIdentityCapability('interfaces.frontend', [
@@ -8,11 +8,11 @@ export const frontendRouteCapability = defineInterfaceIdentityCapability('interf
     pattern: '/',
     methods: ['GET'],
     kind: 'page',
-    handler: (_request, { env }) => renderIndex(env, demos),
+    handler: (_request, { env }) => renderIndex(env, registeredDemoNavigation()),
     title: 'Architecture demo index',
-    description: 'Primary public frontend entry point assembled from the demo registry.',
+    description: 'Primary public frontend entry point assembled from registered page metadata.',
     sourceModule: 'src/ui/page.ts',
     sourceExport: 'renderIndex',
-    tests: ['tests/router.test.ts', 'tests/interface.test.ts'],
+    tests: ['tests/router.test.ts', 'tests/interface.test.ts', 'tests/application-route-registry.test.ts'],
   }),
 ]);

@@ -31,8 +31,8 @@
     "validate:assurance-publication": "node scripts/validate-assurance-publication.mjs",
     "validate:migrations": "wrangler d1 migrations apply demo-blob --local",
     "validate:security": "node scripts/validate-security.mjs",
-    "generate:routes": "node scripts/generate-route-manifest.mjs",
-    "validate:routes": "node scripts/generate-route-manifest.mjs --check",
+    "generate:routes": "ROUTE_ARTIFACTS_WRITE=1 vitest run tests/route-artifacts.test.ts",
+    "validate:routes": "vitest run tests/route-artifacts.test.ts",
     "security:dependencies": "npm audit --audit-level=high",
     "check": "npm run validate:routes && npm run validate:scaffold && npm run validate:history && npm run lint && npm run typecheck && npm run test && npm run validate:contracts && npm run validate:locales && npm run validate:security && npm run validate:governance && npm run validate:assurance",
     "validate:scaffold": "node scripts/validate-scaffold.mjs"

@@ -1,80 +1,22 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { loadAssuranceRegistry } from './lib/assurance-registry.mjs';
-import { assuranceRouteDeclarations } from '../src/assurance/route-contract.js';
 
 const root = process.cwd();
-const manifestPath = path.join(root, 'docs', 'route-manifest.json');
-const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-const routes = new Set(manifest.map((entry) => entry.route));
-const assuranceRegistry = loadAssuranceRegistry(root);
-const assuranceRequiredRoutes = assuranceRouteDeclarations(assuranceRegistry).flatMap((declaration) => {
-  const declared = declaration.routes ?? {};
-  return [
-    declared.html,
-    declared.api,
-    declared.apiRecord?.replace('{id}', '{recordId}'),
-  ].filter(Boolean);
-});
-
-const requiredRoutes = [
-  '/', '/edge', '/workers', '/durable-objects', '/d1', '/r2',
-  '/api', '/identity', '/mcp', '/i18n', '/accessibility', '/git',
-  '/governance', '/governance/concerns', '/dashboard', '/dashboard/uptime', '/dashboard/docs',
-  '/dashboard/logs', '/dashboard/billing', '/admin', '/offline', '/health', '/version',
-  '/sitemap.xml', '/og.png', '/robots.txt', '/.well-known/security.txt', '/__api/operations/logs',
-  '/__api/operations/cloudflare-usage',
-  '/__api/edge/inspect', '/__api/workers/compute', '/__api/durable/counter', '/__api/d1/users', '/__api/d1/users/{id}', '/__api/d1/tasks', '/__api/d1/tasks/{id}', '/__api/d1/reset',
-  '/__api/r2/files', '/__api/r2/files/{id}', '/__api/r2/reset',
-  '/__api/accessibility/lab',
-  '/__api/git/evidence',
-  '/__api/r2/demo', '/__api/r2/object', '/v1/demo-records', '/v1/demo-records/{key}', '/__api/api-sandbox/reset',
-  '/v1/openapi.json', '/v1/openapi.yaml', '/graphql', '/graphql/console', '/graphql/schema', '/__assets/graphiql/{asset}', '/v1/webhooks/demo', '/v1/webhooks/github',
-  '/__api/webhooks/demo', '/__api/webhooks/events', '/__api/webhooks/reset', '/__api/identity/oauth-pkce', '/__api/identity/authorize', '/__api/identity/token',
-  '/__api/identity/sso', '/identity/saml/metadata', '/__api/identity/saml/inspect',
-  '/identity/microsoft', '/identity/microsoft/callback', '/identity/google', '/identity/google/callback',
-  '/identity/github', '/identity/github/callback', '/identity/saml', '/identity/saml/acs', '/identity/session', '/identity/logout',
-  '/__api/operations/billing', '/__api/evidence/traceability',
-  '/__api/governance/security-controls', '/__api/governance/ai-evaluation',
-  ...assuranceRequiredRoutes,
-];
-
-const disallowedManifestRoutes = ['/__api/demo/run', '/__api/demo/events'];
-
 const failures = [];
-if (routes.size !== manifest.length) failures.push('manifest contains duplicate routes');
-const htmlDemos = manifest.filter((entry) => entry.source?.startsWith('src/demos/'));
-if (htmlDemos.length !== 25) failures.push(`expected 25 registered HTML demos; found ${htmlDemos.length}`);
-const expectedGroups = ['Platform', 'Interfaces', 'Standards', 'Delivery & Governance', 'Operations'];
-const actualGroups = [...new Set(htmlDemos.map((entry) => entry.group))];
-if (JSON.stringify(actualGroups) !== JSON.stringify(expectedGroups)) failures.push(`unexpected HTML demo groups: ${actualGroups.join(', ')}`);
-for (const route of requiredRoutes) {
-  if (!routes.has(route)) failures.push(`missing route in manifest: ${route}`);
-}
-for (const route of disallowedManifestRoutes) {
-  if (routes.has(route)) failures.push(`removed route remains in manifest: ${route}`);
-}
-
-for (const entry of manifest) {
-  if (entry.status !== 'working') failures.push(`route is not marked working: ${entry.route}`);
-  if (!entry.source) continue;
-  const sourcePath = path.join(root, entry.source);
-  if (!fs.existsSync(sourcePath)) failures.push(`manifest source does not exist: ${entry.route} -> ${entry.source}`);
-}
+const exists = (file) => fs.existsSync(path.join(root, file));
+const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 
 for (const requiredFile of [
   'docs/ARCHITECTURE-STANDARD.md',
   'docs/OPERATIONS.md',
   'docs/ROUTES.md',
-  'docs/ASSURANCE.md',
-  'docs/ASSURANCE-API.md',
-  'docs/EVIDENCE.md',
-  'docs/IMPLEMENTATION-PLAN.md',
-  'src/ui/admin.ts',
-  'src/lib/demo-control.ts',
-  'src/lib/crawler-control.ts',
-  'src/api/operations.ts',
+  'docs/ROUTE-REGISTRY.md',
+  'docs/route-manifest.json',
+  'src/router.ts',
   'src/routing/registry.ts',
+  'src/routing/application-routes.ts',
+  'src/routing/navigation.ts',
+  'src/routing/artifacts.ts',
   'src/routing/operational-routes.ts',
   'src/routing/assurance-routes.ts',
   'src/routing/platform-laboratory-routes.ts',
@@ -82,245 +24,123 @@ for (const requiredFile of [
   'src/platform/route-capability.ts',
   'src/interfaces/route-capability.ts',
   'src/interfaces/route-capabilities/index.ts',
-  'src/api/assurance.ts',
-  'src/api/advisories.ts',
-  'src/api/assurance-registry.ts',
   'src/assurance/model.ts',
   'src/assurance/route-contract.js',
-  'src/assurance/route-capability.ts',
-  'src/assurance/routes.ts',
   'src/assurance/service.ts',
   'src/assurance/publication.ts',
   'src/assurance/presentation.ts',
-  'src/demos/evidence.ts',
-  'src/demos/evidence-page.ts',
-  'src/demos/security-page.ts',
-  'src/demos/risks.ts',
-  'src/demos/incidents.ts',
-  'src/demos/logs.ts',
+  'src/lib/demo-control.ts',
+  'src/lib/crawler-control.ts',
   'src/lib/logs.ts',
-  'scripts/assurance-interchange.mjs',
-  'scripts/validate-advisories.mjs',
-  'scripts/validate-assurance-projection.mjs',
-  'assurance/risks/risks.json',
-  'assurance/incidents/incidents.json',
-  'assurance/incidents/exercises.json',
-  'assurance/advisories/advisories.json',
-  'contracts/assurance/reporting.schema.json',
-  'contracts/assurance/risk.schema.json',
-  'contracts/assurance/incident.schema.json',
-  'contracts/assurance/exercise.schema.json',
-  'contracts/assurance/advisory.schema.json',
-  'migrations/0002_operations_dashboard.sql',
-  'migrations/0003_demo_control.sql',
-  'migrations/0004_application_logs.sql',
-  'migrations/0009_crawler_control.sql',
-  'migrations/0010_identity_sessions.sql',
-  'migrations/0011_cloudflare_usage.sql',
-  'src/demos/identity-page.ts',
-  'src/lib/identity-session.ts',
-  'KICKOFF-SOL-VERY-HIGH.md'
+  'src/ui/admin.ts',
+  'tests/route-registry.test.ts',
+  'tests/application-route-registry.test.ts',
+  'tests/route-artifacts.test.ts',
 ]) {
-  if (!fs.existsSync(path.join(root, requiredFile))) failures.push(`missing required file: ${requiredFile}`);
+  if (!exists(requiredFile)) failures.push(`missing required file: ${requiredFile}`);
 }
 
-const assuranceRegistryModule = fs.readFileSync(path.join(root, 'src/assurance/registry.ts'), 'utf8');
-if (assuranceRegistryModule.includes('export *')) {
-  failures.push('src/assurance/registry.ts must not remain a compatibility barrel');
+let manifest = [];
+try {
+  manifest = JSON.parse(read('docs/route-manifest.json'));
+} catch (error) {
+  failures.push(`route manifest is not valid JSON: ${String(error)}`);
 }
-const assurancePresentationModule = fs.readFileSync(path.join(root, 'src/assurance/presentation.ts'), 'utf8');
-if (assurancePresentationModule.includes('export *')) {
-  failures.push('src/assurance/presentation.ts must not remain a compatibility barrel');
-}
-
-function walk(dir) {
-  for (const item of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (item.name === 'node_modules' || item.name === '.git') continue;
-    const full = path.join(dir, item.name);
-    if (item.isDirectory()) walk(full);
-    else if (item.name.toLowerCase().endsWith('.pdf')) failures.push(`PDF is not allowed in this package: ${path.relative(root, full)}`);
+if (!Array.isArray(manifest) || manifest.length === 0) failures.push('route manifest must contain registered routes');
+const ids = new Set();
+const patterns = new Set();
+for (const entry of manifest) {
+  if (!entry || typeof entry !== 'object') {
+    failures.push('route manifest contains a non-object entry');
+    continue;
   }
+  for (const field of ['id', 'route', 'kind', 'visibility', 'title', 'description', 'source']) {
+    if (!(field in entry)) failures.push(`route manifest entry missing ${field}: ${JSON.stringify(entry)}`);
+  }
+  if (ids.has(entry.id)) failures.push(`route manifest contains duplicate ID: ${entry.id}`);
+  if (patterns.has(entry.route)) failures.push(`route manifest contains duplicate pattern: ${entry.route}`);
+  ids.add(entry.id);
+  patterns.add(entry.route);
+  if (!Array.isArray(entry.methods) || entry.methods.length === 0) failures.push(`route manifest missing methods: ${entry.id}`);
+  if (!Array.isArray(entry.docs) || entry.docs.length === 0) failures.push(`route manifest missing documentation links: ${entry.id}`);
+  const sourceModule = entry.source?.module;
+  if (!sourceModule || !exists(sourceModule)) failures.push(`route manifest source does not exist: ${entry.id} -> ${sourceModule}`);
 }
-walk(root);
 
-const router = fs.readFileSync(path.join(root, 'src/router.ts'), 'utf8');
-for (const token of [
+const router = read('src/router.ts');
+for (const token of ['applicationRouteRegistry', 'matchRoute', 'normalizeRoutePath', 'safeError', 'getDemoControl', 'route.handler']) {
+  if (!router.includes(token)) failures.push(`router missing final declarative invariant: ${token}`);
+}
+for (const retiredToken of [
+  'API_PREFIXES',
   'routeOperationalRequest',
   'routeAssuranceRequest',
   'routePlatformLaboratoryRequest',
   'routeInterfaceIdentityRequest',
   'interfaceIdentityWantsHtml',
   'isInterfaceIdentityApiLike',
-  'offlineApiResponse',
-  'wantsHtml',
-]) {
-  if (!router.includes(token)) failures.push(`router missing routing invariant: ${token}`);
-}
-for (const retiredToken of [
-  'bypassOfflineGate',
-  'OPERATIONS_PREFIX',
+  'demosByRoute',
+  'LEGACY_OFFLINE_AVAILABLE_PATHS',
   'ASSURANCE_API_HANDLERS',
   'ASSURANCE_HTML_HANDLERS',
-  'LEGACY_OFFLINE_AVAILABLE_PATHS',
-  'matchAssuranceRoute',
-  'demosByRoute',
-  'MCP_SERVER_PATH',
 ]) {
-  if (router.includes(retiredToken)) failures.push(`router still contains retired routing heuristic or dispatch inventory: ${retiredToken}`);
+  if (router.includes(retiredToken)) failures.push(`router still contains retired dispatch logic: ${retiredToken}`);
+}
+if (/\bpath\s*===/.test(router) || /\bpath\.startsWith\(/.test(router)) {
+  failures.push('router still contains application path dispatch or prefix detection');
 }
 
-for (const migratedPlatformPath of [
-  '/edge',
-  '/workers',
-  '/durable-objects',
-  '/d1',
-  '/r2',
-  '/accessibility',
-  '/__api/edge/inspect',
-  '/__api/workers/compute',
-  '/__api/durable/counter',
-  '/__api/d1/users',
-  '/__api/d1/tasks',
-  '/__api/d1/reset',
-  '/v1/demo-records',
-  '/__api/api-sandbox/reset',
-  '/__api/r2/demo',
-  '/__api/r2/object',
-  '/__api/r2/files',
-  '/__api/r2/reset',
-  '/__api/accessibility/lab',
-]) {
-  if (router.includes(`'${migratedPlatformPath}'`) || router.includes(`"${migratedPlatformPath}"`)) {
-    failures.push(`router still contains migrated platform path: ${migratedPlatformPath}`);
-  }
-}
-
-for (const migratedInterfacePath of [
-  '/api',
-  '/v1/openapi.json',
-  '/v1/openapi.yaml',
-  '/graphql',
-  '/graphql/console',
-  '/graphql/schema',
-  '/__assets/graphiql/:asset',
-  '/webhooks',
-  '/v1/webhooks/demo',
-  '/v1/webhooks/github',
-  '/__api/webhooks/demo',
-  '/__api/webhooks/events',
-  '/__api/webhooks/reset',
-  '/identity',
-  '/__api/identity/oauth-pkce',
-  '/__api/identity/authorize',
-  '/__api/identity/token',
-  '/__api/identity/sso',
-  '/identity/microsoft',
-  '/identity/microsoft/callback',
-  '/identity/google',
-  '/identity/google/callback',
-  '/identity/github',
-  '/identity/github/callback',
-  '/identity/saml',
-  '/identity/saml/acs',
-  '/identity/saml/metadata',
-  '/identity/session',
-  '/identity/logout',
-  '/__api/identity/saml/inspect',
-  '/mcp',
-  '/mcp/server',
-  '/git',
-  '/__api/git/evidence',
-  '/__api/git/demo',
-  '/__api/git/demo/release',
-  '/governance',
-  '/governance/concerns',
-  '/__api/evidence/traceability',
-  '/__api/governance/security-controls',
-  '/__api/governance/ai-evaluation',
-  '/i18n',
-]) {
-  if (router.includes(`'${migratedInterfacePath}'`) || router.includes(`"${migratedInterfacePath}"`)) {
-    failures.push(`router still contains migrated interface/identity path: ${migratedInterfacePath}`);
-  }
-}
-
-const operationalRoutes = fs.readFileSync(path.join(root, 'src/routing/operational-routes.ts'), 'utf8');
-for (const token of ['defineRouteModule', 'operationalRouteRegistry', 'routeOperationalRequest']) {
-  if (!operationalRoutes.includes(token)) failures.push(`operational route module missing registry invariant: ${token}`);
-}
-for (const route of [
-  '/admin', '/offline', '/health', '/version', '/robots.txt', '/.well-known/security.txt', '/og.png', '/sitemap.xml',
-  '/dashboard', '/dashboard/uptime', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing',
-  '/__api/operations/logs', '/__api/operations/cloudflare-usage', '/__api/operations/billing',
-]) {
-  if (!operationalRoutes.includes(`pattern: '${route}'`)) failures.push(`operational route registry missing migrated route: ${route}`);
-}
-
-const assuranceRoutes = fs.readFileSync(path.join(root, 'src/routing/assurance-routes.ts'), 'utf8');
+const applicationRoutes = read('src/routing/application-routes.ts');
 for (const token of [
-  'createAssuranceRouteRouter',
+  'operationalRouteRegistry',
   'assuranceDeclarativeRouteRegistry',
-  'routeAssuranceRequest',
-  'genericAssuranceResponse',
-  'defineRouteModule',
-  'contractValidateRouteContract',
-]) {
-  if (!assuranceRoutes.includes(token)) failures.push(`assurance route module missing registry invariant: ${token}`);
-}
-
-const platformRoutes = fs.readFileSync(path.join(root, 'src/routing/platform-laboratory-routes.ts'), 'utf8');
-for (const token of [
-  'createPlatformLaboratoryRouteRouter',
-  'platformLaboratoryRouteRegistry',
-  'routePlatformLaboratoryRequest',
-  'defineRouteModule',
-  'platformLaboratoryCapabilities',
-]) {
-  if (!platformRoutes.includes(token)) failures.push(`platform laboratory route module missing registry invariant: ${token}`);
-}
-
-const interfaceIdentityRoutes = fs.readFileSync(path.join(root, 'src/routing/interface-identity-routes.ts'), 'utf8');
-for (const token of [
-  'createInterfaceIdentityRouteRouter',
   'interfaceIdentityRouteRegistry',
-  'routeInterfaceIdentityRequest',
-  'defineRouteModule',
-  'interfaceIdentityCapabilities',
+  'platformLaboratoryRouteRegistry',
+  'createApplicationRouteRegistry',
+  'validateApplicationDeclaration',
+  'routeUrlFromRegistry',
+  'configureRegisteredRoutes',
 ]) {
-  if (!interfaceIdentityRoutes.includes(token)) failures.push(`interface/identity route module missing registry invariant: ${token}`);
+  if (!applicationRoutes.includes(token)) failures.push(`application registry missing invariant: ${token}`);
 }
 
-const assuranceModel = fs.readFileSync(path.join(root, 'src/assurance/model.ts'), 'utf8');
-for (const legacyToken of ['v1BoundaryAdapters', 'frameworkReferences:', 'riskLinks:', 'objectiveLinks:', 'incidentLinks:']) {
-  if (assuranceModel.includes(legacyToken)) failures.push(`canonical assurance model still contains v1 compatibility token: ${legacyToken}`);
-}
-const retiredSerializerPath = path.join(root, 'src/api/assurance-v1.ts');
-if (fs.existsSync(retiredSerializerPath)) failures.push('retired v1 assurance serializer must not remain in the current contract');
-for (const apiFile of ['src/api/assurance.ts', 'src/api/advisories.ts', 'src/api/assurance-registry.ts']) {
-  const apiSource = fs.readFileSync(path.join(root, apiFile), 'utf8');
-  if (apiSource.includes('serializeAssuranceV1')) failures.push(`${apiFile} still references the retired v1 assurance serializer`);
+const generator = read('scripts/generate-route-manifest.mjs');
+for (const retiredToken of ['const machine =', 'requiredRoutes =', '/__api/', '/v1/']) {
+  if (generator.includes(retiredToken)) failures.push(`route generator still contains a hardcoded route inventory: ${retiredToken}`);
 }
 
-const adminUi = fs.readFileSync(path.join(root, 'src/ui/admin.ts'), 'utf8');
-if (!adminUi.includes('Oops! demo is down.')) failures.push('offline UI missing required Oops! demo is down. message');
+const demoRegistry = read('src/demos/registry.ts');
+if (demoRegistry.includes('demosByRoute')) failures.push('retired demosByRoute lookup remains in the demo registry');
 
-const control = fs.readFileSync(path.join(root, 'src/lib/demo-control.ts'), 'utf8');
-if (!control.includes('demo_state_changed')) failures.push('admin state changes are not auditable');
+const assuranceRegistryModule = read('src/assurance/registry.ts');
+if (assuranceRegistryModule.includes('export *')) failures.push('src/assurance/registry.ts must not remain a compatibility barrel');
+const assurancePresentationModule = read('src/assurance/presentation.ts');
+if (assurancePresentationModule.includes('export *')) failures.push('src/assurance/presentation.ts must not remain a compatibility barrel');
+if (exists('src/api/assurance-v1.ts')) failures.push('retired v1 assurance serializer must not remain in the current contract');
 
-const crawlerControl = fs.readFileSync(path.join(root, 'src/lib/crawler-control.ts'), 'utf8');
+const adminUi = read('src/ui/admin.ts');
+if (!adminUi.includes('Oops! demo is down.')) failures.push('offline UI missing required recovery message');
+const crawlerControl = read('src/lib/crawler-control.ts');
 for (const token of ['OAI-SearchBot', 'ChatGPT-User', 'GPTBot', 'chatgpt_crawl_access_changed']) {
   if (!crawlerControl.includes(token)) failures.push(`crawler control invariant missing: ${token}`);
 }
-
-const logsLib = fs.readFileSync(path.join(root, 'src/lib/logs.ts'), 'utf8');
+const logsLib = read('src/lib/logs.ts');
 for (const token of ['application_logs', 'SENSITIVE_KEY', '[redacted]', 'recentApplicationLogs']) {
-  if (!logsLib.includes(token)) failures.push(`log viewer safety/persistence invariant missing: ${token}`);
+  if (!logsLib.includes(token)) failures.push(`application log invariant missing: ${token}`);
 }
+
+function walk(directory) {
+  for (const item of fs.readdirSync(directory, { withFileTypes: true })) {
+    if (item.name === 'node_modules' || item.name === '.git') continue;
+    const full = path.join(directory, item.name);
+    if (item.isDirectory()) walk(full);
+    else if (item.name.toLowerCase().endsWith('.pdf')) failures.push(`PDF is not allowed in this package: ${path.relative(root, full)}`);
+  }
+}
+walk(root);
 
 if (failures.length) {
-  console.error('Scaffold validation failed:');
-  for (const failure of failures) console.error(`- ${failure}`);
+  console.error(failures.join('\n'));
   process.exit(1);
 }
-
-console.log(`Scaffold validation passed: ${manifest.length} route entries, operations/admin/assurance/platform/interface-identity registry invariants present, no PDFs.`);
+console.log(`Scaffold validation passed for ${manifest.length} registry-generated routes.`);

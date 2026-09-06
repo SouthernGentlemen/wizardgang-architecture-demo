@@ -1,10 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import { demos } from '../src/demos/registry';
-import { isApiLike, wantsHtml } from '../src/router';
 import { sitemapResponse } from '../src/api/sitemap';
+import {
+  applicationRouteRegistry,
+  type ApplicationRouteDeclaration,
+} from '../src/routing/application-routes';
 import { operationalRouteRegistry } from '../src/routing/operational-routes';
 import { matchRoute } from '../src/routing/registry';
 import { readFileSync } from 'node:fs';
+
+const applicationRoutes = applicationRouteRegistry.declarations as readonly ApplicationRouteDeclaration[];
 
 describe('architecture demo registry', () => {
   it('publishes 25 HTML routes in five architecture groups', () => {
@@ -46,15 +51,26 @@ describe('architecture demo registry', () => {
   });
 
   it('keeps registry metadata synchronized with the machine route manifest', () => {
-    const manifest = JSON.parse(readFileSync('docs/route-manifest.json', 'utf8')) as Array<{ route: string; source: string; status: string }>;
+    const manifest = JSON.parse(readFileSync('docs/route-manifest.json', 'utf8')) as Array<{
+      route: string;
+      source: { module: string };
+      status: string;
+      navigation?: { group: string; label: string; index: boolean; sitemap: boolean };
+    }>;
     for (const demo of demos) {
       const entry = manifest.find((candidate) => candidate.route === demo.route);
       expect(entry, `missing manifest entry for ${demo.route}`).toBeDefined();
-      expect(entry?.source).toBe(demo.sourcePath);
+      expect(entry?.source.module).toMatch(/^src\//);
       expect(entry?.status).toBe(demo.status);
+      expect(entry?.navigation).toMatchObject({
+        group: demo.group,
+        label: demo.title,
+        index: true,
+        sitemap: true,
+      });
     }
     expect(demos.every((demo) => demo.status === 'working')).toBe(true);
-    expect(manifest.filter((entry) => entry.source.startsWith('src/demos/'))).toHaveLength(25);
+    expect(manifest.filter((entry) => entry.navigation?.index)).toHaveLength(demos.length);
   });
 });
 
@@ -80,30 +96,22 @@ describe('intentional offline route policies', () => {
     }
   });
 
-  it('identifies machine/API-like paths', () => {
-    expect(isApiLike('/__api/edge/inspect')).toBe(true);
-    expect(isApiLike('/v1/things')).toBe(true);
-    expect(isApiLike('/v1/assurance')).toBe(true);
-    expect(isApiLike('/v1/assurance/evidence')).toBe(true);
-    expect(isApiLike('/v1/assurance/risks')).toBe(true);
-    expect(isApiLike('/v1/assurance/incidents')).toBe(true);
-    expect(isApiLike('/__api/operations/logs')).toBe(true);
-    expect(isApiLike('/graphql')).toBe(true);
-    expect(isApiLike('/mcp/server')).toBe(true);
-    expect(isApiLike('/mcp')).toBe(false);
-    expect(isApiLike('/edge')).toBe(false);
-  });
-
-  it('only treats browser-style GETs as HTML redirects', () => {
-    expect(wantsHtml(new Request('https://demo.wizardgang.ai/edge', { headers: { accept: 'text/html' } }), '/edge')).toBe(true);
-    expect(wantsHtml(new Request('https://demo.wizardgang.ai/__api/evidence/traceability', { headers: { accept: 'application/json' } }), '/__api/evidence/traceability')).toBe(false);
-    expect(wantsHtml(new Request('https://demo.wizardgang.ai/edge', { method: 'POST' }), '/edge')).toBe(false);
-    expect(wantsHtml(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'text/html' } }), '/mcp')).toBe(true);
-    expect(wantsHtml(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'application/json' } }), '/mcp')).toBe(false);
-    expect(wantsHtml(new Request('https://demo.wizardgang.ai/mcp/server', { headers: { accept: 'text/html' } }), '/mcp/server')).toBe(false);
-    expect(wantsHtml(new Request('https://demo.wizardgang.ai/graphql', { headers: { accept: 'text/html' } }), '/graphql')).toBe(true);
-    expect(wantsHtml(new Request('https://demo.wizardgang.ai/graphql', { headers: { accept: 'application/json' } }), '/graphql')).toBe(false);
-    expect(wantsHtml(new Request('https://demo.wizardgang.ai/graphql/schema'), '/graphql/schema')).toBe(false);
+  it('declares browser response behavior without API-prefix or HTML-path inference', () => {
+    const browserPolicy = (pattern: string) => applicationRoutes.find((route) => route.pattern === pattern)?.browserHtml;
+    for (const pattern of [
+      '/__api/edge/inspect',
+      '/v1/assurance',
+      '/v1/assurance/evidence',
+      '/v1/assurance/risks',
+      '/v1/assurance/incidents',
+      '/__api/operations/logs',
+      '/mcp/server',
+      '/graphql/schema',
+    ]) expect(browserPolicy(pattern), pattern).toBe('never');
+    expect(browserPolicy('/graphql')).toBe('graphql');
+    expect(browserPolicy('/mcp')).toBe('page');
+    expect(browserPolicy('/edge')).toBe('page');
+    expect(applicationRoutes.some((route) => route.pattern === '/v1/things')).toBe(false);
   });
 });
 

@@ -146,7 +146,8 @@ describe('platform laboratory declarative routing', () => {
 
   it('removes individual migrated platform paths from the central router', () => {
     const centralRouterSource = fs.readFileSync('src/router.ts', 'utf8');
-    expect(centralRouterSource).toContain('routePlatformLaboratoryRequest');
+    expect(centralRouterSource).toContain('applicationRouteRegistry');
+    expect(centralRouterSource).not.toContain('routePlatformLaboratoryRequest');
 
     for (const path of [
       '/edge',
