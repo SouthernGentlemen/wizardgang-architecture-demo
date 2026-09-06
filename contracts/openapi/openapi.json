@@ -2061,8 +2061,7 @@
               "source",
               "resource",
               "revision",
-              "records",
-              "relationships"
+              "records"
             ],
             "properties": {
               "source": {
@@ -2078,12 +2077,6 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/$defs/record"
-                }
-              },
-              "relationships": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/$defs/relationship"
                 }
               }
             }
