@@ -16,6 +16,22 @@ const DEFAULT_MAX_PAGES = 20;
 const MAX_PAGE_LIMIT = 100;
 const MAX_EXPORT_PAGES = 50;
 const ISSUE_WRITE_FIELDS = new Set(['title', 'body', 'state', 'labels', 'assignees', 'milestone']);
+const IMPORT_REQUEST_FIELDS = new Set(['source', 'repository', 'operation', 'nativeId', 'revision', 'fields']);
+const RETAINED_REPORT_FIELDS = new Set([
+  'schemaVersion',
+  'id',
+  'source',
+  'reportType',
+  'producer',
+  'sourceRevision',
+  'observedAt',
+  'status',
+  'qualification',
+  'checks',
+  'evidence',
+  'relationships',
+]);
+const RETAINED_REPORT_OUTCOMES = new Set(['passed', 'failed', 'cancelled', 'skipped', 'incomplete']);
 
 type JsonObject = Record<string, unknown>;
 export type GitHubReportingMode = 'sample' | 'export';
@@ -102,9 +118,134 @@ function asObject(value: unknown): JsonObject | null {
   return value !== null && typeof value === 'object' && !Array.isArray(value) ? value as JsonObject : null;
 }
 
-function asObjects(value: unknown): JsonObject[] {
-  if (!Array.isArray(value)) return [];
-  return value.map(asObject).filter((candidate): candidate is JsonObject => Boolean(candidate));
+function strictObjects(value: unknown): JsonObject[] | null {
+  if (!Array.isArray(value)) return null;
+  const objects = value.map(asObject);
+  if (objects.some((candidate) => !candidate)) return null;
+  return objects as JsonObject[];
+}
+
+function hasOnlyKeys(object: JsonObject, allowed: ReadonlySet<string>): boolean {
+  return Object.keys(object).every((key) => allowed.has(key));
+}
+
+function nonEmptyString(value: unknown): value is string {
+  return typeof value === 'string' && value.length > 0;
+}
+
+function validDateTime(value: unknown): value is string {
+  if (typeof value !== 'string') return false;
+  if (!/^\d{4}-\d{2}-\d{2}T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|[+-](?:[01]\d|2[0-3]):[0-5]\d)$/.test(value)) return false;
+  return !Number.isNaN(Date.parse(value));
+}
+
+function validUri(value: unknown): value is string {
+  if (typeof value !== 'string') return false;
+  try {
+    const url = new URL(value);
+    return Boolean(url.protocol);
+  } catch {
+    return false;
+  }
+}
+
+function validReportingIdentity(value: unknown): value is ReportingIdentity {
+  const object = asObject(value);
+  if (!object || !hasOnlyKeys(object, new Set(['source', 'native', 'revision', 'observation']))) return false;
+  if (!nonEmptyString(object.source) || !nonEmptyString(object.native)) return false;
+  if (object.revision !== undefined && !nonEmptyString(object.revision)) return false;
+  if (object.observation !== undefined && !nonEmptyString(object.observation)) return false;
+  return true;
+}
+
+function validReportingRelationship(value: unknown): value is ReportingRelationship {
+  const object = asObject(value);
+  return Boolean(
+    object
+    && hasOnlyKeys(object, new Set(['relation', 'from', 'to']))
+    && nonEmptyString(object.relation)
+    && validReportingIdentity(object.from)
+    && validReportingIdentity(object.to),
+  );
+}
+
+function validEvidenceReference(value: unknown): boolean {
+  const object = asObject(value);
+  return Boolean(
+    object
+    && hasOnlyKeys(object, new Set(['kind', 'url']))
+    && (object.kind === 'workflow-run' || object.kind === 'job' || object.kind === 'source-revision')
+    && validUri(object.url),
+  );
+}
+
+function validOptionalDateTime(value: unknown): boolean {
+  return value === null || validDateTime(value);
+}
+
+function validReportStep(value: unknown): boolean {
+  const object = asObject(value);
+  if (!object || !hasOnlyKeys(object, new Set(['number', 'name', 'status', 'conclusion', 'outcome', 'startedAt', 'completedAt']))) return false;
+  if (!Number.isInteger(object.number) || Number(object.number) < 1) return false;
+  if (!nonEmptyString(object.name) || !nonEmptyString(object.status)) return false;
+  if (object.conclusion !== null && typeof object.conclusion !== 'string') return false;
+  if (!RETAINED_REPORT_OUTCOMES.has(String(object.outcome))) return false;
+  if (object.startedAt !== undefined && !validOptionalDateTime(object.startedAt)) return false;
+  if (object.completedAt !== undefined && !validOptionalDateTime(object.completedAt)) return false;
+  return true;
+}
+
+function validReportCheck(value: unknown): boolean {
+  const object = asObject(value);
+  if (!object || !hasOnlyKeys(object, new Set(['id', 'name', 'status', 'conclusion', 'outcome', 'startedAt', 'completedAt', 'evidence', 'steps']))) return false;
+  if (!Number.isInteger(object.id) || Number(object.id) < 1) return false;
+  if (!nonEmptyString(object.name) || !nonEmptyString(object.status)) return false;
+  if (object.conclusion !== null && typeof object.conclusion !== 'string') return false;
+  if (!RETAINED_REPORT_OUTCOMES.has(String(object.outcome))) return false;
+  if (!validOptionalDateTime(object.startedAt) || !validOptionalDateTime(object.completedAt)) return false;
+  if (!validEvidenceReference(object.evidence)) return false;
+  const steps = strictObjects(object.steps);
+  return Boolean(steps && steps.every(validReportStep));
+}
+
+function validReportProducer(value: unknown): boolean {
+  const object = asObject(value);
+  if (!object || !hasOnlyKeys(object, new Set(['provider', 'repository', 'workflow', 'workflowRunId', 'runAttempt', 'event', 'status', 'conclusion']))) return false;
+  if (object.provider !== 'github-actions' || !validRepository(object.repository)) return false;
+  if (object.workflow !== 'CI' && object.workflow !== 'Assurance Monitor') return false;
+  if (!Number.isInteger(object.workflowRunId) || Number(object.workflowRunId) < 1) return false;
+  if (!Number.isInteger(object.runAttempt) || Number(object.runAttempt) < 1) return false;
+  if (object.event !== 'push' && object.event !== 'schedule' && object.event !== 'workflow_dispatch') return false;
+  if (object.status !== 'completed') return false;
+  return object.conclusion === null || typeof object.conclusion === 'string';
+}
+
+function retainedReportPayload(value: unknown): JsonObject | null {
+  const report = asObject(value);
+  if (!report || !hasOnlyKeys(report, RETAINED_REPORT_FIELDS)) return null;
+  if (report.schemaVersion !== 1 || typeof report.id !== 'string' || !/^RPT-[A-Z0-9-]+$/.test(report.id)) return null;
+  if (report.source !== 'github.retained-reports' || !validDateTime(report.observedAt)) return null;
+  if (!RETAINED_REPORT_OUTCOMES.has(String(report.status))) return null;
+
+  const sourceRevision = asObject(report.sourceRevision);
+  if (!sourceRevision || !hasOnlyKeys(sourceRevision, new Set(['commit', 'branch']))) return null;
+  if (typeof sourceRevision.commit !== 'string' || !/^[0-9a-f]{40}$/.test(sourceRevision.commit) || !nonEmptyString(sourceRevision.branch)) return null;
+
+  const relationships = strictObjects(report.relationships);
+  if (!relationships || !relationships.every(validReportingRelationship)) return null;
+
+  if (report.reportType !== undefined && report.reportType !== 'ci-validation' && report.reportType !== 'assurance-monitor') return null;
+  if (report.qualification !== undefined && !nonEmptyString(report.qualification)) return null;
+  if (report.producer !== undefined && !validReportProducer(report.producer)) return null;
+  if (report.checks !== undefined) {
+    const checks = strictObjects(report.checks);
+    if (!checks || !checks.every(validReportCheck)) return null;
+  }
+  if (report.evidence !== undefined) {
+    const evidence = strictObjects(report.evidence);
+    if (!evidence || evidence.length < 2 || !evidence.every(validEvidenceReference)) return null;
+  }
+  return report;
 }
 
 function text(value: unknown): string | null {
@@ -336,14 +477,21 @@ function linkHasNext(header: string | null): boolean {
   return Boolean(header?.split(',').some((part) => /rel="next"/.test(part)));
 }
 
-function collection(value: unknown, key?: string): { items: JsonObject[]; totalCount: number | null } {
-  if (!key) return { items: asObjects(value), totalCount: null };
+function collection(value: unknown, key?: string): { items: JsonObject[]; totalCount: number | null } | null {
+  if (!key) {
+    const items = strictObjects(value);
+    return items ? { items, totalCount: null } : null;
+  }
   const object = asObject(value);
-  if (!object) return { items: [], totalCount: null };
-  return {
-    items: asObjects(object[key]),
-    totalCount: typeof object.total_count === 'number' && Number.isFinite(object.total_count) ? object.total_count : null,
-  };
+  if (!object) return null;
+  const items = strictObjects(object[key]);
+  if (!items) return null;
+  let totalCount: number | null = null;
+  if (object.total_count !== undefined) {
+    if (!Number.isSafeInteger(object.total_count) || Number(object.total_count) < 0) return null;
+    totalCount = Number(object.total_count);
+  }
+  return { items, totalCount };
 }
 
 async function fetchPaged(
@@ -369,6 +517,9 @@ async function fetchPaged(
     }
 
     const current = collection(value, key);
+    if (!current) {
+      return { items, availability: 'unavailable', complete: false, nextCursor: null, detail: 'github_provider_invalid_response' };
+    }
     items.push(...current.items);
     exactTotal = current.totalCount ?? exactTotal;
     const next = linkHasNext(response.headers.get('link')) || (exactTotal !== null && items.length < exactTotal);
@@ -498,13 +649,14 @@ function retainedReportRecord(
   blobSha: string,
   report: JsonObject,
 ): GitHubReportingRecord | null {
-  const reportId = text(report.id);
-  if (!reportId || report.source !== source.id) return null;
+  const validatedReport = retainedReportPayload(report);
+  if (!validatedReport) return null;
+  const reportId = text(validatedReport.id);
+  if (!reportId || validatedReport.source !== source.id) return null;
+  const relationshipObjects = strictObjects(validatedReport.relationships);
+  if (!relationshipObjects || !relationshipObjects.every(validReportingRelationship)) return null;
+  const reportRelationships = relationshipObjects as unknown as ReportingRelationship[];
   const identity = reportingIdentity(source.id, repository, [reportId], blobSha);
-  const reportRelationships = Array.isArray(report.relationships)
-    ? report.relationships.map(asObject).filter((value): value is JsonObject => Boolean(value))
-      .filter((value) => asObject(value.from) && asObject(value.to) && text(value.relation)) as unknown as ReportingRelationship[]
-    : [];
   return {
     id: identity.native,
     source: source.id,
@@ -515,12 +667,12 @@ function retainedReportRecord(
     identity,
     revision: blobSha,
     url: `https://github.com/${repository}/blob/${encodeURIComponent(branch)}/${path.split('/').map(encodeURIComponent).join('/')}`,
-    status: text(report.status),
-    createdAt: text(report.observedAt),
-    updatedAt: text(report.observedAt),
+    status: text(validatedReport.status),
+    createdAt: text(validatedReport.observedAt),
+    updatedAt: text(validatedReport.observedAt),
     availability: 'available',
     relationships: structuredClone(reportRelationships),
-    native: { ...structuredClone(report), path, blobSha },
+    native: { ...structuredClone(validatedReport), path, blobSha },
   };
 }
 
@@ -560,10 +712,14 @@ async function fetchRetainedReports(
     return { source, records: [], availability: failure.availability, complete: false, nextCursor: null, detail: failure.detail };
   }
   const tree = asObject(treeResult.value);
-  if (!tree) {
+  if (!tree || (tree.truncated !== undefined && typeof tree.truncated !== 'boolean')) {
     return { source, records: [], availability: 'unavailable', complete: false, nextCursor: null, detail: 'github_provider_invalid_response' };
   }
-  const reportEntries = asObjects(tree.tree)
+  const treeEntries = strictObjects(tree.tree);
+  if (!treeEntries) {
+    return { source, records: [], availability: 'unavailable', complete: false, nextCursor: null, detail: 'github_provider_invalid_response' };
+  }
+  const reportEntries = treeEntries
     .filter((entry) => entry.type === 'blob' && /^reports\/.+\.json$/.test(text(entry.path) ?? '') && text(entry.sha))
     .sort((left, right) => String(right.path).localeCompare(String(left.path), undefined, { numeric: true }));
   const maximum = mode === 'sample' ? limit : context.maxPages * MAX_PAGE_LIMIT;
@@ -592,7 +748,7 @@ async function fetchRetainedReports(
     }
     const decoded = decodeGitBlob(result.value);
     let report: JsonObject | null = null;
-    try { report = decoded ? asObject(JSON.parse(decoded)) : null; } catch { report = null; }
+    try { report = decoded ? retainedReportPayload(JSON.parse(decoded)) : null; } catch { report = null; }
     const record = report && retainedReportRecord(
       source,
       context.binding.repository,
@@ -906,10 +1062,34 @@ function validateIssueFields(fields: Readonly<Record<string, unknown>>): JsonObj
   return result;
 }
 
+export function validateGitHubReportingImportRequest(value: unknown): GitHubReportingImportRequest {
+  const object = asObject(value);
+  if (!object || !hasOnlyKeys(object, IMPORT_REQUEST_FIELDS)) {
+    throw new GitHubReportingError(400, 'github_import_payload_invalid', 'The reporting import body must match the native update request contract.');
+  }
+  if (object.operation !== 'update') {
+    throw new GitHubReportingError(400, 'github_import_operation_unsupported', 'Only update is supported for native GitHub reporting sources.');
+  }
+  if (!nonEmptyString(object.source)) throw new GitHubReportingError(400, 'github_import_payload_invalid', 'source');
+  if (!validRepository(object.repository)) throw new GitHubReportingError(400, 'github_import_payload_invalid', 'repository');
+  if (!nonEmptyString(object.nativeId)) throw new GitHubReportingError(400, 'github_import_payload_invalid', 'nativeId');
+  if (!nonEmptyString(object.revision)) throw new GitHubReportingError(400, 'github_import_payload_invalid', 'revision');
+  const fields = asObject(object.fields);
+  if (!fields) throw new GitHubReportingError(400, 'github_import_payload_invalid', 'fields');
+  return {
+    source: object.source,
+    repository: object.repository,
+    operation: 'update',
+    nativeId: object.nativeId,
+    revision: object.revision,
+    fields: structuredClone(fields),
+  };
+}
+
 export async function importGitHubReporting(
   env: Env,
   principal: Principal,
-  input: GitHubReportingImportRequest,
+  payload: unknown,
 ): Promise<GitHubReportingRecord> {
   if (!principal.permissions.includes('reporting:write')) {
     throw new GitHubReportingError(
@@ -917,9 +1097,7 @@ export async function importGitHubReporting(
       isAuthenticated(principal) ? 'permission_denied' : 'authentication_required',
     );
   }
-  if (!input || input.operation !== 'update') {
-    throw new GitHubReportingError(400, 'github_import_operation_unsupported', 'Only update is supported for native GitHub reporting sources.');
-  }
+  const input = validateGitHubReportingImportRequest(payload);
 
   const binding = bindingFor(env, input.repository);
   const source = sourceFor(input.source, binding.repository);
