@@ -106,7 +106,7 @@ npm run build
 git diff --check
 ```
 
-CI repeats the required validation controls. A separate trusted `workflow_run` publisher derives the actual default-branch run/job/step outcomes from GitHub and retains the schema-valid report on the `assurance-reports` branch; its 30-day Actions artifact is transport/recovery only.
+CI repeats the required validation controls. Delivery reporting queries GitHub's native workflow runs, attempts, and artifacts through the canonical reporting layer; no workflow creates a reporting branch or stores a second report shape.
 
 ## Delivery
 

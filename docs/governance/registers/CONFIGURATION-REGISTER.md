@@ -140,7 +140,7 @@ CI source defines:
 - clean D1 migration validation;
 - dependency audit;
 - Worker build;
-- provider-derived retained report generation after trusted default-branch workflows.
+- provider-native workflow run, attempt, and artifact evidence queried through the shared reporting layer without a second branch.
 
 ### CFG-012 — release/deployment workflows — Met
 

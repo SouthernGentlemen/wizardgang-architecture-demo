@@ -98,24 +98,24 @@ describe('authoritative reporting contracts', () => {
     expect(github.filter((source) => source.id !== 'github.issues').every((source) => !source.capabilities.includes('update'))).toBe(true);
   });
 
-  it('resolves report ownership to durable retained reports and governance to canonical structured partitions', () => {
-    const retained = registeredReportingSource('github.retained-reports');
-    expect(retained).toMatchObject({
-      authority: 'structured-record',
-      scope: { branch: 'assurance-reports', resource: 'reports/' },
+  it('resolves report ownership to provider-native workflow attempts and governance to canonical structured partitions', () => {
+    const reports = registeredReportingSource('github.workflow-attempts');
+    expect(reports).toMatchObject({
+      authority: 'native-object',
+      scope: { resource: 'workflow-attempts' },
       capabilities: ['read', 'query', 'export'],
-      ingestion: 'disabled',
+      ingestion: 'enabled',
     });
     expect(registry.reporting.ownership.find((owner) => owner.domain === 'reports')).toEqual({
       domain: 'reports',
-      source: 'github.retained-reports',
+      source: 'github.workflow-attempts',
     });
     expect(registry.reporting.ownership.find((owner) => owner.domain === 'governance')).toEqual({
       domain: 'governance',
       source: 'github.structured-records',
       resource: 'governance.records',
     });
-    expect(reportingSourceForOwnership('reports').id).toBe('github.retained-reports');
+    expect(reportingSourceForOwnership('reports').id).toBe('github.workflow-attempts');
     const governance = assuranceRegistryResources.find((resource) => resource.id === 'governance.records');
     expect(governance).toBeDefined();
     expect(reportingSourceForOwnership('governance', governance).id).toBe('github.structured-records.governance.records');

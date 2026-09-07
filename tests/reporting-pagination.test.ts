@@ -141,7 +141,7 @@ describe('opaque reporting cursor codec', () => {
   it('cannot be reused for another collection', async () => {
     const cursor = await encodeReportingCursor(context, continuation, secret);
     await expectCursorFailure(
-      decodeReportingCursor(cursor, { ...context, collection: 'retained-reports' }, secret),
+      decodeReportingCursor(cursor, { ...context, collection: 'reports' }, secret),
       'reporting_cursor_mismatch',
       'collection',
     );

@@ -52,6 +52,6 @@ npm run security:dependencies
 npm run build
 ```
 
-CI repeats these checks and validates the controlled history and pull-request title. After accepted default-branch CI completes, the trusted retained-report publisher derives the actual provider outcomes and writes the schema-valid report to the `assurance-reports` branch. Never edit an applied migration; add the next numbered migration. Releases and production deployment follow [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md) and [`docs/RELEASE.md`](docs/RELEASE.md).
+CI repeats these checks and validates the controlled history and pull-request title. Delivery evidence remains in GitHub's native workflow runs, attempts, and artifacts and is queried through the canonical reporting layer; repository automation must not create a reporting branch. Never edit an applied migration; add the next numbered migration. Releases and production deployment follow [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md) and [`docs/RELEASE.md`](docs/RELEASE.md).
 
 Do not add PDF documentation to this project unless explicitly requested; architecture and operational standards are maintained in reviewable Markdown/text.

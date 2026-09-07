@@ -145,33 +145,4 @@ describe('reporting trust-boundary validation', () => {
     expect(outcome.result.qualifications['github.issues.detail']).toBe('github_provider_invalid_response');
   });
 
-  it('marks malformed retained-report blobs partial instead of projecting invalid relationships', async () => {
-    const invalidReport = {
-      schemaVersion: 1,
-      id: 'RPT-CI-7001-A2',
-      source: 'github.retained-reports',
-      sourceRevision: { commit: '1'.repeat(40), branch: 'main' },
-      observedAt: '2026-09-04T18:00:00Z',
-      status: 'failed',
-      relationships: [{ relation: 'producedBy', from: 'invalid', to: { source: 'github.workflow-runs', native: `${repository}|github.workflow-runs|7001` } }],
-    };
-    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
-      const path = requestPath(input);
-      if (path === repositoryApi) return json({ id: 1, default_branch: 'main', private: false });
-      if (path === `${repositoryApi}/branches/assurance-reports`) return json({ commit: { sha: '2'.repeat(40) } });
-      if (path === `${repositoryApi}/git/trees/${'2'.repeat(40)}?recursive=1`) {
-        return json({ truncated: false, tree: [{ path: 'reports/ci-7001.json', type: 'blob', sha: '3'.repeat(40) }] });
-      }
-      if (path === `${repositoryApi}/git/blobs/${'3'.repeat(40)}`) {
-        return json({ encoding: 'base64', content: btoa(JSON.stringify(invalidReport)) });
-      }
-      return json({ message: 'missing fixture' }, 500);
-    });
-
-    const outcome = await queryGitHubReporting(environment(), visitor, { sourceIds: ['github.retained-reports'] });
-    expect(outcome.result.records).toEqual([]);
-    expect(outcome.result.availability['github.retained-reports']).toBe('partial');
-    expect(outcome.result.qualifications['github.retained-reports.completeness']).toBe('partial');
-    expect(outcome.result.qualifications['github.retained-reports.detail']).toBe('retained_report_invalid');
-  });
 });

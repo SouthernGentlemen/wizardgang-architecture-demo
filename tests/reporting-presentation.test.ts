@@ -9,7 +9,7 @@ const source: ReportingSource = {
   scope: { resource: 'reports/' },
   nativeIdentity: ['id'],
   revisionIdentity: ['blob'],
-  schema: 'contracts/assurance/report.schema.json',
+  schema: 'contracts/assurance/reporting.schema.json#/$defs/record',
   visibility: 'public',
   capabilities: ['read', 'query', 'export'],
   ingestion: 'disabled',

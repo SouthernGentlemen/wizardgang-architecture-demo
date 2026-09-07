@@ -22,7 +22,7 @@ function syntheticReportRegistry() {
         kind: 'reports',
         role: 'dataset',
         path: 'assurance/reports/reports.json',
-        schema: 'contracts/assurance/report.schema.json',
+        schema: 'contracts/assurance/reporting.schema.json#/$defs/record',
         visibility: 'public',
         capabilities: ['runtime', 'records'],
         recordCollection: { path: 'records', identity: ['id'] },

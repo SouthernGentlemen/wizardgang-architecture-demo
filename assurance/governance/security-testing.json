@@ -228,11 +228,11 @@
       "order": 14,
       "fields": {
         "category": "Evidence",
-        "testControl": "Provider-derived retained CI report",
-        "currentEvidence": "`scripts/generate-retained-report.mjs`, `.github/workflows/report-publisher.yml`, `github.retained-reports`",
+        "testControl": "Provider-native CI run and attempt evidence",
+        "currentEvidence": "GitHub Actions runs, attempts, jobs, and artifacts through `github.workflow-runs`, `github.workflow-attempts`, and `github.workflow-artifacts`",
         "status": "Active",
         "triggerCadence": "PR / main CI",
-        "currentLimitationNextAction": "Durable Git history is authoritative; the 30-day Actions artifact is transport/recovery only"
+        "currentLimitationNextAction": "GitHub controls native retention; reporting preserves provider availability and expiration state without copying results to another branch"
       },
       "relationships": []
     },
