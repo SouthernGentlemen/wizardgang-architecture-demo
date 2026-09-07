@@ -13,7 +13,7 @@ const applicationRoutes = applicationRouteRegistry.declarations as readonly Appl
 
 describe('architecture demo registry', () => {
   it('publishes the consolidated HTML routes in four architecture groups', () => {
-    expect(demos).toHaveLength(9);
+    expect(demos).toHaveLength(5);
     expect([...new Set(demos.map((demo) => demo.group))]).toEqual([
       'Platform', 'Interfaces', 'Delivery & Governance', 'Operations',
     ]);
@@ -31,11 +31,10 @@ describe('architecture demo registry', () => {
     expect(demos.every((demo) => demo.route.startsWith('/'))).toBe(true);
   });
 
-  it('includes the complete operations dashboard route family', () => {
+  it('publishes one canonical operations route and retires the dashboard route family', () => {
     const routes = new Set(demos.map((demo) => demo.route));
-    expect([...routes].filter((route) => route.startsWith('/dashboard'))).toEqual([
-      '/dashboard', '/dashboard/uptime', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing',
-    ]);
+    expect([...routes].filter((route) => route === '/operations')).toEqual(['/operations']);
+    expect([...routes].filter((route) => route.startsWith('/dashboard'))).toEqual([]);
   });
 
   it('places consolidated assurance and separate security in delivery and governance', () => {
@@ -76,7 +75,7 @@ describe('architecture demo registry', () => {
 describe('intentional offline route policies', () => {
   it('keeps registered operational recovery surfaces reachable', () => {
     for (const route of [
-      '/dashboard', '/dashboard/uptime', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing',
+      '/operations',
       '/health', '/version', '/__api/operations/logs', '/__api/operations/cloudflare-usage',
       '/__api/operations/billing', '/offline', '/admin', '/robots.txt', '/.well-known/security.txt', '/og.png',
     ]) {

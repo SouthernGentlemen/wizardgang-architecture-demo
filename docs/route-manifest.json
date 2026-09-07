@@ -2250,266 +2250,6 @@
     "status": "working"
   },
   {
-    "id": "operations.dashboard",
-    "route": "/dashboard",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "available"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Operations dashboard",
-    "description": "Read-only operations center for runtime, availability, delivery, usage, and assurance.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/OPERATIONS.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/operations-pages.ts",
-      "exportName": "renderDashboard",
-      "tests": [
-        "tests/operational-route-registry.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Operations",
-      "label": "System Operations",
-      "order": 5,
-      "index": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
-    "id": "operations.dashboard-billing",
-    "route": "/dashboard/billing",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "available"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Usage and cost",
-    "description": "Cloudflare usage, cost evidence, and guardrail simulator.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/OPERATIONS.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/operations-pages.ts",
-      "exportName": "renderBilling",
-      "tests": [
-        "tests/operational-route-registry.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Operations",
-      "label": "Cloudflare Usage & Cost",
-      "order": 9,
-      "index": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
-    "id": "operations.dashboard-docs",
-    "route": "/dashboard/docs",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "available"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Operations documentation",
-    "description": "Documentation index for the live architecture demo.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/OPERATIONS.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/operations-pages.ts",
-      "exportName": "renderDocs",
-      "tests": [
-        "tests/operational-route-registry.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Operations",
-      "label": "Documentation",
-      "order": 7,
-      "index": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
-    "id": "operations.dashboard-logs",
-    "route": "/dashboard/logs",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "available"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Operations logs",
-    "description": "Public-safe application log viewer.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/OPERATIONS.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/logs.ts",
-      "exportName": "renderLogsDemo",
-      "tests": [
-        "tests/operational-route-registry.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Operations",
-      "label": "Log Viewer",
-      "order": 8,
-      "index": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
-    "id": "operations.dashboard-uptime",
-    "route": "/dashboard/uptime",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "available"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Availability history",
-    "description": "Scheduled availability and planned-maintenance history.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/OPERATIONS.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/operations-pages.ts",
-      "exportName": "renderUptime",
-      "tests": [
-        "tests/operational-route-registry.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Operations",
-      "label": "Availability",
-      "order": 6,
-      "index": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
     "id": "operations.health",
     "route": "/health",
     "methods": [
@@ -2596,6 +2336,58 @@
         "tests/operational-route-registry.test.ts",
         "tests/router.test.ts"
       ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.page",
+    "route": "/operations",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Operations",
+    "description": "Canonical server-rendered operations surface for overview, availability, logs, usage, reports, and documentation.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/operations.ts",
+      "exportName": "renderOperations",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Operations",
+      "label": "Operations",
+      "order": 5,
+      "index": true,
+      "sitemap": true
     },
     "status": "working"
   },

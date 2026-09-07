@@ -16,8 +16,7 @@ import { securityTxtResponse } from '../api/security-policy';
 import { sitemapResponse } from '../api/sitemap';
 import { socialCardResponse } from '../ui/brand-assets';
 import { renderAdmin, renderOffline } from '../ui/admin';
-import { renderBilling, renderDashboard, renderDocs, renderUptime } from '../demos/operations-pages';
-import { renderLogsDemo } from '../demos/logs';
+import { renderOperations } from '../demos/operations';
 import { demos } from '../demos/registry';
 import {
   createRouteRegistry,
@@ -178,29 +177,9 @@ const globalOperationalRoutes = [
     cache: { mode: 'public', maxAgeSeconds: 3600 },
   }),
   operationalRoute({
-    id: 'operations.dashboard', pattern: '/dashboard', methods: ['GET'], kind: 'page', handler: (request, { env }) => renderDashboard(env, request),
-    title: 'Operations dashboard', description: 'Read-only operations center for runtime, availability, delivery, usage, and assurance.',
-    sourceModule: 'src/demos/operations-pages.ts', sourceExport: 'renderDashboard', indexing: 'allow',
-  }),
-  operationalRoute({
-    id: 'operations.dashboard-uptime', pattern: '/dashboard/uptime', methods: ['GET'], kind: 'page', handler: (_request, { env }) => renderUptime(env),
-    title: 'Availability history', description: 'Scheduled availability and planned-maintenance history.',
-    sourceModule: 'src/demos/operations-pages.ts', sourceExport: 'renderUptime', indexing: 'allow',
-  }),
-  operationalRoute({
-    id: 'operations.dashboard-docs', pattern: '/dashboard/docs', methods: ['GET'], kind: 'page', handler: (_request, { env }) => renderDocs(env),
-    title: 'Operations documentation', description: 'Documentation index for the live architecture demo.',
-    sourceModule: 'src/demos/operations-pages.ts', sourceExport: 'renderDocs', indexing: 'allow',
-  }),
-  operationalRoute({
-    id: 'operations.dashboard-billing', pattern: '/dashboard/billing', methods: ['GET'], kind: 'page', handler: (_request, { env }) => renderBilling(env),
-    title: 'Usage and cost', description: 'Cloudflare usage, cost evidence, and guardrail simulator.',
-    sourceModule: 'src/demos/operations-pages.ts', sourceExport: 'renderBilling', indexing: 'allow',
-  }),
-  operationalRoute({
-    id: 'operations.dashboard-logs', pattern: '/dashboard/logs', methods: ['GET'], kind: 'page', handler: (request, { env }) => renderLogsDemo(request, env),
-    title: 'Operations logs', description: 'Public-safe application log viewer.',
-    sourceModule: 'src/demos/logs.ts', sourceExport: 'renderLogsDemo', indexing: 'allow',
+    id: 'operations.page', pattern: '/operations', methods: ['GET'], kind: 'page', handler: (request, { env }) => renderOperations(request, env),
+    title: 'Operations', description: 'Canonical server-rendered operations surface for overview, availability, logs, usage, reports, and documentation.',
+    sourceModule: 'src/demos/operations.ts', sourceExport: 'renderOperations', indexing: 'allow',
   }),
   operationalRoute({
     id: 'operations.api-logs', pattern: '/__api/operations/logs', methods: ['GET'], kind: 'api', handler: (request, { env }) => logsResponse(request, env),

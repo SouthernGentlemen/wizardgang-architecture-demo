@@ -8,12 +8,8 @@ This file is generated from the active declarative application registry. Route I
 |---|---|---|---|---|---|---|---|---|
 | `interfaces.frontend.index` | `/` | `GET` | page | public | gated | allow | Architecture demo index | `src/ui/page.ts` |
 | `assurance.wizardgang-public-assurance.html` | `/assurance` | `GET` | page | public | gated | allow | Assurance registry html | `src/demos/assurance.ts` |
-| `operations.dashboard` | `/dashboard` | `GET` | page | public | available | allow | Operations dashboard | `src/demos/operations-pages.ts` |
-| `operations.dashboard-billing` | `/dashboard/billing` | `GET` | page | public | available | allow | Usage and cost | `src/demos/operations-pages.ts` |
-| `operations.dashboard-docs` | `/dashboard/docs` | `GET` | page | public | available | allow | Operations documentation | `src/demos/operations-pages.ts` |
-| `operations.dashboard-logs` | `/dashboard/logs` | `GET` | page | public | available | allow | Operations logs | `src/demos/logs.ts` |
-| `operations.dashboard-uptime` | `/dashboard/uptime` | `GET` | page | public | available | allow | Availability history | `src/demos/operations-pages.ts` |
 | `interfaces.page` | `/interfaces` | `GET` | page | public | gated | allow | Interfaces | `src/demos/interfaces.ts` |
+| `operations.page` | `/operations` | `GET` | page | public | available | allow | Operations | `src/demos/operations.ts` |
 | `platform.page` | `/platform` | `GET` | page | public | gated | allow | Cloudflare Platform | `src/demos/platform.ts` |
 | `assurance.advisories.html` | `/security` | `GET` | page | public | available | allow | Assurance advisories html | `src/demos/security-page.ts` |
 

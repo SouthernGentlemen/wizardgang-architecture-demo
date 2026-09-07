@@ -12,7 +12,7 @@ export function renderAdmin(env: Env, control: DemoControl, crawlerControl: Craw
 <section class="page-header">
   <p class="eyebrow">Operations / protected</p>
   <h1>Demo Admin</h1>
-  <p class="lede">Control public demo availability and ChatGPT web access without disabling the status, documentation, or administration surface.</p>
+  <p class="lede">Control public demo availability and ChatGPT web access without disabling the operations, security, health, recovery, or administration surfaces.</p>
   <div class="page-tools">
     <span class="badge ${offline ? 'badge-down' : 'badge-ok'}">${escapeHtml(control.state)}</span>
     ${referenceDetails([
@@ -71,12 +71,12 @@ ${notice ? `<section class="panel" role="status"><strong>${escapeHtml(notice)}</
 <section class="panel">
   <h2>Offline invariants</h2>
   <ul>
-    <li>Browser demo pages redirect to the public offline message.</li>
-    <li>API, non-HTML, and write requests return structured <code>503</code> responses.</li>
-    <li>Dashboard, health, version, offline, and admin routes remain reachable.</li>
+    <li>Ordinary browser demo pages redirect to the public offline message.</li>
+    <li>Ordinary gated API, non-HTML, and write requests return structured <code>503</code> responses.</li>
+    <li>Operations, security, health, version, offline, admin, and required machine recovery routes remain reachable.</li>
     <li>Every state transition is written to the shared audit event stream.</li>
   </ul>
-</section>`, { cacheControl: 'no-store', noindex: true });
+</section>`, { cacheControl: 'no-store', noindex: true, activeRoute: '/operations' });
 }
 
 export function renderOffline(env: Env, control: DemoControl, requestedPath: string): Response {
@@ -98,13 +98,17 @@ export function renderOffline(env: Env, control: DemoControl, requestedPath: str
   return shell(env, offline ? 'Demo offline' : 'Demo online', `${body}
 <section class="panel">
   <h2>Always reachable</h2>
-  <p class="subtle">Operational surfaces stay available during an intentional offline window so the demo can be observed while it is down.</p>
+  <p class="subtle">Operational and security surfaces stay available during an intentional offline window so the demo can be observed and recovered while ordinary demos are down.</p>
   <div class="meta">
-    <a href="/dashboard">Operations dashboard</a>
-    <a href="/dashboard#health">Health</a>
-    <a href="/dashboard/uptime">Uptime</a>
-    <a href="/dashboard/docs">Docs</a>
+    <a href="/operations">Operations</a>
+    <a href="/operations#health">Health</a>
+    <a href="/operations?view=availability">Availability</a>
+    <a href="/operations?view=docs">Docs</a>
+    <a href="/security">Security</a>
+    <a href="/health">Health JSON</a>
+    <a href="/version">Version JSON</a>
+    <a href="/admin">Admin</a>
     <a href="${escapeHtml(repoUrl(env))}">Public source</a>
   </div>
-</section>`, { cacheControl: 'no-store', noindex: true, status: offline ? 503 : 200 });
+</section>`, { cacheControl: 'no-store', noindex: true, status: offline ? 503 : 200, activeRoute: '/operations' });
 }
