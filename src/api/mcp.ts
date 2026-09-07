@@ -14,7 +14,7 @@ import { authorize } from '../lib/authorization';
 import { json } from '../lib/http';
 import { recordApplicationLog } from '../lib/logs';
 
-export const MCP_SERVER_PATH = '/mcp/server';
+export const MCP_SERVER_PATH = '/mcp';
 export const MCP_MODERN_PROTOCOL_VERSION = '2026-07-28';
 export const MCP_SUPPORTED_PROTOCOL_VERSIONS = [
   MCP_MODERN_PROTOCOL_VERSION,

@@ -392,6 +392,228 @@
         }
       }
     },
+    "/auth/microsoft": {
+      "get": {
+        "summary": "Start Microsoft authorization",
+        "description": "Starts OIDC authorization-code flow with state, nonce, and PKCE.",
+        "x-route-id": "interfaces.identity.microsoft.start",
+        "responses": {
+          "303": {
+            "description": "Redirect response"
+          }
+        }
+      }
+    },
+    "/auth/microsoft/callback": {
+      "get": {
+        "summary": "Microsoft authorization callback",
+        "description": "Validates the Microsoft OIDC callback and establishes the application session.",
+        "x-route-id": "interfaces.identity.microsoft.callback",
+        "responses": {
+          "303": {
+            "description": "Redirect response"
+          }
+        }
+      }
+    },
+    "/auth/google": {
+      "get": {
+        "summary": "Start Google authorization",
+        "description": "Starts OIDC authorization-code flow with state, nonce, and PKCE.",
+        "x-route-id": "interfaces.identity.google.start",
+        "responses": {
+          "303": {
+            "description": "Redirect response"
+          }
+        }
+      }
+    },
+    "/auth/google/callback": {
+      "get": {
+        "summary": "Google authorization callback",
+        "description": "Validates the Google OIDC callback and establishes the application session.",
+        "x-route-id": "interfaces.identity.google.callback",
+        "responses": {
+          "303": {
+            "description": "Redirect response"
+          }
+        }
+      }
+    },
+    "/auth/github": {
+      "get": {
+        "summary": "Start GitHub authorization",
+        "description": "Starts OAuth authorization-code flow with state and PKCE.",
+        "x-route-id": "interfaces.identity.github.start",
+        "responses": {
+          "303": {
+            "description": "Redirect response"
+          }
+        }
+      }
+    },
+    "/auth/github/callback": {
+      "get": {
+        "summary": "GitHub authorization callback",
+        "description": "Validates the GitHub OAuth callback and provider identity before establishing a session.",
+        "x-route-id": "interfaces.identity.github.callback",
+        "responses": {
+          "303": {
+            "description": "Redirect response"
+          }
+        }
+      }
+    },
+    "/auth/saml": {
+      "get": {
+        "summary": "Start SAML sign-in",
+        "description": "Creates a replay-bound SAML AuthnRequest.",
+        "x-route-id": "interfaces.identity.saml.start",
+        "responses": {
+          "303": {
+            "description": "Redirect response"
+          }
+        }
+      }
+    },
+    "/auth/saml/acs": {
+      "post": {
+        "summary": "SAML assertion consumer service",
+        "description": "Validates signature, issuer, audience, destination, time bounds, RelayState, and replay.",
+        "x-route-id": "interfaces.identity.saml.acs",
+        "responses": {
+          "303": {
+            "description": "Redirect response"
+          }
+        }
+      }
+    },
+    "/auth/saml/metadata": {
+      "get": {
+        "summary": "SAML service-provider metadata",
+        "description": "Returns origin-specific public service-provider metadata.",
+        "x-route-id": "interfaces.identity.saml.metadata",
+        "responses": {
+          "200": {
+            "description": "Protocol response"
+          }
+        }
+      }
+    },
+    "/auth/session": {
+      "get": {
+        "summary": "Current identity session",
+        "description": "Returns the disclosure-safe current application session.",
+        "x-route-id": "interfaces.identity.session",
+        "responses": {
+          "200": {
+            "description": "Protocol response"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Revoke identity session",
+        "description": "Revokes the current application session.",
+        "x-route-id": "interfaces.identity.logout",
+        "responses": {
+          "200": {
+            "description": "Protocol response"
+          }
+        }
+      }
+    },
+    "/auth/token": {
+      "post": {
+        "summary": "Issue bounded demo access token",
+        "description": "Issues a short-lived token derived from the validated identity session.",
+        "x-route-id": "interfaces.identity.token",
+        "responses": {
+          "200": {
+            "description": "Protocol response"
+          }
+        }
+      }
+    },
+    "/auth/authorize": {
+      "post": {
+        "summary": "Evaluate identity authorization",
+        "description": "Evaluates application authorization from the server-derived identity session.",
+        "x-route-id": "interfaces.identity.authorize",
+        "responses": {
+          "200": {
+            "description": "Protocol response"
+          }
+        }
+      }
+    },
+    "/graphql": {
+      "get": {
+        "summary": "GraphQL endpoint",
+        "description": "Executes bounded GraphQL queries.",
+        "x-route-id": "interfaces.graphql.endpoint",
+        "responses": {
+          "200": {
+            "description": "Protocol response"
+          }
+        }
+      },
+      "post": {
+        "summary": "GraphQL endpoint",
+        "description": "Executes bounded GraphQL queries and authorized mutations.",
+        "x-route-id": "interfaces.graphql.endpoint",
+        "responses": {
+          "200": {
+            "description": "Protocol response"
+          }
+        }
+      }
+    },
+    "/mcp": {
+      "get": {
+        "summary": "MCP Streamable HTTP endpoint",
+        "description": "MCP protocol transport with origin and authorization enforcement.",
+        "x-route-id": "interfaces.mcp.server",
+        "responses": {
+          "200": {
+            "description": "Protocol response"
+          }
+        }
+      },
+      "post": {
+        "summary": "MCP Streamable HTTP endpoint",
+        "description": "MCP protocol transport with origin and authorization enforcement.",
+        "x-route-id": "interfaces.mcp.server",
+        "responses": {
+          "200": {
+            "description": "Protocol response"
+          }
+        }
+      },
+      "delete": {
+        "summary": "MCP Streamable HTTP endpoint",
+        "description": "MCP protocol transport with origin and authorization enforcement.",
+        "x-route-id": "interfaces.mcp.server",
+        "responses": {
+          "200": {
+            "description": "Protocol response"
+          }
+        }
+      }
+    },
+    "/webhooks/github": {
+      "post": {
+        "summary": "GitHub webhook receiver",
+        "description": "Verifies exact-body signature, repository and event allowlists, replay, audit, and safe disclosure.",
+        "x-route-id": "interfaces.webhooks.github",
+        "responses": {
+          "202": {
+            "description": "Protocol response"
+          }
+        }
+      }
+    },
     "/api/reporting": {
       "get": {
         "summary": "Discover canonical reporting collections",

@@ -69,7 +69,7 @@ describe('identity protocol boundaries', () => {
   });
 
   it('requires a real application session before evaluating authorization', async () => {
-    const response = await authorizationDecisionResponse(new Request('https://demo.example/__api/identity/authorize', {
+    const response = await authorizationDecisionResponse(new Request('https://demo.example/auth/authorize', {
       method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ requestedAction: 'demo:read' }),
     }), env());
     expect(response.status).toBe(401);
@@ -80,20 +80,20 @@ describe('identity protocol boundaries', () => {
     const environment = env({ IDENTITY_SESSION_SECRET: 'a-test-secret-that-is-at-least-thirty-two-characters' });
     const setCookie = await createIdentitySession(environment, authenticatedSession());
     const cookie = setCookie.split(';')[0];
-    const decide = (action: string) => authorizationDecisionResponse(new Request('https://demo.example/__api/identity/authorize', {
+    const decide = (action: string) => authorizationDecisionResponse(new Request('https://demo.example/auth/authorize', {
       method: 'POST', headers: { 'content-type': 'application/json', cookie, origin: 'https://demo.example' }, body: JSON.stringify({ authentication: { role: 'viewer' }, requestedAction: action }),
     }), environment);
     const write = await decide('demo:write');
     expect(write.status).toBe(200);
     expect(await write.json()).toMatchObject({ authorization: { decision: 'allow' }, identity: { role: 'operator', assurance: 'mfa' } });
-    const session = await identitySessionResponse(new Request('https://demo.example/identity/session', { headers: { cookie } }), environment);
+    const session = await identitySessionResponse(new Request('https://demo.example/auth/session', { headers: { cookie } }), environment);
     expect(await session.json()).toMatchObject({ authenticated: true, session: { identity: { subject: 'stable-subject' } } });
   });
 
   it('issues a ten-minute token with a server-derived visitor sandbox', async () => {
     const environment = env({ IDENTITY_SESSION_SECRET: 'a-test-secret-that-is-at-least-thirty-two-characters' });
     const cookie = (await createIdentitySession(environment, authenticatedSession())).split(';')[0];
-    const response = await demoAccessTokenResponse(new Request('https://demo.example/__api/identity/token', {
+    const response = await demoAccessTokenResponse(new Request('https://demo.example/auth/token', {
       method: 'POST', headers: { cookie, origin: 'https://demo.example' },
     }), environment);
     expect(response.status).toBe(200);
@@ -107,7 +107,7 @@ describe('identity protocol boundaries', () => {
   it('requires the application origin for authenticated authorization requests', async () => {
     const environment = env({ IDENTITY_SESSION_SECRET: 'a-test-secret-that-is-at-least-thirty-two-characters' });
     const cookie = (await createIdentitySession(environment, authenticatedSession())).split(';')[0];
-    const request = (origin?: string) => authorizationDecisionResponse(new Request('https://demo.example/__api/identity/authorize', {
+    const request = (origin?: string) => authorizationDecisionResponse(new Request('https://demo.example/auth/authorize', {
       method: 'POST',
       headers: { 'content-type': 'application/json', cookie, ...(origin ? { origin } : {}) },
       body: JSON.stringify({ requestedAction: 'demo:read' }),
@@ -120,7 +120,7 @@ describe('identity protocol boundaries', () => {
     const environment = env({ IDENTITY_SESSION_SECRET: 'a-test-secret-that-is-at-least-thirty-two-characters' });
     const setCookie = await createIdentitySession(environment, authenticatedSession());
     const cookie = `${setCookie.split(';')[0]}tampered`;
-    const response = await identitySessionResponse(new Request('https://demo.example/identity/session', { headers: { cookie } }), environment);
+    const response = await identitySessionResponse(new Request('https://demo.example/auth/session', { headers: { cookie } }), environment);
     expect(await response.json()).toMatchObject({ authenticated: false });
   });
 
@@ -135,7 +135,7 @@ describe('identity protocol boundaries', () => {
   });
 
   it('redirects an unconfigured provider start back to the identity console', async () => {
-    const response = await providerStartResponse(new Request('https://demo.example/identity/google'), env(), 'google');
+    const response = await providerStartResponse(new Request('https://demo.example/auth/google'), env(), 'google');
     expect(response.status).toBe(303);
     expect(response.headers.get('location')).toBe('https://demo.example/interfaces?view=identity&error=provider_unconfigured&provider=google');
   });
@@ -165,12 +165,12 @@ describe('identity protocol boundaries', () => {
       if (url === 'https://www.googleapis.com/oauth2/v3/certs') return new Response(JSON.stringify({ keys: [{ ...publicJwk, kid: 'test-key', alg: 'RS256', use: 'sig' }] }), { headers: { 'content-type': 'application/json' } });
       return new Response(null, { status: 404 });
     }));
-    const callback = await providerCallbackResponse(new Request('https://demo.example/identity/google/callback?state=browser-state&code=one-time-code', { headers: { cookie: flowCookie } }), environment, 'google');
+    const callback = await providerCallbackResponse(new Request('https://demo.example/auth/google/callback?state=browser-state&code=one-time-code', { headers: { cookie: flowCookie } }), environment, 'google');
     expect(callback.status).toBe(303);
     expect(callback.headers.get('location')).toBe('https://demo.example/interfaces?view=identity&authenticated=google');
     const sessionCookie = callback.headers.get('set-cookie')?.match(/__Host-wg_identity=([^;,]+)/)?.[1];
     expect(sessionCookie).toBeTruthy();
-    const sessionResponse = await identitySessionResponse(new Request('https://demo.example/identity/session', { headers: { cookie: `__Host-wg_identity=${sessionCookie}` } }), environment);
+    const sessionResponse = await identitySessionResponse(new Request('https://demo.example/auth/session', { headers: { cookie: `__Host-wg_identity=${sessionCookie}` } }), environment);
     const body = await sessionResponse.json() as Record<string, unknown>;
     expect(body).toMatchObject({ authenticated: true, session: { identity: { provider: 'google', subject: 'google-stable-subject', emailVerified: true }, providerPayload: { sub: 'google-stable-subject' } } });
     expect(JSON.stringify(body)).not.toContain('provider-access-token');
@@ -191,20 +191,20 @@ describe('identity protocol boundaries', () => {
       if (url === 'https://api.github.com/user/emails') return new Response(JSON.stringify([{ email: 'ada@example.test', primary: true, verified: true }]));
       return new Response(null, { status: 404 });
     }));
-    const callback = await providerCallbackResponse(new Request('https://demo.example/identity/github/callback?state=github-state&code=one-time-code', { headers: { cookie: flowCookie } }), environment, 'github');
+    const callback = await providerCallbackResponse(new Request('https://demo.example/auth/github/callback?state=github-state&code=one-time-code', { headers: { cookie: flowCookie } }), environment, 'github');
     expect(callback.headers.get('location')).toBe('https://demo.example/interfaces?view=identity&authenticated=github');
     const sessionCookie = callback.headers.get('set-cookie')?.match(/__Host-wg_identity=([^;,]+)/)?.[1];
-    const response = await identitySessionResponse(new Request('https://demo.example/identity/session', { headers: { cookie: `__Host-wg_identity=${sessionCookie}` } }), environment);
+    const response = await identitySessionResponse(new Request('https://demo.example/auth/session', { headers: { cookie: `__Host-wg_identity=${sessionCookie}` } }), environment);
     const body = await response.json() as Record<string, unknown>;
     expect(body).toMatchObject({ authenticated: true, session: { identity: { subject: 'github:12345678', email: 'ada@example.test', emailVerified: true, role: 'viewer' }, providerPayloadLabel: 'GitHub API identity' } });
     expect(JSON.stringify(body)).not.toContain('github-provider-access-token');
   });
 
   it('serves origin-specific Entra SAML metadata and an explicit trust boundary', async () => {
-    const metadata = samlMetadataResponse(new Request('https://demo.example/identity/saml/metadata'));
+    const metadata = samlMetadataResponse(new Request('https://demo.example/auth/saml/metadata'));
     const xml = await metadata.text();
     expect(metadata.headers.get('content-type')).toContain('samlmetadata+xml');
-    expect(xml).toContain('https://demo.example/identity/saml/acs');
+    expect(xml).toContain('https://demo.example/auth/saml/acs');
     expect(xml).toContain('WantAssertionsSigned="true"');
     expect(await (await ssoBoundaryResponse(new Request('https://demo.example/__api/identity/sso'), env())).json()).toMatchObject({ authentication: { provider: 'Microsoft Entra ID' } });
   });

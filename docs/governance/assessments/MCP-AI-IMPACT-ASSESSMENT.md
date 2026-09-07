@@ -26,7 +26,7 @@ The assessed capability is the public MCP interface implemented by the WizardGan
 
 The current server:
 
-- exposes a streamable HTTP MCP endpoint at `/mcp/server`;
+- exposes a streamable HTTP MCP endpoint at `/mcp`;
 - exposes a read-only `ping` tool;
 - exposes a read-only `list_demo_records` tool;
 - authorizes the caller against the application's `demo:read` permission boundary;

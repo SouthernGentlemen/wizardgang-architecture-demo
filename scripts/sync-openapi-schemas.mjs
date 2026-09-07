@@ -177,9 +177,23 @@ function canonicalize(document) {
       || currentPath.startsWith('/api/operations/')
       || currentPath === '/api/openapi.json'
     ) continue;
-    const canonicalPath = currentPath.startsWith('/v1/') || currentPath.startsWith('/api/labs/')
-      ? currentPath
-      : `/v1${currentPath}`;
+    const canonicalInterfacePath = currentPath.startsWith('/v1/auth/')
+      ? currentPath.slice(3)
+      : currentPath === '/v1/graphql'
+        ? '/graphql'
+        : currentPath === '/v1/mcp'
+          ? '/mcp'
+          : currentPath === '/v1/webhooks/github'
+            ? '/webhooks/github'
+            : currentPath;
+    const canonicalPath = canonicalInterfacePath.startsWith('/auth/')
+      || canonicalInterfacePath === '/graphql'
+      || canonicalInterfacePath === '/mcp'
+      || canonicalInterfacePath === '/webhooks/github'
+      ? canonicalInterfacePath
+      : canonicalInterfacePath.startsWith('/v1/') || canonicalInterfacePath.startsWith('/api/labs/')
+        ? canonicalInterfacePath
+        : `/v1${canonicalInterfacePath}`;
     retained[canonicalPath] = pathItem;
   }
 

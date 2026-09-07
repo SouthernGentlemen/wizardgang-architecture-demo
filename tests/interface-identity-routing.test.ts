@@ -54,27 +54,21 @@ describe('interface and identity declarative routing', () => {
       '/interfaces',
       '/api/openapi.json',
       '/graphql',
-      '/graphql/schema',
-      '/__assets/graphiql/:asset',
-      '/v1/webhooks/demo',
-      '/v1/webhooks/github',
-      '/__api/identity/oauth-pkce',
-      '/__api/identity/authorize',
-      '/__api/identity/token',
-      '/__api/identity/sso',
-      '/identity/microsoft',
-      '/identity/microsoft/callback',
-      '/identity/google',
-      '/identity/google/callback',
-      '/identity/github',
-      '/identity/github/callback',
-      '/identity/saml',
-      '/identity/saml/acs',
-      '/identity/saml/metadata',
-      '/identity/session',
-      '/identity/logout',
-      '/__api/identity/saml/inspect',
-      '/mcp/server',
+      '/webhooks/github',
+      '/auth/authorize',
+      '/auth/token',
+      '/auth/microsoft',
+      '/auth/microsoft/callback',
+      '/auth/google',
+      '/auth/google/callback',
+      '/auth/github',
+      '/auth/github/callback',
+      '/auth/saml',
+      '/auth/saml/acs',
+      '/auth/saml/metadata',
+      '/auth/session',
+      '/auth/logout',
+      '/mcp',
     ].sort());
 
     for (const route of routes) {
@@ -94,7 +88,7 @@ describe('interface and identity declarative routing', () => {
     expect(openApiPost.status).toBe('method-not-allowed');
     if (openApiPost.status === 'method-not-allowed') expect(openApiPost.allowedMethods).toEqual(['GET']);
 
-    const samlGet = matchRoute(interfaceIdentityRouteRegistry, 'GET', '/identity/saml/acs');
+    const samlGet = matchRoute(interfaceIdentityRouteRegistry, 'GET', '/auth/saml/acs');
     expect(samlGet.status).toBe('method-not-allowed');
     if (samlGet.status === 'method-not-allowed') expect(samlGet.allowedMethods).toEqual(['POST']);
 
@@ -124,14 +118,14 @@ describe('interface and identity declarative routing', () => {
     expect(routeById('interfaces.mcp.server').authorization).toMatchObject({ mode: 'policy' });
   });
 
-  it('registers protocol endpoints and callbacks without changing their URLs', () => {
+  it('registers the canonical protocol endpoints and callbacks', () => {
     expect(routeById('interfaces.graphql.endpoint')).toMatchObject({ kind: 'protocol', methods: ['GET', 'POST'] });
     expect(routeById('interfaces.webhooks.github')).toMatchObject({ kind: 'protocol', methods: ['POST'] });
-    expect(routeById('interfaces.identity.microsoft.callback')).toMatchObject({ pattern: '/identity/microsoft/callback', kind: 'protocol', methods: ['GET'] });
-    expect(routeById('interfaces.identity.google.callback')).toMatchObject({ pattern: '/identity/google/callback', kind: 'protocol', methods: ['GET'] });
-    expect(routeById('interfaces.identity.github.callback')).toMatchObject({ pattern: '/identity/github/callback', kind: 'protocol', methods: ['GET'] });
-    expect(routeById('interfaces.identity.saml.acs')).toMatchObject({ pattern: '/identity/saml/acs', kind: 'protocol', methods: ['POST'] });
-    expect(routeById('interfaces.mcp.server')).toMatchObject({ pattern: '/mcp/server', kind: 'protocol', methods: ['GET', 'POST', 'DELETE'] });
+    expect(routeById('interfaces.identity.microsoft.callback')).toMatchObject({ pattern: '/auth/microsoft/callback', kind: 'protocol', methods: ['GET'] });
+    expect(routeById('interfaces.identity.google.callback')).toMatchObject({ pattern: '/auth/google/callback', kind: 'protocol', methods: ['GET'] });
+    expect(routeById('interfaces.identity.github.callback')).toMatchObject({ pattern: '/auth/github/callback', kind: 'protocol', methods: ['GET'] });
+    expect(routeById('interfaces.identity.saml.acs')).toMatchObject({ pattern: '/auth/saml/acs', kind: 'protocol', methods: ['POST'] });
+    expect(routeById('interfaces.mcp.server')).toMatchObject({ pattern: '/mcp', kind: 'protocol', methods: ['GET', 'POST', 'DELETE'] });
   });
 
   it('keeps GraphQL HTML negotiation and API-like classification capability-owned', () => {
@@ -139,7 +133,7 @@ describe('interface and identity declarative routing', () => {
     expect(interfaceIdentityWantsHtml(new Request('https://demo.wizardgang.ai/graphql', { headers: { accept: 'text/html' } }), '/graphql')).toBe(false);
     expect(interfaceIdentityWantsHtml(new Request('https://demo.wizardgang.ai/graphql', { headers: { accept: 'application/json' } }), '/graphql')).toBe(false);
     expect(isInterfaceIdentityApiLike('/graphql')).toBe(true);
-    expect(isInterfaceIdentityApiLike('/mcp/server')).toBe(true);
+    expect(isInterfaceIdentityApiLike('/mcp')).toBe(true);
     expect(isInterfaceIdentityApiLike('/interfaces')).toBe(false);
     expect(isInterfaceIdentityApiLike('/identity')).toBe(false);
   });

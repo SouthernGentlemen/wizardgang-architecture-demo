@@ -1,5 +1,4 @@
-import { graphqlResponse, graphqlSchemaResponse } from '../../api/graphql';
-import { graphiqlAssetResponse } from '../../ui/graphiql-assets';
+import { graphqlResponse } from '../../api/graphql';
 import { defineInterfaceIdentityCapability, interfaceIdentityRoute } from '../route-capability';
 
 function machineOnlyGraphqlRequest(request: Request): Request {
@@ -26,32 +25,5 @@ export const graphqlRouteCapability = defineInterfaceIdentityCapability('interfa
     browserHtml: 'never',
     indexing: 'deny',
     tests: ['tests/graphql.test.ts', 'tests/integration-interfaces.test.ts', 'tests/interface-consolidation.test.ts', 'tests/canonical-frontend-routes.test.ts'],
-  }),
-  interfaceIdentityRoute({
-    id: 'interfaces.graphql.schema',
-    pattern: '/graphql/schema',
-    methods: ['GET'],
-    kind: 'protocol',
-    handler: (request) => graphqlSchemaResponse(request),
-    title: 'GraphQL schema',
-    description: 'Executable GraphQL schema contract.',
-    sourceModule: 'src/api/graphql.ts',
-    sourceExport: 'graphqlSchemaResponse',
-    cache: { mode: 'public', maxAgeSeconds: 300 },
-    tests: ['tests/graphql.test.ts', 'tests/contracts.test.ts'],
-  }),
-  interfaceIdentityRoute({
-    id: 'interfaces.graphql.asset',
-    pattern: '/__assets/graphiql/:asset',
-    methods: ['GET'],
-    kind: 'asset',
-    handler: (request, _context, params) => graphiqlAssetResponse(request, params.asset || ''),
-    title: 'GraphiQL local asset',
-    description: 'Immutable locally bundled GraphiQL script, stylesheet, or worker asset.',
-    sourceModule: 'src/ui/graphiql-assets.ts',
-    sourceExport: 'graphiqlAssetResponse',
-    cache: { mode: 'public', maxAgeSeconds: 31_536_000, immutable: true },
-    browserHtml: 'never',
-    tests: ['tests/graphql.test.ts'],
   }),
 ]);

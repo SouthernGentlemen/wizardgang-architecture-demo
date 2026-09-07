@@ -65,19 +65,19 @@ export function identityProviderConfiguration(env: Env): Record<string, Provider
   return {
     microsoft: {
       configured: session && nonEmpty(env.MICROSOFT_CLIENT_ID) && nonEmpty(env.MICROSOFT_CLIENT_SECRET) && nonEmpty(env.MICROSOFT_TENANT_ID),
-      label: 'Microsoft Entra ID', protocol: 'OpenID Connect / OAuth 2.0', startPath: '/identity/microsoft',
+      label: 'Microsoft Entra ID', protocol: 'OpenID Connect / OAuth 2.0', startPath: '/auth/microsoft',
     },
     saml: {
       configured: session && nonEmpty(env.MICROSOFT_TENANT_ID) && nonEmpty(env.SAML_IDP_CERT),
-      label: 'Microsoft Entra ID', protocol: 'SAML 2.0', startPath: '/identity/saml',
+      label: 'Microsoft Entra ID', protocol: 'SAML 2.0', startPath: '/auth/saml',
     },
     google: {
       configured: session && nonEmpty(env.GOOGLE_CLIENT_ID) && nonEmpty(env.GOOGLE_CLIENT_SECRET),
-      label: 'Google', protocol: 'OpenID Connect', startPath: '/identity/google',
+      label: 'Google', protocol: 'OpenID Connect', startPath: '/auth/google',
     },
     github: {
       configured: session && nonEmpty(env.GITHUB_CLIENT_ID) && nonEmpty(env.GITHUB_CLIENT_SECRET),
-      label: 'GitHub', protocol: 'OAuth 2.0', startPath: '/identity/github',
+      label: 'GitHub', protocol: 'OAuth 2.0', startPath: '/auth/github',
     },
   };
 }
@@ -99,11 +99,11 @@ function callbackUrl(request: Request, provider: IdentityProvider): string {
 }
 
 function samlEntityId(request: Request): string {
-  return new URL('/identity/saml', request.url).toString();
+  return new URL('/auth/saml', request.url).toString();
 }
 
 function samlCallbackUrl(request: Request): string {
-  return new URL('/identity/saml/acs', request.url).toString();
+  return new URL('/auth/saml/acs', request.url).toString();
 }
 
 async function equalValue(left: string, right: string): Promise<boolean> {
@@ -250,7 +250,7 @@ async function auditIdentity(env: Env, eventType: string, provider: IdentityProv
   const event = await recordDemoEvent(env, 'identity', `identity.${eventType}`, { provider: provider === 'saml' ? 'microsoft' : provider, protocol: providerProtocol(provider), ...detail });
   await recordApplicationLog(env, {
     source: 'identity', eventKey: `identity.${eventType}`, message: `${eventType.replaceAll('_', ' ')} for ${providerName(provider)}.`,
-    route: provider === 'saml' ? '/identity/saml' : `/identity/${provider}`,
+    route: provider === 'saml' ? '/auth/saml' : `/identity/${provider}`,
     detail: { provider: provider === 'saml' ? 'microsoft' : provider, protocol: providerProtocol(provider), eventId: event.id, ...detail },
   });
 }
@@ -263,7 +263,7 @@ export async function oauthPkceResponse(request: Request, env: Env): Promise<Res
   if (request.method !== 'POST') return methodNotAllowed(['POST']);
   await pkceChallenge(randomValue());
   const event = await recordDemoEvent(env, 'identity', 'identity.pkce_boundary_inspected', { method: 'S256', secretsExposed: false });
-  await recordApplicationLog(env, { source: 'identity', eventKey: 'identity.pkce_boundary_inspected', message: 'Inspected the server-side PKCE boundary.', route: '/__api/identity/oauth-pkce', detail: { method: 'S256', secretsExposed: false, eventId: event.id } });
+  await recordApplicationLog(env, { source: 'identity', eventKey: 'identity.pkce_boundary_inspected', message: 'Inspected the server-side PKCE boundary.', route: 'identity.oauth-pkce', detail: { method: 'S256', secretsExposed: false, eventId: event.id } });
   return json({ flow: 'OAuth 2.0 authorization code with PKCE', state: 'generated server-side', nonce: 'generated server-side for OIDC', pkce: 'S256', verifier: 'retained in an encrypted HttpOnly flow cookie', secretsExposed: false, providers: identityProviderConfiguration(env), auditEventId: event.id }, { headers: { 'cache-control': 'no-store' } });
 }
 
@@ -281,7 +281,7 @@ export async function authorizationDecisionResponse(request: Request, env: Env):
     const allowed = principal.permissions.includes(action);
     const eventType = allowed ? 'authorization_allowed' : 'authorization_denied';
     const event = await recordDemoEvent(env, 'identity', `identity.${eventType}`, { subjectSha256: await sha256(`${identity.provider}:${identity.subject}`), provider: identity.provider, assurance: identity.assurance, role: identity.role, action });
-    await recordApplicationLog(env, { source: 'identity', eventKey: `identity.${eventType}`, message: `Application policy ${allowed ? 'allowed' : 'denied'} ${action}.`, route: '/__api/identity/authorize', detail: { provider: identity.provider, assurance: identity.assurance, role: identity.role, action, allowed, eventId: event.id } });
+    await recordApplicationLog(env, { source: 'identity', eventKey: `identity.${eventType}`, message: `Application policy ${allowed ? 'allowed' : 'denied'} ${action}.`, route: '/auth/authorize', detail: { provider: identity.provider, assurance: identity.assurance, role: identity.role, action, allowed, eventId: event.id } });
     return json({ identity: { provider: identity.provider, displayName: identity.displayName, assurance: identity.assurance, role: identity.role }, principal, authorization: { requestedAction: action, decision: allowed ? 'allow' : 'deny', policy: 'Authenticated identities receive demo:read and visitor-sandbox demo:write. Only the managed operator credential can address a caller-selected namespace.' }, separation: 'Authentication established the identity. Application policy independently decided the permitted action and data scope.', auditEventId: event.id }, { status: allowed ? 200 : 403, headers: { 'cache-control': 'no-store' } });
   } catch (error) { return errorResponse(error); }
 }
@@ -298,7 +298,7 @@ export async function demoAccessTokenResponse(request: Request, env: Env): Promi
       subjectSha256, provider: claims.provider, permissions: claims.permissions, namespace: claims.namespace, expiresAt: claims.expiresAt,
     });
     await recordApplicationLog(env, {
-      source: 'identity', eventKey: 'identity.demo_access_token_issued', message: 'Issued a short-lived visitor API token.', route: '/__api/identity/token',
+      source: 'identity', eventKey: 'identity.demo_access_token_issued', message: 'Issued a short-lived visitor API token.', route: '/auth/token',
       detail: { subjectSha256, provider: claims.provider, permissions: claims.permissions, namespace: claims.namespace, expiresAt: claims.expiresAt, eventId: event.id },
     });
     return json({ tokenType: 'Bearer', accessToken: token, ...claims, sandboxLabel: 'Your API sandbox' }, { headers: { 'cache-control': 'no-store' } });

@@ -10,7 +10,7 @@
     },
     {
       "type": "github",
-      "route": "/v1/webhooks/github",
+      "route": "/webhooks/github",
       "allowedEvents": ["ping", "push", "pull_request", "workflow_run", "release"],
       "delivery": "HTTPS POST",
       "payload": "GitHub JSON",

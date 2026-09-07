@@ -17,12 +17,6 @@ This file is generated from the active declarative application registry. Route I
 
 | Route ID | Route | Methods | Kind | Visibility | Offline | Indexing | Purpose | Source |
 |---|---|---|---|---|---|---|---|---|
-| `interfaces.identity.authorize` | `/__api/identity/authorize` | `POST` | api | private | gated | deny | Identity authorization decision | `src/api/identity.ts` |
-| `interfaces.identity.oauth-pkce` | `/__api/identity/oauth-pkce` | `POST` | api | public | gated | deny | OAuth PKCE boundary demonstration | `src/api/identity.ts` |
-| `interfaces.identity.saml.inspect` | `/__api/identity/saml/inspect` | `GET` | api | public | gated | deny | SAML boundary inspection | `src/api/identity.ts` |
-| `interfaces.identity.sso-boundary` | `/__api/identity/sso` | `GET` | api | public | gated | deny | SSO boundary status | `src/api/identity.ts` |
-| `interfaces.identity.token` | `/__api/identity/token` | `POST` | api | private | gated | deny | Identity demo access token | `src/api/identity.ts` |
-| `interfaces.graphql.asset` | `/__assets/graphiql/{asset}` | `GET` | asset | public | gated | deny | GraphiQL local asset | `src/ui/graphiql-assets.ts` |
 | `operations.security-txt` | `/.well-known/security.txt` | `GET`, `HEAD` | protocol | public | available | deny | Security contact | `src/api/security-policy.ts` |
 | `operations.admin` | `/admin` | `GET`, `POST` | page | private | available | deny | Demo administration | `src/ui/admin.ts` |
 | `platform.accessibility.lab` | `/api/labs/accessibility` | `GET` | api | public | gated | deny | Accessibility teaching laboratory API | `src/platform/route-capabilities/accessibility.ts` |
@@ -59,26 +53,26 @@ This file is generated from the active declarative application registry. Route I
 | `reporting.index` | `/api/reporting` | `GET`, `OPTIONS` | api | public | gated | deny | Reporting collection index | `src/api/reporting.ts` |
 | `reporting.collection` | `/api/reporting/{collection}` | `GET`, `OPTIONS` | api | public | gated | deny | Reporting collection API | `src/api/reporting.ts` |
 | `reporting.record` | `/api/reporting/{collection}/{recordId}` | `GET`, `PATCH`, `OPTIONS` | api | public | gated | deny | Reporting record API | `src/api/reporting.ts` |
+| `operations.assets` | `/assets/{asset}` | `GET`, `HEAD` | asset | public | available | deny | Bundled UI asset | `src/ui/assets.ts` |
+| `interfaces.identity.authorize` | `/auth/authorize` | `POST` | api | private | gated | deny | Identity authorization decision | `src/api/identity.ts` |
+| `interfaces.identity.github.start` | `/auth/github` | `GET` | protocol | public | gated | deny | github authorization start | `src/api/identity.ts` |
+| `interfaces.identity.github.callback` | `/auth/github/callback` | `GET` | protocol | public | gated | deny | github authorization callback | `src/api/identity.ts` |
+| `interfaces.identity.google.start` | `/auth/google` | `GET` | protocol | public | gated | deny | google authorization start | `src/api/identity.ts` |
+| `interfaces.identity.google.callback` | `/auth/google/callback` | `GET` | protocol | public | gated | deny | google authorization callback | `src/api/identity.ts` |
+| `interfaces.identity.logout` | `/auth/logout` | `POST` | api | public | gated | deny | Identity logout | `src/api/identity.ts` |
+| `interfaces.identity.microsoft.start` | `/auth/microsoft` | `GET` | protocol | public | gated | deny | microsoft authorization start | `src/api/identity.ts` |
+| `interfaces.identity.microsoft.callback` | `/auth/microsoft/callback` | `GET` | protocol | public | gated | deny | microsoft authorization callback | `src/api/identity.ts` |
+| `interfaces.identity.saml.start` | `/auth/saml` | `GET` | protocol | public | gated | deny | SAML sign-in start | `src/api/identity.ts` |
+| `interfaces.identity.saml.acs` | `/auth/saml/acs` | `POST` | protocol | public | gated | deny | SAML assertion consumer service | `src/api/identity.ts` |
+| `interfaces.identity.saml.metadata` | `/auth/saml/metadata` | `GET` | protocol | public | gated | deny | SAML service-provider metadata | `src/api/identity.ts` |
+| `interfaces.identity.session` | `/auth/session` | `GET` | api | public | gated | deny | Identity session | `src/api/identity.ts` |
+| `interfaces.identity.token` | `/auth/token` | `POST` | api | private | gated | deny | Identity demo access token | `src/api/identity.ts` |
 | `interfaces.graphql.endpoint` | `/graphql` | `GET`, `POST` | protocol | public | gated | deny | GraphQL API | `src/api/graphql.ts` |
-| `interfaces.graphql.schema` | `/graphql/schema` | `GET` | protocol | public | gated | deny | GraphQL schema | `src/api/graphql.ts` |
-| `interfaces.identity.github.start` | `/identity/github` | `GET` | protocol | public | gated | deny | github authorization start | `src/api/identity.ts` |
-| `interfaces.identity.github.callback` | `/identity/github/callback` | `GET` | protocol | public | gated | deny | github authorization callback | `src/api/identity.ts` |
-| `interfaces.identity.google.start` | `/identity/google` | `GET` | protocol | public | gated | deny | google authorization start | `src/api/identity.ts` |
-| `interfaces.identity.google.callback` | `/identity/google/callback` | `GET` | protocol | public | gated | deny | google authorization callback | `src/api/identity.ts` |
-| `interfaces.identity.logout` | `/identity/logout` | `POST` | api | public | gated | deny | Identity logout | `src/api/identity.ts` |
-| `interfaces.identity.microsoft.start` | `/identity/microsoft` | `GET` | protocol | public | gated | deny | microsoft authorization start | `src/api/identity.ts` |
-| `interfaces.identity.microsoft.callback` | `/identity/microsoft/callback` | `GET` | protocol | public | gated | deny | microsoft authorization callback | `src/api/identity.ts` |
-| `interfaces.identity.saml.start` | `/identity/saml` | `GET` | protocol | public | gated | deny | SAML sign-in start | `src/api/identity.ts` |
-| `interfaces.identity.saml.acs` | `/identity/saml/acs` | `POST` | protocol | public | gated | deny | SAML assertion consumer service | `src/api/identity.ts` |
-| `interfaces.identity.saml.metadata` | `/identity/saml/metadata` | `GET` | protocol | public | gated | deny | SAML service-provider metadata | `src/api/identity.ts` |
-| `interfaces.identity.session` | `/identity/session` | `GET` | api | public | gated | deny | Identity session | `src/api/identity.ts` |
-| `interfaces.mcp.server` | `/mcp/server` | `GET`, `POST`, `DELETE` | protocol | public | gated | deny | MCP streamable HTTP server | `src/api/mcp.ts` |
+| `interfaces.mcp.server` | `/mcp` | `GET`, `POST`, `DELETE` | protocol | public | gated | deny | MCP streamable HTTP server | `src/api/mcp.ts` |
 | `operations.offline` | `/offline` | `GET` | page | public | available | deny | Offline recovery page | `src/ui/admin.ts` |
-| `operations.social-card` | `/og.png` | `GET`, `HEAD` | asset | public | available | deny | Social preview image | `src/ui/brand-assets.ts` |
 | `operations.robots` | `/robots.txt` | `GET`, `HEAD` | protocol | public | available | deny | Robots policy | `src/lib/crawler-control.ts` |
 | `operations.sitemap` | `/sitemap.xml` | `GET` | protocol | public | gated | deny | Sitemap | `src/api/sitemap.ts` |
-| `interfaces.webhooks.demo-receipt` | `/v1/webhooks/demo` | `POST` | protocol | public | gated | deny | Signed demo webhook receiver | `src/api/webhooks.ts` |
-| `interfaces.webhooks.github` | `/v1/webhooks/github` | `POST` | protocol | public | gated | deny | GitHub webhook receiver | `src/api/webhooks.ts` |
+| `interfaces.webhooks.github` | `/webhooks/github` | `POST` | protocol | public | gated | deny | GitHub webhook receiver | `src/api/webhooks.ts` |
 
 ## Generation
 

@@ -86,7 +86,7 @@ describe('controlled MCP interface', () => {
         : text;
       return JSON.parse(payload || '{}');
     };
-    const request = (method: string, params?: unknown) => new Request('https://demo.example/mcp/server', {
+    const request = (method: string, params?: unknown) => new Request('https://demo.example/mcp', {
       method: 'POST', headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }),
     });
     const listed = await mcpResponse(request('tools/list'), env());

@@ -3,14 +3,11 @@ import {
   demoAccessTokenResponse,
   identityLogoutResponse,
   identitySessionResponse,
-  oauthPkceResponse,
   providerCallbackResponse,
   providerStartResponse,
   samlCallbackResponse,
-  samlInspectionResponse,
   samlMetadataResponse,
   samlStartResponse,
-  ssoBoundaryResponse,
 } from '../../api/identity';
 import { defineInterfaceIdentityCapability, interfaceIdentityRoute } from '../route-capability';
 
@@ -18,12 +15,12 @@ const providers = ['microsoft', 'google', 'github'] as const;
 
 const providerRoutes = providers.flatMap((provider) => [
   interfaceIdentityRoute({
-    id: `interfaces.identity.${provider}.start`,
-    pattern: `/identity/${provider}`,
+    id: 'interfaces.identity.' + provider + '.start',
+    pattern: '/auth/' + provider,
     methods: ['GET'],
     kind: 'protocol',
     handler: (request, { env }) => providerStartResponse(request, env, provider),
-    title: `${provider} authorization start`,
+    title: provider + ' authorization start',
     description: 'Authorization-code flow start with state and PKCE; OIDC providers also bind a nonce.',
     sourceModule: 'src/api/identity.ts',
     sourceExport: 'providerStartResponse',
@@ -31,12 +28,12 @@ const providerRoutes = providers.flatMap((provider) => [
     tests: ['tests/identity.test.ts'],
   }),
   interfaceIdentityRoute({
-    id: `interfaces.identity.${provider}.callback`,
-    pattern: `/identity/${provider}/callback`,
+    id: 'interfaces.identity.' + provider + '.callback',
+    pattern: '/auth/' + provider + '/callback',
     methods: ['GET'],
     kind: 'protocol',
     handler: (request, { env }) => providerCallbackResponse(request, env, provider),
-    title: `${provider} authorization callback`,
+    title: provider + ' authorization callback',
     description: provider === 'github'
       ? 'OAuth callback validating state, PKCE-bound code exchange, and provider identity.'
       : 'OIDC callback validating state, nonce, PKCE, issuer, audience, signature, issued-at, and expiry.',
@@ -49,21 +46,8 @@ const providerRoutes = providers.flatMap((provider) => [
 
 export const identityRouteCapability = defineInterfaceIdentityCapability('interfaces.identity', [
   interfaceIdentityRoute({
-    id: 'interfaces.identity.oauth-pkce',
-    pattern: '/__api/identity/oauth-pkce',
-    methods: ['POST'],
-    kind: 'api',
-    handler: (request, { env }) => oauthPkceResponse(request, env),
-    title: 'OAuth PKCE boundary demonstration',
-    description: 'Bounded PKCE protocol demonstration and audit evidence.',
-    sourceModule: 'src/api/identity.ts',
-    sourceExport: 'oauthPkceResponse',
-    authorization: { mode: 'policy', policy: 'PKCE S256 validation' },
-    tests: ['tests/identity.test.ts'],
-  }),
-  interfaceIdentityRoute({
     id: 'interfaces.identity.authorize',
-    pattern: '/__api/identity/authorize',
+    pattern: '/auth/authorize',
     methods: ['POST'],
     kind: 'api',
     handler: (request, { env }) => authorizationDecisionResponse(request, env),
@@ -79,7 +63,7 @@ export const identityRouteCapability = defineInterfaceIdentityCapability('interf
   }),
   interfaceIdentityRoute({
     id: 'interfaces.identity.token',
-    pattern: '/__api/identity/token',
+    pattern: '/auth/token',
     methods: ['POST'],
     kind: 'api',
     handler: (request, { env }) => demoAccessTokenResponse(request, env),
@@ -93,22 +77,10 @@ export const identityRouteCapability = defineInterfaceIdentityCapability('interf
     sameOrigin: { mode: 'required', methods: ['POST'] },
     tests: ['tests/identity.test.ts'],
   }),
-  interfaceIdentityRoute({
-    id: 'interfaces.identity.sso-boundary',
-    pattern: '/__api/identity/sso',
-    methods: ['GET'],
-    kind: 'api',
-    handler: (request, { env }) => ssoBoundaryResponse(request, env),
-    title: 'SSO boundary status',
-    description: 'Disclosure-safe status for configured enterprise identity boundaries.',
-    sourceModule: 'src/api/identity.ts',
-    sourceExport: 'ssoBoundaryResponse',
-    tests: ['tests/identity.test.ts'],
-  }),
   ...providerRoutes,
   interfaceIdentityRoute({
     id: 'interfaces.identity.saml.start',
-    pattern: '/identity/saml',
+    pattern: '/auth/saml',
     methods: ['GET'],
     kind: 'protocol',
     handler: (request, { env }) => samlStartResponse(request, env),
@@ -121,7 +93,7 @@ export const identityRouteCapability = defineInterfaceIdentityCapability('interf
   }),
   interfaceIdentityRoute({
     id: 'interfaces.identity.saml.acs',
-    pattern: '/identity/saml/acs',
+    pattern: '/auth/saml/acs',
     methods: ['POST'],
     kind: 'protocol',
     handler: (request, { env }) => samlCallbackResponse(request, env),
@@ -135,7 +107,7 @@ export const identityRouteCapability = defineInterfaceIdentityCapability('interf
   }),
   interfaceIdentityRoute({
     id: 'interfaces.identity.saml.metadata',
-    pattern: '/identity/saml/metadata',
+    pattern: '/auth/saml/metadata',
     methods: ['GET'],
     kind: 'protocol',
     handler: (request) => samlMetadataResponse(request),
@@ -148,7 +120,7 @@ export const identityRouteCapability = defineInterfaceIdentityCapability('interf
   }),
   interfaceIdentityRoute({
     id: 'interfaces.identity.session',
-    pattern: '/identity/session',
+    pattern: '/auth/session',
     methods: ['GET'],
     kind: 'api',
     handler: (request, { env }) => identitySessionResponse(request, env),
@@ -162,7 +134,7 @@ export const identityRouteCapability = defineInterfaceIdentityCapability('interf
   }),
   interfaceIdentityRoute({
     id: 'interfaces.identity.logout',
-    pattern: '/identity/logout',
+    pattern: '/auth/logout',
     methods: ['POST'],
     kind: 'api',
     handler: (request, { env }) => identityLogoutResponse(request, env),
@@ -173,18 +145,6 @@ export const identityRouteCapability = defineInterfaceIdentityCapability('interf
     authorization: { mode: 'policy', policy: 'optional identity-session invalidation' },
     sameOrigin: { mode: 'required', methods: ['POST'] },
     cache: { mode: 'private' },
-    tests: ['tests/identity.test.ts'],
-  }),
-  interfaceIdentityRoute({
-    id: 'interfaces.identity.saml.inspect',
-    pattern: '/__api/identity/saml/inspect',
-    methods: ['GET'],
-    kind: 'api',
-    handler: (request, { env }) => samlInspectionResponse(request, env),
-    title: 'SAML boundary inspection',
-    description: 'Disclosure-safe inspection of the configured SAML trust boundary.',
-    sourceModule: 'src/api/identity.ts',
-    sourceExport: 'samlInspectionResponse',
     tests: ['tests/identity.test.ts'],
   }),
 ]);

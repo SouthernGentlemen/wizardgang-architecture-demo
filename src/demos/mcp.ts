@@ -13,7 +13,7 @@ const demo: DemoDefinition = {
     'Schema-defined read-only tools behind shared authorization, D1, and sanitized operational evidence',
   ],
   status: 'working',
-  interfaces: [{ method: 'GET, POST', path: '/mcp/server', description: 'Connect an MCP 2026-07-28 or stateless 2025-era client over Streamable HTTP.' }],
+  interfaces: [{ method: 'GET, POST', path: '/mcp', description: 'Connect an MCP 2026-07-28 or stateless 2025-era client over Streamable HTTP.' }],
   supportingSources: [
     { label: 'View MCP implementation', path: 'src/api/mcp.ts' },
     { label: 'View tool manifest', path: 'contracts/mcp/tools.json' },

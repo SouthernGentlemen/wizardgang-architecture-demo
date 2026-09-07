@@ -26,7 +26,7 @@ export async function renderGraphqlDemo(env: Env): Promise<Response> {
   <h1>GraphQL API</h1>
   <p class="lede">Query and mutate the same D1-backed users through a typed GraphQL schema.</p>
   <div class="api-hero-badges"><span class="badge">GraphQL Yoga</span><span class="badge">GraphiQL</span><span class="badge">D1</span><span class="badge">Shared policy</span></div>
-  <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/interfaces.ts'))}">View source ↗</a><a class="text-link" href="/graphql/schema">View schema ↗</a></div>
+  <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/interfaces.ts'))}">View source ↗</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'contracts/graphql/schema.graphql'))}">View schema ↗</a></div>
 </section>
 <section class="graphql-workspace" aria-labelledby="graphiql-heading">
   <div class="graphql-workspace-heading"><div><p class="eyebrow">Live IDE</p><h2 id="graphiql-heading">GraphiQL</h2></div><p>Queries are public. <a href="${escapeHtml(identityUrl)}">Sign in</a> to enable mutations through the shared application policy.</p></div>

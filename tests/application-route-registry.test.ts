@@ -96,8 +96,12 @@ describe('complete declarative application routing', () => {
       allowedMethods: ['GET'],
       route: { id: 'interfaces.page' },
     });
-    expect(matchRoute(applicationRouteRegistry, 'POST', '/mcp')).toEqual({ status: 'not-found', statusCode: 404 });
-    expect(matchRoute(applicationRouteRegistry, 'GET', '/mcp/server')).toMatchObject({
+    expect(matchRoute(applicationRouteRegistry, 'PUT', '/mcp')).toMatchObject({
+      status: 'method-not-allowed',
+      allowedMethods: ['GET', 'POST', 'DELETE'],
+      route: { id: 'interfaces.mcp.server' },
+    });
+    expect(matchRoute(applicationRouteRegistry, 'GET', '/mcp')).toMatchObject({
       status: 'matched',
       route: { id: 'interfaces.mcp.server' },
     });
@@ -143,7 +147,7 @@ describe('complete declarative application routing', () => {
 
   it('keeps removed aliases and unknown paths on the normal 404 even while offline state is unavailable', async () => {
     for (const path of [
-      '/api', '/webhooks', '/identity', '/mcp', '/i18n', '/accessibility',
+      '/api', '/webhooks', '/identity', '/mcp/server', '/i18n', '/accessibility',
       '/__api/demo/run', '/__api/demo/events', '/v1/not-registered', '/legacy/compliance',
     ]) {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`), noDatabaseEnv());

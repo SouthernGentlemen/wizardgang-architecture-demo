@@ -74,10 +74,10 @@ describe('GraphQL Yoga D1 interface', () => {
     expect(response.headers.get('x-frame-options')).toBe('SAMEORIGIN');
     const html = await response.text();
     expect(html).toContain('WizardGang GraphiQL');
-    expect(html).toContain('/__assets/graphiql/graphiql.js');
-    expect(html).toContain('/__assets/graphiql/graphql.worker.js');
+    expect(html).toContain('/assets/graphiql.js');
+    expect(html).toContain('/assets/graphql.worker.js');
     expect(html).not.toContain('unpkg.com');
-    const asset = graphiqlAssetResponse(new Request('https://demo.example/__assets/graphiql/graphiql.js'), 'graphiql.js');
+    const asset = graphiqlAssetResponse(new Request('https://demo.example/assets/graphiql.js'), 'graphiql.js');
     expect(asset.status).toBe(200);
     expect(asset.headers.get('content-type')).toContain('text/javascript');
     expect((await asset.text()).length).toBeGreaterThan(1_000_000);

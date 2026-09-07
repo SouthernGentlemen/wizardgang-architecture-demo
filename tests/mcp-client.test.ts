@@ -47,13 +47,13 @@ function inProcessTransport(env: Env): StreamableHTTPClientTransport {
   const fetchHandler = async (input: RequestInfo | URL, init?: RequestInit) => {
     return mcpResponse(new Request(input, init), env);
   };
-  return new StreamableHTTPClientTransport(new URL('https://demo.example/mcp/server'), {
+  return new StreamableHTTPClientTransport(new URL('https://demo.example/mcp'), {
     fetch: fetchHandler as typeof fetch,
   });
 }
 
 function modernPingRequest(headerName = 'ping'): Request {
-  return new Request('https://demo.example/mcp/server', {
+  return new Request('https://demo.example/mcp', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -159,7 +159,7 @@ describe('official MCP client interoperability', () => {
   });
 
   it('returns 202 with no body for a legacy initialized notification', async () => {
-    const response = await mcpResponse(new Request('https://demo.example/mcp/server', {
+    const response = await mcpResponse(new Request('https://demo.example/mcp', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',

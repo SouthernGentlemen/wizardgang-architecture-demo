@@ -34,8 +34,8 @@ export function renderIdentityDemo(env: Env): Response {
       <div class="identity-provider-meta"><span>OIDC</span><span>OAuth 2.0</span><span data-config-status="microsoft">Checking configuration…</span></div>
     </div>
     <div class="identity-provider-actions">
-      <a class="button button-primary" href="/identity/microsoft" data-provider-action="microsoft">Sign in with Microsoft</a>
-      <a class="text-link" href="/identity/saml" data-provider-action="saml">Use SAML 2.0 instead →</a>
+      <a class="button button-primary" href="/auth/microsoft" data-provider-action="microsoft">Sign in with Microsoft</a>
+      <a class="text-link" href="/auth/saml" data-provider-action="saml">Use SAML 2.0 instead →</a>
     </div>
   </article>
 
@@ -44,12 +44,12 @@ export function renderIdentityDemo(env: Env): Response {
     <article class="identity-provider">
       <div class="identity-provider-mark google-mark" aria-hidden="true">G</div>
       <div class="identity-provider-copy"><p class="identity-provider-kind">OpenID Connect</p><h3>Google</h3><p>Standard Google-account authentication with no Workspace or organizational-domain assumption.</p><div class="identity-provider-meta"><span>OIDC</span><span data-config-status="google">Checking configuration…</span></div></div>
-      <div class="identity-provider-actions"><a class="button" href="/identity/google" data-provider-action="google">Sign in with Google</a></div>
+      <div class="identity-provider-actions"><a class="button" href="/auth/google" data-provider-action="google">Sign in with Google</a></div>
     </article>
     <article class="identity-provider">
       <div class="identity-provider-mark github-mark" aria-hidden="true">GH</div>
       <div class="identity-provider-copy"><p class="identity-provider-kind">Developer identity</p><h3>GitHub</h3><p>OAuth authentication with minimal profile and verified-email scopes, followed by API identity revalidation.</p><div class="identity-provider-meta"><span>OAuth 2.0</span><span data-config-status="github">Checking configuration…</span></div></div>
-      <div class="identity-provider-actions"><a class="button" href="/identity/github" data-provider-action="github">Sign in with GitHub</a></div>
+      <div class="identity-provider-actions"><a class="button" href="/auth/github" data-provider-action="github">Sign in with GitHub</a></div>
     </article>
   </div>
 </section>
@@ -98,7 +98,7 @@ export function renderIdentityDemo(env: Env): Response {
 
 <section class="panel identity-federation" id="saml" aria-labelledby="identity-federation-heading">
   <div><p class="eyebrow">Enterprise federation</p><h2 id="identity-federation-heading">Microsoft Entra ID / SAML 2.0</h2><p>Authenticate through an Entra enterprise application. The Worker validates the signed assertion before any claim reaches application policy.</p><div class="identity-provider-meta"><span>Signed assertion</span><span>Audience</span><span>Time bounds</span><span>Replay protection</span><span data-config-status="saml">Checking configuration…</span></div></div>
-  <div class="identity-provider-actions"><a class="button" href="/identity/saml" data-provider-action="saml">Try SAML authentication</a><a class="text-link" href="/identity/saml/metadata">View SP metadata ↗</a></div>
+  <div class="identity-provider-actions"><a class="button" href="/auth/saml" data-provider-action="saml">Try SAML authentication</a><a class="text-link" href="/auth/saml/metadata">View SP metadata ↗</a></div>
 </section>
 
 <details class="panel identity-implementation">
@@ -129,7 +129,7 @@ export function renderIdentityDemo(env: Env): Response {
   });
 
   const load = async () => {
-    const response = await fetch('/identity/session', { headers: { accept: 'application/json' }, credentials: 'same-origin' });
+    const response = await fetch('/auth/session', { headers: { accept: 'application/json' }, credentials: 'same-origin' });
     if (!response.ok) throw new Error('session unavailable');
     const body = await response.json();
     Object.entries(body.providers || {}).forEach(([key, provider]) => {
@@ -164,7 +164,7 @@ export function renderIdentityDemo(env: Env): Response {
     const detail = document.querySelector('[data-decision-detail]');
     output.hidden = false; decision.textContent = 'EVALUATING'; output.dataset.decision = '';
     try {
-      const response = await fetch('/__api/identity/authorize', { method: 'POST', credentials: 'same-origin', headers: { accept: 'application/json', 'content-type': 'application/json' }, body: JSON.stringify({ requestedAction: button.dataset.authorize }) });
+      const response = await fetch('/auth/authorize', { method: 'POST', credentials: 'same-origin', headers: { accept: 'application/json', 'content-type': 'application/json' }, body: JSON.stringify({ requestedAction: button.dataset.authorize }) });
       const body = await response.json();
       if (!body.authorization) throw new Error('No decision returned');
       const value = body.authorization.decision.toUpperCase(); decision.textContent = value; output.dataset.decision = value.toLowerCase(); detail.textContent = body.authorization.policy;
@@ -172,7 +172,7 @@ export function renderIdentityDemo(env: Env): Response {
   }));
 
   document.querySelector('[data-identity-logout]').addEventListener('click', async () => {
-    const response = await fetch('/identity/logout', { method: 'POST', credentials: 'same-origin', headers: { accept: 'application/json' } });
+    const response = await fetch('/auth/logout', { method: 'POST', credentials: 'same-origin', headers: { accept: 'application/json' } });
     if (response.ok) { result.hidden = true; showNotice('WizardGang application session ended.', 'success'); }
     else showNotice('The session could not be ended.', 'error');
   });

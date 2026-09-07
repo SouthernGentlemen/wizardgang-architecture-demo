@@ -23,7 +23,7 @@ const assets: Record<string, { body: string; contentType: string }> = {
 };
 
 export function graphiqlAssetResponse(request: Request, rawName: string): Response {
-  if (request.method !== 'GET') return methodNotAllowed(['GET']);
+  if (request.method !== 'GET' && request.method !== 'HEAD') return methodNotAllowed(['GET', 'HEAD']);
   const asset = assets[rawName];
   if (!asset) return new Response('Not found.', { status: 404, headers: { 'cache-control': 'no-store' } });
   const headers = withSecurityHeaders(new Headers({
@@ -43,12 +43,12 @@ export function localGraphiqlResponse(request: Request): Response {
     credentials: 'same-origin',
     shouldPersistHeaders: false,
   }).replace(/</g, '\\u003c');
-  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WizardGang GraphiQL</title><link rel="stylesheet" href="/__assets/graphiql/graphiql.css"></head><body id="body" class="no-focus-outline"><noscript>JavaScript is required to run GraphiQL.</noscript><div id="root">Loading WizardGang GraphiQL…</div><script>
-  const workerSources={editorWorkerService:'/__assets/graphiql/editor.worker.js',json:'/__assets/graphiql/json.worker.js',graphql:'/__assets/graphiql/graphql.worker.js'};
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WizardGang GraphiQL</title><link rel="stylesheet" href="/assets/graphiql.css"></head><body id="body" class="no-focus-outline"><noscript>JavaScript is required to run GraphiQL.</noscript><div id="root">Loading WizardGang GraphiQL…</div><script>
+  const workerSources={editorWorkerService:'/assets/editor.worker.js',json:'/assets/json.worker.js',graphql:'/assets/graphql.worker.js'};
   const workerUrls={};
   const prepareWorkers=()=>Promise.all(Object.entries(workerSources).map(async([name,url])=>{const response=await fetch(url);if(!response.ok)throw new Error('Editor worker unavailable');workerUrls[name]=URL.createObjectURL(new Blob([await response.text()],{type:'application/javascript'}))}));
   self.MonacoEnvironment={globalAPI:false,getWorkerUrl:(_moduleId,label)=>workerUrls[label]||workerUrls.editorWorkerService};
-  </script><script src="/__assets/graphiql/graphiql.js"></script><script>prepareWorkers().finally(()=>YogaGraphiQL.renderYogaGraphiQL(document.getElementById('root'),${options}))</script></body></html>`;
+  </script><script src="/assets/graphiql.js"></script><script>prepareWorkers().finally(()=>YogaGraphiQL.renderYogaGraphiQL(document.getElementById('root'),${options}))</script></body></html>`;
   return new Response(html, { headers: {
     'content-type': 'text/html; charset=utf-8',
     'cache-control': 'no-store',

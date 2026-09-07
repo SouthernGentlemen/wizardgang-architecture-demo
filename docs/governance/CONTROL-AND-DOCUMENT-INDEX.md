@@ -302,7 +302,7 @@ The intended public assurance architecture is:
 | **`/dashboard/billing`** | Usage/cost/degradation evidence |
 | **`/health`** | Machine-readable runtime/dependency health |
 | **`/version`** | Deployed version/SHA identity |
-| **`/mcp/server`** | Current bounded MCP implementation surface |
+| **`/mcp`** | Current bounded MCP implementation surface |
 
 `/compliance` must not duplicate canonical state in a second data store. It derives presentation from structured assurance data and may deep-link evidence owners and detailed interactive demonstrations.
 
