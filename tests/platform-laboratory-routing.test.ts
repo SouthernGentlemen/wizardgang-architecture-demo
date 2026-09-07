@@ -10,25 +10,57 @@ import { createPlatformLaboratoryRouteRouter } from '../src/routing/platform-lab
 import { routeRequest } from '../src/router';
 import type { Env } from '../src/types';
 
-const onlineEnv = {
-  DEMO_DB: {
-    prepare: () => ({
-      all: async () => ({
-        results: [{
-          state: 'online',
-          public_message: 'Demo online.',
-          updated_at: '2026-09-05T00:00:00.000Z',
-          updated_by: 'test',
-        }],
+function environment(state: 'online' | 'offline'): Env {
+  return {
+    DEMO_DB: {
+      prepare: (sql: string) => ({
+        bind() { return this; },
+        all: async () => ({
+          results: sql.includes('FROM demo_control') ? [{
+            state,
+            public_message: state === 'online' ? 'Demo online.' : 'Demo maintenance.',
+            updated_at: '2026-09-05T00:00:00.000Z',
+            updated_by: 'test',
+          }] : [],
+        }),
       }),
-    }),
-  },
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
-  GITHUB_BRANCH: 'main',
-} as unknown as Env;
+    },
+    GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+    GITHUB_BRANCH: 'main',
+  } as unknown as Env;
+}
 
+const onlineEnv = environment('online');
+const offlineEnv = environment('offline');
 const routes = platformLaboratoryCapabilities.flatMap((capability) => capability.routes);
 const removedPagePaths = ['/edge', '/workers', '/durable-objects', '/d1', '/r2'] as const;
+const removedLaboratoryPaths = [
+  '/__api/edge/inspect',
+  '/__api/workers/compute',
+  '/__api/durable/counter',
+  '/__api/d1/users',
+  '/__api/d1/users/example',
+  '/__api/d1/tasks',
+  '/__api/d1/tasks/example',
+  '/__api/d1/reset',
+  '/v1/demo-records',
+  '/v1/demo-records/example',
+  '/__api/api-sandbox/reset',
+  '/__api/r2/demo',
+  '/__api/r2/object',
+  '/__api/r2/files',
+  '/__api/r2/files/example',
+  '/__api/r2/reset',
+  '/__api/accessibility/lab',
+  '/__api/webhooks/demo',
+  '/__api/webhooks/events',
+  '/__api/webhooks/reset',
+  '/__api/git/demo',
+  '/__api/git/demo/release',
+  '/__api/evidence/traceability',
+  '/__api/governance/security-controls',
+  '/__api/governance/ai-evaluation',
+] as const;
 const platformViewCases = [
   { view: 'edge', heading: 'Cloudflare Edge', absent: 'SQL Inspector' },
   { view: 'workers', heading: 'Cloudflare Workers', absent: 'Your R2 sandbox' },
@@ -38,26 +70,34 @@ const platformViewCases = [
 ] as const;
 
 describe('platform laboratory declarative routing', () => {
-  it('owns one consolidated platform page and every laboratory API with complete route metadata', () => {
+  it('owns one consolidated platform page and only canonical laboratory APIs with complete contracts', () => {
     expect(routes.map((route) => route.pattern).sort()).toEqual([
-      '/__api/accessibility/lab',
-      '/__api/api-sandbox/reset',
-      '/__api/d1/reset',
-      '/__api/d1/tasks',
-      '/__api/d1/tasks/:id',
-      '/__api/d1/users',
-      '/__api/d1/users/:id',
-      '/__api/durable/counter',
-      '/__api/edge/inspect',
-      '/__api/r2/demo',
-      '/__api/r2/files',
-      '/__api/r2/files/:id',
-      '/__api/r2/object',
-      '/__api/r2/reset',
-      '/__api/workers/compute',
+      '/api/labs/accessibility',
+      '/api/labs/d1-reset',
+      '/api/labs/d1-tasks',
+      '/api/labs/d1-tasks/:id',
+      '/api/labs/d1-users',
+      '/api/labs/d1-users/:id',
+      '/api/labs/durable-counter',
+      '/api/labs/edge',
+      '/api/labs/git-delivery',
+      '/api/labs/git-release',
+      '/api/labs/governance-ai-evaluation',
+      '/api/labs/governance-security-controls',
+      '/api/labs/governance-traceability',
+      '/api/labs/r2-demo',
+      '/api/labs/r2-files',
+      '/api/labs/r2-files/:id',
+      '/api/labs/r2-objects',
+      '/api/labs/r2-reset',
+      '/api/labs/rest-records',
+      '/api/labs/rest-records/:id',
+      '/api/labs/rest-records-reset',
+      '/api/labs/webhook-demo',
+      '/api/labs/webhook-events',
+      '/api/labs/webhook-reset',
+      '/api/labs/workers',
       '/platform',
-      '/v1/demo-records',
-      '/v1/demo-records/:key',
     ].sort());
 
     for (const route of routes) {
@@ -69,8 +109,14 @@ describe('platform laboratory declarative routing', () => {
       expect(route.cache, route.id).toBeDefined();
       if (route.id === 'platform.page') {
         expect(route.source.module).toBe('src/demos/platform.ts');
+        expect(route.labId).toBeUndefined();
+        expect(route.requestSchemas).toBeUndefined();
       } else {
         expect(route.source.module, route.id).toMatch(/^src\/platform\/route-capabilities\//);
+        expect(route.labId, route.id).toMatch(/^[a-z0-9][a-z0-9-]*$/);
+        expect(route.pattern, route.id).toSatisfy((pattern: string) =>
+          pattern === `/api/labs/${route.labId}` || pattern === `/api/labs/${route.labId}/:id`);
+        for (const method of route.methods) expect(route.requestSchemas?.[method], `${route.id}:${method}`).toBeTruthy();
       }
       expect(route.source.exportName, route.id).toBeTruthy();
       expect(route.source.tests, route.id).toContain('tests/platform-laboratory-routing.test.ts');
@@ -87,6 +133,37 @@ describe('platform laboratory declarative routing', () => {
       binding: 'DEMO_R2',
       metadataBinding: 'DEMO_DB',
     });
+  });
+
+  it('rejects a laboratory API that is noncanonical or lacks a method schema', () => {
+    const base = {
+      id: 'platform.synthetic.ping',
+      methods: ['GET'] as const,
+      kind: 'api' as const,
+      handler: () => new Response('ok'),
+      authentication: { mode: 'anonymous' as const },
+      authorization: { mode: 'none' as const },
+      visibility: 'public' as const,
+      sameOrigin: { mode: 'not-required' as const },
+      offline: { mode: 'gated' as const },
+      cache: { mode: 'no-store' as const },
+      crawler: { crawling: 'controlled' as const, indexing: 'deny' as const },
+      documentation: { title: 'Synthetic', description: 'Synthetic route.', docs: ['docs/ROUTE-REGISTRY.md'] },
+      source: { module: 'tests/platform-laboratory-routing.test.ts', exportName: 'synthetic', tests: ['tests/platform-laboratory-routing.test.ts'] },
+      requestLimits: noRequestBody(),
+      storage: NO_STORAGE,
+      labId: 'synthetic',
+    };
+
+    expect(() => definePlatformLaboratoryCapability({
+      id: 'platform.synthetic',
+      routes: [{ ...base, pattern: '/__api/synthetic/ping', requestSchemas: { GET: 'none' } }],
+    })).toThrow(/must use \/api\/labs\/synthetic/);
+
+    expect(() => definePlatformLaboratoryCapability({
+      id: 'platform.synthetic',
+      routes: [{ ...base, pattern: '/api/labs/synthetic' }],
+    })).toThrow(/must declare method request schemas/);
   });
 
   it('renders every platform view as a canonical accessible deep link with ordinary internal links', async () => {
@@ -119,31 +196,68 @@ describe('platform laboratory declarative routing', () => {
     expect(html).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/platform">');
   });
 
-  it('uses the ordinary 404 for an unknown platform view and every removed page route', async () => {
-    const unknown = await routeRequest(new Request('https://demo.wizardgang.ai/platform?view=not-a-view', {
+  it('uses normal 405 handling for unsupported canonical lab methods', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/api/labs/edge', { method: 'PUT' }), onlineEnv);
+    expect(response.status).toBe(405);
+    expect(response.headers.get('allow')).toBe('GET');
+  });
+
+  it('keeps handler schema validation on canonical lab requests', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/api/labs/workers', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ operation: 'sum', values: [] }),
+    }), onlineEnv);
+    expect(response.status).toBe(400);
+  });
+
+  it('preserves authorization and same-origin controls on canonical lab requests', async () => {
+    const unauthorized = await routeRequest(new Request('https://demo.wizardgang.ai/api/labs/rest-records-reset', {
+      method: 'POST',
+    }), onlineEnv);
+    expect(unauthorized.status).toBe(401);
+
+    const crossOrigin = await routeRequest(new Request('https://demo.wizardgang.ai/api/labs/d1-reset', {
+      method: 'POST',
+      headers: { origin: 'https://example.test' },
+    }), onlineEnv);
+    expect(crossOrigin.status).toBe(403);
+  });
+
+  it('preserves offline gating for canonical lab APIs', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/api/labs/edge'), offlineEnv);
+    expect(response.status).toBe(503);
+  });
+
+  it('uses the ordinary 404 for an unknown platform view, unknown lab, and every removed page/API path', async () => {
+    const unknownView = await routeRequest(new Request('https://demo.wizardgang.ai/platform?view=not-a-view', {
       headers: { accept: 'text/html' },
     }), onlineEnv);
-    expect(unknown.status).toBe(404);
-    expect(unknown.headers.get('location')).toBeNull();
-    expect(await unknown.text()).toContain('404 / unknown route');
+    expect(unknownView.status).toBe(404);
+    expect(unknownView.headers.get('location')).toBeNull();
+    expect(await unknownView.text()).toContain('404 / unknown route');
 
-    for (const path of removedPagePaths) {
-      const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`, {
-        headers: { accept: 'text/html' },
-      }), onlineEnv);
+    const unknownLab = await routeRequest(new Request('https://demo.wizardgang.ai/api/labs/not-registered'), onlineEnv);
+    expect(unknownLab.status).toBe(404);
+    expect(unknownLab.headers.get('location')).toBeNull();
+
+    for (const path of [...removedPagePaths, ...removedLaboratoryPaths]) {
+      const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`), onlineEnv);
       expect(response.status, path).toBe(404);
       expect(response.headers.get('location'), path).toBeNull();
       expect(await response.text(), path).toContain('404 / unknown route');
     }
   });
 
-  it('registers a compatible new laboratory without modifying the central router', async () => {
+  it('registers a compatible canonical laboratory without modifying the central router', async () => {
     const synthetic = definePlatformLaboratoryCapability({
       id: 'platform.synthetic',
       routes: [{
         id: 'platform.synthetic.ping',
-        pattern: '/__api/synthetic-lab/ping',
+        labId: 'synthetic',
+        pattern: '/api/labs/synthetic',
         methods: ['GET'],
+        requestSchemas: { GET: 'none' },
         kind: 'api',
         handler: () => new Response(JSON.stringify({ ok: true }), {
           headers: { 'content-type': 'application/json' },
@@ -172,9 +286,9 @@ describe('platform laboratory declarative routing', () => {
     const router = createPlatformLaboratoryRouteRouter([...platformLaboratoryCapabilities, synthetic]);
 
     const response = await router.route(
-      new Request('https://demo.wizardgang.ai/__api/synthetic-lab/ping'),
+      new Request('https://demo.wizardgang.ai/api/labs/synthetic'),
       onlineEnv,
-      '/__api/synthetic-lab/ping',
+      '/api/labs/synthetic',
     );
 
     expect(response?.status).toBe(200);
@@ -182,51 +296,15 @@ describe('platform laboratory declarative routing', () => {
     expect(response?.headers.get('cache-control')).toBe('no-store');
 
     const centralRouterSource = fs.readFileSync('src/router.ts', 'utf8');
-    expect(centralRouterSource).not.toContain('/__api/synthetic-lab/ping');
+    expect(centralRouterSource).not.toContain('/api/labs/synthetic');
   });
 
-  it('keeps unknown laboratory paths unregistered and returns 404 from the main router', async () => {
-    const router = createPlatformLaboratoryRouteRouter();
-    expect(await router.route(
-      new Request('https://demo.wizardgang.ai/__api/d1/not-a-route'),
-      onlineEnv,
-      '/__api/d1/not-a-route',
-    )).toBeUndefined();
-
-    const response = await routeRequest(
-      new Request('https://demo.wizardgang.ai/__api/d1/not-a-route'),
-      onlineEnv,
-    );
-    expect(response.status).toBe(404);
-  });
-
-  it('keeps individual platform paths out of the central router', () => {
+  it('keeps individual laboratory paths out of the central router', () => {
     const centralRouterSource = fs.readFileSync('src/router.ts', 'utf8');
     expect(centralRouterSource).toContain('applicationRouteRegistry');
     expect(centralRouterSource).not.toContain('routePlatformLaboratoryRequest');
 
-    for (const path of [
-      '/platform',
-      '/edge',
-      '/workers',
-      '/durable-objects',
-      '/d1',
-      '/r2',
-      '/accessibility',
-      '/__api/edge/inspect',
-      '/__api/workers/compute',
-      '/__api/durable/counter',
-      '/__api/d1/users',
-      '/__api/d1/tasks',
-      '/__api/d1/reset',
-      '/v1/demo-records',
-      '/__api/api-sandbox/reset',
-      '/__api/r2/demo',
-      '/__api/r2/object',
-      '/__api/r2/files',
-      '/__api/r2/reset',
-      '/__api/accessibility/lab',
-    ]) {
+    for (const path of routes.map((route) => route.pattern)) {
       expect(centralRouterSource).not.toContain(`'${path}'`);
       expect(centralRouterSource).not.toContain(`"${path}"`);
     }

@@ -4,7 +4,7 @@
   "info": {
     "title": "WizardGang Architecture Demo REST API",
     "version": "1.4.0",
-    "description": "Executable OpenAPI 3.1 contract for the current v1 REST and assurance interfaces. Reporting response schemas are mechanically synchronized from the canonical assurance contracts."
+    "description": "Executable OpenAPI 3.1 contract for the current canonical REST, laboratory, and reporting interfaces. Reporting response schemas are mechanically synchronized from the canonical assurance contracts."
   },
   "servers": [
     {
@@ -23,7 +23,7 @@
     }
   ],
   "paths": {
-    "/v1/demo-records": {
+    "/api/labs/rest-records": {
       "get": {
         "tags": [
           "Records"
@@ -183,7 +183,7 @@
         }
       }
     },
-    "/v1/demo-records/{key}": {
+    "/api/labs/rest-records/{id}": {
       "get": {
         "tags": [
           "Records"
@@ -196,7 +196,7 @@
         },
         "parameters": [
           {
-            "name": "key",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -268,7 +268,7 @@
         ],
         "parameters": [
           {
-            "name": "key",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -350,7 +350,7 @@
         ],
         "parameters": [
           {
-            "name": "key",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {

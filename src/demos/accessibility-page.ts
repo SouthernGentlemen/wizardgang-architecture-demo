@@ -57,7 +57,7 @@ export function renderAccessibilityDemo(request: Request, env: Env): Response {
       warning.hidden=mode!=='broken';
       document.querySelectorAll('[data-a11y-mode]').forEach((button)=>button.setAttribute('aria-pressed',String(button.dataset.a11yMode===mode)));
       const url=new URL(location.href);url.searchParams.set('mode',mode);history.replaceState(null,'',url);
-      try{const response=await fetch('/__api/accessibility/lab?mode='+mode);if(!response.ok)throw new Error('frame unavailable');frame.srcdoc=await response.text()}catch(error){state.textContent='Unavailable';meta.textContent='Automated scan unavailable.'}
+      try{const response=await fetch('/api/labs/accessibility?mode='+mode);if(!response.ok)throw new Error('frame unavailable');frame.srcdoc=await response.text()}catch(error){state.textContent='Unavailable';meta.textContent='Automated scan unavailable.'}
     };
     window.addEventListener('message',(event)=>{
       if(event.source!==frame.contentWindow||!validReport(event.data)||event.data.mode!==mode)return;

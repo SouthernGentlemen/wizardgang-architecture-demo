@@ -101,7 +101,7 @@ describe('intentional offline route policies', () => {
   it('declares browser response behavior without API-prefix or HTML-path inference', () => {
     const browserPolicy = (pattern: string) => applicationRoutes.find((route) => route.pattern === pattern)?.browserHtml;
     for (const pattern of [
-      '/__api/edge/inspect',
+      '/api/labs/edge',
       '/api/reporting',
       '/api/reporting/:collection',
       '/api/reporting/:collection/:recordId',

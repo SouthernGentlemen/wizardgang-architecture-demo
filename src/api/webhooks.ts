@@ -129,7 +129,7 @@ async function acceptGitHubShape(request: Request, env: Env, options: { provider
       'INSERT INTO webhook_events (session_id, provider, delivery_id, event_type, action, repository, actor, summary_json, payload_sha256, signature_valid, received_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)',
     ).bind(options.sessionId ?? null, options.provider, deliveryId, eventType, action, repository, actor, safeSummary, digest, receivedAt).run();
     const event = await recordDemoEvent(env, 'webhooks', `${options.provider}_webhook_received`, { provider: options.provider, eventType, deliveryId, repository, payloadSha256: digest });
-    await recordApplicationLog(env, { source: 'webhooks', eventKey: `${options.provider}_webhook_received`, message: `Verified ${options.provider} webhook ${deliveryId} was accepted.`, route: options.provider === 'github' ? '/v1/webhooks/github' : '/__api/webhooks/demo', detail: { eventType, deliveryId, repository, eventId: event.id } });
+    await recordApplicationLog(env, { source: 'webhooks', eventKey: `${options.provider}_webhook_received`, message: `Verified ${options.provider} webhook ${deliveryId} was accepted.`, route: options.provider === 'github' ? '/v1/webhooks/github' : '/api/labs/webhook-demo', detail: { eventType, deliveryId, repository, eventId: event.id } });
     return json({ accepted: true, id: result.meta?.last_row_id, provider: options.provider, deliveryId, eventType, action, repository, actor, summary, receivedAt, payloadSha256: digest, auditEventId: event.id }, { status: 202, headers: { 'cache-control': 'no-store' } });
   } catch (error) {
     if (String(error).toLowerCase().includes('unique')) return json({ error: 'duplicate_delivery', deliveryId }, { status: 409 });

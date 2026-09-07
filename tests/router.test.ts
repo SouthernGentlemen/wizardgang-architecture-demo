@@ -69,7 +69,7 @@ describe('public route contract', () => {
     expect(socialCard.headers.get('cache-control')).toContain('immutable');
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/logs'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/robots.txt'), environment)).status).toBe(200);
-    const accessibilityFrame = await routeRequest(new Request('https://demo.wizardgang.ai/__api/accessibility/lab?mode=accessible'), environment);
+    const accessibilityFrame = await routeRequest(new Request('https://demo.wizardgang.ai/api/labs/accessibility?mode=accessible'), environment);
     expect(accessibilityFrame.status).toBe(200);
     expect(accessibilityFrame.headers.get('content-type')).toContain('text/html');
   });
@@ -79,7 +79,7 @@ describe('public route contract', () => {
     const html = await response.text();
     const openapiOperationCount = Object.values(openapi.paths).reduce((count, path) => count + Object.keys(path).filter((method) => ['get', 'post', 'put', 'patch', 'delete', 'head', 'options'].includes(method)).length, 0);
     for (const anchor of ['rest', 'openapi']) expect(html).toContain(`id="${anchor}"`);
-    for (const endpoint of ['/v1/demo-records', '/api/openapi.json', '/interfaces?view=graphql', '/interfaces?view=webhooks']) expect(html).toContain(endpoint);
+    for (const endpoint of ['/api/labs/rest-records', '/api/openapi.json', '/interfaces?view=graphql', '/interfaces?view=webhooks']) expect(html).toContain(endpoint);
     expect(html.match(/<form data-api-form/g)).toHaveLength(openapiOperationCount);
     expect(html.match(/data-api-endpoint=/g)).toHaveLength(openapiOperationCount);
     expect(html).toContain('OpenAPI 3.1');
@@ -178,7 +178,7 @@ describe('public route contract', () => {
     const html = await response.text();
     for (const anchor of ['source-of-truth', 'versioning', 'branching', 'actions', 'releases', 'environments']) expect(html).toContain(`id="${anchor}"`);
     expect(html).toContain('/__api/git/evidence');
-    expect(html).toContain('/__api/git/demo');
+    expect(html).toContain('/api/labs/git-delivery');
     expect(html).toContain('Run Live Git Demo');
     expect(html).toContain('Merge &amp; Release');
     expect(html).toContain('GitHub Actions live feed');
@@ -193,7 +193,7 @@ describe('public route contract', () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance?view=governance', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     for (const anchor of ['iso-27001', 'iso-42001', 'traceability', 'evidence']) expect(html).toContain(`id="${anchor}"`);
-    for (const endpoint of ['/__api/governance/security-controls', '/__api/governance/ai-evaluation', '/__api/evidence/traceability']) expect(html).toContain(endpoint);
+    for (const endpoint of ['/api/labs/governance-security-controls', '/api/labs/governance-ai-evaluation', '/api/labs/governance-traceability']) expect(html).toContain(endpoint);
     expect(html).toContain('alignment targets, not certification claims');
 
     const edge = await routeRequest(new Request('https://demo.wizardgang.ai/platform?view=edge', { headers: { accept: 'text/html' } }), env());
@@ -325,7 +325,7 @@ describe('offline routing matrix', () => {
     expect(mcp.status).toBe(503);
     expect(await mcp.json()).toMatchObject({ status: 'offline' });
 
-    const api = await routeRequest(new Request('https://demo.wizardgang.ai/v1/demo-records', { headers: { accept: 'application/json' } }), environment);
+    const api = await routeRequest(new Request('https://demo.wizardgang.ai/api/labs/rest-records', { headers: { accept: 'application/json' } }), environment);
     expect(api.status).toBe(503);
     expect(await api.json()).toMatchObject({ status: 'offline' });
 

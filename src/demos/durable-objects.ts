@@ -13,9 +13,9 @@ const demo: DemoDefinition = {
     "D1 records audit evidence but does not hold the counter"
   ],
   "status": "working",
-  "interfaces": [{ "method": "GET / POST", "path": "/__api/durable/counter", "description": "Read or atomically increment the public coordinated counter." }],
+  "interfaces": [{ "method": "GET / POST", "path": "/api/labs/durable-counter", "description": "Read or atomically increment the public coordinated counter." }],
   "supportingSources": [{ "label": "View Durable Object API", "path": "src/api/durable.ts" }, { "label": "View Durable Object class", "path": "src/durable/demo-coordinator.ts" }, { "label": "View Durable Object binding", "path": "wrangler.jsonc" }],
-  "action": { "label": "Increment the coordinated counter", "method": "POST", "path": "/__api/durable/counter" }
+  "action": { "label": "Increment the coordinated counter", "method": "POST", "path": "/api/labs/durable-counter" }
 };
 
 export default demo;

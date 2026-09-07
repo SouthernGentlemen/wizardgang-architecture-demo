@@ -241,7 +241,7 @@ const API_RUNNER = `(() => {
   };
   const updateCount = async () => {
     if (!demoToken) return;
-    const response = await fetch('/v1/demo-records', { headers: securedHeaders() });
+    const response = await fetch('/api/labs/rest-records', { headers: securedHeaders() });
     if (!response.ok) return;
     const payload = await response.json();
     query('[data-sandbox-count]').textContent = (payload.results || []).length + ' record' + ((payload.results || []).length === 1 ? '' : 's');
@@ -309,7 +309,7 @@ const API_RUNNER = `(() => {
   query('[data-copy-token]').addEventListener('click', async (event) => { await navigator.clipboard.writeText(demoToken); event.currentTarget.textContent = 'Copied'; setTimeout(() => { event.currentTarget.textContent = 'Copy token'; }, 1200); });
   query('[data-sandbox-reset]').addEventListener('click', async (event) => {
     event.currentTarget.disabled = true;
-    try { const response = await fetch('/__api/api-sandbox/reset', { method: 'POST', headers: securedHeaders() }); if (!response.ok) throw new Error('Reset failed'); await updateCount(); }
+    try { const response = await fetch('/api/labs/rest-records-reset', { method: 'POST', headers: securedHeaders() }); if (!response.ok) throw new Error('Reset failed'); await updateCount(); }
     finally { event.currentTarget.disabled = false; }
   });
   loadIdentity().catch(() => {});

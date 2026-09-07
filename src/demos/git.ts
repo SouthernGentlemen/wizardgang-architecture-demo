@@ -32,9 +32,9 @@ const demo: DemoDefinition = {
   "repositoryLinks": [{ "label": "View commits", "path": "/commits/main" }, { "label": "View branches", "path": "/branches" }, { "label": "View pull requests", "path": "/pulls" }, { "label": "View Actions", "path": "/actions" }, { "label": "View Releases", "path": "/releases" }],
   "interfaces": [
     { "method": "GET", "path": "/__api/git/evidence", "description": "Fetch bounded, sanitized, cached public GitHub evidence." },
-    { "method": "GET", "path": "/__api/git/demo", "description": "Poll the active or most recent live delivery lifecycle." },
-    { "method": "POST", "path": "/__api/git/demo", "description": "Authenticate and dispatch one controlled semantic-version pull request." },
-    { "method": "POST", "path": "/__api/git/demo/release", "description": "Authenticate and dispatch merge, annotated tag, release, deploy, and verification after CI passes." }
+    { "method": "GET", "path": "/api/labs/git-delivery", "description": "Poll the active or most recent live delivery lifecycle." },
+    { "method": "POST", "path": "/api/labs/git-delivery", "description": "Authenticate and dispatch one controlled semantic-version pull request." },
+    { "method": "POST", "path": "/api/labs/git-release", "description": "Authenticate and dispatch merge, annotated tag, release, deploy, and verification after CI passes." }
   ]
 };
 

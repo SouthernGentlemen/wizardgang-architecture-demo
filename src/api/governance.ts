@@ -114,7 +114,7 @@ export async function aiEvaluationResponse(request: Request, env: Env): Promise<
     source: 'governance-ai',
     eventKey: 'ai_boundary_evaluation',
     message: `AI/MCP boundary evaluation ${outcome}.`,
-    route: '/__api/governance/ai-evaluation',
+    route: '/api/labs/governance-ai-evaluation',
     detail: { auditEventId: event.id },
   });
   return json({

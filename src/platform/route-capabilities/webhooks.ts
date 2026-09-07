@@ -1,0 +1,91 @@
+import {
+  webhookDemoResponse,
+  webhookEventsResponse,
+  webhookResetResponse,
+} from '../../api/webhooks';
+import {
+  D1_RELATIONAL_STORAGE,
+  definePlatformLaboratoryCapability,
+  noRequestBody,
+} from '../route-capability';
+
+const tests = ['tests/platform-laboratory-routing.test.ts', 'tests/webhooks.test.ts', 'tests/router.test.ts'] as const;
+const docs = ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'] as const;
+
+export const webhookLaboratoryCapability = definePlatformLaboratoryCapability({
+  id: 'platform.webhooks',
+  routes: [
+    {
+      id: 'platform.webhooks.synthetic',
+      labId: 'webhook-demo',
+      pattern: '/api/labs/webhook-demo',
+      methods: ['POST'],
+      requestSchemas: { POST: 'none' },
+      kind: 'api',
+      handler: (request, env) => webhookDemoResponse(request, env),
+      authentication: { mode: 'anonymous' },
+      authorization: { mode: 'policy', policy: 'visitor-session' },
+      visibility: 'public',
+      sameOrigin: { mode: 'required', methods: ['POST'] },
+      offline: { mode: 'gated' },
+      cache: { mode: 'no-store' },
+      crawler: { crawling: 'controlled', indexing: 'deny' },
+      documentation: {
+        title: 'Synthetic webhook laboratory action',
+        description: 'Same-origin browser action that signs and exercises the production webhook validation path.',
+        docs,
+      },
+      source: { module: 'src/platform/route-capabilities/webhooks.ts', exportName: 'webhookLaboratoryCapability', tests },
+      requestLimits: noRequestBody('POST generates its bounded synthetic delivery server-side and consumes no request body.'),
+      storage: D1_RELATIONAL_STORAGE,
+    },
+    {
+      id: 'platform.webhooks.events',
+      labId: 'webhook-events',
+      pattern: '/api/labs/webhook-events',
+      methods: ['GET'],
+      requestSchemas: { GET: 'none' },
+      kind: 'api',
+      handler: (request, env) => webhookEventsResponse(request, env),
+      authentication: { mode: 'anonymous' },
+      authorization: { mode: 'policy', policy: 'visitor-session' },
+      visibility: 'public',
+      sameOrigin: { mode: 'not-required' },
+      offline: { mode: 'gated' },
+      cache: { mode: 'no-store' },
+      crawler: { crawling: 'controlled', indexing: 'deny' },
+      documentation: {
+        title: 'Synthetic webhook event laboratory API',
+        description: 'Returns sanitized verified delivery evidence scoped to the current visitor session.',
+        docs,
+      },
+      source: { module: 'src/platform/route-capabilities/webhooks.ts', exportName: 'webhookLaboratoryCapability', tests },
+      requestLimits: noRequestBody('GET consumes no request body.'),
+      storage: D1_RELATIONAL_STORAGE,
+    },
+    {
+      id: 'platform.webhooks.reset',
+      labId: 'webhook-reset',
+      pattern: '/api/labs/webhook-reset',
+      methods: ['POST'],
+      requestSchemas: { POST: 'none' },
+      kind: 'api',
+      handler: (request, env) => webhookResetResponse(request, env),
+      authentication: { mode: 'anonymous' },
+      authorization: { mode: 'policy', policy: 'visitor-session' },
+      visibility: 'public',
+      sameOrigin: { mode: 'required', methods: ['POST'] },
+      offline: { mode: 'gated' },
+      cache: { mode: 'no-store' },
+      crawler: { crawling: 'controlled', indexing: 'deny' },
+      documentation: {
+        title: 'Synthetic webhook reset laboratory API',
+        description: 'Same-origin reset of synthetic webhook evidence for the current visitor session.',
+        docs,
+      },
+      source: { module: 'src/platform/route-capabilities/webhooks.ts', exportName: 'webhookLaboratoryCapability', tests },
+      requestLimits: noRequestBody('POST consumes no request body.'),
+      storage: D1_RELATIONAL_STORAGE,
+    },
+  ],
+});

@@ -48,7 +48,7 @@ const routeById = (id: string) => {
 };
 
 describe('interface and identity declarative routing', () => {
-  it('owns every migrated interface, protocol, identity, Git, governance, i18n, and frontend route', () => {
+  it('owns only interface, protocol, identity, i18n, and frontend routes after lab consolidation', () => {
     expect(routes.map((route) => route.pattern).sort()).toEqual([
       '/',
       '/interfaces',
@@ -58,9 +58,6 @@ describe('interface and identity declarative routing', () => {
       '/__assets/graphiql/:asset',
       '/v1/webhooks/demo',
       '/v1/webhooks/github',
-      '/__api/webhooks/demo',
-      '/__api/webhooks/events',
-      '/__api/webhooks/reset',
       '/__api/identity/oauth-pkce',
       '/__api/identity/authorize',
       '/__api/identity/token',
@@ -78,11 +75,6 @@ describe('interface and identity declarative routing', () => {
       '/identity/logout',
       '/__api/identity/saml/inspect',
       '/mcp/server',
-      '/__api/git/demo',
-      '/__api/git/demo/release',
-      '/__api/evidence/traceability',
-      '/__api/governance/security-controls',
-      '/__api/governance/ai-evaluation',
     ].sort());
 
     for (const route of routes) {
@@ -105,10 +97,6 @@ describe('interface and identity declarative routing', () => {
     const samlGet = matchRoute(interfaceIdentityRouteRegistry, 'GET', '/identity/saml/acs');
     expect(samlGet.status).toBe('method-not-allowed');
     if (samlGet.status === 'method-not-allowed') expect(samlGet.allowedMethods).toEqual(['POST']);
-
-    const gitPut = matchRoute(interfaceIdentityRouteRegistry, 'PUT', '/__api/git/demo');
-    expect(gitPut.status).toBe('method-not-allowed');
-    if (gitPut.status === 'method-not-allowed') expect(gitPut.allowedMethods).toEqual(['GET', 'POST']);
 
     const router = createInterfaceIdentityRouteRouter();
     const response = await router.route(
@@ -133,13 +121,7 @@ describe('interface and identity declarative routing', () => {
       sameOrigin: { mode: 'required', methods: ['POST'] },
     });
     expect(routeById('interfaces.webhooks.github').authorization).toMatchObject({ mode: 'policy' });
-    expect(routeById('interfaces.webhooks.synthetic').sameOrigin).toEqual({ mode: 'required', methods: ['POST'] });
     expect(routeById('interfaces.mcp.server').authorization).toMatchObject({ mode: 'policy' });
-    expect(routeById('interfaces.git.demo-release')).toMatchObject({
-      authentication: { mode: 'required', provider: 'admin-basic' },
-      sameOrigin: { mode: 'required', methods: ['POST'] },
-      visibility: 'private',
-    });
   });
 
   it('registers protocol endpoints and callbacks without changing their URLs', () => {

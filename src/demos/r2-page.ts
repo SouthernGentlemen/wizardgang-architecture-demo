@@ -192,14 +192,14 @@ export function renderR2Demo(env: Env): Response {
       throw error;
     }
   };
-  const previewMarkup = (file) => '<section class="r2-inline-preview" aria-labelledby="selected-preview-heading"><div class="inline-preview-heading"><div><p class="eyebrow">Selected file</p><h3 id="selected-preview-heading" tabindex="-1">' + escape(file.displayName) + '</h3></div><div class="file-actions"><a class="button" href="/__api/r2/files/' + encodeURIComponent(file.id) + '?download=1">Download</a><button type="button" data-close-preview>Close</button></div></div><div class="file-preview"><iframe title="Preview of ' + escape(file.displayName) + '" src="/__api/r2/files/' + encodeURIComponent(file.id) + '"></iframe></div></section>';
+  const previewMarkup = (file) => '<section class="r2-inline-preview" aria-labelledby="selected-preview-heading"><div class="inline-preview-heading"><div><p class="eyebrow">Selected file</p><h3 id="selected-preview-heading" tabindex="-1">' + escape(file.displayName) + '</h3></div><div class="file-actions"><a class="button" href="/api/labs/r2-files/' + encodeURIComponent(file.id) + '?download=1">Download</a><button type="button" data-close-preview>Close</button></div></div><div class="file-preview"><iframe title="Preview of ' + escape(file.displayName) + '" src="/api/labs/r2-files/' + encodeURIComponent(file.id) + '"></iframe></div></section>';
   const fileMarkup = (file) => {
     const selected = state.previewId === file.id;
     const deleting = state.confirmDeleteId === file.id;
     const owner = file.canDelete ? 'Yours' : 'Demo';
     const preview = file.canPreview ? '<button type="button" data-preview-id="' + escape(file.id) + '" aria-pressed="' + String(selected) + '">' + (selected ? 'Viewing' : 'Preview') + '</button>' : '';
     const deleteAction = file.canDelete ? (deleting ? '<div class="delete-confirm" role="group" aria-label="Confirm deletion of ' + escape(file.displayName) + '"><span>Delete?</span><button class="danger-button" type="button" data-confirm-delete="' + escape(file.id) + '">Confirm</button><button type="button" data-cancel-delete>Cancel</button></div>' : '<button class="danger-text-button" type="button" data-delete-id="' + escape(file.id) + '">Delete</button>') : '';
-    const row = '<article class="file-row"' + (selected ? ' data-selected="true"' : '') + '><div class="file-summary"><div class="file-name-line"><strong>' + escape(file.displayName) + '</strong><span class="ownership-badge" data-owner="' + owner.toLowerCase() + '">' + owner + '</span></div><span class="file-facts">' + escape(typeLabel(file.contentType, file.displayName)) + ' · ' + size(file.sizeBytes) + '</span><details class="file-details"><summary>Details</summary><dl><dt>Internal key</dt><dd><code>' + escape(file.key) + '</code></dd><dt>MIME type</dt><dd>' + escape(file.contentType) + '</dd><dt>Ownership</dt><dd>' + escape(file.ownership) + '</dd><dt>Updated</dt><dd>' + escape(new Date(file.updatedAt).toLocaleString()) + '</dd></dl></details></div><div class="file-actions">' + preview + '<a class="button" href="/__api/r2/files/' + encodeURIComponent(file.id) + '?download=1">Download</a>' + deleteAction + '</div></article>';
+    const row = '<article class="file-row"' + (selected ? ' data-selected="true"' : '') + '><div class="file-summary"><div class="file-name-line"><strong>' + escape(file.displayName) + '</strong><span class="ownership-badge" data-owner="' + owner.toLowerCase() + '">' + owner + '</span></div><span class="file-facts">' + escape(typeLabel(file.contentType, file.displayName)) + ' · ' + size(file.sizeBytes) + '</span><details class="file-details"><summary>Details</summary><dl><dt>Internal key</dt><dd><code>' + escape(file.key) + '</code></dd><dt>MIME type</dt><dd>' + escape(file.contentType) + '</dd><dt>Ownership</dt><dd>' + escape(file.ownership) + '</dd><dt>Updated</dt><dd>' + escape(new Date(file.updatedAt).toLocaleString()) + '</dd></dl></details></div><div class="file-actions">' + preview + '<a class="button" href="/api/labs/r2-files/' + encodeURIComponent(file.id) + '?download=1">Download</a>' + deleteAction + '</div></article>';
     return row + (selected ? previewMarkup(file) : '');
   };
   const render = () => {
@@ -218,7 +218,7 @@ export function renderR2Demo(env: Env): Response {
     state.loading = true;
     render();
     try {
-      const payload = await call('/__api/r2/files', {}, 'LIST', track);
+      const payload = await call('/api/labs/r2-files', {}, 'LIST', track);
       state.files = payload.result.files;
       state.ready = true;
     } finally {
@@ -244,7 +244,7 @@ export function renderR2Demo(env: Env): Response {
     uploadButton.textContent = 'Uploading…';
     setStatus('Uploading ' + file.name + '…');
     try {
-      await call('/__api/r2/files', {method:'POST', body}, 'PUT');
+      await call('/api/labs/r2-files', {method:'POST', body}, 'PUT');
       state.selectedFile = null;
       fileInput.value = '';
       await load(false);
@@ -300,7 +300,7 @@ export function renderR2Demo(env: Env): Response {
       button.disabled = true;
       setStatus('Deleting ' + file.displayName + '…');
       try {
-        await call('/__api/r2/files/' + encodeURIComponent(file.id), {method:'DELETE'}, 'DELETE');
+        await call('/api/labs/r2-files/' + encodeURIComponent(file.id), {method:'DELETE'}, 'DELETE');
         if (state.previewId === file.id) state.previewId = null;
         state.confirmDeleteId = null;
         await load(false);
@@ -327,7 +327,7 @@ export function renderR2Demo(env: Env): Response {
       button.disabled = true;
       setStatus('Resetting your sandbox…');
       try {
-        await call('/__api/r2/reset', {method:'POST'}, 'RESET');
+        await call('/api/labs/r2-reset', {method:'POST'}, 'RESET');
         state.previewId = null;
         state.confirmDeleteId = null;
         await load(false);

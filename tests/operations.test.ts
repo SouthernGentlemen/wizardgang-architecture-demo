@@ -134,7 +134,7 @@ describe('operations proof surface', () => {
     }), environment);
     expect(await changed.json()).toMatchObject({ synthetic: true, state: 'degraded', optionalWorkerCompute: 'paused' });
 
-    const compute = await workerComputeResponse(new Request('https://demo.example/__api/workers/compute', {
+    const compute = await workerComputeResponse(new Request('https://demo.example/api/labs/workers', {
       method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ operation: 'sum', values: [1, 2] }),
     }), environment);
     expect(compute.status).toBe(429);

@@ -48,7 +48,7 @@ function env(): Env {
 
 describe('edge and Worker demonstrations', () => {
   it('returns only allowlisted edge context', async () => {
-    const request = new Request('https://demo.example/__api/edge/inspect', { headers: { cookie: 'private=value', accept: 'application/json' } }) as Request & { cf?: Record<string, unknown> };
+    const request = new Request('https://demo.example/api/labs/edge', { headers: { cookie: 'private=value', accept: 'application/json' } }) as Request & { cf?: Record<string, unknown> };
     request.cf = { colo: 'IAD', country: 'US', clientTcpRtt: 12, clientIp: '192.0.2.1' };
     const response = await edgeInspectionResponse(request, env());
     const body = await response.json() as { edge: Record<string, unknown>; privacy: string };
@@ -58,7 +58,7 @@ describe('edge and Worker demonstrations', () => {
   });
 
   it('performs bounded stateless computation', async () => {
-    const response = await workerComputeResponse(new Request('https://demo.example/__api/workers/compute', {
+    const response = await workerComputeResponse(new Request('https://demo.example/api/labs/workers', {
       method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ operation: 'average', values: [2, 4, 9] }),
     }), env());
     expect(await response.json()).toMatchObject({ result: 5, inputCount: 3 });
@@ -68,10 +68,10 @@ describe('edge and Worker demonstrations', () => {
 describe('R2 object boundary', () => {
   it('writes the object to R2 and stores only metadata in D1', async () => {
     const environment = env();
-    const created = await r2DemoObjectResponse(new Request('https://demo.example/__api/r2/demo', { method: 'POST' }), environment);
+    const created = await r2DemoObjectResponse(new Request('https://demo.example/api/labs/r2-demo', { method: 'POST' }), environment);
     expect(await created.json()).toMatchObject({ storage: 'R2', metadata: 'D1 demo-blob', key: 'public/visitor-demo.txt' });
 
-    const fetched = await r2ObjectResponse(new Request('https://demo.example/__api/r2/object?key=public%2Fvisitor-demo.txt'), environment);
+    const fetched = await r2ObjectResponse(new Request('https://demo.example/api/labs/r2-objects?key=public%2Fvisitor-demo.txt'), environment);
     const body = await fetched.json() as { content: string; metadata: { object_key: string } };
     expect(body.content).toContain('WizardGang R2 demonstration object');
     expect(body.metadata.object_key).toBe('public/visitor-demo.txt');

@@ -12,8 +12,10 @@ export const durableObjectsLaboratoryCapability = definePlatformLaboratoryCapabi
   routes: [
     {
       id: 'platform.durable-objects.counter',
-      pattern: '/__api/durable/counter',
+      labId: 'durable-counter',
+      pattern: '/api/labs/durable-counter',
       methods: ['GET', 'POST'],
+      requestSchemas: { GET: 'none', POST: 'none' },
       kind: 'api',
       handler: (request, env) => durableCounterResponse(request, env),
       authentication: { mode: 'anonymous' },
@@ -24,7 +26,7 @@ export const durableObjectsLaboratoryCapability = definePlatformLaboratoryCapabi
       cache: { mode: 'no-store' },
       crawler: { crawling: 'controlled', indexing: 'deny' },
       documentation: {
-        title: 'Durable Object counter API',
+        title: 'Durable Object counter laboratory API',
         description: 'Reads or increments the public counter coordinated and persisted by a Durable Object.',
         docs: ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'],
       },

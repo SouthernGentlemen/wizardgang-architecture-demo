@@ -13,9 +13,9 @@ const demo: DemoDefinition = {
     "Public-safe operational evidence"
   ],
   "status": "working",
-  "interfaces": [{ "method": "GET", "path": "/__api/edge/inspect", "description": "Inspect allowlisted edge and protocol context." }],
+  "interfaces": [{ "method": "GET", "path": "/api/labs/edge", "description": "Inspect allowlisted edge and protocol context." }],
   "supportingSources": [{ "label": "View runtime API", "path": "src/api/runtime.ts" }, { "label": "View Cloudflare route config", "path": "wrangler.jsonc" }],
-  "action": { "label": "Inspect this edge request", "method": "GET", "path": "/__api/edge/inspect" }
+  "action": { "label": "Inspect this edge request", "method": "GET", "path": "/api/labs/edge" }
 };
 
 export default demo;
