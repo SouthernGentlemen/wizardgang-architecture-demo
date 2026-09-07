@@ -266,12 +266,12 @@
       "relationships": []
     },
     {
-      "id": "EVD-RUN-006",
+      "id": "EVD-RUN-007",
       "kind": "live-route",
       "title": "Accessibility engineering demonstration",
       "description": "Live public route for accessible/broken behavior comparison and partial automated accessibility evidence.",
       "locator": {
-        "route": "/accessibility"
+        "route": "/interfaces?view=accessibility"
       },
       "freshnessPolicy": "observation-bound",
       "visibility": "public",

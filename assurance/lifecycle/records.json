@@ -38,6 +38,13 @@
       "reviewedAt": "2026-09-06T18:53:26Z",
       "reviewer": "controlled-repository-review",
       "basis": "DEMO-174 review approves the exact public source revisions produced by the canonical identity-edge relationship migration; later source revisions require a new disclosure decision."
+    },
+    {
+      "id": "review-demo180-interface-route-source",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-07T02:35:00Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-180 review approves superseding the retired accessibility page evidence with a new consolidated Interfaces view record and the exact resulting public evidence source revision; later source revisions require a new disclosure decision."
     }
   ],
   "sourceApprovals": [
@@ -196,9 +203,16 @@
       "resource": "risks",
       "revision": "df96a37d913c5452e875ac3d2adbceaa5c674650",
       "reviewRef": "review-demo174-relationship-sources"
+    },
+    {
+      "id": "source-evidence-d7998fe374ad",
+      "resource": "evidence",
+      "revision": "d7998fe374ad1a24b07d766a4bb412ca35ac4a1e",
+      "reviewRef": "review-demo180-interface-route-source"
     }
   ],
   "records": [
+    { "id": "EVD-RUN-007", "lifecycle": "Published", "reviewRef": "review-demo180-interface-route-source", "supersedes": ["EVD-RUN-006"] },
     { "id": "AI-OBJ-001", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
     { "id": "AI-OBJ-002", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
     { "id": "AI-OBJ-003", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
@@ -212,5 +226,7 @@
     { "id": "SEC-OBJ-005", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
     { "id": "SEC-OBJ-006", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" }
   ],
-  "retiredRecords": []
+  "retiredRecords": [
+    { "id": "EVD-RUN-006", "lifecycle": "Superseded", "reviewRef": "review-demo180-interface-route-source", "supersededBy": ["EVD-RUN-007"] }
+  ]
 }

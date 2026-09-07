@@ -7,8 +7,6 @@ This file is generated from the active declarative application registry. Route I
 | Route ID | Route | Methods | Kind | Visibility | Offline | Indexing | Purpose | Source |
 |---|---|---|---|---|---|---|---|---|
 | `interfaces.frontend.index` | `/` | `GET` | page | public | gated | allow | Architecture demo index | `src/ui/page.ts` |
-| `platform.accessibility.page` | `/accessibility` | `GET` | page | public | gated | allow | WCAG 2.2 | `src/platform/route-capabilities/accessibility.ts` |
-| `interfaces.rest.page` | `/api` | `GET` | page | public | gated | allow | REST API | `src/demos/api-page.ts` |
 | `assurance.compliance.iso-27001.html` | `/compliance` | `GET` | page | public | gated | allow | Assurance compliance html | `src/demos/compliance-page.ts` |
 | `operations.dashboard` | `/dashboard` | `GET` | page | public | available | allow | Operations dashboard | `src/demos/operations-pages.ts` |
 | `operations.dashboard-billing` | `/dashboard/billing` | `GET` | page | public | available | allow | Usage and cost | `src/demos/operations-pages.ts` |
@@ -21,13 +19,9 @@ This file is generated from the active declarative application registry. Route I
 | `interfaces.governance.concerns` | `/governance/concerns` | `GET` | page | public | gated | allow | Report a Concern | `src/demos/assurance-pages.ts` |
 | `assurance.incidents.html` | `/governance/incidents` | `GET` | page | public | gated | allow | Assurance incidents html | `src/demos/assurance-pages.ts` |
 | `assurance.risks.html` | `/governance/risks` | `GET` | page | public | gated | allow | Assurance risks html | `src/demos/assurance-pages.ts` |
-| `interfaces.graphql.endpoint` | `/graphql` | `GET`, `POST` | protocol | public | gated | allow | GraphQL API | `src/api/graphql.ts` |
-| `interfaces.i18n.page` | `/i18n` | `GET` | page | public | gated | allow | Internationalization | `src/demos/i18n-page.ts` |
-| `interfaces.identity.page` | `/identity` | `GET` | page | public | gated | allow | Authentication & SSO | `src/demos/identity-page.ts` |
-| `interfaces.mcp.page` | `/mcp` | `GET` | page | public | gated | allow | Model Context Protocol | `src/demos/mcp-page.ts` |
+| `interfaces.page` | `/interfaces` | `GET` | page | public | gated | allow | Interfaces | `src/demos/interfaces.ts` |
 | `platform.page` | `/platform` | `GET` | page | public | gated | allow | Cloudflare Platform | `src/demos/platform.ts` |
 | `assurance.advisories.html` | `/security` | `GET` | page | public | available | allow | Assurance advisories html | `src/demos/security-page.ts` |
-| `interfaces.webhooks.page` | `/webhooks` | `GET` | page | public | gated | allow | Signed Webhooks | `src/demos/webhook-console.ts` |
 
 ## Registered service, protocol, asset, and private routes
 
@@ -68,6 +62,7 @@ This file is generated from the active declarative application registry. Route I
 | `interfaces.graphql.asset` | `/__assets/graphiql/{asset}` | `GET` | asset | public | gated | deny | GraphiQL local asset | `src/ui/graphiql-assets.ts` |
 | `operations.security-txt` | `/.well-known/security.txt` | `GET`, `HEAD` | protocol | public | available | deny | Security contact | `src/api/security-policy.ts` |
 | `operations.admin` | `/admin` | `GET`, `POST` | page | private | available | deny | Demo administration | `src/ui/admin.ts` |
+| `interfaces.graphql.endpoint` | `/graphql` | `GET`, `POST` | protocol | public | gated | deny | GraphQL API | `src/api/graphql.ts` |
 | `interfaces.graphql.console` | `/graphql/console` | `GET` | page | public | gated | deny | GraphiQL console | `src/ui/graphiql-assets.ts` |
 | `interfaces.graphql.schema` | `/graphql/schema` | `GET` | protocol | public | gated | deny | GraphQL schema | `src/api/graphql.ts` |
 | `operations.health` | `/health` | `GET` | api | public | available | deny | Health | `src/api/operations.ts` |

@@ -16,9 +16,9 @@ export function renderApiDemo(env: Env): Response {
 ${openApiConsole()}
 <section class="related-interfaces" aria-labelledby="related-interfaces-heading">
   <p class="eyebrow">Same policy, different transports</p><h2 id="related-interfaces-heading">Related interfaces</h2>
-  <nav class="resource-list" aria-label="Related application interfaces"><a href="/graphql"><strong>GraphQL →</strong><code>/graphql</code></a><a href="/webhooks"><strong>Webhooks →</strong><code>/webhooks</code></a><a href="/mcp"><strong>MCP →</strong><code>/mcp</code></a><a href="/identity"><strong>Identity →</strong><code>/identity</code></a></nav>
+  <nav class="resource-list" aria-label="Related application interfaces"><a href="/interfaces?view=graphql"><strong>GraphQL →</strong><code>/interfaces?view=graphql</code></a><a href="/interfaces?view=webhooks"><strong>Webhooks →</strong><code>/interfaces?view=webhooks</code></a><a href="/interfaces?view=mcp"><strong>MCP →</strong><code>/interfaces?view=mcp</code></a><a href="/interfaces?view=identity"><strong>Identity →</strong><code>/interfaces?view=identity</code></a></nav>
 </section>
 <details class="implementation-notes"><summary>Implementation details</summary><ul><li>Permanent operator credentials remain environment-owned and never enter the browser.</li><li>Visitor tokens expire after ten minutes and can address only a server-derived namespace.</li><li>D1 audit events and public-safe logs record behavior without recording bearer values or request bodies.</li></ul></details>`, {
-    activeRoute: '/api', description: 'Execute live REST requests and inspect the versioned OpenAPI 3.1 contract.', cacheControl: 'no-store',
+    activeRoute: '/interfaces', description: 'Execute live REST requests and inspect the versioned OpenAPI 3.1 contract.', cacheControl: 'no-store',
   });
 }

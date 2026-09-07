@@ -1,4 +1,3 @@
-import webhooksDemo from '../../demos/webhooks';
 import {
   githubWebhookResponse,
   webhookDemoResponse,
@@ -6,22 +5,9 @@ import {
   webhookReceiptResponse,
   webhookResetResponse,
 } from '../../api/webhooks';
-import { renderWebhooksDemo } from '../../demos/webhook-console';
 import { defineInterfaceIdentityCapability, interfaceIdentityRoute } from '../route-capability';
 
 export const webhooksRouteCapability = defineInterfaceIdentityCapability('interfaces.webhooks', [
-  interfaceIdentityRoute({
-    id: 'interfaces.webhooks.page',
-    pattern: webhooksDemo.route,
-    methods: ['GET'],
-    kind: 'page',
-    handler: (_request, { env }) => renderWebhooksDemo(env),
-    title: webhooksDemo.title,
-    description: webhooksDemo.summary,
-    sourceModule: 'src/demos/webhook-console.ts',
-    sourceExport: 'renderWebhooksDemo',
-    tests: ['tests/webhooks.test.ts', 'tests/interface.test.ts'],
-  }),
   interfaceIdentityRoute({
     id: 'interfaces.webhooks.demo-receipt',
     pattern: '/v1/webhooks/demo',

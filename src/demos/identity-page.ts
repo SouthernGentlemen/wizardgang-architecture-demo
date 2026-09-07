@@ -116,7 +116,7 @@ export function renderIdentityDemo(env: Env): Response {
   if (params.get('error') === 'provider_unconfigured') showNotice('That provider is not configured in this environment yet. The implementation is ready for environment-owned credentials.', 'warning');
   else if (params.get('error') === 'authentication_failed') showNotice('Authentication could not be validated. No application session was created.', 'error');
   else if (params.has('authenticated')) showNotice('Provider authentication validated. A short-lived WizardGang session is active.', 'success');
-  if (params.has('error') || params.has('authenticated')) history.replaceState({}, '', location.pathname + location.hash);
+  if (params.has('error') || params.has('authenticated')) history.replaceState({}, '', '/interfaces?view=identity' + location.hash);
 
   const selectTab = (name) => {
     document.querySelectorAll('[data-identity-tab]').forEach((tab) => { const selected = tab.dataset.identityTab === name; tab.setAttribute('aria-selected', String(selected)); tab.tabIndex = selected ? 0 : -1; });
@@ -177,5 +177,5 @@ export function renderIdentityDemo(env: Env): Response {
     else showNotice('The session could not be ended.', 'error');
   });
 })();
-</script>`, { activeRoute: '/identity', description: 'Authenticate with Microsoft Entra ID, Google, or GitHub and inspect the validated provider-to-application identity boundary.', cacheControl: 'no-store' });
+</script>`, { activeRoute: '/interfaces', description: 'Authenticate with Microsoft Entra ID, Google, or GitHub and inspect the validated provider-to-application identity boundary.', cacheControl: 'no-store' });
 }

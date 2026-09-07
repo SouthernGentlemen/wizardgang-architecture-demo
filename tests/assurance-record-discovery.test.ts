@@ -10,6 +10,10 @@ import {
 import { rebindRelationshipSource, setRelationshipTargets } from './helpers/assurance-relationships';
 
 const repositoryRoot = process.cwd();
+const repositoryGitDir = spawnSync('git', ['rev-parse', '--absolute-git-dir'], {
+  cwd: repositoryRoot,
+  encoding: 'utf8',
+}).stdout.trim();
 const fixtureRoots: string[] = [];
 const ignoredFixtureParts = new Set(['.git', 'node_modules', '.wrangler', 'dist', 'coverage', 'artifacts']);
 
@@ -163,7 +167,7 @@ describe('registry-driven assurance record discovery', () => {
     });
     const env = {
       ...process.env,
-      ASSURANCE_MIGRATION_DIR: repositoryRoot,
+      GIT_DIR: repositoryGitDir,
       ASSURANCE_PREVIOUS_DIR: repositoryRoot,
     };
     expectRejected(

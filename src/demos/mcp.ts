@@ -2,7 +2,7 @@ import type { DemoDefinition } from '../types';
 
 const demo: DemoDefinition = {
   id: 'mcp',
-  route: '/mcp',
+  route: '/interfaces?view=mcp',
   title: 'Model Context Protocol',
   group: 'Interfaces',
   sourcePath: 'src/demos/mcp.ts',

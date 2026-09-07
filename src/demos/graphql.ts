@@ -2,7 +2,7 @@ import type { DemoDefinition } from '../types';
 
 const demo: DemoDefinition = {
   id: 'graphql',
-  route: '/graphql',
+  route: '/interfaces?view=graphql',
   title: 'GraphQL API',
   group: 'Interfaces',
   sourcePath: 'src/demos/graphql.ts',

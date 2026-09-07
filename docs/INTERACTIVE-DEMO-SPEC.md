@@ -20,15 +20,15 @@ Released routes remain canonical. The proposed `/demo/*` names are represented b
 
 | Capability | Canonical human surface | Machine surface | Compatibility decision |
 |---|---|---|---|
-| R2 | `/r2` | `/__api/r2/*` | Deepen the existing route. |
-| D1 | `/d1` | `/__api/d1/*`; retain `/v1/demo-records*` | Add the Users/Tasks lab without removing the current record contract. |
-| i18n | `/i18n` | Server render plus local progressive enhancement | Deepen the existing route and retain Arabic/RTL. |
-| WCAG | `/accessibility` | Isolated lab frame and test result JSON | Do not add `/wcag`; the released accessibility route remains canonical. |
+| R2 | `/platform?view=r2` | `/__api/r2/*` | Keep object storage on the consolidated Platform surface. |
+| D1 | `/platform?view=d1` | `/__api/d1/*`; retain `/v1/demo-records*` | Keep the Users/Tasks lab on the consolidated Platform surface without removing the current record contract. |
+| i18n | `/interfaces?view=i18n` | Server render plus local progressive enhancement | Keep Arabic/RTL on the consolidated Interfaces surface. |
+| WCAG | `/interfaces?view=accessibility` | Isolated lab frame and test result JSON | Keep the accessibility lab on the consolidated Interfaces surface. |
 | Git/GitHub | `/git` | `/__api/git/evidence`; `/__api/git/demo*` | Show public evidence and run a controlled two-stage release lifecycle against this repository. |
-| Webhooks | `/webhooks` | `/v1/webhooks/github`; `/__api/webhooks/*` | `/api/webhooks` redirects to the focused webhook route. |
-| GraphQL | `/graphql` | `/graphql`; `/graphql/schema`; `/graphql/console` | Browser navigation renders the focused route; API clients execute against the same path by content negotiation. |
+| Webhooks | `/interfaces?view=webhooks` | `/v1/webhooks/github`; `/__api/webhooks/*` | Browser presentation is consolidated while receiver URLs remain stable. |
+| GraphQL | `/interfaces?view=graphql` | `/graphql`; `/graphql/schema`; `/graphql/console` | `/graphql` is machine-only; the browser IDE is embedded by the consolidated view. |
 
-No existing response field, method, redirect, source link, or offline-gate behavior may be removed in the same release. Additive interface changes must be reflected in `docs/ROUTES.md`, `docs/route-manifest.json`, and the applicable contract.
+Protocol response fields, methods, security controls, source links, and offline-gate behavior remain stable. Retired HTML pages are removed only through an explicit controlled route-consolidation change reflected in `docs/ROUTES.md`, `docs/route-manifest.json`, and the applicable contract.
 
 ## Shared visitor sandbox
 
@@ -241,7 +241,7 @@ Show binding `DEMO_R2`, bucket alias, operation (`list`, `put`, `get`, or `delet
 - Key traversal, SVG/HTML inline rendering, oversized input, cross-session access, metadata compensation, object-count/byte limits, same-origin enforcement, and offline state are covered.
 - Drag/drop has an equivalent file-input path and all actions are reachable by keyboard.
 
-## `/i18n` — Instant locale laboratory
+## `/interfaces?view=i18n` — Instant locale laboratory
 
 ### Working demonstration
 
@@ -274,7 +274,7 @@ The card includes translated heading/body/action text, a fixed reference date, d
 - Arabic still passes RTL scroll-safety tests; Japanese and English demonstrate different plural behavior; unsupported locales fall back to English.
 - Reset returns to English, count `3`, and the default inspected title without touching server state.
 
-## `/accessibility` — WCAG 2.2 before/after laboratory
+## `/interfaces?view=accessibility` — WCAG 2.2 before/after laboratory
 
 ### Working demonstration
 
@@ -372,7 +372,7 @@ Only show `Protected`, `PR required`, `CI required`, `signed commits`, `linear h
 - Audit records contain version, operation, request ID, and public object identifiers, never Basic credentials or managed tokens.
 - A 500-millisecond active heartbeat tracks the specific workflow/PR lifecycle, updates keyed job and step rows in place, and never fabricates a transition; `Refresh evidence` remains a read-only refresh for the passive evidence grid.
 
-## `/webhooks` — Verified live delivery
+## `/interfaces?view=webhooks` — Verified live delivery
 
 ### Working demonstration
 
@@ -408,7 +408,7 @@ Verify the signature against the raw bytes before parsing JSON. Accept only allo
 - The live stream reconnects with last event ID and falls back to bounded polling without losing accepted deliveries.
 - Reset cannot remove real GitHub events.
 
-## `/graphql` — GraphiQL over the D1 lab
+## `/interfaces?view=graphql` — GraphiQL over the D1 lab
 
 ### Working demonstration
 
@@ -471,13 +471,13 @@ The `sourceEvidence` component renders these labels in this order. A missing fil
 
 | Surface | View route | View Worker | View contract/resource | View tests | View workflow |
 |---|---|---|---|---|---|
-| `/d1` | `src/demos/d1-page.ts` | `src/api/d1-lab.ts` | next D1 migration | `tests/d1-lab.test.ts` | `.github/workflows/ci.yml` |
-| `/r2` | `src/demos/r2-page.ts` | `src/api/r2.ts` | `src/storage/r2.ts` | `tests/r2-lab.test.ts` | `.github/workflows/ci.yml` |
-| `/i18n` | `src/demos/i18n-page.ts` | `src/demos/i18n-page.ts` | selected locale JSON | `tests/interface.test.ts` | `.github/workflows/ci.yml` |
-| `/accessibility` | `src/demos/accessibility-page.ts` | `src/ui/accessibility-lab.ts` | `docs/ACCESSIBILITY.md` | `tests/accessibility-browser.spec.ts` | `.github/workflows/ci.yml` |
+| `/platform?view=d1` | `src/demos/d1-page.ts` | `src/api/d1-lab.ts` | next D1 migration | `tests/d1-lab.test.ts` | `.github/workflows/ci.yml` |
+| `/platform?view=r2` | `src/demos/r2-page.ts` | `src/api/r2.ts` | `src/storage/r2.ts` | `tests/r2-lab.test.ts` | `.github/workflows/ci.yml` |
+| `/interfaces?view=i18n` | `src/demos/i18n-page.ts` | `src/demos/i18n-page.ts` | selected locale JSON | `tests/interface.test.ts` | `.github/workflows/ci.yml` |
+| `/interfaces?view=accessibility` | `src/demos/accessibility-page.ts` | `src/ui/accessibility-lab.ts` | `docs/ACCESSIBILITY.md` | `tests/accessibility-browser.spec.ts` | `.github/workflows/ci.yml` |
 | `/git` | `src/demos/git-page.ts` | `src/lib/github-api.ts` | `docs/CHANGE-MANAGEMENT.md` | `tests/git-evidence.test.ts` | `.github/workflows/deploy.yml` |
-| `/webhooks` | `src/demos/webhook-console.ts` | `src/api/webhooks.ts` | `contracts/webhooks/events.json` | `tests/webhooks.test.ts` | `.github/workflows/ci.yml` |
-| `/graphql` | `src/demos/graphql-console.ts` | `src/api/graphql.ts` | `contracts/graphql/schema.graphql` | `tests/graphql.test.ts` | `.github/workflows/ci.yml` |
+| `/interfaces?view=webhooks` | `src/demos/webhook-console.ts` | `src/api/webhooks.ts` | `contracts/webhooks/events.json` | `tests/webhooks.test.ts` | `.github/workflows/ci.yml` |
+| `/interfaces?view=graphql` | `src/demos/graphql-console.ts` | `src/api/graphql.ts` | `contracts/graphql/schema.graphql` | `tests/graphql.test.ts` | `.github/workflows/ci.yml` |
 
 ## Delivery slices
 

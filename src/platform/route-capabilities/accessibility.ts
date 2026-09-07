@@ -1,5 +1,3 @@
-import accessibilityDemo from '../../demos/accessibility';
-import { renderAccessibilityDemo } from '../../demos/accessibility-page';
 import { accessibilityLabResponse } from '../../ui/accessibility-lab';
 import {
   NO_STORAGE,
@@ -13,28 +11,6 @@ const docs = ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'] as const;
 export const accessibilityLaboratoryCapability = definePlatformLaboratoryCapability({
   id: 'platform.accessibility',
   routes: [
-    {
-      id: 'platform.accessibility.page',
-      pattern: accessibilityDemo.route,
-      methods: ['GET'],
-      kind: 'page',
-      handler: (request, env) => renderAccessibilityDemo(request, env),
-      authentication: { mode: 'anonymous' },
-      authorization: { mode: 'none' },
-      visibility: 'public',
-      sameOrigin: { mode: 'not-required' },
-      offline: { mode: 'gated' },
-      cache: { mode: 'no-store' },
-      crawler: { crawling: 'controlled', indexing: 'allow' },
-      documentation: { title: accessibilityDemo.title, description: accessibilityDemo.summary, docs },
-      source: {
-        module: 'src/platform/route-capabilities/accessibility.ts',
-        exportName: 'accessibilityLaboratoryCapability',
-        tests,
-      },
-      requestLimits: noRequestBody('The accessibility laboratory page accepts GET without a request body.'),
-      storage: NO_STORAGE,
-    },
     {
       id: 'platform.accessibility.lab',
       pattern: '/__api/accessibility/lab',
@@ -50,7 +26,7 @@ export const accessibilityLaboratoryCapability = definePlatformLaboratoryCapabil
       crawler: { crawling: 'controlled', indexing: 'deny' },
       documentation: {
         title: 'Accessibility teaching frame',
-        description: 'Renders the bounded accessible or intentionally broken teaching frame used by the accessibility laboratory.',
+        description: 'Renders the bounded accessible or intentionally broken teaching frame used by the accessibility interface view.',
         docs,
       },
       source: {

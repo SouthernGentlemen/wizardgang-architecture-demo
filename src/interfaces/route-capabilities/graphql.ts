@@ -1,32 +1,32 @@
 import graphqlDemo from '../../demos/graphql';
 import { graphqlResponse, graphqlSchemaResponse } from '../../api/graphql';
-import { renderGraphqlDemo } from '../../demos/graphql-console';
 import { graphiqlAssetResponse, localGraphiqlResponse } from '../../ui/graphiql-assets';
 import { defineInterfaceIdentityCapability, interfaceIdentityRoute } from '../route-capability';
 
-function wantsGraphqlPage(request: Request): boolean {
-  if (request.method !== 'GET') return false;
-  const accept = request.headers.get('accept') || '';
-  return accept.includes('text/html') || accept === '';
+function machineOnlyGraphqlRequest(request: Request): Request {
+  if (request.method !== 'GET' || !(request.headers.get('accept') || '').includes('text/html')) return request;
+  const headers = new Headers(request.headers);
+  headers.set('accept', 'application/graphql-response+json, application/json');
+  return new Request(request, { headers });
 }
 
 export const graphqlRouteCapability = defineInterfaceIdentityCapability('interfaces.graphql', [
   interfaceIdentityRoute({
     id: 'interfaces.graphql.endpoint',
-    pattern: graphqlDemo.route,
+    pattern: '/graphql',
     methods: ['GET', 'POST'],
     kind: 'protocol',
-    handler: (request, { env }) => wantsGraphqlPage(request) ? renderGraphqlDemo(env) : graphqlResponse(request, env),
+    handler: (request, { env }) => graphqlResponse(machineOnlyGraphqlRequest(request), env),
     title: graphqlDemo.title,
-    description: 'GraphQL protocol endpoint with HTML content negotiation, bounded execution, and the shared application authorization policy.',
+    description: 'Machine-only GraphQL protocol endpoint with bounded execution and the shared application authorization policy.',
     sourceModule: 'src/api/graphql.ts',
     sourceExport: 'graphqlResponse',
     authentication: { mode: 'anonymous' },
     authorization: { mode: 'policy', policy: 'demo:read; mutations require demo:write' },
     sameOrigin: { mode: 'required', methods: ['POST'] },
-    browserHtml: 'graphql',
-    indexing: 'allow',
-    tests: ['tests/graphql.test.ts', 'tests/integration-interfaces.test.ts'],
+    browserHtml: 'never',
+    indexing: 'deny',
+    tests: ['tests/graphql.test.ts', 'tests/integration-interfaces.test.ts', 'tests/interface-consolidation.test.ts'],
   }),
   interfaceIdentityRoute({
     id: 'interfaces.graphql.console',
@@ -35,12 +35,12 @@ export const graphqlRouteCapability = defineInterfaceIdentityCapability('interfa
     kind: 'page',
     handler: (request) => localGraphiqlResponse(request),
     title: 'GraphiQL console',
-    description: 'Locally bundled GraphiQL execution console for the GraphQL endpoint.',
+    description: 'Locally bundled GraphiQL execution console embedded by the consolidated GraphQL interface view.',
     sourceModule: 'src/ui/graphiql-assets.ts',
     sourceExport: 'localGraphiqlResponse',
     indexing: 'deny',
     browserHtml: 'never',
-    tests: ['tests/graphql.test.ts'],
+    tests: ['tests/graphql.test.ts', 'tests/interface-consolidation.test.ts'],
   }),
   interfaceIdentityRoute({
     id: 'interfaces.graphql.schema',

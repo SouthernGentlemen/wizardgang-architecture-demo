@@ -51,19 +51,17 @@ describe('interface and identity declarative routing', () => {
   it('owns every migrated interface, protocol, identity, Git, governance, i18n, and frontend route', () => {
     expect(routes.map((route) => route.pattern).sort()).toEqual([
       '/',
-      '/api',
+      '/interfaces',
       '/v1/openapi.json',
       '/graphql',
       '/graphql/console',
       '/graphql/schema',
       '/__assets/graphiql/:asset',
-      '/webhooks',
       '/v1/webhooks/demo',
       '/v1/webhooks/github',
       '/__api/webhooks/demo',
       '/__api/webhooks/events',
       '/__api/webhooks/reset',
-      '/identity',
       '/__api/identity/oauth-pkce',
       '/__api/identity/authorize',
       '/__api/identity/token',
@@ -80,7 +78,6 @@ describe('interface and identity declarative routing', () => {
       '/identity/session',
       '/identity/logout',
       '/__api/identity/saml/inspect',
-      '/mcp',
       '/mcp/server',
       '/git',
       '/__api/git/evidence',
@@ -91,7 +88,6 @@ describe('interface and identity declarative routing', () => {
       '/__api/evidence/traceability',
       '/__api/governance/security-controls',
       '/__api/governance/ai-evaluation',
-      '/i18n',
     ].sort());
 
     for (const route of routes) {
@@ -166,11 +162,12 @@ describe('interface and identity declarative routing', () => {
   });
 
   it('keeps GraphQL HTML negotiation and API-like classification capability-owned', () => {
-    expect(interfaceIdentityWantsHtml(new Request('https://demo.wizardgang.ai/graphql'), '/graphql')).toBe(true);
-    expect(interfaceIdentityWantsHtml(new Request('https://demo.wizardgang.ai/graphql', { headers: { accept: 'text/html' } }), '/graphql')).toBe(true);
+    expect(interfaceIdentityWantsHtml(new Request('https://demo.wizardgang.ai/graphql'), '/graphql')).toBe(false);
+    expect(interfaceIdentityWantsHtml(new Request('https://demo.wizardgang.ai/graphql', { headers: { accept: 'text/html' } }), '/graphql')).toBe(false);
     expect(interfaceIdentityWantsHtml(new Request('https://demo.wizardgang.ai/graphql', { headers: { accept: 'application/json' } }), '/graphql')).toBe(false);
     expect(isInterfaceIdentityApiLike('/graphql')).toBe(true);
     expect(isInterfaceIdentityApiLike('/mcp/server')).toBe(true);
+    expect(isInterfaceIdentityApiLike('/interfaces')).toBe(false);
     expect(isInterfaceIdentityApiLike('/identity')).toBe(false);
   });
 

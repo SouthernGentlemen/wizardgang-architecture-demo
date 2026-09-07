@@ -90,7 +90,7 @@ export function renderD1Demo(env: Env): Response {
       <p class="eyebrow">Relationship</p><h2 id="relationship-heading">Tasks belong to users</h2>
       <p><code>demo_tasks.assignee_id</code><br><span aria-hidden="true">↓</span><br><code>demo_users.id</code></p>
       <p class="subtle">Deleting an assigned user keeps their tasks intact and marks them Unassigned.</p>
-      <a class="text-link" href="/graphql">Query these users with GraphQL →</a>
+      <a class="text-link" href="/interfaces?view=graphql">Query these users with GraphQL →</a>
     </section>
   </aside>
 </section>
