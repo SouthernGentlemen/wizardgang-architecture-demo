@@ -9,7 +9,7 @@ import {
   validateReportingPageSize,
 } from './pagination';
 
-const EPHEMERAL_TEST_CURSOR_SECRET = crypto.getRandomValues(new Uint8Array(32));
+let ephemeralTestCursorSecret: Uint8Array | undefined;
 
 export interface ReportingPage<T> {
   records: readonly T[];
@@ -40,8 +40,10 @@ export function reportingCursorSecret(env?: Pick<Env, 'DEMO_SESSION_SECRET'>): s
 
   // Direct/local test helpers may omit Worker secrets. Deployed environments are expected
   // to provide DEMO_SESSION_SECRET (documented in .dev.vars.example) so cursors resume
-  // across Worker isolates rather than relying on this process-local fallback.
-  return EPHEMERAL_TEST_CURSOR_SECRET;
+  // across Worker isolates rather than relying on this isolate-local fallback. Generate the
+  // fallback lazily because Cloudflare Workers forbids random generation during module startup.
+  ephemeralTestCursorSecret ??= crypto.getRandomValues(new Uint8Array(32));
+  return ephemeralTestCursorSecret;
 }
 
 function cursorOffset(position: Readonly<Record<string, unknown>>, total: number): number {
