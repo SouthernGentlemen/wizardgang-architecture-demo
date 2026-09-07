@@ -8,6 +8,7 @@ export interface Principal {
   subject: string;
   authentication: 'anonymous' | 'bearer' | 'oidc' | 'oauth2' | 'saml2';
   provider?: 'operator' | 'microsoft' | 'google' | 'github';
+  role?: 'viewer' | 'operator';
   permissions: Permission[];
   namespace?: string;
   expiresAt?: string;
@@ -38,6 +39,7 @@ export async function principalFromIdentitySession(session: IdentitySession): Pr
     subject,
     authentication: session.identity.protocol,
     provider: session.identity.provider,
+    role: session.identity.role,
     permissions,
     namespace: `sandbox-${(await sha256(subject)).slice(0, 24)}`,
     expiresAt: session.expiresAt,
@@ -69,6 +71,7 @@ export async function authorize(request: Request, env: Env, permission: Permissi
         subject: 'demo-api-operator',
         authentication: 'bearer',
         provider: 'operator',
+        role: 'operator',
         permissions: ['demo:read', 'demo:write'],
       };
       if (!operator.permissions.includes(permission)) return denied();
@@ -87,7 +90,7 @@ export async function authorize(request: Request, env: Env, permission: Permissi
   }
 
   if (permission === 'demo:read') {
-    return { subject: 'public-visitor', authentication: 'anonymous', permissions: ['demo:read'] };
+    return { subject: 'public-visitor', authentication: 'anonymous', role: 'viewer', permissions: ['demo:read'] };
   }
 
   return rejected();

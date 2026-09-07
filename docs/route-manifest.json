@@ -970,8 +970,8 @@
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
-      "module": "src/ui/page.ts",
-      "exportName": "renderDemo",
+      "module": "src/demos/governance.ts",
+      "exportName": "renderGovernance",
       "tests": [
         "tests/interface-identity-routing.test.ts",
         "tests/governance.test.ts",

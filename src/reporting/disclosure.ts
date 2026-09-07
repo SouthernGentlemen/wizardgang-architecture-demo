@@ -37,7 +37,12 @@ export class ReportingDisclosureError extends Error {
 }
 
 function canReadPrivate(principal: Principal | null | undefined): boolean {
-  return Boolean(principal?.permissions.includes('reporting:private'));
+  return Boolean(
+    principal
+    && principal.authentication !== 'anonymous'
+    && principal.role === 'operator'
+    && principal.permissions.includes('reporting:private'),
+  );
 }
 
 function publicSource(source: ReportingSource): ReportingSource {

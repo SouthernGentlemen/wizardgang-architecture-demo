@@ -1,4 +1,9 @@
-import type { DemoDefinition } from '../types';
+import { authorize, type Principal } from '../lib/authorization';
+import { renderReportingPresentation } from '../reporting/html';
+import { presentReportingQuery } from '../reporting/presentation';
+import { queryReportingCollection, reportingCollectionInventory } from '../reporting/service';
+import { renderDemo } from '../ui/page';
+import type { DemoDefinition, Env } from '../types';
 
 const demo: DemoDefinition = {
   "id": "governance",
@@ -51,5 +56,51 @@ const demo: DemoDefinition = {
     }
   ]
 };
+
+function anonymousPrincipal(): Principal {
+  return { subject: 'public-visitor', authentication: 'anonymous', role: 'viewer', permissions: ['demo:read'] };
+}
+
+async function governancePrincipal(request: Request, env: Env): Promise<Principal> {
+  const authorized = await authorize(request, env, 'demo:read', { allowIdentitySession: true });
+  return authorized instanceof Response ? anonymousPrincipal() : authorized;
+}
+
+function requestedLimit(url: URL): number {
+  const value = Number(url.searchParams.get('limit') || '25');
+  if (!Number.isInteger(value)) return 25;
+  return Math.max(1, Math.min(50, value));
+}
+
+function nextHref(request: Request, cursor: string | null | undefined): string | null {
+  if (!cursor) return null;
+  const url = new URL(request.url);
+  url.searchParams.set('cursor', cursor);
+  return `${url.pathname}${url.search}`;
+}
+
+export async function renderGovernance(
+  request: Request,
+  env: Env,
+  all: DemoDefinition[],
+): Promise<Response> {
+  const principal = await governancePrincipal(request, env);
+  const collection = reportingCollectionInventory(principal).find((candidate) => candidate.id === 'governance');
+  if (!collection) throw new Error('Registered governance reporting collection is unavailable.');
+  const url = new URL(request.url);
+  const result = await queryReportingCollection(env, principal, collection, {
+    limit: requestedLimit(url),
+    cursor: url.searchParams.get('cursor'),
+  });
+  const presentation = presentReportingQuery(result, { label: collection.label });
+  const reporting = `<section class="operations-section" id="governance-records" aria-labelledby="governance-records-heading">
+    <p class="subtle">Governance inventory is discovered from reporting ownership and registry capabilities, including every registered governance partition.</p>
+    ${renderReportingPresentation(presentation, {
+      headingId: 'governance-records-heading',
+      nextHref: nextHref(request, presentation.pagination?.nextCursor),
+    })}
+  </section>`;
+  return renderDemo(env, demo, all, reporting);
+}
 
 export default demo;

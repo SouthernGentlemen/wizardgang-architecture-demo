@@ -178,7 +178,7 @@ const globalOperationalRoutes = [
     cache: { mode: 'public', maxAgeSeconds: 3600 },
   }),
   operationalRoute({
-    id: 'operations.dashboard', pattern: '/dashboard', methods: ['GET'], kind: 'page', handler: (_request, { env }) => renderDashboard(env),
+    id: 'operations.dashboard', pattern: '/dashboard', methods: ['GET'], kind: 'page', handler: (request, { env }) => renderDashboard(env, request),
     title: 'Operations dashboard', description: 'Read-only operations center for runtime, availability, delivery, usage, and assurance.',
     sourceModule: 'src/demos/operations-pages.ts', sourceExport: 'renderDashboard', indexing: 'allow',
   }),

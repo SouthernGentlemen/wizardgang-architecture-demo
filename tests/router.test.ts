@@ -236,10 +236,10 @@ describe('public route contract', () => {
     expect(dashboard).toContain('User-requested ChatGPT fetch');
     expect(dashboard).toContain('Model-training crawl');
     expect(dashboard).not.toContain('name="control" value="chatgpt-crawl"');
-    expect(dashboard).toContain('Compliance &amp; Assurance');
-    expect(dashboard).toContain('287 canonical records');
-    expect(dashboard).toContain('href="/compliance"');
-    expect(dashboard).toContain('href="/v1/assurance/compliance"');
+    expect(dashboard).toContain('Collection discovery comes from reporting ownership and registered capabilities.');
+    expect(dashboard).toContain('href="/dashboard?report=compliance#reporting-browser"');
+    expect(dashboard).toContain('Shared reporting presenter');
+    expect(dashboard).toContain('23 available in the authorized selection');
 
     const docs = await (await routeRequest(new Request('https://demo.wizardgang.ai/dashboard/docs'), environment)).text();
     expect(docs).toContain('src/router.ts');

@@ -61,9 +61,9 @@ describe('public link and route contract', () => {
       const response = await get(page);
       const html = await response.text();
       for (const link of internalLinks(html, page)) {
-        const fragments = targets.get(link.pathname + link.search) ?? new Set<string>();
+        const fragments = targets.get(link.pathname) ?? new Set<string>();
         if (link.hash) fragments.add(decodeURIComponent(link.hash.slice(1)));
-        targets.set(link.pathname + link.search, fragments);
+        targets.set(link.pathname, fragments);
       }
     }
 

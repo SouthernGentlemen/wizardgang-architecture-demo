@@ -47,7 +47,7 @@ const collection = createReportingCollection<PrivateReport>(source, [
 
 const anonymous: Principal = { subject: 'public-visitor', authentication: 'anonymous', permissions: ['demo:read'] };
 const viewer: Principal = { subject: 'microsoft:viewer', authentication: 'oidc', provider: 'microsoft', permissions: ['demo:read', 'demo:write'] };
-const operator: Principal = { subject: 'microsoft:operator', authentication: 'oidc', provider: 'microsoft', permissions: ['demo:read', 'demo:write', 'reporting:private'] };
+const operator: Principal = { subject: 'microsoft:operator', authentication: 'oidc', provider: 'microsoft', role: 'operator', permissions: ['demo:read', 'demo:write', 'reporting:private'] };
 
 function publication(revision = 'a'.repeat(40), approvedRevision = revision) {
   return {
