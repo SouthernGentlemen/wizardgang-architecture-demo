@@ -73,7 +73,7 @@ Canonical records store relationship edges once as `relationships`. Forward view
 
 Structured and provider-backed collection queries both accept the common `limit` and signed `cursor` contract. A cursor is bound to source, collection, filters, ordering, and authorization context; provider-native continuations are never exposed as an alternate public cursor.
 
-Public reporting includes disclosure-safe assurance, GitHub, retained-report, and Cloudflare observation collections registered for anonymous discovery. Protected GitHub security sources are discoverable only by an authenticated operator with `reporting:private`; authorized updates additionally require `reporting:write` and source support.
+Public reporting includes disclosure-safe assurance, provider-native GitHub, and Cloudflare observation collections registered for anonymous discovery. The `reports` collection is the shared presentation of GitHub workflow attempts, not a copied report family or a separate branch. Protected GitHub security sources are discoverable only by an authenticated operator with `reporting:private`; authorized updates additionally require `reporting:write` and source support.
 
 ## Operations
 

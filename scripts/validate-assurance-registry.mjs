@@ -98,7 +98,6 @@ if (registry) {
     if (!exists(reporting.contract)) fail(`${ASSURANCE_REGISTRY_PATH}: reporting contract is missing: ${reporting.contract}`);
 
     const declaredSources = [
-      ...(reporting.retainedReports ? [reporting.retainedReports] : []),
       ...(reporting.nativeObjects ?? []),
       ...(reporting.observations ?? []),
       ...(reporting.privateSources ?? []),
@@ -106,7 +105,6 @@ if (registry) {
     const sourceIds = new Map();
     const sourceBindings = new Map();
     const structured = reporting.structuredRecords;
-    const retained = reporting.retainedReports;
 
     if (structured) {
       sourceIds.set(structured.id, 'structured records');
@@ -135,10 +133,6 @@ if (registry) {
           fail(`${ASSURANCE_REGISTRY_PATH}: private structured resource ${resource.id} requires disabled private ingestion`);
         }
       }
-    }
-
-    if (retained && structured && retained.scope?.repository !== structured.repository) {
-      fail(`${ASSURANCE_REGISTRY_PATH}: retained reports must use the structured-record repository ${structured.repository}`);
     }
 
     for (const source of declaredSources) {
@@ -186,8 +180,8 @@ if (registry) {
       if (!seenDomains.has(domain)) fail(`${ASSURANCE_REGISTRY_PATH}: missing reporting ownership for ${domain}`);
     }
     const reportOwner = (reporting.ownership ?? []).find((ownership) => ownership.domain === 'reports');
-    if (retained && reportOwner?.source !== retained.id) {
-      fail(`${ASSURANCE_REGISTRY_PATH}: reports ownership must resolve to ${retained.id}`);
+    if (reportOwner?.source !== 'github.workflow-attempts') {
+      fail(`${ASSURANCE_REGISTRY_PATH}: reports ownership must resolve to github.workflow-attempts`);
     }
     const governanceOwner = (reporting.ownership ?? []).find((ownership) => ownership.domain === 'governance');
     if (governanceOwner?.resource && identities.has(governanceOwner.resource)) {

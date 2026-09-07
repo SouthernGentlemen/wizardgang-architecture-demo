@@ -19,28 +19,6 @@
       "capabilities": ["read", "query", "export"],
       "ingestion": "disabled"
     },
-    "retainedReports": {
-      "id": "github.retained-reports",
-      "provider": "github",
-      "authority": "structured-record",
-      "scope": {
-        "repository": "SouthernGentlemen/wizardgang-architecture-demo",
-        "branch": "assurance-reports",
-        "resource": "reports/"
-      },
-      "nativeIdentity": ["repository", "reportId"],
-      "revisionIdentity": ["branch", "blob"],
-      "schema": "contracts/assurance/report.schema.json",
-      "visibility": "public",
-      "capabilities": ["read", "query", "export"],
-      "ingestion": "disabled",
-      "retention": {
-        "mode": "git-history",
-        "minimumDays": 400,
-        "transportDays": 30,
-        "deletion": "controlled-change"
-      }
-    },
     "nativeObjects": [
       {
         "id": "github.repositories", "provider": "github", "authority": "native-object",
@@ -166,7 +144,7 @@
     ],
     "ownership": [
       { "domain": "evidence", "source": "github.structured-records", "resource": "evidence" },
-      { "domain": "reports", "source": "github.retained-reports" },
+      { "domain": "reports", "source": "github.workflow-attempts" },
       { "domain": "issues", "source": "github.issues" },
       { "domain": "risks", "source": "github.structured-records", "resource": "risks" },
       { "domain": "security", "source": "github.structured-records", "resource": "advisories" },

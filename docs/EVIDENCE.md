@@ -35,4 +35,4 @@ The public assurance browser is consolidated at `/assurance` with `overview`, `d
 
 Do not reconstruct evidence after the fact when the engineering workflow can create it automatically.
 
-The traceability API reports missing `DEPLOYED_VERSION` / `DEPLOYED_SHA` as `not-supplied`; it never invents a release. After trusted default-branch CI or assurance monitoring completes, the retained-report publisher queries GitHub for the actual run, job, and step outcomes, validates the common report contract, and writes the run attempt once to the `assurance-reports` Git branch. Tagged deployment separately injects the version and SHA, then verifies the public `/api/operations/version` and `/api/operations/health` surfaces.
+The traceability API reports missing `DEPLOYED_VERSION` / `DEPLOYED_SHA` as `not-supplied`; it never invents a release. CI and assurance-monitor evidence remains in GitHub's native workflow runs, attempts, and artifacts and is queried through the canonical reporting contract without a report-copy branch. Tagged deployment separately injects the version and SHA, then verifies the public `/api/operations/version` and `/api/operations/health` surfaces.

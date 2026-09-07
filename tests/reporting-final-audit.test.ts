@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import type { ReportingAvailability, ReportingQueryResult, ReportingRecord } from '../src/reporting/contracts';
 import { presentReportingQuery } from '../src/reporting/presentation';
@@ -69,5 +69,23 @@ describe('final common reporting audit guards', () => {
     expect(presentation).toContain('const costBadgeState = usage.cost.availability');
     expect(presentation).not.toContain("productCard('Workers', usage.products.workers.available");
     expect(presentation).not.toContain("usage.cost.kind === 'billed' ? 'live' : 'unavailable'");
+  });
+
+  it('uses provider-native workflow attempts for reports without a branch-backed report copy', () => {
+    const registry = JSON.parse(readFileSync('assurance/registry.json', 'utf8')) as {
+      reporting: { retainedReports?: unknown; ownership: Array<{ domain: string; source: string }> };
+    };
+    const schema = JSON.parse(readFileSync('contracts/assurance/reporting.schema.json', 'utf8')) as {
+      $defs: Record<string, unknown>;
+    };
+    expect(registry.reporting).not.toHaveProperty('retainedReports');
+    expect(registry.reporting.ownership.find((owner) => owner.domain === 'reports')).toEqual({
+      domain: 'reports',
+      source: 'github.workflow-attempts',
+    });
+    expect(schema.$defs).not.toHaveProperty('retainedReportSource');
+    expect(existsSync('.github/workflows/report-publisher.yml')).toBe(false);
+    expect(existsSync('scripts/generate-retained-report.mjs')).toBe(false);
+    expect(existsSync('contracts/assurance/report.schema.json')).toBe(false);
   });
 });
