@@ -130,7 +130,7 @@ That CLI continues to own Git-controlled structured records. Native provider wri
 
 ## Git demo migration
 
-`/git` retains the functioning live branch/commit/PR/CI/release demonstration. Its source-of-truth evidence panel consumes the shared reporting query contract directly. It groups returned native records and canonical retained reports by registered source ID and displays completeness/availability from the contract. It does not reconstruct an independent issue, finding, report, or evidence-card state model.
+`/assurance?view=delivery` retains the functioning live branch/commit/PR/CI/release demonstration. Its source-of-truth evidence panel consumes the shared reporting query contract directly. It groups returned native records and canonical retained reports by registered source ID and displays completeness/availability from the contract. It does not reconstruct an independent issue, finding, report, or evidence-card state model.
 
 ## Test boundaries
 

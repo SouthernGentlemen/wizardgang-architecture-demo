@@ -12,15 +12,19 @@ import { matchRoute } from '../src/routing/registry';
 describe('assurance route contract', () => {
   it('derives stable public routes and route ownership from the assurance registry', () => {
     const declarations = assuranceRouteDeclarations();
-    expect(declarations.map((entry) => entry.owner)).toEqual(expect.arrayContaining(['evidence', 'compliance', 'risks', 'incidents', 'advisories']));
+    expect(declarations.map((entry) => entry.owner)).toEqual(expect.arrayContaining(['registry', 'evidence', 'compliance', 'risks', 'incidents', 'advisories']));
     expect(assuranceCollectionApiRoute('compliance')).toBe('/v1/assurance/compliance');
     expect(assuranceRecordUrls('compliance', 'WCAG-4.1.2')).toMatchObject({
       api: '/v1/assurance/compliance/WCAG-4.1.2',
-      html: '/compliance#WCAG-4.1.2',
+      html: '/assurance?view=compliance#WCAG-4.1.2',
     });
   });
 
   it('matches registry-derived routes through the declarative matcher', () => {
+    expect(matchRoute(assuranceDeclarativeRouteRegistry, 'GET', '/assurance')).toMatchObject({
+      status: 'matched',
+      route: { id: 'assurance.wizardgang-public-assurance.html' },
+    });
     expect(matchRoute(assuranceDeclarativeRouteRegistry, 'GET', '/v1/assurance/risks')).toMatchObject({
       status: 'matched',
       route: { id: 'assurance.risks.collection' },

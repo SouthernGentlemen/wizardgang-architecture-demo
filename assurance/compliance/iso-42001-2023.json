@@ -56,7 +56,7 @@
       "reference": "4.1",
       "title": "Understand the AI operating context",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -78,7 +78,7 @@
       "reference": "4.2",
       "title": "Identify interested-party AI expectations",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -90,7 +90,7 @@
           },
           "to": {
             "source": "github.structured-records.evidence",
-            "native": "EVD-RUN-005"
+            "native": "EVD-RUN-008"
           }
         }
       ]
@@ -100,7 +100,7 @@
       "reference": "4.3",
       "title": "Define the AI management-system boundary",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -122,7 +122,7 @@
       "reference": "4.4",
       "title": "Operate the AI management system",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -144,7 +144,7 @@
       "reference": "5.1",
       "title": "Establish leadership accountability for AI",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -166,7 +166,7 @@
       "reference": "5.2",
       "title": "Set and maintain AI policy",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -188,7 +188,7 @@
       "reference": "5.3",
       "title": "Assign AI governance roles and authority",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -210,7 +210,7 @@
       "reference": "6.1",
       "title": "Plan responses to AI risks and opportunities",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -232,7 +232,7 @@
       "reference": "6.1.1",
       "title": "Set AI risk and opportunity planning rules",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -254,7 +254,7 @@
       "reference": "6.1.2",
       "title": "Assess AI risk consistently",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -276,7 +276,7 @@
       "reference": "6.1.3",
       "title": "Select and manage AI risk treatment",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -298,7 +298,7 @@
       "reference": "6.1.4",
       "title": "Assess AI system impacts",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -331,7 +331,7 @@
       "reference": "6.2",
       "title": "Set measurable AI objectives",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -353,7 +353,7 @@
       "reference": "6.3",
       "title": "Control AI management-system changes",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -375,7 +375,7 @@
       "reference": "7.1",
       "title": "Provide AI management-system resources",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -397,7 +397,7 @@
       "reference": "7.2",
       "title": "Maintain AI-related competence",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -419,7 +419,7 @@
       "reference": "7.3",
       "title": "Maintain AI governance awareness",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -441,7 +441,7 @@
       "reference": "7.4",
       "title": "Manage AI communications",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -453,7 +453,7 @@
           },
           "to": {
             "source": "github.structured-records.evidence",
-            "native": "EVD-RUN-005"
+            "native": "EVD-RUN-008"
           }
         }
       ]
@@ -463,7 +463,7 @@
       "reference": "7.5",
       "title": "Control AI management documentation",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -485,7 +485,7 @@
       "reference": "7.5.1",
       "title": "Maintain the required AI documentation set",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -507,7 +507,7 @@
       "reference": "7.5.2",
       "title": "Create and update controlled AI records",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -529,7 +529,7 @@
       "reference": "7.5.3",
       "title": "Protect and govern controlled AI records",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -551,7 +551,7 @@
       "reference": "8.1",
       "title": "Plan and control AI operations",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -573,7 +573,7 @@
       "reference": "8.2",
       "title": "Reassess AI risk during operation",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -595,7 +595,7 @@
       "reference": "8.3",
       "title": "Execute and verify AI risk treatment",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -617,7 +617,7 @@
       "reference": "8.4",
       "title": "Reassess AI system impacts during operation",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -650,7 +650,7 @@
       "reference": "9.1",
       "title": "Measure and evaluate AI management performance",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -672,7 +672,7 @@
       "reference": "9.3",
       "title": "Conduct AI management-system reviews",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -694,7 +694,7 @@
       "reference": "9.3.1",
       "title": "Set management-review cadence",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -716,7 +716,7 @@
       "reference": "9.3.2",
       "title": "Use defined AI management-review inputs",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -738,7 +738,7 @@
       "reference": "9.3.3",
       "title": "Record management-review decisions",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -760,7 +760,7 @@
       "reference": "10.1",
       "title": "Improve the AI management system over time",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -782,7 +782,7 @@
       "reference": "10.2",
       "title": "Correct and learn from AI nonconformities",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -804,7 +804,7 @@
       "reference": "9.2",
       "title": "Run objective internal AI management audits",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "gap",
       "applicability": "applicable",
       "relationships": [
@@ -826,7 +826,7 @@
       "reference": "9.2.1",
       "title": "Maintain internal AI audit requirements",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "gap",
       "applicability": "applicable",
       "relationships": [
@@ -848,7 +848,7 @@
       "reference": "9.2.2",
       "title": "Operate and report the AI audit programme",
       "kind": "clause",
-      "section": "Clauses 4–10",
+      "section": "Clauses 4\u201310",
       "status": "gap",
       "applicability": "applicable",
       "relationships": [
@@ -870,7 +870,7 @@
       "reference": "A.2.2",
       "title": "Establish an AI governance policy",
       "kind": "control",
-      "section": "Annex A · policies",
+      "section": "Annex A \u00b7 policies",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -892,7 +892,7 @@
       "reference": "A.2.3",
       "title": "Align AI policy with related governance",
       "kind": "control",
-      "section": "Annex A · policies",
+      "section": "Annex A \u00b7 policies",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -925,7 +925,7 @@
       "reference": "A.2.4",
       "title": "Review AI policy on schedule and change",
       "kind": "control",
-      "section": "Annex A · policies",
+      "section": "Annex A \u00b7 policies",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -947,7 +947,7 @@
       "reference": "A.3.2",
       "title": "Assign AI governance responsibilities",
       "kind": "control",
-      "section": "Annex A · organization",
+      "section": "Annex A \u00b7 organization",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -969,7 +969,7 @@
       "reference": "A.3.3",
       "title": "Provide a channel for AI concerns",
       "kind": "control",
-      "section": "Annex A · organization",
+      "section": "Annex A \u00b7 organization",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -981,7 +981,7 @@
           },
           "to": {
             "source": "github.structured-records.evidence",
-            "native": "EVD-RUN-005"
+            "native": "EVD-RUN-008"
           }
         }
       ]
@@ -991,7 +991,7 @@
       "reference": "A.4.2",
       "title": "Inventory AI-related resources",
       "kind": "control",
-      "section": "Annex A · resources",
+      "section": "Annex A \u00b7 resources",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1013,7 +1013,7 @@
       "reference": "A.4.3",
       "title": "Govern AI-accessible data resources",
       "kind": "control",
-      "section": "Annex A · resources",
+      "section": "Annex A \u00b7 resources",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1035,7 +1035,7 @@
       "reference": "A.4.4",
       "title": "Govern AI tools and system resources",
       "kind": "control",
-      "section": "Annex A · resources",
+      "section": "Annex A \u00b7 resources",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1068,7 +1068,7 @@
       "reference": "A.4.5",
       "title": "Manage computing and service dependencies",
       "kind": "control",
-      "section": "Annex A · resources",
+      "section": "Annex A \u00b7 resources",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1090,7 +1090,7 @@
       "reference": "A.4.6",
       "title": "Maintain AI competence requirements",
       "kind": "control",
-      "section": "Annex A · resources",
+      "section": "Annex A \u00b7 resources",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1112,7 +1112,7 @@
       "reference": "A.5.2",
       "title": "Define an AI impact-assessment process",
       "kind": "control",
-      "section": "Annex A · impact",
+      "section": "Annex A \u00b7 impact",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1134,7 +1134,7 @@
       "reference": "A.5.3",
       "title": "Retain AI impact-assessment records",
       "kind": "control",
-      "section": "Annex A · impact",
+      "section": "Annex A \u00b7 impact",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1156,7 +1156,7 @@
       "reference": "A.5.4",
       "title": "Assess impacts on people and groups",
       "kind": "control",
-      "section": "Annex A · impact",
+      "section": "Annex A \u00b7 impact",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1168,7 +1168,7 @@
           },
           "to": {
             "source": "github.structured-records.evidence",
-            "native": "EVD-RUN-005"
+            "native": "EVD-RUN-008"
           }
         },
         {
@@ -1189,7 +1189,7 @@
       "reference": "A.5.5",
       "title": "Assess broader societal and ecosystem impacts",
       "kind": "control",
-      "section": "Annex A · impact",
+      "section": "Annex A \u00b7 impact",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1212,7 +1212,7 @@
           },
           "to": {
             "source": "github.structured-records.evidence",
-            "native": "EVD-RUN-005"
+            "native": "EVD-RUN-008"
           }
         }
       ]
@@ -1222,7 +1222,7 @@
       "reference": "A.6.1.2",
       "title": "Set responsible AI system objectives",
       "kind": "control",
-      "section": "Annex A · lifecycle",
+      "section": "Annex A \u00b7 lifecycle",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1244,7 +1244,7 @@
       "reference": "A.6.1.3",
       "title": "Use controlled AI design and development",
       "kind": "control",
-      "section": "Annex A · lifecycle",
+      "section": "Annex A \u00b7 lifecycle",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1277,7 +1277,7 @@
       "reference": "A.6.2.2",
       "title": "Specify responsible AI system requirements",
       "kind": "control",
-      "section": "Annex A · lifecycle",
+      "section": "Annex A \u00b7 lifecycle",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1310,7 +1310,7 @@
       "reference": "A.6.2.3",
       "title": "Document AI system design and operation",
       "kind": "control",
-      "section": "Annex A · lifecycle",
+      "section": "Annex A \u00b7 lifecycle",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1343,7 +1343,7 @@
       "reference": "A.6.2.4",
       "title": "Verify and validate AI system behavior",
       "kind": "control",
-      "section": "Annex A · lifecycle",
+      "section": "Annex A \u00b7 lifecycle",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1365,7 +1365,7 @@
       "reference": "A.6.2.5",
       "title": "Control AI deployment and release",
       "kind": "control",
-      "section": "Annex A · lifecycle",
+      "section": "Annex A \u00b7 lifecycle",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1398,7 +1398,7 @@
       "reference": "A.6.2.6",
       "title": "Monitor AI system operation",
       "kind": "control",
-      "section": "Annex A · lifecycle",
+      "section": "Annex A \u00b7 lifecycle",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1431,7 +1431,7 @@
       "reference": "A.6.2.7",
       "title": "Maintain AI system technical documentation",
       "kind": "control",
-      "section": "Annex A · lifecycle",
+      "section": "Annex A \u00b7 lifecycle",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1464,7 +1464,7 @@
       "reference": "A.6.2.8",
       "title": "Record AI system events and traceability",
       "kind": "control",
-      "section": "Annex A · lifecycle",
+      "section": "Annex A \u00b7 lifecycle",
       "status": "met",
       "applicability": "applicable",
       "relationships": [
@@ -1508,7 +1508,7 @@
       "reference": "A.7.3",
       "title": "Track AI data acquisition and provenance",
       "kind": "control",
-      "section": "Annex A · data",
+      "section": "Annex A \u00b7 data",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1530,7 +1530,7 @@
       "reference": "A.7.4",
       "title": "Manage AI data quality",
       "kind": "control",
-      "section": "Annex A · data",
+      "section": "Annex A \u00b7 data",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1563,7 +1563,7 @@
       "reference": "A.7.5",
       "title": "Maintain AI data lineage and records",
       "kind": "control",
-      "section": "Annex A · data",
+      "section": "Annex A \u00b7 data",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1596,7 +1596,7 @@
       "reference": "A.7.2",
       "title": "Govern model-development data",
       "kind": "control",
-      "section": "Annex A · data",
+      "section": "Annex A \u00b7 data",
       "status": "not-applicable",
       "applicability": "not-applicable",
       "rationale": "No model training, fine-tuning, or model-enhancement activity is in scope; reassess before model development is introduced.",
@@ -1619,7 +1619,7 @@
       "reference": "A.7.6",
       "title": "Govern AI data preparation",
       "kind": "control",
-      "section": "Annex A · data",
+      "section": "Annex A \u00b7 data",
       "status": "not-applicable",
       "applicability": "not-applicable",
       "rationale": "No model-training data preparation, labeling, or enhancement pipeline is in scope; reassess before introducing one.",
@@ -1642,7 +1642,7 @@
       "reference": "A.8.2",
       "title": "Provide AI system information to users",
       "kind": "control",
-      "section": "Annex A · interested Parties",
+      "section": "Annex A \u00b7 interested Parties",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1654,7 +1654,7 @@
           },
           "to": {
             "source": "github.structured-records.evidence",
-            "native": "EVD-RUN-005"
+            "native": "EVD-RUN-008"
           }
         },
         {
@@ -1675,7 +1675,7 @@
       "reference": "A.8.3",
       "title": "Define external AI reporting obligations",
       "kind": "control",
-      "section": "Annex A · interested Parties",
+      "section": "Annex A \u00b7 interested Parties",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1698,7 +1698,7 @@
           },
           "to": {
             "source": "github.structured-records.evidence",
-            "native": "EVD-RUN-005"
+            "native": "EVD-RUN-008"
           }
         }
       ]
@@ -1708,7 +1708,7 @@
       "reference": "A.8.4",
       "title": "Communicate AI incidents when required",
       "kind": "control",
-      "section": "Annex A · interested Parties",
+      "section": "Annex A \u00b7 interested Parties",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1731,7 +1731,7 @@
           },
           "to": {
             "source": "github.structured-records.evidence",
-            "native": "EVD-RUN-005"
+            "native": "EVD-RUN-008"
           }
         }
       ]
@@ -1741,7 +1741,7 @@
       "reference": "A.8.5",
       "title": "Disclose AI system limitations and boundaries",
       "kind": "control",
-      "section": "Annex A · interested Parties",
+      "section": "Annex A \u00b7 interested Parties",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1774,7 +1774,7 @@
       "reference": "A.9.2",
       "title": "Define responsible AI use rules",
       "kind": "control",
-      "section": "Annex A · use",
+      "section": "Annex A \u00b7 use",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1807,7 +1807,7 @@
       "reference": "A.9.3",
       "title": "Measure AI use objectives",
       "kind": "control",
-      "section": "Annex A · use",
+      "section": "Annex A \u00b7 use",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1829,7 +1829,7 @@
       "reference": "A.9.4",
       "title": "Prevent unintended AI use and authority",
       "kind": "control",
-      "section": "Annex A · use",
+      "section": "Annex A \u00b7 use",
       "status": "met",
       "applicability": "applicable",
       "relationships": [
@@ -1873,7 +1873,7 @@
       "reference": "A.10.2",
       "title": "Allocate AI responsibilities across suppliers",
       "kind": "control",
-      "section": "Annex A · third Parties",
+      "section": "Annex A \u00b7 third Parties",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1906,7 +1906,7 @@
       "reference": "A.10.3",
       "title": "Govern approved AI suppliers and providers",
       "kind": "control",
-      "section": "Annex A · third Parties",
+      "section": "Annex A \u00b7 third Parties",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1939,7 +1939,7 @@
       "reference": "A.10.4",
       "title": "Communicate customer and user responsibilities",
       "kind": "control",
-      "section": "Annex A · third Parties",
+      "section": "Annex A \u00b7 third Parties",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1962,7 +1962,7 @@
           },
           "to": {
             "source": "github.structured-records.evidence",
-            "native": "EVD-RUN-005"
+            "native": "EVD-RUN-008"
           }
         }
       ]

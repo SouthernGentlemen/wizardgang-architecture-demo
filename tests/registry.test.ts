@@ -12,8 +12,8 @@ import { readFileSync } from 'node:fs';
 const applicationRoutes = applicationRouteRegistry.declarations as readonly ApplicationRouteDeclaration[];
 
 describe('architecture demo registry', () => {
-  it('publishes 15 HTML routes in four architecture groups', () => {
-    expect(demos).toHaveLength(15);
+  it('publishes the consolidated HTML routes in four architecture groups', () => {
+    expect(demos).toHaveLength(9);
     expect([...new Set(demos.map((demo) => demo.group))]).toEqual([
       'Platform', 'Interfaces', 'Delivery & Governance', 'Operations',
     ]);
@@ -38,15 +38,14 @@ describe('architecture demo registry', () => {
     ]);
   });
 
-  it('places the canonical compliance, evidence, risk, and incident routes in delivery and governance', () => {
-    const compliance = demos.find((demo) => demo.route === '/compliance');
-    expect(compliance).toMatchObject({ group: 'Delivery & Governance', sourcePath: 'src/demos/compliance.ts', status: 'working' });
-    const evidence = demos.find((demo) => demo.route === '/evidence');
-    expect(evidence).toMatchObject({ group: 'Delivery & Governance', sourcePath: 'src/demos/evidence.ts', status: 'working' });
-    const risks = demos.find((demo) => demo.route === '/governance/risks');
-    expect(risks).toMatchObject({ group: 'Delivery & Governance', sourcePath: 'src/demos/risks.ts', status: 'working' });
-    const incidents = demos.find((demo) => demo.route === '/governance/incidents');
-    expect(incidents).toMatchObject({ group: 'Delivery & Governance', sourcePath: 'src/demos/incidents.ts', status: 'working' });
+  it('places consolidated assurance and separate security in delivery and governance', () => {
+    const assurance = demos.find((demo) => demo.route === '/assurance');
+    expect(assurance).toMatchObject({ group: 'Delivery & Governance', sourcePath: 'src/demos/assurance.ts', status: 'working' });
+    const security = demos.find((demo) => demo.route === '/security');
+    expect(security).toMatchObject({ group: 'Delivery & Governance', sourcePath: 'src/demos/security.ts', status: 'working' });
+    for (const retired of ['/git', '/governance', '/evidence', '/compliance', '/governance/concerns', '/governance/risks', '/governance/incidents']) {
+      expect(demos.some((demo) => demo.route === retired), retired).toBe(false);
+    }
     expect(demos.some((demo) => demo.route === '/dashboard/compliance')).toBe(false);
   });
 

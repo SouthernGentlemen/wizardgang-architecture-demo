@@ -94,8 +94,8 @@ describe('canonical compliance presentation and API contract', () => {
     expect(html).toContain('/v1/assurance/compliance/WCAG-4.1.2');
     const criterion = canonicalComplianceRecords.find((record) => record.id === 'WCAG-4.1.2');
     expect(criterion).toBeDefined();
-    expect(html).toContain(`/evidence#${assuranceRelationshipIds(criterion?.relationships, 'evidence')[0]}`);
-    expect(html).toContain('<a href="/compliance" aria-current="page">Compliance</a>');
+    expect(html).toContain(`/assurance?view=evidence#${assuranceRelationshipIds(criterion?.relationships, 'evidence')[0]}`);
+    expect(html).toContain('<a href="/assurance" aria-current="page">Assurance</a>');
     expect(html).not.toContain('id="ISO27001-4.1"');
   });
 

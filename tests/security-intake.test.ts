@@ -54,9 +54,9 @@ describe('public concern and security routes', () => {
     expect(security.status).toBe(200);
     expect(securityHtml).toContain('/security/advisories/new');
     expect(securityHtml).toContain('/.well-known/security.txt');
-    expect(securityHtml).toContain('/governance/concerns');
+    expect(securityHtml).toContain('/assurance?view=concerns');
 
-    const concerns = await routeRequest(new Request('https://demo.wizardgang.ai/governance/concerns', { headers: { accept: 'text/html' } }), env);
+    const concerns = await routeRequest(new Request('https://demo.wizardgang.ai/assurance?view=concerns', { headers: { accept: 'text/html' } }), env);
     const concernsHtml = await concerns.text();
     expect(concerns.status).toBe(200);
     for (const template of ['bug.yml', 'feature.yml', 'concern.yml']) expect(concernsHtml).toContain(encodeURIComponent(template));

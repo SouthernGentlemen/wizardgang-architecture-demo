@@ -54,10 +54,17 @@ export function requireAssuranceRoutesForDataset(dataset: string): AssuranceRegi
   return routes;
 }
 
-export function assuranceHtmlRoute(dataset: string): string {
-  const route = requireAssuranceRoutesForDataset(dataset).html;
-  if (!route) throw new Error(`${dataset} has no canonical assurance HTML route.`);
+export function assuranceRegistryHtmlRoute(): string {
+  const route = assuranceRegistry.routes.html;
+  if (!route) throw new Error('assurance registry is missing its canonical HTML route.');
   return route;
+}
+
+export function assuranceHtmlRoute(dataset: string): string {
+  const owner = assuranceRouteOwnerResource(dataset);
+  if (!owner) throw new Error(`${dataset} has no canonical assurance route owner.`);
+  if (owner.routes?.html) return owner.routes.html;
+  return `${assuranceRegistryHtmlRoute()}?view=${encodeURIComponent(owner.kind)}`;
 }
 
 export function assuranceCollectionApiRoute(dataset: string): string {
@@ -74,7 +81,13 @@ export function assuranceRecordUrls(
   dataset: string,
   recordId?: string,
 ): { html?: string; api?: string } {
-  return contractRecordUrls(assuranceRegistry, dataset, recordId) as { html?: string; api?: string };
+  const urls = contractRecordUrls(assuranceRegistry, dataset, recordId) as { html?: string; api?: string };
+  if (urls.html) return urls;
+  const route = assuranceHtmlRoute(dataset);
+  return {
+    ...urls,
+    html: recordId === undefined ? route : `${route}#${contractAnchor(recordId)}`,
+  };
 }
 
 export function assuranceRouteDeclarations(): AssuranceRouteDeclaration[] {

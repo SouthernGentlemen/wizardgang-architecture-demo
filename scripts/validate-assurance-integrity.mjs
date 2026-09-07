@@ -32,7 +32,7 @@ const registeredRoutePath = (route) => {
   catch { return route; }
 };
 const requiredRoutes = [
-  '/evidence', '/compliance', '/governance/risks', '/governance/incidents', '/security',
+  '/assurance', '/security',
   '/v1/assurance', '/v1/assurance/evidence', '/v1/assurance/risks', '/v1/assurance/incidents',
   '/v1/assurance/advisories', '/v1/assurance/compliance', '/v1/assurance/compliance/{recordId}',
 ];

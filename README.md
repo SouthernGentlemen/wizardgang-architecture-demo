@@ -35,13 +35,13 @@ The demo uses the `wizardgang.ai` design tokens: dark by default, with a light t
 
 `/platform` is the single Platform HTML surface. Deep links use `/platform?view=edge`, `/platform?view=workers`, `/platform?view=durable-objects`, `/platform?view=d1`, and `/platform?view=r2`. The former `/edge`, `/workers`, `/durable-objects`, `/d1`, and `/r2` page paths are intentionally unregistered and return the ordinary 404 without redirects; their working API endpoints keep their existing URLs and storage boundaries.
 
-`/interfaces` is the single browser surface for REST, GraphQL, webhooks, identity, MCP, internationalization, and accessibility. Deep links use `/interfaces?view=rest`, `/interfaces?view=graphql`, `/interfaces?view=webhooks`, `/interfaces?view=identity`, `/interfaces?view=mcp`, `/interfaces?view=i18n`, and `/interfaces?view=accessibility`. The former `/api`, `/webhooks`, `/identity`, `/mcp`, `/i18n`, and `/accessibility` HTML paths return the ordinary 404 without redirects. `/graphql` is machine-only, while `/graphql/schema`, `/graphql/console`, the identity protocol routes, webhook endpoints, and `/mcp/server` retain their protocol URLs. The D1 view exposes visitor-scoped users and tasks queryable through GraphQL, and `/git` runs and tracks a controlled two-stage delivery lifecycle against this repository.
+`/interfaces` is the single browser surface for REST, GraphQL, webhooks, identity, MCP, internationalization, and accessibility. Deep links use `/interfaces?view=rest`, `/interfaces?view=graphql`, `/interfaces?view=webhooks`, `/interfaces?view=identity`, `/interfaces?view=mcp`, `/interfaces?view=i18n`, and `/interfaces?view=accessibility`. The former `/api`, `/webhooks`, `/identity`, `/mcp`, `/i18n`, and `/accessibility` HTML paths return the ordinary 404 without redirects. `/graphql` is machine-only, while `/graphql/schema`, `/graphql/console`, the identity protocol routes, webhook endpoints, and `/mcp/server` retain their protocol URLs. The D1 view exposes visitor-scoped users and tasks queryable through GraphQL, and `/assurance?view=delivery` runs and tracks a controlled two-stage delivery lifecycle against this repository.
 
 ## Operations and admin
 
 ```text
 /dashboard
-├── overview → /compliance assurance index
+├── overview → /assurance assurance index
 ├── /dashboard/uptime
 ├── /dashboard/docs
 ├── /dashboard/logs
@@ -54,7 +54,7 @@ The demo uses the `wizardgang.ai` design tokens: dark by default, with a light t
 /robots.txt  dynamic ChatGPT crawler policy
 ```
 
-The read-only dashboard’s `#health` section carries per-service status and latency, while its separate Compliance & Assurance panel links to the canonical `/compliance` evidence index. Cloudflare Cron stores a health observation every five minutes, refreshes sanitized account telemetry every fifteen minutes, and attempts restricted billable usage hourly. `/dashboard/billing` keeps that live usage evidence visually and behaviorally separate from the synthetic cost-guardrail simulator.
+The read-only dashboard’s `#health` section carries per-service status and latency, while its separate Compliance & Assurance panel links to the canonical `/assurance` evidence index. Cloudflare Cron stores a health observation every five minutes, refreshes sanitized account telemetry every fifteen minutes, and attempts restricted billable usage hourly. `/dashboard/billing` keeps that live usage evidence visually and behaviorally separate from the synthetic cost-guardrail simulator.
 
 `/admin` can intentionally take ordinary demos online or offline. Offline browser navigation redirects to `/offline?from=<route>` and displays **“Oops! demo is down.”** API, non-HTML, and write requests return JSON `503`. Dashboard, status, logs, synthetic billing, offline, and authenticated admin surfaces remain reachable. Control failures fail closed.
 

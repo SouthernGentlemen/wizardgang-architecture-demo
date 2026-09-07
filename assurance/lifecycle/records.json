@@ -45,6 +45,13 @@
       "reviewedAt": "2026-09-07T02:35:00Z",
       "reviewer": "controlled-repository-review",
       "basis": "DEMO-180 review approves superseding the retired accessibility page evidence with a new consolidated Interfaces view record and the exact resulting public evidence source revision; later source revisions require a new disclosure decision."
+    },
+    {
+      "id": "review-demo181-assurance-surface-source",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-07T02:45:00Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-181 review approves superseding the retired public concern route evidence with a new consolidated Assurance concerns-view record, migrating current relationship edges to that evidence identity, and the exact resulting public source revisions; later source revisions require a new disclosure decision."
     }
   ],
   "sourceApprovals": [
@@ -209,24 +216,126 @@
       "resource": "evidence",
       "revision": "d7998fe374ad1a24b07d766a4bb412ca35ac4a1e",
       "reviewRef": "review-demo180-interface-route-source"
+    },
+    {
+      "id": "source-claims-f3054cdfba31",
+      "resource": "claims",
+      "revision": "f3054cdfba31e22aa134efd0dfb73f2456425605",
+      "reviewRef": "review-demo181-assurance-surface-source"
+    },
+    {
+      "id": "source-compliance-iso-42001-dae6d373a678",
+      "resource": "compliance.iso-42001",
+      "revision": "dae6d373a678a3544fcd291c3664da8f415731a6",
+      "reviewRef": "review-demo181-assurance-surface-source"
+    },
+    {
+      "id": "source-evidence-ee9d3a2505c2",
+      "resource": "evidence",
+      "revision": "ee9d3a2505c250ecf1d8e6bf8ec8cd37b051a728",
+      "reviewRef": "review-demo181-assurance-surface-source"
+    },
+    {
+      "id": "source-risks-15c2244c9ca9",
+      "resource": "risks",
+      "revision": "15c2244c9ca9d73f658cf0513a8c94098dffdc10",
+      "reviewRef": "review-demo181-assurance-surface-source"
     }
   ],
   "records": [
-    { "id": "EVD-RUN-007", "lifecycle": "Published", "reviewRef": "review-demo180-interface-route-source", "supersedes": ["EVD-RUN-006"] },
-    { "id": "AI-OBJ-001", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
-    { "id": "AI-OBJ-002", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
-    { "id": "AI-OBJ-003", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
-    { "id": "AI-OBJ-004", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
-    { "id": "AI-OBJ-005", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
-    { "id": "GOV-OBJ-001", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
-    { "id": "SEC-OBJ-001", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
-    { "id": "SEC-OBJ-002", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
-    { "id": "SEC-OBJ-003", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
-    { "id": "SEC-OBJ-004", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
-    { "id": "SEC-OBJ-005", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" },
-    { "id": "SEC-OBJ-006", "lifecycle": "Approved", "reviewRef": "review-objectives-pr56" }
+    {
+      "id": "EVD-RUN-008",
+      "lifecycle": "Published",
+      "reviewRef": "review-demo181-assurance-surface-source",
+      "supersedes": [
+        "EVD-RUN-005"
+      ]
+    },
+    {
+      "id": "EVD-RUN-007",
+      "lifecycle": "Published",
+      "reviewRef": "review-demo180-interface-route-source",
+      "supersedes": [
+        "EVD-RUN-006"
+      ]
+    },
+    {
+      "id": "AI-OBJ-001",
+      "lifecycle": "Approved",
+      "reviewRef": "review-objectives-pr56"
+    },
+    {
+      "id": "AI-OBJ-002",
+      "lifecycle": "Approved",
+      "reviewRef": "review-objectives-pr56"
+    },
+    {
+      "id": "AI-OBJ-003",
+      "lifecycle": "Approved",
+      "reviewRef": "review-objectives-pr56"
+    },
+    {
+      "id": "AI-OBJ-004",
+      "lifecycle": "Approved",
+      "reviewRef": "review-objectives-pr56"
+    },
+    {
+      "id": "AI-OBJ-005",
+      "lifecycle": "Approved",
+      "reviewRef": "review-objectives-pr56"
+    },
+    {
+      "id": "GOV-OBJ-001",
+      "lifecycle": "Approved",
+      "reviewRef": "review-objectives-pr56"
+    },
+    {
+      "id": "SEC-OBJ-001",
+      "lifecycle": "Approved",
+      "reviewRef": "review-objectives-pr56"
+    },
+    {
+      "id": "SEC-OBJ-002",
+      "lifecycle": "Approved",
+      "reviewRef": "review-objectives-pr56"
+    },
+    {
+      "id": "SEC-OBJ-003",
+      "lifecycle": "Approved",
+      "reviewRef": "review-objectives-pr56"
+    },
+    {
+      "id": "SEC-OBJ-004",
+      "lifecycle": "Approved",
+      "reviewRef": "review-objectives-pr56"
+    },
+    {
+      "id": "SEC-OBJ-005",
+      "lifecycle": "Approved",
+      "reviewRef": "review-objectives-pr56"
+    },
+    {
+      "id": "SEC-OBJ-006",
+      "lifecycle": "Approved",
+      "reviewRef": "review-objectives-pr56"
+    }
   ],
   "retiredRecords": [
-    { "id": "EVD-RUN-006", "lifecycle": "Superseded", "reviewRef": "review-demo180-interface-route-source", "supersededBy": ["EVD-RUN-007"] }
+    {
+      "id": "EVD-RUN-006",
+      "lifecycle": "Superseded",
+      "reviewRef": "review-demo180-interface-route-source",
+      "supersededBy": [
+        "EVD-RUN-007"
+      ]
+    },
+    {
+      "id": "EVD-RUN-005",
+      "lifecycle": "Superseded",
+      "reviewRef": "review-demo181-assurance-surface-source",
+      "supersededBy": [
+        "EVD-RUN-008"
+      ]
+    }
   ]
 }
