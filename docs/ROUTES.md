@@ -7,18 +7,12 @@ This file is generated from the active declarative application registry. Route I
 | Route ID | Route | Methods | Kind | Visibility | Offline | Indexing | Purpose | Source |
 |---|---|---|---|---|---|---|---|---|
 | `interfaces.frontend.index` | `/` | `GET` | page | public | gated | allow | Architecture demo index | `src/ui/page.ts` |
-| `assurance.compliance.iso-27001.html` | `/compliance` | `GET` | page | public | gated | allow | Assurance compliance html | `src/demos/compliance-page.ts` |
+| `assurance.wizardgang-public-assurance.html` | `/assurance` | `GET` | page | public | gated | allow | Assurance registry html | `src/demos/assurance.ts` |
 | `operations.dashboard` | `/dashboard` | `GET` | page | public | available | allow | Operations dashboard | `src/demos/operations-pages.ts` |
 | `operations.dashboard-billing` | `/dashboard/billing` | `GET` | page | public | available | allow | Usage and cost | `src/demos/operations-pages.ts` |
 | `operations.dashboard-docs` | `/dashboard/docs` | `GET` | page | public | available | allow | Operations documentation | `src/demos/operations-pages.ts` |
 | `operations.dashboard-logs` | `/dashboard/logs` | `GET` | page | public | available | allow | Operations logs | `src/demos/logs.ts` |
 | `operations.dashboard-uptime` | `/dashboard/uptime` | `GET` | page | public | available | allow | Availability history | `src/demos/operations-pages.ts` |
-| `assurance.evidence.html` | `/evidence` | `GET` | page | public | gated | allow | Assurance evidence html | `src/demos/evidence-page.ts` |
-| `interfaces.git.page` | `/git` | `GET` | page | public | gated | allow | Git / GitHub | `src/demos/git-page.ts` |
-| `interfaces.governance.page` | `/governance` | `GET` | page | public | gated | allow | Governance | `src/demos/governance.ts` |
-| `interfaces.governance.concerns` | `/governance/concerns` | `GET` | page | public | gated | allow | Report a Concern | `src/demos/assurance-pages.ts` |
-| `assurance.incidents.html` | `/governance/incidents` | `GET` | page | public | gated | allow | Assurance incidents html | `src/demos/assurance-pages.ts` |
-| `assurance.risks.html` | `/governance/risks` | `GET` | page | public | gated | allow | Assurance risks html | `src/demos/assurance-pages.ts` |
 | `interfaces.page` | `/interfaces` | `GET` | page | public | gated | allow | Interfaces | `src/demos/interfaces.ts` |
 | `platform.page` | `/platform` | `GET` | page | public | gated | allow | Cloudflare Platform | `src/demos/platform.ts` |
 | `assurance.advisories.html` | `/security` | `GET` | page | public | available | allow | Assurance advisories html | `src/demos/security-page.ts` |

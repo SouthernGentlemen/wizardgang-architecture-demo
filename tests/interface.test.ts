@@ -138,7 +138,7 @@ describe('compliance assurance index', () => {
     expect(html).toContain('id="ISO27001-4.1"');
     expect(html).toContain('id="WCAG-4.1.2"');
     expect(html).toContain('href="/v1/assurance/compliance/WCAG-4.1.2"');
-    expect(html).toContain('href="/evidence#EVD-');
+    expect(html).toContain('href="/assurance?view=evidence#EVD-');
     expect(html).not.toMatch(/>\s*(?:COMPLIANT|CERTIFIED)\s*</i);
   });
 });

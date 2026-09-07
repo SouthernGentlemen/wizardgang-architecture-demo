@@ -1,35 +1,7 @@
-import governanceDemo, { renderGovernance } from '../../demos/governance';
-import concernsDemo from '../../demos/concerns';
-import { demos } from '../../demos/registry';
 import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } from '../../api/governance';
-import { renderConcerns } from '../../demos/assurance-pages';
 import { defineInterfaceIdentityCapability, interfaceIdentityRoute } from '../route-capability';
 
 export const governanceRouteCapability = defineInterfaceIdentityCapability('interfaces.governance', [
-  interfaceIdentityRoute({
-    id: 'interfaces.governance.page',
-    pattern: governanceDemo.route,
-    methods: ['GET'],
-    kind: 'page',
-    handler: (request, { env }) => renderGovernance(request, env, demos),
-    title: governanceDemo.title,
-    description: governanceDemo.summary,
-    sourceModule: 'src/demos/governance.ts',
-    sourceExport: 'renderGovernance',
-    tests: ['tests/governance.test.ts', 'tests/interface.test.ts'],
-  }),
-  interfaceIdentityRoute({
-    id: 'interfaces.governance.concerns',
-    pattern: concernsDemo.route,
-    methods: ['GET'],
-    kind: 'page',
-    handler: (_request, { env }) => renderConcerns(env),
-    title: concernsDemo.title,
-    description: concernsDemo.summary,
-    sourceModule: 'src/demos/assurance-pages.ts',
-    sourceExport: 'renderConcerns',
-    tests: ['tests/governance.test.ts'],
-  }),
   interfaceIdentityRoute({
     id: 'interfaces.governance.traceability',
     pattern: '/__api/evidence/traceability',

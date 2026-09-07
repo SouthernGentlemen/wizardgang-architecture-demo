@@ -1,22 +1,8 @@
-import gitDemo from '../../demos/git';
 import { gitEvidenceResponse } from '../../api/git-evidence';
 import { gitDemoReleaseResponse, gitDemoStartResponse, gitDemoStatusResponse } from '../../api/git-demo';
-import { renderGitDemo } from '../../demos/git-page';
 import { defineInterfaceIdentityCapability, interfaceIdentityRoute } from '../route-capability';
 
 export const gitRouteCapability = defineInterfaceIdentityCapability('interfaces.git', [
-  interfaceIdentityRoute({
-    id: 'interfaces.git.page',
-    pattern: gitDemo.route,
-    methods: ['GET'],
-    kind: 'page',
-    handler: (_request, { env }) => renderGitDemo(env),
-    title: gitDemo.title,
-    description: gitDemo.summary,
-    sourceModule: 'src/demos/git-page.ts',
-    sourceExport: 'renderGitDemo',
-    tests: ['tests/git-demo.test.ts', 'tests/interface.test.ts'],
-  }),
   interfaceIdentityRoute({
     id: 'interfaces.git.reporting',
     pattern: '/__api/git/evidence',

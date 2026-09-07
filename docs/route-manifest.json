@@ -92,7 +92,7 @@
     "navigation": {
       "group": "Delivery & Governance",
       "label": "Security",
-      "order": 7,
+      "order": 4,
       "index": true,
       "sitemap": true
     },
@@ -193,58 +193,6 @@
     "status": "working"
   },
   {
-    "id": "assurance.compliance.iso-27001.html",
-    "route": "/compliance",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Assurance compliance html",
-    "description": "Registry-owned html route for the compliance assurance surface.",
-    "docs": [
-      "docs/ASSURANCE-REGISTRY.md",
-      "docs/ASSURANCE-API.md",
-      "docs/ROUTES.md"
-    ],
-    "source": {
-      "module": "src/demos/compliance-page.ts",
-      "exportName": "renderComplianceDemo",
-      "tests": [
-        "tests/assurance-compliance.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Delivery & Governance",
-      "label": "Compliance & Assurance",
-      "order": 6,
-      "index": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
     "id": "assurance.evidence.collection",
     "route": "/v1/assurance/evidence",
     "methods": [
@@ -288,58 +236,6 @@
         "tests/assurance-api.test.ts",
         "tests/assurance-declarative-routing.test.ts"
       ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "assurance.evidence.html",
-    "route": "/evidence",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Assurance evidence html",
-    "description": "Registry-owned html route for the evidence assurance surface.",
-    "docs": [
-      "docs/ASSURANCE-REGISTRY.md",
-      "docs/ASSURANCE-API.md",
-      "docs/ROUTES.md"
-    ],
-    "source": {
-      "module": "src/demos/evidence-page.ts",
-      "exportName": "renderEvidenceDemo",
-      "tests": [
-        "tests/assurance-route-contract.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Delivery & Governance",
-      "label": "Assurance Evidence",
-      "order": 5,
-      "index": true,
-      "sitemap": true
     },
     "status": "working"
   },
@@ -391,58 +287,6 @@
     "status": "working"
   },
   {
-    "id": "assurance.incidents.html",
-    "route": "/governance/incidents",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Assurance incidents html",
-    "description": "Registry-owned html route for the incidents assurance surface.",
-    "docs": [
-      "docs/ASSURANCE-REGISTRY.md",
-      "docs/ASSURANCE-API.md",
-      "docs/ROUTES.md"
-    ],
-    "source": {
-      "module": "src/demos/assurance-pages.ts",
-      "exportName": "renderIncidents",
-      "tests": [
-        "tests/assurance-incidents.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Delivery & Governance",
-      "label": "Incidents & Exercises",
-      "order": 10,
-      "index": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
     "id": "assurance.risks.collection",
     "route": "/v1/assurance/risks",
     "methods": [
@@ -490,58 +334,6 @@
     "status": "working"
   },
   {
-    "id": "assurance.risks.html",
-    "route": "/governance/risks",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Assurance risks html",
-    "description": "Registry-owned html route for the risks assurance surface.",
-    "docs": [
-      "docs/ASSURANCE-REGISTRY.md",
-      "docs/ASSURANCE-API.md",
-      "docs/ROUTES.md"
-    ],
-    "source": {
-      "module": "src/demos/assurance-pages.ts",
-      "exportName": "renderRisks",
-      "tests": [
-        "tests/assurance-risks.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Delivery & Governance",
-      "label": "Risk Assurance",
-      "order": 9,
-      "index": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
     "id": "assurance.wizardgang-public-assurance.collection",
     "route": "/v1/assurance",
     "methods": [
@@ -585,6 +377,58 @@
         "tests/assurance-api.test.ts",
         "tests/assurance-declarative-routing.test.ts"
       ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "assurance.wizardgang-public-assurance.html",
+    "route": "/assurance",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Assurance registry html",
+    "description": "Registry-owned html route for the registry assurance surface.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/ASSURANCE-API.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/demos/assurance.ts",
+      "exportName": "renderAssurance",
+      "tests": [
+        "tests/assurance-consolidation.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "group": "Delivery & Governance",
+      "label": "Assurance",
+      "order": 3,
+      "index": true,
+      "sitemap": true
     },
     "status": "working"
   },
@@ -740,58 +584,6 @@
     "status": "working"
   },
   {
-    "id": "interfaces.git.page",
-    "route": "/git",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Git / GitHub",
-    "description": "An authenticated, two-stage live release lifecycle backed by real branches, commits, pull requests, CI jobs, retained reports, semantic tags, deployment, and public GitHub evidence.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/git-page.ts",
-      "exportName": "renderGitDemo",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/git-demo.test.ts",
-        "tests/interface.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Delivery & Governance",
-      "label": "Git / GitHub",
-      "order": 3,
-      "index": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
     "id": "interfaces.git.reporting",
     "route": "/__api/git/evidence",
     "methods": [
@@ -881,109 +673,6 @@
         "tests/governance.test.ts",
         "tests/mcp-client.test.ts"
       ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "interfaces.governance.concerns",
-    "route": "/governance/concerns",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Report a Concern",
-    "description": "Public intake for bugs, feature requests, accessibility, AI/MCP, and other non-sensitive concerns, with security disclosures routed privately.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/assurance-pages.ts",
-      "exportName": "renderConcerns",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/governance.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Delivery & Governance",
-      "label": "Report a Concern",
-      "order": 8,
-      "index": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
-    "id": "interfaces.governance.page",
-    "route": "/governance",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Governance",
-    "description": "Security controls, AI-system boundary evaluation, traceability, and audit evidence implemented through ordinary engineering work and inspected together.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/governance.ts",
-      "exportName": "renderGovernance",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/governance.test.ts",
-        "tests/interface.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Delivery & Governance",
-      "label": "Governance",
-      "order": 4,
-      "index": true,
-      "sitemap": true
     },
     "status": "working"
   },
@@ -2606,7 +2295,7 @@
     "navigation": {
       "group": "Operations",
       "label": "System Operations",
-      "order": 11,
+      "order": 5,
       "index": true,
       "sitemap": true
     },
@@ -2658,7 +2347,7 @@
     "navigation": {
       "group": "Operations",
       "label": "Cloudflare Usage & Cost",
-      "order": 15,
+      "order": 9,
       "index": true,
       "sitemap": true
     },
@@ -2710,7 +2399,7 @@
     "navigation": {
       "group": "Operations",
       "label": "Documentation",
-      "order": 13,
+      "order": 7,
       "index": true,
       "sitemap": true
     },
@@ -2762,7 +2451,7 @@
     "navigation": {
       "group": "Operations",
       "label": "Log Viewer",
-      "order": 14,
+      "order": 8,
       "index": true,
       "sitemap": true
     },
@@ -2814,7 +2503,7 @@
     "navigation": {
       "group": "Operations",
       "label": "Availability",
-      "order": 12,
+      "order": 6,
       "index": true,
       "sitemap": true
     },

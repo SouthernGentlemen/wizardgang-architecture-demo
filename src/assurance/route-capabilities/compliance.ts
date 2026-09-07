@@ -1,17 +1,8 @@
 import { assuranceComplianceResponse } from '../../api/assurance';
-import { renderComplianceDemo } from '../../demos/compliance-page';
 import { defineAssuranceRouteCapability } from '../route-capability';
 
 export const complianceRouteCapability = defineAssuranceRouteCapability({
   ownerId: 'compliance.iso-27001',
-  html: {
-    handler: renderComplianceDemo,
-    source: {
-      module: 'src/demos/compliance-page.ts',
-      exportName: 'renderComplianceDemo',
-      tests: ['tests/assurance-compliance.test.ts', 'tests/router.test.ts'],
-    },
-  },
   apiCollection: {
     handler: (request, env) => assuranceComplianceResponse(request, undefined, env),
     source: {

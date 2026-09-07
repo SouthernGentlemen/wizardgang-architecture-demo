@@ -39,7 +39,7 @@ for (const resource of projectedResources) {
   validateCanonical(resource.path, read(resource.path), '$', resource.capabilities?.includes('manifest'));
 }
 
-for (const route of ['/evidence', '/v1/assurance', '/v1/assurance/evidence', '/v1/assurance/advisories']) {
+for (const route of ['/assurance', '/security', '/v1/assurance', '/v1/assurance/evidence', '/v1/assurance/advisories']) {
   if (!routes.has(route)) errors.push(`public assurance route is missing from the route manifest: ${route}`);
 }
 
