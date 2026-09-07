@@ -137,23 +137,23 @@ describe('live Git delivery lifecycle', () => {
 
   it('keeps status public and rejects malformed correlation identifiers', async () => {
     fixtures();
-    const response = await gitDemoStatusResponse(new Request(`https://demo.wizardgang.ai/__api/git/demo?request_id=${requestId}`), environment());
+    const response = await gitDemoStatusResponse(new Request(`https://demo.wizardgang.ai/api/labs/git-delivery?request_id=${requestId}`), environment());
     expect(response.status).toBe(200);
     expect(response.headers.get('cache-control')).toBe('no-store');
-    const invalid = await gitDemoStatusResponse(new Request('https://demo.wizardgang.ai/__api/git/demo?request_id=not-a-uuid'), environment());
+    const invalid = await gitDemoStatusResponse(new Request('https://demo.wizardgang.ai/api/labs/git-delivery?request_id=not-a-uuid'), environment());
     expect(invalid.status).toBe(400);
   });
 
   it('requires same-origin admin authentication before a dispatch', async () => {
     fixtures({ pulls: [] });
     const env = environment();
-    const crossOrigin = await gitDemoStartResponse(new Request('https://demo.wizardgang.ai/__api/git/demo', {
+    const crossOrigin = await gitDemoStartResponse(new Request('https://demo.wizardgang.ai/api/labs/git-delivery', {
       method: 'POST',
       headers: { authorization: basic, origin: 'https://attacker.example', 'content-type': 'application/json' },
       body: JSON.stringify({ bump: 'patch' }),
     }), env);
     expect(crossOrigin.status).toBe(403);
-    const unauthenticated = await gitDemoStartResponse(new Request('https://demo.wizardgang.ai/__api/git/demo', {
+    const unauthenticated = await gitDemoStartResponse(new Request('https://demo.wizardgang.ai/api/labs/git-delivery', {
       method: 'POST',
       headers: { origin: 'https://demo.wizardgang.ai', 'content-type': 'application/json' },
       body: JSON.stringify({ bump: 'patch' }),
@@ -164,7 +164,7 @@ describe('live Git delivery lifecycle', () => {
   it('dispatches only the allowlisted workflow with the server-side Actions token', async () => {
     const fetchMock = fixtures({ pulls: [] });
     const env = environment();
-    const response = await gitDemoStartResponse(adminRequest('/__api/git/demo', { bump: 'patch' }), env);
+    const response = await gitDemoStartResponse(adminRequest('/api/labs/git-delivery', { bump: 'patch' }), env);
     const payload = await response.json() as Record<string, unknown>;
     expect(response.status).toBe(202);
     expect(payload).toMatchObject({ accepted: true, bump: 'patch', currentVersion: '0.7.0', targetVersion: '0.7.1' });
@@ -180,7 +180,7 @@ describe('live Git delivery lifecycle', () => {
 
   it('returns the active live-demo pull request instead of creating a collision', async () => {
     const fetchMock = fixtures();
-    const response = await gitDemoStartResponse(adminRequest('/__api/git/demo', { bump: 'minor' }), environment());
+    const response = await gitDemoStartResponse(adminRequest('/api/labs/git-delivery', { bump: 'minor' }), environment());
     expect(response.status).toBe(409);
     expect(await response.json()).toMatchObject({ error: 'git_demo_already_active', requestId, pullRequest: { number: 54 } });
     expect(fetchMock.mock.calls.some(([input]) => String(input).endsWith('/dispatches'))).toBe(false);
@@ -188,7 +188,7 @@ describe('live Git delivery lifecycle', () => {
 
   it('dispatches merge and release only after the real CI workflow passes', async () => {
     const fetchMock = fixtures();
-    const response = await gitDemoReleaseResponse(adminRequest('/__api/git/demo/release', { pullRequest: 54, requestId }), environment());
+    const response = await gitDemoReleaseResponse(adminRequest('/api/labs/git-release', { pullRequest: 54, requestId }), environment());
     expect(response.status).toBe(202);
     const dispatch = fetchMock.mock.calls.find(([input]) => String(input).endsWith('/actions/workflows/git-demo.yml/dispatches'));
     expect(JSON.parse(String((dispatch?.[1] as RequestInit).body))).toMatchObject({ inputs: { operation: 'release', request_id: requestId, pull_request: '54' } });
@@ -196,7 +196,7 @@ describe('live Git delivery lifecycle', () => {
 
   it('refuses release while CI is still running', async () => {
     const fetchMock = fixtures({ ciConclusion: null });
-    const response = await gitDemoReleaseResponse(adminRequest('/__api/git/demo/release', { pullRequest: 54, requestId }), environment());
+    const response = await gitDemoReleaseResponse(adminRequest('/api/labs/git-release', { pullRequest: 54, requestId }), environment());
     expect(response.status).toBe(409);
     expect(await response.json()).toMatchObject({ error: 'git_demo_ci_not_ready' });
     expect(fetchMock.mock.calls.some(([input]) => String(input).endsWith('/dispatches'))).toBe(false);

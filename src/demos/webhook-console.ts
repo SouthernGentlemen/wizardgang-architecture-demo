@@ -67,10 +67,10 @@ export function renderWebhooksDemo(env: Env): Response {
     });
     meta.textContent=events.length+' verified deliver'+(events.length===1?'y':'ies')+' · polling every '+payload.pollingIntervalMs+' ms · '+payload.repository;
   };
-  const refresh=async()=>{try{const response=await fetch('/__api/webhooks/events');if(!response.ok)throw new Error('unavailable');render(await response.json());state.textContent='Connected';state.classList.add('badge-ok')}catch{state.textContent='Unavailable';state.classList.remove('badge-ok');meta.textContent='Verified delivery evidence is unavailable.'}};
+  const refresh=async()=>{try{const response=await fetch('/api/labs/webhook-events');if(!response.ok)throw new Error('unavailable');render(await response.json());state.textContent='Connected';state.classList.add('badge-ok')}catch{state.textContent='Unavailable';state.classList.remove('badge-ok');meta.textContent='Verified delivery evidence is unavailable.'}};
   const mutate=async(path)=>{state.textContent='Working';const response=await fetch(path,{method:'POST'});const payload=await response.json();if(!response.ok)throw new Error(payload.error||'request failed');lastFingerprint='';await refresh()};
-  document.querySelector('[data-webhook-send]').addEventListener('click',async(event)=>{event.currentTarget.disabled=true;try{await mutate('/__api/webhooks/demo')}catch(error){state.textContent='Failed';meta.textContent=String(error)}finally{event.currentTarget.disabled=false}});
-  document.querySelector('[data-webhook-reset]').addEventListener('click',async()=>{try{await mutate('/__api/webhooks/reset')}catch(error){state.textContent='Failed';meta.textContent=String(error)}});
+  document.querySelector('[data-webhook-send]').addEventListener('click',async(event)=>{event.currentTarget.disabled=true;try{await mutate('/api/labs/webhook-demo')}catch(error){state.textContent='Failed';meta.textContent=String(error)}finally{event.currentTarget.disabled=false}});
+  document.querySelector('[data-webhook-reset]').addEventListener('click',async()=>{try{await mutate('/api/labs/webhook-reset')}catch(error){state.textContent='Failed';meta.textContent=String(error)}});
   refresh();setInterval(()=>{if(document.visibilityState==='visible')refresh()},2000);
 })();
 </script>`, { activeRoute: '/interfaces', description: 'Verify signed GitHub-compatible webhooks and inspect replay-protected delivery evidence.', cacheControl: 'no-store' });

@@ -14,7 +14,7 @@ export async function durableCounterResponse(request: Request, env: Env): Promis
   const state = await response.json() as { counter: number };
   if (request.method === 'POST') {
     const event = await recordDemoEvent(env, 'durable-objects', 'counter_incremented', { counter: state.counter, objectName: 'public-counter' });
-    await recordApplicationLog(env, { source: 'durable-objects', eventKey: 'counter_incremented', message: `Coordinated counter advanced to ${state.counter}.`, route: '/__api/durable/counter', detail: { counter: state.counter, eventId: event.id } });
+    await recordApplicationLog(env, { source: 'durable-objects', eventKey: 'counter_incremented', message: `Coordinated counter advanced to ${state.counter}.`, route: '/api/labs/durable-counter', detail: { counter: state.counter, eventId: event.id } });
     return json({ ...state, coordination: 'Durable Object', persistence: 'Durable Object storage', auditEventId: event.id });
   }
   return json({ ...state, coordination: 'Durable Object', persistence: 'Durable Object storage' });

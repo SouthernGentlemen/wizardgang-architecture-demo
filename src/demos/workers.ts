@@ -13,9 +13,9 @@ const demo: DemoDefinition = {
     "D1 is used only for audit evidence, not computation state"
   ],
   "status": "working",
-  "interfaces": [{ "method": "POST", "path": "/__api/workers/compute", "description": "Compute a bounded sum, average, minimum, or maximum." }],
+  "interfaces": [{ "method": "POST", "path": "/api/labs/workers", "description": "Compute a bounded sum, average, minimum, or maximum." }],
   "supportingSources": [{ "label": "View runtime API", "path": "src/api/runtime.ts" }, { "label": "View Worker entry point", "path": "src/index.ts" }],
-  "action": { "label": "Run stateless average", "method": "POST", "path": "/__api/workers/compute", "body": { "operation": "average", "values": [8, 13, 21, 34] } }
+  "action": { "label": "Run stateless average", "method": "POST", "path": "/api/labs/workers", "body": { "operation": "average", "values": [8, 13, 21, 34] } }
 };
 
 export default demo;

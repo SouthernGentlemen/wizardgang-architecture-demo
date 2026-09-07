@@ -105,8 +105,8 @@ describe('consolidated assurance surface', () => {
     const patterns = applicationRouteRegistry.declarations.map((route) => route.pattern);
     expect(patterns).toContain('/assurance');
     expect(patterns).toContain('/security');
-    expect(patterns).toContain('/__api/git/demo');
-    expect(patterns).toContain('/__api/governance/security-controls');
+    expect(patterns).toContain('/api/labs/git-delivery');
+    expect(patterns).toContain('/api/labs/governance-security-controls');
     expect(patterns).toContain('/api/reporting');
     expect(patterns).toContain('/api/reporting/:collection');
     expect(patterns).toContain('/api/reporting/:collection/:recordId');

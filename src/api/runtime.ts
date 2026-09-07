@@ -15,7 +15,7 @@ export async function edgeInspectionResponse(request: Request, env: Env): Promis
   const allowedCfFields = ['colo', 'country', 'region', 'city', 'timezone', 'httpProtocol', 'asOrganization'];
   const edge = Object.fromEntries(allowedCfFields.filter((key) => cf[key] !== undefined).map((key) => [key, cf[key]]));
   await recordApplicationLog(env, {
-    source: 'edge', eventKey: 'request_inspected', message: 'A visitor inspected safe edge request context.', route: '/__api/edge/inspect',
+    source: 'edge', eventKey: 'request_inspected', message: 'A visitor inspected safe edge request context.', route: '/api/labs/edge',
     detail: { method: request.method, edgeFields: Object.keys(edge) },
   });
   return json({
@@ -44,7 +44,7 @@ export async function workerComputeResponse(request: Request, env: Env): Promise
       : operation === 'average' ? values.reduce((total, value) => total + value, 0) / values.length
         : operation === 'min' ? Math.min(...values) : Math.max(...values);
     const event = await recordDemoEvent(env, 'workers', 'stateless_compute', { operation, inputCount: values.length });
-    await recordApplicationLog(env, { source: 'workers', eventKey: 'stateless_compute', message: `Worker completed a bounded ${operation} operation.`, route: '/__api/workers/compute', detail: { operation, inputCount: values.length, eventId: event.id } });
+    await recordApplicationLog(env, { source: 'workers', eventKey: 'stateless_compute', message: `Worker completed a bounded ${operation} operation.`, route: '/api/labs/workers', detail: { operation, inputCount: values.length, eventId: event.id } });
     return json({ operation, inputCount: values.length, result, state: 'No process memory was used for persistence.', auditEventId: event.id });
   } catch (error) {
     return errorResponse(error);

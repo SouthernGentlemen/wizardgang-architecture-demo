@@ -13,8 +13,10 @@ export const accessibilityLaboratoryCapability = definePlatformLaboratoryCapabil
   routes: [
     {
       id: 'platform.accessibility.lab',
-      pattern: '/__api/accessibility/lab',
+      labId: 'accessibility',
+      pattern: '/api/labs/accessibility',
       methods: ['GET'],
+      requestSchemas: { GET: 'accessibility-mode-query-v1' },
       kind: 'api',
       handler: (request) => accessibilityLabResponse(request),
       authentication: { mode: 'anonymous' },
@@ -25,7 +27,7 @@ export const accessibilityLaboratoryCapability = definePlatformLaboratoryCapabil
       cache: { mode: 'no-store' },
       crawler: { crawling: 'controlled', indexing: 'deny' },
       documentation: {
-        title: 'Accessibility teaching frame',
+        title: 'Accessibility teaching laboratory API',
         description: 'Renders the bounded accessible or intentionally broken teaching frame used by the accessibility interface view.',
         docs,
       },

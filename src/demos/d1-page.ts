@@ -229,7 +229,7 @@ export function renderD1Demo(env: Env): Response {
     document.querySelector('[data-rows="tasks"]').innerHTML = state.tasks.map((task) => '<tr><td><strong>' + escape(task.title) + '</strong></td><td>' + escape(names.get(task.assigneeId) || 'Unassigned') + '</td><td><span class="badge d1-task-status" data-status="' + escape(task.status) + '">' + escape(statusLabel(task.status)) + '</span></td><td><div class="d1-row-actions"><button type="button" data-edit-task="' + escape(task.id) + '" aria-label="Edit ' + escape(task.title) + '">Edit</button><button type="button" data-delete-task="' + escape(task.id) + '" aria-label="Delete ' + escape(task.title) + '">Delete</button></div></td></tr>').join('') || '<tr><td colspan="4" class="d1-empty-row">No tasks in this sandbox.</td></tr>';
   };
   const load = async (resource, inspect = true) => {
-    const payload = await request('/__api/d1/' + resource, {}, inspect);
+    const payload = await request('/api/labs/d1-' + resource, {}, inspect);
     state[resource] = payload.result[resource];
     resource === 'users' ? renderUsers() : renderTasks();
     updateCounts();
@@ -310,7 +310,7 @@ export function renderD1Demo(env: Env): Response {
     form.querySelector('[type="submit"]').disabled = true;
     setFormMessage(resource, id ? 'Updating row…' : 'Creating row…');
     try {
-      await request('/__api/d1/' + resource + (id ? '/' + encodeURIComponent(id) : ''), { method: id ? 'PATCH' : 'POST', headers: {'content-type':'application/json'}, body: JSON.stringify(data) });
+      await request('/api/labs/d1-' + resource + (id ? '/' + encodeURIComponent(id) : ''), { method: id ? 'PATCH' : 'POST', headers: {'content-type':'application/json'}, body: JSON.stringify(data) });
       closeForm(resource);
       await loadAll();
       setDatabaseMessage((resource === 'users' ? 'User' : 'Task') + (id ? ' updated.' : ' created.'), 'success');
@@ -352,11 +352,11 @@ export function renderD1Demo(env: Env): Response {
     event.currentTarget.disabled = true;
     try {
       if (pending.type === 'reset') {
-        await request('/__api/d1/reset', { method: 'POST' });
+        await request('/api/labs/d1-reset', { method: 'POST' });
         await loadAll();
         setDatabaseMessage('Sample data restored.', 'success');
       } else {
-        await request('/__api/d1/' + pending.resource + '/' + encodeURIComponent(pending.id), { method: 'DELETE' });
+        await request('/api/labs/d1-' + pending.resource + '/' + encodeURIComponent(pending.id), { method: 'DELETE' });
         closeForm(pending.resource);
         await loadAll();
         setDatabaseMessage((pending.resource === 'users' ? 'User' : 'Task') + ' deleted.', 'success');

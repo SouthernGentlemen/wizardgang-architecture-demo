@@ -35,7 +35,7 @@ const demo: DemoDefinition = {
       "description": "Inspect the published ISO/IEC 27001-related assurance claims and their deployment-aware canonical evidence.",
       "label": "Inspect the security-control map",
       "method": "GET",
-      "path": "/__api/governance/security-controls"
+      "path": "/api/labs/governance-security-controls"
     },
     {
       "id": "iso-42001",
@@ -43,7 +43,7 @@ const demo: DemoDefinition = {
       "description": "Execute and audit the approved, unknown-method, and invalid-scope cases at the controlled MCP boundary.",
       "label": "Run the AI boundary evaluation",
       "method": "POST",
-      "path": "/__api/governance/ai-evaluation"
+      "path": "/api/labs/governance-ai-evaluation"
     },
     {
       "id": "traceability",
@@ -52,7 +52,7 @@ const demo: DemoDefinition = {
       "description": "Inspect the requirement-to-operation chain across source, validation, release metadata, deployment identity, and recent application audit events.",
       "label": "Inspect the live evidence chain",
       "method": "GET",
-      "path": "/__api/evidence/traceability"
+      "path": "/api/labs/governance-traceability"
     }
   ]
 };

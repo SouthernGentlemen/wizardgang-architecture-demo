@@ -27,7 +27,7 @@ async function store(env: Env, key: string, content: string, updatedBy: string):
      ON CONFLICT(object_key) DO UPDATE SET content_type = excluded.content_type, size_bytes = excluded.size_bytes, updated_at = excluded.updated_at, updated_by = excluded.updated_by`,
   ).bind(key, 'text/plain; charset=utf-8', size, updatedAt, updatedBy).run();
   const event = await recordDemoEvent(env, 'r2', 'object_stored', { key, size, updatedBy });
-  await recordApplicationLog(env, { source: 'r2', eventKey: 'object_stored', message: `R2 object ${key} was stored.`, route: '/__api/r2/object', detail: { key, size, eventId: event.id } });
+  await recordApplicationLog(env, { source: 'r2', eventKey: 'object_stored', message: `R2 object ${key} was stored.`, route: '/api/labs/r2-objects', detail: { key, size, eventId: event.id } });
   return { updatedAt, eventId: event.id };
 }
 

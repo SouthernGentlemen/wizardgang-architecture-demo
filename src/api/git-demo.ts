@@ -41,7 +41,7 @@ async function recordDispatchAudit(env: Env, input: {
       source: 'git',
       eventKey: input.eventKey,
       message: input.message,
-      route: '/__api/git/demo',
+      route: '/api/labs/git-delivery',
       requestId: input.requestId,
       detail: input.detail,
     }),
@@ -113,7 +113,7 @@ export async function gitDemoStartResponse(request: Request, env: Env): Promise<
     bump,
     currentVersion: preflight.currentVersion,
     targetVersion: preflight.targetVersion,
-    statusUrl: `/__api/git/demo?request_id=${encodeURIComponent(requestId)}`,
+    statusUrl: `/api/labs/git-delivery?request_id=${encodeURIComponent(requestId)}`,
     auditRecorded,
   }, { status: 202, headers: { 'cache-control': 'no-store' } });
 }

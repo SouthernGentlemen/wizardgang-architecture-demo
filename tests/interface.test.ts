@@ -109,14 +109,14 @@ describe('accessible interaction surface', () => {
   });
 
   it('ships deterministic accessible and broken frame variants with local axe execution', async () => {
-    const accessible = await accessibilityLabResponse(new Request('https://demo.example/__api/accessibility/lab?mode=accessible')).text();
+    const accessible = await accessibilityLabResponse(new Request('https://demo.example/api/labs/accessibility?mode=accessible')).text();
     expect(accessible).toContain('<html lang="en">');
     expect(accessible).toContain('<label for="email">');
     expect(accessible).toContain('role="dialog" aria-modal="true"');
     expect(accessible).toContain("axe.run(document");
     expect(accessible).toContain("type:'wg-accessibility-report'");
 
-    const broken = await accessibilityLabResponse(new Request('https://demo.example/__api/accessibility/lab?mode=broken')).text();
+    const broken = await accessibilityLabResponse(new Request('https://demo.example/api/labs/accessibility?mode=broken')).text();
     expect(broken).toContain('<html><head>');
     expect(broken).toContain('onpaste="return false"');
     expect(broken).toContain('outline:none!important');

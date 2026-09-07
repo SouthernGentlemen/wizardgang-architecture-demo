@@ -158,238 +158,6 @@
     "status": "working"
   },
   {
-    "id": "interfaces.git.demo",
-    "route": "/__api/git/demo",
-    "methods": [
-      "GET",
-      "POST"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "policy",
-      "policy": "GET public status; POST admin authorization + GitHub preflight/release controls"
-    },
-    "same_origin": {
-      "mode": "required",
-      "methods": [
-        "POST"
-      ]
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Git delivery demonstration",
-    "description": "Public status and same-origin administrator-controlled Git delivery demonstration start.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/api/git-demo.ts",
-      "exportName": "gitDemoStartResponse",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/git-demo.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "interfaces.git.demo-release",
-    "route": "/__api/git/demo/release",
-    "methods": [
-      "POST"
-    ],
-    "kind": "api",
-    "visibility": "private",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "required",
-      "provider": "admin-basic"
-    },
-    "authorization": {
-      "mode": "policy",
-      "policy": "admin + release-ready controls"
-    },
-    "same_origin": {
-      "mode": "required",
-      "methods": [
-        "POST"
-      ]
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Git demo release action",
-    "description": "Same-origin administrator-only release action gated by exact run/PR state and successful validation.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/api/git-demo.ts",
-      "exportName": "gitDemoReleaseResponse",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/git-demo.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "interfaces.governance.ai-evaluation",
-    "route": "/__api/governance/ai-evaluation",
-    "methods": [
-      "POST"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "policy",
-      "policy": "MCP method/tool authorization exercised by governance evaluation"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Governance AI boundary evaluation",
-    "description": "Controlled evaluation of approved, unknown, and invalid MCP method/tool cases.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/api/governance.ts",
-      "exportName": "aiEvaluationResponse",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/governance.test.ts",
-        "tests/mcp-client.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "interfaces.governance.security-controls",
-    "route": "/__api/governance/security-controls",
-    "methods": [
-      "GET"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Governance security controls",
-    "description": "Public security-control mapping to implementation and evidence.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/api/governance.ts",
-      "exportName": "securityControlsResponse",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/governance.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "interfaces.governance.traceability",
-    "route": "/__api/evidence/traceability",
-    "methods": [
-      "GET"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Governance traceability evidence",
-    "description": "Requirement-to-operation traceability over source, validation, release, deployment, and audit evidence.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/api/governance.ts",
-      "exportName": "traceabilityResponse",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/governance.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
     "id": "interfaces.graphql.asset",
     "route": "/__assets/graphiql/{asset}",
     "methods": [
@@ -1459,51 +1227,6 @@
     "status": "working"
   },
   {
-    "id": "interfaces.webhooks.events",
-    "route": "/__api/webhooks/events",
-    "methods": [
-      "GET"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "policy",
-      "policy": "visitor-session"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Verified webhook events",
-    "description": "Sanitized delivery evidence scoped to the current visitor session.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/api/webhooks.ts",
-      "exportName": "webhookEventsResponse",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/webhooks.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
     "id": "interfaces.webhooks.github",
     "route": "/v1/webhooks/github",
     "methods": [
@@ -1541,102 +1264,6 @@
     "source": {
       "module": "src/api/webhooks.ts",
       "exportName": "githubWebhookResponse",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/webhooks.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "interfaces.webhooks.reset",
-    "route": "/__api/webhooks/reset",
-    "methods": [
-      "POST"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "policy",
-      "policy": "visitor-session"
-    },
-    "same_origin": {
-      "mode": "required",
-      "methods": [
-        "POST"
-      ]
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Webhook demo reset",
-    "description": "Same-origin reset of synthetic webhook evidence for the current visitor session.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/api/webhooks.ts",
-      "exportName": "webhookResetResponse",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/webhooks.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "interfaces.webhooks.synthetic",
-    "route": "/__api/webhooks/demo",
-    "methods": [
-      "POST"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "policy",
-      "policy": "visitor-session"
-    },
-    "same_origin": {
-      "mode": "required",
-      "methods": [
-        "POST"
-      ]
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Synthetic webhook action",
-    "description": "Same-origin browser action that signs and exercises the production webhook validation path.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/api/webhooks.ts",
-      "exportName": "webhookDemoResponse",
       "tests": [
         "tests/interface-identity-routing.test.ts",
         "tests/webhooks.test.ts"
@@ -2206,7 +1833,7 @@
   },
   {
     "id": "platform.accessibility.lab",
-    "route": "/__api/accessibility/lab",
+    "route": "/api/labs/accessibility",
     "methods": [
       "GET"
     ],
@@ -2232,7 +1859,7 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "Accessibility teaching frame",
+    "title": "Accessibility teaching laboratory API",
     "description": "Renders the bounded accessible or intentionally broken teaching frame used by the accessibility interface view.",
     "docs": [
       "docs/ROUTES.md",
@@ -2251,7 +1878,7 @@
   },
   {
     "id": "platform.d1.record",
-    "route": "/v1/demo-records/{key}",
+    "route": "/api/labs/rest-records/{id}",
     "methods": [
       "GET",
       "PUT",
@@ -2280,8 +1907,8 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "D1 record item API",
-    "description": "Reads, replaces, or deletes one authorized record in D1.",
+    "title": "REST record item laboratory API",
+    "description": "Reads, replaces, or deletes one authorized demo record in D1.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -2300,7 +1927,7 @@
   },
   {
     "id": "platform.d1.records",
-    "route": "/v1/demo-records",
+    "route": "/api/labs/rest-records",
     "methods": [
       "GET",
       "POST"
@@ -2328,8 +1955,8 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "D1 records collection API",
-    "description": "Lists readable records or creates an authorized record in D1.",
+    "title": "REST records laboratory API",
+    "description": "Lists readable demo records or creates an authorized record in D1.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -2348,7 +1975,7 @@
   },
   {
     "id": "platform.d1.records-reset",
-    "route": "/__api/api-sandbox/reset",
+    "route": "/api/labs/rest-records-reset",
     "methods": [
       "POST"
     ],
@@ -2356,8 +1983,7 @@
     "visibility": "public",
     "browser_html": "never",
     "authentication": {
-      "mode": "required",
-      "provider": "demo-access-token-or-operator-bearer"
+      "mode": "anonymous"
     },
     "authorization": {
       "mode": "policy",
@@ -2376,7 +2002,7 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "D1 record sandbox reset API",
+    "title": "REST record sandbox reset laboratory API",
     "description": "Deletes the authenticated visitor sandbox records from D1.",
     "docs": [
       "docs/ROUTES.md",
@@ -2396,7 +2022,7 @@
   },
   {
     "id": "platform.d1.reset",
-    "route": "/__api/d1/reset",
+    "route": "/api/labs/d1-reset",
     "methods": [
       "POST"
     ],
@@ -2425,7 +2051,7 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "D1 users and tasks reset API",
+    "title": "D1 users and tasks reset laboratory API",
     "description": "Resets the visitor-scoped D1 users and tasks sandbox to deterministic seed rows.",
     "docs": [
       "docs/ROUTES.md",
@@ -2445,7 +2071,7 @@
   },
   {
     "id": "platform.d1.task",
-    "route": "/__api/d1/tasks/{id}",
+    "route": "/api/labs/d1-tasks/{id}",
     "methods": [
       "PATCH",
       "DELETE"
@@ -2496,7 +2122,7 @@
   },
   {
     "id": "platform.d1.tasks",
-    "route": "/__api/d1/tasks",
+    "route": "/api/labs/d1-tasks",
     "methods": [
       "GET",
       "POST"
@@ -2546,7 +2172,7 @@
   },
   {
     "id": "platform.d1.user",
-    "route": "/__api/d1/users/{id}",
+    "route": "/api/labs/d1-users/{id}",
     "methods": [
       "PATCH",
       "DELETE"
@@ -2597,7 +2223,7 @@
   },
   {
     "id": "platform.d1.users",
-    "route": "/__api/d1/users",
+    "route": "/api/labs/d1-users",
     "methods": [
       "GET",
       "POST"
@@ -2647,7 +2273,7 @@
   },
   {
     "id": "platform.durable-objects.counter",
-    "route": "/__api/durable/counter",
+    "route": "/api/labs/durable-counter",
     "methods": [
       "GET",
       "POST"
@@ -2674,7 +2300,7 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "Durable Object counter API",
+    "title": "Durable Object counter laboratory API",
     "description": "Reads or increments the public counter coordinated and persisted by a Durable Object.",
     "docs": [
       "docs/ROUTES.md",
@@ -2693,7 +2319,7 @@
   },
   {
     "id": "platform.edge.inspect",
-    "route": "/__api/edge/inspect",
+    "route": "/api/labs/edge",
     "methods": [
       "GET"
     ],
@@ -2719,7 +2345,7 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "Edge inspection API",
+    "title": "Edge inspection laboratory API",
     "description": "Returns the allowlisted Cloudflare request context without client identifiers.",
     "docs": [
       "docs/ROUTES.md",
@@ -2730,6 +2356,245 @@
       "exportName": "edgeLaboratoryCapability",
       "tests": [
         "tests/platform-laboratory-routing.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.git.delivery",
+    "route": "/api/labs/git-delivery",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "GET public status; POST admin authorization + GitHub preflight/release controls"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Git delivery laboratory API",
+    "description": "Public status and same-origin administrator-controlled Git delivery demonstration start.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/git.ts",
+      "exportName": "gitLaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/git-demo.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.git.release",
+    "route": "/api/labs/git-release",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "private",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "required",
+      "provider": "admin-basic"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "admin + release-ready controls"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Git release laboratory action",
+    "description": "Same-origin administrator-only release action gated by exact run/PR state and successful validation.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/git.ts",
+      "exportName": "gitLaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/git-demo.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.governance.ai-evaluation",
+    "route": "/api/labs/governance-ai-evaluation",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "MCP method/tool authorization exercised by governance evaluation"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Governance AI-boundary laboratory API",
+    "description": "Controlled evaluation of approved, unknown, and invalid MCP method/tool cases.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/governance.ts",
+      "exportName": "governanceLaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/governance.test.ts",
+        "tests/mcp-client.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.governance.security-controls",
+    "route": "/api/labs/governance-security-controls",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Governance security-controls laboratory API",
+    "description": "Public security-control mapping to canonical implementation and evidence records.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/governance.ts",
+      "exportName": "governanceLaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/governance.test.ts",
+        "tests/mcp-client.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.governance.traceability",
+    "route": "/api/labs/governance-traceability",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Governance traceability laboratory API",
+    "description": "Requirement-to-operation traceability over source, validation, release, deployment, and audit evidence.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/governance.ts",
+      "exportName": "governanceLaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/governance.test.ts",
+        "tests/mcp-client.test.ts",
         "tests/router.test.ts"
       ]
     },
@@ -2789,7 +2654,7 @@
   },
   {
     "id": "platform.r2.demo-object",
-    "route": "/__api/r2/demo",
+    "route": "/api/labs/r2-demo",
     "methods": [
       "POST"
     ],
@@ -2815,7 +2680,7 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "R2 demonstration object API",
+    "title": "R2 demonstration object laboratory API",
     "description": "Writes the deterministic public demonstration object to R2 with D1 metadata.",
     "docs": [
       "docs/ROUTES.md",
@@ -2834,7 +2699,7 @@
   },
   {
     "id": "platform.r2.file",
-    "route": "/__api/r2/files/{id}",
+    "route": "/api/labs/r2-files/{id}",
     "methods": [
       "GET",
       "DELETE"
@@ -2883,7 +2748,7 @@
   },
   {
     "id": "platform.r2.files",
-    "route": "/__api/r2/files",
+    "route": "/api/labs/r2-files",
     "methods": [
       "GET",
       "POST"
@@ -2932,7 +2797,7 @@
   },
   {
     "id": "platform.r2.object",
-    "route": "/__api/r2/object",
+    "route": "/api/labs/r2-objects",
     "methods": [
       "GET",
       "PUT",
@@ -2961,7 +2826,7 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "R2 object API",
+    "title": "R2 object laboratory API",
     "description": "Reads, stores, or deletes object bytes in R2 while D1 retains relational metadata.",
     "docs": [
       "docs/ROUTES.md",
@@ -2980,7 +2845,7 @@
   },
   {
     "id": "platform.r2.reset",
-    "route": "/__api/r2/reset",
+    "route": "/api/labs/r2-reset",
     "methods": [
       "POST"
     ],
@@ -3009,7 +2874,7 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "R2 files reset API",
+    "title": "R2 files reset laboratory API",
     "description": "Deletes visitor-owned R2 objects and their D1 metadata rows.",
     "docs": [
       "docs/ROUTES.md",
@@ -3027,8 +2892,152 @@
     "status": "working"
   },
   {
+    "id": "platform.webhooks.events",
+    "route": "/api/labs/webhook-events",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "visitor-session"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Synthetic webhook event laboratory API",
+    "description": "Returns sanitized verified delivery evidence scoped to the current visitor session.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/webhooks.ts",
+      "exportName": "webhookLaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/webhooks.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.webhooks.reset",
+    "route": "/api/labs/webhook-reset",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "visitor-session"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Synthetic webhook reset laboratory API",
+    "description": "Same-origin reset of synthetic webhook evidence for the current visitor session.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/webhooks.ts",
+      "exportName": "webhookLaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/webhooks.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.webhooks.synthetic",
+    "route": "/api/labs/webhook-demo",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "visitor-session"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Synthetic webhook laboratory action",
+    "description": "Same-origin browser action that signs and exercises the production webhook validation path.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/webhooks.ts",
+      "exportName": "webhookLaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/webhooks.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
     "id": "platform.workers.compute",
-    "route": "/__api/workers/compute",
+    "route": "/api/labs/workers",
     "methods": [
       "POST"
     ],
@@ -3054,7 +3063,7 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "Worker computation API",
+    "title": "Worker computation laboratory API",
     "description": "Runs bounded stateless arithmetic in the Worker and records audit evidence separately.",
     "docs": [
       "docs/ROUTES.md",

@@ -11,8 +11,10 @@ export const workersLaboratoryCapability = definePlatformLaboratoryCapability({
   routes: [
     {
       id: 'platform.workers.compute',
-      pattern: '/__api/workers/compute',
+      labId: 'workers',
+      pattern: '/api/labs/workers',
       methods: ['POST'],
+      requestSchemas: { POST: 'worker-compute-v1' },
       kind: 'api',
       handler: (request, env) => workerComputeResponse(request, env),
       authentication: { mode: 'anonymous' },
@@ -23,7 +25,7 @@ export const workersLaboratoryCapability = definePlatformLaboratoryCapability({
       cache: { mode: 'no-store' },
       crawler: { crawling: 'controlled', indexing: 'deny' },
       documentation: {
-        title: 'Worker computation API',
+        title: 'Worker computation laboratory API',
         description: 'Runs bounded stateless arithmetic in the Worker and records audit evidence separately.',
         docs: ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'],
       },

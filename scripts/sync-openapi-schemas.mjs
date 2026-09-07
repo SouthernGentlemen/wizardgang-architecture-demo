@@ -177,7 +177,9 @@ function canonicalize(document) {
       || currentPath.startsWith('/api/operations/')
       || currentPath === '/api/openapi.json'
     ) continue;
-    const canonicalPath = currentPath.startsWith('/v1/') ? currentPath : `/v1${currentPath}`;
+    const canonicalPath = currentPath.startsWith('/v1/') || currentPath.startsWith('/api/labs/')
+      ? currentPath
+      : `/v1${currentPath}`;
     retained[canonicalPath] = pathItem;
   }
 

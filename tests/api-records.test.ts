@@ -57,8 +57,8 @@ async function visitorToken(environment: Env, subject: string): Promise<string> 
 describe('shared application authorization', () => {
   it('allows anonymous reads but protects writes', async () => {
     const environment = env();
-    expect(await authorize(new Request('https://demo.example/v1/demo-records'), environment, 'demo:read')).toMatchObject({ authentication: 'anonymous' });
-    const denied = await authorize(new Request('https://demo.example/v1/demo-records'), environment, 'demo:write');
+    expect(await authorize(new Request('https://demo.example/api/labs/rest-records'), environment, 'demo:read')).toMatchObject({ authentication: 'anonymous' });
+    const denied = await authorize(new Request('https://demo.example/api/labs/rest-records'), environment, 'demo:write');
     expect(denied).toBeInstanceOf(Response);
     expect((denied as Response).status).toBe(401);
   });
@@ -68,26 +68,26 @@ describe('D1 REST records', () => {
   it('validates, stores, reads, and deletes a bounded record', async () => {
     const environment = env();
     const authorization = { authorization: 'Bearer test-write-token', 'content-type': 'application/json' };
-    const created = await recordsResponse(new Request('https://demo.example/v1/demo-records', {
+    const created = await recordsResponse(new Request('https://demo.example/api/labs/rest-records', {
       method: 'POST', headers: authorization, body: JSON.stringify({ namespace: 'public', key: 'example', value: { count: 2 } }),
     }), environment);
     expect(created.status).toBe(201);
     expect(created.headers.get('x-request-id')).toMatch(/^req_[0-9a-f]{32}$/);
 
-    const conflict = await recordsResponse(new Request('https://demo.example/v1/demo-records', {
+    const conflict = await recordsResponse(new Request('https://demo.example/api/labs/rest-records', {
       method: 'POST', headers: authorization, body: JSON.stringify({ namespace: 'public', key: 'example', value: { count: 3 } }),
     }), environment);
     expect(conflict.status).toBe(409);
 
-    const replaced = await recordsResponse(new Request('https://demo.example/v1/demo-records/example?namespace=public', {
+    const replaced = await recordsResponse(new Request('https://demo.example/api/labs/rest-records/example?namespace=public', {
       method: 'PUT', headers: authorization, body: JSON.stringify({ value: { count: 4 } }),
     }), environment, 'example');
     expect(replaced.status).toBe(200);
 
-    const listed = await recordsResponse(new Request('https://demo.example/v1/demo-records?namespace=public'), environment);
+    const listed = await recordsResponse(new Request('https://demo.example/api/labs/rest-records?namespace=public'), environment);
     expect(await listed.json()).toMatchObject({ results: [{ key: 'example', value: { count: 4 } }] });
 
-    const deleted = await recordsResponse(new Request('https://demo.example/v1/demo-records/example?namespace=public', {
+    const deleted = await recordsResponse(new Request('https://demo.example/api/labs/rest-records/example?namespace=public', {
       method: 'DELETE', headers: { authorization: 'Bearer test-write-token' },
     }), environment, 'example');
     expect(deleted.status).toBe(204);
@@ -97,7 +97,7 @@ describe('D1 REST records', () => {
     const environment = env();
     const first = await visitorToken(environment, 'first-user');
     const second = await visitorToken(environment, 'second-user');
-    const created = await recordsResponse(new Request('https://demo.example/v1/demo-records', {
+    const created = await recordsResponse(new Request('https://demo.example/api/labs/rest-records', {
       method: 'POST', headers: { authorization: `Bearer ${first}`, 'content-type': 'application/json' },
       body: JSON.stringify({ namespace: 'public', key: 'private-note', value: true }),
     }), environment);
@@ -105,23 +105,23 @@ describe('D1 REST records', () => {
     expect(body.namespace).toMatch(/^sandbox-[0-9a-f]{24}$/);
     expect(body.namespace).not.toBe('public');
 
-    const other = await recordsResponse(new Request('https://demo.example/v1/demo-records?namespace=' + body.namespace, {
+    const other = await recordsResponse(new Request('https://demo.example/api/labs/rest-records?namespace=' + body.namespace, {
       headers: { authorization: `Bearer ${second}` },
     }), environment);
     expect(await other.json()).toMatchObject({ results: [] });
 
-    const anonymous = await recordsResponse(new Request('https://demo.example/v1/demo-records?namespace=' + body.namespace), environment);
+    const anonymous = await recordsResponse(new Request('https://demo.example/api/labs/rest-records?namespace=' + body.namespace), environment);
     expect(await anonymous.json()).toMatchObject({ results: [], authorization: { scope: 'public' } });
   });
 
   it('rejects invalid identifiers and unauthenticated writes', async () => {
     const environment = env();
-    const denied = await recordsResponse(new Request('https://demo.example/v1/demo-records', {
+    const denied = await recordsResponse(new Request('https://demo.example/api/labs/rest-records', {
       method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ key: 'ok', value: true }),
     }), environment);
     expect(denied.status).toBe(401);
 
-    const invalid = await recordsResponse(new Request('https://demo.example/v1/demo-records', {
+    const invalid = await recordsResponse(new Request('https://demo.example/api/labs/rest-records', {
       method: 'POST', headers: { authorization: 'Bearer test-write-token', 'content-type': 'application/json' }, body: JSON.stringify({ key: '../escape', value: true }),
     }), environment);
     expect(invalid.status).toBe(400);

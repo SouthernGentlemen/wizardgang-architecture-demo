@@ -82,7 +82,7 @@ async function listRecords(request: Request, env: Env, id: string): Promise<Resp
      FROM demo_records WHERE namespace = ? ORDER BY record_key LIMIT 100`,
   ).bind(namespace).all<RecordRow>();
   await recordApplicationLog(env, {
-    source: 'rest', eventKey: 'records_listed', message: `REST listed ${result.results.length} demo record(s).`, route: '/v1/demo-records', requestId: id,
+    source: 'rest', eventKey: 'records_listed', message: `REST listed ${result.results.length} demo record(s).`, route: '/api/labs/rest-records', requestId: id,
     detail: { namespace, resultCount: result.results.length, authentication: principal.authentication },
   });
   return json({ results: result.results.map(present), authorization: publicPrincipal(principal) }, { headers: { 'cache-control': 'no-store' } });
@@ -95,7 +95,7 @@ async function getRecord(request: Request, env: Env, key: string, id: string): P
   const row = await findRecord(env, namespace, key);
   await recordApplicationLog(env, {
     source: 'rest', eventKey: row ? 'record_read' : 'record_not_found', message: row ? `REST read demo record ${namespace}/${key}.` : `REST could not find demo record ${namespace}/${key}.`,
-    route: `/v1/demo-records/${key}`, requestId: id, detail: { namespace, key, found: Boolean(row), authentication: principal.authentication },
+    route: `/api/labs/rest-records/${key}`, requestId: id, detail: { namespace, key, found: Boolean(row), authentication: principal.authentication },
   });
   return row ? json({ ...present(row), authorization: publicPrincipal(principal) }, { headers: { 'cache-control': 'no-store' } }) : json({ error: 'record_not_found' }, { status: 404, headers: { 'cache-control': 'no-store' } });
 }
@@ -121,12 +121,12 @@ async function createRecord(request: Request, env: Env, id: string): Promise<Res
   }
   const event = await recordDemoEvent(env, 'd1', 'record_created', { namespace, key, createdBy: principal.subject });
   await recordApplicationLog(env, {
-    source: 'rest', eventKey: 'record_created', message: `REST created demo record ${namespace}/${key}.`, route: '/v1/demo-records', requestId: id,
+    source: 'rest', eventKey: 'record_created', message: `REST created demo record ${namespace}/${key}.`, route: '/api/labs/rest-records', requestId: id,
     detail: { namespace, key, authentication: principal.authentication, eventId: event.id },
   });
   return json({ id: result.meta.last_row_id, namespace, key, value: body.value ?? null, createdAt: now, updatedAt: now, authorization: publicPrincipal(principal), auditEventId: event.id }, {
     status: 201,
-    headers: { location: `/v1/demo-records/${encodeURIComponent(key)}?namespace=${encodeURIComponent(namespace)}`, 'cache-control': 'no-store' },
+    headers: { location: `/api/labs/rest-records/${encodeURIComponent(key)}?namespace=${encodeURIComponent(namespace)}`, 'cache-control': 'no-store' },
   });
 }
 
@@ -147,12 +147,12 @@ async function replaceRecord(request: Request, env: Env, key: string, id: string
   const eventType = existing ? 'record_replaced' : 'record_created_by_put';
   const event = await recordDemoEvent(env, 'd1', eventType, { namespace, key, updatedBy: principal.subject });
   await recordApplicationLog(env, {
-    source: 'rest', eventKey: eventType, message: `REST ${existing ? 'replaced' : 'created'} demo record ${namespace}/${key}.`, route: `/v1/demo-records/${key}`, requestId: id,
+    source: 'rest', eventKey: eventType, message: `REST ${existing ? 'replaced' : 'created'} demo record ${namespace}/${key}.`, route: `/api/labs/rest-records/${key}`, requestId: id,
     detail: { namespace, key, authentication: principal.authentication, eventId: event.id },
   });
   return json({ ...(existing ? { id: existing.id } : {}), namespace, key, value: body.value ?? null, createdAt: existing?.created_at ?? now, updatedAt: now, authorization: publicPrincipal(principal), auditEventId: event.id }, {
     status: existing ? 200 : 201,
-    headers: { location: `/v1/demo-records/${encodeURIComponent(key)}?namespace=${encodeURIComponent(namespace)}`, 'cache-control': 'no-store' },
+    headers: { location: `/api/labs/rest-records/${encodeURIComponent(key)}?namespace=${encodeURIComponent(namespace)}`, 'cache-control': 'no-store' },
   });
 }
 
@@ -163,7 +163,7 @@ async function deleteRecord(request: Request, env: Env, key: string, id: string)
   await env.DEMO_DB.prepare('DELETE FROM demo_records WHERE namespace = ? AND record_key = ?').bind(namespace, key).run();
   const event = await recordDemoEvent(env, 'd1', 'record_deleted', { namespace, key, deletedBy: principal.subject });
   await recordApplicationLog(env, {
-    source: 'rest', eventKey: 'record_deleted', message: `REST deleted demo record ${namespace}/${key}.`, route: `/v1/demo-records/${key}`, requestId: id,
+    source: 'rest', eventKey: 'record_deleted', message: `REST deleted demo record ${namespace}/${key}.`, route: `/api/labs/rest-records/${key}`, requestId: id,
     detail: { namespace, key, authentication: principal.authentication, eventId: event.id },
   });
   return new Response(null, { status: 204, headers: { 'cache-control': 'no-store' } });
@@ -215,7 +215,7 @@ export async function resetRecordSandboxResponse(request: Request, env: Env): Pr
     if (!principal.namespace) throw new HttpError(403, 'visitor_sandbox_required');
     const result = await env.DEMO_DB.prepare('DELETE FROM demo_records WHERE namespace = ?').bind(principal.namespace).run();
     await recordApplicationLog(env, {
-      source: 'rest', eventKey: 'sandbox_reset', message: 'REST visitor sandbox was reset.', route: '/__api/api-sandbox/reset', requestId: id,
+      source: 'rest', eventKey: 'sandbox_reset', message: 'REST visitor sandbox was reset.', route: '/api/labs/rest-records-reset', requestId: id,
       detail: { namespace: principal.namespace, deleted: result.meta.changes ?? null, authentication: principal.authentication },
     });
     return traced(json({ reset: true, deleted: result.meta.changes ?? null, sandbox: 'Your API sandbox' }, { headers: { 'cache-control': 'no-store' } }), id);

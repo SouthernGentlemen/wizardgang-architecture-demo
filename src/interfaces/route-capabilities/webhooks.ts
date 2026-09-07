@@ -1,10 +1,4 @@
-import {
-  githubWebhookResponse,
-  webhookDemoResponse,
-  webhookEventsResponse,
-  webhookReceiptResponse,
-  webhookResetResponse,
-} from '../../api/webhooks';
+import { githubWebhookResponse, webhookReceiptResponse } from '../../api/webhooks';
 import { defineInterfaceIdentityCapability, interfaceIdentityRoute } from '../route-capability';
 
 export const webhooksRouteCapability = defineInterfaceIdentityCapability('interfaces.webhooks', [
@@ -32,47 +26,6 @@ export const webhooksRouteCapability = defineInterfaceIdentityCapability('interf
     sourceModule: 'src/api/webhooks.ts',
     sourceExport: 'githubWebhookResponse',
     authorization: { mode: 'policy', policy: 'github-hmac + repository/event allowlists + replay protection' },
-    tests: ['tests/webhooks.test.ts'],
-  }),
-  interfaceIdentityRoute({
-    id: 'interfaces.webhooks.synthetic',
-    pattern: '/__api/webhooks/demo',
-    methods: ['POST'],
-    kind: 'api',
-    handler: (request, { env }) => webhookDemoResponse(request, env),
-    title: 'Synthetic webhook action',
-    description: 'Same-origin browser action that signs and exercises the production webhook validation path.',
-    sourceModule: 'src/api/webhooks.ts',
-    sourceExport: 'webhookDemoResponse',
-    authorization: { mode: 'policy', policy: 'visitor-session' },
-    sameOrigin: { mode: 'required', methods: ['POST'] },
-    tests: ['tests/webhooks.test.ts'],
-  }),
-  interfaceIdentityRoute({
-    id: 'interfaces.webhooks.events',
-    pattern: '/__api/webhooks/events',
-    methods: ['GET'],
-    kind: 'api',
-    handler: (request, { env }) => webhookEventsResponse(request, env),
-    title: 'Verified webhook events',
-    description: 'Sanitized delivery evidence scoped to the current visitor session.',
-    sourceModule: 'src/api/webhooks.ts',
-    sourceExport: 'webhookEventsResponse',
-    authorization: { mode: 'policy', policy: 'visitor-session' },
-    tests: ['tests/webhooks.test.ts'],
-  }),
-  interfaceIdentityRoute({
-    id: 'interfaces.webhooks.reset',
-    pattern: '/__api/webhooks/reset',
-    methods: ['POST'],
-    kind: 'api',
-    handler: (request, { env }) => webhookResetResponse(request, env),
-    title: 'Webhook demo reset',
-    description: 'Same-origin reset of synthetic webhook evidence for the current visitor session.',
-    sourceModule: 'src/api/webhooks.ts',
-    sourceExport: 'webhookResetResponse',
-    authorization: { mode: 'policy', policy: 'visitor-session' },
-    sameOrigin: { mode: 'required', methods: ['POST'] },
     tests: ['tests/webhooks.test.ts'],
   }),
 ]);

@@ -55,14 +55,14 @@ function firstPublishedEvidence(evidenceIds: string[]) {
 
 describe('governance evidence', () => {
   it('reports missing deployment identity rather than inventing evidence', async () => {
-    const response = await traceabilityResponse(new Request('https://demo.example/__api/evidence/traceability'), env({ DEPLOYED_VERSION: 'development' }));
+    const response = await traceabilityResponse(new Request('https://demo.example/api/labs/governance-traceability'), env({ DEPLOYED_VERSION: 'development' }));
     expect(await response.json()).toMatchObject({ releaseEvidence: { status: 'not-supplied', commit: null }, recentApplicationAuditEvents: [{ event_type: 'demo_state_changed' }] });
   });
 
   it('uses the shared exact deployment identity for traceability', async () => {
     const deployedSha = '0123456789abcdef0123456789abcdef01234567';
     const response = await traceabilityResponse(
-      new Request('https://demo.example/__api/evidence/traceability'),
+      new Request('https://demo.example/api/labs/governance-traceability'),
       env({ DEPLOYED_VERSION: 'v0.14.0', DEPLOYED_SHA: deployedSha, GITHUB_BRANCH: 'moving-branch' }),
     );
     expect(await response.json()).toMatchObject({
@@ -77,7 +77,7 @@ describe('governance evidence', () => {
 
   it('derives the ISO/IEC 27001 control projection from published canonical claim relationships', async () => {
     const body = await securityControlsResponse(
-      new Request('https://demo.example/__api/governance/security-controls'),
+      new Request('https://demo.example/api/labs/governance-security-controls'),
       env({ DEPLOYED_SHA: '0123456789abcdef0123456789abcdef01234567' }),
     ).json() as { alignment: string; controls: GovernanceControl[]; limitations: string[] };
     const expectedClaims = canonicalIso27001Claims();
@@ -95,7 +95,7 @@ describe('governance evidence', () => {
   it('resolves canonical repository evidence at the exact deployed SHA, never the configured branch', async () => {
     const deployedSha = 'fedcba9876543210fedcba9876543210fedcba98';
     const repository = 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo';
-    const request = new Request('https://demo.example/__api/governance/security-controls');
+    const request = new Request('https://demo.example/api/labs/governance-security-controls');
     const body = await securityControlsResponse(request, env({
       DEPLOYED_SHA: deployedSha,
       GITHUB_BRANCH: 'moving-branch',
@@ -119,7 +119,7 @@ describe('governance evidence', () => {
 
   it('does not fabricate a moving-branch URL when deployment identity is absent', async () => {
     const body = await securityControlsResponse(
-      new Request('https://demo.example/__api/governance/security-controls'),
+      new Request('https://demo.example/api/labs/governance-security-controls'),
       env({ GITHUB_BRANCH: 'moving-branch', DEPLOYED_SHA: undefined }),
     ).json() as { controls: GovernanceControl[] };
     const releaseBoundClaim = canonicalIso27001Claims().find((claim) => {
@@ -143,7 +143,7 @@ describe('governance evidence', () => {
   });
 
   it('executes and audits approved, unknown, and invalid-scope MCP evaluation cases', async () => {
-    const response = await aiEvaluationResponse(new Request('https://demo.example/__api/governance/ai-evaluation', { method: 'POST' }), env());
+    const response = await aiEvaluationResponse(new Request('https://demo.example/api/labs/governance-ai-evaluation', { method: 'POST' }), env());
     const body = await response.json() as { passed: boolean; results: Array<{ actual: string; httpStatus: number; passed: boolean }>; alignment: string };
     expect(response.status).toBe(200);
     expect(body.passed).toBe(true);

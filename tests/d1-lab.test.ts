@@ -108,33 +108,33 @@ describe('D1 visitor laboratory', () => {
   it('seeds, creates, updates, deletes, and resets isolated users', async () => {
     const database = new LabD1();
     const env = environment(database);
-    const initial = await d1LabResponse(new Request('https://demo.example/__api/d1/users'), env, 'users');
+    const initial = await d1LabResponse(new Request('https://demo.example/api/labs/d1-users'), env, 'users');
     expect(initial.status).toBe(200);
     expect(await initial.clone().json()).toMatchObject({ operation: 'd1.users.list', rowCount: 3 });
     const setCookie = initial.headers.get('set-cookie')!;
     const cookie = setCookie.split(';')[0];
 
-    const created = await d1LabResponse(mutation('/__api/d1/users', 'POST', { name: 'Mary Jackson', email: 'mary@example.test', role: 'member' }, cookie), env, 'users');
+    const created = await d1LabResponse(mutation('/api/labs/d1-users', 'POST', { name: 'Mary Jackson', email: 'mary@example.test', role: 'member' }, cookie), env, 'users');
     const createdBody = await created.json() as { result: { user: { id: string } } };
     expect(created.status).toBe(201);
 
     const id = createdBody.result.user.id;
-    const updated = await d1LabResponse(mutation(`/__api/d1/users/${id}`, 'PATCH', { name: 'Mary W. Jackson', email: 'mary@example.test', role: 'admin' }, cookie), env, 'users', id);
+    const updated = await d1LabResponse(mutation(`/api/labs/d1-users/${id}`, 'PATCH', { name: 'Mary W. Jackson', email: 'mary@example.test', role: 'admin' }, cookie), env, 'users', id);
     expect(await updated.json()).toMatchObject({ result: { user: { name: 'Mary W. Jackson', role: 'admin' } } });
 
-    expect((await d1LabResponse(mutation(`/__api/d1/users/${id}`, 'DELETE', undefined, cookie), env, 'users', id)).status).toBe(200);
-    expect((await d1LabResponse(mutation('/__api/d1/reset', 'POST', undefined, cookie), env, 'reset')).status).toBe(200);
+    expect((await d1LabResponse(mutation(`/api/labs/d1-users/${id}`, 'DELETE', undefined, cookie), env, 'users', id)).status).toBe(200);
+    expect((await d1LabResponse(mutation('/api/labs/d1-reset', 'POST', undefined, cookie), env, 'reset')).status).toBe(200);
     expect([...database.users.values()].filter((row) => row.session_id === [...database.sessions.keys()][0])).toHaveLength(3);
   });
 
   it('rejects cross-origin writes and keeps two sessions isolated', async () => {
     const database = new LabD1();
     const env = environment(database);
-    const first = await d1LabResponse(new Request('https://demo.example/__api/d1/users'), env, 'users');
-    const second = await d1LabResponse(new Request('https://demo.example/__api/d1/users'), env, 'users');
+    const first = await d1LabResponse(new Request('https://demo.example/api/labs/d1-users'), env, 'users');
+    const second = await d1LabResponse(new Request('https://demo.example/api/labs/d1-users'), env, 'users');
     expect(first.headers.get('set-cookie')).not.toBe(second.headers.get('set-cookie'));
 
-    const denied = await d1LabResponse(new Request('https://demo.example/__api/d1/users', {
+    const denied = await d1LabResponse(new Request('https://demo.example/api/labs/d1-users', {
       method: 'POST', headers: { origin: 'https://attacker.example', 'content-type': 'application/json' }, body: '{}',
     }), env, 'users');
     expect(denied.status).toBe(403);

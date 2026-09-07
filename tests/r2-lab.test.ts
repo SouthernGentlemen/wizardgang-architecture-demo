@@ -79,29 +79,29 @@ function env(): Env {
 describe('R2 visitor file manager', () => {
   it('uploads real bytes, lists safe metadata, previews, deletes, and resets only the session', async () => {
     const environment = env();
-    const listed = await r2FilesResponse(new Request('https://demo.example/__api/r2/files'), environment);
+    const listed = await r2FilesResponse(new Request('https://demo.example/api/labs/r2-files'), environment);
     const cookie = listed.headers.get('set-cookie')!.split(';')[0];
     expect(await listed.clone().json()).toMatchObject({ operation: 'r2.files.list', objectCount: 2 });
 
     const form = new FormData(); form.append('file', new Blob(['hello r2'], { type: 'text/plain' }), 'hello.txt');
-    const uploaded = await r2FilesResponse(new Request('https://demo.example/__api/r2/files', { method: 'POST', headers: { origin: 'https://demo.example', cookie }, body: form }), environment);
+    const uploaded = await r2FilesResponse(new Request('https://demo.example/api/labs/r2-files', { method: 'POST', headers: { origin: 'https://demo.example', cookie }, body: form }), environment);
     const uploadBody = await uploaded.json() as { result: { file: { id: string; key: string } } };
     expect(uploadBody.result.file.key).toContain('uploads/this-session/');
     expect((environment.DEMO_R2 as MemoryR2).objects.size).toBe(3);
 
     const id = uploadBody.result.file.id;
-    const preview = await r2FilesResponse(new Request(`https://demo.example/__api/r2/files/${id}`, { headers: { cookie } }), environment, id);
+    const preview = await r2FilesResponse(new Request(`https://demo.example/api/labs/r2-files/${id}`, { headers: { cookie } }), environment, id);
     expect(await preview.text()).toBe('hello r2');
     expect(preview.headers.get('content-disposition')).toContain('inline');
 
-    expect((await r2FilesResponse(new Request(`https://demo.example/__api/r2/files/${id}`, { method: 'DELETE', headers: { origin: 'https://demo.example', cookie } }), environment, id)).status).toBe(200);
+    expect((await r2FilesResponse(new Request(`https://demo.example/api/labs/r2-files/${id}`, { method: 'DELETE', headers: { origin: 'https://demo.example', cookie } }), environment, id)).status).toBe(200);
     expect((environment.DEMO_R2 as MemoryR2).objects.size).toBe(2);
-    expect((await r2FilesResetResponse(new Request('https://demo.example/__api/r2/reset', { method: 'POST', headers: { origin: 'https://demo.example', cookie } }), environment)).status).toBe(200);
+    expect((await r2FilesResetResponse(new Request('https://demo.example/api/labs/r2-reset', { method: 'POST', headers: { origin: 'https://demo.example', cookie } }), environment)).status).toBe(200);
   });
 
   it('rejects cross-origin upload before creating a sandbox', async () => {
     const environment = env();
-    const response = await r2FilesResponse(new Request('https://demo.example/__api/r2/files', { method: 'POST', headers: { origin: 'https://attacker.example' } }), environment);
+    const response = await r2FilesResponse(new Request('https://demo.example/api/labs/r2-files', { method: 'POST', headers: { origin: 'https://attacker.example' } }), environment);
     expect(response.status).toBe(403);
     expect((environment.DEMO_DB as R2D1).sessions.size).toBe(0);
   });

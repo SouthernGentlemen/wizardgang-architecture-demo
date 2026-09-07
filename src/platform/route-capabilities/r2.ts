@@ -23,8 +23,10 @@ export const r2LaboratoryCapability = definePlatformLaboratoryCapability({
   routes: [
     {
       id: 'platform.r2.demo-object',
-      pattern: '/__api/r2/demo',
+      labId: 'r2-demo',
+      pattern: '/api/labs/r2-demo',
       methods: ['POST'],
+      requestSchemas: { POST: 'none' },
       kind: 'api',
       handler: (request, env) => r2DemoObjectResponse(request, env),
       authentication: { mode: 'anonymous' },
@@ -35,7 +37,7 @@ export const r2LaboratoryCapability = definePlatformLaboratoryCapability({
       cache: { mode: 'no-store' },
       crawler: { crawling: 'controlled', indexing: 'deny' },
       documentation: {
-        title: 'R2 demonstration object API',
+        title: 'R2 demonstration object laboratory API',
         description: 'Writes the deterministic public demonstration object to R2 with D1 metadata.',
         docs,
       },
@@ -49,8 +51,10 @@ export const r2LaboratoryCapability = definePlatformLaboratoryCapability({
     },
     {
       id: 'platform.r2.object',
-      pattern: '/__api/r2/object',
+      labId: 'r2-objects',
+      pattern: '/api/labs/r2-objects',
       methods: ['GET', 'PUT', 'DELETE'],
+      requestSchemas: { GET: 'r2-object-key-query-v1', PUT: 'r2-object-put-v1', DELETE: 'r2-object-key-query-v1' },
       kind: 'api',
       handler: (request, env) => r2ObjectResponse(request, env),
       authentication: { mode: 'anonymous' },
@@ -61,7 +65,7 @@ export const r2LaboratoryCapability = definePlatformLaboratoryCapability({
       cache: { mode: 'no-store' },
       crawler: { crawling: 'controlled', indexing: 'deny' },
       documentation: {
-        title: 'R2 object API',
+        title: 'R2 object laboratory API',
         description: 'Reads, stores, or deletes object bytes in R2 while D1 retains relational metadata.',
         docs,
       },
@@ -80,8 +84,10 @@ export const r2LaboratoryCapability = definePlatformLaboratoryCapability({
     },
     {
       id: 'platform.r2.files',
-      pattern: '/__api/r2/files',
+      labId: 'r2-files',
+      pattern: '/api/labs/r2-files',
       methods: ['GET', 'POST'],
+      requestSchemas: { GET: 'none', POST: 'r2-file-upload-v1' },
       kind: 'api',
       handler: (request, env) => r2FilesResponse(request, env),
       authentication: { mode: 'anonymous' },
@@ -112,8 +118,10 @@ export const r2LaboratoryCapability = definePlatformLaboratoryCapability({
     },
     {
       id: 'platform.r2.file',
-      pattern: '/__api/r2/files/:id',
+      labId: 'r2-files',
+      pattern: '/api/labs/r2-files/:id',
       methods: ['GET', 'DELETE'],
+      requestSchemas: { GET: 'r2-file-id-v1', DELETE: 'r2-file-id-v1' },
       kind: 'api',
       handler: (request, env, params) => r2FilesResponse(request, env, encodeURIComponent(params.id)),
       authentication: { mode: 'anonymous' },
@@ -138,8 +146,10 @@ export const r2LaboratoryCapability = definePlatformLaboratoryCapability({
     },
     {
       id: 'platform.r2.reset',
-      pattern: '/__api/r2/reset',
+      labId: 'r2-reset',
+      pattern: '/api/labs/r2-reset',
       methods: ['POST'],
+      requestSchemas: { POST: 'none' },
       kind: 'api',
       handler: (request, env) => r2FilesResetResponse(request, env),
       authentication: { mode: 'anonymous' },
@@ -150,7 +160,7 @@ export const r2LaboratoryCapability = definePlatformLaboratoryCapability({
       cache: { mode: 'no-store' },
       crawler: { crawling: 'controlled', indexing: 'deny' },
       documentation: {
-        title: 'R2 files reset API',
+        title: 'R2 files reset laboratory API',
         description: 'Deletes visitor-owned R2 objects and their D1 metadata rows.',
         docs,
       },

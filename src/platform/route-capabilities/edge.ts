@@ -12,8 +12,10 @@ export const edgeLaboratoryCapability = definePlatformLaboratoryCapability({
   routes: [
     {
       id: 'platform.edge.inspect',
-      pattern: '/__api/edge/inspect',
+      labId: 'edge',
+      pattern: '/api/labs/edge',
       methods: ['GET'],
+      requestSchemas: { GET: 'none' },
       kind: 'api',
       handler: (request, env) => edgeInspectionResponse(request, env),
       authentication: { mode: 'anonymous' },
@@ -24,7 +26,7 @@ export const edgeLaboratoryCapability = definePlatformLaboratoryCapability({
       cache: { mode: 'no-store' },
       crawler: { crawling: 'controlled', indexing: 'deny' },
       documentation: {
-        title: 'Edge inspection API',
+        title: 'Edge inspection laboratory API',
         description: 'Returns the allowlisted Cloudflare request context without client identifiers.',
         docs: ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'],
       },

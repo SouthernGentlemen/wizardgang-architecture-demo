@@ -115,14 +115,14 @@ describe('GitHub webhook receiver', () => {
 describe('visitor webhook viewer', () => {
   it('generates, lists, and resets only the signed current-session events', async () => {
     const env = environment();
-    const generated = await webhookDemoResponse(new Request('https://demo.example/__api/webhooks/demo', { method: 'POST', headers: { origin: 'https://demo.example' } }), env);
+    const generated = await webhookDemoResponse(new Request('https://demo.example/api/labs/webhook-demo', { method: 'POST', headers: { origin: 'https://demo.example' } }), env);
     expect(generated.status).toBe(202);
     const cookie = generated.headers.get('set-cookie')?.split(';')[0];
     expect(cookie).toMatch(/^wg_demo_session=/);
-    const listed = await webhookEventsResponse(new Request('https://demo.example/__api/webhooks/events', { headers: { cookie: cookie! } }), env);
+    const listed = await webhookEventsResponse(new Request('https://demo.example/api/labs/webhook-events', { headers: { cookie: cookie! } }), env);
     expect(await listed.json()).toMatchObject({ events: [{ provider: 'demo', eventType: 'push', actor: 'demo-visitor' }], pollingIntervalMs: 2000 });
-    expect((await webhookResetResponse(new Request('https://demo.example/__api/webhooks/reset', { method: 'POST', headers: { cookie: cookie!, origin: 'https://demo.example' } }), env)).status).toBe(200);
-    const afterReset = await webhookEventsResponse(new Request('https://demo.example/__api/webhooks/events', { headers: { cookie: cookie! } }), env);
+    expect((await webhookResetResponse(new Request('https://demo.example/api/labs/webhook-reset', { method: 'POST', headers: { cookie: cookie!, origin: 'https://demo.example' } }), env)).status).toBe(200);
+    const afterReset = await webhookEventsResponse(new Request('https://demo.example/api/labs/webhook-events', { headers: { cookie: cookie! } }), env);
     expect(await afterReset.json()).toMatchObject({ events: [] });
   });
 });
