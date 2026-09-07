@@ -94,7 +94,7 @@ export function renderIndex(env: Env, list: FrontendSurfaceDefinition[]): Respon
   <p class="lede home-lede">${list.length} live surfaces expose the platform, interfaces, assurance, security, and operations behind a production edge system.</p>
 </section>
 <section class="status-strip" aria-label="Live service state">
-  <a href="/version"><span>Version</span><strong>${escapeHtml(env.DEPLOYED_VERSION || 'development')}</strong></a>
+  <a href="/api/operations/version"><span>Version</span><strong>${escapeHtml(env.DEPLOYED_VERSION || 'development')}</strong></a>
   <a href="${escapeHtml(OPERATIONS_ROUTE)}#health"><span>Health</span><strong data-health>Checking…</strong></a>
 </section>
 ${groups.map((group) => {
@@ -113,7 +113,7 @@ ${groups.map((group) => {
 </section>`;
   }).join('')}
 <script>
-fetch('/health').then((r) => r.json()).then((h) => {
+fetch('/api/operations/health').then((r) => r.json()).then((h) => {
   const slot = document.querySelector('[data-health]');
   if (slot) slot.textContent = h.status;
 }).catch(() => {

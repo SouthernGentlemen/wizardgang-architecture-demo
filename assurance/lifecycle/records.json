@@ -52,6 +52,13 @@
       "reviewedAt": "2026-09-07T02:45:00Z",
       "reviewer": "controlled-repository-review",
       "basis": "DEMO-181 review approves superseding the retired public concern route evidence with a new consolidated Assurance concerns-view record, migrating current relationship edges to that evidence identity, and the exact resulting public source revisions; later source revisions require a new disclosure decision."
+    },
+    {
+      "id": "review-demo184-canonical-api-routes",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-07T17:32:39Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-184 review approves superseding the retired health and version route evidence with canonical operations API records, migrating current relationship edges to the replacement identities, and the exact resulting public source revisions; later source revisions require a new disclosure decision."
     }
   ],
   "sourceApprovals": [
@@ -240,9 +247,43 @@
       "resource": "risks",
       "revision": "15c2244c9ca9d73f658cf0513a8c94098dffdc10",
       "reviewRef": "review-demo181-assurance-surface-source"
+    },
+    {
+      "id": "source-claims-c2478497d627",
+      "resource": "claims",
+      "revision": "c2478497d627904226bdf4ed0266485f323e3f03",
+      "reviewRef": "review-demo184-canonical-api-routes"
+    },
+    {
+      "id": "source-evidence-7cc4aab0c58e",
+      "resource": "evidence",
+      "revision": "7cc4aab0c58e65244a61dcef7b54501518110088",
+      "reviewRef": "review-demo184-canonical-api-routes"
+    },
+    {
+      "id": "source-risks-a8b7edc7dd95",
+      "resource": "risks",
+      "revision": "a8b7edc7dd95ffbb651bfdd01b5dde9b05e3a0f7",
+      "reviewRef": "review-demo184-canonical-api-routes"
     }
   ],
   "records": [
+    {
+      "id": "EVD-RUN-009",
+      "lifecycle": "Published",
+      "reviewRef": "review-demo184-canonical-api-routes",
+      "supersedes": [
+        "EVD-RUN-001"
+      ]
+    },
+    {
+      "id": "EVD-RUN-010",
+      "lifecycle": "Published",
+      "reviewRef": "review-demo184-canonical-api-routes",
+      "supersedes": [
+        "EVD-RUN-002"
+      ]
+    },
     {
       "id": "EVD-RUN-008",
       "lifecycle": "Published",
@@ -321,6 +362,22 @@
     }
   ],
   "retiredRecords": [
+    {
+      "id": "EVD-RUN-001",
+      "lifecycle": "Superseded",
+      "reviewRef": "review-demo184-canonical-api-routes",
+      "supersededBy": [
+        "EVD-RUN-009"
+      ]
+    },
+    {
+      "id": "EVD-RUN-002",
+      "lifecycle": "Superseded",
+      "reviewRef": "review-demo184-canonical-api-routes",
+      "supersededBy": [
+        "EVD-RUN-010"
+      ]
+    },
     {
       "id": "EVD-RUN-006",
       "lifecycle": "Superseded",

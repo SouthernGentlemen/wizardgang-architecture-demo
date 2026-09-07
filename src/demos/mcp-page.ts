@@ -245,7 +245,7 @@ export async function renderMcpDemo(request: Request, env: Env): Promise<Respons
   const refreshActivity = async () => {
     if (!activityRoot || document.hidden) return;
     try {
-      const response = await fetch('/__api/operations/logs?source=mcp&limit=1', { headers: { accept: 'application/json' } });
+      const response = await fetch('/api/operations/logs?source=mcp&limit=1', { headers: { accept: 'application/json' } });
       if (!response.ok) return;
       const row = (await response.json()).results?.[0];
       if (!row || String(row.id) === activityRoot.dataset.mcpActivityId || !row.detail_json) return;

@@ -4,7 +4,6 @@ import {
   type AssuranceRegistry,
   type AssuranceRegistryRoutes,
 } from '../assurance/model';
-import { genericAssuranceResponse } from '../api/assurance';
 import { assuranceRouteCapabilities } from '../assurance/route-capabilities';
 import type {
   AssuranceRouteCapability,
@@ -13,7 +12,6 @@ import type {
 import {
   assuranceRouteDeclarations as contractRouteDeclarations,
   validateAssuranceRouteContract as contractValidateRouteContract,
-  validateAssuranceRouteHandlerSupport as contractValidateHandlerSupport,
 } from '../assurance/route-contract.js';
 import { getDemoControl } from '../lib/demo-control';
 import { json } from '../lib/http';
@@ -22,7 +20,6 @@ import {
   defineRouteModule,
   matchRoute,
   type RouteDeclaration,
-  type RouteHandler,
   type RouteRegistry,
   type RouteSourceMetadata,
 } from './registry';
@@ -37,70 +34,45 @@ interface AssuranceContractRouteDeclaration {
   routes: AssuranceRegistryRoutes;
 }
 
-export type GenericAssuranceApiHandler = (
-  request: Request,
-  env: Env,
-  owner: string,
-  rawRecordId?: string,
-) => Response | Promise<Response>;
-
 export interface AssuranceRouteRouter {
   registry: RouteRegistry<AssuranceRouteContext>;
   route(request: Request, env: Env, path: string): Promise<Response | undefined>;
 }
 
 const ROUTE_TEST = 'tests/assurance-declarative-routing.test.ts';
-const API_CACHE_SECONDS = 300;
-const GENERIC_API_SOURCE: RouteSourceMetadata = {
-  module: 'src/api/assurance.ts',
-  exportName: 'genericAssuranceResponse',
-  tests: [ROUTE_TEST, 'tests/assurance-api-contract.test.ts'],
-};
 
 function routeSource(source: AssuranceRouteSourceMetadata | undefined): RouteSourceMetadata {
-  return source ? { ...source } : GENERIC_API_SOURCE;
+  if (!source) throw new Error('Assurance HTML route is missing source metadata.');
+  return { ...source, tests: source.tests ?? [ROUTE_TEST] };
 }
 
-function baseRoute(
+function htmlRoute(
   declaration: AssuranceContractRouteDeclaration,
-  suffix: string,
-  pattern: string,
-  kind: 'page' | 'api',
-  methods: RouteDeclaration<AssuranceRouteContext>['methods'],
-  handler: RouteHandler<AssuranceRouteContext>,
-  source: RouteSourceMetadata,
-  offline: 'available' | 'gated',
-): RouteDeclaration<AssuranceRouteContext> {
+  capability: AssuranceRouteCapability,
+): RouteDeclaration<AssuranceRouteContext> | null {
+  if (!declaration.routes.html) return null;
+  const html = capability.html;
+  if (!html) throw new Error(`${declaration.ownerId} declares routes.html without a specialized HTML handler.`);
   return {
-    id: `assurance.${declaration.ownerId}.${suffix}`,
-    pattern,
-    methods,
-    kind,
-    handler,
+    id: `assurance.${declaration.ownerId}.html`,
+    pattern: declaration.routes.html,
+    methods: ['GET'],
+    kind: 'page',
+    handler: (request, { env }) => html.handler(request, env),
     authentication: { mode: 'anonymous' },
     authorization: { mode: 'none' },
     visibility: 'public',
     sameOrigin: { mode: 'not-required' },
-    offline: { mode: offline },
-    cache: kind === 'api' ? { mode: 'public', maxAgeSeconds: API_CACHE_SECONDS } : { mode: 'no-store' },
-    crawler: { crawling: 'controlled', indexing: kind === 'page' ? 'allow' : 'deny' },
+    offline: { mode: html.offline ?? 'gated' },
+    cache: { mode: 'no-store' },
+    crawler: { crawling: 'controlled', indexing: 'allow' },
     documentation: {
-      title: `Assurance ${declaration.owner} ${suffix}`,
-      description: `Registry-owned ${suffix} route for the ${declaration.owner} assurance surface.`,
-      docs: ['docs/ASSURANCE-REGISTRY.md', 'docs/ASSURANCE-API.md', 'docs/ROUTES.md'],
+      title: `Assurance ${declaration.owner} html`,
+      description: `Registry-owned html route for the ${declaration.owner} assurance surface.`,
+      docs: ['docs/ASSURANCE-REGISTRY.md', 'docs/REPORTING.md', 'docs/ROUTES.md'],
     },
-    source,
+    source: routeSource(html.source),
   };
-}
-
-function detailPattern(pattern: string): string {
-  return pattern.replace('{id}', ':recordId');
-}
-
-function encodedRecordId(params: Readonly<Record<string, string>>): string {
-  const recordId = params.recordId;
-  if (!recordId) throw new Error('Matched assurance detail route without a record ID.');
-  return encodeURIComponent(recordId);
 }
 
 function capabilityByOwner(
@@ -110,9 +82,7 @@ function capabilityByOwner(
   const declaredOwners = new Set(declarations.map((declaration) => declaration.ownerId));
   const result = new Map<string, AssuranceRouteCapability>();
   for (const capability of capabilities) {
-    if (!declaredOwners.has(capability.ownerId)) {
-      throw new Error(`Assurance route capability '${capability.ownerId}' has no registered route owner.`);
-    }
+    if (!declaredOwners.has(capability.ownerId)) continue;
     if (result.has(capability.ownerId)) {
       throw new Error(`Duplicate assurance route capability owner '${capability.ownerId}'.`);
     }
@@ -121,101 +91,21 @@ function capabilityByOwner(
   return result;
 }
 
-function validateCapabilities(
-  registry: AssuranceRegistry,
+function validatePresentationCapabilities(
   declarations: readonly AssuranceContractRouteDeclaration[],
   capabilities: ReadonlyMap<string, AssuranceRouteCapability>,
 ): void {
-  const support: Record<string, { html?: boolean; apiCollection?: boolean; apiRecord?: boolean }> = {};
   const errors: string[] = [];
-
   for (const declaration of declarations) {
     const capability = capabilities.get(declaration.ownerId);
     if ((declaration.routes.aliases ?? []).length > 0) {
-      errors.push(`${declaration.ownerId} declares aliases, which are not supported by the current assurance router`);
+      errors.push(`${declaration.ownerId} declares aliases, which are not supported by the canonical presentation router`);
     }
-    if (capability?.html && !declaration.routes.html) {
-      errors.push(`${declaration.ownerId} registers an HTML handler without routes.html`);
+    if (declaration.routes.html && !capability?.html) {
+      errors.push(`${declaration.ownerId} declares routes.html without a specialized HTML handler`);
     }
-    if (capability?.apiCollection && !declaration.routes.api) {
-      errors.push(`${declaration.ownerId} registers a collection handler without routes.api`);
-    }
-    if (capability?.apiRecord && !declaration.routes.apiRecord) {
-      errors.push(`${declaration.ownerId} registers an exact-record handler without routes.apiRecord`);
-    }
-
-    const genericDatasetApi = declaration.owner !== 'registry';
-    support[declaration.owner] = {
-      html: Boolean(capability?.html),
-      apiCollection: Boolean(declaration.routes.api && (capability?.apiCollection || genericDatasetApi)),
-      apiRecord: Boolean(declaration.routes.apiRecord && (capability?.apiRecord || genericDatasetApi)),
-    };
   }
-
-  errors.push(...contractValidateHandlerSupport(registry, support));
-  if (errors.length > 0) {
-    throw new Error(`Invalid assurance declarative route capabilities:\n${errors.join('\n')}`);
-  }
-}
-
-function routeDeclarations(
-  declaration: AssuranceContractRouteDeclaration,
-  capability: AssuranceRouteCapability | undefined,
-  genericApiHandler: GenericAssuranceApiHandler,
-): RouteDeclaration<AssuranceRouteContext>[] {
-  const routes: RouteDeclaration<AssuranceRouteContext>[] = [];
-
-  if (declaration.routes.html) {
-    const html = capability?.html;
-    if (!html) throw new Error(`${declaration.ownerId} declares routes.html without a specialized HTML handler.`);
-    routes.push(baseRoute(
-      declaration,
-      'html',
-      declaration.routes.html,
-      'page',
-      ['GET'],
-      (request, { env }) => html.handler(request, env),
-      routeSource(html.source),
-      html.offline ?? 'gated',
-    ));
-  }
-
-  if (declaration.routes.api) {
-    const collection = capability?.apiCollection;
-    if (declaration.owner === 'registry' && !collection) {
-      throw new Error(`${declaration.ownerId} registry API requires a specialized collection handler.`);
-    }
-    routes.push(baseRoute(
-      declaration,
-      'collection',
-      declaration.routes.api,
-      'api',
-      ['GET', 'OPTIONS'],
-      collection
-        ? (request, { env }) => collection.handler(request, env)
-        : (request, { env }) => genericApiHandler(request, env, declaration.owner),
-      routeSource(collection?.source),
-      'gated',
-    ));
-  }
-
-  if (declaration.routes.apiRecord) {
-    const detail = capability?.apiRecord;
-    routes.push(baseRoute(
-      declaration,
-      'detail',
-      detailPattern(declaration.routes.apiRecord),
-      'api',
-      ['GET', 'OPTIONS'],
-      detail
-        ? (request, { env }, params) => detail.handler(request, env, encodedRecordId(params))
-        : (request, { env }, params) => genericApiHandler(request, env, declaration.owner, encodedRecordId(params)),
-      routeSource(detail?.source),
-      'gated',
-    ));
-  }
-
-  return routes;
+  if (errors.length > 0) throw new Error(`Invalid assurance presentation route capabilities:\n${errors.join('\n')}`);
 }
 
 function offlineResponse(
@@ -242,8 +132,6 @@ function offlineResponse(
 export function createAssuranceRouteRouter(
   registry: AssuranceRegistry,
   capabilities: readonly AssuranceRouteCapability[],
-  genericApiHandler: GenericAssuranceApiHandler = (request, env, owner, rawRecordId) =>
-    genericAssuranceResponse(request, owner, rawRecordId, env),
 ): AssuranceRouteRouter {
   const contractErrors = contractValidateRouteContract(registry) as string[];
   if (contractErrors.length > 0) {
@@ -252,12 +140,13 @@ export function createAssuranceRouteRouter(
 
   const declarations = contractRouteDeclarations(registry) as AssuranceContractRouteDeclaration[];
   const capabilityMap = capabilityByOwner(declarations, capabilities);
-  validateCapabilities(registry, declarations, capabilityMap);
+  validatePresentationCapabilities(declarations, capabilityMap);
 
-  const modules = declarations.map((declaration) => defineRouteModule(
-    `assurance.${declaration.ownerId}`,
-    routeDeclarations(declaration, capabilityMap.get(declaration.ownerId), genericApiHandler),
-  ));
+  const modules = declarations.map((declaration) => {
+    const capability = capabilityMap.get(declaration.ownerId);
+    const route = capability ? htmlRoute(declaration, capability) : null;
+    return defineRouteModule(`assurance.${declaration.ownerId}`, route ? [route] : []);
+  });
   const declarativeRegistry = createRouteRegistry(modules);
 
   return {
@@ -265,7 +154,7 @@ export function createAssuranceRouteRouter(
     async route(request: Request, env: Env, path: string): Promise<Response | undefined> {
       const match = matchRoute(declarativeRegistry, request.method, path);
       if (match.status === 'not-found') return undefined;
-      if (match.status === 'method-not-allowed' && match.route.kind === 'page') return undefined;
+      if (match.status === 'method-not-allowed') return undefined;
 
       const route = match.route;
       if (route.offline.mode === 'gated') {

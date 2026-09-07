@@ -129,7 +129,7 @@ describe('operations proof surface', () => {
 
   it('moves controlled usage through degraded state and pauses only optional compute', async () => {
     const environment = env();
-    const changed = await billingScenarioResponse(new Request('https://demo.example/__api/operations/billing', {
+    const changed = await billingScenarioResponse(new Request('https://demo.example/api/operations/billing', {
       method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ scenario: 'degraded' }),
     }), environment);
     expect(await changed.json()).toMatchObject({ synthetic: true, state: 'degraded', optionalWorkerCompute: 'paused' });
@@ -146,7 +146,7 @@ describe('operations proof surface', () => {
     await runScheduledOperations(environment, Date.parse('2026-09-02T12:05:00.000Z'));
     expect((environment.DEMO_DB as OperationsD1).persistedHealth).toBe(1);
 
-    const response = await cloudflareUsageResponse(new Request('https://demo.example/__api/operations/cloudflare-usage'), environment);
+    const response = await cloudflareUsageResponse(new Request('https://demo.example/api/operations/cloudflare-usage'), environment);
     expect(response.status).toBe(200);
     expect(response.headers.get('cache-control')).toBe('no-store');
     expect(await response.json()).toMatchObject({
@@ -223,7 +223,7 @@ describe('operations proof surface', () => {
       expect(cached.capturedAt).toBe(observedAt);
       expect(cached.products.workers).toMatchObject({ availability: 'stale', qualification: 'observation-stale' });
 
-      const response = await cloudflareUsageResponse(new Request('https://demo.example/__api/operations/cloudflare-usage'), environment);
+      const response = await cloudflareUsageResponse(new Request('https://demo.example/api/operations/cloudflare-usage'), environment);
       const body = await response.json() as { availability: Record<string, string>; records: Array<{ availability: string }> };
       expect(body.availability['cloudflare.operations']).toBe('stale');
       expect(body.records.length).toBeGreaterThan(0);
@@ -294,7 +294,7 @@ describe('operations proof surface', () => {
     environment.CLOUDFLARE_DO_NAMESPACE = 'private-do-id';
     vi.stubGlobal('fetch', analyticsFetch({ billing: 'available' }));
     try {
-      const response = await cloudflareUsageResponse(new Request('https://demo.example/__api/operations/cloudflare-usage'), environment);
+      const response = await cloudflareUsageResponse(new Request('https://demo.example/api/operations/cloudflare-usage'), environment);
       const body = JSON.stringify(await response.json());
       expect(body).not.toContain('private-account-id');
       expect(body).not.toContain('private-worker-name');

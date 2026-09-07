@@ -80,8 +80,8 @@ describe('intentional offline route policies', () => {
   it('keeps registered operational recovery surfaces reachable', () => {
     for (const route of [
       '/operations',
-      '/health', '/version', '/__api/operations/logs', '/__api/operations/cloudflare-usage',
-      '/__api/operations/billing', '/offline', '/admin', '/robots.txt', '/.well-known/security.txt', '/og.png',
+      '/api/operations/health', '/api/operations/version', '/api/operations/logs', '/api/operations/usage',
+      '/api/operations/budget', '/offline', '/admin', '/robots.txt', '/.well-known/security.txt', '/og.png',
     ]) {
       const declaration = operationalRouteRegistry.declarations.find((candidate) => candidate.pattern === route);
       expect(declaration, route).toBeDefined();
@@ -102,11 +102,10 @@ describe('intentional offline route policies', () => {
     const browserPolicy = (pattern: string) => applicationRoutes.find((route) => route.pattern === pattern)?.browserHtml;
     for (const pattern of [
       '/__api/edge/inspect',
-      '/v1/assurance',
-      '/v1/assurance/evidence',
-      '/v1/assurance/risks',
-      '/v1/assurance/incidents',
-      '/__api/operations/logs',
+      '/api/reporting',
+      '/api/reporting/:collection',
+      '/api/reporting/:collection/:recordId',
+      '/api/operations/logs',
       '/mcp/server',
       '/graphql/schema',
     ]) expect(browserPolicy(pattern), pattern).toBe('never');

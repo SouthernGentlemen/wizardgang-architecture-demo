@@ -1,12 +1,11 @@
 import {
   assuranceRegistry,
+  assuranceRegistryResources,
   type AssuranceRegistryResource,
   type AssuranceRegistryRoutes,
 } from './model';
 import {
   assuranceAnchor as contractAnchor,
-  assuranceRecordUrls as contractRecordUrls,
-  assuranceRegistryApiRoute as contractRegistryApiRoute,
   assuranceRouteAliases as contractRouteAliases,
   assuranceRouteDeclarations as contractRouteDeclarations,
   assuranceRouteOwnerResource as contractRouteOwnerResource,
@@ -15,6 +14,7 @@ import {
   validateAssuranceRouteContract as contractValidateRouteContract,
   validateAssuranceRouteHandlerSupport as contractValidateRouteHandlerSupport,
 } from './route-contract.js';
+import { reportingOwnership } from '../reporting/registry';
 
 export interface AssuranceRouteDeclaration {
   owner: string;
@@ -67,26 +67,34 @@ export function assuranceHtmlRoute(dataset: string): string {
   return `${assuranceRegistryHtmlRoute()}?view=${encodeURIComponent(owner.kind)}`;
 }
 
+function reportingCollectionId(dataset: string): string {
+  const resource = assuranceRegistryResources.find((candidate) => candidate.kind === dataset);
+  if (!resource) return dataset;
+  const owned = reportingOwnership.find((candidate) => (
+    candidate.source === 'github.structured-records'
+    && candidate.resource
+    && (resource.id === candidate.resource || resource.id.startsWith(`${candidate.resource}.`))
+  ));
+  return owned?.domain ?? dataset;
+}
+
 export function assuranceCollectionApiRoute(dataset: string): string {
-  const route = requireAssuranceRoutesForDataset(dataset).api;
-  if (!route) throw new Error(`${dataset} has no canonical assurance collection API route.`);
-  return route;
+  return `/api/reporting/${encodeURIComponent(reportingCollectionId(dataset))}`;
 }
 
 export function assuranceRegistryApiRoute(): string {
-  return contractRegistryApiRoute(assuranceRegistry) as string;
+  return '/api/reporting';
 }
 
 export function assuranceRecordUrls(
   dataset: string,
   recordId?: string,
 ): { html?: string; api?: string } {
-  const urls = contractRecordUrls(assuranceRegistry, dataset, recordId) as { html?: string; api?: string };
-  if (urls.html) return urls;
-  const route = assuranceHtmlRoute(dataset);
+  const html = assuranceHtmlRoute(dataset);
+  const api = assuranceCollectionApiRoute(dataset);
   return {
-    ...urls,
-    html: recordId === undefined ? route : `${route}#${contractAnchor(recordId)}`,
+    html: recordId === undefined ? html : `${html}#${contractAnchor(recordId)}`,
+    api: recordId === undefined ? api : `${api}/${encodeURIComponent(recordId.normalize('NFC'))}`,
   };
 }
 

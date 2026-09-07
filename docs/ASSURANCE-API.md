@@ -1,121 +1,107 @@
-# Public assurance API contract
+# Assurance reporting API
 
-The `/v1/assurance` routes expose the current disclosure-safe assurance query contract. The route prefix remains stable, but DEMO-157 is an intentional representation cutover: the former family-specific envelopes, flattened relationship aliases, and schema-version negotiation are no longer supported.
+The public assurance experience is rendered at `/assurance`. Machine-readable assurance and reporting data is exposed only through the canonical reporting API.
 
-Canonical records remain authoritative. HTTP responses are projections selected through the shared registry/service layer and keep canonical `relationships` intact. Derived values such as risk ratings, counts, facets, publication metadata, and evidence presentation may appear in runtime records or response metadata, but they are not independent source fields.
+## Canonical routes
 
-## Routes
+| Route | Methods | Purpose |
+|---|---|---|
+| `/api/reporting` | `GET`, `OPTIONS` | Discover reporting collections visible to the current principal. |
+| `/api/reporting/{collection}` | `GET`, `OPTIONS` | Query one structured or provider-backed reporting collection. |
+| `/api/reporting/{collection}/{id}` | `GET`, `PATCH`, `OPTIONS` | Read one reporting record, or update it when that source supports authorized mutation. |
 
-| Route | Purpose |
-|---|---|
-| `GET /v1/assurance` | Discover the current assurance registry and API collections. |
-| `GET /v1/assurance/evidence` | Query published evidence records. |
-| `GET /v1/assurance/compliance` | Query published ISO/IEC 27001, ISO/IEC 42001, and WCAG 2.2 records. |
-| `GET /v1/assurance/compliance/{recordId}` | Exact compliance-record lookup using the same record envelope. |
-| `GET /v1/assurance/risks` | Query published security and AI risk records. |
-| `GET /v1/assurance/incidents` | Query published incident and exercise records. |
-| `GET /v1/assurance/advisories` | Query published security advisory records. |
+The route registry is authoritative for method, offline, cache, disclosure, and crawler policy. Unknown collections, unknown records, and retired paths use the normal not-found behavior; there are no compatibility redirects or aliases.
 
-The routes are public and read-only. `OPTIONS` is supported for CORS preflight. Other methods return `405` with `Allow: GET`.
+## Collection discovery
 
-## Current collection/detail shape
+`GET /api/reporting` returns the disclosure-safe collection inventory available to the caller. The inventory is derived from the reporting registry rather than a hardcoded HTTP path list.
 
-Focused collection routes return one common structure:
+Structured assurance collections include the current public domains such as claims, evidence, compliance, risks, incidents, advisories, objectives, governance records, and other registry-backed data that is eligible for reporting. Provider-backed collections are included only when the caller is allowed to discover them.
 
-```json
-{
-  "schemaVersion": 1,
-  "contract": "contracts/assurance/reporting.schema.json",
-  "dataset": "risks",
-  "datasets": ["risks"],
-  "availability": { "risks": "available" },
-  "sources": [],
-  "qualifications": { "risks": null },
-  "query": {
-    "filters": {},
-    "pagination": {
-      "limit": 50,
-      "returned": 50,
-      "total": 80,
-      "nextCursor": "SEC-RISK-050"
-    }
-  },
-  "records": [],
-  "derived": {
-    "count": 80,
-    "totalAvailable": 80,
-    "facets": {}
-  }
-}
+Each collection description identifies its source kind, visibility, supported filters, pagination capability, and export support.
+
+## Querying a collection
+
+`GET /api/reporting/{collection}` uses the shared reporting service for filtering, pagination, disclosure, schema validation, and export behavior.
+
+Common query parameters are:
+
+- `limit`: bounded page size.
+- `cursor`: signed cursor returned by the previous page.
+- `export=1`: request the collection's supported export representation.
+
+Collection-specific filter parameters are declared by the reporting registry. Unknown or unsupported filters are rejected rather than silently ignored. Canonical filter names are used consistently by HTML and API consumers.
+
+Provider-backed collections may require source selectors such as `repository`. The reporting service owns provider query normalization so pages and APIs do not implement separate pagination or filtering contracts.
+
+## Reading one record
+
+`GET /api/reporting/{collection}/{id}` returns one disclosure-safe canonical record when it exists and is visible to the caller. Record identity follows the source contract; structured assurance records use their canonical IDs and provider records use the reporting provider's stable identity.
+
+A record that exists but is not disclosable is not exposed through a public response. The API does not leak private collection membership, private fields, draft provider data, credentials, or internal-only metadata.
+
+## Authorized updates
+
+Writable reporting sources use the appropriate method on the canonical record URL instead of a separate import endpoint.
+
+The current provider-backed update contract uses:
+
+```text
+PATCH /api/reporting/{collection}/{id}
 ```
 
-`query.pagination` is omitted when pagination was not requested. Exact-record routes use the same envelope with one member in `records`, no family-specific detail body, and no flattened relationship fields.
+Updates require `reporting:write` authorization and the source must explicitly support mutation. Revision checks are required where the provider exposes a revision so stale writes cannot silently overwrite a newer record. The request body is runtime-validated before any provider mutation occurs.
 
-`GET /v1/assurance` is discovery rather than an aggregate duplicate of every dataset. It returns the registry plus the current registered API collection routes.
+Structured assurance data checked into the repository remains governed by its canonical source and lifecycle process; exposing a structured collection through the reporting API does not make that collection remotely writable.
 
-## Relationships and derived fields
+## Authorization and disclosure
 
-Records expose the normalized canonical `relationships` object. The following former HTTP-only aliases are not part of the current contract and are not emitted: `frameworkReferences`, flattened `evidence`, `controls`, `riskLinks`, `controlLinks`, `objectiveLinks`, and `incidentLinks`.
+The reporting routes are public entry points with policy-based authorization:
 
-Risk records retain numeric canonical scores. Runtime risk ratings are derived from the controlled risk method and appear in the runtime record under `inherent.rating` and `residual.rating`. The old flattened `residualRating` response field and query parameter are rejected.
+- ordinary public reads require the normal readable reporting principal;
+- private reporting disclosure requires `reporting:private`;
+- record mutation requires `reporting:write`;
+- source-specific permissions still apply after the shared reporting authorization decision.
 
-Counts and facets are response derivations. They are not accepted by the repository interchange importer as authoritative edits.
+The reporting service applies disclosure policy before serialization. HTML pages such as `/assurance` and `/security` consume the same reporting/publication contracts and do not bypass these rules.
 
-## Filters
+## Caching, ETags, and CORS
 
-Filter declarations come from `assurance/registry.json` and their value vocabularies come from registered schemas or shared derivations. Filters are exact and case-sensitive. Multiple supported filters combine with logical AND.
+Response policy is owned by the reporting response because disclosure differs by collection and principal.
 
-Current risk filters are `framework`, `status`, and `residual`. Current compliance filters are `framework`, `status`, and `level`. Other focused routes accept only filters declared for their route owner.
+- public structured reporting responses may use public caching and ETags;
+- public provider-backed responses use the provider reporting cache policy;
+- authenticated or private responses are private and `no-store`;
+- conditional requests retain the existing ETag behavior;
+- CORS and preflight handling are preserved for supported reporting methods.
 
-Unknown query parameters are rejected with `400` and `error: "unsupported_query_parameter"`. This prevents obsolete aliases or accidental parameters from silently changing or appearing to change the current contract.
+The application router must not replace these response-owned headers with a generic route cache policy.
 
-## Pagination
+## Runtime schema validation
 
-Pagination is optional and uses `limit` and `cursor`:
+Structured reporting records are serialized through the canonical assurance/reporting contract and runtime schema validation. Provider-backed payloads are normalized and boundary-validated by the reporting service before they cross the HTTP boundary.
 
-- `limit` is an integer from `1` through `100`.
-- A cursor without a limit uses the default page size of `50`.
-- `cursor` is a stable record ID returned as the previous page's `nextCursor`.
-- Duplicate pagination parameters, invalid limits, and unknown cursors return `400`.
+Contract sources include:
 
-`derived.count` describes the complete filtered selection. `query.pagination.returned` describes the current page. `derived.totalAvailable` describes the unfiltered current route population.
+- `contracts/assurance/reporting.schema.json`
+- `contracts/assurance/registry.schema.json`
+- `src/reporting/service.ts`
+- `src/reporting/disclosure.ts`
+- `src/reporting/pagination.ts`
+- `src/api/reporting.ts`
 
-## Representation negotiation cutover
+## Pagination and cursors
 
-There is one current JSON representation. Clients should use ordinary `Accept: application/json` or omit `Accept`.
+All paginated reporting surfaces use the common signed cursor contract. A cursor is bound to the collection and normalized query state; it cannot be replayed against a different collection or changed filter set.
 
-The former `schemaVersion` query parameter is rejected with `400` and `error: "legacy_schema_version_parameter_unsupported"`. The former `application/vnd.wizardgang.assurance+json` media type is rejected with `406` and `error: "legacy_assurance_media_type_unsupported"`.
+Cursor behavior is documented in `docs/REPORTING-CURSORS.md` and implemented by `src/reporting/pagination.ts`.
 
-`X-Assurance-Schema-Version: 1` remains response metadata identifying the current schema generation; it is not a negotiation mechanism.
+## Exports
 
-## Errors
+Export requests use the same canonical query and disclosure path as normal reads. An export must not broaden access, bypass filters, or reveal fields that would be hidden from the equivalent JSON response.
 
-Assurance API errors use a top-level `error` string. Important current errors include:
+## OpenAPI
 
-| Status | Error | Meaning |
-|---|---|---|
-| `400` | `invalid_filter` | A declared filter is invalid. |
-| `400` | `unsupported_query_parameter` | The query uses a parameter outside the current contract. |
-| `400` | `duplicate_query_parameter` | A single-valued pagination parameter is repeated. |
-| `400` | `invalid_pagination` | Pagination syntax or range is invalid. |
-| `400` | `invalid_cursor` | The cursor does not resolve in the filtered sequence. |
-| `400` | `legacy_schema_version_parameter_unsupported` | Obsolete version negotiation was attempted. |
-| `404` | `assurance_record_not_found` | Exact lookup did not resolve in the route's datasets. |
-| `405` | `method_not_allowed` | An unsupported HTTP method was attempted. |
-| `406` | `legacy_assurance_media_type_unsupported` | Obsolete vendor-media negotiation was attempted. |
+The current OpenAPI 3.1 document is served from `/api/openapi.json`. It documents the active reporting operations and maps each operation to an application route ID.
 
-Errors are non-cacheable.
-
-## Caching and CORS
-
-Successful GET responses use `Cache-Control: public, max-age=300` and a deterministic weak `ETag` based on the exact response body. Matching `If-None-Match` returns `304`.
-
-Public assurance responses use `Access-Control-Allow-Origin: *`, expose `ETag`, `Cache-Control`, and `X-Assurance-Schema-Version`, and use `Cross-Origin-Resource-Policy: cross-origin`. Credentials are not enabled.
-
-## Breaking behavior and rollback
-
-DEMO-157 intentionally removes the old v1 body compatibility contract while keeping useful `/v1/assurance/...` routes. Consumers must migrate to `records`, canonical `relationships`, `query`, and `derived` in the common envelope.
-
-Rollback is repository-level: revert the DEMO-157 merge commit to restore the prior representation as a whole. Do not add a parallel serializer, Accept-based fallback, old query alias, or old/new dual support path.
-
-Repository import/export behavior is defined in [REPORTING.md](./REPORTING.md) and by `contracts/assurance/reporting.schema.json`.
+`contracts/openapi/openapi.json` is the checked-in contract. `npm run validate:contracts` verifies that its embedded assurance/reporting schemas remain synchronized with the canonical JSON Schemas.

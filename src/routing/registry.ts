@@ -23,7 +23,8 @@ export type SameOriginPolicy =
 export type CachePolicy =
   | { mode: 'no-store' }
   | { mode: 'private'; maxAgeSeconds?: number }
-  | { mode: 'public'; maxAgeSeconds: number; staleWhileRevalidateSeconds?: number; immutable?: boolean };
+  | { mode: 'public'; maxAgeSeconds: number; staleWhileRevalidateSeconds?: number; immutable?: boolean }
+  | { mode: 'response' };
 
 export interface CrawlerPolicy {
   crawling: 'allow' | 'deny' | 'controlled';
@@ -344,13 +345,13 @@ export class RouteRegistry<TContext = unknown> {
   }
 }
 
-export function createRouteRegistry<TContext>(
+export function createRouteRegistry<TContext = unknown>(
   modules: readonly RouteModule<TContext>[],
 ): RouteRegistry<TContext> {
   return new RouteRegistry(modules);
 }
 
-export function matchRoute<TContext>(
+export function matchRoute<TContext = unknown>(
   registry: RouteRegistry<TContext>,
   method: string,
   path: string,

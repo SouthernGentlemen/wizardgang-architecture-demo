@@ -29,7 +29,6 @@ This file is generated from the active declarative application registry. Route I
 | `interfaces.governance.traceability` | `/__api/evidence/traceability` | `GET` | api | public | gated | deny | Governance traceability evidence | `src/api/governance.ts` |
 | `interfaces.git.demo` | `/__api/git/demo` | `GET`, `POST` | api | public | gated | deny | Git delivery demonstration | `src/api/git-demo.ts` |
 | `interfaces.git.demo-release` | `/__api/git/demo/release` | `POST` | api | private | gated | deny | Git demo release action | `src/api/git-demo.ts` |
-| `interfaces.git.reporting` | `/__api/git/evidence` | `GET`, `POST` | api | public | gated | deny | GitHub assurance reporting | `src/api/git-evidence.ts` |
 | `interfaces.governance.ai-evaluation` | `/__api/governance/ai-evaluation` | `POST` | api | public | gated | deny | Governance AI boundary evaluation | `src/api/governance.ts` |
 | `interfaces.governance.security-controls` | `/__api/governance/security-controls` | `GET` | api | public | gated | deny | Governance security controls | `src/api/governance.ts` |
 | `interfaces.identity.authorize` | `/__api/identity/authorize` | `POST` | api | private | gated | deny | Identity authorization decision | `src/api/identity.ts` |
@@ -37,9 +36,6 @@ This file is generated from the active declarative application registry. Route I
 | `interfaces.identity.saml.inspect` | `/__api/identity/saml/inspect` | `GET` | api | public | gated | deny | SAML boundary inspection | `src/api/identity.ts` |
 | `interfaces.identity.sso-boundary` | `/__api/identity/sso` | `GET` | api | public | gated | deny | SSO boundary status | `src/api/identity.ts` |
 | `interfaces.identity.token` | `/__api/identity/token` | `POST` | api | private | gated | deny | Identity demo access token | `src/api/identity.ts` |
-| `operations.api-billing` | `/__api/operations/billing` | `POST` | api | public | available | deny | Billing scenario API | `src/api/billing.ts` |
-| `operations.api-cloudflare-usage` | `/__api/operations/cloudflare-usage` | `GET` | api | public | available | deny | Cloudflare usage API | `src/api/operations.ts` |
-| `operations.api-logs` | `/__api/operations/logs` | `GET` | api | public | available | deny | Operations logs API | `src/api/operations.ts` |
 | `platform.r2.demo-object` | `/__api/r2/demo` | `POST` | api | public | gated | deny | R2 demonstration object API | `src/platform/route-capabilities/r2.ts` |
 | `platform.r2.files` | `/__api/r2/files` | `GET`, `POST` | api | public | gated | deny | R2 files laboratory API | `src/platform/route-capabilities/r2.ts` |
 | `platform.r2.file` | `/__api/r2/files/{id}` | `GET`, `DELETE` | api | public | gated | deny | R2 file item laboratory API | `src/platform/route-capabilities/r2.ts` |
@@ -52,9 +48,17 @@ This file is generated from the active declarative application registry. Route I
 | `interfaces.graphql.asset` | `/__assets/graphiql/{asset}` | `GET` | asset | public | gated | deny | GraphiQL local asset | `src/ui/graphiql-assets.ts` |
 | `operations.security-txt` | `/.well-known/security.txt` | `GET`, `HEAD` | protocol | public | available | deny | Security contact | `src/api/security-policy.ts` |
 | `operations.admin` | `/admin` | `GET`, `POST` | page | private | available | deny | Demo administration | `src/ui/admin.ts` |
+| `interfaces.openapi.json` | `/api/openapi.json` | `GET` | api | public | gated | deny | OpenAPI JSON contract | `src/api/openapi.ts` |
+| `operations.api-budget` | `/api/operations/budget` | `POST` | api | public | available | deny | Operations budget API | `src/api/billing.ts` |
+| `operations.health` | `/api/operations/health` | `GET` | api | public | available | deny | Operations health | `src/api/operations.ts` |
+| `operations.api-logs` | `/api/operations/logs` | `GET` | api | public | available | deny | Operations logs API | `src/api/operations.ts` |
+| `operations.api-usage` | `/api/operations/usage` | `GET` | api | public | available | deny | Operations usage API | `src/api/operations.ts` |
+| `operations.version` | `/api/operations/version` | `GET` | api | public | available | deny | Operations version | `src/api/operations.ts` |
+| `reporting.index` | `/api/reporting` | `GET`, `OPTIONS` | api | public | gated | deny | Reporting collection index | `src/api/reporting.ts` |
+| `reporting.collection` | `/api/reporting/{collection}` | `GET`, `OPTIONS` | api | public | gated | deny | Reporting collection API | `src/api/reporting.ts` |
+| `reporting.record` | `/api/reporting/{collection}/{recordId}` | `GET`, `PATCH`, `OPTIONS` | api | public | gated | deny | Reporting record API | `src/api/reporting.ts` |
 | `interfaces.graphql.endpoint` | `/graphql` | `GET`, `POST` | protocol | public | gated | deny | GraphQL API | `src/api/graphql.ts` |
 | `interfaces.graphql.schema` | `/graphql/schema` | `GET` | protocol | public | gated | deny | GraphQL schema | `src/api/graphql.ts` |
-| `operations.health` | `/health` | `GET` | api | public | available | deny | Health | `src/api/operations.ts` |
 | `interfaces.identity.github.start` | `/identity/github` | `GET` | protocol | public | gated | deny | github authorization start | `src/api/identity.ts` |
 | `interfaces.identity.github.callback` | `/identity/github/callback` | `GET` | protocol | public | gated | deny | github authorization callback | `src/api/identity.ts` |
 | `interfaces.identity.google.start` | `/identity/google` | `GET` | protocol | public | gated | deny | google authorization start | `src/api/identity.ts` |
@@ -71,19 +75,10 @@ This file is generated from the active declarative application registry. Route I
 | `operations.social-card` | `/og.png` | `GET`, `HEAD` | asset | public | available | deny | Social preview image | `src/ui/brand-assets.ts` |
 | `operations.robots` | `/robots.txt` | `GET`, `HEAD` | protocol | public | available | deny | Robots policy | `src/lib/crawler-control.ts` |
 | `operations.sitemap` | `/sitemap.xml` | `GET` | protocol | public | gated | deny | Sitemap | `src/api/sitemap.ts` |
-| `assurance.wizardgang-public-assurance.collection` | `/v1/assurance` | `GET`, `OPTIONS` | api | public | gated | deny | Assurance registry collection | `src/api/assurance-registry.ts` |
-| `assurance.advisories.collection` | `/v1/assurance/advisories` | `GET`, `OPTIONS` | api | public | gated | deny | Assurance advisories collection | `src/api/advisories.ts` |
-| `assurance.compliance.iso-27001.collection` | `/v1/assurance/compliance` | `GET`, `OPTIONS` | api | public | gated | deny | Assurance compliance collection | `src/api/assurance.ts` |
-| `assurance.compliance.iso-27001.detail` | `/v1/assurance/compliance/{recordId}` | `GET`, `OPTIONS` | api | public | gated | deny | Assurance compliance detail | `src/api/assurance.ts` |
-| `assurance.evidence.collection` | `/v1/assurance/evidence` | `GET`, `OPTIONS` | api | public | gated | deny | Assurance evidence collection | `src/api/assurance-registry.ts` |
-| `assurance.incidents.collection` | `/v1/assurance/incidents` | `GET`, `OPTIONS` | api | public | gated | deny | Assurance incidents collection | `src/api/assurance.ts` |
-| `assurance.risks.collection` | `/v1/assurance/risks` | `GET`, `OPTIONS` | api | public | gated | deny | Assurance risks collection | `src/api/assurance.ts` |
 | `platform.d1.records` | `/v1/demo-records` | `GET`, `POST` | api | public | gated | deny | D1 records collection API | `src/platform/route-capabilities/d1.ts` |
 | `platform.d1.record` | `/v1/demo-records/{key}` | `GET`, `PUT`, `DELETE` | api | public | gated | deny | D1 record item API | `src/platform/route-capabilities/d1.ts` |
-| `interfaces.openapi.json` | `/v1/openapi.json` | `GET` | api | public | gated | deny | OpenAPI JSON contract | `src/api/openapi.ts` |
 | `interfaces.webhooks.demo-receipt` | `/v1/webhooks/demo` | `POST` | protocol | public | gated | deny | Signed demo webhook receiver | `src/api/webhooks.ts` |
 | `interfaces.webhooks.github` | `/v1/webhooks/github` | `POST` | protocol | public | gated | deny | GitHub webhook receiver | `src/api/webhooks.ts` |
-| `operations.version` | `/version` | `GET` | api | public | available | deny | Version | `src/api/operations.ts` |
 
 ## Generation
 

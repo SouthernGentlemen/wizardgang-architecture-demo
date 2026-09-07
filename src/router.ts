@@ -17,7 +17,7 @@ import {
 } from './routing/application-routes';
 import { matchRoute, normalizeRoutePath, type CachePolicy, type RouteMethod } from './routing/registry';
 
-function cacheControl(policy: CachePolicy): string {
+function cacheControl(policy: Exclude<CachePolicy, { mode: 'response' }>): string {
   if (policy.mode === 'no-store') return 'no-store';
   if (policy.mode === 'private') {
     return policy.maxAgeSeconds === undefined ? 'private' : `private, max-age=${policy.maxAgeSeconds}`;
@@ -34,7 +34,11 @@ function cacheControl(policy: CachePolicy): string {
 
 function applyResponsePolicy(response: Response, route: ApplicationRouteDeclaration): Response {
   const headers = new Headers(response.headers);
-  headers.set('cache-control', cacheControl(route.cache));
+  if (route.cache.mode === 'response') {
+    if (!headers.has('cache-control')) headers.set('cache-control', 'no-store');
+  } else {
+    headers.set('cache-control', cacheControl(route.cache));
+  }
   if (route.crawler.indexing === 'deny') headers.set('x-robots-tag', 'noindex, nofollow');
   return new Response(response.body, {
     status: response.status,

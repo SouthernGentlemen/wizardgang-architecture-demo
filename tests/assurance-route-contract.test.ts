@@ -7,42 +7,50 @@ import {
   assuranceRouteDeclarations,
 } from '../src/assurance/routes';
 import { assuranceDeclarativeRouteRegistry } from '../src/routing/assurance-routes';
+import { reportingRouteRegistry } from '../src/routing/reporting-routes';
 import { matchRoute } from '../src/routing/registry';
 
 describe('assurance route contract', () => {
-  it('derives stable public routes and route ownership from the assurance registry', () => {
+  it('keeps assurance route ownership presentation-only while deriving canonical reporting URLs', () => {
     const declarations = assuranceRouteDeclarations();
-    expect(declarations.map((entry) => entry.owner)).toEqual(expect.arrayContaining(['registry', 'evidence', 'compliance', 'risks', 'incidents', 'advisories']));
-    expect(assuranceCollectionApiRoute('compliance')).toBe('/v1/assurance/compliance');
+    expect(declarations.map((entry) => entry.owner)).toEqual(expect.arrayContaining(['registry', 'advisories']));
+    expect(declarations.every((entry) => !entry.routes.api && !entry.routes.apiRecord)).toBe(true);
+    expect(assuranceCollectionApiRoute('compliance')).toBe('/api/reporting/compliance');
+    expect(assuranceCollectionApiRoute('advisories')).toBe('/api/reporting/security');
     expect(assuranceRecordUrls('compliance', 'WCAG-4.1.2')).toMatchObject({
-      api: '/v1/assurance/compliance/WCAG-4.1.2',
+      api: '/api/reporting/compliance/WCAG-4.1.2',
       html: '/assurance?view=compliance#WCAG-4.1.2',
     });
   });
 
-  it('matches registry-derived routes through the declarative matcher', () => {
+  it('matches HTML through assurance routing and all machine reporting through the generic reporting registry', () => {
     expect(matchRoute(assuranceDeclarativeRouteRegistry, 'GET', '/assurance')).toMatchObject({
       status: 'matched',
       route: { id: 'assurance.wizardgang-public-assurance.html' },
     });
-    expect(matchRoute(assuranceDeclarativeRouteRegistry, 'GET', '/v1/assurance/risks')).toMatchObject({
-      status: 'matched',
-      route: { id: 'assurance.risks.collection' },
+    expect(matchRoute(assuranceDeclarativeRouteRegistry, 'GET', '/api/reporting/risks')).toEqual({
+      status: 'not-found',
+      statusCode: 404,
     });
-    expect(matchRoute(assuranceDeclarativeRouteRegistry, 'GET', '/v1/assurance/compliance/WCAG-4.1.2')).toMatchObject({
+    expect(matchRoute(reportingRouteRegistry, 'GET', '/api/reporting/risks')).toMatchObject({
       status: 'matched',
-      route: { id: 'assurance.compliance.iso-27001.detail' },
-      params: { recordId: 'WCAG-4.1.2' },
+      route: { id: 'reporting.collection' },
+      params: { collection: 'risks' },
     });
-    expect(matchRoute(assuranceDeclarativeRouteRegistry, 'GET', '/v1/assurance/compliance/WCAG-4.1.2/extra')).toEqual({
+    expect(matchRoute(reportingRouteRegistry, 'GET', '/api/reporting/compliance/WCAG-4.1.2')).toMatchObject({
+      status: 'matched',
+      route: { id: 'reporting.record' },
+      params: { collection: 'compliance', recordId: 'WCAG-4.1.2' },
+    });
+    expect(matchRoute(reportingRouteRegistry, 'GET', '/api/reporting/compliance/WCAG-4.1.2/extra')).toEqual({
       status: 'not-found',
       statusCode: 404,
     });
   });
 
-  it('serves exact records through the same current envelope as collection queries', async () => {
+  it('serves exact records through the current shared envelope', async () => {
     const response = await assuranceComplianceResponse(
-      new Request('https://demo.wizardgang.ai/v1/assurance/compliance/WCAG-4.1.2'),
+      new Request('https://demo.wizardgang.ai/api/reporting/compliance/WCAG-4.1.2'),
       'WCAG-4.1.2',
     );
     expect(response.status).toBe(200);
@@ -61,6 +69,6 @@ describe('assurance route contract', () => {
     expect(source).not.toContain('ASSURANCE_HTML_HANDLERS');
     expect(source).not.toContain('matchAssuranceRoute');
     expect(source).not.toContain('genericAssuranceResponse');
-    expect(source).not.toContain("'/v1/assurance");
+    expect(source).not.toContain("'/api/reporting");
   });
 });

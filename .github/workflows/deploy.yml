@@ -124,7 +124,7 @@ jobs:
           }
 
           const { body: metadata } = await fetchJsonWithRetry(
-            'https://demo.wizardgang.ai/version',
+            'https://demo.wizardgang.ai/api/operations/version',
             [200]
           );
           if (metadata.version !== expectedVersion || metadata.commit !== expectedSha) {
@@ -132,7 +132,7 @@ jobs:
           }
 
           const { response: health, body } = await fetchJsonWithRetry(
-            'https://demo.wizardgang.ai/health',
+            'https://demo.wizardgang.ai/api/operations/health',
             [200, 503]
           );
           if (body.services?.worker !== 'operational') {

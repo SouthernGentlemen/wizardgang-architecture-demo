@@ -12,7 +12,8 @@ import {
   type RouteMethod,
 } from './registry';
 
-function cacheControl(policy: CachePolicy): string {
+function cacheControl(policy: CachePolicy): string | undefined {
+  if (policy.mode === 'response') return undefined;
   if (policy.mode === 'no-store') return 'no-store';
   if (policy.mode === 'private') {
     return policy.maxAgeSeconds === undefined ? 'private' : `private, max-age=${policy.maxAgeSeconds}`;
@@ -27,7 +28,10 @@ function cacheControl(policy: CachePolicy): string {
 
 function applyResponsePolicy(response: Response, route: RouteDeclaration<Env>): Response {
   const headers = new Headers(response.headers);
-  if (!headers.has('cache-control')) headers.set('cache-control', cacheControl(route.cache));
+  const declaredCacheControl = cacheControl(route.cache);
+  if (declaredCacheControl !== undefined && !headers.has('cache-control')) {
+    headers.set('cache-control', declaredCacheControl);
+  }
   if (route.kind === 'page' && route.crawler.indexing === 'deny') {
     headers.set('x-robots-tag', 'noindex, nofollow');
   }

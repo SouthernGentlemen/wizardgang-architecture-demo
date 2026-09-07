@@ -15,12 +15,12 @@ const expectedPolicies = [
     offline: { mode: 'available' }, cache: { mode: 'no-store' }, crawler: { crawling: 'controlled', indexing: 'deny' },
   },
   {
-    id: 'operations.health', pattern: '/health', methods: ['GET'], kind: 'api', visibility: 'public',
+    id: 'operations.health', pattern: '/api/operations/health', methods: ['GET'], kind: 'api', visibility: 'public',
     authentication: { mode: 'anonymous' }, authorization: { mode: 'none' }, sameOrigin: { mode: 'not-required' },
     offline: { mode: 'available' }, cache: { mode: 'no-store' }, crawler: { crawling: 'controlled', indexing: 'deny' },
   },
   {
-    id: 'operations.version', pattern: '/version', methods: ['GET'], kind: 'api', visibility: 'public',
+    id: 'operations.version', pattern: '/api/operations/version', methods: ['GET'], kind: 'api', visibility: 'public',
     authentication: { mode: 'anonymous' }, authorization: { mode: 'none' }, sameOrigin: { mode: 'not-required' },
     offline: { mode: 'available' }, cache: { mode: 'no-store' }, crawler: { crawling: 'controlled', indexing: 'deny' },
   },
@@ -50,9 +50,9 @@ const expectedPolicies = [
     offline: { mode: 'available' }, cache: { mode: 'no-store' }, crawler: { crawling: 'controlled', indexing: 'allow' },
   },
   ...[
-    ['operations.api-logs', '/__api/operations/logs', ['GET']],
-    ['operations.api-cloudflare-usage', '/__api/operations/cloudflare-usage', ['GET']],
-    ['operations.api-billing', '/__api/operations/billing', ['POST']],
+    ['operations.api-logs', '/api/operations/logs', ['GET']],
+    ['operations.api-usage', '/api/operations/usage', ['GET']],
+    ['operations.api-budget', '/api/operations/budget', ['POST']],
   ].map(([id, pattern, methods]) => ({
     id, pattern, methods, kind: 'api', visibility: 'public',
     authentication: { mode: 'anonymous' }, authorization: { mode: 'none' }, sameOrigin: { mode: 'not-required' },
@@ -95,7 +95,7 @@ describe('global operational route policies', () => {
     for (const path of ['/dashboard', '/dashboard/uptime', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing', '/dashboard/not-a-route']) {
       expect(matchRoute(operationalRouteRegistry, 'GET', path), path).toEqual({ status: 'not-found', statusCode: 404 });
     }
-    expect(matchRoute(operationalRouteRegistry, 'GET', '/__api/operations/not-a-route')).toEqual({ status: 'not-found', statusCode: 404 });
+    expect(matchRoute(operationalRouteRegistry, 'GET', '/api/operations/not-a-route')).toEqual({ status: 'not-found', statusCode: 404 });
   });
 
   it('attaches documentation and source metadata to every migrated route', () => {

@@ -16,7 +16,7 @@ import {
 function syntheticReportRegistry() {
   return {
     id: 'synthetic-assurance',
-    routes: { api: '/v1/assurance' },
+    routes: { html: '/assurance' },
     datasets: [
       {
         id: 'report-register-v2',
@@ -28,10 +28,6 @@ function syntheticReportRegistry() {
         capabilities: ['runtime', 'records', 'api-index'],
         recordCollection: { path: 'records', identity: ['id'] },
         filters: { status: { path: 'status', label: 'Status' } },
-        routes: {
-          api: '/v1/assurance/reports',
-          apiRecord: '/v1/assurance/reports/{id}',
-        },
       },
     ],
     presentations: [],
@@ -53,22 +49,11 @@ describe('registry capability contracts', () => {
     });
     expect(entries.map((entry) => (entry.record as { id: string }).id)).toEqual(['RPT-001']);
     expect(validateAssuranceRouteContract(registry)).toEqual([]);
-    expect(assuranceRoutesForDataset(registry, 'reports')).toEqual({
-      api: '/v1/assurance/reports',
-      apiRecord: '/v1/assurance/reports/{id}',
-    });
-    expect(matchAssuranceRoute(registry, '/v1/assurance/reports')).toEqual({
-      owner: 'reports',
-      kind: 'api-collection',
-    });
-    expect(matchAssuranceRoute(registry, '/v1/assurance/reports/RPT-001')).toEqual({
-      owner: 'reports',
-      kind: 'api-record',
-      recordId: 'RPT-001',
-    });
+    expect(assuranceRoutesForDataset(registry, 'reports')).toBeNull();
+    expect(matchAssuranceRoute(registry, '/api/reporting/reports')).toBeNull();
+    expect(matchAssuranceRoute(registry, '/api/reporting/reports/RPT-001')).toBeNull();
     expect(validateAssuranceRouteHandlerSupport(registry, {
-      registry: { apiCollection: true },
-      '*': { apiCollection: true, apiRecord: true },
+      registry: { html: true },
     })).toEqual([]);
   });
 

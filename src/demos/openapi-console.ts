@@ -338,7 +338,7 @@ export function openApiConsole(): string {
   <section class="api-contract" id="openapi" aria-labelledby="openapi-heading">
     <div class="api-contract-heading"><div><p class="eyebrow">Machine-readable source of truth</p><h2 id="openapi-heading">OpenAPI contract</h2></div><span class="badge badge-ok">OpenAPI 3.1</span></div>
     <dl><dt>Version</dt><dd><code>${escapeHtml(spec.openapi)}</code></dd><dt>API version</dt><dd><code>${escapeHtml(String(spec.info?.version ?? ''))}</code></dd><dt>JSON Schema dialect</dt><dd><code>${escapeHtml(String(spec.jsonSchemaDialect ?? ''))}</code></dd><dt>Base URL</dt><dd><code>${escapeHtml(serverUrl(spec))}</code></dd><dt>Format</dt><dd>Canonical JSON</dd></dl>
-    <div class="button-row"><a class="button" href="/v1/openapi.json">View JSON</a></div>
+    <div class="button-row"><a class="button" href="/api/openapi.json">View JSON</a></div>
     <details class="schema-browser" data-schema-browser><summary><span>Schemas</span><span>${visibleSchemaCount}</span></summary><div class="schema-grid">${renderSchemas(schemas)}</div></details>
   </section>
   <script>${API_RUNNER}</script>`;

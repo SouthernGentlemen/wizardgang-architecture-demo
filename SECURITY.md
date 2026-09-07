@@ -31,7 +31,7 @@ REST writes accept either the managed operator bearer credential or a ten-minute
 
 ## Public logging
 
-`/dashboard/logs` and `/__api/operations/logs` are intentionally public-safe diagnostic surfaces. They must never become raw request/Cloudflare log proxies. Do not store or render passwords, authorization headers, cookies, bearer tokens, API keys, secrets, payment data, private account identifiers, or unreviewed request bodies. Structured detail is defensively redacted and size-bounded before it reaches `application_logs`.
+`/operations?view=logs` and `/api/operations/logs` are intentionally public-safe diagnostic surfaces. They must never become raw request/Cloudflare log proxies. Do not store or render passwords, authorization headers, cookies, bearer tokens, API keys, secrets, payment data, private account identifiers, or unreviewed request bodies. Structured detail is defensively redacted and size-bounded before it reaches `application_logs`.
 
 Keep operational logs distinct from the `demo_events` audit/evidence stream: logs explain runtime behavior; audit events preserve meaningful control/change evidence.
 
@@ -56,7 +56,7 @@ The controlled path is **private report → triage → GHSA → fix/release → 
 3. **GHSA.** A confirmed vulnerability may be coordinated in a draft GitHub Security Advisory. Draft advisory content is private and is not public assurance evidence.
 4. **Fix and release.** Remediation is completed and a fixed release is published before a public advisory record is added to this repository's assurance dataset.
 5. **Eligible CVE.** A CVE is requested or associated only when appropriate. The public dataset records a CVE only after an actual identifier has been assigned; no placeholder CVE is permitted.
-6. **Public advisory.** After the sanitized GitHub Security Advisory is published, its public GHSA identity, severity, summary, fixed release, optional assigned CVE, public evidence, and optional incident linkage may be projected through `GET /v1/assurance/advisories` and the `#published-advisories` section of `/security`.
+6. **Public advisory.** After the sanitized GitHub Security Advisory is published, its public GHSA identity, severity, summary, fixed release, optional assigned CVE, public evidence, and optional incident linkage may be projected through `GET /api/reporting/security` and the `#published-advisories` section of `/security`.
 
 Published advisories and operational incidents remain separate records. A public advisory may link to an `INC-*` identifier only when that actual incident already exists in the retained incident register. A vulnerability or advisory never creates an incident record by implication.
 

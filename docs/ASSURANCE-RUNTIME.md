@@ -38,7 +38,7 @@ The generated binding also records SHA-256 digests for reachable external schema
 
 ## HTTP boundary
 
-Runtime discoverability does not imply HTTP exposure. The released `/v1/assurance` route and response inventory remains an explicit versioned compatibility contract, with serializers and route declarations controlling which record families are public API surfaces.
+Runtime discoverability does not imply HTTP exposure. The generic `/api/reporting/{collection}` and `/api/reporting/{collection}/{recordId}` routes expose only collections admitted by the reporting inventory, with shared serializers and route declarations controlling the public API surface.
 
 A runtime dataset may therefore be available to shared listing, exact-ID, count, and relationship services without receiving a new endpoint. Adding a compatible internal family or partition requires its data, schema, registry declaration, and generated runtime binding; it does not require editing a central runtime family switch.
 

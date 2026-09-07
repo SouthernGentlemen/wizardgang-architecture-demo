@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { assuranceEvidenceResponse, assuranceResponse } from '../src/api/assurance-registry';
+import { assuranceEvidenceResponse } from '../src/api/assurance-registry';
+import { reportingIndexResponse } from '../src/api/reporting';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import type { Env } from '../src/types';
 
@@ -14,7 +15,7 @@ const environment = {
 describe('public assurance API projection', () => {
   it('serves canonical published evidence records through the current record/query contract', async () => {
     const records = listPublishedAssuranceRecords('evidence');
-    const response = await assuranceEvidenceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/evidence'), environment);
+    const response = await assuranceEvidenceResponse(new Request('https://demo.wizardgang.ai/api/reporting/evidence'), environment);
     expect(response.status).toBe(200);
     expect(response.headers.get('cache-control')).toContain('max-age=300');
     const body = await response.json() as {
@@ -31,27 +32,17 @@ describe('public assurance API projection', () => {
     expect(body.records.every((record) => !('freshness' in record))).toBe(true);
   });
 
-  it('exposes the registry and current collection routes without embedding duplicate dataset copies', async () => {
-    const response = assuranceResponse(new Request('https://demo.wizardgang.ai/v1/assurance'), environment);
+  it('exposes the current generic collection index without embedding dataset copies', async () => {
+    const response = await reportingIndexResponse(new Request('https://demo.wizardgang.ai/api/reporting'), environment);
     const body = await response.json() as {
       contract: string;
-      registry: { id: string; routes: { api?: string } };
-      collections: Array<{ dataset: string; route: string }>;
+      collections: Array<{ id: string; url: string }>;
       evidence?: unknown;
       deployment?: unknown;
     };
     expect(body.contract).toBe('contracts/assurance/reporting.schema.json');
-    expect(body.registry).toMatchObject({ id: 'wizardgang-public-assurance', routes: { api: '/v1/assurance' } });
-    expect(body.collections.some((collection) => collection.route === '/v1/assurance/evidence')).toBe(true);
+    expect(body.collections.some((collection) => collection.id === 'evidence' && collection.url === '/api/reporting/evidence')).toBe(true);
     expect(body).not.toHaveProperty('evidence');
     expect(body).not.toHaveProperty('deployment');
-  });
-
-  it('keeps both assurance endpoints read-only', async () => {
-    for (const responder of [assuranceResponse, assuranceEvidenceResponse]) {
-      const response = await responder(new Request('https://demo.wizardgang.ai/v1/assurance', { method: 'POST' }), environment);
-      expect(response.status).toBe(405);
-      expect(response.headers.get('allow')).toBe('GET');
-    }
   });
 });

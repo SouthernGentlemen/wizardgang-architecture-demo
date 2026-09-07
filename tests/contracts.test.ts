@@ -51,6 +51,7 @@ describe('executable interface contracts', () => {
   it('maps every documented OpenAPI operation directly to the application route registry', () => {
     const openapi = readOpenApi();
     expect(openapi.openapi).toBe('3.1.0');
+    expect(new URL(openapi.servers[0].url).pathname).toBe('/');
 
     for (const [path, pathItem] of Object.entries(openapi.paths)) {
       for (const [method, operation] of Object.entries(pathItem)) {
@@ -78,35 +79,48 @@ describe('executable interface contracts', () => {
     expect(existsSync('contracts/openapi/swagger.json')).toBe(false);
   });
 
-  it('keeps current assurance query shapes in the OpenAPI document', () => {
+  it('documents only the canonical reporting and operations API families', () => {
     const openapi = readOpenApi();
     for (const path of [
-      '/assurance',
-      '/assurance/evidence',
-      '/assurance/compliance',
-      '/assurance/compliance/{recordId}',
-      '/assurance/risks',
-      '/assurance/incidents',
-      '/assurance/advisories',
-    ]) expect(openapi.paths[path]?.get).toBeDefined();
+      '/api/reporting',
+      '/api/reporting/{collection}',
+      '/api/reporting/{collection}/{recordId}',
+      '/api/operations/health',
+      '/api/operations/version',
+      '/api/operations/logs',
+      '/api/operations/usage',
+      '/api/operations/budget',
+      '/api/openapi.json',
+    ]) expect(openapi.paths[path]).toBeDefined();
 
-    const riskParameters = openapi.paths['/assurance/risks'].get?.parameters?.map((parameter) => parameter.name) ?? [];
-    expect(riskParameters).toContain('residual');
-    expect(riskParameters).not.toContain('residualRating');
-    expect(riskParameters).not.toContain('schemaVersion');
+    expect(openapi.paths['/api/reporting/{collection}'].get).toBeDefined();
+    expect(openapi.paths['/api/reporting/{collection}/{recordId}'].get).toBeDefined();
+    expect(openapi.paths['/api/reporting/{collection}/{recordId}'].patch).toBeDefined();
+    const reportingParameters = openapi.paths['/api/reporting/{collection}'].get?.parameters?.map((parameter) => parameter.name) ?? [];
+    expect(reportingParameters).toContain('residual');
+    expect(reportingParameters).not.toContain('residualRating');
+    expect(reportingParameters).not.toContain('schemaVersion');
+
+    for (const path of Object.keys(openapi.paths)) {
+      expect(path.startsWith('/assurance')).toBe(false);
+      expect(path.startsWith('/__api/operations')).toBe(false);
+      expect(path).not.toBe('/health');
+      expect(path).not.toBe('/version');
+    }
   });
 
-  it('serves the current OpenAPI and assurance contracts through the router', async () => {
-    const openapi = await routeRequest(new Request('https://demo.wizardgang.ai/v1/openapi.json'), env);
+  it('serves the current OpenAPI and reporting contracts through the router', async () => {
+    const openapi = await routeRequest(new Request('https://demo.wizardgang.ai/api/openapi.json'), env);
     expect(openapi.status).toBe(200);
     expect(openapi.headers.get('content-type')).toContain('application/json');
     const document = await openapi.json() as { openapi: string; paths: Record<string, unknown> };
     expect(document.openapi).toBe('3.1.0');
-    expect(document.paths).toHaveProperty('/assurance/risks');
+    expect(document.paths).toHaveProperty('/api/reporting/{collection}');
+    expect(document.paths).toHaveProperty('/api/operations/health');
 
-    const assurance = await routeRequest(new Request('https://demo.wizardgang.ai/v1/assurance/risks?limit=1'), env);
-    expect(assurance.status).toBe(200);
-    const body = await assurance.json() as { contract: string; records: Array<{ id: string }> };
+    const reporting = await routeRequest(new Request('https://demo.wizardgang.ai/api/reporting/risks?limit=1'), env);
+    expect(reporting.status).toBe(200);
+    const body = await reporting.json() as { contract: string; records: Array<{ id: string }> };
     expect(body.contract).toBe('contracts/assurance/reporting.schema.json');
     expect(body.records).toHaveLength(1);
   });

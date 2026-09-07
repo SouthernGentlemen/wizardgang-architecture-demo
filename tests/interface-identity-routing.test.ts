@@ -52,7 +52,7 @@ describe('interface and identity declarative routing', () => {
     expect(routes.map((route) => route.pattern).sort()).toEqual([
       '/',
       '/interfaces',
-      '/v1/openapi.json',
+      '/api/openapi.json',
       '/graphql',
       '/graphql/schema',
       '/__assets/graphiql/:asset',
@@ -78,7 +78,6 @@ describe('interface and identity declarative routing', () => {
       '/identity/logout',
       '/__api/identity/saml/inspect',
       '/mcp/server',
-      '/__api/git/evidence',
       '/__api/git/demo',
       '/__api/git/demo/release',
       '/__api/evidence/traceability',
@@ -99,7 +98,7 @@ describe('interface and identity declarative routing', () => {
   });
 
   it('uses the shared matcher for consistent method routing', async () => {
-    const openApiPost = matchRoute(interfaceIdentityRouteRegistry, 'POST', '/v1/openapi.json');
+    const openApiPost = matchRoute(interfaceIdentityRouteRegistry, 'POST', '/api/openapi.json');
     expect(openApiPost.status).toBe('method-not-allowed');
     if (openApiPost.status === 'method-not-allowed') expect(openApiPost.allowedMethods).toEqual(['GET']);
 
@@ -113,15 +112,15 @@ describe('interface and identity declarative routing', () => {
 
     const router = createInterfaceIdentityRouteRouter();
     const response = await router.route(
-      new Request('https://demo.wizardgang.ai/v1/openapi.json', { method: 'POST' }),
+      new Request('https://demo.wizardgang.ai/api/openapi.json', { method: 'POST' }),
       onlineEnv,
-      '/v1/openapi.json',
+      '/api/openapi.json',
     );
     expect(response?.status).toBe(405);
     expect(response?.headers.get('allow')).toBe('GET');
   });
 
-  it('declares the authentication, authorization, origin, and reporting boundaries', () => {
+  it('declares the authentication, authorization, and origin boundaries', () => {
     expect(routeById('interfaces.identity.authorize')).toMatchObject({
       authentication: { mode: 'required', provider: 'identity-session' },
       authorization: { mode: 'policy', policy: 'demo:read or demo:write' },
@@ -140,10 +139,6 @@ describe('interface and identity declarative routing', () => {
       authentication: { mode: 'required', provider: 'admin-basic' },
       sameOrigin: { mode: 'required', methods: ['POST'] },
       visibility: 'private',
-    });
-    expect(routeById('interfaces.git.reporting').authorization).toEqual({
-      mode: 'policy',
-      policy: 'GET demo:read; POST reporting:write; disclosure follows principal and source visibility',
     });
   });
 

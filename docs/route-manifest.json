@@ -1,52 +1,5 @@
 [
   {
-    "id": "assurance.advisories.collection",
-    "route": "/v1/assurance/advisories",
-    "methods": [
-      "GET",
-      "OPTIONS"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "public",
-      "maxAgeSeconds": 300
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Assurance advisories collection",
-    "description": "Registry-owned collection route for the advisories assurance surface.",
-    "docs": [
-      "docs/ASSURANCE-REGISTRY.md",
-      "docs/ASSURANCE-API.md",
-      "docs/ROUTES.md"
-    ],
-    "source": {
-      "module": "src/api/advisories.ts",
-      "exportName": "assuranceAdvisoriesResponse",
-      "tests": [
-        "tests/assurance-advisories.test.ts",
-        "tests/assurance-declarative-routing.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
     "id": "assurance.advisories.html",
     "route": "/security",
     "methods": [
@@ -78,7 +31,7 @@
     "description": "Registry-owned html route for the advisories assurance surface.",
     "docs": [
       "docs/ASSURANCE-REGISTRY.md",
-      "docs/ASSURANCE-API.md",
+      "docs/REPORTING.md",
       "docs/ROUTES.md"
     ],
     "source": {
@@ -95,288 +48,6 @@
       "order": 4,
       "index": true,
       "sitemap": true
-    },
-    "status": "working"
-  },
-  {
-    "id": "assurance.compliance.iso-27001.collection",
-    "route": "/v1/assurance/compliance",
-    "methods": [
-      "GET",
-      "OPTIONS"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "public",
-      "maxAgeSeconds": 300
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Assurance compliance collection",
-    "description": "Registry-owned collection route for the compliance assurance surface.",
-    "docs": [
-      "docs/ASSURANCE-REGISTRY.md",
-      "docs/ASSURANCE-API.md",
-      "docs/ROUTES.md"
-    ],
-    "source": {
-      "module": "src/api/assurance.ts",
-      "exportName": "assuranceComplianceResponse",
-      "tests": [
-        "tests/assurance-compliance-api.test.ts",
-        "tests/assurance-declarative-routing.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "assurance.compliance.iso-27001.detail",
-    "route": "/v1/assurance/compliance/{recordId}",
-    "methods": [
-      "GET",
-      "OPTIONS"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "public",
-      "maxAgeSeconds": 300
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Assurance compliance detail",
-    "description": "Registry-owned detail route for the compliance assurance surface.",
-    "docs": [
-      "docs/ASSURANCE-REGISTRY.md",
-      "docs/ASSURANCE-API.md",
-      "docs/ROUTES.md"
-    ],
-    "source": {
-      "module": "src/api/assurance.ts",
-      "exportName": "assuranceComplianceResponse",
-      "tests": [
-        "tests/assurance-compliance-api.test.ts",
-        "tests/assurance-route-intersections.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "assurance.evidence.collection",
-    "route": "/v1/assurance/evidence",
-    "methods": [
-      "GET",
-      "OPTIONS"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "public",
-      "maxAgeSeconds": 300
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Assurance evidence collection",
-    "description": "Registry-owned collection route for the evidence assurance surface.",
-    "docs": [
-      "docs/ASSURANCE-REGISTRY.md",
-      "docs/ASSURANCE-API.md",
-      "docs/ROUTES.md"
-    ],
-    "source": {
-      "module": "src/api/assurance-registry.ts",
-      "exportName": "assuranceEvidenceResponse",
-      "tests": [
-        "tests/assurance-api.test.ts",
-        "tests/assurance-declarative-routing.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "assurance.incidents.collection",
-    "route": "/v1/assurance/incidents",
-    "methods": [
-      "GET",
-      "OPTIONS"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "public",
-      "maxAgeSeconds": 300
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Assurance incidents collection",
-    "description": "Registry-owned collection route for the incidents assurance surface.",
-    "docs": [
-      "docs/ASSURANCE-REGISTRY.md",
-      "docs/ASSURANCE-API.md",
-      "docs/ROUTES.md"
-    ],
-    "source": {
-      "module": "src/api/assurance.ts",
-      "exportName": "assuranceIncidentsResponse",
-      "tests": [
-        "tests/assurance-incidents.test.ts",
-        "tests/assurance-declarative-routing.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "assurance.risks.collection",
-    "route": "/v1/assurance/risks",
-    "methods": [
-      "GET",
-      "OPTIONS"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "public",
-      "maxAgeSeconds": 300
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Assurance risks collection",
-    "description": "Registry-owned collection route for the risks assurance surface.",
-    "docs": [
-      "docs/ASSURANCE-REGISTRY.md",
-      "docs/ASSURANCE-API.md",
-      "docs/ROUTES.md"
-    ],
-    "source": {
-      "module": "src/api/assurance.ts",
-      "exportName": "assuranceRisksResponse",
-      "tests": [
-        "tests/assurance-risks.test.ts",
-        "tests/assurance-declarative-routing.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "assurance.wizardgang-public-assurance.collection",
-    "route": "/v1/assurance",
-    "methods": [
-      "GET",
-      "OPTIONS"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "public",
-      "maxAgeSeconds": 300
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Assurance registry collection",
-    "description": "Registry-owned collection route for the registry assurance surface.",
-    "docs": [
-      "docs/ASSURANCE-REGISTRY.md",
-      "docs/ASSURANCE-API.md",
-      "docs/ROUTES.md"
-    ],
-    "source": {
-      "module": "src/api/assurance-registry.ts",
-      "exportName": "assuranceResponse",
-      "tests": [
-        "tests/assurance-api.test.ts",
-        "tests/assurance-declarative-routing.test.ts"
-      ]
     },
     "status": "working"
   },
@@ -412,7 +83,7 @@
     "description": "Registry-owned html route for the registry assurance surface.",
     "docs": [
       "docs/ASSURANCE-REGISTRY.md",
-      "docs/ASSURANCE-API.md",
+      "docs/REPORTING.md",
       "docs/ROUTES.md"
     ],
     "source": {
@@ -580,53 +251,6 @@
       "tests": [
         "tests/interface-identity-routing.test.ts",
         "tests/git-demo.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "interfaces.git.reporting",
-    "route": "/__api/git/evidence",
-    "methods": [
-      "GET",
-      "POST"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "policy",
-      "policy": "GET demo:read; POST reporting:write; disclosure follows principal and source visibility"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "GitHub assurance reporting",
-    "description": "GitHub reporting boundary preserving disclosure-aware public reads and protected imports.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/api/git-evidence.ts",
-      "exportName": "gitEvidenceResponse",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/git-evidence.test.ts",
-        "tests/reporting-disclosure.test.ts"
       ]
     },
     "status": "working"
@@ -1693,7 +1317,7 @@
   },
   {
     "id": "interfaces.openapi.json",
-    "route": "/v1/openapi.json",
+    "route": "/api/openapi.json",
     "methods": [
       "GET"
     ],
@@ -2072,8 +1696,8 @@
     "status": "working"
   },
   {
-    "id": "operations.api-billing",
-    "route": "/__api/operations/billing",
+    "id": "operations.api-budget",
+    "route": "/api/operations/budget",
     "methods": [
       "POST"
     ],
@@ -2099,7 +1723,7 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "Billing scenario API",
+    "title": "Operations budget API",
     "description": "Synthetic budget scenario control used by the operations demo.",
     "docs": [
       "docs/ROUTES.md",
@@ -2117,53 +1741,8 @@
     "status": "working"
   },
   {
-    "id": "operations.api-cloudflare-usage",
-    "route": "/__api/operations/cloudflare-usage",
-    "methods": [
-      "GET"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "available"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Cloudflare usage API",
-    "description": "Sanitized cached Cloudflare usage telemetry.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/OPERATIONS.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/api/operations.ts",
-      "exportName": "cloudflareUsageResponse",
-      "tests": [
-        "tests/operational-route-registry.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
     "id": "operations.api-logs",
-    "route": "/__api/operations/logs",
+    "route": "/api/operations/logs",
     "methods": [
       "GET"
     ],
@@ -2207,8 +1786,8 @@
     "status": "working"
   },
   {
-    "id": "operations.health",
-    "route": "/health",
+    "id": "operations.api-usage",
+    "route": "/api/operations/usage",
     "methods": [
       "GET"
     ],
@@ -2234,7 +1813,52 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "Health",
+    "title": "Operations usage API",
+    "description": "Sanitized cached Cloudflare usage telemetry.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/operations.ts",
+      "exportName": "cloudflareUsageResponse",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.health",
+    "route": "/api/operations/health",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Operations health",
     "description": "Machine-readable runtime and dependency health.",
     "docs": [
       "docs/ROUTES.md",
@@ -2537,7 +2161,7 @@
   },
   {
     "id": "operations.version",
-    "route": "/version",
+    "route": "/api/operations/version",
     "methods": [
       "GET"
     ],
@@ -2563,7 +2187,7 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "Version",
+    "title": "Operations version",
     "description": "Machine-readable deployed version and source metadata.",
     "docs": [
       "docs/ROUTES.md",
@@ -3442,6 +3066,151 @@
       "tests": [
         "tests/platform-laboratory-routing.test.ts",
         "tests/runtime.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "reporting.collection",
+    "route": "/api/reporting/{collection}",
+    "methods": [
+      "GET",
+      "OPTIONS"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "GET demo:read; private disclosure requires reporting:private; PATCH requires reporting:write"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "response"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Reporting collection API",
+    "description": "Queries one canonical structured or provider-backed reporting collection with signed cursor pagination and export support.",
+    "docs": [
+      "docs/REPORTING.md",
+      "docs/ASSURANCE-API.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/api/reporting.ts",
+      "exportName": "reportingCollectionResponse",
+      "tests": [
+        "tests/reporting-api.test.ts",
+        "tests/retired-api-routes.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "reporting.index",
+    "route": "/api/reporting",
+    "methods": [
+      "GET",
+      "OPTIONS"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "GET demo:read; private disclosure requires reporting:private; PATCH requires reporting:write"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "response"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Reporting collection index",
+    "description": "Discovers disclosure-safe canonical reporting collections and their supported filters.",
+    "docs": [
+      "docs/REPORTING.md",
+      "docs/ASSURANCE-API.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/api/reporting.ts",
+      "exportName": "reportingIndexResponse",
+      "tests": [
+        "tests/reporting-api.test.ts",
+        "tests/retired-api-routes.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "reporting.record",
+    "route": "/api/reporting/{collection}/{recordId}",
+    "methods": [
+      "GET",
+      "PATCH",
+      "OPTIONS"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "GET demo:read; private disclosure requires reporting:private; PATCH requires reporting:write"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "response"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Reporting record API",
+    "description": "Reads one canonical reporting record or performs an authorized revision-checked update when the source supports mutation.",
+    "docs": [
+      "docs/REPORTING.md",
+      "docs/ASSURANCE-API.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/api/reporting.ts",
+      "exportName": "reportingRecordResponse",
+      "tests": [
+        "tests/reporting-api.test.ts",
+        "tests/retired-api-routes.test.ts",
         "tests/router.test.ts"
       ]
     },

@@ -5,7 +5,7 @@
   "scope": "Public, disclosure-safe assurance records for demo.wizardgang.ai",
   "qualification": "Alignment and engineering evidence only; no certification is claimed.",
   "visibility": "public",
-  "routes": { "html": "/assurance", "api": "/v1/assurance" },
+  "routes": { "html": "/assurance" },
   "reporting": {
     "contract": "contracts/assurance/reporting.schema.json",
     "structuredRecords": {
@@ -185,8 +185,7 @@
       "id": "evidence", "kind": "evidence", "role": "dataset",
       "path": "assurance/evidence/evidence.json", "schema": "contracts/assurance/evidence.schema.json",
       "visibility": "public", "capabilities": ["runtime", "records", "api-index"],
-      "recordCollection": { "path": "records", "identity": ["kind", "locator.repositoryPath", "locator.route"] },
-      "routes": { "api": "/v1/assurance/evidence" }
+      "recordCollection": { "path": "records", "identity": ["kind", "locator.repositoryPath", "locator.route"] }
     },
     {
       "id": "claims", "kind": "claims", "role": "dataset",
@@ -206,7 +205,6 @@
       "visibility": "public", "capabilities": ["runtime", "records", "api-index", "summary-source"],
       "recordCollection": { "path": "records", "identity": [{ "source": "resource", "path": "framework.id" }, { "source": "record", "path": "reference" }] },
       "qualification": "Public engineering-evidence projection only. Framework-specific qualifications remain authoritative; certification and formal conformance are not claimed.",
-      "routes": { "api": "/v1/assurance/compliance", "apiRecord": "/v1/assurance/compliance/{id}" },
       "filters": {
         "framework": { "path": "framework", "label": "Framework" },
         "status": { "path": "status", "label": "Status" },
@@ -349,7 +347,6 @@
       "path": "assurance/risks/risks.json", "schema": "contracts/assurance/risk.schema.json",
       "visibility": "public", "capabilities": ["runtime", "records", "api-index"],
       "recordCollection": { "path": "records", "identity": ["framework", "title"] },
-      "routes": { "api": "/v1/assurance/risks" },
       "filters": {
         "framework": { "path": "framework", "label": "Framework" },
         "status": { "path": "status", "label": "Status" },
@@ -360,8 +357,7 @@
       "id": "incidents", "kind": "incidents", "role": "dataset",
       "path": "assurance/incidents/incidents.json", "schema": "contracts/assurance/incident.schema.json",
       "visibility": "public", "capabilities": ["runtime", "records", "api-index"],
-      "recordCollection": { "path": "records", "identity": ["recordType", "detectedAt", "title"] },
-      "routes": { "api": "/v1/assurance/incidents" }
+      "recordCollection": { "path": "records", "identity": ["recordType", "detectedAt", "title"] }
     },
     {
       "id": "exercises", "kind": "exercises", "role": "dataset",
@@ -375,7 +371,7 @@
       "path": "assurance/advisories/advisories.json", "schema": "contracts/assurance/advisory.schema.json",
       "visibility": "public", "capabilities": ["runtime", "records", "api-index"],
       "recordCollection": { "path": "records", "identity": ["recordType", "publishedAt"] },
-      "routes": { "html": "/security", "api": "/v1/assurance/advisories" }
+      "routes": { "html": "/security" }
     }
   ],
   "presentations": [

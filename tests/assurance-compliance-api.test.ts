@@ -31,7 +31,7 @@ describe('canonical compliance presentation and API contract', () => {
   });
 
   it('filters canonical records through the current shared query result', async () => {
-    const request = new Request('https://demo.wizardgang.ai/v1/assurance/compliance?framework=wcag-2.2&status=partial&level=AA');
+    const request = new Request('https://demo.wizardgang.ai/api/reporting/compliance?framework=wcag-2.2&status=partial&level=AA');
     const response = await assuranceComplianceResponse(request);
     expect(response.status).toBe(200);
     expect(response.headers.get('cache-control')).toContain('max-age=300');
@@ -51,7 +51,7 @@ describe('canonical compliance presentation and API contract', () => {
 
   it('supports exact stable-record lookup with the same envelope and deterministic not-found response', async () => {
     const exact = await assuranceComplianceResponse(
-      new Request('https://demo.wizardgang.ai/v1/assurance/compliance/WCAG-4.1.2'),
+      new Request('https://demo.wizardgang.ai/api/reporting/compliance/WCAG-4.1.2'),
       'WCAG-4.1.2',
     );
     expect(exact.status).toBe(200);
@@ -68,7 +68,7 @@ describe('canonical compliance presentation and API contract', () => {
     expect(exactBody.derived.count).toBe(1);
 
     const missing = await assuranceComplianceResponse(
-      new Request('https://demo.wizardgang.ai/v1/assurance/compliance/WCAG-9.9.9'),
+      new Request('https://demo.wizardgang.ai/api/reporting/compliance/WCAG-9.9.9'),
       'WCAG-9.9.9',
     );
     expect(missing.status).toBe(404);
@@ -91,7 +91,7 @@ describe('canonical compliance presentation and API contract', () => {
     expect(html).toContain('<caption class="subtle">');
     expect(html).toContain('id="WCAG-4.1.2"');
     expect(html).toContain('href="#WCAG-4.1.2"');
-    expect(html).toContain('/v1/assurance/compliance/WCAG-4.1.2');
+    expect(html).toContain('/api/reporting/compliance/WCAG-4.1.2');
     const criterion = canonicalComplianceRecords.find((record) => record.id === 'WCAG-4.1.2');
     expect(criterion).toBeDefined();
     expect(html).toContain(`/assurance?view=evidence#${assuranceRelationshipIds(criterion?.relationships, 'evidence')[0]}`);
@@ -99,8 +99,8 @@ describe('canonical compliance presentation and API contract', () => {
     expect(html).not.toContain('id="ISO27001-4.1"');
   });
 
-  it('keeps the compliance API read-only and represented once in the generated route contract', async () => {
-    const post = await assuranceComplianceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/compliance', { method: 'POST' }));
+  it('keeps reporting read-only at the collection route and represented once by generic route declarations', async () => {
+    const post = await assuranceComplianceResponse(new Request('https://demo.wizardgang.ai/api/reporting/compliance', { method: 'POST' }));
     expect(post.status).toBe(405);
     expect(post.headers.get('allow')).toBe('GET');
 
@@ -109,13 +109,13 @@ describe('canonical compliance presentation and API contract', () => {
       methods: string[];
       source: { module: string };
     }>;
-    expect(manifest.filter((entry) => entry.route === '/v1/assurance/compliance')).toEqual([expect.objectContaining({
+    expect(manifest.filter((entry) => entry.route === '/api/reporting/{collection}')).toEqual([expect.objectContaining({
       methods: expect.arrayContaining(['GET']),
-      source: expect.objectContaining({ module: 'src/api/assurance.ts' }),
+      source: expect.objectContaining({ module: 'src/api/reporting.ts' }),
     })]);
-    expect(manifest.filter((entry) => entry.route === '/v1/assurance/compliance/{recordId}')).toEqual([expect.objectContaining({
+    expect(manifest.filter((entry) => entry.route === '/api/reporting/{collection}/{recordId}')).toEqual([expect.objectContaining({
       methods: expect.arrayContaining(['GET']),
-      source: expect.objectContaining({ module: 'src/api/assurance.ts' }),
+      source: expect.objectContaining({ module: 'src/api/reporting.ts' }),
     })]);
   });
 });

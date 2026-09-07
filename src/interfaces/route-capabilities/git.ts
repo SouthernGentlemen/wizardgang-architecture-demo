@@ -1,21 +1,7 @@
-import { gitEvidenceResponse } from '../../api/git-evidence';
 import { gitDemoReleaseResponse, gitDemoStartResponse, gitDemoStatusResponse } from '../../api/git-demo';
 import { defineInterfaceIdentityCapability, interfaceIdentityRoute } from '../route-capability';
 
 export const gitRouteCapability = defineInterfaceIdentityCapability('interfaces.git', [
-  interfaceIdentityRoute({
-    id: 'interfaces.git.reporting',
-    pattern: '/__api/git/evidence',
-    methods: ['GET', 'POST'],
-    kind: 'api',
-    handler: (request, { env }) => gitEvidenceResponse(request, env),
-    title: 'GitHub assurance reporting',
-    description: 'GitHub reporting boundary preserving disclosure-aware public reads and protected imports.',
-    sourceModule: 'src/api/git-evidence.ts',
-    sourceExport: 'gitEvidenceResponse',
-    authorization: { mode: 'policy', policy: 'GET demo:read; POST reporting:write; disclosure follows principal and source visibility' },
-    tests: ['tests/git-evidence.test.ts', 'tests/reporting-disclosure.test.ts'],
-  }),
   interfaceIdentityRoute({
     id: 'interfaces.git.demo',
     pattern: '/__api/git/demo',

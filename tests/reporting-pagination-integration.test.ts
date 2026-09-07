@@ -62,7 +62,7 @@ describe('DEMO-177 reporting pagination integration', () => {
   it('passes an API cursor through the dashboard unchanged and rejects invalid cursors', async () => {
     const env = environment();
     const firstResponse = await assuranceEvidenceResponse(
-      new Request('https://demo.wizardgang.ai/v1/assurance/evidence?limit=1'),
+      new Request('https://demo.wizardgang.ai/api/reporting/evidence?limit=1'),
       env,
     );
     expect(firstResponse.status).toBe(200);
@@ -75,7 +75,7 @@ describe('DEMO-177 reporting pagination integration', () => {
 
     const dashboardUrl = new URL('https://demo.wizardgang.ai/dashboard?report=evidence&limit=1');
     dashboardUrl.searchParams.set('cursor', cursor!);
-    const target = dashboardReportingRequestUrl('/v1/assurance/evidence', dashboardUrl);
+    const target = dashboardReportingRequestUrl('/api/reporting/evidence', dashboardUrl);
     expect(target.searchParams.get('cursor')).toBe(cursor);
 
     const secondResponse = await assuranceEvidenceResponse(new Request(target), env);
@@ -84,7 +84,7 @@ describe('DEMO-177 reporting pagination integration', () => {
     expect(second.records[0]?.id).not.toBe(first.records[0]?.id);
 
     const invalid = await assuranceEvidenceResponse(
-      new Request('https://demo.wizardgang.ai/v1/assurance/evidence?limit=1&cursor=not-a-cursor'),
+      new Request('https://demo.wizardgang.ai/api/reporting/evidence?limit=1&cursor=not-a-cursor'),
       env,
     );
     expect(invalid.status).toBe(400);

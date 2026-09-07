@@ -8,7 +8,7 @@ branch -> DEMO commit(s) -> pull request -> CI -> review -> merge
        -> smoke check -> operational observation
 ```
 
-Pushing an annotated semantic tag runs the release workflow. It reproduces the tagged state, publishes the matching record from `docs/releases/`, and calls the deployment workflow with that exact tag. The deploy workflow also accepts a manually selected existing semantic tag for recovery. It checks out the tag, runs the full validation suite, applies D1 migrations, injects `DEPLOYED_VERSION` and `DEPLOYED_SHA`, deploys the Worker, and verifies `/version` and `/health`.
+Pushing an annotated semantic tag runs the release workflow. It reproduces the tagged state, publishes the matching record from `docs/releases/`, and calls the deployment workflow with that exact tag. The deploy workflow also accepts a manually selected existing semantic tag for recovery. It checks out the tag, runs the full validation suite, applies D1 migrations, injects `DEPLOYED_VERSION` and `DEPLOYED_SHA`, deploys the Worker, and verifies `/api/operations/version` and `/api/operations/health`.
 
 Required managed repository secrets:
 

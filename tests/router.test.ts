@@ -61,13 +61,13 @@ describe('public route contract', () => {
     expect(adminHtml).toContain('https://developers.openai.com/api/docs/bots');
     // The maintenance page reports the real state: it only claims the demo is down while it is.
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/offline'), environment)).status).toBe(200);
-    expect((await routeRequest(new Request('https://demo.wizardgang.ai/health'), environment)).status).toBe(200);
-    expect((await routeRequest(new Request('https://demo.wizardgang.ai/version'), environment)).status).toBe(200);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/health'), environment)).status).toBe(200);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/version'), environment)).status).toBe(200);
     const socialCard = await routeRequest(new Request('https://demo.wizardgang.ai/og.png'), environment);
     expect(socialCard.status).toBe(200);
     expect(socialCard.headers.get('content-type')).toBe('image/png');
     expect(socialCard.headers.get('cache-control')).toContain('immutable');
-    expect((await routeRequest(new Request('https://demo.wizardgang.ai/__api/operations/logs'), environment)).status).toBe(200);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/logs'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/robots.txt'), environment)).status).toBe(200);
     const accessibilityFrame = await routeRequest(new Request('https://demo.wizardgang.ai/__api/accessibility/lab?mode=accessible'), environment);
     expect(accessibilityFrame.status).toBe(200);
@@ -79,7 +79,7 @@ describe('public route contract', () => {
     const html = await response.text();
     const openapiOperationCount = Object.values(openapi.paths).reduce((count, path) => count + Object.keys(path).filter((method) => ['get', 'post', 'put', 'patch', 'delete', 'head', 'options'].includes(method)).length, 0);
     for (const anchor of ['rest', 'openapi']) expect(html).toContain(`id="${anchor}"`);
-    for (const endpoint of ['/v1/demo-records', '/v1/openapi.json', '/interfaces?view=graphql', '/interfaces?view=webhooks']) expect(html).toContain(endpoint);
+    for (const endpoint of ['/v1/demo-records', '/api/openapi.json', '/interfaces?view=graphql', '/interfaces?view=webhooks']) expect(html).toContain(endpoint);
     expect(html.match(/<form data-api-form/g)).toHaveLength(openapiOperationCount);
     expect(html.match(/data-api-endpoint=/g)).toHaveLength(openapiOperationCount);
     expect(html).toContain('OpenAPI 3.1');
@@ -213,8 +213,8 @@ describe('public route contract', () => {
     for (const anchor of ['ISO27001-4.1', 'ISO42001-4.1', 'WCAG-4.1.2']) {
       expect(html).toContain(`id="${anchor}"`);
     }
-    expect(html).toContain('href="/v1/assurance/compliance"');
-    expect(html).toContain('href="/v1/assurance/compliance/WCAG-4.1.2"');
+    expect(html).toContain('href="/api/reporting/compliance"');
+    expect(html).toContain('href="/api/reporting/compliance/WCAG-4.1.2"');
     expect(html).toContain('href="/assurance?view=evidence"');
     expect(html).not.toMatch(/>\s*(?:COMPLIANT|CERTIFIED)\s*</i);
   });
@@ -298,12 +298,12 @@ describe('ChatGPT crawler control', () => {
     expect(searchBlocked.status).toBe(403);
     expect(await searchBlocked.json()).toMatchObject({ agent: 'OAI-SearchBot', reason: 'chatgpt_crawl_access_disabled' });
 
-    const userBlocked = await routeRequest(new Request('https://demo.wizardgang.ai/health', { headers: { 'user-agent': userAgent } }), env('online', 'disabled'));
+    const userBlocked = await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/health', { headers: { 'user-agent': userAgent } }), env('online', 'disabled'));
     expect(userBlocked.status).toBe(403);
     expect(userBlocked.headers.get('x-robots-tag')).toBe('noindex, nofollow');
 
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/', { headers: { 'user-agent': searchAgent } }), env('online', 'enabled'))).status).toBe(200);
-    expect((await routeRequest(new Request('https://demo.wizardgang.ai/version', { headers: { 'user-agent': userAgent } }), env('online', 'enabled'))).status).toBe(200);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/version', { headers: { 'user-agent': userAgent } }), env('online', 'enabled'))).status).toBe(200);
 
     const trainingBlocked = await routeRequest(new Request('https://demo.wizardgang.ai/', { headers: { 'user-agent': trainingAgent } }), env('online', 'enabled'));
     expect(trainingBlocked.status).toBe(403);
@@ -334,9 +334,9 @@ describe('offline routing matrix', () => {
     expect(await offlinePage.text()).toContain('Oops! demo is down.');
 
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/operations'), environment)).status).toBe(200);
-    expect((await routeRequest(new Request('https://demo.wizardgang.ai/__api/operations/logs'), environment)).status).toBe(200);
-    expect((await routeRequest(new Request('https://demo.wizardgang.ai/version'), environment)).status).toBe(200);
-    expect((await routeRequest(new Request('https://demo.wizardgang.ai/health'), environment)).status).toBe(503);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/logs'), environment)).status).toBe(200);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/version'), environment)).status).toBe(200);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/health'), environment)).status).toBe(503);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/og.png'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/admin', { headers: { authorization: basic } }), environment)).status).toBe(200);
   });

@@ -38,7 +38,7 @@ body:
     id: version
     attributes:
       label: Observed version
-      description: Copy the version from https://demo.wizardgang.ai/version when relevant.
+      description: Copy the version from https://demo.wizardgang.ai/api/operations/version when relevant.
   - type: checkboxes
     id: public-safe
     attributes:

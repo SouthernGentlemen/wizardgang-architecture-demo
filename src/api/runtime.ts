@@ -31,7 +31,7 @@ export async function workerComputeResponse(request: Request, env: Env): Promise
   try {
     const budget = await currentBudgetState(env);
     if (budget.state === 'degraded') {
-      return json({ error: 'synthetic_budget_degraded', message: 'Optional Worker compute is paused by the controlled billing policy.', percent: budget.percent, criticalRoutesRemainAvailable: ['/dashboard', '/health', '/version', '/admin', '/offline'] }, { status: 429, headers: { 'cache-control': 'no-store', 'retry-after': '60' } });
+      return json({ error: 'synthetic_budget_degraded', message: 'Optional Worker compute is paused by the controlled billing policy.', percent: budget.percent, criticalRoutesRemainAvailable: ['/operations', '/api/operations/health', '/api/operations/version', '/admin', '/offline'] }, { status: 429, headers: { 'cache-control': 'no-store', 'retry-after': '60' } });
     }
     const body = await readJson<ComputeInput>(request, 4096);
     const operation = typeof body.operation === 'string' ? body.operation : '';

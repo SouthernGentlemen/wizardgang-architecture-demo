@@ -73,7 +73,7 @@ ${notice ? `<section class="panel" role="status"><strong>${escapeHtml(notice)}</
   <ul>
     <li>Ordinary browser demo pages redirect to the public offline message.</li>
     <li>Ordinary gated API, non-HTML, and write requests return structured <code>503</code> responses.</li>
-    <li>Operations, security, health, version, offline, admin, and required machine recovery routes remain reachable.</li>
+    <li>Operations, security, <code>/api/operations/health</code>, <code>/api/operations/version</code>, offline, admin, and required machine recovery routes remain reachable.</li>
     <li>Every state transition is written to the shared audit event stream.</li>
   </ul>
 </section>`, { cacheControl: 'no-store', noindex: true, activeRoute: '/operations' });
@@ -105,8 +105,8 @@ export function renderOffline(env: Env, control: DemoControl, requestedPath: str
     <a href="/operations?view=availability">Availability</a>
     <a href="/operations?view=docs">Docs</a>
     <a href="/security">Security</a>
-    <a href="/health">Health JSON</a>
-    <a href="/version">Version JSON</a>
+    <a href="/api/operations/health">Health JSON</a>
+    <a href="/api/operations/version">Version JSON</a>
     <a href="/admin">Admin</a>
     <a href="${escapeHtml(repoUrl(env))}">Public source</a>
   </div>

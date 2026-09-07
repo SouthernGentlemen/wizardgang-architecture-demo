@@ -142,13 +142,13 @@ const globalOperationalRoutes = [
     sourceModule: 'src/ui/admin.ts', sourceExport: 'renderOffline', indexing: 'deny',
   }),
   operationalRoute({
-    id: 'operations.health', pattern: '/health', methods: ['GET'], kind: 'api', handler: (_request, { env }) => healthResponse(env),
-    title: 'Health', description: 'Machine-readable runtime and dependency health.',
+    id: 'operations.health', pattern: '/api/operations/health', methods: ['GET'], kind: 'api', handler: (_request, { env }) => healthResponse(env),
+    title: 'Operations health', description: 'Machine-readable runtime and dependency health.',
     sourceModule: 'src/api/operations.ts', sourceExport: 'healthResponse',
   }),
   operationalRoute({
-    id: 'operations.version', pattern: '/version', methods: ['GET'], kind: 'api', handler: (_request, { env }) => versionResponse(env),
-    title: 'Version', description: 'Machine-readable deployed version and source metadata.',
+    id: 'operations.version', pattern: '/api/operations/version', methods: ['GET'], kind: 'api', handler: (_request, { env }) => versionResponse(env),
+    title: 'Operations version', description: 'Machine-readable deployed version and source metadata.',
     sourceModule: 'src/api/operations.ts', sourceExport: 'versionResponse',
   }),
   operationalRoute({
@@ -182,18 +182,18 @@ const globalOperationalRoutes = [
     sourceModule: 'src/demos/operations.ts', sourceExport: 'renderOperations', indexing: 'allow',
   }),
   operationalRoute({
-    id: 'operations.api-logs', pattern: '/__api/operations/logs', methods: ['GET'], kind: 'api', handler: (request, { env }) => logsResponse(request, env),
+    id: 'operations.api-logs', pattern: '/api/operations/logs', methods: ['GET'], kind: 'api', handler: (request, { env }) => logsResponse(request, env),
     title: 'Operations logs API', description: 'Sanitized application log query endpoint.',
     sourceModule: 'src/api/operations.ts', sourceExport: 'logsResponse',
   }),
   operationalRoute({
-    id: 'operations.api-cloudflare-usage', pattern: '/__api/operations/cloudflare-usage', methods: ['GET'], kind: 'api', handler: (request, { env }) => cloudflareUsageResponse(request, env),
-    title: 'Cloudflare usage API', description: 'Sanitized cached Cloudflare usage telemetry.',
+    id: 'operations.api-usage', pattern: '/api/operations/usage', methods: ['GET'], kind: 'api', handler: (request, { env }) => cloudflareUsageResponse(request, env),
+    title: 'Operations usage API', description: 'Sanitized cached Cloudflare usage telemetry.',
     sourceModule: 'src/api/operations.ts', sourceExport: 'cloudflareUsageResponse',
   }),
   operationalRoute({
-    id: 'operations.api-billing', pattern: '/__api/operations/billing', methods: ['POST'], kind: 'api', handler: (request, { env }) => billingScenarioResponse(request, env),
-    title: 'Billing scenario API', description: 'Synthetic budget scenario control used by the operations demo.',
+    id: 'operations.api-budget', pattern: '/api/operations/budget', methods: ['POST'], kind: 'api', handler: (request, { env }) => billingScenarioResponse(request, env),
+    title: 'Operations budget API', description: 'Synthetic budget scenario control used by the operations demo.',
     sourceModule: 'src/api/billing.ts', sourceExport: 'billingScenarioResponse',
   }),
 ] as const;
@@ -202,6 +202,7 @@ export const operationalRouteModule = defineRouteModule('operations', globalOper
 export const operationalRouteRegistry = createRouteRegistry([operationalRouteModule]);
 
 function cacheControl(policy: CachePolicy): string {
+  if (policy.mode === 'response') return 'no-store';
   if (policy.mode === 'no-store') return 'no-store';
   if (policy.mode === 'private') {
     return policy.maxAgeSeconds === undefined ? 'private' : `private, max-age=${policy.maxAgeSeconds}`;
@@ -216,7 +217,11 @@ function cacheControl(policy: CachePolicy): string {
 
 function applyResponsePolicy(response: Response, route: RouteDeclaration<OperationalRouteContext>): Response {
   const headers = new Headers(response.headers);
-  headers.set('cache-control', cacheControl(route.cache));
+  if (route.cache.mode === 'response') {
+    if (!headers.has('cache-control')) headers.set('cache-control', 'no-store');
+  } else {
+    headers.set('cache-control', cacheControl(route.cache));
+  }
   if (route.kind === 'page' && route.crawler.indexing === 'deny') {
     headers.set('x-robots-tag', 'noindex, nofollow');
   }

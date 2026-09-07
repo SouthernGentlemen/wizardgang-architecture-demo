@@ -68,7 +68,7 @@ describe('focused assurance registry-declared filtering', () => {
     expect(expected).toHaveLength(7);
 
     const response = await assuranceEvidenceResponse(
-      new Request(`${origin}/v1/assurance/evidence?kind=source&limit=2`),
+      new Request(`${origin}/api/reporting/evidence?kind=source&limit=2`),
       environment,
     );
     expect(response.status).toBe(200);
@@ -96,8 +96,8 @@ describe('focused assurance registry-declared filtering', () => {
 
     const origin = 'https://demo.wizardgang.ai';
     const cases = [
-      [`${origin}/v1/assurance/evidence?kind=unsupported`, 'unsupported'],
-      [`${origin}/v1/assurance/evidence?kind=`, ''],
+      [`${origin}/api/reporting/evidence?kind=unsupported`, 'unsupported'],
+      [`${origin}/api/reporting/evidence?kind=`, ''],
     ] as const;
     for (const [url, value] of cases) {
       const response = await assuranceEvidenceResponse(new Request(url), environment);
@@ -110,7 +110,7 @@ describe('focused assurance registry-declared filtering', () => {
     }
 
     const repeated = await assuranceEvidenceResponse(
-      new Request(`${origin}/v1/assurance/evidence?kind=source&kind=test`),
+      new Request(`${origin}/api/reporting/evidence?kind=source&kind=test`),
       environment,
     );
     expect(repeated.status).toBe(400);
@@ -122,7 +122,7 @@ describe('focused assurance registry-declared filtering', () => {
 
     for (const parameter of ['futureParameter', 'q']) {
       const undeclared = await assuranceEvidenceResponse(
-        new Request(`${origin}/v1/assurance/evidence?${parameter}=source`),
+        new Request(`${origin}/api/reporting/evidence?${parameter}=source`),
         environment,
       );
       expect(undeclared.status).toBe(400);
@@ -139,7 +139,7 @@ describe('focused assurance registry-declared filtering', () => {
     const expectedExercises = listPublishedAssuranceRecords('exercises');
     expect(expectedExercises.length).toBeGreaterThan(0);
     const response = await assuranceIncidentsResponse(new Request(
-      'https://demo.wizardgang.ai/v1/assurance/incidents?recordType=exercise&limit=1',
+      'https://demo.wizardgang.ai/api/reporting/incidents?recordType=exercise&limit=1',
     ));
     expect(response.status).toBe(200);
     const body = await response.json() as {
@@ -154,7 +154,7 @@ describe('focused assurance registry-declared filtering', () => {
     expect(body.query.pagination.total).toBe(expectedExercises.length);
 
     const invalid = await assuranceIncidentsResponse(new Request(
-      'https://demo.wizardgang.ai/v1/assurance/incidents?recordType=advisory',
+      'https://demo.wizardgang.ai/api/reporting/incidents?recordType=advisory',
     ));
     expect(invalid.status).toBe(400);
     expect(await invalid.json()).toMatchObject({
@@ -170,7 +170,7 @@ describe('focused assurance registry-declared filtering', () => {
       readFileSync('tests/fixtures/assurance/advisories/valid-nonempty.json', 'utf8'),
     ) as { records: Array<{ id: string; severity: string }> };
 
-    const lowUrl = new URL('https://demo.wizardgang.ai/v1/assurance/advisories?severity=low');
+    const lowUrl = new URL('https://demo.wizardgang.ai/api/reporting/advisories?severity=low');
     const low = selectFocusedAssuranceRecords(
       new Request(lowUrl),
       lowUrl,
@@ -182,7 +182,7 @@ describe('focused assurance registry-declared filtering', () => {
     expect(low.filterOwner).toBe('advisories');
     expect(low.records.map((record) => record.id)).toEqual(['GHSA-aaaa-bbbb-cccc']);
 
-    const highUrl = new URL('https://demo.wizardgang.ai/v1/assurance/advisories?severity=high');
+    const highUrl = new URL('https://demo.wizardgang.ai/api/reporting/advisories?severity=high');
     const high = selectFocusedAssuranceRecords(
       new Request(highUrl),
       highUrl,
@@ -193,7 +193,7 @@ describe('focused assurance registry-declared filtering', () => {
     if (high instanceof Response) throw new Error('Expected advisory fixture selection.');
     expect(high.records).toEqual([]);
 
-    const invalidUrl = new URL('https://demo.wizardgang.ai/v1/assurance/advisories?severity=unknown');
+    const invalidUrl = new URL('https://demo.wizardgang.ai/api/reporting/advisories?severity=unknown');
     const invalid = selectFocusedAssuranceRecords(
       new Request(invalidUrl),
       invalidUrl,

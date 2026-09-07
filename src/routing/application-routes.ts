@@ -11,6 +11,10 @@ import {
   operationalRouteRegistry,
   type OperationalRouteContext,
 } from './operational-routes';
+import {
+  reportingRouteRegistry,
+  type ReportingRouteContext,
+} from './reporting-routes';
 import { platformLaboratoryRouteRegistry } from './platform-laboratory-routes';
 import {
   createRouteRegistry,
@@ -139,6 +143,17 @@ function assuranceRoutes(): ApplicationRouteDeclaration[] {
   ));
 }
 
+function reportingRoutes(): ApplicationRouteDeclaration[] {
+  return reportingRouteRegistry.declarations.map((route) => adaptRoute(
+    route,
+    (request, context, params) => route.handler(
+      request,
+      { env: context.env } satisfies ReportingRouteContext,
+      params,
+    ),
+  ));
+}
+
 function interfaceIdentityRoutes(): ApplicationRouteDeclaration[] {
   return interfaceIdentityRouteRegistry.declarations.map((route) => adaptRoute(
     route,
@@ -160,6 +175,7 @@ function platformRoutes(): ApplicationRouteDeclaration[] {
 const applicationModules: readonly RouteModule<ApplicationRouteContext>[] = [
   defineRouteModule('application.operations', operationalRoutes()),
   defineRouteModule('application.assurance', assuranceRoutes()),
+  defineRouteModule('application.reporting', reportingRoutes()),
   defineRouteModule('application.interfaces', interfaceIdentityRoutes()),
   defineRouteModule('application.platform', platformRoutes()),
 ];

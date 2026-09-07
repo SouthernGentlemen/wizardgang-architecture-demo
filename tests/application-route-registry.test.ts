@@ -79,7 +79,7 @@ describe('complete declarative application routing', () => {
   });
 
   it('resolves internal URLs by stable route ID, including encoded parameters', () => {
-    expect(routeUrl('interfaces.openapi.json')).toBe('/v1/openapi.json');
+    expect(routeUrl('interfaces.openapi.json')).toBe('/api/openapi.json');
     const parameterized = applicationRouteRegistry.declarations.find((route) => route.pattern.includes(':'));
     expect(parameterized).toBeTruthy();
     const names = [...parameterized!.pattern.matchAll(/:([A-Za-z_][A-Za-z0-9_]*)/g)].map((match) => match[1]);
@@ -130,8 +130,8 @@ describe('complete declarative application routing', () => {
 
   it('rejects collisions across capability boundaries', () => {
     expect(() => createApplicationRouteRegistry([
-      defineRouteModule('synthetic.duplicate', [syntheticRoute('synthetic.duplicate', '/health')]),
-    ])).toThrow("Duplicate route pattern '/health'");
+      defineRouteModule('synthetic.duplicate', [syntheticRoute('synthetic.duplicate', '/api/operations/health')]),
+    ])).toThrow("Duplicate route pattern '/api/operations/health'");
 
     expect(() => createApplicationRouteRegistry([
       defineRouteModule('synthetic.ambiguous', [
