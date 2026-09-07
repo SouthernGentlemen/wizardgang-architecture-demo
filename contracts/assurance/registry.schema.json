@@ -115,23 +115,6 @@
     }
   },
   "$defs": {
-    "routeAlias": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "path"
-      ],
-      "properties": {
-        "path": {
-          "type": "string",
-          "pattern": "^/"
-        },
-        "fragment": {
-          "type": "string",
-          "minLength": 1
-        }
-      }
-    },
     "routes": {
       "type": "object",
       "additionalProperties": false,
@@ -139,21 +122,6 @@
         "html": {
           "type": "string",
           "pattern": "^/"
-        },
-        "api": {
-          "type": "string",
-          "pattern": "^/"
-        },
-        "apiRecord": {
-          "type": "string",
-          "pattern": "^/.+\\{id\\}"
-        },
-        "aliases": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "$ref": "#/$defs/routeAlias"
-          }
         }
       }
     },
@@ -263,7 +231,6 @@
             "enum": [
               "runtime",
               "records",
-              "api-index",
               "summary-source",
               "manifest",
               "lifecycle",
@@ -348,7 +315,6 @@
             "enum": [
               "runtime",
               "records",
-              "api-index",
               "summary-source",
               "manifest",
               "lifecycle",
@@ -510,7 +476,6 @@
             "enum": [
               "runtime",
               "records",
-              "api-index",
               "summary-source",
               "manifest",
               "lifecycle",

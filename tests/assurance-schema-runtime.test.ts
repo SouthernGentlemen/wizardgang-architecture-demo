@@ -1,7 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { assuranceRisksResponse } from '../src/api/assurance';
+import { reportingCollectionResponse } from '../src/api/reporting';
 import { assuranceFilterValues, filterAssuranceRecords, listAssuranceRecords } from '../src/assurance/service';
+import type { Env } from '../src/types';
+
+const env = { GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' } as Env;
 
 describe('runtime schema-derived assurance behavior', () => {
   it('uses registered schema vocabulary for stored risk filters', () => {
@@ -25,7 +28,7 @@ describe('runtime schema-derived assurance behavior', () => {
   });
 
   it('reports schema-driven filters as current derived facets instead of family count envelopes', async () => {
-    const response = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/api/reporting/risks?status=open'));
+    const response = await reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/risks?status=open'), env, 'risks');
     const body = await response.json() as {
       records: Array<{ status: string }>;
       derived: { count: number; facets: Record<string, Record<string, number>> };

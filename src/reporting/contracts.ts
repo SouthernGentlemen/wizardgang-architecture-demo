@@ -1,7 +1,7 @@
 export type ReportingProvider = 'github' | 'cloudflare';
 export type ReportingAuthority = 'native-object' | 'structured-record' | 'native-observation';
 export type ReportingVisibility = 'public' | 'private';
-export type ReportingCapability = 'read' | 'query' | 'export' | 'import' | 'observe';
+export type ReportingCapability = 'read' | 'query' | 'export' | 'update' | 'observe';
 export type ReportingAvailability = 'available' | 'partial' | 'unavailable' | 'rate-limited' | 'stale' | 'expired';
 export type ReportingScalar = string | number | boolean | null;
 
@@ -61,7 +61,6 @@ export interface ReportingObservation<T = unknown> extends ReportingRecord {
 export interface ReportingCollectionResult<T extends ReportingRecord> {
   source: ReportingSource;
   records: readonly T[];
-  relationships: readonly ReportingRelationship[];
   derived: { readonly count: number };
 }
 
@@ -76,8 +75,8 @@ export interface ReportingPagination {
   returned: number;
   total: number;
   nextCursor: string | null;
-  completeness?: ReportingPaginationCompleteness;
-  partialReason?: ReportingPaginationPartialReason | null;
+  completeness: ReportingPaginationCompleteness;
+  partialReason: ReportingPaginationPartialReason | null;
 }
 
 export interface ReportingQuery {
@@ -102,39 +101,11 @@ export interface ReportingQueryResult<T extends ReportingRecord> {
   };
 }
 
-export interface ReportingResourceReference {
-  id: string;
-  path: string;
-  schema: string;
-  collectionPath: string;
-  visibility: ReportingVisibility;
-}
-
-export interface ReportingSourceRevision {
-  commit: string;
-  blob: string;
-}
-
-export interface ReportingInterchangeCollection<T extends ReportingRecord = ReportingRecord> {
-  source: ReportingSource;
-  resource: ReportingResourceReference;
-  revision: ReportingSourceRevision;
-  records: readonly T[];
-  relationships: readonly ReportingRelationship[];
-}
-
-export interface ReportingInterchangeEnvelope<T extends ReportingRecord = ReportingRecord> {
-  contract: string;
-  registry: { id: string; schemaVersion: 1 };
-  collections: readonly ReportingInterchangeCollection<T>[];
-}
-
 export function createReportingCollection<T extends ReportingRecord>(
   source: ReportingSource,
   records: readonly T[],
-  relationships: readonly ReportingRelationship[] = [],
 ): ReportingCollectionResult<T> {
-  return { source, records, relationships, derived: { count: records.length } };
+  return { source, records, derived: { count: records.length } };
 }
 
 function normalizedDimensions(dimensions: Readonly<Record<string, ReportingScalar>>): Array<[string, ReportingScalar]> {

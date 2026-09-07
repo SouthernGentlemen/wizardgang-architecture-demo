@@ -86,7 +86,7 @@ function registerSyntheticReportFamily(fixtureRoot: string, mutate?: (record: an
     path: reportPath,
     schema: risks.schema,
     visibility: 'public',
-    capabilities: ['runtime', 'records', 'api-index'],
+    capabilities: ['runtime', 'records'],
     recordCollection: structuredClone(risks.recordCollection),
   });
   writeJson(fixtureRoot, registryPath, registry);

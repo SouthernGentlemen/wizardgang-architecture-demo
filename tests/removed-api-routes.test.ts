@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { applicationRouteRegistry } from '../src/routing/application-routes';
 import { matchRoute } from '../src/routing/registry';
 
-const retiredRoutes = [
+const removedRoutes = [
   ['GET', '/v1/assurance'],
   ['GET', '/v1/assurance/evidence'],
   ['GET', '/v1/assurance/compliance'],
@@ -20,21 +20,21 @@ const retiredRoutes = [
   ['GET', '/v1/openapi.json'],
 ] as const;
 
-describe('retired reporting and operations API routes', () => {
-  for (const [method, path] of retiredRoutes) {
+describe('removed reporting and operations API routes', () => {
+  for (const [method, path] of removedRoutes) {
     it(`${method} ${path} is not registered`, () => {
       expect(matchRoute(applicationRouteRegistry, method, path)).toEqual({ status: 'not-found', statusCode: 404 });
     });
   }
 
-  it('does not retain a catch-all legacy assurance API', () => {
+  it('does not retain a catch-all assurance API', () => {
     expect(matchRoute(applicationRouteRegistry, 'GET', '/v1/assurance/anything-else')).toEqual({
       status: 'not-found',
       statusCode: 404,
     });
   });
 
-  it('does not retain a catch-all legacy operations API', () => {
+  it('does not retain a catch-all operations API', () => {
     expect(matchRoute(applicationRouteRegistry, 'GET', '/__api/operations/anything-else')).toEqual({
       status: 'not-found',
       statusCode: 404,

@@ -1,519 +1,111 @@
-# Interactive demo implementation specification
+# Interactive demonstration specification
 
-Status: implemented by DEMO-037 through DEMO-044 for the v0.5.0 release. This document remains the design specification; deployed evidence is recorded only by the exact-tag release and deployment records.
+This document describes the current interactive architecture demo. Route declarations, the generated route manifest, OpenAPI, and the implementation remain authoritative when extending a capability.
 
-## Objective
+## Browser topology
 
-Deepen seven existing demonstrations without turning the architecture companion into seven unrelated applications. Every upgraded surface follows one sequence:
+Exactly eight HTML page pathnames exist:
 
-1. Run a bounded demonstration.
-2. Show the live technical state produced by that action.
-3. Link to the exact route, Worker/API, contract or resource, test, and workflow source.
-4. Explain the architecture boundary being proved.
-5. Reset only the current visitor's demonstration state.
+| Pathname | Purpose |
+|---|---|
+| `/` | Architecture index |
+| `/platform` | Edge, Workers, Durable Objects, D1, and R2 laboratories |
+| `/interfaces` | REST/OpenAPI, GraphQL, webhooks, identity, MCP, i18n, and accessibility |
+| `/assurance` | Delivery, governance, evidence, compliance, risks, incidents, and concerns |
+| `/security` | Security policy, private reporting boundary, and published advisories |
+| `/operations` | Health, availability, logs, usage, reporting, and documentation |
+| `/admin` | Authenticated availability and crawler controls |
+| `/offline` | Intentional-maintenance status |
 
-The implementation remains a Cloudflare Worker with server-rendered TypeScript and progressively enhanced browser controls. A reference implementation may use React or Hono without requiring this repository to adopt that framework. GraphiQL is the one intentional client application because an actual GraphQL IDE is part of the proof.
+Subsections use server-rendered query state such as `/platform?view=d1`, `/interfaces?view=graphql`, `/assurance?view=compliance`, and `/operations?view=reports`. Unknown pathnames and unknown view values use the ordinary 404. There is no redirect table, route alias, proxy path, dual endpoint, or client-side routing fallback.
 
-## Route compatibility decisions
+## Routing contract
 
-Released routes remain canonical. The proposed `/demo/*` names are represented by the current public contract instead of creating a second URL hierarchy.
+`src/routing/application-routes.ts` composes capability-owned declarative route modules. `src/routing/registry.ts` provides the generic matcher. `src/router.ts` performs normalization, matching, common policy enforcement, and handler invocation; it does not dispatch by application pathname or prefix.
 
-| Capability | Canonical human surface | Machine surface | Compatibility decision |
-|---|---|---|---|
-| R2 | `/platform?view=r2` | `/__api/r2/*` | Keep object storage on the consolidated Platform surface. |
-| D1 | `/platform?view=d1` | `/__api/d1/*`; retain `/v1/demo-records*` | Keep the Users/Tasks lab on the consolidated Platform surface without removing the current record contract. |
-| i18n | `/interfaces?view=i18n` | Server render plus local progressive enhancement | Keep Arabic/RTL on the consolidated Interfaces surface. |
-| WCAG | `/interfaces?view=accessibility` | Isolated lab frame and test result JSON | Keep the accessibility lab on the consolidated Interfaces surface. |
-| Git/GitHub | `/git` | `/__api/git/evidence`; `/__api/git/demo*` | Show public evidence and run a controlled two-stage release lifecycle against this repository. |
-| Webhooks | `/interfaces?view=webhooks` | `/webhooks/github`; `/__api/webhooks/*` | Browser presentation is consolidated while receiver URLs remain stable. |
-| GraphQL | `/interfaces?view=graphql` | `/graphql`; `/graphql/schema`; `/graphql/console` | `/graphql` is machine-only; the browser IDE is embedded by the consolidated view. |
+The same registry generates:
 
-Protocol response fields, methods, security controls, source links, and offline-gate behavior remain stable. Retired HTML pages are removed only through an explicit controlled route-consolidation change reflected in `docs/ROUTES.md`, `docs/route-manifest.json`, and the applicable contract.
+- `docs/route-manifest.json`;
+- the tables in `docs/ROUTES.md`;
+- registered navigation metadata; and
+- sitemap membership.
 
-## Shared visitor sandbox
+OpenAPI operations identify their owning declaration with `x-route-id`. A route change is incomplete until `npm run generate:routes` and `npm run generate:openapi` produce matching checked-in artifacts.
 
-The live D1, GraphQL, R2, and webhook demonstrations need writes without sharing mutable data between anonymous visitors. Add one bounded visitor sandbox rather than weakening the existing bearer-protected interfaces.
+## Platform laboratories
 
-- Issue `wg_demo_session=<opaque-id>.<signature>` as `Secure; HttpOnly; SameSite=Lax; Path=/; Max-Age=86400`.
-- Sign the opaque ID with a managed `DEMO_SESSION_SECRET`; never store the secret, raw cookie, IP address, or user agent in D1 or logs.
-- Require an exact same-origin check on every visitor mutation.
-- Scope every mutable row and uploaded object to the session ID.
-- Limit each session to 10 users, 25 tasks, 10 uploads, 5 MiB per object, 20 MiB total R2 content, and 50 webhook events.
-- Expire sandbox state after 24 hours. Opportunistic cleanup may delete expired D1 rows; R2 cleanup must enumerate only `uploads/<session-id>/` and delete explicit validated keys.
-- Keep `/v1/demo-records*` and `/__api/r2/object` bearer authorization unchanged. New visitor-lab handlers are separate, narrowly scoped interfaces.
-- Reset is idempotent. It removes only rows/objects belonging to the current signed session, recreates deterministic seed data where applicable, records a public-safe audit event, and returns a reset summary.
-- When the demo is intentionally offline, all sandbox interfaces return the existing JSON `503` response and no action reaches D1 or R2.
+The Platform page offers five query-selected views backed by canonical `/api/labs/*` routes:
 
-The common action response is:
+- Edge inspection exposes only allowlisted request context.
+- Worker compute accepts bounded numeric operations and remains stateless.
+- Durable Objects own coordinated counter state and write only audit evidence to D1.
+- D1 owns visitor-scoped users, tasks, and REST demonstration records.
+- R2 owns object bytes while D1 stores bounded metadata and session references.
 
-```json
-{
-  "requestId": "uuid",
-  "operation": "d1.users.create",
-  "resource": "DEMO_DB / demo-blob",
-  "status": 201,
-  "durationMs": 8.4,
-  "rowCount": 1,
-  "statement": "INSERT INTO demo_users (...) VALUES (?, ...)",
-  "parameters": ["sessionId", "id", "name", "email", "role"],
-  "result": {}
-}
-```
+Every mutation has explicit method, body, identity, same-origin, size, and storage constraints in its route declaration and handler. Reset behavior is scoped to the current visitor sandbox.
 
-`statement` is a checked-in template selected by statement ID, not dynamically supplied SQL. `parameters` contains names, not session identifiers, secrets, or credential values. R2 and webhook responses use the same envelope but replace `statement` and `parameters` with safe object or verification metadata.
+## Interface demonstrations
 
-## Shared D1 schema
+The Interfaces page embeds the browser presentations while preserving one machine endpoint per protocol:
 
-Add the next numbered migration; never edit an applied migration. The implementation may add housekeeping columns, but the following public-safe model and constraints are required.
+- OpenAPI 3.1 is served at `/api/openapi.json` and drives the REST forms.
+- GraphQL executes at `/graphql`; the browser console is embedded in the Interfaces page.
+- GitHub webhook deliveries enter at `/webhooks/github`; synthetic demonstrations use the current laboratory API.
+- OAuth/OIDC and SAML use the `/auth/*` protocol routes documented in `docs/IDENTITY.md`.
+- MCP Streamable HTTP uses `/mcp` and protocol revision `2026-07-28`.
+- i18n and accessibility are browser views with their current laboratory APIs where execution is required.
 
-```sql
-CREATE TABLE demo_sessions (
-  id TEXT PRIMARY KEY,
-  created_at TEXT NOT NULL,
-  expires_at TEXT NOT NULL,
-  last_seen_at TEXT NOT NULL
-);
+REST, GraphQL, and MCP public reads share the same authorization boundary. Authenticated visitor writes use identity-derived, ten-minute access tokens scoped to a server-derived sandbox namespace. There is no static bearer-token credential.
 
-CREATE TABLE demo_users (
-  id TEXT PRIMARY KEY,
-  session_id TEXT NOT NULL,
-  name TEXT NOT NULL,
-  email TEXT NOT NULL,
-  role TEXT NOT NULL CHECK (role IN ('admin', 'member', 'viewer')),
-  created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL,
-  FOREIGN KEY (session_id) REFERENCES demo_sessions(id) ON DELETE CASCADE,
-  UNIQUE (session_id, email)
-);
+## Reporting and assurance
 
-CREATE INDEX idx_demo_users_session ON demo_users(session_id, updated_at DESC);
+All structured assurance and provider-backed queries use one HTTP family:
 
-CREATE TABLE demo_tasks (
-  id TEXT PRIMARY KEY,
-  session_id TEXT NOT NULL,
-  assignee_id TEXT,
-  title TEXT NOT NULL,
-  status TEXT NOT NULL CHECK (status IN ('todo', 'doing', 'done')),
-  created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL,
-  FOREIGN KEY (session_id) REFERENCES demo_sessions(id) ON DELETE CASCADE,
-  FOREIGN KEY (assignee_id) REFERENCES demo_users(id) ON DELETE SET NULL
-);
+| Route | Purpose |
+|---|---|
+| `/api/reporting` | Discover collections visible to the caller |
+| `/api/reporting/{collection}` | Query or export a collection with common filters and cursors |
+| `/api/reporting/{collection}/{recordId}` | Read one record or perform an authorized source-supported update |
 
-CREATE INDEX idx_demo_tasks_session ON demo_tasks(session_id, updated_at DESC);
+`contracts/assurance/reporting.schema.json` is the single reporting JSON Schema. OpenAPI references its `$id` definitions directly and does not embed a copy. Every successful reporting index, query, record, and update response is runtime-validated before serialization.
 
-CREATE TABLE webhook_events (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  session_id TEXT,
-  provider TEXT NOT NULL CHECK (provider IN ('demo', 'github')),
-  delivery_id TEXT NOT NULL UNIQUE,
-  event_type TEXT NOT NULL,
-  action TEXT,
-  repository TEXT,
-  actor TEXT,
-  summary_json TEXT NOT NULL,
-  payload_sha256 TEXT NOT NULL,
-  signature_valid INTEGER NOT NULL CHECK (signature_valid IN (0, 1)),
-  received_at TEXT NOT NULL,
-  FOREIGN KEY (session_id) REFERENCES demo_sessions(id) ON DELETE CASCADE
-);
+Canonical records store relationship edges once as `relationships`. Forward views read those edges, reverse graphs are built from them at runtime, and counts/facets are calculated from the selected records. Flattened relationship properties and stored presentation counts are not supported.
 
-CREATE INDEX idx_webhook_events_session_time
-  ON webhook_events(session_id, received_at DESC);
+Structured and provider-backed collection queries both accept the common `limit` and signed `cursor` contract. A cursor is bound to source, collection, filters, ordering, and authorization context; provider-native continuations are never exposed as an alternate public cursor.
 
-CREATE TABLE demo_state (
-  session_id TEXT NOT NULL,
-  state_key TEXT NOT NULL,
-  value_json TEXT NOT NULL,
-  updated_at TEXT NOT NULL,
-  PRIMARY KEY (session_id, state_key),
-  FOREIGN KEY (session_id) REFERENCES demo_sessions(id) ON DELETE CASCADE
-);
-```
+Public reporting includes disclosure-safe assurance, GitHub, retained-report, and Cloudflare observation collections registered for anonymous discovery. Protected GitHub security sources are discoverable only by an authenticated operator with `reporting:private`; authorized updates additionally require `reporting:write` and source support.
 
-`webhook_receipts` remains in place for migration and rollback compatibility until the new receiver has been released and verified. Copy its safe historical fields into `webhook_events`; do not copy raw payloads because they were intentionally never stored. `demo_control` remains the global operator-controlled online/offline state and must not be conflated with visitor `demo_state`.
+## Operations
 
-Seed each new session with three fictional users and four tasks. Names, domains, repository values, and timestamps must be obviously synthetic and deterministic enough for tests.
+The Operations page presents current runtime state. Machine interfaces are:
 
-## R2 layout
+- `/api/operations/health` for dependency readiness;
+- `/api/operations/version` for deployed source identity;
+- `/api/operations/logs` for sanitized application logs;
+- `/api/operations/budget` for the synthetic cost-guardrail demonstration; and
+- `/api/reporting/operations` for normalized Cloudflare usage observations.
 
-Keep actual object bytes in `DEMO_R2`; D1 stores only metadata and ownership needed for listing and cleanup.
+Provider credentials, private resource identifiers, invoices, payment details, and raw provider payloads never cross the public boundary. Missing or malformed provider data is reported as unavailable or partial; it is not converted into invented zero usage. Stale observations retain their original observation time and explicit freshness state.
+
+## Identity and security boundaries
+
+OAuth authorization-code flows use server-side PKCE and validated provider callbacks. SAML validates issuer, audience, recipient, time bounds, request correlation, signatures, and replay state. Application sessions are encrypted, revocable, short-lived, and separate from provider credentials.
+
+GitHub webhook requests are HMAC-verified before persistence, and delivery IDs are replay-protected. MCP requests are origin-checked and pass through the common authorization layer. GraphQL enforces body, depth, field-count, batching, and same-origin mutation constraints.
+
+Public records and logs are disclosure-safe projections. Credentials, cookies, tokens, authorization codes, PKCE material, SAML assertions, and private provider data are excluded from HTML, logs, reporting responses, and error details.
+
+## Verification
+
+The implementation is complete only when these commands pass from a clean checkout:
 
 ```text
-DEMO_R2 / wizardgang-demo-r2
-├── documents/
-│   └── architecture-demo.txt       immutable shared seed
-├── images/
-│   └── architecture-map.svg        immutable shared seed
-└── uploads/
-    └── <session-id>/
-        └── <uuid>-<safe-filename>  visitor-owned, expires in 24 hours
+npm run generate:routes
+npm run check
+npm run validate:migrations
+npm run security:dependencies
+npm run build
+git diff --check
 ```
 
-Never accept an object key from the browser. The Worker derives the prefix from the verified session, creates a UUID, strips path separators/control characters from the display name, and stores the original display name only as bounded metadata. Preview only `image/png`, `image/jpeg`, `image/gif`, `image/webp`, `text/plain`, and `application/pdf`; serve every other type as an attachment with `X-Content-Type-Options: nosniff`. SVG uploads are attachments, not inline previews.
-
-## Shared UI components
-
-Implement these as TypeScript HTML helpers with small colocated progressive-enhancement scripts. Avoid introducing a site-wide client framework.
-
-| Component | Responsibility | Target source |
-|---|---|---|
-| `demoWorkbench` | Enforces the sequence Demo, Technical state, Architecture, Reset. | `src/ui/demo-workbench.ts` |
-| `technicalState` | Renders operation, binding, endpoint, request/response, duration, and row/object count from the common envelope. | `src/ui/technical-state.ts` |
-| `sourceEvidence` | Renders deterministic Route, Worker, Contract/resource, Tests, and Workflow links. | `src/ui/source-evidence.ts` |
-| `resetControl` | Same-origin POST, pending state, confirmation, and focus-safe status update. | `src/ui/demo-workbench.ts` |
-| `sandboxSession` | Creates/verifies the signed cookie, applies limits, and performs scoped cleanup. | `src/lib/demo-session.ts` |
-| `safeGitHubClient` | Allowlisted public GitHub reads, optional managed token, cache, timeouts, and sanitized fallback states. | `src/lib/github-api.ts` |
-
-Every workbench must be usable without a pointer, expose pending/completed/error states through an existing live region, retain focus after rerender, honor reduced motion, and fit at 320 CSS pixels without two-dimensional scrolling except inside code/table regions.
-
-## `/d1` — Users and Tasks CRUD
-
-### Working demonstration
-
-Render Users and Tasks as two compact tabs implemented with buttons and an accessible tab pattern, with Users selected by default. Each table supports list, create, edit, and delete. Selecting a user filters tasks by assignee; selecting a task exposes its status and assignee. Destructive actions use a native confirmation dialog with cancel focused first.
-
-### Interfaces
-
-| Method | Path | Behavior |
-|---|---|---|
-| `GET`, `POST` | `/__api/d1/users` | List or create session-scoped users. |
-| `PATCH`, `DELETE` | `/__api/d1/users/{id}` | Update or delete one session-scoped user. Deletion sets task assignees to null. |
-| `GET`, `POST` | `/__api/d1/tasks` | List/filter or create session-scoped tasks. |
-| `PATCH`, `DELETE` | `/__api/d1/tasks/{id}` | Update or delete one session-scoped task. |
-| `POST` | `/__api/d1/reset` | Reset Users and Tasks to the session seed used by both D1 and GraphQL. |
-
-Names are 1–80 characters, emails are normalized and validated up to 254 characters, task titles are 1–120 characters, IDs are Worker-generated UUIDs, and unrecognized JSON fields are rejected. Each handler uses parameterized statements and returns the common technical-state envelope. Optimistic UI is not used; the D1 result is authoritative.
-
-### Live state and evidence
-
-Beside the table show the HTTP method/path, D1 binding `DEMO_DB`, database name `demo-blob`, checked-in SQL template, parameter names, status, duration, changed row count, and sanitized result. Never echo the signed session ID.
-
-### Source links
-
-- Route: `src/demos/d1.ts` and `src/demos/d1-page.ts`
-- Worker: `src/api/d1-lab.ts`
-- Schema: the new numbered migration
-- Tests: `tests/d1-lab.test.ts` and `tests/interface.test.ts`
-- Workflow: `.github/workflows/ci.yml`
-
-### Acceptance tests
-
-- Two sessions cannot list, update, or delete each other's rows.
-- Create/read/update/delete and reset work for both entities.
-- Invalid fields, foreign IDs, duplicate email, limits, cross-origin writes, expired/tampered cookies, and offline state fail safely.
-- The UI displays the exact statement ID/template, operation, timing, and row count returned by the Worker.
-- Existing `/v1/demo-records*` tests and bearer authorization remain unchanged.
-
-## `/r2` — Mini file manager
-
-### Working demonstration
-
-Provide keyboard-operable drag/drop and file-input upload, a list grouped into Documents, Images, and My uploads, and preview/download/delete actions. Only session uploads are deletable. Selecting an object opens a metadata panel containing key, display name, size, content type, ETag, uploaded time, and ownership class (`shared seed` or `this sandbox`).
-
-### Interfaces
-
-| Method | Path | Behavior |
-|---|---|---|
-| `GET`, `POST` | `/__api/r2/files` | List visible shared/session objects or accept one bounded multipart upload. |
-| `GET` | `/__api/r2/files/{id}` | Stream a visible object as an inline-safe preview or attachment. |
-| `DELETE` | `/__api/r2/files/{id}` | Delete one object owned by the session and its D1 metadata. |
-| `POST` | `/__api/r2/reset` | Delete the session's explicit upload keys and metadata. |
-
-`POST` accepts one multipart field named `file`; it rejects missing/ambiguous content type, empty objects, declared or measured bodies over 5 MiB, and a session total over 20 MiB. D1 metadata is written after a successful R2 put. If metadata persistence fails, delete the just-written explicit R2 key as compensation and return failure. On delete, remove R2 first and then D1 metadata; an absent R2 object is treated as idempotent success.
-
-### Live state and evidence
-
-Show binding `DEMO_R2`, bucket alias, operation (`list`, `put`, `get`, or `delete`), derived safe key, content metadata, HTTP status, duration, and object count/bytes. Never expose account IDs, S3 credentials, signed URLs, or the raw session prefix.
-
-### Source links
-
-- Route: `src/demos/r2.ts` and `src/demos/r2-page.ts`
-- Worker: `src/api/r2.ts`
-- Storage boundary: `src/storage/r2.ts`
-- Metadata schema: `migrations/0005_capability_records.sql` plus the new migration
-- Tests: `tests/r2-lab.test.ts` and `tests/security.test.ts`
-- Workflow: `.github/workflows/ci.yml`
-
-### Acceptance tests
-
-- Upload/list/preview/download/delete/reset use the actual R2 binding in integration tests and an interface-faithful fake in unit tests.
-- Key traversal, SVG/HTML inline rendering, oversized input, cross-session access, metadata compensation, object-count/byte limits, same-origin enforcement, and offline state are covered.
-- Drag/drop has an equivalent file-input path and all actions are reachable by keyboard.
-
-## `/interfaces?view=i18n` — Instant locale laboratory
-
-### Working demonstration
-
-Render one representative application card with locale buttons for English, Spanish, French, German, Japanese, and Arabic. Keep Arabic because it proves the existing RTL invariant. Changing locale updates the card immediately without a full navigation, while the query string remains shareable and server rendering remains the no-script fallback.
-
-The card includes translated heading/body/action text, a fixed reference date, decimal number, USD currency, and an item count with pluralization. Clicking or focusing an inspectable element updates a companion panel with its translation key, selected/fallback locale, resolved string, format options, plural category where relevant, and the JSON resource excerpt.
-
-### Resource contract
-
-- Add `fr.json`, `de.json`, and `ja.json`; preserve `en.json`, `es.json`, and `ar.json`.
-- Declare all six locales and `en` fallback in `config/i18n.json`.
-- Use one identical flat key set across every resource. Use i18next JSON v4 plural suffixes (`_one`, `_other`, and locale-specific categories where needed).
-- Keep formatting in `Intl.DateTimeFormat`, `Intl.NumberFormat`, and `Intl.PluralRules`; do not store preformatted dates/numbers in translation files.
-- Use a fixed UTC reference instant for deterministic snapshots and expose that fact in the UI.
-- Missing keys resolve through English and are labeled `fallback: en` in the inspector; production locale validation must still fail CI on missing required keys.
-
-### Source links
-
-- Route: `src/demos/i18n.ts`
-- Renderer/client behavior: `src/demos/i18n-page.ts`
-- Configuration: `config/i18n.json`
-- Selected resource: `src/i18n/locales/{locale}.json`
-- Tests: `tests/interface.test.ts` and `scripts/validate-locales.mjs`
-- Workflow: `.github/workflows/ci.yml`
-
-### Acceptance tests
-
-- All locales expose the same required keys and valid plural forms.
-- Instant changes update `lang`, `dir`, URL state, text, date, number, currency, plural, inspector key, and selected resource link.
-- Arabic still passes RTL scroll-safety tests; Japanese and English demonstrate different plural behavior; unsupported locales fall back to English.
-- Reset returns to English, count `3`, and the default inspected title without touching server state.
-
-## `/interfaces?view=accessibility` — WCAG 2.2 before/after laboratory
-
-### Working demonstration
-
-Keep the page controls and explanation accessible at all times. Render the compared application inside a titled `srcdoc` frame with a strict `sandbox="allow-scripts allow-forms"` policy so intentionally broken content does not invalidate the surrounding navigation or gain parent-page access. Accessible mode is the default; Broken mode is opt-in and carries a persistent warning.
-
-The same fictional sign-in/task dialog demonstrates these toggles individually or as a preset:
-
-| Behavior | Accessible mode | Broken mode | Relevant criteria/pattern |
-|---|---|---|---|
-| Keyboard navigation | Native controls in logical order | Click-only element and disrupted order | 2.1.1, 2.4.3 |
-| Focus visibility | 3 CSS-pixel token outline | Outline removed | 2.4.7, 2.4.13 |
-| Focus not obscured | Focused item scrolls above sticky UI | Sticky footer fully hides focus | 2.4.11; 2.4.12 shown as enhanced guidance |
-| Modal behavior | Labeled dialog, initial focus, trapped Tab, Escape, focus return | Unlabeled overlay; focus escapes | WAI-ARIA dialog pattern; 2.4.3 |
-| Image alternative | Useful bounded alt text | Missing `alt` | 1.1.1 |
-| Landmarks and labels | Semantic regions and explicit labels | Generic containers and unlabeled input | 1.3.1, 2.4.1, 3.3.2 |
-| Target size | Controls at least 24×24 CSS px or valid spacing | Adjacent undersized controls | 2.5.8 |
-| Contrast | Token pair meets AA for its text size | Known failing token pair | 1.4.3, 1.4.11 |
-| Redundant entry | Previously supplied value is populated/selectable | Value must be retyped | 3.3.7 |
-| Accessible authentication | Password-manager paste and non-cognitive alternative allowed | Paste blocked and puzzle required | 3.3.8; 3.3.9 shown as enhanced guidance |
-| Dragging | Move buttons and keyboard alternative accompany drag | Drag is the only mechanism | 2.5.7 |
-| Consistent help | Help stays in the same relative location | Help moves/disappears | 3.2.6 |
-
-The criteria introduced in WCAG 2.2 include three AAA criteria. The public result must therefore say `WCAG 2.2 AA demonstration — uncertified`; it may describe AAA behavior as enhanced guidance but must not count that behavior toward an AA claim.
-
-### Automated and manual evidence
-
-Bundle `axe-core` locally inside the frame and run it only against Accessible mode, returning sanitized findings to the parent with a type-checked `postMessage` protocol. Display critical, serious, moderate, and minor counts, rule IDs, and scan time. Broken mode may show expected teaching findings, but it is not a site-conformance result. Automated output is labeled partial coverage and sits beside a checked-in manual matrix for keyboard, focus, screen-reader semantics, target sizing, accessible authentication, zoom/reflow, forced colors, and reduced motion.
-
-### Source links
-
-- Route: `src/demos/accessibility.ts`
-- Lab renderer/behavior: `src/demos/accessibility-page.ts` and `src/ui/accessibility-lab.ts`
-- Manual matrix: `docs/ACCESSIBILITY.md`
-- Tests: `tests/interface.test.ts` and `tests/accessibility-browser.spec.ts`
-- Workflow: `.github/workflows/ci.yml`
-- Standards: W3C WCAG 2.2 and WAI-ARIA APG links from the references section below
-
-### Acceptance tests
-
-- Playwright keyboard tests verify modal focus entry, trap, Escape, return, visible/not-obscured focus, and non-drag alternatives.
-- Axe reports zero critical/serious violations in Accessible mode at desktop and 320 CSS-pixel widths; test failures include the actual rule IDs.
-- The known Broken preset produces the expected deterministic teaching findings without disabling the parent page's controls.
-- Reset restores Accessible mode, closes dialogs, clears form state, returns focus to the mode control, and reruns the accessible scan.
-
-## `/git` — Live controlled delivery lifecycle
-
-### Working demonstration
-
-The primary interaction is a real, two-stage lifecycle. `Run Live Git Demo` accepts `PATCH`, `MINOR`, or `MAJOR`, then requires the existing demo-admin credentials. The same-origin Worker authorizes the human and uses the server-side `GITHUB_DEMO_TOKEN` only to dispatch `.github/workflows/git-demo.yml`. It does not send the Basic credentials to GitHub.
-
-The start workflow serializes all lifecycle controller runs, refuses to proceed while another `demo/live-v*` pull request is open, calculates the next semantic version and next permanent `DEMO-###` identifier from `main`, updates `package.json` and `package-lock.json`, creates the matching `docs/releases/vX.Y.Z.md`, commits the complete controlled record, pushes an isolated branch, and opens a controlled pull request using the GitHub-managed `GIT_DEMO_PR_TOKEN`. The dedicated token is required because a pull request created with the repository `GITHUB_TOKEN` can leave ordinary pull-request workflows awaiting approval.
-
-The pull request stays open while the page polls its specific lifecycle every 500 milliseconds and reconciles the actual GitHub workflow runs, jobs, and steps in place. Existing rows remain mounted while their queued, in-progress, passed, skipped, or failed state changes, so the interface advances down the check feed instead of replacing whole text blocks. CI exposes route, scaffold, history, lint, type, unit, contract, localization, security, migration, dependency, build, and evidence steps individually. General repository evidence retains its independent 60-second cache.
-
-After the real CI workflow succeeds, `Merge & Release vX.Y.Z` requires demo-admin authentication again. The release controller validates the exact request ID, controlled PR title and branch, head SHA, reviewed package version, release record, and successful CI jobs. It merges without an administrative bypass, resolves the merge commit, creates an annotated semantic tag, and pushes it with the dedicated automation token. The existing tag-triggered release workflow reproduces the tag, publishes the GitHub Release, calls the deploy workflow, deploys the exact tag, verifies `/api/operations/version` and `/api/operations/health`, and exposes those real jobs and steps on `/git`.
-
-If an active live-demo pull request exists, a new start returns `409` with `Live release demonstration already active: PR #N` and the page resumes tracking that lifecycle. Workflow concurrency provides a second collision control for requests that arrive before a pull request becomes visible.
-
-The secondary evidence grid continues to render live cards for the default branch, latest non-default branch when one exists, five commits, one open PR, one recently merged PR, recent Actions runs, tags, and latest release. Every item links to the corresponding GitHub page, object, workflow, or run. Missing data is an explicit empty state; an unavailable API is `Evidence unavailable`, never fabricated data.
-
-Display the delivery pipeline as repository evidence:
-
-```text
-Commit → Pull request → Typecheck → Unit tests → WCAG scan → Build
-       → Annotated tag → Deploy → Health check → GitHub Release
-```
-
-Only show `Protected`, `PR required`, `CI required`, `signed commits`, `linear history`, or `force push blocked` when the GitHub ruleset/branch-protection response available to the Worker proves that setting. Otherwise show `Not publicly verifiable` with a link to the repository-owned change policy.
-
-### Interface
-
-`GET /__api/git/evidence` accepts no repository parameter. It derives the allowlisted owner/repository from `GITHUB_REPO_URL`, uses public GitHub APIs with an optional managed `GITHUB_READ_TOKEN`, applies a short timeout, sanitizes fields, caches successful responses for 60 seconds, and returns per-card freshness and partial-failure state. The token is never forwarded, logged, or returned.
-
-`GET /__api/git/demo` returns bounded status for the active or most recent lifecycle and accepts only an optional Worker-issued `request_id`. It uses the public/read-only GitHub boundary, a sub-second in-process coalescing cache while active, a two-second idle cache, and `Cache-Control: no-store`; no write token reaches status output. The 500-millisecond browser heartbeat can therefore update connection state immediately while GitHub refreshes are coalesced to a safe cadence.
-
-`POST /__api/git/demo` accepts only `{ "bump": "patch" | "minor" | "major" }`. `POST /__api/git/demo/release` accepts only the active demo PR number and matching request ID. Both cap input, require exact same-origin and demo-admin Basic authentication, fail closed when preflight evidence or managed secrets are unavailable, dispatch only `git-demo.yml` on the configured default branch, return `202`, and record credential-free audit/log evidence.
-
-### Source links
-
-- Route: `src/demos/git.ts` and `src/demos/git-page.ts`
-- GitHub client: `src/lib/github-api.ts`
-- Lifecycle boundary: `src/api/git-demo.ts` and `src/lib/git-demo.ts`
-- Change policy: `docs/CHANGE-MANAGEMENT.md`
-- Tests: `tests/git-evidence.test.ts` and `tests/git-demo.test.ts`
-- CI workflow: `.github/workflows/ci.yml`
-- Lifecycle workflow: `.github/workflows/git-demo.yml`
-- Deploy workflow: `.github/workflows/deploy.yml`
-
-### Acceptance tests
-
-- Fixtures cover open/merged PRs, no feature branches, no release, API rate limit, partial Actions failure, protected/unverifiable branch, timeout, and sanitized upstream errors.
-- Every rendered commit, branch, PR, run, tag, and release link stays under the configured public repository/API origins.
-- The page makes no control assertion not present in the evidence response.
-- Start and release reject cross-origin, unauthenticated, malformed, mismatched, concurrent, or premature requests without dispatching GitHub.
-- Audit records contain version, operation, request ID, and public object identifiers, never Basic credentials or managed tokens.
-- A 500-millisecond active heartbeat tracks the specific workflow/PR lifecycle, updates keyed job and step rows in place, and never fabricates a transition; `Refresh evidence` remains a read-only refresh for the passive evidence grid.
-
-## `/interfaces?view=webhooks` — Verified live delivery
-
-### Working demonstration
-
-`Send demo webhook` shows the complete bounded path: Worker creates a synthetic GitHub-shaped event, signs the exact body server-side, receiver verifies HMAC-SHA256, validates headers/body, records a safe event summary and digest in D1, notifies the live viewer, and responds `202`. A delivery card shows accepted/rejected state, event, delivery ID, digest, timestamp, and each completed stage. Raw request bodies are never persisted or displayed.
-
-The real GitHub receiver uses `X-Hub-Signature-256`, `X-GitHub-Event`, and `X-GitHub-Delivery` with a managed `GITHUB_WEBHOOK_SECRET`. Keep the current demo-signature endpoint during migration.
-
-### Interfaces
-
-| Method | Path | Behavior |
-|---|---|---|
-| `POST` | `/webhooks/github` | Verify and accept configured GitHub webhook traffic. |
-| `POST` | `/__api/webhooks/demo` | Create a synthetic delivery and send it through the same verifier/storage path. |
-| `GET` | `/__api/webhooks/events?after={id}` | Bounded polling fallback for safe recent summaries. |
-| `GET` | `/__api/webhooks/stream` | Same-origin event stream coordinated by `DEMO_COORDINATOR`. |
-| `POST` | `/__api/webhooks/reset` | Remove only synthetic events from the current session. Real GitHub evidence is retained by policy. |
-
-Verify the signature against the raw bytes before parsing JSON. Accept only allowlisted GitHub event types needed by the demo (`ping`, `push`, `pull_request`, `workflow_run`, `release`), validate the minimal shape for the selected type, reject replay through unique delivery ID, return quickly, and cap input at 64 KiB. Persist only allowlisted summaries plus the SHA-256 digest. Invalid-signature logging contains request ID, provider, event header, and rejection reason—not headers, body, signature, secret, or private repository data.
-
-### Source links
-
-- Route: `src/demos/webhooks.ts` and `src/demos/webhook-console.ts`
-- Worker: `src/api/webhooks.ts`
-- Event contract: `contracts/webhooks/events.json`
-- Schema: the new numbered migration
-- Tests: `tests/webhooks.test.ts` and `tests/integration-interfaces.test.ts`
-- Workflow: `.github/workflows/ci.yml`
-
-### Acceptance tests
-
-- Valid GitHub and synthetic signatures succeed; altered body, wrong/missing signature, malformed/oversized payload, replayed ID, unsupported event, and expired session fail safely.
-- Two sessions see only their synthetic events. Real repository events are visible only when their repository matches `GITHUB_REPO_URL` and their summary is public-safe.
-- The live stream reconnects with last event ID and falls back to bounded polling without losing accepted deliveries.
-- Reset cannot remove real GitHub events.
-
-## `/interfaces?view=graphql` — GraphiQL over the D1 lab
-
-### Working demonstration
-
-Embed a locally bundled GraphiQL IDE in the GraphQL section, preloaded with `users`, `user(id)`, `createUser`, `updateUser`, and `deleteUser` examples. It posts only to same-origin `/graphql`, shows response headers/timing, and links to the served schema. The D1 route and GraphiQL use the same session-scoped `demo_users` rows; creating a user in one surface becomes visible after querying the other.
-
-Use current GraphQL Yoga with the Cloudflare Modules/Fetch API integration for parsing, validation, execution, GraphiQL support, and masked errors. Do not emulate GraphQL by regular-expression parsing. Bundle GraphiQL locally so the existing `connect-src 'self'` policy remains valid; do not load executable code from a CDN.
-
-### Schema additions
-
-```graphql
-type User {
-  id: ID!
-  name: String!
-  email: String!
-  role: UserRole!
-  createdAt: String!
-  updatedAt: String!
-}
-
-enum UserRole { ADMIN MEMBER VIEWER }
-
-input CreateUserInput { name: String!, email: String!, role: UserRole! }
-input UpdateUserInput { name: String, email: String, role: UserRole }
-
-type Query {
-  demoRecords(namespace: String): [DemoRecord!]!
-  users: [User!]!
-  user(id: ID!): User
-}
-
-type Mutation {
-  createUser(input: CreateUserInput!): User!
-  updateUser(id: ID!, input: UpdateUserInput!): User!
-  deleteUser(id: ID!): Boolean!
-}
-```
-
-Keep `demoRecords` for backward compatibility. User resolvers call the same repository/service functions as `/__api/d1/users`; they do not duplicate SQL. Mutations require the signed visitor sandbox and exact same-origin checks. Apply a 16 KiB body limit, parsed-document depth limit 8, field-count limit 50, disabled batching, no schema mutation through variables, and masked unexpected errors with a request ID. Introspection remains enabled because inspectability is the point of this public demo.
-
-### Source links
-
-- Route: `src/demos/graphql.ts` and `src/demos/graphql-console.ts`
-- Worker: `src/api/graphql.ts`
-- Schema: `contracts/graphql/schema.graphql`
-- Shared D1 repository: `src/lib/demo-users.ts`
-- Tests: `tests/graphql.test.ts` and `tests/contracts.test.ts`
-- Workflow: `.github/workflows/ci.yml`
-
-### Acceptance tests
-
-- REST-lab create → GraphQL query and GraphQL mutation → D1-lab list prove the same rows.
-- Session isolation, validation errors, unknown IDs, duplicate email, body/depth/field limits, batching rejection, same-origin mutation, offline state, and masked internal errors are covered.
-- Existing `demoRecords` queries keep their response shape and authorization behavior.
-- The embedded IDE loads with no third-party runtime requests and is keyboard operable at 320 CSS pixels.
-- Reset calls the shared `/__api/d1/reset` behavior and refreshes both surfaces.
-
-## Source evidence matrix
-
-The `sourceEvidence` component renders these labels in this order. A missing file is an implementation failure, not a hidden link.
-
-| Surface | View route | View Worker | View contract/resource | View tests | View workflow |
-|---|---|---|---|---|---|
-| `/platform?view=d1` | `src/demos/d1-page.ts` | `src/api/d1-lab.ts` | next D1 migration | `tests/d1-lab.test.ts` | `.github/workflows/ci.yml` |
-| `/platform?view=r2` | `src/demos/r2-page.ts` | `src/api/r2.ts` | `src/storage/r2.ts` | `tests/r2-lab.test.ts` | `.github/workflows/ci.yml` |
-| `/interfaces?view=i18n` | `src/demos/i18n-page.ts` | `src/demos/i18n-page.ts` | selected locale JSON | `tests/interface.test.ts` | `.github/workflows/ci.yml` |
-| `/interfaces?view=accessibility` | `src/demos/accessibility-page.ts` | `src/ui/accessibility-lab.ts` | `docs/ACCESSIBILITY.md` | `tests/accessibility-browser.spec.ts` | `.github/workflows/ci.yml` |
-| `/git` | `src/demos/git-page.ts` | `src/lib/github-api.ts` | `docs/CHANGE-MANAGEMENT.md` | `tests/git-evidence.test.ts` | `.github/workflows/deploy.yml` |
-| `/interfaces?view=webhooks` | `src/demos/webhook-console.ts` | `src/api/webhooks.ts` | `contracts/webhooks/events.json` | `tests/webhooks.test.ts` | `.github/workflows/ci.yml` |
-| `/interfaces?view=graphql` | `src/demos/graphql-console.ts` | `src/api/graphql.ts` | `contracts/graphql/schema.graphql` | `tests/graphql.test.ts` | `.github/workflows/ci.yml` |
-
-## Delivery slices
-
-Each slice receives its own permanent `DEMO-###` ID, branch, pull request, validation evidence, and rollback notes. Do not combine the schema/session security boundary with all page work in one change.
-
-1. **Visitor sandbox and schema** — session signing, limits, migration, seeded Users/Tasks repository, reset, unit/security tests.
-2. **D1 workbench** — CRUD interface, technical state, D1 source evidence, interface tests.
-3. **GraphQL workbench** — Yoga execution, additive schema, local GraphiQL bundle, shared repository integration, limits/tests.
-4. **R2 workbench** — mini file manager, R2/D1 compensation, preview/download security, cleanup/tests.
-5. **i18n workbench** — French/German/Japanese resources, instant switching, inspector, locale validation/tests.
-6. **WCAG laboratory** — isolated comparison, axe, manual matrix, Playwright keyboard/viewport tests.
-7. **Webhook workbench** — GitHub verification, safe event summaries, coordinated live update, demo/reset/tests.
-8. **Git evidence** — allowlisted cached client, evidence cards/links, unverifiable states, fixtures/tests.
-9. **Cross-demo hardening** — shared evidence rail, offline behavior, responsive/a11y/security regression, documentation and release evidence.
-
-For every slice run the repository delivery loop in `AGENTS.md`. Production verification occurs only after an annotated semantic-version release tag; a branch preview is not production evidence.
-
-## System acceptance criteria
-
-- All seven surfaces follow Demo → Technical state → Source evidence → Architecture → Reset.
-- D1 and GraphQL visibly operate on the same session-scoped users.
-- GitHub delivery visibly flows GitHub/demo sender → verified webhook → D1 event → live viewer.
-- R2 stores real bytes; D1 stores only object metadata. Durable Objects coordinate live webhook delivery; they do not replace D1 history.
-- No visitor can observe or mutate another visitor's D1 rows, R2 keys, or synthetic webhook events.
-- Existing public URLs and contracts remain valid, including retired-route redirects.
-- All code/data source links are deterministic and public; all external-state failures are honest, timestamped states.
-- The accessible mode has zero axe critical/serious findings in CI, plus passing manual/keyboard evidence. The site continues to say `WCAG 2.2 aligned/demonstration — uncertified`.
-- No secret, credential-bearing header, raw webhook body, private repository metadata, signed session value, IP address, or user agent reaches D1 logs or public output.
-- `npm run check`, migration validation, dependency audit, Worker build, browser accessibility checks, and `git diff --check` pass before review.
-
-## Canonical upstream references
-
-- Cloudflare R2: [Upload objects](https://developers.cloudflare.com/r2/objects/upload-objects/) and [Workers API usage](https://developers.cloudflare.com/r2/api/workers/workers-api-usage/)
-- Cloudflare D1: [Build a Comments API](https://developers.cloudflare.com/d1/tutorials/build-a-comments-api/) and [D1 examples](https://developers.cloudflare.com/d1/examples/)
-- i18next/react-i18next: [Step-by-step guide](https://react.i18next.com/latest), [pluralization](https://www.i18next.com/translation-function/plurals), and [formatting](https://www.i18next.com/translation-function/formatting)
-- W3C WAI: [What's New in WCAG 2.2](https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/), [WCAG 2.2](https://www.w3.org/TR/WCAG22/), and [Modal Dialog Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)
-- GitHub: [Managing a branch protection rule](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule) and [Cloudflare Wrangler Action](https://github.com/cloudflare/wrangler-action)
-- Cloudflare webhooks: [Webhooks](https://developers.cloudflare.com/agents/communication-channels/webhooks/)
-- GraphQL Yoga: [GraphQL Yoga](https://the-guild.dev/graphql/yoga-server)
+Release and deployment are separate controlled actions. An implementation PR must not tag, release, migrate a remote database, or deploy the Worker.

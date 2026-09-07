@@ -59,6 +59,13 @@
       "reviewedAt": "2026-09-07T17:32:39Z",
       "reviewer": "controlled-repository-review",
       "basis": "DEMO-184 review approves superseding the retired health and version route evidence with canonical operations API records, migrating current relationship edges to the replacement identities, and the exact resulting public source revisions; later source revisions require a new disclosure decision."
+    },
+    {
+      "id": "review-demo187-route-collapse-audit",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-07T20:45:01Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-187 final route-collapse review approves the objectives source revision that replaces its removed version pathname with the canonical operations API endpoint; later source revisions require a new disclosure decision."
     }
   ],
   "sourceApprovals": [
@@ -265,6 +272,12 @@
       "resource": "risks",
       "revision": "a8b7edc7dd95ffbb651bfdd01b5dde9b05e3a0f7",
       "reviewRef": "review-demo184-canonical-api-routes"
+    },
+    {
+      "id": "source-objectives-b655f9006561",
+      "resource": "objectives",
+      "revision": "b655f90065611c778e36f322bcc0b9bfdefa456d",
+      "reviewRef": "review-demo187-route-collapse-audit"
     }
   ],
   "records": [

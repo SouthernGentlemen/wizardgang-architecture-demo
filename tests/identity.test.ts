@@ -1,6 +1,6 @@
 import { exportJWK, generateKeyPair, SignJWT } from 'jose';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { authorizationDecisionResponse, demoAccessTokenResponse, identityProviderConfiguration, identitySessionResponse, oauthPkceResponse, providerCallbackResponse, providerStartResponse, samlMetadataResponse, ssoBoundaryResponse } from '../src/api/identity';
+import { authorizationDecisionResponse, demoAccessTokenResponse, identityProviderConfiguration, identitySessionResponse, providerCallbackResponse, providerStartResponse, samlMetadataResponse } from '../src/api/identity';
 import { createIdentitySession, writeFlowCookie, type IdentitySession } from '../src/lib/identity-session';
 import type { D1Database, Env } from '../src/types';
 
@@ -59,14 +59,6 @@ function authenticatedSession(): IdentitySession {
 
 describe('identity protocol boundaries', () => {
   afterEach(() => vi.unstubAllGlobals());
-
-  it('keeps PKCE verifier, state, and nonce material out of the browser response', async () => {
-    const response = await oauthPkceResponse(new Request('https://demo.example/__api/identity/oauth-pkce', { method: 'POST' }), env());
-    const body = await response.json() as Record<string, unknown>;
-    expect(body).toMatchObject({ pkce: 'S256', secretsExposed: false });
-    expect(body.verifier).toBe('retained in an encrypted HttpOnly flow cookie');
-    expect(JSON.stringify(body)).not.toMatch(/[A-Za-z0-9_-]{43,}/);
-  });
 
   it('requires a real application session before evaluating authorization', async () => {
     const response = await authorizationDecisionResponse(new Request('https://demo.example/auth/authorize', {
@@ -200,12 +192,11 @@ describe('identity protocol boundaries', () => {
     expect(JSON.stringify(body)).not.toContain('github-provider-access-token');
   });
 
-  it('serves origin-specific Entra SAML metadata and an explicit trust boundary', async () => {
+  it('serves origin-specific Entra SAML metadata', async () => {
     const metadata = samlMetadataResponse(new Request('https://demo.example/auth/saml/metadata'));
     const xml = await metadata.text();
     expect(metadata.headers.get('content-type')).toContain('samlmetadata+xml');
     expect(xml).toContain('https://demo.example/auth/saml/acs');
     expect(xml).toContain('WantAssertionsSigned="true"');
-    expect(await (await ssoBoundaryResponse(new Request('https://demo.example/__api/identity/sso'), env())).json()).toMatchObject({ authentication: { provider: 'Microsoft Entra ID' } });
   });
 });

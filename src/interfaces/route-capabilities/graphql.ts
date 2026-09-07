@@ -24,6 +24,6 @@ export const graphqlRouteCapability = defineInterfaceIdentityCapability('interfa
     sameOrigin: { mode: 'required', methods: ['POST'] },
     browserHtml: 'never',
     indexing: 'deny',
-    tests: ['tests/graphql.test.ts', 'tests/integration-interfaces.test.ts', 'tests/interface-consolidation.test.ts', 'tests/canonical-frontend-routes.test.ts'],
+    tests: ['tests/graphql.test.ts', 'tests/interface-consolidation.test.ts', 'tests/canonical-frontend-routes.test.ts'],
   }),
 ]);

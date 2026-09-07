@@ -5,10 +5,7 @@
     "type": "streamable-http",
     "path": "/mcp"
   },
-  "protocol": {
-    "current": "2026-07-28",
-    "legacy": ["2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05", "2024-10-07"]
-  },
+  "protocol": { "version": "2026-07-28" },
   "boundary": "MCP callers remain inside normal application authentication, authorization, validation, persistence, and audit boundaries.",
   "tools": [
     {

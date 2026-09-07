@@ -13,7 +13,7 @@
       "evidenceSources": [
         "Git tags/releases",
         "deploy workflow",
-        "/version",
+        "/api/operations/version",
         "docs/RELEASE.md",
         "docs/EVIDENCE.md"
       ],
@@ -27,7 +27,7 @@
       "id": "SEC-OBJ-002",
       "area": "Secret protection",
       "objective": "Prevent credentials and secrets from entering public source or public evidence surfaces.",
-      "metric": "Confirmed secret exposures in repository, public logs, health/version, or public evidence.",
+      "metric": "Confirmed secret exposures in repository, public logs, operational health/version responses, or public evidence.",
       "initialTarget": "0 confirmed exposures. Any suspected exposure triggers immediate review and rotation decision.",
       "owner": "Security owner",
       "evidenceSources": [

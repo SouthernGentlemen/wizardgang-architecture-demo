@@ -148,7 +148,7 @@ describe('governance evidence', () => {
     expect(response.status).toBe(200);
     expect(body.passed).toBe(true);
     expect(body.results.map((result) => result.actual)).toEqual(['tool result', 'JSON-RPC -32601', 'tool error']);
-    expect(body.results.map((result) => result.httpStatus)).toEqual([200, 200, 200]);
+    expect(body.results.map((result) => result.httpStatus)).toEqual([200, 404, 200]);
     expect(body.alignment).toContain('uncertified');
   });
 });

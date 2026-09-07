@@ -66,16 +66,15 @@ describe('executable interface contracts', () => {
     }
   });
 
-  it('embeds the canonical assurance reporting schemas without drift', () => {
+  it('references the canonical reporting schema without embedding a weaker copy', () => {
     const openapi = readOpenApi();
-    const reporting = JSON.parse(readFileSync('contracts/assurance/reporting.schema.json', 'utf8')) as unknown;
-    const registry = JSON.parse(readFileSync('contracts/assurance/registry.schema.json', 'utf8')) as unknown;
-
-    expect(openapi.components.schemas.ReportingContract).toEqual(reporting);
-    expect(openapi.components.schemas.AssuranceRegistryContract).toEqual(registry);
-    expect(openapi.components.schemas.AssuranceQueryResult).toEqual({
-      $ref: '#/components/schemas/ReportingContract/$defs/queryResult',
-    });
+    const reporting = JSON.parse(readFileSync('contracts/assurance/reporting.schema.json', 'utf8')) as { $id: string };
+    for (const duplicate of ['ReportingContract', 'AssuranceRegistryContract', 'AssuranceQueryResult']) {
+      expect(openapi.components.schemas).not.toHaveProperty(duplicate);
+    }
+    const reference = (openapi.paths['/api/reporting/{collection}'].get.responses?.['200'] as { content?: { 'application/json'?: { schema?: { $ref?: string } } } })
+      .content?.['application/json']?.schema?.$ref;
+    expect(reference).toBe(`${reporting.$id}#/$defs/queryResult`);
     expect(existsSync('contracts/openapi/swagger.json')).toBe(false);
   });
 
@@ -88,7 +87,6 @@ describe('executable interface contracts', () => {
       '/api/operations/health',
       '/api/operations/version',
       '/api/operations/logs',
-      '/api/operations/usage',
       '/api/operations/budget',
       '/api/openapi.json',
     ]) expect(openapi.paths[path]).toBeDefined();
@@ -106,6 +104,7 @@ describe('executable interface contracts', () => {
       expect(path.startsWith('/__api/operations')).toBe(false);
       expect(path).not.toBe('/health');
       expect(path).not.toBe('/version');
+      expect(path).not.toBe('/api/operations/usage');
     }
   });
 

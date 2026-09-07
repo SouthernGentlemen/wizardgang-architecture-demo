@@ -16,8 +16,8 @@
       "resourceRoot": "assurance/",
       "nativeIdentity": ["repository", "resource"],
       "revisionIdentity": ["commit", "blob"],
-      "capabilities": ["read", "query", "export", "import"],
-      "ingestion": "enabled"
+      "capabilities": ["read", "query", "export"],
+      "ingestion": "disabled"
     },
     "retainedReports": {
       "id": "github.retained-reports",
@@ -68,7 +68,7 @@
         "scope": { "resource": "issues" },
         "nativeIdentity": ["repository", "number"], "revisionIdentity": ["updatedAt"],
         "schema": "contracts/assurance/reporting.schema.json#/$defs/record", "visibility": "public",
-        "capabilities": ["read", "query", "export", "import"], "ingestion": "enabled"
+        "capabilities": ["read", "query", "export", "update"], "ingestion": "enabled"
       },
       {
         "id": "github.pull-requests", "provider": "github", "authority": "native-object",
@@ -184,13 +184,13 @@
     {
       "id": "evidence", "kind": "evidence", "role": "dataset",
       "path": "assurance/evidence/evidence.json", "schema": "contracts/assurance/evidence.schema.json",
-      "visibility": "public", "capabilities": ["runtime", "records", "api-index"],
+      "visibility": "public", "capabilities": ["runtime", "records"],
       "recordCollection": { "path": "records", "identity": ["kind", "locator.repositoryPath", "locator.route"] }
     },
     {
       "id": "claims", "kind": "claims", "role": "dataset",
       "path": "assurance/claims/claims.json", "schema": "contracts/assurance/claim.schema.json",
-      "visibility": "public", "capabilities": ["runtime", "records", "api-index"],
+      "visibility": "public", "capabilities": ["runtime", "records"],
       "recordCollection": { "path": "records", "identity": ["area", "title"] }
     },
     {
@@ -202,7 +202,7 @@
     {
       "id": "compliance.iso-27001", "kind": "compliance", "role": "dataset",
       "path": "assurance/compliance/iso-27001-2022.json", "schema": "contracts/assurance/iso-27001-compliance.schema.json",
-      "visibility": "public", "capabilities": ["runtime", "records", "api-index", "summary-source"],
+      "visibility": "public", "capabilities": ["runtime", "records", "summary-source"],
       "recordCollection": { "path": "records", "identity": [{ "source": "resource", "path": "framework.id" }, { "source": "record", "path": "reference" }] },
       "qualification": "Public engineering-evidence projection only. Framework-specific qualifications remain authoritative; certification and formal conformance are not claimed.",
       "filters": {
@@ -345,7 +345,7 @@
     {
       "id": "risks", "kind": "risks", "role": "dataset",
       "path": "assurance/risks/risks.json", "schema": "contracts/assurance/risk.schema.json",
-      "visibility": "public", "capabilities": ["runtime", "records", "api-index"],
+      "visibility": "public", "capabilities": ["runtime", "records"],
       "recordCollection": { "path": "records", "identity": ["framework", "title"] },
       "filters": {
         "framework": { "path": "framework", "label": "Framework" },
@@ -356,20 +356,20 @@
     {
       "id": "incidents", "kind": "incidents", "role": "dataset",
       "path": "assurance/incidents/incidents.json", "schema": "contracts/assurance/incident.schema.json",
-      "visibility": "public", "capabilities": ["runtime", "records", "api-index"],
+      "visibility": "public", "capabilities": ["runtime", "records"],
       "recordCollection": { "path": "records", "identity": ["recordType", "detectedAt", "title"] }
     },
     {
       "id": "exercises", "kind": "exercises", "role": "dataset",
       "path": "assurance/incidents/exercises.json", "schema": "contracts/assurance/exercise.schema.json",
-      "visibility": "public", "capabilities": ["runtime", "records", "api-index"],
+      "visibility": "public", "capabilities": ["runtime", "records"],
       "recordCollection": { "path": "records", "identity": ["recordType", "exerciseType", "scenario"] },
       "routeOwner": "incidents"
     },
     {
       "id": "advisories", "kind": "advisories", "role": "dataset",
       "path": "assurance/advisories/advisories.json", "schema": "contracts/assurance/advisory.schema.json",
-      "visibility": "public", "capabilities": ["runtime", "records", "api-index"],
+      "visibility": "public", "capabilities": ["runtime", "records"],
       "recordCollection": { "path": "records", "identity": ["recordType", "publishedAt"] },
       "routes": { "html": "/security" }
     }

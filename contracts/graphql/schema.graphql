@@ -1,11 +1,4 @@
 """Executable public schema for the GraphQL architecture demonstration."""
-type DemoRecord {
-  id: ID!
-  namespace: String!
-  key: String!
-  valueJson: String!
-}
-
 type User {
   id: ID!
   name: String!
@@ -34,7 +27,6 @@ input UpdateUserInput {
 }
 
 type Query {
-  demoRecords(namespace: String): [DemoRecord!]!
   users: [User!]!
   user(id: ID!): User
 }

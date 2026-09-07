@@ -9,11 +9,9 @@ import {
 } from '../reporting/contracts';
 import { registeredReportingSource, reportingContractPath } from '../reporting/registry';
 
-export type CloudflareTelemetryStatus = 'live' | 'partial' | 'unavailable' | 'unconfigured' | 'rate-limited' | 'stale';
 export type CloudflareObservationProjection = 'internal' | 'public';
 
 interface DatasetState {
-  available: boolean;
   availability: ReportingAvailability;
   qualification: string | null;
 }
@@ -25,7 +23,7 @@ export interface UsageTrendPoint {
 }
 
 export interface CloudflareUsageSnapshot {
-  status: CloudflareTelemetryStatus;
+  status: ReportingAvailability;
   capturedAt: string | null;
   validUntil: string | null;
   cache: 'provider' | 'derived-cache' | 'none';
@@ -265,11 +263,11 @@ const DURABLE_OBJECTS_QUERY = `query DashboardDurableObjects($accountTag: string
 }`;
 
 function availableState(): DatasetState {
-  return { available: true, availability: 'available', qualification: null };
+  return { availability: 'available', qualification: null };
 }
 
 function unavailableState(qualification: string, availability: ReportingAvailability = 'unavailable'): DatasetState {
-  return { available: false, availability, qualification };
+  return { availability, qualification };
 }
 
 function workersMetrics(data: Record<string, unknown>): { product: CloudflareUsageSnapshot['products']['workers']; trend: UsageTrendPoint[] } {
@@ -395,7 +393,7 @@ function unavailableCost(current: ReturnType<typeof period>, qualification: stri
   };
 }
 
-function emptySnapshot(env: Env, status: CloudflareTelemetryStatus, now = new Date()): CloudflareUsageSnapshot {
+function emptySnapshot(env: Env, status: ReportingAvailability, now = new Date()): CloudflareUsageSnapshot {
   const current = period(now);
   const qualification = accountConfigured(env) ? 'provider-observation-unavailable' : 'cloudflare-analytics-unconfigured';
   return {
@@ -415,8 +413,7 @@ function applySnapshotFreshness(snapshot: CloudflareUsageSnapshot, clock = new D
     const copy = cloneSnapshot(snapshot);
     copy.status = 'stale';
     for (const product of Object.values(copy.products)) {
-      if (product.available) {
-        product.available = false;
+      if (product.availability === 'available') {
         product.availability = 'stale';
         product.qualification = 'observation-stale';
       }
@@ -442,17 +439,16 @@ function currentCachedBilling(cost: CloudflareUsageSnapshot['cost'] | undefined,
 
 function markFailure<T extends DatasetState>(target: T, error: unknown): T {
   const failure = datasetFailure(error);
-  target.available = false;
   target.availability = failure.availability;
   target.qualification = failure.qualification;
   return target;
 }
 
-function overallStatus(products: CloudflareUsageSnapshot['products'], env: Env): CloudflareTelemetryStatus {
-  if (!accountConfigured(env) || !anyResourceConfigured(env)) return 'unconfigured';
+function overallStatus(products: CloudflareUsageSnapshot['products'], env: Env): ReportingAvailability {
+  if (!accountConfigured(env) || !anyResourceConfigured(env)) return 'unavailable';
   const states = Object.values(products);
-  const availableCount = states.filter((state) => state.available).length;
-  if (availableCount === states.length) return 'live';
+  const availableCount = states.filter((state) => state.availability === 'available').length;
+  if (availableCount === states.length) return 'available';
   if (availableCount > 0) return 'partial';
   if (states.some((state) => state.availability === 'rate-limited')) return 'rate-limited';
   return 'unavailable';
@@ -463,7 +459,7 @@ function provenance(transport: 'graphql' | 'rest', dataset: string): ReportingOb
 }
 
 function projectedResource(projection: CloudflareObservationProjection, kind: string, value: string | undefined): string {
-  return projection === 'public' ? kind : `${kind}:${value ?? 'unconfigured'}`;
+  return projection === 'public' ? kind : `${kind}:${value ?? 'not-configured'}`;
 }
 
 export function cloudflareUsageObservations(
@@ -477,7 +473,7 @@ export function cloudflareUsageObservations(
   const observationValidUntil = snapshot.validUntil ?? snapshot.windowEnd;
   const defaultDimensions: Record<string, string> = projection === 'public'
     ? { scope: 'resource' }
-    : { scope: 'resource', account: env.CLOUDFLARE_ACCOUNT_ID ?? 'unconfigured' };
+    : { scope: 'resource', account: env.CLOUDFLARE_ACCOUNT_ID ?? 'not-configured' };
   const observation = (
     resource: string,
     metric: string,
@@ -524,20 +520,12 @@ export function cloudflareUsageObservations(
   return records;
 }
 
-function publicAvailability(status: CloudflareTelemetryStatus): ReportingAvailability {
-  if (status === 'live') return 'available';
-  if (status === 'partial') return 'partial';
-  if (status === 'rate-limited') return 'rate-limited';
-  if (status === 'stale') return 'stale';
-  return 'unavailable';
-}
-
 export function cloudflareUsageQueryResult(env: Env, snapshot: CloudflareUsageSnapshot): ReportingQueryResult<ReportingObservation<number | null>> {
   const source = registeredReportingSource('cloudflare.operations');
   const records = cloudflareUsageObservations(env, snapshot, 'public');
   const metricFacets: Record<string, number> = {};
   for (const record of records) metricFacets[record.metric] = (metricFacets[record.metric] ?? 0) + 1;
-  const qualification = snapshot.status === 'unconfigured'
+  const qualification = (!accountConfigured(env) || !anyResourceConfigured(env))
     ? 'Cloudflare analytics is not configured for this environment.'
     : snapshot.status === 'stale'
       ? 'The last authoritative Cloudflare observation is outside its freshness window.'
@@ -547,10 +535,10 @@ export function cloudflareUsageQueryResult(env: Env, snapshot: CloudflareUsageSn
     contract: reportingContractPath,
     dataset: source.id,
     datasets: [source.id],
-    availability: { [source.id]: publicAvailability(snapshot.status) },
+    availability: { [source.id]: snapshot.status },
     sources: [source],
     qualifications: { [source.id]: qualification },
-    query: { filters: {}, pagination: { limit: records.length || 1, returned: records.length, total: records.length, nextCursor: null } },
+    query: { filters: {} },
     records,
     derived: { count: records.length, totalAvailable: records.filter((record) => record.availability === 'available').length, facets: { metric: metricFacets } },
   };
@@ -570,7 +558,7 @@ export async function recentCloudflareUsage(env: Env, limit = 20): Promise<Cloud
 export async function collectCloudflareUsage(env: Env, includeBilling = true): Promise<CloudflareUsageSnapshot> {
   const now = new Date();
   const current = period(now);
-  if (!accountConfigured(env) || !anyResourceConfigured(env)) return emptySnapshot(env, 'unconfigured', now);
+  if (!accountConfigured(env) || !anyResourceConfigured(env)) return emptySnapshot(env, 'unavailable', now);
 
   const capturedAt = now.toISOString();
   const products = emptyProducts('resource-unconfigured');
@@ -626,7 +614,7 @@ export async function collectCloudflareUsage(env: Env, includeBilling = true): P
   }, now);
 
   const key = snapshotCacheKey(env, current.startDate);
-  if (snapshot.status === 'live' || snapshot.status === 'partial') {
+  if (snapshot.status === 'available' || snapshot.status === 'partial') {
     cacheSet(derivedSnapshotCache, key, cloneSnapshot(snapshot));
     return snapshot;
   }

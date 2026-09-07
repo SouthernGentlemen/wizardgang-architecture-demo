@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { assuranceComplianceResponse } from '../src/api/assurance';
+import { reportingRecordResponse } from '../src/api/reporting';
 import {
   assuranceCollectionApiRoute,
   assuranceRecordUrls,
@@ -9,6 +9,9 @@ import {
 import { assuranceDeclarativeRouteRegistry } from '../src/routing/assurance-routes';
 import { reportingRouteRegistry } from '../src/routing/reporting-routes';
 import { matchRoute } from '../src/routing/registry';
+import type { Env } from '../src/types';
+
+const env = { GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' } as Env;
 
 describe('assurance route contract', () => {
   it('keeps assurance route ownership presentation-only while deriving canonical reporting URLs', () => {
@@ -49,8 +52,10 @@ describe('assurance route contract', () => {
   });
 
   it('serves exact records through the current shared envelope', async () => {
-    const response = await assuranceComplianceResponse(
+    const response = await reportingRecordResponse(
       new Request('https://demo.wizardgang.ai/api/reporting/compliance/WCAG-4.1.2'),
+      env,
+      'compliance',
       'WCAG-4.1.2',
     );
     expect(response.status).toBe(200);

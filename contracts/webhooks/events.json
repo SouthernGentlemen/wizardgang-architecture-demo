@@ -3,7 +3,7 @@
   "events": [
     {
       "type": "demo.record.changed",
-      "route": "/v1/webhooks/demo",
+      "route": "/api/labs/webhook-demo",
       "delivery": "HTTPS POST",
       "payload": "JSON",
       "security": "HMAC-SHA256 over the exact request body; signing secret remains outside Git; delivery IDs are unique to reject replay."

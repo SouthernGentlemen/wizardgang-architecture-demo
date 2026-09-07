@@ -53,16 +53,6 @@ const viewCollections: Record<AssuranceView, string> = {
   concerns: 'governance',
 };
 
-const retiredPresentationRoutes: Array<[string, AssuranceView]> = [
-  ['/governance/concerns', 'concerns'],
-  ['/governance/incidents', 'incidents'],
-  ['/governance/risks', 'risks'],
-  ['/governance', 'governance'],
-  ['/compliance', 'compliance'],
-  ['/evidence', 'evidence'],
-  ['/git', 'delivery'],
-];
-
 function publicPrincipal(): Principal {
   return { subject: 'public-visitor', authentication: 'anonymous', role: 'viewer', permissions: ['demo:read'] };
 }
@@ -124,22 +114,6 @@ async function mainContent(response: Response): Promise<string> {
   return html.slice(start + marker.length, end);
 }
 
-function normalizeEmbeddedRoutes(html: string): string {
-  let normalized = html;
-  for (const [route, view] of retiredPresentationRoutes) {
-    const target = viewHref(view);
-    normalized = normalized.replaceAll(`href="${route}`, `href="${target}`);
-    normalized = normalized.replaceAll(`action="${route}`, `action="${target}`);
-  }
-  for (const view of assuranceViews) {
-    normalized = normalized.replaceAll(`${viewHref(view)}?`, `${viewHref(view)}&`);
-  }
-  return normalized.replace(
-    /<form([^>]*?)action="\/assurance\?view=([a-z]+)"([^>]*)>/g,
-    (_match, before: string, view: string, after: string) => `<form${before}action="${assuranceSurface.route}"${after}><input type="hidden" name="view" value="${escapeHtml(view)}">`,
-  );
-}
-
 async function renderSelectedAssurance(request: Request, env: Env, view: AssuranceView): Promise<string> {
   if (view === 'overview') return overviewContent();
   let response: Response;
@@ -150,7 +124,7 @@ async function renderSelectedAssurance(request: Request, env: Env, view: Assuran
   else if (view === 'risks') response = await renderRisks(request, env);
   else if (view === 'incidents') response = await renderIncidents(env);
   else response = await renderConcerns(env);
-  return normalizeEmbeddedRoutes(await mainContent(response));
+  return mainContent(response);
 }
 
 async function renderSharedReporting(request: Request, env: Env, view: AssuranceView): Promise<string> {
@@ -160,6 +134,7 @@ async function renderSharedReporting(request: Request, env: Env, view: Assurance
     return `<section class="operations-section" id="assurance-reporting"><div class="availability-empty">No compatible public reporting collection is registered for this view.</div></section>`;
   }
   const url = new URL(request.url);
+  url.searchParams.delete('view');
   const result = await queryReportingCollection(env, principal, collection, {
     searchParams: url.searchParams,
     limit: requestedLimit(url),

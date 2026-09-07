@@ -146,7 +146,7 @@
       "order": 9,
       "fields": {
         "accessClass": "Application admin credential",
-        "assetBoundary": "`/admin`, `/git` app boundary",
+        "assetBoundary": "`/admin`, `/assurance?view=delivery` app boundary",
         "minimumIntendedAuthority": "Administrative app actions",
         "publicRecordPosture": "Credential private",
         "reviewState": "Partial"

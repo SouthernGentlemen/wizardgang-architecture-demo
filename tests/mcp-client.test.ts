@@ -1,8 +1,7 @@
 import { Client, StreamableHTTPClientTransport } from '@modelcontextprotocol/client';
 import { describe, expect, it } from 'vitest';
 import {
-  MCP_MODERN_PROTOCOL_VERSION,
-  MCP_SUPPORTED_PROTOCOL_VERSIONS,
+  MCP_PROTOCOL_VERSION,
   mcpMetaKeys,
   mcpResponse,
 } from '../src/api/mcp';
@@ -58,7 +57,7 @@ function modernPingRequest(headerName = 'ping'): Request {
     headers: {
       'content-type': 'application/json',
       accept: 'application/json, text/event-stream',
-      'mcp-protocol-version': MCP_MODERN_PROTOCOL_VERSION,
+      'mcp-protocol-version': MCP_PROTOCOL_VERSION,
       'mcp-method': 'tools/call',
       'mcp-name': headerName,
     },
@@ -70,7 +69,7 @@ function modernPingRequest(headerName = 'ping'): Request {
         name: 'ping',
         arguments: {},
         _meta: {
-          [mcpMetaKeys.protocolVersion]: MCP_MODERN_PROTOCOL_VERSION,
+          [mcpMetaKeys.protocolVersion]: MCP_PROTOCOL_VERSION,
           [mcpMetaKeys.clientInfo]: { name: 'curl', version: '1.0' },
           [mcpMetaKeys.clientCapabilities]: {},
         },
@@ -118,8 +117,8 @@ describe('official MCP client interoperability', () => {
     const client = new Client(
       { name: 'integration-modern-client', version: '1.0.0' },
       {
-        supportedProtocolVersions: MCP_SUPPORTED_PROTOCOL_VERSIONS,
-        versionNegotiation: { mode: { pin: MCP_MODERN_PROTOCOL_VERSION } },
+        supportedProtocolVersions: [MCP_PROTOCOL_VERSION],
+        versionNegotiation: { mode: { pin: MCP_PROTOCOL_VERSION } },
       },
     );
 
@@ -128,20 +127,12 @@ describe('official MCP client interoperability', () => {
     expect(logs[0]).toMatchObject({
       clientName: 'integration-modern-client',
       clientVersion: '1.0.0',
-      protocolVersion: MCP_MODERN_PROTOCOL_VERSION,
+      protocolVersion: MCP_PROTOCOL_VERSION,
       method: 'tools/call',
       tool: 'ping',
       authMode: 'public',
       result: 'success',
     });
-  });
-
-  it('also accepts the official client’s legacy 2025 initialization flow', async () => {
-    const env = environment();
-    const client = new Client({ name: 'integration-legacy-client', version: '1.0.0' });
-    const logs = await exerciseClient(client, env);
-    expect(logs).toHaveLength(2);
-    expect(logs[0]).toMatchObject({ protocolVersion: '2025-11-25', tool: 'ping' });
   });
 
   it('accepts the documented modern stateless curl request without a handshake', async () => {
@@ -158,7 +149,7 @@ describe('official MCP client interoperability', () => {
     expect(response.status).toBe(400);
   });
 
-  it('returns 202 with no body for a legacy initialized notification', async () => {
+  it('accepts a standard initialization notification without creating a compatibility route', async () => {
     const response = await mcpResponse(new Request('https://demo.example/mcp', {
       method: 'POST',
       headers: {
@@ -169,6 +160,5 @@ describe('official MCP client interoperability', () => {
     }), environment());
 
     expect(response.status).toBe(202);
-    expect(await response.text()).toBe('');
   });
 });

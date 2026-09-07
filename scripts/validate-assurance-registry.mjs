@@ -22,7 +22,7 @@ import { renderRuntimeBinding, RUNTIME_BINDING_PATH } from './generate-assurance
 const root = process.cwd();
 const errors = [];
 const registrySchemaPath = 'contracts/assurance/registry.schema.json';
-const stableV1Kinds = new Set(['evidence', 'claims', 'compliance', 'risks', 'incidents', 'exercises', 'advisories']);
+const requiredRecordKinds = new Set(['evidence', 'claims', 'compliance', 'risks', 'incidents', 'exercises', 'advisories']);
 const reportingDomains = new Set(['evidence', 'reports', 'issues', 'risks', 'security', 'governance', 'operations']);
 const cloudflareObservationIdentity = ['resource', 'metric', 'dimensions', 'window.start', 'window.end'];
 
@@ -66,13 +66,9 @@ if (registry) {
 
     const hasRecords = resource.capabilities?.includes('records');
     const hasRuntime = resource.capabilities?.includes('runtime');
-    const hasApiIndex = resource.capabilities?.includes('api-index');
     if (hasRecords && !hasRuntime) fail(`${ASSURANCE_REGISTRY_PATH}: ${resource.id} records capability requires runtime capability for shared Worker/Node record discovery`);
     if (hasRecords && !resource.recordCollection) fail(`${ASSURANCE_REGISTRY_PATH}: ${resource.id} records capability requires recordCollection metadata`);
     if (!hasRecords && resource.recordCollection) fail(`${ASSURANCE_REGISTRY_PATH}: ${resource.id} declares recordCollection without records capability`);
-    if (hasApiIndex && (!hasRuntime || !hasRecords)) {
-      fail(`${ASSURANCE_REGISTRY_PATH}: ${resource.id} api-index capability requires runtime and records capabilities`);
-    }
 
     if (!exists(resource.path)) fail(`${ASSURANCE_REGISTRY_PATH}: registered dataset is missing: ${resource.path}`);
     if (!exists(resource.schema)) fail(`${ASSURANCE_REGISTRY_PATH}: registered schema is missing for ${resource.path}: ${resource.schema}`);
@@ -117,11 +113,12 @@ if (registry) {
       if (structured.provider !== 'github' || structured.authority !== 'structured-record') {
         fail(`${ASSURANCE_REGISTRY_PATH}: structured reporting records must be GitHub structured-record authority`);
       }
-      for (const capability of ['read', 'query', 'export', 'import']) {
+      for (const capability of ['read', 'query', 'export']) {
         if (!structured.capabilities?.includes(capability)) fail(`${ASSURANCE_REGISTRY_PATH}: structured reporting source requires ${capability} capability`);
       }
+      if (structured.capabilities?.includes('update')) fail(`${ASSURANCE_REGISTRY_PATH}: repository-governed structured reporting must not expose update capability`);
       if (structured.capabilities?.includes('observe')) fail(`${ASSURANCE_REGISTRY_PATH}: structured reporting source must not declare observe capability`);
-      if (structured.ingestion !== 'enabled') fail(`${ASSURANCE_REGISTRY_PATH}: public GitHub structured reporting ingestion must be enabled`);
+      if (structured.ingestion !== 'disabled') fail(`${ASSURANCE_REGISTRY_PATH}: repository-governed structured reporting ingestion must be disabled`);
       for (const resource of resources) {
         if (!resource.path.startsWith(structured.resourceRoot ?? '')) {
           fail(`${ASSURANCE_REGISTRY_PATH}: ${resource.id} is outside the structured reporting resource root ${structured.resourceRoot}`);
@@ -158,11 +155,11 @@ if (registry) {
       const sourceSchema = schemaFile(source.schema);
       if (!sourceSchema || !exists(sourceSchema)) fail(`${ASSURANCE_REGISTRY_PATH}: reporting source ${source.id} has missing schema ${source.schema}`);
       if (source.visibility === 'private' && source.ingestion !== 'disabled') fail(`${ASSURANCE_REGISTRY_PATH}: private reporting source ${source.id} must keep ingestion disabled`);
-      if (source.visibility === 'private' && source.capabilities?.includes('import')) fail(`${ASSURANCE_REGISTRY_PATH}: private reporting source ${source.id} must not expose import capability before protected consumption exists`);
+      if (source.visibility === 'private' && source.capabilities?.includes('update')) fail(`${ASSURANCE_REGISTRY_PATH}: private reporting source ${source.id} must not expose update capability before protected consumption exists`);
       if (source.authority === 'native-object' && source.capabilities?.includes('observe')) fail(`${ASSURANCE_REGISTRY_PATH}: native GitHub object ${source.id} must not declare observe capability`);
       if (source.authority === 'native-observation') {
         if (!source.capabilities?.includes('observe')) fail(`${ASSURANCE_REGISTRY_PATH}: observation source ${source.id} requires observe capability`);
-        if (source.capabilities?.includes('import')) fail(`${ASSURANCE_REGISTRY_PATH}: observation source ${source.id} must not declare import capability`);
+        if (source.capabilities?.includes('update')) fail(`${ASSURANCE_REGISTRY_PATH}: observation source ${source.id} must not declare update capability`);
         if (JSON.stringify(source.observationIdentity) !== JSON.stringify(cloudflareObservationIdentity)) {
           fail(`${ASSURANCE_REGISTRY_PATH}: aggregate observation source ${source.id} identity must be resource + metric + dimensions + observation window`);
         }
@@ -216,12 +213,12 @@ if (registry) {
   for (const dataset of registry.datasets ?? []) {
     if (primaryKinds.has(dataset.kind)) fail(`${ASSURANCE_REGISTRY_PATH}: duplicate primary dataset family ${dataset.kind}`);
     else primaryKinds.set(dataset.kind, dataset.id);
-    if (stableV1Kinds.has(dataset.kind) && !dataset.capabilities?.includes('api-index')) {
-      fail(`${ASSURANCE_REGISTRY_PATH}: released v1 primary dataset ${dataset.id} must declare api-index capability`);
+    if (requiredRecordKinds.has(dataset.kind) && (!dataset.capabilities?.includes('runtime') || !dataset.capabilities?.includes('records'))) {
+      fail(`${ASSURANCE_REGISTRY_PATH}: required primary dataset ${dataset.id} must declare runtime and records capabilities`);
     }
   }
-  for (const kind of stableV1Kinds) {
-    if (!primaryKinds.has(kind)) fail(`${ASSURANCE_REGISTRY_PATH}: missing released v1 primary dataset family ${kind}`);
+  for (const kind of requiredRecordKinds) {
+    if (!primaryKinds.has(kind)) fail(`${ASSURANCE_REGISTRY_PATH}: missing required primary dataset family ${kind}`);
   }
 
   try {

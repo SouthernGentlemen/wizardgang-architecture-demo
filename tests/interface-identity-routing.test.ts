@@ -6,10 +6,8 @@ import {
   interfaceIdentityRoute,
 } from '../src/interfaces/route-capability';
 import {
-  createInterfaceIdentityRouteRouter,
+  createInterfaceIdentityRouteRegistry,
   interfaceIdentityRouteRegistry,
-  interfaceIdentityWantsHtml,
-  isInterfaceIdentityApiLike,
 } from '../src/routing/interface-identity-routes';
 import { matchRoute } from '../src/routing/registry';
 import { routeRequest } from '../src/router';
@@ -92,14 +90,6 @@ describe('interface and identity declarative routing', () => {
     expect(samlGet.status).toBe('method-not-allowed');
     if (samlGet.status === 'method-not-allowed') expect(samlGet.allowedMethods).toEqual(['POST']);
 
-    const router = createInterfaceIdentityRouteRouter();
-    const response = await router.route(
-      new Request('https://demo.wizardgang.ai/api/openapi.json', { method: 'POST' }),
-      onlineEnv,
-      '/api/openapi.json',
-    );
-    expect(response?.status).toBe(405);
-    expect(response?.headers.get('allow')).toBe('GET');
   });
 
   it('declares the authentication, authorization, and origin boundaries', () => {
@@ -128,14 +118,10 @@ describe('interface and identity declarative routing', () => {
     expect(routeById('interfaces.mcp.server')).toMatchObject({ pattern: '/mcp', kind: 'protocol', methods: ['GET', 'POST', 'DELETE'] });
   });
 
-  it('keeps GraphQL HTML negotiation and API-like classification capability-owned', () => {
-    expect(interfaceIdentityWantsHtml(new Request('https://demo.wizardgang.ai/graphql'), '/graphql')).toBe(false);
-    expect(interfaceIdentityWantsHtml(new Request('https://demo.wizardgang.ai/graphql', { headers: { accept: 'text/html' } }), '/graphql')).toBe(false);
-    expect(interfaceIdentityWantsHtml(new Request('https://demo.wizardgang.ai/graphql', { headers: { accept: 'application/json' } }), '/graphql')).toBe(false);
-    expect(isInterfaceIdentityApiLike('/graphql')).toBe(true);
-    expect(isInterfaceIdentityApiLike('/mcp')).toBe(true);
-    expect(isInterfaceIdentityApiLike('/interfaces')).toBe(false);
-    expect(isInterfaceIdentityApiLike('/identity')).toBe(false);
+  it('keeps browser response behavior in declarative route metadata', () => {
+    expect(routeById('interfaces.graphql.endpoint').browserHtml).toBe('never');
+    expect(routeById('interfaces.mcp.server').browserHtml).toBe('never');
+    expect(routeById('interfaces.page').browserHtml).toBe('page');
   });
 
   it('can register a compatible new interface without modifying the central router', async () => {
@@ -152,24 +138,18 @@ describe('interface and identity declarative routing', () => {
         sourceExport: 'synthetic',
       }),
     ]);
-    const router = createInterfaceIdentityRouteRouter([...interfaceIdentityCapabilities, synthetic]);
-    const response = await router.route(
-      new Request('https://demo.wizardgang.ai/__api/interfaces-synthetic/ping'),
-      onlineEnv,
-      '/__api/interfaces-synthetic/ping',
-    );
-    expect(response?.status).toBe(200);
-    expect(await response?.json()).toEqual({ ok: true });
+    const routeRegistry = createInterfaceIdentityRouteRegistry([...interfaceIdentityCapabilities, synthetic]);
+    const match = matchRoute(routeRegistry, 'GET', '/__api/interfaces-synthetic/ping');
+    expect(match.status).toBe('matched');
+    if (match.status !== 'matched') throw new Error('Synthetic interface route did not match.');
+    const response = await match.route.handler(new Request('https://demo.wizardgang.ai/__api/interfaces-synthetic/ping'), { env: onlineEnv }, match.params);
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ ok: true });
     expect(fs.readFileSync('src/router.ts', 'utf8')).not.toContain('/__api/interfaces-synthetic/ping');
   });
 
   it('keeps unknown interface paths unregistered and 404s from the main router', async () => {
-    const router = createInterfaceIdentityRouteRouter();
-    expect(await router.route(
-      new Request('https://demo.wizardgang.ai/identity/not-a-route'),
-      onlineEnv,
-      '/identity/not-a-route',
-    )).toBeUndefined();
+    expect(matchRoute(interfaceIdentityRouteRegistry, 'GET', '/identity/not-a-route')).toEqual({ status: 'not-found', statusCode: 404 });
 
     const response = await routeRequest(
       new Request('https://demo.wizardgang.ai/identity/not-a-route'),

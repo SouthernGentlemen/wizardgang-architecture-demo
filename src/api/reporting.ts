@@ -8,12 +8,12 @@ import {
 } from '../assurance/service';
 import {
   assuranceErrorResponse,
-  assuranceJsonResponse,
   ASSURANCE_SCHEMA_VERSION,
 } from './assurance-contract';
+import { reportingJsonResponse } from './reporting-response';
 import {
   GitHubReportingError,
-  importGitHubReporting,
+  updateGitHubReporting,
 } from '../reporting/github';
 import { ReportingCursorError } from '../reporting/pagination';
 import {
@@ -23,14 +23,14 @@ import {
   type ReportingCollectionDescriptor,
 } from '../reporting/service';
 import type { ReportingQueryResult, ReportingRecord } from '../reporting/contracts';
-import { reportingContractPath } from '../reporting/registry';
+import { registeredReportingSource, reportingContractPath } from '../reporting/registry';
+import { isReportingContract } from '../reporting/schema-validation';
 import { exportReportingPages } from '../reporting/query';
 
 const DEFAULT_PAGE_LIMIT = 50;
 const MAX_PAGE_LIMIT = 100;
 const MAX_UPDATE_BODY_BYTES = 32_768;
 const CONTROL_PARAMETERS = new Set(['limit', 'cursor', 'export', 'repository']);
-const UPDATE_FIELDS = new Set(['repository', 'revision', 'fields']);
 
 interface ReportingQueryOptions {
   limit: number;
@@ -205,19 +205,19 @@ async function queryCollection(
   try {
     const first = await query(options.cursor);
     if (!options.exportRequested) {
-      return assuranceJsonResponse(request, first, { cacheControl: cacheControlFor(collection, principal) });
+      return reportingJsonResponse(request, first, 'queryResult', { cacheControl: cacheControlFor(collection, principal) });
     }
     const exported = await exportReportingPages(async (cursor) => {
       const page = await query(cursor);
       if (!page.query.pagination) throw new Error(`Reporting collection ${collection.id} did not return pagination metadata.`);
       return { records: page.records, pagination: page.query.pagination };
     }, options.limit);
-    return assuranceJsonResponse(request, {
+    return reportingJsonResponse(request, {
       ...first,
       query: { ...first.query, pagination: exported.pagination },
       records: exported.records,
       derived: { ...first.derived, count: exported.records.length, totalAvailable: exported.records.length },
-    }, { cacheControl: cacheControlFor(collection, principal) });
+    }, 'queryResult', { cacheControl: cacheControlFor(collection, principal) });
   } catch (error) {
     if (error instanceof GitHubReportingError || error instanceof ReportingCursorError) return reportingErrorResponse(request, error);
     throw error;
@@ -256,7 +256,7 @@ async function queryRecord(
           records: [record],
           derived: { ...page.derived, count: 1 },
         };
-        return assuranceJsonResponse(request, result, { cacheControl: cacheControlFor(collection, principal) });
+        return reportingJsonResponse(request, result, 'queryResult', { cacheControl: cacheControlFor(collection, principal) });
       }
       cursor = page.query.pagination?.nextCursor ?? null;
       if (!cursor) break;
@@ -270,16 +270,9 @@ async function queryRecord(
   }
 }
 
-function isObject(value: unknown): value is Record<string, unknown> {
-  return Boolean(value && typeof value === 'object' && !Array.isArray(value));
-}
-
 function validateUpdateRequest(value: unknown): ReportingUpdateRequest | null {
-  if (!isObject(value) || Object.keys(value).some((key) => !UPDATE_FIELDS.has(key))) return null;
-  if (typeof value.repository !== 'string' || !/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(value.repository)) return null;
-  if (typeof value.revision !== 'string' || !value.revision) return null;
-  if (!isObject(value.fields) || Object.keys(value.fields).length === 0) return null;
-  return { repository: value.repository, revision: value.revision, fields: structuredClone(value.fields) };
+  if (!isReportingContract(value, 'updateRequest')) return null;
+  return structuredClone(value) as ReportingUpdateRequest;
 }
 
 async function updateRecord(
@@ -300,11 +293,11 @@ async function updateRecord(
     const input = validateUpdateRequest(await readJson<unknown>(request, MAX_UPDATE_BODY_BYTES));
     if (!input) {
       return assuranceErrorResponse(request, 400, {
-        error: 'github_import_payload_invalid',
+        error: 'github_update_payload_invalid',
         detail: 'PATCH body must contain exactly repository, revision, and non-empty fields.',
       });
     }
-    const record = await importGitHubReporting(env, principal, {
+    const record = await updateGitHubReporting(env, principal, {
       source: collection.sourceIds[0],
       repository: input.repository,
       operation: 'update',
@@ -312,19 +305,18 @@ async function updateRecord(
       revision: input.revision,
       fields: input.fields,
     });
-    return assuranceJsonResponse(request, {
+    return reportingJsonResponse(request, {
       schemaVersion: ASSURANCE_SCHEMA_VERSION,
       contract: reportingContractPath,
       dataset: collection.id,
       datasets: collection.sourceIds,
-      operation: 'update',
       records: [record],
       derived: { count: 1, totalAvailable: 1, facets: {} },
       availability: { [collection.id]: 'available', [collection.sourceIds[0]]: 'available' },
-      sources: [],
+      sources: [registeredReportingSource(collection.sourceIds[0])],
       qualifications: {},
       query: { filters: { repository: input.repository } },
-    }, { cacheControl: 'private, no-store' });
+    }, 'queryResult', { cacheControl: 'private, no-store' });
   } catch (error) {
     if (error instanceof GitHubReportingError || error instanceof ReportingCursorError) return reportingErrorResponse(request, error);
     throw error;
@@ -344,11 +336,11 @@ export async function reportingIndexResponse(request: Request, env: Env): Promis
     filters: reportingCollectionFilters(collection),
     url: `/api/reporting/${encodeURIComponent(collection.id)}`,
   }));
-  return assuranceJsonResponse(request, {
+  return reportingJsonResponse(request, {
     schemaVersion: ASSURANCE_SCHEMA_VERSION,
     contract: reportingContractPath,
     collections,
-  }, { cacheControl: cacheControlFor(undefined, principal) });
+  }, 'collectionIndexResult', { cacheControl: cacheControlFor(undefined, principal) });
 }
 
 export async function reportingCollectionResponse(

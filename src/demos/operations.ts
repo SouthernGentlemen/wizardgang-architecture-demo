@@ -20,44 +20,12 @@ function viewHref(view: OperationsView): string {
 function operationsViewNavigation(active: OperationsView): string {
   return `<div class="operations-navigation"><nav class="section-nav" aria-label="Operations views">${operationsViews.map((view) =>
     `<a href="${viewHref(view)}"${view === active ? ' aria-current="page"' : ''}>${viewLabels[view]}</a>`).join('')}</nav>
-  <details class="machine-endpoints"><summary>Machine endpoints</summary><nav class="link-row" aria-label="Operations machine endpoints"><a href="/api/operations/health">/api/operations/health</a><a href="/api/operations/version">/api/operations/version</a><a href="/api/operations/logs">/api/operations/logs</a><a href="/api/operations/usage">/api/operations/usage</a></nav></details></div>`;
+  <details class="machine-endpoints"><summary>Machine endpoints</summary><nav class="link-row" aria-label="Operations machine endpoints"><a href="/api/operations/health">/api/operations/health</a><a href="/api/operations/version">/api/operations/version</a><a href="/api/operations/logs">/api/operations/logs</a><a href="/api/reporting/operations">/api/reporting/operations</a></nav></details></div>`;
 }
 
 function parseView(request: Request): OperationsView | null {
   const raw = new URL(request.url).searchParams.get('view') || 'overview';
   return operationsViews.includes(raw as OperationsView) ? raw as OperationsView : null;
-}
-
-function rewriteLegacyLinks(html: string, view: OperationsView): string {
-  let rewritten = html
-    .replaceAll('/dashboard/uptime', viewHref('availability'))
-    .replaceAll('/dashboard/logs', viewHref('logs'))
-    .replaceAll('/dashboard/billing', viewHref('usage'))
-    .replaceAll('/dashboard/docs', viewHref('docs'))
-    .replaceAll('/dashboard?report=', `${viewHref('reports')}&amp;report=`)
-    .replaceAll('/dashboard', operationsSurface.route);
-
-  rewritten = rewritten.replace(
-    /<div class="operations-navigation"><nav class="section-nav" aria-label="Operations">[\s\S]*?<\/details><\/div>/,
-    operationsViewNavigation(view),
-  );
-  rewritten = rewritten.replace(
-    `<a href="${operationsSurface.route}">Operations</a>`,
-    `<a href="${operationsSurface.route}" aria-current="page">Operations</a>`,
-  );
-  if (view === 'logs') {
-    rewritten = rewritten.replace(
-      '<form method="get" class="filters">',
-      '<form method="get" class="filters"><input type="hidden" name="view" value="logs">',
-    );
-  }
-  return rewritten;
-}
-
-async function normalizeLegacyResponse(response: Response, view: OperationsView): Promise<Response> {
-  const headers = new Headers(response.headers);
-  const body = rewriteLegacyLinks(await response.text(), view);
-  return new Response(body, { status: response.status, statusText: response.statusText, headers });
 }
 
 async function renderReports(request: Request, env: Env): Promise<Response> {
@@ -92,16 +60,16 @@ export async function renderOperations(request: Request, env: Env): Promise<Resp
 
   switch (view) {
     case 'overview':
-      return normalizeLegacyResponse(await renderDashboard(env, request), view);
+      return renderDashboard(env, request);
     case 'availability':
-      return normalizeLegacyResponse(await renderUptime(env), view);
+      return renderUptime(env);
     case 'logs':
-      return normalizeLegacyResponse(await renderLogsDemo(request, env), view);
+      return renderLogsDemo(request, env);
     case 'usage':
-      return normalizeLegacyResponse(await renderBilling(env), view);
+      return renderBilling(env);
     case 'reports':
       return renderReports(request, env);
     case 'docs':
-      return normalizeLegacyResponse(await renderDocs(env), view);
+      return renderDocs(env);
   }
 }

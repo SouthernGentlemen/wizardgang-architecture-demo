@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { demos } from '../src/demos/registry';
+import { indexedSurfaces } from '../src/demos/registry';
 import { routeRequest } from '../src/router';
 import type { D1PreparedStatement, Env } from '../src/types';
 
@@ -49,17 +49,17 @@ describe('public link and route contract', () => {
       route: string;
       source: { module: string };
     }>;
-    for (const demo of demos) {
-      const entries = manifest.filter((entry) => entry.route === demo.route);
-      expect(entries, `${demo.route} manifest entry`).toHaveLength(1);
-      expect(readFileSync(entries[0].source.module, 'utf8').length, `${demo.route} source is empty`).toBeGreaterThan(0);
-      const response = await get(demo.route);
-      expect(response.status, `${demo.route} implementation`).toBe(200);
+    for (const surface of indexedSurfaces) {
+      const entries = manifest.filter((entry) => entry.route === surface.route);
+      expect(entries, `${surface.route} manifest entry`).toHaveLength(1);
+      expect(readFileSync(entries[0].source.module, 'utf8').length, `${surface.route} source is empty`).toBeGreaterThan(0);
+      const response = await get(surface.route);
+      expect(response.status, `${surface.route} implementation`).toBe(200);
     }
   });
 
   it('resolves every internal page link and linked fragment', async () => {
-    const pages = ['/', ...demos.map((demo) => demo.route)];
+    const pages = ['/', ...indexedSurfaces.map((surface) => surface.route)];
     const targets = new Map<string, Set<string>>();
     for (const page of pages) {
       const response = await get(page);
@@ -87,7 +87,7 @@ describe('public link and route contract', () => {
     const response = await get('/sitemap.xml');
     const xml = await response.text();
     const locations = [...xml.matchAll(/<loc>https:\/\/demo\.wizardgang\.ai([^<]*)<\/loc>/g)].map((match) => match[1]);
-    expect(locations).toEqual(['/', ...demos.map((demo) => demo.route)]);
+    expect(locations).toEqual(['/', ...indexedSurfaces.map((surface) => surface.route)]);
     expect(new Set(locations).size).toBe(locations.length);
   });
 });

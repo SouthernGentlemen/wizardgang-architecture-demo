@@ -1,8 +1,11 @@
 import { existsSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { assuranceComplianceResponse } from '../src/api/assurance';
+import { reportingCollectionResponse } from '../src/api/reporting';
 import { assuranceComplianceFrameworks, assuranceRegistryResources } from '../src/assurance/model';
 import { listAssuranceRecords } from '../src/assurance/service';
+import type { Env } from '../src/types';
+
+const env = { GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' } as Env;
 
 describe('canonical compliance framework metadata', () => {
   it('derives framework presentation metadata from registered framework resources', () => {
@@ -25,7 +28,7 @@ describe('canonical compliance framework metadata', () => {
   });
 
   it('publishes the canonical framework metadata on current records without a compatibility serializer', async () => {
-    const response = await assuranceComplianceResponse(new Request('https://demo.wizardgang.ai/api/reporting/compliance?framework=wcag-2.2&limit=1'));
+    const response = await reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/compliance?framework=wcag-2.2&limit=1'), env, 'compliance');
     const body = await response.json() as { records: Array<{ framework: string; frameworkLabel: string; sourcePath: string; relationships: Record<string, string[]> }> };
     expect(body.records).toHaveLength(1);
     expect(body.records[0]).toMatchObject({ framework: 'wcag-2.2', frameworkLabel: 'WCAG 2.2' });

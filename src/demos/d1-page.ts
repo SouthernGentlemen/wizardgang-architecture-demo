@@ -370,5 +370,5 @@ export function renderD1Demo(env: Env): Response {
   });
   loadAll('users').catch((error) => setDatabaseMessage(error.message, 'error'));
 })();
-</script>`, { activeRoute: '/d1', cacheControl: 'no-store' });
+</script>`, { activeRoute: '/platform', cacheControl: 'no-store' });
 }

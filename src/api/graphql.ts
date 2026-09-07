@@ -6,20 +6,11 @@ import { authorize, type Principal } from '../lib/authorization';
 import { ensureDemoSession, withDemoSession, type DemoSession } from '../lib/demo-session';
 import { createDemoUser, deleteDemoUser, getDemoUser, listDemoUsers, updateDemoUser } from '../lib/demo-users';
 import { json, methodNotAllowed, withSecurityHeaders } from '../lib/http';
-import { recordApplicationLog } from '../lib/logs';
 import { localGraphiqlResponse } from '../ui/graphiql-assets';
 
-interface RecordRow { id: number; namespace: string; record_key: string; value_json: string }
 interface GraphQLServerContext { env: Env; request: Request; principal: Principal; session?: DemoSession }
 
 const SCHEMA = `"""Executable public schema backed by the shared D1 demonstration database."""
-type DemoRecord {
-  id: ID!
-  namespace: String!
-  key: String!
-  valueJson: String!
-}
-
 type User {
   id: ID!
   name: String!
@@ -34,7 +25,6 @@ input CreateUserInput { name: String!, email: String!, role: UserRole! }
 input UpdateUserInput { name: String!, email: String!, role: UserRole! }
 
 type Query {
-  demoRecords(namespace: String): [DemoRecord!]!
   users: [User!]!
   user(id: ID!): User
 }
@@ -63,15 +53,6 @@ const schema = createSchema<GraphQLServerContext>({
   resolvers: {
     UserRole: { ADMIN: 'admin', MEMBER: 'member', VIEWER: 'viewer' },
     Query: {
-      async demoRecords(_: unknown, args: { namespace?: string }, context: GraphQLServerContext) {
-        const namespace = context.principal.namespace ?? (context.principal.authentication === 'anonymous' ? 'public' : args.namespace ?? 'public');
-        if (!/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$/.test(namespace)) throw new GraphQLError('Invalid namespace.', { extensions: { code: 'BAD_USER_INPUT' } });
-        const result = await context.env.DEMO_DB.prepare(
-          'SELECT id, namespace, record_key, value_json FROM demo_records WHERE namespace = ? ORDER BY record_key LIMIT 100',
-        ).bind(namespace).all<RecordRow>();
-        await recordApplicationLog(context.env, { source: 'graphql', eventKey: 'records_queried', message: `GraphQL queried ${result.results.length} demo record(s).`, route: '/graphql', detail: { namespace, resultCount: result.results.length, authentication: context.principal.authentication } });
-        return result.results.map((row) => ({ id: String(row.id), namespace: row.namespace, key: row.record_key, valueJson: row.value_json }));
-      },
       async users(_: unknown, _args: unknown, context: GraphQLServerContext) {
         return listDemoUsers(context.env, sandbox(context).id);
       },
@@ -168,7 +149,7 @@ export async function graphqlResponse(request: Request, env: Env): Promise<Respo
   let session: DemoSession | undefined;
   if (env.DEMO_SESSION_SECRET) {
     try { session = await ensureDemoSession(request, env); }
-    catch { /* Legacy demoRecords remains available if the optional sandbox is misconfigured. */ }
+    catch { /* Yoga returns a service-unavailable error for sandbox-backed fields. */ }
   }
   let response = await yoga.fetch(request, { env, request, principal, session });
   if (request.method === 'POST' && response.status === 200 && (response.headers.get('content-type') || '').includes('application/json')) {
@@ -176,9 +157,4 @@ export async function graphqlResponse(request: Request, env: Env): Promise<Respo
     if (payload.data === undefined && payload.errors?.length) response = new Response(response.body, { status: 400, headers: response.headers });
   }
   return secured(response, session);
-}
-
-export function graphqlSchemaResponse(request: Request): Response {
-  if (request.method !== 'GET') return methodNotAllowed(['GET']);
-  return new Response(SCHEMA, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=300', 'x-content-type-options': 'nosniff' } });
 }

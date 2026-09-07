@@ -1,6 +1,6 @@
 import { assuranceRelationshipIds } from '../assurance/relationship-contract.js';
 import type { Env } from '../types';
-import { MCP_SERVER_PATH, mcpResponse } from './mcp';
+import { MCP_PROTOCOL_VERSION, MCP_SERVER_PATH, mcpMetaKeys, mcpResponse } from './mcp';
 import { recordDemoEvent, recentDemoEvents } from '../lib/audit';
 import { repoUrl } from '../lib/github';
 import { json, methodNotAllowed } from '../lib/http';
@@ -77,7 +77,29 @@ export function securityControlsResponse(request: Request, env: Env): Response {
 export async function aiEvaluationResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'POST') return methodNotAllowed(['POST']);
   const invoke = (method: string, params?: unknown) => mcpResponse(new Request(new URL(MCP_SERVER_PATH, request.url), {
-    method: 'POST', headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream' }, body: JSON.stringify({ jsonrpc: '2.0', id: crypto.randomUUID(), method, params }),
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      accept: 'application/json, text/event-stream',
+      'mcp-protocol-version': MCP_PROTOCOL_VERSION,
+      'mcp-method': method,
+      ...(method === 'tools/call' && params && typeof params === 'object' && 'name' in params
+        ? { 'mcp-name': String((params as { name: unknown }).name) }
+        : {}),
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: crypto.randomUUID(),
+      method,
+      params: {
+        ...(params && typeof params === 'object' ? params : {}),
+        _meta: {
+          [mcpMetaKeys.protocolVersion]: MCP_PROTOCOL_VERSION,
+          [mcpMetaKeys.clientInfo]: { name: 'governance-evaluation', version: '1.0' },
+          [mcpMetaKeys.clientCapabilities]: {},
+        },
+      },
+    }),
   }), env);
   const valid = await invoke('tools/call', { name: 'list_demo_records', arguments: { namespace: 'public' } });
   const unknownMethod = await invoke('tools/deleteEverything');

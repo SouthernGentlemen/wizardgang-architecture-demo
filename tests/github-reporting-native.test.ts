@@ -53,7 +53,6 @@ describe('GitHub reporting native edge cases', () => {
 
     const outcome = await queryGitHubReporting(env(), principal, {
       sourceIds: ['github.workflow-attempts'],
-      mode: 'export',
     });
     expect(outcome.result.records.map((record) => record.nativeId)).toEqual(['7001|1', '7001|2']);
     expect(outcome.result.records.map((record) => record.revision)).toEqual([
@@ -93,7 +92,6 @@ describe('GitHub reporting native edge cases', () => {
     });
     const outcome = await queryGitHubReporting(configured, principal, {
       sourceIds: ['github.branch-protection'],
-      mode: 'export',
     });
     expect(outcome.result.sources[0].scope).toMatchObject({ repository, branch });
     expect(outcome.result.records[0]).toMatchObject({
@@ -109,7 +107,6 @@ describe('GitHub reporting native edge cases', () => {
     includeRevision = false;
     const incomplete = await queryGitHubReporting(configured, principal, {
       sourceIds: ['github.branch-protection'],
-      mode: 'export',
     });
     expect(incomplete.result.records).toEqual([]);
     expect(incomplete.result.availability['github.branch-protection']).toBe('partial');
@@ -125,7 +122,6 @@ describe('GitHub reporting native edge cases', () => {
 
     const outcome = await queryGitHubReporting(env(), principal, {
       sourceIds: ['github.repositories'],
-      mode: 'export',
     });
     expect(outcome.result.records).toEqual([]);
     expect(outcome.result.availability['github.repositories']).toBe('partial');
@@ -142,7 +138,6 @@ describe('GitHub reporting native edge cases', () => {
 
     const outcome = await queryGitHubReporting(env(), principal, {
       sourceIds: ['github.workflow-artifacts'],
-      mode: 'export',
     });
     expect(outcome.result.records).toEqual([]);
     expect(outcome.result.availability['github.workflow-artifacts']).toBe('unavailable');

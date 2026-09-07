@@ -83,9 +83,9 @@ During disruption the operator must retain, or deliberately re-establish before 
 
 When the Worker/runtime remains healthy enough to serve requests safely, the design intends to keep these surfaces available:
 
-- `/dashboard` and operational dashboard routes;
-- `/health`;
-- `/version`;
+- `/operations` and operational dashboard routes;
+- `/api/operations/health`;
+- `/api/operations/version`;
 - `/offline`;
 - protected `/admin`;
 - `/robots.txt`;
@@ -143,7 +143,7 @@ Current design behavior includes:
 
 - browser GETs to ordinary architecture routes redirecting to `/offline?from=...`;
 - API/non-HTML/write requests receiving safe JSON `503` responses;
-- dashboard/health/version/offline/admin remaining reachable where runtime permits;
+- `/operations`, `/api/operations/health`, `/api/operations/version`, `/offline`, and `/admin` remaining reachable where runtime permits;
 - no redirect loops;
 - no debugging-secret exposure.
 
@@ -171,7 +171,7 @@ The continuity priority follows the recovery model but focuses on operational ca
 | Priority | Capability | Continuity objective |
 |---|---|---|
 | **C0 — Control** | repository/provider account control, credentials, admin containment, known release identity | retain/re-establish trustworthy control before expanding service |
-| **C1 — Core status/runtime** | Worker, DNS/route where available, `/version`, `/health`, operational status, critical D1 control state | provide identifiable and safely observable service |
+| **C1 — Core status/runtime** | Worker, DNS/route where available, `/api/operations/version`, `/api/operations/health`, operational status, critical D1 control state | provide identifiable and safely observable service |
 | **C2 — Core demo data/functions** | ordinary Worker routes, D1 application data, required integrations | restore when control and data boundaries are trustworthy |
 | **C3 — Object/optional integrations** | R2 features, identity-provider demonstrations, webhooks, AI/MCP, optional telemetry | restore independently when their own boundary is verified |
 | **C4 — Historical diagnostics** | nonessential telemetry, usage history, public-safe historical logs | preserve/restore where retained and useful; otherwise document loss and resume collection |
@@ -264,8 +264,8 @@ Potential effect:
 Continuity response:
 
 - keep/restore a known approved tag where possible;
-- verify exact `/version` commit/version identity;
-- verify `/health` and affected boundary;
+- verify exact `/api/operations/version` commit/version identity;
+- verify `/api/operations/health` and affected boundary;
 - use intentional offline state if safe known-good operation cannot be established;
 - preserve workflow/deployment evidence;
 - treat persistent or security-significant failures through incident/corrective processes.
@@ -525,8 +525,8 @@ Normal service may resume when the responsible owner has proportionately verifie
 Depending on the event, criteria include:
 
 - disruption contained or supplier/service restored sufficiently;
-- expected semantic version/commit confirmed through `/version` or equivalent evidence;
-- Worker and required dependency readiness confirmed through `/health` or equivalent evidence;
+- expected semantic version/commit confirmed through `/api/operations/version` or equivalent evidence;
+- Worker and required dependency readiness confirmed through `/api/operations/health` or equivalent evidence;
 - D1/R2/DO state suitable for the affected functions;
 - required credentials rotated/re-provisioned and not publicly exposed;
 - authentication/authorization behaves as expected;
@@ -594,7 +594,7 @@ Useful evidence includes:
 - affected routes/services/suppliers;
 - selected operating mode;
 - admin/offline change evidence;
-- health/version results;
+- health and version results;
 - GitHub workflow/release/deployment evidence;
 - D1 audit events and public-safe application logs;
 - supplier notices/support records where appropriate;
@@ -683,7 +683,7 @@ A material continuity disruption or exercise can trigger updates to:
 - vulnerability/security maintenance records;
 - corrective action;
 - management review;
-- `/compliance` evidence/status once the canonical registry is rebuilt.
+- `/assurance?view=compliance` evidence/status once the canonical registry is rebuilt.
 
 Merge of a documentation change does not prove continuity effectiveness.
 

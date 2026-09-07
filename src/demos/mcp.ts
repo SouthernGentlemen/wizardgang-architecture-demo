@@ -9,11 +9,11 @@ const demo: DemoDefinition = {
   summary: 'Connect a real MCP client to the live demo and invoke read-only tools through the same application permissions used by the rest of the platform.',
   proves: [
     'Real client interoperability over Streamable HTTP',
-    'MCP 2026-07-28 with stateless 2025-era compatibility',
+    'MCP 2026-07-28 with one current protocol contract',
     'Schema-defined read-only tools behind shared authorization, D1, and sanitized operational evidence',
   ],
   status: 'working',
-  interfaces: [{ method: 'GET, POST', path: '/mcp', description: 'Connect an MCP 2026-07-28 or stateless 2025-era client over Streamable HTTP.' }],
+  interfaces: [{ method: 'GET, POST', path: '/mcp', description: 'Connect an MCP 2026-07-28 client over Streamable HTTP.' }],
   supportingSources: [
     { label: 'View MCP implementation', path: 'src/api/mcp.ts' },
     { label: 'View tool manifest', path: 'contracts/mcp/tools.json' },

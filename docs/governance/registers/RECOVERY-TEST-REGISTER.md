@@ -100,8 +100,8 @@ The planned test covers:
 7. restore D1 data using the implemented backup/export method;
 8. restore or reconstruct selected R2 objects;
 9. deploy/start the recovered application;
-10. verify `/version` matches the selected release/commit;
-11. verify `/health` and required dependency readiness;
+10. verify `/api/operations/version` matches the selected release/commit;
+11. verify `/api/operations/health` and required dependency readiness;
 12. validate selected D1 records/schema and R2 object presence/integrity;
 13. verify admin/offline behavior;
 14. verify authentication/authorization and public-safe logging boundaries;
@@ -138,7 +138,7 @@ The completed record should retain public-safe references to:
 - relevant workflow/command/test outputs;
 - backup/export identifier and timestamp without sensitive storage details;
 - D1/R2 validation summary;
-- `/version` and `/health` results;
+- `/api/operations/version` and `/api/operations/health` results;
 - MCP boundary/evaluation result;
 - measured timestamps;
 - observed recovery point;

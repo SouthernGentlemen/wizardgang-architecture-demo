@@ -5,12 +5,10 @@ import assert from 'node:assert/strict';
 const root = process.cwd();
 const openApiPath = path.join(root, 'contracts', 'openapi', 'openapi.json');
 const reportingPath = path.join(root, 'contracts', 'assurance', 'reporting.schema.json');
-const registryPath = path.join(root, 'contracts', 'assurance', 'registry.schema.json');
 const check = process.argv.includes('--check');
 
 const openApi = JSON.parse(fs.readFileSync(openApiPath, 'utf8'));
 const reporting = JSON.parse(fs.readFileSync(reportingPath, 'utf8'));
-const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
 
 const schemas = openApi.components?.schemas;
 if (!schemas || typeof schemas !== 'object') {
@@ -23,6 +21,8 @@ const jsonObjectResponse = (description, schema = { type: 'object' }) => ({
     'application/json': { schema },
   },
 });
+
+const reportingDefinition = (name) => ({ $ref: `${reporting.$id}#/$defs/${name}` });
 
 const errorResponses = {
   '400': jsonObjectResponse('Invalid request.'),
@@ -62,7 +62,7 @@ function reportingPaths() {
         summary: 'Discover canonical reporting collections',
         'x-route-id': 'reporting.index',
         responses: {
-          '200': jsonObjectResponse('Disclosure-safe reporting collection inventory.'),
+          '200': jsonObjectResponse('Disclosure-safe reporting collection inventory.', reportingDefinition('collectionIndexResult')),
           ...errorResponses,
         },
       },
@@ -73,7 +73,7 @@ function reportingPaths() {
         'x-route-id': 'reporting.collection',
         parameters: [collectionParameter, ...reportingQueryParameters],
         responses: {
-          '200': jsonObjectResponse('Canonical reporting query result.', { $ref: '#/components/schemas/AssuranceQueryResult' }),
+          '200': jsonObjectResponse('Canonical reporting query result.', reportingDefinition('queryResult')),
           ...errorResponses,
         },
       },
@@ -84,7 +84,7 @@ function reportingPaths() {
         'x-route-id': 'reporting.record',
         parameters: [collectionParameter, recordParameter, ...reportingQueryParameters.filter((parameter) => parameter.name !== 'export')],
         responses: {
-          '200': jsonObjectResponse('Canonical single-record reporting result.', { $ref: '#/components/schemas/AssuranceQueryResult' }),
+          '200': jsonObjectResponse('Canonical single-record reporting result.', reportingDefinition('queryResult')),
           ...errorResponses,
         },
       },
@@ -97,21 +97,12 @@ function reportingPaths() {
           required: true,
           content: {
             'application/json': {
-              schema: {
-                type: 'object',
-                additionalProperties: false,
-                required: ['repository', 'revision', 'fields'],
-                properties: {
-                  repository: { type: 'string', pattern: '^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$' },
-                  revision: { type: 'string', minLength: 1 },
-                  fields: { type: 'object', minProperties: 1 },
-                },
-              },
+              schema: reportingDefinition('updateRequest'),
             },
           },
         },
         responses: {
-          '200': jsonObjectResponse('Updated canonical reporting record.', { $ref: '#/components/schemas/AssuranceQueryResult' }),
+          '200': jsonObjectResponse('Updated canonical reporting record.', reportingDefinition('queryResult')),
           '400': jsonObjectResponse('Invalid update payload or revision.'),
           '401': jsonObjectResponse('Authentication required.'),
           '403': jsonObjectResponse('Insufficient reporting permission.'),
@@ -147,13 +138,6 @@ function operationsPaths() {
         responses: { '200': jsonObjectResponse('Sanitized operational log telemetry.'), ...errorResponses },
       },
     },
-    '/api/operations/usage': {
-      get: {
-        summary: 'Read sanitized Cloudflare usage telemetry',
-        'x-route-id': 'operations.api-usage',
-        responses: { '200': jsonObjectResponse('Sanitized cached provider usage telemetry.'), ...errorResponses },
-      },
-    },
     '/api/operations/budget': {
       post: {
         summary: 'Calculate the synthetic operations budget demonstration',
@@ -177,24 +161,7 @@ function canonicalize(document) {
       || currentPath.startsWith('/api/operations/')
       || currentPath === '/api/openapi.json'
     ) continue;
-    const canonicalInterfacePath = currentPath.startsWith('/v1/auth/')
-      ? currentPath.slice(3)
-      : currentPath === '/v1/graphql'
-        ? '/graphql'
-        : currentPath === '/v1/mcp'
-          ? '/mcp'
-          : currentPath === '/v1/webhooks/github'
-            ? '/webhooks/github'
-            : currentPath;
-    const canonicalPath = canonicalInterfacePath.startsWith('/auth/')
-      || canonicalInterfacePath === '/graphql'
-      || canonicalInterfacePath === '/mcp'
-      || canonicalInterfacePath === '/webhooks/github'
-      ? canonicalInterfacePath
-      : canonicalInterfacePath.startsWith('/v1/') || canonicalInterfacePath.startsWith('/api/labs/')
-        ? canonicalInterfacePath
-        : `/v1${canonicalInterfacePath}`;
-    retained[canonicalPath] = pathItem;
+    retained[currentPath] = pathItem;
   }
 
   const firstServer = document.servers?.[0] && typeof document.servers[0] === 'object'
@@ -215,23 +182,24 @@ function canonicalize(document) {
       },
     },
   };
-  document.components.schemas.ReportingContract = reporting;
-  document.components.schemas.AssuranceRegistryContract = registry;
+  for (const name of ['ReportingContract', 'AssuranceQueryResult', 'AssuranceRegistryContract', 'AssuranceRegistryDiscovery']) {
+    delete document.components.schemas[name];
+  }
+  for (const name of Object.keys(document.components.responses ?? {})) {
+    if (name.startsWith('Assurance')) delete document.components.responses[name];
+  }
+  delete document.components.headers?.ETag;
+  delete document.components.headers?.AssuranceSchemaVersion;
   return document;
 }
 
 const expected = canonicalize(structuredClone(openApi));
 
 if (check) {
-  assert.deepStrictEqual(
-    openApi.components.schemas.ReportingContract,
-    reporting,
-    'OpenAPI ReportingContract drifted from contracts/assurance/reporting.schema.json. Run npm run generate:openapi.',
-  );
-  assert.deepStrictEqual(
-    openApi.components.schemas.AssuranceRegistryContract,
-    registry,
-    'OpenAPI AssuranceRegistryContract drifted from contracts/assurance/registry.schema.json. Run npm run generate:openapi.',
+  assert.equal(
+    JSON.stringify(openApi.components.schemas).includes(reporting.$id),
+    false,
+    'OpenAPI components must not duplicate or wrap the canonical reporting schema.',
   );
   assert.deepStrictEqual(
     openApi.servers,

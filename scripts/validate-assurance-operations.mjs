@@ -5,7 +5,7 @@ import {
   loadAssuranceRegistry,
   requireRegistryResource,
 } from './lib/assurance-registry.mjs';
-import { matchAssuranceRoute } from '../src/assurance/route-contract.js';
+import { assuranceRouteDeclarations } from '../src/assurance/route-contract.js';
 
 const root = process.cwd();
 const live = process.argv.includes('--live');
@@ -49,8 +49,8 @@ for (const [label, value] of [
 }
 
 const policyRoute = reporting.policyRoute;
-const policyRouteMatch = policyRoute ? matchAssuranceRoute(registry, policyRoute) : null;
-if (!policyRoute || policyRouteMatch?.kind !== 'html') {
+const policyRouteMatch = assuranceRouteDeclarations(registry).some((entry) => entry.routes?.html === policyRoute);
+if (!policyRoute || !policyRouteMatch) {
   errors.push(`configured security policy route is not a canonical assurance HTML route: ${policyRoute}`);
 }
 const securityTxtRoute = reporting.securityTxtRoute;

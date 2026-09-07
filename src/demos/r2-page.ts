@@ -348,5 +348,5 @@ export function renderR2Demo(env: Env): Response {
     setStatus(friendlyError(error, 'Unable to load files — try again.'), 'error');
   });
 })();
-</script>`, { activeRoute: '/r2', cacheControl: 'no-store' });
+</script>`, { activeRoute: '/platform', cacheControl: 'no-store' });
 }

@@ -61,12 +61,6 @@ function terminalPartialReason(outcome: GitHubReportingQueryOutcome): ReportingP
   return providerBound ? 'provider-export-bound' : 'provider-unavailable';
 }
 
-function sanitizedQualifications(
-  qualifications: Readonly<Record<string, string | null>>,
-): Readonly<Record<string, string | null>> {
-  return Object.fromEntries(Object.entries(qualifications).filter(([key]) => key !== 'mode' && !key.endsWith('.nextCursor')));
-}
-
 async function reportingSnapshot(
   env: Env,
   principal: Principal,
@@ -77,8 +71,6 @@ async function reportingSnapshot(
   const outcome = await queryGitHubReporting(env, principal, {
     ...(query.repository ? { repository: query.repository } : {}),
     ...(query.sourceIds ? { sourceIds: normalizedSourceIds(query.sourceIds) } : {}),
-    mode: 'export',
-    limit: 100,
   });
   const filters = publicFilters(query, outcome);
   return {
@@ -104,7 +96,7 @@ async function pageSnapshot(
   });
   const result: ReportingQueryResult<GitHubReportingRecord> = {
     ...snapshot.outcome.result,
-    qualifications: sanitizedQualifications(snapshot.outcome.result.qualifications),
+    qualifications: snapshot.outcome.result.qualifications,
     query: { filters: snapshot.filters, pagination: page.pagination },
     records: page.records,
     derived: {
@@ -139,7 +131,7 @@ export async function exportGitHubReporting(
   );
   const result: ReportingQueryResult<GitHubReportingRecord> = {
     ...snapshot.outcome.result,
-    qualifications: sanitizedQualifications(snapshot.outcome.result.qualifications),
+    qualifications: snapshot.outcome.result.qualifications,
     query: { filters: snapshot.filters, pagination: exported.pagination },
     records: exported.records,
     derived: {

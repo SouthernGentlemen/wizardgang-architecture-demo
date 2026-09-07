@@ -2,7 +2,7 @@ import type { DemoDefinition } from '../types';
 
 const demo: DemoDefinition = {
   "id": "durable-objects",
-  "route": "/durable-objects",
+  "route": "/platform?view=durable-objects",
   "title": "Durable Objects",
   "group": "Platform",
   "sourcePath": "src/demos/durable-objects.ts",

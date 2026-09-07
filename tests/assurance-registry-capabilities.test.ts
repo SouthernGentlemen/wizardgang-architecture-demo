@@ -8,7 +8,6 @@ import {
 import { validateAssuranceRelationshipSet } from '../src/assurance/relationship-contract.js';
 import {
   assuranceRoutesForDataset,
-  matchAssuranceRoute,
   validateAssuranceRouteContract,
   validateAssuranceRouteHandlerSupport,
 } from '../src/assurance/route-contract.js';
@@ -25,7 +24,7 @@ function syntheticReportRegistry() {
         path: 'assurance/reports/reports.json',
         schema: 'contracts/assurance/report.schema.json',
         visibility: 'public',
-        capabilities: ['runtime', 'records', 'api-index'],
+        capabilities: ['runtime', 'records'],
         recordCollection: { path: 'records', identity: ['id'] },
         filters: { status: { path: 'status', label: 'Status' } },
       },
@@ -36,7 +35,7 @@ function syntheticReportRegistry() {
 }
 
 describe('registry capability contracts', () => {
-  it('admits a synthetic report family through discovery and generic API routing without a family switch', () => {
+  it('admits a synthetic report family through discovery without an API-index capability', () => {
     const registry = syntheticReportRegistry();
     const documents = {
       'report-register-v2': { records: [{ id: 'RPT-001', status: 'ready' }] },
@@ -50,8 +49,6 @@ describe('registry capability contracts', () => {
     expect(entries.map((entry) => (entry.record as { id: string }).id)).toEqual(['RPT-001']);
     expect(validateAssuranceRouteContract(registry)).toEqual([]);
     expect(assuranceRoutesForDataset(registry, 'reports')).toBeNull();
-    expect(matchAssuranceRoute(registry, '/api/reporting/reports')).toBeNull();
-    expect(matchAssuranceRoute(registry, '/api/reporting/reports/RPT-001')).toBeNull();
     expect(validateAssuranceRouteHandlerSupport(registry, {
       registry: { html: true },
     })).toEqual([]);

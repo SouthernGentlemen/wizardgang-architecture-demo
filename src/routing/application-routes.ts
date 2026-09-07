@@ -29,7 +29,7 @@ import {
   type RegisteredPageMetadata,
 } from './navigation';
 
-export type BrowserHtmlPolicy = 'page' | 'graphql' | 'never';
+export type BrowserHtmlPolicy = 'page' | 'never';
 
 export interface ApplicationRouteContext {
   env: Env;

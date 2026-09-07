@@ -37,7 +37,6 @@ class MemoryD1 {
 function env(): Env {
   return {
     DEMO_DB: new MemoryD1(),
-    DEMO_API_TOKEN: 'test-write-token',
     IDENTITY_SESSION_SECRET: 'test-identity-secret-with-at-least-32-characters',
     GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
@@ -67,7 +66,8 @@ describe('shared application authorization', () => {
 describe('D1 REST records', () => {
   it('validates, stores, reads, and deletes a bounded record', async () => {
     const environment = env();
-    const authorization = { authorization: 'Bearer test-write-token', 'content-type': 'application/json' };
+    const token = await visitorToken(environment, 'write-user');
+    const authorization = { authorization: `Bearer ${token}`, 'content-type': 'application/json' };
     const created = await recordsResponse(new Request('https://demo.example/api/labs/rest-records', {
       method: 'POST', headers: authorization, body: JSON.stringify({ namespace: 'public', key: 'example', value: { count: 2 } }),
     }), environment);
@@ -84,11 +84,13 @@ describe('D1 REST records', () => {
     }), environment, 'example');
     expect(replaced.status).toBe(200);
 
-    const listed = await recordsResponse(new Request('https://demo.example/api/labs/rest-records?namespace=public'), environment);
+    const listed = await recordsResponse(new Request('https://demo.example/api/labs/rest-records', {
+      headers: { authorization: `Bearer ${token}` },
+    }), environment);
     expect(await listed.json()).toMatchObject({ results: [{ key: 'example', value: { count: 4 } }] });
 
     const deleted = await recordsResponse(new Request('https://demo.example/api/labs/rest-records/example?namespace=public', {
-      method: 'DELETE', headers: { authorization: 'Bearer test-write-token' },
+      method: 'DELETE', headers: { authorization: `Bearer ${token}` },
     }), environment, 'example');
     expect(deleted.status).toBe(204);
   });
@@ -121,8 +123,9 @@ describe('D1 REST records', () => {
     }), environment);
     expect(denied.status).toBe(401);
 
+    const token = await visitorToken(environment, 'invalid-input-user');
     const invalid = await recordsResponse(new Request('https://demo.example/api/labs/rest-records', {
-      method: 'POST', headers: { authorization: 'Bearer test-write-token', 'content-type': 'application/json' }, body: JSON.stringify({ key: '../escape', value: true }),
+      method: 'POST', headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' }, body: JSON.stringify({ key: '../escape', value: true }),
     }), environment);
     expect(invalid.status).toBe(400);
   });

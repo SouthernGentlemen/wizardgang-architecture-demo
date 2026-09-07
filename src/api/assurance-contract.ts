@@ -1,31 +1,14 @@
 import { withSecurityHeaders } from '../lib/http';
-import type { Env } from '../types';
-import type { ReportingPagination } from '../reporting/contracts';
-import { ReportingCursorError, type ReportingCursorContext } from '../reporting/pagination';
-import { paginateReportingRecords, reportingCursorSecret } from '../reporting/query';
 
 export const ASSURANCE_SCHEMA_VERSION = 1;
 export const ASSURANCE_CACHE_CONTROL = 'public, max-age=300';
-export const ASSURANCE_PAGINATION_DEFAULT_LIMIT = 50;
-export const ASSURANCE_PAGINATION_MAX_LIMIT = 100;
 export const ASSURANCE_CORS_ALLOW_ORIGIN = '*';
 
-const LEGACY_ASSURANCE_VENDOR_MEDIA_TYPE = 'application/vnd.wizardgang.assurance+json';
 const ASSURANCE_CORS_EXPOSE_HEADERS = [
   'ETag',
   'Cache-Control',
   'X-Assurance-Schema-Version',
 ].join(', ');
-
-export interface AssuranceRequestContext {
-  url: URL;
-  schemaVersion: typeof ASSURANCE_SCHEMA_VERSION;
-}
-
-export interface AssurancePage<T> {
-  records: readonly T[];
-  pagination: ReportingPagination;
-}
 
 interface AssuranceResponseOptions {
   status?: number;
@@ -122,103 +105,4 @@ export function assuranceErrorResponse(
     cacheControl: 'no-store',
     etag: false,
   });
-}
-
-function assurancePreflightResponse(): Response {
-  const headers = contractHeaders(undefined, 'public, max-age=3600');
-  headers.set('access-control-allow-methods', 'GET, OPTIONS');
-  headers.set('access-control-allow-headers', 'Accept, If-None-Match');
-  headers.set('access-control-max-age', '3600');
-  return new Response(null, { status: 204, headers });
-}
-
-export function prepareAssuranceRequest(request: Request): AssuranceRequestContext | Response {
-  if (request.method === 'OPTIONS') return assurancePreflightResponse();
-  if (request.method !== 'GET') {
-    return assuranceErrorResponse(
-      request,
-      405,
-      { error: 'method_not_allowed', allowed: ['GET'] },
-      { allow: 'GET' },
-    );
-  }
-
-  const url = new URL(request.url);
-  if (url.searchParams.has('schemaVersion')) {
-    return assuranceErrorResponse(request, 400, {
-      error: 'legacy_schema_version_parameter_unsupported',
-      parameter: 'schemaVersion',
-    });
-  }
-
-  const accept = request.headers.get('accept')?.toLowerCase() ?? '';
-  if (accept.includes(LEGACY_ASSURANCE_VENDOR_MEDIA_TYPE)) {
-    return assuranceErrorResponse(request, 406, {
-      error: 'legacy_assurance_media_type_unsupported',
-      supported: ['application/json'],
-    });
-  }
-
-  return { url, schemaVersion: ASSURANCE_SCHEMA_VERSION };
-}
-
-export async function paginateAssuranceRecords<T>(
-  request: Request,
-  url: URL,
-  records: readonly T[],
-  cursorContext: ReportingCursorContext,
-  env?: Pick<Env, 'DEMO_SESSION_SECRET'>,
-): Promise<AssurancePage<T> | Response> {
-  const limitValues = url.searchParams.getAll('limit');
-  const cursorValues = url.searchParams.getAll('cursor');
-  if (limitValues.length > 1 || cursorValues.length > 1) {
-    return assuranceErrorResponse(request, 400, {
-      error: 'duplicate_query_parameter',
-      parameter: limitValues.length > 1 ? 'limit' : 'cursor',
-    });
-  }
-
-  const rawLimit = limitValues[0];
-  const limit = rawLimit === undefined ? ASSURANCE_PAGINATION_DEFAULT_LIMIT : Number(rawLimit);
-  if (
-    (rawLimit !== undefined && !/^[1-9]\d*$/.test(rawLimit))
-    || !Number.isSafeInteger(limit)
-    || limit < 1
-    || limit > ASSURANCE_PAGINATION_MAX_LIMIT
-  ) {
-    return assuranceErrorResponse(request, 400, {
-      error: 'invalid_pagination',
-      parameter: 'limit',
-      value: rawLimit ?? null,
-      minimum: 1,
-      maximum: ASSURANCE_PAGINATION_MAX_LIMIT,
-    });
-  }
-
-  const cursor = cursorValues[0];
-  if (cursor !== undefined && !cursor) {
-    return assuranceErrorResponse(request, 400, {
-      error: 'invalid_pagination',
-      parameter: 'cursor',
-      value: cursor,
-    });
-  }
-
-  try {
-    return await paginateReportingRecords(records, {
-      context: cursorContext,
-      limit,
-      cursor: cursor ?? null,
-      secret: reportingCursorSecret(env),
-    });
-  } catch (error) {
-    if (error instanceof ReportingCursorError) {
-      return assuranceErrorResponse(request, 400, {
-        error: error.code,
-        parameter: 'cursor',
-        ...(error.detail ? { detail: error.detail } : {}),
-      });
-    }
-    throw error;
-  }
 }

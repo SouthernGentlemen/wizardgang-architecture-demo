@@ -1,6 +1,6 @@
 import { escapeHtml } from '../lib/html';
+import type { ReportingAvailability } from './contracts';
 import type {
-  ReportingPresentationAvailability,
   ReportingQueryPresentation,
   ReportingRecordPresentation,
 } from './presentation';
@@ -10,16 +10,14 @@ export interface ReportingHtmlOptions {
   nextHref?: string | null;
 }
 
-function availabilityLabel(value: ReportingPresentationAvailability): string {
-  if (value === 'empty') return 'No records';
-  if (value === 'unconfigured') return 'Not configured';
+function availabilityLabel(value: ReportingAvailability): string {
   if (value === 'rate-limited') return 'Rate limited';
   return value.replaceAll('-', ' ').replace(/(^|\s)\S/g, (match) => match.toUpperCase());
 }
 
-function badgeClass(value: ReportingPresentationAvailability): string {
+function badgeClass(value: ReportingAvailability): string {
   if (value === 'available') return 'badge badge-ok';
-  if (value === 'empty' || value === 'partial' || value === 'stale' || value === 'rate-limited' || value === 'unconfigured') return 'badge badge-warn';
+  if (value === 'partial' || value === 'stale' || value === 'rate-limited') return 'badge badge-warn';
   return 'badge badge-down';
 }
 
@@ -50,7 +48,7 @@ export function renderReportingPresentation(
     ? `<details><summary>Facets</summary><ul>${Object.entries(presentation.facets).map(([name, values]) => `<li><strong>${escapeHtml(name)}</strong>: ${Object.entries(values).map(([value, count]) => `${escapeHtml(value)} ${count}`).join(' · ')}</li>`).join('')}</ul></details>`
     : '';
   const empty = presentation.records.length === 0
-    ? `<div class="availability-empty">${presentation.availability === 'empty' ? 'No records in this authorized selection.' : `Source ${escapeHtml(availabilityLabel(presentation.availability).toLowerCase())}.`}</div>`
+    ? `<div class="availability-empty">${presentation.availability === 'available' ? 'No records in this authorized selection.' : `Source ${escapeHtml(availabilityLabel(presentation.availability).toLowerCase())}.`}</div>`
     : '';
   const pagination = presentation.pagination
     ? `<nav class="link-row" aria-label="Reporting pagination"><span>Showing ${presentation.pagination.returned} of ${presentation.pagination.total}</span>${presentation.pagination.nextCursor && options.nextHref ? `<a href="${escapeHtml(options.nextHref)}">Next page →</a>` : presentation.pagination.completeness === 'partial' ? `<span>Partial result${presentation.pagination.partialReason ? ` · ${escapeHtml(presentation.pagination.partialReason)}` : ''}</span>` : ''}</nav>`

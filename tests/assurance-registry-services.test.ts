@@ -1,19 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { genericAssuranceResponse } from '../src/api/assurance';
+import { reportingCollectionResponse } from '../src/api/reporting';
 import {
-  assuranceCollectionState,
   assuranceDatasetCount,
   assuranceReportingCollections,
   listAssuranceRecords,
 } from '../src/assurance/service';
+import type { Env } from '../src/types';
+
+const env = { GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' } as Env;
 
 describe('registry-driven assurance services', () => {
-  it('discovers runtime record families from registry capabilities rather than api-index inventories', () => {
-    const objectives = assuranceCollectionState('objectives');
-    expect(objectives.status).toBe('available');
-    expect(objectives.resourceIds).toContain('objectives');
-    expect(objectives.records).toEqual(listAssuranceRecords('objectives'));
-    expect(assuranceDatasetCount('objectives')).toBe(objectives.records.length);
+  it('discovers runtime record families directly from runtime record capabilities', () => {
+    const objectives = listAssuranceRecords('objectives');
+    expect(objectives.length).toBeGreaterThan(0);
+    expect(assuranceDatasetCount('objectives')).toBe(objectives.length);
   });
 
   it('builds source-bound reporting collections for every registered runtime resource', () => {
@@ -26,7 +26,7 @@ describe('registry-driven assurance services', () => {
   });
 
   it('serves any registered record family through the generic current query envelope', async () => {
-    const response = await genericAssuranceResponse(new Request('https://demo.wizardgang.ai/api/reporting/objectives?limit=2'), 'objectives');
+    const response = await reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/objectives?limit=2'), env, 'objectives');
     expect(response.status).toBe(200);
     const body = await response.json() as {
       dataset: string;
@@ -41,17 +41,17 @@ describe('registry-driven assurance services', () => {
     expect(body.availability.objectives).toBe('available');
     expect(body.records).toHaveLength(2);
     expect(body.query.pagination.total).toBe(listAssuranceRecords('objectives').length);
-    expect(body.derived.count).toBe(listAssuranceRecords('objectives').length);
+    expect(body.derived.count).toBe(body.records.length);
     expect(body.derived.totalAvailable).toBe(listAssuranceRecords('objectives').length);
   });
 
-  it('distinguishes unknown families from registered empty collections', async () => {
-    expect(assuranceCollectionState('not-a-family').status).toBe('unknown');
-    const unknown = await genericAssuranceResponse(new Request('https://demo.wizardgang.ai/api/reporting/not-a-family'), 'not-a-family');
+  it('keeps unknown families out of collection discovery while treating empty registered data as available', async () => {
+    const unknown = await reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/not-a-family'), env, 'not-a-family');
     expect(unknown.status).toBe(404);
-    expect(await unknown.json()).toMatchObject({ error: 'assurance_dataset_not_found', dataset: 'not-a-family' });
+    expect(await unknown.json()).toMatchObject({ error: 'reporting_collection_not_found', collection: 'not-a-family' });
 
-    const advisories = assuranceCollectionState('advisories');
-    expect(['empty', 'available']).toContain(advisories.status);
+    const advisories = await reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/security'), env, 'security');
+    expect(advisories.status).toBe(200);
+    expect(await advisories.json()).toMatchObject({ availability: { security: 'available' } });
   });
 });

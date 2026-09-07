@@ -159,7 +159,7 @@ Secret values must not be placed in:
 - issues, pull requests, or review comments;
 - public screenshots;
 - public logs or audit-event payloads;
-- `/health`, `/version`, `/dashboard`, `/compliance`, `/governance`, or documentation responses;
+- `/api/operations/health`, `/api/operations/version`, `/operations`, `/assurance`, or documentation responses;
 - public D1/R2 demo data;
 - MCP responses;
 - browser-visible HTML/JavaScript unless the value is intentionally public and is therefore not a secret.
@@ -182,7 +182,6 @@ The username is authentication configuration but is not necessarily secret. The 
 
 Examples:
 
-- `DEMO_API_TOKEN`;
 - identity-derived short-lived access tokens created by the application;
 - OAuth client secrets.
 

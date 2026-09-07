@@ -5,7 +5,7 @@
   "type": "object",
   "$defs": {
     "capability": {
-      "enum": ["read", "query", "export", "import", "observe"]
+      "enum": ["read", "query", "export", "update", "observe"]
     },
     "visibility": {
       "enum": ["public", "private"]
@@ -85,8 +85,8 @@
         "resourceRoot": { "const": "assurance/" },
         "nativeIdentity": { "const": ["repository", "resource"] },
         "revisionIdentity": { "const": ["commit", "blob"] },
-        "capabilities": { "const": ["read", "query", "export", "import"] },
-        "ingestion": { "const": "enabled" }
+        "capabilities": { "const": ["read", "query", "export"] },
+        "ingestion": { "const": "disabled" }
       }
     },
     "retainedReportSource": {
@@ -214,7 +214,11 @@
       "type": "object",
       "required": ["id"],
       "properties": {
-        "id": { "type": "string", "minLength": 1 }
+        "id": { "type": "string", "minLength": 1 },
+        "relationships": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/relationship" }
+        }
       }
     },
     "relationship": {
@@ -270,34 +274,10 @@
         "value": {}
       }
     },
-    "collectionResult": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["source", "records", "relationships", "derived"],
-      "properties": {
-        "source": { "$ref": "#/$defs/source" },
-        "records": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/record" }
-        },
-        "relationships": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/relationship" }
-        },
-        "derived": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["count"],
-          "properties": {
-            "count": { "type": "integer", "minimum": 0 }
-          }
-        }
-      }
-    },
     "pagination": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["limit", "returned", "total", "nextCursor"],
+      "required": ["limit", "returned", "total", "nextCursor", "completeness", "partialReason"],
       "properties": {
         "limit": { "type": "integer", "minimum": 1, "maximum": 100 },
         "returned": { "type": "integer", "minimum": 0 },
@@ -311,7 +291,7 @@
         "completeness": { "enum": ["complete", "partial"] },
         "partialReason": {
           "oneOf": [
-            { "enum": ["page-boundary", "sample", "provider-export-bound", "provider-unavailable"] },
+            { "enum": ["page-boundary", "provider-export-bound", "provider-unavailable"] },
             { "type": "null" }
           ]
         }
@@ -362,58 +342,68 @@
         "derived": { "$ref": "#/$defs/queryDerived" }
       }
     },
-    "registryReference": {
+    "filterValue": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "schemaVersion"],
+      "required": ["value", "label"],
       "properties": {
-        "id": { "type": "string", "minLength": 1 },
-        "schemaVersion": { "const": 1 }
+        "value": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 }
       }
     },
-    "resourceReference": {
+    "filterDescriptor": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "path", "schema", "collectionPath", "visibility"],
+      "required": ["name", "label", "values"],
       "properties": {
-        "id": { "type": "string", "minLength": 1 },
-        "path": { "type": "string", "pattern": "^assurance/.+\\.json$" },
-        "schema": { "type": "string", "pattern": "^contracts/assurance/.+\\.schema\\.json$" },
-        "collectionPath": { "type": "string", "minLength": 1 },
-        "visibility": { "$ref": "#/$defs/visibility" }
+        "name": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "values": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/filterValue" }
+        }
       }
     },
-    "sourceRevision": {
+    "collectionDescriptor": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["commit", "blob"],
+      "required": ["id", "label", "kind", "provider", "visibility", "filters", "url"],
       "properties": {
-        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
-        "blob": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
+        "id": { "type": "string", "pattern": "^[a-z0-9.-]+$" },
+        "label": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["structured", "provider"] },
+        "provider": { "enum": ["github", "cloudflare"] },
+        "visibility": { "$ref": "#/$defs/visibility" },
+        "filters": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/filterDescriptor" }
+        },
+        "url": { "type": "string", "pattern": "^/api/reporting/[a-z0-9.-]+$" }
       }
     },
-    "interchangeCollection": {
+    "collectionIndexResult": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["source", "resource", "revision", "records"],
+      "required": ["schemaVersion", "contract", "collections"],
       "properties": {
-        "source": { "$ref": "#/$defs/source" },
-        "resource": { "$ref": "#/$defs/resourceReference" },
-        "revision": { "$ref": "#/$defs/sourceRevision" },
-        "records": { "type": "array", "items": { "$ref": "#/$defs/record" } }
-      }
-    },
-    "interchangeEnvelope": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["contract", "registry", "collections"],
-      "properties": {
+        "schemaVersion": { "const": 1 },
         "contract": { "const": "contracts/assurance/reporting.schema.json" },
-        "registry": { "$ref": "#/$defs/registryReference" },
         "collections": {
           "type": "array",
-          "minItems": 1,
-          "items": { "$ref": "#/$defs/interchangeCollection" }
+          "items": { "$ref": "#/$defs/collectionDescriptor" }
+        }
+      }
+    },
+    "updateRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "revision", "fields"],
+      "properties": {
+        "repository": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$" },
+        "revision": { "type": "string", "minLength": 1 },
+        "fields": {
+          "type": "object",
+          "minProperties": 1
         }
       }
     }

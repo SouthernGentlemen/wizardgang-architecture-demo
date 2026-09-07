@@ -160,7 +160,6 @@ export function renderDemo(env: Env, demo: DemoDefinition, all: DemoDefinition[]
   const runPanelItems = extra && !demo.actions ? '' : actions.map((action, index) => {
     const headingId = `${action.id ?? `run-${index + 1}`}-heading`;
     return `<section class="action-card"${action.id ? ` id="${escapeHtml(action.id)}"` : ''} aria-labelledby="${escapeHtml(headingId)}">
-  ${(action.aliases ?? []).map((alias) => `<span id="${escapeHtml(alias)}" aria-hidden="true"></span>`).join('')}
   <h2 id="${escapeHtml(headingId)}">${escapeHtml(action.title ?? 'Run it')}</h2>
   ${action.description ? `<p>${escapeHtml(action.description)}</p>` : ''}
   <div class="request-line"><span class="http-method http-${action.method.toLowerCase()}">${escapeHtml(action.method)}</span><code>${escapeHtml(action.path)}</code></div>

@@ -1,10 +1,5 @@
 import {
-  advisoryQualification,
-  assuranceQualification,
-  deriveIncidentCounts,
-  deriveRiskCounts,
   filterAssuranceRecords,
-  incidentQualifications,
   listAssuranceRecords,
   type AssuranceFilterValues,
   type AssuranceRecordMap,
@@ -29,10 +24,7 @@ import { presentEvidence, type PresentedEvidence } from './presentation';
 import {
   assuranceObservedState,
   assurancePublicationDecision,
-  resolveAssuranceLifecycle,
-  assuranceLifecyclePresentation,
   type AssuranceLifecyclePresentation,
-  type AssuranceLifecycleRecord,
   type AssuranceLifecycleRegistry,
   type AssuranceObservedState,
 } from './publication-policy.js';
@@ -167,40 +159,3 @@ export function presentedPublishedEvidenceRecords(
     };
   });
 }
-
-function retainedLifecyclePresentation(record: AssuranceLifecycleRecord): AssuranceLifecyclePresentation {
-  const resolved = resolveAssuranceLifecycle(lifecycleRegistry, record.id, lifecycleResolutionOptions);
-  const presentation = resolved?.source === 'retired'
-    ? assuranceLifecyclePresentation(resolved)
-    : null;
-  if (!presentation?.id) {
-    throw new Error(`Retained assurance record ${record.id} lost its stable identity during publication.`);
-  }
-  return presentation;
-}
-
-const claims = listPublishedAssuranceRecords('claims');
-const evidence = listPublishedAssuranceRecords('evidence');
-const risks = listPublishedAssuranceRecords('risks');
-const incidents = listPublishedAssuranceRecords('incidents');
-const exercises = listPublishedAssuranceRecords('exercises');
-const advisories = listPublishedAssuranceRecords('advisories');
-
-export const publishedAssuranceSummary = {
-  qualification: assuranceQualification,
-  counts: {
-    claims: claims.length,
-    evidence: evidence.length,
-    risks: risks.length,
-    incidents: incidents.length,
-    exercises: exercises.length,
-    advisories: advisories.length,
-  },
-  riskCounts: deriveRiskCounts(risks),
-  incidentCounts: deriveIncidentCounts(incidents, exercises),
-  incidentQualifications,
-  advisoryQualification,
-  publication: {
-    retainedRecords: (lifecycleRegistry.retiredRecords ?? []).map(retainedLifecyclePresentation),
-  },
-};

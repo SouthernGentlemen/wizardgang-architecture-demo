@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { matchAssuranceRoute } from '../src/assurance/routes';
 import { routeRequest } from '../src/router';
 import { reportingRouteRegistry } from '../src/routing/reporting-routes';
 import { matchRoute } from '../src/routing/registry';
@@ -24,7 +23,6 @@ const env = {
 
 describe('reporting route intersections', () => {
   it('keeps collection and record routes distinct in the generic reporting matcher', () => {
-    expect(matchAssuranceRoute('/api/reporting/compliance')).toBeNull();
     expect(matchRoute(reportingRouteRegistry, 'GET', '/api/reporting/compliance')).toMatchObject({
       status: 'matched', route: { id: 'reporting.collection' }, params: { collection: 'compliance' },
     });

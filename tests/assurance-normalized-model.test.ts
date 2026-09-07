@@ -1,7 +1,10 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { assuranceRisksResponse } from '../src/api/assurance';
+import { reportingCollectionResponse } from '../src/api/reporting';
 import { listAssuranceRecords } from '../src/assurance/service';
+import type { Env } from '../src/types';
+
+const env = { GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' } as Env;
 
 describe('normalized assurance model', () => {
   it('uses one normalized identity-edge relationship array across canonical record families', () => {
@@ -39,7 +42,7 @@ describe('normalized assurance model', () => {
   });
 
   it('returns normalized runtime records directly at the HTTP boundary', async () => {
-    const response = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/api/reporting/risks?limit=2'));
+    const response = await reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/risks?limit=2'), env, 'risks');
     const body = await response.json() as { records: Array<Record<string, unknown> & { relationships: Array<{ relation: string; from: { source: string; native: string }; to: { source: string; native: string } }> }> };
     expect(body.records).toHaveLength(2);
     for (const record of body.records) {
@@ -50,8 +53,8 @@ describe('normalized assurance model', () => {
     }
   });
 
-  it('has removed the legacy assurance serializer entirely', () => {
+  it('has removed the superseded assurance serializer entirely', () => {
     expect(existsSync('src/api/assurance-v1.ts')).toBe(false);
-    expect(readFileSync('src/api/assurance.ts', 'utf8')).not.toContain('serializeAssuranceV1');
+    expect(readFileSync('src/api/reporting.ts', 'utf8')).not.toContain('serializeAssuranceV1');
   });
 });

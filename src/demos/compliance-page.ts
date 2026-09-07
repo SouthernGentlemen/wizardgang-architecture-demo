@@ -138,8 +138,8 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
       <a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/compliance.ts'))}">Route source</a>
       ${referenceDetails([
         { label: 'Canonical assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
-        { label: 'Current assurance API contract', href: sourceUrl(env, 'src/api/assurance.ts') },
-        { label: 'Reporting interchange contract', href: sourceUrl(env, 'contracts/assurance/reporting.schema.json') },
+        { label: 'Reporting API', href: sourceUrl(env, 'src/api/reporting.ts') },
+        { label: 'Canonical reporting schema', href: sourceUrl(env, 'contracts/assurance/reporting.schema.json') },
         { label: 'Publication policy', href: sourceUrl(env, 'src/assurance/publication-policy.js') },
         ...frameworkSources,
         { label: 'Assurance guide', href: sourceUrl(env, 'docs/ASSURANCE.md') },
@@ -152,7 +152,8 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
   </section>
   <section class="info-card" aria-labelledby="compliance-filter-heading">
     <h2 id="compliance-filter-heading">Filter records</h2>
-    <form method="get" action="${escapeHtml(COMPLIANCE_ROUTE)}">
+    <form method="get" action="/assurance">
+      <input type="hidden" name="view" value="compliance">
       <fieldset>
         <legend class="subtle">Framework, status, and WCAG level</legend>
         <p>

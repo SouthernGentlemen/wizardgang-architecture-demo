@@ -2,7 +2,7 @@ import type { Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
 import { recentApplicationLogs, type ApplicationLogRow } from '../lib/logs';
-import { MCP_MODERN_PROTOCOL_VERSION, MCP_SERVER_PATH, mcpMetaKeys } from '../api/mcp';
+import { MCP_PROTOCOL_VERSION, MCP_SERVER_PATH, mcpMetaKeys } from '../api/mcp';
 import { referenceDetails, shell } from '../ui/page';
 
 interface McpActivity {
@@ -57,7 +57,7 @@ export async function renderMcpDemo(request: Request, env: Env): Promise<Respons
   -X POST \\
   -H 'Content-Type: application/json' \\
   -H 'Accept: application/json, text/event-stream' \\
-  -H 'MCP-Protocol-Version: ${MCP_MODERN_PROTOCOL_VERSION}' \\
+  -H 'MCP-Protocol-Version: ${MCP_PROTOCOL_VERSION}' \\
   -H 'Mcp-Method: tools/call' \\
   -H 'Mcp-Name: ping' \\
   --data '${JSON.stringify({
@@ -68,7 +68,7 @@ export async function renderMcpDemo(request: Request, env: Env): Promise<Respons
       name: 'ping',
       arguments: {},
       _meta: {
-        [mcpMetaKeys.protocolVersion]: MCP_MODERN_PROTOCOL_VERSION,
+        [mcpMetaKeys.protocolVersion]: MCP_PROTOCOL_VERSION,
         [mcpMetaKeys.clientInfo]: { name: 'curl', version: '1.0' },
         [mcpMetaKeys.clientCapabilities]: {},
       },
@@ -89,8 +89,7 @@ export async function renderMcpDemo(request: Request, env: Env): Promise<Respons
   <div class="mcp-badges" aria-label="MCP server characteristics">
     <span class="badge badge-ok">Streamable HTTP</span>
     <span class="badge">Public read-only</span>
-    <span class="badge">MCP ${MCP_MODERN_PROTOCOL_VERSION}</span>
-    <span class="badge">Legacy compatible</span>
+    <span class="badge">MCP ${MCP_PROTOCOL_VERSION}</span>
   </div>
   <div class="mcp-endpoint">
     <span>Endpoint</span>
@@ -133,7 +132,7 @@ export async function renderMcpDemo(request: Request, env: Env): Promise<Respons
       <p class="eyebrow">Wire-level verification</p>
       <h3>Call <code>ping</code> without a handshake</h3>
       <div class="mcp-command mcp-command-tall"><pre id="mcp-curl-command">${escapeHtml(curlCommand)}</pre><button type="button" data-copy-target="mcp-curl-command">Copy</button></div>
-      <p class="subtle">The request carries the modern protocol version, method, tool name, client identity, and capabilities in the headers and per-request metadata required by MCP ${MCP_MODERN_PROTOCOL_VERSION}.</p>
+      <p class="subtle">The request carries the protocol version, method, tool name, client identity, and capabilities in the headers and per-request metadata required by MCP ${MCP_PROTOCOL_VERSION}.</p>
     </div>
     <div class="mcp-tab-panel" role="tabpanel" id="mcp-panel-3" aria-labelledby="mcp-tab-3" data-mcp-panel="3" hidden>
       <p class="eyebrow">MCP Inspector</p>
@@ -195,7 +194,7 @@ export async function renderMcpDemo(request: Request, env: Env): Promise<Respons
 
 <details class="implementation-notes"><summary>What this route proves</summary><ul>
   <li>Real MCP clients connect through the official Streamable HTTP transport.</li>
-  <li>MCP ${MCP_MODERN_PROTOCOL_VERSION} and stateless 2025-era clients share one SDK-backed tool implementation.</li>
+  <li>MCP ${MCP_PROTOCOL_VERSION} uses one SDK-backed protocol and tool implementation.</li>
   <li>Tool discovery exposes explicit input schemas, output schemas, and read-only behavioral annotations.</li>
   <li><code>list_demo_records</code> returns one normalized public contract while D1 column names remain behind the repository boundary.</li>
   <li>Every successful tool invocation records bounded, sanitized operational evidence.</li>

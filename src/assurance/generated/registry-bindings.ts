@@ -67,8 +67,8 @@ export const assuranceRuntimeSourceRevisions: Readonly<Record<string, string>> =
   "evidence": "7cc4aab0c58e65244a61dcef7b54501518110088",
   "exercises": "6c6e8f646a696ce66599f45c8e7c15776f01ad6b",
   "incidents": "1ff3b01fe53498e0bfd4b0af369bc8f1cfb8614e",
-  "lifecycle.records": "0df422b8f596cc83483041dac3daa74adc04bb38",
-  "objectives": "e0b741ec1d793f1711669b30e615b7b492898cdc",
+  "lifecycle.records": "e7805369ff02203a3f34d445d7aca1670816bca6",
+  "objectives": "b655f90065611c778e36f322bcc0b9bfdefa456d",
   "risks": "a8b7edc7dd95ffbb651bfdd01b5dde9b05e3a0f7"
 };
 

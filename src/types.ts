@@ -63,7 +63,6 @@ export interface Env {
   GITHUB_BRANCH: string;
   DEMO_ADMIN_USER?: string;
   DEMO_ADMIN_PASSWORD?: string;
-  DEMO_API_TOKEN?: string;
   WEBHOOK_DEMO_SECRET?: string;
   GITHUB_WEBHOOK_SECRET?: string;
   GITHUB_READ_TOKEN?: string;
@@ -100,7 +99,6 @@ export type DemoStatus = 'working' | 'planned';
 
 export interface DemoAction {
   id?: string;
-  aliases?: string[];
   title?: string;
   description?: string;
   label: string;

@@ -3,7 +3,6 @@ import {
   assuranceQualifications,
   assuranceRegistry,
   assuranceRegistryResources,
-  assuranceRuntimeForwardRelationshipIndex,
   assuranceRuntimeRecordCollections,
   assuranceRuntimeRecordIndex,
   assuranceRuntimeReverseRelationshipIndex,
@@ -49,15 +48,6 @@ import { structuredReportingSource } from '../reporting/registry';
 export type AssuranceRecordMap = CanonicalAssuranceRecordMap;
 export type AssuranceRecord = CanonicalAssuranceRecordMap[AssuranceDataset];
 export type AssuranceFilterValues = Record<string, string>;
-export type AssuranceCollectionStatus = 'unknown' | 'unsupported' | 'unavailable' | 'partial' | 'empty' | 'available';
-
-export interface AssuranceCollectionState {
-  dataset: string;
-  status: AssuranceCollectionStatus;
-  resourceIds: string[];
-  records: AssuranceRuntimeRecord[];
-}
-
 function reportingResourcesForDataset(dataset: string): AssuranceRegistryResource[] {
   return assuranceRegistryResources.filter((resource) => resource.kind === dataset
     && resource.capabilities.includes('runtime')
@@ -76,26 +66,11 @@ function recordsForReportingResource(dataset: string, resource: AssuranceRegistr
   return (assuranceRuntimeRecordCollections[dataset] ?? []).filter((record) => sourceIds.has(record.id));
 }
 
-export function assuranceCollectionState(dataset: string): AssuranceCollectionState {
+function assertReadableCollection(dataset: string): void {
   const registration = assuranceRecordFamilyRegistration(assuranceRegistry, dataset);
-  const records = [...(assuranceRuntimeRecordCollections[dataset] ?? [])];
-  const status: AssuranceCollectionStatus = registration.status === 'registered'
-    ? (records.length === 0 ? 'empty' : 'available')
-    : registration.status;
-  return {
-    dataset,
-    status,
-    resourceIds: registration.runtimeResources.map((resource) => resource.id),
-    records,
-  };
-}
-
-function assertReadableCollection(dataset: string): AssuranceCollectionState {
-  const state = assuranceCollectionState(dataset);
-  if (state.status === 'unknown') throw new Error(`Unknown assurance record family ${dataset}.`);
-  if (state.status === 'unsupported') throw new Error(`Assurance family ${dataset} does not declare records capability.`);
-  if (state.status === 'unavailable') throw new Error(`Assurance family ${dataset} has no runtime-available record resource.`);
-  return state;
+  if (registration.status === 'unknown') throw new Error(`Unknown assurance record family ${dataset}.`);
+  if (registration.status === 'unsupported') throw new Error(`Assurance family ${dataset} does not declare records capability.`);
+  if (registration.status === 'unavailable') throw new Error(`Assurance family ${dataset} has no runtime-available record resource.`);
 }
 
 export function assuranceReportingCollections(dataset: string): ReportingCollectionResult<AssuranceRuntimeRecord>[] {
@@ -296,7 +271,7 @@ export function deriveIncidentCounts(actual: IncidentRecord[], simulatedExercise
 export type AssuranceRelationshipReference = AssuranceRuntimeRelationshipReference;
 
 export function forwardAssuranceRelationships(recordId: string): AssuranceRelationships | undefined {
-  return assuranceRuntimeForwardRelationshipIndex.get(recordId);
+  return assuranceRuntimeRecordIndex.get(recordId)?.record.relationships;
 }
 
 export function reverseAssuranceRelationships(targetId: string, relation?: AssuranceRelationshipName): AssuranceRelationshipReference[] {

@@ -111,7 +111,6 @@ describe('consolidated operations surface', () => {
       ['/api/operations/health', undefined, 503],
       ['/api/operations/version', undefined, 200],
       ['/api/operations/logs', undefined, 200],
-      ['/api/operations/usage', undefined, 200],
       ['/admin', { headers: { authorization: basic, accept: 'text/html' } }, 200],
       ['/offline', { headers: { accept: 'text/html' } }, 503],
     ];
@@ -119,6 +118,12 @@ describe('consolidated operations surface', () => {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`, init), environment);
       expect(response.status, path).toBe(status);
     }
+  });
+
+  it('returns the ordinary 404 for the removed operations usage endpoint', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/usage'), env());
+    expect(response.status).toBe(404);
+    expect(response.headers.get('location')).toBeNull();
   });
 
   it('returns the normal 404 without redirects for all retired dashboard HTML routes', async () => {

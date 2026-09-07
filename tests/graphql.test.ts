@@ -35,7 +35,6 @@ class GraphStatement implements D1PreparedStatement {
       const [sessionId, id] = this.values as string[];
       return { results: [...this.db.users.values()].filter((row) => row.session_id === sessionId && (!id || row.id === id)) as T[] };
     }
-    if (this.sql.includes('FROM demo_records')) this.db.lastRecordNamespace = String(this.values[0]);
     return { results: [] as T[] };
   }
 }
@@ -44,7 +43,6 @@ class GraphD1 {
   sessions = new Map<string, Row>();
   users = new Map<string, Row>();
   tasks = new Map<string, Row>();
-  lastRecordNamespace = '';
   prepare(sql: string) { return new GraphStatement(this, sql); }
 }
 
@@ -113,16 +111,6 @@ describe('GraphQL Yoga D1 interface', () => {
       body: JSON.stringify({ query: 'mutation { createUser(input: { name: "X", email: "x@example.test", role: MEMBER }) { id } }' }),
     }), environment);
     expect(await denied.json()).toMatchObject({ errors: [{ extensions: { code: 'UNAUTHENTICATED' } }] });
-  });
-
-  it('fixes anonymous record reads to the public namespace', async () => {
-    const environment = env();
-    const response = await graphqlResponse(new Request('https://demo.example/graphql', {
-      method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ query: 'query { demoRecords(namespace: "sandbox-guessed") { key } }' }),
-    }), environment);
-    expect(response.status).toBe(200);
-    expect((environment.DEMO_DB as GraphD1).lastRecordNamespace).toBe('public');
   });
 
   it('permits bounded schema introspection for the local GraphiQL IDE', async () => {

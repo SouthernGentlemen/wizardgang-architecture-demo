@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { assuranceComplianceResponse } from '../src/api/assurance';
+import { reportingCollectionResponse, reportingRecordResponse } from '../src/api/reporting';
+import { matchRoute } from '../src/routing/registry';
+import { reportingRouteRegistry } from '../src/routing/reporting-routes';
 import { deriveComplianceCounts } from '../src/assurance/service';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import { renderComplianceDemo } from '../src/demos/compliance-page';
@@ -14,6 +16,12 @@ const environment = {
 } as unknown as Env;
 
 const canonicalComplianceRecords = listPublishedAssuranceRecords('compliance');
+
+function complianceResponse(request: Request, recordId?: string): Promise<Response> {
+  return recordId
+    ? reportingRecordResponse(request, environment, 'compliance', recordId)
+    : reportingCollectionResponse(request, environment, 'compliance');
+}
 
 describe('canonical compliance presentation and API contract', () => {
   it('normalizes every canonical framework record and derives all counts at runtime', () => {
@@ -32,7 +40,7 @@ describe('canonical compliance presentation and API contract', () => {
 
   it('filters canonical records through the current shared query result', async () => {
     const request = new Request('https://demo.wizardgang.ai/api/reporting/compliance?framework=wcag-2.2&status=partial&level=AA');
-    const response = await assuranceComplianceResponse(request);
+    const response = await complianceResponse(request);
     expect(response.status).toBe(200);
     expect(response.headers.get('cache-control')).toContain('max-age=300');
     const body = await response.json() as {
@@ -43,14 +51,14 @@ describe('canonical compliance presentation and API contract', () => {
     const expected = canonicalComplianceRecords.filter((record) => record.framework === 'wcag-2.2' && record.status === 'partial' && record.level === 'AA');
     expect(expected.length).toBeGreaterThan(0);
     expect(body.query.filters).toEqual({ framework: 'wcag-2.2', status: 'partial', level: 'AA' });
-    expect(body.derived.totalAvailable).toBe(287);
+    expect(body.derived.totalAvailable).toBe(expected.length);
     expect(body.derived.count).toBe(expected.length);
     expect(body.records).toEqual(expected);
     expect(body.records.every((record) => Boolean(record.relationships))).toBe(true);
   });
 
   it('supports exact stable-record lookup with the same envelope and deterministic not-found response', async () => {
-    const exact = await assuranceComplianceResponse(
+    const exact = await complianceResponse(
       new Request('https://demo.wizardgang.ai/api/reporting/compliance/WCAG-4.1.2'),
       'WCAG-4.1.2',
     );
@@ -67,21 +75,21 @@ describe('canonical compliance presentation and API contract', () => {
     expect(exactBody.records[0]).not.toHaveProperty('evidence');
     expect(exactBody.derived.count).toBe(1);
 
-    const missing = await assuranceComplianceResponse(
+    const missing = await complianceResponse(
       new Request('https://demo.wizardgang.ai/api/reporting/compliance/WCAG-9.9.9'),
       'WCAG-9.9.9',
     );
     expect(missing.status).toBe(404);
     expect(await missing.json()).toEqual({
-      error: 'assurance_record_not_found',
-      dataset: 'compliance',
+      error: 'reporting_record_not_found',
+      collection: 'compliance',
       recordId: 'WCAG-9.9.9',
     });
   });
 
   it('renders accessible filters, stable row anchors, evidence links, exact lookup links, and current primary navigation', async () => {
     const response = renderComplianceDemo(
-      new Request('https://demo.wizardgang.ai/compliance?framework=wcag-2.2&level=A'),
+      new Request('https://demo.wizardgang.ai/assurance?view=compliance&framework=wcag-2.2&level=A'),
       environment,
     );
     const html = await response.text();
@@ -99,10 +107,11 @@ describe('canonical compliance presentation and API contract', () => {
     expect(html).not.toContain('id="ISO27001-4.1"');
   });
 
-  it('keeps reporting read-only at the collection route and represented once by generic route declarations', async () => {
-    const post = await assuranceComplianceResponse(new Request('https://demo.wizardgang.ai/api/reporting/compliance', { method: 'POST' }));
-    expect(post.status).toBe(405);
-    expect(post.headers.get('allow')).toBe('GET');
+  it('keeps reporting read-only at the collection route and represented once by generic route declarations', () => {
+    expect(matchRoute(reportingRouteRegistry, 'POST', '/api/reporting/compliance')).toMatchObject({
+      status: 'method-not-allowed',
+      allowedMethods: ['GET', 'OPTIONS'],
+    });
 
     const manifest = JSON.parse(readFileSync('docs/route-manifest.json', 'utf8')) as Array<{
       route: string;

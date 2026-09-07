@@ -1,18 +1,9 @@
 import type {
+  ReportingAvailability,
   ReportingQueryResult,
   ReportingRecord,
   ReportingSource,
 } from './contracts';
-
-export type ReportingPresentationAvailability =
-  | 'available'
-  | 'empty'
-  | 'partial'
-  | 'unavailable'
-  | 'rate-limited'
-  | 'stale'
-  | 'expired'
-  | 'unconfigured';
 
 export interface ReportingPresentationField {
   name: string;
@@ -31,7 +22,7 @@ export interface ReportingRecordPresentation {
   title: string;
   recordType: string | null;
   status: string | null;
-  availability: ReportingPresentationAvailability | null;
+  availability: ReportingAvailability | null;
   fields: ReportingPresentationField[];
   relationships: ReportingRelationshipPresentation[];
   relationshipCount: number;
@@ -44,7 +35,7 @@ export interface ReportingSourcePresentation {
   label: string;
   provider: string;
   visibility: 'public' | 'private';
-  availability: ReportingPresentationAvailability;
+  availability: ReportingAvailability;
   recordCount: number;
   resource: string;
   repository: string | null;
@@ -53,7 +44,7 @@ export interface ReportingSourcePresentation {
 export interface ReportingQueryPresentation<T extends ReportingRecord = ReportingRecord> {
   dataset: string;
   label: string;
-  availability: ReportingPresentationAvailability;
+  availability: ReportingAvailability;
   count: number;
   totalAvailable: number;
   records: ReportingRecordPresentation[];
@@ -99,29 +90,21 @@ function scalarText(value: unknown): string | null {
   return null;
 }
 
-function normalizedAvailability(value: unknown): ReportingPresentationAvailability | null {
-  if (value === 'available' || value === 'empty' || value === 'partial' || value === 'unavailable'
-    || value === 'rate-limited' || value === 'stale' || value === 'expired' || value === 'unconfigured') return value;
-  if (value === 'live') return 'available';
+function normalizedAvailability(value: unknown): ReportingAvailability | null {
+  if (value === 'available' || value === 'partial' || value === 'unavailable'
+    || value === 'rate-limited' || value === 'stale' || value === 'expired') return value;
   return null;
 }
 
 function targetText(value: unknown): string | null {
-  if (typeof value === 'string') return value;
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
-  const object = value as Record<string, unknown>;
-  for (const candidate of [object.id, object.native, object.recordId, object.target]) {
-    if (typeof candidate === 'string' && candidate) return candidate;
-  }
-  return null;
+  const native = (value as Record<string, unknown>).native;
+  return typeof native === 'string' && native ? native : null;
 }
 
 function rawRelationshipCount(record: Record<string, unknown>): number {
   const relationships = record.relationships;
-  if (Array.isArray(relationships)) return relationships.length;
-  if (!relationships || typeof relationships !== 'object') return 0;
-  return Object.values(relationships as Record<string, unknown>)
-    .reduce<number>((total, value) => total + (Array.isArray(value) ? value.length : value === null || value === undefined ? 0 : 1), 0);
+  return Array.isArray(relationships) ? relationships.length : 0;
 }
 
 function recordRelationships(record: Record<string, unknown>): ReportingRelationshipPresentation[] {
@@ -131,21 +114,16 @@ function recordRelationships(record: Record<string, unknown>): ReportingRelation
     for (const relationship of relationships) {
       if (!relationship || typeof relationship !== 'object' || Array.isArray(relationship)) continue;
       const object = relationship as Record<string, unknown>;
-      const relation = typeof object.relation === 'string' && object.relation ? object.relation : 'related';
-      const target = targetText(object.to) ?? targetText(object.target) ?? targetText(object);
-      if (!target) continue;
+      const relation = typeof object.relation === 'string' && object.relation ? object.relation : null;
+      const target = targetText(object.to);
+      if (!relation || !target) continue;
       const values = grouped.get(relation) ?? [];
       values.push(target);
       grouped.set(relation, values);
     }
     return [...grouped].map(([relation, targets]) => ({ relation, label: reportingPresentationLabel(relation), targets }));
   }
-  if (!relationships || typeof relationships !== 'object') return [];
-  return Object.entries(relationships as Record<string, unknown>).flatMap(([relation, raw]) => {
-    const values = Array.isArray(raw) ? raw : [raw];
-    const targets = values.map(targetText).filter((value): value is string => Boolean(value));
-    return targets.length > 0 ? [{ relation, label: reportingPresentationLabel(relation), targets }] : [];
-  });
+  return [];
 }
 
 function recordTitle(record: Record<string, unknown>, id: string): string {
@@ -196,20 +174,17 @@ function recordFields(record: Record<string, unknown>, limit = 12): ReportingPre
 function queryAvailability<T extends ReportingRecord>(
   result: ReportingQueryResult<T>,
   key: string,
-): ReportingPresentationAvailability {
+): ReportingAvailability {
   const direct = normalizedAvailability(result.availability[key]);
   const fallback = direct ?? Object.values(result.availability).map(normalizedAvailability).find(Boolean) ?? null;
-  const qualification = Object.values(result.qualifications).filter((value): value is string => typeof value === 'string').join(' ').toLowerCase();
-  if (fallback === 'unavailable' && qualification.includes('unconfigur')) return 'unconfigured';
-  if ((fallback === 'available' || fallback === null) && result.derived.count === 0) return 'empty';
-  return fallback ?? (result.derived.count === 0 ? 'empty' : 'available');
+  return fallback ?? 'available';
 }
 
 function sourceAvailability<T extends ReportingRecord>(
   result: ReportingQueryResult<T>,
   source: ReportingSource,
-  overall: ReportingPresentationAvailability,
-): ReportingPresentationAvailability {
+  overall: ReportingAvailability,
+): ReportingAvailability {
   const explicit = normalizedAvailability(result.availability[source.id]);
   if (explicit) return explicit;
   const dataset = normalizedAvailability(result.availability[result.dataset]);

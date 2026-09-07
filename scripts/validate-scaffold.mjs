@@ -71,7 +71,7 @@ const router = read('src/router.ts');
 for (const token of ['applicationRouteRegistry', 'matchRoute', 'normalizeRoutePath', 'safeError', 'getDemoControl', 'route.handler']) {
   if (!router.includes(token)) failures.push(`router missing final declarative invariant: ${token}`);
 }
-for (const retiredToken of [
+for (const removedToken of [
   'API_PREFIXES',
   'routeOperationalRequest',
   'routeAssuranceRequest',
@@ -84,7 +84,7 @@ for (const retiredToken of [
   'ASSURANCE_API_HANDLERS',
   'ASSURANCE_HTML_HANDLERS',
 ]) {
-  if (router.includes(retiredToken)) failures.push(`router still contains retired dispatch logic: ${retiredToken}`);
+  if (router.includes(removedToken)) failures.push(`router still contains removed dispatch logic: ${removedToken}`);
 }
 if (/\bpath\s*===/.test(router) || /\bpath\.startsWith\(/.test(router)) {
   failures.push('router still contains application path dispatch or prefix detection');
@@ -105,18 +105,16 @@ for (const token of [
 }
 
 const generator = read('scripts/generate-route-manifest.mjs');
-for (const retiredToken of ['const machine =', 'requiredRoutes =', '/__api/', '/v1/']) {
-  if (generator.includes(retiredToken)) failures.push(`route generator still contains a hardcoded route inventory: ${retiredToken}`);
+for (const removedToken of ['const machine =', 'requiredRoutes =', '/__api/', '/v1/']) {
+  if (generator.includes(removedToken)) failures.push(`route generator still contains a hardcoded route inventory: ${removedToken}`);
 }
 
 const demoRegistry = read('src/demos/registry.ts');
-if (demoRegistry.includes('demosByRoute')) failures.push('retired demosByRoute lookup remains in the demo registry');
+if (demoRegistry.includes('demosByRoute')) failures.push('removed demosByRoute lookup remains in the demo registry');
 
-const assuranceRegistryModule = read('src/assurance/registry.ts');
-if (assuranceRegistryModule.includes('export *')) failures.push('src/assurance/registry.ts must not remain a compatibility barrel');
 const assurancePresentationModule = read('src/assurance/presentation.ts');
-if (assurancePresentationModule.includes('export *')) failures.push('src/assurance/presentation.ts must not remain a compatibility barrel');
-if (exists('src/api/assurance-v1.ts')) failures.push('retired v1 assurance serializer must not remain in the current contract');
+if (assurancePresentationModule.includes('export *')) failures.push('src/assurance/presentation.ts must not remain an export-only barrel');
+if (exists('src/api/assurance-v1.ts')) failures.push('removed v1 assurance serializer must not remain in the current contract');
 
 const adminUi = read('src/ui/admin.ts');
 if (!adminUi.includes('Oops! demo is down.')) failures.push('offline UI missing required recovery message');

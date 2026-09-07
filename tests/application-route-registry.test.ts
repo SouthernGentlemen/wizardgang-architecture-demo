@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { demos } from '../src/demos/registry';
+import { indexedSurfaces } from '../src/demos/registry';
 import { sitemapResponse } from '../src/api/sitemap';
 import { routeRequest } from '../src/router';
 import type { Env } from '../src/types';
@@ -11,7 +11,7 @@ import {
   type ApplicationRouteContext,
 } from '../src/routing/application-routes';
 import {
-  registeredDemoNavigation,
+  registeredSurfaceNavigation,
   registeredPageMetadata,
   registeredSitemapPaths,
 } from '../src/routing/navigation';
@@ -62,13 +62,13 @@ function noDatabaseEnv(): Env {
 
 describe('complete declarative application routing', () => {
   it('builds architecture navigation from registered page metadata', () => {
-    expect(registeredDemoNavigation().map((demo) => demo.route)).toEqual(demos.map((demo) => demo.route));
-    expect(registeredPageMetadata().filter((route) => route.navigation?.index)).toHaveLength(demos.length);
+    expect(registeredSurfaceNavigation().map((surface) => surface.route)).toEqual(indexedSurfaces.map((surface) => surface.route));
+    expect(registeredPageMetadata().filter((route) => route.navigation?.index)).toHaveLength(indexedSurfaces.length);
     expect(registeredPageMetadata().every((route) => route.visibility === 'public')).toBe(true);
   });
 
   it('generates sitemap entries from public registered page metadata', async () => {
-    expect(registeredSitemapPaths()).toEqual(['/', ...demos.map((demo) => demo.route)]);
+    expect(registeredSitemapPaths()).toEqual(['/', ...indexedSurfaces.map((surface) => surface.route)]);
     const response = sitemapResponse(new Request('https://demo.wizardgang.ai/sitemap.xml'));
     const xml = await response.text();
     for (const routePath of registeredSitemapPaths()) {

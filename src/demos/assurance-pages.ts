@@ -45,7 +45,7 @@ export function renderConcerns(env: Env): Response {
 
   return shell(env, 'Report a Concern', `
   <section class="page-header assurance-header">
-    <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / /governance/concerns</p>
+    <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / /assurance?view=concerns</p>
     <h1>Put concerns into controlled work.</h1>
     <p class="lede">Choose a structured public issue form. The submitted issue becomes part of the reviewable work and change history for this demonstration.</p>
     <p class="assurance-notice"><strong>Public intake only:</strong> remove credentials, personal data, private infrastructure details, and unreleased exploit information.</p>
@@ -60,7 +60,7 @@ export function renderConcerns(env: Env): Response {
     <p>Keep it private. Use the dedicated security channel so triage and remediation can happen before public disclosure.</p>
     <p><a href="${escapeHtml(privateReportUrl(env))}">Open a private security report →</a></p>
   </section>`, {
-    activeRoute: '/governance/concerns',
+    activeRoute: '/assurance',
     description: 'Public issue intake for non-sensitive WizardGang Architecture Demo bugs, features, accessibility, AI/MCP, and other concerns.',
   });
 }
@@ -130,14 +130,15 @@ export function renderRisks(request: Request, env: Env): Response {
       { label: 'Risk schema', href: sourceUrl(env, assuranceDatasetSchema('risks')) },
       { label: 'Canonical assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
       { label: 'Shared assurance presentation', href: sourceUrl(env, 'src/assurance/presentation.ts') },
-      { label: 'Current assurance API contract', href: sourceUrl(env, 'src/api/assurance.ts') },
+      { label: 'Reporting API', href: sourceUrl(env, 'src/api/reporting.ts') },
       { label: 'Publication policy', href: sourceUrl(env, 'src/assurance/publication-policy.js') },
       { label: 'Risk-management method', href: sourceUrl(env, 'docs/governance/RISK-MANAGEMENT.md') },
     ])}</div>
   </section>
   <section class="info-card" aria-labelledby="risk-filter-heading">
     <h2 id="risk-filter-heading">Filter records</h2>
-    <form method="get" action="${escapeHtml(RISK_ROUTE)}">
+    <form method="get" action="/assurance">
+      <input type="hidden" name="view" value="risks">
       <p>
         ${riskFilterControls(filters)}
         <button type="submit">Apply filters</button>
@@ -207,7 +208,7 @@ export function renderIncidents(env: Env): Response {
       { label: 'Incident dataset', href: sourceUrl(env, assuranceDatasetSource('incidents')) },
       { label: 'Exercise dataset', href: sourceUrl(env, assuranceDatasetSource('exercises')) },
       { label: 'Canonical assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
-      { label: 'Current assurance API contract', href: sourceUrl(env, 'src/api/assurance.ts') },
+      { label: 'Reporting API', href: sourceUrl(env, 'src/api/reporting.ts') },
       { label: 'Publication policy', href: sourceUrl(env, 'src/assurance/publication-policy.js') },
       { label: 'Incident schema', href: sourceUrl(env, assuranceDatasetSchema('incidents')) },
       { label: 'Exercise schema', href: sourceUrl(env, assuranceDatasetSchema('exercises')) },

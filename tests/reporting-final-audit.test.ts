@@ -56,7 +56,7 @@ describe('final common reporting audit guards', () => {
   it('keeps assurance status normalization in the common reporting layer instead of the dashboard', () => {
     const service = readFileSync('src/reporting/service.ts', 'utf8');
     const dashboard = readFileSync('src/demos/reporting-dashboard.ts', 'utf8');
-    expect(service).toContain('structuredAvailability(state.status)');
+    expect(service).not.toContain('AssuranceCollectionStatus');
     expect(dashboard).toContain('queryReportingCollection');
     expect(dashboard).toContain('presentReportingQuery');
     expect(dashboard).not.toContain('structuredAvailability(');
@@ -66,7 +66,7 @@ describe('final common reporting audit guards', () => {
   it('renders Cloudflare product and billed-cost state from common availability rather than boolean or kind shortcuts', () => {
     const presentation = readFileSync('src/demos/operations-pages.ts', 'utf8');
     expect(presentation).toContain("productCard('Workers', usage.products.workers.availability");
-    expect(presentation).toContain("const costBadgeState = usage.cost.availability === 'available' ? 'live' : usage.cost.availability");
+    expect(presentation).toContain('const costBadgeState = usage.cost.availability');
     expect(presentation).not.toContain("productCard('Workers', usage.products.workers.available");
     expect(presentation).not.toContain("usage.cost.kind === 'billed' ? 'live' : 'unavailable'");
   });

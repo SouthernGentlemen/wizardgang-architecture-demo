@@ -30,17 +30,17 @@ function binding(source: ReturnType<typeof structuredReportingSource>): string {
 
 function cloudflareSnapshot(costKind: CloudflareUsageSnapshot['cost']['kind']): CloudflareUsageSnapshot {
   return {
-    status: 'live',
+    status: 'available',
     capturedAt: '2026-09-04T01:00:00.000Z',
     validUntil: '2026-09-04T01:10:00.000Z',
     cache: 'provider',
     windowStart: '2026-09-04T00:00:00.000Z',
     windowEnd: '2026-09-04T01:00:00.000Z',
     products: {
-      workers: { available: true, availability: 'available', qualification: null, requests: 12, errors: 0, subrequests: 1, cpuP50Ms: 1, cpuP99Ms: 2 },
-      d1: { available: true, availability: 'available', qualification: null, rowsRead: 3, rowsWritten: 1, storageBytes: 4 },
-      r2: { available: true, availability: 'available', qualification: null, classAOperations: 1, classBOperations: 2, storageBytes: 5, objects: 1 },
-      durableObjects: { available: true, availability: 'available', qualification: null, requests: 2, cpuTimeMs: 3, storageBytes: 4 },
+      workers: { availability: 'available', qualification: null, requests: 12, errors: 0, subrequests: 1, cpuP50Ms: 1, cpuP99Ms: 2 },
+      d1: { availability: 'available', qualification: null, rowsRead: 3, rowsWritten: 1, storageBytes: 4 },
+      r2: { availability: 'available', qualification: null, classAOperations: 1, classBOperations: 2, storageBytes: 5, objects: 1 },
+      durableObjects: { availability: 'available', qualification: null, requests: 2, cpuTimeMs: 3, storageBytes: 4 },
     },
     cost: {
       kind: costKind,
@@ -79,7 +79,7 @@ describe('authoritative reporting contracts', () => {
     }
   });
 
-  it('registers native GitHub source kinds once and limits import to supported provider writes', () => {
+  it('registers native GitHub source kinds once and limits updates to supported provider writes', () => {
     const github = registeredReportingSources().filter((source) => source.provider === 'github' && source.authority === 'native-object');
     expect(new Set(github.map((source) => source.id)).size).toBe(github.length);
     expect(github.map((source) => source.id)).toEqual(expect.arrayContaining([
@@ -94,8 +94,8 @@ describe('authoritative reporting contracts', () => {
       'github.dependabot-alerts',
       'github.repository-security-advisories',
     ]));
-    expect(registeredReportingSource('github.issues').capabilities).toContain('import');
-    expect(github.filter((source) => source.id !== 'github.issues').every((source) => !source.capabilities.includes('import'))).toBe(true);
+    expect(registeredReportingSource('github.issues').capabilities).toContain('update');
+    expect(github.filter((source) => source.id !== 'github.issues').every((source) => !source.capabilities.includes('update'))).toBe(true);
   });
 
   it('resolves report ownership to durable retained reports and governance to canonical structured partitions', () => {
@@ -189,12 +189,12 @@ describe('authoritative reporting contracts', () => {
     expect(result.records.every((record) => record.provenance.provider === 'cloudflare')).toBe(true);
   });
 
-  it('has one current interchange type surface and no legacy source/records-only import helper', () => {
+  it('has one reporting response/export shape and no repository interchange envelope', () => {
     expect(reportingContracts).not.toHaveProperty('importAuthoritativeReportingCollection');
     expect(reportingContracts).not.toHaveProperty('exportAuthoritativeReportingCollection');
     const schema = JSON.parse(readFileSync('contracts/assurance/reporting.schema.json', 'utf8')) as { $defs: Record<string, unknown> };
-    expect(schema.$defs).toHaveProperty('interchangeEnvelope');
     expect(schema.$defs).toHaveProperty('observationProvenance');
+    expect(schema.$defs).not.toHaveProperty('interchangeEnvelope');
     expect(schema.$defs).not.toHaveProperty('importCollection');
   });
 
@@ -202,7 +202,7 @@ describe('authoritative reporting contracts', () => {
     expect(registry.reporting.privateIngestion).toBe('disabled');
     expect(registry.reporting.privateSources.length).toBeGreaterThan(0);
     expect(registry.reporting.privateSources.every((source) => source.visibility === 'private' && source.ingestion === 'disabled')).toBe(true);
-    expect(registry.reporting.privateSources.every((source) => !source.capabilities.includes('import'))).toBe(true);
+    expect(registry.reporting.privateSources.every((source) => !source.capabilities.includes('update'))).toBe(true);
     const serialized = JSON.stringify(registry.reporting);
     expect(serialized).not.toMatch(/"(?:token|secret|credential|payload)"\s*:/i);
   });

@@ -486,7 +486,7 @@ The server validates namespace syntax, queries by exact namespace, orders by key
 
 - values remain outside source;
 - public documentation may identify secret names/purpose/scope but not values;
-- public health/version/log/evidence surfaces must not return values;
+- public health, version, log, and evidence surfaces must not return values;
 - suspected exposure triggers incident review and rotation decision.
 
 **Retention/deletion:** Driven by active need, rotation, revocation, provider capability, and recovery requirements. Exact values are intentionally not recorded in this public register.

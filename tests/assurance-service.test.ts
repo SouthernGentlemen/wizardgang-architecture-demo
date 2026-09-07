@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { assuranceComplianceResponse, assuranceRisksResponse } from '../src/api/assurance';
+import { reportingCollectionResponse } from '../src/api/reporting';
 import {
   assuranceFilterNames,
   assuranceFilterValues,
@@ -43,16 +43,16 @@ describe('common canonical assurance query and presentation service', () => {
     const complianceFilters = { framework: 'wcag-2.2', status: 'partial', level: 'AA' };
     const complianceQuery = serializeAssuranceFilters('compliance', complianceFilters);
     const complianceExpected = filterPublishedAssuranceRecords('compliance', complianceFilters).map((record) => record.id);
-    const complianceApi = await (await assuranceComplianceResponse(new Request(`https://demo.wizardgang.ai/api/reporting/compliance?${complianceQuery}`))).json() as { records: Array<{ id: string }> };
-    const complianceHtml = await renderComplianceDemo(new Request(`https://demo.wizardgang.ai/compliance?${complianceQuery}`), environment).text();
+    const complianceApi = await (await reportingCollectionResponse(new Request(`https://demo.wizardgang.ai/api/reporting/compliance?${complianceQuery}`), environment, 'compliance')).json() as { records: Array<{ id: string }> };
+    const complianceHtml = await renderComplianceDemo(new Request(`https://demo.wizardgang.ai/assurance?view=compliance&${complianceQuery}`), environment).text();
     expect(complianceApi.records.map((record) => record.id)).toEqual(complianceExpected);
     expect(complianceIds(complianceHtml)).toEqual(complianceExpected);
 
     const riskFilters = { framework: 'security', residual: 'high' };
     const riskQuery = serializeAssuranceFilters('risks', riskFilters);
     const riskExpected = filterPublishedAssuranceRecords('risks', riskFilters).map((record) => record.id);
-    const riskApi = await (await assuranceRisksResponse(new Request(`https://demo.wizardgang.ai/api/reporting/risks?${riskQuery}`))).json() as { records: Array<{ id: string }> };
-    const riskHtml = await renderRisks(new Request(`https://demo.wizardgang.ai/governance/risks?${riskQuery}`), environment).text();
+    const riskApi = await (await reportingCollectionResponse(new Request(`https://demo.wizardgang.ai/api/reporting/risks?${riskQuery}`), environment, 'risks')).json() as { records: Array<{ id: string }> };
+    const riskHtml = await renderRisks(new Request(`https://demo.wizardgang.ai/assurance?view=risks&${riskQuery}`), environment).text();
     expect(riskApi.records.map((record) => record.id)).toEqual(riskExpected);
     expect(riskIds(riskHtml)).toEqual(riskExpected);
   });
@@ -70,15 +70,15 @@ describe('common canonical assurance query and presentation service', () => {
   });
 
   it('rejects invalid, duplicate, and undeclared parameters under the current contract', async () => {
-    const invalid = await assuranceComplianceResponse(new Request('https://demo.wizardgang.ai/api/reporting/compliance?framework='));
+    const invalid = await reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/compliance?framework='), environment, 'compliance');
     expect(invalid.status).toBe(400);
     expect(await invalid.json()).toMatchObject({ error: 'invalid_filter', parameter: 'framework', value: '' });
 
-    const duplicate = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/api/reporting/risks?framework=security&framework=ai'));
+    const duplicate = await reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/risks?framework=security&framework=ai'), environment, 'risks');
     expect(duplicate.status).toBe(400);
     expect(await duplicate.json()).toMatchObject({ error: 'invalid_filter', parameter: 'framework', value: ['security', 'ai'] });
 
-    const unknown = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/api/reporting/risks?futureParameter=ignored'));
+    const unknown = await reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/risks?futureParameter=ignored'), environment, 'risks');
     expect(unknown.status).toBe(400);
     expect(await unknown.json()).toEqual({ error: 'unsupported_query_parameter', parameter: 'futureParameter' });
   });
@@ -89,7 +89,7 @@ describe('common canonical assurance query and presentation service', () => {
     expect(expected.length).toBeGreaterThan(2);
     const query = serializeAssuranceFilters('compliance', filters);
 
-    const first = await (await assuranceComplianceResponse(new Request(`https://demo.wizardgang.ai/api/reporting/compliance?${query}&limit=2`))).json() as {
+    const first = await (await reportingCollectionResponse(new Request(`https://demo.wizardgang.ai/api/reporting/compliance?${query}&limit=2`), environment, 'compliance')).json() as {
       records: Array<{ id: string }>;
       query: { pagination: { total: number; nextCursor: string | null } };
       derived: { count: number };
@@ -97,7 +97,7 @@ describe('common canonical assurance query and presentation service', () => {
     expect(first.records.map((record) => record.id)).toEqual(expected.slice(0, 2).map((record) => record.id));
     expect(first.query.pagination.total).toBe(expected.length);
     expect(first.query.pagination.nextCursor).toMatch(/^rpc1\./);
-    expect(first.derived.count).toBe(expected.length);
+    expect(first.derived.count).toBe(first.records.length);
   });
 
   it('keeps reverse evidence relationships complete for canonical relationship-bearing families', () => {
@@ -115,9 +115,9 @@ describe('common canonical assurance query and presentation service', () => {
     }
   });
 
-  it('has no legacy serializer or flattened assurance relationship boundary', () => {
+  it('has no superseded serializer or flattened assurance relationship boundary', () => {
     expect(existsSync('src/api/assurance-v1.ts')).toBe(false);
-    const apiSource = readFileSync('src/api/assurance.ts', 'utf8');
+    const apiSource = readFileSync('src/api/reporting.ts', 'utf8');
     expect(apiSource).not.toContain('serializeAssuranceV1');
     expect(apiSource).not.toContain('riskLinks:');
     expect(apiSource).not.toContain('frameworkReferences:');

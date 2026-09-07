@@ -32,8 +32,8 @@ function result(overrides: Partial<ReportingQueryResult<ReportingRecord>> = {}):
 }
 
 describe('shared reporting presentation', () => {
-  it('distinguishes a registered empty collection from an unavailable source', () => {
-    expect(presentReportingQuery(result()).availability).toBe('empty');
+  it('distinguishes an available empty collection from an unavailable source', () => {
+    expect(presentReportingQuery(result()).availability).toBe('available');
     expect(presentReportingQuery(result({
       availability: { 'example-reports': 'unavailable' },
       qualifications: { 'example-reports': 'provider-observation-unavailable' },
@@ -45,7 +45,7 @@ describe('shared reporting presentation', () => {
       availability: { 'example-reports': 'unavailable' },
       qualifications: { 'example-reports': 'Reporting is unconfigured for this environment.' },
     }));
-    expect(presented.availability).toBe('unconfigured');
+    expect(presented.availability).toBe('unavailable');
     expect(presented.count).toBe(0);
   });
 

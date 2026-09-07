@@ -213,6 +213,9 @@ function validateNode(value, schema, context, instancePath = '$', schemaPath = '
   }
 
   if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+    const propertyCount = Object.keys(value).length;
+    if (schema.minProperties !== undefined && propertyCount < schema.minProperties) push(`must contain at least ${schema.minProperties} properties`, 'minProperties');
+    if (schema.maxProperties !== undefined && propertyCount > schema.maxProperties) push(`must contain at most ${schema.maxProperties} properties`, 'maxProperties');
     const required = schema.required ?? [];
     for (const key of required) {
       if (!Object.hasOwn(value, key)) errors.push({
@@ -264,7 +267,7 @@ const arraySchemaKeywords = new Set(['allOf', 'anyOf', 'oneOf']);
 const scalarKeywords = new Set([
   '$ref', 'type', 'const', 'enum', 'required', 'pattern', 'format', 'minLength', 'maxLength',
   'minimum', 'maximum', 'exclusiveMinimum', 'exclusiveMaximum', 'multipleOf', 'minItems', 'maxItems',
-  'uniqueItems', 'dependentRequired',
+  'uniqueItems', 'dependentRequired', 'minProperties', 'maxProperties',
 ]);
 
 function assertSupportedNode(schema, schemaPath, pointer = '#') {

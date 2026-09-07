@@ -2,7 +2,7 @@
 
 The stable route contract was established first; genuine capabilities were then implemented without renaming the public human routes. Capability IDs below are design-plan references, not permanent Git change IDs.
 
-The interaction-depth backlog for R2, D1, i18n, WCAG, Git, webhooks, and GraphQL is specified in [`INTERACTIVE-DEMO-SPEC.md`](INTERACTIVE-DEMO-SPEC.md), was implemented for v0.5.0 by DEMO-037 through DEMO-044, and was deployed from the verified annotated tag on 2026-09-01. Exact production evidence is recorded separately in [`history/DEPLOYMENTS.md`](history/DEPLOYMENTS.md).
+The current interaction contract for R2, D1, i18n, WCAG, Git, webhooks, GraphQL, reporting, and route topology is specified in [`INTERACTIVE-DEMO-SPEC.md`](INTERACTIVE-DEMO-SPEC.md). Exact production evidence for released historical states is recorded separately in [`history/DEPLOYMENTS.md`](history/DEPLOYMENTS.md).
 
 The shared dark/light interface, responsive shell, technical surfaces, navigation, and social preview were aligned with the flagship `wizardgang.ai` brand system in v0.6.0 and deployed from its verified annotated tag on 2026-09-01.
 
@@ -24,7 +24,7 @@ The dashboard-visible ChatGPT crawler control, dynamic robots policy, and server
 | CAP-019 | End-to-end traceability and evidence API | Complete |
 | CAP-020–024 | Dashboard, uptime/health, logs, synthetic billing/degradation, protected control | Complete |
 | CAP-025 | Dashboard-visible, admin-controlled ChatGPT search/fetch access with independent training opt-out | Complete |
-| CAP-026 | Canonical `/compliance` assurance index, dashboard entry point, consolidated global chrome, and automated route/link contract | Complete; aligned/supporting statements remain uncertified |
+| CAP-026 | Canonical assurance compliance view, operations entry point, consolidated global chrome, and automated route/link contract | Complete; aligned/supporting statements remain uncertified |
 
 The v0.5.0 interaction work adds visitor-scoped D1 users/tasks, GraphQL Yoga and local GraphiQL, bounded R2 uploads, six-locale switching, an accessibility comparison lab, verified GitHub webhook handling, and live GitHub delivery evidence without changing the released HTML route set.
 

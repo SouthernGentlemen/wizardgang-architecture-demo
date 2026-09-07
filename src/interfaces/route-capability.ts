@@ -11,7 +11,7 @@ export interface InterfaceIdentityRouteContext {
   env: Env;
 }
 
-export type BrowserHtmlPolicy = 'page' | 'graphql' | 'never';
+export type BrowserHtmlPolicy = 'page' | 'never';
 
 export interface InterfaceIdentityRouteDeclaration extends RouteDeclaration<InterfaceIdentityRouteContext> {
   browserHtml: BrowserHtmlPolicy;

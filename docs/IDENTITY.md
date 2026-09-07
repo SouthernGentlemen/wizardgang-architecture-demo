@@ -39,7 +39,7 @@ GitHub is intentionally different from the OIDC providers. It does not supply an
 | `/auth/logout` | Revoke the current application session |
 | `/auth/authorize` | Apply application policy to the authenticated session |
 
-The earlier `/__api/identity/oauth-pkce`, `/__api/identity/sso`, and `/__api/auth/saml/inspect` contracts remain available for route stability. They now describe the live security boundary without returning verifier, state, nonce, token, or credential values.
+There are no browser-facing identity inspection APIs alongside these protocol routes. The consolidated identity view explains the boundary without returning verifier, state, nonce, token, or credential values.
 
 ## Validation boundaries
 
@@ -152,16 +152,16 @@ Authentication and policy transitions create sanitized events including `identit
 
 ## DEMO-186 release-time provider cutover
 
-DEMO-186 removes the previous identity and protocol route contracts without redirects or compatibility handlers. The code change does **not** modify any external identity-provider or GitHub webhook configuration and does not deploy or release the application.
+DEMO-186 removed the previous identity and protocol route contracts without redirects or alternate handlers. That code change did **not** modify any external identity-provider or GitHub webhook configuration and did not deploy or release the application.
 
 At the release cutover, operators must update the external systems to the canonical application URLs for the release origin:
 
-- Microsoft Entra OIDC redirect URI: '/auth/microsoft/callback'
-- Google OIDC redirect URI: '/auth/google/callback'
-- GitHub OAuth callback URL: '/auth/github/callback'
-- SAML service-provider entity ID: '/auth/saml'
-- SAML assertion consumer service (ACS): '/auth/saml/acs'
-- SAML metadata: '/auth/saml/metadata'
-- GitHub webhook payload URL: '/webhooks/github'
+- Microsoft Entra OIDC redirect URI: `/auth/microsoft/callback`
+- Google OIDC redirect URI: `/auth/google/callback`
+- GitHub OAuth callback URL: `/auth/github/callback`
+- SAML service-provider entity ID: `/auth/saml`
+- SAML assertion consumer service (ACS): `/auth/saml/acs`
+- SAML metadata: `/auth/saml/metadata`
+- GitHub webhook payload URL: `/webhooks/github`
 
-Clients must also use '/mcp' for MCP Streamable HTTP and '/graphql' for GraphQL. The removed '/identity/*', '/__api/identity/*', '/mcp/server', '/graphql/console', '/graphql/schema', '/__assets/graphiql/*', '/v1/webhooks/demo', '/v1/webhooks/github', and '/og.png' routes are intentionally not aliases. Provider and webhook configuration should be verified against the released origin before traffic is cut over.
+Clients use `/mcp` for MCP Streamable HTTP and `/graphql` for GraphQL. Removed identity and protocol URLs are ordinary unknown paths, not aliases. Provider and webhook configuration should be verified against the released origin before traffic is cut over.
