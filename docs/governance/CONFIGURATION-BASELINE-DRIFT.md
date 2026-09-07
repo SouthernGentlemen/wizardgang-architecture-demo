@@ -113,7 +113,7 @@ The deploy workflow:
 - applies remote D1 migrations;
 - deploys the Worker;
 - injects release identity and selected production variables;
-- verifies `/version` and `/health` after deployment.
+- verifies `/api/operations/version` and `/api/operations/health` after deployment.
 
 Deployment-time values such as `DEPLOYED_VERSION`, `DEPLOYED_SHA`, `DEPLOYMENT_ENVIRONMENT`, and CI status are expected to differ from development defaults in `wrangler.jsonc`. That difference is **controlled environment substitution**, not drift.
 
@@ -296,8 +296,8 @@ Drift may be detected through:
 - Git diff/PR review;
 - CI validation;
 - generated-manifest validation;
-- deployment `/version` verification;
-- `/health` and operational observations;
+- deployment `/api/operations/version` verification;
+- `/api/operations/health` and operational observations;
 - GitHub/provider configuration review;
 - access review;
 - supplier review;
@@ -319,7 +319,7 @@ The following review baseline applies:
 |---|---|
 | Source-controlled config | every controlled change affecting it |
 | Production release identity | every deployment |
-| Public runtime health/version | every deployment + routine monitoring |
+| Public runtime health and version evidence | every deployment + routine monitoring |
 | Privileged/provider access | quarterly + event-driven |
 | GitHub provider settings | at least annually and after material permission/workflow/security changes |
 | Cloudflare provider settings | at least annually and after material resource/permission/domain/storage changes |
@@ -397,8 +397,8 @@ Every production deployment already verifies release identity and Worker health.
 
 Post-deployment configuration verification should include, proportionately:
 
-- `/version` matches expected semantic version and commit SHA;
-- Worker service reports operational through `/health`;
+- `/api/operations/version` matches expected semantic version and commit SHA;
+- Worker service reports operational through `/api/operations/health`;
 - required D1/R2/DO dependencies are available or accurately degraded;
 - critical routes respond as expected;
 - admin/offline boundary remains intact;
@@ -417,7 +417,7 @@ Evidence may include:
 - PR review/CI results;
 - provider-derived retained validation report;
 - tagged release and deployment history;
-- `/version` and `/health` verification;
+- `/api/operations/version` and `/api/operations/health` verification;
 - D1 audit events;
 - provider configuration exports/screenshots/summaries retained privately where appropriate;
 - access reviews;

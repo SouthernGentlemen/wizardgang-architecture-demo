@@ -2,7 +2,7 @@ import type { DemoDefinition } from '../types';
 
 const demo: DemoDefinition = {
   "id": "workers",
-  "route": "/workers",
+  "route": "/platform?view=workers",
   "title": "Cloudflare Workers",
   "group": "Platform",
   "sourcePath": "src/demos/workers.ts",

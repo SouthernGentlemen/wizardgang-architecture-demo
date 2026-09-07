@@ -13,7 +13,7 @@ function baseResult(env: Env, snapshot: CloudflareUsageSnapshot): ReportingQuery
 }
 
 function terminalPartial(snapshot: CloudflareUsageSnapshot): 'provider-unavailable' | null {
-  return snapshot.status === 'live' ? null : 'provider-unavailable';
+  return snapshot.status === 'available' ? null : 'provider-unavailable';
 }
 
 async function pageFromResult(

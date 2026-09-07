@@ -5,7 +5,6 @@ const failures = [];
 const HTTP_METHODS = new Set(['get', 'post', 'put', 'patch', 'delete', 'options', 'head', 'trace']);
 const openapi = JSON.parse(fs.readFileSync('contracts/openapi/openapi.json', 'utf8'));
 const reporting = JSON.parse(fs.readFileSync('contracts/assurance/reporting.schema.json', 'utf8'));
-const registry = JSON.parse(fs.readFileSync('contracts/assurance/registry.schema.json', 'utf8'));
 
 function fail(message) {
   failures.push(message);
@@ -54,15 +53,20 @@ if (openapi.components?.['x-assurance-query-responses']) {
   fail('OpenAPI must not reuse a Responses Object through components.x-assurance-query-responses');
 }
 
-try {
-  assert.deepStrictEqual(openapi.components?.schemas?.ReportingContract, reporting);
-} catch {
-  fail('ReportingContract drifted from contracts/assurance/reporting.schema.json; run npm run generate:openapi');
+for (const name of ['ReportingContract', 'AssuranceQueryResult', 'AssuranceRegistryContract', 'AssuranceRegistryDiscovery']) {
+  if (openapi.components?.schemas?.[name]) fail(`OpenAPI must not duplicate the canonical reporting contract through ${name}`);
 }
-try {
-  assert.deepStrictEqual(openapi.components?.schemas?.AssuranceRegistryContract, registry);
-} catch {
-  fail('AssuranceRegistryContract drifted from contracts/assurance/registry.schema.json; run npm run generate:openapi');
+const reportingRefs = [
+  openapi.paths?.['/api/reporting']?.get?.responses?.['200']?.content?.['application/json']?.schema?.$ref,
+  openapi.paths?.['/api/reporting/{collection}']?.get?.responses?.['200']?.content?.['application/json']?.schema?.$ref,
+  openapi.paths?.['/api/reporting/{collection}/{recordId}']?.get?.responses?.['200']?.content?.['application/json']?.schema?.$ref,
+  openapi.paths?.['/api/reporting/{collection}/{recordId}']?.patch?.responses?.['200']?.content?.['application/json']?.schema?.$ref,
+  openapi.paths?.['/api/reporting/{collection}/{recordId}']?.patch?.requestBody?.content?.['application/json']?.schema?.$ref,
+];
+for (const reference of reportingRefs) {
+  if (typeof reference !== 'string' || !reference.startsWith(`${reporting.$id}#/$defs/`)) {
+    fail(`OpenAPI reporting operation does not reference the canonical reporting schema: ${reference}`);
+  }
 }
 
 let operationCount = 0;
@@ -91,9 +95,11 @@ visit(openapi);
 if (fs.existsSync('contracts/openapi/swagger.json')) fail('legacy contracts/openapi/swagger.json must not exist');
 
 const graphql = fs.readFileSync('contracts/graphql/schema.graphql', 'utf8');
-if (!graphql.includes('demoRecords')) fail('GraphQL schema is missing demoRecords');
+if (!graphql.includes('users: [User!]!') || graphql.includes('demoRecords') || graphql.includes('DemoRecord')) {
+  fail('GraphQL schema must expose only the current user contract');
+}
 const mcp = JSON.parse(fs.readFileSync('contracts/mcp/tools.json', 'utf8'));
-if (mcp.status !== 'working' || mcp.transport?.path !== '/mcp' || mcp.protocol?.current !== '2026-07-28') {
+if (mcp.status !== 'working' || mcp.transport?.path !== '/mcp' || mcp.protocol?.version !== '2026-07-28' || Object.keys(mcp.protocol).length !== 1) {
   fail('MCP manifest does not match the live transport');
 }
 for (const name of ['ping', 'list_demo_records']) {

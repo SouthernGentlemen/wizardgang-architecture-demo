@@ -1,7 +1,8 @@
 import type { Env } from '../types';
+import type { ReportingAvailability } from '../reporting/contracts';
 import { collectHealth, type HealthSnapshot } from '../api/operations';
 import { currentBudgetState, recentUsage } from '../lib/billing';
-import { latestCloudflareUsage, recentCloudflareUsage, type CloudflareTelemetryStatus, type CloudflareUsageSnapshot } from '../lib/cloudflare-usage';
+import { latestCloudflareUsage, recentCloudflareUsage, type CloudflareUsageSnapshot } from '../lib/cloudflare-usage';
 import { getDemoControl } from '../lib/demo-control';
 import { getCrawlerControl } from '../lib/crawler-control';
 import { escapeHtml } from '../lib/html';
@@ -31,15 +32,16 @@ interface AvailabilitySummary {
 export function operationsNavigation(active: string): string {
   const links: Array<[string, string]> = [
     ['/operations', 'Overview'], ['/operations?view=availability', 'Availability'],
-    ['/operations?view=logs', 'Logs'], ['/operations?view=usage', 'Usage & Cost'], ['/operations?view=docs', 'Docs'],
+    ['/operations?view=logs', 'Logs'], ['/operations?view=usage', 'Usage & Cost'],
+    ['/operations?view=reports', 'Reports'], ['/operations?view=docs', 'Docs'],
   ];
-  return `<div class="operations-navigation"><nav class="section-nav" aria-label="Operations">${links.map(([href, label]) =>
+  return `<div class="operations-navigation"><nav class="section-nav" aria-label="Operations views">${links.map(([href, label]) =>
     `<a href="${href}"${href === active ? ' aria-current="page"' : ''}>${label}</a>`).join('')}</nav>
-  <details class="machine-endpoints"><summary>Machine endpoints</summary><nav class="link-row" aria-label="Operations machine endpoints"><a href="/api/operations/health">/api/operations/health</a><a href="/api/operations/version">/api/operations/version</a><a href="/api/operations/logs">/api/operations/logs</a><a href="/api/operations/usage">/api/operations/usage</a></nav></details></div>`;
+  <details class="machine-endpoints"><summary>Machine endpoints</summary><nav class="link-row" aria-label="Operations machine endpoints"><a href="/api/operations/health">/api/operations/health</a><a href="/api/operations/version">/api/operations/version</a><a href="/api/operations/logs">/api/operations/logs</a><a href="/api/reporting/operations">/api/reporting/operations</a></nav></details></div>`;
 }
 
 function tone(value: string): 'ok' | 'warn' | 'down' | '' {
-  if (value === 'operational' || value === 'online' || value === 'normal' || value === 'live') return 'ok';
+  if (value === 'operational' || value === 'online' || value === 'normal' || value === 'available') return 'ok';
   if (value === 'degraded' || value === 'warning' || value === 'partial' || value === 'planned' || value === 'stale' || value === 'rate-limited') return 'warn';
   if (value === 'down' || value === 'offline' || value === 'unavailable' || value === 'expired') return 'down';
   return '';
@@ -48,13 +50,13 @@ function tone(value: string): 'ok' | 'warn' | 'down' | '' {
 const statusClass = (value: string) => `stat${tone(value) ? ` stat-${tone(value)}` : ''}`;
 const badgeClass = (value: string) => `badge${tone(value) ? ` badge-${tone(value)}` : ''}`;
 
-function telemetryStatusLabel(status: CloudflareTelemetryStatus): string {
+function telemetryStatusLabel(status: ReportingAvailability): string {
   switch (status) {
-    case 'live': return 'LIVE';
+    case 'available': return 'AVAILABLE';
     case 'partial': return 'PARTIAL';
     case 'stale': return 'STALE';
     case 'rate-limited': return 'RATE LIMITED';
-    case 'unconfigured': return 'SETUP NEEDED';
+    case 'expired': return 'EXPIRED';
     case 'unavailable': return 'UNAVAILABLE';
   }
 }
@@ -176,7 +178,7 @@ export async function renderDashboard(env: Env, request: Request = new Request('
     { name: 'Durable Objects', state: health.services.durableObjects, latency: health.responseMs.durableObjects ?? null },
   ];
   const healthy = services.filter((service) => service.state === 'operational').length;
-  const usageReady = usage.status === 'live' || usage.status === 'partial';
+  const usageReady = usage.status === 'available' || usage.status === 'partial';
   const usageState = telemetryStatusLabel(usage.status);
   const availabilityValue = availability.excludingPlanned === null ? 'AWAITING DATA' : `${availability.excludingPlanned.toFixed(3)}%`;
   const sha = env.DEPLOYED_SHA || '';
@@ -184,7 +186,7 @@ export async function renderDashboard(env: Env, request: Request = new Request('
   const currentStatus = `<div class="operations-live-state"><span class="status-pulse" data-state="${overall}"></span><strong>${escapeHtml(overallLabel)}</strong><span>Checked ${relativeTime(health.checkedAt)}</span><span>${escapeHtml(env.DEPLOYMENT_ENVIRONMENT || 'local')} · ${escapeHtml(version)}</span></div>`;
   const reporting = await renderUnifiedReportingPresentation(request, env, usage);
 
-  return operationalPage(env, '/operations', 'System Operations', 'OPERATIONS / LIVE', 'System Operations', 'Live health, availability, deployment, shared reporting, activity, and cost-control evidence for the architecture demo.', 'src/demos/dashboard.ts', `
+  return operationalPage(env, '/operations', 'System Operations', 'OPERATIONS / LIVE', 'System Operations', 'Live health, availability, deployment, shared reporting, activity, and cost-control evidence for the architecture demo.', 'src/demos/operations.ts', `
   <section class="operations-kpis" aria-label="Current operational state">
     <article><p class="eyebrow">System</p><strong class="${statusClass(overall)}">${escapeHtml(overallLabel)}</strong><span>${healthy} / 4 dependencies healthy</span></article>
     <article><p class="eyebrow">Availability</p><strong>${availabilityValue}</strong><span>${availability.unexpected} unexpected outage${availability.unexpected === 1 ? '' : 's'}</span></article>
@@ -217,7 +219,7 @@ export async function renderDashboard(env: Env, request: Request = new Request('
     <article class="operations-section usage-overview" aria-labelledby="usage-heading">
       <div class="operations-section-heading"><div><p class="eyebrow">${usageReady ? 'Latest account telemetry' : 'Telemetry status'}</p><h2 id="usage-heading">Cloudflare usage</h2></div><a href="/operations?view=usage">View usage &amp; cost <span aria-hidden="true">→</span></a></div>
       <div class="usage-state-line"><span class="${badgeClass(usage.status)}">${usageState}</span><span>${usageReady ? `Updated ${relativeTime(usage.capturedAt)}` : escapeHtml(usage.cost.note)}</span></div>
-      <dl class="usage-compact"><dt>Workers</dt><dd>${usage.products.workers.available ? `${formatNumber(usage.products.workers.requests)} requests` : 'Awaiting telemetry'}</dd><dt>D1</dt><dd>${usage.products.d1.available ? `${formatNumber(usage.products.d1.rowsRead)} rows read` : 'Awaiting telemetry'}</dd><dt>R2</dt><dd>${usage.products.r2.available ? `${formatBytes(usage.products.r2.storageBytes)} stored` : 'Awaiting telemetry'}</dd><dt>Durable Objects</dt><dd>${usage.products.durableObjects.available ? `${formatNumber(usage.products.durableObjects.requests)} requests` : 'Awaiting telemetry'}</dd></dl>
+      <dl class="usage-compact"><dt>Workers</dt><dd>${usage.products.workers.availability === 'available' ? `${formatNumber(usage.products.workers.requests)} requests` : 'Awaiting telemetry'}</dd><dt>D1</dt><dd>${usage.products.d1.availability === 'available' ? `${formatNumber(usage.products.d1.rowsRead)} rows read` : 'Awaiting telemetry'}</dd><dt>R2</dt><dd>${usage.products.r2.availability === 'available' ? `${formatBytes(usage.products.r2.storageBytes)} stored` : 'Awaiting telemetry'}</dd><dt>Durable Objects</dt><dd>${usage.products.durableObjects.availability === 'available' ? `${formatNumber(usage.products.durableObjects.requests)} requests` : 'Awaiting telemetry'}</dd></dl>
     </article>
     <article class="operations-section deployment-card" aria-labelledby="deployment-heading">
       <div class="operations-section-heading"><div><p class="eyebrow">Release evidence</p><h2 id="deployment-heading">Deployment evidence</h2></div><a href="/api/operations/version">Version JSON <span aria-hidden="true">→</span></a></div>
@@ -258,7 +260,7 @@ export async function renderUptime(env: Env): Promise<Response> {
   const statusLabel = latest ? state === 'planned' ? 'PLANNED MAINTENANCE' : state.toUpperCase() : 'AWAITING DATA';
   const recent = rows.slice(0, 20); const remainder = rows.slice(20);
   const liveState = `<div class="operations-live-state"><span class="status-pulse" data-state="${state}"></span><strong>${statusLabel}</strong><span>${latest ? `Last observation ${relativeTime(latest.checked_at)}` : 'Cron monitoring has not stored an observation yet'}</span></div>`;
-  return operationalPage(env, '/operations?view=availability', 'Availability', 'OPERATIONS / AVAILABILITY', 'Availability', 'Measured runtime availability with planned maintenance kept separate from unexpected dependency failures.', 'src/demos/uptime.ts', `
+  return operationalPage(env, '/operations?view=availability', 'Availability', 'OPERATIONS / AVAILABILITY', 'Availability', 'Measured runtime availability with planned maintenance kept separate from unexpected dependency failures.', 'src/demos/operations-pages.ts', `
   <section class="availability-kpis"><article><p class="eyebrow">Current window</p><strong>${summary.excludingPlanned === null ? '—' : `${summary.excludingPlanned.toFixed(3)}%`}</strong><span>excluding planned maintenance</span></article><article><p class="eyebrow">Raw observations</p><strong>${summary.raw === null ? '—' : `${summary.raw.toFixed(3)}%`}</strong><span>all stored states included</span></article><article><p class="eyebrow">Events</p><strong>${summary.intentional} / ${summary.unexpected}</strong><span>planned / unexpected</span></article></section>
   <section class="operations-section"><div class="operations-section-heading"><div><p class="eyebrow">Latest ${Math.min(rows.length, 40)} observations</p><h2 id="availability-heading">Availability history</h2></div><span class="subtle">Every 5 minutes</span></div>${availabilityTimeline(rows)}<div class="availability-legend"><span><i data-state="operational"></i>Operational</span><span><i data-state="planned"></i>Planned maintenance</span><span><i data-state="degraded"></i>Unexpected failure</span></div><p class="subtle">This is measured history, not an SLA.</p></section>
   <section class="operations-section"><div class="operations-section-heading"><div><p class="eyebrow">Most recent first</p><h2>Observations</h2></div><span class="subtle">Showing ${recent.length} of ${rows.length}</span></div><div class="table-wrap"><table><thead><tr><th>Checked</th><th>State</th><th>D1 latency</th><th>Classification</th></tr></thead><tbody>${historyRows(recent) || '<tr><td colspan="4">Scheduled monitoring will populate this history after deployment.</td></tr>'}</tbody></table></div>${remainder.length ? `<details class="full-history"><summary>Show full history</summary><div class="table-wrap"><table><thead><tr><th>Checked</th><th>State</th><th>D1 latency</th><th>Classification</th></tr></thead><tbody>${historyRows(remainder)}</tbody></table></div></details>` : ''}<p><a href="${escapeHtml(sourceUrl(env, 'migrations/0002_operations_dashboard.sql'))}">View history schema</a></p></section>`, liveState);
@@ -266,9 +268,9 @@ export async function renderUptime(env: Env): Promise<Response> {
 
 export function renderDocs(env: Env): Response {
   const links: Array<[string, string]> = [
-    ['Architecture standard', 'docs/ARCHITECTURE-STANDARD.md'], ['Operations standard', 'docs/OPERATIONS.md'], ['Assurance guide', 'docs/ASSURANCE.md'], ['Stable route map', 'docs/ROUTES.md'], ['Machine route manifest', 'docs/route-manifest.json'], ['Router', 'src/router.ts'], ['Implementation plan', 'docs/IMPLEMENTATION-PLAN.md'], ['Interactive demo specification', 'docs/INTERACTIVE-DEMO-SPEC.md'], ['Evidence map', 'docs/EVIDENCE.md'], ['Accessibility guidance', 'docs/ACCESSIBILITY.md'], ['ISO/IEC 27001 compliance dataset', 'assurance/compliance/iso-27001-2022.json'], ['ISO/IEC 42001 compliance dataset', 'assurance/compliance/iso-42001-2023.json'], ['WCAG 2.2 compliance manifest', 'assurance/compliance/wcag-2.2.json'], ['Identity guidance', 'docs/IDENTITY.md'], ['README', 'README.md'], ['Contributing', 'CONTRIBUTING.md'], ['Agent guidance', 'AGENTS.md'], ['Security', 'SECURITY.md'], ['Changelog', 'CHANGELOG.md'], ['OpenAPI 3.1 contract', 'contracts/openapi/openapi.json'], ['GraphQL schema', 'contracts/graphql/schema.graphql'], ['MCP tools', 'contracts/mcp/tools.json'], ['Webhook events', 'contracts/webhooks/events.json'], ['CI workflow', '.github/workflows/ci.yml'], ['Deploy workflow', '.github/workflows/deploy.yml'], ['D1 migrations', 'migrations/0001_demo_blob.sql'],
+    ['Architecture standard', 'docs/ARCHITECTURE-STANDARD.md'], ['Operations standard', 'docs/OPERATIONS.md'], ['Assurance guide', 'docs/ASSURANCE.md'], ['Stable route map', 'docs/ROUTES.md'], ['Machine route manifest', 'docs/route-manifest.json'], ['Router', 'src/router.ts'], ['Implementation plan', 'docs/IMPLEMENTATION-PLAN.md'], ['Interactive demonstration specification', 'docs/INTERACTIVE-DEMO-SPEC.md'], ['Evidence map', 'docs/EVIDENCE.md'], ['Accessibility guidance', 'docs/ACCESSIBILITY.md'], ['ISO/IEC 27001 compliance dataset', 'assurance/compliance/iso-27001-2022.json'], ['ISO/IEC 42001 compliance dataset', 'assurance/compliance/iso-42001-2023.json'], ['WCAG 2.2 compliance manifest', 'assurance/compliance/wcag-2.2.json'], ['Identity guidance', 'docs/IDENTITY.md'], ['README', 'README.md'], ['Contributing', 'CONTRIBUTING.md'], ['Agent guidance', 'AGENTS.md'], ['Security', 'SECURITY.md'], ['Changelog', 'CHANGELOG.md'], ['OpenAPI 3.1 contract', 'contracts/openapi/openapi.json'], ['GraphQL schema', 'contracts/graphql/schema.graphql'], ['MCP tools', 'contracts/mcp/tools.json'], ['Webhook events', 'contracts/webhooks/events.json'], ['CI workflow', '.github/workflows/ci.yml'], ['Deploy workflow', '.github/workflows/deploy.yml'], ['D1 migrations', 'migrations/0001_demo_blob.sql'],
   ];
-  return operationalPage(env, '/operations?view=docs', 'Documentation', 'OPERATIONS / DOCS', 'Documentation', 'Repository-native standards, contracts, implementation sources, and live machine interfaces.', 'src/demos/docs.ts', `<section class="resource-list" aria-label="Repository documentation">${links.map(([label, path]) => `<a href="${escapeHtml(sourceUrl(env, path))}"><strong>${escapeHtml(label)}</strong><code>${escapeHtml(path)}</code></a>`).join('')}</section><section class="machine-links"><h2>Live interfaces</h2><nav class="link-row" aria-label="Live machine interfaces"><a href="/api/openapi.json">OpenAPI JSON</a><a href="/graphql/schema">GraphQL schema</a><a href="/api/reporting/compliance">Compliance JSON</a><a href="/api/operations/health">Health JSON</a><a href="/api/operations/version">Version JSON</a><a href="/api/operations/logs">Logs JSON</a><a href="/api/operations/usage">Usage JSON</a><a href="${escapeHtml(repoUrl(env))}/releases">Releases</a><a href="${escapeHtml(repoUrl(env))}/tags">Tags</a></nav></section>`);
+  return operationalPage(env, '/operations?view=docs', 'Documentation', 'OPERATIONS / DOCS', 'Documentation', 'Repository-native standards, contracts, implementation sources, and live machine interfaces.', 'src/demos/operations-pages.ts', `<section class="resource-list" aria-label="Repository documentation">${links.map(([label, path]) => `<a href="${escapeHtml(sourceUrl(env, path))}"><strong>${escapeHtml(label)}</strong><code>${escapeHtml(path)}</code></a>`).join('')}</section><section class="machine-links"><h2>Live interfaces</h2><nav class="link-row" aria-label="Live machine interfaces"><a href="/api/openapi.json">OpenAPI JSON</a><a href="/graphql">GraphQL</a><a href="/api/reporting/compliance">Compliance JSON</a><a href="/api/reporting/operations">Operations Reporting JSON</a><a href="/api/operations/health">Health JSON</a><a href="/api/operations/version">Version JSON</a><a href="/api/operations/logs">Logs JSON</a><a href="${escapeHtml(repoUrl(env))}/releases">Releases</a><a href="${escapeHtml(repoUrl(env))}/tags">Tags</a></nav></section>`);
 }
 
 type CloudflareMetricAvailability = CloudflareUsageSnapshot['products']['workers']['availability'];
@@ -284,7 +286,7 @@ function metricAvailabilityLabel(availability: CloudflareMetricAvailability): st
 
 function productCard(label: string, availability: CloudflareMetricAvailability, metrics: Array<[string, string]>): string {
   const current = availability === 'available';
-  return `<article class="usage-product"><div><p class="eyebrow">Cloudflare</p><h3>${escapeHtml(label)}</h3><span class="${badgeClass(current ? 'live' : availability)}">${metricAvailabilityLabel(availability)}</span></div><dl>${metrics.map(([name, value]) => `<dt>${escapeHtml(name)}</dt><dd>${escapeHtml(current ? value : '—')}</dd>`).join('')}</dl></article>`;
+  return `<article class="usage-product"><div><p class="eyebrow">Cloudflare</p><h3>${escapeHtml(label)}</h3><span class="${badgeClass(availability)}">${metricAvailabilityLabel(availability)}</span></div><dl>${metrics.map(([name, value]) => `<dt>${escapeHtml(name)}</dt><dd>${escapeHtml(current ? value : '—')}</dd>`).join('')}</dl></article>`;
 }
 
 function usageTrend(usage: CloudflareUsageSnapshot): string {
@@ -301,17 +303,17 @@ function usageTrend(usage: CloudflareUsageSnapshot): string {
 export async function renderBilling(env: Env): Promise<Response> {
   const [current, syntheticHistory, usage, snapshots] = await Promise.all([currentBudgetState(env), recentUsage(env), latestCloudflareUsage(env), recentCloudflareUsage(env)]);
   const syntheticRows = syntheticHistory.map((row) => `<tr><td>${escapeHtml(row.captured_at)}</td><td>${row.quantity.toLocaleString('en-US')} ${escapeHtml(row.unit)}</td><td>$${row.estimated_cost_usd.toFixed(4)}</td><td>$${(row.budget_limit_usd ?? 0).toFixed(2)}</td><td>${budgetLabel(row.estimated_cost_usd, row.budget_limit_usd ?? 0)}</td></tr>`).join('');
-  const usageRows = snapshots.map((row) => `<tr><td>${escapeHtml(row.capturedAt || '—')}</td><td><span class="${badgeClass(row.status)}">${escapeHtml(row.status)}</span></td><td>${row.products.workers.available ? formatNumber(row.products.workers.requests, false) : '—'}</td><td>${row.products.d1.available ? formatNumber(row.products.d1.rowsRead, false) : '—'}</td><td>${row.products.r2.available ? formatBytes(row.products.r2.storageBytes) : '—'}</td><td>${row.cost.amountUsd === null ? '—' : `$${row.cost.amountUsd.toFixed(4)}`} ${row.cost.kind}</td></tr>`).join('');
-  const telemetryReady = usage.status === 'live' || usage.status === 'partial';
+  const usageRows = snapshots.map((row) => `<tr><td>${escapeHtml(row.capturedAt || '—')}</td><td><span class="${badgeClass(row.status)}">${escapeHtml(row.status)}</span></td><td>${row.products.workers.availability === 'available' ? formatNumber(row.products.workers.requests, false) : '—'}</td><td>${row.products.d1.availability === 'available' ? formatNumber(row.products.d1.rowsRead, false) : '—'}</td><td>${row.products.r2.availability === 'available' ? formatBytes(row.products.r2.storageBytes) : '—'}</td><td>${row.cost.amountUsd === null ? '—' : `$${row.cost.amountUsd.toFixed(4)}`} ${row.cost.kind}</td></tr>`).join('');
+  const telemetryReady = usage.status === 'available' || usage.status === 'partial';
   const costLabel = 'Usage-based spend';
   const costValue = usage.cost.amountUsd === null ? '—' : `$${usage.cost.amountUsd.toFixed(2)}`;
-  const costBadgeState = usage.cost.availability === 'available' ? 'live' : usage.cost.availability;
+  const costBadgeState = usage.cost.availability;
   const costStateLabel = usage.cost.availability === 'available'
     ? usage.cost.kind
     : usage.cost.kind === 'unavailable' ? usage.cost.availability : `${usage.cost.kind} · ${usage.cost.availability}`;
   const breakdownMaximum = Math.max(0.0001, ...usage.cost.breakdown.map((row) => row.amountUsd));
   const liveState = `<div class="operations-live-state"><span class="status-pulse" data-state="${usage.status}"></span><strong>${telemetryStatusLabel(usage.status)}</strong><span>${usage.capturedAt ? `Updated ${relativeTime(usage.capturedAt)}` : escapeHtml(usage.cost.note)}</span></div>`;
-  return operationalPage(env, '/operations?view=usage', 'Cloudflare Usage & Cost', 'OPERATIONS / USAGE', 'Cloudflare Usage & Cost', 'Live Cloudflare resource consumption with controlled cost-degradation scenarios.', 'src/demos/billing.ts', `
+  return operationalPage(env, '/operations?view=usage', 'Cloudflare Usage & Cost', 'OPERATIONS / USAGE', 'Cloudflare Usage & Cost', 'Live Cloudflare resource consumption with controlled cost-degradation scenarios.', 'src/demos/operations-pages.ts', `
   <section class="billing-period"><div><p class="eyebrow">Current usage window</p><strong>${escapeHtml(usage.cost.periodStart.slice(0, 10))} → ${escapeHtml(usage.cost.periodEnd.slice(0, 10))}</strong></div><div><p class="eyebrow">${escapeHtml(costLabel)}</p><strong>${costValue}</strong><span class="${badgeClass(costBadgeState)}">${escapeHtml(costStateLabel)}</span></div><p>${escapeHtml(usage.cost.note)}</p></section>
   <section class="operations-section"><div class="operations-section-heading"><div><p class="eyebrow">Normalized, public-safe metrics</p><h2>Resource usage</h2></div><span class="subtle">${usage.capturedAt ? `Updated ${relativeTime(usage.capturedAt)}` : 'Awaiting first refresh'}</span></div><div class="usage-products">
     ${productCard('Workers', usage.products.workers.availability, [['Requests', formatNumber(usage.products.workers.requests, false)], ['Errors', formatNumber(usage.products.workers.errors, false)], ['Success rate', usage.products.workers.requests ? `${((usage.products.workers.requests - usage.products.workers.errors) / usage.products.workers.requests * 100).toFixed(3)}%` : '—'], ['CPU p50', usage.products.workers.cpuP50Ms === null ? '—' : `${usage.products.workers.cpuP50Ms.toFixed(1)} ms`], ['CPU p99', usage.products.workers.cpuP99Ms === null ? '—' : `${usage.products.workers.cpuP99Ms.toFixed(1)} ms`], ['Subrequests', formatNumber(usage.products.workers.subrequests, false)]])}

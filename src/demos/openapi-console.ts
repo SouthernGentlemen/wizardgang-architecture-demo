@@ -276,7 +276,7 @@ const API_RUNNER = `(() => {
       else if (!response.ok) { message.hidden = false; message.innerHTML = '<strong>Request failed</strong><span>The raw response is available below.</span>'; }
       const id = response.headers.get('x-request-id');
       const log = query('[data-request-log]', result);
-      if (id) { log.hidden = false; log.href = '/dashboard/logs?source=rest&requestId=' + encodeURIComponent(id); log.textContent = 'View ' + id + ' in logs →'; } else log.hidden = true;
+      if (id) { log.hidden = false; log.href = '/operations?view=logs&source=rest&requestId=' + encodeURIComponent(id); log.textContent = 'View ' + id + ' in logs →'; } else log.hidden = true;
       if (response.ok && form.dataset.method !== 'GET') updateCount().catch(() => {});
     } catch (error) {
       query('[data-response-status]', result).textContent = 'Request not sent';

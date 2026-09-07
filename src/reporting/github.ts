@@ -11,12 +11,11 @@ import { registeredReportingSources } from './registry';
 
 const GITHUB_API_ROOT = 'https://api.github.com';
 const REPORTING_CONTRACT = 'contracts/assurance/reporting.schema.json';
-const DEFAULT_PAGE_LIMIT = 5;
 const DEFAULT_MAX_PAGES = 20;
 const MAX_PAGE_LIMIT = 100;
 const MAX_EXPORT_PAGES = 50;
 const ISSUE_WRITE_FIELDS = new Set(['title', 'body', 'state', 'labels', 'assignees', 'milestone']);
-const IMPORT_REQUEST_FIELDS = new Set(['source', 'repository', 'operation', 'nativeId', 'revision', 'fields']);
+const UPDATE_REQUEST_FIELDS = new Set(['source', 'repository', 'operation', 'nativeId', 'revision', 'fields']);
 const RETAINED_REPORT_FIELDS = new Set([
   'schemaVersion',
   'id',
@@ -34,8 +33,6 @@ const RETAINED_REPORT_FIELDS = new Set([
 const RETAINED_REPORT_OUTCOMES = new Set(['passed', 'failed', 'cancelled', 'skipped', 'incomplete']);
 
 type JsonObject = Record<string, unknown>;
-export type GitHubReportingMode = 'sample' | 'export';
-
 export interface GitHubReportingBinding {
   repository: string;
   branch?: string;
@@ -64,8 +61,6 @@ export interface GitHubReportingRecord extends JsonObject {
 export interface GitHubReportingQuery {
   repository?: string;
   sourceIds?: readonly string[];
-  mode?: GitHubReportingMode;
-  limit?: number;
 }
 
 export interface GitHubReportingQueryOutcome {
@@ -73,7 +68,7 @@ export interface GitHubReportingQueryOutcome {
   protected: boolean;
 }
 
-export interface GitHubReportingImportRequest {
+export interface GitHubReportingUpdateRequest {
   source: string;
   repository: string;
   operation: 'update';
@@ -497,12 +492,10 @@ function collection(value: unknown, key?: string): { items: JsonObject[]; totalC
 async function fetchPaged(
   context: RepositoryContext,
   path: string,
-  mode: GitHubReportingMode,
-  limit: number,
   key?: string,
 ): Promise<PageResult> {
   const items: JsonObject[] = [];
-  const pageLimit = mode === 'export' ? MAX_PAGE_LIMIT : Math.max(1, Math.min(MAX_PAGE_LIMIT, limit));
+  const pageLimit = MAX_PAGE_LIMIT;
   let page = 1;
   let exactTotal: number | null = null;
 
@@ -524,9 +517,6 @@ async function fetchPaged(
     exactTotal = current.totalCount ?? exactTotal;
     const next = linkHasNext(response.headers.get('link')) || (exactTotal !== null && items.length < exactTotal);
     if (!next) return { items, availability: 'available', complete: true, nextCursor: null, detail: null };
-    if (mode === 'sample') {
-      return { items, availability: 'partial', complete: false, nextCursor: `page:${page + 1}`, detail: 'dashboard_sample' };
-    }
     if (page >= context.maxPages) {
       return { items, availability: 'partial', complete: false, nextCursor: `page:${page + 1}`, detail: 'pagination_bound_reached' };
     }
@@ -679,8 +669,6 @@ function retainedReportRecord(
 async function fetchRetainedReports(
   context: RepositoryContext,
   source: ReportingSource,
-  mode: GitHubReportingMode,
-  limit: number,
 ): Promise<SourceFetchResult> {
   const branch = source.scope.branch || 'assurance-reports';
   const branchResult = await githubJson(
@@ -722,13 +710,13 @@ async function fetchRetainedReports(
   const reportEntries = treeEntries
     .filter((entry) => entry.type === 'blob' && /^reports\/.+\.json$/.test(text(entry.path) ?? '') && text(entry.sha))
     .sort((left, right) => String(right.path).localeCompare(String(left.path), undefined, { numeric: true }));
-  const maximum = mode === 'sample' ? limit : context.maxPages * MAX_PAGE_LIMIT;
+  const maximum = context.maxPages * MAX_PAGE_LIMIT;
   const selected = reportEntries.slice(0, maximum);
   let complete = tree.truncated !== true && selected.length === reportEntries.length;
   let availability: ReportingAvailability = complete ? 'available' : 'partial';
   let detail: string | null = tree.truncated === true
     ? 'github_tree_truncated'
-    : selected.length < reportEntries.length ? (mode === 'sample' ? 'dashboard_sample' : 'pagination_bound_reached') : null;
+    : selected.length < reportEntries.length ? 'pagination_bound_reached' : null;
   const records: GitHubReportingRecord[] = [];
 
   const blobs = await Promise.all(selected.map(async (entry) => ({
@@ -832,10 +820,8 @@ function sourceDescriptor(sourceId: string, context: RepositoryContext): { path:
 
 async function workflowAttempts(
   context: RepositoryContext,
-  mode: GitHubReportingMode,
-  limit: number,
 ): Promise<PageResult> {
-  const runs = await fetchPaged(context, '/actions/runs', mode, limit, 'workflow_runs');
+  const runs = await fetchPaged(context, '/actions/runs', 'workflow_runs');
   if (runs.items.length === 0) return runs;
 
   const attempts: JsonObject[] = [];
@@ -892,14 +878,12 @@ async function branchProtectionPage(
 async function fetchSource(
   context: RepositoryContext,
   source: ReportingSource,
-  mode: GitHubReportingMode,
-  limit: number,
 ): Promise<SourceFetchResult> {
-  if (source.id === 'github.retained-reports') return fetchRetainedReports(context, source, mode, limit);
+  if (source.id === 'github.retained-reports') return fetchRetainedReports(context, source);
   let page: PageResult;
   let revisionOverride: readonly string[] | undefined;
   if (source.id === 'github.workflow-attempts') {
-    page = await workflowAttempts(context, mode, limit);
+    page = await workflowAttempts(context);
   } else if (source.id === 'github.repositories') {
     page = { items: [context.repository], availability: 'available', complete: true, nextCursor: null, detail: null };
   } else if (source.id === 'github.branch-protection') {
@@ -910,7 +894,7 @@ async function fetchSource(
     const descriptor = sourceDescriptor(source.id, context);
     page = descriptor.single
       ? await fetchSingle(context, descriptor.path)
-      : await fetchPaged(context, descriptor.path, mode, limit, descriptor.key);
+      : await fetchPaged(context, descriptor.path, descriptor.key);
   }
 
   const records: GitHubReportingRecord[] = [];
@@ -969,9 +953,6 @@ export async function queryGitHubReporting(
   query: GitHubReportingQuery = {},
 ): Promise<GitHubReportingQueryOutcome> {
   const binding = bindingFor(env, query.repository);
-  const mode = query.mode || 'sample';
-  const requestedLimit = typeof query.limit === 'number' && Number.isInteger(query.limit) ? query.limit : DEFAULT_PAGE_LIMIT;
-  const limit = Math.max(1, Math.min(MAX_PAGE_LIMIT, requestedLimit));
   const requested = query.sourceIds?.length
     ? [...new Set(query.sourceIds)]
     : githubProviderSources().filter((source) => source.visibility === 'public').map((source) => source.id);
@@ -985,22 +966,18 @@ export async function queryGitHubReporting(
   if (context.private) requirePrivate(principal);
   const scopedSources = selected.map((source) => sourceWithResolvedScope(source, context));
 
-  const results = await Promise.all(scopedSources.map((source) => fetchSource(context, source, mode, limit)));
-  const records = results.flatMap((entry) => mode === 'sample' ? entry.records.slice(0, limit) : entry.records);
+  const results = await Promise.all(scopedSources.map((source) => fetchSource(context, source)));
+  const records = results.flatMap((entry) => entry.records);
   const availability = Object.fromEntries(results.map((entry) => [entry.source.id, entry.availability]));
   const qualifications: Record<string, string | null> = {
     repository: binding.repository,
-    mode,
     generatedAt: new Date().toISOString(),
   };
   for (const entry of results) {
     qualifications[`${entry.source.id}.completeness`] = entry.complete ? 'complete' : 'partial';
     qualifications[`${entry.source.id}.detail`] = entry.detail;
-    qualifications[`${entry.source.id}.nextCursor`] = entry.nextCursor;
   }
   const totalObserved = results.reduce((sum, entry) => sum + entry.records.length, 0);
-  const partialSources = results.filter((entry) => !entry.complete).map((entry) => entry.source.id);
-
   const result: ReportingQueryResult<GitHubReportingRecord> = {
     schemaVersion: 1,
     contract: REPORTING_CONTRACT,
@@ -1012,14 +989,7 @@ export async function queryGitHubReporting(
     query: {
       filters: {
         repository: binding.repository,
-        mode,
         source: scopedSources.map((source) => source.id).join(','),
-      },
-      pagination: {
-        limit,
-        returned: records.length,
-        total: totalObserved,
-        nextCursor: partialSources.length > 0 ? `provider:${partialSources[0]}` : null,
       },
     },
     records,
@@ -1039,43 +1009,43 @@ function issueNumber(value: string): number {
 
 function validateIssueFields(fields: Readonly<Record<string, unknown>>): JsonObject {
   const entries = Object.entries(fields);
-  if (entries.length === 0) throw new GitHubReportingError(400, 'github_import_fields_required');
+  if (entries.length === 0) throw new GitHubReportingError(400, 'github_update_fields_required');
   const unsupported = entries.map(([name]) => name).filter((name) => !ISSUE_WRITE_FIELDS.has(name));
-  if (unsupported.length > 0) throw new GitHubReportingError(400, 'github_import_field_unsupported', unsupported.join(','));
+  if (unsupported.length > 0) throw new GitHubReportingError(400, 'github_update_field_unsupported', unsupported.join(','));
 
   const result: JsonObject = {};
   for (const [name, value] of entries) {
     if ((name === 'title' || name === 'body' || name === 'state') && typeof value !== 'string') {
-      throw new GitHubReportingError(400, 'github_import_field_invalid', name);
+      throw new GitHubReportingError(400, 'github_update_field_invalid', name);
     }
     if ((name === 'labels' || name === 'assignees') && (!Array.isArray(value) || value.some((item) => typeof item !== 'string'))) {
-      throw new GitHubReportingError(400, 'github_import_field_invalid', name);
+      throw new GitHubReportingError(400, 'github_update_field_invalid', name);
     }
     if (name === 'milestone' && value !== null && (typeof value !== 'number' || !Number.isInteger(value) || value < 1)) {
-      throw new GitHubReportingError(400, 'github_import_field_invalid', name);
+      throw new GitHubReportingError(400, 'github_update_field_invalid', name);
     }
     result[name] = structuredClone(value);
   }
   if (result.state !== undefined && result.state !== 'open' && result.state !== 'closed') {
-    throw new GitHubReportingError(400, 'github_import_field_invalid', 'state');
+    throw new GitHubReportingError(400, 'github_update_field_invalid', 'state');
   }
   return result;
 }
 
-export function validateGitHubReportingImportRequest(value: unknown): GitHubReportingImportRequest {
+export function validateGitHubReportingUpdateRequest(value: unknown): GitHubReportingUpdateRequest {
   const object = asObject(value);
-  if (!object || !hasOnlyKeys(object, IMPORT_REQUEST_FIELDS)) {
-    throw new GitHubReportingError(400, 'github_import_payload_invalid', 'The reporting import body must match the native update request contract.');
+  if (!object || !hasOnlyKeys(object, UPDATE_REQUEST_FIELDS)) {
+    throw new GitHubReportingError(400, 'github_update_payload_invalid', 'The reporting update body must match the native update request contract.');
   }
   if (object.operation !== 'update') {
-    throw new GitHubReportingError(400, 'github_import_operation_unsupported', 'Only update is supported for native GitHub reporting sources.');
+    throw new GitHubReportingError(400, 'github_update_operation_unsupported', 'Only update is supported for native GitHub reporting sources.');
   }
-  if (!nonEmptyString(object.source)) throw new GitHubReportingError(400, 'github_import_payload_invalid', 'source');
-  if (!validRepository(object.repository)) throw new GitHubReportingError(400, 'github_import_payload_invalid', 'repository');
-  if (!nonEmptyString(object.nativeId)) throw new GitHubReportingError(400, 'github_import_payload_invalid', 'nativeId');
-  if (!nonEmptyString(object.revision)) throw new GitHubReportingError(400, 'github_import_payload_invalid', 'revision');
+  if (!nonEmptyString(object.source)) throw new GitHubReportingError(400, 'github_update_payload_invalid', 'source');
+  if (!validRepository(object.repository)) throw new GitHubReportingError(400, 'github_update_payload_invalid', 'repository');
+  if (!nonEmptyString(object.nativeId)) throw new GitHubReportingError(400, 'github_update_payload_invalid', 'nativeId');
+  if (!nonEmptyString(object.revision)) throw new GitHubReportingError(400, 'github_update_payload_invalid', 'revision');
   const fields = asObject(object.fields);
-  if (!fields) throw new GitHubReportingError(400, 'github_import_payload_invalid', 'fields');
+  if (!fields) throw new GitHubReportingError(400, 'github_update_payload_invalid', 'fields');
   return {
     source: object.source,
     repository: object.repository,
@@ -1086,7 +1056,7 @@ export function validateGitHubReportingImportRequest(value: unknown): GitHubRepo
   };
 }
 
-export async function importGitHubReporting(
+export async function updateGitHubReporting(
   env: Env,
   principal: Principal,
   payload: unknown,
@@ -1097,15 +1067,15 @@ export async function importGitHubReporting(
       isAuthenticated(principal) ? 'permission_denied' : 'authentication_required',
     );
   }
-  const input = validateGitHubReportingImportRequest(payload);
+  const input = validateGitHubReportingUpdateRequest(payload);
 
   const binding = bindingFor(env, input.repository);
   const source = sourceFor(input.source, binding.repository);
   requireBoundSource(binding, source);
-  if (!source.capabilities.includes('import') || source.ingestion !== 'enabled') {
-    throw new GitHubReportingError(400, 'github_import_not_supported', source.id);
+  if (!source.capabilities.includes('update') || source.ingestion !== 'enabled') {
+    throw new GitHubReportingError(400, 'github_update_not_supported', source.id);
   }
-  if (source.id !== 'github.issues') throw new GitHubReportingError(400, 'github_import_not_supported', source.id);
+  if (source.id !== 'github.issues') throw new GitHubReportingError(400, 'github_update_not_supported', source.id);
   if (!env.GITHUB_REPORTING_WRITE_TOKEN) {
     throw new GitHubReportingError(503, 'github_write_credential_missing', 'Native GitHub source writes require GITHUB_REPORTING_WRITE_TOKEN.');
   }

@@ -40,7 +40,6 @@ function env(): Env {
   return {
     DEMO_DB: new RuntimeD1(),
     DEMO_R2: new MemoryR2(),
-    DEMO_API_TOKEN: 'write-token',
     GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
   };

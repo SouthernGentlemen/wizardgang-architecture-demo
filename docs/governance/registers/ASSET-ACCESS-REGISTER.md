@@ -190,7 +190,7 @@ These are the only approved AI/MCP connection families.
 | ACC-006 | Optional GitHub read token | GitHub API | Read only | Secret value private | Partial |
 | ACC-007 | Cloudflare deploy/admin access | Cloudflare account/runtime | Deployment/configuration according to token/account scope | Account details private | Partial |
 | ACC-008 | Cloudflare analytics access | Cloudflare analytics/billing API | Read only; Billing Read only when needed | Account/token details private | Partial |
-| ACC-009 | Application admin credential | `/admin`, `/git` app boundary | Administrative app actions | Credential private | Partial |
+| ACC-009 | Application admin credential | `/admin`, `/assurance?view=delivery` app boundary | Administrative app actions | Credential private | Partial |
 | ACC-010 | Operator API bearer access | protected application writes | Scoped application write | Credential private | Partial |
 | ACC-011 | Identity-derived write token | visitor namespace | 10-minute bounded visitor write authority | Runtime-derived; no public token detail | Partial |
 | ACC-012 | Webhook signing secrets | webhook receivers | Signature verification only | Secret private | Partial |

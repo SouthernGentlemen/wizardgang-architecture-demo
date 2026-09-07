@@ -51,7 +51,6 @@ const expectedPolicies = [
   },
   ...[
     ['operations.api-logs', '/api/operations/logs', ['GET']],
-    ['operations.api-usage', '/api/operations/usage', ['GET']],
     ['operations.api-budget', '/api/operations/budget', ['POST']],
   ].map(([id, pattern, methods]) => ({
     id, pattern, methods, kind: 'api', visibility: 'public',

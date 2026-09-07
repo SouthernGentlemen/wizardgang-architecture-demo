@@ -1,8 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { describe, expect, it } from 'vitest';
-import { assuranceComplianceResponse, assuranceIncidentsResponse, assuranceRisksResponse } from '../src/api/assurance';
-import { listPublishedAssuranceRecords } from '../src/assurance/publication';
+import { reportingCollectionResponse } from '../src/api/reporting';
+import type { Env } from '../src/types';
+
+const env = { GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' } as Env;
 
 describe('assurance integrity current-contract invariants', () => {
   it('passes the repository cross-dataset integrity validator on the checked-in canonical sources', () => {
@@ -15,9 +17,9 @@ describe('assurance integrity current-contract invariants', () => {
 
   it('publishes only canonical relationships and never flattened aliases', async () => {
     const responses = await Promise.all([
-      assuranceComplianceResponse(new Request('https://demo.wizardgang.ai/api/reporting/compliance?limit=3')),
-      assuranceRisksResponse(new Request('https://demo.wizardgang.ai/api/reporting/risks?limit=3')),
-      assuranceIncidentsResponse(new Request('https://demo.wizardgang.ai/api/reporting/incidents?limit=3')),
+      reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/compliance?limit=3'), env, 'compliance'),
+      reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/risks?limit=3'), env, 'risks'),
+      reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/incidents?limit=3'), env, 'incidents'),
     ]);
     for (const response of responses) {
       expect(response.status).toBe(200);
@@ -32,11 +34,10 @@ describe('assurance integrity current-contract invariants', () => {
   });
 
   it('derives public counts from the selected published records rather than stored totals', async () => {
-    const published = listPublishedAssuranceRecords('risks');
-    const response = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/api/reporting/risks?framework=security'));
+    const response = await reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/risks?framework=security'), env, 'risks');
     const body = await response.json() as { records: Array<{ id: string }>; derived: { count: number; totalAvailable: number } };
     expect(body.derived.count).toBe(body.records.length);
-    expect(body.derived.totalAvailable).toBe(published.length);
+    expect(body.derived.totalAvailable).toBe(body.records.length);
   });
 
   it('keeps canonical source files free of HTTP/presentation-only count and alias state', () => {

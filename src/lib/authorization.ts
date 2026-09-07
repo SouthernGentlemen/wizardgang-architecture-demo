@@ -18,19 +18,6 @@ interface AuthorizationOptions {
   allowIdentitySession?: boolean;
 }
 
-async function secretMatches(actual: string, expected: string): Promise<boolean> {
-  const encode = (value: string) => new TextEncoder().encode(value);
-  const [left, right] = await Promise.all([
-    crypto.subtle.digest('SHA-256', encode(actual)),
-    crypto.subtle.digest('SHA-256', encode(expected)),
-  ]);
-  const a = new Uint8Array(left);
-  const b = new Uint8Array(right);
-  let mismatch = a.byteLength ^ b.byteLength;
-  for (let index = 0; index < Math.max(a.byteLength, b.byteLength); index += 1) mismatch |= (a[index] ?? 0) ^ (b[index] ?? 0);
-  return mismatch === 0;
-}
-
 export async function principalFromIdentitySession(session: IdentitySession): Promise<Principal> {
   const subject = `${session.identity.provider}:${session.identity.subject}`;
   const permissions: Permission[] = ['demo:read', 'demo:write'];
@@ -65,17 +52,6 @@ export async function authorize(request: Request, env: Env, permission: Permissi
     if (visitor) {
       if (!visitor.permissions.some((candidate) => candidate === permission)) return denied();
       return visitor;
-    }
-    if (env.DEMO_API_TOKEN && await secretMatches(token, env.DEMO_API_TOKEN)) {
-      const operator: Principal = {
-        subject: 'demo-api-operator',
-        authentication: 'bearer',
-        provider: 'operator',
-        role: 'operator',
-        permissions: ['demo:read', 'demo:write'],
-      };
-      if (!operator.permissions.includes(permission)) return denied();
-      return operator;
     }
     return rejected();
   }

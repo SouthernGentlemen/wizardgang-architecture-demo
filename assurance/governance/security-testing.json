@@ -564,7 +564,7 @@
       "order": 38,
       "fields": {
         "category": "Deployment",
-        "testControl": "Live `/version` matches expected tag/SHA after deployment",
+        "testControl": "Live `/api/operations/version` matches expected tag/SHA after deployment",
         "currentEvidence": "`.github/workflows/deploy.yml`",
         "status": "Active",
         "triggerCadence": "Every production deploy",
@@ -578,7 +578,7 @@
       "order": 39,
       "fields": {
         "category": "Deployment",
-        "testControl": "Live `/health` confirms Worker operational after deployment",
+        "testControl": "Live `/api/operations/health` confirms Worker operational after deployment",
         "currentEvidence": "`.github/workflows/deploy.yml`",
         "status": "Active",
         "triggerCadence": "Every production deploy",

@@ -204,16 +204,8 @@ export interface AssuranceRegistryFilter {
   label: string;
 }
 
-export interface AssuranceRegistryRouteAlias {
-  path: string;
-  fragment?: string;
-}
-
 export interface AssuranceRegistryRoutes {
   html?: string;
-  api?: string;
-  apiRecord?: string;
-  aliases?: AssuranceRegistryRouteAlias[];
 }
 
 export interface AssuranceRegistryIdentityComponent {
@@ -389,7 +381,6 @@ export const assuranceRuntimeRecordCounts: Readonly<Record<string, number>> = Ob
 const runtimeRecordIndex = new Map<string, AssuranceRuntimeRecordReference>();
 const runtimeRecordResourceIndex = new Map<string, AssuranceRegistryResource>();
 const runtimeIdentityIndex = new Map<string, { dataset: string; record: AssuranceRuntimeRecord; resource: AssuranceRegistryResource }>();
-const forwardRelationshipIndex = new Map<string, AssuranceRelationships>();
 const reverseRelationshipIndex = new Map<string, AssuranceRuntimeRelationshipReference[]>();
 const resourceByReportingSource = new Map(assuranceRegistryResources.map((resource) => [structuredReportingSource(resource).id, resource]));
 
@@ -424,7 +415,6 @@ for (const [dataset, records] of Object.entries(runtimeRecordCollections)) {
     const relationships = record.relationships ?? [];
     const relationshipErrors = validateAssuranceRelationshipSet(relationships, { sourceIdentity }, `${resource.path}:${record.id}`);
     if (relationshipErrors.length > 0) throw new Error(relationshipErrors.join('; '));
-    forwardRelationshipIndex.set(record.id, relationships);
     for (const relationship of relationships) {
       const definition = assuranceRelationshipDefinition(relationship.relation);
       if (!definition) throw new Error(`Assurance runtime record ${record.id} declares invalid relation ${relationship.relation}.`);
@@ -459,7 +449,6 @@ for (const references of reverseRelationshipIndex.values()) {
 }
 
 export const assuranceRuntimeRecordIndex: ReadonlyMap<string, AssuranceRuntimeRecordReference> = runtimeRecordIndex;
-export const assuranceRuntimeForwardRelationshipIndex: ReadonlyMap<string, AssuranceRelationships> = forwardRelationshipIndex;
 export const assuranceRuntimeReverseRelationshipIndex: ReadonlyMap<string, readonly AssuranceRuntimeRelationshipReference[]> = reverseRelationshipIndex;
 
 export const assuranceCanonicalRecordCollections = assuranceRuntimeRecordCollections as unknown as {

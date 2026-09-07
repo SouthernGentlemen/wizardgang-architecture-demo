@@ -7,7 +7,7 @@ import type { DemoDefinition, Env } from '../types';
 
 const demo: DemoDefinition = {
   "id": "governance",
-  "route": "/governance",
+  "route": "/assurance?view=governance",
   "title": "Governance",
   "group": "Delivery & Governance",
   "sourcePath": "src/demos/governance.ts",
@@ -47,7 +47,6 @@ const demo: DemoDefinition = {
     },
     {
       "id": "traceability",
-      "aliases": ["evidence"],
       "title": "Traceability & evidence",
       "description": "Inspect the requirement-to-operation chain across source, validation, release metadata, deployment identity, and recent application audit events.",
       "label": "Inspect the live evidence chain",

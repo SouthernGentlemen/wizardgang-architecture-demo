@@ -95,7 +95,7 @@ function identityRedirect(request: Request, parameters: Record<string, string>, 
 }
 
 function callbackUrl(request: Request, provider: IdentityProvider): string {
-  return new URL(`/identity/${provider}/callback`, request.url).toString();
+  return new URL(`/auth/${provider}/callback`, request.url).toString();
 }
 
 function samlEntityId(request: Request): string {
@@ -250,21 +250,13 @@ async function auditIdentity(env: Env, eventType: string, provider: IdentityProv
   const event = await recordDemoEvent(env, 'identity', `identity.${eventType}`, { provider: provider === 'saml' ? 'microsoft' : provider, protocol: providerProtocol(provider), ...detail });
   await recordApplicationLog(env, {
     source: 'identity', eventKey: `identity.${eventType}`, message: `${eventType.replaceAll('_', ' ')} for ${providerName(provider)}.`,
-    route: provider === 'saml' ? '/auth/saml' : `/identity/${provider}`,
+    route: provider === 'saml' ? '/auth/saml' : `/auth/${provider}`,
     detail: { provider: provider === 'saml' ? 'microsoft' : provider, protocol: providerProtocol(provider), eventId: event.id, ...detail },
   });
 }
 
 async function auditFailure(env: Env, provider: IdentityProvider | 'saml', reason: string): Promise<void> {
   try { await auditIdentity(env, 'authentication_failed', provider, { reason }); } catch { /* Authentication remains failed closed. */ }
-}
-
-export async function oauthPkceResponse(request: Request, env: Env): Promise<Response> {
-  if (request.method !== 'POST') return methodNotAllowed(['POST']);
-  await pkceChallenge(randomValue());
-  const event = await recordDemoEvent(env, 'identity', 'identity.pkce_boundary_inspected', { method: 'S256', secretsExposed: false });
-  await recordApplicationLog(env, { source: 'identity', eventKey: 'identity.pkce_boundary_inspected', message: 'Inspected the server-side PKCE boundary.', route: 'identity.oauth-pkce', detail: { method: 'S256', secretsExposed: false, eventId: event.id } });
-  return json({ flow: 'OAuth 2.0 authorization code with PKCE', state: 'generated server-side', nonce: 'generated server-side for OIDC', pkce: 'S256', verifier: 'retained in an encrypted HttpOnly flow cookie', secretsExposed: false, providers: identityProviderConfiguration(env), auditEventId: event.id }, { headers: { 'cache-control': 'no-store' } });
 }
 
 export async function authorizationDecisionResponse(request: Request, env: Env): Promise<Response> {
@@ -603,11 +595,6 @@ export async function samlCallbackResponse(request: Request, env: Env): Promise<
   }
 }
 
-export function ssoBoundaryResponse(request: Request, env?: Env): Response {
-  if (request.method !== 'GET') return methodNotAllowed(['GET']);
-  return json({ authentication: { provider: 'Microsoft Entra ID', protocols: ['OpenID Connect / OAuth 2.0', 'SAML 2.0'], validation: ['state and nonce', 'PKCE', 'issuer', 'audience', 'signature', 'time bounds', 'request correlation and replay protection'] }, normalization: 'Validated provider claims cross one mapping boundary before application policy sees them.', authorization: 'The application role and authentication assurance are evaluated independently for demo:read and demo:write.', ...(env ? { providers: identityProviderConfiguration(env) } : {}) }, { headers: { 'cache-control': 'no-store' } });
-}
-
 export function samlMetadataResponse(request: Request): Response {
   if (request.method !== 'GET') return methodNotAllowed(['GET']);
   const entityId = samlEntityId(request);
@@ -620,9 +607,4 @@ export function samlMetadataResponse(request: Request): Response {
   </SPSSODescriptor>
 </EntityDescriptor>`;
   return new Response(metadata, { headers: { 'content-type': 'application/samlmetadata+xml; charset=utf-8', 'cache-control': 'public, max-age=300', 'x-content-type-options': 'nosniff' } });
-}
-
-export function samlInspectionResponse(request: Request, env?: Env): Response {
-  if (request.method !== 'GET') return methodNotAllowed(['GET']);
-  return json({ provider: 'Microsoft Entra ID', metadata: { entityId: samlEntityId(request), assertionConsumerService: samlCallbackUrl(request), binding: 'HTTP-POST' }, validation: ['signed assertion', 'configured Entra issuer', 'audience', 'recipient', 'time bounds', 'InResponseTo', 'RelayState', 'one-time assertion ID'], configured: env ? identityProviderConfiguration(env).saml.configured : false, secretsExposed: false }, { headers: { 'cache-control': 'no-store' } });
 }

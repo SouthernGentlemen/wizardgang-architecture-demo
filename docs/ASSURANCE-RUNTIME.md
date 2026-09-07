@@ -2,7 +2,7 @@
 
 Canonical assurance runtime discovery is registry-driven.
 
-Every resource in `assurance/registry.json` that declares both `runtime` and `records` participates in the shared Worker runtime record indexes after the normal assurance runtime binding is generated. This includes primary datasets, additional partitions, and internal record families that do not declare `api-index` or a public route.
+Every resource in `assurance/registry.json` that declares both `runtime` and `records` participates in the shared Worker runtime record indexes after the normal assurance runtime binding is generated. This includes primary datasets, additional partitions, and internal record families that do not declare a public route.
 
 The shared runtime derives, in registry order:
 

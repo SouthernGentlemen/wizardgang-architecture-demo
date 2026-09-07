@@ -1,6 +1,6 @@
 # Unified Reporting Pagination and Cursors
 
-DEMO-176 defines the pagination and continuation contract shared by reporting sources. It adds the common types and codec foundation only; existing provider consumers are intentionally not all migrated in this change.
+DEMO-176 introduced the pagination and continuation contract shared by reporting sources. All current structured and provider consumers now use that contract.
 
 ## Pagination contract
 
@@ -13,7 +13,7 @@ Reporting pagination has one public shape:
 - `completeness` — `complete` or `partial` for consumers that have adopted the DEMO-176 pagination constructor.
 - `partialReason` — `null` for complete results, otherwise one of `page-boundary`, `sample`, `provider-export-bound`, or `provider-unavailable`.
 
-`completeness` and `partialReason` are optional in the JSON schema during staged adoption so DEMO-176 does not require every existing reporting producer to migrate in the same pull request. The common constructor always emits and validates them. Follow-up migrations should adopt this constructor rather than define another pagination shape.
+The common constructor emits and validates `completeness` and `partialReason` for every current producer. New reporting code must use this constructor instead of defining another pagination shape.
 
 A complete result cannot carry a continuation cursor or a partial reason. A partial result must carry an explicit reason. `returned` cannot exceed the observed `total` represented by that result.
 
@@ -64,8 +64,8 @@ A migrated producer must return:
 
 Any native provider continuation value required to resume is placed only inside the encrypted common cursor payload. Raw provider values such as a GitHub page number, GraphQL cursor, REST page token, or provider-specific continuation string are implementation details.
 
-## Staged adoption
+## Current adoption
 
-DEMO-176 establishes the codec, common TypeScript types, schema vocabulary, validation rules, and tests without migrating every reporting consumer. Existing provider execution paths can be migrated incrementally, but new code must not introduce another public cursor field or a parallel legacy cursor contract.
+Structured and provider reporting paths use the common codec, TypeScript types, schema vocabulary, validation rules, and tests. No other public cursor field or provider-specific envelope is supported.
 
-The existing access-control boundary remains authoritative during migration. A valid cursor can identify where an authorized query would continue; it can never establish that the query is authorized.
+The access-control boundary remains authoritative. A valid cursor can identify where an authorized query would continue; it can never establish that the query is authorized.

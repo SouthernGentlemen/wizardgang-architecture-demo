@@ -13,7 +13,7 @@ DEMO-166 introduced the typed matcher foundation, and DEMO-167 through DEMO-170 
 5. invoke the matched handler with normalized parameters; and
 6. convert unexpected failures into the shared safe error response.
 
-The router does not keep an application path switch, API-prefix inventory, HTML-path list, assurance-owner switch, demo fallback lookup, redirect alias list, or route-family dispatch chain. Browser offline behavior is read from route metadata, including the GraphQL content-negotiation exception and routes that must never be treated as browser pages.
+The router does not keep an application path switch, API-prefix inventory, HTML-path list, assurance-owner switch, demo fallback lookup, redirect alias list, or route-family dispatch chain. Browser offline behavior is read from route metadata, including routes that must never be treated as browser pages.
 
 ## Application registry
 
@@ -64,7 +64,7 @@ The shared matcher retains the deterministic rules established in DEMO-166:
 - malformed encoded parameters and unknown paths return the standard `404`;
 - duplicate module IDs, route IDs, normalized patterns, duplicate methods, invalid parameters, invalid same-origin method declarations, and overlapping parameter patterns fail registry construction.
 
-No redirect or alias compatibility layer is installed by the final registry. Removed routes remain ordinary unknown paths.
+No redirect or alias layer is installed by the final registry. Removed routes remain ordinary unknown paths.
 
 ## Policy ownership
 
@@ -76,4 +76,4 @@ Platform declarations continue to retain their request-limit and storage-boundar
 
 The route suite verifies generated manifest consistency, generated documentation, sitemap membership, architecture navigation, route-ID URL generation, method handling, shared policy completeness, cross-family collision rejection, unreachable/undocumented route rejection, and normal 404 behavior for removed aliases and arbitrary unknown paths.
 
-This change does not rename public URLs, release, or deploy the application.
+The current registry is the complete route contract. Route removals are deliberate and receive the ordinary 404; this audit does not release or deploy the application.

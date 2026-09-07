@@ -3,7 +3,6 @@ import {
   CLIENT_INFO_META_KEY,
   McpServer,
   PROTOCOL_VERSION_META_KEY,
-  SUPPORTED_PROTOCOL_VERSIONS,
   createMcpHandler,
   type ServerContext,
 } from '@modelcontextprotocol/server';
@@ -15,11 +14,7 @@ import { json } from '../lib/http';
 import { recordApplicationLog } from '../lib/logs';
 
 export const MCP_SERVER_PATH = '/mcp';
-export const MCP_MODERN_PROTOCOL_VERSION = '2026-07-28';
-export const MCP_SUPPORTED_PROTOCOL_VERSIONS = [
-  MCP_MODERN_PROTOCOL_VERSION,
-  ...SUPPORTED_PROTOCOL_VERSIONS,
-];
+export const MCP_PROTOCOL_VERSION = '2026-07-28';
 
 interface RecordRow {
   id: number;
@@ -90,14 +85,14 @@ async function readClientEvidence(request: Request): Promise<ClientEvidence> {
 
   const params = objectValue(body?.params);
   const meta = objectValue(params?._meta);
-  const clientInfo = objectValue(meta?.[CLIENT_INFO_META_KEY]) ?? objectValue(params?.clientInfo);
+  const clientInfo = objectValue(meta?.[CLIENT_INFO_META_KEY]);
   const headerVersion = request.headers.get('mcp-protocol-version');
-  const claimedVersion = meta?.[PROTOCOL_VERSION_META_KEY] ?? params?.protocolVersion;
+  const claimedVersion = meta?.[PROTOCOL_VERSION_META_KEY];
 
   return {
     clientName: safeIdentity(clientInfo?.name, knownUserAgent(request.headers.get('user-agent'))),
     clientVersion: safeIdentity(clientInfo?.version, 'unreported', 40),
-    protocolVersion: safeIdentity(headerVersion ?? claimedVersion, 'legacy-unreported', 40),
+    protocolVersion: safeIdentity(headerVersion ?? claimedVersion, 'unreported', 40),
   };
 }
 
@@ -137,7 +132,7 @@ function createWizardGangMcpServer(env: Env, principal: Principal, evidence: Cli
   const server = new McpServer(
     { name: 'wizardgang-architecture-demo', version: '2.0.0' },
     {
-      supportedProtocolVersions: MCP_SUPPORTED_PROTOCOL_VERSIONS,
+      supportedProtocolVersions: [MCP_PROTOCOL_VERSION],
       instructions: 'Use ping to verify connectivity. All exposed tools are public, read-only demonstrations governed by the same application authorization boundary as REST and GraphQL.',
       cacheHints: {
         'server/discover': { ttlMs: 60_000, cacheScope: 'public' },
@@ -224,7 +219,7 @@ export async function mcpResponse(request: Request, env: Env): Promise<Response>
   const evidence = await readClientEvidence(request);
   const handler = createMcpHandler(
     () => createWizardGangMcpServer(env, principal, evidence),
-    { legacy: 'stateless', responseMode: 'auto' },
+    { legacy: 'reject', responseMode: 'auto' },
   );
   return handler.fetch(request);
 }

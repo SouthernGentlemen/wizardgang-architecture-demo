@@ -293,7 +293,7 @@ Security controls must remain operable through keyboard and assistive technology
 
 ### 8.11 Production verification
 
-Production deployment verifies the exact tagged release and checks public `/version` and `/health` after deployment.
+Production deployment verifies the exact tagged release and checks public `/api/operations/version` and `/api/operations/health` after deployment.
 
 For material security changes, verification should also include the affected security boundary where it can be tested safely. Production verification must not use destructive or unsafe test data merely to produce evidence.
 

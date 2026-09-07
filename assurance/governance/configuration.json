@@ -57,7 +57,7 @@
         "configurationSurface": "Production release identity",
         "authoritySource": "`.github/workflows/deploy.yml` + annotated tag",
         "environment": "Production",
-        "verification": "`/version` expected version/SHA",
+        "verification": "`/api/operations/version` expected version/SHA",
         "status": "Met"
       },
       "relationships": []
@@ -70,7 +70,7 @@
         "configurationSurface": "Production Worker health",
         "authoritySource": "deploy workflow + runtime",
         "environment": "Production",
-        "verification": "`/health` post-deploy + monitoring",
+        "verification": "`/api/operations/health` post-deploy + monitoring",
         "status": "Met"
       },
       "relationships": []

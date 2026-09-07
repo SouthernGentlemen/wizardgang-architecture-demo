@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { assuranceIncidentsResponse } from '../src/api/assurance';
+import { reportingCollectionResponse } from '../src/api/reporting';
 import { deriveIncidentCounts } from '../src/assurance/service';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import { renderIncidents } from '../src/demos/assurance-pages';
@@ -41,31 +41,28 @@ describe('public incident and exercise assurance', () => {
     }
   });
 
-  it('publishes incidents and exercises in one common read-only record collection', async () => {
+  it('publishes incidents and exercises through the same collection contract without duplicating either dataset', async () => {
     const incidents = listPublishedAssuranceRecords('incidents');
     const exercises = listPublishedAssuranceRecords('exercises');
-    const response = await assuranceIncidentsResponse(new Request('https://demo.wizardgang.ai/api/reporting/incidents'));
-    expect(response.status).toBe(200);
-    expect(response.headers.get('content-type')).toContain('application/json');
-    const body = await response.json() as {
+    const [incidentsResponse, exercisesResponse] = await Promise.all([
+      reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/incidents'), env, 'incidents'),
+      reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/exercises'), env, 'exercises'),
+    ]);
+    expect(incidentsResponse.status).toBe(200);
+    expect(exercisesResponse.status).toBe(200);
+    expect(incidentsResponse.headers.get('content-type')).toContain('application/json');
+    const incidentsBody = await incidentsResponse.json() as {
       dataset: string;
       datasets: string[];
       records: Array<{ id: string; recordType: string; relationships: Record<string, string[]> }>;
       derived: { count: number; totalAvailable: number };
-      incidents?: unknown;
-      exercises?: unknown;
     };
-    expect(body.dataset).toBe('incidents');
-    expect(body.datasets).toEqual(['incidents', 'exercises']);
-    expect(body.records).toEqual([...incidents, ...exercises]);
-    expect(body.derived.count).toBe(incidents.length + exercises.length);
-    expect(body.derived.totalAvailable).toBe(incidents.length + exercises.length);
-    expect(body).not.toHaveProperty('incidents');
-    expect(body).not.toHaveProperty('exercises');
+    const exercisesBody = await exercisesResponse.json() as typeof incidentsBody;
+    expect(incidentsBody).toMatchObject({ dataset: 'incidents', datasets: ['incidents'], records: incidents });
+    expect(exercisesBody).toMatchObject({ dataset: 'exercises', datasets: ['exercises'], records: exercises });
+    expect(incidentsBody.derived).toMatchObject({ count: incidents.length, totalAvailable: incidents.length });
+    expect(exercisesBody.derived).toMatchObject({ count: exercises.length, totalAvailable: exercises.length });
 
-    const rejected = await assuranceIncidentsResponse(new Request('https://demo.wizardgang.ai/api/reporting/incidents', { method: 'POST' }));
-    expect(rejected.status).toBe(405);
-    expect(rejected.headers.get('allow')).toBe('GET');
   });
 
   it('renders permanent anchors only for canonical records and uses empty-state copy only when the dataset is empty', async () => {

@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { assuranceEvidenceResponse } from '../src/api/assurance-registry';
-import { reportingIndexResponse } from '../src/api/reporting';
+import { reportingCollectionResponse, reportingIndexResponse } from '../src/api/reporting';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import type { Env } from '../src/types';
 
@@ -15,7 +14,7 @@ const environment = {
 describe('public assurance API projection', () => {
   it('serves canonical published evidence records through the current record/query contract', async () => {
     const records = listPublishedAssuranceRecords('evidence');
-    const response = await assuranceEvidenceResponse(new Request('https://demo.wizardgang.ai/api/reporting/evidence'), environment);
+    const response = await reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/evidence'), environment, 'evidence');
     expect(response.status).toBe(200);
     expect(response.headers.get('cache-control')).toContain('max-age=300');
     const body = await response.json() as {

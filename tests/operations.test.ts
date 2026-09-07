@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { billingScenarioResponse } from '../src/api/billing';
-import { cloudflareUsageResponse } from '../src/api/operations';
+import { reportingCollectionResponse } from '../src/api/reporting';
 import { workerComputeResponse } from '../src/api/runtime';
 import { renderBilling, renderDashboard, renderDocs, renderUptime } from '../src/demos/operations-pages';
 import { runScheduledOperations } from '../src/index';
@@ -110,7 +110,7 @@ describe('operations proof surface', () => {
     expect(dashboard).toContain('User-requested ChatGPT fetch');
     expect(dashboard).toContain('href="/admin"');
     expect(dashboard).toContain('href="/robots.txt"');
-    expect(dashboard).toContain('aria-label="Operations"');
+    expect(dashboard).toContain('aria-label="Operations views"');
     expect(dashboard).toContain('Collection discovery comes from reporting ownership and registered capabilities.');
     expect(dashboard).toContain('href="/operations?view=reports&amp;report=compliance#reporting-browser"');
     expect(dashboard).toContain('Shared reporting presenter');
@@ -146,12 +146,12 @@ describe('operations proof surface', () => {
     await runScheduledOperations(environment, Date.parse('2026-09-02T12:05:00.000Z'));
     expect((environment.DEMO_DB as OperationsD1).persistedHealth).toBe(1);
 
-    const response = await cloudflareUsageResponse(new Request('https://demo.example/api/operations/cloudflare-usage'), environment);
+    const response = await reportingCollectionResponse(new Request('https://demo.example/api/reporting/operations'), environment, 'operations');
     expect(response.status).toBe(200);
-    expect(response.headers.get('cache-control')).toBe('no-store');
+    expect(response.headers.get('cache-control')).toBe('public, max-age=30, s-maxage=30');
     expect(await response.json()).toMatchObject({
       schemaVersion: 1,
-      dataset: 'cloudflare.operations',
+      dataset: 'operations',
       availability: { 'cloudflare.operations': 'unavailable' },
     });
   });
@@ -163,12 +163,12 @@ describe('operations proof surface', () => {
     vi.stubGlobal('fetch', analyticsFetch({ zero: true, billing: 'forbidden' }));
     try {
       const snapshot = await collectCloudflareUsage(environment, true);
-      expect(snapshot.status).toBe('live');
+      expect(snapshot.status).toBe('available');
       expect(snapshot.products).toMatchObject({
-        workers: { available: true, availability: 'available', requests: 0 },
-        d1: { available: true, availability: 'available', rowsRead: 0, rowsWritten: 0, storageBytes: 0 },
-        r2: { available: true, availability: 'available', classAOperations: 0, classBOperations: 0, storageBytes: 0, objects: 0 },
-        durableObjects: { available: true, availability: 'available', requests: 0, cpuTimeMs: 0, storageBytes: 0 },
+        workers: { availability: 'available', requests: 0 },
+        d1: { availability: 'available', rowsRead: 0, rowsWritten: 0, storageBytes: 0 },
+        r2: { availability: 'available', classAOperations: 0, classBOperations: 0, storageBytes: 0, objects: 0 },
+        durableObjects: { availability: 'available', requests: 0, cpuTimeMs: 0, storageBytes: 0 },
       });
       expect(snapshot.cost).toMatchObject({ kind: 'unavailable', amountUsd: null, scope: 'account' });
     } finally {
@@ -183,7 +183,7 @@ describe('operations proof surface', () => {
     try {
       const snapshot = await collectCloudflareUsage(environment, true);
       expect(snapshot.status).toBe('unavailable');
-      expect(Object.values(snapshot.products).every((product) => !product.available)).toBe(true);
+      expect(Object.values(snapshot.products).every((product) => product.availability === 'unavailable')).toBe(true);
       expect(snapshot.products.workers.qualification).toBe('account-scope-not-found');
       const dashboard = await (await renderDashboard(environment)).text();
       expect(dashboard).toContain('>UNAVAILABLE<');
@@ -199,8 +199,8 @@ describe('operations proof surface', () => {
     try {
       const snapshot = await collectCloudflareUsage(environment, true);
       expect(snapshot.status).toBe('partial');
-      expect(snapshot.products.workers).toMatchObject({ available: false, availability: 'unavailable', qualification: 'malformed-workers-totals' });
-      expect(snapshot.products.d1.available).toBe(true);
+      expect(snapshot.products.workers).toMatchObject({ availability: 'unavailable', qualification: 'malformed-workers-totals' });
+      expect(snapshot.products.d1.availability).toBe('available');
     } finally {
       vi.unstubAllGlobals();
     }
@@ -213,7 +213,7 @@ describe('operations proof surface', () => {
     vi.stubGlobal('fetch', analyticsFetch({ billing: 'forbidden' }));
     try {
       const first = await collectCloudflareUsage(environment, false);
-      expect(first.status).toBe('live');
+      expect(first.status).toBe('available');
       const observedAt = first.capturedAt;
       vi.setSystemTime(new Date('2026-09-02T12:11:00.000Z'));
       vi.stubGlobal('fetch', async () => { throw new Error('network unavailable'); });
@@ -223,7 +223,7 @@ describe('operations proof surface', () => {
       expect(cached.capturedAt).toBe(observedAt);
       expect(cached.products.workers).toMatchObject({ availability: 'stale', qualification: 'observation-stale' });
 
-      const response = await cloudflareUsageResponse(new Request('https://demo.example/api/operations/cloudflare-usage'), environment);
+      const response = await reportingCollectionResponse(new Request('https://demo.example/api/reporting/operations'), environment, 'operations');
       const body = await response.json() as { availability: Record<string, string>; records: Array<{ availability: string }> };
       expect(body.availability['cloudflare.operations']).toBe('stale');
       expect(body.records.length).toBeGreaterThan(0);
@@ -244,7 +244,7 @@ describe('operations proof surface', () => {
     vi.stubGlobal('fetch', analyticsFetch({ billing: 'forbidden' }));
     try {
       const original = await collectCloudflareUsage(cloudflareEnv('scope-account', 'worker-a'), false);
-      expect(original.status).toBe('live');
+      expect(original.status).toBe('available');
       vi.stubGlobal('fetch', async () => { throw new Error('network unavailable'); });
       const changed = await collectCloudflareUsage(cloudflareEnv('scope-account', 'worker-b'), false);
       expect(changed.status).toBe('unavailable');
@@ -279,7 +279,7 @@ describe('operations proof surface', () => {
     vi.stubGlobal('fetch', analyticsFetch({ billing: 'forbidden' }));
     try {
       const snapshot = await collectCloudflareUsage(environment, true);
-      expect(snapshot.status).toBe('live');
+      expect(snapshot.status).toBe('available');
       expect(snapshot.cost).toMatchObject({ kind: 'unavailable', availability: 'unavailable', amountUsd: null, scope: 'account' });
       expect(snapshot.cost.note).toContain('no local pricing fallback');
     } finally {
@@ -294,7 +294,7 @@ describe('operations proof surface', () => {
     environment.CLOUDFLARE_DO_NAMESPACE = 'private-do-id';
     vi.stubGlobal('fetch', analyticsFetch({ billing: 'available' }));
     try {
-      const response = await cloudflareUsageResponse(new Request('https://demo.example/api/operations/cloudflare-usage'), environment);
+      const response = await reportingCollectionResponse(new Request('https://demo.example/api/reporting/operations'), environment, 'operations');
       const body = JSON.stringify(await response.json());
       expect(body).not.toContain('private-account-id');
       expect(body).not.toContain('private-worker-name');

@@ -44,9 +44,6 @@ export function registeredSurfaceNavigation(): FrontendSurfaceDefinition[] {
     .map((route) => route.navigation!.surface);
 }
 
-/** Transitional name for callers being collapsed by DEMO-183. */
-export const registeredDemoNavigation = registeredSurfaceNavigation;
-
 export function registeredSitemapPaths(): string[] {
   return registeredPageMetadata()
     .filter((route) => route.navigation?.sitemap && route.crawler.indexing === 'allow' && !route.pattern.includes(':'))

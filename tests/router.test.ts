@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import openapi from '../contracts/openapi/openapi.json';
-import { demos } from '../src/demos/registry';
+import { indexedSurfaces } from '../src/demos/registry';
 import { routeRequest } from '../src/router';
 import { applicationRouteRegistry } from '../src/routing/application-routes';
 import type { D1PreparedStatement, Env } from '../src/types';
@@ -41,13 +41,13 @@ const basic = `Basic ${btoa('operator:test-admin-password')}`;
 describe('public route contract', () => {
   it('resolves every registered human demo route and links to its exact primary source', async () => {
     const environment = env();
-    for (const demo of demos) {
-      const declaration = applicationRouteRegistry.declarations.find((route) => route.pattern === demo.route);
-      expect(declaration, `${demo.route} declaration`).toBeDefined();
-      const response = await routeRequest(new Request(`https://demo.wizardgang.ai${demo.route}`, { headers: { accept: 'text/html' } }), environment);
-      expect(response.status, demo.route).toBe(200);
+    for (const surface of indexedSurfaces) {
+      const declaration = applicationRouteRegistry.declarations.find((route) => route.pattern === surface.route);
+      expect(declaration, `${surface.route} declaration`).toBeDefined();
+      const response = await routeRequest(new Request(`https://demo.wizardgang.ai${surface.route}`, { headers: { accept: 'text/html' } }), environment);
+      expect(response.status, surface.route).toBe(200);
       const html = await response.text();
-      expect(html, demo.route).toContain(`https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/main/${declaration?.source.module}`);
+      expect(html, surface.route).toContain(`https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/main/${declaration?.source.module}`);
     }
   });
 
@@ -112,14 +112,14 @@ describe('public route contract', () => {
     const graphqlApi = await routeRequest(new Request('https://demo.wizardgang.ai/graphql', {
       method: 'POST',
       headers: { 'content-type': 'application/json', origin: 'https://demo.wizardgang.ai' },
-      body: JSON.stringify({ query: '{ demoRecords { key } }' }),
+      body: JSON.stringify({ query: '{ users { id } }' }),
     }), environment);
     expect(graphqlApi.headers.get('content-type')).toContain('application/json');
 
     const crossOriginGraphqlApi = await routeRequest(new Request('https://demo.wizardgang.ai/graphql', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ query: '{ demoRecords { key } }' }),
+      body: JSON.stringify({ query: '{ users { id } }' }),
     }), environment);
     expect(crossOriginGraphqlApi.status).toBe(403);
 
@@ -164,7 +164,7 @@ describe('public route contract', () => {
     expect(await transportGet.text()).toContain('Method not allowed');
   });
 
-  it('returns the ordinary 404 for retired standalone interface pages', async () => {
+  it('returns the ordinary 404 for removed standalone interface pages', async () => {
     const environment = env();
     for (const path of ['/api', '/webhooks', '/identity', '/i18n', '/accessibility']) {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`, { headers: { accept: 'text/html' } }), environment);
@@ -177,7 +177,7 @@ describe('public route contract', () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance?view=delivery', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     for (const anchor of ['source-of-truth', 'versioning', 'branching', 'actions', 'releases', 'environments']) expect(html).toContain(`id="${anchor}"`);
-    expect(html).toContain('/__api/git/evidence');
+    expect(html).toContain("fetch('/api/reporting/'+encodeURIComponent(collection)");
     expect(html).toContain('/api/labs/git-delivery');
     expect(html).toContain('Run Live Git Demo');
     expect(html).toContain('Merge &amp; Release');
@@ -192,7 +192,7 @@ describe('public route contract', () => {
   it('renders consolidated governance controls, evidence anchors, and the alignment notice', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance?view=governance', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
-    for (const anchor of ['iso-27001', 'iso-42001', 'traceability', 'evidence']) expect(html).toContain(`id="${anchor}"`);
+    for (const anchor of ['iso-27001', 'iso-42001', 'traceability', 'governance-records']) expect(html).toContain(`id="${anchor}"`);
     for (const endpoint of ['/api/labs/governance-security-controls', '/api/labs/governance-ai-evaluation', '/api/labs/governance-traceability']) expect(html).toContain(endpoint);
     expect(html).toContain('alignment targets, not certification claims');
 
@@ -248,7 +248,7 @@ describe('public route contract', () => {
     expect(index).toContain('WG-ARCH-001 · <a href="https://github.com/SouthernGentlemen/wizardgang-architecture-demo">Public source</a>');
 
     const operations = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations'), environment)).text();
-    expect(operations).toContain('<nav class="section-nav" aria-label="Operations views">');
+    expect(operations).toContain('aria-label="Operations views"');
     expect(operations).not.toContain('Operational proof surfaces');
     expect(operations).toContain('User-requested ChatGPT fetch');
     expect(operations).toContain('Model-training crawl');

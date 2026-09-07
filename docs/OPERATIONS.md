@@ -1,6 +1,6 @@
 # Operations
 
-`/operations` is the canonical server-rendered operations surface. Machine-readable operational state is exposed only through the `/api/operations/*` route family.
+`/operations` is the canonical server-rendered operations surface. Operational health, version, logs, and the synthetic budget control use `/api/operations/*`; normalized usage observations use the single reporting contract at `/api/reporting/operations`.
 
 ## Canonical routes
 
@@ -10,12 +10,12 @@
 | `/api/operations/health` | `GET` | Runtime and dependency health. | available |
 | `/api/operations/version` | `GET` | Deployed version and source metadata. | available |
 | `/api/operations/logs` | `GET` | Sanitized application log telemetry. | available |
-| `/api/operations/usage` | `GET` | Sanitized cached Cloudflare usage telemetry. | available |
+| `/api/reporting/operations` | `GET`, `OPTIONS` | Schema-validated, sanitized Cloudflare usage observations. | gated |
 | `/api/operations/budget` | `POST` | Synthetic budget calculation used by the operations demonstration. | available |
 | `/admin` | `GET`, `POST` | Protected demo/crawler controls. | available |
 | `/offline` | `GET` | Intentional-maintenance status surface. | available |
 
-The application route registry owns these paths. Retired operational API paths are not redirected and are not registered as aliases.
+The application route registry owns these paths. Removed operational API paths are not redirected and are not registered as aliases.
 
 ## Operations UI
 
@@ -50,7 +50,7 @@ The `/operations?view=logs` page consumes the same operational data instead of m
 
 ## Usage
 
-`GET /api/operations/usage` returns the cached, sanitized Cloudflare usage projection. Provider credentials and raw private provider payloads are never returned to the browser.
+`GET /api/reporting/operations` returns cached, sanitized Cloudflare observations in the canonical reporting query envelope. Provider credentials and raw private provider payloads are never returned to the browser.
 
 The usage service remains responsible for provider acquisition, observation windows, freshness, normalization, and safe cache behavior. `/operations?view=usage` is only a presentation surface over that contract.
 
@@ -82,7 +82,7 @@ Operational APIs deny search indexing. Public browser pages may remain crawlable
 
 ## Authorization and disclosure
 
-Public health/version/telemetry endpoints expose only disclosure-safe operational data. Protected administration remains separately authorized. Provider credentials, internal secrets, and private infrastructure details are not serialized into public operations responses.
+Public health, version, and reporting endpoints expose only disclosure-safe operational data. Protected administration remains separately authorized. Provider credentials, internal secrets, and private infrastructure details are not serialized into public operations responses.
 
 The route registry defines coarse route authorization while the underlying handler/service remains responsible for source-specific disclosure constraints.
 
@@ -93,7 +93,7 @@ Automation and documentation should use the canonical machine routes directly:
 - health checks: `/api/operations/health`;
 - deployed version checks: `/api/operations/version`;
 - sanitized log inspection: `/api/operations/logs`;
-- usage inspection: `/api/operations/usage`;
+- usage inspection: `/api/reporting/operations`;
 - OpenAPI discovery: `/api/openapi.json`.
 
 Monitoring must not depend on removed operational path families.
@@ -110,6 +110,6 @@ Relevant validation includes:
 
 - `tests/operational-route-registry.test.ts` for declarations and policy;
 - `tests/operations.test.ts` and `tests/operations-consolidation.test.ts` for behavior and UI;
-- `tests/retired-api-routes.test.ts` for removed machine routes;
+- `tests/removed-api-routes.test.ts` for removed machine routes;
 - `tests/route-artifacts.test.ts` for generated route documentation and manifest parity;
 - `npm run check` for the complete required validation chain.

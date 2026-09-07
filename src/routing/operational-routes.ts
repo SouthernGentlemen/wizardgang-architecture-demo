@@ -1,27 +1,22 @@
 import type { Env } from '../types';
 import type { AdminIdentity } from '../lib/admin-auth';
-import { requireAdmin, requireSameOrigin } from '../lib/admin-auth';
 import { getDemoControl, setDemoControl } from '../lib/demo-control';
 import {
-  crawlerBlockedResponse,
   getCrawlerControl,
-  identifyOpenAIAgent,
   robotsResponse,
   setCrawlerControl,
 } from '../lib/crawler-control';
-import { json, methodNotAllowed } from '../lib/http';
-import { healthResponse, versionResponse, logsResponse, cloudflareUsageResponse } from '../api/operations';
+import { json } from '../lib/http';
+import { healthResponse, versionResponse, logsResponse } from '../api/operations';
 import { billingScenarioResponse } from '../api/billing';
 import { securityTxtResponse } from '../api/security-policy';
 import { sitemapResponse } from '../api/sitemap';
 import { uiAssetResponse } from '../ui/assets';
 import { renderAdmin, renderOffline } from '../ui/admin';
 import { renderOperations } from '../demos/operations';
-import { demos } from '../demos/registry';
 import {
   createRouteRegistry,
   defineRouteModule,
-  matchRoute,
   type CachePolicy,
   type RouteDeclaration,
   type RouteHandler,
@@ -172,7 +167,7 @@ const globalOperationalRoutes = [
   }),
   operationalRoute({
     id: 'operations.sitemap', pattern: '/sitemap.xml', methods: ['GET'], kind: 'protocol',
-    handler: (request) => sitemapResponse(request, demos), title: 'Sitemap', description: 'Registry-generated public sitemap.',
+    handler: (request) => sitemapResponse(request), title: 'Sitemap', description: 'Registry-generated public sitemap.',
     sourceModule: 'src/api/sitemap.ts', sourceExport: 'sitemapResponse', offline: 'gated',
     cache: { mode: 'public', maxAgeSeconds: 3600 },
   }),
@@ -187,11 +182,6 @@ const globalOperationalRoutes = [
     sourceModule: 'src/api/operations.ts', sourceExport: 'logsResponse',
   }),
   operationalRoute({
-    id: 'operations.api-usage', pattern: '/api/operations/usage', methods: ['GET'], kind: 'api', handler: (request, { env }) => cloudflareUsageResponse(request, env),
-    title: 'Operations usage API', description: 'Sanitized cached Cloudflare usage telemetry.',
-    sourceModule: 'src/api/operations.ts', sourceExport: 'cloudflareUsageResponse',
-  }),
-  operationalRoute({
     id: 'operations.api-budget', pattern: '/api/operations/budget', methods: ['POST'], kind: 'api', handler: (request, { env }) => billingScenarioResponse(request, env),
     title: 'Operations budget API', description: 'Synthetic budget scenario control used by the operations demo.',
     sourceModule: 'src/api/billing.ts', sourceExport: 'billingScenarioResponse',
@@ -200,103 +190,3 @@ const globalOperationalRoutes = [
 
 export const operationalRouteModule = defineRouteModule('operations', globalOperationalRoutes);
 export const operationalRouteRegistry = createRouteRegistry([operationalRouteModule]);
-
-function cacheControl(policy: CachePolicy): string {
-  if (policy.mode === 'response') return 'no-store';
-  if (policy.mode === 'no-store') return 'no-store';
-  if (policy.mode === 'private') {
-    return policy.maxAgeSeconds === undefined ? 'private' : `private, max-age=${policy.maxAgeSeconds}`;
-  }
-  return [
-    'public',
-    `max-age=${policy.maxAgeSeconds}`,
-    ...(policy.staleWhileRevalidateSeconds === undefined ? [] : [`stale-while-revalidate=${policy.staleWhileRevalidateSeconds}`]),
-    ...(policy.immutable ? ['immutable'] : []),
-  ].join(', ');
-}
-
-function applyResponsePolicy(response: Response, route: RouteDeclaration<OperationalRouteContext>): Response {
-  const headers = new Headers(response.headers);
-  if (route.cache.mode === 'response') {
-    if (!headers.has('cache-control')) headers.set('cache-control', 'no-store');
-  } else {
-    headers.set('cache-control', cacheControl(route.cache));
-  }
-  if (route.kind === 'page' && route.crawler.indexing === 'deny') {
-    headers.set('x-robots-tag', 'noindex, nofollow');
-  }
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers,
-  });
-}
-
-async function crawlerPolicyFailure(
-  request: Request,
-  env: Env,
-  route: RouteDeclaration<OperationalRouteContext>,
-): Promise<Response | null> {
-  if (route.crawler.crawling === 'allow') return null;
-  const agent = identifyOpenAIAgent(request.headers.get('user-agent'));
-  if (!agent) return null;
-  if (route.crawler.crawling === 'deny' || agent === 'GPTBot') return crawlerBlockedResponse(agent);
-  if ((await getCrawlerControl(env)).state === 'disabled') return crawlerBlockedResponse(agent);
-  return null;
-}
-
-function offlineResponse(request: Request, route: RouteDeclaration<OperationalRouteContext>, message: string): Response {
-  const accept = request.headers.get('accept') || '';
-  const browserHtml = request.method === 'GET'
-    && route.kind !== 'api'
-    && (accept.includes('text/html') || accept === '');
-  if (browserHtml) {
-    const url = new URL(request.url);
-    const target = new URL('/offline', url.origin);
-    target.searchParams.set('from', url.pathname);
-    return Response.redirect(target.toString(), 302);
-  }
-  return json({ status: 'offline', message }, {
-    status: 503,
-    headers: { 'cache-control': 'no-store', 'retry-after': '60' },
-  });
-}
-
-async function authorizeRoute(
-  request: Request,
-  env: Env,
-  route: RouteDeclaration<OperationalRouteContext>,
-): Promise<AdminIdentity | Response | undefined> {
-  if (route.authentication.mode === 'anonymous') return undefined;
-  if (route.authentication.provider !== 'admin-basic' || route.authorization.mode !== 'policy' || route.authorization.policy !== 'admin') {
-    throw new Error(`Unsupported operational route authorization policy for ${route.id}`);
-  }
-  return requireAdmin(request, env);
-}
-
-export async function routeOperationalRequest(request: Request, env: Env, path: string): Promise<Response | undefined> {
-  const match = matchRoute(operationalRouteRegistry, request.method, path);
-  if (match.status === 'not-found') return undefined;
-  const route = match.route;
-
-  const authorization = await authorizeRoute(request, env, route);
-  if (authorization instanceof Response) return authorization;
-
-  const crawlerFailure = await crawlerPolicyFailure(request, env, route);
-  if (crawlerFailure) return crawlerFailure;
-
-  if (route.offline.mode === 'gated') {
-    const control = await getDemoControl(env);
-    if (control.state === 'offline') return offlineResponse(request, route, control.publicMessage);
-  }
-
-  if (match.status === 'method-not-allowed') return methodNotAllowed([...match.allowedMethods]);
-
-  if (route.sameOrigin.mode === 'required' && route.sameOrigin.methods.includes(request.method as RouteMethod)) {
-    const originFailure = requireSameOrigin(request);
-    if (originFailure) return originFailure;
-  }
-
-  const response = await route.handler(request, { env, adminIdentity: authorization }, match.params);
-  return applyResponsePolicy(response, route);
-}

@@ -109,8 +109,7 @@ const surfaceByRouteId = new Map<FrontendSurfaceRouteId, FrontendSurfaceDefiniti
 
 export const htmlPagePathnames = surfaces.map((surface) => surface.route);
 
-/** Transitional consumer view: these are surface declarations, not legacy page definitions. */
-export const demos = surfaces.filter((surface) => surface.index);
+export const indexedSurfaces = surfaces.filter((surface) => surface.index);
 
 export function frontendSurface(routeId: FrontendSurfaceRouteId): FrontendSurfaceDefinition {
   const surface = surfaceByRouteId.get(routeId);

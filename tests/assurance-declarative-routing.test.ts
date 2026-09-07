@@ -6,7 +6,8 @@ import {
 } from '../src/assurance/model';
 import { assuranceRouteCapabilities } from '../src/assurance/route-capabilities';
 import type { AssuranceRouteCapability } from '../src/assurance/route-capability';
-import { createAssuranceRouteRouter } from '../src/routing/assurance-routes';
+import { createAssuranceRouteRegistry } from '../src/routing/assurance-routes';
+import { matchRoute } from '../src/routing/registry';
 import type { Env } from '../src/types';
 
 const env = {
@@ -72,19 +73,18 @@ describe('declarative assurance presentation routing', () => {
       'synthetic',
       { html: '/synthetic-assurance' },
     ));
-    const router = createAssuranceRouteRouter(
+    const routeRegistry = createAssuranceRouteRegistry(
       registry,
       [...assuranceRouteCapabilities, syntheticCapability('synthetic')],
     );
 
-    expect(router.registry.declarations.map((route) => route.pattern)).toContain('/synthetic-assurance');
-    const response = await router.route(
-      new Request('https://demo.wizardgang.ai/synthetic-assurance'),
-      env,
-      '/synthetic-assurance',
-    );
-    expect(response?.status).toBe(200);
-    expect(await response?.json()).toMatchObject({ ownerId: 'synthetic', pathname: '/synthetic-assurance' });
+    expect(routeRegistry.declarations.map((route) => route.pattern)).toContain('/synthetic-assurance');
+    const match = matchRoute(routeRegistry, 'GET', '/synthetic-assurance');
+    expect(match.status).toBe('matched');
+    if (match.status !== 'matched') throw new Error('Synthetic assurance route did not match.');
+    const response = await match.route.handler(new Request('https://demo.wizardgang.ai/synthetic-assurance'), { env }, match.params);
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({ ownerId: 'synthetic', pathname: '/synthetic-assurance' });
   });
 
   it('keeps independently registered presentation routes distinct', async () => {
@@ -92,7 +92,7 @@ describe('declarative assurance presentation routing', () => {
       syntheticResource('synthetic-a', 'synthetic-a', { html: '/synthetic-a' }),
       syntheticResource('synthetic-b', 'synthetic-b', { html: '/synthetic-b' }),
     );
-    const router = createAssuranceRouteRouter(
+    const routeRegistry = createAssuranceRouteRegistry(
       registry,
       [
         ...assuranceRouteCapabilities,
@@ -101,9 +101,9 @@ describe('declarative assurance presentation routing', () => {
       ],
     );
 
-    expect((await router.route(new Request('https://demo.wizardgang.ai/synthetic-a'), env, '/synthetic-a'))?.status).toBe(200);
-    expect((await router.route(new Request('https://demo.wizardgang.ai/synthetic-b'), env, '/synthetic-b'))?.status).toBe(200);
-    expect(await router.route(new Request('https://demo.wizardgang.ai/synthetic-a/extra'), env, '/synthetic-a/extra')).toBeUndefined();
+    expect(matchRoute(routeRegistry, 'GET', '/synthetic-a').status).toBe('matched');
+    expect(matchRoute(routeRegistry, 'GET', '/synthetic-b').status).toBe('matched');
+    expect(matchRoute(routeRegistry, 'GET', '/synthetic-a/extra')).toEqual({ status: 'not-found', statusCode: 404 });
   });
 
   it('fails closed when a registered HTML route has no specialized renderer', () => {
@@ -112,17 +112,17 @@ describe('declarative assurance presentation routing', () => {
       'synthetic-html',
       { html: '/synthetic-assurance' },
     ));
-    expect(() => createAssuranceRouteRouter(registry, assuranceRouteCapabilities))
+    expect(() => createAssuranceRouteRegistry(registry, assuranceRouteCapabilities))
       .toThrow(/synthetic-html.*HTML|HTML.*synthetic-html/i);
   });
 
-  it('rejects legacy assurance API declarations instead of reviving a second API router', () => {
+  it('rejects additional assurance API declarations instead of creating a second API router', () => {
     const registry = registryWith(syntheticResource(
       'synthetic-api',
       'synthetic-api',
-      { api: '/v1/assurance/synthetic-api', apiRecord: '/v1/assurance/synthetic-api/{id}' },
+      { api: '/v1/assurance/synthetic-api', apiRecord: '/v1/assurance/synthetic-api/{id}' } as never,
     ));
-    expect(() => createAssuranceRouteRouter(registry, assuranceRouteCapabilities))
-      .toThrow(/legacy assurance API routes.*api\/reporting/i);
+    expect(() => createAssuranceRouteRegistry(registry, assuranceRouteCapabilities))
+      .toThrow(/unsupported route field.*api\/reporting/i);
   });
 });

@@ -1,5 +1,4 @@
 import {
-  assuranceCollectionState,
   assuranceDatasetQualification,
   assuranceFilterDefinitions,
   assuranceFilterPredicate,
@@ -193,12 +192,6 @@ export function reportingCollectionFilters(collection: ReportingCollectionDescri
   }));
 }
 
-function structuredAvailability(status: ReturnType<typeof assuranceCollectionState>['status']): ReportingAvailability {
-  if (status === 'available' || status === 'empty') return 'available';
-  if (status === 'partial') return 'partial';
-  return 'unavailable';
-}
-
 function genericFacets(records: readonly ReportingRecord[]): Readonly<Record<string, Readonly<Record<string, number>>>> {
   const facets: Record<string, Record<string, number>> = {};
   for (const field of ['recordType', 'status', 'availability', 'partition']) {
@@ -247,8 +240,7 @@ async function queryRuntimeStructured(
   const filtered = allPublished.filter(assuranceFilterPredicate(dataset, normalized.filters));
   const limit = normalizedLimit(options.limit);
   const page = await paginateStructured(env, collection, filtered, normalized.filters, limit, options.cursor ?? null);
-  const state = assuranceCollectionState(dataset);
-  const availability = structuredAvailability(state.status);
+  const availability: ReportingAvailability = 'available';
   const sources = assuranceReportingCollections(dataset)
     .map((entry) => entry.source)
     .filter((source) => collection.sourcePaths.includes(source.scope.resource));

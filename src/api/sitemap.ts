@@ -3,7 +3,7 @@ import { withSecurityHeaders } from '../lib/http';
 import { registeredSitemapPaths } from '../routing/navigation';
 
 /** Generate the public sitemap from registered page metadata. */
-export function sitemapResponse(request: Request, _legacyInput?: unknown): Response {
+export function sitemapResponse(request: Request): Response {
   const url = new URL(request.url);
   const local = url.hostname === 'localhost' || url.hostname === '127.0.0.1';
   const origin = local ? url.origin : `https://${url.host}`;

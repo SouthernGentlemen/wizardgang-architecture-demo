@@ -6,11 +6,9 @@ import {
 } from './model';
 import {
   assuranceAnchor as contractAnchor,
-  assuranceRouteAliases as contractRouteAliases,
   assuranceRouteDeclarations as contractRouteDeclarations,
   assuranceRouteOwnerResource as contractRouteOwnerResource,
   assuranceRoutesForDataset as contractRoutesForDataset,
-  matchAssuranceRoute as contractMatchRoute,
   validateAssuranceRouteContract as contractValidateRouteContract,
   validateAssuranceRouteHandlerSupport as contractValidateRouteHandlerSupport,
 } from './route-contract.js';
@@ -22,17 +20,8 @@ export interface AssuranceRouteDeclaration {
   routes: AssuranceRegistryRoutes;
 }
 
-export interface AssuranceRouteMatch {
-  owner: string;
-  kind: 'html' | 'api-collection' | 'api-record' | 'alias';
-  recordId?: string;
-  target?: string;
-}
-
 export interface AssuranceRouteHandlerSupport {
   html?: boolean;
-  apiCollection?: boolean;
-  apiRecord?: boolean;
 }
 
 const routeContractErrors = contractValidateRouteContract(assuranceRegistry);
@@ -100,14 +89,6 @@ export function assuranceRecordUrls(
 
 export function assuranceRouteDeclarations(): AssuranceRouteDeclaration[] {
   return contractRouteDeclarations(assuranceRegistry) as AssuranceRouteDeclaration[];
-}
-
-export function assuranceRouteAliases(): Array<{ owner: string; path: string; target: string }> {
-  return contractRouteAliases(assuranceRegistry) as Array<{ owner: string; path: string; target: string }>;
-}
-
-export function matchAssuranceRoute(path: string): AssuranceRouteMatch | null {
-  return contractMatchRoute(assuranceRegistry, path) as AssuranceRouteMatch | null;
 }
 
 export function validateAssuranceRouteHandlerSupport(

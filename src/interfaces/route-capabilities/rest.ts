@@ -13,6 +13,6 @@ export const restRouteCapability = defineInterfaceIdentityCapability('interfaces
     sourceModule: 'src/api/openapi.ts',
     sourceExport: 'openApiResponse',
     cache: { mode: 'public', maxAgeSeconds: 300 },
-    tests: ['tests/contracts.test.ts', 'tests/integration-interfaces.test.ts'],
+    tests: ['tests/contracts.test.ts', 'tests/api-records.test.ts'],
   }),
 ]);

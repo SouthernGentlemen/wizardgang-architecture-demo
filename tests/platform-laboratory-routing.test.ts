@@ -6,7 +6,8 @@ import {
   definePlatformLaboratoryCapability,
   noRequestBody,
 } from '../src/platform/route-capability';
-import { createPlatformLaboratoryRouteRouter } from '../src/routing/platform-laboratory-routes';
+import { createPlatformLaboratoryRouteRegistry } from '../src/routing/platform-laboratory-routes';
+import { matchRoute } from '../src/routing/registry';
 import { routeRequest } from '../src/router';
 import type { Env } from '../src/types';
 
@@ -283,17 +284,13 @@ describe('platform laboratory declarative routing', () => {
         storage: NO_STORAGE,
       }],
     });
-    const router = createPlatformLaboratoryRouteRouter([...platformLaboratoryCapabilities, synthetic]);
-
-    const response = await router.route(
-      new Request('https://demo.wizardgang.ai/api/labs/synthetic'),
-      onlineEnv,
-      '/api/labs/synthetic',
-    );
-
-    expect(response?.status).toBe(200);
-    expect(await response?.json()).toEqual({ ok: true });
-    expect(response?.headers.get('cache-control')).toBe('no-store');
+    const routeRegistry = createPlatformLaboratoryRouteRegistry([...platformLaboratoryCapabilities, synthetic]);
+    const match = matchRoute(routeRegistry, 'GET', '/api/labs/synthetic');
+    expect(match.status).toBe('matched');
+    if (match.status !== 'matched') throw new Error('Synthetic laboratory route did not match.');
+    const response = await match.route.handler(new Request('https://demo.wizardgang.ai/api/labs/synthetic'), onlineEnv, match.params);
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ ok: true });
 
     const centralRouterSource = fs.readFileSync('src/router.ts', 'utf8');
     expect(centralRouterSource).not.toContain('/api/labs/synthetic');

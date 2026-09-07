@@ -47,9 +47,7 @@ Consumers should call this service instead of importing datasets or provider cli
 
 ### Disclosure
 
-`src/reporting/disclosure.ts` applies the caller's principal and source visibility before data crosses a presentation or HTTP boundary. Private data must never become visible merely because a collection or provider can technically return it.
-
-Public entry points can therefore remain discoverable while private collection membership and private fields stay protected.
+`src/reporting/service.ts` applies the caller's principal and source visibility before data crosses a presentation or HTTP boundary. Private data must never become visible merely because a collection or provider can technically return it. Public entry points can therefore remain discoverable while private collection membership and private fields stay protected.
 
 ### Pagination
 
@@ -87,7 +85,7 @@ PATCH /api/reporting/{collection}/{id}
 
 Mutation requires `reporting:write` and a source that explicitly supports updates. The request boundary validates the payload and requires the source's revision token when applicable. The provider adapter performs the revision-checked mutation and returns the normalized updated record.
 
-A source that is read-only through reporting rejects mutation rather than exposing a separate import or compatibility route.
+A source that is read-only through reporting rejects mutation rather than exposing a separate import route.
 
 ## Filters
 
@@ -137,7 +135,7 @@ The application router uses `cache: response` for reporting routes so it does no
 
 ## Runtime validation
 
-Structured records are checked against the canonical assurance/reporting contract before serialization. Provider payloads are normalized and boundary-validated before they are returned.
+Every successful reporting index, collection, record, and update response is checked against the applicable definition in the canonical reporting JSON Schema before serialization. Provider payloads are normalized first and pass through the same response validator.
 
 The principal contract files are:
 
@@ -145,11 +143,13 @@ The principal contract files are:
 - `contracts/assurance/registry.schema.json`
 - `src/reporting/contracts.ts`
 - `src/reporting/service.ts`
+- `src/reporting/schema-validation.ts`
 - `src/api/reporting.ts`
+- `src/api/reporting-response.ts`
 
 ## OpenAPI
 
-The active OpenAPI 3.1 document is served from `/api/openapi.json`. Every documented operation declares `x-route-id`, and contract tests verify that the referenced route ID owns the documented method and path in the application registry.
+The active OpenAPI 3.1 document is served from `/api/openapi.json`. Every documented operation declares `x-route-id`, and contract tests verify that the referenced route ID owns the documented method and path in the application registry. Reporting operations reference the canonical schema `$id` directly; OpenAPI does not embed, wrap, or weaken a second reporting schema.
 
 ## Consumer guidance
 

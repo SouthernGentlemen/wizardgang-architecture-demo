@@ -10,7 +10,7 @@ The public assurance experience is rendered at `/assurance`. Machine-readable as
 | `/api/reporting/{collection}` | `GET`, `OPTIONS` | Query one structured or provider-backed reporting collection. |
 | `/api/reporting/{collection}/{id}` | `GET`, `PATCH`, `OPTIONS` | Read one reporting record, or update it when that source supports authorized mutation. |
 
-The route registry is authoritative for method, offline, cache, disclosure, and crawler policy. Unknown collections, unknown records, and retired paths use the normal not-found behavior; there are no compatibility redirects or aliases.
+The route registry is authoritative for method, offline, cache, disclosure, and crawler policy. Unknown collections, unknown records, and removed paths use the normal not-found behavior; there are no redirects or aliases.
 
 ## Collection discovery
 
@@ -86,9 +86,10 @@ Contract sources include:
 - `contracts/assurance/reporting.schema.json`
 - `contracts/assurance/registry.schema.json`
 - `src/reporting/service.ts`
-- `src/reporting/disclosure.ts`
+- `src/reporting/schema-validation.ts`
 - `src/reporting/pagination.ts`
 - `src/api/reporting.ts`
+- `src/api/reporting-response.ts`
 
 ## Pagination and cursors
 
@@ -104,4 +105,4 @@ Export requests use the same canonical query and disclosure path as normal reads
 
 The current OpenAPI 3.1 document is served from `/api/openapi.json`. It documents the active reporting operations and maps each operation to an application route ID.
 
-`contracts/openapi/openapi.json` is the checked-in contract. `npm run validate:contracts` verifies that its embedded assurance/reporting schemas remain synchronized with the canonical JSON Schemas.
+`contracts/openapi/openapi.json` is the checked-in contract. Reporting operations reference the canonical reporting schema `$id` directly. `npm run validate:contracts` rejects embedded duplicates, wrappers, or weaker reporting schemas.

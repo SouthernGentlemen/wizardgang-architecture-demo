@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { demos } from '../src/demos/registry';
+import { indexedSurfaces } from '../src/demos/registry';
 import { sitemapResponse } from '../src/api/sitemap';
 import {
   applicationRouteRegistry,
@@ -13,43 +13,43 @@ const applicationRoutes = applicationRouteRegistry.declarations as readonly Appl
 
 describe('architecture demo registry', () => {
   it('publishes the consolidated HTML routes in four architecture groups', () => {
-    expect(demos).toHaveLength(5);
-    expect([...new Set(demos.map((demo) => demo.group))]).toEqual([
+    expect(indexedSurfaces).toHaveLength(5);
+    expect([...new Set(indexedSurfaces.map((surface) => surface.group))]).toEqual([
       'Platform', 'Interfaces', 'Delivery & Governance', 'Operations',
     ]);
   });
 
   it('uses unique public routes', () => {
-    expect(new Set(demos.map((demo) => demo.route)).size).toBe(demos.length);
+    expect(new Set(indexedSurfaces.map((surface) => surface.route)).size).toBe(indexedSurfaces.length);
   });
 
   it('uses one source module per architecture demo route', () => {
     const indexedRoutes = applicationRoutes.filter((route) => route.navigation?.index);
-    expect(indexedRoutes).toHaveLength(demos.length);
-    expect(new Set(indexedRoutes.map((route) => route.source.module)).size).toBe(demos.length);
+    expect(indexedRoutes).toHaveLength(indexedSurfaces.length);
+    expect(new Set(indexedRoutes.map((route) => route.source.module)).size).toBe(indexedSurfaces.length);
   });
 
   it('keeps every architecture route absolute', () => {
-    expect(demos.every((demo) => demo.route.startsWith('/'))).toBe(true);
+    expect(indexedSurfaces.every((surface) => surface.route.startsWith('/'))).toBe(true);
   });
 
   it('publishes one canonical operations route and retires the dashboard route family', () => {
-    const routes = new Set(demos.map((demo) => demo.route));
+    const routes = new Set(indexedSurfaces.map((surface) => surface.route));
     expect([...routes].filter((route) => route === '/operations')).toEqual(['/operations']);
     expect([...routes].filter((route) => route.startsWith('/dashboard'))).toEqual([]);
   });
 
   it('places consolidated assurance and separate security in delivery and governance', () => {
-    const assurance = demos.find((demo) => demo.route === '/assurance');
+    const assurance = indexedSurfaces.find((surface) => surface.route === '/assurance');
     expect(assurance).toMatchObject({ group: 'Delivery & Governance' });
     expect(applicationRoutes.find((route) => route.pattern === '/assurance')?.source.module).toBe('src/demos/assurance.ts');
-    const security = demos.find((demo) => demo.route === '/security');
+    const security = indexedSurfaces.find((surface) => surface.route === '/security');
     expect(security).toMatchObject({ group: 'Delivery & Governance' });
     expect(applicationRoutes.find((route) => route.pattern === '/security')?.source.module).toBe('src/demos/security-page.ts');
     for (const retired of ['/git', '/governance', '/evidence', '/compliance', '/governance/concerns', '/governance/risks', '/governance/incidents']) {
-      expect(demos.some((demo) => demo.route === retired), retired).toBe(false);
+      expect(indexedSurfaces.some((surface) => surface.route === retired), retired).toBe(false);
     }
-    expect(demos.some((demo) => demo.route === '/dashboard/compliance')).toBe(false);
+    expect(indexedSurfaces.some((surface) => surface.route === '/dashboard/compliance')).toBe(false);
   });
 
   it('keeps registry metadata synchronized with the machine route manifest', () => {
@@ -59,20 +59,20 @@ describe('architecture demo registry', () => {
       status: string;
       navigation?: { group: string; label: string; index: boolean; sitemap: boolean };
     }>;
-    for (const demo of demos) {
-      const entry = manifest.find((candidate) => candidate.route === demo.route);
-      const declaration = applicationRoutes.find((route) => route.pattern === demo.route);
-      expect(entry, `missing manifest entry for ${demo.route}`).toBeDefined();
+    for (const surface of indexedSurfaces) {
+      const entry = manifest.find((candidate) => candidate.route === surface.route);
+      const declaration = applicationRoutes.find((route) => route.pattern === surface.route);
+      expect(entry, `missing manifest entry for ${surface.route}`).toBeDefined();
       expect(entry?.source.module).toBe(declaration?.source.module);
       expect(entry?.status).toBe('working');
       expect(entry?.navigation).toMatchObject({
-        group: demo.group,
-        label: demo.title,
+        group: surface.group,
+        label: surface.title,
         index: true,
         sitemap: true,
       });
     }
-    expect(manifest.filter((entry) => entry.navigation?.index)).toHaveLength(demos.length);
+    expect(manifest.filter((entry) => entry.navigation?.index)).toHaveLength(indexedSurfaces.length);
   });
 });
 
@@ -80,7 +80,7 @@ describe('intentional offline route policies', () => {
   it('keeps registered operational recovery surfaces reachable', () => {
     for (const route of [
       '/operations',
-      '/api/operations/health', '/api/operations/version', '/api/operations/logs', '/api/operations/usage',
+      '/api/operations/health', '/api/operations/version', '/api/operations/logs',
       '/api/operations/budget', '/offline', '/admin', '/robots.txt', '/.well-known/security.txt', '/assets/:asset',
     ]) {
       const declaration = operationalRouteRegistry.declarations.find((candidate) => candidate.pattern === route);
@@ -119,11 +119,11 @@ describe('intentional offline route policies', () => {
 
 describe('public sitemap', () => {
   it('publishes every registered route over https', async () => {
-    const xml = await sitemapResponse(new Request('https://demo.wizardgang.ai/sitemap.xml'), demos).text();
+    const xml = await sitemapResponse(new Request('https://demo.wizardgang.ai/sitemap.xml')).text();
     expect(xml).toContain('<loc>https://demo.wizardgang.ai/</loc>');
-    for (const demo of demos) {
-      expect(xml, demo.route).toContain(`<loc>https://demo.wizardgang.ai${demo.route}</loc>`);
+    for (const surface of indexedSurfaces) {
+      expect(xml, surface.route).toContain(`<loc>https://demo.wizardgang.ai${surface.route}</loc>`);
     }
-    expect((xml.match(/<loc>/g) ?? []).length).toBe(demos.length + 1);
+    expect((xml.match(/<loc>/g) ?? []).length).toBe(indexedSurfaces.length + 1);
   });
 });

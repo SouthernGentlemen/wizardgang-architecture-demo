@@ -7,7 +7,7 @@ import { operationsNavigation } from './operations-pages';
 
 const demo: DemoDefinition = {
   id: 'logs',
-  route: '/dashboard/logs',
+  route: '/operations?view=logs',
   title: 'Log Viewer',
   group: 'Operations',
   sourcePath: 'src/demos/logs.ts',
@@ -65,10 +65,11 @@ export async function renderLogsDemo(request: Request, env: Env): Promise<Respon
     ])}
   </div>
 </section>
-${operationsNavigation('/dashboard/logs')}
+${operationsNavigation('/operations?view=logs')}
 <section class="panel" aria-labelledby="filters-heading">
   <h2 id="filters-heading">Filter logs</h2>
-  <form method="get" class="filters">
+  <form method="get" action="/operations" class="filters">
+    <input type="hidden" name="view" value="logs">
     <label>Level
       <select name="level">
         <option value="">All</option>
@@ -85,7 +86,7 @@ ${operationsNavigation('/dashboard/logs')}
       <input name="requestId" value="${escapeHtml(requestId)}" maxlength="120" placeholder="req_…">
     </label>
     <button type="submit">Apply</button>
-    <a href="/dashboard/logs">Reset</a>
+    <a href="/operations?view=logs">Reset</a>
   </form>
 </section>
 <section class="panel" aria-labelledby="viewer-heading">
@@ -100,7 +101,7 @@ ${operationsNavigation('/dashboard/logs')}
   <p><a href="/api/operations/logs?limit=${limit}${level ? `&level=${encodeURIComponent(level)}` : ''}${source ? `&source=${encodeURIComponent(source)}` : ''}${requestId ? `&requestId=${encodeURIComponent(requestId)}` : ''}">View JSON</a></p>
 </section>`;
 
-  return shell(env, demo.title, body, { cacheControl: 'no-store', activeRoute: '/dashboard/logs' });
+  return shell(env, demo.title, body, { cacheControl: 'no-store', activeRoute: '/operations' });
 }
 
 export default demo;

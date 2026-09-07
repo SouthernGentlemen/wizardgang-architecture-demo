@@ -49,7 +49,7 @@ Includes:
 
 **Primary recovery source:** Git repository history and retained semantic tags/releases.
 
-The existing release process can manually deploy an existing semantic tag, checks out the exact tag, runs validation, applies D1 migrations, injects version/SHA metadata, deploys the Worker, and verifies `/version` and `/health`.
+The existing release process can manually deploy an existing semantic tag, checks out the exact tag, runs validation, applies D1 migrations, injects version/SHA metadata, deploys the Worker, and verifies `/api/operations/version` and `/api/operations/health`.
 
 **Current evidence posture:** Strong reconstruction path for source-controlled state. This does not prove independent GitHub-hosted backup or availability during a GitHub outage.
 
@@ -126,7 +126,7 @@ The current internal recovery priority is:
 | Priority | Capability / asset | Recovery intent |
 |---|---|---|
 | P0 | Authorized control of repository/provider accounts, known-good release identity, required credentials | Re-establish trustworthy control before restoring service |
-| P1 | Worker/runtime, `/version`, `/health`, critical D1 application/control state | Restore safe and identifiable service operation |
+| P1 | Worker/runtime, `/api/operations/version`, `/api/operations/health`, critical D1 application/control state | Restore safe and identifiable service operation |
 | P2 | Required R2 objects and other non-reconstructable demo content | Restore functional content after core trust boundary is operating |
 | P3 | Historical telemetry, usage snapshots, public-safe logs, nonessential diagnostic history | Restore when retained/needed; otherwise resume collection with loss documented |
 
@@ -213,7 +213,7 @@ A normal restore/reconstruction follows this sequence where applicable:
 6. **Reconstruct platform state.** Re-establish Worker/configuration/bindings and required secrets using authorized sources.
 7. **Apply schema/migrations carefully.** Use the expected migration sequence for the recovered release and data state.
 8. **Restore D1/R2 as applicable.** Restore only the intended data sets into an isolated/non-production target first when feasible.
-9. **Validate application integrity.** Confirm `/version`, `/health`, routes, data access, expected records/objects, and important control behavior.
+9. **Validate application integrity.** Confirm `/api/operations/version`, `/api/operations/health`, routes, data access, expected records/objects, and important control behavior.
 10. **Validate security and AI boundaries.** Confirm authentication/authorization, admin state, public-safe logging, webhook controls, MCP read-only tool inventory, namespace validation, and the approved Codex/Claude-only AI/MCP supplier boundary.
 11. **Return service deliberately.** Move from offline/degraded/test state to normal operation only after required validation passes or an explicit residual limitation is accepted.
 12. **Record outcome.** Capture actual duration, recovered data point, missing data/evidence, defects, follow-up actions, and whether risk/SoA/objectives/supplier/incident records require update.
@@ -226,8 +226,8 @@ Validation should include, as applicable:
 
 - expected commit SHA and semantic version;
 - build/CI validation appropriate to the release;
-- `/version` consistency;
-- `/health` and dependency readiness;
+- `/api/operations/version` consistency;
+- `/api/operations/health` and dependency readiness;
 - D1 schema and selected record counts/content checks;
 - R2 manifest/object presence and selected integrity checks;
 - admin/offline state behavior;
@@ -274,7 +274,7 @@ The first exercise should test, in an isolated or otherwise controlled environme
 - authorized secret re-provisioning without exposing values;
 - D1 export/restore using the implemented mechanism;
 - selected R2 object restore or reconstruction;
-- `/version` and `/health` verification;
+- `/api/operations/version` and `/api/operations/health` verification;
 - selected data-integrity checks;
 - admin/offline behavior;
 - release/deployment traceability;

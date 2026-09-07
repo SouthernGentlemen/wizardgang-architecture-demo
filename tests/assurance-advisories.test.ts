@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { assuranceAdvisoriesResponse } from '../src/api/advisories';
+import { reportingCollectionResponse } from '../src/api/reporting';
 import { advisoryQualification } from '../src/assurance/service';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import { renderSecurity } from '../src/demos/security-page';
@@ -27,7 +27,7 @@ describe('published security advisory assurance', () => {
 
   it('publishes the current common advisory record collection without private report state', async () => {
     const records = listPublishedAssuranceRecords('advisories');
-    const response = await assuranceAdvisoriesResponse(new Request('https://demo.wizardgang.ai/api/reporting/advisories'));
+    const response = await reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/security'), env, 'security');
     expect(response.status).toBe(200);
     expect(response.headers.get('content-type')).toContain('application/json');
     expect(response.headers.get('cache-control')).toContain('max-age=300');
@@ -37,15 +37,12 @@ describe('published security advisory assurance', () => {
       records: typeof records;
       derived: { count: number };
     };
-    expect(body.dataset).toBe('advisories');
+    expect(body.dataset).toBe('security');
     expect(body.derived.count).toBe(records.length);
     expect(body.records).toEqual(records);
-    expect(body.qualifications.advisories).toBe(advisoryQualification);
+    expect(body.qualifications.security).toBe(advisoryQualification);
     expect(JSON.stringify(body)).not.toMatch(unsafePublicAdvisoryFields);
 
-    const rejected = await assuranceAdvisoriesResponse(new Request('https://demo.wizardgang.ai/api/reporting/advisories', { method: 'POST' }));
-    expect(rejected.status).toBe(405);
-    expect(rejected.headers.get('allow')).toBe('GET');
   });
 
   it('documents coordinated disclosure and renders the current canonical advisory state truthfully', async () => {

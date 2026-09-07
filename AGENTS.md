@@ -31,7 +31,7 @@ Preserve these invariants:
 - Keep `src/demos/registry.ts`, `docs/ROUTES.md`, and `docs/route-manifest.json` consistent.
 - Keep the consolidated `/operations` surface and admin/offline controls working as cross-cutting infrastructure while individual demos are implemented.
 - Never let ordinary demo behavior execute behind the intentional offline gate.
-- Keep `/operations`, `/security`, `/api/operations/health`, `/api/operations/version`, `/api/operations/logs`, `/api/operations/usage`, `/api/operations/budget`, `/admin`, and `/offline` reachable while intentionally offline.
+- Keep `/operations`, `/security`, `/api/operations/health`, `/api/operations/version`, `/api/operations/logs`, `/api/operations/budget`, `/admin`, and `/offline` reachable while intentionally offline. Reporting routes remain governed by their declarative offline policy.
 - API/non-HTML/write requests receive `503` JSON while offline; browser HTML demo navigation may redirect to `/offline`.
 - Do not commit secrets, real Cloudflare billing/account data, or admin credentials.
 - Do not claim WCAG, ISO/IEC 27001, or ISO/IEC 42001 certification.

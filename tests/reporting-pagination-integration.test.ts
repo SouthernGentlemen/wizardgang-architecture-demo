@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { assuranceEvidenceResponse } from '../src/api/assurance-registry';
+import { reportingCollectionResponse } from '../src/api/reporting';
 import { dashboardReportingRequestUrl } from '../src/demos/reporting-dashboard';
 import type { Principal } from '../src/lib/authorization';
 import type { ReportingCursorContext } from '../src/reporting/pagination';
@@ -61,9 +61,10 @@ afterEach(() => vi.restoreAllMocks());
 describe('DEMO-177 reporting pagination integration', () => {
   it('passes an API cursor through the dashboard unchanged and rejects invalid cursors', async () => {
     const env = environment();
-    const firstResponse = await assuranceEvidenceResponse(
+    const firstResponse = await reportingCollectionResponse(
       new Request('https://demo.wizardgang.ai/api/reporting/evidence?limit=1'),
       env,
+      'evidence',
     );
     expect(firstResponse.status).toBe(200);
     const first = await firstResponse.json() as {
@@ -73,22 +74,23 @@ describe('DEMO-177 reporting pagination integration', () => {
     const cursor = first.query.pagination.nextCursor;
     expect(cursor).toMatch(/^rpc1\./);
 
-    const dashboardUrl = new URL('https://demo.wizardgang.ai/dashboard?report=evidence&limit=1');
+    const dashboardUrl = new URL('https://demo.wizardgang.ai/operations?view=reports&report=evidence&limit=1');
     dashboardUrl.searchParams.set('cursor', cursor!);
     const target = dashboardReportingRequestUrl('/api/reporting/evidence', dashboardUrl);
     expect(target.searchParams.get('cursor')).toBe(cursor);
 
-    const secondResponse = await assuranceEvidenceResponse(new Request(target), env);
+    const secondResponse = await reportingCollectionResponse(new Request(target), env, 'evidence');
     expect(secondResponse.status).toBe(200);
     const second = await secondResponse.json() as { records: Array<{ id: string }> };
     expect(second.records[0]?.id).not.toBe(first.records[0]?.id);
 
-    const invalid = await assuranceEvidenceResponse(
+    const invalid = await reportingCollectionResponse(
       new Request('https://demo.wizardgang.ai/api/reporting/evidence?limit=1&cursor=not-a-cursor'),
       env,
+      'evidence',
     );
     expect(invalid.status).toBe(400);
-    expect(await invalid.json()).toMatchObject({ error: 'reporting_cursor_malformed', parameter: 'cursor' });
+    expect(await invalid.json()).toEqual({ error: 'reporting_cursor_malformed' });
   });
 
   it('binds continuation to filters and sources', async () => {

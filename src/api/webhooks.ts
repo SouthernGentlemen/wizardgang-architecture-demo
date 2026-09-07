@@ -137,34 +137,6 @@ async function acceptGitHubShape(request: Request, env: Env, options: { provider
   }
 }
 
-/** Executable contract used by the OpenAPI demo. */
-export async function webhookReceiptResponse(request: Request, env: Env): Promise<Response> {
-  if (request.method !== 'POST') return methodNotAllowed(['POST']);
-  try {
-    if (!env.WEBHOOK_DEMO_SECRET) return json({ error: 'webhook_demo_not_configured' }, { status: 503 });
-    const payload = await boundedBody(request, 16_384);
-    const deliveryId = request.headers.get('x-demo-delivery-id');
-    const signature = request.headers.get('x-demo-signature') || '';
-    if (!validDeliveryId(deliveryId)) throw new HttpError(400, 'invalid_delivery_id');
-    if (!(await verifySignature(env.WEBHOOK_DEMO_SECRET, payload, signature))) return json({ error: 'invalid_signature' }, { status: 401 });
-    let parsed: { type?: unknown };
-    try { parsed = JSON.parse(payload) as { type?: unknown }; } catch { throw new HttpError(400, 'invalid_json'); }
-    if (typeof parsed.type !== 'string' || !/^demo\.[a-z.]{1,60}$/.test(parsed.type)) throw new HttpError(400, 'invalid_event_type');
-    const receivedAt = new Date().toISOString();
-    const digest = await sha256(payload);
-    try {
-      await env.DEMO_DB.prepare('INSERT INTO webhook_receipts (event_type, delivery_id, payload_sha256, received_at) VALUES (?, ?, ?, ?)').bind(parsed.type, deliveryId, digest, receivedAt).run();
-    } catch {
-      return json({ error: 'duplicate_delivery', deliveryId }, { status: 409 });
-    }
-    const event = await recordDemoEvent(env, 'webhooks', 'signed_webhook_received', { eventType: parsed.type, deliveryId, payloadSha256: digest });
-    await recordApplicationLog(env, { source: 'webhooks', eventKey: 'signed_webhook_received', message: `Verified webhook ${deliveryId} was accepted.`, route: 'webhooks.synthetic-receipt', detail: { eventType: parsed.type, deliveryId, payloadSha256: digest, eventId: event.id } });
-    return json({ accepted: true, deliveryId, eventType: parsed.type, receivedAt, payloadSha256: digest, auditEventId: event.id }, { status: 202 });
-  } catch (error) {
-    return errorResponse(error);
-  }
-}
-
 export async function githubWebhookResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'POST') return methodNotAllowed(['POST']);
   try {

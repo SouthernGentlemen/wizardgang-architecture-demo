@@ -3,9 +3,9 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { routeRequest } from '../src/router';
 import type { D1PreparedStatement, Env } from '../src/types';
-import { referenceFreeRemovedHtml404Pathnames as retiredRoutes } from './fixtures/removed-html-pathnames';
+import { referenceFreeRemovedHtml404Pathnames as removedRoutes } from './fixtures/removed-html-pathnames';
 
-class RetiredRouteStatement implements D1PreparedStatement {
+class RemovedRouteStatement implements D1PreparedStatement {
   constructor(private readonly sql: string) {}
   bind() { return this; }
   async run() { return { meta: {} }; }
@@ -21,7 +21,7 @@ class RetiredRouteStatement implements D1PreparedStatement {
 }
 
 const environment: Env = {
-  DEMO_DB: { prepare: (sql: string) => new RetiredRouteStatement(sql) },
+  DEMO_DB: { prepare: (sql: string) => new RemovedRouteStatement(sql) },
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
   DEMO_ADMIN_USER: 'operator',
@@ -32,9 +32,9 @@ const environment: Env = {
 const textExtensions = new Set(['.css', '.html', '.js', '.json', '.md', '.mjs', '.ts', '.txt', '.yaml', '.yml']);
 const excludedFiles = new Set([
   'CHANGELOG.md',
-  'docs/INTERACTIVE-DEMO-SPEC.md', // v0.5.0 release design record; retained as historical documentation.
-  'tests/fixtures/removed-html-pathnames.ts', // Authoritative negative fixture imported above.
-  'tests/retired-routes.test.ts',
+  'docs/INTERACTIVE-DEMO-SPEC.md',
+  'tests/fixtures/removed-html-pathnames.ts',
+  'tests/removed-routes.test.ts',
 ]);
 const excludedDirectories = ['.git/', '.wrangler/', 'dist/', 'docs/history/', 'docs/releases/', 'node_modules/'];
 
@@ -61,9 +61,9 @@ function pathReferencePattern(route: string): RegExp {
   return new RegExp(`(?:["'\u0060(]|demo\\.wizardgang\\.ai)${escaped}(?=["'\u0060#?\\s)>]|$)`);
 }
 
-describe('retired route removal', () => {
-  it('lets every retired URL fall through the ordinary 404', async () => {
-    for (const route of retiredRoutes) {
+describe('removed route handling', () => {
+  it('lets every removed URL fall through the ordinary 404', async () => {
+    for (const route of removedRoutes) {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${route}`, {
         headers: { accept: 'text/html' },
       }), environment);
@@ -72,11 +72,11 @@ describe('retired route removal', () => {
     }
   });
 
-  it('contains no current runtime, documentation, test, or internal-link references to retired URLs', () => {
+  it('contains no current runtime, documentation, test, or internal-link references to removed URLs', () => {
     const references: string[] = [];
     for (const file of repositoryTextFiles()) {
       const source = readFileSync(file, 'utf8');
-      for (const route of retiredRoutes) {
+      for (const route of removedRoutes) {
         if (pathReferencePattern(route).test(source)) references.push(`${file}: ${route}`);
       }
     }

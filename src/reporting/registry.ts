@@ -11,7 +11,7 @@ interface StructuredRecordSourceDeclaration {
   nativeIdentity: string[];
   revisionIdentity: string[];
   capabilities: ReportingCapability[];
-  ingestion: 'enabled';
+  ingestion: 'disabled';
 }
 
 interface ReportingOwnershipDeclaration {
@@ -38,12 +38,17 @@ export const reportingOwnership = reporting.ownership as readonly ReportingOwner
 
 function copySource(source: ReportingSource): ReportingSource {
   return {
-    ...source,
+    id: source.id,
+    provider: source.provider,
+    authority: source.authority,
     scope: { ...source.scope },
     nativeIdentity: [...source.nativeIdentity],
     revisionIdentity: source.revisionIdentity ? [...source.revisionIdentity] : [],
     ...(source.observationIdentity ? { observationIdentity: [...source.observationIdentity] } : {}),
+    schema: source.schema,
+    visibility: source.visibility,
     capabilities: [...source.capabilities],
+    ingestion: source.ingestion,
   };
 }
 
@@ -63,7 +68,6 @@ export function structuredReportingSource(resource: AssuranceRegistryResource): 
     throw new Error(`${resource.id} is outside the structured reporting source scope ${declaration.resourceRoot}.`);
   }
   const visibility = resource.visibility as ReportingVisibility;
-  const privateResource = visibility === 'private';
   return {
     id: `${declaration.id}.${resource.id}`,
     provider: declaration.provider,
@@ -73,10 +77,8 @@ export function structuredReportingSource(resource: AssuranceRegistryResource): 
     revisionIdentity: [...declaration.revisionIdentity],
     schema: resource.schema,
     visibility,
-    capabilities: privateResource
-      ? declaration.capabilities.filter((capability) => capability !== 'import')
-      : [...declaration.capabilities],
-    ingestion: privateResource ? reporting.privateIngestion : declaration.ingestion,
+    capabilities: [...declaration.capabilities],
+    ingestion: declaration.ingestion,
   };
 }
 

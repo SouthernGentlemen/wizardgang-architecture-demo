@@ -1,9 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
-  importGitHubReporting,
+  updateGitHubReporting,
   queryGitHubReporting,
-  validateGitHubReportingImportRequest,
+  validateGitHubReportingUpdateRequest,
 } from '../src/reporting/github';
+import { reportingJsonResponse } from '../src/api/reporting-response';
 import type { Principal } from '../src/lib/authorization';
 import type { D1Database, Env } from '../src/types';
 
@@ -49,17 +50,36 @@ function requestPath(input: RequestInfo | URL): string {
 afterEach(() => vi.restoreAllMocks());
 
 describe('reporting trust-boundary validation', () => {
+  it('rejects an invalid successful response before serialization', () => {
+    expect(() => reportingJsonResponse(
+      new Request('https://demo.example/api/reporting/risks'),
+      {
+        schemaVersion: 1,
+        contract: 'contracts/assurance/reporting.schema.json',
+        dataset: 'risks',
+        datasets: ['risks'],
+        availability: { risks: 'available' },
+        sources: [],
+        qualifications: {},
+        query: { filters: {} },
+        records: [],
+        derived: { count: 'zero', totalAvailable: 0, facets: {} },
+      },
+      'queryResult',
+    )).toThrowError(/Reporting response violates queryResult/);
+  });
+
   it('rejects malformed native write bodies before repository or provider access', async () => {
-    expect(() => validateGitHubReportingImportRequest(null)).toThrowError('github_import_payload_invalid');
-    expect(() => validateGitHubReportingImportRequest({
+    expect(() => validateGitHubReportingUpdateRequest(null)).toThrowError('github_update_payload_invalid');
+    expect(() => validateGitHubReportingUpdateRequest({
       source: 'github.issues',
       repository,
       operation: 'update',
       nativeId: '158',
       revision: '2026-09-04T19:00:00Z',
       fields: [],
-    })).toThrowError('github_import_payload_invalid');
-    expect(() => validateGitHubReportingImportRequest({
+    })).toThrowError('github_update_payload_invalid');
+    expect(() => validateGitHubReportingUpdateRequest({
       source: 'github.issues',
       repository,
       operation: 'update',
@@ -67,29 +87,29 @@ describe('reporting trust-boundary validation', () => {
       revision: '2026-09-04T19:00:00Z',
       fields: { title: 'x' },
       ignored: true,
-    })).toThrowError('github_import_payload_invalid');
+    })).toThrowError('github_update_payload_invalid');
 
     const fetchMock = vi.spyOn(globalThis, 'fetch');
-    await expect(importGitHubReporting(environment(), operator, {
+    await expect(updateGitHubReporting(environment(), operator, {
       source: 'github.issues',
       repository,
       operation: 'update',
       nativeId: 158,
       revision: '2026-09-04T19:00:00Z',
       fields: { title: 'x' },
-    })).rejects.toMatchObject({ status: 400, code: 'github_import_payload_invalid', detail: 'nativeId' });
+    })).rejects.toMatchObject({ status: 400, code: 'github_update_payload_invalid', detail: 'nativeId' });
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it('preserves the unsupported-operation error after structural request validation', () => {
-    expect(() => validateGitHubReportingImportRequest({
+    expect(() => validateGitHubReportingUpdateRequest({
       source: 'github.issues',
       repository,
       operation: 'create',
       nativeId: '158',
       revision: '2026-09-04T19:00:00Z',
       fields: { title: 'x' },
-    })).toThrowError('github_import_operation_unsupported');
+    })).toThrowError('github_update_operation_unsupported');
   });
 
   it('does not reinterpret malformed provider collections as available empty data', async () => {
@@ -100,11 +120,12 @@ describe('reporting trust-boundary validation', () => {
       return json({ message: 'missing fixture' }, 500);
     });
 
-    const outcome = await queryGitHubReporting(environment(), visitor, { sourceIds: ['github.issues'], mode: 'export' });
+    const outcome = await queryGitHubReporting(environment(), visitor, { sourceIds: ['github.issues'] });
     expect(outcome.result.records).toEqual([]);
     expect(outcome.result.availability['github.issues']).toBe('unavailable');
     expect(outcome.result.qualifications['github.issues.completeness']).toBe('partial');
     expect(outcome.result.qualifications['github.issues.detail']).toBe('github_provider_invalid_response');
+    expect(JSON.stringify(outcome.result)).not.toContain('nextCursor');
   });
 
   it('rejects mixed-shape provider arrays instead of silently dropping malformed entries', async () => {
@@ -118,7 +139,7 @@ describe('reporting trust-boundary validation', () => {
       return json({ message: 'missing fixture' }, 500);
     });
 
-    const outcome = await queryGitHubReporting(environment(), visitor, { sourceIds: ['github.issues'], mode: 'export' });
+    const outcome = await queryGitHubReporting(environment(), visitor, { sourceIds: ['github.issues'] });
     expect(outcome.result.records).toEqual([]);
     expect(outcome.result.availability['github.issues']).toBe('unavailable');
     expect(outcome.result.qualifications['github.issues.detail']).toBe('github_provider_invalid_response');

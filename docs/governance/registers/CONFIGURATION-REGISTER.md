@@ -30,8 +30,8 @@ A repository file may be `Met` as desired-state configuration while provider enf
 | ID | Configuration surface | Authority / source | Environment | Verification | Status |
 |---|---|---|---|---|---|
 | CFG-001 | Worker/runtime desired state | `wrangler.jsonc` | Production + local tooling | source review, Wrangler build/deploy | Met |
-| CFG-002 | Production release identity | `.github/workflows/deploy.yml` + annotated tag | Production | `/version` expected version/SHA | Met |
-| CFG-003 | Production Worker health | deploy workflow + runtime | Production | `/health` post-deploy + monitoring | Met |
+| CFG-002 | Production release identity | `.github/workflows/deploy.yml` + annotated tag | Production | `/api/operations/version` expected version/SHA | Met |
+| CFG-003 | Production Worker health | deploy workflow + runtime | Production | `/api/operations/health` post-deploy + monitoring | Met |
 | CFG-004 | D1 binding/resource identity | `wrangler.jsonc` + deploy workflow + Cloudflare resource | Production | build/deploy/health/migrations; provider reconciliation incomplete | Partial |
 | CFG-005 | R2 binding/resource identity | `wrangler.jsonc` + deploy workflow + Cloudflare resource | Production/preview | build/runtime tests; provider reconciliation incomplete | Partial |
 | CFG-006 | Durable Object binding/migration | `wrangler.jsonc` | Production | build/tests/runtime behavior | Partial |
@@ -85,7 +85,7 @@ Production deployment intentionally substitutes release and environment values. 
 
 **CFG-002 — Status: Met for current workflow design/evidence.**
 
-Production deployment requires an exact annotated semantic-version tag and records the version/SHA into deployment variables. The workflow then verifies the live `/version` response against the expected version/SHA.
+Production deployment requires an exact annotated semantic-version tag and records the version/SHA into deployment variables. The workflow then verifies the live `/api/operations/version` response against the expected version/SHA.
 
 This provides strong evidence that the deployed Worker corresponds to the intended tagged source. It does not prove every provider-side setting matches source.
 

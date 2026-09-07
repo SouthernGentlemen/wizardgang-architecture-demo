@@ -130,7 +130,7 @@ describe('DEMO-178 unified reporting presentation', () => {
       availability: { 'presentation-test': 'unavailable', [source.id]: 'unavailable' },
       qualifications: { 'presentation-test': 'provider_unavailable' },
     };
-    expect(presentReportingQuery(empty).availability).toBe('empty');
+    expect(presentReportingQuery(empty).availability).toBe('available');
     expect(presentReportingQuery(unavailable).availability).toBe('unavailable');
   });
 
@@ -161,7 +161,11 @@ describe('DEMO-178 unified reporting presentation', () => {
         status: 'open',
         availability: 'available',
         fields: { owner: 'delivery', severity: 'high' },
-        relationships: { evidence: ['EVD-1'] },
+        relationships: [{
+          relation: 'evidence',
+          from: { source: source.id, native: 'REC-1' },
+          to: { source: 'github.structured-records.evidence', native: 'EVD-1' },
+        }],
       } as unknown as ReportingRecord],
       derived: {
         count: 1,
@@ -188,7 +192,7 @@ describe('DEMO-178 unified reporting presentation', () => {
       expect.objectContaining({ name: 'severity', value: 'high' }),
     ]));
 
-    const html = renderReportingPresentation(presented, { nextHref: '/dashboard?cursor=next' });
+    const html = renderReportingPresentation(presented, { nextHref: '/operations?view=reports&cursor=next' });
     expect(html).toContain('Shared presentation record');
     expect(html).toContain('Status open');
     expect(html).toContain('Availability Available');

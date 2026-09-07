@@ -103,8 +103,8 @@ export function renderEvidenceDemo(request: Request, env: Env): Response {
       <a class="text-link" href="${escapeHtml(EVIDENCE_API_ROUTE)}">Evidence JSON</a>
       ${referenceDetails([
         { label: 'Canonical assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
-        { label: 'Current assurance API contract', href: sourceUrl(env, 'src/api/assurance.ts') },
-        { label: 'Reporting interchange contract', href: sourceUrl(env, 'contracts/assurance/reporting.schema.json') },
+        { label: 'Reporting API', href: sourceUrl(env, 'src/api/reporting.ts') },
+        { label: 'Canonical reporting schema', href: sourceUrl(env, 'contracts/assurance/reporting.schema.json') },
         { label: 'Publication policy', href: sourceUrl(env, 'src/assurance/publication-policy.js') },
         { label: 'Canonical evidence dataset', href: sourceUrl(env, assuranceDatasetSource('evidence')) },
         { label: 'Assurance guide', href: sourceUrl(env, 'docs/ASSURANCE.md') },

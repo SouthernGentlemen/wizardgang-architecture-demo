@@ -202,7 +202,6 @@
       "tests": [
         "tests/interface-identity-routing.test.ts",
         "tests/graphql.test.ts",
-        "tests/integration-interfaces.test.ts",
         "tests/interface-consolidation.test.ts",
         "tests/canonical-frontend-routes.test.ts"
       ]
@@ -899,7 +898,7 @@
       "tests": [
         "tests/interface-identity-routing.test.ts",
         "tests/contracts.test.ts",
-        "tests/integration-interfaces.test.ts"
+        "tests/api-records.test.ts"
       ]
     },
     "status": "working"
@@ -1135,51 +1134,6 @@
     "source": {
       "module": "src/api/operations.ts",
       "exportName": "logsResponse",
-      "tests": [
-        "tests/operational-route-registry.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "operations.api-usage",
-    "route": "/api/operations/usage",
-    "methods": [
-      "GET"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "available"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Operations usage API",
-    "description": "Sanitized cached Cloudflare usage telemetry.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/OPERATIONS.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/api/operations.ts",
-      "exportName": "cloudflareUsageResponse",
       "tests": [
         "tests/operational-route-registry.test.ts",
         "tests/router.test.ts"
@@ -2852,7 +2806,7 @@
       "exportName": "reportingCollectionResponse",
       "tests": [
         "tests/reporting-api.test.ts",
-        "tests/retired-api-routes.test.ts",
+        "tests/removed-api-routes.test.ts",
         "tests/router.test.ts"
       ]
     },
@@ -2900,7 +2854,7 @@
       "exportName": "reportingIndexResponse",
       "tests": [
         "tests/reporting-api.test.ts",
-        "tests/retired-api-routes.test.ts",
+        "tests/removed-api-routes.test.ts",
         "tests/router.test.ts"
       ]
     },
@@ -2949,7 +2903,7 @@
       "exportName": "reportingRecordResponse",
       "tests": [
         "tests/reporting-api.test.ts",
-        "tests/retired-api-routes.test.ts",
+        "tests/removed-api-routes.test.ts",
         "tests/router.test.ts"
       ]
     },

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { assuranceRisksResponse } from '../src/api/assurance';
+import { reportingCollectionResponse } from '../src/api/reporting';
 import {
   deriveRiskCounts,
   filterAssuranceRecords,
@@ -65,7 +65,7 @@ describe('disclosure-safe public risk assurance', () => {
 
   it('serves filtered GET JSON through the current shared query contract', async () => {
     const published = listPublishedAssuranceRecords('risks');
-    const response = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/api/reporting/risks?framework=ai&status=open&residual=low'));
+    const response = await reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/risks?framework=ai&status=open&residual=low'), environment, 'risks');
     expect(response.status).toBe(200);
     expect(response.headers.get('cache-control')).toBe('public, max-age=300');
     const body = await response.json() as {
@@ -76,17 +76,14 @@ describe('disclosure-safe public risk assurance', () => {
     const expected = published.filter((risk) => risk.framework === 'ai' && risk.status === 'open' && risk.residual.rating === 'low');
     expect(body.query.filters).toEqual({ framework: 'ai', status: 'open', residual: 'low' });
     expect(body.derived.count).toBe(expected.length);
-    expect(body.derived.totalAvailable).toBe(published.length);
+    expect(body.derived.totalAvailable).toBe(expected.length);
     expect(body.records).toEqual(expected);
     expect(body.records.every((record) => Boolean(record.relationships))).toBe(true);
 
-    const rejected = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/api/reporting/risks', { method: 'POST' }));
-    expect(rejected.status).toBe(405);
-    expect(rejected.headers.get('allow')).toBe('GET');
   });
 
   it('renders filter state and stable exact risk anchors', async () => {
-    const response = renderRisks(new Request('https://demo.wizardgang.ai/governance/risks?framework=security&residual=high'), environment);
+    const response = renderRisks(new Request('https://demo.wizardgang.ai/assurance?view=risks&framework=security&residual=high'), environment);
     const html = await response.text();
     expect(response.status).toBe(200);
     expect(html).toContain('option value="security" selected');

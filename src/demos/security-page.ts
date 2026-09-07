@@ -62,7 +62,7 @@ export function renderSecurity(env: Env): Response {
     <h1>Report security privately.</h1>
     <p class="lede">Use the repository's private vulnerability channel for suspected vulnerabilities, active security incidents, credentials, exploit details, or sensitive infrastructure information.</p>
     <p class="assurance-notice"><strong>Do not open a public issue for sensitive security information.</strong> Private report contents are never exposed through the public assurance registry.</p>
-    <div class="page-tools"><a class="button button-primary" href="${reportUrl}">Open a private security report</a><a class="text-link" href="${escapeHtml(ADVISORIES_API_ROUTE)}">Published advisory JSON</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/security.ts'))}">Route source</a>${referenceDetails([
+    <div class="page-tools"><a class="button button-primary" href="${reportUrl}">Open a private security report</a><a class="text-link" href="${escapeHtml(ADVISORIES_API_ROUTE)}">Published advisory JSON</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/security-page.ts'))}">Route source</a>${referenceDetails([
       { label: 'Security page implementation', href: sourceUrl(env, 'src/demos/security-page.ts') },
       { label: 'Security policy source', href: sourceUrl(env, 'SECURITY.md') },
       { label: 'Machine-readable security.txt', href: '/.well-known/security.txt' },

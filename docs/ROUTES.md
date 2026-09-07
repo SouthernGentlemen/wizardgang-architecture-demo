@@ -48,7 +48,6 @@ This file is generated from the active declarative application registry. Route I
 | `operations.api-budget` | `/api/operations/budget` | `POST` | api | public | available | deny | Operations budget API | `src/api/billing.ts` |
 | `operations.health` | `/api/operations/health` | `GET` | api | public | available | deny | Operations health | `src/api/operations.ts` |
 | `operations.api-logs` | `/api/operations/logs` | `GET` | api | public | available | deny | Operations logs API | `src/api/operations.ts` |
-| `operations.api-usage` | `/api/operations/usage` | `GET` | api | public | available | deny | Operations usage API | `src/api/operations.ts` |
 | `operations.version` | `/api/operations/version` | `GET` | api | public | available | deny | Operations version | `src/api/operations.ts` |
 | `reporting.index` | `/api/reporting` | `GET`, `OPTIONS` | api | public | gated | deny | Reporting collection index | `src/api/reporting.ts` |
 | `reporting.collection` | `/api/reporting/{collection}` | `GET`, `OPTIONS` | api | public | gated | deny | Reporting collection API | `src/api/reporting.ts` |

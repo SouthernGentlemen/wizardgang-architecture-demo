@@ -28,11 +28,11 @@ Frontend code builds these links through the surface route-ID/view helpers inste
 
 ## Protocol and machine endpoints
 
-Protocol and API URLs remain separate from the frontend page contract. In particular, `/graphql` is a machine-only GraphQL protocol endpoint even when a browser sends `Accept: text/html`; it does not render GraphiQL or another removed page. The locally bundled GraphiQL document is embedded inside `/interfaces?view=graphql`. `/graphql/schema`, identity callbacks, webhook endpoints, MCP endpoints, health/version routes, and other registered machine contracts keep their protocol/API kinds and are not HTML pages.
+Protocol and API URLs remain separate from the frontend page contract. In particular, `/graphql` is a machine-only GraphQL protocol endpoint even when a browser sends `Accept: text/html`; it does not render GraphiQL or another removed page. The locally bundled GraphiQL document is embedded inside `/interfaces?view=graphql`. Identity callbacks, webhook endpoints, MCP, `/api/operations/health`, `/api/operations/version`, and other registered machine contracts keep their protocol/API kinds and are not HTML pages.
 
 ## Retired HTML paths
 
-Every removed HTML pathname is enumerated once in `tests/fixtures/removed-html-pathnames.ts`. Retired page paths have no redirects, aliases, or compatibility renderers and fall through to the ordinary 404. The fixture separately marks `/graphql` as a retained protocol pathname so tests can prove that it remains machine-only rather than treating it as a removed endpoint.
+Every removed HTML pathname is enumerated once in `tests/fixtures/removed-html-pathnames.ts`. Removed page paths have no redirects, aliases, or alternate renderers and fall through to the ordinary 404. The fixture separately marks `/graphql` as a retained protocol pathname so tests can prove that it remains machine-only rather than treating it as a removed endpoint.
 
 ## Rendering model
 

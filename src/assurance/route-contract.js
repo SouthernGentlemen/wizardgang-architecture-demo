@@ -42,18 +42,6 @@ export function assuranceRouteDeclarations(registry) {
   return declarations;
 }
 
-export function assuranceRouteAliases(registry) {
-  return assuranceRouteDeclarations(registry).flatMap((declaration) => {
-    const html = declaration.routes?.html;
-    if (!html) return [];
-    return (declaration.routes.aliases ?? []).map((alias) => ({
-      owner: declaration.owner,
-      path: alias.path,
-      target: `${html}${alias.fragment ? `#${encodeURIComponent(alias.fragment)}` : ''}`,
-    }));
-  });
-}
-
 export function assuranceAnchor(recordId) {
   return encodeURIComponent(recordId);
 }
@@ -66,20 +54,6 @@ export function assuranceRecordUrls(registry, kind, recordId) {
   return {
     html: recordId === undefined ? route : `${route}#${assuranceAnchor(recordId)}`,
   };
-}
-
-export function assuranceRegistryApiRoute() {
-  return '/api/reporting';
-}
-
-export function matchAssuranceRoute(registry, path) {
-  for (const alias of assuranceRouteAliases(registry)) {
-    if (alias.path === path) return { owner: alias.owner, kind: 'alias', target: alias.target };
-  }
-  for (const declaration of assuranceRouteDeclarations(registry)) {
-    if (declaration.routes?.html === path) return { owner: declaration.owner, kind: 'html' };
-  }
-  return null;
 }
 
 function validRoutePath(value) {
@@ -115,10 +89,6 @@ export function validateAssuranceRouteContract(registry) {
   const ids = new Map(resources.map((resource) => [resource.id, resource]));
 
   if (!registry?.routes?.html) errors.push('registry must declare routes.html');
-  if (registry?.routes?.api || registry?.routes?.apiRecord) {
-    errors.push('registry cannot declare legacy assurance API routes; use /api/reporting');
-  }
-
   for (const resource of resources.filter((entry) => entry.role === 'dataset')) {
     if (resource.routes && resource.routeOwner) {
       errors.push(`${resource.id} cannot declare both routes and routeOwner`);
@@ -126,9 +96,6 @@ export function validateAssuranceRouteContract(registry) {
     if (resource.routeOwner) {
       const owner = assuranceResourceById(registry, resource.routeOwner);
       if (!owner) errors.push(`${resource.id} declares unknown routeOwner ${resource.routeOwner}`);
-    }
-    if (resource.routes?.api || resource.routes?.apiRecord) {
-      errors.push(`${resource.id} cannot declare legacy assurance API routes; use /api/reporting`);
     }
   }
 
@@ -149,27 +116,18 @@ export function validateAssuranceRouteContract(registry) {
 
   for (const declaration of declarations) {
     const routes = declaration.routes ?? {};
+    for (const key of Object.keys(routes)) {
+      if (key !== 'html') errors.push(`${declaration.ownerId} declares unsupported route field ${key}; machine reporting uses /api/reporting`);
+    }
     const resource = declaration.owner === 'registry' ? null : ids.get(declaration.ownerId);
     const capabilities = new Set(resource?.capabilities ?? []);
-    if (!routes.html && (routes.aliases ?? []).length === 0) {
-      errors.push(`${declaration.ownerId} routes must declare html`);
-    }
+    if (!routes.html) errors.push(`${declaration.ownerId} routes must declare html`);
     if (routes.html !== undefined) {
       if (!validRoutePath(routes.html)) errors.push(`${declaration.ownerId} routes.html is not a canonical route path: ${routes.html}`);
       else claim(routes.html, `${declaration.ownerId} routes.html`);
     }
     if (resource && routes.html && !capabilities.has('runtime')) {
       errors.push(`${declaration.ownerId} route owner must declare runtime capability`);
-    }
-    if ((routes.aliases ?? []).length > 0 && !routes.html) {
-      errors.push(`${declaration.ownerId} HTML aliases require routes.html`);
-    }
-    for (const alias of routes.aliases ?? []) {
-      if (!validRoutePath(alias.path)) errors.push(`${declaration.ownerId} alias is not a canonical route path: ${alias.path}`);
-      else claim(alias.path, `${declaration.ownerId} alias`);
-      if (alias.fragment !== undefined && (typeof alias.fragment !== 'string' || alias.fragment.length === 0 || alias.fragment.includes('#'))) {
-        errors.push(`${declaration.ownerId} alias fragment must be a non-empty fragment id without #`);
-      }
     }
   }
 

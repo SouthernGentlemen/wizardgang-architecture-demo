@@ -15,7 +15,7 @@ export interface ReportingRouteContext {
 }
 
 const REPORTING_DOCS = ['docs/REPORTING.md', 'docs/ASSURANCE-API.md', 'docs/ROUTES.md'] as const;
-const REPORTING_TESTS = ['tests/reporting-api.test.ts', 'tests/retired-api-routes.test.ts', 'tests/router.test.ts'] as const;
+const REPORTING_TESTS = ['tests/reporting-api.test.ts', 'tests/removed-api-routes.test.ts', 'tests/router.test.ts'] as const;
 
 function route(
   declaration: Pick<RouteDeclaration<ReportingRouteContext>, 'id' | 'pattern' | 'methods' | 'handler'> & {
