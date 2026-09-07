@@ -65,7 +65,7 @@ describe('disclosure-safe public risk assurance', () => {
 
   it('serves filtered GET JSON through the current shared query contract', async () => {
     const published = listPublishedAssuranceRecords('risks');
-    const response = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?framework=ai&status=open&residual=low'));
+    const response = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?framework=ai&status=open&residual=low'));
     expect(response.status).toBe(200);
     expect(response.headers.get('cache-control')).toBe('public, max-age=300');
     const body = await response.json() as {
@@ -80,7 +80,7 @@ describe('disclosure-safe public risk assurance', () => {
     expect(body.records).toEqual(expected);
     expect(body.records.every((record) => Boolean(record.relationships))).toBe(true);
 
-    const rejected = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks', { method: 'POST' }));
+    const rejected = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks', { method: 'POST' }));
     expect(rejected.status).toBe(405);
     expect(rejected.headers.get('allow')).toBe('GET');
   });

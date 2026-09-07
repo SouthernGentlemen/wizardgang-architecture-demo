@@ -44,7 +44,7 @@ describe('public incident and exercise assurance', () => {
   it('publishes incidents and exercises in one common read-only record collection', async () => {
     const incidents = listPublishedAssuranceRecords('incidents');
     const exercises = listPublishedAssuranceRecords('exercises');
-    const response = assuranceIncidentsResponse(new Request('https://demo.wizardgang.ai/v1/assurance/incidents'));
+    const response = await assuranceIncidentsResponse(new Request('https://demo.wizardgang.ai/v1/assurance/incidents'));
     expect(response.status).toBe(200);
     expect(response.headers.get('content-type')).toContain('application/json');
     const body = await response.json() as {
@@ -63,7 +63,7 @@ describe('public incident and exercise assurance', () => {
     expect(body).not.toHaveProperty('incidents');
     expect(body).not.toHaveProperty('exercises');
 
-    const rejected = assuranceIncidentsResponse(new Request('https://demo.wizardgang.ai/v1/assurance/incidents', { method: 'POST' }));
+    const rejected = await assuranceIncidentsResponse(new Request('https://demo.wizardgang.ai/v1/assurance/incidents', { method: 'POST' }));
     expect(rejected.status).toBe(405);
     expect(rejected.headers.get('allow')).toBe('GET');
   });

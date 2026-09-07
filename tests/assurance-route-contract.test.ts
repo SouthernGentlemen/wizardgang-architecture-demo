@@ -37,7 +37,7 @@ describe('assurance route contract', () => {
   });
 
   it('serves exact records through the same current envelope as collection queries', async () => {
-    const response = assuranceComplianceResponse(
+    const response = await assuranceComplianceResponse(
       new Request('https://demo.wizardgang.ai/v1/assurance/compliance/WCAG-4.1.2'),
       'WCAG-4.1.2',
     );

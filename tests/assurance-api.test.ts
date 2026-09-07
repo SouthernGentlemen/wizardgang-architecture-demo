@@ -14,7 +14,7 @@ const environment = {
 describe('public assurance API projection', () => {
   it('serves canonical published evidence records through the current record/query contract', async () => {
     const records = listPublishedAssuranceRecords('evidence');
-    const response = assuranceEvidenceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/evidence'), environment);
+    const response = await assuranceEvidenceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/evidence'), environment);
     expect(response.status).toBe(200);
     expect(response.headers.get('cache-control')).toContain('max-age=300');
     const body = await response.json() as {
@@ -47,9 +47,9 @@ describe('public assurance API projection', () => {
     expect(body).not.toHaveProperty('deployment');
   });
 
-  it('keeps both assurance endpoints read-only', () => {
+  it('keeps both assurance endpoints read-only', async () => {
     for (const responder of [assuranceResponse, assuranceEvidenceResponse]) {
-      const response = responder(new Request('https://demo.wizardgang.ai/v1/assurance', { method: 'POST' }), environment);
+      const response = await responder(new Request('https://demo.wizardgang.ai/v1/assurance', { method: 'POST' }), environment);
       expect(response.status).toBe(405);
       expect(response.headers.get('allow')).toBe('GET');
     }

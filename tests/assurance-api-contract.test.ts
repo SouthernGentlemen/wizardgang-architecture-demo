@@ -52,7 +52,7 @@ describe('current assurance HTTP contract', () => {
   });
 
   it('returns canonical records and normalized relationships without flattened v1 aliases', async () => {
-    const response = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?framework=security'));
+    const response = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?framework=security'));
     const body = await response.json() as {
       contract: string;
       dataset: string;
@@ -113,27 +113,30 @@ describe('current assurance HTTP contract', () => {
     expect(exact).not.toHaveProperty('record');
   });
 
-  it('keeps stable cursor pagination and representation ETags on the common envelope', async () => {
-    const first = assuranceEvidenceResponse(
+  it('keeps opaque cursor pagination and representation ETags on the common envelope', async () => {
+    const first = await assuranceEvidenceResponse(
       new Request('https://demo.wizardgang.ai/v1/assurance/evidence?limit=2'),
       environment,
     );
     const firstBody = await first.json() as {
       records: Array<{ id: string }>;
-      query: { pagination: { limit: number; returned: number; total: number; nextCursor: string | null } };
+      query: { pagination: { limit: number; returned: number; total: number; nextCursor: string | null; completeness: string; partialReason: string | null } };
       derived: { count: number };
     };
     expect(firstBody.records.map((record) => record.id)).toEqual(published.evidence.slice(0, 2).map((record) => record.id));
-    expect(firstBody.query.pagination).toEqual({
+    expect(firstBody.query.pagination).toMatchObject({
       limit: 2,
       returned: Math.min(2, published.evidence.length),
       total: published.evidence.length,
-      nextCursor: published.evidence.length > 2 ? published.evidence[1].id : null,
+      completeness: published.evidence.length > 2 ? 'partial' : 'complete',
+      partialReason: published.evidence.length > 2 ? 'page-boundary' : null,
     });
+    if (published.evidence.length > 2) expect(firstBody.query.pagination.nextCursor).toMatch(/^rpc1\./);
+    else expect(firstBody.query.pagination.nextCursor).toBeNull();
     expect(firstBody.derived.count).toBe(published.evidence.length);
 
     const etag = first.headers.get('etag');
-    const conditional = assuranceEvidenceResponse(new Request(
+    const conditional = await assuranceEvidenceResponse(new Request(
       'https://demo.wizardgang.ai/v1/assurance/evidence?limit=2',
       { headers: { 'if-none-match': etag ?? '' } },
     ), environment);
@@ -143,14 +146,14 @@ describe('current assurance HTTP contract', () => {
   });
 
   it('rejects legacy negotiation, aliases, invalid filters, and unsupported writes clearly', async () => {
-    const schemaVersion = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?schemaVersion=1'));
+    const schemaVersion = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?schemaVersion=1'));
     expect(schemaVersion.status).toBe(400);
     expect(await schemaVersion.json()).toEqual({
       error: 'legacy_schema_version_parameter_unsupported',
       parameter: 'schemaVersion',
     });
 
-    const vendor = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks', {
+    const vendor = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks', {
       headers: { accept: 'application/vnd.wizardgang.assurance+json; version=1' },
     }));
     expect(vendor.status).toBe(406);
@@ -159,14 +162,14 @@ describe('current assurance HTTP contract', () => {
       supported: ['application/json'],
     });
 
-    const alias = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?residualRating=low'));
+    const alias = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?residualRating=low'));
     expect(alias.status).toBe(400);
     expect(await alias.json()).toEqual({
       error: 'unsupported_query_parameter',
       parameter: 'residualRating',
     });
 
-    const invalid = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?framework=unknown'));
+    const invalid = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?framework=unknown'));
     expect(invalid.status).toBe(400);
     expect(await invalid.json()).toEqual({
       error: 'invalid_filter',
@@ -175,7 +178,7 @@ describe('current assurance HTTP contract', () => {
       allowed: ['security', 'ai'],
     });
 
-    const missing = assuranceComplianceResponse(
+    const missing = await assuranceComplianceResponse(
       new Request('https://demo.wizardgang.ai/v1/assurance/compliance/WCAG-9.9.9'),
       'WCAG-9.9.9',
     );
@@ -187,12 +190,12 @@ describe('current assurance HTTP contract', () => {
     });
 
     for (const responder of [assuranceRisksResponse, assuranceIncidentsResponse, assuranceAdvisoriesResponse]) {
-      const rejected = responder(new Request('https://demo.wizardgang.ai/v1/assurance/risks', { method: 'POST' }));
+      const rejected = await responder(new Request('https://demo.wizardgang.ai/v1/assurance/risks', { method: 'POST' }));
       expect(rejected.status).toBe(405);
       expect(rejected.headers.get('allow')).toBe('GET');
     }
 
-    const preflight = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks', { method: 'OPTIONS' }));
+    const preflight = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks', { method: 'OPTIONS' }));
     expect(preflight.status).toBe(204);
     expect(preflight.headers.get('access-control-allow-methods')).toBe('GET, OPTIONS');
   });

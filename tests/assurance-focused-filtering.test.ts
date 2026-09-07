@@ -67,7 +67,7 @@ describe('focused assurance registry-declared filtering', () => {
     const expected = listPublishedAssuranceRecords('evidence').filter((record) => record.kind === 'source');
     expect(expected).toHaveLength(7);
 
-    const response = assuranceEvidenceResponse(
+    const response = await assuranceEvidenceResponse(
       new Request(`${origin}/v1/assurance/evidence?kind=source&limit=2`),
       environment,
     );
@@ -83,7 +83,7 @@ describe('focused assurance registry-declared filtering', () => {
     expect(body.records.every((record) => record.kind === 'source')).toBe(true);
     expect(body.query.pagination.total).toBe(expected.length);
     expect(body.query.pagination.returned).toBe(2);
-    expect(body.query.pagination.nextCursor).toBe(expected[1].id);
+    expect(body.query.pagination.nextCursor).toMatch(/^rpc1\./);
   });
 
   it('rejects invalid, empty, repeated, and undeclared filter/query parameters', async () => {
@@ -100,7 +100,7 @@ describe('focused assurance registry-declared filtering', () => {
       [`${origin}/v1/assurance/evidence?kind=`, ''],
     ] as const;
     for (const [url, value] of cases) {
-      const response = assuranceEvidenceResponse(new Request(url), environment);
+      const response = await assuranceEvidenceResponse(new Request(url), environment);
       expect(response.status).toBe(400);
       expect(await response.json()).toMatchObject({
         error: 'invalid_filter',
@@ -109,7 +109,7 @@ describe('focused assurance registry-declared filtering', () => {
       });
     }
 
-    const repeated = assuranceEvidenceResponse(
+    const repeated = await assuranceEvidenceResponse(
       new Request(`${origin}/v1/assurance/evidence?kind=source&kind=test`),
       environment,
     );
@@ -121,7 +121,7 @@ describe('focused assurance registry-declared filtering', () => {
     });
 
     for (const parameter of ['futureParameter', 'q']) {
-      const undeclared = assuranceEvidenceResponse(
+      const undeclared = await assuranceEvidenceResponse(
         new Request(`${origin}/v1/assurance/evidence?${parameter}=source`),
         environment,
       );
@@ -138,7 +138,7 @@ describe('focused assurance registry-declared filtering', () => {
 
     const expectedExercises = listPublishedAssuranceRecords('exercises');
     expect(expectedExercises.length).toBeGreaterThan(0);
-    const response = assuranceIncidentsResponse(new Request(
+    const response = await assuranceIncidentsResponse(new Request(
       'https://demo.wizardgang.ai/v1/assurance/incidents?recordType=exercise&limit=1',
     ));
     expect(response.status).toBe(200);
@@ -153,7 +153,7 @@ describe('focused assurance registry-declared filtering', () => {
     expect(body.derived.count).toBe(expectedExercises.length);
     expect(body.query.pagination.total).toBe(expectedExercises.length);
 
-    const invalid = assuranceIncidentsResponse(new Request(
+    const invalid = await assuranceIncidentsResponse(new Request(
       'https://demo.wizardgang.ai/v1/assurance/incidents?recordType=advisory',
     ));
     expect(invalid.status).toBe(400);

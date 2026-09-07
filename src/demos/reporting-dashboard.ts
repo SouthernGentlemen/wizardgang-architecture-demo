@@ -103,6 +103,12 @@ function routeOwnerMatchesDataset(dataset: string): boolean {
   return Boolean(owner && owner.kind === dataset);
 }
 
+function exportEndpoint(path: string | null | undefined): string | null {
+  if (!path) return null;
+  const separator = path.includes('?') ? '&' : '?';
+  return `${path}${separator}export=1`;
+}
+
 function structuredFamily(dataset: string): DashboardReportingFamily {
   const routable = routeOwnerMatchesDataset(dataset);
   const urls = routable ? assuranceRecordUrls(dataset) : {};
@@ -113,7 +119,7 @@ function structuredFamily(dataset: string): DashboardReportingFamily {
     label: reportingPresentationLabel(dataset),
     kind: 'structured',
     endpoint: routable ? urls.api ?? null : null,
-    exportEndpoint: routable ? urls.api ?? null : null,
+    exportEndpoint: routable ? exportEndpoint(urls.api) : null,
     htmlPath: routable ? urls.html ?? null : null,
     sourcePaths: [...new Set(resources.map((resource) => resource.path))],
     filters: Object.entries(definitions).map(([name, definition]) => ({
@@ -128,12 +134,17 @@ function structuredFamily(dataset: string): DashboardReportingFamily {
   };
 }
 
-function providerEndpoint(source: ReportingSource, mode: 'sample' | 'export'): string | null {
+function providerEndpoint(source: ReportingSource, exporting: boolean): string | null {
   if (source.provider === 'github') {
-    const params = new URLSearchParams({ source: source.id, mode, limit: mode === 'export' ? '100' : '10' });
+    const params = new URLSearchParams({ source: source.id, limit: exporting ? '100' : '10' });
+    if (exporting) params.set('export', '1');
     return `/__api/git/evidence?${params.toString()}`;
   }
-  if (source.provider === 'cloudflare') return '/__api/operations/cloudflare-usage';
+  if (source.provider === 'cloudflare') {
+    return exporting
+      ? '/__api/operations/cloudflare-usage?export=1&limit=100'
+      : '/__api/operations/cloudflare-usage?limit=10';
+  }
   return null;
 }
 
@@ -155,8 +166,8 @@ function providerFamilies(env: Env, usage: CloudflareUsageSnapshot): DashboardRe
       id: owner.domain,
       label: reportingPresentationLabel(owner.domain),
       kind: 'provider',
-      endpoint: providerEndpoint(source, 'sample'),
-      exportEndpoint: source.capabilities.includes('export') ? providerEndpoint(source, 'export') : null,
+      endpoint: providerEndpoint(source, false),
+      exportEndpoint: source.capabilities.includes('export') ? providerEndpoint(source, true) : null,
       htmlPath: null,
       sourcePaths: [],
       filters: [],
@@ -171,6 +182,23 @@ export function dashboardReportingFamilies(env: Env, usage: CloudflareUsageSnaps
   const providers = providerFamilies(env, usage)
     .filter((family) => !structured.some((candidate) => candidate.id === family.id));
   return [...structured, ...providers];
+}
+
+export function dashboardReportingRequestUrl(
+  endpoint: string,
+  dashboardUrl: string | URL,
+  filterNames: readonly string[] = [],
+): URL {
+  const current = dashboardUrl instanceof URL ? dashboardUrl : new URL(dashboardUrl);
+  const target = new URL(endpoint, current.origin);
+  for (const filterName of filterNames) {
+    const value = current.searchParams.get(filterName);
+    if (value) target.searchParams.set(filterName, value);
+  }
+  if (!target.searchParams.has('limit')) target.searchParams.set('limit', current.searchParams.get('limit') || '10');
+  const cursor = current.searchParams.get('cursor');
+  if (cursor) target.searchParams.set('cursor', cursor);
+  return target;
 }
 
 function availabilityLabel(availability: ReportingPresentationAvailability): string {
@@ -237,7 +265,7 @@ const note=document.createElement('p');note.className='subtle';note.textContent=
 const facets=result.derived?.facets||{};if(Object.keys(facets).length){const details=document.createElement('details');const sum=document.createElement('summary');sum.textContent='Facets';details.append(sum);const list=document.createElement('ul');for(const [name,values] of Object.entries(facets)){const item=document.createElement('li');item.textContent=name+': '+Object.entries(values).map(([value,count])=>value+' '+count).join(' · ');list.append(item)}details.append(list);output.append(details)}
 const records=Array.isArray(result.records)?result.records:[];if(!records.length){const empty=document.createElement('div');empty.className='availability-empty';empty.textContent=availability.includes('unavailable')?'Source unavailable.':availability.includes('partial')?'No records were returned from the partial source selection.':'No records in this authorized selection.';output.append(empty)}
 const list=document.createElement('div');list.className='activity-list';for(const record of records){const article=document.createElement('article');article.className='activity-item';const body=document.createElement('div');const title=record.title||record.name||record.reference||record.metric||record.id;setText(body,'h3',String(title));const meta=[];for(const key of ['recordType','status','availability','framework','metric','unit','observedAt','validUntil','updatedAt'])if(record[key]!==undefined&&record[key]!==null)meta.push(key+' '+String(record[key]));if(meta.length)setText(body,'p',meta.join(' · '));let relationshipCount=0;if(Array.isArray(record.relationships))relationshipCount=record.relationships.length;else if(record.relationships&&typeof record.relationships==='object')for(const value of Object.values(record.relationships))if(Array.isArray(value))relationshipCount+=value.length;if(relationshipCount)setText(body,'small',relationshipCount+' authorized relationship'+(relationshipCount===1?'':'s'));if(typeof record.url==='string')safeLink(body,'Open source ↗',record.url);article.append(body);list.append(article)}output.append(list);
-const page=result.query?.pagination;if(page){const nav=document.createElement('nav');nav.className='link-row';nav.setAttribute('aria-label','Reporting pagination');setText(nav,'span','Showing '+page.returned+' of '+page.total);if(page.nextCursor&&typeof page.nextCursor==='string'&&!page.nextCursor.startsWith('provider:')){const next=new URL(location.href);next.searchParams.set('report',family.id);next.searchParams.set('cursor',page.nextCursor);safeLink(nav,'Next page →',next.toString())}else if(page.nextCursor)setText(nav,'span','Provider sample is partial; use export for the full authorized selection.');output.append(nav)}
+const page=result.query?.pagination;if(page){const nav=document.createElement('nav');nav.className='link-row';nav.setAttribute('aria-label','Reporting pagination');setText(nav,'span','Showing '+page.returned+' of '+page.total);if(page.nextCursor&&typeof page.nextCursor==='string'){const next=new URL(location.href);next.searchParams.set('report',family.id);next.searchParams.set('cursor',page.nextCursor);safeLink(nav,'Next page →',next.toString())}else if(page.completeness==='partial')setText(nav,'span','Partial result: '+String(page.partialReason||'provider unavailable'));output.append(nav)}
 }).catch(error=>{output.textContent=error instanceof Error?error.message:'The reporting source could not be loaded.'});
 })();</script>`;
 }

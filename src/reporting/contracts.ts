@@ -68,7 +68,6 @@ export interface ReportingCollectionResult<T extends ReportingRecord> {
 export type ReportingPaginationCompleteness = 'complete' | 'partial';
 export type ReportingPaginationPartialReason =
   | 'page-boundary'
-  | 'sample'
   | 'provider-export-bound'
   | 'provider-unavailable';
 

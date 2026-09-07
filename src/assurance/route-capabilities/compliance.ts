@@ -13,7 +13,7 @@ export const complianceRouteCapability = defineAssuranceRouteCapability({
     },
   },
   apiCollection: {
-    handler: (request) => assuranceComplianceResponse(request),
+    handler: (request, env) => assuranceComplianceResponse(request, undefined, env),
     source: {
       module: 'src/api/assurance.ts',
       exportName: 'assuranceComplianceResponse',
@@ -21,7 +21,7 @@ export const complianceRouteCapability = defineAssuranceRouteCapability({
     },
   },
   apiRecord: {
-    handler: (request, _env, rawRecordId) => assuranceComplianceResponse(request, rawRecordId),
+    handler: (request, env, rawRecordId) => assuranceComplianceResponse(request, rawRecordId, env),
     source: {
       module: 'src/api/assurance.ts',
       exportName: 'assuranceComplianceResponse',

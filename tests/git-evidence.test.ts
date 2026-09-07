@@ -272,7 +272,7 @@ describe('registered GitHub reporting provider', () => {
       if (key.startsWith(`${repoApi}/issues?`)) return response(fixture.issues);
       return response([], 200);
     });
-    const responseValue = await gitEvidenceResponse(new Request('https://demo.example/__api/git/evidence?source=github.issues&mode=export'), environment());
+    const responseValue = await gitEvidenceResponse(new Request('https://demo.example/__api/git/evidence?source=github.issues&export=1'), environment());
     const body = await responseValue.json() as Record<string, unknown>;
     expect(responseValue.status).toBe(200);
     expect(responseValue.headers.get('cache-control')).toContain('public');

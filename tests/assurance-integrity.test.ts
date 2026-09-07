@@ -14,11 +14,11 @@ describe('assurance integrity current-contract invariants', () => {
   });
 
   it('publishes only canonical relationships and never flattened aliases', async () => {
-    const responses = [
+    const responses = await Promise.all([
       assuranceComplianceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/compliance?limit=3')),
       assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?limit=3')),
       assuranceIncidentsResponse(new Request('https://demo.wizardgang.ai/v1/assurance/incidents?limit=3')),
-    ];
+    ]);
     for (const response of responses) {
       expect(response.status).toBe(200);
       const body = await response.json() as { records: Array<Record<string, unknown>> };
@@ -33,7 +33,7 @@ describe('assurance integrity current-contract invariants', () => {
 
   it('derives public counts from the selected published records rather than stored totals', async () => {
     const published = listPublishedAssuranceRecords('risks');
-    const response = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?framework=security'));
+    const response = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?framework=security'));
     const body = await response.json() as { records: Array<{ id: string }>; derived: { count: number; totalAvailable: number } };
     expect(body.derived.count).toBe(body.records.length);
     expect(body.derived.totalAvailable).toBe(published.length);

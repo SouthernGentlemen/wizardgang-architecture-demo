@@ -14,7 +14,14 @@ import {
   listPublishedAssuranceRecords,
   type PublishedAssuranceRuntimeRecord,
 } from '../assurance/publication';
+import type { Env } from '../types';
+import type { ReportingCursorContext } from '../reporting/pagination';
 import { reportingContractPath } from '../reporting/registry';
+import {
+  exportReportingPages,
+  paginateReportingRecords,
+  reportingCursorSecret,
+} from '../reporting/query';
 import {
   assuranceErrorResponse,
   assuranceJsonResponse,
@@ -79,7 +86,23 @@ function commonMetadata(owner: string, datasets: readonly string[]) {
   };
 }
 
-export function genericAssuranceResponse(request: Request, dataset: string, recordId?: string): Response {
+function assuranceExportRequested(request: Request, url: URL): boolean | Response {
+  const values = url.searchParams.getAll('export');
+  if (values.length > 1 || (values[0] !== undefined && values[0] !== '1')) {
+    return assuranceErrorResponse(request, 400, { error: 'invalid_export', parameter: 'export' });
+  }
+  if (values[0] === '1' && url.searchParams.has('cursor')) {
+    return assuranceErrorResponse(request, 400, { error: 'export_cursor_conflict', parameter: 'cursor' });
+  }
+  return values[0] === '1';
+}
+
+export async function genericAssuranceResponse(
+  request: Request,
+  dataset: string,
+  recordId?: string,
+  env?: Pick<Env, 'DEMO_SESSION_SECRET'>,
+): Promise<Response> {
   const context = prepareAssuranceRequest(request);
   if (context instanceof Response) return context;
   const unavailable = unavailableCollectionResponse(request, dataset);
@@ -138,19 +161,45 @@ export function genericAssuranceResponse(request: Request, dataset: string, reco
     });
   }
 
+  const exportRequested = assuranceExportRequested(request, context.url);
+  if (exportRequested instanceof Response) return exportRequested;
   const selection = selectFocusedAssuranceRecords(request, context.url, datasets, sourceRecords);
   if (selection instanceof Response) return selection;
-  const page = paginateAssuranceRecords(request, context.url, selection.records);
+  const cursorContext: ReportingCursorContext = {
+    schemaVersion: context.schemaVersion,
+    collection: `assurance:${dataset}`,
+    source: [...datasets].sort().join(','),
+    filters: selection.filters,
+    ordering: [{ field: 'registry-order', direction: 'asc' }],
+  };
+  const page = await paginateAssuranceRecords(request, context.url, selection.records, cursorContext, env);
   if (page instanceof Response) return page;
+
+  let responseRecords = page.records;
+  let pagination = page.pagination;
+  if (exportRequested) {
+    const secret = reportingCursorSecret(env);
+    const exported = await exportReportingPages(
+      (cursor) => paginateReportingRecords(selection.records, {
+        context: cursorContext,
+        limit: page.pagination.limit,
+        cursor,
+        secret,
+      }),
+      page.pagination.limit,
+    );
+    responseRecords = exported.records;
+    pagination = exported.pagination;
+  }
 
   return assuranceJsonResponse(request, {
     schemaVersion: context.schemaVersion,
     ...metadata,
     query: {
       filters: selection.filters,
-      ...(page.pagination ? { pagination: page.pagination } : {}),
+      pagination,
     },
-    records: page.records,
+    records: responseRecords,
     derived: {
       count: selection.records.length,
       totalAvailable: sourceRecords.length,
@@ -159,14 +208,24 @@ export function genericAssuranceResponse(request: Request, dataset: string, reco
   });
 }
 
-export function assuranceRisksResponse(request: Request): Response {
-  return genericAssuranceResponse(request, 'risks');
+export function assuranceRisksResponse(
+  request: Request,
+  env?: Pick<Env, 'DEMO_SESSION_SECRET'>,
+): Promise<Response> {
+  return genericAssuranceResponse(request, 'risks', undefined, env);
 }
 
-export function assuranceComplianceResponse(request: Request, recordId?: string): Response {
-  return genericAssuranceResponse(request, 'compliance', recordId);
+export function assuranceComplianceResponse(
+  request: Request,
+  recordId?: string,
+  env?: Pick<Env, 'DEMO_SESSION_SECRET'>,
+): Promise<Response> {
+  return genericAssuranceResponse(request, 'compliance', recordId, env);
 }
 
-export function assuranceIncidentsResponse(request: Request): Response {
-  return genericAssuranceResponse(request, 'incidents');
+export function assuranceIncidentsResponse(
+  request: Request,
+  env?: Pick<Env, 'DEMO_SESSION_SECRET'>,
+): Promise<Response> {
+  return genericAssuranceResponse(request, 'incidents', undefined, env);
 }

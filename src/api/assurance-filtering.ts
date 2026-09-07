@@ -48,6 +48,7 @@ export function selectFocusedAssuranceRecords<T>(
     ...assuranceFilterNames(filterOwner),
     'limit',
     'cursor',
+    'export',
   ]);
   let unsupported: string | undefined;
   url.searchParams.forEach((_value, parameter) => {

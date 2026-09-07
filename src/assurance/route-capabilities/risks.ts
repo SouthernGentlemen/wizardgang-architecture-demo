@@ -13,7 +13,7 @@ export const risksRouteCapability = defineAssuranceRouteCapability({
     },
   },
   apiCollection: {
-    handler: (request) => assuranceRisksResponse(request),
+    handler: (request, env) => assuranceRisksResponse(request, env),
     source: {
       module: 'src/api/assurance.ts',
       exportName: 'assuranceRisksResponse',

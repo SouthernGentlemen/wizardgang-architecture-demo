@@ -1,4 +1,8 @@
 import { withSecurityHeaders } from '../lib/http';
+import type { Env } from '../types';
+import type { ReportingPagination } from '../reporting/contracts';
+import { ReportingCursorError, type ReportingCursorContext } from '../reporting/pagination';
+import { paginateReportingRecords, reportingCursorSecret } from '../reporting/query';
 
 export const ASSURANCE_SCHEMA_VERSION = 1;
 export const ASSURANCE_CACHE_CONTROL = 'public, max-age=300';
@@ -18,16 +22,9 @@ export interface AssuranceRequestContext {
   schemaVersion: typeof ASSURANCE_SCHEMA_VERSION;
 }
 
-export interface AssurancePagination {
-  limit: number;
-  returned: number;
-  total: number;
-  nextCursor: string | null;
-}
-
 export interface AssurancePage<T> {
-  records: T[];
-  pagination?: AssurancePagination;
+  records: readonly T[];
+  pagination: ReportingPagination;
 }
 
 interface AssuranceResponseOptions {
@@ -58,6 +55,32 @@ function hashRepresentation(body: string): string {
   return `${(first >>> 0).toString(16).padStart(8, '0')}${(second >>> 0).toString(16).padStart(8, '0')}`;
 }
 
+function etagRepresentation(data: unknown): string {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return JSON.stringify(data, null, 2);
+
+  const root = data as Record<string, unknown>;
+  const query = root.query;
+  if (!query || typeof query !== 'object' || Array.isArray(query)) return JSON.stringify(data, null, 2);
+
+  const queryRecord = query as Record<string, unknown>;
+  const pagination = queryRecord.pagination;
+  if (!pagination || typeof pagination !== 'object' || Array.isArray(pagination)) return JSON.stringify(data, null, 2);
+
+  const paginationRecord = pagination as Record<string, unknown>;
+  if (!('nextCursor' in paginationRecord)) return JSON.stringify(data, null, 2);
+
+  return JSON.stringify({
+    ...root,
+    query: {
+      ...queryRecord,
+      pagination: {
+        ...paginationRecord,
+        nextCursor: paginationRecord.nextCursor === null ? null : '<opaque-continuation>',
+      },
+    },
+  }, null, 2);
+}
+
 function matchesEtag(ifNoneMatch: string | null, etag: string): boolean {
   if (!ifNoneMatch) return false;
   const normalizedEtag = etag.replace(/^W\//, '');
@@ -77,7 +100,7 @@ export function assuranceJsonResponse(
   headers.set('content-type', 'application/json; charset=utf-8');
 
   if (options.etag !== false && (options.status === undefined || options.status === 200)) {
-    const etag = `W/"assurance-current-${hashRepresentation(body)}"`;
+    const etag = `W/"assurance-current-${hashRepresentation(etagRepresentation(data))}"`;
     headers.set('etag', etag);
     if (matchesEtag(request.headers.get('if-none-match'), etag)) {
       return new Response(null, { status: 304, headers });
@@ -139,41 +162,15 @@ export function prepareAssuranceRequest(request: Request): AssuranceRequestConte
   return { url, schemaVersion: ASSURANCE_SCHEMA_VERSION };
 }
 
-function sliceAssurancePage<T extends { id: string }>(
-  records: T[],
-  options?: { limit: number; cursor?: string },
-): AssurancePage<T> | undefined {
-  if (!options) return { records: [...records] };
-  let start = 0;
-  if (options.cursor !== undefined) {
-    const index = records.findIndex((record) => record.id === options.cursor);
-    if (index < 0) return undefined;
-    start = index + 1;
-  }
-  const pageRecords = records.slice(start, start + options.limit);
-  const hasMore = start + pageRecords.length < records.length;
-  return {
-    records: pageRecords,
-    pagination: {
-      limit: options.limit,
-      returned: pageRecords.length,
-      total: records.length,
-      nextCursor: hasMore && pageRecords.length > 0 ? pageRecords[pageRecords.length - 1].id : null,
-    },
-  };
-}
-
-export function paginateAssuranceRecords<T extends { id: string }>(
+export async function paginateAssuranceRecords<T>(
   request: Request,
   url: URL,
-  records: T[],
-): AssurancePage<T> | Response {
+  records: readonly T[],
+  cursorContext: ReportingCursorContext,
+  env?: Pick<Env, 'DEMO_SESSION_SECRET'>,
+): Promise<AssurancePage<T> | Response> {
   const limitValues = url.searchParams.getAll('limit');
   const cursorValues = url.searchParams.getAll('cursor');
-  const paginationRequested = limitValues.length > 0 || cursorValues.length > 0;
-
-  if (!paginationRequested) return sliceAssurancePage(records) as AssurancePage<T>;
-
   if (limitValues.length > 1 || cursorValues.length > 1) {
     return assuranceErrorResponse(request, 400, {
       error: 'duplicate_query_parameter',
@@ -207,12 +204,21 @@ export function paginateAssuranceRecords<T extends { id: string }>(
     });
   }
 
-  const page = sliceAssurancePage(records, { limit, ...(cursor !== undefined ? { cursor } : {}) });
-  if (!page) {
-    return assuranceErrorResponse(request, 400, {
-      error: 'invalid_cursor',
-      cursor,
+  try {
+    return await paginateReportingRecords(records, {
+      context: cursorContext,
+      limit,
+      cursor: cursor ?? null,
+      secret: reportingCursorSecret(env),
     });
+  } catch (error) {
+    if (error instanceof ReportingCursorError) {
+      return assuranceErrorResponse(request, 400, {
+        error: error.code,
+        parameter: 'cursor',
+        ...(error.detail ? { detail: error.detail } : {}),
+      });
+    }
+    throw error;
   }
-  return page;
 }

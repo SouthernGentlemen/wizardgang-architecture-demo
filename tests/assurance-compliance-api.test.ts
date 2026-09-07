@@ -32,7 +32,7 @@ describe('canonical compliance presentation and API contract', () => {
 
   it('filters canonical records through the current shared query result', async () => {
     const request = new Request('https://demo.wizardgang.ai/v1/assurance/compliance?framework=wcag-2.2&status=partial&level=AA');
-    const response = assuranceComplianceResponse(request);
+    const response = await assuranceComplianceResponse(request);
     expect(response.status).toBe(200);
     expect(response.headers.get('cache-control')).toContain('max-age=300');
     const body = await response.json() as {
@@ -50,7 +50,7 @@ describe('canonical compliance presentation and API contract', () => {
   });
 
   it('supports exact stable-record lookup with the same envelope and deterministic not-found response', async () => {
-    const exact = assuranceComplianceResponse(
+    const exact = await assuranceComplianceResponse(
       new Request('https://demo.wizardgang.ai/v1/assurance/compliance/WCAG-4.1.2'),
       'WCAG-4.1.2',
     );
@@ -67,7 +67,7 @@ describe('canonical compliance presentation and API contract', () => {
     expect(exactBody.records[0]).not.toHaveProperty('evidence');
     expect(exactBody.derived.count).toBe(1);
 
-    const missing = assuranceComplianceResponse(
+    const missing = await assuranceComplianceResponse(
       new Request('https://demo.wizardgang.ai/v1/assurance/compliance/WCAG-9.9.9'),
       'WCAG-9.9.9',
     );
@@ -99,8 +99,8 @@ describe('canonical compliance presentation and API contract', () => {
     expect(html).not.toContain('id="ISO27001-4.1"');
   });
 
-  it('keeps the compliance API read-only and represented once in the generated route contract', () => {
-    const post = assuranceComplianceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/compliance', { method: 'POST' }));
+  it('keeps the compliance API read-only and represented once in the generated route contract', async () => {
+    const post = await assuranceComplianceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/compliance', { method: 'POST' }));
     expect(post.status).toBe(405);
     expect(post.headers.get('allow')).toBe('GET');
 

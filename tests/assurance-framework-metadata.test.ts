@@ -25,7 +25,7 @@ describe('canonical compliance framework metadata', () => {
   });
 
   it('publishes the canonical framework metadata on current records without a compatibility serializer', async () => {
-    const response = assuranceComplianceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/compliance?framework=wcag-2.2&limit=1'));
+    const response = await assuranceComplianceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/compliance?framework=wcag-2.2&limit=1'));
     const body = await response.json() as { records: Array<{ framework: string; frameworkLabel: string; sourcePath: string; relationships: Record<string, string[]> }> };
     expect(body.records).toHaveLength(1);
     expect(body.records[0]).toMatchObject({ framework: 'wcag-2.2', frameworkLabel: 'WCAG 2.2' });

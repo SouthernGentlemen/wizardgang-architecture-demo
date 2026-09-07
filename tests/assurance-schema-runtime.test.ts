@@ -25,7 +25,7 @@ describe('runtime schema-derived assurance behavior', () => {
   });
 
   it('reports schema-driven filters as current derived facets instead of family count envelopes', async () => {
-    const response = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?status=open'));
+    const response = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?status=open'));
     const body = await response.json() as {
       records: Array<{ status: string }>;
       derived: { count: number; facets: Record<string, Record<string, number>> };

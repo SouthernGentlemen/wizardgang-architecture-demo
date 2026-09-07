@@ -26,7 +26,7 @@ describe('registry-driven assurance services', () => {
   });
 
   it('serves any registered record family through the generic current query envelope', async () => {
-    const response = genericAssuranceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/objectives?limit=2'), 'objectives');
+    const response = await genericAssuranceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/objectives?limit=2'), 'objectives');
     expect(response.status).toBe(200);
     const body = await response.json() as {
       dataset: string;
@@ -47,7 +47,7 @@ describe('registry-driven assurance services', () => {
 
   it('distinguishes unknown families from registered empty collections', async () => {
     expect(assuranceCollectionState('not-a-family').status).toBe('unknown');
-    const unknown = genericAssuranceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/not-a-family'), 'not-a-family');
+    const unknown = await genericAssuranceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/not-a-family'), 'not-a-family');
     expect(unknown.status).toBe(404);
     expect(await unknown.json()).toMatchObject({ error: 'assurance_dataset_not_found', dataset: 'not-a-family' });
 
