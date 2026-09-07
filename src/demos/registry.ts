@@ -1,9 +1,5 @@
 import type { DemoDefinition } from '../types';
-import demo_edge from './edge';
-import demo_workers from './workers';
-import demo_durable_objects from './durable-objects';
-import demo_d1 from './d1';
-import demo_r2 from './r2';
+import demo_platform from './platform';
 import demo_api from './api';
 import demo_graphql from './graphql';
 import demo_webhooks from './webhooks';
@@ -26,11 +22,7 @@ import demo_logs from './logs';
 import demo_billing from './billing';
 
 export const demos: DemoDefinition[] = [
-  demo_edge,
-  demo_workers,
-  demo_durable_objects,
-  demo_d1,
-  demo_r2,
+  demo_platform,
   demo_api,
   demo_graphql,
   demo_webhooks,

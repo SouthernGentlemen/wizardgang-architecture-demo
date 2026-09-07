@@ -180,7 +180,7 @@ describe('public route contract', () => {
     for (const endpoint of ['/__api/governance/security-controls', '/__api/governance/ai-evaluation', '/__api/evidence/traceability']) expect(html).toContain(endpoint);
     expect(html).toContain('alignment targets, not certification claims');
 
-    const edge = await routeRequest(new Request('https://demo.wizardgang.ai/edge', { headers: { accept: 'text/html' } }), env());
+    const edge = await routeRequest(new Request('https://demo.wizardgang.ai/platform?view=edge', { headers: { accept: 'text/html' } }), env());
     expect(await edge.text()).not.toContain('alignment targets, not certification claims');
   });
 
@@ -204,9 +204,10 @@ describe('public route contract', () => {
   });
 
   it('keeps source context without repeating global route chrome or interface lists', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/edge', { headers: { accept: 'text/html' } }), env());
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/platform?view=edge', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     expect(html).toContain('Route source');
+    expect(html).toContain('Platform route source');
     expect(html).not.toContain('D1 schema');
     expect(html).not.toContain('Route map');
     expect(html).not.toContain('Live interfaces');
@@ -299,9 +300,9 @@ describe('ChatGPT crawler control', () => {
 describe('offline routing matrix', () => {
   it('blocks ordinary behavior before execution while keeping operations reachable', async () => {
     const environment = env('offline');
-    const html = await routeRequest(new Request('https://demo.wizardgang.ai/edge', { headers: { accept: 'text/html' } }), environment);
+    const html = await routeRequest(new Request('https://demo.wizardgang.ai/platform', { headers: { accept: 'text/html' } }), environment);
     expect(html.status).toBe(302);
-    expect(html.headers.get('location')).toContain('/offline?from=%2Fedge');
+    expect(html.headers.get('location')).toContain('/offline?from=%2Fplatform');
     expect(environment.DEMO_DB.queries.every((query) => query.includes('demo_control'))).toBe(true);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'text/html' } }), environment)).status).toBe(302);
     const mcp = await routeRequest(new Request('https://demo.wizardgang.ai/mcp/server', { headers: { accept: 'application/json' } }), environment);

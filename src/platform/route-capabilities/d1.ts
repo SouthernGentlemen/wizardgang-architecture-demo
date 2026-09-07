@@ -1,7 +1,5 @@
-import d1Demo from '../../demos/d1';
 import { d1LabResponse } from '../../api/d1-lab';
 import { recordsResponse, resetRecordSandboxResponse } from '../../api/records';
-import { renderD1Demo } from '../../demos/d1-page';
 import {
   D1_RELATIONAL_STORAGE,
   definePlatformLaboratoryCapability,
@@ -20,28 +18,6 @@ const docs = ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'] as const;
 export const d1LaboratoryCapability = definePlatformLaboratoryCapability({
   id: 'platform.d1',
   routes: [
-    {
-      id: 'platform.d1.page',
-      pattern: d1Demo.route,
-      methods: ['GET'],
-      kind: 'page',
-      handler: (_request, env) => renderD1Demo(env),
-      authentication: { mode: 'anonymous' },
-      authorization: { mode: 'none' },
-      visibility: 'public',
-      sameOrigin: { mode: 'not-required' },
-      offline: { mode: 'gated' },
-      cache: { mode: 'no-store' },
-      crawler: { crawling: 'controlled', indexing: 'allow' },
-      documentation: { title: d1Demo.title, description: d1Demo.summary, docs },
-      source: {
-        module: 'src/platform/route-capabilities/d1.ts',
-        exportName: 'd1LaboratoryCapability',
-        tests,
-      },
-      requestLimits: noRequestBody('The D1 laboratory page accepts GET without a request body.'),
-      storage: D1_RELATIONAL_STORAGE,
-    },
     {
       id: 'platform.d1.users',
       pattern: '/__api/d1/users',
