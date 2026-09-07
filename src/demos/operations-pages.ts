@@ -157,7 +157,7 @@ function dashboardActivity(logs: ApplicationLogRow[], health: HealthSnapshot): s
   return selected.map((log) => `<article class="activity-item"><span class="activity-dot" data-tone="${log.level === 'error' ? 'down' : log.level === 'warn' ? 'warn' : 'ok'}"></span><div><h3>${escapeHtml(activityTitle(log))}</h3><p>${escapeHtml(log.message)}</p><small>${escapeHtml(log.source)} · ${relativeTime(log.created_at)}</small></div></article>`).join('');
 }
 
-export async function renderDashboard(env: Env): Promise<Response> {
+export async function renderDashboard(env: Env, request: Request = new Request('https://demo.local/dashboard')): Promise<Response> {
   const healthHistory = env.DEMO_DB.prepare(
     `SELECT id, service_key, status, response_ms, detail_json, checked_at FROM service_health_checks WHERE service_key = 'public-demo' ORDER BY id DESC LIMIT 100`,
   ).all<HealthRow>();
@@ -182,6 +182,7 @@ export async function renderDashboard(env: Env): Promise<Response> {
   const sha = env.DEPLOYED_SHA || '';
   const commitUrl = sha ? `${repoUrl(env)}/commit/${encodeURIComponent(sha)}` : `${repoUrl(env)}/commits/${encodeURIComponent(env.GITHUB_BRANCH || 'main')}`;
   const currentStatus = `<div class="operations-live-state"><span class="status-pulse" data-state="${overall}"></span><strong>${escapeHtml(overallLabel)}</strong><span>Checked ${relativeTime(health.checkedAt)}</span><span>${escapeHtml(env.DEPLOYMENT_ENVIRONMENT || 'local')} · ${escapeHtml(version)}</span></div>`;
+  const reporting = await renderUnifiedReportingPresentation(request, env, usage);
 
   return operationalPage(env, '/dashboard', 'System Operations', 'OPERATIONS / LIVE', 'System Operations', 'Live health, availability, deployment, shared reporting, activity, and cost-control evidence for the architecture demo.', 'src/demos/dashboard.ts', `
   <section class="operations-kpis" aria-label="Current operational state">
@@ -226,7 +227,7 @@ export async function renderDashboard(env: Env): Promise<Response> {
     </article>
   </section>
 
-  ${renderUnifiedReportingPresentation(env, usage)}
+  ${reporting}
 
   <section class="operations-section policy-card" aria-labelledby="policy-heading">
     <div class="operations-section-heading"><div><p class="eyebrow">Read-only public state</p><h2 id="policy-heading">Operational policy</h2></div><a href="/admin">Admin controls <span aria-hidden="true">→</span></a></div>

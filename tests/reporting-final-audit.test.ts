@@ -53,10 +53,14 @@ describe('final common reporting audit guards', () => {
     expect(presentation).not.toContain("usage.cost.kind === 'estimated'");
   });
 
-  it('does not leak internal assurance statuses into the schema-defined reporting availability map', () => {
+  it('keeps assurance status normalization in the common reporting layer instead of the dashboard', () => {
+    const service = readFileSync('src/reporting/service.ts', 'utf8');
     const dashboard = readFileSync('src/demos/reporting-dashboard.ts', 'utf8');
-    expect(dashboard).toContain('availability: { [dataset]: structuredAvailability(state.status) }');
-    expect(dashboard).not.toContain('availability: { [dataset]: state.status }');
+    expect(service).toContain('structuredAvailability(state.status)');
+    expect(dashboard).toContain('queryReportingCollection');
+    expect(dashboard).toContain('presentReportingQuery');
+    expect(dashboard).not.toContain('structuredAvailability(');
+    expect(dashboard).not.toContain('result.records.map');
   });
 
   it('renders Cloudflare product and billed-cost state from common availability rather than boolean or kind shortcuts', () => {

@@ -20,7 +20,7 @@ This file is generated from the active declarative application registry. Route I
 | `platform.edge.page` | `/edge` | `GET` | page | public | gated | allow | Cloudflare Edge | `src/platform/route-capabilities/edge.ts` |
 | `assurance.evidence.html` | `/evidence` | `GET` | page | public | gated | allow | Assurance evidence html | `src/demos/evidence-page.ts` |
 | `interfaces.git.page` | `/git` | `GET` | page | public | gated | allow | Git / GitHub | `src/demos/git-page.ts` |
-| `interfaces.governance.page` | `/governance` | `GET` | page | public | gated | allow | Governance | `src/ui/page.ts` |
+| `interfaces.governance.page` | `/governance` | `GET` | page | public | gated | allow | Governance | `src/demos/governance.ts` |
 | `interfaces.governance.concerns` | `/governance/concerns` | `GET` | page | public | gated | allow | Report a Concern | `src/demos/assurance-pages.ts` |
 | `assurance.incidents.html` | `/governance/incidents` | `GET` | page | public | gated | allow | Assurance incidents html | `src/demos/assurance-pages.ts` |
 | `assurance.risks.html` | `/governance/risks` | `GET` | page | public | gated | allow | Assurance risks html | `src/demos/assurance-pages.ts` |

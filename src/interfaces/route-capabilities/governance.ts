@@ -1,9 +1,8 @@
-import governanceDemo from '../../demos/governance';
+import governanceDemo, { renderGovernance } from '../../demos/governance';
 import concernsDemo from '../../demos/concerns';
 import { demos } from '../../demos/registry';
 import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } from '../../api/governance';
 import { renderConcerns } from '../../demos/assurance-pages';
-import { renderDemo } from '../../ui/page';
 import { defineInterfaceIdentityCapability, interfaceIdentityRoute } from '../route-capability';
 
 export const governanceRouteCapability = defineInterfaceIdentityCapability('interfaces.governance', [
@@ -12,11 +11,11 @@ export const governanceRouteCapability = defineInterfaceIdentityCapability('inte
     pattern: governanceDemo.route,
     methods: ['GET'],
     kind: 'page',
-    handler: (_request, { env }) => renderDemo(env, governanceDemo, demos),
+    handler: (request, { env }) => renderGovernance(request, env, demos),
     title: governanceDemo.title,
     description: governanceDemo.summary,
-    sourceModule: 'src/ui/page.ts',
-    sourceExport: 'renderDemo',
+    sourceModule: 'src/demos/governance.ts',
+    sourceExport: 'renderGovernance',
     tests: ['tests/governance.test.ts', 'tests/interface.test.ts'],
   }),
   interfaceIdentityRoute({

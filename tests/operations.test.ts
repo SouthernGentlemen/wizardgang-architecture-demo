@@ -111,8 +111,9 @@ describe('operations proof surface', () => {
     expect(dashboard).toContain('href="/admin"');
     expect(dashboard).toContain('href="/robots.txt"');
     expect(dashboard).toContain('aria-label="Operations"');
-    expect(dashboard).toContain('Compliance &amp; Assurance');
-    expect(dashboard).toContain('href="/compliance"');
+    expect(dashboard).toContain('Collection discovery comes from reporting ownership and registered capabilities.');
+    expect(dashboard).toContain('href="/dashboard?report=compliance#reporting-browser"');
+    expect(dashboard).toContain('Shared reporting presenter');
     expect(dashboard).not.toContain('name="control" value="chatgpt-crawl"');
     expect(dashboard).not.toContain('name="state" value="enabled"');
     const docs = await renderDocs(environment).text();
