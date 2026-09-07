@@ -22,7 +22,7 @@ export function renderAccessibilityDemo(request: Request, env: Env): Response {
   const cards = behaviors.map(([name, accessible, broken, criterion]) => `<article class="criterion-card"><p class="eyebrow">${criterion}</p><h3>${name}</h3><p><strong>Accessible:</strong> ${accessible}</p><p><strong>Broken:</strong> ${broken}</p></article>`).join('');
   return shell(env, 'WCAG 2.2 engineering', `
   <a class="skip-link" href="#accessibility-demo">Skip to interactive demonstration</a>
-  <section class="page-header"><div class="eyebrow">Standards / /accessibility</div><h1>Accessibility is behavior.</h1><p class="lede">Compare an accessible interaction with deterministic teaching failures, then inspect partial automated evidence and the manual verification matrix.</p><div class="page-tools"><span class="badge">WCAG 2.2 AA demonstration — uncertified</span>${referenceDetails([
+  <section class="page-header"><div class="eyebrow">Interfaces / Accessibility</div><h1>Accessibility is behavior.</h1><p class="lede">Compare an accessible interaction with deterministic teaching failures, then inspect partial automated evidence and the manual verification matrix.</p><div class="page-tools"><span class="badge">WCAG 2.2 AA demonstration — uncertified</span>${referenceDetails([
     { label: 'Route source', href: sourceUrl(env, 'src/demos/accessibility.ts') },
     { label: 'Lab source', href: sourceUrl(env, 'src/ui/accessibility-lab.ts') },
     { label: 'Manual verification matrix', href: sourceUrl(env, 'docs/ACCESSIBILITY.md') },
@@ -74,5 +74,5 @@ export function renderAccessibilityDemo(request: Request, env: Env): Response {
     document.querySelector('[data-a11y-reset]').addEventListener('click',()=>{load('accessible');document.querySelector('[data-a11y-mode="accessible"]').focus()});
     load(mode);
   })();
-  </script>`, { cacheControl: 'no-store', activeRoute: '/accessibility' });
+  </script>`, { cacheControl: 'no-store', activeRoute: '/interfaces' });
 }

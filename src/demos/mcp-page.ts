@@ -118,14 +118,14 @@ export async function renderMcpDemo(request: Request, env: Env): Promise<Respons
       <p class="eyebrow">Claude Code</p>
       <h3>Add the remote HTTP server</h3>
       <div class="mcp-command"><pre id="mcp-claude-command">${escapeHtml(claudeCommand)}</pre><button type="button" data-copy-target="mcp-claude-command">Copy</button></div>
-      <p>Confirm it with <code>claude mcp get wizardgang</code>, launch <code>claude</code>, open <code>/mcp</code>, then ask:</p>
+      <p>Confirm it with <code>claude mcp get wizardgang</code>, launch <code>claude</code>, open <code>/interfaces?view=mcp</code>, then ask:</p>
       <blockquote>Use the wizardgang MCP server and call its ping tool.</blockquote>
     </div>
     <div class="mcp-tab-panel" role="tabpanel" id="mcp-panel-1" aria-labelledby="mcp-tab-1" data-mcp-panel="1" hidden>
       <p class="eyebrow">Codex CLI <span>OpenAI / ChatGPT</span></p>
       <h3>Add the remote HTTP server</h3>
       <div class="mcp-command"><pre id="mcp-codex-command">${escapeHtml(codexCommand)}</pre><button type="button" data-copy-target="mcp-codex-command">Copy</button></div>
-      <p>Confirm it with <code>codex mcp list</code>, launch <code>codex</code>, open <code>/mcp</code>, then ask:</p>
+      <p>Confirm it with <code>codex mcp list</code>, launch <code>codex</code>, open <code>/interfaces?view=mcp</code>, then ask:</p>
       <blockquote>Use the wizardgang MCP server and ping it.</blockquote>
       <p class="subtle">Codex CLI, the ChatGPT desktop app, and the IDE extension share MCP configuration on the same Codex host. ChatGPT web uses plugin-provided remote MCP tools instead of local Codex configuration.</p>
     </div>
@@ -201,7 +201,7 @@ export async function renderMcpDemo(request: Request, env: Env): Promise<Respons
   <li>Every successful tool invocation records bounded, sanitized operational evidence.</li>
   <li>The official TypeScript MCP client performs discovery and both tool calls in CI.</li>
 </ul></details>
-<nav class="meta mcp-pager" aria-label="Interfaces routes"><a href="/identity">← Authentication &amp; Authorization</a><a href="/i18n">Internationalization →</a></nav>
+<nav class="meta mcp-pager" aria-label="Interfaces routes"><a href="/interfaces?view=identity">← Authentication &amp; Authorization</a><a href="/interfaces?view=i18n">Internationalization →</a></nav>
 
 <script>
 (() => {
@@ -270,7 +270,7 @@ export async function renderMcpDemo(request: Request, env: Env): Promise<Respons
 </script>`;
 
   return shell(env, 'Model Context Protocol', body, {
-    activeRoute: '/mcp',
+    activeRoute: '/interfaces',
     cacheControl: 'no-store',
     description: 'Connect a real MCP client to the live WizardGang server, discover read-only tools, invoke ping, and inspect sanitized activity evidence.',
   });

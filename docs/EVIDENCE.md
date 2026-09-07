@@ -29,7 +29,7 @@ The controlled public assurance data layer lives under `assurance/` and is descr
 
 Freshness is explicit rather than implied: `release-bound` evidence changes with a deployed release/commit, `event-driven` evidence changes when its controlled governance or release event is published, and `observation-bound` evidence is current only for the time of the observation.
 
-`/compliance` remains the assurance posture front door across those sources and links into `/evidence` for record-level inspection. It states the WCAG 2.2, ISO/IEC 27001, and ISO/IEC 42001 posture as aligned or supported and uncertified, then links to the canonical working evidence at `/accessibility`, `/i18n`, `/governance`, `/mcp`, `/git`, and `/dashboard/*`. It does not reproduce their explanations or turn alignment into a certification claim.
+`/compliance` remains the assurance posture front door across those sources and links into `/evidence` for record-level inspection. It states the WCAG 2.2, ISO/IEC 27001, and ISO/IEC 42001 posture as aligned or supported and uncertified, then links to the canonical working evidence at `/interfaces?view=accessibility`, `/interfaces?view=i18n`, `/governance`, `/interfaces?view=mcp`, `/git`, and `/dashboard/*`. It does not reproduce their explanations or turn alignment into a certification claim.
 
 Do not reconstruct evidence after the fact when the engineering workflow can create it automatically.
 

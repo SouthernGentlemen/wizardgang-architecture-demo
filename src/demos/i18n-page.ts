@@ -64,6 +64,7 @@ export async function renderI18nDemo(request: Request, env: Env): Promise<Respon
     <div class="lab-heading"><div><p class="eyebrow">Six synchronized resources</p><h2 id="i18n-controls-title" data-copy="controls">${escapeHtml(m('controls'))}</h2></div><code data-direction>${direction}</code></div>
     <div class="locale-switcher" role="group" aria-label="${escapeHtml(m('language'))}">${localeButtons}</div>
     <form method="get" class="filters" data-i18n-form>
+      <input type="hidden" name="view" value="i18n">
       <label for="locale"><span data-copy="language">${escapeHtml(m('language'))}</span><select id="locale" name="locale">${localeOptions}</select></label>
       <label for="count"><span data-copy="count">${escapeHtml(m('count'))}</span><input id="count" name="count" type="number" min="0" max="9999" value="${count}"></label>
       <button type="submit" data-copy="apply">${escapeHtml(m('apply'))}</button>
@@ -168,7 +169,7 @@ export async function renderI18nDemo(request: Request, env: Env): Promise<Respon
     });
   })();
   </script>`;
-  const response = shell(env, m('demo.title'), body, { cacheControl: 'no-store', activeRoute: '/i18n' });
+  const response = shell(env, m('demo.title'), body, { cacheControl: 'no-store', activeRoute: '/interfaces' });
   const html = await response.text();
   return new Response(html.replace('<html lang="en">', `<html lang="${locale}" dir="${direction}">`), { headers: response.headers });
 }

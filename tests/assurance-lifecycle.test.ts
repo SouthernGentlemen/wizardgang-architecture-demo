@@ -10,6 +10,10 @@ import {
 } from '../scripts/generate-assurance-runtime-binding.mjs';
 
 const repositoryRoot = process.cwd();
+const repositoryGitDir = spawnSync('git', ['rev-parse', '--absolute-git-dir'], {
+  cwd: repositoryRoot,
+  encoding: 'utf8',
+}).stdout.trim();
 const fixtureRoots: string[] = [];
 const ignoredFixtureParts = new Set(['.git', 'node_modules', '.wrangler', 'dist', 'coverage', 'artifacts']);
 const lifecyclePath = 'assurance/lifecycle/records.json';
@@ -48,7 +52,7 @@ function runLifecycle(root: string): SpawnSyncReturns<string> {
     encoding: 'utf8',
     env: {
       ...process.env,
-      ASSURANCE_MIGRATION_DIR: repositoryRoot,
+      GIT_DIR: repositoryGitDir,
       ASSURANCE_PREVIOUS_DIR: repositoryRoot,
     },
   });

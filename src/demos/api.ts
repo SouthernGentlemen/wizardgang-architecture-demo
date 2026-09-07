@@ -2,7 +2,7 @@ import type { DemoDefinition } from '../types';
 
 const demo: DemoDefinition = {
   "id": "api",
-  "route": "/api",
+  "route": "/interfaces?view=rest",
   "title": "REST API",
   "group": "Interfaces",
   "sourcePath": "src/demos/api.ts",

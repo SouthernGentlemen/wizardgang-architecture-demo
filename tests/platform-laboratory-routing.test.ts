@@ -55,7 +55,6 @@ describe('platform laboratory declarative routing', () => {
       '/__api/r2/object',
       '/__api/r2/reset',
       '/__api/workers/compute',
-      '/accessibility',
       '/platform',
       '/v1/demo-records',
       '/v1/demo-records/:key',

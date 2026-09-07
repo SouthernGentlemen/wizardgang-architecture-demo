@@ -27,6 +27,10 @@ const registry = loadAssuranceRegistry(root);
 const resources = flattenAssuranceRegistry(registry);
 const routeManifest = readJson('docs/route-manifest.json');
 const publicRoutes = new Set(routeManifest.map((entry) => entry.route));
+const registeredRoutePath = (route) => {
+  try { return new URL(route, 'https://demo.wizardgang.ai').pathname; }
+  catch { return route; }
+};
 const requiredRoutes = [
   '/evidence', '/compliance', '/governance/risks', '/governance/incidents', '/security',
   '/v1/assurance', '/v1/assurance/evidence', '/v1/assurance/risks', '/v1/assurance/incidents',
@@ -107,7 +111,7 @@ function reportObservationWindowError(recordId, evaluation) {
 for (const { resource, record } of recordEntries) {
   registerPublicId(record.id, resource.id);
   if (resource.kind !== 'evidence') continue;
-  if (record.locator?.route && !publicRoutes.has(record.locator.route)) errors.push(`${record.id}: evidence route is missing from the route manifest: ${record.locator.route}`);
+  if (record.locator?.route && !publicRoutes.has(registeredRoutePath(record.locator.route))) errors.push(`${record.id}: evidence route is missing from the route manifest: ${record.locator.route}`);
   const isTimeBound = record.kind === 'observation' || record.observedAt !== undefined || record.validUntil !== undefined;
   if (isTimeBound) {
     if (record.freshnessPolicy !== 'observation-bound') errors.push(`${record.id}: time-bound evidence must use observation-bound freshness`);

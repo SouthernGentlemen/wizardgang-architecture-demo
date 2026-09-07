@@ -16,6 +16,10 @@ import { gitBlobShaForFile } from '../scripts/generate-assurance-runtime-binding
 import { rebindRelationshipSource } from './helpers/assurance-relationships';
 
 const repositoryRoot = process.cwd();
+const repositoryGitDir = spawnSync('git', ['rev-parse', '--absolute-git-dir'], {
+  cwd: repositoryRoot,
+  encoding: 'utf8',
+}).stdout.trim();
 const fixtureRoots: string[] = [];
 const ignoredFixtureParts = new Set(['.git', 'node_modules', '.wrangler', 'dist', 'coverage', 'artifacts']);
 const validationNow = '2026-09-03T03:59:00Z';
@@ -146,7 +150,7 @@ function runScript(fixtureRoot: string, script: string): SpawnSyncReturns<string
     env: {
       ...process.env,
       ASSURANCE_VALIDATION_NOW: validationNow,
-      ASSURANCE_MIGRATION_DIR: repositoryRoot,
+      GIT_DIR: repositoryGitDir,
       ASSURANCE_PREVIOUS_DIR: repositoryRoot,
     },
   });

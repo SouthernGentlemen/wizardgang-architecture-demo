@@ -1,6 +1,6 @@
 # Accessibility demonstration, criterion registry, and manual matrix
 
-The whole site follows WCAG 2.2-oriented engineering practices. `/accessibility` makes twelve behaviors explicit through an accessible default and an opt-in broken teaching preset. Broken content runs in a titled `srcdoc` frame with `sandbox="allow-scripts allow-forms"`; it is not evidence about the surrounding site.
+The whole site follows WCAG 2.2-oriented engineering practices. `/interfaces?view=accessibility` makes twelve behaviors explicit through an accessible default and an opt-in broken teaching preset. Broken content runs in a titled `srcdoc` frame with `sandbox="allow-scripts allow-forms"`; it is not evidence about the surrounding site.
 
 Status language is **WCAG 2.2 engineering evidence — no conformance claim**. The repository does not claim Level A, AA, or AAA conformance or certification. Criterion-level status describes implementation and evidence only; a demonstrated or partial record is not a success-criterion result.
 

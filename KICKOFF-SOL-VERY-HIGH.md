@@ -48,9 +48,8 @@ Use only the canonical current routes defined in `docs/ROUTES.md` and `docs/rout
 
 Core groups include:
 
-- Platform: `/edge`, `/workers`, `/durable-objects`, `/d1`, `/r2`
-- Interfaces: `/api`, `/graphql`, `/webhooks`, `/identity`, `/mcp`
-- Standards: `/i18n`, `/accessibility`
+- Platform: `/platform?view=edge`, `/platform?view=workers`, `/platform?view=durable-objects`, `/platform?view=d1`, `/platform?view=r2`
+- Interfaces: `/interfaces?view=rest`, `/interfaces?view=graphql`, `/interfaces?view=webhooks`, `/interfaces?view=identity`, `/interfaces?view=mcp`, `/interfaces?view=i18n`, `/interfaces?view=accessibility`
 - Delivery & Governance: `/git`, `/governance`, `/evidence`, `/compliance`, `/security`, `/governance/concerns`, `/governance/risks`, `/governance/incidents`
 - Operations: `/dashboard`, `/dashboard/uptime`, `/dashboard/docs`, `/dashboard/logs`, `/dashboard/billing`
 - Administration: `/admin`, `/offline`

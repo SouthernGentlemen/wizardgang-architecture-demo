@@ -1,4 +1,3 @@
-import identityDemo from '../../demos/identity';
 import {
   authorizationDecisionResponse,
   demoAccessTokenResponse,
@@ -13,7 +12,6 @@ import {
   samlStartResponse,
   ssoBoundaryResponse,
 } from '../../api/identity';
-import { renderIdentityDemo } from '../../demos/identity-page';
 import { defineInterfaceIdentityCapability, interfaceIdentityRoute } from '../route-capability';
 
 const providers = ['microsoft', 'google', 'github'] as const;
@@ -45,23 +43,11 @@ const providerRoutes = providers.flatMap((provider) => [
     sourceModule: 'src/api/identity.ts',
     sourceExport: 'providerCallbackResponse',
     authorization: { mode: 'policy', policy: provider === 'github' ? 'oauth-state + PKCE + provider identity' : 'oidc-state + nonce + PKCE + issuer/audience/expiry' },
-    tests: ['tests/identity.test.ts'],
+    tests: ['tests/identity.test.ts', 'tests/interface-consolidation.test.ts'],
   }),
 ]);
 
 export const identityRouteCapability = defineInterfaceIdentityCapability('interfaces.identity', [
-  interfaceIdentityRoute({
-    id: 'interfaces.identity.page',
-    pattern: identityDemo.route,
-    methods: ['GET'],
-    kind: 'page',
-    handler: (_request, { env }) => renderIdentityDemo(env),
-    title: identityDemo.title,
-    description: identityDemo.summary,
-    sourceModule: 'src/demos/identity-page.ts',
-    sourceExport: 'renderIdentityDemo',
-    tests: ['tests/identity.test.ts', 'tests/interface.test.ts'],
-  }),
   interfaceIdentityRoute({
     id: 'interfaces.identity.oauth-pkce',
     pattern: '/__api/identity/oauth-pkce',
@@ -145,7 +131,7 @@ export const identityRouteCapability = defineInterfaceIdentityCapability('interf
     sourceExport: 'samlCallbackResponse',
     authorization: { mode: 'policy', policy: 'SAML signature + audience + time bounds + replay protection' },
     sameOrigin: { mode: 'not-required' },
-    tests: ['tests/identity.test.ts'],
+    tests: ['tests/identity.test.ts', 'tests/interface-consolidation.test.ts'],
   }),
   interfaceIdentityRoute({
     id: 'interfaces.identity.saml.metadata',

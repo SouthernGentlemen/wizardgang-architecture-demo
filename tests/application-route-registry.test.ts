@@ -91,11 +91,12 @@ describe('complete declarative application routing', () => {
   });
 
   it('uses one consistent method result from the application registry', () => {
-    expect(matchRoute(applicationRouteRegistry, 'POST', '/mcp')).toMatchObject({
+    expect(matchRoute(applicationRouteRegistry, 'POST', '/interfaces')).toMatchObject({
       status: 'method-not-allowed',
       allowedMethods: ['GET'],
-      route: { id: 'interfaces.mcp.page' },
+      route: { id: 'interfaces.page' },
     });
+    expect(matchRoute(applicationRouteRegistry, 'POST', '/mcp')).toEqual({ status: 'not-found', statusCode: 404 });
     expect(matchRoute(applicationRouteRegistry, 'GET', '/mcp/server')).toMatchObject({
       status: 'matched',
       route: { id: 'interfaces.mcp.server' },
@@ -141,7 +142,10 @@ describe('complete declarative application routing', () => {
   });
 
   it('keeps removed aliases and unknown paths on the normal 404 even while offline state is unavailable', async () => {
-    for (const path of ['/__api/demo/run', '/__api/demo/events', '/v1/not-registered', '/legacy/compliance']) {
+    for (const path of [
+      '/api', '/webhooks', '/identity', '/mcp', '/i18n', '/accessibility',
+      '/__api/demo/run', '/__api/demo/events', '/v1/not-registered', '/legacy/compliance',
+    ]) {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`), noDatabaseEnv());
       expect(response.status, path).toBe(404);
     }

@@ -2,7 +2,7 @@ import type { DemoDefinition } from '../types';
 
 const demo: DemoDefinition = {
   id: 'webhooks',
-  route: '/webhooks',
+  route: '/interfaces?view=webhooks',
   title: 'Signed Webhooks',
   group: 'Interfaces',
   sourcePath: 'src/demos/webhooks.ts',

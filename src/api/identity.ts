@@ -89,7 +89,7 @@ function redirect(location: URL, cookies: string[] = []): Response {
 }
 
 function identityRedirect(request: Request, parameters: Record<string, string>, cookies: string[] = []): Response {
-  const location = new URL('/identity', request.url);
+  const location = new URL('/interfaces?view=identity', request.url);
   for (const [key, value] of Object.entries(parameters)) location.searchParams.set(key, value);
   return redirect(location, cookies);
 }

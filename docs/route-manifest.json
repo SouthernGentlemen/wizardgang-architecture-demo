@@ -92,7 +92,7 @@
     "navigation": {
       "group": "Delivery & Governance",
       "label": "Security",
-      "order": 13,
+      "order": 7,
       "index": true,
       "sitemap": true
     },
@@ -238,7 +238,7 @@
     "navigation": {
       "group": "Delivery & Governance",
       "label": "Compliance & Assurance",
-      "order": 12,
+      "order": 6,
       "index": true,
       "sitemap": true
     },
@@ -337,7 +337,7 @@
     "navigation": {
       "group": "Delivery & Governance",
       "label": "Assurance Evidence",
-      "order": 11,
+      "order": 5,
       "index": true,
       "sitemap": true
     },
@@ -436,7 +436,7 @@
     "navigation": {
       "group": "Delivery & Governance",
       "label": "Incidents & Exercises",
-      "order": 16,
+      "order": 10,
       "index": true,
       "sitemap": true
     },
@@ -535,7 +535,7 @@
     "navigation": {
       "group": "Delivery & Governance",
       "label": "Risk Assurance",
-      "order": 15,
+      "order": 9,
       "index": true,
       "sitemap": true
     },
@@ -785,7 +785,7 @@
     "navigation": {
       "group": "Delivery & Governance",
       "label": "Git / GitHub",
-      "order": 9,
+      "order": 3,
       "index": true,
       "sitemap": true
     },
@@ -929,7 +929,7 @@
     "navigation": {
       "group": "Delivery & Governance",
       "label": "Report a Concern",
-      "order": 14,
+      "order": 8,
       "index": true,
       "sitemap": true
     },
@@ -981,7 +981,7 @@
     "navigation": {
       "group": "Delivery & Governance",
       "label": "Governance",
-      "order": 10,
+      "order": 4,
       "index": true,
       "sitemap": true
     },
@@ -1150,7 +1150,7 @@
       "indexing": "deny"
     },
     "title": "GraphiQL console",
-    "description": "Locally bundled GraphiQL execution console for the GraphQL endpoint.",
+    "description": "Locally bundled GraphiQL execution console embedded by the consolidated GraphQL interface view.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -1160,7 +1160,8 @@
       "exportName": "localGraphiqlResponse",
       "tests": [
         "tests/interface-identity-routing.test.ts",
-        "tests/graphql.test.ts"
+        "tests/graphql.test.ts",
+        "tests/interface-consolidation.test.ts"
       ]
     },
     "status": "working"
@@ -1174,7 +1175,7 @@
     ],
     "kind": "protocol",
     "visibility": "public",
-    "browser_html": "graphql",
+    "browser_html": "never",
     "authentication": {
       "mode": "anonymous"
     },
@@ -1196,10 +1197,10 @@
     },
     "crawler": {
       "crawling": "controlled",
-      "indexing": "allow"
+      "indexing": "deny"
     },
     "title": "GraphQL API",
-    "description": "GraphQL protocol endpoint with HTML content negotiation, bounded execution, and the shared application authorization policy.",
+    "description": "Machine-only GraphQL protocol endpoint with bounded execution and the shared application authorization policy.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -1210,15 +1211,9 @@
       "tests": [
         "tests/interface-identity-routing.test.ts",
         "tests/graphql.test.ts",
-        "tests/integration-interfaces.test.ts"
+        "tests/integration-interfaces.test.ts",
+        "tests/interface-consolidation.test.ts"
       ]
-    },
-    "navigation": {
-      "group": "Interfaces",
-      "label": "GraphQL API",
-      "order": 3,
-      "index": true,
-      "sitemap": true
     },
     "status": "working"
   },
@@ -1265,57 +1260,6 @@
         "tests/graphql.test.ts",
         "tests/contracts.test.ts"
       ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "interfaces.i18n.page",
-    "route": "/i18n",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Internationalization",
-    "description": "Locale-ready interface architecture including language, formatting, translation resources, and RTL readiness.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/i18n-page.ts",
-      "exportName": "renderI18nDemo",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/interface.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Standards",
-      "label": "Internationalization",
-      "order": 7,
-      "index": true,
-      "sitemap": true
     },
     "status": "working"
   },
@@ -1408,7 +1352,8 @@
       "exportName": "providerCallbackResponse",
       "tests": [
         "tests/interface-identity-routing.test.ts",
-        "tests/identity.test.ts"
+        "tests/identity.test.ts",
+        "tests/interface-consolidation.test.ts"
       ]
     },
     "status": "working"
@@ -1498,7 +1443,8 @@
       "exportName": "providerCallbackResponse",
       "tests": [
         "tests/interface-identity-routing.test.ts",
-        "tests/identity.test.ts"
+        "tests/identity.test.ts",
+        "tests/interface-consolidation.test.ts"
       ]
     },
     "status": "working"
@@ -1636,7 +1582,8 @@
       "exportName": "providerCallbackResponse",
       "tests": [
         "tests/interface-identity-routing.test.ts",
-        "tests/identity.test.ts"
+        "tests/identity.test.ts",
+        "tests/interface-consolidation.test.ts"
       ]
     },
     "status": "working"
@@ -1732,58 +1679,6 @@
     "status": "working"
   },
   {
-    "id": "interfaces.identity.page",
-    "route": "/identity",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Authentication & SSO",
-    "description": "Real Microsoft Entra ID, Google, and GitHub authentication paths converge on one normalized identity and application authorization boundary.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/identity-page.ts",
-      "exportName": "renderIdentityDemo",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/identity.test.ts",
-        "tests/interface.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Interfaces",
-      "label": "Authentication & SSO",
-      "order": 5,
-      "index": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
     "id": "interfaces.identity.saml.acs",
     "route": "/identity/saml/acs",
     "methods": [
@@ -1823,7 +1718,8 @@
       "exportName": "samlCallbackResponse",
       "tests": [
         "tests/interface-identity-routing.test.ts",
-        "tests/identity.test.ts"
+        "tests/identity.test.ts",
+        "tests/interface-consolidation.test.ts"
       ]
     },
     "status": "working"
@@ -2101,58 +1997,6 @@
     "status": "working"
   },
   {
-    "id": "interfaces.mcp.page",
-    "route": "/mcp",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Model Context Protocol",
-    "description": "Connect a real MCP client to the live demo and invoke read-only tools through the same application permissions used by the rest of the platform.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/mcp-page.ts",
-      "exportName": "renderMcpDemo",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/mcp-client.test.ts",
-        "tests/interface.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Interfaces",
-      "label": "Model Context Protocol",
-      "order": 6,
-      "index": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
     "id": "interfaces.mcp.server",
     "route": "/mcp/server",
     "methods": [
@@ -2195,7 +2039,8 @@
       "tests": [
         "tests/interface-identity-routing.test.ts",
         "tests/mcp-client.test.ts",
-        "tests/governance.test.ts"
+        "tests/governance.test.ts",
+        "tests/interface-consolidation.test.ts"
       ]
     },
     "status": "working"
@@ -2247,8 +2092,8 @@
     "status": "working"
   },
   {
-    "id": "interfaces.rest.page",
-    "route": "/api",
+    "id": "interfaces.page",
+    "route": "/interfaces",
     "methods": [
       "GET"
     ],
@@ -2274,24 +2119,24 @@
       "crawling": "controlled",
       "indexing": "allow"
     },
-    "title": "REST API",
-    "description": "Explore a versioned D1-backed REST API, execute live requests, and inspect the OpenAPI 3.1 contract behind it.",
+    "title": "Interfaces",
+    "description": "One server-rendered surface for the REST, GraphQL, webhook, identity, MCP, internationalization, and accessibility demonstrations.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
-      "module": "src/demos/api-page.ts",
-      "exportName": "renderApiDemo",
+      "module": "src/demos/interfaces.ts",
+      "exportName": "renderInterfaces",
       "tests": [
         "tests/interface-identity-routing.test.ts",
-        "tests/api-records.test.ts",
+        "tests/interface-consolidation.test.ts",
         "tests/interface.test.ts"
       ]
     },
     "navigation": {
       "group": "Interfaces",
-      "label": "REST API",
+      "label": "Interfaces",
       "order": 2,
       "index": true,
       "sitemap": true
@@ -2430,58 +2275,6 @@
         "tests/interface-identity-routing.test.ts",
         "tests/webhooks.test.ts"
       ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "interfaces.webhooks.page",
-    "route": "/webhooks",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Signed Webhooks",
-    "description": "Verify GitHub-compatible deliveries through signature, repository, event, payload, and replay controls, then inspect the sanitized evidence.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/webhook-console.ts",
-      "exportName": "renderWebhooksDemo",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/webhooks.test.ts",
-        "tests/interface.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Interfaces",
-      "label": "Signed Webhooks",
-      "order": 4,
-      "index": true,
-      "sitemap": true
     },
     "status": "working"
   },
@@ -2813,7 +2606,7 @@
     "navigation": {
       "group": "Operations",
       "label": "System Operations",
-      "order": 17,
+      "order": 11,
       "index": true,
       "sitemap": true
     },
@@ -2865,7 +2658,7 @@
     "navigation": {
       "group": "Operations",
       "label": "Cloudflare Usage & Cost",
-      "order": 21,
+      "order": 15,
       "index": true,
       "sitemap": true
     },
@@ -2917,7 +2710,7 @@
     "navigation": {
       "group": "Operations",
       "label": "Documentation",
-      "order": 19,
+      "order": 13,
       "index": true,
       "sitemap": true
     },
@@ -2969,7 +2762,7 @@
     "navigation": {
       "group": "Operations",
       "label": "Log Viewer",
-      "order": 20,
+      "order": 14,
       "index": true,
       "sitemap": true
     },
@@ -3021,7 +2814,7 @@
     "navigation": {
       "group": "Operations",
       "label": "Availability",
-      "order": 18,
+      "order": 12,
       "index": true,
       "sitemap": true
     },
@@ -3378,7 +3171,7 @@
       "indexing": "deny"
     },
     "title": "Accessibility teaching frame",
-    "description": "Renders the bounded accessible or intentionally broken teaching frame used by the accessibility laboratory.",
+    "description": "Renders the bounded accessible or intentionally broken teaching frame used by the accessibility interface view.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -3391,58 +3184,6 @@
         "tests/interface.test.ts",
         "tests/router.test.ts"
       ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "platform.accessibility.page",
-    "route": "/accessibility",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "WCAG 2.2",
-    "description": "Isolated WCAG 2.2 before-and-after laboratory with accessible behavior, opt-in teaching failures, axe-core output, and manual evidence.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/platform/route-capabilities/accessibility.ts",
-      "exportName": "accessibilityLaboratoryCapability",
-      "tests": [
-        "tests/platform-laboratory-routing.test.ts",
-        "tests/interface.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Standards",
-      "label": "WCAG 2.2",
-      "order": 8,
-      "index": true,
-      "sitemap": true
     },
     "status": "working"
   },
