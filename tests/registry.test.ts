@@ -12,8 +12,8 @@ import { readFileSync } from 'node:fs';
 const applicationRoutes = applicationRouteRegistry.declarations as readonly ApplicationRouteDeclaration[];
 
 describe('architecture demo registry', () => {
-  it('publishes 25 HTML routes in five architecture groups', () => {
-    expect(demos).toHaveLength(25);
+  it('publishes 21 HTML routes in five architecture groups', () => {
+    expect(demos).toHaveLength(21);
     expect([...new Set(demos.map((demo) => demo.group))]).toEqual([
       'Platform', 'Interfaces', 'Standards', 'Delivery & Governance', 'Operations',
     ]);
@@ -110,7 +110,8 @@ describe('intentional offline route policies', () => {
     ]) expect(browserPolicy(pattern), pattern).toBe('never');
     expect(browserPolicy('/graphql')).toBe('graphql');
     expect(browserPolicy('/mcp')).toBe('page');
-    expect(browserPolicy('/edge')).toBe('page');
+    expect(browserPolicy('/platform')).toBe('page');
+    expect(browserPolicy('/edge')).toBeUndefined();
     expect(applicationRoutes.some((route) => route.pattern === '/v1/things')).toBe(false);
   });
 });

@@ -10,14 +10,11 @@ This file is generated from the active declarative application registry. Route I
 | `platform.accessibility.page` | `/accessibility` | `GET` | page | public | gated | allow | WCAG 2.2 | `src/platform/route-capabilities/accessibility.ts` |
 | `interfaces.rest.page` | `/api` | `GET` | page | public | gated | allow | REST API | `src/demos/api-page.ts` |
 | `assurance.compliance.iso-27001.html` | `/compliance` | `GET` | page | public | gated | allow | Assurance compliance html | `src/demos/compliance-page.ts` |
-| `platform.d1.page` | `/d1` | `GET` | page | public | gated | allow | Cloudflare D1 | `src/platform/route-capabilities/d1.ts` |
 | `operations.dashboard` | `/dashboard` | `GET` | page | public | available | allow | Operations dashboard | `src/demos/operations-pages.ts` |
 | `operations.dashboard-billing` | `/dashboard/billing` | `GET` | page | public | available | allow | Usage and cost | `src/demos/operations-pages.ts` |
 | `operations.dashboard-docs` | `/dashboard/docs` | `GET` | page | public | available | allow | Operations documentation | `src/demos/operations-pages.ts` |
 | `operations.dashboard-logs` | `/dashboard/logs` | `GET` | page | public | available | allow | Operations logs | `src/demos/logs.ts` |
 | `operations.dashboard-uptime` | `/dashboard/uptime` | `GET` | page | public | available | allow | Availability history | `src/demos/operations-pages.ts` |
-| `platform.durable-objects.page` | `/durable-objects` | `GET` | page | public | gated | allow | Durable Objects | `src/platform/route-capabilities/durable-objects.ts` |
-| `platform.edge.page` | `/edge` | `GET` | page | public | gated | allow | Cloudflare Edge | `src/platform/route-capabilities/edge.ts` |
 | `assurance.evidence.html` | `/evidence` | `GET` | page | public | gated | allow | Assurance evidence html | `src/demos/evidence-page.ts` |
 | `interfaces.git.page` | `/git` | `GET` | page | public | gated | allow | Git / GitHub | `src/demos/git-page.ts` |
 | `interfaces.governance.page` | `/governance` | `GET` | page | public | gated | allow | Governance | `src/demos/governance.ts` |
@@ -28,10 +25,9 @@ This file is generated from the active declarative application registry. Route I
 | `interfaces.i18n.page` | `/i18n` | `GET` | page | public | gated | allow | Internationalization | `src/demos/i18n-page.ts` |
 | `interfaces.identity.page` | `/identity` | `GET` | page | public | gated | allow | Authentication & SSO | `src/demos/identity-page.ts` |
 | `interfaces.mcp.page` | `/mcp` | `GET` | page | public | gated | allow | Model Context Protocol | `src/demos/mcp-page.ts` |
-| `platform.r2.page` | `/r2` | `GET` | page | public | gated | allow | Cloudflare R2 | `src/platform/route-capabilities/r2.ts` |
+| `platform.page` | `/platform` | `GET` | page | public | gated | allow | Cloudflare Platform | `src/demos/platform.ts` |
 | `assurance.advisories.html` | `/security` | `GET` | page | public | available | allow | Assurance advisories html | `src/demos/security-page.ts` |
 | `interfaces.webhooks.page` | `/webhooks` | `GET` | page | public | gated | allow | Signed Webhooks | `src/demos/webhook-console.ts` |
-| `platform.workers.page` | `/workers` | `GET` | page | public | gated | allow | Cloudflare Workers | `src/platform/route-capabilities/workers.ts` |
 
 ## Registered service, protocol, asset, and private routes
 

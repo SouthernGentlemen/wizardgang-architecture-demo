@@ -92,7 +92,7 @@
     "navigation": {
       "group": "Delivery & Governance",
       "label": "Security",
-      "order": 17,
+      "order": 13,
       "index": true,
       "sitemap": true
     },
@@ -238,7 +238,7 @@
     "navigation": {
       "group": "Delivery & Governance",
       "label": "Compliance & Assurance",
-      "order": 16,
+      "order": 12,
       "index": true,
       "sitemap": true
     },
@@ -337,7 +337,7 @@
     "navigation": {
       "group": "Delivery & Governance",
       "label": "Assurance Evidence",
-      "order": 15,
+      "order": 11,
       "index": true,
       "sitemap": true
     },
@@ -436,7 +436,7 @@
     "navigation": {
       "group": "Delivery & Governance",
       "label": "Incidents & Exercises",
-      "order": 20,
+      "order": 16,
       "index": true,
       "sitemap": true
     },
@@ -535,7 +535,7 @@
     "navigation": {
       "group": "Delivery & Governance",
       "label": "Risk Assurance",
-      "order": 19,
+      "order": 15,
       "index": true,
       "sitemap": true
     },
@@ -785,7 +785,7 @@
     "navigation": {
       "group": "Delivery & Governance",
       "label": "Git / GitHub",
-      "order": 13,
+      "order": 9,
       "index": true,
       "sitemap": true
     },
@@ -929,7 +929,7 @@
     "navigation": {
       "group": "Delivery & Governance",
       "label": "Report a Concern",
-      "order": 18,
+      "order": 14,
       "index": true,
       "sitemap": true
     },
@@ -981,7 +981,7 @@
     "navigation": {
       "group": "Delivery & Governance",
       "label": "Governance",
-      "order": 14,
+      "order": 10,
       "index": true,
       "sitemap": true
     },
@@ -1216,7 +1216,7 @@
     "navigation": {
       "group": "Interfaces",
       "label": "GraphQL API",
-      "order": 7,
+      "order": 3,
       "index": true,
       "sitemap": true
     },
@@ -1313,7 +1313,7 @@
     "navigation": {
       "group": "Standards",
       "label": "Internationalization",
-      "order": 11,
+      "order": 7,
       "index": true,
       "sitemap": true
     },
@@ -1777,7 +1777,7 @@
     "navigation": {
       "group": "Interfaces",
       "label": "Authentication & SSO",
-      "order": 9,
+      "order": 5,
       "index": true,
       "sitemap": true
     },
@@ -2146,7 +2146,7 @@
     "navigation": {
       "group": "Interfaces",
       "label": "Model Context Protocol",
-      "order": 10,
+      "order": 6,
       "index": true,
       "sitemap": true
     },
@@ -2292,7 +2292,7 @@
     "navigation": {
       "group": "Interfaces",
       "label": "REST API",
-      "order": 6,
+      "order": 2,
       "index": true,
       "sitemap": true
     },
@@ -2479,7 +2479,7 @@
     "navigation": {
       "group": "Interfaces",
       "label": "Signed Webhooks",
-      "order": 8,
+      "order": 4,
       "index": true,
       "sitemap": true
     },
@@ -2813,7 +2813,7 @@
     "navigation": {
       "group": "Operations",
       "label": "System Operations",
-      "order": 21,
+      "order": 17,
       "index": true,
       "sitemap": true
     },
@@ -2865,7 +2865,7 @@
     "navigation": {
       "group": "Operations",
       "label": "Cloudflare Usage & Cost",
-      "order": 25,
+      "order": 21,
       "index": true,
       "sitemap": true
     },
@@ -2917,7 +2917,7 @@
     "navigation": {
       "group": "Operations",
       "label": "Documentation",
-      "order": 23,
+      "order": 19,
       "index": true,
       "sitemap": true
     },
@@ -2969,7 +2969,7 @@
     "navigation": {
       "group": "Operations",
       "label": "Log Viewer",
-      "order": 24,
+      "order": 20,
       "index": true,
       "sitemap": true
     },
@@ -3021,7 +3021,7 @@
     "navigation": {
       "group": "Operations",
       "label": "Availability",
-      "order": 22,
+      "order": 18,
       "index": true,
       "sitemap": true
     },
@@ -3440,60 +3440,7 @@
     "navigation": {
       "group": "Standards",
       "label": "WCAG 2.2",
-      "order": 12,
-      "index": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
-    "id": "platform.d1.page",
-    "route": "/d1",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Cloudflare D1",
-    "description": "Isolated Users and Tasks CRUD with live parameterized SQL, timing, row counts, shared GraphQL data, and resettable D1 state.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/platform/route-capabilities/d1.ts",
-      "exportName": "d1LaboratoryCapability",
-      "tests": [
-        "tests/platform-laboratory-routing.test.ts",
-        "tests/d1-lab.test.ts",
-        "tests/api-records.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Platform",
-      "label": "Cloudflare D1",
-      "order": 4,
+      "order": 8,
       "index": true,
       "sitemap": true
     },
@@ -3942,58 +3889,6 @@
     "status": "working"
   },
   {
-    "id": "platform.durable-objects.page",
-    "route": "/durable-objects",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Durable Objects",
-    "description": "Coordinated stateful compute for cases where independent Worker requests must agree on shared state.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/platform/route-capabilities/durable-objects.ts",
-      "exportName": "durableObjectsLaboratoryCapability",
-      "tests": [
-        "tests/platform-laboratory-routing.test.ts",
-        "tests/runtime.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Platform",
-      "label": "Durable Objects",
-      "order": 3,
-      "index": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
     "id": "platform.edge.inspect",
     "route": "/__api/edge/inspect",
     "methods": [
@@ -4038,8 +3933,8 @@
     "status": "working"
   },
   {
-    "id": "platform.edge.page",
-    "route": "/edge",
+    "id": "platform.page",
+    "route": "/platform",
     "methods": [
       "GET"
     ],
@@ -4065,23 +3960,24 @@
       "crawling": "controlled",
       "indexing": "allow"
     },
-    "title": "Cloudflare Edge",
-    "description": "Public edge boundary for DNS, TLS, CDN, routing, traffic filtering, rate controls, and security policy.",
+    "title": "Cloudflare Platform",
+    "description": "One server-rendered surface for the edge, Worker, Durable Object, D1, and R2 architecture laboratories.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
-      "module": "src/platform/route-capabilities/edge.ts",
-      "exportName": "edgeLaboratoryCapability",
+      "module": "src/demos/platform.ts",
+      "exportName": "renderPlatform",
       "tests": [
         "tests/platform-laboratory-routing.test.ts",
-        "tests/router.test.ts"
+        "tests/router.test.ts",
+        "tests/interface.test.ts"
       ]
     },
     "navigation": {
       "group": "Platform",
-      "label": "Cloudflare Edge",
+      "label": "Cloudflare Platform",
       "order": 1,
       "index": true,
       "sitemap": true
@@ -4280,58 +4176,6 @@
     "status": "working"
   },
   {
-    "id": "platform.r2.page",
-    "route": "/r2",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Cloudflare R2",
-    "description": "A session-isolated mini file manager backed by real R2 bytes and D1 metadata, with upload, list, preview, download, delete, and reset.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/platform/route-capabilities/r2.ts",
-      "exportName": "r2LaboratoryCapability",
-      "tests": [
-        "tests/platform-laboratory-routing.test.ts",
-        "tests/r2-lab.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Platform",
-      "label": "Cloudflare R2",
-      "order": 5,
-      "index": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
     "id": "platform.r2.reset",
     "route": "/__api/r2/reset",
     "methods": [
@@ -4421,58 +4265,6 @@
         "tests/runtime.test.ts",
         "tests/router.test.ts"
       ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "platform.workers.page",
-    "route": "/workers",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Cloudflare Workers",
-    "description": "Stateless TypeScript application compute and the mediation layer between clients, platform state, and integrations.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/platform/route-capabilities/workers.ts",
-      "exportName": "workersLaboratoryCapability",
-      "tests": [
-        "tests/platform-laboratory-routing.test.ts",
-        "tests/runtime.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "group": "Platform",
-      "label": "Cloudflare Workers",
-      "order": 2,
-      "index": true,
-      "sitemap": true
     },
     "status": "working"
   }

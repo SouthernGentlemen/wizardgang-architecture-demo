@@ -1,11 +1,9 @@
-import r2Demo from '../../demos/r2';
 import {
   r2DemoObjectResponse,
   r2FilesResetResponse,
   r2FilesResponse,
   r2ObjectResponse,
 } from '../../api/r2';
-import { renderR2Demo } from '../../demos/r2-page';
 import {
   R2_OBJECT_STORAGE,
   definePlatformLaboratoryCapability,
@@ -23,28 +21,6 @@ const docs = ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'] as const;
 export const r2LaboratoryCapability = definePlatformLaboratoryCapability({
   id: 'platform.r2',
   routes: [
-    {
-      id: 'platform.r2.page',
-      pattern: r2Demo.route,
-      methods: ['GET'],
-      kind: 'page',
-      handler: (_request, env) => renderR2Demo(env),
-      authentication: { mode: 'anonymous' },
-      authorization: { mode: 'none' },
-      visibility: 'public',
-      sameOrigin: { mode: 'not-required' },
-      offline: { mode: 'gated' },
-      cache: { mode: 'no-store' },
-      crawler: { crawling: 'controlled', indexing: 'allow' },
-      documentation: { title: r2Demo.title, description: r2Demo.summary, docs },
-      source: {
-        module: 'src/platform/route-capabilities/r2.ts',
-        exportName: 'r2LaboratoryCapability',
-        tests,
-      },
-      requestLimits: noRequestBody('The R2 laboratory page accepts GET without a request body.'),
-      storage: R2_OBJECT_STORAGE,
-    },
     {
       id: 'platform.r2.demo-object',
       pattern: '/__api/r2/demo',

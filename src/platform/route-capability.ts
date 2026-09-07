@@ -1,6 +1,4 @@
-import type { DemoDefinition, Env } from '../types';
-import { demos } from '../demos/registry';
-import { renderDemo } from '../ui/page';
+import type { Env } from '../types';
 import type { RouteDeclaration } from '../routing/registry';
 
 export interface LaboratoryRequestLimits {
@@ -37,10 +35,6 @@ export function definePlatformLaboratoryCapability<T extends PlatformLaboratoryC
 
 export function noRequestBody(note = 'Request body is not consumed.'): LaboratoryRequestLimits {
   return { maxBodyBytes: null, notes: [note] };
-}
-
-export function renderRegisteredDemo(env: Env, demo: DemoDefinition): Response {
-  return renderDemo(env, demo, demos);
 }
 
 export const NO_STORAGE: LaboratoryStorageBoundary = {
