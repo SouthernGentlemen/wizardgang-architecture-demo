@@ -226,7 +226,7 @@ describe('public route contract', () => {
     expect(html).not.toContain('This button calls the live Worker interface below');
   });
 
-  it('keeps a compact live status strip on the index and removes duplicate dashboard navigation', async () => {
+  it('keeps a compact live status strip on the index and links the canonical operations surface', async () => {
     const environment = env();
     const index = await (await routeRequest(new Request('https://demo.wizardgang.ai/'), environment)).text();
     expect(index).not.toContain('<h2 class="eyebrow">Routes</h2>');
@@ -236,25 +236,25 @@ describe('public route contract', () => {
     expect(index).toContain('<span>Health</span>');
     expect(index).toContain('<strong>WIZARDGANG</strong>');
     expect(index).toContain('<meta property="og:image" content="https://demo.wizardgang.ai/og.png">');
-    expect(index).toContain('href="/dashboard">Dashboard</a>');
+    expect(index).toContain('href="/operations">Operations</a>');
+    expect(index).not.toContain('href="/dashboard');
     expect(index).not.toContain('>Map</a>');
-    expect(index).not.toContain('>Operations</a>');
     expect(index).not.toContain('>Docs</a>');
     expect(index).not.toContain('>GitHub <span');
     expect(index).toContain('WG-ARCH-001 · <a href="https://github.com/SouthernGentlemen/wizardgang-architecture-demo">Public source</a>');
 
-    const dashboard = await (await routeRequest(new Request('https://demo.wizardgang.ai/dashboard'), environment)).text();
-    expect(dashboard).toContain('<nav class="section-nav" aria-label="Operations">');
-    expect(dashboard).not.toContain('Operational proof surfaces');
-    expect(dashboard).toContain('User-requested ChatGPT fetch');
-    expect(dashboard).toContain('Model-training crawl');
-    expect(dashboard).not.toContain('name="control" value="chatgpt-crawl"');
-    expect(dashboard).toContain('Collection discovery comes from reporting ownership and registered capabilities.');
-    expect(dashboard).toContain('href="/dashboard?report=compliance#reporting-browser"');
-    expect(dashboard).toContain('Shared reporting presenter');
-    expect(dashboard).toContain('23 available in the authorized selection');
+    const operations = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations'), environment)).text();
+    expect(operations).toContain('<nav class="section-nav" aria-label="Operations views">');
+    expect(operations).not.toContain('Operational proof surfaces');
+    expect(operations).toContain('User-requested ChatGPT fetch');
+    expect(operations).toContain('Model-training crawl');
+    expect(operations).not.toContain('name="control" value="chatgpt-crawl"');
+    expect(operations).toContain('Collection discovery comes from reporting ownership and registered capabilities.');
+    expect(operations).toContain('href="/operations?view=reports&amp;report=compliance#reporting-browser"');
+    expect(operations).toContain('Shared reporting presenter');
+    expect(operations).toContain('23 available in the authorized selection');
 
-    const docs = await (await routeRequest(new Request('https://demo.wizardgang.ai/dashboard/docs'), environment)).text();
+    const docs = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations?view=docs'), environment)).text();
     expect(docs).toContain('src/router.ts');
   });
 
@@ -329,7 +329,7 @@ describe('offline routing matrix', () => {
     expect(offlinePage.status).toBe(503);
     expect(await offlinePage.text()).toContain('Oops! demo is down.');
 
-    expect((await routeRequest(new Request('https://demo.wizardgang.ai/dashboard'), environment)).status).toBe(200);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/operations'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/__api/operations/logs'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/version'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/health'), environment)).status).toBe(503);

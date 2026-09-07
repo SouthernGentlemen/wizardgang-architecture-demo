@@ -27,7 +27,7 @@ export interface ShellOptions {
 
 export function shell(env: Env, title: string, body: string, options: ShellOptions = {}): Response {
   const description = options.description ?? DEFAULT_DESCRIPTION;
-  const dashboardCurrent = options.activeRoute?.startsWith('/dashboard') ? ' aria-current="page"' : '';
+  const operationsCurrent = options.activeRoute?.startsWith('/operations') ? ' aria-current="page"' : '';
   const assuranceCurrent = options.activeRoute?.startsWith(ASSURANCE_ROUTE) ? ' aria-current="page"' : '';
   const html = `<!doctype html>
 <html lang="en">
@@ -60,7 +60,7 @@ export function shell(env: Env, title: string, body: string, options: ShellOptio
     <span class="brand-copy"><strong>WIZARDGANG</strong><small>Architecture demo</small></span>
   </a>
   <nav class="nav" aria-label="Primary">
-    <a href="/dashboard"${dashboardCurrent}>Dashboard</a>
+    <a href="/operations"${operationsCurrent}>Operations</a>
     <a href="${escapeHtml(ASSURANCE_ROUTE)}"${assuranceCurrent}>Assurance</a>
     <a href="https://wizardgang.ai/">Main site <span aria-hidden="true">↗</span></a>
     <button type="button" data-theme-toggle aria-label="Switch to light theme" aria-pressed="false">Theme: Light</button>
@@ -92,7 +92,7 @@ export function renderIndex(env: Env, list: DemoDefinition[]): Response {
 </section>
 <section class="status-strip" aria-label="Live service state">
   <a href="/version"><span>Version</span><strong>${escapeHtml(env.DEPLOYED_VERSION || 'development')}</strong></a>
-  <a href="/dashboard#health"><span>Health</span><strong data-health>Checking…</strong></a>
+  <a href="/operations#health"><span>Health</span><strong data-health>Checking…</strong></a>
 </section>
 ${groups.map((group) => {
     const inGroup = list.filter((demo) => demo.group === group);
@@ -226,6 +226,6 @@ export function renderNotFound(env: Env): Response {
   <p class="eyebrow">404 / unknown route</p>
   <h1>That route does not exist.</h1>
   <p class="lede">Every published route is registered in the route map and backed by a source module.</p>
-  <div class="meta"><a href="/">Architecture map</a><a href="/dashboard">Operations dashboard</a><a href="${escapeHtml(sourceUrl(env, 'docs/ROUTES.md'))}">Route map</a></div>
+  <div class="meta"><a href="/">Architecture map</a><a href="/operations">Operations</a><a href="${escapeHtml(sourceUrl(env, 'docs/ROUTES.md'))}">Route map</a></div>
 </section>`, { status: 404, noindex: true });
 }

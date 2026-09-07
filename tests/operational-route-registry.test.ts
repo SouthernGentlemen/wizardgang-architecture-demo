@@ -44,17 +44,11 @@ const expectedPolicies = [
     authentication: { mode: 'anonymous' }, authorization: { mode: 'none' }, sameOrigin: { mode: 'not-required' },
     offline: { mode: 'gated' }, cache: { mode: 'public', maxAgeSeconds: 3600 }, crawler: { crawling: 'controlled', indexing: 'deny' },
   },
-  ...[
-    ['operations.dashboard', '/dashboard'],
-    ['operations.dashboard-uptime', '/dashboard/uptime'],
-    ['operations.dashboard-docs', '/dashboard/docs'],
-    ['operations.dashboard-billing', '/dashboard/billing'],
-    ['operations.dashboard-logs', '/dashboard/logs'],
-  ].map(([id, pattern]) => ({
-    id, pattern, methods: ['GET'], kind: 'page', visibility: 'public',
+  {
+    id: 'operations.page', pattern: '/operations', methods: ['GET'], kind: 'page', visibility: 'public',
     authentication: { mode: 'anonymous' }, authorization: { mode: 'none' }, sameOrigin: { mode: 'not-required' },
     offline: { mode: 'available' }, cache: { mode: 'no-store' }, crawler: { crawling: 'controlled', indexing: 'allow' },
-  })),
+  },
   ...[
     ['operations.api-logs', '/__api/operations/logs', ['GET']],
     ['operations.api-cloudflare-usage', '/__api/operations/cloudflare-usage', ['GET']],
@@ -97,8 +91,10 @@ describe('global operational route policies', () => {
     }
   });
 
-  it('does not turn an unknown dashboard or operations path into a registered recovery route', () => {
-    expect(matchRoute(operationalRouteRegistry, 'GET', '/dashboard/not-a-route')).toEqual({ status: 'not-found', statusCode: 404 });
+  it('does not register retired dashboard paths or unknown operations paths', () => {
+    for (const path of ['/dashboard', '/dashboard/uptime', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing', '/dashboard/not-a-route']) {
+      expect(matchRoute(operationalRouteRegistry, 'GET', path), path).toEqual({ status: 'not-found', statusCode: 404 });
+    }
     expect(matchRoute(operationalRouteRegistry, 'GET', '/__api/operations/not-a-route')).toEqual({ status: 'not-found', statusCode: 404 });
   });
 

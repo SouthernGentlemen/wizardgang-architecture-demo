@@ -1,146 +1,122 @@
-# Operations, Dashboard, and Demo Administration
+# Operations and Demo Administration
 
-This document makes the operational surface a first-class part of the architecture demo rather than an afterthought.
+The public operational experience is one server-rendered route: `/operations`. Operational state remains backed by the same runtime, D1, Cloudflare, reporting, and deployment evidence sources; the consolidation removes redundant HTML route contracts rather than duplicating or replacing those sources.
 
 ## Route family
 
 ```text
-/dashboard
-├── overview → /compliance assurance index
-├── /dashboard/uptime
-├── /dashboard/docs
-├── /dashboard/logs
-└── /dashboard/billing
+/operations
+├── overview      /operations
+├── availability  /operations?view=availability
+├── logs          /operations?view=logs
+├── usage         /operations?view=usage
+├── reports       /operations?view=reports
+└── docs          /operations?view=docs
 
 /admin       protected control surface
 /offline     public maintenance/offline page
+/security    public security and advisory recovery surface
 /health      machine-readable health
 /version     machine-readable release/build metadata
 /robots.txt  dynamic ChatGPT crawler policy
-/__api/operations/logs  machine-readable public-safe logs
-/__api/operations/cloudflare-usage  sanitized common-contract Cloudflare observations
+/__api/operations/logs              machine-readable public-safe logs
+/__api/operations/cloudflare-usage   sanitized Cloudflare observations
+/__api/operations/billing            synthetic cost-guardrail simulation
 ```
 
-The operational routes remain reachable while ordinary demos are intentionally offline.
+The retired HTML routes `/dashboard`, `/dashboard/uptime`, `/dashboard/docs`, `/dashboard/logs`, and `/dashboard/billing` have no redirect or alias. They use the normal 404 path.
 
-## Dashboard
+## Operations views
 
-`/dashboard` is the public, read-only operational center. It answers these questions without exposing private infrastructure:
+### Overview
 
-1. Is the demo intentionally online or offline?
-2. Is the Worker healthy and are its dependencies ready?
-3. What availability history has been observed?
-4. What version/source/docs are running?
-5. What recent application activity can be safely inspected?
-6. What Cloudflare resources are being consumed, and how fresh is that data?
-7. Is ChatGPT search and user-requested web access currently enabled?
-8. What happens when cost guardrails enter warning or degraded state?
-9. Where can a reviewer enter the compliance and assurance evidence map?
+`/operations` is the public, read-only operational center. It preserves the current demo-control state, runtime/dependency health, crawler policy, Cloudflare observations, deployment evidence, operational reporting context, and links to administrative and machine recovery interfaces. Mutation controls remain under authenticated `/admin` or the explicitly labeled synthetic guardrail simulator.
 
-All mutation controls live under authenticated `/admin` or an explicitly labeled simulator. The overview reports demo and crawler policy state but renders no working administration forms. It links directly to the source files, migrations, tests, GitHub Actions, releases, and route documentation that produce the displayed state.
+### Availability
 
-Compliance is not an operational KPI or a dashboard child route. The overview presents a separate Compliance & Assurance panel linking to canonical `/compliance`, where alignment statements lead back into the dashboard and other working evidence owners.
+`/operations?view=availability` reads `service_health_checks` from `demo-blob`. A Cloudflare Cron Trigger invokes the Worker every five minutes; `scheduled()` calls `collectHealth(env, true)`, so availability observations exist independently of browser traffic and `/health` requests.
 
-## Availability
-
-`/dashboard/uptime` uses `service_health_checks` in `demo-blob`. A Cloudflare Cron Trigger invokes the Worker every five minutes; `scheduled()` calls `collectHealth(env, true)`, so observations exist independently of dashboard traffic or calls to `/health`.
-
-Show:
-
-- measured service key;
-- observation window;
-- latest check;
-- operational/degraded/down counts;
-- calculated availability percentage;
-- response-time history where available;
-- distinction between an intentional admin offline window and an unexpected dependency failure.
-
-Do not imply an SLA unless one is explicitly defined.
-
-Collection cadence:
+The view preserves measured service, observation window, latest check, operational/degraded/down counts, response-time history, calculated availability, and the distinction between intentional planned/manual offline windows and unexpected failures. No SLA is implied unless one is explicitly defined.
 
 ```text
 */5 * * * *  -> dependency health and availability observation
 ```
 
-Cloudflare usage and returned billing observations are queried from Cloudflare on demand by the dashboard/API. They are not refreshed into a local provider-state mirror.
+### Logs
 
-## Health
+`/operations?view=logs` is the public operational log viewer. It reads bounded application-generated records from `application_logs` in `demo-blob`; it is not a raw Cloudflare account-log proxy. Level/source filters and bounded limits remain available.
 
-`/dashboard#health` is the human-readable view. `/health` is the machine-readable endpoint.
+Public log safety is mandatory. Do not log or render passwords, authorization headers, cookies, bearer tokens, API keys, secrets, payment data, private account identifiers, or raw request bodies that may contain credentials. Structured detail is defensively redacted and bounded. `demo_events` remains the audit/evidence stream; `application_logs` remains operational diagnostics.
 
-Health should report separately:
+`GET /__api/operations/logs` exposes the same sanitized data as JSON and remains reachable during an intentional offline state.
 
-- Worker/runtime availability;
-- D1 readiness;
-- R2 readiness once configured;
-- Durable Object readiness once configured;
-- demo control state (`online` or `offline`);
-- overall status.
+### Usage
 
-An intentionally offline demo is not the same as a crashed Worker. The Worker can remain operational while the public demo state is intentionally offline.
+`/operations?view=usage` preserves two distinct layers:
 
-No secret, token, account identifier, internal host, or private Cloudflare metadata may be returned.
-
-## Documentation
-
-`/dashboard/docs` is a live documentation index. It should include:
-
-- `docs/ARCHITECTURE-STANDARD.md`;
-- `docs/ROUTES.md`;
-- `docs/route-manifest.json`;
-- `src/router.ts`;
-- API/OpenAPI/GraphQL/MCP contracts when implemented;
-- public repository and direct route source links;
-- README, CONTRIBUTING, AGENTS, SECURITY, CHANGELOG;
-- GitHub Releases and tags;
-- CI/deploy workflows;
-- migrations;
-- evidence/traceability material;
-- `/health` and `/version`.
-
-The repository intentionally contains no PDF architecture dependency; the canonical project copy is Markdown so it is diffable, searchable, linkable, and reviewable in Git.
-
-## Logs
-
-`/dashboard/logs` is the public operational log viewer. It reads bounded, application-generated records from `application_logs` in `demo-blob`; it is not a raw Cloudflare account-log proxy.
-
-Show:
-
-- timestamp;
-- level (`debug`, `info`, `warn`, `error`);
-- source/component;
-- event key;
-- short message;
-- route where useful;
-- structured detail behind an explicit disclosure;
-- level/source filters and a bounded row limit;
-- direct links to the emitting/persistence source and D1 migration.
-
-Public log safety is mandatory. Do not log or render passwords, authorization headers, cookies, bearer tokens, API keys, secrets, payment data, private account identifiers, or raw request bodies that may contain credentials. Structured details are defensively redacted by key and capped in size. Treat `demo_events` as the audit/evidence stream and `application_logs` as operational diagnostics; they may reference the same occurrence but should not be conflated.
-
-`GET /__api/operations/logs` exposes the same sanitized data as JSON with bounded `limit`, `level`, and `source` filters. Both the human and machine log surfaces remain reachable during an intentional demo-offline window so the outage/maintenance state can still be inspected.
-
-## Cloudflare usage and cost
-
-`/dashboard/billing` presents two deliberately separate layers:
-
-1. Sanitized, current Cloudflare usage observations for the configured Worker, D1 database, R2 bucket, and Durable Objects namespace.
+1. Sanitized Cloudflare usage observations for the configured Worker, D1 database, R2 bucket, and Durable Objects namespace.
 2. The controlled `normal -> warning -> degraded` application-behavior simulator.
 
-The Worker queries Cloudflare server-side. Internally, each observation identifies the exact configured account/resource scope, metric, normalized dimensions, unit, observation window, collection time, freshness bound, and Cloudflare dataset/transport provenance. `GET /__api/operations/cloudflare-usage` projects those observations through the common reporting query-result contract using approved public resource aliases. The browser never receives an API token, account identifier, resource identifier, invoice identifier, account name, customer profile, subscription identifier, or payment data.
+The Worker queries Cloudflare server-side. Provider responses are validated before a dataset is marked available. Valid empty datasets are legitimate zero activity; missing account scope, malformed data, authorization failures, rate limits, partial collection, unavailable datasets, and stale observations remain distinguishable.
 
-Provider responses are validated before a dataset is marked available. A matched account with a valid empty dataset is legitimate zero activity. A missing account match, malformed payload, unauthorized response, unconfigured resource, rate limit, partial collection, unavailable dataset, or expired observation remains distinguishable and is never converted into a live zero.
+GraphQL Analytics is usage telemetry, not billing. When Cloudflare returns populated `BilledCost`, the account-scoped cost observation is labeled **billed**, retains its billing period and collection/freshness time, and is never attributed to an individual Worker, D1 database, R2 bucket, or Durable Objects namespace. If authoritative billing is unavailable, there is no local pricing fallback.
 
-GraphQL Analytics is **usage telemetry**, not billing. Account billable usage is a separate account-scoped dataset. When Cloudflare returns populated `BilledCost` values, the cost observation is labeled **billed**, retains the provider billing period and its own collection/freshness time, and is never attributed to an individual Worker, D1 database, R2 bucket, or Durable Objects namespace. If Cloudflare billing is unavailable, authoritative cost is unavailable: there is no local pricing/rate fallback. A still-current derived billing cache may be reused only for the same account and billing period, and its original observation time is preserved rather than advanced with newer telemetry.
+The public browser never receives Cloudflare API tokens, account IDs, resource IDs, invoice identifiers, customer profiles, subscription identifiers, or payment data. `GET /__api/operations/cloudflare-usage` projects approved observations through the common reporting query-result contract and sends `Cache-Control: no-store`.
 
-Transient runtime caches are non-authoritative and are keyed by the exact account/resource source identity plus observation context. Both newly collected and reused observations are evaluated by the shared assurance observation-window evaluator. The machine endpoint sends `Cache-Control: no-store` so a shared HTTP cache cannot replay one runtime source scope as another.
+The synthetic `/__api/operations/billing` simulator demonstrates graceful degradation only. In degraded state it pauses optional stateless Worker compute while operations, security, documentation, logs, admin, health, and recovery interfaces remain available. It does not mutate real Cloudflare billing configuration.
 
-The historical `cloudflare_usage_snapshots` table was a redundant local provider-state mirror. Active runtime code already stopped reading and writing it; migration `0012_retire_cloudflare_usage_snapshots.sql` removes that retired table/index. Raw operational observations remain authoritative in Cloudflare. Retained assessment reports may live in GitHub with source references under the common reporting contract.
+### Reports
 
-The common reporting source and observation ownership contract is defined in `docs/REPORTING.md` and `contracts/assurance/reporting.schema.json`. Cloudflare aggregate observation identity is derived from resource, metric, normalized dimensions, and the observation window.
+`/operations?view=reports` uses the shared reporting presentation stack in `src/reporting/presentation.ts` and `src/reporting/html.ts`. Collection discovery comes from reporting ownership and registered capabilities; the operations page does not introduce a parallel reporting inventory, provider-specific record interpretation, or independent pagination/filter contract.
 
-Runtime configuration:
+The common reporting source and observation ownership contract is defined in `docs/REPORTING.md` and `contracts/assurance/reporting.schema.json`.
+
+### Docs
+
+`/operations?view=docs` is the live documentation index. It links the architecture standard, route map and manifest, router, public API/interface contracts, repository guidance, release/tag history, workflows, migrations, evidence material, `/health`, and `/version`.
+
+The canonical project documentation remains Markdown/text so it is diffable, searchable, linkable, and reviewable in Git.
+
+## Health and deployment evidence
+
+`/operations#health` is the human-readable health view. `/health` is the machine-readable endpoint. Health reports runtime availability, dependency readiness, demo control state, and overall status without returning secrets or private Cloudflare metadata.
+
+An intentionally offline demo is not the same as a crashed Worker. The Worker and recovery interfaces can remain operational while ordinary architecture demonstrations are intentionally gated.
+
+The operations overview also preserves deployment evidence and direct public source/documentation links so a reviewer can trace the running state back to repository-controlled artifacts.
+
+## Admin control
+
+`/admin` controls public demo availability and ChatGPT fetch policy. It remains authenticated, no-store, same-origin for mutations, D1-backed, and audited. Credentials are never committed.
+
+When the demo is intentionally offline:
+
+- ordinary browser architecture pages may redirect to `/offline?from=<route>`;
+- ordinary gated API, non-HTML, and write requests return structured `503` responses;
+- `/operations`, `/admin`, `/offline`, `/security`, `/health`, `/version`, `/robots.txt`, `/__api/operations/logs`, and `/__api/operations/cloudflare-usage` remain reachable;
+- there is no redirect loop;
+- the public offline page uses the explicit heading **“Oops! demo is down.”**.
+
+Crawler changes update `/robots.txt` and the server-side `OAI-SearchBot` / `ChatGPT-User` request gate. `GPTBot` remains blocked in both crawler-control states, so user/search fetch access never implies model-training access.
+
+## Offline behavior matrix
+
+| Request | Online | Offline |
+|---|---|---|
+| Browser GET to ordinary architecture route | normal demo | `302` to `/offline?from=...` |
+| Gated API / non-HTML GET | normal response | JSON `503` |
+| Gated demo write / POST | normal action | JSON `503` |
+| `/operations` and its six views | available | available |
+| `/security` | available | available |
+| `/__api/operations/logs` | available | available |
+| `/__api/operations/cloudflare-usage` | available | available |
+| `/health` | machine health | reachable and reports intentional offline state |
+| `/version` | available | available |
+| `/admin` | protected | protected + available |
+| `/offline` | available | available |
+| `/robots.txt` | reflects crawler control | reflects crawler control |
+
+## Runtime configuration
 
 ```text
 CLOUDFLARE_ACCOUNT_ID
@@ -151,109 +127,30 @@ CLOUDFLARE_R2_BUCKET
 CLOUDFLARE_DO_NAMESPACE
 ```
 
-The account and resource identifiers are environment-owned inputs even though the public API response never displays them. Store `CLOUDFLARE_API_TOKEN` as an encrypted Worker secret with `wrangler secret put CLOUDFLARE_API_TOKEN` (or the Cloudflare dashboard), never as a plaintext Wrangler variable. Use a dedicated read-only token rather than the deployment token; the deploy workflow supplies only the non-secret resource identifiers.
-
-Use `usage_snapshots` only for the synthetic graceful-degradation demonstration:
-
-```text
-normal -> warning -> degraded
-```
-
-Suggested default demonstration policy:
-
-- **Normal:** synthetic scenario spend < 70% of synthetic monthly budget.
-- **Warning:** 70% to < 90%.
-- **Degraded:** >= 90%.
-
-This simulator is not authoritative Cloudflare billing and does not derive its state from the provider observation contract. The live controlled scenario endpoint is `/__api/operations/billing`. In degraded state it pauses the optional stateless Worker compute action with a structured response while status, documentation, logs, admin, and health remain available. Selecting a scenario never writes Cloudflare account configuration or changes real billing thresholds.
-
-The UI should show which optional behaviors would be reduced or disabled as synthetic scenario cost rises, while keeping critical status, admin, and health routes available. The policy is a demonstration of graceful degradation, not a real billing-control integration unless explicitly wired later.
-
-## Admin control
-
-`/admin` intentionally controls whether public architecture demos are online or offline and whether ChatGPT may fetch public demo content.
-
-Requirements:
-
-- authenticated access only;
-- credentials never committed;
-- D1 persistence through `demo_control`;
-- separate D1 persistence through `crawler_control`;
-- public message editable by admin;
-- changes written to the common audit event stream;
-- `Cache-Control: no-store`;
-- ordinary demo behavior blocked while offline;
-- HTML demo navigation redirects to `/offline?from=<route>`;
-- API/non-HTML/write requests receive a JSON `503` rather than an HTML redirect;
-- `/dashboard/*`, `/health`, `/version`, `/offline`, and `/admin` stay available;
-- no redirect loop;
-- public offline page uses the explicit heading **“Oops! demo is down.”**.
-- crawler changes update both `/robots.txt` and a server-side `OAI-SearchBot` / `ChatGPT-User` request gate;
-- crawler control fails closed when D1 is unavailable;
-- `GPTBot` remains blocked in both crawler-control states so web access never implies model-training access.
-
-For local development the implementation supports HTTP Basic credentials from `.dev.vars`. The application compares digests, requires exact same-origin state-changing submissions, emits no-store responses, and fails closed if control state cannot be read. For production, prefer Cloudflare Access in front of `/admin` while retaining the application-side authorization boundary.
-
-## Offline behavior matrix
-
-| Request | Online | Offline |
-|---|---|---|
-| Browser GET to architecture route | normal demo | `302` to `/offline?from=...` |
-| API / non-HTML GET | normal response | JSON `503` |
-| Demo write / POST | normal action | JSON `503` |
-| `/dashboard/*` | available | available |
-| `/__api/operations/logs` | available | available |
-| `/__api/operations/cloudflare-usage` | available | available |
-| `/health` | `200` if healthy | reachable; reports intentional offline state, generally `503` overall |
-| `/version` | available | available |
-| `/admin` | protected | protected + available |
-| `/offline` | available | available |
-| `/robots.txt` | available; reflects crawler control | available; reflects crawler control |
-
-## Audit trail
-
-Admin transitions should emit a `demo_events` record such as:
-
-```json
-{
-  "demo_id": "admin",
-  "event_type": "demo_state_changed",
-  "payload": {
-    "state": "offline",
-    "message": "Maintenance in progress.",
-    "updatedBy": "<authenticated-admin>"
-  }
-}
-```
-
-Do not record passwords, authorization headers, tokens, cookies, or other credentials.
-
-Crawler transitions use the same safe evidence boundaries with event type `chatgpt_crawl_access_changed`; the public payload contains only the selected state, an opaque authenticated-admin actor label, and a timestamp. The actual admin username remains confined to the protected control record. OpenAI documents that ChatGPT user-triggered fetches may not follow `robots.txt`, so the Worker also enforces the state before routing public content. Search indexing may take time to observe a policy update even though the Worker gate changes immediately.
+Store `CLOUDFLARE_API_TOKEN` as an encrypted Worker secret and use a dedicated read-only token rather than a deployment token. Resource identifiers remain environment-owned inputs even though public responses do not display them.
 
 ## Source ownership
 
 | Concern | Primary source |
 |---|---|
-| Reporting authority and shared observation contracts | `assurance/registry.json`, `contracts/assurance/reporting.schema.json`, `docs/REPORTING.md` |
-| Retained CI / assurance-monitor reports | `.github/workflows/report-publisher.yml`, `scripts/generate-retained-report.mjs`, `contracts/assurance/report.schema.json`, `assurance-reports` branch |
-| Dashboard metadata | `src/demos/dashboard.ts` |
-| Uptime metadata | `src/demos/uptime.ts` |
-| Health metadata | `src/demos/health.ts` |
-| Docs metadata | `src/demos/docs.ts` |
-| Log viewer | `src/demos/logs.ts` |
-| Log persistence / redaction | `src/lib/logs.ts` |
-| Billing metadata | `src/demos/billing.ts` |
-| Cloudflare usage collection, validation, observation projection, and derived caches | `src/lib/cloudflare-usage.ts` |
+| Consolidated operations page and view dispatch | `src/demos/operations.ts` |
+| Health, availability, usage, and documentation presenters | `src/demos/operations-pages.ts` |
+| Public log presenter | `src/demos/logs.ts` |
+| Shared reporting presentation | `src/reporting/presentation.ts`, `src/reporting/html.ts`, `src/demos/reporting-dashboard.ts` |
+| Reporting authority and observation contracts | `assurance/registry.json`, `contracts/assurance/reporting.schema.json`, `docs/REPORTING.md` |
+| Cloudflare usage collection, validation, billing observations, and derived caches | `src/lib/cloudflare-usage.ts` |
 | Scheduled health collection | `src/index.ts`, `wrangler.jsonc` |
-| Machine health/version/Cloudflare query-result projection | `src/api/operations.ts` |
+| Machine health/version/Cloudflare projection | `src/api/operations.ts` |
+| Synthetic guardrail API | `src/api/billing.ts` |
 | Admin UI/offline page | `src/ui/admin.ts` |
 | Admin authentication | `src/lib/admin-auth.ts` |
 | Online/offline state | `src/lib/demo-control.ts` |
-| ChatGPT crawler state, robots policy, and request classification | `src/lib/crawler-control.ts` |
-| Shared event audit | `src/lib/audit.ts` |
+| ChatGPT crawler state and robots policy | `src/lib/crawler-control.ts` |
+| Public-safe log persistence/redaction | `src/lib/logs.ts` |
+| Shared audit evidence | `src/lib/audit.ts` |
+| Route declarations | `src/routing/operational-routes.ts` |
+| Routing and offline gate | `src/router.ts` |
 | Operations schema | `migrations/0002_operations_dashboard.sql` |
-| Retired Cloudflare snapshot migration history | `migrations/0011_cloudflare_usage.sql`, `migrations/0012_retire_cloudflare_usage_snapshots.sql` |
 | Application log schema | `migrations/0004_application_logs.sql` |
 | Control schema | `migrations/0003_demo_control.sql` |
 | Crawler-control schema | `migrations/0009_crawler_control.sql` |
-| Routing gate | `src/router.ts` |

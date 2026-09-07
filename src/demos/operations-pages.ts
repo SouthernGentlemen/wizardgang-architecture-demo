@@ -30,8 +30,8 @@ interface AvailabilitySummary {
 
 export function operationsNavigation(active: string): string {
   const links: Array<[string, string]> = [
-    ['/dashboard', 'Overview'], ['/dashboard/uptime', 'Availability'],
-    ['/dashboard/logs', 'Logs'], ['/dashboard/billing', 'Usage & Cost'], ['/dashboard/docs', 'Docs'],
+    ['/operations', 'Overview'], ['/operations?view=availability', 'Availability'],
+    ['/operations?view=logs', 'Logs'], ['/operations?view=usage', 'Usage & Cost'], ['/operations?view=docs', 'Docs'],
   ];
   return `<div class="operations-navigation"><nav class="section-nav" aria-label="Operations">${links.map(([href, label]) =>
     `<a href="${href}"${href === active ? ' aria-current="page"' : ''}>${label}</a>`).join('')}</nav>
@@ -157,7 +157,7 @@ function dashboardActivity(logs: ApplicationLogRow[], health: HealthSnapshot): s
   return selected.map((log) => `<article class="activity-item"><span class="activity-dot" data-tone="${log.level === 'error' ? 'down' : log.level === 'warn' ? 'warn' : 'ok'}"></span><div><h3>${escapeHtml(activityTitle(log))}</h3><p>${escapeHtml(log.message)}</p><small>${escapeHtml(log.source)} · ${relativeTime(log.created_at)}</small></div></article>`).join('');
 }
 
-export async function renderDashboard(env: Env, request: Request = new Request('https://demo.local/dashboard')): Promise<Response> {
+export async function renderDashboard(env: Env, request: Request = new Request('https://demo.local/operations')): Promise<Response> {
   const healthHistory = env.DEMO_DB.prepare(
     `SELECT id, service_key, status, response_ms, detail_json, checked_at FROM service_health_checks WHERE service_key = 'public-demo' ORDER BY id DESC LIMIT 100`,
   ).all<HealthRow>();
@@ -184,7 +184,7 @@ export async function renderDashboard(env: Env, request: Request = new Request('
   const currentStatus = `<div class="operations-live-state"><span class="status-pulse" data-state="${overall}"></span><strong>${escapeHtml(overallLabel)}</strong><span>Checked ${relativeTime(health.checkedAt)}</span><span>${escapeHtml(env.DEPLOYMENT_ENVIRONMENT || 'local')} · ${escapeHtml(version)}</span></div>`;
   const reporting = await renderUnifiedReportingPresentation(request, env, usage);
 
-  return operationalPage(env, '/dashboard', 'System Operations', 'OPERATIONS / LIVE', 'System Operations', 'Live health, availability, deployment, shared reporting, activity, and cost-control evidence for the architecture demo.', 'src/demos/dashboard.ts', `
+  return operationalPage(env, '/operations', 'System Operations', 'OPERATIONS / LIVE', 'System Operations', 'Live health, availability, deployment, shared reporting, activity, and cost-control evidence for the architecture demo.', 'src/demos/dashboard.ts', `
   <section class="operations-kpis" aria-label="Current operational state">
     <article><p class="eyebrow">System</p><strong class="${statusClass(overall)}">${escapeHtml(overallLabel)}</strong><span>${healthy} / 4 dependencies healthy</span></article>
     <article><p class="eyebrow">Availability</p><strong>${availabilityValue}</strong><span>${availability.unexpected} unexpected outage${availability.unexpected === 1 ? '' : 's'}</span></article>
@@ -202,25 +202,25 @@ export async function renderDashboard(env: Env, request: Request = new Request('
 
   <section class="operations-split">
     <article class="operations-section availability-overview" aria-labelledby="availability-heading">
-      <div class="operations-section-heading"><div><p class="eyebrow">Monitoring window</p><h2 id="availability-heading">Availability</h2></div><a href="/dashboard/uptime">View history <span aria-hidden="true">→</span></a></div>
+      <div class="operations-section-heading"><div><p class="eyebrow">Monitoring window</p><h2 id="availability-heading">Availability</h2></div><a href="/operations?view=availability">View history <span aria-hidden="true">→</span></a></div>
       <p class="operations-hero-value">${availabilityValue}</p><p class="subtle">Excluding planned maintenance across ${availability.total} stored observation${availability.total === 1 ? '' : 's'}.</p>
       ${availabilityTimeline(historyResult.results)}
       <div class="availability-legend"><span><i data-state="operational"></i>Operational</span><span><i data-state="planned"></i>${availability.intentional} planned</span><span><i data-state="degraded"></i>${availability.unexpected} unexpected</span></div>
     </article>
     <article class="operations-section" aria-labelledby="activity-heading">
-      <div class="operations-section-heading"><div><p class="eyebrow">Public-safe events</p><h2 id="activity-heading">Recent activity</h2></div><a href="/dashboard/logs">View all logs <span aria-hidden="true">→</span></a></div>
+      <div class="operations-section-heading"><div><p class="eyebrow">Public-safe events</p><h2 id="activity-heading">Recent activity</h2></div><a href="/operations?view=logs">View all logs <span aria-hidden="true">→</span></a></div>
       <div class="activity-list">${dashboardActivity(logs, health)}</div>
     </article>
   </section>
 
   <section class="operations-split">
     <article class="operations-section usage-overview" aria-labelledby="usage-heading">
-      <div class="operations-section-heading"><div><p class="eyebrow">${usageReady ? 'Latest account telemetry' : 'Telemetry status'}</p><h2 id="usage-heading">Cloudflare usage</h2></div><a href="/dashboard/billing">View usage &amp; cost <span aria-hidden="true">→</span></a></div>
+      <div class="operations-section-heading"><div><p class="eyebrow">${usageReady ? 'Latest account telemetry' : 'Telemetry status'}</p><h2 id="usage-heading">Cloudflare usage</h2></div><a href="/operations?view=usage">View usage &amp; cost <span aria-hidden="true">→</span></a></div>
       <div class="usage-state-line"><span class="${badgeClass(usage.status)}">${usageState}</span><span>${usageReady ? `Updated ${relativeTime(usage.capturedAt)}` : escapeHtml(usage.cost.note)}</span></div>
       <dl class="usage-compact"><dt>Workers</dt><dd>${usage.products.workers.available ? `${formatNumber(usage.products.workers.requests)} requests` : 'Awaiting telemetry'}</dd><dt>D1</dt><dd>${usage.products.d1.available ? `${formatNumber(usage.products.d1.rowsRead)} rows read` : 'Awaiting telemetry'}</dd><dt>R2</dt><dd>${usage.products.r2.available ? `${formatBytes(usage.products.r2.storageBytes)} stored` : 'Awaiting telemetry'}</dd><dt>Durable Objects</dt><dd>${usage.products.durableObjects.available ? `${formatNumber(usage.products.durableObjects.requests)} requests` : 'Awaiting telemetry'}</dd></dl>
     </article>
     <article class="operations-section deployment-card" aria-labelledby="deployment-heading">
-      <div class="operations-section-heading"><div><p class="eyebrow">Release evidence</p><h2 id="deployment-heading">Deployment</h2></div><a href="/version">Version JSON <span aria-hidden="true">→</span></a></div>
+      <div class="operations-section-heading"><div><p class="eyebrow">Release evidence</p><h2 id="deployment-heading">Deployment evidence</h2></div><a href="/version">Version JSON <span aria-hidden="true">→</span></a></div>
       <p class="operations-hero-value">${escapeHtml(version)}</p><span class="badge badge-ok">${escapeHtml((env.DEPLOYMENT_ENVIRONMENT || 'local').toUpperCase())}</span>
       <dl><dt>Branch</dt><dd>${escapeHtml(env.GITHUB_BRANCH || 'not supplied')}</dd><dt>Commit</dt><dd><a href="${escapeHtml(commitUrl)}"><code>${escapeHtml(sha ? sha.slice(0, 7) : 'not supplied')}</code></a></dd><dt>CI</dt><dd>${escapeHtml((env.DEPLOYMENT_CI_STATUS || 'not verified').replace(/-/g, ' ').toUpperCase())}</dd></dl>
       <div class="link-row"><a href="${escapeHtml(commitUrl)}">View commit ↗</a><a href="${escapeHtml(repoUrl(env))}/releases">View releases ↗</a></div>
@@ -258,7 +258,7 @@ export async function renderUptime(env: Env): Promise<Response> {
   const statusLabel = latest ? state === 'planned' ? 'PLANNED MAINTENANCE' : state.toUpperCase() : 'AWAITING DATA';
   const recent = rows.slice(0, 20); const remainder = rows.slice(20);
   const liveState = `<div class="operations-live-state"><span class="status-pulse" data-state="${state}"></span><strong>${statusLabel}</strong><span>${latest ? `Last observation ${relativeTime(latest.checked_at)}` : 'Cron monitoring has not stored an observation yet'}</span></div>`;
-  return operationalPage(env, '/dashboard/uptime', 'Availability', 'OPERATIONS / AVAILABILITY', 'Availability', 'Measured runtime availability with planned maintenance kept separate from unexpected dependency failures.', 'src/demos/uptime.ts', `
+  return operationalPage(env, '/operations?view=availability', 'Availability', 'OPERATIONS / AVAILABILITY', 'Availability', 'Measured runtime availability with planned maintenance kept separate from unexpected dependency failures.', 'src/demos/uptime.ts', `
   <section class="availability-kpis"><article><p class="eyebrow">Current window</p><strong>${summary.excludingPlanned === null ? '—' : `${summary.excludingPlanned.toFixed(3)}%`}</strong><span>excluding planned maintenance</span></article><article><p class="eyebrow">Raw observations</p><strong>${summary.raw === null ? '—' : `${summary.raw.toFixed(3)}%`}</strong><span>all stored states included</span></article><article><p class="eyebrow">Events</p><strong>${summary.intentional} / ${summary.unexpected}</strong><span>planned / unexpected</span></article></section>
   <section class="operations-section"><div class="operations-section-heading"><div><p class="eyebrow">Latest ${Math.min(rows.length, 40)} observations</p><h2 id="availability-heading">Availability history</h2></div><span class="subtle">Every 5 minutes</span></div>${availabilityTimeline(rows)}<div class="availability-legend"><span><i data-state="operational"></i>Operational</span><span><i data-state="planned"></i>Planned maintenance</span><span><i data-state="degraded"></i>Unexpected failure</span></div><p class="subtle">This is measured history, not an SLA.</p></section>
   <section class="operations-section"><div class="operations-section-heading"><div><p class="eyebrow">Most recent first</p><h2>Observations</h2></div><span class="subtle">Showing ${recent.length} of ${rows.length}</span></div><div class="table-wrap"><table><thead><tr><th>Checked</th><th>State</th><th>D1 latency</th><th>Classification</th></tr></thead><tbody>${historyRows(recent) || '<tr><td colspan="4">Scheduled monitoring will populate this history after deployment.</td></tr>'}</tbody></table></div>${remainder.length ? `<details class="full-history"><summary>Show full history</summary><div class="table-wrap"><table><thead><tr><th>Checked</th><th>State</th><th>D1 latency</th><th>Classification</th></tr></thead><tbody>${historyRows(remainder)}</tbody></table></div></details>` : ''}<p><a href="${escapeHtml(sourceUrl(env, 'migrations/0002_operations_dashboard.sql'))}">View history schema</a></p></section>`, liveState);
@@ -268,7 +268,7 @@ export function renderDocs(env: Env): Response {
   const links: Array<[string, string]> = [
     ['Architecture standard', 'docs/ARCHITECTURE-STANDARD.md'], ['Operations standard', 'docs/OPERATIONS.md'], ['Assurance guide', 'docs/ASSURANCE.md'], ['Stable route map', 'docs/ROUTES.md'], ['Machine route manifest', 'docs/route-manifest.json'], ['Router', 'src/router.ts'], ['Implementation plan', 'docs/IMPLEMENTATION-PLAN.md'], ['Interactive demo specification', 'docs/INTERACTIVE-DEMO-SPEC.md'], ['Evidence map', 'docs/EVIDENCE.md'], ['Accessibility guidance', 'docs/ACCESSIBILITY.md'], ['ISO/IEC 27001 compliance dataset', 'assurance/compliance/iso-27001-2022.json'], ['ISO/IEC 42001 compliance dataset', 'assurance/compliance/iso-42001-2023.json'], ['WCAG 2.2 compliance manifest', 'assurance/compliance/wcag-2.2.json'], ['Identity guidance', 'docs/IDENTITY.md'], ['README', 'README.md'], ['Contributing', 'CONTRIBUTING.md'], ['Agent guidance', 'AGENTS.md'], ['Security', 'SECURITY.md'], ['Changelog', 'CHANGELOG.md'], ['OpenAPI 3.1 contract', 'contracts/openapi/openapi.json'], ['GraphQL schema', 'contracts/graphql/schema.graphql'], ['MCP tools', 'contracts/mcp/tools.json'], ['Webhook events', 'contracts/webhooks/events.json'], ['CI workflow', '.github/workflows/ci.yml'], ['Deploy workflow', '.github/workflows/deploy.yml'], ['D1 migrations', 'migrations/0001_demo_blob.sql'],
   ];
-  return operationalPage(env, '/dashboard/docs', 'Documentation', 'OPERATIONS / DOCS', 'Documentation', 'Repository-native standards, contracts, implementation sources, and live machine interfaces.', 'src/demos/docs.ts', `<section class="resource-list" aria-label="Repository documentation">${links.map(([label, path]) => `<a href="${escapeHtml(sourceUrl(env, path))}"><strong>${escapeHtml(label)}</strong><code>${escapeHtml(path)}</code></a>`).join('')}</section><section class="machine-links"><h2>Live interfaces</h2><nav class="link-row" aria-label="Live machine interfaces"><a href="/v1/openapi.json">OpenAPI JSON</a><a href="/graphql/schema">GraphQL schema</a><a href="/v1/assurance/compliance">Compliance JSON</a><a href="/health">Health JSON</a><a href="/version">Version JSON</a><a href="/__api/operations/logs">Logs JSON</a><a href="/__api/operations/cloudflare-usage">Usage JSON</a><a href="${escapeHtml(repoUrl(env))}/releases">Releases</a><a href="${escapeHtml(repoUrl(env))}/tags">Tags</a></nav></section>`);
+  return operationalPage(env, '/operations?view=docs', 'Documentation', 'OPERATIONS / DOCS', 'Documentation', 'Repository-native standards, contracts, implementation sources, and live machine interfaces.', 'src/demos/docs.ts', `<section class="resource-list" aria-label="Repository documentation">${links.map(([label, path]) => `<a href="${escapeHtml(sourceUrl(env, path))}"><strong>${escapeHtml(label)}</strong><code>${escapeHtml(path)}</code></a>`).join('')}</section><section class="machine-links"><h2>Live interfaces</h2><nav class="link-row" aria-label="Live machine interfaces"><a href="/v1/openapi.json">OpenAPI JSON</a><a href="/graphql/schema">GraphQL schema</a><a href="/v1/assurance/compliance">Compliance JSON</a><a href="/health">Health JSON</a><a href="/version">Version JSON</a><a href="/__api/operations/logs">Logs JSON</a><a href="/__api/operations/cloudflare-usage">Usage JSON</a><a href="${escapeHtml(repoUrl(env))}/releases">Releases</a><a href="${escapeHtml(repoUrl(env))}/tags">Tags</a></nav></section>`);
 }
 
 type CloudflareMetricAvailability = CloudflareUsageSnapshot['products']['workers']['availability'];
@@ -311,7 +311,7 @@ export async function renderBilling(env: Env): Promise<Response> {
     : usage.cost.kind === 'unavailable' ? usage.cost.availability : `${usage.cost.kind} · ${usage.cost.availability}`;
   const breakdownMaximum = Math.max(0.0001, ...usage.cost.breakdown.map((row) => row.amountUsd));
   const liveState = `<div class="operations-live-state"><span class="status-pulse" data-state="${usage.status}"></span><strong>${telemetryStatusLabel(usage.status)}</strong><span>${usage.capturedAt ? `Updated ${relativeTime(usage.capturedAt)}` : escapeHtml(usage.cost.note)}</span></div>`;
-  return operationalPage(env, '/dashboard/billing', 'Cloudflare Usage & Cost', 'OPERATIONS / USAGE', 'Cloudflare Usage & Cost', 'Live Cloudflare resource consumption with controlled cost-degradation scenarios.', 'src/demos/billing.ts', `
+  return operationalPage(env, '/operations?view=usage', 'Cloudflare Usage & Cost', 'OPERATIONS / USAGE', 'Cloudflare Usage & Cost', 'Live Cloudflare resource consumption with controlled cost-degradation scenarios.', 'src/demos/billing.ts', `
   <section class="billing-period"><div><p class="eyebrow">Current usage window</p><strong>${escapeHtml(usage.cost.periodStart.slice(0, 10))} → ${escapeHtml(usage.cost.periodEnd.slice(0, 10))}</strong></div><div><p class="eyebrow">${escapeHtml(costLabel)}</p><strong>${costValue}</strong><span class="${badgeClass(costBadgeState)}">${escapeHtml(costStateLabel)}</span></div><p>${escapeHtml(usage.cost.note)}</p></section>
   <section class="operations-section"><div class="operations-section-heading"><div><p class="eyebrow">Normalized, public-safe metrics</p><h2>Resource usage</h2></div><span class="subtle">${usage.capturedAt ? `Updated ${relativeTime(usage.capturedAt)}` : 'Awaiting first refresh'}</span></div><div class="usage-products">
     ${productCard('Workers', usage.products.workers.availability, [['Requests', formatNumber(usage.products.workers.requests, false)], ['Errors', formatNumber(usage.products.workers.errors, false)], ['Success rate', usage.products.workers.requests ? `${((usage.products.workers.requests - usage.products.workers.errors) / usage.products.workers.requests * 100).toFixed(3)}%` : '—'], ['CPU p50', usage.products.workers.cpuP50Ms === null ? '—' : `${usage.products.workers.cpuP50Ms.toFixed(1)} ms`], ['CPU p99', usage.products.workers.cpuP99Ms === null ? '—' : `${usage.products.workers.cpuP99Ms.toFixed(1)} ms`], ['Subrequests', formatNumber(usage.products.workers.subrequests, false)]])}
