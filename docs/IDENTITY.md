@@ -26,20 +26,20 @@ GitHub is intentionally different from the OIDC providers. It does not supply an
 | Route | Purpose |
 |---|---|
 | `/interfaces?view=identity` | Sign-in surface and authenticated identity inspector |
-| `/identity/microsoft` | Start Microsoft OIDC authentication |
-| `/identity/microsoft/callback` | Validate the Microsoft OIDC callback |
-| `/identity/google` | Start Google OIDC authentication |
-| `/identity/google/callback` | Validate the Google OIDC callback |
-| `/identity/github` | Start GitHub OAuth authentication |
-| `/identity/github/callback` | Validate the GitHub OAuth callback and API identity |
-| `/identity/saml` | Start Microsoft Entra SAML authentication |
-| `/identity/saml/acs` | Validate the posted SAML response |
-| `/identity/saml/metadata` | Public service-provider metadata |
-| `/identity/session` | Return the current browser's sanitized application identity |
-| `/identity/logout` | Revoke the current application session |
-| `/__api/identity/authorize` | Apply application policy to the authenticated session |
+| `/auth/microsoft` | Start Microsoft OIDC authentication |
+| `/auth/microsoft/callback` | Validate the Microsoft OIDC callback |
+| `/auth/google` | Start Google OIDC authentication |
+| `/auth/google/callback` | Validate the Google OIDC callback |
+| `/auth/github` | Start GitHub OAuth authentication |
+| `/auth/github/callback` | Validate the GitHub OAuth callback and API identity |
+| `/auth/saml` | Start Microsoft Entra SAML authentication |
+| `/auth/saml/acs` | Validate the posted SAML response |
+| `/auth/saml/metadata` | Public service-provider metadata |
+| `/auth/session` | Return the current browser's sanitized application identity |
+| `/auth/logout` | Revoke the current application session |
+| `/auth/authorize` | Apply application policy to the authenticated session |
 
-The earlier `/__api/identity/oauth-pkce`, `/__api/identity/sso`, and `/__api/identity/saml/inspect` contracts remain available for route stability. They now describe the live security boundary without returning verifier, state, nonce, token, or credential values.
+The earlier `/__api/identity/oauth-pkce`, `/__api/identity/sso`, and `/__api/auth/saml/inspect` contracts remain available for route stability. They now describe the live security boundary without returning verifier, state, nonce, token, or credential values.
 
 ## Validation boundaries
 
@@ -110,7 +110,7 @@ SAML_IDP_CERT
 Configure this Web redirect URI:
 
 ```text
-https://demo.wizardgang.ai/identity/microsoft/callback
+https://demo.wizardgang.ai/auth/microsoft/callback
 ```
 
 The app requests `openid profile email`. Add an app role with value `demo.operator` (or `operator`) and assign it only to identities that should demonstrate write authorization. MFA assurance is recognized only when Entra emits `mfa` in the validated authentication-method claim.
@@ -120,19 +120,19 @@ The app requests `openid profile email`. Add an app role with value `demo.operat
 Configure:
 
 ```text
-Identifier (Entity ID): https://demo.wizardgang.ai/identity/saml
-Reply URL (ACS):        https://demo.wizardgang.ai/identity/saml/acs
+Identifier (Entity ID): https://demo.wizardgang.ai/auth/saml
+Reply URL (ACS):        https://demo.wizardgang.ai/auth/saml/acs
 Sign-on URL:            https://demo.wizardgang.ai/interfaces?view=identity
 ```
 
-Download the Entra SAML signing certificate and store its PEM or base64 certificate body in `SAML_IDP_CERT`. The live service-provider metadata is available at `/identity/saml/metadata`.
+Download the Entra SAML signing certificate and store its PEM or base64 certificate body in `SAML_IDP_CERT`. The live service-provider metadata is available at `/auth/saml/metadata`.
 
 ### Google OAuth client
 
 Create a Web application OAuth client and configure:
 
 ```text
-https://demo.wizardgang.ai/identity/google/callback
+https://demo.wizardgang.ai/auth/google/callback
 ```
 
 This is ordinary Google OpenID Connect and does not require Google Workspace.
@@ -142,9 +142,26 @@ This is ordinary Google OpenID Connect and does not require Google Workspace.
 Configure the authorization callback URL:
 
 ```text
-https://demo.wizardgang.ai/identity/github/callback
+https://demo.wizardgang.ai/auth/github/callback
 ```
 
 ## Audit evidence
 
 Authentication and policy transitions create sanitized events including `identity.authentication_started`, `identity.authentication_completed`, `identity.authentication_failed`, `identity.saml_assertion_validated`, `identity.authorization_allowed`, `identity.authorization_denied`, `identity.session_created`, and `identity.session_destroyed`. Subject values are SHA-256 digests in audit evidence. Tokens, cookies, raw assertions, and credentials are excluded.
+
+
+## DEMO-186 release-time provider cutover
+
+DEMO-186 removes the previous identity and protocol route contracts without redirects or compatibility handlers. The code change does **not** modify any external identity-provider or GitHub webhook configuration and does not deploy or release the application.
+
+At the release cutover, operators must update the external systems to the canonical application URLs for the release origin:
+
+- Microsoft Entra OIDC redirect URI: '/auth/microsoft/callback'
+- Google OIDC redirect URI: '/auth/google/callback'
+- GitHub OAuth callback URL: '/auth/github/callback'
+- SAML service-provider entity ID: '/auth/saml'
+- SAML assertion consumer service (ACS): '/auth/saml/acs'
+- SAML metadata: '/auth/saml/metadata'
+- GitHub webhook payload URL: '/webhooks/github'
+
+Clients must also use '/mcp' for MCP Streamable HTTP and '/graphql' for GraphQL. The removed '/identity/*', '/__api/identity/*', '/mcp/server', '/graphql/console', '/graphql/schema', '/__assets/graphiql/*', '/v1/webhooks/demo', '/v1/webhooks/github', and '/og.png' routes are intentionally not aliases. Provider and webhook configuration should be verified against the released origin before traffic is cut over.

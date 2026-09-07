@@ -37,3 +37,13 @@ SAML_IDP_CERT=replace-me-with-the-entra-signing-certificate
 # CLOUDFLARE_D1_DATABASE_ID=replace-me
 # CLOUDFLARE_R2_BUCKET=wizardgang-demo-r2
 # CLOUDFLARE_DO_NAMESPACE=replace-me
+
+
+# DEMO-186 canonical external endpoints. Provider-side settings are changed at release time, not by this file.
+# Microsoft redirect URI: <PUBLIC_ORIGIN>/auth/microsoft/callback
+# Google redirect URI: <PUBLIC_ORIGIN>/auth/google/callback
+# GitHub OAuth callback URL: <PUBLIC_ORIGIN>/auth/github/callback
+# SAML entity ID: <PUBLIC_ORIGIN>/auth/saml
+# SAML ACS URL: <PUBLIC_ORIGIN>/auth/saml/acs
+# SAML metadata URL: <PUBLIC_ORIGIN>/auth/saml/metadata
+# GitHub webhook payload URL: <PUBLIC_ORIGIN>/webhooks/github

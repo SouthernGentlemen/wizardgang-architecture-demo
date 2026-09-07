@@ -45,12 +45,12 @@ export function shell(env: Env, title: string, body: string, options: ShellOptio
   <meta property="og:site_name" content="${SITE_NAME}">
   <meta property="og:title" content="${escapeHtml(title)}">
   <meta property="og:description" content="${escapeHtml(description)}">
-  <meta property="og:image" content="https://demo.wizardgang.ai/og.png">
+  <meta property="og:image" content="https://demo.wizardgang.ai/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="WizardGang Architecture — Architecture you can inspect.">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://demo.wizardgang.ai/og.png">
+  <meta name="twitter:image" content="https://demo.wizardgang.ai/assets/og.png">
   <link rel="icon" href="${FAVICON}">
   <style>${styles}</style>
   <script>${THEME_BOOT}</script>

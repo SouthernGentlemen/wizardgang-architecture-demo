@@ -63,7 +63,7 @@ describe('public route contract', () => {
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/offline'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/health'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/version'), environment)).status).toBe(200);
-    const socialCard = await routeRequest(new Request('https://demo.wizardgang.ai/og.png'), environment);
+    const socialCard = await routeRequest(new Request('https://demo.wizardgang.ai/assets/og.png'), environment);
     expect(socialCard.status).toBe(200);
     expect(socialCard.headers.get('content-type')).toBe('image/png');
     expect(socialCard.headers.get('cache-control')).toContain('immutable');
@@ -125,7 +125,7 @@ describe('public route contract', () => {
 
     const webhooksPage = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces?view=webhooks', { headers: { accept: 'text/html' } }), environment);
     const webhooksHtml = await webhooksPage.text();
-    expect(webhooksHtml).toContain('/v1/webhooks/github');
+    expect(webhooksHtml).toContain('/webhooks/github');
     expect(webhooksHtml).toContain('Generate signed event');
     expect(webhooksHtml).toContain('Signature valid');
     expect(webhooksHtml).toContain('Verified deliveries');
@@ -135,11 +135,11 @@ describe('public route contract', () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces?view=identity', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     for (const anchor of ['oauth', 'sso', 'saml']) expect(html).toContain(`id="${anchor}"`);
-    for (const endpoint of ['/identity/microsoft', '/identity/google', '/identity/github', '/identity/saml', '/identity/session', '/__api/identity/authorize', '/identity/saml/metadata']) expect(html).toContain(endpoint);
+    for (const endpoint of ['/auth/microsoft', '/auth/google', '/auth/github', '/auth/saml', '/auth/session', '/auth/authorize', '/auth/saml/metadata']) expect(html).toContain(endpoint);
     for (const view of ['Provider payload', 'Normalized identity', 'Authorization', 'Protocol']) expect(html).toContain(view);
     expect(html).not.toContain('visitor@example.test');
 
-    const metadata = await routeRequest(new Request('https://demo.wizardgang.ai/identity/saml/metadata'), env());
+    const metadata = await routeRequest(new Request('https://demo.wizardgang.ai/auth/saml/metadata'), env());
     expect(metadata.status).toBe(200);
     expect(metadata.headers.get('content-type')).toContain('application/samlmetadata+xml');
   });
@@ -149,24 +149,24 @@ describe('public route contract', () => {
     const page = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces?view=mcp', { headers: { accept: 'text/html' } }), environment);
     const html = await page.text();
     expect(page.status).toBe(200);
-    expect(html).toContain('https://demo.wizardgang.ai/mcp/server');
+    expect(html).toContain('https://demo.wizardgang.ai/mcp');
     expect(html).toContain('claude mcp add --transport http wizardgang');
     expect(html).toContain('codex mcp add wizardgang --url');
     expect(html).toContain('MCP-Protocol-Version: 2026-07-28');
     expect(html).toContain('Live MCP activity');
     expect(html).toContain('MCP is another interface—not another trust boundary.');
 
-    const oldTransport = await routeRequest(new Request('https://demo.wizardgang.ai/mcp', { method: 'POST' }), environment);
+    const oldTransport = await routeRequest(new Request('https://demo.wizardgang.ai/mcp/server', { method: 'POST' }), environment);
     expect(oldTransport.status).toBe(404);
 
-    const transportGet = await routeRequest(new Request('https://demo.wizardgang.ai/mcp/server'), environment);
+    const transportGet = await routeRequest(new Request('https://demo.wizardgang.ai/mcp'), environment);
     expect(transportGet.status).toBe(405);
     expect(await transportGet.text()).toContain('Method not allowed');
   });
 
   it('returns the ordinary 404 for retired standalone interface pages', async () => {
     const environment = env();
-    for (const path of ['/api', '/webhooks', '/identity', '/mcp', '/i18n', '/accessibility']) {
+    for (const path of ['/api', '/webhooks', '/identity', '/i18n', '/accessibility']) {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`, { headers: { accept: 'text/html' } }), environment);
       expect(response.status, path).toBe(404);
       expect(response.headers.get('location'), path).toBeNull();
@@ -239,7 +239,7 @@ describe('public route contract', () => {
     expect(index).toContain('<span>Version</span>');
     expect(index).toContain('<span>Health</span>');
     expect(index).toContain('<strong>WIZARDGANG</strong>');
-    expect(index).toContain('<meta property="og:image" content="https://demo.wizardgang.ai/og.png">');
+    expect(index).toContain('<meta property="og:image" content="https://demo.wizardgang.ai/assets/og.png">');
     expect(index).toContain('href="/operations">Operations</a>');
     expect(index).not.toContain('href="/dashboard');
     expect(index).not.toContain('>Map</a>');
@@ -321,7 +321,7 @@ describe('offline routing matrix', () => {
     expect(html.headers.get('location')).toContain('/offline?from=%2Fplatform');
     expect(environment.DEMO_DB.queries.every((query) => query.includes('demo_control'))).toBe(true);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/interfaces?view=mcp', { headers: { accept: 'text/html' } }), environment)).status).toBe(302);
-    const mcp = await routeRequest(new Request('https://demo.wizardgang.ai/mcp/server', { headers: { accept: 'application/json' } }), environment);
+    const mcp = await routeRequest(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'application/json' } }), environment);
     expect(mcp.status).toBe(503);
     expect(await mcp.json()).toMatchObject({ status: 'offline' });
 
@@ -337,7 +337,7 @@ describe('offline routing matrix', () => {
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/logs'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/version'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/health'), environment)).status).toBe(503);
-    expect((await routeRequest(new Request('https://demo.wizardgang.ai/og.png'), environment)).status).toBe(200);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/assets/og.png'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/admin', { headers: { authorization: basic } }), environment)).status).toBe(200);
   });
 

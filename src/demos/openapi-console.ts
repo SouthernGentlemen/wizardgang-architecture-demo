@@ -298,11 +298,11 @@ const API_RUNNER = `(() => {
     updateCount().catch(() => {});
   };
   const loadIdentity = async () => {
-    const sessionResponse = await fetch('/identity/session', { headers: { accept: 'application/json' }, credentials: 'same-origin' });
+    const sessionResponse = await fetch('/auth/session', { headers: { accept: 'application/json' }, credentials: 'same-origin' });
     if (!sessionResponse.ok) return;
     const session = await sessionResponse.json();
     if (!session.authenticated) return;
-    const tokenResponse = await fetch('/__api/identity/token', { method: 'POST', headers: { accept: 'application/json' }, credentials: 'same-origin' });
+    const tokenResponse = await fetch('/auth/token', { method: 'POST', headers: { accept: 'application/json' }, credentials: 'same-origin' });
     if (tokenResponse.ok) setAuthenticated(await tokenResponse.json());
   };
   query('[data-copy-base]').addEventListener('click', async (event) => { await navigator.clipboard.writeText('https://demo.wizardgang.ai/v1'); event.currentTarget.textContent = 'Copied'; });

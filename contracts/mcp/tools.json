@@ -3,7 +3,7 @@
   "status": "working",
   "transport": {
     "type": "streamable-http",
-    "path": "/mcp/server"
+    "path": "/mcp"
   },
   "protocol": {
     "current": "2026-07-28",

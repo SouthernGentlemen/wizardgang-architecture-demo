@@ -81,7 +81,7 @@ describe('consolidated interface demonstrations', () => {
   });
 
   it('retires standalone pages while preserving GraphQL and MCP machine endpoints', async () => {
-    for (const path of ['/api', '/webhooks', '/identity', '/mcp', '/i18n', '/accessibility', '/graphql/console']) {
+    for (const path of ['/api', '/webhooks', '/identity', '/i18n', '/accessibility', '/graphql/console']) {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`, {
         headers: { accept: 'text/html' },
       }), environment);
@@ -96,12 +96,29 @@ describe('consolidated interface demonstrations', () => {
     expect(graphql.headers.get('x-robots-tag')).toBe('noindex, nofollow');
     expect(await graphql.text()).not.toContain('GraphiQL');
 
-    const mcp = await routeRequest(new Request('https://demo.wizardgang.ai/mcp/server'), environment);
+    const mcp = await routeRequest(new Request('https://demo.wizardgang.ai/mcp'), environment);
     expect(mcp.status).toBe(405);
   });
 
+  it('returns normal 404s for retired identity and protocol contracts', async () => {
+    const retired = [
+      '/identity/microsoft', '/identity/microsoft/callback', '/identity/google', '/identity/google/callback',
+      '/identity/github', '/identity/github/callback', '/identity/saml', '/identity/saml/acs', '/identity/saml/metadata',
+      '/identity/session', '/identity/logout', '/__api/identity/oauth-pkce', '/__api/identity/authorize', '/__api/identity/token',
+      '/__api/identity/sso', '/__api/identity/saml/inspect', '/mcp/server', '/graphql/console', '/graphql/schema',
+      '/__assets/graphiql/graphiql.min.js', '/v1/webhooks/demo', '/v1/webhooks/github', '/og.png',
+    ];
+    for (const path of retired) {
+      const response = await routeRequest(new Request('https://demo.wizardgang.ai' + path, {
+        headers: { accept: 'application/json' },
+      }), environment);
+      expect(response.status, path).toBe(404);
+      expect(response.headers.get('location'), path).toBeNull();
+    }
+  });
+
   it('lands identity start errors on the consolidated identity view', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/identity/google'), environment);
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/auth/google'), environment);
     expect(response.status).toBe(303);
     expect(response.headers.get('location')).toBe('https://demo.wizardgang.ai/interfaces?view=identity&error=provider_unconfigured&provider=google');
   });

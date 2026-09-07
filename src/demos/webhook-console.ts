@@ -30,7 +30,7 @@ export function renderWebhooksDemo(env: Env): Response {
 </section>
 <section class="webhook-connection" aria-labelledby="webhook-connection-heading">
   <div><p class="eyebrow">GitHub webhooks</p><h2 id="webhook-connection-heading">Connected receiver</h2></div><span class="badge badge-ok" data-webhook-state>Connecting</span>
-  <dl><dt>Endpoint</dt><dd><code>https://demo.wizardgang.ai/v1/webhooks/github</code></dd><dt>Repository</dt><dd><a href="${escapeHtml(env.GITHUB_REPO_URL)}">${escapeHtml(repository)}</a></dd><dt>Supported</dt><dd class="webhook-tags"><span>push</span><span>pull_request</span><span>workflow_run</span><span>release</span><span>ping</span></dd></dl>
+  <dl><dt>Endpoint</dt><dd><code>https://demo.wizardgang.ai/webhooks/github</code></dd><dt>Repository</dt><dd><a href="${escapeHtml(env.GITHUB_REPO_URL)}">${escapeHtml(repository)}</a></dd><dt>Supported</dt><dd class="webhook-tags"><span>push</span><span>pull_request</span><span>workflow_run</span><span>release</span><span>ping</span></dd></dl>
 </section>
 <section class="webhook-test panel" aria-labelledby="webhook-test-heading">
   <div class="webhook-section-heading"><div><p class="eyebrow">Executable proof</p><h2 id="webhook-test-heading">Send a test event</h2><p>Generate a GitHub-shaped payload. The Worker signs it server-side and sends it through the same verifier and persistence path as a configured GitHub delivery.</p></div><button class="button-primary" type="button" data-webhook-send>Generate signed event</button></div>

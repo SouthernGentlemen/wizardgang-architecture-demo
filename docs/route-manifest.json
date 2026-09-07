@@ -158,52 +158,6 @@
     "status": "working"
   },
   {
-    "id": "interfaces.graphql.asset",
-    "route": "/__assets/graphiql/{asset}",
-    "methods": [
-      "GET"
-    ],
-    "kind": "asset",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "public",
-      "maxAgeSeconds": 31536000,
-      "immutable": true
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "GraphiQL local asset",
-    "description": "Immutable locally bundled GraphiQL script, stylesheet, or worker asset.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/ui/graphiql-assets.ts",
-      "exportName": "graphiqlAssetResponse",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/graphql.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
     "id": "interfaces.graphql.endpoint",
     "route": "/graphql",
     "methods": [
@@ -256,54 +210,8 @@
     "status": "working"
   },
   {
-    "id": "interfaces.graphql.schema",
-    "route": "/graphql/schema",
-    "methods": [
-      "GET"
-    ],
-    "kind": "protocol",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "public",
-      "maxAgeSeconds": 300
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "GraphQL schema",
-    "description": "Executable GraphQL schema contract.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/api/graphql.ts",
-      "exportName": "graphqlSchemaResponse",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/graphql.test.ts",
-        "tests/contracts.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
     "id": "interfaces.identity.authorize",
-    "route": "/__api/identity/authorize",
+    "route": "/auth/authorize",
     "methods": [
       "POST"
     ],
@@ -352,7 +260,7 @@
   },
   {
     "id": "interfaces.identity.github.callback",
-    "route": "/identity/github/callback",
+    "route": "/auth/github/callback",
     "methods": [
       "GET"
     ],
@@ -398,7 +306,7 @@
   },
   {
     "id": "interfaces.identity.github.start",
-    "route": "/identity/github",
+    "route": "/auth/github",
     "methods": [
       "GET"
     ],
@@ -443,7 +351,7 @@
   },
   {
     "id": "interfaces.identity.google.callback",
-    "route": "/identity/google/callback",
+    "route": "/auth/google/callback",
     "methods": [
       "GET"
     ],
@@ -489,7 +397,7 @@
   },
   {
     "id": "interfaces.identity.google.start",
-    "route": "/identity/google",
+    "route": "/auth/google",
     "methods": [
       "GET"
     ],
@@ -534,7 +442,7 @@
   },
   {
     "id": "interfaces.identity.logout",
-    "route": "/identity/logout",
+    "route": "/auth/logout",
     "methods": [
       "POST"
     ],
@@ -582,7 +490,7 @@
   },
   {
     "id": "interfaces.identity.microsoft.callback",
-    "route": "/identity/microsoft/callback",
+    "route": "/auth/microsoft/callback",
     "methods": [
       "GET"
     ],
@@ -628,7 +536,7 @@
   },
   {
     "id": "interfaces.identity.microsoft.start",
-    "route": "/identity/microsoft",
+    "route": "/auth/microsoft",
     "methods": [
       "GET"
     ],
@@ -672,53 +580,8 @@
     "status": "working"
   },
   {
-    "id": "interfaces.identity.oauth-pkce",
-    "route": "/__api/identity/oauth-pkce",
-    "methods": [
-      "POST"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "policy",
-      "policy": "PKCE S256 validation"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "OAuth PKCE boundary demonstration",
-    "description": "Bounded PKCE protocol demonstration and audit evidence.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/api/identity.ts",
-      "exportName": "oauthPkceResponse",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/identity.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
     "id": "interfaces.identity.saml.acs",
-    "route": "/identity/saml/acs",
+    "route": "/auth/saml/acs",
     "methods": [
       "POST"
     ],
@@ -763,52 +626,8 @@
     "status": "working"
   },
   {
-    "id": "interfaces.identity.saml.inspect",
-    "route": "/__api/identity/saml/inspect",
-    "methods": [
-      "GET"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "SAML boundary inspection",
-    "description": "Disclosure-safe inspection of the configured SAML trust boundary.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/api/identity.ts",
-      "exportName": "samlInspectionResponse",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/identity.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
     "id": "interfaces.identity.saml.metadata",
-    "route": "/identity/saml/metadata",
+    "route": "/auth/saml/metadata",
     "methods": [
       "GET"
     ],
@@ -853,7 +672,7 @@
   },
   {
     "id": "interfaces.identity.saml.start",
-    "route": "/identity/saml",
+    "route": "/auth/saml",
     "methods": [
       "GET"
     ],
@@ -898,7 +717,7 @@
   },
   {
     "id": "interfaces.identity.session",
-    "route": "/identity/session",
+    "route": "/auth/session",
     "methods": [
       "GET"
     ],
@@ -942,52 +761,8 @@
     "status": "working"
   },
   {
-    "id": "interfaces.identity.sso-boundary",
-    "route": "/__api/identity/sso",
-    "methods": [
-      "GET"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "SSO boundary status",
-    "description": "Disclosure-safe status for configured enterprise identity boundaries.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/api/identity.ts",
-      "exportName": "ssoBoundaryResponse",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/identity.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
     "id": "interfaces.identity.token",
-    "route": "/__api/identity/token",
+    "route": "/auth/token",
     "methods": [
       "POST"
     ],
@@ -1036,7 +811,7 @@
   },
   {
     "id": "interfaces.mcp.server",
-    "route": "/mcp/server",
+    "route": "/mcp",
     "methods": [
       "GET",
       "POST",
@@ -1182,53 +957,8 @@
     "status": "working"
   },
   {
-    "id": "interfaces.webhooks.demo-receipt",
-    "route": "/v1/webhooks/demo",
-    "methods": [
-      "POST"
-    ],
-    "kind": "protocol",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "policy",
-      "policy": "valid webhook HMAC and unique delivery ID"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Signed demo webhook receiver",
-    "description": "HMAC-validated bounded webhook receiver with delivery replay protection.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/api/webhooks.ts",
-      "exportName": "webhookReceiptResponse",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/webhooks.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
     "id": "interfaces.webhooks.github",
-    "route": "/v1/webhooks/github",
+    "route": "/webhooks/github",
     "methods": [
       "POST"
     ],
@@ -1450,6 +1180,54 @@
     "source": {
       "module": "src/api/operations.ts",
       "exportName": "cloudflareUsageResponse",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.assets",
+    "route": "/assets/{asset}",
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "kind": "asset",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "public",
+      "maxAgeSeconds": 31536000,
+      "immutable": true
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Bundled UI asset",
+    "description": "Locally bundled immutable UI and social-preview assets.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/ui/assets.ts",
+      "exportName": "uiAssetResponse",
       "tests": [
         "tests/operational-route-registry.test.ts",
         "tests/router.test.ts"
@@ -1731,54 +1509,6 @@
     "source": {
       "module": "src/api/sitemap.ts",
       "exportName": "sitemapResponse",
-      "tests": [
-        "tests/operational-route-registry.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "operations.social-card",
-    "route": "/og.png",
-    "methods": [
-      "GET",
-      "HEAD"
-    ],
-    "kind": "asset",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "available"
-    },
-    "cache": {
-      "mode": "public",
-      "maxAgeSeconds": 31536000,
-      "immutable": true
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Social preview image",
-    "description": "Branded Open Graph preview asset.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/OPERATIONS.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/ui/brand-assets.ts",
-      "exportName": "socialCardResponse",
       "tests": [
         "tests/operational-route-registry.test.ts",
         "tests/router.test.ts"

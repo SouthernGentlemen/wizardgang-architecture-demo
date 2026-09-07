@@ -25,7 +25,7 @@ Released routes remain canonical. The proposed `/demo/*` names are represented b
 | i18n | `/interfaces?view=i18n` | Server render plus local progressive enhancement | Keep Arabic/RTL on the consolidated Interfaces surface. |
 | WCAG | `/interfaces?view=accessibility` | Isolated lab frame and test result JSON | Keep the accessibility lab on the consolidated Interfaces surface. |
 | Git/GitHub | `/git` | `/__api/git/evidence`; `/__api/git/demo*` | Show public evidence and run a controlled two-stage release lifecycle against this repository. |
-| Webhooks | `/interfaces?view=webhooks` | `/v1/webhooks/github`; `/__api/webhooks/*` | Browser presentation is consolidated while receiver URLs remain stable. |
+| Webhooks | `/interfaces?view=webhooks` | `/webhooks/github`; `/__api/webhooks/*` | Browser presentation is consolidated while receiver URLs remain stable. |
 | GraphQL | `/interfaces?view=graphql` | `/graphql`; `/graphql/schema`; `/graphql/console` | `/graphql` is machine-only; the browser IDE is embedded by the consolidated view. |
 
 Protocol response fields, methods, security controls, source links, and offline-gate behavior remain stable. Retired HTML pages are removed only through an explicit controlled route-consolidation change reflected in `docs/ROUTES.md`, `docs/route-manifest.json`, and the applicable contract.
@@ -384,7 +384,7 @@ The real GitHub receiver uses `X-Hub-Signature-256`, `X-GitHub-Event`, and `X-Gi
 
 | Method | Path | Behavior |
 |---|---|---|
-| `POST` | `/v1/webhooks/github` | Verify and accept configured GitHub webhook traffic. |
+| `POST` | `/webhooks/github` | Verify and accept configured GitHub webhook traffic. |
 | `POST` | `/__api/webhooks/demo` | Create a synthetic delivery and send it through the same verifier/storage path. |
 | `GET` | `/__api/webhooks/events?after={id}` | Bounded polling fallback for safe recent summaries. |
 | `GET` | `/__api/webhooks/stream` | Same-origin event stream coordinated by `DEMO_COORDINATOR`. |

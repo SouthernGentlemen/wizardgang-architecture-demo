@@ -18,16 +18,16 @@ const demo: DemoDefinition = {
     { "label": "View identity console", "path": "src/demos/identity-page.ts" },
     { "label": "View identity boundary implementation", "path": "src/api/identity.ts" },
     { "label": "View identity design", "path": "docs/IDENTITY.md" },
-    { "label": "View SAML metadata example", "path": "contracts/identity/saml-metadata.example.xml" }
+    { "label": "View SAML metadata example", "path": "contracts/auth/saml-metadata.example.xml" }
   ],
   "interfaces": [
-    { "method": "GET", "path": "/identity/microsoft", "description": "Start Microsoft Entra ID OIDC authentication." },
-    { "method": "GET", "path": "/identity/google", "description": "Start Google OpenID Connect authentication." },
-    { "method": "GET", "path": "/identity/github", "description": "Start GitHub OAuth authentication." },
-    { "method": "GET / POST", "path": "/identity/saml → /identity/saml/acs", "description": "Start and consume Microsoft Entra ID SAML authentication." },
-    { "method": "GET", "path": "/identity/session", "description": "Inspect only the current browser's sanitized application session." },
-    { "method": "POST", "path": "/__api/identity/authorize", "description": "Evaluate the authenticated application identity against demo policy." },
-    { "method": "POST", "path": "/__api/identity/token", "description": "Issue a ten-minute bearer token scoped to the authenticated visitor sandbox." }
+    { "method": "GET", "path": "/auth/microsoft", "description": "Start Microsoft Entra ID OIDC authentication." },
+    { "method": "GET", "path": "/auth/google", "description": "Start Google OpenID Connect authentication." },
+    { "method": "GET", "path": "/auth/github", "description": "Start GitHub OAuth authentication." },
+    { "method": "GET / POST", "path": "/auth/saml → /auth/saml/acs", "description": "Start and consume Microsoft Entra ID SAML authentication." },
+    { "method": "GET", "path": "/auth/session", "description": "Inspect only the current browser's sanitized application session." },
+    { "method": "POST", "path": "/auth/authorize", "description": "Evaluate the authenticated application identity against demo policy." },
+    { "method": "POST", "path": "/auth/token", "description": "Issue a ten-minute bearer token scoped to the authenticated visitor sandbox." }
   ]
 };
 

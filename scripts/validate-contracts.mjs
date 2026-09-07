@@ -93,7 +93,7 @@ if (fs.existsSync('contracts/openapi/swagger.json')) fail('legacy contracts/open
 const graphql = fs.readFileSync('contracts/graphql/schema.graphql', 'utf8');
 if (!graphql.includes('demoRecords')) fail('GraphQL schema is missing demoRecords');
 const mcp = JSON.parse(fs.readFileSync('contracts/mcp/tools.json', 'utf8'));
-if (mcp.status !== 'working' || mcp.transport?.path !== '/mcp/server' || mcp.protocol?.current !== '2026-07-28') {
+if (mcp.status !== 'working' || mcp.transport?.path !== '/mcp' || mcp.protocol?.current !== '2026-07-28') {
   fail('MCP manifest does not match the live transport');
 }
 for (const name of ['ping', 'list_demo_records']) {

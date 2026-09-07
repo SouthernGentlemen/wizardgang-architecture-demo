@@ -35,7 +35,7 @@ const expectedPolicies = [
     offline: { mode: 'available' }, cache: { mode: 'public', maxAgeSeconds: 3600 }, crawler: { crawling: 'allow', indexing: 'deny' },
   },
   {
-    id: 'operations.social-card', pattern: '/og.png', methods: ['GET', 'HEAD'], kind: 'asset', visibility: 'public',
+    id: 'operations.assets', pattern: '/assets/:asset', methods: ['GET', 'HEAD'], kind: 'asset', visibility: 'public',
     authentication: { mode: 'anonymous' }, authorization: { mode: 'none' }, sameOrigin: { mode: 'not-required' },
     offline: { mode: 'available' }, cache: { mode: 'public', maxAgeSeconds: 31_536_000, immutable: true }, crawler: { crawling: 'controlled', indexing: 'deny' },
   },

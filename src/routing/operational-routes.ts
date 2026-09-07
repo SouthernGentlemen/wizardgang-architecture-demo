@@ -14,7 +14,7 @@ import { healthResponse, versionResponse, logsResponse, cloudflareUsageResponse 
 import { billingScenarioResponse } from '../api/billing';
 import { securityTxtResponse } from '../api/security-policy';
 import { sitemapResponse } from '../api/sitemap';
-import { socialCardResponse } from '../ui/brand-assets';
+import { uiAssetResponse } from '../ui/assets';
 import { renderAdmin, renderOffline } from '../ui/admin';
 import { renderOperations } from '../demos/operations';
 import { demos } from '../demos/registry';
@@ -165,9 +165,9 @@ const globalOperationalRoutes = [
     cache: { mode: 'public', maxAgeSeconds: 3600 },
   }),
   operationalRoute({
-    id: 'operations.social-card', pattern: '/og.png', methods: ['GET', 'HEAD'], kind: 'asset',
-    handler: (request) => socialCardResponse(request), title: 'Social preview image', description: 'Branded Open Graph preview asset.',
-    sourceModule: 'src/ui/brand-assets.ts', sourceExport: 'socialCardResponse',
+    id: 'operations.assets', pattern: '/assets/:asset', methods: ['GET', 'HEAD'], kind: 'asset',
+    handler: (request, _context, params) => uiAssetResponse(request, params.asset || ''), title: 'Bundled UI asset', description: 'Locally bundled immutable UI and social-preview assets.',
+    sourceModule: 'src/ui/assets.ts', sourceExport: 'uiAssetResponse',
     cache: { mode: 'public', maxAgeSeconds: 31_536_000, immutable: true },
   }),
   operationalRoute({

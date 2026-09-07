@@ -73,7 +73,7 @@ function environment(): Env & { DEMO_DB: WebhookD1 } {
 }
 
 function githubRequest(secret: string, payload: string, delivery = 'delivery-github-1', event = 'push'): Promise<Request> {
-  return signWebhookForTest(secret, payload).then((signature) => new Request('https://demo.example/v1/webhooks/github', {
+  return signWebhookForTest(secret, payload).then((signature) => new Request('https://demo.example/webhooks/github', {
     method: 'POST', body: payload, headers: {
       'content-type': 'application/json',
       'x-github-delivery': delivery,

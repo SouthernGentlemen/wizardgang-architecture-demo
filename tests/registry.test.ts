@@ -81,7 +81,7 @@ describe('intentional offline route policies', () => {
     for (const route of [
       '/operations',
       '/api/operations/health', '/api/operations/version', '/api/operations/logs', '/api/operations/usage',
-      '/api/operations/budget', '/offline', '/admin', '/robots.txt', '/.well-known/security.txt', '/og.png',
+      '/api/operations/budget', '/offline', '/admin', '/robots.txt', '/.well-known/security.txt', '/assets/:asset',
     ]) {
       const declaration = operationalRouteRegistry.declarations.find((candidate) => candidate.pattern === route);
       expect(declaration, route).toBeDefined();
@@ -106,11 +106,10 @@ describe('intentional offline route policies', () => {
       '/api/reporting/:collection',
       '/api/reporting/:collection/:recordId',
       '/api/operations/logs',
-      '/mcp/server',
-      '/graphql/schema',
+      '/mcp',
     ]) expect(browserPolicy(pattern), pattern).toBe('never');
     expect(browserPolicy('/graphql')).toBe('never');
-    expect(browserPolicy('/mcp')).toBeUndefined();
+    expect(browserPolicy('/mcp/server')).toBeUndefined();
     expect(browserPolicy('/interfaces')).toBe('page');
     expect(browserPolicy('/platform')).toBe('page');
     expect(browserPolicy('/edge')).toBeUndefined();
