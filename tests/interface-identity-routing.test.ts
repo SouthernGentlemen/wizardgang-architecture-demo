@@ -54,7 +54,6 @@ describe('interface and identity declarative routing', () => {
       '/interfaces',
       '/v1/openapi.json',
       '/graphql',
-      '/graphql/console',
       '/graphql/schema',
       '/__assets/graphiql/:asset',
       '/v1/webhooks/demo',

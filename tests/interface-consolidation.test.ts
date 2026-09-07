@@ -26,7 +26,7 @@ const environment: Env = {
 
 const viewMarkers = {
   rest: 'id="rest"',
-  graphql: 'src="/graphql/console"',
+  graphql: 'srcdoc=',
   webhooks: 'id="webhooks"',
   identity: 'id="oauth"',
   mcp: 'id="mcp-endpoint"',
@@ -46,6 +46,7 @@ describe('consolidated interface demonstrations', () => {
       expect(html, view).toContain(viewMarkers[view]);
       expect(html, view).toContain(`href="/interfaces?view=${view}" aria-current="page"`);
       expect(html, view).toContain(`<link rel="canonical" href="https://demo.wizardgang.ai/interfaces?view=${view}">`);
+      expect(html, view).not.toContain('/graphql/console');
       expect(html.match(/<h1\b/g), view).toHaveLength(1);
     }
   });
@@ -80,7 +81,7 @@ describe('consolidated interface demonstrations', () => {
   });
 
   it('retires standalone pages while preserving GraphQL and MCP machine endpoints', async () => {
-    for (const path of ['/api', '/webhooks', '/identity', '/mcp', '/i18n', '/accessibility']) {
+    for (const path of ['/api', '/webhooks', '/identity', '/mcp', '/i18n', '/accessibility', '/graphql/console']) {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`, {
         headers: { accept: 'text/html' },
       }), environment);

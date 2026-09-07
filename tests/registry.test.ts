@@ -24,7 +24,9 @@ describe('architecture demo registry', () => {
   });
 
   it('uses one source module per architecture demo route', () => {
-    expect(new Set(demos.map((demo) => demo.sourcePath)).size).toBe(demos.length);
+    const indexedRoutes = applicationRoutes.filter((route) => route.navigation?.index);
+    expect(indexedRoutes).toHaveLength(demos.length);
+    expect(new Set(indexedRoutes.map((route) => route.source.module)).size).toBe(demos.length);
   });
 
   it('keeps every architecture route absolute', () => {
@@ -39,9 +41,11 @@ describe('architecture demo registry', () => {
 
   it('places consolidated assurance and separate security in delivery and governance', () => {
     const assurance = demos.find((demo) => demo.route === '/assurance');
-    expect(assurance).toMatchObject({ group: 'Delivery & Governance', sourcePath: 'src/demos/assurance.ts', status: 'working' });
+    expect(assurance).toMatchObject({ group: 'Delivery & Governance' });
+    expect(applicationRoutes.find((route) => route.pattern === '/assurance')?.source.module).toBe('src/demos/assurance.ts');
     const security = demos.find((demo) => demo.route === '/security');
-    expect(security).toMatchObject({ group: 'Delivery & Governance', sourcePath: 'src/demos/security.ts', status: 'working' });
+    expect(security).toMatchObject({ group: 'Delivery & Governance' });
+    expect(applicationRoutes.find((route) => route.pattern === '/security')?.source.module).toBe('src/demos/security-page.ts');
     for (const retired of ['/git', '/governance', '/evidence', '/compliance', '/governance/concerns', '/governance/risks', '/governance/incidents']) {
       expect(demos.some((demo) => demo.route === retired), retired).toBe(false);
     }
@@ -57,9 +61,10 @@ describe('architecture demo registry', () => {
     }>;
     for (const demo of demos) {
       const entry = manifest.find((candidate) => candidate.route === demo.route);
+      const declaration = applicationRoutes.find((route) => route.pattern === demo.route);
       expect(entry, `missing manifest entry for ${demo.route}`).toBeDefined();
-      expect(entry?.source.module).toMatch(/^src\//);
-      expect(entry?.status).toBe(demo.status);
+      expect(entry?.source.module).toBe(declaration?.source.module);
+      expect(entry?.status).toBe('working');
       expect(entry?.navigation).toMatchObject({
         group: demo.group,
         label: demo.title,
@@ -67,7 +72,6 @@ describe('architecture demo registry', () => {
         sitemap: true,
       });
     }
-    expect(demos.every((demo) => demo.status === 'working')).toBe(true);
     expect(manifest.filter((entry) => entry.navigation?.index)).toHaveLength(demos.length);
   });
 });

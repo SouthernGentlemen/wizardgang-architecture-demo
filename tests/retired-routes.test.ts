@@ -3,24 +3,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { routeRequest } from '../src/router';
 import type { D1PreparedStatement, Env } from '../src/types';
-
-const retiredRoutes = [
-  '/api/rest',
-  '/api/openapi',
-  '/api/graphql',
-  '/api/webhooks',
-  '/identity/oauth',
-  '/identity/sso',
-  '/git/versioning',
-  '/git/branching',
-  '/git/releases',
-  '/git/actions',
-  '/environments',
-  '/governance/iso-27001',
-  '/governance/iso-42001',
-  '/traceability',
-  '/dashboard/health',
-] as const;
+import { referenceFreeRemovedHtml404Pathnames as retiredRoutes } from './fixtures/removed-html-pathnames';
 
 class RetiredRouteStatement implements D1PreparedStatement {
   constructor(private readonly sql: string) {}
@@ -50,6 +33,7 @@ const textExtensions = new Set(['.css', '.html', '.js', '.json', '.md', '.mjs', 
 const excludedFiles = new Set([
   'CHANGELOG.md',
   'docs/INTERACTIVE-DEMO-SPEC.md', // v0.5.0 release design record; retained as historical documentation.
+  'tests/fixtures/removed-html-pathnames.ts', // Authoritative negative fixture imported above.
   'tests/retired-routes.test.ts',
 ]);
 const excludedDirectories = ['.git/', '.wrangler/', 'dist/', 'docs/history/', 'docs/releases/', 'node_modules/'];

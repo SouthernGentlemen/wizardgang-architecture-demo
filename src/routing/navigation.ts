@@ -1,4 +1,4 @@
-import type { DemoDefinition } from '../types';
+import type { FrontendSurfaceDefinition } from '../demos/registry';
 
 export interface RegisteredPageMetadata {
   group: string;
@@ -7,7 +7,7 @@ export interface RegisteredPageMetadata {
   order: number;
   index: boolean;
   sitemap: boolean;
-  demo?: DemoDefinition;
+  surface: FrontendSurfaceDefinition;
 }
 
 export interface RegisteredRouteMetadataView {
@@ -38,11 +38,14 @@ export function registeredPageMetadata(): readonly RegisteredRouteMetadataView[]
     .sort((left, right) => (left.navigation?.order ?? 0) - (right.navigation?.order ?? 0));
 }
 
-export function registeredDemoNavigation(): DemoDefinition[] {
+export function registeredSurfaceNavigation(): FrontendSurfaceDefinition[] {
   return registeredPageMetadata()
-    .filter((route) => route.navigation?.index && route.navigation.demo)
-    .map((route) => ({ ...route.navigation!.demo!, route: route.pattern }));
+    .filter((route) => route.navigation?.index)
+    .map((route) => route.navigation!.surface);
 }
+
+/** Transitional name for callers being collapsed by DEMO-183. */
+export const registeredDemoNavigation = registeredSurfaceNavigation;
 
 export function registeredSitemapPaths(): string[] {
   return registeredPageMetadata()

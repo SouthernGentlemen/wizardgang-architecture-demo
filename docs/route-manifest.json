@@ -473,7 +473,8 @@
         "tests/interface-identity-routing.test.ts",
         "tests/router.test.ts",
         "tests/interface.test.ts",
-        "tests/application-route-registry.test.ts"
+        "tests/application-route-registry.test.ts",
+        "tests/canonical-frontend-routes.test.ts"
       ]
     },
     "navigation": {
@@ -772,7 +773,7 @@
     ],
     "kind": "asset",
     "visibility": "public",
-    "browser_html": "page",
+    "browser_html": "never",
     "authentication": {
       "mode": "anonymous"
     },
@@ -806,51 +807,6 @@
       "tests": [
         "tests/interface-identity-routing.test.ts",
         "tests/graphql.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "interfaces.graphql.console",
-    "route": "/graphql/console",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "GraphiQL console",
-    "description": "Locally bundled GraphiQL execution console embedded by the consolidated GraphQL interface view.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/ui/graphiql-assets.ts",
-      "exportName": "localGraphiqlResponse",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/graphql.test.ts",
-        "tests/interface-consolidation.test.ts"
       ]
     },
     "status": "working"
@@ -901,7 +857,8 @@
         "tests/interface-identity-routing.test.ts",
         "tests/graphql.test.ts",
         "tests/integration-interfaces.test.ts",
-        "tests/interface-consolidation.test.ts"
+        "tests/interface-consolidation.test.ts",
+        "tests/canonical-frontend-routes.test.ts"
       ]
     },
     "status": "working"
@@ -1809,7 +1766,7 @@
       "indexing": "allow"
     },
     "title": "Interfaces",
-    "description": "One server-rendered surface for the REST, GraphQL, webhook, identity, MCP, internationalization, and accessibility demonstrations.",
+    "description": "One server-rendered surface for REST, GraphQL, webhooks, identity, MCP, internationalization, and accessibility.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -3183,7 +3140,7 @@
       "indexing": "allow"
     },
     "title": "Cloudflare Platform",
-    "description": "One server-rendered surface for the edge, Worker, Durable Object, D1, and R2 architecture laboratories.",
+    "description": "One server-rendered surface for edge inspection, Worker compute, Durable Objects, D1, and R2 demonstrations.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"

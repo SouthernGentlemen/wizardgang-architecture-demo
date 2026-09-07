@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import openapi from '../contracts/openapi/openapi.json';
 import { demos } from '../src/demos/registry';
 import { routeRequest } from '../src/router';
+import { applicationRouteRegistry } from '../src/routing/application-routes';
 import type { D1PreparedStatement, Env } from '../src/types';
 
 class RouterStatement implements D1PreparedStatement {
@@ -41,10 +42,12 @@ describe('public route contract', () => {
   it('resolves every registered human demo route and links to its exact primary source', async () => {
     const environment = env();
     for (const demo of demos) {
+      const declaration = applicationRouteRegistry.declarations.find((route) => route.pattern === demo.route);
+      expect(declaration, `${demo.route} declaration`).toBeDefined();
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${demo.route}`, { headers: { accept: 'text/html' } }), environment);
       expect(response.status, demo.route).toBe(200);
       const html = await response.text();
-      expect(html, demo.route).toContain(`https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/main/${demo.sourcePath}`);
+      expect(html, demo.route).toContain(`https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/main/${declaration?.source.module}`);
     }
   });
 
@@ -97,7 +100,8 @@ describe('public route contract', () => {
     const environment = env();
     const graphqlPage = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces?view=graphql', { headers: { accept: 'text/html' } }), environment);
     const graphqlHtml = await graphqlPage.text();
-    expect(graphqlHtml).toContain('src="/graphql/console"');
+    expect(graphqlHtml).toContain('srcdoc="');
+    expect(graphqlHtml).not.toContain('/graphql/console');
     for (const control of ['Depth limit', 'Field limit', 'Batching', 'Request limit']) expect(graphqlHtml).toContain(control);
     expect(graphqlHtml).toContain('GraphQL ↔ D1 Users');
 

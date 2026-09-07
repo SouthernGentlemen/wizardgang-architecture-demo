@@ -1,13 +1,11 @@
 import type { AdminIdentity } from '../lib/admin-auth';
-import type { DemoDefinition, Env } from '../types';
-import { demos } from '../demos/registry';
+import type { Env } from '../types';
+import { surfaces } from '../demos/registry';
 import {
   assuranceDeclarativeRouteRegistry,
   type AssuranceRouteContext,
 } from './assurance-routes';
-import {
-  interfaceIdentityRouteRegistry,
-} from './interface-identity-routes';
+import { interfaceIdentityRouteRegistry } from './interface-identity-routes';
 import type { InterfaceIdentityRouteContext } from '../interfaces/route-capability';
 import {
   operationalRouteRegistry,
@@ -39,8 +37,8 @@ export interface ApplicationRouteDeclaration extends RouteDeclaration<Applicatio
   navigation?: RegisteredPageMetadata;
 }
 
-const demoMetadata = new Map<string, { demo: DemoDefinition; order: number }>(
-  demos.map((demo, index) => [normalizeRoutePath(demo.route), { demo, order: index + 1 }]),
+const surfaceMetadata = new Map<string, (typeof surfaces)[number]>(
+  surfaces.map((surface) => [surface.routeId, surface]),
 );
 
 function browserHtmlFor<TContext>(route: RouteDeclaration<TContext>): BrowserHtmlPolicy {
@@ -49,26 +47,16 @@ function browserHtmlFor<TContext>(route: RouteDeclaration<TContext>): BrowserHtm
 }
 
 function navigationFor<TContext>(route: RouteDeclaration<TContext>): RegisteredPageMetadata | undefined {
-  if (route.id === 'interfaces.frontend.index') {
-    return {
-      group: 'Navigation',
-      label: route.documentation.title,
-      summary: route.documentation.description,
-      order: 0,
-      index: false,
-      sitemap: true,
-    };
-  }
-  const metadata = demoMetadata.get(normalizeRoutePath(route.pattern));
-  if (!metadata) return undefined;
+  const surface = surfaceMetadata.get(route.id);
+  if (!surface?.navigation) return undefined;
   return {
-    group: metadata.demo.group,
-    label: metadata.demo.title,
-    summary: metadata.demo.summary,
-    order: metadata.order,
-    index: true,
-    sitemap: true,
-    demo: metadata.demo,
+    group: surface.group,
+    label: surface.title,
+    summary: surface.summary,
+    order: surface.order,
+    index: surface.index,
+    sitemap: surface.sitemap,
+    surface,
   };
 }
 
@@ -101,6 +89,19 @@ function validateApplicationDeclaration(route: ApplicationRouteDeclaration): voi
   }
   if (route.visibility === 'private' && route.cache.mode === 'public') {
     throw new Error(`Route '${route.id}' is private but declares public caching`);
+  }
+}
+
+function validateCanonicalFrontendPages(registry: RouteRegistry<ApplicationRouteContext>): void {
+  const expected = surfaces
+    .map((surface) => `${surface.routeId}:${normalizeRoutePath(surface.route)}`)
+    .sort();
+  const actual = registry.declarations
+    .filter((route) => route.kind === 'page')
+    .map((route) => `${route.id}:${normalizeRoutePath(route.pattern)}`)
+    .sort();
+  if (actual.length !== expected.length || actual.some((entry, index) => entry !== expected[index])) {
+    throw new Error(`Frontend page registry must contain only the eight canonical surfaces. Expected ${expected.join(', ')}; received ${actual.join(', ')}`);
   }
 }
 
@@ -182,6 +183,7 @@ export function createApplicationRouteRegistry(
   for (const route of registry.declarations as readonly ApplicationRouteDeclaration[]) {
     validateApplicationDeclaration(route);
   }
+  validateCanonicalFrontendPages(registry);
   return registry;
 }
 
