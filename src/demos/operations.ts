@@ -20,7 +20,7 @@ function viewHref(view: OperationsView): string {
 function operationsViewNavigation(active: OperationsView): string {
   return `<div class="operations-navigation"><nav class="section-nav" aria-label="Operations views">${operationsViews.map((view) =>
     `<a href="${viewHref(view)}"${view === active ? ' aria-current="page"' : ''}>${viewLabels[view]}</a>`).join('')}</nav>
-  <details class="machine-endpoints"><summary>Machine endpoints</summary><nav class="link-row" aria-label="Operations machine endpoints"><a href="/health">/health</a><a href="/version">/version</a><a href="/__api/operations/logs">/__api/operations/logs</a><a href="/__api/operations/cloudflare-usage">/__api/operations/cloudflare-usage</a></nav></details></div>`;
+  <details class="machine-endpoints"><summary>Machine endpoints</summary><nav class="link-row" aria-label="Operations machine endpoints"><a href="/api/operations/health">/api/operations/health</a><a href="/api/operations/version">/api/operations/version</a><a href="/api/operations/logs">/api/operations/logs</a><a href="/api/operations/usage">/api/operations/usage</a></nav></details></div>`;
 }
 
 function parseView(request: Request): OperationsView | null {

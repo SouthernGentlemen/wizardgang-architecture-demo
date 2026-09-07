@@ -88,7 +88,7 @@ describe('consolidated assurance surface', () => {
     expect(html).toContain('option value="security" selected');
     expect(html).toContain('name="view" value="risks"');
     expect(html).not.toContain('/assurance?view=risks?');
-    expect(html).toContain('/v1/assurance/risks?framework=security&amp;residual=high');
+    expect(html).toContain('/api/reporting/risks?framework=security&amp;residual=high');
   });
 
   it('returns normal 404s for every retired HTML pathname', async () => {
@@ -107,10 +107,9 @@ describe('consolidated assurance surface', () => {
     expect(patterns).toContain('/security');
     expect(patterns).toContain('/__api/git/demo');
     expect(patterns).toContain('/__api/governance/security-controls');
-    expect(patterns).toContain('/v1/assurance/evidence');
-    expect(patterns).toContain('/v1/assurance/compliance');
-    expect(patterns).toContain('/v1/assurance/risks');
-    expect(patterns).toContain('/v1/assurance/incidents');
+    expect(patterns).toContain('/api/reporting');
+    expect(patterns).toContain('/api/reporting/:collection');
+    expect(patterns).toContain('/api/reporting/:collection/:recordId');
     for (const path of retiredPaths) expect(patterns).not.toContain(path);
 
     const sitemap = await sitemapResponse(new Request('https://demo.wizardgang.ai/sitemap.xml')).text();

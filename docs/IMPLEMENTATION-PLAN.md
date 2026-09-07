@@ -39,8 +39,8 @@ The v0.1.0 baseline completed the publication path below. Every later release re
 3. Create `demo-blob`, the R2 buckets, and Worker secrets; bind the reviewed resource identifiers.
 4. Configure Cloudflare Access for `/admin` where available and configure `demo.wizardgang.ai`.
 5. Tag the reviewed commit with semantic versioning and publish a GitHub Release.
-6. Run the tag-only deploy workflow and verify `/version`, `/health`, and the dashboard.
+6. Run the tag-only deploy workflow and verify `/api/operations/version`, `/api/operations/health`, and the operations surface.
 
-Outside a tagged production deployment, `/version` intentionally reports development or missing commit metadata and the traceability API reports unavailable release evidence as `not-supplied`.
+Outside a tagged production deployment, `/api/operations/version` intentionally reports development or missing commit metadata and the traceability API reports unavailable release evidence as `not-supplied`.
 
 No route or document claims WCAG, ISO/IEC 27001, or ISO/IEC 42001 certification.

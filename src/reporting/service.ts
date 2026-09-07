@@ -56,12 +56,13 @@ export interface ReportingQueryOptions {
   searchParams?: URLSearchParams;
   limit?: number;
   cursor?: string | null;
+  repository?: string;
   usage?: CloudflareUsageSnapshot;
 }
 
 const STRUCTURED_SOURCE_ID = 'github.structured-records';
 const DEFAULT_LIMIT = 10;
-const MAX_LIMIT = 50;
+const MAX_LIMIT = 100;
 
 export function canReadPrivateReporting(principal: Principal | null | undefined): boolean {
   return Boolean(
@@ -367,6 +368,7 @@ async function queryProvider(
   if (source.provider === 'github') {
     try {
       const outcome = await queryGitHubReportingPage(env, principal, {
+        ...(options.repository ? { repository: options.repository } : {}),
         sourceIds: [source.id],
         limit,
         cursor: options.cursor ?? null,

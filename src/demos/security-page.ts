@@ -70,7 +70,7 @@ export function renderSecurity(env: Env): Response {
       { label: 'Advisory dataset', href: sourceUrl(env, assuranceDatasetSource('advisories')) },
       { label: 'Advisory schema', href: sourceUrl(env, assuranceDatasetSchema('advisories')) },
       { label: 'Canonical assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
-      { label: 'Current assurance API contract', href: sourceUrl(env, 'src/api/assurance.ts') },
+      { label: 'Canonical reporting API', href: sourceUrl(env, 'src/api/reporting.ts') },
       { label: 'Publication policy', href: sourceUrl(env, 'src/assurance/publication-policy.js') },
     ])}</div>
   </section>

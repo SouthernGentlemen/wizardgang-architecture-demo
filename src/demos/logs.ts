@@ -18,7 +18,7 @@ const demo: DemoDefinition = {
     'Log retention and query limits are intentionally bounded for a public demo'
   ],
   status: 'working',
-  interfaces: [{ method: 'GET', path: '/__api/operations/logs', description: 'Read bounded, sanitized log rows as JSON.' }],
+  interfaces: [{ method: 'GET', path: '/api/operations/logs', description: 'Read bounded, sanitized log rows as JSON.' }],
   supportingSources: [{ label: 'View redaction tests', path: 'tests/logs.test.ts' }]
 };
 
@@ -97,7 +97,7 @@ ${operationsNavigation('/dashboard/logs')}
       <tbody>${rows || '<tr><td colspan="8">No logs have been recorded yet.</td></tr>'}</tbody>
     </table>
   </div>
-  <p><a href="/__api/operations/logs?limit=${limit}${level ? `&level=${encodeURIComponent(level)}` : ''}${source ? `&source=${encodeURIComponent(source)}` : ''}${requestId ? `&requestId=${encodeURIComponent(requestId)}` : ''}">View JSON</a></p>
+  <p><a href="/api/operations/logs?limit=${limit}${level ? `&level=${encodeURIComponent(level)}` : ''}${source ? `&source=${encodeURIComponent(source)}` : ''}${requestId ? `&requestId=${encodeURIComponent(requestId)}` : ''}">View JSON</a></p>
 </section>`;
 
   return shell(env, demo.title, body, { cacheControl: 'no-store', activeRoute: '/dashboard/logs' });

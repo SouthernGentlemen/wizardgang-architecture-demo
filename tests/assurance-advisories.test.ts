@@ -27,7 +27,7 @@ describe('published security advisory assurance', () => {
 
   it('publishes the current common advisory record collection without private report state', async () => {
     const records = listPublishedAssuranceRecords('advisories');
-    const response = await assuranceAdvisoriesResponse(new Request('https://demo.wizardgang.ai/v1/assurance/advisories'));
+    const response = await assuranceAdvisoriesResponse(new Request('https://demo.wizardgang.ai/api/reporting/advisories'));
     expect(response.status).toBe(200);
     expect(response.headers.get('content-type')).toContain('application/json');
     expect(response.headers.get('cache-control')).toContain('max-age=300');
@@ -43,7 +43,7 @@ describe('published security advisory assurance', () => {
     expect(body.qualifications.advisories).toBe(advisoryQualification);
     expect(JSON.stringify(body)).not.toMatch(unsafePublicAdvisoryFields);
 
-    const rejected = await assuranceAdvisoriesResponse(new Request('https://demo.wizardgang.ai/v1/assurance/advisories', { method: 'POST' }));
+    const rejected = await assuranceAdvisoriesResponse(new Request('https://demo.wizardgang.ai/api/reporting/advisories', { method: 'POST' }));
     expect(rejected.status).toBe(405);
     expect(rejected.headers.get('allow')).toBe('GET');
   });
@@ -55,7 +55,7 @@ describe('published security advisory assurance', () => {
     expect(html).toContain('id="disclosure-lifecycle"');
     expect(html).toContain('Private report → triage → GHSA → fix/release → eligible CVE → public advisory');
     expect(html).toContain('id="published-advisories"');
-    expect(html).toContain('/v1/assurance/advisories');
+    expect(html).toContain('/api/reporting/security');
     expect(html).toContain('INC-*');
 
     if (records.length === 0) {

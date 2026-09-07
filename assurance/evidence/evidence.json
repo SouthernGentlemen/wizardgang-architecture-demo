@@ -86,24 +86,24 @@
       "relationships": []
     },
     {
-      "id": "EVD-RUN-001",
+      "id": "EVD-RUN-009",
       "kind": "live-route",
       "title": "Runtime health",
       "description": "Current Worker and dependency health observation.",
       "locator": {
-        "route": "/health"
+        "route": "/api/operations/health"
       },
       "freshnessPolicy": "observation-bound",
       "visibility": "public",
       "relationships": []
     },
     {
-      "id": "EVD-RUN-002",
+      "id": "EVD-RUN-010",
       "kind": "live-route",
       "title": "Deployed version identity",
       "description": "Current deployed semantic version and exact source commit.",
       "locator": {
-        "route": "/version"
+        "route": "/api/operations/version"
       },
       "freshnessPolicy": "observation-bound",
       "visibility": "public",

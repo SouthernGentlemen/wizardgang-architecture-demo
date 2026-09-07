@@ -48,7 +48,7 @@ const serverPath = (() => {
     return '';
   }
 })();
-if (serverPath !== '/v1') fail('OpenAPI server URL must expose the stable /v1 base path');
+if (serverPath !== '/') fail('OpenAPI server URL must use the application root; documented paths own their complete runtime URL.');
 if (!openapi.components?.securitySchemes?.BearerToken) fail('BearerToken security scheme is missing');
 if (openapi.components?.['x-assurance-query-responses']) {
   fail('OpenAPI must not reuse a Responses Object through components.x-assurance-query-responses');
@@ -67,7 +67,7 @@ try {
 
 let operationCount = 0;
 for (const [path, pathItem] of Object.entries(openapi.paths ?? {})) {
-  if (!path.startsWith('/')) fail(`OpenAPI path must be relative to the /v1 server: ${path}`);
+  if (!path.startsWith('/')) fail(`OpenAPI path must be an absolute application path: ${path}`);
   for (const [method, operation] of Object.entries(pathItem ?? {})) {
     if (!HTTP_METHODS.has(method.toLowerCase())) continue;
     operationCount += 1;

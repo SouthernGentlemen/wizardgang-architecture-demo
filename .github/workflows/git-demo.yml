@@ -142,7 +142,7 @@ jobs:
             echo
             echo "- Pull-request CI validates routes, controlled history, lint, types, tests, contracts, localization, security, migrations, dependencies, the Worker build, and commit-bound evidence."
             echo "- Release automation reproduces the annotated tag before deployment."
-            echo "- Deployment automation verifies /version and /health against the exact tag commit."
+            echo "- Deployment automation verifies /api/operations/version and /api/operations/health against the exact tag commit."
             echo
             echo "## Deployment"
             echo

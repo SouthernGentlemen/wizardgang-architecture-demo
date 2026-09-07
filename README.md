@@ -53,8 +53,8 @@ There is no client-side router. View changes are normal links to server-rendered
 
 /admin       protected D1-backed demo control
 /offline     public maintenance page
-/health      machine-readable dependency health
-/version     machine-readable release/source identity
+/api/operations/health      machine-readable dependency health
+/api/operations/version     machine-readable release/source identity
 /robots.txt  dynamic ChatGPT crawler policy
 ```
 

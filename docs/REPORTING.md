@@ -1,161 +1,164 @@
-# Authoritative Reporting Contracts
+# Reporting architecture
 
-## Purpose
+Reporting is a shared application capability, not a family of resource-specific HTTP handlers. The reporting registry describes source ownership and disclosure; the reporting service owns query normalization, pagination, presentation inputs, exports, and provider integration; the canonical HTTP boundary is `/api/reporting`.
 
-Reporting is a projection and provider-integration layer, not a second system of record. Every reportable fact has one authoritative source. Structured assurance records remain Git-controlled JSON in this repository, native GitHub concerns remain native GitHub objects, and Cloudflare operational facts remain native observations.
+## Canonical HTTP contract
 
-The common contract is `contracts/assurance/reporting.schema.json`. All source declarations live in the existing `assurance/registry.json`; there is no second reporting registry.
+| Route | Methods | Meaning |
+|---|---|---|
+| `/api/reporting` | `GET`, `OPTIONS` | Discover reporting collections visible to the caller. |
+| `/api/reporting/{collection}` | `GET`, `OPTIONS` | Query one collection with the source's declared filters, signed cursors, and export behavior. |
+| `/api/reporting/{collection}/{id}` | `GET`, `PATCH`, `OPTIONS` | Read one record or perform an authorized update where the source is writable. |
 
-## Authority model
+There is one active reporting URL family. Retired assurance- and Git-specific API paths are not aliases and are not redirected.
 
-| Domain | Authoritative source | Rule |
-| --- | --- | --- |
-| Evidence | GitHub structured assurance records | Registered evidence JSON owns assurance evidence facts. |
-| Internal reports | `github.retained-reports` | Schema-valid CI and assurance-monitor reports are retained once on the `assurance-reports` Git branch; the 30-day Actions artifact is transport/recovery only. |
-| Issues / corrective actions | Native GitHub issues | Repository + issue number is identity; GitHub `updated_at` is revision. Configured labels may select corrective-action concerns without copying them into a register. |
-| Delivery evidence | Native GitHub repository objects | Repository, branch, commit, pull request, Actions run/attempt/artifact, tag, release, and branch-protection objects remain provider-owned. |
-| Security findings | Native protected GitHub security objects | Code scanning, secret scanning, Dependabot, and repository security advisories remain provider-owned and protected. |
-| Private vulnerability reporting | Native GitHub repository security advisories | Private vulnerability reports stay on GitHub's repository-security-advisory workflow. They are never converted into public issues. |
-| Risks / public advisories | GitHub structured assurance records | Registered domain JSON remains authoritative for public assurance facts. |
-| Governance registers | `governance.records` structured partitions | Reportable table facts live in registry-declared JSON and Markdown tables are deterministic views; policy prose and professional judgment remain authored in Markdown. |
-| Operations | Native Cloudflare observations | Cloudflare owns native operational observations. |
+## Layers
 
-## Registered GitHub provider sources
+### Registry
 
-`assurance/registry.json` declares the GitHub native object types. Runtime repository bindings are configuration, not canonical data. The provider binds each selected source to an authorized repository at request time and preserves the repository scope in every returned identity.
+`src/reporting/registry.ts` is the reporting ownership contract. It binds a reporting domain to a source, optional assurance resource, visibility, supported filters, and provider requirements.
 
-Public source types include repositories, branches, commits, issues, pull requests, workflow runs, workflow attempts, workflow artifacts, tags, releases, configured-branch protection, and the `github.retained-reports` structured source. Protected source types include code-scanning alerts, secret-scanning alerts, Dependabot alerts, and repository security advisories.
+Registry metadata answers questions such as:
 
-Source objects advertise only capabilities the provider adapter actually supports. GitHub issues advertise `import` because update-only issue writes are implemented. Other native objects do not advertise import. Protected security sources remain read/query/export only and `privateIngestion` remains disabled.
+- Which collections exist?
+- Which source owns each collection?
+- Is the collection public or private?
+- Which filters are valid?
+- Does the source require a repository selector?
+- Is provider-backed mutation supported?
 
-## Native identity and revisions
+HTTP paths are not duplicated in the reporting registry. The application route registry owns URL topology.
 
-The provider does not allocate report IDs that compete with GitHub. The required reporting `id` is a deterministic serialization of the registered source identity, while the response also preserves the source-native identifier, repository, timestamps, URLs, provider status/state, revision components, and the native provider payload. Missing required native identity or revision components qualify the source as partial instead of creating fallback identity.
+### Query service
 
-Examples:
+`src/reporting/service.ts` is the common query boundary used by APIs and server-rendered reporting views. It provides:
 
-- issue: repository + issue number, revised by `updated_at`;
-- pull request: repository + PR number, revised by head SHA and `updated_at`;
-- workflow run: repository + run ID, revised by attempt number and `updated_at`;
-- workflow attempt: repository + run ID + attempt number, revised by `updated_at`;
-- artifact: repository + artifact ID, revised by update/expiration metadata;
-- release: repository + release ID, revised by update time/tag;
-- branch protection: repository + configured branch, revised by that branch's commit SHA;
-- repository security advisory: repository + GHSA ID, revised by `updated_at`.
+- disclosure-safe collection inventory;
+- normalized structured-record queries;
+- provider-backed queries;
+- exact record lookup;
+- filter validation;
+- signed cursor pagination;
+- export production;
+- source-specific update integration;
+- normalized result metadata for presentation.
 
-Relationships are identities, not copied register rows. For example, an artifact can point to its producing workflow run, an attempt can point to its run, a pull request can point to its head commit, and a release can point to its tag.
+Consumers should call this service instead of importing datasets or provider clients directly.
 
-## Retained report production
+### Disclosure
 
-`.github/workflows/report-publisher.yml` runs only after completion of the approved `CI` or `Assurance Monitor` workflows on the trusted default branch. It checks out publisher code from the default branch—not the producer revision or pull-request checkout—and queries the GitHub run/job/step APIs directly. CI push runs are accepted only for the `push` event; assurance-monitor runs are accepted only for `schedule` or `workflow_dispatch`. A repository mismatch, unapproved producer/event, non-default branch, incomplete run, invalid provenance, incomplete job pagination, or schema-invalid report fails publication.
+`src/reporting/disclosure.ts` applies the caller's principal and source visibility before data crosses a presentation or HTTP boundary. Private data must never become visible merely because a collection or provider can technically return it.
 
-Provider conclusions map without reinterpretation: `success` is `passed`; `failure`, `timed_out`, `action_required`, and `startup_failure` are `failed`; `cancelled` is `cancelled`; `skipped` is `skipped`; and any other or unfinished outcome is `incomplete`. A completed run with zero observed jobs remains representable and explicitly says that no check execution was inferred.
+Public entry points can therefore remain discoverable while private collection membership and private fields stay protected.
 
-The publisher writes each run attempt once to `reports/YYYY/MM/<family>-<run>-attempt-<attempt>.json` on the `assurance-reports` branch. That Git history is the durable authority with a minimum 400-day retention policy and controlled-change deletion. Its 30-day Actions artifact is not a second report authority. If GitHub repository Actions settings do not grant `GITHUB_TOKEN` write authority, the publisher fails at the branch push and the setting must be corrected; no Worker token, D1 copy, external storage, or invented credential is used as a fallback.
+### Pagination
 
-## Query and export behavior
+`src/reporting/pagination.ts` is the only cursor contract. Cursors are signed and bound to normalized query state. The same cursor cannot be replayed against a different collection or filter set.
 
-The existing `/__api/git/evidence` route returns the current shared reporting `queryResult`; the legacy `GitHubEvidence`, `EvidenceCard`, `cards`, and `controls` response model is not supported in parallel.
+See `docs/REPORTING-CURSORS.md` for the cursor envelope and validation rules.
 
-GET accepts:
+### Presentation
 
-- `repository` — one configured repository binding; omitted uses the first configured binding;
-- `source` — one or more registered source IDs, repeatable or comma-separated;
-- `mode=sample|export` — `sample` is intended for dashboards, `export` follows provider pagination;
-- `limit=1..100` — per-source dashboard page size.
+`src/reporting/presentation.ts` and `src/reporting/html.ts` normalize reporting results for the public UI. `/assurance` and operations reporting views consume the same service result instead of reconstructing resource-specific tables or pagination rules.
 
-A sample request fetches one provider page and marks the source `partial` when GitHub reports a next page. A sample is therefore never described as a complete export. `mode=export` follows provider pagination until the source is complete or the configured hard page bound is reached. If the hard bound is reached, the result remains explicit `partial` with a provider cursor qualification.
+## Structured assurance collections
 
-The common schema-defined provider availability vocabulary is `available`, `partial`, `unavailable`, `rate-limited`, `stale`, and `expired`. `stale` means an authoritative observation is retained but its freshness window has elapsed; it is not counted as currently available. `expired` is reserved for provider resources that are themselves expired, such as an expired GitHub Actions artifact. `empty` and `unconfigured` are presentation states derived from an available zero-record result or an unavailable source with explicit configuration qualification; they are not provider availability values. A missing or inaccessible `assurance-reports` branch is `unavailable`, while an existing branch with no report files is an available empty source. Upstream error bodies are not returned to clients.
+Registry-backed assurance records are exposed through reporting collections when their resource metadata allows reporting. Canonical record identity, lifecycle, publication state, schema validation, relationships, and disclosure remain owned by the assurance model.
 
-`query.pagination.total` and `derived.totalAvailable` are the number of native objects actually observed by the bounded query. When a source is partial, its qualification says so; those numbers must not be interpreted as an authoritative global total.
+Examples include evidence, compliance, risks, incidents, advisories, claims, objectives, and governance records. The reporting API projects those records; it does not create a second source of truth.
 
-## Configuration
+Structured collection responses retain the canonical assurance reporting schema and runtime validation path.
 
-The existing `GITHUB_REPO_URL` and `GITHUB_BRANCH` remain the default repository binding so the functioning Git demo requires no duplicate repository configuration.
+## Provider-backed collections
 
-Optional `GITHUB_REPORTING_BINDINGS` is a JSON array for explicit multi-repository/source bindings. Each entry accepts:
+Provider-backed sources, including GitHub reporting, enter through the same collection and record routes. A provider adapter normalizes native records into the reporting contract and applies source-specific query requirements.
 
-```json
-{
-  "repository": "owner/repository",
-  "branch": "main",
-  "sources": ["github.issues", "github.workflow-runs"],
-  "issueLabels": ["corrective-action"]
-}
-```
+Provider records may expose a stable native identifier alongside their reporting identifier. Exact record reads use the identity declared by that adapter.
 
-Bindings are fail-closed: invalid repositories, duplicate repository entries, unregistered source IDs, or a request for a source excluded by the binding produce precise configuration errors. The application never invents or creates a private repository to satisfy reporting.
+Private provider fields remain private even when the provider collection itself is discoverable.
 
-`GITHUB_REPORTING_MAX_PAGES` bounds `mode=export` provider pagination. The implementation clamps it to a safe maximum.
+## Authorized record updates
 
-## Access controls
-
-A server-side provider credential establishes the Worker's ability to query a source; it does not establish the visitor's right to receive that source.
-
-Public repositories and public source types are probed without a credential. If that probe indicates a private repository, private content is not fetched until the current application principal has `reporting:private`. Protected security source types require `reporting:private` even when the repository itself is public.
-
-`reporting:private` is granted only to a validated, revocable application identity normalized to the `operator` role. Viewer identities and the legacy static demo API token do not receive it. Protected HTTP responses are `private, no-store` and vary on `Authorization, Cookie`.
-
-### Read credential
-
-`GITHUB_READ_TOKEN` is optional for public-only reporting. Configure it as a dedicated, repository-scoped fine-grained credential when a bound repository is private or a protected GitHub security source is enabled. Grant only the native read permissions required by the configured sources, for example:
-
-- Metadata / Contents / Pull requests: read for repository/commit/PR evidence as applicable;
-- Actions: read for workflow runs, attempts, and artifacts;
-- Issues: read for issue/corrective-action reporting;
-- code scanning / secret scanning / Dependabot / repository security advisory read permissions for protected security sources;
-- Administration: read only if branch-protection retrieval is required.
-
-Do not expose the token in browser payloads, logs, registry JSON, fixtures, or report objects.
-
-## Supported source writes
-
-Native provider writes use the same registered source capability model. POST `/__api/git/evidence` requires an operator principal with `reporting:write` and a dedicated server-side `GITHUB_REPORTING_WRITE_TOKEN`.
-
-The current supported native operation is **update an existing GitHub issue**. The request supplies the registered source, configured repository, `operation: "update"`, native issue number, expected native revision, and fields.
-
-Allowed issue fields are `title`, `body`, `state`, `labels`, `assignees`, and `milestone`. Unknown fields are rejected rather than ignored. The adapter fetches the current issue and requires its `updated_at` revision to match the request before PATCH, preventing stale writes. Create, delete, repository creation, release creation, advisory creation, and security-object conversion are unsupported and rejected.
-
-The live Git demo credential is not reused for reporting writes. `GITHUB_REPORTING_WRITE_TOKEN` should be a separate fine-grained credential with only Issues: write for the configured repository. If it is not configured, the write path returns `github_write_credential_missing`; validation does not create resources or credentials.
-
-Structured-record import/export remains the repository CLI introduced by DEMO-157:
+Writable provider records are updated on the canonical record resource:
 
 ```text
-npm run assurance:interchange -- export [--output <file>]
-npm run assurance:interchange -- import --input <file> [--dry-run]
+PATCH /api/reporting/{collection}/{id}
 ```
 
-That CLI continues to own Git-controlled structured records. Native provider writes occur through the provider adapter and are never rewritten into the structured assurance register.
+Mutation requires `reporting:write` and a source that explicitly supports updates. The request boundary validates the payload and requires the source's revision token when applicable. The provider adapter performs the revision-checked mutation and returns the normalized updated record.
 
-## Git demo migration
+A source that is read-only through reporting rejects mutation rather than exposing a separate import or compatibility route.
 
-`/assurance?view=delivery` retains the functioning live branch/commit/PR/CI/release demonstration. Its source-of-truth evidence panel consumes the shared reporting query contract directly. It groups returned native records and canonical retained reports by registered source ID and displays completeness/availability from the contract. It does not reconstruct an independent issue, finding, report, or evidence-card state model.
+## Filters
 
-## Test boundaries
+Filter vocabulary is source metadata, not route-specific code. The API validates requested filter names against the collection declaration before querying.
 
-Fixtures cover:
+Structured assurance filters continue to use canonical names such as `status`, `lifecycle`, `framework`, `level`, `residual`, and source-declared relationship filters. Provider collections expose their own normalized filter set.
 
-- native identity and revision preservation;
-- duplicate native identities across provider pages;
-- bounded sample vs complete export pagination;
-- open/closed issue status without reinterpretation;
-- unavailable, rate-limited, stale, and provider-expired states;
-- Actions run/artifact relationships;
-- retained-report branch discovery, report relationships, and missing-source versus empty-source behavior;
-- successful, failed, skipped, cancelled, zero-job, incomplete, and rejected report production;
-- protected repository-security-advisory access without issue conversion;
-- public/private repository isolation;
-- update-only issue writes, unsupported fields/operations, stale revisions, and missing write credentials.
+Unsupported filters fail explicitly. Consumers must not silently drop unknown filters or translate legacy names.
 
-Live provider reads are permitted only when the deployment already has the required source configuration and authorization. CI fixture success is tested code; it is not evidence that a protected live GitHub integration is configured.
+## Cursors
 
-## Rollback
+Collection queries accept:
 
-Rollback of the native provider integration remains one controlled revert of DEMO-158. Rollback of retained reports and governance projections is one controlled revert of DEMO-159; do not operate the retired validation-artifact producer or independently edited Markdown state in parallel with the canonical sources.
+- `limit` for bounded page size;
+- `cursor` for the signed continuation state.
 
-Reverting publisher code does not delete already retained reports. Any deletion from `assurance-reports` is a separate controlled change so durable evidence is not silently erased.
+The response exposes the next cursor only when another page exists. Cursor signing, verification, query fingerprinting, and provider continuation state are handled by the shared pagination module.
 
-If rollback occurs after a permitted native issue update, reverting application code does **not** revert that provider-side issue change. Provider writes are separately auditable GitHub operations and must be reversed in GitHub through an authorized corrective update if required.
+## Exports
 
-No release or deployment is part of this reporting refactor series.
+`export=1` uses the same normalized query and disclosure boundary as a JSON read. Exporting never broadens disclosure and never bypasses filters or cursor validation.
+
+Provider-backed exports and structured assurance exports are normalized by the reporting service so consumers do not implement their own export path families.
+
+## Authorization
+
+The canonical reporting routes use policy-based authorization:
+
+- readable public reporting uses the ordinary read principal;
+- private disclosure requires `reporting:private`;
+- mutation requires `reporting:write`;
+- provider-specific authorization is still enforced after the common policy decision.
+
+Authorization is evaluated independently from publication/disclosure. Possessing provider access does not automatically make a private record public.
+
+## HTTP response policy
+
+Reporting responses own their cache policy because it depends on source and principal:
+
+- public structured assurance responses can retain public caching and ETags;
+- public provider results use their bounded public cache policy;
+- authenticated or private responses are private and `no-store`;
+- CORS and OPTIONS behavior remain available for supported methods;
+- conditional requests continue to use the canonical ETag behavior.
+
+The application router uses `cache: response` for reporting routes so it does not overwrite these response-specific headers.
+
+## Runtime validation
+
+Structured records are checked against the canonical assurance/reporting contract before serialization. Provider payloads are normalized and boundary-validated before they are returned.
+
+The principal contract files are:
+
+- `contracts/assurance/reporting.schema.json`
+- `contracts/assurance/registry.schema.json`
+- `src/reporting/contracts.ts`
+- `src/reporting/service.ts`
+- `src/api/reporting.ts`
+
+## OpenAPI
+
+The active OpenAPI 3.1 document is served from `/api/openapi.json`. Every documented operation declares `x-route-id`, and contract tests verify that the referenced route ID owns the documented method and path in the application registry.
+
+## Consumer guidance
+
+New reporting consumers should:
+
+1. register or reuse a reporting collection;
+2. query through `src/reporting/service.ts`;
+3. present through the shared presentation layer when rendering HTML;
+4. use `/api/reporting` for HTTP access;
+5. preserve disclosure, cursor, export, schema, and cache behavior rather than recreating them locally.
+
+A compatible new reporting source should not require a new top-level API family or changes to the central router.

@@ -4,7 +4,7 @@ import { defineInterfaceIdentityCapability, interfaceIdentityRoute } from '../ro
 export const restRouteCapability = defineInterfaceIdentityCapability('interfaces.rest', [
   interfaceIdentityRoute({
     id: 'interfaces.openapi.json',
-    pattern: '/v1/openapi.json',
+    pattern: '/api/openapi.json',
     methods: ['GET'],
     kind: 'api',
     handler: (request) => openApiResponse(request),

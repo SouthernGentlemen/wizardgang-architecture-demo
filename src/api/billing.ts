@@ -23,7 +23,7 @@ export async function billingScenarioResponse(request: Request, env: Env): Promi
     ).bind('architecture-demo', 'synthetic-worker-requests', quantity, 'requests', cost, budget, capturedAt).run();
     const state = budgetState(cost, budget);
     const event = await recordDemoEvent(env, 'billing', 'synthetic_budget_changed', { scenario, state, percent: ratio * 100 });
-    await recordApplicationLog(env, { level: state === 'degraded' ? 'warn' : 'info', source: 'billing', eventKey: 'synthetic_budget_changed', message: `Synthetic budget state changed to ${state}.`, route: '/__api/operations/billing', detail: { scenario, state, percent: ratio * 100, eventId: event.id } });
+    await recordApplicationLog(env, { level: state === 'degraded' ? 'warn' : 'info', source: 'billing', eventKey: 'synthetic_budget_changed', message: `Synthetic budget state changed to ${state}.`, route: '/api/operations/budget', detail: { scenario, state, percent: ratio * 100, eventId: event.id } });
     return json({ synthetic: true, state, estimatedCostUsd: cost, budgetUsd: budget, percent: ratio * 100, optionalWorkerCompute: state === 'degraded' ? 'paused' : 'available', capturedAt, auditEventId: event.id }, { headers: { 'cache-control': 'no-store' } });
   } catch (error) {
     return errorResponse(error);

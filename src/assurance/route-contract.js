@@ -4,22 +4,21 @@ import {
   resolveAssuranceResourceOwner,
 } from './record-discovery.js';
 
-function indexedDataset(registry, kind) {
+function rootDataset(registry, kind) {
   const matches = (registry?.datasets ?? []).filter(
-    (dataset) => dataset?.kind === kind && dataset?.role === 'dataset' && dataset?.capabilities?.includes('api-index'),
+    (dataset) => dataset?.kind === kind && dataset?.role === 'dataset',
   );
   if (matches.length === 0) return null;
   if (matches.length !== 1) {
-    throw new Error(`assurance route contract expected exactly one indexed ${kind} dataset; found ${matches.length}`);
+    throw new Error(`assurance route contract expected exactly one ${kind} root dataset; found ${matches.length}`);
   }
   return matches[0];
 }
 
 export function assuranceRouteOwnerResource(registry, kind) {
-  const indexed = indexedDataset(registry, kind);
-  if (!indexed) return null;
-  const owner = resolveAssuranceResourceOwner(registry, indexed, 'routeOwner');
-  return owner?.routes ? owner : null;
+  const dataset = rootDataset(registry, kind);
+  if (!dataset) return null;
+  return resolveAssuranceResourceOwner(registry, dataset, 'routeOwner') ?? dataset;
 }
 
 export function assuranceRoutesForDataset(registry, kind) {
@@ -34,9 +33,9 @@ export function assuranceRouteDeclarations(registry) {
 
   const seenOwners = new Set();
   for (const dataset of registry?.datasets ?? []) {
-    if (!dataset?.capabilities?.includes('api-index')) continue;
+    if (dataset?.role !== 'dataset') continue;
     const owner = assuranceRouteOwnerResource(registry, dataset.kind);
-    if (!owner || seenOwners.has(owner.id)) continue;
+    if (!owner?.routes || seenOwners.has(owner.id)) continue;
     seenOwners.add(owner.id);
     declarations.push({ owner: owner.kind, ownerId: owner.id, routes: owner.routes });
   }
@@ -60,78 +59,25 @@ export function assuranceAnchor(recordId) {
 }
 
 export function assuranceRecordUrls(registry, kind, recordId) {
-  const routes = assuranceRoutesForDataset(registry, kind);
-  if (!routes) throw new Error(`${kind} has no canonical assurance route owner.`);
-  const hasRecord = recordId !== undefined;
-  const encodedId = hasRecord ? encodeURIComponent(recordId) : undefined;
+  const owner = assuranceRouteOwnerResource(registry, kind);
+  if (!owner) throw new Error(`${kind} has no canonical assurance resource owner.`);
+  const route = owner.routes?.html ?? registry?.routes?.html;
+  if (!route) return {};
   return {
-    ...(routes.html ? { html: hasRecord ? `${routes.html}#${assuranceAnchor(recordId)}` : routes.html } : {}),
-    ...(!hasRecord && routes.api ? { api: routes.api } : {}),
-    ...(hasRecord && routes.apiRecord ? { api: routes.apiRecord.replace('{id}', encodedId) } : {}),
+    html: recordId === undefined ? route : `${route}#${assuranceAnchor(recordId)}`,
   };
 }
 
-export function assuranceRegistryApiRoute(registry) {
-  const route = registry?.routes?.api;
-  if (!route) throw new Error('assurance registry is missing its canonical API route.');
-  return route;
-}
-
-function routeSegments(path) {
-  return path === '/' ? [] : path.slice(1).split('/');
-}
-
-function matchRecordTemplate(template, path) {
-  const templateSegments = routeSegments(template);
-  const pathSegments = routeSegments(path);
-  if (templateSegments.length !== pathSegments.length) return null;
-
-  let recordId;
-  for (let index = 0; index < templateSegments.length; index += 1) {
-    const templateSegment = templateSegments[index];
-    const pathSegment = pathSegments[index];
-    if (templateSegment === '{id}') {
-      if (pathSegment.length === 0) return null;
-      recordId = pathSegment;
-    } else if (templateSegment !== pathSegment) {
-      return null;
-    }
-  }
-  return recordId ?? null;
-}
-
-function recordTemplateIntersection(left, right) {
-  const leftSegments = routeSegments(left);
-  const rightSegments = routeSegments(right);
-  if (leftSegments.length !== rightSegments.length) return null;
-
-  const witness = [];
-  for (let index = 0; index < leftSegments.length; index += 1) {
-    const leftSegment = leftSegments[index];
-    const rightSegment = rightSegments[index];
-    if (leftSegment !== '{id}' && rightSegment !== '{id}' && leftSegment !== rightSegment) return null;
-    witness.push(leftSegment === '{id}' ? (rightSegment === '{id}' ? 'record-id' : rightSegment) : leftSegment);
-  }
-  return `/${witness.join('/')}`;
+export function assuranceRegistryApiRoute() {
+  return '/api/reporting';
 }
 
 export function matchAssuranceRoute(registry, path) {
   for (const alias of assuranceRouteAliases(registry)) {
     if (alias.path === path) return { owner: alias.owner, kind: 'alias', target: alias.target };
   }
-
-  const declarations = assuranceRouteDeclarations(registry);
-  for (const declaration of declarations) {
-    const routes = declaration.routes ?? {};
-    if (routes.html === path) return { owner: declaration.owner, kind: 'html' };
-    if (routes.api === path) return { owner: declaration.owner, kind: 'api-collection' };
-  }
-
-  for (const declaration of declarations) {
-    const template = declaration.routes?.apiRecord;
-    if (!template) continue;
-    const recordId = matchRecordTemplate(template, path);
-    if (recordId !== null) return { owner: declaration.owner, kind: 'api-record', recordId };
+  for (const declaration of assuranceRouteDeclarations(registry)) {
+    if (declaration.routes?.html === path) return { owner: declaration.owner, kind: 'html' };
   }
   return null;
 }
@@ -159,12 +105,6 @@ export function validateAssuranceRouteHandlerSupport(registry, support) {
     if (routes.html && !ownerSupport.html) {
       errors.push(`${declaration.ownerId} declares routes.html without an HTML handler`);
     }
-    if (routes.api && !ownerSupport.apiCollection) {
-      errors.push(`${declaration.ownerId} declares routes.api without a collection API handler`);
-    }
-    if (routes.apiRecord && !ownerSupport.apiRecord) {
-      errors.push(`${declaration.ownerId} declares routes.apiRecord without an exact-record API handler`);
-    }
   }
   return errors;
 }
@@ -174,7 +114,10 @@ export function validateAssuranceRouteContract(registry) {
   const resources = flattenAssuranceResources(registry);
   const ids = new Map(resources.map((resource) => [resource.id, resource]));
 
-  if (!registry?.routes?.api) errors.push('registry must declare routes.api');
+  if (!registry?.routes?.html) errors.push('registry must declare routes.html');
+  if (registry?.routes?.api || registry?.routes?.apiRecord) {
+    errors.push('registry cannot declare legacy assurance API routes; use /api/reporting');
+  }
 
   for (const resource of resources.filter((entry) => entry.role === 'dataset')) {
     if (resource.routes && resource.routeOwner) {
@@ -183,7 +126,9 @@ export function validateAssuranceRouteContract(registry) {
     if (resource.routeOwner) {
       const owner = assuranceResourceById(registry, resource.routeOwner);
       if (!owner) errors.push(`${resource.id} declares unknown routeOwner ${resource.routeOwner}`);
-      else if (!owner.routes) errors.push(`${resource.id} routeOwner ${resource.routeOwner} does not own routes`);
+    }
+    if (resource.routes?.api || resource.routes?.apiRecord) {
+      errors.push(`${resource.id} cannot declare legacy assurance API routes; use /api/reporting`);
     }
   }
 
@@ -196,7 +141,6 @@ export function validateAssuranceRouteContract(registry) {
   }
 
   const claimedPaths = new Map();
-  const recordTemplates = [];
   const claim = (path, label) => {
     const existing = claimedPaths.get(path);
     if (existing) errors.push(`${label} collides with ${existing} at ${path}`);
@@ -207,43 +151,16 @@ export function validateAssuranceRouteContract(registry) {
     const routes = declaration.routes ?? {};
     const resource = declaration.owner === 'registry' ? null : ids.get(declaration.ownerId);
     const capabilities = new Set(resource?.capabilities ?? []);
-    if (!routes.html && !routes.api) errors.push(`${declaration.ownerId} routes must declare html or api`);
-    for (const [name, value] of [['html', routes.html], ['api', routes.api]]) {
-      if (value === undefined) continue;
-      if (!validRoutePath(value)) errors.push(`${declaration.ownerId} routes.${name} is not a canonical route path: ${value}`);
-      else claim(value, `${declaration.ownerId} routes.${name}`);
+    if (!routes.html && (routes.aliases ?? []).length === 0) {
+      errors.push(`${declaration.ownerId} routes must declare html`);
     }
-
-    if (resource && (routes.html || routes.api || routes.apiRecord) && !capabilities.has('runtime')) {
+    if (routes.html !== undefined) {
+      if (!validRoutePath(routes.html)) errors.push(`${declaration.ownerId} routes.html is not a canonical route path: ${routes.html}`);
+      else claim(routes.html, `${declaration.ownerId} routes.html`);
+    }
+    if (resource && routes.html && !capabilities.has('runtime')) {
       errors.push(`${declaration.ownerId} route owner must declare runtime capability`);
     }
-    if (resource && routes.api && !capabilities.has('api-index')) {
-      errors.push(`${declaration.ownerId} routes.api requires api-index capability`);
-    }
-    if (resource && routes.api && !capabilities.has('records')) {
-      errors.push(`${declaration.ownerId} routes.api requires records capability`);
-    }
-
-    if (routes.apiRecord !== undefined) {
-      const markerCount = routes.apiRecord.split('{id}').length - 1;
-      const placeholderSegments = validRoutePath(routes.apiRecord) ? routeSegments(routes.apiRecord).filter((segment) => segment === '{id}').length : 0;
-      const validTemplate = validRoutePath(routes.apiRecord.replace('{id}', 'record-id'))
-        && markerCount === 1
-        && placeholderSegments === 1;
-      if (!validTemplate) {
-        errors.push(`${declaration.ownerId} routes.apiRecord must contain exactly one {id} path-segment placeholder`);
-      } else {
-        recordTemplates.push({ path: routes.apiRecord, label: `${declaration.ownerId} routes.apiRecord` });
-      }
-      if (!routes.api) errors.push(`${declaration.ownerId} routes.apiRecord requires routes.api`);
-      else if (!routes.apiRecord.startsWith(`${routes.api}/`)) {
-        errors.push(`${declaration.ownerId} routes.apiRecord must be nested beneath routes.api`);
-      }
-      if (resource && !capabilities.has('records')) {
-        errors.push(`${declaration.ownerId} routes.apiRecord requires records capability`);
-      }
-    }
-
     if ((routes.aliases ?? []).length > 0 && !routes.html) {
       errors.push(`${declaration.ownerId} HTML aliases require routes.html`);
     }
@@ -253,15 +170,6 @@ export function validateAssuranceRouteContract(registry) {
       if (alias.fragment !== undefined && (typeof alias.fragment !== 'string' || alias.fragment.length === 0 || alias.fragment.includes('#'))) {
         errors.push(`${declaration.ownerId} alias fragment must be a non-empty fragment id without #`);
       }
-    }
-  }
-
-  for (let leftIndex = 0; leftIndex < recordTemplates.length; leftIndex += 1) {
-    for (let rightIndex = leftIndex + 1; rightIndex < recordTemplates.length; rightIndex += 1) {
-      const left = recordTemplates[leftIndex];
-      const right = recordTemplates[rightIndex];
-      const witness = recordTemplateIntersection(left.path, right.path);
-      if (witness) errors.push(`${left.label} intersects ${right.label} at ${witness}`);
     }
   }
 

@@ -25,7 +25,7 @@ Every `docs/releases/vX.Y.Z.md` record states the product, version, release date
 ```text
 isolated branch -> controlled commits -> pull request -> CI -> review -> merge to main
                 -> release change -> annotated tag -> reproduce -> GitHub Release
-                -> deploy exact tag -> verify /version and /health -> deployment record
+                -> deploy exact tag -> verify /api/operations/version and /api/operations/health -> deployment record
 ```
 
 Production identity comes from the immutable release tag and commit, not from an arbitrary `main` commit. A security or release defect is corrected forward with a new change ID and patch version.

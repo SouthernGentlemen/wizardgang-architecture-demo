@@ -32,9 +32,13 @@ const registeredRoutePath = (route) => {
   catch { return route; }
 };
 const requiredRoutes = [
-  '/assurance', '/security',
-  '/v1/assurance', '/v1/assurance/evidence', '/v1/assurance/risks', '/v1/assurance/incidents',
-  '/v1/assurance/advisories', '/v1/assurance/compliance', '/v1/assurance/compliance/{recordId}',
+  '/assurance',
+  '/security',
+  '/api/reporting',
+  '/api/reporting/{collection}',
+  '/api/reporting/{collection}/{recordId}',
+  '/api/operations/health',
+  '/api/operations/version',
 ];
 for (const route of requiredRoutes) if (!publicRoutes.has(route)) errors.push(`required public assurance route is missing: ${route}`);
 

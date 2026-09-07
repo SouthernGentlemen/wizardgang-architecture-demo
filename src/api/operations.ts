@@ -84,7 +84,7 @@ export async function collectHealth(env: Env, persist = true): Promise<HealthSna
         message: status === 'offline'
           ? 'Runtime checked; public demo intentionally offline.'
           : status === 'degraded' ? 'Runtime operational; one or more dependencies unavailable.' : 'Runtime dependency checks passed.',
-        route: '/health',
+        route: '/api/operations/health',
         detail: { demoState: control.state, services: snapshot.services, responseMs: snapshot.responseMs },
       });
     } catch {

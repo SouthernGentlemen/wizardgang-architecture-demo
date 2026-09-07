@@ -15,8 +15,8 @@ const demo: DemoDefinition = {
   ],
   status: 'working',
   interfaces: [
-    { method: 'GET', path: '/__api/operations/cloudflare-usage', description: 'Read the latest sanitized Cloudflare usage snapshot.' },
-    { method: 'POST', path: '/__api/operations/billing', description: 'Select normal, warning, or degraded controlled usage state.' },
+    { method: 'GET', path: '/api/operations/usage', description: 'Read the latest sanitized Cloudflare usage snapshot.' },
+    { method: 'POST', path: '/api/operations/budget', description: 'Select normal, warning, or degraded controlled usage state.' },
   ],
   supportingSources: [{ label: 'View scenario API', path: 'src/api/billing.ts' }, { label: 'View operational page', path: 'src/demos/operations-pages.ts' }, { label: 'View degradation policy', path: 'src/lib/billing.ts' }]
 };
