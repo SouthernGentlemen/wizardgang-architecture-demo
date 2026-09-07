@@ -1,10 +1,12 @@
-import platformDemo, { renderPlatform } from '../../demos/platform';
+import { renderPlatform } from '../../demos/platform';
+import { frontendSurface } from '../../demos/registry';
 import {
   NO_STORAGE,
   definePlatformLaboratoryCapability,
   noRequestBody,
 } from '../route-capability';
 
+const platformSurface = frontendSurface('platform.page');
 const tests = ['tests/platform-laboratory-routing.test.ts', 'tests/router.test.ts', 'tests/interface.test.ts'] as const;
 const docs = ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'] as const;
 
@@ -13,7 +15,7 @@ export const platformPageCapability = definePlatformLaboratoryCapability({
   routes: [
     {
       id: 'platform.page',
-      pattern: platformDemo.route,
+      pattern: platformSurface.route,
       methods: ['GET'],
       kind: 'page',
       handler: (request, env) => renderPlatform(request, env),
@@ -25,8 +27,8 @@ export const platformPageCapability = definePlatformLaboratoryCapability({
       cache: { mode: 'no-store' },
       crawler: { crawling: 'controlled', indexing: 'allow' },
       documentation: {
-        title: platformDemo.title,
-        description: platformDemo.summary,
+        title: platformSurface.title,
+        description: platformSurface.summary,
         docs,
       },
       source: {

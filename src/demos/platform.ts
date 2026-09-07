@@ -1,4 +1,5 @@
 import type { DemoDefinition, Env } from '../types';
+import { frontendSurface, frontendViewUrl } from './registry';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
 import { renderDemo, renderNotFound, shell } from '../ui/page';
@@ -13,23 +14,10 @@ import { renderR2Demo } from './r2-page';
 export const platformViews = ['edge', 'workers', 'durable-objects', 'd1', 'r2'] as const;
 export type PlatformView = (typeof platformViews)[number];
 
-const platformDemo: DemoDefinition = {
-  id: 'platform',
-  route: '/platform',
-  title: 'Cloudflare Platform',
-  group: 'Platform',
-  sourcePath: 'src/demos/platform.ts',
-  summary: 'One server-rendered surface for the edge, Worker, Durable Object, D1, and R2 architecture laboratories.',
-  proves: [
-    'Platform demonstrations share one canonical HTML route without a client-side router',
-    'Each view preserves its existing platform API and storage boundary',
-    'Deep links are ordinary query-selected server-rendered documents',
-  ],
-  status: 'working',
-};
+const platformSurface = frontendSurface('platform.page');
 
 function viewHref(view: PlatformView): string {
-  return `/platform?view=${view}`;
+  return frontendViewUrl('platform.page', view);
 }
 
 const viewDemos: Record<PlatformView, DemoDefinition> = {
@@ -40,13 +28,7 @@ const viewDemos: Record<PlatformView, DemoDefinition> = {
   r2: { ...r2Demo, route: viewHref('r2') },
 };
 
-const viewLabels: Record<PlatformView, string> = {
-  edge: 'Edge',
-  workers: 'Workers',
-  'durable-objects': 'Durable Objects',
-  d1: 'D1',
-  r2: 'R2',
-};
+const viewLabels = Object.fromEntries(platformSurface.views.map((view) => [view.id, view.label])) as Record<PlatformView, string>;
 
 function isPlatformView(value: string): value is PlatformView {
   return (platformViews as readonly string[]).includes(value);
@@ -96,13 +78,11 @@ export async function renderPlatform(request: Request, env: Env): Promise<Respon
 
   const selected = viewDemos[requestedView];
   const body = `${viewNavigation(requestedView)}
-  <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, platformDemo.sourcePath))}">Platform route source</a></div>
+  <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/platform.ts'))}">Platform route source</a></div>
   ${await renderSelectedLaboratory(env, requestedView)}`;
-  const response = shell(env, `${selected.title} · Platform`, body, {
-    activeRoute: platformDemo.route,
+  const response = shell(env, `${selected.title} · ${platformSurface.title}`, body, {
+    activeRoute: platformSurface.route,
     description: selected.summary,
   });
-  return addCanonical(response, rawView === null ? platformDemo.route : viewHref(requestedView));
+  return addCanonical(response, rawView === null ? platformSurface.route : viewHref(requestedView));
 }
-
-export default platformDemo;

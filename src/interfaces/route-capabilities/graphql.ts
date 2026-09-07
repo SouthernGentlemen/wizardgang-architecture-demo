@@ -1,6 +1,5 @@
-import graphqlDemo from '../../demos/graphql';
 import { graphqlResponse, graphqlSchemaResponse } from '../../api/graphql';
-import { graphiqlAssetResponse, localGraphiqlResponse } from '../../ui/graphiql-assets';
+import { graphiqlAssetResponse } from '../../ui/graphiql-assets';
 import { defineInterfaceIdentityCapability, interfaceIdentityRoute } from '../route-capability';
 
 function machineOnlyGraphqlRequest(request: Request): Request {
@@ -17,7 +16,7 @@ export const graphqlRouteCapability = defineInterfaceIdentityCapability('interfa
     methods: ['GET', 'POST'],
     kind: 'protocol',
     handler: (request, { env }) => graphqlResponse(machineOnlyGraphqlRequest(request), env),
-    title: graphqlDemo.title,
+    title: 'GraphQL API',
     description: 'Machine-only GraphQL protocol endpoint with bounded execution and the shared application authorization policy.',
     sourceModule: 'src/api/graphql.ts',
     sourceExport: 'graphqlResponse',
@@ -26,21 +25,7 @@ export const graphqlRouteCapability = defineInterfaceIdentityCapability('interfa
     sameOrigin: { mode: 'required', methods: ['POST'] },
     browserHtml: 'never',
     indexing: 'deny',
-    tests: ['tests/graphql.test.ts', 'tests/integration-interfaces.test.ts', 'tests/interface-consolidation.test.ts'],
-  }),
-  interfaceIdentityRoute({
-    id: 'interfaces.graphql.console',
-    pattern: '/graphql/console',
-    methods: ['GET'],
-    kind: 'page',
-    handler: (request) => localGraphiqlResponse(request),
-    title: 'GraphiQL console',
-    description: 'Locally bundled GraphiQL execution console embedded by the consolidated GraphQL interface view.',
-    sourceModule: 'src/ui/graphiql-assets.ts',
-    sourceExport: 'localGraphiqlResponse',
-    indexing: 'deny',
-    browserHtml: 'never',
-    tests: ['tests/graphql.test.ts', 'tests/interface-consolidation.test.ts'],
+    tests: ['tests/graphql.test.ts', 'tests/integration-interfaces.test.ts', 'tests/interface-consolidation.test.ts', 'tests/canonical-frontend-routes.test.ts'],
   }),
   interfaceIdentityRoute({
     id: 'interfaces.graphql.schema',
@@ -66,7 +51,7 @@ export const graphqlRouteCapability = defineInterfaceIdentityCapability('interfa
     sourceModule: 'src/ui/graphiql-assets.ts',
     sourceExport: 'graphiqlAssetResponse',
     cache: { mode: 'public', maxAgeSeconds: 31_536_000, immutable: true },
-    browserHtml: 'page',
+    browserHtml: 'never',
     tests: ['tests/graphql.test.ts'],
   }),
 ]);

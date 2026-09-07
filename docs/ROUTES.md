@@ -53,7 +53,6 @@ This file is generated from the active declarative application registry. Route I
 | `operations.security-txt` | `/.well-known/security.txt` | `GET`, `HEAD` | protocol | public | available | deny | Security contact | `src/api/security-policy.ts` |
 | `operations.admin` | `/admin` | `GET`, `POST` | page | private | available | deny | Demo administration | `src/ui/admin.ts` |
 | `interfaces.graphql.endpoint` | `/graphql` | `GET`, `POST` | protocol | public | gated | deny | GraphQL API | `src/api/graphql.ts` |
-| `interfaces.graphql.console` | `/graphql/console` | `GET` | page | public | gated | deny | GraphiQL console | `src/ui/graphiql-assets.ts` |
 | `interfaces.graphql.schema` | `/graphql/schema` | `GET` | protocol | public | gated | deny | GraphQL schema | `src/api/graphql.ts` |
 | `operations.health` | `/health` | `GET` | api | public | available | deny | Health | `src/api/operations.ts` |
 | `interfaces.identity.github.start` | `/identity/github` | `GET` | protocol | public | gated | deny | github authorization start | `src/api/identity.ts` |

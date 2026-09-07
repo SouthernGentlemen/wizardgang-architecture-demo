@@ -4,13 +4,14 @@ import { escapeHtml } from '../lib/html';
 import { renderReportingPresentation } from '../reporting/html';
 import { presentReportingQuery } from '../reporting/presentation';
 import { queryReportingCollection, reportingCollectionInventory } from '../reporting/service';
-import type { DemoDefinition, Env } from '../types';
+import type { Env } from '../types';
 import { renderNotFound, shell } from '../ui/page';
 import { renderConcerns, renderIncidents, renderRisks } from './assurance-pages';
 import { renderComplianceDemo } from './compliance-page';
 import { renderEvidenceDemo } from './evidence-page';
 import { renderGitDemo } from './git-page';
 import { renderGovernance } from './governance';
+import { frontendSurface, frontendUrl, frontendViewUrl } from './registry';
 
 export const assuranceViews = [
   'overview',
@@ -24,40 +25,11 @@ export const assuranceViews = [
 ] as const;
 export type AssuranceView = (typeof assuranceViews)[number];
 
-const assuranceDemo: DemoDefinition = {
-  id: 'assurance',
-  route: '/assurance',
-  title: 'Assurance',
-  group: 'Delivery & Governance',
-  sourcePath: 'src/demos/assurance.ts',
-  summary: 'One server-rendered assurance surface for delivery, governance, evidence, compliance, risks, incidents, and public concerns.',
-  notice: 'WCAG 2.2 / ISO 27001 / ISO 42001 references are alignment targets, not certification claims. Private vulnerability reporting remains at /security.',
-  proves: [
-    'Public assurance views share one canonical server-rendered route and shared reporting contracts',
-    'Stable assurance record fragments survive surface consolidation',
-    'Git delivery controls and public concern intake retain their existing provider-backed workflows',
-    'Private vulnerability reporting and published security advisories remain isolated on /security',
-  ],
-  status: 'working',
-  supportingSources: [
-    { label: 'Assurance guidance', path: 'docs/ASSURANCE.md' },
-    { label: 'Reporting guidance', path: 'docs/REPORTING.md' },
-    { label: 'Evidence map', path: 'docs/EVIDENCE.md' },
-    { label: 'Disclosure policy', path: 'src/reporting/disclosure.ts' },
-    { label: 'Publication policy', path: 'src/assurance/publication-policy.js' },
-  ],
-};
+const assuranceSurface = frontendSurface('assurance.wizardgang-public-assurance.html');
+const securityRoute = frontendUrl('assurance.advisories.html');
+const qualificationNotice = 'WCAG 2.2 / ISO 27001 / ISO 42001 references are alignment targets, not certification claims. Private vulnerability reporting remains at /security.';
 
-const viewLabels: Record<AssuranceView, string> = {
-  overview: 'Overview',
-  delivery: 'Delivery',
-  governance: 'Governance',
-  evidence: 'Evidence',
-  compliance: 'Compliance',
-  risks: 'Risks',
-  incidents: 'Incidents',
-  concerns: 'Concerns',
-};
+const viewLabels = Object.fromEntries(assuranceSurface.views.map((view) => [view.id, view.label])) as Record<AssuranceView, string>;
 
 const viewDescriptions: Record<AssuranceView, string> = {
   overview: 'Public assurance posture, qualifications, and inspectable record families.',
@@ -96,7 +68,7 @@ function publicPrincipal(): Principal {
 }
 
 function viewHref(view: AssuranceView): string {
-  return `/assurance?view=${view}`;
+  return frontendViewUrl('assurance.wizardgang-public-assurance.html', view);
 }
 
 function isAssuranceView(value: string): value is AssuranceView {
@@ -121,17 +93,17 @@ function viewNavigation(view: AssuranceView): string {
     <div class="section-head"><h2>Assurance views</h2><span>Server-rendered views</span></div>
     <nav class="meta" aria-label="Assurance views">
       ${assuranceViews.map((name) => `<a href="${escapeHtml(viewHref(name))}"${name === view ? ' aria-current="page"' : ''}>${escapeHtml(viewLabels[name])}</a>`).join('')}
-      <a href="/security">Security reporting</a>
+      <a href="${escapeHtml(securityRoute)}">Security reporting</a>
     </nav>
   </section>`;
 }
 
 function overviewContent(): string {
   return `<section class="page-header assurance-header">
-    <p class="eyebrow">Delivery &amp; Governance / /assurance</p>
+    <p class="eyebrow">Delivery &amp; Governance / ${escapeHtml(assuranceSurface.route)}</p>
     <h1>Public assurance, one inspectable surface.</h1>
     <p class="lede">Browse delivery, governance, evidence, compliance, risk, incident, and concern records without duplicating the canonical reporting or publication contracts behind them.</p>
-    <p class="assurance-notice"><strong>Qualification:</strong> ${escapeHtml(assuranceDemo.notice ?? '')}</p>
+    <p class="assurance-notice"><strong>Qualification:</strong> ${escapeHtml(qualificationNotice)}</p>
   </section>
   <section aria-labelledby="assurance-overview-heading">
     <div class="section-head"><h2 id="assurance-overview-heading">Assurance areas</h2><span>Shared query and presentation contracts</span></div>
@@ -139,7 +111,7 @@ function overviewContent(): string {
   </section>
   <section class="assurance-notice" aria-labelledby="security-boundary-heading">
     <h2 id="security-boundary-heading">Security stays separate</h2>
-    <p>Suspected vulnerabilities, active security incidents, credentials, exploit detail, and other sensitive material belong in private vulnerability reporting. Published advisories remain on the canonical <a href="/security">security page</a>.</p>
+    <p>Suspected vulnerabilities, active security incidents, credentials, exploit detail, and other sensitive material belong in private vulnerability reporting. Published advisories remain on the canonical <a href="${escapeHtml(securityRoute)}">security page</a>.</p>
   </section>`;
 }
 
@@ -164,7 +136,7 @@ function normalizeEmbeddedRoutes(html: string): string {
   }
   return normalized.replace(
     /<form([^>]*?)action="\/assurance\?view=([a-z]+)"([^>]*)>/g,
-    (_match, before: string, view: string, after: string) => `<form${before}action="/assurance"${after}><input type="hidden" name="view" value="${escapeHtml(view)}">`,
+    (_match, before: string, view: string, after: string) => `<form${before}action="${assuranceSurface.route}"${after}><input type="hidden" name="view" value="${escapeHtml(view)}">`,
   );
 }
 
@@ -223,15 +195,13 @@ export async function renderAssurance(request: Request, env: Env): Promise<Respo
   if (!isAssuranceView(requestedView)) return renderNotFound(env);
 
   const body = `${viewNavigation(requestedView)}
-  <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, assuranceDemo.sourcePath))}">Assurance route source</a></div>
+  <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/assurance.ts'))}">Assurance route source</a></div>
   ${await renderSelectedAssurance(request, env, requestedView)}
   ${await renderSharedReporting(request, env, requestedView)}`;
-  const response = shell(env, `${viewLabels[requestedView]} · Assurance`, body, {
-    activeRoute: assuranceDemo.route,
+  const response = shell(env, `${viewLabels[requestedView]} · ${assuranceSurface.title}`, body, {
+    activeRoute: assuranceSurface.route,
     description: viewDescriptions[requestedView],
     cacheControl: 'no-store',
   });
-  return finalizeResponse(response, rawView === null ? assuranceDemo.route : viewHref(requestedView));
+  return finalizeResponse(response, rawView === null ? assuranceSurface.route : viewHref(requestedView));
 }
-
-export default assuranceDemo;

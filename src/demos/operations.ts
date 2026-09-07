@@ -1,50 +1,49 @@
-import type { DemoDefinition, Env } from '../types';
+import type { Env } from '../types';
 import { latestCloudflareUsage } from '../lib/cloudflare-usage';
 import { sourceUrl } from '../lib/github';
 import { shell } from '../ui/page';
 import { renderLogsDemo } from './logs';
 import { renderBilling, renderDashboard, renderDocs, renderUptime } from './operations-pages';
 import { renderUnifiedReportingPresentation } from './reporting-dashboard';
+import { frontendSurface, frontendViewUrl } from './registry';
 
-type OperationsView = 'overview' | 'availability' | 'logs' | 'usage' | 'reports' | 'docs';
+export const operationsViews = ['overview', 'availability', 'logs', 'usage', 'reports', 'docs'] as const;
+export type OperationsView = (typeof operationsViews)[number];
 
-const views: readonly OperationsView[] = ['overview', 'availability', 'logs', 'usage', 'reports', 'docs'];
+const operationsSurface = frontendSurface('operations.page');
+const viewLabels = Object.fromEntries(operationsSurface.views.map((view) => [view.id, view.label])) as Record<OperationsView, string>;
+
+function viewHref(view: OperationsView): string {
+  return view === 'overview' ? operationsSurface.route : frontendViewUrl('operations.page', view);
+}
 
 function operationsViewNavigation(active: OperationsView): string {
-  const links: Array<[OperationsView, string, string]> = [
-    ['overview', 'Overview', '/operations'],
-    ['availability', 'Availability', '/operations?view=availability'],
-    ['logs', 'Logs', '/operations?view=logs'],
-    ['usage', 'Usage', '/operations?view=usage'],
-    ['reports', 'Reports', '/operations?view=reports'],
-    ['docs', 'Docs', '/operations?view=docs'],
-  ];
-  return `<div class="operations-navigation"><nav class="section-nav" aria-label="Operations views">${links.map(([view, label, href]) =>
-    `<a href="${href}"${view === active ? ' aria-current="page"' : ''}>${label}</a>`).join('')}</nav>
+  return `<div class="operations-navigation"><nav class="section-nav" aria-label="Operations views">${operationsViews.map((view) =>
+    `<a href="${viewHref(view)}"${view === active ? ' aria-current="page"' : ''}>${viewLabels[view]}</a>`).join('')}</nav>
   <details class="machine-endpoints"><summary>Machine endpoints</summary><nav class="link-row" aria-label="Operations machine endpoints"><a href="/health">/health</a><a href="/version">/version</a><a href="/__api/operations/logs">/__api/operations/logs</a><a href="/__api/operations/cloudflare-usage">/__api/operations/cloudflare-usage</a></nav></details></div>`;
 }
 
 function parseView(request: Request): OperationsView | null {
   const raw = new URL(request.url).searchParams.get('view') || 'overview';
-  return views.includes(raw as OperationsView) ? raw as OperationsView : null;
+  return operationsViews.includes(raw as OperationsView) ? raw as OperationsView : null;
 }
 
 function rewriteLegacyLinks(html: string, view: OperationsView): string {
   let rewritten = html
-    .replaceAll('/dashboard/uptime', '/operations?view=availability')
-    .replaceAll('/dashboard/logs', '/operations?view=logs')
-    .replaceAll('/dashboard/billing', '/operations?view=usage')
-    .replaceAll('/dashboard/docs', '/operations?view=docs')
-    .replaceAll('/dashboard?report=', '/operations?view=reports&amp;report=')
-    .replaceAll('/dashboard', '/operations');
+    .replaceAll('/dashboard/uptime', viewHref('availability'))
+    .replaceAll('/dashboard/logs', viewHref('logs'))
+    .replaceAll('/dashboard/billing', viewHref('usage'))
+    .replaceAll('/dashboard/docs', viewHref('docs'))
+    .replaceAll('/dashboard?report=', `${viewHref('reports')}&amp;report=`)
+    .replaceAll('/dashboard', operationsSurface.route);
 
   rewritten = rewritten.replace(
     /<div class="operations-navigation"><nav class="section-nav" aria-label="Operations">[\s\S]*?<\/details><\/div>/,
     operationsViewNavigation(view),
   );
   rewritten = rewritten.replace(
-    '<a href="/operations">Operations</a>',
-    '<a href="/operations" aria-current="page">Operations</a>',
+    `<a href="${operationsSurface.route}">Operations</a>`,
+    `<a href="${operationsSurface.route}" aria-current="page">Operations</a>`,
   );
   if (view === 'logs') {
     rewritten = rewritten.replace(
@@ -73,16 +72,16 @@ async function renderReports(request: Request, env: Env): Promise<Response> {
 ${operationsViewNavigation('reports')}
 ${reporting}`, {
     cacheControl: 'no-store',
-    activeRoute: '/operations',
+    activeRoute: operationsSurface.route,
     description: 'Shared operational and assurance reporting for the architecture demo.',
   });
 }
 
 function notFound(env: Env): Response {
-  return shell(env, 'Not Found', `<section class="page-header"><p class="eyebrow">404</p><h1>Not found</h1><p class="lede">That operations view is not registered.</p><p><a href="/operations">Return to Operations</a></p></section>`, {
+  return shell(env, 'Not Found', `<section class="page-header"><p class="eyebrow">404</p><h1>Not found</h1><p class="lede">That operations view is not registered.</p><p><a href="${operationsSurface.route}">Return to Operations</a></p></section>`, {
     status: 404,
     cacheControl: 'no-store',
-    activeRoute: '/operations',
+    activeRoute: operationsSurface.route,
     noindex: true,
   });
 }
@@ -106,37 +105,3 @@ export async function renderOperations(request: Request, env: Env): Promise<Resp
       return normalizeLegacyResponse(await renderDocs(env), view);
   }
 }
-
-const demo: DemoDefinition = {
-  id: 'operations',
-  route: '/operations',
-  title: 'Operations',
-  group: 'Operations',
-  sourcePath: 'src/demos/operations.ts',
-  summary: 'One server-rendered operations surface for health, availability, public-safe logs, usage and cost, shared reporting, deployment evidence, and documentation.',
-  proves: [
-    'One canonical server-rendered operations route with six explicit views',
-    'Scheduled observations distinguish planned maintenance from unexpected availability failures',
-    'Public-safe logs and sanitized Cloudflare observations remain visible without exposing private account configuration',
-    'Billed-cost state and synthetic guardrail simulation remain available alongside deployment evidence',
-    'Reports use the shared reporting presenter rather than a parallel reporting contract',
-    'Operational documentation and machine recovery interfaces remain directly reachable',
-  ],
-  status: 'working',
-  interfaces: [
-    { method: 'GET', path: '/operations', description: 'Render overview, availability, logs, usage, reports, or docs from the view query.' },
-    { method: 'GET', path: '/health', description: 'Return machine-readable runtime and dependency health.' },
-    { method: 'GET', path: '/version', description: 'Return deployment version and source metadata.' },
-    { method: 'GET', path: '/__api/operations/logs', description: 'Return bounded public-safe application logs.' },
-    { method: 'GET', path: '/__api/operations/cloudflare-usage', description: 'Return sanitized Cloudflare usage observations.' },
-    { method: 'POST', path: '/__api/operations/billing', description: 'Run the synthetic cost-guardrail scenario.' },
-  ],
-  supportingSources: [
-    { label: 'View consolidated operations implementation', path: 'src/demos/operations.ts' },
-    { label: 'View operational presenters', path: 'src/demos/operations-pages.ts' },
-    { label: 'View shared reporting presenter', path: 'src/reporting/presentation.ts' },
-    { label: 'View operations tests', path: 'tests/operations-consolidation.test.ts' },
-  ],
-};
-
-export default demo;

@@ -1,4 +1,5 @@
 import type { DemoDefinition, Env } from '../types';
+import { frontendSurface, frontendViewUrl } from './registry';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
 import { renderNotFound, shell } from '../ui/page';
@@ -20,24 +21,10 @@ import { renderAccessibilityDemo } from './accessibility-page';
 export const interfaceViews = ['rest', 'graphql', 'webhooks', 'identity', 'mcp', 'i18n', 'accessibility'] as const;
 export type InterfaceView = (typeof interfaceViews)[number];
 
-const interfacesDemo: DemoDefinition = {
-  id: 'interfaces',
-  route: '/interfaces',
-  title: 'Interfaces',
-  group: 'Interfaces',
-  sourcePath: 'src/demos/interfaces.ts',
-  summary: 'One server-rendered surface for the REST, GraphQL, webhook, identity, MCP, internationalization, and accessibility demonstrations.',
-  proves: [
-    'Interface demonstrations share one canonical HTML route without a client-side router',
-    'GraphQL and MCP keep their machine endpoints separate from browser presentation',
-    'Identity callbacks land on the consolidated identity view without changing protocol validation',
-    'Deep links remain ordinary server-rendered query-selected documents',
-  ],
-  status: 'working',
-};
+const interfacesSurface = frontendSurface('interfaces.page');
 
 function viewHref(view: InterfaceView): string {
-  return `/interfaces?view=${view}`;
+  return frontendViewUrl('interfaces.page', view);
 }
 
 const viewDemos: Record<InterfaceView, DemoDefinition> = {
@@ -50,15 +37,7 @@ const viewDemos: Record<InterfaceView, DemoDefinition> = {
   accessibility: accessibilityDemo,
 };
 
-const viewLabels: Record<InterfaceView, string> = {
-  rest: 'REST',
-  graphql: 'GraphQL',
-  webhooks: 'Webhooks',
-  identity: 'Identity',
-  mcp: 'MCP',
-  i18n: 'I18n',
-  accessibility: 'Accessibility',
-};
+const viewLabels = Object.fromEntries(interfacesSurface.views.map((view) => [view.id, view.label])) as Record<InterfaceView, string>;
 
 function isInterfaceView(value: string): value is InterfaceView {
   return (interfaceViews as readonly string[]).includes(value);
@@ -76,7 +55,7 @@ async function mainContent(response: Response): Promise<string> {
 async function renderSelectedInterface(request: Request, env: Env, view: InterfaceView): Promise<string> {
   let response: Response;
   if (view === 'rest') response = renderApiDemo(env);
-  else if (view === 'graphql') response = renderGraphqlDemo(env);
+  else if (view === 'graphql') response = await renderGraphqlDemo(env);
   else if (view === 'webhooks') response = renderWebhooksDemo(env);
   else if (view === 'identity') response = renderIdentityDemo(env);
   else if (view === 'mcp') response = await renderMcpDemo(request, env);
@@ -128,14 +107,12 @@ export async function renderInterfaces(request: Request, env: Env): Promise<Resp
 
   const selected = viewDemos[requestedView];
   const body = `${viewNavigation(requestedView)}
-  <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, interfacesDemo.sourcePath))}">Interfaces route source</a></div>
+  <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/interfaces.ts'))}">Interfaces route source</a></div>
   ${await renderSelectedInterface(request, env, requestedView)}`;
-  const response = shell(env, `${selected.title} · Interfaces`, body, {
-    activeRoute: interfacesDemo.route,
+  const response = shell(env, `${selected.title} · ${interfacesSurface.title}`, body, {
+    activeRoute: interfacesSurface.route,
     description: selected.summary,
     cacheControl: 'no-store',
   });
-  return finalizeResponse(response, request, requestedView, rawView === null ? interfacesDemo.route : viewHref(requestedView));
+  return finalizeResponse(response, request, requestedView, rawView === null ? interfacesSurface.route : viewHref(requestedView));
 }
-
-export default interfacesDemo;

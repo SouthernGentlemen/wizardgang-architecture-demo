@@ -45,10 +45,14 @@ async function get(path: string): Promise<Response> {
 
 describe('public link and route contract', () => {
   it('keeps every registered HTML route implemented, sourced, and canonical', async () => {
-    const manifest = JSON.parse(readFileSync('docs/route-manifest.json', 'utf8')) as Array<{ route: string; source: string }>;
+    const manifest = JSON.parse(readFileSync('docs/route-manifest.json', 'utf8')) as Array<{
+      route: string;
+      source: { module: string };
+    }>;
     for (const demo of demos) {
-      expect(readFileSync(demo.sourcePath, 'utf8').length, `${demo.route} source is empty`).toBeGreaterThan(0);
-      expect(manifest.filter((entry) => entry.route === demo.route), `${demo.route} manifest entry`).toHaveLength(1);
+      const entries = manifest.filter((entry) => entry.route === demo.route);
+      expect(entries, `${demo.route} manifest entry`).toHaveLength(1);
+      expect(readFileSync(entries[0].source.module, 'utf8').length, `${demo.route} source is empty`).toBeGreaterThan(0);
       const response = await get(demo.route);
       expect(response.status, `${demo.route} implementation`).toBe(200);
     }

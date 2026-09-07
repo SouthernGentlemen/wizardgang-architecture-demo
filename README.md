@@ -9,13 +9,12 @@ The canonical standard is [`docs/ARCHITECTURE-STANDARD.md`](docs/ARCHITECTURE-ST
 
 ## Architecture laboratory
 
-Public HTML routes organize the architecture into five layers. Each layer has a dedicated owner under `src/demos/`, live implementation, observable behavior, and direct public source/evidence links.
+The frontend has exactly eight server-rendered HTML page pathnames: `/`, `/platform`, `/interfaces`, `/assurance`, `/security`, `/operations`, `/admin`, and `/offline`. The surface and view inventory is declared once in `src/demos/registry.ts`; navigation and sitemap publication derive from the same declarations. See [`docs/FRONTEND-ROUTES.md`](docs/FRONTEND-ROUTES.md) for the complete information architecture.
 
-- **Platform:** one server-rendered `/platform` surface selects safe edge-context inspection, bounded stateless Worker compute, the coordinated Durable Object counter, the session-isolated D1 users-and-tasks lab, or the bounded R2 mini file manager with D1 metadata through ordinary `?view=` deep links.
-- **Interfaces:** focused REST/OpenAPI, GraphQL/GraphiQL, signed-webhook, identity, and MCP routes converging on explicit application policies and shared D1/logging boundaries.
-- **Standards:** English, Spanish, French, German, Japanese, and Arabic resources; instant switching and `Intl` inspection; RTL rendering; and accessible/broken comparison labs with locally bundled axe-core analysis.
-- **Delivery and governance:** live GitHub branch/commit/pull-request/Actions/tag/release evidence, durable provider-derived CI and assurance reports, runtime traceability, generated governance-register views, security-control mapping, an executable MCP boundary evaluation, and a compact compliance and assurance index linking those canonical proofs.
-- **Operations:** five-minute scheduled dependency health, measured availability, live documentation, sanitized D1 logs, cached Cloudflare usage telemetry, progressive billable-cost evidence, observable graceful degradation, and authenticated D1-backed demo control.
+- **Platform:** `/platform` selects safe edge-context inspection, bounded stateless Worker compute, the coordinated Durable Object counter, the session-isolated D1 users-and-tasks lab, or the bounded R2 mini file manager through ordinary `?view=` query state.
+- **Interfaces:** `/interfaces` selects REST/OpenAPI, GraphQL/GraphiQL, signed webhooks, identity, MCP, internationalization, and accessibility demonstrations. Protocol and API endpoints remain separate machine contracts.
+- **Assurance:** `/assurance` selects delivery, governance, evidence, compliance, risks, incidents, and public-concern views while preserving stable record fragments. `/security` remains the separate public security/advisory and private-reporting boundary.
+- **Operations:** `/operations` selects overview, availability, public-safe logs, usage/cost, reporting, and documentation views. `/admin` and `/offline` remain dedicated control/recovery pages.
 
 Core invariants:
 
@@ -31,21 +30,26 @@ See [`docs/ROUTES.md`](docs/ROUTES.md) and [`docs/route-manifest.json`](docs/rou
 
 ## Interface
 
-The demo uses the `wizardgang.ai` design tokens: dark by default, with a light theme the reader can toggle and the browser remembers. Every page carries a skip link, a compact Dashboard/Main site/Theme header, and in-group previous/next paging; `/sitemap.xml` is generated from the same registry that serves the routes, so it cannot drift from the published contract.
+The demo uses the `wizardgang.ai` design tokens: dark by default, with a light theme the reader can toggle and the browser remembers. Every HTML surface carries a skip link and shared page chrome. `/sitemap.xml` is generated from registered page metadata, so it cannot publish a page that is absent from the application route registry.
 
-`/platform` is the single Platform HTML surface. Deep links use `/platform?view=edge`, `/platform?view=workers`, `/platform?view=durable-objects`, `/platform?view=d1`, and `/platform?view=r2`. The former `/edge`, `/workers`, `/durable-objects`, `/d1`, and `/r2` page paths are intentionally unregistered and return the ordinary 404 without redirects; their working API endpoints keep their existing URLs and storage boundaries.
+`/platform` is the single Platform HTML surface. Deep links use `/platform?view=edge`, `/platform?view=workers`, `/platform?view=durable-objects`, `/platform?view=d1`, and `/platform?view=r2`. Former standalone platform page paths are unregistered and return the ordinary 404 without redirects; their working API endpoints keep their existing URLs and storage boundaries.
 
-`/interfaces` is the single browser surface for REST, GraphQL, webhooks, identity, MCP, internationalization, and accessibility. Deep links use `/interfaces?view=rest`, `/interfaces?view=graphql`, `/interfaces?view=webhooks`, `/interfaces?view=identity`, `/interfaces?view=mcp`, `/interfaces?view=i18n`, and `/interfaces?view=accessibility`. The former `/api`, `/webhooks`, `/identity`, `/mcp`, `/i18n`, and `/accessibility` HTML paths return the ordinary 404 without redirects. `/graphql` is machine-only, while `/graphql/schema`, `/graphql/console`, the identity protocol routes, webhook endpoints, and `/mcp/server` retain their protocol URLs. The D1 view exposes visitor-scoped users and tasks queryable through GraphQL, and `/assurance?view=delivery` runs and tracks a controlled two-stage delivery lifecycle against this repository.
+`/interfaces` is the single browser surface for REST, GraphQL, webhooks, identity, MCP, internationalization, and accessibility. Deep links use `/interfaces?view=rest`, `/interfaces?view=graphql`, `/interfaces?view=webhooks`, `/interfaces?view=identity`, `/interfaces?view=mcp`, `/interfaces?view=i18n`, and `/interfaces?view=accessibility`. Former standalone interface page paths return the ordinary 404 without redirects. `/graphql` is machine-only even for browser HTML requests; the locally bundled GraphiQL document is embedded inside `/interfaces?view=graphql`. `/graphql/schema`, identity protocol routes, webhook endpoints, and `/mcp/server` retain their protocol URLs.
+
+`/assurance` is the single public assurance browser surface. Its query-selected views preserve canonical filters, reporting contracts, and stable fragments such as `/assurance?view=risks#SEC-RISK-001`. `/security` remains a distinct page because vulnerability reporting and published security advisories have a separate disclosure boundary.
+
+There is no client-side router. View changes are normal links to server-rendered documents with query state; application routing remains registry matching in `src/router.ts`.
 
 ## Operations and admin
 
 ```text
-/dashboard
-├── overview → /assurance assurance index
-├── /dashboard/uptime
-├── /dashboard/docs
-├── /dashboard/logs
-└── /dashboard/billing
+/operations
+├── overview
+├── ?view=availability
+├── ?view=logs
+├── ?view=usage
+├── ?view=reports
+└── ?view=docs
 
 /admin       protected D1-backed demo control
 /offline     public maintenance page
@@ -54,11 +58,11 @@ The demo uses the `wizardgang.ai` design tokens: dark by default, with a light t
 /robots.txt  dynamic ChatGPT crawler policy
 ```
 
-The read-only dashboard’s `#health` section carries per-service status and latency, while its separate Compliance & Assurance panel links to the canonical `/assurance` evidence index. Cloudflare Cron stores a health observation every five minutes, refreshes sanitized account telemetry every fifteen minutes, and attempts restricted billable usage hourly. `/dashboard/billing` keeps that live usage evidence visually and behaviorally separate from the synthetic cost-guardrail simulator.
+The read-only operations surface carries health, availability, deployment evidence, public-safe logs, sanitized usage/cost observations, shared reporting, and current documentation. Cloudflare Cron stores health observations every five minutes; other provider observations retain their own collection and freshness semantics. The synthetic cost-guardrail simulator remains explicitly separate from authoritative provider billing data.
 
-`/admin` can intentionally take ordinary demos online or offline. Offline browser navigation redirects to `/offline?from=<route>` and displays **“Oops! demo is down.”** API, non-HTML, and write requests return JSON `503`. Dashboard, status, logs, synthetic billing, offline, and authenticated admin surfaces remain reachable. Control failures fail closed.
+`/admin` can intentionally take ordinary demonstrations online or offline. Offline browser navigation may redirect gated canonical pages to `/offline?from=<route>`; API, non-HTML, and write requests return JSON `503`. Operations, security, health/version recovery interfaces, public-safe logs, offline, and authenticated admin remain reachable according to their registered offline policies. Control failures fail closed.
 
-The same protected admin page controls ChatGPT web access. The switch updates a D1-backed `/robots.txt` policy and a server-side gate for `OAI-SearchBot` and `ChatGPT-User`, so disabling access also covers user-requested ChatGPT fetches that may not follow robots rules. `GPTBot` remains blocked in either state; this control never opts the demo into foundation-model training. The public dashboard reports the current state without rendering a mutation form.
+The same protected admin page controls ChatGPT web access. The switch updates a D1-backed `/robots.txt` policy and a server-side gate for `OAI-SearchBot` and `ChatGPT-User`, so disabling access also covers user-requested ChatGPT fetches that may not follow robots rules. `GPTBot` remains blocked in either state; this control never opts the demo into foundation-model training. The public operations surface reports the current state without rendering a mutation form.
 
 ## Shared D1 backend
 
@@ -68,7 +72,7 @@ The numbered migrations establish:
 - `demo_records` — versioned REST/GraphQL/MCP demonstration records, seeded so public reads return real data;
 - `service_health_checks` — timestamped availability history;
 - `usage_snapshots` — controlled synthetic usage/cost state;
-- `cloudflare_usage_snapshots` — cached, normalized public-safe Cloudflare telemetry;
+- `cloudflare_usage_snapshots` — cached, normalized public-safe Cloudflare telemetry retained only where current migrations/contracts require it;
 - `demo_control` — online/offline state and public message;
 - `crawler_control` — ChatGPT search and user-requested web access state;
 - `application_logs` — bounded public-safe diagnostics;
@@ -81,7 +85,7 @@ The numbered migrations establish:
 - `identity_sessions` — encrypted, expiring, revocable application sessions;
 - `identity_saml_requests` and `identity_saml_assertions` — SAML request correlation and assertion replay protection.
 
-Machine contracts for Swagger 2.0, GraphQL, MCP, webhooks, and SAML service-provider metadata are versioned beside their implementations.
+Machine contracts for OpenAPI 3.1, GraphQL, MCP, webhooks, and SAML service-provider metadata are versioned beside their implementations.
 
 ## Local setup
 
@@ -94,13 +98,15 @@ Machine contracts for Swagger 2.0, GraphQL, MCP, webhooks, and SAML service-prov
 Validation:
 
 ```text
+npm run generate:routes
 npm run check
 npm run validate:migrations
 npm run security:dependencies
 npm run build
+git diff --check
 ```
 
-CI repeats those controls. A separate trusted `workflow_run` publisher derives the actual default-branch run/job/step outcomes from GitHub and retains the schema-valid report on the `assurance-reports` branch; its 30-day Actions artifact is transport/recovery only.
+CI repeats the required validation controls. A separate trusted `workflow_run` publisher derives the actual default-branch run/job/step outcomes from GitHub and retains the schema-valid report on the `assurance-reports` branch; its 30-day Actions artifact is transport/recovery only.
 
 ## Delivery
 
@@ -113,10 +119,11 @@ Primary types: `INIT`, `FEAT`, `FIX`, `SEC`, `API`, `A11Y`, `I18N`, `AI`, `DB`, 
 ## Start here
 
 - [`docs/ARCHITECTURE-STANDARD.md`](docs/ARCHITECTURE-STANDARD.md) — governing architecture.
-- [`docs/OPERATIONS.md`](docs/OPERATIONS.md) — dashboard, health, logs, billing, admin, and offline behavior.
+- [`docs/FRONTEND-ROUTES.md`](docs/FRONTEND-ROUTES.md) — the eight-page frontend information architecture and query-state view contract.
+- [`docs/OPERATIONS.md`](docs/OPERATIONS.md) — operations, health, logs, usage/cost, admin, and offline behavior.
 - [`docs/CHANGE-MANAGEMENT.md`](docs/CHANGE-MANAGEMENT.md) — permanent change IDs, commit records, and risk controls.
 - [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md) — reproducible releases, annotated tags, and rollback records.
 - [`docs/ROUTES.md`](docs/ROUTES.md) — routes mapped to implementation source.
 - [`docs/IMPLEMENTATION-PLAN.md`](docs/IMPLEMENTATION-PLAN.md) — implementation status and external prerequisites.
-- [`docs/INTERACTIVE-DEMO-SPEC.md`](docs/INTERACTIVE-DEMO-SPEC.md) — precise interaction upgrade plan for R2, D1, i18n, WCAG, Git, webhooks, and GraphQL.
+- [`docs/INTERACTIVE-DEMO-SPEC.md`](docs/INTERACTIVE-DEMO-SPEC.md) — historical interaction design context for R2, D1, i18n, WCAG, Git, webhooks, and GraphQL.
 - [`KICKOFF-SOL-VERY-HIGH.md`](KICKOFF-SOL-VERY-HIGH.md) — original implementation brief retained as project context.
