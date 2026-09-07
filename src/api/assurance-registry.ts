@@ -28,6 +28,6 @@ export function assuranceResponse(request: Request, _env: Env): Response {
   });
 }
 
-export function assuranceEvidenceResponse(request: Request, _env: Env): Response {
-  return genericAssuranceResponse(request, 'evidence');
+export function assuranceEvidenceResponse(request: Request, env: Env): Promise<Response> {
+  return genericAssuranceResponse(request, 'evidence', undefined, env);
 }

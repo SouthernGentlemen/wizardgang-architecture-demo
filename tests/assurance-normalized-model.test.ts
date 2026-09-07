@@ -39,7 +39,7 @@ describe('normalized assurance model', () => {
   });
 
   it('returns normalized runtime records directly at the HTTP boundary', async () => {
-    const response = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?limit=2'));
+    const response = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?limit=2'));
     const body = await response.json() as { records: Array<Record<string, unknown> & { relationships: Array<{ relation: string; from: { source: string; native: string }; to: { source: string; native: string } }> }> };
     expect(body.records).toHaveLength(2);
     for (const record of body.records) {

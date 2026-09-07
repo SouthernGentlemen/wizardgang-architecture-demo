@@ -17,7 +17,7 @@ describe('assurance presentation consistency', () => {
     const filters = { framework: 'security', residual: 'high' };
     const query = serializeAssuranceFilters('risks', filters);
     const expected = filterPublishedAssuranceRecords('risks', filters).map((record) => record.id);
-    const api = await assuranceRisksResponse(new Request(`https://demo.wizardgang.ai/v1/assurance/risks?${query}`)).json() as { records: Array<{ id: string }>; derived: { count: number } };
+    const api = await (await assuranceRisksResponse(new Request(`https://demo.wizardgang.ai/v1/assurance/risks?${query}`))).json() as { records: Array<{ id: string }>; derived: { count: number } };
     const html = await renderRisks(new Request(`https://demo.wizardgang.ai/governance/risks?${query}`), environment).text();
     const rendered = [...html.matchAll(/id="((?:SEC|AI)-RISK-[0-9]+)"/g)].map((match) => match[1]);
     expect(api.records.map((record) => record.id)).toEqual(expected);
@@ -29,7 +29,7 @@ describe('assurance presentation consistency', () => {
     const filters = { framework: 'wcag-2.2', level: 'A' };
     const query = serializeAssuranceFilters('compliance', filters);
     const expected = filterPublishedAssuranceRecords('compliance', filters).map((record) => record.id);
-    const api = await assuranceComplianceResponse(new Request(`https://demo.wizardgang.ai/v1/assurance/compliance?${query}`)).json() as { records: Array<{ id: string }>; derived: { count: number } };
+    const api = await (await assuranceComplianceResponse(new Request(`https://demo.wizardgang.ai/v1/assurance/compliance?${query}`))).json() as { records: Array<{ id: string }>; derived: { count: number } };
     const html = await renderComplianceDemo(new Request(`https://demo.wizardgang.ai/compliance?${query}`), environment).text();
     const rendered = [...html.matchAll(/<tr id="((?:ISO27001|ISO42001|WCAG)-[^"]+)">/g)].map((match) => match[1]);
     expect(api.records.map((record) => record.id)).toEqual(expected);
@@ -39,7 +39,7 @@ describe('assurance presentation consistency', () => {
 
   it('presents incidents and exercises from the same current records collection', async () => {
     const expected = [...listPublishedAssuranceRecords('incidents'), ...listPublishedAssuranceRecords('exercises')];
-    const api = await assuranceIncidentsResponse(new Request('https://demo.wizardgang.ai/v1/assurance/incidents')).json() as { records: Array<{ id: string }>; derived: { count: number } };
+    const api = await (await assuranceIncidentsResponse(new Request('https://demo.wizardgang.ai/v1/assurance/incidents'))).json() as { records: Array<{ id: string }>; derived: { count: number } };
     const html = await renderIncidents(environment).text();
     expect(api.records.map((record) => record.id)).toEqual(expected.map((record) => record.id));
     expect(api.derived.count).toBe(expected.length);

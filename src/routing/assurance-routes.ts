@@ -242,8 +242,8 @@ function offlineResponse(
 export function createAssuranceRouteRouter(
   registry: AssuranceRegistry,
   capabilities: readonly AssuranceRouteCapability[],
-  genericApiHandler: GenericAssuranceApiHandler = (request, _env, owner, rawRecordId) =>
-    genericAssuranceResponse(request, owner, rawRecordId),
+  genericApiHandler: GenericAssuranceApiHandler = (request, env, owner, rawRecordId) =>
+    genericAssuranceResponse(request, owner, rawRecordId, env),
 ): AssuranceRouteRouter {
   const contractErrors = contractValidateRouteContract(registry) as string[];
   if (contractErrors.length > 0) {

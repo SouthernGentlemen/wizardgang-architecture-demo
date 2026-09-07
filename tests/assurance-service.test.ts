@@ -43,7 +43,7 @@ describe('common canonical assurance query and presentation service', () => {
     const complianceFilters = { framework: 'wcag-2.2', status: 'partial', level: 'AA' };
     const complianceQuery = serializeAssuranceFilters('compliance', complianceFilters);
     const complianceExpected = filterPublishedAssuranceRecords('compliance', complianceFilters).map((record) => record.id);
-    const complianceApi = await assuranceComplianceResponse(new Request(`https://demo.wizardgang.ai/v1/assurance/compliance?${complianceQuery}`)).json() as { records: Array<{ id: string }> };
+    const complianceApi = await (await assuranceComplianceResponse(new Request(`https://demo.wizardgang.ai/v1/assurance/compliance?${complianceQuery}`))).json() as { records: Array<{ id: string }> };
     const complianceHtml = await renderComplianceDemo(new Request(`https://demo.wizardgang.ai/compliance?${complianceQuery}`), environment).text();
     expect(complianceApi.records.map((record) => record.id)).toEqual(complianceExpected);
     expect(complianceIds(complianceHtml)).toEqual(complianceExpected);
@@ -51,7 +51,7 @@ describe('common canonical assurance query and presentation service', () => {
     const riskFilters = { framework: 'security', residual: 'high' };
     const riskQuery = serializeAssuranceFilters('risks', riskFilters);
     const riskExpected = filterPublishedAssuranceRecords('risks', riskFilters).map((record) => record.id);
-    const riskApi = await assuranceRisksResponse(new Request(`https://demo.wizardgang.ai/v1/assurance/risks?${riskQuery}`)).json() as { records: Array<{ id: string }> };
+    const riskApi = await (await assuranceRisksResponse(new Request(`https://demo.wizardgang.ai/v1/assurance/risks?${riskQuery}`))).json() as { records: Array<{ id: string }> };
     const riskHtml = await renderRisks(new Request(`https://demo.wizardgang.ai/governance/risks?${riskQuery}`), environment).text();
     expect(riskApi.records.map((record) => record.id)).toEqual(riskExpected);
     expect(riskIds(riskHtml)).toEqual(riskExpected);
@@ -70,33 +70,33 @@ describe('common canonical assurance query and presentation service', () => {
   });
 
   it('rejects invalid, duplicate, and undeclared parameters under the current contract', async () => {
-    const invalid = assuranceComplianceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/compliance?framework='));
+    const invalid = await assuranceComplianceResponse(new Request('https://demo.wizardgang.ai/v1/assurance/compliance?framework='));
     expect(invalid.status).toBe(400);
     expect(await invalid.json()).toMatchObject({ error: 'invalid_filter', parameter: 'framework', value: '' });
 
-    const duplicate = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?framework=security&framework=ai'));
+    const duplicate = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?framework=security&framework=ai'));
     expect(duplicate.status).toBe(400);
     expect(await duplicate.json()).toMatchObject({ error: 'invalid_filter', parameter: 'framework', value: ['security', 'ai'] });
 
-    const unknown = assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?futureParameter=ignored'));
+    const unknown = await assuranceRisksResponse(new Request('https://demo.wizardgang.ai/v1/assurance/risks?futureParameter=ignored'));
     expect(unknown.status).toBe(400);
     expect(await unknown.json()).toEqual({ error: 'unsupported_query_parameter', parameter: 'futureParameter' });
   });
 
-  it('applies filters before stable cursor pagination in the shared query block', async () => {
+  it('applies filters before opaque cursor pagination in the shared query block', async () => {
     const filters = { framework: 'wcag-2.2', status: 'partial', level: 'AA' };
     const expected = filterPublishedAssuranceRecords('compliance', filters);
     expect(expected.length).toBeGreaterThan(2);
     const query = serializeAssuranceFilters('compliance', filters);
 
-    const first = await assuranceComplianceResponse(new Request(`https://demo.wizardgang.ai/v1/assurance/compliance?${query}&limit=2`)).json() as {
+    const first = await (await assuranceComplianceResponse(new Request(`https://demo.wizardgang.ai/v1/assurance/compliance?${query}&limit=2`))).json() as {
       records: Array<{ id: string }>;
       query: { pagination: { total: number; nextCursor: string | null } };
       derived: { count: number };
     };
     expect(first.records.map((record) => record.id)).toEqual(expected.slice(0, 2).map((record) => record.id));
     expect(first.query.pagination.total).toBe(expected.length);
-    expect(first.query.pagination.nextCursor).toBe(expected[1].id);
+    expect(first.query.pagination.nextCursor).toMatch(/^rpc1\./);
     expect(first.derived.count).toBe(expected.length);
   });
 

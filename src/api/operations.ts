@@ -2,7 +2,9 @@ import type { Env } from '../types';
 import { getDemoControl } from '../lib/demo-control';
 import { recordApplicationLog, recentApplicationLogs } from '../lib/logs';
 import { json, methodNotAllowed } from '../lib/http';
-import { cloudflareUsageQueryResult, latestCloudflareUsage } from '../lib/cloudflare-usage';
+import { latestCloudflareUsage } from '../lib/cloudflare-usage';
+import { exportCloudflareReporting, queryCloudflareReportingPage } from '../reporting/cloudflare-query';
+import { ReportingCursorError } from '../reporting/pagination';
 
 type Readiness = 'operational' | 'unavailable' | 'unconfigured';
 
@@ -125,12 +127,49 @@ export async function logsResponse(request: Request, env: Env): Promise<Response
   return json({ results }, { headers: { 'cache-control': 'no-store' } });
 }
 
+function reportingPageLimit(url: URL): number | Response {
+  const values = url.searchParams.getAll('limit');
+  if (values.length > 1) return json({ error: 'reporting_limit_invalid' }, { status: 400 });
+  const value = values[0];
+  if (value === undefined) return 50;
+  if (!/^[1-9]\d*$/.test(value)) return json({ error: 'reporting_limit_invalid' }, { status: 400 });
+  const parsed = Number(value);
+  if (!Number.isSafeInteger(parsed) || parsed < 1 || parsed > 100) return json({ error: 'reporting_limit_invalid' }, { status: 400 });
+  return parsed;
+}
+
 export async function cloudflareUsageResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'GET') return methodNotAllowed(['GET']);
+  const url = new URL(request.url);
+  const limit = reportingPageLimit(url);
+  if (limit instanceof Response) return limit;
+  const cursorValues = url.searchParams.getAll('cursor');
+  if (cursorValues.length > 1 || cursorValues[0] === '') return json({ error: 'reporting_cursor_invalid' }, { status: 400 });
+  const exportValues = url.searchParams.getAll('export');
+  if (exportValues.length > 1 || (exportValues[0] !== undefined && exportValues[0] !== '1')) {
+    return json({ error: 'reporting_export_invalid' }, { status: 400 });
+  }
+  if (exportValues[0] === '1' && cursorValues[0] !== undefined) {
+    return json({ error: 'reporting_export_cursor_conflict' }, { status: 400 });
+  }
+
   const snapshot = await latestCloudflareUsage(env);
-  return json(cloudflareUsageQueryResult(env, snapshot), {
-    // Runtime configuration can change without changing the route. Do not let a shared HTTP cache
-    // replay observations collected for another account/resource scope.
-    headers: { 'cache-control': 'no-store', vary: 'Accept' },
-  });
+  try {
+    const result = exportValues[0] === '1'
+      ? await exportCloudflareReporting(env, snapshot, { limit })
+      : await queryCloudflareReportingPage(env, snapshot, { limit, cursor: cursorValues[0] ?? null });
+    return json(result, {
+      // Runtime configuration can change without changing the route. Do not let a shared HTTP cache
+      // replay observations collected for another account/resource scope.
+      headers: { 'cache-control': 'no-store', vary: 'Accept' },
+    });
+  } catch (error) {
+    if (error instanceof ReportingCursorError) {
+      return json({ error: error.code, ...(error.detail ? { detail: error.detail } : {}) }, {
+        status: 400,
+        headers: { 'cache-control': 'no-store' },
+      });
+    }
+    throw error;
+  }
 }
