@@ -193,9 +193,11 @@ function renderSchemas(schemas: Record<string, JsonObject>): string {
 }
 
 const IDENTITY_PAGE_URL = routeUrl('interfaces.identity.page');
+const OPERATIONS_LOGS_SOURCE_URL = routeUrl('operations.logs', {}, { source: 'rest' });
 
 const API_RUNNER = `(() => {
   const identityPageUrl = ${JSON.stringify(IDENTITY_PAGE_URL)};
+  const operationsLogsSourceUrl = ${JSON.stringify(OPERATIONS_LOGS_SOURCE_URL)};
   let demoToken = '';
   let tokenExpiresAt = '';
   const query = (selector, root = document) => root.querySelector(selector);
@@ -278,7 +280,7 @@ const API_RUNNER = `(() => {
       else if (!response.ok) { message.hidden = false; message.innerHTML = '<strong>Request failed</strong><span>The raw response is available below.</span>'; }
       const id = response.headers.get('x-request-id');
       const log = query('[data-request-log]', result);
-      if (id) { log.hidden = false; log.href = '/operations?view=logs&source=rest&requestId=' + encodeURIComponent(id); log.textContent = 'View ' + id + ' in logs →'; } else log.hidden = true;
+      if (id) { log.hidden = false; log.href = operationsLogsSourceUrl + '&requestId=' + encodeURIComponent(id); log.textContent = 'View ' + id + ' in logs →'; } else log.hidden = true;
       if (response.ok && form.dataset.method !== 'GET') updateCount().catch(() => {});
     } catch (error) {
       query('[data-response-status]', result).textContent = 'Request not sent';

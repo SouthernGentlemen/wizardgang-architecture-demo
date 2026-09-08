@@ -70,7 +70,7 @@ describe('complete declarative application routing', () => {
       'platform.index',
       'interfaces.index',
       'assurance.index',
-      'operations.page',
+      'operations.index',
       'security.index',
     ]);
     expect(primaryNavigation().map((route) => route.page?.label)).toEqual([
@@ -103,7 +103,8 @@ describe('complete declarative application routing', () => {
       '/platform/workers', '/interfaces', '/interfaces/webhooks', '/platform/durable-objects',
       '/assurance', '/assurance/delivery', '/assurance/governance', '/assurance/evidence',
       '/assurance/compliance', '/assurance/risks', '/assurance/incidents', '/assurance/concerns',
-      '/interfaces/identity', '/platform/d1', '/interfaces/mcp', '/operations', '/platform/r2',
+      '/interfaces/identity', '/platform/d1', '/interfaces/mcp', '/operations',
+      '/operations/availability', '/operations/docs', '/operations/logs', '/operations/reports', '/operations/usage', '/platform/r2',
       '/security', '/interfaces/i18n', '/interfaces/accessibility',
     ].sort());
     const response = sitemapResponse(new Request('https://demo.wizardgang.ai/sitemap.xml'));

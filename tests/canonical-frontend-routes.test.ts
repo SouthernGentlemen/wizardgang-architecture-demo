@@ -1,10 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { assuranceRecordUrls } from '../src/assurance/routes';
-import {
-  frontendViewUrl,
-  operationsSurfaceViews,
-} from '../src/demos/registry';
 import { routeRequest } from '../src/router';
 import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import type { Env } from '../src/types';
@@ -21,19 +17,7 @@ const environment: Env = {
 };
 
 describe('canonical frontend route contract', () => {
-  it('keeps query views only for the remaining stateful consolidated surface and publishes canonical children', () => {
-    const inventories = [
-      ['operations.page', operationsSurfaceViews],
-    ] as const;
-    for (const [routeId, views] of inventories) {
-      for (const view of views) {
-        const href = frontendViewUrl(routeId, view.id);
-        const url = new URL(href, 'https://demo.wizardgang.ai');
-        expect(url.pathname, `${routeId}:${view.id}`).toBe(routeUrl(routeId));
-        expect(url.searchParams.get('view'), `${routeId}:${view.id}`).toBe(view.id);
-      }
-    }
-
+  it('publishes canonical child resources without a query-view route inventory', () => {
     const canonicalChildren = [
       ['platform.edge', '/platform/edge'], ['platform.workers', '/platform/workers'],
       ['platform.durable-objects', '/platform/durable-objects'], ['platform.d1', '/platform/d1'],
@@ -45,6 +29,9 @@ describe('canonical frontend route contract', () => {
       ['assurance.evidence', '/assurance/evidence'], ['assurance.compliance', '/assurance/compliance'],
       ['assurance.risks', '/assurance/risks'], ['assurance.incidents', '/assurance/incidents'],
       ['assurance.concerns', '/assurance/concerns'],
+      ['operations.availability', '/operations/availability'], ['operations.logs', '/operations/logs'],
+      ['operations.usage', '/operations/usage'], ['operations.reports', '/operations/reports'],
+      ['operations.docs', '/operations/docs'],
     ] as const;
     for (const [routeId, path] of canonicalChildren) expect(routeUrl(routeId)).toBe(path);
   });

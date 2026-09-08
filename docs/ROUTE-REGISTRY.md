@@ -34,7 +34,7 @@ Page declarations own their frontend metadata directly through the optional `pag
 
 `src/routing/navigation.ts` projects primary navigation, child navigation, architecture-map entries, and sitemap paths from those declarations while retaining the `configureRegisteredRoutes()` / `registeredRouteMetadata()` seam. The shell consumes primary navigation directly, and active state is matched by route ID: exactly the current primary route receives `aria-current="page"`; ancestors can receive visual section state without claiming a second current page.
 
-`src/demos/registry.ts` now retains only the query-view inventories needed by the four consolidated surfaces plus `frontendViewUrl()`. It no longer owns pathnames, page titles, hierarchy, navigation membership, architecture-card membership, or sitemap membership.
+Canonical frontend resources, including the operations children, are declared directly in capability route registries. There is no separate query-view inventory or frontend URL builder outside the application registry.
 
 `/sitemap.xml` is derived from public, indexable, non-parameterized page declarations. The root route remains in the sitemap but is not duplicated as an architecture card.
 

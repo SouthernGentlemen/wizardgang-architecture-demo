@@ -132,7 +132,7 @@ const globalOperationalRoutes = [
     authentication: { mode: 'required', provider: 'admin-basic' }, authorization: { mode: 'policy', policy: 'admin' },
     sameOrigin: { mode: 'required', methods: ['POST'] },
     page: {
-      parent: 'operations.page',
+      parent: 'operations.index',
       label: 'Demo administration',
       summary: 'Protected control surface for demo availability and ChatGPT fetch policy.',
       order: 0,
@@ -149,7 +149,7 @@ const globalOperationalRoutes = [
     title: 'Offline recovery page', description: 'Public maintenance page shown when ordinary demo routes are intentionally offline.',
     sourceModule: 'src/ui/admin.ts', sourceExport: 'renderOffline', indexing: 'deny',
     page: {
-      parent: 'operations.page',
+      parent: 'operations.index',
       label: 'Offline recovery page',
       summary: 'Public maintenance page shown when ordinary demo routes are intentionally offline.',
       order: 1,
@@ -193,19 +193,99 @@ const globalOperationalRoutes = [
     cache: { mode: 'public', maxAgeSeconds: 3600 },
   }),
   operationalRoute({
-    id: 'operations.page', pattern: '/operations', methods: ['GET'], kind: 'page', handler: async (request, { env }) => {
-      const { renderOperations } = await import('../demos/operations');
-      return renderOperations(request, env);
+    id: 'operations.index', pattern: '/operations', methods: ['GET'], kind: 'page', handler: async (request, { env }) => {
+      const [{ dashboardContent }, { operationsPageContent }, { renderNotFound, renderPage }] = await Promise.all([
+        import('../demos/operations-pages'),
+        import('../demos/operations'),
+        import('../ui/page'),
+      ]);
+      if (new URL(request.url).searchParams.has('view')) return renderNotFound(env);
+      return renderPage(env, operationsPageContent(await dashboardContent(env, request), 'operations.index'));
     },
-    title: 'Operations', description: 'Canonical server-rendered operations surface for overview, availability, logs, usage, reports, and documentation.',
-    sourceModule: 'src/demos/operations.ts', sourceExport: 'renderOperations', indexing: 'allow',
+    title: 'Operations', description: 'Canonical operations index for live health, availability, public-safe logs, usage, reporting, and documentation.',
+    sourceModule: 'src/demos/operations-pages.ts', sourceExport: 'dashboardContent', indexing: 'allow', offline: 'available',
     page: {
       parent: 'interfaces.frontend.index',
       label: 'Operations',
-      summary: 'One server-rendered operations surface for health, availability, public-safe logs, usage and cost, shared reporting, deployment evidence, and documentation.',
+      summary: 'Live health, availability, public-safe logs, usage and cost, shared reporting, deployment evidence, and documentation.',
       order: 4,
       navigation: 'primary',
       architectureMap: true,
+    },
+  }),
+  operationalRoute({
+    id: 'operations.availability', pattern: '/operations/availability', methods: ['GET'], kind: 'page', handler: async (_request, { env }) => {
+      const [{ uptimeContent }, { operationsPageContent }, { renderPage }] = await Promise.all([
+        import('../demos/operations-pages'), import('../demos/operations'), import('../ui/page'),
+      ]);
+      return renderPage(env, operationsPageContent(await uptimeContent(env), 'operations.availability'));
+    },
+    title: 'Operations availability', description: 'Measured availability history with planned maintenance separated from unexpected failures.',
+    sourceModule: 'src/demos/operations-pages.ts', sourceExport: 'uptimeContent', indexing: 'allow', offline: 'available',
+    page: {
+      parent: 'operations.index', label: 'Availability',
+      summary: 'Measured availability history with planned maintenance separated from unexpected failures.',
+      order: 0, navigation: 'secondary', architectureMap: false,
+    },
+  }),
+  operationalRoute({
+    id: 'operations.logs', pattern: '/operations/logs', methods: ['GET'], kind: 'page', handler: async (request, { env }) => {
+      const [{ logsContent }, { operationsPageContent }, { renderPage }] = await Promise.all([
+        import('../demos/logs'), import('../demos/operations'), import('../ui/page'),
+      ]);
+      return renderPage(env, operationsPageContent(await logsContent(request, env), 'operations.logs'));
+    },
+    title: 'Operations logs', description: 'Public-safe application log viewer with bounded filtering and request correlation.',
+    sourceModule: 'src/demos/logs.ts', sourceExport: 'logsContent', indexing: 'allow', offline: 'available',
+    page: {
+      parent: 'operations.index', label: 'Logs',
+      summary: 'Public-safe application log viewer with bounded filtering and request correlation.',
+      order: 1, navigation: 'secondary', architectureMap: false,
+    },
+  }),
+  operationalRoute({
+    id: 'operations.usage', pattern: '/operations/usage', methods: ['GET'], kind: 'page', handler: async (_request, { env }) => {
+      const [{ billingContent }, { operationsPageContent }, { renderPage }] = await Promise.all([
+        import('../demos/operations-pages'), import('../demos/operations'), import('../ui/page'),
+      ]);
+      return renderPage(env, operationsPageContent(await billingContent(env), 'operations.usage'));
+    },
+    title: 'Operations usage and cost', description: 'Live Cloudflare resource consumption with controlled cost-degradation scenarios.',
+    sourceModule: 'src/demos/operations-pages.ts', sourceExport: 'billingContent', indexing: 'allow', offline: 'available',
+    page: {
+      parent: 'operations.index', label: 'Usage & cost',
+      summary: 'Live Cloudflare resource consumption with controlled cost-degradation scenarios.',
+      order: 2, navigation: 'secondary', architectureMap: false,
+    },
+  }),
+  operationalRoute({
+    id: 'operations.reports', pattern: '/operations/reports', methods: ['GET'], kind: 'page', handler: async (request, { env }) => {
+      const [{ reportsContent, operationsPageContent }, { renderPage }] = await Promise.all([
+        import('../demos/operations'), import('../ui/page'),
+      ]);
+      return renderPage(env, operationsPageContent(await reportsContent(request, env), 'operations.reports'));
+    },
+    title: 'Operations reports', description: 'Shared operational and assurance reporting through the canonical reporting presenter.',
+    sourceModule: 'src/demos/operations.ts', sourceExport: 'reportsContent', indexing: 'allow', offline: 'available',
+    page: {
+      parent: 'operations.index', label: 'Reports',
+      summary: 'Shared operational and assurance reporting through the canonical reporting presenter.',
+      order: 3, navigation: 'secondary', architectureMap: false,
+    },
+  }),
+  operationalRoute({
+    id: 'operations.docs', pattern: '/operations/docs', methods: ['GET'], kind: 'page', handler: async (_request, { env }) => {
+      const [{ docsContent }, { operationsPageContent }, { renderPage }] = await Promise.all([
+        import('../demos/operations-pages'), import('../demos/operations'), import('../ui/page'),
+      ]);
+      return renderPage(env, operationsPageContent(docsContent(env), 'operations.docs'));
+    },
+    title: 'Operations documentation', description: 'Repository-native standards, contracts, implementation sources, and live machine interfaces.',
+    sourceModule: 'src/demos/operations-pages.ts', sourceExport: 'docsContent', indexing: 'allow', offline: 'available',
+    page: {
+      parent: 'operations.index', label: 'Documentation',
+      summary: 'Repository-native standards, contracts, implementation sources, and live machine interfaces.',
+      order: 4, navigation: 'secondary', architectureMap: false,
     },
   }),
   operationalRoute({

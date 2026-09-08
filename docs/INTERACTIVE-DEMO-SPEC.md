@@ -25,11 +25,16 @@ HTML resources are declared by capability-owned routes. `/platform` and `/interf
 | `/interfaces/accessibility` | Accessibility laboratory |
 | `/assurance` | Delivery, governance, evidence, compliance, risks, incidents, and concerns |
 | `/security` | Security policy, private reporting boundary, and published advisories |
-| `/operations` | Health, availability, logs, usage, reporting, and documentation |
+| `/operations` | Live operations overview |
+| `/operations/availability` | Availability and health interpretation |
+| `/operations/logs` | Public-safe application diagnostics |
+| `/operations/usage` | Usage and cost telemetry |
+| `/operations/reports` | Shared reporting presentation |
+| `/operations/docs` | Machine interfaces and source references |
 | `/admin` | Authenticated availability and crawler controls |
 | `/offline` | Intentional-maintenance status |
 
-Platform and interface demonstrations use those child pathnames. Query parameters remain state where appropriate, including `/assurance/compliance`, `/operations?view=reports`, `/interfaces/i18n?locale=ar`, and `/interfaces/accessibility?mode=broken`. Unknown pathnames and retired platform/interface `view` URLs use the ordinary 404. There is no redirect table, route alias, proxy path, dual endpoint, or client-side routing fallback.
+Platform, interface, assurance, and operations demonstrations use those child pathnames. Query parameters remain state where appropriate, including `/assurance/compliance?framework=iso-27001`, `/operations/reports?report=evidence`, `/interfaces/i18n?locale=ar`, and `/interfaces/accessibility?mode=broken`. Unknown pathnames and retired resource-selection `view` URLs use the ordinary 404. There is no redirect table, route alias, proxy path, dual endpoint, or client-side routing fallback.
 
 ## Routing contract
 

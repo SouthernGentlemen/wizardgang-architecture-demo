@@ -3,8 +3,10 @@ import { billingScenarioResponse } from '../src/api/billing';
 import { reportingCollectionResponse } from '../src/api/reporting';
 import { workerComputeResponse } from '../src/api/runtime';
 import { renderOperations } from '../src/demos/operations';
+import { billingContent, docsContent, uptimeContent } from '../src/demos/operations-pages';
 import { runScheduledOperations } from '../src/index';
 import { collectCloudflareUsage } from '../src/lib/cloudflare-usage';
+import { cursorLink } from '../src/routing/cursor-link';
 import type { D1PreparedStatement, Env } from '../src/types';
 
 interface Usage { id: number; service_key: string; metric_key: string; quantity: number; unit: string; estimated_cost_usd: number; budget_limit_usd: number; captured_at: string }
@@ -101,7 +103,7 @@ function analyticsFetch(options: { zero?: boolean; missingAccount?: boolean; mal
 }
 
 describe('operations proof surface', () => {
-  it('renders dashboard, health, docs, uptime classification, and billing from live state', async () => {
+  it('renders the canonical index and child content from live state', async () => {
     const environment = env();
     const dashboard = await (await renderOperations(new Request('https://demo.wizardgang.ai/operations'), environment)).text();
     expect(dashboard).toContain('Current operational state');
@@ -112,19 +114,31 @@ describe('operations proof surface', () => {
     expect(dashboard).toContain('href="/robots.txt"');
     expect(dashboard).toContain('aria-label="Operations views"');
     expect(dashboard).toContain('Collection discovery comes from reporting ownership and registered capabilities.');
-    expect(dashboard).toContain('href="/operations?view=reports&amp;report=compliance#reporting-browser"');
+    expect(dashboard).toContain('href="/operations/reports?report=compliance#reporting-browser"');
     expect(dashboard).toContain('Shared reporting presenter');
     expect(dashboard).not.toContain('name="control" value="chatgpt-crawl"');
     expect(dashboard).not.toContain('name="state" value="enabled"');
-    const docs = await (await renderOperations(new Request('https://demo.wizardgang.ai/operations?view=docs'), environment)).text();
-    expect(docs).toContain('OpenAPI JSON');
-    expect(docs).toContain('docs/INTERACTIVE-DEMO-SPEC.md');
-    const uptime = await (await renderOperations(new Request('https://demo.wizardgang.ai/operations?view=availability'), environment)).text();
-    expect(uptime).toContain('planned/manual offline');
-    expect(uptime).toContain('<strong>1 / 1</strong><span>planned / unexpected</span>');
-    const billing = await (await renderOperations(new Request('https://demo.wizardgang.ai/operations?view=usage'), environment)).text();
-    expect(billing).toContain('Cloudflare Usage &amp; Cost');
-    expect(billing).toContain('Cost guardrail simulator');
+
+    const docs = docsContent(environment);
+    expect(docs.canonicalPath).toBe('/operations/docs');
+    expect(docs.body).toContain('OpenAPI JSON');
+    expect(docs.body).toContain('docs/INTERACTIVE-DEMO-SPEC.md');
+
+    const uptime = await uptimeContent(environment);
+    expect(uptime.canonicalPath).toBe('/operations/availability');
+    expect(uptime.body).toContain('planned/manual offline');
+    expect(uptime.body).toContain('<strong>1 / 1</strong><span>planned / unexpected</span>');
+
+    const billing = await billingContent(environment);
+    expect(billing.canonicalPath).toBe('/operations/usage');
+    expect(billing.body).toContain('Cloudflare Usage &amp; Cost');
+    expect(billing.body).toContain('Cost guardrail simulator');
+  });
+
+  it('preserves all reporting query state while replacing only the cursor', () => {
+    const request = new Request('https://demo.wizardgang.ai/operations/reports?report=operations&limit=25&source=github&cursor=old#reporting-browser');
+    expect(cursorLink(request, 'next cursor')).toBe('/operations/reports?report=operations&limit=25&source=github&cursor=next+cursor#reporting-browser');
+    expect(cursorLink(request, null)).toBeNull();
   });
 
   it('moves controlled usage through degraded state and pauses only optional compute', async () => {

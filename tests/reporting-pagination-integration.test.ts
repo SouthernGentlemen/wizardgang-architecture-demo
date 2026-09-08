@@ -74,7 +74,7 @@ describe('DEMO-177 reporting pagination integration', () => {
     const cursor = first.query.pagination.nextCursor;
     expect(cursor).toMatch(/^rpc1\./);
 
-    const dashboardUrl = new URL('https://demo.wizardgang.ai/operations?view=reports&report=evidence&limit=1');
+    const dashboardUrl = new URL('https://demo.wizardgang.ai/operations/reports?report=evidence&limit=1');
     dashboardUrl.searchParams.set('cursor', cursor!);
     const target = dashboardReportingRequestUrl('/api/reporting/evidence', dashboardUrl);
     expect(target.searchParams.get('cursor')).toBe(cursor);

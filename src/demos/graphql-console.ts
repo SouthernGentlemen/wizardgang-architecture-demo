@@ -7,7 +7,7 @@ import { localGraphiqlDocument } from '../ui/graphiql-assets';
 
 export function graphqlContent(env: Env): PageContent {
   const sources = [
-    ['Surface registry', 'src/demos/registry.ts'],
+    ['Application route registry', 'src/routing/application-routes.ts'],
     ['GraphQL execution', 'src/api/graphql.ts'],
     ['Executable schema', 'contracts/graphql/schema.graphql'],
     ['GraphiQL assets', 'src/ui/graphiql-assets.ts'],

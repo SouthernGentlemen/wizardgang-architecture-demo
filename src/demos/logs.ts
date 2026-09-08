@@ -2,11 +2,12 @@ import type { DemoDefinition, Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
 import { recentApplicationLogs } from '../lib/logs';
+import { routeUrl } from '../routing/application-routes';
 import { referenceDetails, pageContent, type PageContent } from '../ui/page';
 
 const demo: DemoDefinition = {
   id: 'logs',
-  route: '/operations?view=logs',
+  route: routeUrl('operations.logs'),
   title: 'Log Viewer',
   group: 'Operations',
   sourcePath: 'src/demos/logs.ts',
@@ -17,7 +18,7 @@ const demo: DemoDefinition = {
     'Log retention and query limits are intentionally bounded for a public demo'
   ],
   status: 'working',
-  interfaces: [{ method: 'GET', path: '/api/operations/logs', description: 'Read bounded, sanitized log rows as JSON.' }],
+  interfaces: [{ method: 'GET', path: routeUrl('operations.api-logs'), description: 'Read bounded, sanitized log rows as JSON.' }],
   supportingSources: [{ label: 'View redaction tests', path: 'tests/logs.test.ts' }]
 };
 
@@ -37,6 +38,13 @@ export async function logsContent(request: Request, env: Env): Promise<PageConte
   const requestId = url.searchParams.get('requestId') || '';
   const limit = Math.max(1, Math.min(Number(url.searchParams.get('limit') || '50') || 50, 200));
   const logs = await recentApplicationLogs(env, { level, source, requestId, limit });
+  const logsRoute = routeUrl('operations.logs');
+  const logsApiRoute = routeUrl('operations.api-logs', {}, {
+    limit: String(limit),
+    level: level || undefined,
+    source: source || undefined,
+    requestId: requestId || undefined,
+  });
 
   const rows = logs.map((log) => `
     <tr>
@@ -66,8 +74,7 @@ export async function logsContent(request: Request, env: Env): Promise<PageConte
 </section>
 <section class="panel" aria-labelledby="filters-heading">
   <h2 id="filters-heading">Filter logs</h2>
-  <form method="get" action="/operations" class="filters">
-    <input type="hidden" name="view" value="logs">
+  <form method="get" action="${escapeHtml(logsRoute)}" class="filters">
     <label>Level
       <select name="level">
         <option value="">All</option>
@@ -84,7 +91,7 @@ export async function logsContent(request: Request, env: Env): Promise<PageConte
       <input name="requestId" value="${escapeHtml(requestId)}" maxlength="120" placeholder="req_…">
     </label>
     <button type="submit">Apply</button>
-    <a href="/operations?view=logs">Reset</a>
+    <a href="${escapeHtml(logsRoute)}">Reset</a>
   </form>
 </section>
 <section class="panel" aria-labelledby="viewer-heading">
@@ -96,10 +103,10 @@ export async function logsContent(request: Request, env: Env): Promise<PageConte
       <tbody>${rows || '<tr><td colspan="8">No logs have been recorded yet.</td></tr>'}</tbody>
     </table>
   </div>
-  <p><a href="/api/operations/logs?limit=${limit}${level ? `&level=${encodeURIComponent(level)}` : ''}${source ? `&source=${encodeURIComponent(source)}` : ''}${requestId ? `&requestId=${encodeURIComponent(requestId)}` : ''}">View JSON</a></p>
+  <p><a href="${escapeHtml(logsApiRoute)}">View JSON</a></p>
 </section>`;
 
-  return pageContent(env, demo.title, body, { cacheControl: 'no-store', canonicalPath: '/operations' });
+  return pageContent(env, demo.title, body, { cacheControl: 'no-store', canonicalPath: logsRoute });
 }
 
 export default demo;

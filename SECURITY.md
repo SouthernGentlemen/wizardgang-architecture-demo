@@ -31,7 +31,7 @@ REST writes accept either the managed operator bearer credential or a ten-minute
 
 ## Public logging
 
-`/operations?view=logs` and `/api/operations/logs` are intentionally public-safe diagnostic surfaces. They must never become raw request/Cloudflare log proxies. Do not store or render passwords, authorization headers, cookies, bearer tokens, API keys, secrets, payment data, private account identifiers, or unreviewed request bodies. Structured detail is defensively redacted and size-bounded before it reaches `application_logs`.
+`/operations/logs` and `/api/operations/logs` are intentionally public-safe diagnostic surfaces. They must never become raw request/Cloudflare log proxies. Do not store or render passwords, authorization headers, cookies, bearer tokens, API keys, secrets, payment data, private account identifiers, or unreviewed request bodies. Structured detail is defensively redacted and size-bounded before it reaches `application_logs`.
 
 Keep operational logs distinct from the `demo_events` audit/evidence stream: logs explain runtime behavior; audit events preserve meaningful control/change evidence.
 

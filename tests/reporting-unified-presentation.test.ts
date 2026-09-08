@@ -192,7 +192,7 @@ describe('DEMO-178 unified reporting presentation', () => {
       expect.objectContaining({ name: 'severity', value: 'high' }),
     ]));
 
-    const html = renderReportingPresentation(presented, { nextHref: '/operations?view=reports&cursor=next' });
+    const html = renderReportingPresentation(presented, { nextHref: '/operations/reports?cursor=next' });
     expect(html).toContain('Shared presentation record');
     expect(html).toContain('Status open');
     expect(html).toContain('Availability Available');

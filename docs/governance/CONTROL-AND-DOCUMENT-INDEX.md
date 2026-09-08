@@ -274,9 +274,9 @@ The most important technical evidence owners are:
 | Data | migrations, D1/R2 source, data governance/register |
 | Configuration | `wrangler.jsonc`, workflows, config/contracts, configuration register |
 | Cryptography/secrets | identity/webhook/admin source, `SECURITY.md`, crypto/secrets governance/register |
-| Logging/audit | logging/audit libraries, D1 migrations, `/operations?view=logs`, `demo_events`/`application_logs` |
-| Health/uptime | `/api/operations/health`, `/api/operations/version`, scheduled observations, `/operations?view=availability` |
-| Cost/degradation | `/operations?view=usage`, usage collector, degradation behavior |
+| Logging/audit | logging/audit libraries, D1 migrations, `/operations/logs`, `demo_events`/`application_logs` |
+| Health/uptime | `/api/operations/health`, `/api/operations/version`, scheduled observations, `/operations/availability` |
+| Cost/degradation | `/operations/usage`, usage collector, degradation behavior |
 | Recovery | release reconstruction path, recovery procedure/register, future RT-001 evidence |
 | Accessibility | `docs/ACCESSIBILITY.md`, `/interfaces/accessibility`, interface tests, manual records |
 | Traceability | `docs/EVIDENCE.md`, Git/PR/CI/tag/release/deploy/runtime chain |
@@ -297,9 +297,9 @@ The intended public assurance architecture is:
 | **`/security`** | Vulnerability disclosure policy and private-reporting boundary |
 | **`/.well-known/security.txt`** | Machine-readable vulnerability-reporting contact and policy |
 | **`/operations`** | Operational posture and links to evidence owners |
-| **`/operations?view=availability`** | Health/availability observations |
-| **`/operations?view=logs`** | Public-safe application diagnostics |
-| **`/operations?view=usage`** | Usage/cost/degradation evidence |
+| **`/operations/availability`** | Health/availability observations |
+| **`/operations/logs`** | Public-safe application diagnostics |
+| **`/operations/usage`** | Usage/cost/degradation evidence |
 | **`/api/operations/health`** | Machine-readable runtime/dependency health |
 | **`/api/operations/version`** | Deployed version/SHA identity |
 | **`/mcp`** | Current bounded MCP implementation surface |
