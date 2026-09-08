@@ -1,24 +1,28 @@
 import { defineInterfaceIdentityCapability, interfaceIdentityRoute } from '../route-capability';
 
-export const interfacesRouteCapability = defineInterfaceIdentityCapability('interfaces.page', [
+export const interfacesRouteCapability = defineInterfaceIdentityCapability('interfaces.surface', [
   interfaceIdentityRoute({
-    id: 'interfaces.page',
+    id: 'interfaces.index',
     pattern: '/interfaces',
     methods: ['GET'],
     kind: 'page',
     handler: async (request, { env }) => {
-      const { renderInterfaces } = await import('../../demos/interfaces');
-      return renderInterfaces(request, env);
+      const [{ interfacesContent }, { renderNotFound, renderPage }] = await Promise.all([
+        import('../../demos/interfaces'),
+        import('../../ui/page'),
+      ]);
+      if (new URL(request.url).searchParams.has('view')) return renderNotFound(env);
+      return renderPage(env, interfacesContent(env));
     },
-    title: 'Interfaces',
-    description: 'One server-rendered surface for REST, GraphQL, webhooks, identity, MCP, internationalization, and accessibility.',
+    title: 'Application interfaces',
+    description: 'Index of canonical application interface demonstration routes.',
     sourceModule: 'src/demos/interfaces.ts',
-    sourceExport: 'renderInterfaces',
-    tests: ['tests/interface-consolidation.test.ts', 'tests/interface.test.ts'],
+    sourceExport: 'interfacesContent',
+    tests: ['tests/interface-consolidation.test.ts', 'tests/router.test.ts', 'tests/interface.test.ts', 'tests/application-route-registry.test.ts'],
     page: {
       parent: 'interfaces.frontend.index',
       label: 'Interfaces',
-      summary: 'One server-rendered surface for REST, GraphQL, webhooks, identity, MCP, internationalization, and accessibility.',
+      summary: 'REST, GraphQL, webhooks, identity, MCP, internationalization, and accessibility surfaces.',
       order: 2,
       navigation: 'primary',
       architectureMap: true,

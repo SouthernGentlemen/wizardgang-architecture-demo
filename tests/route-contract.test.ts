@@ -3,9 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   assuranceSurfaceViews,
   frontendViewUrl,
-  interfaceSurfaceViews,
   operationsSurfaceViews,
-  platformSurfaceViews,
 } from '../src/demos/registry';
 import {
   applicationRouteRegistry,
@@ -57,8 +55,6 @@ function registeredPageUrls(): string[] {
     ...applicationRouteRegistry.declarations
       .filter((route) => route.kind === 'page')
       .map((route) => routeUrl(route.id)),
-    ...platformSurfaceViews.map((view) => frontendViewUrl('platform.page', view.id)),
-    ...interfaceSurfaceViews.map((view) => frontendViewUrl('interfaces.page', view.id)),
     ...assuranceSurfaceViews.map((view) => frontendViewUrl('assurance.wizardgang-public-assurance.html', view.id)),
     ...operationsSurfaceViews.map((view) => frontendViewUrl('operations.page', view.id)),
   ];

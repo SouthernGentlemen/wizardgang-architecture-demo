@@ -1,8 +1,9 @@
-import type { DemoDefinition } from '../types';
+import type { DemoDefinition, Env } from '../types';
+import { routeUrl } from '../routing/application-routes';
+import { demoContent, type PageContent } from '../ui/page';
 
 const demo: DemoDefinition = {
   "id": "durable-objects",
-  "route": "/platform?view=durable-objects",
   "title": "Durable Objects",
   "group": "Platform",
   "sourcePath": "src/demos/durable-objects.ts",
@@ -17,5 +18,9 @@ const demo: DemoDefinition = {
   "supportingSources": [{ "label": "View Durable Object API", "path": "src/api/durable.ts" }, { "label": "View Durable Object class", "path": "src/durable/demo-coordinator.ts" }, { "label": "View Durable Object binding", "path": "wrangler.jsonc" }],
   "action": { "label": "Increment the coordinated counter", "method": "POST", "path": "/api/labs/durable-counter" }
 };
+
+export function durableObjectsContent(env: Env): PageContent {
+  return demoContent(env, { ...demo, route: routeUrl('platform.durable-objects') });
+}
 
 export default demo;

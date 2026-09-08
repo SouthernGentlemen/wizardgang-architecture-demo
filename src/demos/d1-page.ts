@@ -1,8 +1,11 @@
 import type { Env } from '../types';
 import { sourceUrl } from '../lib/github';
+import { routeUrl } from '../routing/application-routes';
 import { pageContent, type PageContent } from '../ui/page';
 
 export function d1Content(env: Env): PageContent {
+  const d1Url = routeUrl('platform.d1');
+  const graphqlUrl = routeUrl('interfaces.graphql.console');
   const implementationLinks = [
     { label: 'Page implementation', path: 'src/demos/d1-page.ts' },
     { label: 'Route definition', path: 'src/demos/d1.ts' },
@@ -90,7 +93,7 @@ export function d1Content(env: Env): PageContent {
       <p class="eyebrow">Relationship</p><h2 id="relationship-heading">Tasks belong to users</h2>
       <p><code>demo_tasks.assignee_id</code><br><span aria-hidden="true">↓</span><br><code>demo_users.id</code></p>
       <p class="subtle">Deleting an assigned user keeps their tasks intact and marks them Unassigned.</p>
-      <a class="text-link" href="/interfaces?view=graphql">Query these users with GraphQL →</a>
+      <a class="text-link" href="${graphqlUrl}">Query these users with GraphQL →</a>
     </section>
   </aside>
 </section>
@@ -370,5 +373,5 @@ export function d1Content(env: Env): PageContent {
   });
   loadAll('users').catch((error) => setDatabaseMessage(error.message, 'error'));
 })();
-</script>`, { canonicalPath: '/platform', cacheControl: 'no-store' });
+</script>`, { canonicalPath: d1Url, cacheControl: 'no-store' });
 }

@@ -23,7 +23,10 @@ describe('architecture demo registry', () => {
     ]);
     expect(primary.every((route) => route.page?.navigation === 'primary')).toBe(true);
     expect(architectureMapEntries().map((route) => route.pattern)).toEqual([
-      '/platform', '/interfaces', '/assurance', '/operations', '/security',
+      '/interfaces/rest', '/platform/edge', '/interfaces/graphql', '/platform',
+      '/platform/workers', '/interfaces', '/interfaces/webhooks', '/platform/durable-objects',
+      '/assurance', '/interfaces/identity', '/platform/d1', '/interfaces/mcp',
+      '/operations', '/platform/r2', '/security', '/interfaces/i18n', '/interfaces/accessibility',
     ]);
   });
 

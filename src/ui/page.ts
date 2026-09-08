@@ -84,6 +84,12 @@ function primaryNavigationHtml(currentRouteId: string | undefined): string {
 
 function shell(env: Env, content: PageContent): Response {
   const homeRoute = routeUrl(ROOT_ROUTE_ID);
+  const routeSourceModule = content.routeId
+    ? registeredRouteMetadata().find((route) => route.id === content.routeId)?.source.module
+    : undefined;
+  const routeSourceLink = routeSourceModule
+    ? ` · <a href="${escapeHtml(sourceUrl(env, routeSourceModule))}">Route source</a>`
+    : '';
   const canonicalHref = new URL(content.canonicalPath ?? homeRoute, 'https://demo.wizardgang.ai').toString();
   const html = `<!doctype html>
 <html lang="${escapeHtml(content.lang ?? 'en')}"${content.dir ? ` dir="${content.dir}"` : ''}>
@@ -127,7 +133,7 @@ function shell(env: Env, content: PageContent): Response {
 ${content.beforeMain ?? ''}
 <main class="site-main" id="main">${content.body}</main>
 <footer class="site-footer">
-  <span>WG-ARCH-001 · <a href="${escapeHtml(repoUrl(env))}">Public source</a></span>
+  <span>WG-ARCH-001 · <a href="${escapeHtml(repoUrl(env))}">Public source</a>${routeSourceLink}</span>
 </footer>
 <script>${THEME_TOGGLE}</script>
 </body>
@@ -194,16 +200,21 @@ fetch('/api/operations/health').then((r) => r.json()).then((h) => {
   });
 }
 
+function demoRoute(demo: DemoDefinition): string {
+  if (!demo.route) throw new Error(`Demo '${demo.id}' requires a registered route before rendering.`);
+  return demo.route;
+}
+
 /** Previous/next within the same group keeps adjacent proofs easy to reach. */
 function groupPager(demo: DemoDefinition, all: DemoDefinition[]): string {
   const siblings = all.filter((candidate) => candidate.group === demo.group);
-  const index = siblings.findIndex((candidate) => candidate.route === demo.route);
+  const index = siblings.findIndex((candidate) => candidate.id === demo.id);
   const previous = siblings[index - 1];
   const next = siblings[index + 1];
   if (!previous && !next) return '';
   return `<nav class="meta" aria-label="${escapeHtml(demo.group)} routes" style="margin-top:2.5rem;padding-top:1.1rem;border-top:1px solid var(--line)">
-    ${previous ? `<a href="${escapeHtml(previous.route)}">← ${escapeHtml(previous.title)}</a>` : ''}
-    ${next ? `<a href="${escapeHtml(next.route)}">${escapeHtml(next.title)} →</a>` : ''}
+    ${previous ? `<a href="${escapeHtml(demoRoute(previous))}">← ${escapeHtml(previous.title)}</a>` : ''}
+    ${next ? `<a href="${escapeHtml(demoRoute(next))}">${escapeHtml(next.title)} →</a>` : ''}
   </nav>`;
 }
 
@@ -219,6 +230,7 @@ export function referenceDetails(links: ReferenceLink[], label = 'References'): 
 }
 
 export function demoContent(env: Env, demo: DemoDefinition, all: DemoDefinition[] = [], extra = ''): PageContent {
+  const route = demoRoute(demo);
   const actions = demo.actions ?? (demo.action ? [{
     ...demo.action,
     description: demo.action.description ?? demo.interfaces?.find((item) => item.path === demo.action?.path)?.description,
@@ -247,7 +259,7 @@ export function demoContent(env: Env, demo: DemoDefinition, all: DemoDefinition[
   ];
   const body = `
 <section class="page-header">
-  <p class="eyebrow"><a href="${escapeHtml(routeUrl(ROOT_ROUTE_ID))}">${escapeHtml(demo.group)}</a> / ${escapeHtml(demo.route)}</p>
+  <p class="eyebrow"><a href="${escapeHtml(routeUrl(ROOT_ROUTE_ID))}">${escapeHtml(demo.group)}</a> / ${escapeHtml(route)}</p>
   <h1>${escapeHtml(demo.title)}</h1>
   <p class="lede">${escapeHtml(demo.summary)}</p>
   ${demo.notice ? `<p class="subtle">${escapeHtml(demo.notice)}</p>` : ''}
@@ -285,7 +297,7 @@ ${groupPager(demo, all)}
   }));
 })();
 </script>`;
-  return pageContent(env, demo.title, body, { canonicalPath: demo.route, description: demo.summary });
+  return pageContent(env, demo.title, body, { canonicalPath: route, description: demo.summary });
 }
 
 export function renderNotFound(env: Env): Response {

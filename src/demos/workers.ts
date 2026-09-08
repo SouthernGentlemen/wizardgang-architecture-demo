@@ -1,8 +1,9 @@
-import type { DemoDefinition } from '../types';
+import type { DemoDefinition, Env } from '../types';
+import { routeUrl } from '../routing/application-routes';
+import { demoContent, type PageContent } from '../ui/page';
 
 const demo: DemoDefinition = {
   "id": "workers",
-  "route": "/platform?view=workers",
   "title": "Cloudflare Workers",
   "group": "Platform",
   "sourcePath": "src/demos/workers.ts",
@@ -17,5 +18,9 @@ const demo: DemoDefinition = {
   "supportingSources": [{ "label": "View runtime API", "path": "src/api/runtime.ts" }, { "label": "View Worker entry point", "path": "src/index.ts" }],
   "action": { "label": "Run stateless average", "method": "POST", "path": "/api/labs/workers", "body": { "operation": "average", "values": [8, 13, 21, 34] } }
 };
+
+export function workersContent(env: Env): PageContent {
+  return demoContent(env, { ...demo, route: routeUrl('platform.workers') });
+}
 
 export default demo;

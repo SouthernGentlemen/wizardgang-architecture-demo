@@ -1,12 +1,9 @@
 import type { Env } from '../types';
-import { frontendViewUrl } from './registry';
 import { routeUrl } from '../routing/application-routes';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
 import { pageContent, type PageContent } from '../ui/page';
 import { localGraphiqlDocument } from '../ui/graphiql-assets';
-
-const GRAPHIQL_DOCUMENT_URL = 'https://demo.wizardgang.ai/interfaces?view=graphql';
 
 export function graphqlContent(env: Env): PageContent {
   const sources = [
@@ -16,13 +13,14 @@ export function graphqlContent(env: Env): PageContent {
     ['GraphiQL assets', 'src/ui/graphiql-assets.ts'],
     ['GraphQL tests', 'tests/graphql.test.ts'],
   ];
-  const graphiqlDocument = localGraphiqlDocument(new Request(GRAPHIQL_DOCUMENT_URL));
-  const identityUrl = frontendViewUrl('interfaces.page', 'identity');
-  const restUrl = frontendViewUrl('interfaces.page', 'rest');
-  const webhooksUrl = frontendViewUrl('interfaces.page', 'webhooks');
-  const mcpUrl = frontendViewUrl('interfaces.page', 'mcp');
-  const d1Url = frontendViewUrl('platform.page', 'd1');
-  const interfacesUrl = routeUrl('interfaces.page');
+  const graphqlUrl = routeUrl('interfaces.graphql.console');
+  const graphiqlDocumentUrl = new URL(graphqlUrl, 'https://demo.wizardgang.ai').toString();
+  const graphiqlDocument = localGraphiqlDocument(new Request(graphiqlDocumentUrl));
+  const identityUrl = routeUrl('interfaces.identity.page');
+  const restUrl = routeUrl('interfaces.rest');
+  const webhooksUrl = routeUrl('interfaces.webhooks.console');
+  const mcpUrl = routeUrl('interfaces.mcp.console');
+  const d1Url = routeUrl('platform.d1');
   return pageContent(env, 'GraphQL API', `
 <section class="page-header lab-page-header graphql-page-header" id="graphql">
   <p class="eyebrow">Interfaces / GraphQL</p>
@@ -42,6 +40,6 @@ export function graphqlContent(env: Env): PageContent {
 <section class="graphql-shared panel" aria-labelledby="graphql-shared-heading"><div><p class="eyebrow">Shared data</p><h2 id="graphql-shared-heading">GraphQL ↔ D1 Users</h2><p>The IDE and the D1 console call the same bounded user services. Transport changes; persistence and policy do not.</p></div><a class="button" href="${escapeHtml(d1Url)}">Open D1 view →</a></section>
 <section class="related-interfaces" aria-labelledby="graphql-related-heading"><p class="eyebrow">Application interfaces</p><h2 id="graphql-related-heading">Related interfaces</h2><nav class="resource-list" aria-label="Related application interfaces"><a href="${escapeHtml(restUrl)}"><strong>REST API →</strong><code>${escapeHtml(restUrl)}</code></a><a href="${escapeHtml(webhooksUrl)}"><strong>Webhooks →</strong><code>${escapeHtml(webhooksUrl)}</code></a><a href="${escapeHtml(mcpUrl)}"><strong>MCP →</strong><code>${escapeHtml(mcpUrl)}</code></a><a href="${escapeHtml(identityUrl)}"><strong>Identity →</strong><code>${escapeHtml(identityUrl)}</code></a></nav></section>
 <details class="implementation-notes"><summary>Implementation details</summary><div class="reference-links">${sources.map(([label, path]) => `<a href="${escapeHtml(sourceUrl(env, path))}">${escapeHtml(label)}</a>`).join('')}</div></details>`, {
-    canonicalPath: interfacesUrl, description: 'Run the D1-backed GraphQL schema through a locally bundled GraphiQL IDE.', cacheControl: 'no-store',
+    canonicalPath: graphqlUrl, description: 'Run the D1-backed GraphQL schema through a locally bundled GraphiQL IDE.', cacheControl: 'no-store',
   });
 }

@@ -4,20 +4,32 @@ This document describes the current interactive architecture demo. Route declara
 
 ## Browser topology
 
-Exactly eight HTML page pathnames exist:
+HTML resources are declared by capability-owned routes. `/platform` and `/interfaces` are real indexes whose demonstrations are canonical child resources:
 
 | Pathname | Purpose |
 |---|---|
 | `/` | Architecture index |
-| `/platform` | Edge, Workers, Durable Objects, D1, and R2 laboratories |
-| `/interfaces` | REST/OpenAPI, GraphQL, webhooks, identity, MCP, i18n, and accessibility |
+| `/platform` | Platform laboratory index |
+| `/platform/edge` | Edge inspection laboratory |
+| `/platform/workers` | Worker computation laboratory |
+| `/platform/durable-objects` | Durable Object counter laboratory |
+| `/platform/d1` | D1 laboratory |
+| `/platform/r2` | R2 laboratory |
+| `/interfaces` | Interface demonstration index |
+| `/interfaces/rest` | REST/OpenAPI console |
+| `/interfaces/graphql` | GraphiQL console |
+| `/interfaces/webhooks` | Webhook console |
+| `/interfaces/identity` | Identity console |
+| `/interfaces/mcp` | MCP console |
+| `/interfaces/i18n` | Internationalization laboratory |
+| `/interfaces/accessibility` | Accessibility laboratory |
 | `/assurance` | Delivery, governance, evidence, compliance, risks, incidents, and concerns |
 | `/security` | Security policy, private reporting boundary, and published advisories |
 | `/operations` | Health, availability, logs, usage, reporting, and documentation |
 | `/admin` | Authenticated availability and crawler controls |
 | `/offline` | Intentional-maintenance status |
 
-Subsections use server-rendered query state such as `/platform?view=d1`, `/interfaces?view=graphql`, `/assurance?view=compliance`, and `/operations?view=reports`. Unknown pathnames and unknown view values use the ordinary 404. There is no redirect table, route alias, proxy path, dual endpoint, or client-side routing fallback.
+Platform and interface demonstrations use those child pathnames. Query parameters remain state where appropriate, including `/assurance?view=compliance`, `/operations?view=reports`, `/interfaces/i18n?locale=ar`, and `/interfaces/accessibility?mode=broken`. Unknown pathnames and retired platform/interface `view` URLs use the ordinary 404. There is no redirect table, route alias, proxy path, dual endpoint, or client-side routing fallback.
 
 ## Routing contract
 
@@ -34,7 +46,7 @@ OpenAPI operations identify their owning declaration with `x-route-id`. A route 
 
 ## Platform laboratories
 
-The Platform page offers five query-selected views backed by canonical `/api/labs/*` routes:
+The `/platform` index links to five canonical child pages backed by the existing `/api/labs/*` routes:
 
 - Edge inspection exposes only allowlisted request context.
 - Worker compute accepts bounded numeric operations and remains stateless.
@@ -46,14 +58,14 @@ Every mutation has explicit method, body, identity, same-origin, size, and stora
 
 ## Interface demonstrations
 
-The Interfaces page embeds the browser presentations while preserving one machine endpoint per protocol:
+The `/interfaces` index links to canonical browser presentations while preserving one machine endpoint per protocol:
 
 - OpenAPI 3.1 is served at `/api/openapi.json` and drives the REST forms.
-- GraphQL executes at `/graphql`; the browser console is embedded in the Interfaces page.
+- GraphQL executes at `/graphql`; the browser console is `/interfaces/graphql`.
 - GitHub webhook deliveries enter at `/webhooks/github`; synthetic demonstrations use the current laboratory API.
 - OAuth/OIDC and SAML use the `/auth/*` protocol routes documented in `docs/IDENTITY.md`.
 - MCP Streamable HTTP uses `/mcp` and protocol revision `2026-07-28`.
-- i18n and accessibility are browser views with their current laboratory APIs where execution is required.
+- i18n and accessibility are browser child pages with their current laboratory APIs where execution is required.
 
 REST, GraphQL, and MCP public reads share the same authorization boundary. Authenticated visitor writes use identity-derived, ten-minute access tokens scoped to a server-derived sandbox namespace. There is no static bearer-token credential.
 

@@ -4,20 +4,28 @@ import {
   noRequestBody,
 } from '../route-capability';
 
-const tests = ['tests/platform-laboratory-routing.test.ts', 'tests/router.test.ts', 'tests/interface.test.ts'] as const;
-const docs = ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'] as const;
+const tests = [
+  'tests/platform-laboratory-routing.test.ts',
+  'tests/router.test.ts',
+  'tests/interface.test.ts',
+  'tests/application-route-registry.test.ts',
+] as const;
 
 export const platformPageCapability = definePlatformLaboratoryCapability({
   id: 'platform.surface',
   routes: [
     {
-      id: 'platform.page',
+      id: 'platform.index',
       pattern: '/platform',
       methods: ['GET'],
       kind: 'page',
       handler: async (request, env) => {
-        const { renderPlatform } = await import('../../demos/platform');
-        return renderPlatform(request, env);
+        const [{ platformContent }, { renderNotFound, renderPage }] = await Promise.all([
+          import('../../demos/platform'),
+          import('../../ui/page'),
+        ]);
+        if (new URL(request.url).searchParams.has('view')) return renderNotFound(env);
+        return renderPage(env, platformContent(env));
       },
       authentication: { mode: 'anonymous' },
       authorization: { mode: 'none' },
@@ -27,21 +35,21 @@ export const platformPageCapability = definePlatformLaboratoryCapability({
       cache: { mode: 'no-store' },
       crawler: { crawling: 'controlled', indexing: 'allow' },
       documentation: {
-        title: 'Cloudflare Platform',
-        description: 'One server-rendered surface for edge inspection, Worker compute, Durable Objects, D1, and R2 demonstrations.',
-        docs,
+        title: 'Platform demonstrations',
+        description: 'Index of canonical Cloudflare platform demonstration routes.',
+        docs: ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'],
       },
       source: {
         module: 'src/demos/platform.ts',
-        exportName: 'renderPlatform',
+        exportName: 'platformContent',
         tests,
       },
-      requestLimits: noRequestBody('The platform page selects a server-rendered view from the query string and consumes no request body.'),
+      requestLimits: noRequestBody('GET renders registered platform child routes and consumes no request body.'),
       storage: NO_STORAGE,
       page: {
         parent: 'interfaces.frontend.index',
         label: 'Platform',
-        summary: 'One server-rendered surface for edge inspection, Worker compute, Durable Objects, D1, and R2 demonstrations.',
+        summary: 'Cloudflare edge, compute, coordination, relational, and object-storage demonstrations.',
         order: 1,
         navigation: 'primary',
         architectureMap: true,

@@ -1,8 +1,9 @@
-import type { DemoDefinition } from '../types';
+import type { DemoDefinition, Env } from '../types';
+import { routeUrl } from '../routing/application-routes';
+import { demoContent, type PageContent } from '../ui/page';
 
 const demo: DemoDefinition = {
   "id": "edge",
-  "route": "/platform?view=edge",
   "title": "Cloudflare Edge",
   "group": "Platform",
   "sourcePath": "src/demos/edge.ts",
@@ -17,5 +18,9 @@ const demo: DemoDefinition = {
   "supportingSources": [{ "label": "View runtime API", "path": "src/api/runtime.ts" }, { "label": "View Cloudflare route config", "path": "wrangler.jsonc" }],
   "action": { "label": "Inspect this edge request", "method": "GET", "path": "/api/labs/edge" }
 };
+
+export function edgeContent(env: Env): PageContent {
+  return demoContent(env, { ...demo, route: routeUrl('platform.edge') });
+}
 
 export default demo;

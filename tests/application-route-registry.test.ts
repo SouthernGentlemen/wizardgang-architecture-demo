@@ -67,8 +67,8 @@ describe('complete declarative application routing', () => {
   it('derives global navigation and the architecture map from page declarations', () => {
     expect(primaryNavigation().map((route) => route.id)).toEqual([
       'interfaces.frontend.index',
-      'platform.page',
-      'interfaces.page',
+      'platform.index',
+      'interfaces.index',
       'assurance.wizardgang-public-assurance.html',
       'operations.page',
       'assurance.advisories.html',
@@ -77,14 +77,29 @@ describe('complete declarative application routing', () => {
       'Architecture', 'Platform', 'Interfaces', 'Assurance', 'Operations', 'Security',
     ]);
     expect(architectureMapEntries().map((route) => route.pattern)).toEqual([
-      '/platform', '/interfaces', '/assurance', '/operations', '/security',
+      '/interfaces/rest', '/platform/edge', '/interfaces/graphql', '/platform',
+      '/platform/workers', '/interfaces', '/interfaces/webhooks', '/platform/durable-objects',
+      '/assurance', '/interfaces/identity', '/platform/d1', '/interfaces/mcp',
+      '/operations', '/platform/r2', '/security', '/interfaces/i18n', '/interfaces/accessibility',
     ]);
     expect(secondaryNavigation('interfaces.frontend.index')).toEqual([]);
+    expect(secondaryNavigation('platform.index').map((route) => route.pattern)).toEqual([
+      '/platform/edge', '/platform/workers', '/platform/durable-objects', '/platform/d1', '/platform/r2',
+    ]);
+    expect(secondaryNavigation('interfaces.index').map((route) => route.pattern)).toEqual([
+      '/interfaces/rest', '/interfaces/graphql', '/interfaces/webhooks', '/interfaces/identity',
+      '/interfaces/mcp', '/interfaces/i18n', '/interfaces/accessibility',
+    ]);
     expect(primaryNavigation().every((route) => route.visibility === 'public')).toBe(true);
   });
 
   it('generates sitemap entries from public indexable registered pages', async () => {
-    expect(sitemapPaths()).toEqual(['/', '/platform', '/interfaces', '/assurance', '/operations', '/security']);
+    expect(sitemapPaths()).toEqual([
+      '/', '/interfaces/rest', '/platform/edge', '/interfaces/graphql', '/platform',
+      '/platform/workers', '/interfaces', '/interfaces/webhooks', '/platform/durable-objects',
+      '/assurance', '/interfaces/identity', '/platform/d1', '/interfaces/mcp',
+      '/operations', '/platform/r2', '/security', '/interfaces/i18n', '/interfaces/accessibility',
+    ]);
     const response = sitemapResponse(new Request('https://demo.wizardgang.ai/sitemap.xml'));
     const xml = await response.text();
     for (const routePath of sitemapPaths()) {
@@ -135,7 +150,7 @@ describe('complete declarative application routing', () => {
     expect(matchRoute(applicationRouteRegistry, 'POST', '/interfaces')).toMatchObject({
       status: 'method-not-allowed',
       allowedMethods: ['GET'],
-      route: { id: 'interfaces.page' },
+      route: { id: 'interfaces.index' },
     });
     expect(matchRoute(applicationRouteRegistry, 'PUT', '/mcp')).toMatchObject({
       status: 'method-not-allowed',

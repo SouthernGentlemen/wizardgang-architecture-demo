@@ -32,13 +32,13 @@ See [`docs/ROUTES.md`](docs/ROUTES.md) and [`docs/route-manifest.json`](docs/rou
 
 The demo uses the `wizardgang.ai` design tokens: dark by default, with a light theme the reader can toggle and the browser remembers. Every HTML surface carries a skip link and shared page chrome. `/sitemap.xml` is generated from registered page metadata, so it cannot publish a page that is absent from the application route registry.
 
-`/platform` is the single Platform HTML surface. Deep links use `/platform?view=edge`, `/platform?view=workers`, `/platform?view=durable-objects`, `/platform?view=d1`, and `/platform?view=r2`. Former standalone platform page paths are unregistered and return the ordinary 404 without redirects; their working API endpoints keep their existing URLs and storage boundaries.
+`/platform` is the Platform index. Its canonical child resources are `/platform/edge`, `/platform/workers`, `/platform/durable-objects`, `/platform/d1`, and `/platform/r2`. Retired top-level laboratory paths remain unregistered and return the ordinary 404 without redirects; their working API endpoints keep their existing URLs and storage boundaries.
 
-`/interfaces` is the single browser surface for REST, GraphQL, webhooks, identity, MCP, internationalization, and accessibility. Deep links use `/interfaces?view=rest`, `/interfaces?view=graphql`, `/interfaces?view=webhooks`, `/interfaces?view=identity`, `/interfaces?view=mcp`, `/interfaces?view=i18n`, and `/interfaces?view=accessibility`. Former standalone interface page paths return the ordinary 404 without redirects. `/graphql` is machine-only even for browser HTML requests; the locally bundled GraphiQL document is embedded inside `/interfaces?view=graphql`. `/graphql/schema`, identity protocol routes, webhook endpoints, and `/mcp` retain their protocol URLs.
+`/interfaces` is the Interfaces index. Its canonical child resources are `/interfaces/rest`, `/interfaces/graphql`, `/interfaces/webhooks`, `/interfaces/identity`, `/interfaces/mcp`, `/interfaces/i18n`, and `/interfaces/accessibility`. Retired top-level interface page paths remain dead. `/graphql` is machine-only even for browser HTML requests; the locally bundled GraphiQL document is served from `/interfaces/graphql`. `/graphql/schema`, identity protocol routes, webhook endpoints, and `/mcp` retain their protocol URLs.
 
 `/assurance` is the single public assurance browser surface. Its query-selected views preserve canonical filters, reporting contracts, and stable fragments such as `/assurance?view=risks#SEC-RISK-001`. `/security` remains a distinct page because vulnerability reporting and published security advisories have a separate disclosure boundary.
 
-There is no client-side router. View changes are normal links to server-rendered documents with query state; application routing remains registry matching in `src/router.ts`.
+There is no client-side router. Platform and interface navigation uses canonical child routes; assurance, operations, locale, accessibility mode, and request deep links keep true interaction state in query parameters. Application routing remains registry matching in `src/router.ts`.
 
 ## Operations and admin
 

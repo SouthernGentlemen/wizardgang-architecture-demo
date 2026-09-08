@@ -1,6 +1,6 @@
 # Identity architecture
 
-The `/interfaces?view=identity` console proves one complete boundary:
+The `/interfaces/identity` console proves one complete boundary:
 
 ```text
 provider authentication -> protocol validation -> normalized identity -> application authorization -> WizardGang session
@@ -25,7 +25,7 @@ GitHub is intentionally different from the OIDC providers. It does not supply an
 
 | Route | Purpose |
 |---|---|
-| `/interfaces?view=identity` | Sign-in surface and authenticated identity inspector |
+| `/interfaces/identity` | Sign-in surface and authenticated identity inspector |
 | `/auth/microsoft` | Start Microsoft OIDC authentication |
 | `/auth/microsoft/callback` | Validate the Microsoft OIDC callback |
 | `/auth/google` | Start Google OIDC authentication |
@@ -122,7 +122,7 @@ Configure:
 ```text
 Identifier (Entity ID): https://demo.wizardgang.ai/auth/saml
 Reply URL (ACS):        https://demo.wizardgang.ai/auth/saml/acs
-Sign-on URL:            https://demo.wizardgang.ai/interfaces?view=identity
+Sign-on URL:            https://demo.wizardgang.ai/interfaces/identity
 ```
 
 Download the Entra SAML signing certificate and store its PEM or base64 certificate body in `SAML_IDP_CERT`. The live service-provider metadata is available at `/auth/saml/metadata`.
