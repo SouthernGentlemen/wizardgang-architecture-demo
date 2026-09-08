@@ -114,15 +114,13 @@ function requestBody(operation: JsonObject, spec: OpenApiDocument): { schema: Js
 }
 
 function serverUrl(spec: OpenApiDocument): string {
-  return spec.servers?.[0]?.url?.replace(/\/$/, '') || 'https://demo.wizardgang.ai/v1';
+  const url = spec.servers?.[0]?.url;
+  if (!url) throw new Error('OpenAPI spec must declare servers[0].url.');
+  return url.replace(/\/$/, '');
 }
 
 function basePath(spec: OpenApiDocument): string {
-  try {
-    return new URL(serverUrl(spec)).pathname.replace(/\/$/, '');
-  } catch {
-    return '/v1';
-  }
+  return new URL(serverUrl(spec)).pathname.replace(/\/$/, '');
 }
 
 function exampleRequest(entry: OperationEntry, spec: OpenApiDocument): { url: string; body?: string } {
@@ -305,7 +303,7 @@ const API_RUNNER = `(() => {
     const tokenResponse = await fetch('/auth/token', { method: 'POST', headers: { accept: 'application/json' }, credentials: 'same-origin' });
     if (tokenResponse.ok) setAuthenticated(await tokenResponse.json());
   };
-  query('[data-copy-base]').addEventListener('click', async (event) => { await navigator.clipboard.writeText('https://demo.wizardgang.ai/v1'); event.currentTarget.textContent = 'Copied'; });
+  query('[data-copy-base]').addEventListener('click', async (event) => { await navigator.clipboard.writeText(event.currentTarget.dataset.copyBase); event.currentTarget.textContent = 'Copied'; });
   query('[data-copy-token]').addEventListener('click', async (event) => { await navigator.clipboard.writeText(demoToken); event.currentTarget.textContent = 'Copied'; setTimeout(() => { event.currentTarget.textContent = 'Copy token'; }, 1200); });
   query('[data-sandbox-reset]').addEventListener('click', async (event) => {
     event.currentTarget.disabled = true;
@@ -321,7 +319,7 @@ export function openApiConsole(): string {
   const schemas = spec.components?.schemas ?? {};
   const visibleSchemaCount = Object.keys(schemas).filter((name) => name !== 'ReportingContract' && name !== 'AssuranceRegistryContract').length;
   return `<section class="api-base" aria-labelledby="api-base-heading">
-    <div><p class="eyebrow">Base URL</p><h2 id="api-base-heading"><code>${escapeHtml(serverUrl(spec))}</code></h2></div><button type="button" data-copy-base>Copy</button>
+    <div><p class="eyebrow">Base URL</p><h2 id="api-base-heading"><code>${escapeHtml(serverUrl(spec))}</code></h2></div><button type="button" data-copy-base="${escapeHtml(serverUrl(spec))}">Copy</button>
   </section>
   <section class="api-sandbox" aria-labelledby="api-sandbox-heading">
     <div class="api-sandbox-heading"><div><p class="eyebrow">Authorization</p><h2 id="api-sandbox-heading">Your API sandbox</h2></div><span class="badge" data-api-auth-state>Public read</span></div>

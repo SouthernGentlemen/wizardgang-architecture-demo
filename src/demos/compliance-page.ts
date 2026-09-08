@@ -27,12 +27,10 @@ import { sourceUrl } from '../lib/github';
 import { referenceDetails, shell } from '../ui/page';
 
 const COMPLIANCE_ROUTE = assuranceHtmlRoute('compliance');
-const COMPLIANCE_API_ROUTE = assuranceCollectionApiRoute('compliance');
 const EVIDENCE_ROUTE = assuranceHtmlRoute('evidence');
 
-function filterQuery(filters: AssuranceFilterValues): string {
-  const query = serializeAssuranceFilters('compliance', filters);
-  return query ? `?${query}` : '';
+function filterQuery(filters: AssuranceFilterValues): Record<string, string> {
+  return Object.fromEntries(new URLSearchParams(serializeAssuranceFilters('compliance', filters)));
 }
 
 function titleCase(value: string): string {
@@ -92,9 +90,11 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
   const allRecords = listPublishedAssuranceRecords('compliance');
   const counts = deriveComplianceCounts(records);
   const query = filterQuery(filters);
+  const matchingApiRoute = assuranceCollectionApiRoute('compliance', query);
   const frameworkCards = complianceFrameworks.map((framework) => {
     const frameworkRecords = filterPublishedAssuranceRecords('compliance', { framework: framework.id });
-    return `<a class="assurance-posture-card" href="${escapeHtml(COMPLIANCE_ROUTE)}?framework=${encodeURIComponent(framework.id)}">
+    const frameworkRoute = assuranceHtmlRoute('compliance', { framework: framework.id });
+    return `<a class="assurance-posture-card" href="${escapeHtml(frameworkRoute)}">
       <p class="eyebrow">Canonical dataset</p>
       <h2>${escapeHtml(framework.label)}</h2>
       <strong>${frameworkRecords.length} records</strong>
@@ -133,7 +133,7 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
     <p class="lede">Browse the canonical ${escapeHtml(frameworkNames)} public assurance datasets through one derived view with stable record anchors and evidence links.</p>
     <p class="assurance-notice"><strong>Scope:</strong> ${escapeHtml(complianceQualification)} WCAG statuses are engineering-evidence states, while ISO statuses reflect the approved public mapping; they are not interchangeable pass/fail claims.</p>
     <div class="page-tools">
-      <a class="button button-primary" href="${escapeHtml(COMPLIANCE_API_ROUTE)}${escapeHtml(query)}">View matching JSON</a>
+      <a class="button button-primary" href="${escapeHtml(matchingApiRoute)}">View matching JSON</a>
       <a class="text-link" href="${escapeHtml(EVIDENCE_ROUTE)}">Search evidence</a>
       <a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/compliance.ts'))}">Route source</a>
       ${referenceDetails([

@@ -126,12 +126,15 @@ describe('accessible interaction surface', () => {
 
 describe('compliance assurance index', () => {
   it('renders the canonical registry with accessible filters, stable anchors, and descriptive evidence links', async () => {
-    const html = await renderComplianceDemo(new Request('https://demo.example/compliance'), env).text();
+    const html = await renderComplianceDemo(new Request('https://demo.example/assurance?view=compliance'), env).text();
     expect(html.match(/<h1\b/g)).toHaveLength(1);
     expect(html).toContain('aria-labelledby="framework-heading"');
     expect(html).toContain('aria-labelledby="compliance-filter-heading"');
     expect(html).toContain('aria-labelledby="compliance-records-heading"');
     expect(html.match(/class="assurance-posture-card"/g)).toHaveLength(3);
+    for (const framework of ['iso-27001', 'iso-42001', 'wcag-2.2']) {
+      expect(html).toContain(`href="/assurance?view=compliance&amp;framework=${framework}"`);
+    }
     expect(html).toContain('<label for="compliance-framework">Framework</label>');
     expect(html).toContain('<label for="compliance-status">Status</label>');
     expect(html).toContain('<label for="compliance-level">WCAG level</label>');

@@ -13,6 +13,7 @@ import {
   validateAssuranceRouteHandlerSupport as contractValidateRouteHandlerSupport,
 } from './route-contract.js';
 import { reportingOwnership } from '../reporting/registry';
+import { withRouteQuery, type RouteQuery } from '../routing/route-url';
 
 export interface AssuranceRouteDeclaration {
   owner: string;
@@ -49,11 +50,12 @@ export function assuranceRegistryHtmlRoute(): string {
   return route;
 }
 
-export function assuranceHtmlRoute(dataset: string): string {
+export function assuranceHtmlRoute(dataset: string, query: RouteQuery = {}): string {
   const owner = assuranceRouteOwnerResource(dataset);
   if (!owner) throw new Error(`${dataset} has no canonical assurance route owner.`);
-  if (owner.routes?.html) return owner.routes.html;
-  return `${assuranceRegistryHtmlRoute()}?view=${encodeURIComponent(owner.kind)}`;
+  const route = owner.routes?.html
+    ?? withRouteQuery(assuranceRegistryHtmlRoute(), { view: owner.kind });
+  return withRouteQuery(route, query);
 }
 
 function reportingCollectionId(dataset: string): string {
@@ -67,12 +69,12 @@ function reportingCollectionId(dataset: string): string {
   return owned?.domain ?? dataset;
 }
 
-export function assuranceCollectionApiRoute(dataset: string): string {
-  return `/api/reporting/${encodeURIComponent(reportingCollectionId(dataset))}`;
+export function assuranceCollectionApiRoute(dataset: string, query: RouteQuery = {}): string {
+  return withRouteQuery(`/api/reporting/${encodeURIComponent(reportingCollectionId(dataset))}`, query);
 }
 
-export function assuranceRegistryApiRoute(): string {
-  return '/api/reporting';
+export function assuranceRegistryApiRoute(query: RouteQuery = {}): string {
+  return withRouteQuery('/api/reporting', query);
 }
 
 export function assuranceRecordUrls(

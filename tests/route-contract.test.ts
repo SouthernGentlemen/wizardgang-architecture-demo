@@ -1,6 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { indexedSurfaces } from '../src/demos/registry';
+import { indexedSurfaces, surfaces } from '../src/demos/registry';
+import {
+  applicationRouteRegistry,
+  routeUrl,
+} from '../src/routing/application-routes';
 import { routeRequest } from '../src/router';
 import type { D1PreparedStatement, Env } from '../src/types';
 
@@ -28,13 +32,31 @@ const authorization = `Basic ${btoa('operator:test-admin-password')}`;
 const hrefPattern = /<a\b[^>]*\shref="([^"]+)"/gi;
 const idPattern = /\sid="([^"]+)"/gi;
 
-function internalLinks(html: string, sourceRoute: string): URL[] {
+function renderedHrefs(html: string): string[] {
   const renderedMarkup = html.replace(/<script\b[\s\S]*?<\/script>/gi, '');
   return [...renderedMarkup.matchAll(hrefPattern)]
-    .map((match) => match[1].replaceAll('&amp;', '&'))
+    .map((match) => match[1].replaceAll('&amp;', '&'));
+}
+
+function internalLinks(html: string, sourceRoute: string): URL[] {
+  return renderedHrefs(html)
     .filter((href) => !href.startsWith('mailto:') && !href.startsWith('data:'))
     .map((href) => new URL(href, `https://demo.wizardgang.ai${sourceRoute}`))
     .filter((url) => url.origin === 'https://demo.wizardgang.ai');
+}
+
+function registeredPageUrls(): string[] {
+  return applicationRouteRegistry.declarations
+    .filter((route) => route.kind === 'page')
+    .flatMap((route) => {
+      const surface = surfaces.find((candidate) => candidate.routeId === route.id);
+      if (!surface) throw new Error(`Registered page '${route.id}' is missing a frontend surface definition.`);
+      const page = routeUrl(route.id);
+      return [
+        page,
+        ...surface.views.map((view) => `${page}?${new URLSearchParams({ view: view.id })}`),
+      ];
+    });
 }
 
 async function get(path: string): Promise<Response> {
@@ -59,15 +81,18 @@ describe('public link and route contract', () => {
   });
 
   it('resolves every internal page link and linked fragment', async () => {
-    const pages = ['/', ...indexedSurfaces.map((surface) => surface.route)];
     const targets = new Map<string, Set<string>>();
-    for (const page of pages) {
+    for (const page of registeredPageUrls()) {
       const response = await get(page);
       const html = await response.text();
+      for (const href of renderedHrefs(html)) {
+        expect((href.match(/\?/g) ?? []).length, `multiple query delimiters in ${page} href ${href}`).toBeLessThanOrEqual(1);
+      }
       for (const link of internalLinks(html, page)) {
-        const fragments = targets.get(link.pathname) ?? new Set<string>();
+        const target = `${link.pathname}${link.search}`;
+        const fragments = targets.get(target) ?? new Set<string>();
         if (link.hash) fragments.add(decodeURIComponent(link.hash.slice(1)));
-        targets.set(link.pathname, fragments);
+        targets.set(target, fragments);
       }
     }
 
@@ -80,6 +105,19 @@ describe('public link and route contract', () => {
       const html = await response.text();
       const ids = new Set([...html.matchAll(idPattern)].map((match) => match[1]));
       for (const fragment of fragments) expect(ids.has(fragment), `missing ${target}#${fragment}`).toBe(true);
+    }
+  }, 60_000);
+
+  it('serves every compliance framework filter through the canonical assurance view', async () => {
+    for (const framework of ['iso-27001', 'iso-42001', 'wcag-2.2']) {
+      const target = routeUrl('assurance.wizardgang-public-assurance.html', {}, {
+        view: 'compliance',
+        framework,
+      });
+      const response = await get(target);
+      expect(response.status, target).toBe(200);
+      const html = await response.text();
+      expect(html, `${framework} filter was not applied`).toContain(`<option value="${framework}" selected>`);
     }
   });
 

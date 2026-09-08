@@ -29,7 +29,6 @@ import {
 } from '../assurance/publication';
 
 const RISK_ROUTE = assuranceHtmlRoute('risks');
-const RISK_API_ROUTE = assuranceCollectionApiRoute('risks');
 const INCIDENT_ROUTE = assuranceHtmlRoute('incidents');
 const INCIDENT_API_ROUTE = assuranceCollectionApiRoute('incidents');
 const SECURITY_ROUTE = assuranceHtmlRoute('advisories');
@@ -69,9 +68,8 @@ function titleCase(value: string): string {
   return value.split('-').map((part) => part ? `${part[0].toUpperCase()}${part.slice(1)}` : '').join(' ');
 }
 
-function riskFilterQuery(filters: AssuranceFilterValues): string {
-  const query = serializeAssuranceFilters('risks', filters);
-  return query ? `?${query}` : '';
+function riskFilterQuery(filters: AssuranceFilterValues): Record<string, string> {
+  return Object.fromEntries(new URLSearchParams(serializeAssuranceFilters('risks', filters)));
 }
 
 function riskFilterSelect(parameter: string, current?: string): string {
@@ -116,7 +114,7 @@ export function renderRisks(request: Request, env: Env): Response {
   const filters = assuranceFiltersFromUrl('risks', new URL(request.url));
   const records = filterPublishedAssuranceRecords('risks', filters);
   const counts = deriveRiskCounts(records);
-  const query = riskFilterQuery(filters);
+  const matchingApiRoute = assuranceCollectionApiRoute('risks', riskFilterQuery(filters));
   const cards = records.map((record) => riskCard(env, record)).join('');
   const results = cards || '<article class="info-card"><h2>No matching risks</h2><p>Change or clear the filters to view the public assurance records.</p></article>';
 
@@ -126,7 +124,7 @@ export function renderRisks(request: Request, env: Env): Response {
     <h1>Review the public risk assurance record.</h1>
     <p class="lede">This disclosure-safe view carries stable security and AI risk identifiers, current scores, treatment direction, lifecycle state, and reviewable evidence/control links from the controlled registers.</p>
     <p class="assurance-notice"><strong>Public assurance boundary:</strong> private treatment actions, risk-owner and acceptance detail, sensitive infrastructure context, and acceptance rationale are intentionally omitted. These records do not claim certification or residual-risk acceptance.</p>
-    <div class="page-tools"><a class="button button-primary" href="${escapeHtml(RISK_API_ROUTE)}${escapeHtml(query)}">View JSON</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/risks.ts'))}">Route source</a><a class="text-link" href="${escapeHtml(sourceUrl(env, assuranceDatasetSource('risks')))}">Dataset source</a>${referenceDetails([
+    <div class="page-tools"><a class="button button-primary" href="${escapeHtml(matchingApiRoute)}">View JSON</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/risks.ts'))}">Route source</a><a class="text-link" href="${escapeHtml(sourceUrl(env, assuranceDatasetSource('risks')))}">Dataset source</a>${referenceDetails([
       { label: 'Risk schema', href: sourceUrl(env, assuranceDatasetSchema('risks')) },
       { label: 'Canonical assurance service', href: sourceUrl(env, 'src/assurance/service.ts') },
       { label: 'Shared assurance presentation', href: sourceUrl(env, 'src/assurance/presentation.ts') },
