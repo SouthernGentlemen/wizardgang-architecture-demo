@@ -774,6 +774,7 @@ summary { cursor: pointer; }
 .operations-tour-card { display: flex; flex-direction: column; padding: 1.5rem; border: 1px solid var(--line); background: var(--panel); }
 .operations-tour-card h3 { margin: .5rem 0 1rem; font-size: 1.5rem; }
 .operations-tour-card > a { margin-top: auto; padding-top: 1rem; font-weight: 800; }
+.log-example code, .log-example time { overflow-wrap: anywhere; }
 .operations-flow { display: flex; flex-wrap: wrap; gap: 1rem; padding: 0; list-style: none; }
 .operations-flow li { flex: 1 1 130px; min-width: 0; padding: 1rem; border: 1px solid var(--line); background: var(--panel-2); }
 .operations-flow li:not(:last-child) strong::after { content: ' →'; color: var(--muted); }

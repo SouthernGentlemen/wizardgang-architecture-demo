@@ -38,7 +38,7 @@ The version declaration returns deployed package and source identity metadata us
 
 The public log API returns the disclosure-safe application log projection. Log records are sanitized before they cross the public HTTP boundary and retain bounded request and cache behavior.
 
-The browser log resource consumes the same operational data instead of maintaining an independent API.
+The browser log resource consumes the same operational data instead of maintaining an independent API. It introduces structured events, sanitized telemetry, and traceability, then shows up to three distinct source/event pairs from the current bounded query, newest first. The preview uses real stored records and inherits the active filters; it never fabricates sample events. **Open log explorer** reveals the existing filters, all returned rows, structured detail, and matching JSON link. Requests containing log filter or limit parameters open the explorer automatically. Implementation and redaction sources remain available after the explorer.
 
 ## Usage and cost
 
