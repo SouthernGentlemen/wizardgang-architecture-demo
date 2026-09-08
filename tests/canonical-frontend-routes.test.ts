@@ -19,21 +19,18 @@ const environment: Env = {
 describe('canonical frontend route contract', () => {
   it('publishes canonical child resources without a query-view route inventory', () => {
     const canonicalChildren = [
-      ['platform.edge', '/platform/edge'], ['platform.workers', '/platform/workers'],
-      ['platform.durable-objects', '/platform/durable-objects'], ['platform.d1', '/platform/d1'],
-      ['platform.r2', '/platform/r2'], ['interfaces.rest', '/interfaces/rest'],
-      ['interfaces.graphql.console', '/interfaces/graphql'], ['interfaces.webhooks.console', '/interfaces/webhooks'],
-      ['interfaces.identity.page', '/interfaces/identity'], ['interfaces.mcp.console', '/interfaces/mcp'],
-      ['interfaces.i18n', '/interfaces/i18n'], ['interfaces.accessibility', '/interfaces/accessibility'],
-      ['assurance.delivery', '/assurance/delivery'], ['assurance.governance', '/assurance/governance'],
-      ['assurance.evidence', '/assurance/evidence'], ['assurance.compliance', '/assurance/compliance'],
-      ['assurance.risks', '/assurance/risks'], ['assurance.incidents', '/assurance/incidents'],
-      ['assurance.concerns', '/assurance/concerns'],
-      ['operations.availability', '/operations/availability'], ['operations.logs', '/operations/logs'],
-      ['operations.usage', '/operations/usage'], ['operations.reports', '/operations/reports'],
-      ['operations.docs', '/operations/docs'],
+      'platform.edge', 'platform.workers', 'platform.durable-objects', 'platform.d1', 'platform.r2',
+      'interfaces.rest', 'interfaces.graphql.console', 'interfaces.webhooks.console', 'interfaces.identity.page',
+      'interfaces.mcp.console', 'interfaces.i18n', 'interfaces.accessibility',
+      'assurance.delivery', 'assurance.governance', 'assurance.evidence', 'assurance.compliance',
+      'assurance.risks', 'assurance.incidents', 'assurance.concerns',
+      'operations.availability', 'operations.logs', 'operations.usage', 'operations.reports', 'operations.docs',
     ] as const;
-    for (const [routeId, path] of canonicalChildren) expect(routeUrl(routeId)).toBe(path);
+    for (const routeId of canonicalChildren) {
+      const path = routeUrl(routeId);
+      expect(path, routeId).not.toContain('?');
+      expect(applicationRouteRegistry.declarations.some((route) => route.id === routeId && route.pattern === path), routeId).toBe(true);
+    }
   });
 
   it('uses the normal 404 for every removed HTML pathname', async () => {
@@ -55,10 +52,10 @@ describe('canonical frontend route contract', () => {
   });
 
   it('preserves stable assurance record fragments', () => {
-    expect(assuranceRecordUrls('evidence', 'EV-001').html).toBe('/assurance/evidence#EV-001');
-    expect(assuranceRecordUrls('risks', 'SEC-RISK-001').html).toBe('/assurance/risks#SEC-RISK-001');
-    expect(assuranceRecordUrls('incidents', 'INC-001').html).toBe('/assurance/incidents#INC-001');
-    expect(assuranceRecordUrls('advisories', 'ADV-001').html).toBe('/security#ADV-001');
+    expect(assuranceRecordUrls('evidence', 'EV-001').html).toBe(`${routeUrl('assurance.evidence')}#EV-001`);
+    expect(assuranceRecordUrls('risks', 'SEC-RISK-001').html).toBe(`${routeUrl('assurance.risks')}#SEC-RISK-001`);
+    expect(assuranceRecordUrls('incidents', 'INC-001').html).toBe(`${routeUrl('assurance.incidents')}#INC-001`);
+    expect(assuranceRecordUrls('advisories', 'ADV-001').html).toBe(`${routeUrl('security.index')}#ADV-001`);
   });
 
   it('has no client-side router dependency or history-based route dispatcher', () => {

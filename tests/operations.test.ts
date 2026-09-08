@@ -7,6 +7,7 @@ import { billingContent, docsContent, uptimeContent } from '../src/demos/operati
 import { runScheduledOperations } from '../src/index';
 import { collectCloudflareUsage } from '../src/lib/cloudflare-usage';
 import { cursorLink } from '../src/routing/cursor-link';
+import { routeUrl } from '../src/routing/application-routes';
 import type { D1PreparedStatement, Env } from '../src/types';
 
 interface Usage { id: number; service_key: string; metric_key: string; quantity: number; unit: string; estimated_cost_usd: number; budget_limit_usd: number; captured_at: string }
@@ -120,24 +121,26 @@ describe('operations proof surface', () => {
     expect(dashboard).not.toContain('name="state" value="enabled"');
 
     const docs = docsContent(environment);
-    expect(docs.canonicalPath).toBe('/operations/docs');
+    expect(docs.canonicalPath).toBe(routeUrl('operations.docs'));
     expect(docs.body).toContain('OpenAPI JSON');
     expect(docs.body).toContain('docs/INTERACTIVE-DEMO-SPEC.md');
 
     const uptime = await uptimeContent(environment);
-    expect(uptime.canonicalPath).toBe('/operations/availability');
+    expect(uptime.canonicalPath).toBe(routeUrl('operations.availability'));
     expect(uptime.body).toContain('planned/manual offline');
     expect(uptime.body).toContain('<strong>1 / 1</strong><span>planned / unexpected</span>');
 
     const billing = await billingContent(environment);
-    expect(billing.canonicalPath).toBe('/operations/usage');
+    expect(billing.canonicalPath).toBe(routeUrl('operations.usage'));
     expect(billing.body).toContain('Cloudflare Usage &amp; Cost');
     expect(billing.body).toContain('Cost guardrail simulator');
   });
 
   it('preserves all reporting query state while replacing only the cursor', () => {
     const request = new Request('https://demo.wizardgang.ai/operations/reports?report=operations&limit=25&source=github&cursor=old#reporting-browser');
-    expect(cursorLink(request, 'next cursor')).toBe('/operations/reports?report=operations&limit=25&source=github&cursor=next+cursor#reporting-browser');
+    expect(cursorLink(request, 'next cursor')).toBe(`${routeUrl('operations.reports', {}, {
+      report: 'operations', limit: '25', source: 'github', cursor: 'next cursor',
+    })}#reporting-browser`);
     expect(cursorLink(request, null)).toBeNull();
   });
 

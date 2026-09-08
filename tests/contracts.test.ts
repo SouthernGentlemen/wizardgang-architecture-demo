@@ -1,8 +1,9 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { routeRequest } from '../src/router';
-import { applicationRouteRegistry } from '../src/routing/application-routes';
+import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import type { Env } from '../src/types';
+import { retiredApiReferencePrefixes } from './fixtures/removed-api-pathnames';
 
 const env = {
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
@@ -100,10 +101,10 @@ describe('executable interface contracts', () => {
     expect(reportingParameters).not.toContain('schemaVersion');
 
     for (const path of Object.keys(openapi.paths)) {
-      expect(path.startsWith('/assurance')).toBe(false);
-      expect(path.startsWith('/__api/operations')).toBe(false);
-      expect(path).not.toBe('/health');
-      expect(path).not.toBe('/version');
+      expect(path.startsWith(routeUrl('assurance.index'))).toBe(false);
+      expect(path.startsWith(`${retiredApiReferencePrefixes[1]}/operations`)).toBe(false);
+      expect(path).not.toBe(retiredApiReferencePrefixes[2]);
+      expect(path).not.toBe(retiredApiReferencePrefixes[3]);
       expect(path).not.toBe('/api/operations/usage');
     }
   });

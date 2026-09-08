@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { routeRequest } from '../src/router';
+import { routeUrl } from '../src/routing/application-routes';
 import type { D1PreparedStatement, Env } from '../src/types';
 
 class OperationsRouteStatement implements D1PreparedStatement {
@@ -43,22 +44,15 @@ function env(state: 'online' | 'offline' = 'online'): Env {
 
 const basic = `Basic ${btoa('operator:test-admin-password')}`;
 const routes = [
-  '/operations',
-  '/operations/availability',
-  '/operations/logs',
-  '/operations/usage',
-  '/operations/reports',
-  '/operations/docs',
-] as const;
+  'operations.index',
+  'operations.availability',
+  'operations.logs',
+  'operations.usage',
+  'operations.reports',
+  'operations.docs',
+].map((routeId) => routeUrl(routeId));
 
-const navigationHrefs = [
-  '/operations',
-  '/operations/availability',
-  '/operations/logs',
-  '/operations/usage',
-  '/operations/reports',
-  '/operations/docs',
-] as const;
+const navigationHrefs = routes;
 
 describe('canonical operations routes', () => {
   it('renders all six server-rendered pages with one derived navigation', async () => {
@@ -69,7 +63,7 @@ describe('canonical operations routes', () => {
       const html = await response.text();
       expect(html, path).toContain('aria-label="Operations sections"');
       for (const href of navigationHrefs) {
-        if (href !== path || path !== '/operations') expect(html, `${path} -> ${href}`).toContain(`href="${href}"`);
+        if (href !== path || path !== routeUrl('operations.index')) expect(html, `${path} -> ${href}`).toContain(`href="${href}"`);
       }
       expect(html, path).toContain('aria-current="page"');
       expect(html, path).toContain('<a class="skip-link" href="#main">Skip to main content</a>');
@@ -125,7 +119,7 @@ describe('canonical operations routes', () => {
     const environment = env('offline');
     const alwaysReachable: Array<[string, RequestInit | undefined, number]> = [
       ...routes.map((path) => [path, { headers: { accept: 'text/html' } }, 200] as [string, RequestInit, number]),
-      ['/security', { headers: { accept: 'text/html' } }, 200],
+      [routeUrl('security.index'), { headers: { accept: 'text/html' } }, 200],
       ['/api/operations/health', undefined, 503],
       ['/api/operations/version', undefined, 200],
       ['/api/operations/logs', undefined, 200],

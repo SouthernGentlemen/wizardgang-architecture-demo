@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { sitemapResponse } from '../src/api/sitemap';
 import {
   applicationRouteRegistry,
+  routeUrl,
   type ApplicationRouteDeclaration,
 } from '../src/routing/application-routes';
 import {
@@ -13,6 +14,7 @@ import {
 import { operationalRouteRegistry } from '../src/routing/operational-routes';
 import { matchRoute } from '../src/routing/registry';
 import { readFileSync } from 'node:fs';
+import { retiredApiReferencePrefixes } from './fixtures/removed-api-pathnames';
 
 const applicationRoutes = applicationRouteRegistry.declarations as readonly ApplicationRouteDeclaration[];
 
@@ -38,11 +40,11 @@ describe('architecture demo registry', () => {
 
   it('derives the five operations child links from route declarations', () => {
     expect(secondaryNavigation('operations.index').map((route) => [route.id, route.pattern, route.page?.label])).toEqual([
-      ['operations.availability', '/operations/availability', 'Availability'],
-      ['operations.logs', '/operations/logs', 'Logs'],
-      ['operations.usage', '/operations/usage', 'Usage & cost'],
-      ['operations.reports', '/operations/reports', 'Reports'],
-      ['operations.docs', '/operations/docs', 'Documentation'],
+      ['operations.availability', routeUrl('operations.availability'), 'Availability'],
+      ['operations.logs', routeUrl('operations.logs'), 'Logs'],
+      ['operations.usage', routeUrl('operations.usage'), 'Usage & cost'],
+      ['operations.reports', routeUrl('operations.reports'), 'Reports'],
+      ['operations.docs', routeUrl('operations.docs'), 'Documentation'],
     ]);
   });
 
@@ -66,22 +68,22 @@ describe('architecture demo registry', () => {
       ...secondaryNavigation('operations.index'),
     ].filter((route): route is ApplicationRouteDeclaration => Boolean(route));
     expect(operations.map((route) => route.pattern)).toEqual([
-      '/operations',
-      '/operations/availability',
-      '/operations/logs',
-      '/operations/usage',
-      '/operations/reports',
-      '/operations/docs',
-    ]);
+      'operations.index',
+      'operations.availability',
+      'operations.logs',
+      'operations.usage',
+      'operations.reports',
+      'operations.docs',
+    ].map((routeId) => routeUrl(routeId)));
     expect(applicationRoutes.some((route) => route.id === 'operations.page')).toBe(false);
     expect(applicationRoutes.some((route) => route.pattern.startsWith('/dashboard'))).toBe(false);
   });
 
   it('keeps consolidated assurance and separate security as registered architecture entries', () => {
-    const assurance = architectureMapEntries().find((route) => route.pattern === '/assurance');
+    const assurance = architectureMapEntries().find((route) => route.pattern === routeUrl('assurance.index'));
     expect(assurance?.page).toMatchObject({ label: 'Assurance', architectureMap: true });
     expect(assurance?.source.module).toBe('src/demos/assurance.ts');
-    const security = architectureMapEntries().find((route) => route.pattern === '/security');
+    const security = architectureMapEntries().find((route) => route.pattern === routeUrl('security.index'));
     expect(security?.page).toMatchObject({ label: 'Security', architectureMap: true });
     expect(security?.source.module).toBe('src/demos/security-page.ts');
     for (const retired of ['/git', '/governance', '/evidence', '/compliance', '/governance/concerns', '/governance/risks', '/governance/incidents']) {
@@ -127,7 +129,7 @@ describe('architecture demo registry', () => {
 describe('intentional offline route policies', () => {
   it('keeps registered operational recovery surfaces reachable', () => {
     for (const route of [
-      '/operations', '/operations/availability', '/operations/logs', '/operations/usage', '/operations/reports', '/operations/docs',
+      ...['operations.index', 'operations.availability', 'operations.logs', 'operations.usage', 'operations.reports', 'operations.docs'].map((routeId) => routeUrl(routeId)),
       '/api/operations/health', '/api/operations/version', '/api/operations/logs',
       '/api/operations/budget', '/offline', '/admin', '/robots.txt', '/.well-known/security.txt', '/assets/:asset',
     ]) {
@@ -158,11 +160,11 @@ describe('intentional offline route policies', () => {
     ]) expect(browserPolicy(pattern), pattern).toBe('never');
     expect(browserPolicy('/graphql')).toBe('never');
     expect(browserPolicy('/mcp/server')).toBeUndefined();
-    expect(browserPolicy('/interfaces')).toBe('page');
-    expect(browserPolicy('/platform')).toBe('page');
-    expect(browserPolicy('/operations/reports')).toBe('page');
+    expect(browserPolicy(routeUrl('interfaces.index'))).toBe('page');
+    expect(browserPolicy(routeUrl('platform.index'))).toBe('page');
+    expect(browserPolicy(routeUrl('operations.reports'))).toBe('page');
     expect(browserPolicy('/edge')).toBeUndefined();
-    expect(applicationRoutes.some((route) => route.pattern === '/v1/things')).toBe(false);
+    expect(applicationRoutes.some((route) => route.pattern === `${retiredApiReferencePrefixes[0]}/things`)).toBe(false);
   });
 });
 

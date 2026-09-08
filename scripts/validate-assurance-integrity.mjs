@@ -27,19 +27,25 @@ const registry = loadAssuranceRegistry(root);
 const resources = flattenAssuranceRegistry(registry);
 const routeManifest = readJson('docs/route-manifest.json');
 const publicRoutes = new Set(routeManifest.map((entry) => entry.route));
+const routesById = new Map(routeManifest.map((entry) => [entry.id, entry.route]));
 const registeredRoutePath = (route) => {
   try { return new URL(route, 'https://demo.wizardgang.ai').pathname; }
   catch { return route; }
 };
-const requiredRoutes = [
-  '/assurance',
-  '/security',
-  '/api/reporting',
-  '/api/reporting/{collection}',
-  '/api/reporting/{collection}/{recordId}',
-  '/api/operations/health',
-  '/api/operations/version',
+const requiredRouteIds = [
+  'assurance.index',
+  'security.index',
+  'reporting.index',
+  'reporting.collection',
+  'reporting.record',
+  'operations.health',
+  'operations.version',
 ];
+const requiredRoutes = requiredRouteIds.flatMap((routeId) => {
+  const route = routesById.get(routeId);
+  if (!route) errors.push(`required public assurance route ID is missing: ${routeId}`);
+  return route ? [route] : [];
+});
 for (const route of requiredRoutes) if (!publicRoutes.has(route)) errors.push(`required public assurance route is missing: ${route}`);
 
 const canonicalPaths = new Set(canonicalAssuranceDatasetPaths(registry).filter((relative) => exists(relative)));

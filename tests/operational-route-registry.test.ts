@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { routeUrl } from '../src/routing/application-routes';
 import { matchRoute } from '../src/routing/registry';
 import { operationalRouteRegistry } from '../src/routing/operational-routes';
 
@@ -51,12 +52,12 @@ const expectedPolicies = [
     offline: { mode: 'gated' }, cache: { mode: 'public', maxAgeSeconds: 3600 }, crawler: { crawling: 'controlled', indexing: 'deny' },
   },
   ...[
-    ['operations.index', '/operations'],
-    ['operations.availability', '/operations/availability'],
-    ['operations.logs', '/operations/logs'],
-    ['operations.usage', '/operations/usage'],
-    ['operations.reports', '/operations/reports'],
-    ['operations.docs', '/operations/docs'],
+    ['operations.index', routeUrl('operations.index')],
+    ['operations.availability', routeUrl('operations.availability')],
+    ['operations.logs', routeUrl('operations.logs')],
+    ['operations.usage', routeUrl('operations.usage')],
+    ['operations.reports', routeUrl('operations.reports')],
+    ['operations.docs', routeUrl('operations.docs')],
   ].map(([id, pattern]) => ({ id, pattern, ...publicPagePolicy })),
   ...[
     ['operations.api-logs', '/api/operations/logs', ['GET']],
@@ -104,11 +105,11 @@ describe('global operational route policies', () => {
       expect(matchRoute(operationalRouteRegistry, 'GET', path), path).toEqual({ status: 'not-found', statusCode: 404 });
     }
     expect(matchRoute(operationalRouteRegistry, 'GET', '/api/operations/not-a-route')).toEqual({ status: 'not-found', statusCode: 404 });
-    expect(matchRoute(operationalRouteRegistry, 'GET', '/operations/not-a-route')).toEqual({ status: 'not-found', statusCode: 404 });
+    expect(matchRoute(operationalRouteRegistry, 'GET', `${routeUrl('operations.index')}/not-a-route`)).toEqual({ status: 'not-found', statusCode: 404 });
   });
 
   it('declares every operations page available while intentionally offline', () => {
-    for (const path of ['/operations', '/operations/availability', '/operations/logs', '/operations/usage', '/operations/reports', '/operations/docs']) {
+    for (const path of ['operations.index', 'operations.availability', 'operations.logs', 'operations.usage', 'operations.reports', 'operations.docs'].map((routeId) => routeUrl(routeId))) {
       const route = operationalRouteRegistry.declarations.find((candidate) => candidate.pattern === path);
       expect(route?.offline, path).toEqual({ mode: 'available' });
       expect(route?.kind, path).toBe('page');

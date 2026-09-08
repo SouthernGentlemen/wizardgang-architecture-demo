@@ -7,9 +7,14 @@ import {
   noRequestBody,
 } from '../src/platform/route-capability';
 import { createPlatformLaboratoryRouteRegistry } from '../src/routing/platform-laboratory-routes';
+import { routeUrl } from '../src/routing/application-routes';
 import { matchRoute } from '../src/routing/registry';
 import { routeRequest } from '../src/router';
 import type { Env } from '../src/types';
+import {
+  noncanonicalSyntheticLabPathname,
+  removedPlatformLaboratoryPathnames,
+} from './fixtures/removed-api-pathnames';
 
 function environment(state: 'online' | 'offline'): Env {
   return {
@@ -35,39 +40,12 @@ const onlineEnv = environment('online');
 const offlineEnv = environment('offline');
 const routes = platformLaboratoryCapabilities.flatMap((capability) => capability.routes);
 const removedPagePaths = ['/edge', '/workers', '/durable-objects', '/d1', '/r2'] as const;
-const removedLaboratoryPaths = [
-  '/__api/edge/inspect',
-  '/__api/workers/compute',
-  '/__api/durable/counter',
-  '/__api/d1/users',
-  '/__api/d1/users/example',
-  '/__api/d1/tasks',
-  '/__api/d1/tasks/example',
-  '/__api/d1/reset',
-  '/v1/demo-records',
-  '/v1/demo-records/example',
-  '/__api/api-sandbox/reset',
-  '/__api/r2/demo',
-  '/__api/r2/object',
-  '/__api/r2/files',
-  '/__api/r2/files/example',
-  '/__api/r2/reset',
-  '/__api/accessibility/lab',
-  '/__api/webhooks/demo',
-  '/__api/webhooks/events',
-  '/__api/webhooks/reset',
-  '/__api/git/demo',
-  '/__api/git/demo/release',
-  '/__api/evidence/traceability',
-  '/__api/governance/security-controls',
-  '/__api/governance/ai-evaluation',
-] as const;
 const platformPageCases = [
-  { path: '/platform/edge', heading: 'Cloudflare Edge', absent: 'SQL Inspector', view: 'edge' },
-  { path: '/platform/workers', heading: 'Cloudflare Workers', absent: 'Your R2 sandbox', view: 'workers' },
-  { path: '/platform/durable-objects', heading: 'Durable Objects', absent: 'SQL Inspector', view: 'durable-objects' },
-  { path: '/platform/d1', heading: 'Cloudflare D1 Database', absent: 'Your R2 sandbox', view: 'd1' },
-  { path: '/platform/r2', heading: 'Cloudflare R2 Storage', absent: 'SQL Inspector', view: 'r2' },
+  { path: routeUrl('platform.edge'), heading: 'Cloudflare Edge', absent: 'SQL Inspector', view: 'edge' },
+  { path: routeUrl('platform.workers'), heading: 'Cloudflare Workers', absent: 'Your R2 sandbox', view: 'workers' },
+  { path: routeUrl('platform.durable-objects'), heading: 'Durable Objects', absent: 'SQL Inspector', view: 'durable-objects' },
+  { path: routeUrl('platform.d1'), heading: 'Cloudflare D1 Database', absent: 'Your R2 sandbox', view: 'd1' },
+  { path: routeUrl('platform.r2'), heading: 'Cloudflare R2 Storage', absent: 'SQL Inspector', view: 'r2' },
 ] as const;
 
 describe('platform laboratory declarative routing', () => {
@@ -98,13 +76,13 @@ describe('platform laboratory declarative routing', () => {
       '/api/labs/webhook-events',
       '/api/labs/webhook-reset',
       '/api/labs/workers',
-      '/interfaces/accessibility',
-      '/platform/d1',
-      '/platform/durable-objects',
-      '/platform/edge',
-      '/platform/r2',
-      '/platform/workers',
-      '/platform',
+      routeUrl('interfaces.accessibility'),
+      routeUrl('platform.d1'),
+      routeUrl('platform.durable-objects'),
+      routeUrl('platform.edge'),
+      routeUrl('platform.r2'),
+      routeUrl('platform.workers'),
+      routeUrl('platform.index'),
     ].sort());
 
     for (const route of routes) {
@@ -165,7 +143,7 @@ describe('platform laboratory declarative routing', () => {
 
     expect(() => definePlatformLaboratoryCapability({
       id: 'platform.synthetic',
-      routes: [{ ...base, pattern: '/__api/synthetic/ping', requestSchemas: { GET: 'none' } }],
+      routes: [{ ...base, pattern: noncanonicalSyntheticLabPathname, requestSchemas: { GET: 'none' } }],
     })).toThrow(/must use \/api\/labs\/synthetic/);
 
     expect(() => definePlatformLaboratoryCapability({
@@ -257,7 +235,7 @@ it('returns the ordinary 404 for every retired platform ?view= URL', async () =>
     expect(unknownLab.status).toBe(404);
     expect(unknownLab.headers.get('location')).toBeNull();
 
-    for (const path of [...removedPagePaths, ...removedLaboratoryPaths]) {
+    for (const path of [...removedPagePaths, ...removedPlatformLaboratoryPathnames]) {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`), onlineEnv);
       expect(response.status, path).toBe(404);
       expect(response.headers.get('location'), path).toBeNull();

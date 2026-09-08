@@ -17,6 +17,7 @@ import {
   sitemapPaths,
 } from '../src/routing/navigation';
 import { defineRouteModule, matchRoute, type RouteDeclaration } from '../src/routing/registry';
+import { retiredApiReferencePrefixes } from './fixtures/removed-api-pathnames';
 
 function syntheticRoute(
   id: string,
@@ -88,37 +89,38 @@ describe('complete declarative application routing', () => {
       .sort();
     expect(architectureMapEntries().map((route) => route.id).sort()).toEqual(expectedArchitectureRoutes);
     expect(secondaryNavigation('interfaces.frontend.index')).toEqual([]);
-    expect(secondaryNavigation('platform.index').map((route) => route.pattern)).toEqual([
-      '/platform/edge', '/platform/workers', '/platform/durable-objects', '/platform/d1', '/platform/r2',
+    expect(secondaryNavigation('platform.index').map((route) => route.id)).toEqual([
+      'platform.edge', 'platform.workers', 'platform.durable-objects', 'platform.d1', 'platform.r2',
     ]);
-    expect(secondaryNavigation('interfaces.index').map((route) => route.pattern)).toEqual([
-      '/interfaces/rest', '/interfaces/graphql', '/interfaces/webhooks', '/interfaces/identity',
-      '/interfaces/mcp', '/interfaces/i18n', '/interfaces/accessibility',
+    expect(secondaryNavigation('interfaces.index').map((route) => route.id)).toEqual([
+      'interfaces.rest', 'interfaces.graphql.console', 'interfaces.webhooks.console', 'interfaces.identity.page',
+      'interfaces.mcp.console', 'interfaces.i18n', 'interfaces.accessibility',
     ]);
-    expect(secondaryNavigation('assurance.index').map((route) => route.pattern)).toEqual([
-      '/assurance/delivery', '/assurance/governance', '/assurance/evidence', '/assurance/compliance',
-      '/assurance/risks', '/assurance/incidents', '/assurance/concerns',
+    expect(secondaryNavigation('assurance.index').map((route) => route.id)).toEqual([
+      'assurance.delivery', 'assurance.governance', 'assurance.evidence', 'assurance.compliance',
+      'assurance.risks', 'assurance.incidents', 'assurance.concerns',
     ]);
     expect(primaryNavigation().every((route) => route.visibility === 'public')).toBe(true);
   });
 
   it('generates sitemap entries from public indexable registered pages', async () => {
-    expect([...sitemapPaths()].sort()).toEqual([
-      '/', '/interfaces/rest', '/platform/edge', '/interfaces/graphql', '/platform',
-      '/platform/workers', '/interfaces', '/interfaces/webhooks', '/platform/durable-objects',
-      '/assurance', '/assurance/delivery', '/assurance/governance', '/assurance/evidence',
-      '/assurance/compliance', '/assurance/risks', '/assurance/incidents', '/assurance/concerns',
-      '/interfaces/identity', '/platform/d1', '/interfaces/mcp', '/operations',
-      '/operations/availability', '/operations/docs', '/operations/logs', '/operations/reports', '/operations/usage', '/platform/r2',
-      '/security', '/interfaces/i18n', '/interfaces/accessibility',
-    ].sort());
+    const sitemapRouteIds = [
+      'interfaces.frontend.index', 'interfaces.rest', 'platform.edge', 'interfaces.graphql.console', 'platform.index',
+      'platform.workers', 'interfaces.index', 'interfaces.webhooks.console', 'platform.durable-objects',
+      'assurance.index', 'assurance.delivery', 'assurance.governance', 'assurance.evidence',
+      'assurance.compliance', 'assurance.risks', 'assurance.incidents', 'assurance.concerns',
+      'interfaces.identity.page', 'platform.d1', 'interfaces.mcp.console', 'operations.index',
+      'operations.availability', 'operations.docs', 'operations.logs', 'operations.reports', 'operations.usage', 'platform.r2',
+      'security.index', 'interfaces.i18n', 'interfaces.accessibility',
+    ];
+    expect([...sitemapPaths()].sort()).toEqual(sitemapRouteIds.map((routeId) => routeUrl(routeId)).sort());
     const response = sitemapResponse(new Request('https://demo.wizardgang.ai/sitemap.xml'));
     const xml = await response.text();
     for (const routePath of sitemapPaths()) {
       expect(xml).toContain(`<loc>https://demo.wizardgang.ai${routePath}</loc>`);
     }
     expect(xml).not.toContain('/admin</loc>');
-    expect(xml).not.toContain('/v1/');
+    expect(xml).not.toContain(`${retiredApiReferencePrefixes[0]}/`);
   });
 
   it('resolves internal URLs by stable route ID, including encoded parameters', () => {
@@ -159,7 +161,7 @@ describe('complete declarative application routing', () => {
   });
 
   it('uses one consistent method result from the application registry', () => {
-    expect(matchRoute(applicationRouteRegistry, 'POST', '/interfaces')).toMatchObject({
+    expect(matchRoute(applicationRouteRegistry, 'POST', routeUrl('interfaces.index'))).toMatchObject({
       status: 'method-not-allowed',
       allowedMethods: ['GET'],
       route: { id: 'interfaces.index' },
@@ -231,7 +233,7 @@ describe('complete declarative application routing', () => {
   it('keeps removed aliases and unknown paths on the normal 404 even while offline state is unavailable', async () => {
     for (const path of [
       '/api', '/webhooks', '/identity', '/mcp/server', '/i18n', '/accessibility',
-      '/__api/demo/run', '/__api/demo/events', '/v1/not-registered', '/legacy/compliance',
+      '/not-registered', '/legacy/compliance',
     ]) {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`), noDatabaseEnv());
       expect(response.status, path).toBe(404);

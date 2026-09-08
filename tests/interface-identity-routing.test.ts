@@ -9,6 +9,7 @@ import {
   createInterfaceIdentityRouteRegistry,
   interfaceIdentityRouteRegistry,
 } from '../src/routing/interface-identity-routes';
+import { routeUrl } from '../src/routing/application-routes';
 import { matchRoute } from '../src/routing/registry';
 import { routeRequest } from '../src/router';
 import type { D1PreparedStatement, Env } from '../src/types';
@@ -49,13 +50,13 @@ describe('interface and identity declarative routing', () => {
   it('owns only interface, protocol, identity, i18n, and frontend routes after lab consolidation', () => {
     expect(routes.map((route) => route.pattern).sort()).toEqual([
       '/',
-      '/interfaces',
-      '/interfaces/rest',
-      '/interfaces/graphql',
-      '/interfaces/webhooks',
-      '/interfaces/identity',
-      '/interfaces/mcp',
-      '/interfaces/i18n',
+      routeUrl('interfaces.index'),
+      routeUrl('interfaces.rest'),
+      routeUrl('interfaces.graphql.console'),
+      routeUrl('interfaces.webhooks.console'),
+      routeUrl('interfaces.identity.page'),
+      routeUrl('interfaces.mcp.console'),
+      routeUrl('interfaces.i18n'),
       '/api/openapi.json',
       '/graphql',
       '/webhooks/github',
@@ -131,10 +132,11 @@ describe('interface and identity declarative routing', () => {
   });
 
   it('can register a compatible new interface without modifying the central router', async () => {
+    const syntheticPath = '/synthetic-interface/ping';
     const synthetic = defineInterfaceIdentityCapability('interfaces.synthetic', [
       interfaceIdentityRoute({
         id: 'interfaces.synthetic.ping',
-        pattern: '/__api/interfaces-synthetic/ping',
+        pattern: syntheticPath,
         methods: ['GET'],
         kind: 'api',
         handler: () => new Response(JSON.stringify({ ok: true }), { headers: { 'content-type': 'application/json' } }),
@@ -145,13 +147,13 @@ describe('interface and identity declarative routing', () => {
       }),
     ]);
     const routeRegistry = createInterfaceIdentityRouteRegistry([...interfaceIdentityCapabilities, synthetic]);
-    const match = matchRoute(routeRegistry, 'GET', '/__api/interfaces-synthetic/ping');
+    const match = matchRoute(routeRegistry, 'GET', syntheticPath);
     expect(match.status).toBe('matched');
     if (match.status !== 'matched') throw new Error('Synthetic interface route did not match.');
-    const response = await match.route.handler(new Request('https://demo.wizardgang.ai/__api/interfaces-synthetic/ping'), { env: onlineEnv }, match.params);
+    const response = await match.route.handler(new Request(`https://demo.wizardgang.ai${syntheticPath}`), { env: onlineEnv }, match.params);
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({ ok: true });
-    expect(fs.readFileSync('src/router.ts', 'utf8')).not.toContain('/__api/interfaces-synthetic/ping');
+    expect(fs.readFileSync('src/router.ts', 'utf8')).not.toContain(syntheticPath);
   });
 
   it('keeps unknown interface paths unregistered and 404s from the main router', async () => {

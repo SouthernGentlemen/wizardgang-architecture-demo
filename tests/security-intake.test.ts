@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { securityTxtResponse, SECURITY_TXT_EXPIRES } from '../src/api/security-policy';
 import { routeRequest } from '../src/router';
+import { routeUrl } from '../src/routing/application-routes';
 import type { Env } from '../src/types';
 
 const env = {
@@ -52,21 +53,21 @@ describe('public concern and security routes', () => {
     const security = await routeRequest(new Request('https://demo.wizardgang.ai/security', { headers: { accept: 'text/html' } }), env);
     const securityHtml = await security.text();
     expect(security.status).toBe(200);
-    expect(securityHtml).toContain('/security/advisories/new');
+    expect(securityHtml).toContain('security/advisories/new');
     expect(securityHtml).toContain('/.well-known/security.txt');
-    expect(securityHtml).toContain('/assurance/concerns');
+    expect(securityHtml).toContain(routeUrl('assurance.concerns'));
 
     const concerns = await routeRequest(new Request('https://demo.wizardgang.ai/assurance/concerns', { headers: { accept: 'text/html' } }), env);
     const concernsHtml = await concerns.text();
     expect(concerns.status).toBe(200);
     for (const template of ['bug.yml', 'feature.yml', 'concern.yml']) expect(concernsHtml).toContain(encodeURIComponent(template));
-    expect(concernsHtml).toContain('/security/advisories/new');
+    expect(concernsHtml).toContain('security/advisories/new');
   });
 
   it('offers no public security issue form', () => {
     const config = readFileSync('.github/ISSUE_TEMPLATE/config.yml', 'utf8');
     expect(config).toContain('blank_issues_enabled: false');
-    expect(config).toContain('/security/advisories/new');
+    expect(config).toContain('security/advisories/new');
     expect(config).not.toContain('security.yml');
   });
 });
