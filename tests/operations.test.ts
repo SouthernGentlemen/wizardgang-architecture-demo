@@ -164,6 +164,42 @@ describe('operations proof surface', () => {
     expect(body).not.toContain('id="reporting-browser"');
   });
 
+  it('explains availability before progressively disclosing the full observation window', async () => {
+    const environment = env();
+    const db = environment.DEMO_DB as OperationsD1;
+    db.health = [...db.health, ...Array.from({ length: 22 }, (_, index) => ({ ...db.health[0], id: 100 + index }))];
+    const { body } = await uptimeContent(environment);
+    expect(body).toContain('measured history, not an SLA');
+    expect(body).toContain('<strong>1 / 1</strong><span>planned / unexpected</span>');
+    expect(body).toContain('Event counts classify observations');
+    expect(body.indexOf('availability-demonstrates-heading')).toBeLessThan(body.indexOf('class="availability-timeline"'));
+    expect(body.indexOf('class="availability-timeline"')).toBeLessThan(body.indexOf('class="availability-kpis"'));
+    const inspection = body.slice(body.indexOf('<details class="operations-inspection">'), body.indexOf('<details class="reference-details">'));
+    expect(inspection).toContain('<summary>Inspect observations</summary>');
+    expect(inspection).toContain('<th>D1 latency</th>');
+    expect(inspection).toContain('planned/manual offline');
+    expect(inspection).toContain('unexpected dependency failure');
+    expect(inspection).toContain('Show full history');
+    expect((inspection.match(/<time /g) || []).length).toBe(25);
+    expect(body.slice(0, body.indexOf('<details class="operations-inspection">'))).not.toContain('<table>');
+  });
+
+  it('shows the latest stored maintenance or failure state and keeps empty history explicit', async () => {
+    const environment = env();
+    const db = environment.DEMO_DB as OperationsD1;
+    db.health = [db.health[1], db.health[2]];
+    expect((await uptimeContent(environment)).body).toContain('<strong>PLANNED MAINTENANCE</strong>');
+    db.health = [db.health[1]];
+    expect((await uptimeContent(environment)).body).toContain('<strong>DEGRADED</strong>');
+    db.health = [];
+    const { body } = await uptimeContent(environment);
+    expect(body).toContain('<strong>AWAITING DATA</strong>');
+    expect(body).toContain('Awaiting the first scheduled observation.');
+    expect(body).toContain('<strong>0 / 0</strong><span>planned / unexpected</span>');
+    expect(body).not.toContain('100.000%');
+    expect(body).toContain('Inspect observations');
+  });
+
   it('preserves all reporting query state while replacing only the cursor', () => {
     const request = new Request('https://demo.wizardgang.ai/operations/reports?report=operations&limit=25&source=github&cursor=old#reporting-browser');
     expect(cursorLink(request, 'next cursor')).toBe(`${routeUrl('operations.reports', {}, {

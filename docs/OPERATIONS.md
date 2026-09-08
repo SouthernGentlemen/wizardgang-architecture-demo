@@ -28,7 +28,7 @@ The browser presentation may link to machine contracts when raw JSON is useful, 
 
 The health declaration reports whether the Worker and required dependencies can serve the demo. It remains available according to its registered offline policy so operators and automation can observe and recover the system.
 
-The availability browser resource interprets the same operational evidence rather than defining an independent health contract.
+The availability browser resource interprets the same operational evidence rather than defining an independent health contract. It explains stored observations and planned versus unexpected failures, then leads with the timeline, latest stored state, and measured results. Timestamp, latency, and classification tables remain available under **Inspect observations**, including the full retained window. Event counts classify observations rather than distinct incidents; percentages describe the stored sample window and do not constitute an SLA.
 
 ## Version
 

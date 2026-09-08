@@ -313,10 +313,39 @@ export async function uptimeContent(env: Env): Promise<PageContent> {
   const statusLabel = latest ? state === 'planned' ? 'PLANNED MAINTENANCE' : state.toUpperCase() : 'AWAITING DATA';
   const recent = rows.slice(0, 20); const remainder = rows.slice(20);
   const liveState = `<div class="operations-live-state"><span class="status-pulse" data-state="${state}"></span><strong>${statusLabel}</strong><span>${latest ? `Last observation ${relativeTime(latest.checked_at)}` : 'Cron monitoring has not stored an observation yet'}</span></div>`;
-  return operationalPage(env, routeUrl('operations.availability'), 'Availability', 'Availability', 'Measured runtime availability with planned maintenance kept separate from unexpected dependency failures.', 'src/demos/operations-pages.ts', `
-  <section class="availability-kpis"><article><p class="eyebrow">Current window</p><strong>${summary.excludingPlanned === null ? '—' : `${summary.excludingPlanned.toFixed(3)}%`}</strong><span>excluding planned maintenance</span></article><article><p class="eyebrow">Raw observations</p><strong>${summary.raw === null ? '—' : `${summary.raw.toFixed(3)}%`}</strong><span>all stored states included</span></article><article><p class="eyebrow">Events</p><strong>${summary.intentional} / ${summary.unexpected}</strong><span>planned / unexpected</span></article></section>
-  <section class="operations-section"><div class="operations-section-heading"><div><p class="eyebrow">Latest ${Math.min(rows.length, 40)} observations</p><h2 id="availability-heading">Availability history</h2></div><span class="subtle">Every 5 minutes</span></div>${availabilityTimeline(rows)}<div class="availability-legend"><span><i data-state="operational"></i>Operational</span><span><i data-state="planned"></i>Planned maintenance</span><span><i data-state="degraded"></i>Unexpected failure</span></div><p class="subtle">This is measured history, not an SLA.</p></section>
-  <section class="operations-section"><div class="operations-section-heading"><div><p class="eyebrow">Most recent first</p><h2>Observations</h2></div><span class="subtle">Showing ${recent.length} of ${rows.length}</span></div><div class="table-wrap"><table><thead><tr><th>Checked</th><th>State</th><th>D1 latency</th><th>Classification</th></tr></thead><tbody>${historyRows(recent) || '<tr><td colspan="4">Scheduled monitoring will populate this history after deployment.</td></tr>'}</tbody></table></div>${remainder.length ? `<details class="full-history"><summary>Show full history</summary><div class="table-wrap"><table><thead><tr><th>Checked</th><th>State</th><th>D1 latency</th><th>Classification</th></tr></thead><tbody>${historyRows(remainder)}</tbody></table></div></details>` : ''}<p><a href="${escapeHtml(sourceUrl(env, 'migrations/0002_operations_dashboard.sql'))}">View history schema</a></p></section>`, liveState);
+  return operationalPage(env, routeUrl('operations.availability'), 'Availability', 'Availability', 'Can we tell whether the system is actually healthy?', 'src/demos/operations-pages.ts', `
+  <section class="operations-section" aria-labelledby="availability-demonstrates-heading">
+    <p class="eyebrow">What this demonstrates</p><h2 id="availability-demonstrates-heading">Health observations become measured history</h2>
+    <p>Health observations are captured over time. Planned maintenance is classified separately from unexpected failures, so you can distinguish an intentional pause from a dependency problem.</p>
+    <p>This demo reports measured history, not an SLA. The percentages describe stored observations in the current window, rather than a guarantee of continuous uptime.</p>
+  </section>
+  <section class="operations-section" aria-labelledby="availability-heading">
+    <div class="operations-section-heading"><div><p class="eyebrow">Latest ${Math.min(rows.length, 40)} observations</p><h2 id="availability-heading">Availability history</h2></div><span class="subtle">Every 5 minutes</span></div>
+    ${availabilityTimeline(rows)}
+    <div class="availability-legend"><span><i data-state="operational"></i>Operational</span><span><i data-state="planned"></i>Planned maintenance</span><span><i data-state="degraded"></i>Unexpected failure</span></div>
+    <p class="subtle">Read from oldest to newest. The current state above is the latest stored observation.</p>
+  </section>
+  <section class="availability-kpis" aria-label="Measured availability and event counts">
+    <article><p class="eyebrow">Current window</p><strong>${summary.excludingPlanned === null ? '—' : `${summary.excludingPlanned.toFixed(3)}%`}</strong><span>excluding planned maintenance</span></article>
+    <article><p class="eyebrow">Raw observations</p><strong>${summary.raw === null ? '—' : `${summary.raw.toFixed(3)}%`}</strong><span>all stored states included</span></article>
+    <article><p class="eyebrow">Events</p><strong>${summary.intentional} / ${summary.unexpected}</strong><span>planned / unexpected</span></article>
+  </section>
+  <p class="subtle">Results use ${rows.length} stored observation${rows.length === 1 ? '' : 's'} in the current window. Event counts classify observations, so a continuing incident can appear in more than one observation.</p>
+  <details class="operations-inspection">
+    <summary>Inspect observations</summary>
+    <section class="operations-section" aria-labelledby="observations-heading">
+      <div class="operations-section-heading"><div><p class="eyebrow">Most recent first</p><h2 id="observations-heading">Observations</h2></div><span class="subtle">Showing ${recent.length} of ${rows.length}</span></div>
+      <div class="table-wrap"><table><thead><tr><th>Checked</th><th>State</th><th>D1 latency</th><th>Classification</th></tr></thead><tbody>${historyRows(recent) || '<tr><td colspan="4">Scheduled monitoring will populate this history after deployment.</td></tr>'}</tbody></table></div>
+      ${remainder.length ? `<details class="full-history"><summary>Show full history</summary><div class="table-wrap"><table><thead><tr><th>Checked</th><th>State</th><th>D1 latency</th><th>Classification</th></tr></thead><tbody>${historyRows(remainder)}</tbody></table></div></details>` : ''}
+    </section>
+  </details>
+  ${referenceDetails([
+    { label: 'Availability implementation', href: sourceUrl(env, 'src/demos/operations-pages.ts') },
+    { label: 'Health collection', href: sourceUrl(env, 'src/api/operations.ts') },
+    { label: 'Scheduled collection', href: sourceUrl(env, 'src/index.ts') },
+    { label: 'View history schema', href: sourceUrl(env, 'migrations/0002_operations_dashboard.sql') },
+    { label: 'Operations standard', href: sourceUrl(env, 'docs/OPERATIONS.md') },
+  ], 'Implementation sources')}`, liveState);
 }
 
 export function docsContent(env: Env): PageContent {
