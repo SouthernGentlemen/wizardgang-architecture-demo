@@ -1,7 +1,7 @@
 [
   {
-    "id": "assurance.advisories.html",
-    "route": "/security",
+    "id": "assurance.compliance",
+    "route": "/assurance/compliance",
     "methods": [
       "GET"
     ],
@@ -18,7 +18,7 @@
       "mode": "not-required"
     },
     "offline": {
-      "mode": "available"
+      "mode": "gated"
     },
     "cache": {
       "mode": "no-store"
@@ -27,33 +27,293 @@
       "crawling": "controlled",
       "indexing": "allow"
     },
-    "title": "Assurance advisories html",
-    "description": "Registry-owned html route for the advisories assurance surface.",
+    "title": "Compliance",
+    "description": "Filterable WCAG 2.2, ISO/IEC 27001, and ISO/IEC 42001 engineering-evidence mappings.",
     "docs": [
       "docs/ASSURANCE-REGISTRY.md",
       "docs/REPORTING.md",
       "docs/ROUTES.md"
     ],
     "source": {
-      "module": "src/demos/security-page.ts",
-      "exportName": "renderSecurity",
+      "module": "src/demos/compliance-page.ts",
+      "exportName": "complianceContent",
       "tests": [
-        "tests/security.test.ts",
-        "tests/router.test.ts"
+        "tests/assurance-consolidation.test.ts",
+        "tests/route-contract.test.ts"
       ]
     },
     "navigation": {
-      "parent": "interfaces.frontend.index",
-      "label": "Security",
-      "order": 5,
-      "navigation": "primary",
-      "architectureMap": true,
+      "parent": "assurance.index",
+      "label": "Compliance",
+      "order": 3,
+      "navigation": "secondary",
+      "architectureMap": false,
       "sitemap": true
     },
     "status": "working"
   },
   {
-    "id": "assurance.wizardgang-public-assurance.html",
+    "id": "assurance.concerns",
+    "route": "/assurance/concerns",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Concerns",
+    "description": "Structured public intake for non-sensitive bugs, features, accessibility, AI/MCP, and governance concerns.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/REPORTING.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/demos/assurance-pages.ts",
+      "exportName": "concernsContent",
+      "tests": [
+        "tests/assurance-consolidation.test.ts"
+      ]
+    },
+    "navigation": {
+      "parent": "assurance.index",
+      "label": "Concerns",
+      "order": 6,
+      "navigation": "secondary",
+      "architectureMap": false,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "assurance.delivery",
+    "route": "/assurance/delivery",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Delivery",
+    "description": "Git delivery workflow, validation evidence, and release traceability.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/REPORTING.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/demos/git-page.ts",
+      "exportName": "gitContent",
+      "tests": [
+        "tests/assurance-consolidation.test.ts"
+      ]
+    },
+    "navigation": {
+      "parent": "assurance.index",
+      "label": "Delivery",
+      "order": 0,
+      "navigation": "secondary",
+      "architectureMap": false,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "assurance.evidence",
+    "route": "/assurance/evidence",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Evidence",
+    "description": "Searchable public evidence with provenance, freshness, lifecycle state, and stable fragments.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/REPORTING.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/demos/evidence-page.ts",
+      "exportName": "evidenceContent",
+      "tests": [
+        "tests/assurance-consolidation.test.ts"
+      ]
+    },
+    "navigation": {
+      "parent": "assurance.index",
+      "label": "Evidence",
+      "order": 2,
+      "navigation": "secondary",
+      "architectureMap": false,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "assurance.governance",
+    "route": "/assurance/governance",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Governance",
+    "description": "Governance records, control mappings, AI boundary evaluation, and traceability.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/REPORTING.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/demos/governance.ts",
+      "exportName": "governanceContent",
+      "tests": [
+        "tests/assurance-consolidation.test.ts"
+      ]
+    },
+    "navigation": {
+      "parent": "assurance.index",
+      "label": "Governance",
+      "order": 1,
+      "navigation": "secondary",
+      "architectureMap": false,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "assurance.incidents",
+    "route": "/assurance/incidents",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Incidents",
+    "description": "Disclosure-safe incident and exercise records with explicit record boundaries.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/REPORTING.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/demos/assurance-pages.ts",
+      "exportName": "incidentsContent",
+      "tests": [
+        "tests/assurance-consolidation.test.ts"
+      ]
+    },
+    "navigation": {
+      "parent": "assurance.index",
+      "label": "Incidents",
+      "order": 5,
+      "navigation": "secondary",
+      "architectureMap": false,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "assurance.index",
     "route": "/assurance",
     "methods": [
       "GET"
@@ -80,8 +340,8 @@
       "crawling": "controlled",
       "indexing": "allow"
     },
-    "title": "Assurance registry html",
-    "description": "Registry-owned html route for the registry assurance surface.",
+    "title": "Assurance",
+    "description": "Public assurance index for delivery evidence, governance, compliance, risks, incidents, concerns, and evidence records.",
     "docs": [
       "docs/ASSURANCE-REGISTRY.md",
       "docs/REPORTING.md",
@@ -89,7 +349,7 @@
     ],
     "source": {
       "module": "src/demos/assurance.ts",
-      "exportName": "renderAssurance",
+      "exportName": "assuranceIndexContent",
       "tests": [
         "tests/assurance-consolidation.test.ts",
         "tests/router.test.ts"
@@ -101,6 +361,58 @@
       "order": 3,
       "navigation": "primary",
       "architectureMap": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "assurance.risks",
+    "route": "/assurance/risks",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Risks",
+    "description": "Disclosure-safe public risk records with treatment direction, lifecycle state, and evidence relationships.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/REPORTING.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/demos/assurance-pages.ts",
+      "exportName": "risksContent",
+      "tests": [
+        "tests/assurance-consolidation.test.ts"
+      ]
+    },
+    "navigation": {
+      "parent": "assurance.index",
+      "label": "Risks",
+      "order": 4,
+      "navigation": "secondary",
+      "architectureMap": false,
       "sitemap": true
     },
     "status": "working"
@@ -3549,6 +3861,59 @@
         "tests/removed-api-routes.test.ts",
         "tests/router.test.ts"
       ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "security.index",
+    "route": "/security",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Security",
+    "description": "Private vulnerability reporting, coordinated disclosure, and disclosure-safe published security advisory assurance.",
+    "docs": [
+      "docs/ASSURANCE-REGISTRY.md",
+      "docs/REPORTING.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/demos/security-page.ts",
+      "exportName": "securityContent",
+      "tests": [
+        "tests/security.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "parent": "interfaces.frontend.index",
+      "label": "Security",
+      "order": 4,
+      "navigation": "primary",
+      "architectureMap": true,
+      "sitemap": true
     },
     "status": "working"
   }

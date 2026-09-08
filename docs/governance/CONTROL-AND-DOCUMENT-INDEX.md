@@ -54,7 +54,7 @@ The management system distinguishes different record types because a policy, reg
 | **Release / deployment evidence** | Connects accepted source to production | PR, merge, annotated tag, release, deploy run, `/api/operations/version` | What source was accepted and deployed |
 | **Operational evidence** | Demonstrates behavior over time | `/api/operations/health`, dashboard, D1 audit events, public-safe logs, usage/uptime, incidents | Runtime/operational behavior for the observed period |
 | **Management evidence** | Demonstrates review and decision activity | audit record, management review, risk acceptance, corrective action, competence review | Human governance activity and attributable decisions |
-| **Public assurance presentation** | Makes the evidence understandable to reviewers | `/assurance?view=compliance`, `/assurance?view=governance`, `/interfaces/accessibility`, `/operations` | Presentation/traceability only; not independent certification |
+| **Public assurance presentation** | Makes the evidence understandable to reviewers | `/assurance/compliance`, `/assurance/governance`, `/interfaces/accessibility`, `/operations` | Presentation/traceability only; not independent certification |
 
 A document moving to `Approved` does **not** by itself make the associated control `Met` or prove effectiveness.
 
@@ -109,7 +109,7 @@ CI validates reference uniqueness, registry/header agreement, governed-file exis
 | DEMO-100 | `CRYPTOGRAPHY-SECRETS-KEY-MANAGEMENT.md` | Cryptographic mechanisms, authentication information and secret lifecycle | cryptography-secrets register |
 | DEMO-101 | `SECURE-ENGINEERING-TESTING.md` | Risk-scaled secure engineering and security testing | security-testing register, CI/tests |
 | DEMO-102 | `CONTINUITY-RESILIENCE.md` | Safe continuity, degradation, supplier disruption and return to service | incident/recovery exercises, operations evidence |
-| DEMO-103 | `CONTROL-AND-DOCUMENT-INDEX.md` | Authoritative navigation and traceability index | `assurance/registry.json`, `/assurance?view=compliance` registry and consistency checks |
+| DEMO-103 | `CONTROL-AND-DOCUMENT-INDEX.md` | Authoritative navigation and traceability index | `assurance/registry.json`, `/assurance/compliance` registry and consistency checks |
 
 ## 6. Assessment, SoA, and Register Inventory
 
@@ -244,7 +244,7 @@ The detailed accessibility owner is:
 - `tests/interface.test.ts` and other applicable interface tests;
 - automated axe evidence where implemented;
 - dated browser/assistive-technology manual results when actually completed;
-- the exhaustive `/assurance?view=compliance` checklist rows for every WCAG 2.2 A/AA/AAA criterion.
+- the exhaustive `/assurance/compliance` checklist rows for every WCAG 2.2 A/AA/AAA criterion.
 
 | WCAG principle | Primary evidence concerns |
 |---|---|
@@ -290,10 +290,10 @@ The intended public assurance architecture is:
 
 | Route | Ownership |
 |---|---|
-| **`/assurance?view=compliance`** | Canonical human-readable projection of the structured WCAG/ISO checklist and current evidence posture |
+| **`/assurance/compliance`** | Canonical human-readable projection of the structured WCAG/ISO checklist and current evidence posture |
 | **`/interfaces/accessibility`** | Detailed WCAG interactive, automated and manual evidence |
-| **`/assurance?view=governance`** | Governance, security-management and AI-management evidence summaries |
-| **`/assurance?view=concerns`** | Public, non-sensitive bug, feature, accessibility, AI/MCP and other concern intake |
+| **`/assurance/governance`** | Governance, security-management and AI-management evidence summaries |
+| **`/assurance/concerns`** | Public, non-sensitive bug, feature, accessibility, AI/MCP and other concern intake |
 | **`/security`** | Vulnerability disclosure policy and private-reporting boundary |
 | **`/.well-known/security.txt`** | Machine-readable vulnerability-reporting contact and policy |
 | **`/operations`** | Operational posture and links to evidence owners |
@@ -304,11 +304,11 @@ The intended public assurance architecture is:
 | **`/api/operations/version`** | Deployed version/SHA identity |
 | **`/mcp`** | Current bounded MCP implementation surface |
 
-`/assurance?view=compliance` must not duplicate canonical state in a second data store. It derives presentation from structured assurance data and may deep-link evidence owners and detailed interactive demonstrations.
+`/assurance/compliance` must not duplicate canonical state in a second data store. It derives presentation from structured assurance data and may deep-link evidence owners and detailed interactive demonstrations.
 
 ## 12. Exhaustive Compliance Registry
 
-The structured `/assurance?view=compliance` registry covers:
+The structured `/assurance/compliance` registry covers:
 
 - WCAG 2.2 Level A, AA and AAA success criteria;
 - ISO/IEC 27001:2022 clauses 4-10;

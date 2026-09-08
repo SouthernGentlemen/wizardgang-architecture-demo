@@ -11,7 +11,7 @@
     "scope",
     "qualification",
     "visibility",
-    "routes",
+    "presentation",
     "reporting",
     "lifecycle",
     "datasets",
@@ -41,8 +41,8 @@
     "visibility": {
       "const": "public"
     },
-    "routes": {
-      "$ref": "#/$defs/routes"
+    "presentation": {
+      "$ref": "#/$defs/presentation"
     },
     "reporting": {
       "$ref": "./reporting.schema.json#/$defs/registryReporting"
@@ -115,13 +115,16 @@
     }
   },
   "$defs": {
-    "routes": {
+    "presentation": {
       "type": "object",
       "additionalProperties": false,
+      "required": [
+        "routeId"
+      ],
       "properties": {
-        "html": {
+        "routeId": {
           "type": "string",
-          "pattern": "^/"
+          "pattern": "^[a-z][a-z0-9.-]+$"
         }
       }
     },
@@ -245,8 +248,8 @@
           "type": "string",
           "minLength": 1
         },
-        "routes": {
-          "$ref": "#/$defs/routes"
+        "presentation": {
+          "$ref": "#/$defs/presentation"
         },
         "routeOwner": {
           "type": "string",
@@ -329,8 +332,8 @@
           "type": "string",
           "minLength": 1
         },
-        "routes": {
-          "$ref": "#/$defs/routes"
+        "presentation": {
+          "$ref": "#/$defs/presentation"
         },
         "routeOwner": {
           "type": "string",
@@ -490,8 +493,8 @@
           "type": "string",
           "minLength": 1
         },
-        "routes": {
-          "$ref": "#/$defs/routes"
+        "presentation": {
+          "$ref": "#/$defs/presentation"
         },
         "routeOwner": {
           "type": "string",

@@ -134,6 +134,12 @@ describe('assurance operational gates', () => {
     writeJson(fixtureRoot, 'assurance/operations/monitoring.json', config); const result = run(fixtureRoot, 'scripts/validate-assurance-operations.mjs');
     expect(result.status).not.toBe(0); expect(combined(result)).toContain('missing accountable owner for evidence');
   });
+  it('requires the configured security policy path to remain the separate canonical application page', () => {
+    const fixtureRoot = createFixture(); const routes = readJson(fixtureRoot, 'docs/route-manifest.json');
+    writeJson(fixtureRoot, 'docs/route-manifest.json', routes.filter((route: { id: string }) => route.id !== 'security.index'));
+    const result = run(fixtureRoot, 'scripts/validate-assurance-operations.mjs');
+    expect(result.status).not.toBe(0); expect(combined(result)).toContain('configured security policy route is not the canonical application security page');
+  });
   it('rejects an expired security.txt source value', () => {
     const fixtureRoot = createFixture(); const target = join(fixtureRoot, 'src/api/security-policy.ts');
     writeFileSync(target, readFileSync(target, 'utf8').replace('2027-03-02T00:00:00Z', '2026-01-01T00:00:00Z'));

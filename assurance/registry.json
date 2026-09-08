@@ -5,7 +5,7 @@
   "scope": "Public, disclosure-safe assurance records for demo.wizardgang.ai",
   "qualification": "Alignment and engineering evidence only; no certification is claimed.",
   "visibility": "public",
-  "routes": { "html": "/assurance" },
+  "presentation": { "routeId": "assurance.index" },
   "reporting": {
     "contract": "contracts/assurance/reporting.schema.json",
     "structuredRecords": {
@@ -163,12 +163,14 @@
       "id": "evidence", "kind": "evidence", "role": "dataset",
       "path": "assurance/evidence/evidence.json", "schema": "contracts/assurance/evidence.schema.json",
       "visibility": "public", "capabilities": ["runtime", "records"],
+      "presentation": { "routeId": "assurance.evidence" },
       "recordCollection": { "path": "records", "identity": ["kind", "locator.repositoryPath", "locator.route"] }
     },
     {
       "id": "claims", "kind": "claims", "role": "dataset",
       "path": "assurance/claims/claims.json", "schema": "contracts/assurance/claim.schema.json",
       "visibility": "public", "capabilities": ["runtime", "records"],
+      "presentation": { "routeId": "assurance.index" },
       "recordCollection": { "path": "records", "identity": ["area", "title"] }
     },
     {
@@ -181,6 +183,7 @@
       "id": "compliance.iso-27001", "kind": "compliance", "role": "dataset",
       "path": "assurance/compliance/iso-27001-2022.json", "schema": "contracts/assurance/iso-27001-compliance.schema.json",
       "visibility": "public", "capabilities": ["runtime", "records", "summary-source"],
+      "presentation": { "routeId": "assurance.compliance" },
       "recordCollection": { "path": "records", "identity": [{ "source": "resource", "path": "framework.id" }, { "source": "record", "path": "reference" }] },
       "qualification": "Public engineering-evidence projection only. Framework-specific qualifications remain authoritative; certification and formal conformance are not claimed.",
       "filters": {
@@ -251,6 +254,7 @@
       "id": "governance.records", "kind": "governance-records", "role": "dataset",
       "path": "assurance/governance/asset-inventory.json", "schema": "contracts/assurance/governance-record.schema.json",
       "visibility": "public", "capabilities": ["summary-source"],
+      "presentation": { "routeId": "assurance.governance" },
       "qualification": "Reportable governance register facts are canonical structured records; generated Markdown remains a presentation layer and policy prose remains authored in Markdown.",
       "resources": [
         {
@@ -324,6 +328,7 @@
       "id": "risks", "kind": "risks", "role": "dataset",
       "path": "assurance/risks/risks.json", "schema": "contracts/assurance/risk.schema.json",
       "visibility": "public", "capabilities": ["runtime", "records"],
+      "presentation": { "routeId": "assurance.risks" },
       "recordCollection": { "path": "records", "identity": ["framework", "title"] },
       "filters": {
         "framework": { "path": "framework", "label": "Framework" },
@@ -335,6 +340,7 @@
       "id": "incidents", "kind": "incidents", "role": "dataset",
       "path": "assurance/incidents/incidents.json", "schema": "contracts/assurance/incident.schema.json",
       "visibility": "public", "capabilities": ["runtime", "records"],
+      "presentation": { "routeId": "assurance.incidents" },
       "recordCollection": { "path": "records", "identity": ["recordType", "detectedAt", "title"] }
     },
     {
@@ -342,14 +348,14 @@
       "path": "assurance/incidents/exercises.json", "schema": "contracts/assurance/exercise.schema.json",
       "visibility": "public", "capabilities": ["runtime", "records"],
       "recordCollection": { "path": "records", "identity": ["recordType", "exerciseType", "scenario"] },
-      "routeOwner": "incidents"
+      "presentation": { "routeId": "assurance.incidents" }
     },
     {
       "id": "advisories", "kind": "advisories", "role": "dataset",
       "path": "assurance/advisories/advisories.json", "schema": "contracts/assurance/advisory.schema.json",
       "visibility": "public", "capabilities": ["runtime", "records"],
       "recordCollection": { "path": "records", "identity": ["recordType", "publishedAt"] },
-      "routes": { "html": "/security" }
+      "presentation": { "routeId": "security.index" }
     }
   ],
   "presentations": [

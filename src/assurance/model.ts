@@ -204,8 +204,8 @@ export interface AssuranceRegistryFilter {
   label: string;
 }
 
-export interface AssuranceRegistryRoutes {
-  html?: string;
+export interface AssuranceRegistryPresentation {
+  routeId: string;
 }
 
 export interface AssuranceRegistryIdentityComponent {
@@ -230,7 +230,7 @@ export interface AssuranceRegistryResource {
   framework?: ComplianceFrameworkMetadata;
   partition?: { number: string; label: string };
   qualification?: string;
-  routes?: AssuranceRegistryRoutes;
+  presentation?: AssuranceRegistryPresentation;
   routeOwner?: string;
   filters?: Record<string, AssuranceRegistryFilter>;
   resources?: AssuranceRegistryResource[];
@@ -243,7 +243,7 @@ export interface AssuranceRegistry {
   scope: string;
   qualification: string;
   visibility: 'public';
-  routes: AssuranceRegistryRoutes;
+  presentation: AssuranceRegistryPresentation;
   lifecycle: AssuranceRegistryResource;
   datasets: AssuranceRegistryResource[];
   presentations: AssuranceRegistryResource[];

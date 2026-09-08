@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { assuranceViews } from '../src/demos/assurance';
 import { operationsViews } from '../src/demos/operations';
 import { routeRequest } from '../src/router';
 import { renderPage, type PageContent } from '../src/ui/page';
@@ -59,7 +58,14 @@ const publicPages = [
   '/interfaces/mcp',
   '/interfaces/i18n',
   '/interfaces/accessibility',
-  ...defaultOrView('/assurance', assuranceViews),
+  '/assurance',
+  '/assurance/delivery',
+  '/assurance/governance',
+  '/assurance/evidence',
+  '/assurance/compliance',
+  '/assurance/risks',
+  '/assurance/incidents',
+  '/assurance/concerns',
   '/security',
   ...defaultOrView('/operations', operationsViews),
   '/offline',

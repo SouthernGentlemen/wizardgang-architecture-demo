@@ -51,7 +51,9 @@ try {
 
 if (registry) {
   errors.push(...validateAssuranceSchemaValue(root, ASSURANCE_REGISTRY_PATH, registrySchemaPath, registry));
-  for (const error of validateAssuranceRouteContract(registry)) fail(`${ASSURANCE_REGISTRY_PATH}: ${error}`);
+  const routeManifest = readJsonFile(root, 'docs/route-manifest.json');
+  const registeredApplicationRouteIds = new Set(routeManifest.map((entry) => entry.id));
+  for (const error of validateAssuranceRouteContract(registry, registeredApplicationRouteIds)) fail(`${ASSURANCE_REGISTRY_PATH}: ${error}`);
 
   const resources = flattenAssuranceRegistry(registry);
   const identities = new Map();

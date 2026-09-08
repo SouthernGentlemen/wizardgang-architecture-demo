@@ -1,4 +1,3 @@
-import { aiEvaluationResponse, securityControlsResponse, traceabilityResponse } from '../../api/governance';
 import {
   D1_RELATIONAL_STORAGE,
   NO_STORAGE,
@@ -24,7 +23,10 @@ export const governanceLaboratoryCapability = definePlatformLaboratoryCapability
       methods: ['GET'],
       requestSchemas: { GET: 'none' },
       kind: 'api',
-      handler: (request, env) => traceabilityResponse(request, env),
+      handler: async (request, env) => {
+        const { traceabilityResponse } = await import('../../api/governance');
+        return traceabilityResponse(request, env);
+      },
       authentication: { mode: 'anonymous' },
       authorization: { mode: 'none' },
       visibility: 'public',
@@ -48,7 +50,10 @@ export const governanceLaboratoryCapability = definePlatformLaboratoryCapability
       methods: ['GET'],
       requestSchemas: { GET: 'none' },
       kind: 'api',
-      handler: (request, env) => securityControlsResponse(request, env),
+      handler: async (request, env) => {
+        const { securityControlsResponse } = await import('../../api/governance');
+        return securityControlsResponse(request, env);
+      },
       authentication: { mode: 'anonymous' },
       authorization: { mode: 'none' },
       visibility: 'public',
@@ -72,7 +77,10 @@ export const governanceLaboratoryCapability = definePlatformLaboratoryCapability
       methods: ['POST'],
       requestSchemas: { POST: 'none' },
       kind: 'api',
-      handler: (request, env) => aiEvaluationResponse(request, env),
+      handler: async (request, env) => {
+        const { aiEvaluationResponse } = await import('../../api/governance');
+        return aiEvaluationResponse(request, env);
+      },
       authentication: { mode: 'anonymous' },
       authorization: { mode: 'policy', policy: 'MCP method/tool authorization exercised by governance evaluation' },
       visibility: 'public',

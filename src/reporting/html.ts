@@ -8,6 +8,7 @@ import type {
 export interface ReportingHtmlOptions {
   headingId?: string;
   nextHref?: string | null;
+  recordAnchors?: boolean;
 }
 
 function availabilityLabel(value: ReportingAvailability): string {
@@ -21,7 +22,7 @@ function badgeClass(value: ReportingAvailability): string {
   return 'badge badge-down';
 }
 
-function renderRecord(record: ReportingRecordPresentation): string {
+function renderRecord(record: ReportingRecordPresentation, recordAnchors = false): string {
   const metadata = [
     record.recordType ? `Type ${record.recordType}` : '',
     record.status ? `Status ${record.status}` : '',
@@ -33,7 +34,7 @@ function renderRecord(record: ReportingRecordPresentation): string {
   const relationships = record.relationships.length
     ? `<details><summary>${record.relationshipCount} authorized relationship${record.relationshipCount === 1 ? '' : 's'}</summary><ul>${record.relationships.map((relationship) => `<li><strong>${escapeHtml(relationship.label)}</strong>: ${relationship.targets.map(escapeHtml).join(', ')}</li>`).join('')}</ul></details>`
     : '';
-  return `<article class="activity-item"><div><h3>${escapeHtml(record.title)}</h3>${metadata.length ? `<p>${metadata.map(escapeHtml).join(' · ')}</p>` : ''}${fields}${relationships}${record.sourceLink ? `<p><a href="${escapeHtml(record.sourceLink)}">Open source ↗</a></p>` : ''}</div></article>`;
+  return `<article class="activity-item"${recordAnchors ? ` id="${escapeHtml(record.id)}"` : ''}><div><h3>${escapeHtml(record.title)}</h3>${metadata.length ? `<p>${metadata.map(escapeHtml).join(' · ')}</p>` : ''}${fields}${relationships}${record.sourceLink ? `<p><a href="${escapeHtml(record.sourceLink)}">Open source ↗</a></p>` : ''}</div></article>`;
 }
 
 export function renderReportingPresentation(
@@ -57,6 +58,6 @@ export function renderReportingPresentation(
     <div class="operations-section-heading"><div><p class="eyebrow">Shared reporting presenter</p><h2 id="${escapeHtml(headingId)}">${escapeHtml(presentation.label)}</h2></div><span class="${badgeClass(presentation.availability)}">${escapeHtml(availabilityLabel(presentation.availability))}</span></div>
     <p>${presentation.count} record${presentation.count === 1 ? '' : 's'} shown · ${presentation.totalAvailable} available in the authorized selection.</p>
     <p class="subtle">Source availability is independent from record status. A current record may come from an unavailable source snapshot, and an available source may contain no records.</p>
-    ${sources}${facets}${empty}<div class="activity-list">${presentation.records.map(renderRecord).join('')}</div>${pagination}
+    ${sources}${facets}${empty}<div class="activity-list">${presentation.records.map((record) => renderRecord(record, options.recordAnchors)).join('')}</div>${pagination}
   </section>`;
 }

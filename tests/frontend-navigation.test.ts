@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { renderAssurance } from '../src/demos/assurance';
 import { renderPlatform } from '../src/demos/platform';
 import { applicationRouteRegistry } from '../src/routing/application-routes';
 import type { Env } from '../src/types';
@@ -30,10 +29,13 @@ describe('derived frontend navigation', () => {
     expect(html).not.toContain('data-view-current');
   });
 
-  it('keeps exactly one page-current link on /assurance?view=risks', async () => {
-    const html = await (await renderAssurance(new Request('https://demo.wizardgang.ai/assurance?view=risks'), env)).text();
-    expect(currentPageCount(html)).toBe(1);
-    expect(html).toContain('<a href="/assurance" aria-current="page">Assurance</a>');
-    expect(html).toContain('<a href="/assurance?view=risks" data-view-current>Risks</a>');
+  it('marks Assurance as the current section on /assurance/risks without query-view navigation', async () => {
+    const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === 'assurance.risks');
+    if (!route) throw new Error('Missing assurance.risks route');
+    const html = await (await route.handler(new Request('https://demo.wizardgang.ai/assurance/risks'), { env }, {})).text();
+    expect(currentPageCount(html)).toBe(0);
+    expect(html).toContain('<a href="/assurance" data-section-current');
+    expect(html).not.toContain('data-view-current');
+    expect(html).not.toContain('name="view"');
   });
 });

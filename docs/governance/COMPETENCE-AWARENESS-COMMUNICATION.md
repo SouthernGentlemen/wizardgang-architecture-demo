@@ -155,7 +155,7 @@ Material management-system communication should identify:
 | Audit/self-assessment finding | Auditor/reviewer | Management-System Owner + finding owner | Audit record | Finding, owner, due date, follow-up |
 | Corrective action | Corrective-Action Owner | Affected owners/management | CA/issue/PR | Implementation and effectiveness evidence |
 | Accessibility regression | Accessibility Owner | Change owner/management where material | Issue/PR/verification record | Updated verification and corrective work |
-| Public assurance/compliance claim change | Evidence / Management-System Owner | Public reviewers/users | `/assurance?view=compliance`, docs, release/site content | Source/evidence mapping and controlled change |
+| Public assurance/compliance claim change | Evidence / Management-System Owner | Public reviewers/users | `/assurance/compliance`, docs, release/site content | Source/evidence mapping and controlled change |
 
 Urgent communication may occur outside Git first, but material decisions and outcomes should be retained in a controlled record afterward without exposing sensitive details.
 

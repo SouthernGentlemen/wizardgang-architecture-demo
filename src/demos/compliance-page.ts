@@ -25,7 +25,9 @@ import type { Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
 import { referenceDetails, pageContent, type PageContent } from '../ui/page';
+import { routeUrl } from '../routing/application-routes';
 
+const ASSURANCE_INDEX_ROUTE = routeUrl('assurance.index');
 const COMPLIANCE_ROUTE = assuranceHtmlRoute('compliance');
 const EVIDENCE_ROUTE = assuranceHtmlRoute('evidence');
 
@@ -128,7 +130,7 @@ export function complianceContent(request: Request, env: Env): PageContent {
 
   return pageContent(env, 'Compliance & Assurance', `
   <section class="page-header assurance-header">
-    <p class="eyebrow"><a href="/#architecture-map">Delivery &amp; Governance</a> / ${escapeHtml(COMPLIANCE_ROUTE)}</p>
+    <p class="eyebrow"><a href="${escapeHtml(ASSURANCE_INDEX_ROUTE)}">Delivery &amp; Governance</a> / ${escapeHtml(COMPLIANCE_ROUTE)}</p>
     <h1>Compliance evidence, record by record.</h1>
     <p class="lede">Browse the canonical ${escapeHtml(frameworkNames)} public assurance datasets through one derived view with stable record anchors and evidence links.</p>
     <p class="assurance-notice"><strong>Scope:</strong> ${escapeHtml(complianceQualification)} WCAG statuses are engineering-evidence states, while ISO statuses reflect the approved public mapping; they are not interchangeable pass/fail claims.</p>
@@ -152,8 +154,7 @@ export function complianceContent(request: Request, env: Env): PageContent {
   </section>
   <section class="info-card" aria-labelledby="compliance-filter-heading">
     <h2 id="compliance-filter-heading">Filter records</h2>
-    <form method="get" action="/assurance">
-      <input type="hidden" name="view" value="compliance">
+    <form method="get" action="${escapeHtml(COMPLIANCE_ROUTE)}">
       <fieldset>
         <legend class="subtle">Framework, status, and WCAG level</legend>
         <p>

@@ -22,22 +22,30 @@ export function assuranceRouteOwnerResource(registry, kind) {
 }
 
 export function assuranceRoutesForDataset(registry, kind) {
-  return assuranceRouteOwnerResource(registry, kind)?.routes ?? null;
+  return assuranceRouteOwnerResource(registry, kind)?.presentation?.routeId ?? null;
 }
 
 export function assuranceRouteDeclarations(registry) {
   const declarations = [];
-  if (registry?.routes) {
-    declarations.push({ owner: 'registry', ownerId: registry.id, routes: registry.routes });
+  if (registry?.presentation?.routeId) {
+    declarations.push({
+      owner: 'registry',
+      ownerId: registry.id,
+      routeId: registry.presentation.routeId,
+    });
   }
 
   const seenOwners = new Set();
   for (const dataset of registry?.datasets ?? []) {
     if (dataset?.role !== 'dataset') continue;
     const owner = assuranceRouteOwnerResource(registry, dataset.kind);
-    if (!owner?.routes || seenOwners.has(owner.id)) continue;
+    if (!owner?.presentation?.routeId || seenOwners.has(owner.id)) continue;
     seenOwners.add(owner.id);
-    declarations.push({ owner: owner.kind, ownerId: owner.id, routes: owner.routes });
+    declarations.push({
+      owner: owner.kind,
+      ownerId: owner.id,
+      routeId: owner.presentation.routeId,
+    });
   }
   return declarations;
 }
@@ -46,22 +54,10 @@ export function assuranceAnchor(recordId) {
   return encodeURIComponent(recordId);
 }
 
-export function assuranceRecordUrls(registry, kind, recordId) {
-  const owner = assuranceRouteOwnerResource(registry, kind);
-  if (!owner) throw new Error(`${kind} has no canonical assurance resource owner.`);
-  const route = owner.routes?.html ?? registry?.routes?.html;
-  if (!route) return {};
-  return {
-    html: recordId === undefined ? route : `${route}#${assuranceAnchor(recordId)}`,
-  };
-}
-
-function validRoutePath(value) {
-  return typeof value === 'string'
-    && value.startsWith('/')
-    && !value.includes('?')
-    && !value.includes('#')
-    && (value === '/' || !value.endsWith('/'));
+function applicationRouteIds(registeredRouteIds) {
+  if (!registeredRouteIds) return null;
+  if (registeredRouteIds instanceof Set) return registeredRouteIds;
+  return new Set(registeredRouteIds);
 }
 
 export function validateAssuranceRouteHandlerSupport(registry, support) {
@@ -74,24 +70,26 @@ export function validateAssuranceRouteHandlerSupport(registry, support) {
   }
 
   for (const declaration of declarations) {
-    const routes = declaration.routes ?? {};
-    const ownerSupport = support?.[declaration.owner] ?? support?.['*'] ?? {};
-    if (routes.html && !ownerSupport.html) {
-      errors.push(`${declaration.ownerId} declares routes.html without an HTML handler`);
+    const routeSupport = support?.[declaration.routeId] ?? support?.['*'] ?? {};
+    if (!routeSupport.html) {
+      errors.push(`${declaration.ownerId} presents on ${declaration.routeId} without an HTML handler`);
     }
   }
   return errors;
 }
 
-export function validateAssuranceRouteContract(registry) {
+export function validateAssuranceRouteContract(registry, registeredRouteIds) {
   const errors = [];
   const resources = flattenAssuranceResources(registry);
-  const ids = new Map(resources.map((resource) => [resource.id, resource]));
+  const routeIds = applicationRouteIds(registeredRouteIds);
 
-  if (!registry?.routes?.html) errors.push('registry must declare routes.html');
+  if (!registry?.presentation?.routeId) {
+    errors.push('registry must declare presentation.routeId');
+  }
+
   for (const resource of resources.filter((entry) => entry.role === 'dataset')) {
-    if (resource.routes && resource.routeOwner) {
-      errors.push(`${resource.id} cannot declare both routes and routeOwner`);
+    if (resource.presentation && resource.routeOwner) {
+      errors.push(`${resource.id} cannot declare both presentation and routeOwner`);
     }
     if (resource.routeOwner) {
       const owner = assuranceResourceById(registry, resource.routeOwner);
@@ -107,27 +105,13 @@ export function validateAssuranceRouteContract(registry) {
     return errors;
   }
 
-  const claimedPaths = new Map();
-  const claim = (path, label) => {
-    const existing = claimedPaths.get(path);
-    if (existing) errors.push(`${label} collides with ${existing} at ${path}`);
-    else claimedPaths.set(path, label);
-  };
-
   for (const declaration of declarations) {
-    const routes = declaration.routes ?? {};
-    for (const key of Object.keys(routes)) {
-      if (key !== 'html') errors.push(`${declaration.ownerId} declares unsupported route field ${key}; machine reporting uses /api/reporting`);
+    if (typeof declaration.routeId !== 'string' || declaration.routeId.length === 0) {
+      errors.push(`${declaration.ownerId} presentation.routeId must be a non-empty route ID`);
+      continue;
     }
-    const resource = declaration.owner === 'registry' ? null : ids.get(declaration.ownerId);
-    const capabilities = new Set(resource?.capabilities ?? []);
-    if (!routes.html) errors.push(`${declaration.ownerId} routes must declare html`);
-    if (routes.html !== undefined) {
-      if (!validRoutePath(routes.html)) errors.push(`${declaration.ownerId} routes.html is not a canonical route path: ${routes.html}`);
-      else claim(routes.html, `${declaration.ownerId} routes.html`);
-    }
-    if (resource && routes.html && !capabilities.has('runtime')) {
-      errors.push(`${declaration.ownerId} route owner must declare runtime capability`);
+    if (routeIds && !routeIds.has(declaration.routeId)) {
+      errors.push(`${declaration.ownerId} presentation.routeId references unknown application route ${declaration.routeId}`);
     }
   }
 

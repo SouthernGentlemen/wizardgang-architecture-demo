@@ -2,7 +2,6 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { assuranceRecordUrls } from '../src/assurance/routes';
 import {
-  assuranceSurfaceViews,
   frontendViewUrl,
   operationsSurfaceViews,
 } from '../src/demos/registry';
@@ -22,9 +21,8 @@ const environment: Env = {
 };
 
 describe('canonical frontend route contract', () => {
-  it('keeps query views only for stateful consolidated surfaces and publishes canonical children', () => {
+  it('keeps query views only for the remaining stateful consolidated surface and publishes canonical children', () => {
     const inventories = [
-      ['assurance.wizardgang-public-assurance.html', assuranceSurfaceViews],
       ['operations.page', operationsSurfaceViews],
     ] as const;
     for (const [routeId, views] of inventories) {
@@ -43,6 +41,10 @@ describe('canonical frontend route contract', () => {
       ['interfaces.graphql.console', '/interfaces/graphql'], ['interfaces.webhooks.console', '/interfaces/webhooks'],
       ['interfaces.identity.page', '/interfaces/identity'], ['interfaces.mcp.console', '/interfaces/mcp'],
       ['interfaces.i18n', '/interfaces/i18n'], ['interfaces.accessibility', '/interfaces/accessibility'],
+      ['assurance.delivery', '/assurance/delivery'], ['assurance.governance', '/assurance/governance'],
+      ['assurance.evidence', '/assurance/evidence'], ['assurance.compliance', '/assurance/compliance'],
+      ['assurance.risks', '/assurance/risks'], ['assurance.incidents', '/assurance/incidents'],
+      ['assurance.concerns', '/assurance/concerns'],
     ] as const;
     for (const [routeId, path] of canonicalChildren) expect(routeUrl(routeId)).toBe(path);
   });
@@ -66,9 +68,9 @@ describe('canonical frontend route contract', () => {
   });
 
   it('preserves stable assurance record fragments', () => {
-    expect(assuranceRecordUrls('evidence', 'EV-001').html).toBe('/assurance?view=evidence#EV-001');
-    expect(assuranceRecordUrls('risks', 'SEC-RISK-001').html).toBe('/assurance?view=risks#SEC-RISK-001');
-    expect(assuranceRecordUrls('incidents', 'INC-001').html).toBe('/assurance?view=incidents#INC-001');
+    expect(assuranceRecordUrls('evidence', 'EV-001').html).toBe('/assurance/evidence#EV-001');
+    expect(assuranceRecordUrls('risks', 'SEC-RISK-001').html).toBe('/assurance/risks#SEC-RISK-001');
+    expect(assuranceRecordUrls('incidents', 'INC-001').html).toBe('/assurance/incidents#INC-001');
     expect(assuranceRecordUrls('advisories', 'ADV-001').html).toBe('/security#ADV-001');
   });
 

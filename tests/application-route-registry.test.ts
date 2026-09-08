@@ -69,9 +69,9 @@ describe('complete declarative application routing', () => {
       'interfaces.frontend.index',
       'platform.index',
       'interfaces.index',
-      'assurance.wizardgang-public-assurance.html',
+      'assurance.index',
       'operations.page',
-      'assurance.advisories.html',
+      'security.index',
     ]);
     expect(primaryNavigation().map((route) => route.page?.label)).toEqual([
       'Architecture', 'Platform', 'Interfaces', 'Assurance', 'Operations', 'Security',
@@ -90,16 +90,22 @@ describe('complete declarative application routing', () => {
       '/interfaces/rest', '/interfaces/graphql', '/interfaces/webhooks', '/interfaces/identity',
       '/interfaces/mcp', '/interfaces/i18n', '/interfaces/accessibility',
     ]);
+    expect(secondaryNavigation('assurance.index').map((route) => route.pattern)).toEqual([
+      '/assurance/delivery', '/assurance/governance', '/assurance/evidence', '/assurance/compliance',
+      '/assurance/risks', '/assurance/incidents', '/assurance/concerns',
+    ]);
     expect(primaryNavigation().every((route) => route.visibility === 'public')).toBe(true);
   });
 
   it('generates sitemap entries from public indexable registered pages', async () => {
-    expect(sitemapPaths()).toEqual([
+    expect([...sitemapPaths()].sort()).toEqual([
       '/', '/interfaces/rest', '/platform/edge', '/interfaces/graphql', '/platform',
       '/platform/workers', '/interfaces', '/interfaces/webhooks', '/platform/durable-objects',
-      '/assurance', '/interfaces/identity', '/platform/d1', '/interfaces/mcp',
-      '/operations', '/platform/r2', '/security', '/interfaces/i18n', '/interfaces/accessibility',
-    ]);
+      '/assurance', '/assurance/delivery', '/assurance/governance', '/assurance/evidence',
+      '/assurance/compliance', '/assurance/risks', '/assurance/incidents', '/assurance/concerns',
+      '/interfaces/identity', '/platform/d1', '/interfaces/mcp', '/operations', '/platform/r2',
+      '/security', '/interfaces/i18n', '/interfaces/accessibility',
+    ].sort());
     const response = sitemapResponse(new Request('https://demo.wizardgang.ai/sitemap.xml'));
     const xml = await response.text();
     for (const routePath of sitemapPaths()) {

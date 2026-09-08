@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { reportingRecordResponse } from '../src/api/reporting';
 import {
   assuranceCollectionApiRoute,
+  assuranceHtmlRoute,
   assuranceRecordUrls,
   assuranceRouteDeclarations,
 } from '../src/assurance/routes';
@@ -14,23 +15,46 @@ import type { Env } from '../src/types';
 const env = { GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' } as Env;
 
 describe('assurance route contract', () => {
-  it('keeps assurance route ownership presentation-only while deriving canonical reporting URLs', () => {
+  it('keeps assurance metadata route-ID-only while deriving canonical browser and reporting URLs', () => {
     const declarations = assuranceRouteDeclarations();
-    expect(declarations.map((entry) => entry.owner)).toEqual(expect.arrayContaining(['registry', 'advisories']));
-    expect(declarations.every((entry) => !entry.routes.api && !entry.routes.apiRecord)).toBe(true);
+    expect(declarations.map((entry) => entry.routeId)).toEqual(expect.arrayContaining([
+      'assurance.index',
+      'assurance.evidence',
+      'assurance.governance',
+      'assurance.compliance',
+      'assurance.risks',
+      'assurance.incidents',
+      'security.index',
+    ]));
+    expect(declarations.every((entry) => !('routes' in entry))).toBe(true);
     expect(assuranceCollectionApiRoute('compliance')).toBe('/api/reporting/compliance');
     expect(assuranceCollectionApiRoute('advisories')).toBe('/api/reporting/security');
     expect(assuranceRecordUrls('compliance', 'WCAG-4.1.2')).toMatchObject({
       api: '/api/reporting/compliance/WCAG-4.1.2',
-      html: '/assurance?view=compliance#WCAG-4.1.2',
+      html: '/assurance/compliance#WCAG-4.1.2',
     });
+    for (const dataset of ['claims', 'evidence', 'compliance', 'risks', 'incidents', 'exercises', 'advisories', 'governance-records']) {
+      expect(assuranceHtmlRoute(dataset), dataset).not.toContain('?');
+    }
   });
 
-  it('matches HTML through assurance routing and all machine reporting through the generic reporting registry', () => {
-    expect(matchRoute(assuranceDeclarativeRouteRegistry, 'GET', '/assurance')).toMatchObject({
-      status: 'matched',
-      route: { id: 'assurance.wizardgang-public-assurance.html' },
-    });
+  it('matches every canonical assurance HTML route and all machine reporting through the generic reporting registry', () => {
+    for (const [routeId, path] of [
+      ['assurance.index', '/assurance'],
+      ['assurance.delivery', '/assurance/delivery'],
+      ['assurance.governance', '/assurance/governance'],
+      ['assurance.evidence', '/assurance/evidence'],
+      ['assurance.compliance', '/assurance/compliance'],
+      ['assurance.risks', '/assurance/risks'],
+      ['assurance.incidents', '/assurance/incidents'],
+      ['assurance.concerns', '/assurance/concerns'],
+      ['security.index', '/security'],
+    ] as const) {
+      expect(matchRoute(assuranceDeclarativeRouteRegistry, 'GET', path)).toMatchObject({
+        status: 'matched',
+        route: { id: routeId },
+      });
+    }
     expect(matchRoute(assuranceDeclarativeRouteRegistry, 'GET', '/api/reporting/risks')).toEqual({
       status: 'not-found',
       statusCode: 404,
@@ -39,15 +63,6 @@ describe('assurance route contract', () => {
       status: 'matched',
       route: { id: 'reporting.collection' },
       params: { collection: 'risks' },
-    });
-    expect(matchRoute(reportingRouteRegistry, 'GET', '/api/reporting/compliance/WCAG-4.1.2')).toMatchObject({
-      status: 'matched',
-      route: { id: 'reporting.record' },
-      params: { collection: 'compliance', recordId: 'WCAG-4.1.2' },
-    });
-    expect(matchRoute(reportingRouteRegistry, 'GET', '/api/reporting/compliance/WCAG-4.1.2/extra')).toEqual({
-      status: 'not-found',
-      statusCode: 404,
     });
   });
 
@@ -64,6 +79,12 @@ describe('assurance route contract', () => {
     expect(body.records.map((record) => record.id)).toEqual(['WCAG-4.1.2']);
     expect(body.derived.count).toBe(1);
     expect(body).not.toHaveProperty('record');
+  });
+
+  it('contains no dead assuranceRecordUrls export in the JavaScript route contract', () => {
+    const source = readFileSync('src/assurance/route-contract.js', 'utf8');
+    expect(source).not.toMatch(/export function assuranceRecordUrls/);
+    expect(source).not.toContain('?view=');
   });
 
   it('keeps assurance family dispatch out of the main router', () => {

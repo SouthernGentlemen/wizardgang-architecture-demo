@@ -1,21 +1,31 @@
 import { defineAssuranceRouteCapability } from '../route-capability';
 
 export const assuranceRegistryRouteCapability = defineAssuranceRouteCapability({
-  ownerId: 'wizardgang-public-assurance',
+  routeId: 'assurance.index',
+  pattern: '/assurance',
   html: {
     handler: async (request, env) => {
-      const { renderAssurance } = await import('../../demos/assurance');
-      return renderAssurance(request, env);
+      const [{ assuranceIndexContent, renderSharedReporting }, { renderPage }] = await Promise.all([
+        import('../../demos/assurance'),
+        import('../../ui/page'),
+      ]);
+      const content = assuranceIndexContent(env);
+      const reporting = await renderSharedReporting(request, env, 'index');
+      return renderPage(env, {
+        ...content,
+        routeId: 'assurance.index',
+        body: `${content.body}\n${reporting}`,
+      });
     },
     source: {
       module: 'src/demos/assurance.ts',
-      exportName: 'renderAssurance',
+      exportName: 'assuranceIndexContent',
       tests: ['tests/assurance-consolidation.test.ts', 'tests/router.test.ts'],
     },
     page: {
       parent: 'interfaces.frontend.index',
       label: 'Assurance',
-      summary: 'One public assurance surface for delivery evidence, governance, compliance, risks, incidents, concerns, and evidence records.',
+      summary: 'Public assurance index for delivery evidence, governance, compliance, risks, incidents, concerns, and evidence records.',
       order: 3,
       navigation: 'primary',
       architectureMap: true,

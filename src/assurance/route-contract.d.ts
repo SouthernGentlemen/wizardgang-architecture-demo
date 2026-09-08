@@ -1,11 +1,7 @@
-export interface AssuranceRouteContractRoutes {
-  html?: string;
-}
-
 export interface AssuranceRouteContractDeclaration {
   owner: string;
   ownerId: string;
-  routes: AssuranceRouteContractRoutes;
+  routeId: string;
 }
 
 export interface AssuranceRouteHandlerSupport {
@@ -13,16 +9,14 @@ export interface AssuranceRouteHandlerSupport {
 }
 
 export function assuranceRouteOwnerResource(registry: unknown, kind: string): unknown | null;
-export function assuranceRoutesForDataset(registry: unknown, kind: string): AssuranceRouteContractRoutes | null;
+export function assuranceRoutesForDataset(registry: unknown, kind: string): string | null;
 export function assuranceRouteDeclarations(registry: unknown): AssuranceRouteContractDeclaration[];
 export function assuranceAnchor(recordId: string): string;
-export function assuranceRecordUrls(
-  registry: unknown,
-  kind: string,
-  recordId?: string,
-): { html?: string; api?: string };
 export function validateAssuranceRouteHandlerSupport(
   registry: unknown,
   support: Record<string, AssuranceRouteHandlerSupport>,
 ): string[];
-export function validateAssuranceRouteContract(registry: unknown): string[];
+export function validateAssuranceRouteContract(
+  registry: unknown,
+  registeredRouteIds?: ReadonlySet<string> | readonly string[],
+): string[];

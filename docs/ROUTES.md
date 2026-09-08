@@ -7,7 +7,14 @@ This file is generated from the active declarative application registry. Route I
 | Route ID | Route | Methods | Kind | Visibility | Offline | Indexing | Purpose | Source |
 |---|---|---|---|---|---|---|---|---|
 | `interfaces.frontend.index` | `/` | `GET` | page | public | gated | allow | Architecture demo index | `src/ui/page.ts` |
-| `assurance.wizardgang-public-assurance.html` | `/assurance` | `GET` | page | public | gated | allow | Assurance registry html | `src/demos/assurance.ts` |
+| `assurance.index` | `/assurance` | `GET` | page | public | gated | allow | Assurance | `src/demos/assurance.ts` |
+| `assurance.compliance` | `/assurance/compliance` | `GET` | page | public | gated | allow | Compliance | `src/demos/compliance-page.ts` |
+| `assurance.concerns` | `/assurance/concerns` | `GET` | page | public | gated | allow | Concerns | `src/demos/assurance-pages.ts` |
+| `assurance.delivery` | `/assurance/delivery` | `GET` | page | public | gated | allow | Delivery | `src/demos/git-page.ts` |
+| `assurance.evidence` | `/assurance/evidence` | `GET` | page | public | gated | allow | Evidence | `src/demos/evidence-page.ts` |
+| `assurance.governance` | `/assurance/governance` | `GET` | page | public | gated | allow | Governance | `src/demos/governance.ts` |
+| `assurance.incidents` | `/assurance/incidents` | `GET` | page | public | gated | allow | Incidents | `src/demos/assurance-pages.ts` |
+| `assurance.risks` | `/assurance/risks` | `GET` | page | public | gated | allow | Risks | `src/demos/assurance-pages.ts` |
 | `interfaces.index` | `/interfaces` | `GET` | page | public | gated | allow | Application interfaces | `src/demos/interfaces.ts` |
 | `interfaces.accessibility` | `/interfaces/accessibility` | `GET` | page | public | gated | allow | WCAG 2.2 accessibility laboratory | `src/demos/accessibility-page.ts` |
 | `interfaces.graphql.console` | `/interfaces/graphql` | `GET` | page | public | gated | allow | GraphQL console | `src/demos/graphql-console.ts` |
@@ -23,7 +30,7 @@ This file is generated from the active declarative application registry. Route I
 | `platform.edge` | `/platform/edge` | `GET` | page | public | gated | allow | Cloudflare Edge | `src/demos/edge.ts` |
 | `platform.r2` | `/platform/r2` | `GET` | page | public | gated | allow | Cloudflare R2 | `src/demos/r2-page.ts` |
 | `platform.workers` | `/platform/workers` | `GET` | page | public | gated | allow | Cloudflare Workers | `src/demos/workers.ts` |
-| `assurance.advisories.html` | `/security` | `GET` | page | public | available | allow | Assurance advisories html | `src/demos/security-page.ts` |
+| `security.index` | `/security` | `GET` | page | public | available | allow | Security | `src/demos/security-page.ts` |
 
 ## Registered service, protocol, asset, and private routes
 

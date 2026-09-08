@@ -16,7 +16,8 @@ import {
 } from '../assurance/publication';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
-import { referenceDetails, pageResponse } from '../ui/page';
+import { referenceDetails, pageContent, renderPage, type PageContent } from '../ui/page';
+import { routeUrl } from '../routing/application-routes';
 
 const SECURITY_ROUTE = assuranceHtmlRoute('advisories');
 const ADVISORIES_API_ROUTE = assuranceCollectionApiRoute('advisories');
@@ -47,7 +48,7 @@ function advisoryCard(env: Env, advisory: PublishedAssuranceRecordMap['advisorie
   </article>`;
 }
 
-export function renderSecurity(env: Env): Response {
+export function securityContent(env: Env): PageContent {
   const reportUrl = escapeHtml(privateReportUrl(env));
   const advisories = listPublishedAssuranceRecords('advisories');
   const advisoryCards = advisories.map((record) => advisoryCard(env, record)).join('');
@@ -56,9 +57,9 @@ export function renderSecurity(env: Env): Response {
     <p>The public assurance registry currently contains no published security advisory records. This is not a claim that no vulnerabilities, private reports, defects, or security investigations have existed.</p>
   </article>`;
 
-  return pageResponse(env, 'Security', `
+  return pageContent(env, 'Security', `
   <section class="page-header assurance-header">
-    <p class="eyebrow"><a href="/#architecture-map">Delivery &amp; Governance</a> / ${escapeHtml(SECURITY_ROUTE)}</p>
+    <p class="eyebrow"><a href="${escapeHtml(routeUrl('assurance.index'))}">Delivery &amp; Governance</a> / ${escapeHtml(SECURITY_ROUTE)}</p>
     <h1>Report security privately.</h1>
     <p class="lede">Use the repository's private vulnerability channel for suspected vulnerabilities, active security incidents, credentials, exploit details, or sensitive infrastructure information.</p>
     <p class="assurance-notice"><strong>Do not open a public issue for sensitive security information.</strong> Private report contents are never exposed through the public assurance registry.</p>
@@ -78,7 +79,7 @@ export function renderSecurity(env: Env): Response {
     <article class="info-card"><h2>What to report</h2><p>Describe the affected route, component, or release; the observed behavior and impact; reproducible steps; and any safe supporting evidence. Keep reporter identity, exploit detail, and sensitive infrastructure context inside the private channel.</p></article>
     <article class="info-card"><h2>What happens next</h2><p>The report is privately triaged. Maintainers may request clarification, reject a non-security report, coordinate remediation in a draft GitHub Security Advisory, and publish only disclosure-safe information after a fix is released.</p></article>
     <article class="info-card"><h2>Advisories and CVEs</h2><p>A confirmed vulnerability may receive a GitHub Security Advisory. A CVE is recorded only when the vulnerability is eligible and a real identifier has been assigned; neither a GHSA nor a CVE is fabricated for demonstration purposes.</p></article>
-    <article class="info-card"><h2>Non-security concerns</h2><p>Bugs, feature requests, accessibility issues, AI/MCP concerns, and other non-sensitive feedback belong in the public concern intake.</p><p><a href="/assurance?view=concerns">Choose a public concern form →</a></p></article>
+    <article class="info-card"><h2>Non-security concerns</h2><p>Bugs, feature requests, accessibility issues, AI/MCP concerns, and other non-sensitive feedback belong in the public concern intake.</p><p><a href="${escapeHtml(routeUrl('assurance.concerns'))}">Choose a public concern form →</a></p></article>
   </div>
   <section id="disclosure-lifecycle" class="assurance-section" aria-labelledby="disclosure-lifecycle-heading">
     <div class="section-heading">
@@ -103,9 +104,11 @@ export function renderSecurity(env: Env): Response {
     </div>
     <div class="info-grid">${published}</div>
   </section>`, {
-    routeId: 'assurance.advisories.html',
     canonicalPath: SECURITY_ROUTE,
     cacheControl: 'no-store',
     description: 'Private vulnerability reporting, coordinated disclosure lifecycle, and disclosure-safe published advisory assurance for the WizardGang Architecture Demo.',
   });
+}
+export function renderSecurity(env: Env): Response {
+  return renderPage(env, { ...securityContent(env), routeId: 'security.index' });
 }

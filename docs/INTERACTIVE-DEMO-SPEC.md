@@ -29,7 +29,7 @@ HTML resources are declared by capability-owned routes. `/platform` and `/interf
 | `/admin` | Authenticated availability and crawler controls |
 | `/offline` | Intentional-maintenance status |
 
-Platform and interface demonstrations use those child pathnames. Query parameters remain state where appropriate, including `/assurance?view=compliance`, `/operations?view=reports`, `/interfaces/i18n?locale=ar`, and `/interfaces/accessibility?mode=broken`. Unknown pathnames and retired platform/interface `view` URLs use the ordinary 404. There is no redirect table, route alias, proxy path, dual endpoint, or client-side routing fallback.
+Platform and interface demonstrations use those child pathnames. Query parameters remain state where appropriate, including `/assurance/compliance`, `/operations?view=reports`, `/interfaces/i18n?locale=ar`, and `/interfaces/accessibility?mode=broken`. Unknown pathnames and retired platform/interface `view` URLs use the ordinary 404. There is no redirect table, route alias, proxy path, dual endpoint, or client-side routing fallback.
 
 ## Routing contract
 

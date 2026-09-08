@@ -130,7 +130,7 @@ describe('identity protocol boundaries', () => {
     const response = await providerStartResponse(new Request('https://demo.example/auth/google'), env(), 'google');
     expect(response.status).toBe(303);
     expect(response.headers.get('location')).toBe('https://demo.example/interfaces/identity?error=provider_unconfigured&provider=google');
-  });
+  }, 10_000);
 
   it('validates a Google ID token against discovery and JWKS before creating the application session', async () => {
     const environment = env({

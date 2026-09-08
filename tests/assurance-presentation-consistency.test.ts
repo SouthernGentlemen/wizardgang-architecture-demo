@@ -19,7 +19,7 @@ describe('assurance presentation consistency', () => {
     const query = serializeAssuranceFilters('risks', filters);
     const expected = filterPublishedAssuranceRecords('risks', filters).map((record) => record.id);
     const api = await (await reportingCollectionResponse(new Request(`https://demo.wizardgang.ai/api/reporting/risks?${query}`), environment, 'risks')).json() as { records: Array<{ id: string }>; derived: { count: number } };
-    const html = await renderPage(environment, risksContent(new Request(`https://demo.wizardgang.ai/assurance?view=risks&${query}`), environment)).text();
+    const html = await renderPage(environment, risksContent(new Request(`https://demo.wizardgang.ai/assurance/risks?${query}`), environment)).text();
     const rendered = [...html.matchAll(/id="((?:SEC|AI)-RISK-[0-9]+)"/g)].map((match) => match[1]);
     expect(api.records.map((record) => record.id)).toEqual(expected);
     expect(api.derived.count).toBe(expected.length);
@@ -31,7 +31,7 @@ describe('assurance presentation consistency', () => {
     const query = serializeAssuranceFilters('compliance', filters);
     const expected = filterPublishedAssuranceRecords('compliance', filters).map((record) => record.id);
     const api = await (await reportingCollectionResponse(new Request(`https://demo.wizardgang.ai/api/reporting/compliance?${query}`), environment, 'compliance')).json() as { records: Array<{ id: string }>; derived: { count: number } };
-    const html = await renderPage(environment, complianceContent(new Request(`https://demo.wizardgang.ai/assurance?view=compliance&${query}`), environment)).text();
+    const html = await renderPage(environment, complianceContent(new Request(`https://demo.wizardgang.ai/assurance/compliance?${query}`), environment)).text();
     const rendered = [...html.matchAll(/<tr id="((?:ISO27001|ISO42001|WCAG)-[^"]+)">/g)].map((match) => match[1]);
     expect(api.records.map((record) => record.id)).toEqual(expected);
     expect(api.derived.count).toBe(expected.length);

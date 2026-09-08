@@ -36,7 +36,7 @@ The demo uses the `wizardgang.ai` design tokens: dark by default, with a light t
 
 `/interfaces` is the Interfaces index. Its canonical child resources are `/interfaces/rest`, `/interfaces/graphql`, `/interfaces/webhooks`, `/interfaces/identity`, `/interfaces/mcp`, `/interfaces/i18n`, and `/interfaces/accessibility`. Retired top-level interface page paths remain dead. `/graphql` is machine-only even for browser HTML requests; the locally bundled GraphiQL document is served from `/interfaces/graphql`. `/graphql/schema`, identity protocol routes, webhook endpoints, and `/mcp` retain their protocol URLs.
 
-`/assurance` is the single public assurance browser surface. Its query-selected views preserve canonical filters, reporting contracts, and stable fragments such as `/assurance?view=risks#SEC-RISK-001`. `/security` remains a distinct page because vulnerability reporting and published security advisories have a separate disclosure boundary.
+`/assurance` is the public assurance index. Its canonical child resources preserve filters, reporting contracts, and stable fragments such as `/assurance/risks#SEC-RISK-001`. `/security` remains a distinct page because vulnerability reporting and published security advisories have a separate disclosure boundary.
 
 There is no client-side router. Platform and interface navigation uses canonical child routes; assurance, operations, locale, accessibility mode, and request deep links keep true interaction state in query parameters. Application routing remains registry matching in `src/router.ts`.
 

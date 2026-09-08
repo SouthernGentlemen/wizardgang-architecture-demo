@@ -28,7 +28,7 @@ const env = {
 function syntheticResource(
   id: string,
   kind: string,
-  routes: AssuranceRegistryResource['routes'],
+  routeId: string,
   capabilities: string[] = ['runtime', 'records'],
 ): AssuranceRegistryResource {
   return {
@@ -40,7 +40,7 @@ function syntheticResource(
     visibility: 'public',
     capabilities,
     recordCollection: { path: 'records', identity: ['title'] },
-    routes,
+    presentation: { routeId },
   };
 }
 
@@ -50,11 +50,12 @@ function registryWith(...resources: AssuranceRegistryResource[]): AssuranceRegis
   return registry;
 }
 
-function syntheticCapability(ownerId: string): AssuranceRouteCapability {
+function syntheticCapability(routeId: string, pattern: string): AssuranceRouteCapability {
   return {
-    ownerId,
+    routeId,
+    pattern,
     html: {
-      handler: (request) => new Response(JSON.stringify({ ownerId, pathname: new URL(request.url).pathname }), {
+      handler: (request) => new Response(JSON.stringify({ routeId, pathname: new URL(request.url).pathname }), {
         headers: { 'content-type': 'application/json' },
       }),
       source: {
@@ -71,11 +72,11 @@ describe('declarative assurance presentation routing', () => {
     const registry = registryWith(syntheticResource(
       'synthetic',
       'synthetic',
-      { html: '/synthetic-assurance' },
+      'assurance.synthetic',
     ));
     const routeRegistry = createAssuranceRouteRegistry(
       registry,
-      [...assuranceRouteCapabilities, syntheticCapability('synthetic')],
+      [...assuranceRouteCapabilities, syntheticCapability('assurance.synthetic', '/synthetic-assurance')],
     );
 
     expect(routeRegistry.declarations.map((route) => route.pattern)).toContain('/synthetic-assurance');
@@ -84,20 +85,20 @@ describe('declarative assurance presentation routing', () => {
     if (match.status !== 'matched') throw new Error('Synthetic assurance route did not match.');
     const response = await match.route.handler(new Request('https://demo.wizardgang.ai/synthetic-assurance'), { env }, match.params);
     expect(response.status).toBe(200);
-    expect(await response.json()).toMatchObject({ ownerId: 'synthetic', pathname: '/synthetic-assurance' });
+    expect(await response.json()).toMatchObject({ routeId: 'assurance.synthetic', pathname: '/synthetic-assurance' });
   });
 
-  it('keeps independently registered presentation routes distinct', async () => {
+  it('keeps independently registered presentation routes distinct', () => {
     const registry = registryWith(
-      syntheticResource('synthetic-a', 'synthetic-a', { html: '/synthetic-a' }),
-      syntheticResource('synthetic-b', 'synthetic-b', { html: '/synthetic-b' }),
+      syntheticResource('synthetic-a', 'synthetic-a', 'assurance.synthetic-a'),
+      syntheticResource('synthetic-b', 'synthetic-b', 'assurance.synthetic-b'),
     );
     const routeRegistry = createAssuranceRouteRegistry(
       registry,
       [
         ...assuranceRouteCapabilities,
-        syntheticCapability('synthetic-a'),
-        syntheticCapability('synthetic-b'),
+        syntheticCapability('assurance.synthetic-a', '/synthetic-a'),
+        syntheticCapability('assurance.synthetic-b', '/synthetic-b'),
       ],
     );
 
@@ -106,23 +107,27 @@ describe('declarative assurance presentation routing', () => {
     expect(matchRoute(routeRegistry, 'GET', '/synthetic-a/extra')).toEqual({ status: 'not-found', statusCode: 404 });
   });
 
-  it('fails closed when a registered HTML route has no specialized renderer', () => {
+  it('fails closed when metadata references an application route ID with no renderer', () => {
     const registry = registryWith(syntheticResource(
       'synthetic-html',
       'synthetic-html',
-      { html: '/synthetic-assurance' },
+      'assurance.synthetic-missing',
     ));
     expect(() => createAssuranceRouteRegistry(registry, assuranceRouteCapabilities))
-      .toThrow(/synthetic-html.*HTML|HTML.*synthetic-html/i);
+      .toThrow(/synthetic-html.*unknown application route assurance\.synthetic-missing/i);
   });
 
-  it('rejects additional assurance API declarations instead of creating a second API router', () => {
+  it('takes the pathname from the application route capability rather than assurance metadata', () => {
     const registry = registryWith(syntheticResource(
-      'synthetic-api',
-      'synthetic-api',
-      { api: '/v1/assurance/synthetic-api', apiRecord: '/v1/assurance/synthetic-api/{id}' } as never,
+      'synthetic-canonical',
+      'synthetic-canonical',
+      'assurance.synthetic-canonical',
     ));
-    expect(() => createAssuranceRouteRegistry(registry, assuranceRouteCapabilities))
-      .toThrow(/unsupported route field.*api\/reporting/i);
+    const routeRegistry = createAssuranceRouteRegistry(
+      registry,
+      [...assuranceRouteCapabilities, syntheticCapability('assurance.synthetic-canonical', '/owned-by-application-route')],
+    );
+    expect(matchRoute(routeRegistry, 'GET', '/owned-by-application-route').status).toBe('matched');
+    expect(JSON.stringify(registry)).not.toContain('/owned-by-application-route');
   });
 });
