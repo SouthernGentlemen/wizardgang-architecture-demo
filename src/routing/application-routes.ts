@@ -28,6 +28,7 @@ import {
   configureRegisteredRoutes,
   type RegisteredPageMetadata,
 } from './navigation';
+import { withRouteQuery, type RouteQuery } from './route-url';
 
 export type BrowserHtmlPolicy = 'page' | 'never';
 
@@ -223,10 +224,11 @@ export function routeUrlFromRegistry(
   registry: RouteRegistry<ApplicationRouteContext>,
   routeId: string,
   params: Readonly<Record<string, string>> = {},
+  query: RouteQuery = {},
 ): string {
   const route = registry.declarations.find((candidate) => candidate.id === routeId);
   if (!route) throw new Error(`Unknown route ID '${routeId}'`);
-  return interpolatePattern(route.pattern, params);
+  return withRouteQuery(interpolatePattern(route.pattern, params), query);
 }
 
 export const applicationRouteRegistry = createApplicationRouteRegistry();
@@ -235,6 +237,7 @@ configureRegisteredRoutes(applicationRouteRegistry.declarations as readonly Appl
 export function routeUrl(
   routeId: string,
   params: Readonly<Record<string, string>> = {},
+  query: RouteQuery = {},
 ): string {
-  return routeUrlFromRegistry(applicationRouteRegistry, routeId, params);
+  return routeUrlFromRegistry(applicationRouteRegistry, routeId, params, query);
 }
