@@ -71,3 +71,9 @@ Adding a compatible operational route requires a declaration with method, author
 ## Validation
 
 Relevant validation includes operational route-registry tests, operations behavior tests, dead-route tests, generated route-artifact tests, and the complete `npm run check` chain.
+
+## Reporting presentation
+
+Reports leads with “One reporting contract, many evidence families” and an illustrative family → shared authorization/presentation/pagination → HTML/JSON/machine consumer flow. The registry-derived inventory and unchanged record browser remain under **Explore all reporting sources**. The diagram is explanatory copy, not a second source registry.
+
+Query-bearing requests open the explorer on the server so selections, filters, and pagination remain visible. Fragment navigation opens the containing disclosure on initial load and hash changes, preserving existing reporting anchors and record deep links. Reporting ownership, authorization, source discovery, and cursor handling remain in their existing services.

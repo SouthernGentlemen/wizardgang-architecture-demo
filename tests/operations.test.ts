@@ -200,6 +200,23 @@ describe('operations proof surface', () => {
     expect(body).toContain('Inspect observations');
   });
 
+  it('explains shared reporting before the closed registry browser and opens selections', async () => {
+    const environment = env();
+    const { body } = await reportsContent(new Request('https://demo.wizardgang.ai/operations/reports'), environment);
+    expect(body).toContain('One reporting contract, many evidence families');
+    expect(body).toContain('Shared authorization · shared presentation · shared pagination');
+    expect(body).toContain('HTML pages · JSON responses · machine consumers');
+    expect(body).toContain('id="reporting-explorer">');
+    expect(body.indexOf('One reporting contract')).toBeLessThan(body.indexOf('Explore all reporting sources'));
+    expect(body.indexOf('Explore all reporting sources')).toBeLessThan(body.indexOf('Registered reporting collections'));
+    const selected = await reportsContent(new Request('https://demo.wizardgang.ai/operations/reports?report=compliance&limit=25'), environment);
+    expect(selected.body).toContain('id="reporting-explorer" open');
+    expect(selected.body).toContain('value="compliance" selected');
+    expect(selected.body).toContain('value="25" selected');
+    expect(selected.body).toContain('id="reporting-browser"');
+    expect(selected.body).toContain('Shared reporting presenter');
+  });
+
   it('preserves all reporting query state while replacing only the cursor', () => {
     const request = new Request('https://demo.wizardgang.ai/operations/reports?report=operations&limit=25&source=github&cursor=old#reporting-browser');
     expect(cursorLink(request, 'next cursor')).toBe(`${routeUrl('operations.reports', {}, {
