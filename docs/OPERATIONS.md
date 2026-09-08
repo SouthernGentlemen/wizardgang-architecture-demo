@@ -77,3 +77,7 @@ Relevant validation includes operational route-registry tests, operations behavi
 Reports leads with “One reporting contract, many evidence families” and an illustrative family → shared authorization/presentation/pagination → HTML/JSON/machine consumer flow. The registry-derived inventory and unchanged record browser remain under **Explore all reporting sources**. The diagram is explanatory copy, not a second source registry.
 
 Query-bearing requests open the explorer on the server so selections, filters, and pagination remain visible. Fragment navigation opens the containing disclosure on initial load and hash changes, preserving existing reporting anchors and record deep links. Reporting ownership, authorization, source discovery, and cursor handling remain in their existing services.
+
+## Documentation portal
+
+Documentation groups existing deterministic source links into **Start here**, **Governance & assurance**, **Interfaces & contracts**, and **Implementation**, with an explanation of what each group helps verify. In-page group links support direct navigation. The live interfaces section retains its canonical machine routes, releases, and tags. These groups organize reading; they do not introduce another route or contract inventory.

@@ -349,14 +349,53 @@ export async function uptimeContent(env: Env): Promise<PageContent> {
 }
 
 export function docsContent(env: Env): PageContent {
-  const links: Array<[string, string]> = [
-    ['Architecture standard', 'docs/ARCHITECTURE-STANDARD.md'], ['Operations standard', 'docs/OPERATIONS.md'], ['Assurance guide', 'docs/ASSURANCE.md'], ['Stable route map', 'docs/ROUTES.md'], ['Machine route manifest', 'docs/route-manifest.json'], ['Router', 'src/router.ts'], ['Implementation plan', 'docs/IMPLEMENTATION-PLAN.md'], ['Interactive demonstration specification', 'docs/INTERACTIVE-DEMO-SPEC.md'], ['Evidence map', 'docs/EVIDENCE.md'], ['Accessibility guidance', 'docs/ACCESSIBILITY.md'], ['ISO/IEC 27001 compliance dataset', 'assurance/compliance/iso-27001-2022.json'], ['ISO/IEC 42001 compliance dataset', 'assurance/compliance/iso-42001-2023.json'], ['WCAG 2.2 compliance manifest', 'assurance/compliance/wcag-2.2.json'], ['Identity guidance', 'docs/IDENTITY.md'], ['README', 'README.md'], ['Contributing', 'CONTRIBUTING.md'], ['Agent guidance', 'AGENTS.md'], ['Security', 'SECURITY.md'], ['Changelog', 'CHANGELOG.md'], ['OpenAPI 3.1 contract', 'contracts/openapi/openapi.json'], ['GraphQL schema', 'contracts/graphql/schema.graphql'], ['MCP tools', 'contracts/mcp/tools.json'], ['Webhook events', 'contracts/webhooks/events.json'], ['CI workflow', '.github/workflows/ci.yml'], ['Deploy workflow', '.github/workflows/deploy.yml'], ['D1 migrations', 'migrations/0001_demo_blob.sql'],
+  const groups: Array<{ id: string; title: string; description: string; links: Array<[string, string]> }> = [
+    { id: 'start-here', title: 'Start here', description: 'Understand the architecture, its operating model, and the evidence used to support its claims.', links: [
+      ['Architecture standard', 'docs/ARCHITECTURE-STANDARD.md'],
+      ['Operations standard', 'docs/OPERATIONS.md'],
+      ['Assurance guide', 'docs/ASSURANCE.md'],
+    ] },
+    { id: 'governance-assurance', title: 'Governance & assurance', description: 'Verify how security, accessibility, and assurance claims connect to documented controls and evidence.', links: [
+      ['Evidence map', 'docs/EVIDENCE.md'],
+      ['Security', 'SECURITY.md'],
+      ['Accessibility guidance', 'docs/ACCESSIBILITY.md'],
+      ['ISO/IEC 27001 compliance dataset', 'assurance/compliance/iso-27001-2022.json'],
+      ['ISO/IEC 42001 compliance dataset', 'assurance/compliance/iso-42001-2023.json'],
+      ['WCAG 2.2 compliance manifest', 'assurance/compliance/wcag-2.2.json'],
+      ['Identity guidance', 'docs/IDENTITY.md'],
+    ] },
+    { id: 'interfaces-contracts', title: 'Interfaces & contracts', description: 'Compare declared routes, schemas, and event contracts with the live machine interfaces below.', links: [
+      ['Stable route map', 'docs/ROUTES.md'],
+      ['Machine route manifest', 'docs/route-manifest.json'],
+      ['OpenAPI 3.1 contract', 'contracts/openapi/openapi.json'],
+      ['GraphQL schema', 'contracts/graphql/schema.graphql'],
+      ['MCP tools', 'contracts/mcp/tools.json'],
+      ['Webhook events', 'contracts/webhooks/events.json'],
+    ] },
+    { id: 'implementation', title: 'Implementation', description: 'Trace the standards into source, development guidance, change history, and the build and deployment workflows.', links: [
+      ['README', 'README.md'],
+      ['Router', 'src/router.ts'],
+      ['Implementation plan', 'docs/IMPLEMENTATION-PLAN.md'],
+      ['Interactive demonstration specification', 'docs/INTERACTIVE-DEMO-SPEC.md'],
+      ['Contributing', 'CONTRIBUTING.md'],
+      ['Agent guidance', 'AGENTS.md'],
+      ['Changelog', 'CHANGELOG.md'],
+      ['CI workflow', '.github/workflows/ci.yml'],
+      ['Deploy workflow', '.github/workflows/deploy.yml'],
+      ['D1 migrations', 'migrations/0001_demo_blob.sql'],
+    ] },
   ];
   const openapi = routeUrl('interfaces.openapi.json');
   const graphql = routeUrl('interfaces.graphql.endpoint');
   const complianceReporting = routeUrl('reporting.collection', { collection: 'compliance' });
   const operationsReporting = routeUrl('reporting.collection', { collection: 'operations' });
-  return operationalPage(env, routeUrl('operations.docs'), 'Documentation', 'Documentation', 'Repository-native standards, contracts, implementation sources, and live machine interfaces.', 'src/demos/operations-pages.ts', `<section class="resource-list" aria-label="Repository documentation">${links.map(([label, path]) => `<a href="${escapeHtml(sourceUrl(env, path))}"><strong>${escapeHtml(label)}</strong><code>${escapeHtml(path)}</code></a>`).join('')}</section><section class="machine-links"><h2>Live interfaces</h2><nav class="link-row" aria-label="Live machine interfaces"><a href="${escapeHtml(openapi)}">OpenAPI JSON</a><a href="${escapeHtml(graphql)}">GraphQL</a><a href="${escapeHtml(complianceReporting)}">Compliance JSON</a><a href="${escapeHtml(operationsReporting)}">Operations Reporting JSON</a><a href="${escapeHtml(routeUrl('operations.health'))}">Health JSON</a><a href="${escapeHtml(routeUrl('operations.version'))}">Version JSON</a><a href="${escapeHtml(routeUrl('operations.api-logs'))}">Logs JSON</a><a href="${escapeHtml(repoUrl(env))}/releases">Releases</a><a href="${escapeHtml(repoUrl(env))}/tags">Tags</a></nav></section>`);
+  return operationalPage(env, routeUrl('operations.docs'), 'Documentation', 'Documentation', 'Can someone independently verify how this is implemented?', 'src/demos/operations-pages.ts', `<nav class="link-row" aria-label="Documentation groups">${groups.map((group) => `<a href="#${escapeHtml(group.id)}">${escapeHtml(group.title)}</a>`).join('')}</nav>
+  ${groups.map((group) => `<section class="operations-section documentation-group" id="${escapeHtml(group.id)}" aria-labelledby="${escapeHtml(group.id)}-heading">
+    <h2 id="${escapeHtml(group.id)}-heading">${escapeHtml(group.title)}</h2>
+    <p>${escapeHtml(group.description)}</p>
+    <div class="resource-list">${group.links.map(([label, path]) => `<a href="${escapeHtml(sourceUrl(env, path))}"><strong>${escapeHtml(label)}</strong><code>${escapeHtml(path)}</code></a>`).join('')}</div>
+  </section>`).join('')}
+  <section class="machine-links"><h2>Live interfaces</h2><p>Inspect machine-readable contracts and current operational evidence, then verify release and tag history.</p><nav class="link-row" aria-label="Live machine interfaces"><a href="${escapeHtml(openapi)}">OpenAPI JSON</a><a href="${escapeHtml(graphql)}">GraphQL</a><a href="${escapeHtml(complianceReporting)}">Compliance JSON</a><a href="${escapeHtml(operationsReporting)}">Operations Reporting JSON</a><a href="${escapeHtml(routeUrl('operations.health'))}">Health JSON</a><a href="${escapeHtml(routeUrl('operations.version'))}">Version JSON</a><a href="${escapeHtml(routeUrl('operations.api-logs'))}">Logs JSON</a><a href="${escapeHtml(repoUrl(env))}/releases">Releases</a><a href="${escapeHtml(repoUrl(env))}/tags">Tags</a></nav></section>`);
 }
 
 type CloudflareMetricAvailability = CloudflareUsageSnapshot['products']['workers']['availability'];
