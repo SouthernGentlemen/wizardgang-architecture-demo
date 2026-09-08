@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { logsContent } from '../src/demos/logs';
 import { recordApplicationLog } from '../src/lib/logs';
+import { routeUrl } from '../src/routing/application-routes';
 import type { Env } from '../src/types';
 
 describe('public-safe application logs', () => {
@@ -35,7 +36,7 @@ describe('public-safe application logs', () => {
       GITHUB_BRANCH: 'main',
     } as Env;
     const content = await logsContent(new Request('https://demo.wizardgang.ai/operations/logs?level=warn&source=rest&limit=25&requestId=req-123'), env);
-    expect(content.canonicalPath).toBe('/operations/logs');
+    expect(content.canonicalPath).toBe(routeUrl('operations.logs'));
     expect(content.body).toContain('action="/operations/logs"');
     expect(content.body).toContain('href="/operations/logs"');
     expect(content.body).toContain('href="/api/operations/logs?limit=25&amp;level=warn&amp;source=rest&amp;requestId=req-123"');

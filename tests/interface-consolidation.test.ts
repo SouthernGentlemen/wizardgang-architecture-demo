@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { routeRequest } from '../src/router';
+import { routeUrl } from '../src/routing/application-routes';
 import type { D1PreparedStatement, Env } from '../src/types';
+import { removedIdentityAndProtocolPathnames } from './fixtures/removed-api-pathnames';
 
 class InterfaceStatement implements D1PreparedStatement {
   constructor(private readonly sql: string) {}
@@ -20,13 +22,13 @@ const environment: Env = {
 };
 
 const pages = [
-  { view: 'rest', path: '/interfaces/rest', marker: 'id="rest"' },
-  { view: 'graphql', path: '/interfaces/graphql', marker: 'srcdoc=' },
-  { view: 'webhooks', path: '/interfaces/webhooks', marker: 'id="webhooks"' },
-  { view: 'identity', path: '/interfaces/identity', marker: 'id="oauth"' },
-  { view: 'mcp', path: '/interfaces/mcp', marker: 'id="mcp-endpoint"' },
-  { view: 'i18n', path: '/interfaces/i18n', marker: 'data-i18n-form' },
-  { view: 'accessibility', path: '/interfaces/accessibility', marker: 'id="accessibility-demo"' },
+  { view: 'rest', path: routeUrl('interfaces.rest'), marker: 'id="rest"' },
+  { view: 'graphql', path: routeUrl('interfaces.graphql.console'), marker: 'srcdoc=' },
+  { view: 'webhooks', path: routeUrl('interfaces.webhooks.console'), marker: 'id="webhooks"' },
+  { view: 'identity', path: routeUrl('interfaces.identity.page'), marker: 'id="oauth"' },
+  { view: 'mcp', path: routeUrl('interfaces.mcp.console'), marker: 'id="mcp-endpoint"' },
+  { view: 'i18n', path: routeUrl('interfaces.i18n'), marker: 'data-i18n-form' },
+  { view: 'accessibility', path: routeUrl('interfaces.accessibility'), marker: 'id="accessibility-demo"' },
 ] as const;
 
 describe('canonical interface demonstrations', () => {
@@ -96,14 +98,7 @@ describe('canonical interface demonstrations', () => {
   });
 
   it('returns normal 404s for retired identity and protocol contracts', async () => {
-    const retired = [
-      '/identity/microsoft', '/identity/microsoft/callback', '/identity/google', '/identity/google/callback',
-      '/identity/github', '/identity/github/callback', '/identity/saml', '/identity/saml/acs', '/identity/saml/metadata',
-      '/identity/session', '/identity/logout', '/__api/identity/oauth-pkce', '/__api/identity/authorize', '/__api/identity/token',
-      '/__api/identity/sso', '/__api/identity/saml/inspect', '/mcp/server', '/graphql/console', '/graphql/schema',
-      '/__assets/graphiql/graphiql.min.js', '/v1/webhooks/demo', '/v1/webhooks/github', '/og.png',
-    ];
-    for (const path of retired) {
+    for (const path of removedIdentityAndProtocolPathnames) {
       const response = await routeRequest(new Request('https://demo.wizardgang.ai' + path, { headers: { accept: 'application/json' } }), environment);
       expect(response.status, path).toBe(404);
       expect(response.headers.get('location'), path).toBeNull();

@@ -11,6 +11,7 @@ const read = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative),
 const registry = loadAssuranceRegistry(root);
 const manifest = read('docs/route-manifest.json');
 const routes = new Set(manifest.map((entry) => entry.route));
+const routesById = new Map(manifest.map((entry) => [entry.id, entry.route]));
 const errors = [];
 const derivedOnlyKeys = new Set(['counts', 'usedBy', 'url', 'urls', 'href', 'hrefs', 'resolved']);
 
@@ -39,8 +40,10 @@ for (const resource of projectedResources) {
   validateCanonical(resource.path, read(resource.path), '$', resource.capabilities?.includes('manifest'));
 }
 
-for (const route of ['/assurance', '/security', '/api/reporting', '/api/reporting/{collection}', '/api/reporting/{collection}/{recordId}']) {
-  if (!routes.has(route)) errors.push(`public assurance route is missing from the route manifest: ${route}`);
+for (const routeId of ['assurance.index', 'security.index', 'reporting.index', 'reporting.collection', 'reporting.record']) {
+  const route = routesById.get(routeId);
+  if (!route) errors.push(`public assurance route ID is missing from the route manifest: ${routeId}`);
+  else if (!routes.has(route)) errors.push(`public assurance route is missing from the route manifest: ${route}`);
 }
 
 if (errors.length) {

@@ -9,6 +9,13 @@ const check = process.argv.includes('--check');
 
 const openApi = JSON.parse(fs.readFileSync(openApiPath, 'utf8'));
 const reporting = JSON.parse(fs.readFileSync(reportingPath, 'utf8'));
+const routeManifest = JSON.parse(fs.readFileSync(path.join(root, 'docs', 'route-manifest.json'), 'utf8'));
+
+function manifestRoute(routeId) {
+  const entry = routeManifest.find((candidate) => candidate.id === routeId);
+  if (!entry) throw new Error(`Route manifest is missing required route ID '${routeId}'.`);
+  return entry.route;
+}
 
 const schemas = openApi.components?.schemas;
 if (!schemas || typeof schemas !== 'object') {
@@ -154,9 +161,10 @@ function operationsPaths() {
 
 function canonicalize(document) {
   const retained = {};
+  const assurancePageRoot = manifestRoute('assurance.index');
   for (const [currentPath, pathItem] of Object.entries(document.paths ?? {})) {
     if (
-      currentPath.startsWith('/assurance')
+      currentPath.startsWith(assurancePageRoot)
       || currentPath.startsWith('/api/reporting')
       || currentPath.startsWith('/api/operations/')
       || currentPath === '/api/openapi.json'

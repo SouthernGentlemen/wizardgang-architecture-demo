@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { routeRequest } from '../src/router';
-import { applicationRouteRegistry } from '../src/routing/application-routes';
+import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import { renderPage, type PageContent } from '../src/ui/page';
 import type { D1PreparedStatement, Env } from '../src/types';
 
@@ -44,11 +44,12 @@ const publicPages = applicationRouteRegistry.declarations
 
 describe('document composition', () => {
   it('builds one document and preserves page metadata through the content boundary', async () => {
+    const boundaryPath = routeUrl('platform.index', {}, { view: 'edge' });
     const content: PageContent = {
       title: 'Boundary proof',
       description: 'Child description',
       body: '<section><h1>Boundary proof</h1><h2>Detail</h2><h3>Evidence</h3></section>',
-      canonicalPath: '/platform?view=edge',
+      canonicalPath: boundaryPath,
       lang: 'ar', dir: 'rtl', status: 404, cacheControl: 'no-store', noindex: true,
       headExtra: '<meta name="boundary-proof" content="yes">',
     };
@@ -61,8 +62,8 @@ describe('document composition', () => {
     expect(html.match(/<h1(?:\s|>)/g)).toHaveLength(1);
     expect(html).toContain('<html lang="ar" dir="rtl">');
     expect(html).toContain('<meta name="description" content="Child description">');
-    expect(html).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/platform?view=edge">');
-    expect(html).toContain('<meta property="og:url" content="https://demo.wizardgang.ai/platform?view=edge">');
+    expect(html).toContain(`<link rel="canonical" href="https://demo.wizardgang.ai${boundaryPath}">`);
+    expect(html).toContain(`<meta property="og:url" content="https://demo.wizardgang.ai${boundaryPath}">`);
     expect(html).toContain('<meta name="boundary-proof" content="yes">');
     expect(headings(html)).toEqual([1, 2, 3]);
   });

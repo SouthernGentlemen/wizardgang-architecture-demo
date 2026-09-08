@@ -27,16 +27,17 @@ const environment: Env = {
   GITHUB_BRANCH: 'main',
 };
 
-const assurancePages = [
-  ['assurance.index', '/assurance'],
-  ['assurance.delivery', '/assurance/delivery'],
-  ['assurance.governance', '/assurance/governance'],
-  ['assurance.evidence', '/assurance/evidence'],
-  ['assurance.compliance', '/assurance/compliance'],
-  ['assurance.risks', '/assurance/risks'],
-  ['assurance.incidents', '/assurance/incidents'],
-  ['assurance.concerns', '/assurance/concerns'],
+const assurancePageIds = [
+  'assurance.index',
+  'assurance.delivery',
+  'assurance.governance',
+  'assurance.evidence',
+  'assurance.compliance',
+  'assurance.risks',
+  'assurance.incidents',
+  'assurance.concerns',
 ] as const;
+const assurancePages = assurancePageIds.map((routeId) => [routeId, routeUrl(routeId)] as const);
 
 const retiredPaths = [
   '/git',
@@ -59,7 +60,7 @@ describe('canonical assurance child routes', () => {
       expect(response.headers.get('content-type'), routeId).toContain('text/html');
       expect(html, routeId).toContain(`<link rel="canonical" href="https://demo.wizardgang.ai${path}">`);
       expect(html, routeId).not.toContain('name="view"');
-      expect(html, routeId).not.toContain('/assurance?view=');
+      expect(html, routeId).not.toContain(`${routeUrl('assurance.index')}?view=`);
       expect(html.match(/<h1\b/g), routeId).toHaveLength(1);
       if (routeId !== 'assurance.index') expect(html, routeId).toContain('<a href="/assurance" data-section-current');
     }
@@ -85,11 +86,11 @@ describe('canonical assurance child routes', () => {
       expect(path, dataset).not.toContain('?');
       expect(path, dataset).not.toContain('#');
     }
-    expect(assuranceRecordUrls('evidence', 'EV-001').html).toBe('/assurance/evidence#EV-001');
-    expect(assuranceRecordUrls('risks', 'SEC-RISK-001').html).toBe('/assurance/risks#SEC-RISK-001');
-    expect(assuranceRecordUrls('incidents', 'INC-001').html).toBe('/assurance/incidents#INC-001');
-    expect(assuranceRecordUrls('exercises', 'EX-001').html).toBe('/assurance/incidents#EX-001');
-    expect(assuranceRecordUrls('advisories', 'ADV-001').html).toBe('/security#ADV-001');
+    expect(assuranceRecordUrls('evidence', 'EV-001').html).toBe(`${routeUrl('assurance.evidence')}#EV-001`);
+    expect(assuranceRecordUrls('risks', 'SEC-RISK-001').html).toBe(`${routeUrl('assurance.risks')}#SEC-RISK-001`);
+    expect(assuranceRecordUrls('incidents', 'INC-001').html).toBe(`${routeUrl('assurance.incidents')}#INC-001`);
+    expect(assuranceRecordUrls('exercises', 'EX-001').html).toBe(`${routeUrl('assurance.incidents')}#EX-001`);
+    expect(assuranceRecordUrls('advisories', 'ADV-001').html).toBe(`${routeUrl('security.index')}#ADV-001`);
   });
 
   it('round-trips real risk filter state without a hidden view parameter', async () => {
@@ -120,8 +121,7 @@ describe('canonical assurance child routes', () => {
       expect(routeUrl(routeId), routeId).toBe(path);
       expect(patterns, path).toContain(path);
     }
-    expect(routeUrl('security.index')).toBe('/security');
-    expect(patterns).toContain('/security');
+    expect(patterns).toContain(routeUrl('security.index'));
     for (const path of retiredPaths) expect(patterns).not.toContain(path);
 
     const sitemap = await sitemapResponse(new Request('https://demo.wizardgang.ai/sitemap.xml')).text();

@@ -5,6 +5,7 @@ import type { Principal } from '../src/lib/authorization';
 import type { Env } from '../src/types';
 import { renderReportingPresentation } from '../src/reporting/html';
 import { presentReportingQuery } from '../src/reporting/presentation';
+import { routeUrl } from '../src/routing/application-routes';
 import {
   queryReportingCollection,
   reportingCollectionInventory,
@@ -192,7 +193,7 @@ describe('DEMO-178 unified reporting presentation', () => {
       expect.objectContaining({ name: 'severity', value: 'high' }),
     ]));
 
-    const html = renderReportingPresentation(presented, { nextHref: '/operations/reports?cursor=next' });
+    const html = renderReportingPresentation(presented, { nextHref: routeUrl('operations.reports', {}, { cursor: 'next' }) });
     expect(html).toContain('Shared presentation record');
     expect(html).toContain('Status open');
     expect(html).toContain('Availability Available');

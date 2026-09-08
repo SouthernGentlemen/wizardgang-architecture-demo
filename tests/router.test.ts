@@ -2,8 +2,9 @@ import { describe, expect, it } from 'vitest';
 import openapi from '../contracts/openapi/openapi.json';
 import { architectureMapEntries } from '../src/routing/navigation';
 import { routeRequest } from '../src/router';
-import { applicationRouteRegistry } from '../src/routing/application-routes';
+import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import type { D1PreparedStatement, Env } from '../src/types';
+import { removedRouterFallbackPathnames } from './fixtures/removed-api-pathnames';
 
 class RouterStatement implements D1PreparedStatement {
   private values: unknown[] = [];
@@ -79,7 +80,12 @@ describe('public route contract', () => {
     const html = await response.text();
     const openapiOperationCount = Object.values(openapi.paths).reduce((count, path) => count + Object.keys(path).filter((method) => ['get', 'post', 'put', 'patch', 'delete', 'head', 'options'].includes(method)).length, 0);
     for (const anchor of ['rest', 'openapi']) expect(html).toContain(`id="${anchor}"`);
-    for (const endpoint of ['/api/labs/rest-records', '/api/openapi.json', '/interfaces/graphql', '/interfaces/webhooks']) expect(html).toContain(endpoint);
+    for (const endpoint of [
+      '/api/labs/rest-records',
+      '/api/openapi.json',
+      routeUrl('interfaces.graphql.console'),
+      routeUrl('interfaces.webhooks.console'),
+    ]) expect(html).toContain(endpoint);
     expect(html.match(/<form data-api-form/g)).toHaveLength(openapiOperationCount);
     expect(html.match(/data-api-endpoint=/g)).toHaveLength(openapiOperationCount);
     expect(html).toContain('OpenAPI 3.1');
@@ -264,8 +270,8 @@ describe('public route contract', () => {
 
   it('removes the generic fallback runner and event listing routes', async () => {
     const environment = env();
-    expect((await routeRequest(new Request('https://demo.wizardgang.ai/__api/demo/run', { method: 'POST' }), environment)).status).toBe(404);
-    expect((await routeRequest(new Request('https://demo.wizardgang.ai/__api/demo/events'), environment)).status).toBe(404);
+    expect((await routeRequest(new Request(`https://demo.wizardgang.ai${removedRouterFallbackPathnames[0]}`, { method: 'POST' }), environment)).status).toBe(404);
+    expect((await routeRequest(new Request(`https://demo.wizardgang.ai${removedRouterFallbackPathnames[1]}`), environment)).status).toBe(404);
   });
 });
 

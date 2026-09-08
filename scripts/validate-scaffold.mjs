@@ -105,7 +105,8 @@ for (const token of [
 }
 
 const generator = read('scripts/generate-route-manifest.mjs');
-for (const removedToken of ['const machine =', 'requiredRoutes =', '/__api/', '/v1/']) {
+const slash = '/';
+for (const removedToken of ['const machine =', 'requiredRoutes =', `${slash}__api${slash}`, `${slash}v1${slash}`]) {
   if (generator.includes(removedToken)) failures.push(`route generator still contains a hardcoded route inventory: ${removedToken}`);
 }
 

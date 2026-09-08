@@ -28,11 +28,10 @@ Preserve these invariants:
 
 - Keep public routes stable once released unless a controlled change explicitly retires a route without compatibility aliases.
 - Keep one architecture concern per demo module.
-- Keep route declarations, `docs/ROUTES.md`, and `docs/route-manifest.json` consistent.
-- Keep the consolidated `/operations` surface and admin/offline controls working as cross-cutting infrastructure while individual demos are implemented.
+- Treat route declarations as the route source of truth; generated route documentation and manifests are projections, not parallel inventories.
+- Keep registry-declared operations, security, administration, and offline-recovery capabilities available according to each declaration's offline policy; do not protect them with a hardcoded pathname inventory.
 - Never let ordinary demo behavior execute behind the intentional offline gate.
-- Keep `/operations`, `/security`, `/api/operations/health`, `/api/operations/version`, `/api/operations/logs`, `/api/operations/budget`, `/admin`, and `/offline` reachable while intentionally offline. Reporting routes remain governed by their declarative offline policy.
-- API/non-HTML/write requests receive `503` JSON while offline; browser HTML demo navigation may redirect to `/offline`.
+- API/non-HTML/write requests receive `503` JSON while offline; browser HTML demo navigation may redirect to the registered offline recovery page.
 - Do not commit secrets, real Cloudflare billing/account data, or admin credentials.
 - Do not claim WCAG, ISO/IEC 27001, or ISO/IEC 42001 certification.
 - Prefer the smallest implementation that visibly proves the architecture concept.
@@ -42,3 +41,4 @@ Preserve these invariants:
 - Record safe audit evidence for meaningful control/architecture actions without logging credentials.
 - Keep `application_logs` public-safe and bounded; never persist credentials, authorization headers, cookies, tokens, secrets, payment data, private account metadata, or unreviewed request bodies.
 - Keep architecture documentation in Markdown/text. Do not add PDFs to this package unless explicitly requested later.
+- Report route counts from generated artifacts or runtime projections; never encode a fixed route count as an invariant.

@@ -1,58 +1,53 @@
 # Frontend Information Architecture
 
-DEMO-196 completes the application-owned browser hierarchy for the operations surface. `/platform`, `/interfaces`, `/assurance`, and `/operations` are real index pages, and each architectural presentation is a separately declared child resource. Feature metadata references application route IDs; it does not own browser pathnames.
+The frontend hierarchy is owned by application route declarations. A user-facing conceptual destination is a page resource only when it has a registered route ID, one canonical pathname, and a `page` metadata block. Feature modules may refer to route IDs, but they do not own browser pathnames or maintain a second frontend inventory.
 
-| Surface | Route ID | Path | Browser state |
-| --- | --- | --- | --- |
-| Home | `interfaces.frontend.index` | `/` | none |
-| Platform index | `platform.index` | `/platform` | none |
-| Edge | `platform.edge` | `/platform/edge` | none |
-| Workers | `platform.workers` | `/platform/workers` | none |
-| Durable Objects | `platform.durable-objects` | `/platform/durable-objects` | none |
-| D1 | `platform.d1` | `/platform/d1` | none |
-| R2 | `platform.r2` | `/platform/r2` | none |
-| Interfaces index | `interfaces.index` | `/interfaces` | none |
-| REST | `interfaces.rest` | `/interfaces/rest` | request deep-link state such as `requestId` |
-| GraphQL console | `interfaces.graphql.console` | `/interfaces/graphql` | console state |
-| Webhooks console | `interfaces.webhooks.console` | `/interfaces/webhooks` | console state |
-| Identity | `interfaces.identity.page` | `/interfaces/identity` | provider/auth result state |
-| MCP console | `interfaces.mcp.console` | `/interfaces/mcp` | console state |
-| Internationalization | `interfaces.i18n` | `/interfaces/i18n` | `locale` |
-| Accessibility | `interfaces.accessibility` | `/interfaces/accessibility` | `mode` |
-| Assurance index | `assurance.index` | `/assurance` | none |
-| Delivery assurance | `assurance.delivery` | `/assurance/delivery` | reporting/filter state only |
-| Governance assurance | `assurance.governance` | `/assurance/governance` | reporting/filter state only |
-| Evidence assurance | `assurance.evidence` | `/assurance/evidence` | search state and stable fragments |
-| Compliance assurance | `assurance.compliance` | `/assurance/compliance` | framework/status/level filters and stable fragments |
-| Risk assurance | `assurance.risks` | `/assurance/risks` | framework/status/residual filters and stable fragments |
-| Incident assurance | `assurance.incidents` | `/assurance/incidents` | reporting state and stable fragments |
-| Concern intake | `assurance.concerns` | `/assurance/concerns` | none |
-| Security | `security.index` | `/security` | none |
-| Operations index | `operations.index` | `/operations` | none |
-| Availability | `operations.availability` | `/operations/availability` | none |
-| Public-safe logs | `operations.logs` | `/operations/logs` | log filter and request-correlation state |
-| Usage and cost | `operations.usage` | `/operations/usage` | none |
-| Operations reports | `operations.reports` | `/operations/reports` | reporting/filter state only |
-| Operations documentation | `operations.docs` | `/operations/docs` | none |
-| Admin | `operations.admin` | `/admin` | none |
-| Offline | `operations.offline` | `/offline` | none |
+The authoritative current inventory is generated in [`docs/ROUTES.md`](ROUTES.md) and [`docs/route-manifest.json`](route-manifest.json).
 
-Route metadata owns labels, summaries, parentage, navigation placement, architecture-map membership, visibility, indexing policy, sitemap publication, and source provenance. There is no separate frontend route or query-view inventory.
+## Replacement invariants
 
-## Resources versus state
+Future route work must preserve these invariants:
 
-Platform, interface, assurance, and operations presentations are resources, so they use canonical child pathnames. Retired resource-selection `view` forms have no redirect or alias and return the ordinary 404.
+- every user-facing conceptual destination has exactly one canonical route ID and pathname;
+- no two canonical routes present the same conceptual page;
+- a query parameter may filter, search, sort, paginate or localise, and may not select the primary resource;
+- primary navigation, secondary navigation, breadcrumbs, the homepage map, the sitemap, canonical links and route documentation are all projections of the same declarations;
+- route counts are reported, never asserted.
 
-Query parameters remain appropriate for interaction state. Examples include `/interfaces/i18n?locale=ar`, `/interfaces/accessibility?mode=broken`, REST `requestId` deep links, `/assurance/risks?residual=high#SEC-RISK-001`, and `/operations/logs?level=warn&source=rest`.
+## Canonical destination model
 
-## Protocol and machine endpoints
+A page declaration owns both transport policy and presentation metadata. Its stable route ID is the application-level reference used by internal callers; its pathname is declared once and resolved through `routeUrl(routeId)` rather than copied into feature code.
 
-Protocol and API URLs remain separate from browser pages. `/graphql` is a machine-only GraphQL protocol endpoint even for `Accept: text/html`; the locally bundled GraphiQL document is served from `/interfaces/graphql`. `/mcp` remains the MCP protocol endpoint while `/interfaces/mcp` is its browser console. Identity callbacks, webhook endpoints, `/api/labs/*`, `/api/operations/health`, `/api/operations/version`, and other registered machine contracts keep their existing protocol/API route IDs and URLs.
+Parent relationships are expressed as route IDs, not inferred from pathname prefixes. Index pages and their children therefore form an explicit resource hierarchy that can be validated for one root, valid parents, reachability, and cycles without creating an independent route table.
 
-## Retired HTML paths
+Retired aliases and retired resource-selection URLs are not compatibility routes. Unless a separate protocol endpoint intentionally retains the same pathname for a different machine contract, retired browser locations fall through the ordinary 404 with no `Location` header.
 
-Every removed top-level HTML pathname remains enumerated in `tests/fixtures/removed-html-pathnames.ts`. Removed page paths and retired resource-selection query-view URLs have no redirects, aliases, or alternate renderers and fall through to the ordinary 404. `/graphql` remains a retained protocol pathname, not a browser alias.
+## Query-state policy
+
+Query parameters are interaction state, not resource selectors. They may represent filters, search terms, sort order, pagination cursors, locale, or comparable state that refines one already-selected resource.
+
+A query parameter must not choose the primary conceptual destination. A presentation that deserves independent navigation, canonical-link identity, sitemap membership, or direct sharing must be declared as its own route instead.
+
+Stable fragments remain appropriate for record-level anchors within a page.
+
+## Projection model
+
+The route declarations are projected into all user-facing navigation and discovery surfaces:
+
+- primary navigation;
+- secondary navigation;
+- breadcrumbs;
+- the homepage architecture map;
+- the sitemap;
+- canonical links;
+- generated route documentation and the route manifest.
+
+These projections may report the number of registered routes they observe, but documentation and tests must not freeze a manually counted page inventory.
+
+## Protocol and machine boundaries
+
+Browser pages and machine contracts are separate declarations even when they demonstrate the same capability. GraphQL, MCP, identity callbacks, webhooks, laboratory APIs, reporting APIs, and operational APIs keep protocol-appropriate routes and policies. Their current IDs, patterns, methods, and source ownership are listed in the generated route artifacts and, where applicable, OpenAPI.
 
 ## Rendering model
 
-The application has no client-side router. `src/router.ts` normalizes and matches requests on the server, while capability-owned route declarations supply browser handlers and metadata. Client scripts may enhance controls or update true interaction state, but they do not dispatch application routes or emulate the canonical child hierarchy.
+The application has no client-side router. `src/router.ts` normalizes requests, matches the registry, enforces shared policy, and invokes the declared handler. Client scripts may enhance controls or update true interaction state, but they do not emulate application routing.
