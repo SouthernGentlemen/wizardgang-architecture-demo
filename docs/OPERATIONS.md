@@ -46,7 +46,7 @@ Usage reporting uses the canonical reporting contract and normalized provider ob
 
 The usage service remains responsible for acquisition, observation windows, freshness, normalization, and safe cache behavior. The browser resource is only a presentation over that contract.
 
-The synthetic budget action remains a demonstration and must not be treated as billing authorization or a real provider charge operation.
+The synthetic budget action remains a demonstration and must not be treated as billing authorization or a real provider charge operation. The usage page leads with the existing Normal, Warning, and Degraded simulator and explains which workloads remain available. Live provider telemetry follows with its original availability and freshness states; missing billing data is distinguished from application health. Scenario percentages are example inputs, while the existing 70% warning and 90% degradation thresholds retain their behavior.
 
 ## Offline behavior
 

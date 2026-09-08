@@ -208,6 +208,34 @@ describe('operations proof surface', () => {
     expect(cursorLink(request, null)).toBeNull();
   });
 
+  it('leads with the guardrail simulator while retaining unavailable provider telemetry', async () => {
+    const { body } = await billingContent(env());
+    expect(body.indexOf('Cost-aware degradation')).toBeLessThan(body.indexOf('Cost guardrail simulator'));
+    expect(body.indexOf('Cost guardrail simulator')).toBeLessThan(body.indexOf('Live provider telemetry'));
+    expect(body.indexOf('Live provider telemetry')).toBeLessThan(body.indexOf('<strong>UNAVAILABLE</strong>'));
+    expect(body).toContain('it does not establish an application outage');
+    expect(body).toContain('Warning begins at 70%; degradation begins at 90%');
+    expect(body).toContain('data-budget="normal" aria-pressed="true"');
+    expect(body).toContain('Synthetic scenario history');
+  });
+
+  it('retains workload behavior across each simulator state and recovery', async () => {
+    const environment = env();
+    for (const state of ['normal', 'warning', 'degraded', 'normal']) {
+      const response = await billingScenarioResponse(new Request('https://demo.example' + routeUrl('operations.api-budget'), {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ scenario: state }),
+      }), environment);
+      expect(await response.json()).toMatchObject({ state, optionalWorkerCompute: state === 'degraded' ? 'paused' : 'available' });
+      const { body } = await billingContent(environment);
+      expect(body).toContain(`data-budget="${state}" aria-pressed="true"`);
+      expect(body).toContain('Live provider telemetry');
+      const compute = await workerComputeResponse(new Request('https://demo.example/api/labs/workers', {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ operation: 'sum', values: [1, 2] }),
+      }), environment);
+      expect(compute.status).toBe(state === 'degraded' ? 429 : 200);
+    }
+  });
+
   it('moves controlled usage through degraded state and pauses only optional compute', async () => {
     const environment = env();
     const changed = await billingScenarioResponse(new Request('https://demo.example/api/operations/billing', {
