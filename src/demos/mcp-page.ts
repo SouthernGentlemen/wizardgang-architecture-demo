@@ -3,7 +3,7 @@ import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
 import { recentApplicationLogs, type ApplicationLogRow } from '../lib/logs';
 import { MCP_PROTOCOL_VERSION, MCP_SERVER_PATH, mcpMetaKeys } from '../api/mcp';
-import { referenceDetails, shell } from '../ui/page';
+import { referenceDetails, pageContent, type PageContent } from '../ui/page';
 
 interface McpActivity {
   id: number;
@@ -47,7 +47,7 @@ function activityValue(activity: McpActivity | undefined, key: keyof McpActivity
   return value === undefined ? fallback : String(value);
 }
 
-export async function renderMcpDemo(request: Request, env: Env): Promise<Response> {
+export async function mcpContent(request: Request, env: Env): Promise<PageContent> {
   const endpoint = `${new URL(request.url).origin}${MCP_SERVER_PATH}`;
   const activity = activityFromLog((await recentApplicationLogs(env, { source: 'mcp', limit: 1 }))[0]);
   const claudeCommand = `claude mcp add --transport http wizardgang ${endpoint}`;
@@ -268,8 +268,8 @@ export async function renderMcpDemo(request: Request, env: Env): Promise<Respons
 })();
 </script>`;
 
-  return shell(env, 'Model Context Protocol', body, {
-    activeRoute: '/interfaces',
+  return pageContent(env, 'Model Context Protocol', body, {
+    canonicalPath: '/interfaces',
     cacheControl: 'no-store',
     description: 'Connect a real MCP client to the live WizardGang server, discover read-only tools, invoke ping, and inspect sanitized activity evidence.',
   });

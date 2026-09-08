@@ -8,7 +8,7 @@ import { getCrawlerControl } from '../lib/crawler-control';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
 import { recentApplicationLogs, type ApplicationLogRow } from '../lib/logs';
-import { referenceDetails, shell } from '../ui/page';
+import { referenceDetails, pageContent, type PageContent } from '../ui/page';
 import { renderUnifiedReportingPresentation } from './reporting-dashboard';
 
 interface HealthRow {
@@ -71,16 +71,15 @@ function operationalPage(
   primarySource: string,
   content: string,
   liveState = '',
-): Response {
-  return shell(env, title, `<section class="page-header operations-header">
+): PageContent {
+  return pageContent(env, title, `<section class="page-header operations-header">
   <p class="eyebrow">${escapeHtml(eyebrow)}</p>
   <h1>${escapeHtml(heading)}</h1>
   <p class="lede">${escapeHtml(description)}</p>
   ${liveState}
   <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, primarySource))}">View source <span aria-hidden="true">↗</span></a></div>
 </section>
-${operationsNavigation(route)}
-${content}`, { cacheControl: 'no-store', activeRoute: route, description });
+${content}`, { cacheControl: 'no-store', canonicalPath: route, description });
 }
 
 function isIntentional(row: HealthRow): boolean {
@@ -159,7 +158,7 @@ function dashboardActivity(logs: ApplicationLogRow[], health: HealthSnapshot): s
   return selected.map((log) => `<article class="activity-item"><span class="activity-dot" data-tone="${log.level === 'error' ? 'down' : log.level === 'warn' ? 'warn' : 'ok'}"></span><div><h3>${escapeHtml(activityTitle(log))}</h3><p>${escapeHtml(log.message)}</p><small>${escapeHtml(log.source)} · ${relativeTime(log.created_at)}</small></div></article>`).join('');
 }
 
-export async function renderDashboard(env: Env, request: Request = new Request('https://demo.local/operations')): Promise<Response> {
+export async function dashboardContent(env: Env, request: Request = new Request('https://demo.local/operations')): Promise<PageContent> {
   const healthHistory = env.DEMO_DB.prepare(
     `SELECT id, service_key, status, response_ms, detail_json, checked_at FROM service_health_checks WHERE service_key = 'public-demo' ORDER BY id DESC LIMIT 100`,
   ).all<HealthRow>();
@@ -249,7 +248,7 @@ function historyRows(rows: HealthRow[]): string {
   return rows.map((row) => `<tr><td><time datetime="${escapeHtml(row.checked_at)}">${escapeHtml(row.checked_at)}</time></td><td><span class="${badgeClass(isIntentional(row) ? 'planned' : row.status)}">${escapeHtml(isIntentional(row) ? 'planned maintenance' : row.status)}</span></td><td>${row.response_ms ?? '—'} ms</td><td>${isIntentional(row) ? 'planned/manual offline' : row.status === 'operational' ? 'operational observation' : 'unexpected dependency failure'}</td></tr>`).join('');
 }
 
-export async function renderUptime(env: Env): Promise<Response> {
+export async function uptimeContent(env: Env): Promise<PageContent> {
   const result = await env.DEMO_DB.prepare(
     `SELECT id, service_key, status, response_ms, detail_json, checked_at FROM service_health_checks WHERE service_key = 'public-demo' ORDER BY id DESC LIMIT 100`,
   ).all<HealthRow>();
@@ -266,7 +265,7 @@ export async function renderUptime(env: Env): Promise<Response> {
   <section class="operations-section"><div class="operations-section-heading"><div><p class="eyebrow">Most recent first</p><h2>Observations</h2></div><span class="subtle">Showing ${recent.length} of ${rows.length}</span></div><div class="table-wrap"><table><thead><tr><th>Checked</th><th>State</th><th>D1 latency</th><th>Classification</th></tr></thead><tbody>${historyRows(recent) || '<tr><td colspan="4">Scheduled monitoring will populate this history after deployment.</td></tr>'}</tbody></table></div>${remainder.length ? `<details class="full-history"><summary>Show full history</summary><div class="table-wrap"><table><thead><tr><th>Checked</th><th>State</th><th>D1 latency</th><th>Classification</th></tr></thead><tbody>${historyRows(remainder)}</tbody></table></div></details>` : ''}<p><a href="${escapeHtml(sourceUrl(env, 'migrations/0002_operations_dashboard.sql'))}">View history schema</a></p></section>`, liveState);
 }
 
-export function renderDocs(env: Env): Response {
+export function docsContent(env: Env): PageContent {
   const links: Array<[string, string]> = [
     ['Architecture standard', 'docs/ARCHITECTURE-STANDARD.md'], ['Operations standard', 'docs/OPERATIONS.md'], ['Assurance guide', 'docs/ASSURANCE.md'], ['Stable route map', 'docs/ROUTES.md'], ['Machine route manifest', 'docs/route-manifest.json'], ['Router', 'src/router.ts'], ['Implementation plan', 'docs/IMPLEMENTATION-PLAN.md'], ['Interactive demonstration specification', 'docs/INTERACTIVE-DEMO-SPEC.md'], ['Evidence map', 'docs/EVIDENCE.md'], ['Accessibility guidance', 'docs/ACCESSIBILITY.md'], ['ISO/IEC 27001 compliance dataset', 'assurance/compliance/iso-27001-2022.json'], ['ISO/IEC 42001 compliance dataset', 'assurance/compliance/iso-42001-2023.json'], ['WCAG 2.2 compliance manifest', 'assurance/compliance/wcag-2.2.json'], ['Identity guidance', 'docs/IDENTITY.md'], ['README', 'README.md'], ['Contributing', 'CONTRIBUTING.md'], ['Agent guidance', 'AGENTS.md'], ['Security', 'SECURITY.md'], ['Changelog', 'CHANGELOG.md'], ['OpenAPI 3.1 contract', 'contracts/openapi/openapi.json'], ['GraphQL schema', 'contracts/graphql/schema.graphql'], ['MCP tools', 'contracts/mcp/tools.json'], ['Webhook events', 'contracts/webhooks/events.json'], ['CI workflow', '.github/workflows/ci.yml'], ['Deploy workflow', '.github/workflows/deploy.yml'], ['D1 migrations', 'migrations/0001_demo_blob.sql'],
   ];
@@ -300,7 +299,7 @@ function usageTrend(usage: CloudflareUsageSnapshot): string {
   }).join('')}</div>`;
 }
 
-export async function renderBilling(env: Env): Promise<Response> {
+export async function billingContent(env: Env): Promise<PageContent> {
   const [current, syntheticHistory, usage, snapshots] = await Promise.all([currentBudgetState(env), recentUsage(env), latestCloudflareUsage(env), recentCloudflareUsage(env)]);
   const syntheticRows = syntheticHistory.map((row) => `<tr><td>${escapeHtml(row.captured_at)}</td><td>${row.quantity.toLocaleString('en-US')} ${escapeHtml(row.unit)}</td><td>$${row.estimated_cost_usd.toFixed(4)}</td><td>$${(row.budget_limit_usd ?? 0).toFixed(2)}</td><td>${budgetLabel(row.estimated_cost_usd, row.budget_limit_usd ?? 0)}</td></tr>`).join('');
   const usageRows = snapshots.map((row) => `<tr><td>${escapeHtml(row.capturedAt || '—')}</td><td><span class="${badgeClass(row.status)}">${escapeHtml(row.status)}</span></td><td>${row.products.workers.availability === 'available' ? formatNumber(row.products.workers.requests, false) : '—'}</td><td>${row.products.d1.availability === 'available' ? formatNumber(row.products.d1.rowsRead, false) : '—'}</td><td>${row.products.r2.availability === 'available' ? formatBytes(row.products.r2.storageBytes) : '—'}</td><td>${row.cost.amountUsd === null ? '—' : `$${row.cost.amountUsd.toFixed(4)}`} ${row.cost.kind}</td></tr>`).join('');

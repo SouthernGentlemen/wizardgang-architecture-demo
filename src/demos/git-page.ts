@@ -1,6 +1,6 @@
 import type { Env } from '../types';
 import { sourceUrl } from '../lib/github';
-import { referenceDetails, shell } from '../ui/page';
+import { referenceDetails, pageContent, type PageContent } from '../ui/page';
 
 const cards = [
   ['github.branches', 'Branches', 'Configured repository branches from the registered GitHub source.'],
@@ -15,10 +15,10 @@ const cards = [
 
 const lifecycleStages = ['Change', 'Branch', 'Commit', 'Pull request', 'CI', 'Review gate', 'Merge', 'Tag', 'Release', 'Deploy', 'Health check', 'Live'];
 
-export function renderGitDemo(env: Env): Response {
+export function gitContent(env: Env): PageContent {
   const cardMarkup = cards.map(([key, title, description]) => `<article class="evidence-card" data-evidence-card="${key}"><p class="eyebrow">Registered GitHub source</p><h2>${title}</h2><p>${description}</p><p class="subtle" data-evidence-status>Loading source…</p><div data-evidence-items></div></article>`).join('');
   const lifecycleMarkup = lifecycleStages.map((label) => `<span data-lifecycle-stage>${label}</span>`).join('');
-  return shell(env, 'Git / GitHub', `
+  return pageContent(env, 'Git / GitHub', `
   <section class="page-header"><p class="eyebrow">Delivery &amp; Governance / /assurance?view=delivery</p><h1>Ship a real release, live.</h1><p class="lede">Create a controlled branch, commit, and open pull request in this repository; watch its real GitHub Actions jobs; then explicitly merge, tag, deploy, and verify the reviewed version.</p><div class="page-tools"><a class="text-link" href="${sourceUrl(env, 'src/demos/assurance.ts')}">Route source</a>${referenceDetails([
     { label: 'Page source', href: sourceUrl(env, 'src/demos/git-page.ts') },
     { label: 'Lifecycle API', href: sourceUrl(env, 'src/api/git-demo.ts') },
@@ -144,5 +144,5 @@ export function renderGitDemo(env: Env): Response {
     q('[data-evidence-refresh]').addEventListener('click',()=>{document.querySelectorAll('[data-evidence-items]').forEach((node)=>node.innerHTML='');loadEvidence()});
     loadStatus();loadEvidence();
   })();
-  </script>`, { activeRoute: '/assurance', cacheControl: 'no-store' });
+  </script>`, { canonicalPath: '/assurance', cacheControl: 'no-store' });
 }

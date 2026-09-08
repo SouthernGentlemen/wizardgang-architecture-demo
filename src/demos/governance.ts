@@ -2,7 +2,7 @@ import { authorize, type Principal } from '../lib/authorization';
 import { renderReportingPresentation } from '../reporting/html';
 import { presentReportingQuery } from '../reporting/presentation';
 import { queryReportingCollection, reportingCollectionInventory } from '../reporting/service';
-import { renderDemo } from '../ui/page';
+import { demoContent, pageContent, type PageContent } from '../ui/page';
 import type { DemoDefinition, Env } from '../types';
 
 const demo: DemoDefinition = {
@@ -78,11 +78,11 @@ function nextHref(request: Request, cursor: string | null | undefined): string |
   return `${url.pathname}${url.search}`;
 }
 
-export async function renderGovernance(
+export async function governanceContent(
   request: Request,
   env: Env,
   all: DemoDefinition[],
-): Promise<Response> {
+): Promise<PageContent> {
   const principal = await governancePrincipal(request, env);
   const collection = reportingCollectionInventory(principal).find((candidate) => candidate.id === 'governance');
   if (!collection) throw new Error('Registered governance reporting collection is unavailable.');
@@ -99,7 +99,7 @@ export async function renderGovernance(
       nextHref: nextHref(request, presentation.pagination?.nextCursor),
     })}
   </section>`;
-  return renderDemo(env, demo, all, reporting);
+  return demoContent(env, demo, all, reporting);
 }
 
 export default demo;

@@ -20,37 +20,67 @@ const THEME_BOOT = `try{var t=localStorage.getItem('wg-theme');if(t==='light'||t
 
 const THEME_TOGGLE = `(()=>{const b=document.querySelector('[data-theme-toggle]');if(!b)return;const r=document.documentElement;const sync=()=>{const light=r.dataset.theme==='light';const next=light?'dark':'light';b.textContent='Theme: '+(light?'Dark':'Light');b.setAttribute('aria-label','Switch to '+next+' theme');b.setAttribute('aria-pressed',String(light))};sync();b.addEventListener('click',()=>{const next=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=next;try{localStorage.setItem('wg-theme',next)}catch(e){}sync()})})()`;
 
-export interface ShellOptions {
-  cacheControl?: string;
-  description?: string;
-  activeRoute?: string;
-  noindex?: boolean;
+export interface PageContent {
+  title: string;
+  description: string;
+  body: string;
+  headExtra?: string;
+  lang?: string;
+  dir?: 'ltr' | 'rtl';
   status?: number;
+  cacheControl?: string;
+  noindex?: boolean;
+  canonicalPath?: string;
+  /** Surface-level navigation/chrome rendered before main without participating in the document heading outline. */
+  beforeMain?: string;
 }
 
-export function shell(env: Env, title: string, body: string, options: ShellOptions = {}): Response {
-  const description = options.description ?? DEFAULT_DESCRIPTION;
-  const operationsCurrent = options.activeRoute?.startsWith(OPERATIONS_ROUTE) ? ' aria-current="page"' : '';
-  const assuranceCurrent = options.activeRoute?.startsWith(ASSURANCE_ROUTE) ? ' aria-current="page"' : '';
+export interface PageContentOptions extends Partial<Omit<PageContent, 'title' | 'description' | 'body'>> {
+  description?: string;
+}
+
+export function pageContent(
+  _env: Env,
+  title: string,
+  body: string,
+  options: PageContentOptions = {},
+): PageContent {
+  const { description = DEFAULT_DESCRIPTION, ...contentOptions } = options;
+  return {
+    title,
+    description,
+    body,
+    ...contentOptions,
+    canonicalPath: contentOptions.canonicalPath ?? HOME_ROUTE,
+  };
+}
+
+function shell(env: Env, content: PageContent): Response {
+  const operationsCurrent = content.canonicalPath?.startsWith(OPERATIONS_ROUTE) ? ' aria-current="page"' : '';
+  const assuranceCurrent = content.canonicalPath?.startsWith(ASSURANCE_ROUTE) ? ' aria-current="page"' : '';
+  const canonicalHref = new URL(content.canonicalPath ?? HOME_ROUTE, 'https://demo.wizardgang.ai').toString();
   const html = `<!doctype html>
-<html lang="en">
+<html lang="${escapeHtml(content.lang ?? 'en')}"${content.dir ? ` dir="${content.dir}"` : ''}>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${escapeHtml(title)} · ${SITE_NAME}</title>
-  <meta name="description" content="${escapeHtml(description)}">
+  <title>${escapeHtml(content.title)} · ${SITE_NAME}</title>
+  <meta name="description" content="${escapeHtml(content.description)}">
   <meta name="color-scheme" content="dark light">
-  ${options.noindex ? '<meta name="robots" content="noindex, nofollow">' : ''}
+  ${content.noindex ? '<meta name="robots" content="noindex, nofollow">' : ''}
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="${SITE_NAME}">
-  <meta property="og:title" content="${escapeHtml(title)}">
-  <meta property="og:description" content="${escapeHtml(description)}">
+  <meta property="og:title" content="${escapeHtml(content.title)}">
+  <meta property="og:description" content="${escapeHtml(content.description)}">
+  <meta property="og:url" content="${escapeHtml(canonicalHref)}">
   <meta property="og:image" content="https://demo.wizardgang.ai/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="WizardGang Architecture — Architecture you can inspect.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://demo.wizardgang.ai/assets/og.png">
+  <link rel="canonical" href="${escapeHtml(canonicalHref)}">
+  ${content.headExtra ?? ''}
   <link rel="icon" href="${FAVICON}">
   <style>${styles}</style>
   <script>${THEME_BOOT}</script>
@@ -69,7 +99,8 @@ export function shell(env: Env, title: string, body: string, options: ShellOptio
     <button type="button" data-theme-toggle aria-label="Switch to light theme" aria-pressed="false">Theme: Light</button>
   </nav>
 </header>
-<main class="site-main" id="main">${body}</main>
+${content.beforeMain ?? ''}
+<main class="site-main" id="main">${content.body}</main>
 <footer class="site-footer">
   <span>WG-ARCH-001 · <a href="${escapeHtml(repoUrl(env))}">Public source</a></span>
 </footer>
@@ -77,12 +108,25 @@ export function shell(env: Env, title: string, body: string, options: ShellOptio
 </body>
 </html>`;
   const headers = withSecurityHeaders(new Headers({ 'content-type': 'text/html; charset=utf-8' }));
-  if (options.cacheControl) headers.set('cache-control', options.cacheControl);
-  if (options.noindex) {
+  if (content.cacheControl) headers.set('cache-control', content.cacheControl);
+  if (content.noindex) {
     headers.set('x-robots-tag', 'noindex, nofollow');
     headers.set('referrer-policy', 'no-referrer');
   }
-  return new Response(html, { status: options.status ?? 200, headers });
+  return new Response(html, { status: content.status ?? 200, headers });
+}
+
+export function renderPage(env: Env, content: PageContent): Response {
+  return shell(env, content);
+}
+
+export function pageResponse(
+  env: Env,
+  title: string,
+  body: string,
+  options: PageContentOptions = {},
+): Response {
+  return renderPage(env, pageContent(env, title, body, options));
 }
 
 export function renderIndex(env: Env, list: FrontendSurfaceDefinition[]): Response {
@@ -121,7 +165,7 @@ fetch('/api/operations/health').then((r) => r.json()).then((h) => {
   if (slot) slot.textContent = 'Unavailable';
 });
 </script>`;
-  return shell(env, 'Architecture', body, { activeRoute: HOME_ROUTE, description: DEFAULT_DESCRIPTION });
+  return pageResponse(env, 'Architecture', body, { canonicalPath: HOME_ROUTE, description: DEFAULT_DESCRIPTION });
 }
 
 function slug(value: string): string {
@@ -152,7 +196,7 @@ export function referenceDetails(links: ReferenceLink[], label = 'References'): 
   return `<details class="reference-details"><summary>${escapeHtml(label)}</summary><div class="reference-links">${links.map((link) => `<a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a>`).join('')}</div></details>`;
 }
 
-export function renderDemo(env: Env, demo: DemoDefinition, all: DemoDefinition[] = [], extra = ''): Response {
+export function demoContent(env: Env, demo: DemoDefinition, all: DemoDefinition[] = [], extra = ''): PageContent {
   const actions = demo.actions ?? (demo.action ? [{
     ...demo.action,
     description: demo.action.description ?? demo.interfaces?.find((item) => item.path === demo.action?.path)?.description,
@@ -219,11 +263,11 @@ ${groupPager(demo, all)}
   }));
 })();
 </script>`;
-  return shell(env, demo.title, body, { activeRoute: demo.route, description: demo.summary });
+  return pageContent(env, demo.title, body, { canonicalPath: demo.route, description: demo.summary });
 }
 
 export function renderNotFound(env: Env): Response {
-  return shell(env, 'Not found', `
+  return pageResponse(env, 'Not found', `
 <section>
   <p class="eyebrow">404 / unknown route</p>
   <h1>That route does not exist.</h1>

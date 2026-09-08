@@ -1,8 +1,8 @@
 import type { Env } from '../types';
 import { sourceUrl } from '../lib/github';
-import { shell } from '../ui/page';
+import { pageContent, type PageContent } from '../ui/page';
 
-export function renderD1Demo(env: Env): Response {
+export function d1Content(env: Env): PageContent {
   const implementationLinks = [
     { label: 'Page implementation', path: 'src/demos/d1-page.ts' },
     { label: 'Route definition', path: 'src/demos/d1.ts' },
@@ -13,7 +13,7 @@ export function renderD1Demo(env: Env): Response {
     { label: 'CI workflow', path: '.github/workflows/ci.yml' },
   ];
 
-  return shell(env, 'Cloudflare D1', `
+  return pageContent(env, 'Cloudflare D1', `
 <section class="page-header lab-page-header d1-page-header">
   <p class="eyebrow">Platform / D1</p>
   <h1>Cloudflare D1 Database</h1>
@@ -370,5 +370,5 @@ export function renderD1Demo(env: Env): Response {
   });
   loadAll('users').catch((error) => setDatabaseMessage(error.message, 'error'));
 })();
-</script>`, { activeRoute: '/platform', cacheControl: 'no-store' });
+</script>`, { canonicalPath: '/platform', cacheControl: 'no-store' });
 }

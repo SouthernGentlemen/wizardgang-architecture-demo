@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { renderAccessibilityDemo } from '../src/demos/accessibility-page';
-import { renderComplianceDemo } from '../src/demos/compliance-page';
-import { renderD1Demo } from '../src/demos/d1-page';
-import { renderI18nDemo } from '../src/demos/i18n-page';
-import { renderR2Demo } from '../src/demos/r2-page';
+import { accessibilityContent } from '../src/demos/accessibility-page';
+import { complianceContent } from '../src/demos/compliance-page';
+import { d1Content } from '../src/demos/d1-page';
+import { i18nContent } from '../src/demos/i18n-page';
+import { r2Content } from '../src/demos/r2-page';
+import { renderPage } from '../src/ui/page';
 import { styles } from '../src/ui/styles';
 import { accessibilityLabResponse } from '../src/ui/accessibility-lab';
 import type { Env } from '../src/types';
@@ -15,7 +16,7 @@ const env = {
 
 describe('D1 database console', () => {
   it('leads with table navigation and progressively discloses relational CRUD controls', async () => {
-    const html = await renderD1Demo(env).text();
+    const html = await renderPage(env, d1Content(env)).text();
     expect(html).toContain('Platform / D1');
     expect(html).toContain('Cloudflare D1 Database');
     expect(html).toContain('role="tablist"');
@@ -32,7 +33,7 @@ describe('D1 database console', () => {
   });
 
   it('surfaces API failures and confirms relational and reset behavior', async () => {
-    const html = await renderD1Demo(env).text();
+    const html = await renderPage(env, d1Content(env)).text();
     expect(html).toContain("email_already_exists: 'That email already exists.'");
     expect(html).toContain("user_limit_reached: 'This sandbox has reached its 10-user limit.'");
     expect(html).toContain("task_limit_reached: 'This sandbox has reached its 25-task limit.'");
@@ -45,7 +46,7 @@ describe('D1 database console', () => {
 
 describe('R2 storage workspace', () => {
   it('leads with the sandbox workflow and progressively discloses technical evidence', async () => {
-    const html = await renderR2Demo(env).text();
+    const html = await renderPage(env, r2Content(env)).text();
     expect(html).toContain('Platform / R2');
     expect(html).toContain('Cloudflare R2 Storage');
     expect(html).toContain('Your R2 sandbox');
@@ -59,7 +60,7 @@ describe('R2 storage workspace', () => {
   });
 
   it('validates uploads and uses inline confirmation with surfaced operation errors', async () => {
-    const html = await renderR2Demo(env).text();
+    const html = await renderPage(env, r2Content(env)).text();
     expect(html).toContain("state.selectedFile.size > MAX_FILE_BYTES");
     expect(html).toContain('File exceeds the 5 MiB limit.');
     expect(html).toContain('data-confirm-delete');
@@ -72,7 +73,7 @@ describe('R2 storage workspace', () => {
 
 describe('internationalized interface', () => {
   it('renders Arabic with a matching lang, RTL direction, resources, and locale formats', async () => {
-    const response = await renderI18nDemo(new Request('https://demo.example/i18n?locale=ar&count=3'), env);
+    const response = renderPage(env, i18nContent(new Request('https://demo.example/i18n?locale=ar&count=3'), env));
     const html = await response.text();
     expect(html).toContain('<html lang="ar" dir="rtl">');
     expect(html).toContain('التدويل في الواجهة');
@@ -81,12 +82,12 @@ describe('internationalized interface', () => {
   });
 
   it('falls back to English for unsupported locale input', async () => {
-    const html = await (await renderI18nDemo(new Request('https://demo.example/i18n?locale=xx'), env)).text();
+    const html = await renderPage(env, i18nContent(new Request('https://demo.example/i18n?locale=xx'), env)).text();
     expect(html).toContain('<html lang="en" dir="ltr">');
   });
 
   it('ships six synchronized instant-switch resources and an inspector', async () => {
-    const html = await (await renderI18nDemo(new Request('https://demo.example/i18n?locale=ja&count=7'), env)).text();
+    const html = await renderPage(env, i18nContent(new Request('https://demo.example/i18n?locale=ja&count=7'), env)).text();
     expect(html).toContain('<html lang="ja" dir="ltr">');
     expect(html).toContain('data-locale="fr"');
     expect(html).toContain('data-locale="de"');
@@ -99,7 +100,7 @@ describe('internationalized interface', () => {
 
 describe('accessible interaction surface', () => {
   it('keeps parent controls accessible and isolates opt-in broken content', async () => {
-    const html = await renderAccessibilityDemo(new Request('https://demo.example/accessibility'), env).text();
+    const html = await renderPage(env, accessibilityContent(new Request('https://demo.example/accessibility'), env)).text();
     expect(html).toContain('class="skip-link"');
     expect(html).toContain('sandbox="allow-scripts allow-forms"');
     expect(html).toContain('data-a11y-mode="accessible" aria-pressed="true"');
@@ -126,7 +127,7 @@ describe('accessible interaction surface', () => {
 
 describe('compliance assurance index', () => {
   it('renders the canonical registry with accessible filters, stable anchors, and descriptive evidence links', async () => {
-    const html = await renderComplianceDemo(new Request('https://demo.example/assurance?view=compliance'), env).text();
+    const html = await renderPage(env, complianceContent(new Request('https://demo.example/assurance?view=compliance'), env)).text();
     expect(html.match(/<h1\b/g)).toHaveLength(1);
     expect(html).toContain('aria-labelledby="framework-heading"');
     expect(html).toContain('aria-labelledby="compliance-filter-heading"');

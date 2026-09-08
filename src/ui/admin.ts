@@ -3,12 +3,12 @@ import type { DemoControl } from '../lib/demo-control';
 import type { CrawlerControl } from '../lib/crawler-control';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
-import { referenceDetails, shell } from './page';
+import { referenceDetails, pageResponse } from './page';
 
 export function renderAdmin(env: Env, control: DemoControl, crawlerControl: CrawlerControl, notice = ''): Response {
   const offline = control.state === 'offline';
   const crawlEnabled = crawlerControl.state === 'enabled';
-  return shell(env, 'Demo Admin', `
+  return pageResponse(env, 'Demo Admin', `
 <section class="page-header">
   <p class="eyebrow">Operations / protected</p>
   <h1>Demo Admin</h1>
@@ -76,7 +76,7 @@ ${notice ? `<section class="panel" role="status"><strong>${escapeHtml(notice)}</
     <li>Operations, security, <code>/api/operations/health</code>, <code>/api/operations/version</code>, offline, admin, and required machine recovery routes remain reachable.</li>
     <li>Every state transition is written to the shared audit event stream.</li>
   </ul>
-</section>`, { cacheControl: 'no-store', noindex: true, activeRoute: '/operations' });
+</section>`, { cacheControl: 'no-store', noindex: true, canonicalPath: '/admin' });
 }
 
 export function renderOffline(env: Env, control: DemoControl, requestedPath: string): Response {
@@ -95,7 +95,7 @@ export function renderOffline(env: Env, control: DemoControl, requestedPath: str
   <p class="lede">${escapeHtml(control.publicMessage)} This page is the maintenance surface visitors see when an operator intentionally takes the demonstrations offline.</p>
   <p class="subtle"><a href="${escapeHtml(safePath)}">Continue to <code>${escapeHtml(safePath)}</code></a></p>
 </section>`;
-  return shell(env, offline ? 'Demo offline' : 'Demo online', `${body}
+  return pageResponse(env, offline ? 'Demo offline' : 'Demo online', `${body}
 <section class="panel">
   <h2>Always reachable</h2>
   <p class="subtle">Operational and security surfaces stay available during an intentional offline window so the demo can be observed and recovered while ordinary demos are down.</p>
@@ -110,5 +110,5 @@ export function renderOffline(env: Env, control: DemoControl, requestedPath: str
     <a href="/admin">Admin</a>
     <a href="${escapeHtml(repoUrl(env))}">Public source</a>
   </div>
-</section>`, { cacheControl: 'no-store', noindex: true, status: offline ? 503 : 200, activeRoute: '/operations' });
+</section>`, { cacheControl: 'no-store', noindex: true, status: offline ? 503 : 200, canonicalPath: '/offline' });
 }

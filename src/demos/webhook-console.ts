@@ -1,7 +1,7 @@
 import type { Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
-import { shell } from '../ui/page';
+import { pageContent, type PageContent } from '../ui/page';
 
 function repositoryName(env: Env): string {
   try {
@@ -12,7 +12,7 @@ function repositoryName(env: Env): string {
   }
 }
 
-export function renderWebhooksDemo(env: Env): Response {
+export function webhooksContent(env: Env): PageContent {
   const repository = repositoryName(env);
   const sources = [
     ['Route definition', 'src/demos/webhooks.ts'],
@@ -20,7 +20,7 @@ export function renderWebhooksDemo(env: Env): Response {
     ['Event contract', 'contracts/webhooks/events.json'],
     ['Signature and replay tests', 'tests/webhooks.test.ts'],
   ];
-  return shell(env, 'Signed Webhooks', `
+  return pageContent(env, 'Signed Webhooks', `
 <section class="page-header lab-page-header webhook-page-header" id="webhooks">
   <p class="eyebrow">Interfaces / Webhooks</p>
   <h1>Signed Webhooks</h1>
@@ -73,5 +73,5 @@ export function renderWebhooksDemo(env: Env): Response {
   document.querySelector('[data-webhook-reset]').addEventListener('click',async()=>{try{await mutate('/api/labs/webhook-reset')}catch(error){state.textContent='Failed';meta.textContent=String(error)}});
   refresh();setInterval(()=>{if(document.visibilityState==='visible')refresh()},2000);
 })();
-</script>`, { activeRoute: '/interfaces', description: 'Verify signed GitHub-compatible webhooks and inspect replay-protected delivery evidence.', cacheControl: 'no-store' });
+</script>`, { canonicalPath: '/interfaces', description: 'Verify signed GitHub-compatible webhooks and inspect replay-protected delivery evidence.', cacheControl: 'no-store' });
 }

@@ -6,7 +6,8 @@ import {
   listAssuranceRecords,
 } from '../src/assurance/service';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
-import { renderRisks } from '../src/demos/assurance-pages';
+import { risksContent } from '../src/demos/assurance-pages';
+import { renderPage } from '../src/ui/page';
 import type { Env } from '../src/types';
 
 const environment = {
@@ -83,7 +84,7 @@ describe('disclosure-safe public risk assurance', () => {
   });
 
   it('renders filter state and stable exact risk anchors', async () => {
-    const response = renderRisks(new Request('https://demo.wizardgang.ai/assurance?view=risks&framework=security&residual=high'), environment);
+    const response = renderPage(environment, risksContent(new Request('https://demo.wizardgang.ai/assurance?view=risks&framework=security&residual=high'), environment));
     const html = await response.text();
     expect(response.status).toBe(200);
     expect(html).toContain('option value="security" selected');

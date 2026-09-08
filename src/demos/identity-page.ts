@@ -1,9 +1,9 @@
 import type { Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
-import { shell } from '../ui/page';
+import { pageContent, type PageContent } from '../ui/page';
 
-export function renderIdentityDemo(env: Env): Response {
+export function identityContent(env: Env): PageContent {
   const sources = [
     ['Route definition', 'src/demos/identity.ts'],
     ['Identity console', 'src/demos/identity-page.ts'],
@@ -13,7 +13,7 @@ export function renderIdentityDemo(env: Env): Response {
     ['Session schema', 'migrations/0010_identity_sessions.sql'],
     ['Tests', 'tests/identity.test.ts'],
   ];
-  return shell(env, 'Authentication & SSO', `
+  return pageContent(env, 'Authentication & SSO', `
 <section class="page-header lab-page-header identity-page-header">
   <p class="eyebrow">Interfaces / Identity</p>
   <h1>Authentication &amp; SSO</h1>
@@ -177,5 +177,5 @@ export function renderIdentityDemo(env: Env): Response {
     else showNotice('The session could not be ended.', 'error');
   });
 })();
-</script>`, { activeRoute: '/interfaces', description: 'Authenticate with Microsoft Entra ID, Google, or GitHub and inspect the validated provider-to-application identity boundary.', cacheControl: 'no-store' });
+</script>`, { canonicalPath: '/interfaces', description: 'Authenticate with Microsoft Entra ID, Google, or GitHub and inspect the validated provider-to-application identity boundary.', cacheControl: 'no-store' });
 }

@@ -16,7 +16,7 @@ import {
 import { sourceUrl } from '../lib/github';
 import { escapeHtml } from '../lib/html';
 import type { Env } from '../types';
-import { referenceDetails, shell } from '../ui/page';
+import { referenceDetails, pageContent, type PageContent } from '../ui/page';
 
 const EVIDENCE_ROUTE = assuranceHtmlRoute('evidence');
 const EVIDENCE_API_ROUTE = assuranceCollectionApiRoute('evidence');
@@ -55,7 +55,7 @@ function observationLine(record: PresentedPublishedEvidence): string {
   return `<p><strong>Observed state:</strong> ${escapeHtml(titleCase(record.observation.state))}${observedAt}${validUntil}</p>`;
 }
 
-export function renderEvidenceDemo(request: Request, env: Env): Response {
+export function evidenceContent(request: Request, env: Env): PageContent {
   const origin = new URL(request.url).origin;
   const records = presentedPublishedEvidenceRecords(env, origin);
   const freshnessCards = Object.entries(FRESHNESS_SEMANTICS).map(([policy, semantics]) => `<article class="assurance-evidence-card">
@@ -91,7 +91,7 @@ export function renderEvidenceDemo(request: Request, env: Env): Response {
     </article>`;
   }).join('');
 
-  return shell(env, 'Evidence Registry', `
+  return pageContent(env, 'Evidence Registry', `
   <section class="page-header assurance-header">
     <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / ${escapeHtml(EVIDENCE_ROUTE)}</p>
     <h1>Evidence you can trace.</h1>
@@ -148,7 +148,7 @@ export function renderEvidenceDemo(request: Request, env: Env): Response {
     apply();
   })();
   </script>`, {
-    activeRoute: EVIDENCE_ROUTE,
+    canonicalPath: EVIDENCE_ROUTE,
     description: 'Searchable public assurance evidence with lifecycle presentation, exact deployed-commit source resolution, reverse record usage, and freshness policy separated from observed state.',
   });
 }

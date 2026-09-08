@@ -2,8 +2,7 @@ import type { DemoDefinition, Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
 import { recentApplicationLogs } from '../lib/logs';
-import { referenceDetails, shell } from '../ui/page';
-import { operationsNavigation } from './operations-pages';
+import { referenceDetails, pageContent, type PageContent } from '../ui/page';
 
 const demo: DemoDefinition = {
   id: 'logs',
@@ -31,7 +30,7 @@ function detailText(value: string | null): string {
   }
 }
 
-export async function renderLogsDemo(request: Request, env: Env): Promise<Response> {
+export async function logsContent(request: Request, env: Env): Promise<PageContent> {
   const url = new URL(request.url);
   const level = url.searchParams.get('level') || '';
   const source = url.searchParams.get('source') || '';
@@ -65,7 +64,6 @@ export async function renderLogsDemo(request: Request, env: Env): Promise<Respon
     ])}
   </div>
 </section>
-${operationsNavigation('/operations?view=logs')}
 <section class="panel" aria-labelledby="filters-heading">
   <h2 id="filters-heading">Filter logs</h2>
   <form method="get" action="/operations" class="filters">
@@ -101,7 +99,7 @@ ${operationsNavigation('/operations?view=logs')}
   <p><a href="/api/operations/logs?limit=${limit}${level ? `&level=${encodeURIComponent(level)}` : ''}${source ? `&source=${encodeURIComponent(source)}` : ''}${requestId ? `&requestId=${encodeURIComponent(requestId)}` : ''}">View JSON</a></p>
 </section>`;
 
-  return shell(env, demo.title, body, { cacheControl: 'no-store', activeRoute: '/operations' });
+  return pageContent(env, demo.title, body, { cacheControl: 'no-store', canonicalPath: '/operations' });
 }
 
 export default demo;
