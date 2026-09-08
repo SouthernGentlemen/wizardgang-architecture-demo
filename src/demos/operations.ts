@@ -1,20 +1,20 @@
 import type { Env } from '../types';
 import { latestCloudflareUsage } from '../lib/cloudflare-usage';
 import { sourceUrl } from '../lib/github';
+import { routeUrl } from '../routing/application-routes';
 import { pageContent, pageResponse, renderPage, type PageContent } from '../ui/page';
 import { logsContent } from './logs';
 import { billingContent, dashboardContent, docsContent, operationsNavigation, uptimeContent } from './operations-pages';
 import { renderUnifiedReportingPresentation } from './reporting-dashboard';
-import { frontendSurface, frontendViewUrl } from './registry';
+import { frontendViewUrl, operationsSurfaceViews } from './registry';
 
-export const operationsViews = ['overview', 'availability', 'logs', 'usage', 'reports', 'docs'] as const;
-export type OperationsView = (typeof operationsViews)[number];
+export type OperationsView = (typeof operationsSurfaceViews)[number]['id'];
+export const operationsViews: readonly OperationsView[] = operationsSurfaceViews.map((view) => view.id);
 
-const operationsSurface = frontendSurface('operations.page');
-const viewLabels = Object.fromEntries(operationsSurface.views.map((view) => [view.id, view.label])) as Record<OperationsView, string>;
+const viewLabels = Object.fromEntries(operationsSurfaceViews.map((view) => [view.id, view.label])) as Record<OperationsView, string>;
 
 function viewHref(view: OperationsView): string {
-  return view === 'overview' ? operationsSurface.route : frontendViewUrl('operations.page', view);
+  return view === 'overview' ? routeUrl('operations.page') : frontendViewUrl('operations.page', view);
 }
 
 function parseView(request: Request): OperationsView | null {
@@ -33,17 +33,18 @@ async function reportsContent(request: Request, env: Env): Promise<PageContent> 
 </section>
 ${reporting}`, {
     cacheControl: 'no-store',
-    canonicalPath: operationsSurface.route,
+    canonicalPath: routeUrl('operations.page'),
     description: 'Shared operational and assurance reporting for the architecture demo.',
   });
 }
 
 function notFound(env: Env): Response {
-  return pageResponse(env, 'Not Found', `<section class="page-header"><p class="eyebrow">404</p><h1>Not found</h1><p class="lede">That operations view is not registered.</p><p><a href="${operationsSurface.route}">Return to Operations</a></p></section>`, {
+  const operationsRoute = routeUrl('operations.page');
+  return pageResponse(env, 'Not Found', `<section class="page-header"><p class="eyebrow">404</p><h1>Not found</h1><p class="lede">That operations view is not registered.</p><p><a href="${operationsRoute}">Return to Operations</a></p></section>`, {
     status: 404,
     cacheControl: 'no-store',
     noindex: true,
-    canonicalPath: operationsSurface.route,
+    canonicalPath: operationsRoute,
   });
 }
 
@@ -62,7 +63,8 @@ export async function renderOperations(request: Request, env: Env): Promise<Resp
   }
   return renderPage(env, {
     ...content,
-    beforeMain: `<div class="site-main surface-before-main">${operationsNavigation(viewHref(view))}</div>`,
+    routeId: 'operations.page',
+    beforeMain: `<div class="site-main surface-before-main">${operationsNavigation(viewHref(view)).replaceAll(' aria-current="page"', ' data-view-current')}</div>`,
     canonicalPath: viewHref(view),
   });
 }

@@ -1,11 +1,18 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { indexedSurfaces, surfaces } from '../src/demos/registry';
+import {
+  assuranceSurfaceViews,
+  frontendViewUrl,
+  interfaceSurfaceViews,
+  operationsSurfaceViews,
+  platformSurfaceViews,
+} from '../src/demos/registry';
 import {
   applicationRouteRegistry,
   routeUrl,
 } from '../src/routing/application-routes';
 import { routeRequest } from '../src/router';
+import { sitemapPaths } from '../src/routing/navigation';
 import type { D1PreparedStatement, Env } from '../src/types';
 
 class ContractStatement implements D1PreparedStatement {
@@ -46,17 +53,15 @@ function internalLinks(html: string, sourceRoute: string): URL[] {
 }
 
 function registeredPageUrls(): string[] {
-  return applicationRouteRegistry.declarations
-    .filter((route) => route.kind === 'page')
-    .flatMap((route) => {
-      const surface = surfaces.find((candidate) => candidate.routeId === route.id);
-      if (!surface) throw new Error(`Registered page '${route.id}' is missing a frontend surface definition.`);
-      const page = routeUrl(route.id);
-      return [
-        page,
-        ...surface.views.map((view) => `${page}?${new URLSearchParams({ view: view.id })}`),
-      ];
-    });
+  return [
+    ...applicationRouteRegistry.declarations
+      .filter((route) => route.kind === 'page')
+      .map((route) => routeUrl(route.id)),
+    ...platformSurfaceViews.map((view) => frontendViewUrl('platform.page', view.id)),
+    ...interfaceSurfaceViews.map((view) => frontendViewUrl('interfaces.page', view.id)),
+    ...assuranceSurfaceViews.map((view) => frontendViewUrl('assurance.wizardgang-public-assurance.html', view.id)),
+    ...operationsSurfaceViews.map((view) => frontendViewUrl('operations.page', view.id)),
+  ];
 }
 
 async function get(path: string): Promise<Response> {
@@ -71,12 +76,12 @@ describe('public link and route contract', () => {
       route: string;
       source: { module: string };
     }>;
-    for (const surface of indexedSurfaces) {
-      const entries = manifest.filter((entry) => entry.route === surface.route);
-      expect(entries, `${surface.route} manifest entry`).toHaveLength(1);
-      expect(readFileSync(entries[0].source.module, 'utf8').length, `${surface.route} source is empty`).toBeGreaterThan(0);
-      const response = await get(surface.route);
-      expect(response.status, `${surface.route} implementation`).toBe(200);
+    for (const route of sitemapPaths()) {
+      const entries = manifest.filter((entry) => entry.route === route);
+      expect(entries, `${route} manifest entry`).toHaveLength(1);
+      expect(readFileSync(entries[0].source.module, 'utf8').length, `${route} source is empty`).toBeGreaterThan(0);
+      const response = await get(route);
+      expect(response.status, `${route} implementation`).toBe(200);
     }
   });
 
@@ -125,7 +130,7 @@ describe('public link and route contract', () => {
     const response = await get('/sitemap.xml');
     const xml = await response.text();
     const locations = [...xml.matchAll(/<loc>https:\/\/demo\.wizardgang\.ai([^<]*)<\/loc>/g)].map((match) => match[1]);
-    expect(locations).toEqual(['/', ...indexedSurfaces.map((surface) => surface.route)]);
+    expect(locations).toEqual(sitemapPaths());
     expect(new Set(locations).size).toBe(locations.length);
   });
 });

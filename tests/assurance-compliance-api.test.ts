@@ -93,7 +93,10 @@ describe('canonical compliance presentation and API contract', () => {
       new Request('https://demo.wizardgang.ai/assurance?view=compliance&framework=wcag-2.2&level=A'),
       environment,
     );
-    const html = await renderPage(environment, response).text();
+    const html = await renderPage(environment, {
+      ...response,
+      routeId: 'assurance.wizardgang-public-assurance.html',
+    }).text();
     expect(html).toContain('<label for="compliance-framework">Framework</label>');
     expect(html).toContain('<label for="compliance-status">Status</label>');
     expect(html).toContain('<label for="compliance-level">WCAG level</label>');

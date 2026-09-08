@@ -24,15 +24,19 @@ The router does not keep an application path switch, API-prefix inventory, HTML-
 - interface and identity capabilities; and
 - platform laboratory capabilities.
 
-Composition adapts their handler contexts without moving ownership back into the central router. Cross-family duplicate IDs, duplicate patterns, and ambiguous parameter patterns are rejected by the shared matcher. Application validation additionally rejects undocumented routes, page declarations that cannot be reached with `GET`, unreachable navigation metadata, publicly cached private routes, and indexable private routes.
+Composition adapts their handler contexts without moving ownership back into the central router. Cross-family duplicate IDs, duplicate patterns, and ambiguous parameter patterns are rejected by the shared matcher. Application validation additionally rejects undocumented routes, page declarations that cannot be reached with `GET`, invalid page metadata, missing page parents, cycles or multiple roots in the page hierarchy, publicly cached private routes, and indexable private routes.
 
 The same module exposes stable route-ID URL helpers. Internal callers can resolve a declaration by ID and supply normalized, percent-encoded route parameters without copying its path literal.
 
 ## Registered page metadata
 
-The application registry attaches public page metadata to declarations by joining the active route patterns to the existing demo definitions. `src/routing/navigation.ts` exposes that registered metadata to consumers.
+Page declarations own their frontend metadata directly through the optional `page` block: parent route ID, navigation label, summary, sibling order, primary/secondary/none navigation membership, and architecture-map membership. The hierarchy is expressed in route IDs rather than inferred from pathname prefixes, and `interfaces.frontend.index` is the single root.
 
-The architecture-map navigation consumes the registered page set instead of the demo registry directly. `/sitemap.xml` is generated from public, indexable, non-parameterized registered page metadata. The root route is explicitly registered as a sitemap page but is not duplicated as an architecture card.
+`src/routing/navigation.ts` projects primary navigation, child navigation, architecture-map entries, and sitemap paths from those declarations while retaining the `configureRegisteredRoutes()` / `registeredRouteMetadata()` seam. The shell consumes primary navigation directly, and active state is matched by route ID: exactly the current primary route receives `aria-current="page"`; ancestors can receive visual section state without claiming a second current page.
+
+`src/demos/registry.ts` now retains only the query-view inventories needed by the four consolidated surfaces plus `frontendViewUrl()`. It no longer owns pathnames, page titles, hierarchy, navigation membership, architecture-card membership, or sitemap membership.
+
+`/sitemap.xml` is derived from public, indexable, non-parameterized page declarations. The root route remains in the sitemap but is not duplicated as an architecture card.
 
 ## Generated artifacts
 
@@ -50,7 +54,7 @@ Validation uses the same projection without writing files:
 npm run validate:routes
 ```
 
-The generated manifest records stable ID, route pattern, methods, kind, visibility, browser HTML policy, authentication/authorization, same-origin, offline, cache, crawler/indexing, documentation, source/test provenance, and navigation metadata. Route documentation is therefore a projection of the live contract rather than a second route inventory.
+The generated manifest records stable ID, route pattern, methods, kind, visibility, browser HTML policy, authentication/authorization, same-origin, offline, cache, crawler/indexing, documentation, source/test provenance, and derived page-navigation metadata. Route documentation is therefore a projection of the live contract rather than a second route inventory.
 
 ## Matcher and collision rules
 
@@ -68,12 +72,12 @@ No redirect or alias layer is installed by the final registry. Removed routes re
 
 ## Policy ownership
 
-Route declarations own the policy that can be enforced generically at dispatch: visibility, browser HTML behavior, authentication provider, authorization declaration, same-origin methods, offline availability, cache policy, crawler access, and indexing. Authentication and authorization remain independent declarations: a route may require a verified identity without defining an additional authorization policy. Protocol-specific validation remains in the capability handler where it belongs. For example, OAuth/OIDC/SAML cryptographic validation, GraphQL execution limits, webhook signature/replay checks, MCP protocol authorization, and Git release-readiness checks are not duplicated in the router.
+Route declarations own the policy that can be enforced generically at dispatch: visibility, browser HTML behavior, authentication provider, authorization declaration, same-origin methods, offline availability, cache policy, crawler access, indexing, and page presentation metadata. Authentication and authorization remain independent declarations: a route may require a verified identity without defining an additional authorization policy. Protocol-specific validation remains in the capability handler where it belongs. For example, OAuth/OIDC/SAML cryptographic validation, GraphQL execution limits, webhook signature/replay checks, MCP protocol authorization, and Git release-readiness checks are not duplicated in the router.
 
 Platform declarations continue to retain their request-limit and storage-boundary metadata. D1 owns relational state, R2 owns object bytes, Durable Objects own coordinated state, and Worker computation remains stateless.
 
 ## Validation
 
-The route suite verifies generated manifest consistency, generated documentation, sitemap membership, architecture navigation, route-ID URL generation, method handling, shared policy completeness, cross-family collision rejection, unreachable/undocumented route rejection, and normal 404 behavior for removed aliases and arbitrary unknown paths.
+The route suite verifies generated manifest consistency, generated documentation, derived sitemap membership, primary and architecture navigation, route-ID URL generation, method handling, page-hierarchy validity, shared policy completeness, cross-family collision rejection, compatible additional-page registration, active-state semantics, unreachable/undocumented route rejection, and normal 404 behavior for removed aliases and arbitrary unknown paths.
 
 The current registry is the complete route contract. Route removals are deliberate and receive the ordinary 404; this audit does not release or deploy the application.

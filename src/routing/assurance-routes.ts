@@ -19,6 +19,7 @@ import {
   type RouteRegistry,
   type RouteSourceMetadata,
 } from './registry';
+import type { PageMetadata } from './application-routes';
 
 import type { Env } from '../types';
 
@@ -30,6 +31,8 @@ interface AssuranceContractRouteDeclaration {
   routes: AssuranceRegistryRoutes;
 }
 
+type AssuranceApplicationRouteDeclaration = RouteDeclaration<AssuranceRouteContext> & { page?: PageMetadata };
+
 const ROUTE_TEST = 'tests/assurance-declarative-routing.test.ts';
 
 function routeSource(source: AssuranceRouteSourceMetadata | undefined): RouteSourceMetadata {
@@ -40,7 +43,7 @@ function routeSource(source: AssuranceRouteSourceMetadata | undefined): RouteSou
 function htmlRoute(
   declaration: AssuranceContractRouteDeclaration,
   capability: AssuranceRouteCapability,
-): RouteDeclaration<AssuranceRouteContext> | null {
+): AssuranceApplicationRouteDeclaration | null {
   if (!declaration.routes.html) return null;
   const html = capability.html;
   if (!html) throw new Error(`${declaration.ownerId} declares routes.html without a specialized HTML handler.`);
@@ -63,6 +66,7 @@ function htmlRoute(
       docs: ['docs/ASSURANCE-REGISTRY.md', 'docs/REPORTING.md', 'docs/ROUTES.md'],
     },
     source: routeSource(html.source),
+    ...(html.page ? { page: html.page } : {}),
   };
 }
 

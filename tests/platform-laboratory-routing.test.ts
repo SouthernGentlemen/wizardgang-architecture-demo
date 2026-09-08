@@ -180,7 +180,9 @@ describe('platform laboratory declarative routing', () => {
       expect(html, view).toContain('class="skip-link" href="#main"');
       expect(html, view).toContain('<main class="site-main" id="main">');
       expect(html, view).toContain('aria-label="Platform demonstrations"');
-      expect(html, view).toContain(`href="/platform?view=${view}" aria-current="page"`);
+      expect(html, view).toContain('<a href="/platform" aria-current="page">Platform</a>');
+      expect(html, view).toContain(`href="/platform?view=${view}" data-view-current`);
+      expect((html.match(/<[a-z][^>]*\baria-current="page"[^>]*>/gi) ?? []).length, view).toBe(1);
       for (const href of expectedLinks) expect(html, `${view} -> ${href}`).toContain(`href="${href}"`);
       for (const removed of removedPagePaths) expect(html, `${view} legacy ${removed}`).not.toContain(`href="${removed}"`);
       expect(html, view).not.toContain(absent);

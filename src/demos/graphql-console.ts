@@ -1,5 +1,6 @@
 import type { Env } from '../types';
-import { frontendUrl, frontendViewUrl } from './registry';
+import { frontendViewUrl } from './registry';
+import { routeUrl } from '../routing/application-routes';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
 import { pageContent, type PageContent } from '../ui/page';
@@ -21,7 +22,7 @@ export function graphqlContent(env: Env): PageContent {
   const webhooksUrl = frontendViewUrl('interfaces.page', 'webhooks');
   const mcpUrl = frontendViewUrl('interfaces.page', 'mcp');
   const d1Url = frontendViewUrl('platform.page', 'd1');
-  const interfacesUrl = frontendUrl('interfaces.page');
+  const interfacesUrl = routeUrl('interfaces.page');
   return pageContent(env, 'GraphQL API', `
 <section class="page-header lab-page-header graphql-page-header" id="graphql">
   <p class="eyebrow">Interfaces / GraphQL</p>

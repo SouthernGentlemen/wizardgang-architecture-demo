@@ -44,7 +44,9 @@ describe('consolidated interface demonstrations', () => {
       expect(response.status, view).toBe(200);
       expect(response.headers.get('content-type'), view).toContain('text/html');
       expect(html, view).toContain(viewMarkers[view]);
-      expect(html, view).toContain(`href="/interfaces?view=${view}" aria-current="page"`);
+      expect(html, view).toContain('<a href="/interfaces" aria-current="page">Interfaces</a>');
+      expect(html, view).toContain(`href="/interfaces?view=${view}" data-view-current`);
+      expect((html.match(/<[a-z][^>]*\baria-current="page"[^>]*>/gi) ?? []).length, view).toBe(1);
       expect(html, view).toContain(`<link rel="canonical" href="https://demo.wizardgang.ai/interfaces?view=${view}">`);
       expect(html, view).not.toContain('/graphql/console');
       expect(html.match(/<h1\b/g), view).toHaveLength(1);

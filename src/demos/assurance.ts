@@ -4,6 +4,7 @@ import { escapeHtml } from '../lib/html';
 import { renderReportingPresentation } from '../reporting/html';
 import { presentReportingQuery } from '../reporting/presentation';
 import { queryReportingCollection, reportingCollectionInventory } from '../reporting/service';
+import { routeUrl } from '../routing/application-routes';
 import type { Env } from '../types';
 import { pageContent, renderNotFound, renderPage, type PageContent } from '../ui/page';
 import { concernsContent, incidentsContent, risksContent } from './assurance-pages';
@@ -11,25 +12,14 @@ import { complianceContent } from './compliance-page';
 import { evidenceContent } from './evidence-page';
 import { gitContent } from './git-page';
 import { governanceContent } from './governance';
-import { frontendSurface, frontendUrl, frontendViewUrl } from './registry';
+import { assuranceSurfaceViews, frontendViewUrl } from './registry';
 
-export const assuranceViews = [
-  'overview',
-  'delivery',
-  'governance',
-  'evidence',
-  'compliance',
-  'risks',
-  'incidents',
-  'concerns',
-] as const;
-export type AssuranceView = (typeof assuranceViews)[number];
+export type AssuranceView = (typeof assuranceSurfaceViews)[number]['id'];
+export const assuranceViews: readonly AssuranceView[] = assuranceSurfaceViews.map((view) => view.id);
 
-const assuranceSurface = frontendSurface('assurance.wizardgang-public-assurance.html');
-const securityRoute = frontendUrl('assurance.advisories.html');
 const qualificationNotice = 'WCAG 2.2 / ISO 27001 / ISO 42001 references are alignment targets, not certification claims. Private vulnerability reporting remains at /security.';
 
-const viewLabels = Object.fromEntries(assuranceSurface.views.map((view) => [view.id, view.label])) as Record<AssuranceView, string>;
+const viewLabels = Object.fromEntries(assuranceSurfaceViews.map((view) => [view.id, view.label])) as Record<AssuranceView, string>;
 
 const viewDescriptions: Record<AssuranceView, string> = {
   overview: 'Public assurance posture, qualifications, and inspectable record families.',
@@ -57,6 +47,14 @@ function publicPrincipal(): Principal {
   return { subject: 'public-visitor', authentication: 'anonymous', role: 'viewer', permissions: ['demo:read'] };
 }
 
+function assuranceRoute(): string {
+  return routeUrl('assurance.wizardgang-public-assurance.html');
+}
+
+function securityRoute(): string {
+  return routeUrl('assurance.advisories.html');
+}
+
 function viewHref(view: AssuranceView): string {
   return frontendViewUrl('assurance.wizardgang-public-assurance.html', view);
 }
@@ -82,15 +80,15 @@ function viewNavigation(view: AssuranceView): string {
   return `<section class="platform-view-selector assurance-view-selector" aria-label="Assurance view selection">
     <div class="section-head"><span class="surface-view-heading">Assurance views</span><span>Server-rendered views</span></div>
     <nav class="meta" aria-label="Assurance views">
-      ${assuranceViews.map((name) => `<a href="${escapeHtml(viewHref(name))}"${name === view ? ' aria-current="page"' : ''}>${escapeHtml(viewLabels[name])}</a>`).join('')}
-      <a href="${escapeHtml(securityRoute)}">Security reporting</a>
+      ${assuranceViews.map((name) => `<a href="${escapeHtml(viewHref(name))}"${name === view ? ' data-view-current' : ''}>${escapeHtml(viewLabels[name])}</a>`).join('')}
+      <a href="${escapeHtml(securityRoute())}">Security reporting</a>
     </nav>
   </section>`;
 }
 
 function overviewContent(): PageContent {
   return pageContent({} as Env, 'Overview · Assurance', `<section class="page-header assurance-header">
-    <p class="eyebrow">Delivery &amp; Governance / ${escapeHtml(assuranceSurface.route)}</p>
+    <p class="eyebrow">Delivery &amp; Governance / ${escapeHtml(assuranceRoute())}</p>
     <h1>Public assurance, one inspectable surface.</h1>
     <p class="lede">Browse delivery, governance, evidence, compliance, risk, incident, and concern records without duplicating the canonical reporting or publication contracts behind them.</p>
     <p class="assurance-notice"><strong>Qualification:</strong> ${escapeHtml(qualificationNotice)}</p>
@@ -101,8 +99,8 @@ function overviewContent(): PageContent {
   </section>
   <section class="assurance-notice" aria-labelledby="security-boundary-heading">
     <h2 id="security-boundary-heading">Security stays separate</h2>
-    <p>Suspected vulnerabilities, active security incidents, credentials, exploit detail, and other sensitive material belong in private vulnerability reporting. Published advisories remain on the canonical <a href="${escapeHtml(securityRoute)}">security page</a>.</p>
-  </section>`, { description: viewDescriptions.overview, canonicalPath: assuranceSurface.route });
+    <p>Suspected vulnerabilities, active security incidents, credentials, exploit detail, and other sensitive material belong in private vulnerability reporting. Published advisories remain on the canonical <a href="${escapeHtml(securityRoute())}">security page</a>.</p>
+  </section>`, { description: viewDescriptions.overview, canonicalPath: assuranceRoute() });
 }
 
 async function selectedAssuranceContent(request: Request, env: Env, view: AssuranceView): Promise<PageContent> {
@@ -153,9 +151,9 @@ export async function renderAssurance(request: Request, env: Env): Promise<Respo
   </div>`;
   return renderPage(env, {
     ...content,
-    body: `${content.body}
-${reporting}`,
+    routeId: 'assurance.wizardgang-public-assurance.html',
+    body: `${content.body}\n${reporting}`,
     beforeMain,
-    canonicalPath: rawView === null ? assuranceSurface.route : viewHref(requestedView),
+    canonicalPath: rawView === null ? assuranceRoute() : viewHref(requestedView),
   });
 }

@@ -1,5 +1,6 @@
 import type { DemoDefinition, Env } from '../types';
-import { frontendSurface, frontendViewUrl } from './registry';
+import { frontendViewUrl, interfaceSurfaceViews } from './registry';
+import { routeUrl } from '../routing/application-routes';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
 import { renderNotFound, renderPage, type PageContent } from '../ui/page';
@@ -18,10 +19,8 @@ import { mcpContent } from './mcp-page';
 import { i18nContent } from './i18n-page';
 import { accessibilityContent } from './accessibility-page';
 
-export const interfaceViews = ['rest', 'graphql', 'webhooks', 'identity', 'mcp', 'i18n', 'accessibility'] as const;
-export type InterfaceView = (typeof interfaceViews)[number];
-
-const interfacesSurface = frontendSurface('interfaces.page');
+export type InterfaceView = (typeof interfaceSurfaceViews)[number]['id'];
+export const interfaceViews: readonly InterfaceView[] = interfaceSurfaceViews.map((view) => view.id);
 
 function viewHref(view: InterfaceView): string {
   return frontendViewUrl('interfaces.page', view);
@@ -37,7 +36,7 @@ const viewDemos: Record<InterfaceView, DemoDefinition> = {
   accessibility: accessibilityDemo,
 };
 
-const viewLabels = Object.fromEntries(interfacesSurface.views.map((view) => [view.id, view.label])) as Record<InterfaceView, string>;
+const viewLabels = Object.fromEntries(interfaceSurfaceViews.map((view) => [view.id, view.label])) as Record<InterfaceView, string>;
 
 function isInterfaceView(value: string): value is InterfaceView {
   return (interfaceViews as readonly string[]).includes(value);
@@ -57,7 +56,7 @@ function viewNavigation(view: InterfaceView): string {
   return `<section class="platform-view-selector interface-view-selector" aria-label="Interface view selection">
     <div class="section-head"><span class="surface-view-heading">Interface demonstrations</span><span>Server-rendered views</span></div>
     <nav class="meta" aria-label="Interface demonstrations">
-      ${interfaceViews.map((name) => `<a href="${escapeHtml(viewHref(name))}"${name === view ? ' aria-current="page"' : ''}>${escapeHtml(viewLabels[name])}</a>`).join('')}
+      ${interfaceViews.map((name) => `<a href="${escapeHtml(viewHref(name))}"${name === view ? ' data-view-current' : ''}>${escapeHtml(viewLabels[name])}</a>`).join('')}
     </nav>
   </section>`;
 }
@@ -74,7 +73,8 @@ export async function renderInterfaces(request: Request, env: Env): Promise<Resp
   </div>`;
   return renderPage(env, {
     ...content,
+    routeId: 'interfaces.page',
     beforeMain,
-    canonicalPath: rawView === null ? interfacesSurface.route : viewHref(requestedView),
+    canonicalPath: rawView === null ? routeUrl('interfaces.page') : viewHref(requestedView),
   });
 }

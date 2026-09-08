@@ -47,7 +47,9 @@ describe('consolidated assurance surface', () => {
       const html = await response.text();
       expect(response.status, view).toBe(200);
       expect(response.headers.get('content-type'), view).toContain('text/html');
-      expect(html, view).toContain(`href="/assurance?view=${view}" aria-current="page"`);
+      expect(html, view).toContain('<a href="/assurance" aria-current="page">Assurance</a>');
+      expect(html, view).toContain(`href="/assurance?view=${view}" data-view-current`);
+      expect((html.match(/<[a-z][^>]*\baria-current="page"[^>]*>/gi) ?? []).length, view).toBe(1);
       expect(html, view).toContain('Shared reporting presenter');
       expect(html, view).toContain(`<link rel="canonical" href="https://demo.wizardgang.ai/assurance?view=${view}">`);
       expect(html, view).toContain('href="/security"');
