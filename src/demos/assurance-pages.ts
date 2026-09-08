@@ -2,7 +2,7 @@ import { assuranceRelationshipIds } from '../assurance/relationship-contract.js'
 import type { Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
-import { referenceDetails, shell } from '../ui/page';
+import { referenceDetails, pageContent, type PageContent } from '../ui/page';
 import {
   assuranceAnchor,
   assuranceDatasetSchema,
@@ -35,14 +35,14 @@ const SECURITY_ROUTE = assuranceHtmlRoute('advisories');
 const issueUrl = (env: Env, template: string) => `${repoUrl(env)}/issues/new?template=${encodeURIComponent(template)}`;
 const privateReportUrl = (env: Env) => `${repoUrl(env)}/security/advisories/new`;
 
-export function renderConcerns(env: Env): Response {
+export function concernsContent(env: Env): PageContent {
   const cards = [
     ['Bug', 'Report reproducible incorrect behavior that contains no sensitive security information.', issueUrl(env, 'bug.yml')],
     ['Feature request', 'Propose a new capability or improvement and explain the problem it would solve.', issueUrl(env, 'feature.yml')],
     ['Other concern', 'Report an accessibility, AI/MCP, governance, documentation, or other non-sensitive concern.', issueUrl(env, 'concern.yml')],
   ].map(([title, description, href]) => `<article class="info-card"><h2>${escapeHtml(title)}</h2><p>${escapeHtml(description)}</p><p><a href="${escapeHtml(href)}">Open public issue form →</a></p></article>`).join('');
 
-  return shell(env, 'Report a Concern', `
+  return pageContent(env, 'Report a Concern', `
   <section class="page-header assurance-header">
     <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / /assurance?view=concerns</p>
     <h1>Put concerns into controlled work.</h1>
@@ -59,7 +59,7 @@ export function renderConcerns(env: Env): Response {
     <p>Keep it private. Use the dedicated security channel so triage and remediation can happen before public disclosure.</p>
     <p><a href="${escapeHtml(privateReportUrl(env))}">Open a private security report →</a></p>
   </section>`, {
-    activeRoute: '/assurance',
+    canonicalPath: '/assurance',
     description: 'Public issue intake for non-sensitive WizardGang Architecture Demo bugs, features, accessibility, AI/MCP, and other concerns.',
   });
 }
@@ -110,7 +110,7 @@ function riskCard(env: Env, risk: PublishedAssuranceRecordMap['risks']): string 
   </article>`;
 }
 
-export function renderRisks(request: Request, env: Env): Response {
+export function risksContent(request: Request, env: Env): PageContent {
   const filters = assuranceFiltersFromUrl('risks', new URL(request.url));
   const records = filterPublishedAssuranceRecords('risks', filters);
   const counts = deriveRiskCounts(records);
@@ -118,7 +118,7 @@ export function renderRisks(request: Request, env: Env): Response {
   const cards = records.map((record) => riskCard(env, record)).join('');
   const results = cards || '<article class="info-card"><h2>No matching risks</h2><p>Change or clear the filters to view the public assurance records.</p></article>';
 
-  return shell(env, 'Risk Assurance', `
+  return pageContent(env, 'Risk Assurance', `
   <section class="page-header assurance-header">
     <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / ${escapeHtml(RISK_ROUTE)}</p>
     <h1>Review the public risk assurance record.</h1>
@@ -146,7 +146,7 @@ export function renderRisks(request: Request, env: Env): Response {
     <p><strong>${counts.total}</strong> matching records · ${counts.byFramework.security} security · ${counts.byFramework.ai} AI · ${counts.byResidualRating.high} high residual · ${counts.byResidualRating.moderate} moderate residual · ${counts.byResidualRating.low} low residual.</p>
   </section>
   <div class="info-grid">${results}</div>`, {
-    activeRoute: RISK_ROUTE,
+    canonicalPath: RISK_ROUTE,
     description: 'Disclosure-safe security and AI risk assurance with stable identifiers, lifecycle state, evidence links, control references, and derived counts.',
   });
 }
@@ -161,7 +161,7 @@ function recordTags(values: string[], linkRecords = false): string {
   }).join(' ');
 }
 
-export function renderIncidents(env: Env): Response {
+export function incidentsContent(env: Env): PageContent {
   const incidents = listPublishedAssuranceRecords('incidents');
   const exercises = listPublishedAssuranceRecords('exercises');
   const counts = deriveIncidentCounts(incidents, exercises);
@@ -196,7 +196,7 @@ export function renderIncidents(env: Env): Response {
     </article>`;
   }).join('');
 
-  return shell(env, 'Incidents & Exercises', `
+  return pageContent(env, 'Incidents & Exercises', `
   <section class="page-header assurance-header">
     <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / ${escapeHtml(INCIDENT_ROUTE)}</p>
     <h1>Incidents and exercises stay distinct.</h1>
@@ -232,7 +232,7 @@ export function renderIncidents(env: Env): Response {
     <h2 id="response-exercises">Response exercises</h2>
     <div class="info-grid">${exerciseCards}</div>
   </section>`, {
-    activeRoute: INCIDENT_ROUTE,
+    canonicalPath: INCIDENT_ROUTE,
     description: 'Disclosure-safe public incident and response-exercise register with lifecycle presentation and permanent INC-* and EX-* record anchors.',
   });
 }

@@ -1,9 +1,9 @@
 import type { Env } from '../types';
 import { sourceUrl } from '../lib/github';
-import { referenceDetails, shell } from '../ui/page';
+import { referenceDetails, pageContent, type PageContent } from '../ui/page';
 
-export function renderR2Demo(env: Env): Response {
-  return shell(env, 'Cloudflare R2', `
+export function r2Content(env: Env): PageContent {
+  return pageContent(env, 'Cloudflare R2', `
 <section class="page-header lab-page-header">
   <p class="eyebrow">Platform / R2</p>
   <h1>Cloudflare R2 Storage</h1>
@@ -348,5 +348,5 @@ export function renderR2Demo(env: Env): Response {
     setStatus(friendlyError(error, 'Unable to load files — try again.'), 'error');
   });
 })();
-</script>`, { activeRoute: '/platform', cacheControl: 'no-store' });
+</script>`, { canonicalPath: '/platform', cacheControl: 'no-store' });
 }

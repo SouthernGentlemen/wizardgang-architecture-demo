@@ -5,12 +5,12 @@ import { renderReportingPresentation } from '../reporting/html';
 import { presentReportingQuery } from '../reporting/presentation';
 import { queryReportingCollection, reportingCollectionInventory } from '../reporting/service';
 import type { Env } from '../types';
-import { renderNotFound, shell } from '../ui/page';
-import { renderConcerns, renderIncidents, renderRisks } from './assurance-pages';
-import { renderComplianceDemo } from './compliance-page';
-import { renderEvidenceDemo } from './evidence-page';
-import { renderGitDemo } from './git-page';
-import { renderGovernance } from './governance';
+import { pageContent, renderNotFound, renderPage, type PageContent } from '../ui/page';
+import { concernsContent, incidentsContent, risksContent } from './assurance-pages';
+import { complianceContent } from './compliance-page';
+import { evidenceContent } from './evidence-page';
+import { gitContent } from './git-page';
+import { governanceContent } from './governance';
 import { frontendSurface, frontendUrl, frontendViewUrl } from './registry';
 
 export const assuranceViews = [
@@ -80,7 +80,7 @@ function nextHref(request: Request, cursor: string | null | undefined): string |
 
 function viewNavigation(view: AssuranceView): string {
   return `<section class="platform-view-selector assurance-view-selector" aria-label="Assurance view selection">
-    <div class="section-head"><h2>Assurance views</h2><span>Server-rendered views</span></div>
+    <div class="section-head"><span class="surface-view-heading">Assurance views</span><span>Server-rendered views</span></div>
     <nav class="meta" aria-label="Assurance views">
       ${assuranceViews.map((name) => `<a href="${escapeHtml(viewHref(name))}"${name === view ? ' aria-current="page"' : ''}>${escapeHtml(viewLabels[name])}</a>`).join('')}
       <a href="${escapeHtml(securityRoute)}">Security reporting</a>
@@ -88,8 +88,8 @@ function viewNavigation(view: AssuranceView): string {
   </section>`;
 }
 
-function overviewContent(): string {
-  return `<section class="page-header assurance-header">
+function overviewContent(): PageContent {
+  return pageContent({} as Env, 'Overview · Assurance', `<section class="page-header assurance-header">
     <p class="eyebrow">Delivery &amp; Governance / ${escapeHtml(assuranceSurface.route)}</p>
     <h1>Public assurance, one inspectable surface.</h1>
     <p class="lede">Browse delivery, governance, evidence, compliance, risk, incident, and concern records without duplicating the canonical reporting or publication contracts behind them.</p>
@@ -102,29 +102,18 @@ function overviewContent(): string {
   <section class="assurance-notice" aria-labelledby="security-boundary-heading">
     <h2 id="security-boundary-heading">Security stays separate</h2>
     <p>Suspected vulnerabilities, active security incidents, credentials, exploit detail, and other sensitive material belong in private vulnerability reporting. Published advisories remain on the canonical <a href="${escapeHtml(securityRoute)}">security page</a>.</p>
-  </section>`;
+  </section>`, { description: viewDescriptions.overview, canonicalPath: assuranceSurface.route });
 }
 
-async function mainContent(response: Response): Promise<string> {
-  const html = await response.text();
-  const marker = '<main class="site-main" id="main">';
-  const start = html.indexOf(marker);
-  const end = start === -1 ? -1 : html.indexOf('</main>', start + marker.length);
-  if (start === -1 || end === -1) throw new Error('Assurance renderer did not return the shared page shell.');
-  return html.slice(start + marker.length, end);
-}
-
-async function renderSelectedAssurance(request: Request, env: Env, view: AssuranceView): Promise<string> {
+async function selectedAssuranceContent(request: Request, env: Env, view: AssuranceView): Promise<PageContent> {
   if (view === 'overview') return overviewContent();
-  let response: Response;
-  if (view === 'delivery') response = await renderGitDemo(env);
-  else if (view === 'governance') response = await renderGovernance(request, env, []);
-  else if (view === 'evidence') response = await renderEvidenceDemo(request, env);
-  else if (view === 'compliance') response = await renderComplianceDemo(request, env);
-  else if (view === 'risks') response = await renderRisks(request, env);
-  else if (view === 'incidents') response = await renderIncidents(env);
-  else response = await renderConcerns(env);
-  return mainContent(response);
+  if (view === 'delivery') return gitContent(env);
+  if (view === 'governance') return governanceContent(request, env, []);
+  if (view === 'evidence') return evidenceContent(request, env);
+  if (view === 'compliance') return complianceContent(request, env);
+  if (view === 'risks') return risksContent(request, env);
+  if (view === 'incidents') return incidentsContent(env);
+  return concernsContent(env);
 }
 
 async function renderSharedReporting(request: Request, env: Env, view: AssuranceView): Promise<string> {
@@ -151,32 +140,22 @@ async function renderSharedReporting(request: Request, env: Env, view: Assurance
   </section>`;
 }
 
-async function finalizeResponse(response: Response, canonicalPath: string): Promise<Response> {
-  let html = await response.text();
-  const canonicalHref = new URL(canonicalPath, 'https://demo.wizardgang.ai').toString();
-  const tag = `<link rel="canonical" href="${escapeHtml(canonicalHref)}">`;
-  html = html.replace('  <link rel="icon"', `  ${tag}\n  <link rel="icon"`);
-  return new Response(html, {
-    status: response.status,
-    statusText: response.statusText,
-    headers: response.headers,
-  });
-}
-
 export async function renderAssurance(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
   const rawView = url.searchParams.get('view');
   const requestedView = rawView === null ? 'overview' : rawView;
   if (!isAssuranceView(requestedView)) return renderNotFound(env);
 
-  const body = `${viewNavigation(requestedView)}
-  <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/assurance.ts'))}">Assurance route source</a></div>
-  ${await renderSelectedAssurance(request, env, requestedView)}
-  ${await renderSharedReporting(request, env, requestedView)}`;
-  const response = shell(env, `${viewLabels[requestedView]} · ${assuranceSurface.title}`, body, {
-    activeRoute: assuranceSurface.route,
-    description: viewDescriptions[requestedView],
-    cacheControl: 'no-store',
+  const content = await selectedAssuranceContent(request, env, requestedView);
+  const reporting = await renderSharedReporting(request, env, requestedView);
+  const beforeMain = `<div class="site-main surface-before-main">${viewNavigation(requestedView)}
+    <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/assurance.ts'))}">Assurance route source</a></div>
+  </div>`;
+  return renderPage(env, {
+    ...content,
+    body: `${content.body}
+${reporting}`,
+    beforeMain,
+    canonicalPath: rawView === null ? assuranceSurface.route : viewHref(requestedView),
   });
-  return finalizeResponse(response, rawView === null ? assuranceSurface.route : viewHref(requestedView));
 }

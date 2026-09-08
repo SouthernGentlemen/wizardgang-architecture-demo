@@ -7,7 +7,7 @@ import fr from '../i18n/locales/fr.json';
 import ja from '../i18n/locales/ja.json';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
-import { referenceDetails, shell } from '../ui/page';
+import { referenceDetails, pageContent, type PageContent } from '../ui/page';
 
 const resources = { en, es, fr, de, ja, ar } as const;
 type Locale = keyof typeof resources;
@@ -38,11 +38,11 @@ function safeJson(value: unknown): string {
   return JSON.stringify(value).replace(/</g, '\\u003c');
 }
 
-export async function renderI18nDemo(request: Request, env: Env): Promise<Response> {
+export function i18nContent(request: Request, env: Env): PageContent {
   const url = new URL(request.url);
   const locale = localeFor(url.searchParams.get('locale'));
   const count = Math.max(0, Math.min(Number(url.searchParams.get('count') || '3') || 0, 9999));
-  const direction = locale === 'ar' ? 'rtl' : 'ltr';
+  const direction: 'rtl' | 'ltr' = locale === 'ar' ? 'rtl' : 'ltr';
   const m = (key: string) => message(locale, key);
   const selectedPluralKey = pluralKey(locale, count);
   const formattedItems = m(selectedPluralKey).replace('{count}', new Intl.NumberFormat(locale).format(count));
@@ -169,7 +169,11 @@ export async function renderI18nDemo(request: Request, env: Env): Promise<Respon
     });
   })();
   </script>`;
-  const response = shell(env, m('demo.title'), body, { cacheControl: 'no-store', activeRoute: '/interfaces' });
-  const html = await response.text();
-  return new Response(html.replace('<html lang="en">', `<html lang="${locale}" dir="${direction}">`), { headers: response.headers });
+  return pageContent(env, m('demo.title'), body, {
+    cacheControl: 'no-store',
+    canonicalPath: '/interfaces',
+    description: m('demo.summary'),
+    lang: locale,
+    dir: direction,
+  });
 }

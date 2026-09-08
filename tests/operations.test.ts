@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { billingScenarioResponse } from '../src/api/billing';
 import { reportingCollectionResponse } from '../src/api/reporting';
 import { workerComputeResponse } from '../src/api/runtime';
-import { renderBilling, renderDashboard, renderDocs, renderUptime } from '../src/demos/operations-pages';
+import { renderOperations } from '../src/demos/operations';
 import { runScheduledOperations } from '../src/index';
 import { collectCloudflareUsage } from '../src/lib/cloudflare-usage';
 import type { D1PreparedStatement, Env } from '../src/types';
@@ -103,7 +103,7 @@ function analyticsFetch(options: { zero?: boolean; missingAccount?: boolean; mal
 describe('operations proof surface', () => {
   it('renders dashboard, health, docs, uptime classification, and billing from live state', async () => {
     const environment = env();
-    const dashboard = await (await renderDashboard(environment)).text();
+    const dashboard = await (await renderOperations(new Request('https://demo.wizardgang.ai/operations'), environment)).text();
     expect(dashboard).toContain('Current operational state');
     expect(dashboard).toContain('id="health"');
     expect(dashboard).toContain('Service health');
@@ -116,13 +116,13 @@ describe('operations proof surface', () => {
     expect(dashboard).toContain('Shared reporting presenter');
     expect(dashboard).not.toContain('name="control" value="chatgpt-crawl"');
     expect(dashboard).not.toContain('name="state" value="enabled"');
-    const docs = await renderDocs(environment).text();
+    const docs = await (await renderOperations(new Request('https://demo.wizardgang.ai/operations?view=docs'), environment)).text();
     expect(docs).toContain('OpenAPI JSON');
     expect(docs).toContain('docs/INTERACTIVE-DEMO-SPEC.md');
-    const uptime = await (await renderUptime(environment)).text();
+    const uptime = await (await renderOperations(new Request('https://demo.wizardgang.ai/operations?view=availability'), environment)).text();
     expect(uptime).toContain('planned/manual offline');
     expect(uptime).toContain('<strong>1 / 1</strong><span>planned / unexpected</span>');
-    const billing = await (await renderBilling(environment)).text();
+    const billing = await (await renderOperations(new Request('https://demo.wizardgang.ai/operations?view=usage'), environment)).text();
     expect(billing).toContain('Cloudflare Usage &amp; Cost');
     expect(billing).toContain('Cost guardrail simulator');
   });
@@ -185,7 +185,7 @@ describe('operations proof surface', () => {
       expect(snapshot.status).toBe('unavailable');
       expect(Object.values(snapshot.products).every((product) => product.availability === 'unavailable')).toBe(true);
       expect(snapshot.products.workers.qualification).toBe('account-scope-not-found');
-      const dashboard = await (await renderDashboard(environment)).text();
+      const dashboard = await (await renderOperations(new Request('https://demo.wizardgang.ai/operations'), environment)).text();
       expect(dashboard).toContain('>UNAVAILABLE<');
       expect(dashboard).not.toContain('>STALE<');
     } finally {
@@ -229,7 +229,7 @@ describe('operations proof surface', () => {
       expect(body.records.length).toBeGreaterThan(0);
       expect(body.records.every((record) => record.availability === 'stale')).toBe(true);
 
-      const dashboard = await (await renderDashboard(environment)).text();
+      const dashboard = await (await renderOperations(new Request('https://demo.wizardgang.ai/operations'), environment)).text();
       expect(dashboard).toContain('>STALE<');
       expect(dashboard).not.toContain('>UNAVAILABLE<');
     } finally {

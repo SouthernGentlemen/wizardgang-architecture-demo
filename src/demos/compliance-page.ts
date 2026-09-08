@@ -24,7 +24,7 @@ import {
 import type { Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
-import { referenceDetails, shell } from '../ui/page';
+import { referenceDetails, pageContent, type PageContent } from '../ui/page';
 
 const COMPLIANCE_ROUTE = assuranceHtmlRoute('compliance');
 const EVIDENCE_ROUTE = assuranceHtmlRoute('evidence');
@@ -84,7 +84,7 @@ function countSummary(counts: ReturnType<typeof deriveComplianceCounts>, totalAv
     <p class="subtle">Statuses: ${counts.byStatus.met} met · ${counts.byStatus.partial} partial · ${counts.byStatus.gap} gap · ${counts.byStatus['not-applicable']} not applicable · ${counts.byStatus.demonstrated} demonstrated · ${counts.byStatus['not-observed']} not observed. WCAG levels: ${counts.byLevel.A} A · ${counts.byLevel.AA} AA · ${counts.byLevel.AAA} AAA.</p>`;
 }
 
-export function renderComplianceDemo(request: Request, env: Env): Response {
+export function complianceContent(request: Request, env: Env): PageContent {
   const filters = assuranceFiltersFromUrl('compliance', new URL(request.url));
   const records = filterPublishedAssuranceRecords('compliance', filters);
   const allRecords = listPublishedAssuranceRecords('compliance');
@@ -126,7 +126,7 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
     href: sourceUrl(env, framework.sourcePath),
   }));
 
-  return shell(env, 'Compliance & Assurance', `
+  return pageContent(env, 'Compliance & Assurance', `
   <section class="page-header assurance-header">
     <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / ${escapeHtml(COMPLIANCE_ROUTE)}</p>
     <h1>Compliance evidence, record by record.</h1>
@@ -176,7 +176,7 @@ export function renderComplianceDemo(request: Request, env: Env): Response {
       </table>
     </div>
   </section>`, {
-    activeRoute: COMPLIANCE_ROUTE,
+    canonicalPath: COMPLIANCE_ROUTE,
     description: `Filterable canonical ${frameworkNames} public assurance records with stable anchors, derived counts, lifecycle presentation, and evidence links.`,
   });
 }

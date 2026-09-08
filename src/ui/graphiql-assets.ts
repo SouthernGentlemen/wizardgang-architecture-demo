@@ -33,8 +33,8 @@ export function graphiqlAssetResponse(request: Request, rawName: string): Respon
   return new Response(asset.body, { headers });
 }
 
-export function localGraphiqlResponse(request: Request): Response {
-  if (request.method !== 'GET') return methodNotAllowed(['GET']);
+export function localGraphiqlDocument(request: Request): string {
+  if (request.method !== 'GET') throw new Error('GraphiQL document requires GET.');
   const options = JSON.stringify({
     endpoint: '/graphql',
     title: 'WizardGang GraphiQL',
@@ -49,6 +49,12 @@ export function localGraphiqlResponse(request: Request): Response {
   const prepareWorkers=()=>Promise.all(Object.entries(workerSources).map(async([name,url])=>{const response=await fetch(url);if(!response.ok)throw new Error('Editor worker unavailable');workerUrls[name]=URL.createObjectURL(new Blob([await response.text()],{type:'application/javascript'}))}));
   self.MonacoEnvironment={globalAPI:false,getWorkerUrl:(_moduleId,label)=>workerUrls[label]||workerUrls.editorWorkerService};
   </script><script src="/assets/graphiql.js"></script><script>prepareWorkers().finally(()=>YogaGraphiQL.renderYogaGraphiQL(document.getElementById('root'),${options}))</script></body></html>`;
+  return html;
+}
+
+export function localGraphiqlResponse(request: Request): Response {
+  if (request.method !== 'GET') return methodNotAllowed(['GET']);
+  const html = localGraphiqlDocument(request);
   return new Response(html, { headers: {
     'content-type': 'text/html; charset=utf-8',
     'cache-control': 'no-store',

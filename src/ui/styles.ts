@@ -126,7 +126,7 @@ p { margin: 0 0 1rem; }
 .status-strip span { color: var(--muted); font: 800 .68rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
 .status-strip strong { font-size: 1.2rem; }
 .section-head { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin: clamp(4.5rem, 8vw, 7rem) 0 1.3rem; padding-top: 1.3rem; border-top: 1px solid var(--line); }
-.section-head h2 { margin: 0; }
+.section-head h2,.section-head .surface-view-heading { margin: 0; }
 .section-head > span { color: var(--muted); font: 800 .68rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
 
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: .75rem; }

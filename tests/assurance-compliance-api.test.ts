@@ -5,7 +5,8 @@ import { matchRoute } from '../src/routing/registry';
 import { reportingRouteRegistry } from '../src/routing/reporting-routes';
 import { deriveComplianceCounts } from '../src/assurance/service';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
-import { renderComplianceDemo } from '../src/demos/compliance-page';
+import { complianceContent } from '../src/demos/compliance-page';
+import { renderPage } from '../src/ui/page';
 import type { Env } from '../src/types';
 import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
 
@@ -88,11 +89,11 @@ describe('canonical compliance presentation and API contract', () => {
   });
 
   it('renders accessible filters, stable row anchors, evidence links, exact lookup links, and current primary navigation', async () => {
-    const response = renderComplianceDemo(
+    const response = complianceContent(
       new Request('https://demo.wizardgang.ai/assurance?view=compliance&framework=wcag-2.2&level=A'),
       environment,
     );
-    const html = await response.text();
+    const html = await renderPage(environment, response).text();
     expect(html).toContain('<label for="compliance-framework">Framework</label>');
     expect(html).toContain('<label for="compliance-status">Status</label>');
     expect(html).toContain('<label for="compliance-level">WCAG level</label>');

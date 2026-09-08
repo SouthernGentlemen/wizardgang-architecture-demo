@@ -1,6 +1,6 @@
 import type { Env } from '../types';
 import { sourceUrl } from '../lib/github';
-import { referenceDetails, shell } from '../ui/page';
+import { referenceDetails, pageContent, type PageContent } from '../ui/page';
 
 const behaviors = [
   ['Keyboard navigation', 'Native controls in logical order', 'Click-only control and disrupted order', '2.1.1, 2.4.3'],
@@ -17,10 +17,10 @@ const behaviors = [
   ['Consistent help', 'Help remains in its expected location', 'Help disappears', '3.2.6'],
 ] as const;
 
-export function renderAccessibilityDemo(request: Request, env: Env): Response {
+export function accessibilityContent(request: Request, env: Env): PageContent {
   const initialMode = new URL(request.url).searchParams.get('mode') === 'broken' ? 'broken' : 'accessible';
   const cards = behaviors.map(([name, accessible, broken, criterion]) => `<article class="criterion-card"><p class="eyebrow">${criterion}</p><h3>${name}</h3><p><strong>Accessible:</strong> ${accessible}</p><p><strong>Broken:</strong> ${broken}</p></article>`).join('');
-  return shell(env, 'WCAG 2.2 engineering', `
+  return pageContent(env, 'WCAG 2.2 engineering', `
   <a class="skip-link" href="#accessibility-demo">Skip to interactive demonstration</a>
   <section class="page-header"><div class="eyebrow">Interfaces / Accessibility</div><h1>Accessibility is behavior.</h1><p class="lede">Compare an accessible interaction with deterministic teaching failures, then inspect partial automated evidence and the manual verification matrix.</p><div class="page-tools"><span class="badge">WCAG 2.2 AA demonstration — uncertified</span>${referenceDetails([
     { label: 'Route source', href: sourceUrl(env, 'src/demos/accessibility.ts') },
@@ -74,5 +74,5 @@ export function renderAccessibilityDemo(request: Request, env: Env): Response {
     document.querySelector('[data-a11y-reset]').addEventListener('click',()=>{load('accessible');document.querySelector('[data-a11y-mode="accessible"]').focus()});
     load(mode);
   })();
-  </script>`, { cacheControl: 'no-store', activeRoute: '/interfaces' });
+  </script>`, { cacheControl: 'no-store', canonicalPath: '/interfaces' });
 }

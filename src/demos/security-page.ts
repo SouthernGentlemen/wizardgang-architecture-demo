@@ -16,7 +16,7 @@ import {
 } from '../assurance/publication';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
-import { referenceDetails, shell } from '../ui/page';
+import { referenceDetails, pageResponse } from '../ui/page';
 
 const SECURITY_ROUTE = assuranceHtmlRoute('advisories');
 const ADVISORIES_API_ROUTE = assuranceCollectionApiRoute('advisories');
@@ -56,7 +56,7 @@ export function renderSecurity(env: Env): Response {
     <p>The public assurance registry currently contains no published security advisory records. This is not a claim that no vulnerabilities, private reports, defects, or security investigations have existed.</p>
   </article>`;
 
-  return shell(env, 'Security', `
+  return pageResponse(env, 'Security', `
   <section class="page-header assurance-header">
     <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / ${escapeHtml(SECURITY_ROUTE)}</p>
     <h1>Report security privately.</h1>
@@ -103,7 +103,7 @@ export function renderSecurity(env: Env): Response {
     </div>
     <div class="info-grid">${published}</div>
   </section>`, {
-    activeRoute: SECURITY_ROUTE,
+    canonicalPath: SECURITY_ROUTE,
     cacheControl: 'no-store',
     description: 'Private vulnerability reporting, coordinated disclosure lifecycle, and disclosure-safe published advisory assurance for the WizardGang Architecture Demo.',
   });
