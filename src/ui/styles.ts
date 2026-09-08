@@ -769,6 +769,18 @@ summary { cursor: pointer; }
 .operations-kpis strong, .availability-kpis strong { align-self: end; overflow-wrap: anywhere; font: 900 clamp(1.35rem, 2.4vw, 2.15rem)/.98 var(--mono); letter-spacing: -.05em; }
 .operations-kpis article > span, .availability-kpis article > span { margin-top: .6rem; color: var(--muted); font: 700 .72rem/1.4 var(--mono); }
 .operations-kpis .stat { margin: 0; }
+.operations-tour, .operations-results-intro { margin: 2.5rem 0 1rem; }
+.operations-tour-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+.operations-tour-card { display: flex; flex-direction: column; padding: 1.5rem; border: 1px solid var(--line); background: var(--panel); }
+.operations-tour-card h3 { margin: .5rem 0 1rem; font-size: 1.5rem; }
+.operations-tour-card > a { margin-top: auto; padding-top: 1rem; font-weight: 800; }
+.operations-flow { display: flex; flex-wrap: wrap; gap: 1rem; padding: 0; list-style: none; }
+.operations-flow li { flex: 1 1 130px; min-width: 0; padding: 1rem; border: 1px solid var(--line); background: var(--panel-2); }
+.operations-flow li:not(:last-child) strong::after { content: ' →'; color: var(--muted); }
+.operations-flow strong, .operations-flow span { display: block; }
+.operations-flow span { margin-top: .5rem; color: var(--muted); font-size: .85rem; }
+.operations-inspection { margin: 1rem 0; padding: 1rem; border: 1px solid var(--line); }
+.operations-inspection > summary { min-height: 44px; align-content: center; font-weight: 800; cursor: pointer; }
 .operations-section { margin: 1rem 0; padding: clamp(1.2rem, 3vw, 1.65rem); border: 1px solid var(--line); background: linear-gradient(145deg, rgb(120 232 255 / 3%), transparent 45%), var(--panel); }
 .operations-section > :last-child { margin-bottom: 0; }
 .operations-section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; }
@@ -926,6 +938,7 @@ footer a { color: var(--paper); }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
 @media (max-width: 900px) {
+  .operations-tour-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .home-header { grid-template-columns: 1fr; }
   .home-header .eyebrow { grid-column: auto; margin-bottom: 0; }
   .home-header h1 { max-width: 11ch; }
@@ -968,6 +981,7 @@ footer a { color: var(--paper); }
   .assurance-dashboard-card > div:last-child { justify-items: start; text-align: left; }
 }
 @media (max-width: 620px) {
+  .operations-tour-grid { grid-template-columns: minmax(0, 1fr); }
   header, main, footer, .bar { width: min(100% - 24px, var(--shell-width)); }
   header { align-items: flex-start; flex-direction: column; gap: .6rem; }
   .nav { justify-content: flex-start; }

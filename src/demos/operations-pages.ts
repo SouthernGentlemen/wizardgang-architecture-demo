@@ -10,7 +10,6 @@ import { repoUrl, sourceUrl } from '../lib/github';
 import { recentApplicationLogs, type ApplicationLogRow } from '../lib/logs';
 import { routeUrl } from '../routing/application-routes';
 import { referenceDetails, pageContent, type PageContent } from '../ui/page';
-import { renderUnifiedReportingPresentation } from './reporting-dashboard';
 
 interface HealthRow {
   id: number;
@@ -146,7 +145,7 @@ function dashboardActivity(logs: ApplicationLogRow[], health: HealthSnapshot): s
   return selected.map((log) => `<article class="activity-item"><span class="activity-dot" data-tone="${log.level === 'error' ? 'down' : log.level === 'warn' ? 'warn' : 'ok'}"></span><div><h3>${escapeHtml(activityTitle(log))}</h3><p>${escapeHtml(log.message)}</p><small>${escapeHtml(log.source)} · ${relativeTime(log.created_at)}</small></div></article>`).join('');
 }
 
-export async function dashboardContent(env: Env, request: Request = new Request('https://demo.local/operations')): Promise<PageContent> {
+export async function dashboardContent(env: Env, _request?: Request): Promise<PageContent> {
   const healthHistory = env.DEMO_DB.prepare(
     `SELECT id, service_key, status, response_ms, detail_json, checked_at FROM service_health_checks WHERE service_key = 'public-demo' ORDER BY id DESC LIMIT 100`,
   ).all<HealthRow>();
@@ -171,14 +170,69 @@ export async function dashboardContent(env: Env, request: Request = new Request(
   const sha = env.DEPLOYED_SHA || '';
   const commitUrl = sha ? `${repoUrl(env)}/commit/${encodeURIComponent(sha)}` : `${repoUrl(env)}/commits/${encodeURIComponent(env.GITHUB_BRANCH || 'main')}`;
   const currentStatus = `<div class="operations-live-state"><span class="status-pulse" data-state="${overall}"></span><strong>${escapeHtml(overallLabel)}</strong><span>Checked ${relativeTime(health.checkedAt)}</span><span>${escapeHtml(env.DEPLOYMENT_ENVIRONMENT || 'local')} · ${escapeHtml(version)}</span></div>`;
-  const reporting = await renderUnifiedReportingPresentation(request, env, usage);
 
-  return operationalPage(env, routeUrl('operations.index'), 'System Operations', 'System Operations', 'Live health, availability, deployment, shared reporting, activity, and cost-control evidence for the architecture demo.', 'src/demos/operations-pages.ts', `
+  return operationalPage(env, routeUrl('operations.index'), 'System Operations', 'How the system operates', 'How does this architecture remain observable, resilient, accountable, and cost-aware in production?', 'src/demos/operations-pages.ts', `
   <section class="operations-kpis" aria-label="Current operational state">
     <article><p class="eyebrow">System</p><strong class="${statusClass(overall)}">${escapeHtml(overallLabel)}</strong><span>${healthy} / 4 dependencies healthy</span></article>
     <article><p class="eyebrow">Availability</p><strong>${availabilityValue}</strong><span>${availability.unexpected} unexpected outage${availability.unexpected === 1 ? '' : 's'}</span></article>
-    <article><p class="eyebrow">Cloudflare usage</p><strong class="${statusClass(usage.status)}">${usageState}</strong><span>${usageReady ? `Updated ${relativeTime(usage.capturedAt)}` : usage.cost.note}</span></article>
+    <article><p class="eyebrow">Cloudflare usage</p><strong class="${statusClass(usage.status)}">${usageState}</strong><span>${usageReady ? `Updated ${relativeTime(usage.capturedAt)}` : escapeHtml(usage.cost.note)}</span></article>
     <article><p class="eyebrow">Deployment</p><strong>${escapeHtml(version)}</strong><span>${escapeHtml(env.DEPLOYMENT_ENVIRONMENT || 'local')} · ${escapeHtml(env.GITHUB_BRANCH || 'unknown branch')}</span></article>
+  </section>
+
+  <section class="operations-tour" aria-labelledby="operations-tour-heading">
+    <p class="eyebrow">Understand the architecture</p>
+    <h2 id="operations-tour-heading">Five decisions you can inspect</h2>
+    <p>Start with a capability, see it in action, then follow its results into evidence and source.</p>
+    <div class="operations-tour-grid">
+      <article class="operations-tour-card">
+        <p class="eyebrow">01 / Observe health</p><h3>Availability</h3>
+        <p>Stored health observations distinguish planned maintenance from unexpected failures, so availability can be measured over time.</p>
+        <p class="subtle">See the history and classifications behind the percentage. This demo does not publish an SLA.</p>
+        <a href="${escapeHtml(routeUrl('operations.availability'))}">Explore availability <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="operations-tour-card">
+        <p class="eyebrow">02 / Explain behavior</p><h3>Public-safe logging</h3>
+        <p>Structured events identify the subsystem and route behind runtime activity. Public logs remain bounded and sanitized.</p>
+        <p class="subtle">Inspect recent events and their details to understand what happened.</p>
+        <a href="${escapeHtml(routeUrl('operations.logs'))}">Explore logs <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="operations-tour-card">
+        <p class="eyebrow">03 / Preserve core service</p><h3>Cost resilience</h3>
+        <p>A controlled simulator moves through Normal, Warning, and Degraded states, eventually pausing optional compute while operations stay online.</p>
+        <p class="subtle">Try the guardrail scenarios and inspect their results. Provider telemetry has its own availability state.</p>
+        <a href="${escapeHtml(routeUrl('operations.usage'))}">Explore usage &amp; cost <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="operations-tour-card">
+        <p class="eyebrow">04 / Retrieve evidence</p><h3>Unified reporting</h3>
+        <p>Operational and assurance evidence use one reporting abstraction, with shared authorization, presentation, and pagination.</p>
+        <p class="subtle">Explore registered collections and follow a record back to its source.</p>
+        <a href="${escapeHtml(routeUrl('operations.reports'))}">Explore reports <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="operations-tour-card">
+        <p class="eyebrow">05 / Verify independently</p><h3>Traceable implementation</h3>
+        <p>Follow architectural claims into public source, standards, contracts, and machine-readable interfaces.</p>
+        <p class="subtle">Use the documentation to verify how each capability is implemented.</p>
+        <a href="${escapeHtml(routeUrl('operations.docs'))}">Explore documentation <span aria-hidden="true">→</span></a>
+      </article>
+    </div>
+  </section>
+
+  <section class="operations-section" aria-labelledby="operations-flow-heading">
+    <p class="eyebrow">Follow the demonstration</p><h2 id="operations-flow-heading">From runtime to evidence</h2>
+    <ol class="operations-flow" aria-label="Runtime to evidence reading sequence">
+      <li><strong>Runtime</strong><span>Serve requests</span></li>
+      <li><strong>Health</strong><span>Probe dependencies</span></li>
+      <li><strong>Logs</strong><span>Explain events</span></li>
+      <li><strong>Availability</strong><span>Measure history</span></li>
+      <li><strong>Reporting</strong><span>Retrieve records</span></li>
+      <li><strong>Evidence</strong><span>Verify claims</span></li>
+    </ol>
+    <p class="subtle">A reading sequence through the architecture. Health observations and logs are separate signals; they do not form a serial processing pipeline.</p>
+  </section>
+
+  <section class="operations-results-intro" aria-labelledby="operations-results-heading">
+    <p class="eyebrow">See the result</p><h2 id="operations-results-heading">Live operational results</h2>
+    <p>These current probes, stored observations, and public-safe events show what the running system is doing.</p>
   </section>
 
   <section class="operations-section" id="health" aria-labelledby="service-health-heading">
@@ -202,6 +256,8 @@ export async function dashboardContent(env: Env, request: Request = new Request(
     </article>
   </section>
 
+  <details class="operations-inspection">
+    <summary>Inspect runtime details</summary>
   <section class="operations-split">
     <article class="operations-section usage-overview" aria-labelledby="usage-heading">
       <div class="operations-section-heading"><div><p class="eyebrow">${usageReady ? 'Latest account telemetry' : 'Telemetry status'}</p><h2 id="usage-heading">Cloudflare usage</h2></div><a href="${escapeHtml(routeUrl('operations.usage'))}">View usage &amp; cost <span aria-hidden="true">→</span></a></div>
@@ -216,11 +272,21 @@ export async function dashboardContent(env: Env, request: Request = new Request(
     </article>
   </section>
 
-  ${reporting}
+  </details>
+
+  <details class="operations-inspection">
+    <summary>Inspect operational policy</summary>
 
   <section class="operations-section policy-card" aria-labelledby="policy-heading">
     <div class="operations-section-heading"><div><p class="eyebrow">Read-only public state</p><h2 id="policy-heading">Operational policy</h2></div><a href="${escapeHtml(routeUrl('operations.admin'))}">Admin controls <span aria-hidden="true">→</span></a></div>
     <div class="policy-grid"><div><span>Demo</span><strong class="${statusClass(control.state)}">${escapeHtml(control.state.toUpperCase())}</strong><small>${escapeHtml(control.publicMessage)}</small></div><div><span>User-requested ChatGPT fetch</span><strong class="${statusClass(crawlerControl.state === 'enabled' ? 'online' : 'offline')}">${escapeHtml(crawlerControl.state.toUpperCase())}</strong><small>Search and user-requested fetch policy</small></div><div><span>Model-training crawl</span><strong class="stat-down">BLOCKED</strong><small><a href="${escapeHtml(routeUrl('operations.robots'))}">Inspect robots.txt →</a></small></div></div>
+  </section>
+  </details>
+
+  <section class="operations-section" id="reporting" aria-labelledby="operations-evidence-heading">
+    <p class="eyebrow">Inspect the evidence</p><h2 id="operations-evidence-heading">Follow the proof</h2>
+    <p>Open the shared reporting browser for registered sources, authorized records, publication details, freshness, and pagination.</p>
+    <a class="text-link" href="${escapeHtml(routeUrl('operations.reports'))}">Inspect evidence <span aria-hidden="true">→</span></a>
   </section>
   ${referenceDetails([
     { label: 'Dashboard implementation', href: sourceUrl(env, 'src/demos/operations-pages.ts') },
@@ -229,7 +295,7 @@ export async function dashboardContent(env: Env, request: Request = new Request(
     { label: 'Scheduled collection', href: sourceUrl(env, 'src/index.ts') },
     { label: 'Cloudflare usage collector', href: sourceUrl(env, 'src/lib/cloudflare-usage.ts') },
     { label: 'Operations standard', href: sourceUrl(env, 'docs/OPERATIONS.md') },
-  ], 'Implementation evidence')}`, currentStatus);
+  ], 'Implementation sources')}`, currentStatus);
 }
 
 function historyRows(rows: HealthRow[]): string {
