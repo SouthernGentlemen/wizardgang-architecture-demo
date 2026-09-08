@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { billingScenarioResponse } from '../src/api/billing';
 import { reportingCollectionResponse } from '../src/api/reporting';
 import { workerComputeResponse } from '../src/api/runtime';
-import { renderOperations } from '../src/demos/operations';
+import { renderOperations, reportsContent } from '../src/demos/operations';
 import { billingContent, docsContent, uptimeContent } from '../src/demos/operations-pages';
 import { runScheduledOperations } from '../src/index';
 import { collectCloudflareUsage } from '../src/lib/cloudflare-usage';
@@ -114,9 +114,13 @@ describe('operations proof surface', () => {
     expect(dashboard).toContain('href="/admin"');
     expect(dashboard).toContain('href="/robots.txt"');
     expect(dashboard).toContain('aria-label="Operations sections"');
-    expect(dashboard).toContain('Collection discovery comes from reporting ownership and registered capabilities.');
-    expect(dashboard).toContain('href="/operations/reports?report=compliance#reporting-browser"');
-    expect(dashboard).toContain('Shared reporting presenter');
+    expect(dashboard).toContain('How the system operates');
+    expect(dashboard).toContain('Inspect evidence');
+    expect(dashboard).not.toContain('id="reporting-browser"');
+    expect(dashboard).not.toContain('Registered reporting collections');
+    const reports = await reportsContent(new Request('https://demo.wizardgang.ai/operations/reports'), environment);
+    expect(reports.body).toContain('href="/operations/reports?report=compliance#reporting-browser"');
+    expect(reports.body).toContain('Shared reporting presenter');
     expect(dashboard).not.toContain('name="control" value="chatgpt-crawl"');
     expect(dashboard).not.toContain('name="state" value="enabled"');
 
@@ -134,6 +138,30 @@ describe('operations proof surface', () => {
     expect(billing.canonicalPath).toBe(routeUrl('operations.usage'));
     expect(billing.body).toContain('Cloudflare Usage &amp; Cost');
     expect(billing.body).toContain('Cost guardrail simulator');
+  });
+
+  it('keeps the guided tour usable without observations or provider telemetry', async () => {
+    const environment = env();
+    (environment.DEMO_DB as OperationsD1).health = [];
+    const response = await renderOperations(new Request('https://demo.wizardgang.ai/operations'), environment);
+    expect(response.headers.get('cache-control')).toBe('no-store');
+    const html = await response.text();
+    const body = html.slice(html.indexOf('<main'), html.indexOf('</main>'));
+    expect(body).toContain('AWAITING DATA');
+    expect(body).toContain('UNAVAILABLE');
+    expect(body).toContain('Awaiting the first scheduled observation.');
+    expect(body).toContain('Current health snapshot');
+    const tour = body.slice(body.indexOf('class="operations-tour"'), body.indexOf('id="operations-flow-heading"'));
+    for (const routeId of ['operations.availability', 'operations.logs', 'operations.usage', 'operations.reports', 'operations.docs']) {
+      expect(tour).toContain(`href="${routeUrl(routeId)}"`);
+    }
+    const stages = ['Current operational state', 'id="operations-tour-heading"', 'id="operations-flow-heading"', 'id="operations-results-heading"', 'id="operations-evidence-heading"', 'Implementation sources'];
+    for (let index = 1; index < stages.length; index += 1) {
+      expect(body.indexOf(stages[index])).toBeGreaterThan(body.indexOf(stages[index - 1]));
+    }
+    expect(body).toContain('<details class="operations-inspection">\n    <summary>Inspect runtime details</summary>');
+    expect(body).toContain('<summary>Inspect operational policy</summary>');
+    expect(body).not.toContain('id="reporting-browser"');
   });
 
   it('preserves all reporting query state while replacing only the cursor', () => {

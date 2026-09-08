@@ -10,6 +10,14 @@ The operations index and its child resources are canonical destinations. Navigat
 
 Query parameters remain valid for interaction state such as log filters, reporting filters, page size, search, sorting, and signed pagination cursors. Retired resource-selection query forms are not aliases and return the ordinary 404.
 
+## Guided overview presentation
+
+The operations index teaches five capabilities: availability, public-safe logging, cost resilience, unified reporting, and traceable implementation. Its live status strip remains first, followed by instructional cards, a runtime-to-evidence reading sequence, and live operational results. The sequence explains how to inspect the architecture; it is not a serial telemetry pipeline.
+
+The presentation pattern is **explanation → demonstration → result → evidence → source**. Cards link to existing child resources through route IDs. Runtime details and operational policy use native disclosure controls. **Inspect evidence** opens the existing Reports resource, which continues to own the full registered collection and record browser. Implementation sources remain available at the end of the overview.
+
+This is a presentation contract, not a second route, capability, or reporting registry. Health, logs, availability, telemetry states, source links, and reporting authorization remain owned by their existing implementations. Other operations child pages can adopt the same sequence in subsequent changes.
+
 ## Machine contracts
 
 Operational APIs remain separate declarations from browser pages. Their route IDs include the health, version, public-safe log, synthetic budget, and reporting contracts documented by the generated route artifacts and OpenAPI where applicable.
