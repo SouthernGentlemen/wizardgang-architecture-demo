@@ -62,12 +62,12 @@ const removedLaboratoryPaths = [
   '/__api/governance/security-controls',
   '/__api/governance/ai-evaluation',
 ] as const;
-const platformViewCases = [
-  { view: 'edge', heading: 'Cloudflare Edge', absent: 'SQL Inspector' },
-  { view: 'workers', heading: 'Cloudflare Workers', absent: 'Your R2 sandbox' },
-  { view: 'durable-objects', heading: 'Durable Objects', absent: 'SQL Inspector' },
-  { view: 'd1', heading: 'Cloudflare D1 Database', absent: 'Your R2 sandbox' },
-  { view: 'r2', heading: 'Cloudflare R2 Storage', absent: 'SQL Inspector' },
+const platformPageCases = [
+  { path: '/platform/edge', heading: 'Cloudflare Edge', absent: 'SQL Inspector', view: 'edge' },
+  { path: '/platform/workers', heading: 'Cloudflare Workers', absent: 'Your R2 sandbox', view: 'workers' },
+  { path: '/platform/durable-objects', heading: 'Durable Objects', absent: 'SQL Inspector', view: 'durable-objects' },
+  { path: '/platform/d1', heading: 'Cloudflare D1 Database', absent: 'Your R2 sandbox', view: 'd1' },
+  { path: '/platform/r2', heading: 'Cloudflare R2 Storage', absent: 'SQL Inspector', view: 'r2' },
 ] as const;
 
 describe('platform laboratory declarative routing', () => {
@@ -98,6 +98,12 @@ describe('platform laboratory declarative routing', () => {
       '/api/labs/webhook-events',
       '/api/labs/webhook-reset',
       '/api/labs/workers',
+      '/interfaces/accessibility',
+      '/platform/d1',
+      '/platform/durable-objects',
+      '/platform/edge',
+      '/platform/r2',
+      '/platform/workers',
       '/platform',
     ].sort());
 
@@ -108,24 +114,25 @@ describe('platform laboratory declarative routing', () => {
       expect(route.authorization, route.id).toBeDefined();
       expect(route.offline, route.id).toEqual({ mode: 'gated' });
       expect(route.cache, route.id).toBeDefined();
-      if (route.id === 'platform.page') {
-        expect(route.source.module).toBe('src/demos/platform.ts');
-        expect(route.labId).toBeUndefined();
-        expect(route.requestSchemas).toBeUndefined();
-      } else {
-        expect(route.source.module, route.id).toMatch(/^src\/platform\/route-capabilities\//);
-        expect(route.labId, route.id).toMatch(/^[a-z0-9][a-z0-9-]*$/);
-        expect(route.pattern, route.id).toSatisfy((pattern: string) =>
-          pattern === `/api/labs/${route.labId}` || pattern === `/api/labs/${route.labId}/:id`);
-        for (const method of route.methods) expect(route.requestSchemas?.[method], `${route.id}:${method}`).toBeTruthy();
-      }
+      if (route.kind === 'page') {
+      expect(route.labId, route.id).toBeUndefined();
+      expect(route.requestSchemas, route.id).toBeUndefined();
+      expect(route.crawler.indexing, route.id).toBe('allow');
+      expect(route.page, route.id).toBeDefined();
+    } else {
+      expect(route.source.module, route.id).toMatch(/^src\/platform\/route-capabilities\//);
+      expect(route.labId, route.id).toMatch(/^[a-z0-9][a-z0-9-]*$/);
+      expect(route.pattern, route.id).toSatisfy((pattern: string) =>
+        pattern === `/api/labs/${route.labId}` || pattern === `/api/labs/${route.labId}/:id`);
+      for (const method of route.methods) expect(route.requestSchemas?.[method], `${route.id}:${method}`).toBeTruthy();
+    }
       expect(route.source.exportName, route.id).toBeTruthy();
       expect(route.source.tests, route.id).toContain('tests/platform-laboratory-routing.test.ts');
       expect(route.handler, route.id).toBeTypeOf('function');
       expect(route.storage, route.id).toBeDefined();
     }
 
-    expect(routes.find((route) => route.id === 'platform.page')?.storage.kind).toBe('none');
+    expect(routes.find((route) => route.id === 'platform.index')?.storage.kind).toBe('none');
     expect(routes.find((route) => route.id === 'platform.workers.compute')?.storage.kind).toBe('stateless-compute');
     expect(routes.find((route) => route.id === 'platform.durable-objects.counter')?.storage.kind).toBe('durable-object');
     expect(routes.find((route) => route.id === 'platform.d1.records')?.storage.kind).toBe('d1');
@@ -167,37 +174,43 @@ describe('platform laboratory declarative routing', () => {
     })).toThrow(/must declare method request schemas/);
   });
 
-  it('renders every platform view as a canonical accessible deep link with ordinary internal links', async () => {
-    const expectedLinks = platformViewCases.map(({ view }) => `/platform?view=${view}`);
-    for (const { view, heading, absent } of platformViewCases) {
-      const response = await routeRequest(new Request(`https://demo.wizardgang.ai/platform?view=${view}`, {
-        headers: { accept: 'text/html' },
-      }), onlineEnv);
-      expect(response.status, view).toBe(200);
-      const html = await response.text();
-      expect(html, view).toContain(`<h1>${heading}</h1>`);
-      expect(html, view).toContain(`<link rel="canonical" href="https://demo.wizardgang.ai/platform?view=${view}">`);
-      expect(html, view).toContain('class="skip-link" href="#main"');
-      expect(html, view).toContain('<main class="site-main" id="main">');
-      expect(html, view).toContain('aria-label="Platform demonstrations"');
-      expect(html, view).toContain('<a href="/platform" aria-current="page">Platform</a>');
-      expect(html, view).toContain(`href="/platform?view=${view}" data-view-current`);
-      expect((html.match(/<[a-z][^>]*\baria-current="page"[^>]*>/gi) ?? []).length, view).toBe(1);
-      for (const href of expectedLinks) expect(html, `${view} -> ${href}`).toContain(`href="${href}"`);
-      for (const removed of removedPagePaths) expect(html, `${view} legacy ${removed}`).not.toContain(`href="${removed}"`);
-      expect(html, view).not.toContain(absent);
-    }
-  });
-
-  it('defaults /platform to edge and keeps the sitemap URL canonical', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/platform', {
-      headers: { accept: 'text/html' },
-    }), onlineEnv);
+  it('renders every platform child as a canonical accessible page', async () => {
+  const bodies: string[] = [];
+  for (const { path, heading, absent } of platformPageCases) {
+    const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`, { headers: { accept: 'text/html' } }), onlineEnv);
+    expect(response.status, path).toBe(200);
     const html = await response.text();
-    expect(response.status).toBe(200);
-    expect(html).toContain('<h1>Cloudflare Edge</h1>');
-    expect(html).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/platform">');
-  });
+    bodies.push(html);
+    expect(html, path).toContain(`<h1>${heading}</h1>`);
+    expect(html, path).toContain(`<link rel="canonical" href="https://demo.wizardgang.ai${path}">`);
+    expect(html, path).toContain('class="skip-link" href="#main"');
+    expect(html, path).toContain('<main class="site-main" id="main">');
+    expect(html.match(/<h1\b/g), path).toHaveLength(1);
+    expect(html, path).toContain('<a href="/platform" data-section-current');
+    for (const removed of removedPagePaths) expect(html, `${path} legacy ${removed}`).not.toContain(`href="${removed}"`);
+    expect(html, path).not.toContain(absent);
+  }
+  expect(new Set(bodies).size).toBe(platformPageCases.length);
+});
+
+it('renders /platform as a real child index rather than the edge laboratory', async () => {
+  const response = await routeRequest(new Request('https://demo.wizardgang.ai/platform', { headers: { accept: 'text/html' } }), onlineEnv);
+  const html = await response.text();
+  expect(response.status).toBe(200);
+  expect(html).toContain('<h1>Cloudflare Platform</h1>');
+  expect(html).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/platform">');
+  expect(html).not.toContain('<h1>Cloudflare Edge</h1>');
+  for (const { path } of platformPageCases) expect(html).toContain(`href="${path}"`);
+});
+
+it('returns the ordinary 404 for every retired platform ?view= URL', async () => {
+  for (const view of [...platformPageCases.map((entry) => entry.view), 'not-a-view']) {
+    const response = await routeRequest(new Request(`https://demo.wizardgang.ai/platform?view=${view}`, { headers: { accept: 'text/html' } }), onlineEnv);
+    expect(response.status, view).toBe(404);
+    expect(response.headers.get('location'), view).toBeNull();
+    expect(await response.text(), view).toContain('404 / unknown route');
+  }
+});
 
   it('uses normal 405 handling for unsupported canonical lab methods', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/api/labs/edge', { method: 'PUT' }), onlineEnv);

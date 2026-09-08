@@ -2,6 +2,14 @@ import { MCP_SERVER_PATH, mcpResponse } from '../../api/mcp';
 import { defineInterfaceIdentityCapability, interfaceIdentityRoute } from '../route-capability';
 
 export const mcpRouteCapability = defineInterfaceIdentityCapability('interfaces.mcp', [
+
+interfaceIdentityRoute({
+  id: 'interfaces.mcp.console', pattern: '/interfaces/mcp', methods: ['GET'], kind: 'page',
+  handler: async (request, { env }) => { const [{ mcpContent }, { renderPage }] = await Promise.all([import('../../demos/mcp-page'), import('../../ui/page')]); return renderPage(env, { ...await mcpContent(request, env), routeId: 'interfaces.mcp.console' }); },
+  title: 'Model Context Protocol console', description: 'Connect compatible MCP clients and inspect read-only tool activity.',
+  sourceModule: 'src/demos/mcp-page.ts', sourceExport: 'mcpContent', tests: ['tests/interface-consolidation.test.ts', 'tests/mcp-client.test.ts'],
+  page: { parent: 'interfaces.index', label: 'MCP', summary: 'Streamable HTTP MCP client interoperability and read-only tool activity.', order: 4, navigation: 'secondary', architectureMap: true },
+}),
   interfaceIdentityRoute({
     id: 'interfaces.mcp.server',
     pattern: MCP_SERVER_PATH,

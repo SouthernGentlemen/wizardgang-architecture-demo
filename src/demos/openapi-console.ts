@@ -1,5 +1,6 @@
 import openapi from '../../contracts/openapi/openapi.json';
 import { escapeHtml } from '../lib/html';
+import { routeUrl } from '../routing/application-routes';
 
 type JsonObject = Record<string, unknown>;
 
@@ -191,7 +192,10 @@ function renderSchemas(schemas: Record<string, JsonObject>): string {
   return visible.map(([name, schema]) => `<details class="schema-card" id="openapi-schema-${escapeHtml(name)}"><summary><code>${escapeHtml(name)}</code></summary><pre>${escapeHtml(JSON.stringify(schema, null, 2))}</pre></details>`).join('');
 }
 
+const IDENTITY_PAGE_URL = routeUrl('interfaces.identity.page');
+
 const API_RUNNER = `(() => {
+  const identityPageUrl = ${JSON.stringify(IDENTITY_PAGE_URL)};
   let demoToken = '';
   let tokenExpiresAt = '';
   const query = (selector, root = document) => root.querySelector(selector);
@@ -268,7 +272,7 @@ const API_RUNNER = `(() => {
       query('[data-response-headers]', result).textContent = [...response.headers].map(([name, value]) => name + ': ' + value).join('\\n') || '(no response headers)';
       query('[data-response-request]', result).textContent = form.dataset.method + ' ' + request.path + (Object.keys(previewHeaders).length ? '\\n' + Object.entries(previewHeaders).map(([name, value]) => name + ': ' + value).join('\\n') : '') + (request.body ? '\\n\\n' + JSON.stringify(JSON.parse(request.body), null, 2) : '');
       const message = query('[data-response-message]', result);
-      if (response.status === 401) { message.hidden = false; message.innerHTML = '<strong>Authentication required</strong><span>Sign in to enable write requests.</span><a href="/interfaces?view=identity">Sign in →</a>'; }
+      if (response.status === 401) { message.hidden = false; message.innerHTML = '<strong>Authentication required</strong><span>Sign in to enable write requests.</span><a href="' + identityPageUrl + '">Sign in →</a>'; }
       else if (response.status === 409) { message.hidden = false; message.innerHTML = '<strong>That key already exists</strong><span>Choose PUT to replace the complete resource.</span>'; }
       else if (response.status === 404) { message.hidden = false; message.innerHTML = '<strong>Record not found</strong><span>Check the key or create it with POST or PUT.</span>'; }
       else if (!response.ok) { message.hidden = false; message.innerHTML = '<strong>Request failed</strong><span>The raw response is available below.</span>'; }
@@ -324,7 +328,7 @@ export function openApiConsole(): string {
   <section class="api-sandbox" aria-labelledby="api-sandbox-heading">
     <div class="api-sandbox-heading"><div><p class="eyebrow">Authorization</p><h2 id="api-sandbox-heading">Your API sandbox</h2></div><span class="badge" data-api-auth-state>Public read</span></div>
     <p data-api-auth-copy>Anonymous requests can read <code>public</code>. Authenticate to receive a ten-minute token for isolated writes.</p>
-    <div class="api-sandbox-actions"><a class="button button-primary" href="/interfaces?view=identity" data-sign-in>Sign in to enable writes →</a><button type="button" data-sandbox-reset hidden>Reset sandbox</button><span data-sandbox-count>Public records</span></div>
+    <div class="api-sandbox-actions"><a class="button button-primary" href="${escapeHtml(IDENTITY_PAGE_URL)}" data-sign-in>Sign in to enable writes →</a><button type="button" data-sandbox-reset hidden>Reset sandbox</button><span data-sandbox-count>Public records</span></div>
     <div class="api-token" data-token-panel hidden><div><span>Short-lived bearer token</span><code data-token-preview></code><small data-token-expiry></small></div><button type="button" data-copy-token>Copy token</button></div>
   </section>
   <section class="api-explorer" id="rest" aria-labelledby="endpoints-heading">

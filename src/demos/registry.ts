@@ -5,24 +5,6 @@ export interface SurfaceViewDefinition {
   label: string;
 }
 
-export const platformSurfaceViews = [
-  { id: 'edge', label: 'Edge' },
-  { id: 'workers', label: 'Workers' },
-  { id: 'durable-objects', label: 'Durable Objects' },
-  { id: 'd1', label: 'D1' },
-  { id: 'r2', label: 'R2' },
-] as const satisfies readonly SurfaceViewDefinition[];
-
-export const interfaceSurfaceViews = [
-  { id: 'rest', label: 'REST' },
-  { id: 'graphql', label: 'GraphQL' },
-  { id: 'webhooks', label: 'Webhooks' },
-  { id: 'identity', label: 'Identity' },
-  { id: 'mcp', label: 'MCP' },
-  { id: 'i18n', label: 'I18n' },
-  { id: 'accessibility', label: 'Accessibility' },
-] as const satisfies readonly SurfaceViewDefinition[];
-
 export const assuranceSurfaceViews = [
   { id: 'overview', label: 'Overview' },
   { id: 'delivery', label: 'Delivery' },
@@ -44,8 +26,6 @@ export const operationsSurfaceViews = [
 ] as const satisfies readonly SurfaceViewDefinition[];
 
 const viewInventory = {
-  'platform.page': platformSurfaceViews,
-  'interfaces.page': interfaceSurfaceViews,
   'assurance.wizardgang-public-assurance.html': assuranceSurfaceViews,
   'operations.page': operationsSurfaceViews,
 } as const;

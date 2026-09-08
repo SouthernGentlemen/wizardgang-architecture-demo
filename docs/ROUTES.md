@@ -8,9 +8,21 @@ This file is generated from the active declarative application registry. Route I
 |---|---|---|---|---|---|---|---|---|
 | `interfaces.frontend.index` | `/` | `GET` | page | public | gated | allow | Architecture demo index | `src/ui/page.ts` |
 | `assurance.wizardgang-public-assurance.html` | `/assurance` | `GET` | page | public | gated | allow | Assurance registry html | `src/demos/assurance.ts` |
-| `interfaces.page` | `/interfaces` | `GET` | page | public | gated | allow | Interfaces | `src/demos/interfaces.ts` |
+| `interfaces.index` | `/interfaces` | `GET` | page | public | gated | allow | Application interfaces | `src/demos/interfaces.ts` |
+| `interfaces.accessibility` | `/interfaces/accessibility` | `GET` | page | public | gated | allow | WCAG 2.2 accessibility laboratory | `src/demos/accessibility-page.ts` |
+| `interfaces.graphql.console` | `/interfaces/graphql` | `GET` | page | public | gated | allow | GraphQL console | `src/demos/graphql-console.ts` |
+| `interfaces.i18n` | `/interfaces/i18n` | `GET` | page | public | gated | allow | Internationalization | `src/demos/i18n-page.ts` |
+| `interfaces.identity.page` | `/interfaces/identity` | `GET` | page | public | gated | allow | Authentication and SSO | `src/demos/identity-page.ts` |
+| `interfaces.mcp.console` | `/interfaces/mcp` | `GET` | page | public | gated | allow | Model Context Protocol console | `src/demos/mcp-page.ts` |
+| `interfaces.rest` | `/interfaces/rest` | `GET` | page | public | gated | allow | REST API | `src/demos/api-page.ts` |
+| `interfaces.webhooks.console` | `/interfaces/webhooks` | `GET` | page | public | gated | allow | Signed webhooks console | `src/demos/webhook-console.ts` |
 | `operations.page` | `/operations` | `GET` | page | public | available | allow | Operations | `src/demos/operations.ts` |
-| `platform.page` | `/platform` | `GET` | page | public | gated | allow | Cloudflare Platform | `src/demos/platform.ts` |
+| `platform.index` | `/platform` | `GET` | page | public | gated | allow | Platform demonstrations | `src/demos/platform.ts` |
+| `platform.d1` | `/platform/d1` | `GET` | page | public | gated | allow | Cloudflare D1 | `src/demos/d1-page.ts` |
+| `platform.durable-objects` | `/platform/durable-objects` | `GET` | page | public | gated | allow | Durable Objects | `src/demos/durable-objects.ts` |
+| `platform.edge` | `/platform/edge` | `GET` | page | public | gated | allow | Cloudflare Edge | `src/demos/edge.ts` |
+| `platform.r2` | `/platform/r2` | `GET` | page | public | gated | allow | Cloudflare R2 | `src/demos/r2-page.ts` |
+| `platform.workers` | `/platform/workers` | `GET` | page | public | gated | allow | Cloudflare Workers | `src/demos/workers.ts` |
 | `assurance.advisories.html` | `/security` | `GET` | page | public | available | allow | Assurance advisories html | `src/demos/security-page.ts` |
 
 ## Registered service, protocol, asset, and private routes

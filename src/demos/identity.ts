@@ -2,7 +2,6 @@ import type { DemoDefinition } from '../types';
 
 const demo: DemoDefinition = {
   "id": "identity",
-  "route": "/interfaces?view=identity",
   "title": "Authentication & SSO",
   "group": "Interfaces",
   "sourcePath": "src/demos/identity.ts",

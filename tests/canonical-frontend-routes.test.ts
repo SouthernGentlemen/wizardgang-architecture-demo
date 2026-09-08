@@ -4,9 +4,7 @@ import { assuranceRecordUrls } from '../src/assurance/routes';
 import {
   assuranceSurfaceViews,
   frontendViewUrl,
-  interfaceSurfaceViews,
   operationsSurfaceViews,
-  platformSurfaceViews,
 } from '../src/demos/registry';
 import { routeRequest } from '../src/router';
 import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
@@ -24,10 +22,8 @@ const environment: Env = {
 };
 
 describe('canonical frontend route contract', () => {
-  it('models every named view as query state on its owning route declaration', () => {
+  it('keeps query views only for stateful consolidated surfaces and publishes canonical children', () => {
     const inventories = [
-      ['platform.page', platformSurfaceViews],
-      ['interfaces.page', interfaceSurfaceViews],
       ['assurance.wizardgang-public-assurance.html', assuranceSurfaceViews],
       ['operations.page', operationsSurfaceViews],
     ] as const;
@@ -39,6 +35,16 @@ describe('canonical frontend route contract', () => {
         expect(url.searchParams.get('view'), `${routeId}:${view.id}`).toBe(view.id);
       }
     }
+
+    const canonicalChildren = [
+      ['platform.edge', '/platform/edge'], ['platform.workers', '/platform/workers'],
+      ['platform.durable-objects', '/platform/durable-objects'], ['platform.d1', '/platform/d1'],
+      ['platform.r2', '/platform/r2'], ['interfaces.rest', '/interfaces/rest'],
+      ['interfaces.graphql.console', '/interfaces/graphql'], ['interfaces.webhooks.console', '/interfaces/webhooks'],
+      ['interfaces.identity.page', '/interfaces/identity'], ['interfaces.mcp.console', '/interfaces/mcp'],
+      ['interfaces.i18n', '/interfaces/i18n'], ['interfaces.accessibility', '/interfaces/accessibility'],
+    ] as const;
+    for (const [routeId, path] of canonicalChildren) expect(routeUrl(routeId)).toBe(path);
   });
 
   it('uses the normal 404 for every removed HTML pathname', async () => {

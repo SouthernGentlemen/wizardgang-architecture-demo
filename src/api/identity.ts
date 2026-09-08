@@ -88,8 +88,9 @@ function redirect(location: URL, cookies: string[] = []): Response {
   return new Response(null, { status: 303, headers });
 }
 
-function identityRedirect(request: Request, parameters: Record<string, string>, cookies: string[] = []): Response {
-  const location = new URL('/interfaces?view=identity', request.url);
+async function identityRedirect(request: Request, parameters: Record<string, string>, cookies: string[] = []): Promise<Response> {
+  const { routeUrl } = await import('../routing/application-routes');
+  const location = new URL(routeUrl('interfaces.identity.page'), request.url);
   for (const [key, value] of Object.entries(parameters)) location.searchParams.set(key, value);
   return redirect(location, cookies);
 }

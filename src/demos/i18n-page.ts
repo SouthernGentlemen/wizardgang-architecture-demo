@@ -7,6 +7,7 @@ import fr from '../i18n/locales/fr.json';
 import ja from '../i18n/locales/ja.json';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
+import { routeUrl } from '../routing/application-routes';
 import { referenceDetails, pageContent, type PageContent } from '../ui/page';
 
 const resources = { en, es, fr, de, ja, ar } as const;
@@ -40,6 +41,7 @@ function safeJson(value: unknown): string {
 
 export function i18nContent(request: Request, env: Env): PageContent {
   const url = new URL(request.url);
+  const i18nUrl = routeUrl('interfaces.i18n');
   const locale = localeFor(url.searchParams.get('locale'));
   const count = Math.max(0, Math.min(Number(url.searchParams.get('count') || '3') || 0, 9999));
   const direction: 'rtl' | 'ltr' = locale === 'ar' ? 'rtl' : 'ltr';
@@ -64,7 +66,6 @@ export function i18nContent(request: Request, env: Env): PageContent {
     <div class="lab-heading"><div><p class="eyebrow">Six synchronized resources</p><h2 id="i18n-controls-title" data-copy="controls">${escapeHtml(m('controls'))}</h2></div><code data-direction>${direction}</code></div>
     <div class="locale-switcher" role="group" aria-label="${escapeHtml(m('language'))}">${localeButtons}</div>
     <form method="get" class="filters" data-i18n-form>
-      <input type="hidden" name="view" value="i18n">
       <label for="locale"><span data-copy="language">${escapeHtml(m('language'))}</span><select id="locale" name="locale">${localeOptions}</select></label>
       <label for="count"><span data-copy="count">${escapeHtml(m('count'))}</span><input id="count" name="count" type="number" min="0" max="9999" value="${count}"></label>
       <button type="submit" data-copy="apply">${escapeHtml(m('apply'))}</button>
@@ -171,7 +172,7 @@ export function i18nContent(request: Request, env: Env): PageContent {
   </script>`;
   return pageContent(env, m('demo.title'), body, {
     cacheControl: 'no-store',
-    canonicalPath: '/interfaces',
+    canonicalPath: i18nUrl,
     description: m('demo.summary'),
     lang: locale,
     dir: direction,

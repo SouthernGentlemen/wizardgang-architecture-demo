@@ -1,6 +1,7 @@
 import type { Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
+import { routeUrl } from '../routing/application-routes';
 import { recentApplicationLogs, type ApplicationLogRow } from '../lib/logs';
 import { MCP_PROTOCOL_VERSION, MCP_SERVER_PATH, mcpMetaKeys } from '../api/mcp';
 import { referenceDetails, pageContent, type PageContent } from '../ui/page';
@@ -49,6 +50,10 @@ function activityValue(activity: McpActivity | undefined, key: keyof McpActivity
 
 export async function mcpContent(request: Request, env: Env): Promise<PageContent> {
   const endpoint = `${new URL(request.url).origin}${MCP_SERVER_PATH}`;
+  const interfacesUrl = routeUrl('interfaces.index');
+  const mcpUrl = routeUrl('interfaces.mcp.console');
+  const identityUrl = routeUrl('interfaces.identity.page');
+  const i18nUrl = routeUrl('interfaces.i18n');
   const activity = activityFromLog((await recentApplicationLogs(env, { source: 'mcp', limit: 1 }))[0]);
   const claudeCommand = `claude mcp add --transport http wizardgang ${endpoint}`;
   const codexCommand = `codex mcp add wizardgang --url ${endpoint}`;
@@ -83,7 +88,7 @@ export async function mcpContent(request: Request, env: Env): Promise<PageConten
 
   const body = `
 <section class="page-header mcp-page-header">
-  <p class="eyebrow"><a href="/interfaces">Interfaces</a> / MCP</p>
+  <p class="eyebrow"><a href="${escapeHtml(interfacesUrl)}">Interfaces</a> / MCP</p>
   <h1>Model Context Protocol</h1>
   <p class="lede">Connect Claude, Codex, or any compatible MCP client to the live demo and invoke read-only tools through the same application permissions used by the rest of the platform.</p>
   <div class="mcp-badges" aria-label="MCP server characteristics">
@@ -117,14 +122,14 @@ export async function mcpContent(request: Request, env: Env): Promise<PageConten
       <p class="eyebrow">Claude Code</p>
       <h3>Add the remote HTTP server</h3>
       <div class="mcp-command"><pre id="mcp-claude-command">${escapeHtml(claudeCommand)}</pre><button type="button" data-copy-target="mcp-claude-command">Copy</button></div>
-      <p>Confirm it with <code>claude mcp get wizardgang</code>, launch <code>claude</code>, open <code>/interfaces?view=mcp</code>, then ask:</p>
+      <p>Confirm it with <code>claude mcp get wizardgang</code>, launch <code>claude</code>, open <code>${escapeHtml(mcpUrl)}</code>, then ask:</p>
       <blockquote>Use the wizardgang MCP server and call its ping tool.</blockquote>
     </div>
     <div class="mcp-tab-panel" role="tabpanel" id="mcp-panel-1" aria-labelledby="mcp-tab-1" data-mcp-panel="1" hidden>
       <p class="eyebrow">Codex CLI <span>OpenAI / ChatGPT</span></p>
       <h3>Add the remote HTTP server</h3>
       <div class="mcp-command"><pre id="mcp-codex-command">${escapeHtml(codexCommand)}</pre><button type="button" data-copy-target="mcp-codex-command">Copy</button></div>
-      <p>Confirm it with <code>codex mcp list</code>, launch <code>codex</code>, open <code>/interfaces?view=mcp</code>, then ask:</p>
+      <p>Confirm it with <code>codex mcp list</code>, launch <code>codex</code>, open <code>${escapeHtml(mcpUrl)}</code>, then ask:</p>
       <blockquote>Use the wizardgang MCP server and ping it.</blockquote>
       <p class="subtle">Codex CLI, the ChatGPT desktop app, and the IDE extension share MCP configuration on the same Codex host. ChatGPT web uses plugin-provided remote MCP tools instead of local Codex configuration.</p>
     </div>
@@ -200,7 +205,7 @@ export async function mcpContent(request: Request, env: Env): Promise<PageConten
   <li>Every successful tool invocation records bounded, sanitized operational evidence.</li>
   <li>The official TypeScript MCP client performs discovery and both tool calls in CI.</li>
 </ul></details>
-<nav class="meta mcp-pager" aria-label="Interfaces routes"><a href="/interfaces?view=identity">← Authentication &amp; Authorization</a><a href="/interfaces?view=i18n">Internationalization →</a></nav>
+<nav class="meta mcp-pager" aria-label="Interfaces routes"><a href="${escapeHtml(identityUrl)}">← Authentication &amp; Authorization</a><a href="${escapeHtml(i18nUrl)}">Internationalization →</a></nav>
 
 <script>
 (() => {
@@ -269,7 +274,7 @@ export async function mcpContent(request: Request, env: Env): Promise<PageConten
 </script>`;
 
   return pageContent(env, 'Model Context Protocol', body, {
-    canonicalPath: '/interfaces',
+    canonicalPath: mcpUrl,
     cacheControl: 'no-store',
     description: 'Connect a real MCP client to the live WizardGang server, discover read-only tools, invoke ping, and inspect sanitized activity evidence.',
   });

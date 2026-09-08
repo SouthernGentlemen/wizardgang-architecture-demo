@@ -1,6 +1,7 @@
 import type { Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
+import { routeUrl } from '../routing/application-routes';
 import { pageContent, type PageContent } from '../ui/page';
 
 function repositoryName(env: Env): string {
@@ -14,6 +15,11 @@ function repositoryName(env: Env): string {
 
 export function webhooksContent(env: Env): PageContent {
   const repository = repositoryName(env);
+  const webhooksUrl = routeUrl('interfaces.webhooks.console');
+  const restUrl = routeUrl('interfaces.rest');
+  const graphqlUrl = routeUrl('interfaces.graphql.console');
+  const mcpUrl = routeUrl('interfaces.mcp.console');
+  const identityUrl = routeUrl('interfaces.identity.page');
   const sources = [
     ['Route definition', 'src/demos/webhooks.ts'],
     ['Webhook receiver', 'src/api/webhooks.ts'],
@@ -40,7 +46,7 @@ export function webhooksContent(env: Env): PageContent {
   <div class="webhook-section-heading"><div><p class="eyebrow">Sanitized D1 history</p><h2 id="webhook-deliveries-heading">Verified deliveries</h2><p class="subtle" data-webhook-meta aria-live="polite">Loading verified deliveries…</p></div><button type="button" data-webhook-reset>Reset my synthetic events</button></div>
   <div class="webhook-events" data-webhook-events></div>
 </section>
-<section class="related-interfaces" aria-labelledby="webhook-related-heading"><p class="eyebrow">Application interfaces</p><h2 id="webhook-related-heading">Related interfaces</h2><nav class="resource-list" aria-label="Related application interfaces"><a href="/interfaces?view=rest"><strong>REST API →</strong><code>/interfaces?view=rest</code></a><a href="/interfaces?view=graphql"><strong>GraphQL →</strong><code>/interfaces?view=graphql</code></a><a href="/interfaces?view=mcp"><strong>MCP →</strong><code>/interfaces?view=mcp</code></a><a href="/interfaces?view=identity"><strong>Identity →</strong><code>/interfaces?view=identity</code></a></nav></section>
+<section class="related-interfaces" aria-labelledby="webhook-related-heading"><p class="eyebrow">Application interfaces</p><h2 id="webhook-related-heading">Related interfaces</h2><nav class="resource-list" aria-label="Related application interfaces"><a href="${escapeHtml(restUrl)}"><strong>REST API →</strong><code>${escapeHtml(restUrl)}</code></a><a href="${escapeHtml(graphqlUrl)}"><strong>GraphQL →</strong><code>${escapeHtml(graphqlUrl)}</code></a><a href="${escapeHtml(mcpUrl)}"><strong>MCP →</strong><code>${escapeHtml(mcpUrl)}</code></a><a href="${escapeHtml(identityUrl)}"><strong>Identity →</strong><code>${escapeHtml(identityUrl)}</code></a></nav></section>
 <details class="implementation-notes"><summary>Implementation details</summary><div class="reference-links">${sources.map(([label, path]) => `<a href="${escapeHtml(sourceUrl(env, path))}">${escapeHtml(label)}</a>`).join('')}</div></details>
 <script>
 (()=>{
@@ -73,5 +79,5 @@ export function webhooksContent(env: Env): PageContent {
   document.querySelector('[data-webhook-reset]').addEventListener('click',async()=>{try{await mutate('/api/labs/webhook-reset')}catch(error){state.textContent='Failed';meta.textContent=String(error)}});
   refresh();setInterval(()=>{if(document.visibilityState==='visible')refresh()},2000);
 })();
-</script>`, { canonicalPath: '/interfaces', description: 'Verify signed GitHub-compatible webhooks and inspect replay-protected delivery evidence.', cacheControl: 'no-store' });
+</script>`, { canonicalPath: webhooksUrl, description: 'Verify signed GitHub-compatible webhooks and inspect replay-protected delivery evidence.', cacheControl: 'no-store' });
 }

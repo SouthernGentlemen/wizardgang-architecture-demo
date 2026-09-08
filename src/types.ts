@@ -109,7 +109,7 @@ export interface DemoAction {
 
 export interface DemoDefinition {
   id: string;
-  route: string;
+  route?: string;
   title: string;
   group: string;
   sourcePath: string;

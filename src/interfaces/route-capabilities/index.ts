@@ -5,6 +5,7 @@ import { graphqlRouteCapability } from './graphql';
 import { webhooksRouteCapability } from './webhooks';
 import { identityRouteCapability } from './identity';
 import { mcpRouteCapability } from './mcp';
+import { i18nRouteCapability } from './i18n';
 
 export const interfaceIdentityCapabilities = [
   frontendRouteCapability,
@@ -14,4 +15,5 @@ export const interfaceIdentityCapabilities = [
   webhooksRouteCapability,
   identityRouteCapability,
   mcpRouteCapability,
+  i18nRouteCapability,
 ] as const;

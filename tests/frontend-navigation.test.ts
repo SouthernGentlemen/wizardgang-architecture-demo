@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { renderAssurance } from '../src/demos/assurance';
 import { renderPlatform } from '../src/demos/platform';
+import { applicationRouteRegistry } from '../src/routing/application-routes';
 import type { Env } from '../src/types';
 
 const env: Env = {
@@ -20,11 +21,13 @@ describe('derived frontend navigation', () => {
     }
   });
 
-  it('keeps exactly one page-current link on /platform?view=d1', async () => {
-    const html = await (await renderPlatform(new Request('https://demo.wizardgang.ai/platform?view=d1'), env)).text();
-    expect(currentPageCount(html)).toBe(1);
-    expect(html).toContain('<a href="/platform" aria-current="page">Platform</a>');
-    expect(html).toContain('<a href="/platform?view=d1" data-view-current>D1</a>');
+  it('marks Platform as the current section on /platform/d1', async () => {
+    const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === 'platform.d1');
+    if (!route) throw new Error('Missing platform.d1 route');
+    const html = await (await route.handler(new Request('https://demo.wizardgang.ai/platform/d1'), { env }, {})).text();
+    expect(currentPageCount(html)).toBe(0);
+    expect(html).toContain('<a href="/platform" data-section-current');
+    expect(html).not.toContain('data-view-current');
   });
 
   it('keeps exactly one page-current link on /assurance?view=risks', async () => {

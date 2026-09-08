@@ -75,11 +75,11 @@ describe('public route contract', () => {
   });
 
   it('renders a focused REST client generated from the OpenAPI contract', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces?view=rest', { headers: { accept: 'text/html' } }), env());
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/rest', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     const openapiOperationCount = Object.values(openapi.paths).reduce((count, path) => count + Object.keys(path).filter((method) => ['get', 'post', 'put', 'patch', 'delete', 'head', 'options'].includes(method)).length, 0);
     for (const anchor of ['rest', 'openapi']) expect(html).toContain(`id="${anchor}"`);
-    for (const endpoint of ['/api/labs/rest-records', '/api/openapi.json', '/interfaces?view=graphql', '/interfaces?view=webhooks']) expect(html).toContain(endpoint);
+    for (const endpoint of ['/api/labs/rest-records', '/api/openapi.json', '/interfaces/graphql', '/interfaces/webhooks']) expect(html).toContain(endpoint);
     expect(html.match(/<form data-api-form/g)).toHaveLength(openapiOperationCount);
     expect(html.match(/data-api-endpoint=/g)).toHaveLength(openapiOperationCount);
     expect(html).toContain('OpenAPI 3.1');
@@ -98,7 +98,7 @@ describe('public route contract', () => {
 
   it('renders focused GraphQL and webhook interface routes', async () => {
     const environment = env();
-    const graphqlPage = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces?view=graphql', { headers: { accept: 'text/html' } }), environment);
+    const graphqlPage = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/graphql', { headers: { accept: 'text/html' } }), environment);
     const graphqlHtml = await graphqlPage.text();
     expect(graphqlHtml).toContain('srcdoc="');
     expect(graphqlHtml).not.toContain('/graphql/console');
@@ -123,7 +123,7 @@ describe('public route contract', () => {
     }), environment);
     expect(crossOriginGraphqlApi.status).toBe(403);
 
-    const webhooksPage = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces?view=webhooks', { headers: { accept: 'text/html' } }), environment);
+    const webhooksPage = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/webhooks', { headers: { accept: 'text/html' } }), environment);
     const webhooksHtml = await webhooksPage.text();
     expect(webhooksHtml).toContain('/webhooks/github');
     expect(webhooksHtml).toContain('Generate signed event');
@@ -132,7 +132,7 @@ describe('public route contract', () => {
   });
 
   it('renders the identity console with provider routes, inspector views, and stable anchors', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces?view=identity', { headers: { accept: 'text/html' } }), env());
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/identity', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     for (const anchor of ['oauth', 'sso', 'saml']) expect(html).toContain(`id="${anchor}"`);
     for (const endpoint of ['/auth/microsoft', '/auth/google', '/auth/github', '/auth/saml', '/auth/session', '/auth/authorize', '/auth/saml/metadata']) expect(html).toContain(endpoint);
@@ -146,7 +146,7 @@ describe('public route contract', () => {
 
   it('separates the MCP guide from the interoperable Streamable HTTP endpoint', async () => {
     const environment = env();
-    const page = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces?view=mcp', { headers: { accept: 'text/html' } }), environment);
+    const page = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/mcp', { headers: { accept: 'text/html' } }), environment);
     const html = await page.text();
     expect(page.status).toBe(200);
     expect(html).toContain('https://demo.wizardgang.ai/mcp');
@@ -196,7 +196,7 @@ describe('public route contract', () => {
     for (const endpoint of ['/api/labs/governance-security-controls', '/api/labs/governance-ai-evaluation', '/api/labs/governance-traceability']) expect(html).toContain(endpoint);
     expect(html).toContain('alignment targets, not certification claims');
 
-    const edge = await routeRequest(new Request('https://demo.wizardgang.ai/platform?view=edge', { headers: { accept: 'text/html' } }), env());
+    const edge = await routeRequest(new Request('https://demo.wizardgang.ai/platform/edge', { headers: { accept: 'text/html' } }), env());
     expect(await edge.text()).not.toContain('alignment targets, not certification claims');
   });
 
@@ -220,10 +220,10 @@ describe('public route contract', () => {
   });
 
   it('keeps source context without repeating global route chrome or interface lists', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/platform?view=edge', { headers: { accept: 'text/html' } }), env());
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/platform/edge', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     expect(html).toContain('Route source');
-    expect(html).toContain('Platform route source');
+    expect(html).toContain('/src/demos/edge.ts');
     expect(html).not.toContain('D1 schema');
     expect(html).not.toContain('Route map');
     expect(html).not.toContain('Live interfaces');
@@ -320,7 +320,7 @@ describe('offline routing matrix', () => {
     expect(html.status).toBe(302);
     expect(html.headers.get('location')).toContain('/offline?from=%2Fplatform');
     expect(environment.DEMO_DB.queries.every((query) => query.includes('demo_control'))).toBe(true);
-    expect((await routeRequest(new Request('https://demo.wizardgang.ai/interfaces?view=mcp', { headers: { accept: 'text/html' } }), environment)).status).toBe(302);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/mcp', { headers: { accept: 'text/html' } }), environment)).status).toBe(302);
     const mcp = await routeRequest(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'application/json' } }), environment);
     expect(mcp.status).toBe(503);
     expect(await mcp.json()).toMatchObject({ status: 'offline' });

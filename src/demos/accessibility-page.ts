@@ -1,5 +1,6 @@
 import type { Env } from '../types';
 import { sourceUrl } from '../lib/github';
+import { routeUrl } from '../routing/application-routes';
 import { referenceDetails, pageContent, type PageContent } from '../ui/page';
 
 const behaviors = [
@@ -18,6 +19,7 @@ const behaviors = [
 ] as const;
 
 export function accessibilityContent(request: Request, env: Env): PageContent {
+  const accessibilityUrl = routeUrl('interfaces.accessibility');
   const initialMode = new URL(request.url).searchParams.get('mode') === 'broken' ? 'broken' : 'accessible';
   const cards = behaviors.map(([name, accessible, broken, criterion]) => `<article class="criterion-card"><p class="eyebrow">${criterion}</p><h3>${name}</h3><p><strong>Accessible:</strong> ${accessible}</p><p><strong>Broken:</strong> ${broken}</p></article>`).join('');
   return pageContent(env, 'WCAG 2.2 engineering', `
@@ -74,5 +76,5 @@ export function accessibilityContent(request: Request, env: Env): PageContent {
     document.querySelector('[data-a11y-reset]').addEventListener('click',()=>{load('accessible');document.querySelector('[data-a11y-mode="accessible"]').focus()});
     load(mode);
   })();
-  </script>`, { cacheControl: 'no-store', canonicalPath: '/interfaces' });
+  </script>`, { cacheControl: 'no-store', canonicalPath: accessibilityUrl });
 }

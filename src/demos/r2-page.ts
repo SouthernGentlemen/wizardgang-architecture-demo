@@ -1,8 +1,10 @@
 import type { Env } from '../types';
 import { sourceUrl } from '../lib/github';
+import { routeUrl } from '../routing/application-routes';
 import { referenceDetails, pageContent, type PageContent } from '../ui/page';
 
 export function r2Content(env: Env): PageContent {
+  const r2Url = routeUrl('platform.r2');
   return pageContent(env, 'Cloudflare R2', `
 <section class="page-header lab-page-header">
   <p class="eyebrow">Platform / R2</p>
@@ -348,5 +350,5 @@ export function r2Content(env: Env): PageContent {
     setStatus(friendlyError(error, 'Unable to load files — try again.'), 'error');
   });
 })();
-</script>`, { canonicalPath: '/platform', cacheControl: 'no-store' });
+</script>`, { canonicalPath: r2Url, cacheControl: 'no-store' });
 }

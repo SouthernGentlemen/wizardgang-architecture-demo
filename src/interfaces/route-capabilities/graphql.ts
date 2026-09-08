@@ -9,6 +9,14 @@ function machineOnlyGraphqlRequest(request: Request): Request {
 }
 
 export const graphqlRouteCapability = defineInterfaceIdentityCapability('interfaces.graphql', [
+
+interfaceIdentityRoute({
+  id: 'interfaces.graphql.console', pattern: '/interfaces/graphql', methods: ['GET'], kind: 'page',
+  handler: async (_request, { env }) => { const [{ graphqlContent }, { renderPage }] = await Promise.all([import('../../demos/graphql-console'), import('../../ui/page')]); return renderPage(env, { ...graphqlContent(env), routeId: 'interfaces.graphql.console' }); },
+  title: 'GraphQL console', description: 'Query and mutate the shared D1-backed schema through a locally bundled GraphiQL IDE.',
+  sourceModule: 'src/demos/graphql-console.ts', sourceExport: 'graphqlContent', tests: ['tests/interface-consolidation.test.ts', 'tests/graphql.test.ts'],
+  page: { parent: 'interfaces.index', label: 'GraphQL', summary: 'Typed GraphQL over shared D1 services with a locally bundled GraphiQL IDE.', order: 1, navigation: 'secondary', architectureMap: true },
+}),
   interfaceIdentityRoute({
     id: 'interfaces.graphql.endpoint',
     pattern: '/graphql',

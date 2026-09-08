@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { assuranceViews } from '../src/demos/assurance';
-import { interfaceViews } from '../src/demos/interfaces';
 import { operationsViews } from '../src/demos/operations';
-import { platformViews } from '../src/demos/platform';
 import { routeRequest } from '../src/router';
 import { renderPage, type PageContent } from '../src/ui/page';
 import type { D1PreparedStatement, Env } from '../src/types';
@@ -47,8 +45,20 @@ function defaultOrView(route: string, views: readonly string[]): string[] {
 
 const publicPages = [
   '/',
-  ...defaultOrView('/platform', platformViews),
-  ...defaultOrView('/interfaces', interfaceViews),
+  '/platform',
+  '/platform/edge',
+  '/platform/workers',
+  '/platform/durable-objects',
+  '/platform/d1',
+  '/platform/r2',
+  '/interfaces',
+  '/interfaces/rest',
+  '/interfaces/graphql',
+  '/interfaces/webhooks',
+  '/interfaces/identity',
+  '/interfaces/mcp',
+  '/interfaces/i18n',
+  '/interfaces/accessibility',
   ...defaultOrView('/assurance', assuranceViews),
   '/security',
   ...defaultOrView('/operations', operationsViews),
@@ -82,8 +92,8 @@ describe('document composition', () => {
     expect(headings(html)).toEqual([1, 2, 3]);
   });
 
-  it('renders all 29 public HTML surfaces through one shell with a valid heading outline', async () => {
-    expect(publicPages).toHaveLength(29);
+  it('renders all 31 public HTML surfaces through one shell with a valid heading outline', async () => {
+    expect(publicPages).toHaveLength(31);
     for (const path of publicPages) {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`, {
         headers: { accept: 'text/html' },

@@ -1,9 +1,11 @@
 import type { Env } from '../types';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
+import { routeUrl } from '../routing/application-routes';
 import { pageContent, type PageContent } from '../ui/page';
 
 export function identityContent(env: Env): PageContent {
+  const identityPageUrl = routeUrl('interfaces.identity.page');
   const sources = [
     ['Route definition', 'src/demos/identity.ts'],
     ['Identity console', 'src/demos/identity-page.ts'],
@@ -108,6 +110,7 @@ export function identityContent(env: Env): PageContent {
 
 <script>
 (() => {
+  const identityPageUrl = ${JSON.stringify(identityPageUrl)};
   const notice = document.querySelector('[data-identity-notice]');
   const result = document.querySelector('[data-identity-result]');
   const providerLabels = { microsoft: 'Microsoft Entra ID', google: 'Google', github: 'GitHub' };
@@ -116,7 +119,7 @@ export function identityContent(env: Env): PageContent {
   if (params.get('error') === 'provider_unconfigured') showNotice('That provider is not configured in this environment yet. The implementation is ready for environment-owned credentials.', 'warning');
   else if (params.get('error') === 'authentication_failed') showNotice('Authentication could not be validated. No application session was created.', 'error');
   else if (params.has('authenticated')) showNotice('Provider authentication validated. A short-lived WizardGang session is active.', 'success');
-  if (params.has('error') || params.has('authenticated')) history.replaceState({}, '', '/interfaces?view=identity' + location.hash);
+  if (params.has('error') || params.has('authenticated')) history.replaceState({}, '', identityPageUrl + location.hash);
 
   const selectTab = (name) => {
     document.querySelectorAll('[data-identity-tab]').forEach((tab) => { const selected = tab.dataset.identityTab === name; tab.setAttribute('aria-selected', String(selected)); tab.tabIndex = selected ? 0 : -1; });
@@ -177,5 +180,5 @@ export function identityContent(env: Env): PageContent {
     else showNotice('The session could not be ended.', 'error');
   });
 })();
-</script>`, { canonicalPath: '/interfaces', description: 'Authenticate with Microsoft Entra ID, Google, or GitHub and inspect the validated provider-to-application identity boundary.', cacheControl: 'no-store' });
+</script>`, { canonicalPath: identityPageUrl, description: 'Authenticate with Microsoft Entra ID, Google, or GitHub and inspect the validated provider-to-application identity boundary.', cacheControl: 'no-store' });
 }
