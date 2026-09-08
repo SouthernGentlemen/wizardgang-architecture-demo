@@ -45,7 +45,7 @@ describe('common canonical assurance query and presentation service', () => {
     const complianceQuery = serializeAssuranceFilters('compliance', complianceFilters);
     const complianceExpected = filterPublishedAssuranceRecords('compliance', complianceFilters).map((record) => record.id);
     const complianceApi = await (await reportingCollectionResponse(new Request(`https://demo.wizardgang.ai/api/reporting/compliance?${complianceQuery}`), environment, 'compliance')).json() as { records: Array<{ id: string }> };
-    const complianceHtml = await renderPage(environment, complianceContent(new Request(`https://demo.wizardgang.ai/assurance?view=compliance&${complianceQuery}`), environment)).text();
+    const complianceHtml = await renderPage(environment, complianceContent(new Request(`https://demo.wizardgang.ai/assurance/compliance?${complianceQuery}`), environment)).text();
     expect(complianceApi.records.map((record) => record.id)).toEqual(complianceExpected);
     expect(complianceIds(complianceHtml)).toEqual(complianceExpected);
 
@@ -53,7 +53,7 @@ describe('common canonical assurance query and presentation service', () => {
     const riskQuery = serializeAssuranceFilters('risks', riskFilters);
     const riskExpected = filterPublishedAssuranceRecords('risks', riskFilters).map((record) => record.id);
     const riskApi = await (await reportingCollectionResponse(new Request(`https://demo.wizardgang.ai/api/reporting/risks?${riskQuery}`), environment, 'risks')).json() as { records: Array<{ id: string }> };
-    const riskHtml = await renderPage(environment, risksContent(new Request(`https://demo.wizardgang.ai/assurance?view=risks&${riskQuery}`), environment)).text();
+    const riskHtml = await renderPage(environment, risksContent(new Request(`https://demo.wizardgang.ai/assurance/risks?${riskQuery}`), environment)).text();
     expect(riskApi.records.map((record) => record.id)).toEqual(riskExpected);
     expect(riskIds(riskHtml)).toEqual(riskExpected);
   });

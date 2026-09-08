@@ -683,7 +683,7 @@ A material continuity disruption or exercise can trigger updates to:
 - vulnerability/security maintenance records;
 - corrective action;
 - management review;
-- `/assurance?view=compliance` evidence/status once the canonical registry is rebuilt.
+- `/assurance/compliance` evidence/status once the canonical registry is rebuilt.
 
 Merge of a documentation change does not prove continuity effectiveness.
 

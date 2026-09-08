@@ -1,10 +1,5 @@
 import type { Env } from '../types';
 import {
-  reportingCollectionResponse,
-  reportingIndexResponse,
-  reportingRecordResponse,
-} from '../api/reporting';
-import {
   createRouteRegistry,
   defineRouteModule,
   type RouteDeclaration,
@@ -61,7 +56,10 @@ const reportingRoutes = [
     id: 'reporting.index',
     pattern: '/api/reporting',
     methods: ['GET', 'OPTIONS'],
-    handler: (request, { env }) => reportingIndexResponse(request, env),
+    handler: async (request, { env }) => {
+      const { reportingIndexResponse } = await import('../api/reporting');
+      return reportingIndexResponse(request, env);
+    },
     title: 'Reporting collection index',
     description: 'Discovers disclosure-safe canonical reporting collections and their supported filters.',
   }),
@@ -69,7 +67,10 @@ const reportingRoutes = [
     id: 'reporting.collection',
     pattern: '/api/reporting/:collection',
     methods: ['GET', 'OPTIONS'],
-    handler: (request, { env }, params) => reportingCollectionResponse(request, env, params.collection),
+    handler: async (request, { env }, params) => {
+      const { reportingCollectionResponse } = await import('../api/reporting');
+      return reportingCollectionResponse(request, env, params.collection);
+    },
     title: 'Reporting collection API',
     description: 'Queries one canonical structured or provider-backed reporting collection with signed cursor pagination and export support.',
   }),
@@ -77,7 +78,10 @@ const reportingRoutes = [
     id: 'reporting.record',
     pattern: '/api/reporting/:collection/:recordId',
     methods: ['GET', 'PATCH', 'OPTIONS'],
-    handler: (request, { env }, params) => reportingRecordResponse(request, env, params.collection, params.recordId),
+    handler: async (request, { env }, params) => {
+      const { reportingRecordResponse } = await import('../api/reporting');
+      return reportingRecordResponse(request, env, params.collection, params.recordId);
+    },
     title: 'Reporting record API',
     description: 'Reads one canonical reporting record or performs an authorized revision-checked update when the source supports mutation.',
   }),

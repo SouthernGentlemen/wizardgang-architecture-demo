@@ -5,7 +5,6 @@ import {
   loadAssuranceRegistry,
   requireRegistryResource,
 } from './lib/assurance-registry.mjs';
-import { assuranceRouteDeclarations } from '../src/assurance/route-contract.js';
 
 const root = process.cwd();
 const live = process.argv.includes('--live');
@@ -24,6 +23,7 @@ const monitoringResource = requireRegistryResource(
   'operational monitoring dataset',
 );
 const config = readJson(monitoringResource.path);
+const applicationRoutes = readJson('docs/route-manifest.json');
 const owners = config.accountableOwners ?? {};
 const requiredOwnerKeys = new Set(['registry', 'lifecycle', 'securityReporting']);
 for (const kind of new Set(flattenAssuranceRegistry(registry).map((resource) => resource.kind))) {
@@ -49,9 +49,14 @@ for (const [label, value] of [
 }
 
 const policyRoute = reporting.policyRoute;
-const policyRouteMatch = assuranceRouteDeclarations(registry).some((entry) => entry.routes?.html === policyRoute);
+const policyRouteMatch = applicationRoutes.some((entry) => (
+  entry.id === 'security.index'
+  && entry.route === policyRoute
+  && entry.kind === 'page'
+  && entry.browser_html === 'page'
+));
 if (!policyRoute || !policyRouteMatch) {
-  errors.push(`configured security policy route is not a canonical assurance HTML route: ${policyRoute}`);
+  errors.push(`configured security policy route is not the canonical application security page: ${policyRoute}`);
 }
 const securityTxtRoute = reporting.securityTxtRoute;
 if (!securityTxtRoute || !operationalRoutes.includes(`pattern: '${securityTxtRoute}'`)) {

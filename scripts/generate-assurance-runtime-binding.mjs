@@ -72,6 +72,9 @@ function schemaFilterValues(root, resource, definition, loadSchema) {
 
 function resourceUsesFilterOwner(registry, resource, owner) {
   if (resource.kind === owner.kind) return true;
+  if (resource.presentation?.routeId && owner.presentation?.routeId) {
+    return resource.presentation.routeId === owner.presentation.routeId;
+  }
   if (!resource.routeOwner) return false;
   return resolveAssuranceResourceOwner(registry, resource, 'routeOwner').id === owner.id;
 }

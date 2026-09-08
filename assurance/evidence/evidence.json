@@ -170,12 +170,12 @@
       "relationships": []
     },
     {
-      "id": "EVD-RUN-008",
+      "id": "EVD-RUN-011",
       "kind": "live-route",
       "title": "Public concern intake",
       "description": "Structured public bug, feature, accessibility, AI/MCP, governance, documentation, and other concern routing.",
       "locator": {
-        "route": "/assurance?view=concerns"
+        "route": "/assurance/concerns"
       },
       "freshnessPolicy": "event-driven",
       "visibility": "public",

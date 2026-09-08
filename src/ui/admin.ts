@@ -3,6 +3,7 @@ import type { DemoControl } from '../lib/demo-control';
 import type { CrawlerControl } from '../lib/crawler-control';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
+import { routeUrl } from '../routing/application-routes';
 import { referenceDetails, pageResponse } from './page';
 
 export function renderAdmin(env: Env, control: DemoControl, crawlerControl: CrawlerControl, notice = ''): Response {
@@ -104,7 +105,7 @@ export function renderOffline(env: Env, control: DemoControl, requestedPath: str
     <a href="/operations#health">Health</a>
     <a href="/operations?view=availability">Availability</a>
     <a href="/operations?view=docs">Docs</a>
-    <a href="/security">Security</a>
+    <a href="${escapeHtml(routeUrl('security.index'))}">Security</a>
     <a href="/api/operations/health">Health JSON</a>
     <a href="/api/operations/version">Version JSON</a>
     <a href="/admin">Admin</a>

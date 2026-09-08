@@ -4,10 +4,11 @@ import { presentReportingQuery } from '../reporting/presentation';
 import { queryReportingCollection, reportingCollectionInventory } from '../reporting/service';
 import { demoContent, pageContent, type PageContent } from '../ui/page';
 import type { DemoDefinition, Env } from '../types';
+import { routeUrl } from '../routing/application-routes';
 
 const demo: DemoDefinition = {
   "id": "governance",
-  "route": "/assurance?view=governance",
+  "route": routeUrl('assurance.governance'),
   "title": "Governance",
   "group": "Delivery & Governance",
   "sourcePath": "src/demos/governance.ts",

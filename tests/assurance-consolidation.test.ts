@@ -1,9 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { sitemapResponse } from '../src/api/sitemap';
-import { assuranceRecordUrls } from '../src/assurance/routes';
-import { assuranceViews } from '../src/demos/assurance';
+import { assuranceHtmlRoute, assuranceRecordUrls } from '../src/assurance/routes';
 import { routeRequest } from '../src/router';
-import { applicationRouteRegistry } from '../src/routing/application-routes';
+import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import type { D1PreparedStatement, Env } from '../src/types';
 
 class AssuranceStatement implements D1PreparedStatement {
@@ -28,6 +27,17 @@ const environment: Env = {
   GITHUB_BRANCH: 'main',
 };
 
+const assurancePages = [
+  ['assurance.index', '/assurance'],
+  ['assurance.delivery', '/assurance/delivery'],
+  ['assurance.governance', '/assurance/governance'],
+  ['assurance.evidence', '/assurance/evidence'],
+  ['assurance.compliance', '/assurance/compliance'],
+  ['assurance.risks', '/assurance/risks'],
+  ['assurance.incidents', '/assurance/incidents'],
+  ['assurance.concerns', '/assurance/concerns'],
+] as const;
+
 const retiredPaths = [
   '/git',
   '/governance',
@@ -38,58 +48,59 @@ const retiredPaths = [
   '/governance/incidents',
 ] as const;
 
-describe('consolidated assurance surface', () => {
-  it('server-renders every assurance view through the shared reporting presenter', async () => {
-    for (const view of assuranceViews) {
-      const response = await routeRequest(new Request(`https://demo.wizardgang.ai/assurance?view=${view}`, {
+describe('canonical assurance child routes', () => {
+  it('server-renders every assurance page through canonical application declarations', async () => {
+    for (const [routeId, path] of assurancePages) {
+      const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`, {
         headers: { accept: 'text/html' },
       }), environment);
       const html = await response.text();
-      expect(response.status, view).toBe(200);
-      expect(response.headers.get('content-type'), view).toContain('text/html');
-      expect(html, view).toContain('<a href="/assurance" aria-current="page">Assurance</a>');
-      expect(html, view).toContain(`href="/assurance?view=${view}" data-view-current`);
-      expect((html.match(/<[a-z][^>]*\baria-current="page"[^>]*>/gi) ?? []).length, view).toBe(1);
-      expect(html, view).toContain('Shared reporting presenter');
-      expect(html, view).toContain(`<link rel="canonical" href="https://demo.wizardgang.ai/assurance?view=${view}">`);
-      expect(html, view).toContain('href="/security"');
-      expect(html, view).not.toContain('github.code-scanning-alerts');
-      expect(html, view).not.toContain('github.secret-scanning-alerts');
-      expect(html.match(/<h1\b/g), view).toHaveLength(1);
+      expect(response.status, routeId).toBe(200);
+      expect(response.headers.get('content-type'), routeId).toContain('text/html');
+      expect(html, routeId).toContain(`<link rel="canonical" href="https://demo.wizardgang.ai${path}">`);
+      expect(html, routeId).not.toContain('name="view"');
+      expect(html, routeId).not.toContain('/assurance?view=');
+      expect(html.match(/<h1\b/g), routeId).toHaveLength(1);
+      if (routeId !== 'assurance.index') expect(html, routeId).toContain('<a href="/assurance" data-section-current');
     }
   });
 
-  it('defaults to overview and rejects unknown views without redirecting', async () => {
-    const defaultResponse = await routeRequest(new Request('https://demo.wizardgang.ai/assurance', {
+  it('makes /assurance a real index whose cards derive from canonical child routes', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance', {
       headers: { accept: 'text/html' },
     }), environment);
-    const defaultHtml = await defaultResponse.text();
-    expect(defaultResponse.status).toBe(200);
-    expect(defaultHtml).toContain('Public assurance, one inspectable surface.');
-    expect(defaultHtml).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/assurance">');
-
-    const unknown = await routeRequest(new Request('https://demo.wizardgang.ai/assurance?view=unknown', {
-      headers: { accept: 'text/html' },
-    }), environment);
-    expect(unknown.status).toBe(404);
-    expect(unknown.headers.get('location')).toBeNull();
+    const html = await response.text();
+    expect(response.status).toBe(200);
+    expect(html).toContain('Public assurance, one inspectable surface.');
+    expect(html).toContain('Security stays separate');
+    expect(html).toContain('href="/security"');
+    for (const [, path] of assurancePages.slice(1)) expect(html).toContain(`href="${path}"`);
+    expect(html).not.toContain('data-view-current');
   });
 
-  it('preserves filters and stable fragments on the consolidated route', async () => {
-    expect(assuranceRecordUrls('evidence', 'EV-001').html).toBe('/assurance?view=evidence#EV-001');
-    expect(assuranceRecordUrls('risks', 'SEC-RISK-001').html).toBe('/assurance?view=risks#SEC-RISK-001');
-    expect(assuranceRecordUrls('incidents', 'INC-001').html).toBe('/assurance?view=incidents#INC-001');
-    expect(assuranceRecordUrls('exercises', 'EX-001').html).toBe('/assurance?view=incidents#EX-001');
+  it('returns bare canonical HTML paths for every presented dataset and preserves stable fragments', () => {
+    const datasets = ['claims', 'evidence', 'compliance', 'risks', 'incidents', 'exercises', 'advisories', 'governance-records'];
+    for (const dataset of datasets) {
+      const path = assuranceHtmlRoute(dataset);
+      expect(path, dataset).not.toContain('?');
+      expect(path, dataset).not.toContain('#');
+    }
+    expect(assuranceRecordUrls('evidence', 'EV-001').html).toBe('/assurance/evidence#EV-001');
+    expect(assuranceRecordUrls('risks', 'SEC-RISK-001').html).toBe('/assurance/risks#SEC-RISK-001');
+    expect(assuranceRecordUrls('incidents', 'INC-001').html).toBe('/assurance/incidents#INC-001');
+    expect(assuranceRecordUrls('exercises', 'EX-001').html).toBe('/assurance/incidents#EX-001');
     expect(assuranceRecordUrls('advisories', 'ADV-001').html).toBe('/security#ADV-001');
+  });
 
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance?view=risks&framework=security&residual=high', {
+  it('round-trips real risk filter state without a hidden view parameter', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance/risks?framework=security&residual=high', {
       headers: { accept: 'text/html' },
     }), environment);
     const html = await response.text();
     expect(response.status).toBe(200);
     expect(html).toContain('option value="security" selected');
-    expect(html).toContain('name="view" value="risks"');
-    expect(html).not.toContain('/assurance?view=risks?');
+    expect(html).not.toContain('name="view"');
+    expect(html).toContain('action="/assurance/risks"');
     expect(html).toContain('/api/reporting/risks?framework=security&amp;residual=high');
   });
 
@@ -103,22 +114,19 @@ describe('consolidated assurance surface', () => {
     }
   });
 
-  it('publishes only the consolidated assurance pages while retaining machine endpoints', async () => {
+  it('publishes all canonical assurance pages and keeps security separate', async () => {
     const patterns = applicationRouteRegistry.declarations.map((route) => route.pattern);
-    expect(patterns).toContain('/assurance');
+    for (const [routeId, path] of assurancePages) {
+      expect(routeUrl(routeId), routeId).toBe(path);
+      expect(patterns, path).toContain(path);
+    }
+    expect(routeUrl('security.index')).toBe('/security');
     expect(patterns).toContain('/security');
-    expect(patterns).toContain('/api/labs/git-delivery');
-    expect(patterns).toContain('/api/labs/governance-security-controls');
-    expect(patterns).toContain('/api/reporting');
-    expect(patterns).toContain('/api/reporting/:collection');
-    expect(patterns).toContain('/api/reporting/:collection/:recordId');
     for (const path of retiredPaths) expect(patterns).not.toContain(path);
 
     const sitemap = await sitemapResponse(new Request('https://demo.wizardgang.ai/sitemap.xml')).text();
-    expect(sitemap).toContain('<loc>https://demo.wizardgang.ai/assurance</loc>');
+    for (const [, path] of assurancePages) expect(sitemap).toContain(`<loc>https://demo.wizardgang.ai${path}</loc>`);
     expect(sitemap).toContain('<loc>https://demo.wizardgang.ai/security</loc>');
-    for (const path of retiredPaths) {
-      expect(sitemap).not.toContain(`<loc>https://demo.wizardgang.ai${path}</loc>`);
-    }
+    for (const path of retiredPaths) expect(sitemap).not.toContain(`<loc>https://demo.wizardgang.ai${path}</loc>`);
   });
 });

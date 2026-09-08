@@ -66,6 +66,13 @@
       "reviewedAt": "2026-09-07T20:45:01Z",
       "reviewer": "controlled-repository-review",
       "basis": "DEMO-187 final route-collapse review approves the objectives source revision that replaces its removed version pathname with the canonical operations API endpoint; later source revisions require a new disclosure decision."
+    },
+    {
+      "id": "review-demo195-assurance-child-routes",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-08T12:05:37Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-195 review approves superseding the retired assurance concern query-view evidence with a canonical assurance child-route record, migrating current relationship edges to the replacement identity, and the exact resulting public source revisions; later source revisions require a new disclosure decision."
     }
   ],
   "sourceApprovals": [
@@ -278,6 +285,30 @@
       "resource": "objectives",
       "revision": "b655f90065611c778e36f322bcc0b9bfdefa456d",
       "reviewRef": "review-demo187-route-collapse-audit"
+    },
+    {
+      "id": "source-evidence-81b4af75bf39",
+      "resource": "evidence",
+      "revision": "81b4af75bf39d6463fdacba2a34f774be3c457d6",
+      "reviewRef": "review-demo195-assurance-child-routes"
+    },
+    {
+      "id": "source-claims-d58b7f41fb8e",
+      "resource": "claims",
+      "revision": "d58b7f41fb8ea6dc90ee31e08a7c94f990bc3719",
+      "reviewRef": "review-demo195-assurance-child-routes"
+    },
+    {
+      "id": "source-compliance-iso-42001-209f138568ae",
+      "resource": "compliance.iso-42001",
+      "revision": "209f138568aeb3b38e0b9ea444dfd68818dff580",
+      "reviewRef": "review-demo195-assurance-child-routes"
+    },
+    {
+      "id": "source-risks-25e755a5d945",
+      "resource": "risks",
+      "revision": "25e755a5d945f60c4f86d39a3123c349baa024c5",
+      "reviewRef": "review-demo195-assurance-child-routes"
     }
   ],
   "records": [
@@ -298,11 +329,11 @@
       ]
     },
     {
-      "id": "EVD-RUN-008",
+      "id": "EVD-RUN-011",
       "lifecycle": "Published",
-      "reviewRef": "review-demo181-assurance-surface-source",
+      "reviewRef": "review-demo195-assurance-child-routes",
       "supersedes": [
-        "EVD-RUN-005"
+        "EVD-RUN-008"
       ]
     },
     {
@@ -405,6 +436,17 @@
       "reviewRef": "review-demo181-assurance-surface-source",
       "supersededBy": [
         "EVD-RUN-008"
+      ]
+    },
+    {
+      "id": "EVD-RUN-008",
+      "lifecycle": "Superseded",
+      "reviewRef": "review-demo195-assurance-child-routes",
+      "supersedes": [
+        "EVD-RUN-005"
+      ],
+      "supersededBy": [
+        "EVD-RUN-011"
       ]
     }
   ]

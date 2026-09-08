@@ -1,7 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
-  assuranceSurfaceViews,
   frontendViewUrl,
   operationsSurfaceViews,
 } from '../src/demos/registry';
@@ -55,7 +54,6 @@ function registeredPageUrls(): string[] {
     ...applicationRouteRegistry.declarations
       .filter((route) => route.kind === 'page')
       .map((route) => routeUrl(route.id)),
-    ...assuranceSurfaceViews.map((view) => frontendViewUrl('assurance.wizardgang-public-assurance.html', view.id)),
     ...operationsSurfaceViews.map((view) => frontendViewUrl('operations.page', view.id)),
   ];
 }
@@ -109,12 +107,9 @@ describe('public link and route contract', () => {
     }
   }, 60_000);
 
-  it('serves every compliance framework filter through the canonical assurance view', async () => {
+  it('serves every compliance framework filter through the canonical assurance route', async () => {
     for (const framework of ['iso-27001', 'iso-42001', 'wcag-2.2']) {
-      const target = routeUrl('assurance.wizardgang-public-assurance.html', {}, {
-        view: 'compliance',
-        framework,
-      });
+      const target = routeUrl('assurance.compliance', {}, { framework });
       const response = await get(target);
       expect(response.status, target).toBe(200);
       const html = await response.text();

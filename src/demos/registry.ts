@@ -5,17 +5,6 @@ export interface SurfaceViewDefinition {
   label: string;
 }
 
-export const assuranceSurfaceViews = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'delivery', label: 'Delivery' },
-  { id: 'governance', label: 'Governance' },
-  { id: 'evidence', label: 'Evidence' },
-  { id: 'compliance', label: 'Compliance' },
-  { id: 'risks', label: 'Risks' },
-  { id: 'incidents', label: 'Incidents' },
-  { id: 'concerns', label: 'Concerns' },
-] as const satisfies readonly SurfaceViewDefinition[];
-
 export const operationsSurfaceViews = [
   { id: 'overview', label: 'Overview' },
   { id: 'availability', label: 'Availability' },
@@ -26,7 +15,6 @@ export const operationsSurfaceViews = [
 ] as const satisfies readonly SurfaceViewDefinition[];
 
 const viewInventory = {
-  'assurance.wizardgang-public-assurance.html': assuranceSurfaceViews,
   'operations.page': operationsSurfaceViews,
 } as const;
 

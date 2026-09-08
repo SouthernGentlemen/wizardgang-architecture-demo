@@ -1,7 +1,6 @@
 import {
   assuranceRegistry,
   type AssuranceRegistry,
-  type AssuranceRegistryRoutes,
 } from '../assurance/model';
 import { assuranceRouteCapabilities } from '../assurance/route-capabilities';
 import type {
@@ -9,7 +8,6 @@ import type {
   AssuranceRouteSourceMetadata,
 } from '../assurance/route-capability';
 import {
-  assuranceRouteDeclarations as contractRouteDeclarations,
   validateAssuranceRouteContract as contractValidateRouteContract,
 } from '../assurance/route-contract.js';
 import {
@@ -20,16 +18,9 @@ import {
   type RouteSourceMetadata,
 } from './registry';
 import type { PageMetadata } from './application-routes';
-
 import type { Env } from '../types';
 
 export interface AssuranceRouteContext { env: Env; }
-
-interface AssuranceContractRouteDeclaration {
-  owner: string;
-  ownerId: string;
-  routes: AssuranceRegistryRoutes;
-}
 
 type AssuranceApplicationRouteDeclaration = RouteDeclaration<AssuranceRouteContext> & { page?: PageMetadata };
 
@@ -40,16 +31,12 @@ function routeSource(source: AssuranceRouteSourceMetadata | undefined): RouteSou
   return { ...source, tests: source.tests ?? [ROUTE_TEST] };
 }
 
-function htmlRoute(
-  declaration: AssuranceContractRouteDeclaration,
-  capability: AssuranceRouteCapability,
-): AssuranceApplicationRouteDeclaration | null {
-  if (!declaration.routes.html) return null;
+function htmlRoute(capability: AssuranceRouteCapability): AssuranceApplicationRouteDeclaration | null {
   const html = capability.html;
-  if (!html) throw new Error(`${declaration.ownerId} declares routes.html without a specialized HTML handler.`);
+  if (!html) return null;
   return {
-    id: `assurance.${declaration.ownerId}.html`,
-    pattern: declaration.routes.html,
+    id: capability.routeId,
+    pattern: capability.pattern,
     methods: ['GET'],
     kind: 'page',
     handler: (request, { env }) => html.handler(request, env),
@@ -61,8 +48,8 @@ function htmlRoute(
     cache: { mode: 'no-store' },
     crawler: { crawling: 'controlled', indexing: 'allow' },
     documentation: {
-      title: `Assurance ${declaration.owner} html`,
-      description: `Registry-owned html route for the ${declaration.owner} assurance surface.`,
+      title: html.page?.label ?? capability.routeId,
+      description: html.page?.summary ?? `Canonical assurance presentation route ${capability.routeId}.`,
       docs: ['docs/ASSURANCE-REGISTRY.md', 'docs/REPORTING.md', 'docs/ROUTES.md'],
     },
     source: routeSource(html.source),
@@ -70,55 +57,25 @@ function htmlRoute(
   };
 }
 
-function capabilityByOwner(
-  declarations: readonly AssuranceContractRouteDeclaration[],
-  capabilities: readonly AssuranceRouteCapability[],
-): ReadonlyMap<string, AssuranceRouteCapability> {
-  const declaredOwners = new Set(declarations.map((declaration) => declaration.ownerId));
-  const result = new Map<string, AssuranceRouteCapability>();
-  for (const capability of capabilities) {
-    if (!declaredOwners.has(capability.ownerId)) continue;
-    if (result.has(capability.ownerId)) {
-      throw new Error(`Duplicate assurance route capability owner '${capability.ownerId}'.`);
-    }
-    result.set(capability.ownerId, capability);
-  }
-  return result;
-}
-
-function validatePresentationCapabilities(
-  declarations: readonly AssuranceContractRouteDeclaration[],
-  capabilities: ReadonlyMap<string, AssuranceRouteCapability>,
-): void {
-  const errors: string[] = [];
-  for (const declaration of declarations) {
-    const capability = capabilities.get(declaration.ownerId);
-    if (declaration.routes.html && !capability?.html) {
-      errors.push(`${declaration.ownerId} declares routes.html without a specialized HTML handler`);
-    }
-  }
-  if (errors.length > 0) throw new Error(`Invalid assurance presentation route capabilities:\n${errors.join('\n')}`);
-}
-
 export function createAssuranceRouteRegistry(
   registry: AssuranceRegistry,
   capabilities: readonly AssuranceRouteCapability[],
 ): RouteRegistry<AssuranceRouteContext> {
-  const contractErrors = contractValidateRouteContract(registry) as string[];
+  const routes = capabilities.map((capability) => {
+    const route = htmlRoute(capability);
+    if (!route) throw new Error(`${capability.routeId} has no specialized HTML handler.`);
+    return route;
+  });
+
+  const contractErrors = contractValidateRouteContract(
+    registry,
+    new Set(routes.map((route) => route.id)),
+  ) as string[];
   if (contractErrors.length > 0) {
     throw new Error(`Invalid assurance route contract:\n${contractErrors.join('\n')}`);
   }
 
-  const declarations = contractRouteDeclarations(registry) as AssuranceContractRouteDeclaration[];
-  const capabilityMap = capabilityByOwner(declarations, capabilities);
-  validatePresentationCapabilities(declarations, capabilityMap);
-
-  const modules = declarations.map((declaration) => {
-    const capability = capabilityMap.get(declaration.ownerId);
-    const route = capability ? htmlRoute(declaration, capability) : null;
-    return defineRouteModule(`assurance.${declaration.ownerId}`, route ? [route] : []);
-  });
-  return createRouteRegistry(modules);
+  return createRouteRegistry(routes.map((route) => defineRouteModule(`assurance.${route.id}`, [route])));
 }
 
 export const assuranceDeclarativeRouteRegistry = createAssuranceRouteRegistry(

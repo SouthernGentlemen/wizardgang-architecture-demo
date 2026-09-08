@@ -15,7 +15,7 @@ import {
 function syntheticReportRegistry() {
   return {
     id: 'synthetic-assurance',
-    routes: { html: '/assurance' },
+    presentation: { routeId: 'assurance.index' },
     datasets: [
       {
         id: 'report-register-v2',
@@ -50,7 +50,7 @@ describe('registry capability contracts', () => {
     expect(validateAssuranceRouteContract(registry)).toEqual([]);
     expect(assuranceRoutesForDataset(registry, 'reports')).toBeNull();
     expect(validateAssuranceRouteHandlerSupport(registry, {
-      registry: { html: true },
+      'assurance.index': { html: true },
     })).toEqual([]);
   });
 
@@ -106,6 +106,7 @@ describe('registry capability contracts', () => {
     const incidents = registry.datasets.find((dataset: any) => dataset.kind === 'incidents');
     const exercises = registry.datasets.find((dataset: any) => dataset.kind === 'exercises');
     incidents.id = 'incident-register-v2';
+    delete exercises.presentation;
     exercises.routeOwner = incidents.id;
 
     expect(resolveAssuranceResourceOwner(registry, exercises, 'routeOwner').id).toBe('incident-register-v2');

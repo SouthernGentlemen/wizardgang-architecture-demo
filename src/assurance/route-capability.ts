@@ -20,7 +20,8 @@ export interface AssuranceHtmlRouteHandlerRegistration {
 }
 
 export interface AssuranceRouteCapability {
-  ownerId: string;
+  routeId: string;
+  pattern: string;
   html?: AssuranceHtmlRouteHandlerRegistration;
 }
 
