@@ -13,7 +13,7 @@ import { withSecurityHeaders } from '../lib/http';
 const SITE_NAME = 'WizardGang Architecture Demo';
 const DEFAULT_DESCRIPTION = 'Executable companion to WG-ARCH-001. Every architecture concept has a stable route, a live implementation, and a direct link to the public code behind it.';
 const ROOT_ROUTE_ID = 'interfaces.frontend.index';
-const OPERATIONS_ROUTE_ID = 'operations.page';
+const OPERATIONS_ROUTE_ID = 'operations.index';
 
 /** Acid square with an offset violet square — the same mark as the wordmark. */
 const FAVICON = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#08080b"/><rect x="5" y="15" width="12" height="12" fill="#d9ff43"/><rect x="15" y="5" width="12" height="12" fill="#a489ff"/></svg>')}`;

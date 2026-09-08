@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { operationsViews } from '../src/demos/operations';
 import { routeRequest } from '../src/router';
+import { applicationRouteRegistry } from '../src/routing/application-routes';
 import { renderPage, type PageContent } from '../src/ui/page';
 import type { D1PreparedStatement, Env } from '../src/types';
 
@@ -38,38 +38,9 @@ function topLevelHtmlElements(html: string): RegExpMatchArray | null {
   return html.match(/^<html\b/gm);
 }
 
-function defaultOrView(route: string, views: readonly string[]): string[] {
-  return views.map((view, index) => index === 0 ? route : `${route}?view=${view}`);
-}
-
-const publicPages = [
-  '/',
-  '/platform',
-  '/platform/edge',
-  '/platform/workers',
-  '/platform/durable-objects',
-  '/platform/d1',
-  '/platform/r2',
-  '/interfaces',
-  '/interfaces/rest',
-  '/interfaces/graphql',
-  '/interfaces/webhooks',
-  '/interfaces/identity',
-  '/interfaces/mcp',
-  '/interfaces/i18n',
-  '/interfaces/accessibility',
-  '/assurance',
-  '/assurance/delivery',
-  '/assurance/governance',
-  '/assurance/evidence',
-  '/assurance/compliance',
-  '/assurance/risks',
-  '/assurance/incidents',
-  '/assurance/concerns',
-  '/security',
-  ...defaultOrView('/operations', operationsViews),
-  '/offline',
-];
+const publicPages = applicationRouteRegistry.declarations
+  .filter((route) => route.kind === 'page' && route.visibility === 'public' && !route.pattern.includes(':'))
+  .map((route) => route.pattern);
 
 describe('document composition', () => {
   it('builds one document and preserves page metadata through the content boundary', async () => {

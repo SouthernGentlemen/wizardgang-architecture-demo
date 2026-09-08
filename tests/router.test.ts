@@ -254,11 +254,11 @@ describe('public route contract', () => {
     expect(operations).toContain('Model-training crawl');
     expect(operations).not.toContain('name="control" value="chatgpt-crawl"');
     expect(operations).toContain('Collection discovery comes from reporting ownership and registered capabilities.');
-    expect(operations).toContain('href="/operations?view=reports&amp;report=compliance#reporting-browser"');
+    expect(operations).toContain('href="/operations/reports?report=compliance#reporting-browser"');
     expect(operations).toContain('Shared reporting presenter');
     expect(operations).toContain('23 available in the authorized selection');
 
-    const docs = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations?view=docs'), environment)).text();
+    const docs = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations/docs'), environment)).text();
     expect(docs).toContain('src/router.ts');
   });
 

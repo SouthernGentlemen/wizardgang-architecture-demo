@@ -7,6 +7,7 @@ import {
 import {
   architectureMapEntries,
   primaryNavigation,
+  secondaryNavigation,
   sitemapPaths,
 } from '../src/routing/navigation';
 import { operationalRouteRegistry } from '../src/routing/operational-routes';
@@ -30,6 +31,16 @@ describe('architecture demo registry', () => {
     ]);
   });
 
+  it('derives the five operations child links from route declarations', () => {
+    expect(secondaryNavigation('operations.index').map((route) => [route.id, route.pattern, route.page?.label])).toEqual([
+      ['operations.availability', '/operations/availability', 'Availability'],
+      ['operations.logs', '/operations/logs', 'Logs'],
+      ['operations.usage', '/operations/usage', 'Usage & cost'],
+      ['operations.reports', '/operations/reports', 'Reports'],
+      ['operations.docs', '/operations/docs', 'Documentation'],
+    ]);
+  });
+
   it('uses unique public architecture routes', () => {
     const entries = architectureMapEntries();
     expect(new Set(entries.map((route) => route.pattern)).size).toBe(entries.length);
@@ -44,10 +55,21 @@ describe('architecture demo registry', () => {
     expect(architectureMapEntries().every((route) => route.pattern.startsWith('/'))).toBe(true);
   });
 
-  it('publishes one canonical operations route and retires the dashboard route family', () => {
-    const routes = new Set(architectureMapEntries().map((route) => route.pattern));
-    expect([...routes].filter((route) => route === '/operations')).toEqual(['/operations']);
-    expect([...routes].filter((route) => route.startsWith('/dashboard'))).toEqual([]);
+  it('publishes canonical operations paths and retires the dashboard route family', () => {
+    const operations = [
+      applicationRoutes.find((route) => route.id === 'operations.index'),
+      ...secondaryNavigation('operations.index'),
+    ].filter((route): route is ApplicationRouteDeclaration => Boolean(route));
+    expect(operations.map((route) => route.pattern)).toEqual([
+      '/operations',
+      '/operations/availability',
+      '/operations/logs',
+      '/operations/usage',
+      '/operations/reports',
+      '/operations/docs',
+    ]);
+    expect(applicationRoutes.some((route) => route.id === 'operations.page')).toBe(false);
+    expect(applicationRoutes.some((route) => route.pattern.startsWith('/dashboard'))).toBe(false);
   });
 
   it('keeps consolidated assurance and separate security as registered architecture entries', () => {
@@ -78,7 +100,7 @@ describe('architecture demo registry', () => {
         sitemap: boolean;
       };
     }>;
-    for (const route of primaryNavigation()) {
+    for (const route of applicationRoutes.filter((candidate) => candidate.page && candidate.page.navigation !== 'none')) {
       const entry = manifest.find((candidate) => candidate.id === route.id);
       expect(entry, `missing manifest entry for ${route.id}`).toBeDefined();
       expect(entry?.source.module).toBe(route.source.module);
@@ -86,7 +108,7 @@ describe('architecture demo registry', () => {
       expect(entry?.navigation).toMatchObject({
         label: route.page?.label,
         order: route.page?.order,
-        navigation: 'primary',
+        navigation: route.page?.navigation,
         architectureMap: route.page?.architectureMap,
         sitemap: sitemapPaths().includes(route.pattern),
       });
@@ -99,7 +121,7 @@ describe('architecture demo registry', () => {
 describe('intentional offline route policies', () => {
   it('keeps registered operational recovery surfaces reachable', () => {
     for (const route of [
-      '/operations',
+      '/operations', '/operations/availability', '/operations/logs', '/operations/usage', '/operations/reports', '/operations/docs',
       '/api/operations/health', '/api/operations/version', '/api/operations/logs',
       '/api/operations/budget', '/offline', '/admin', '/robots.txt', '/.well-known/security.txt', '/assets/:asset',
     ]) {
@@ -132,6 +154,7 @@ describe('intentional offline route policies', () => {
     expect(browserPolicy('/mcp/server')).toBeUndefined();
     expect(browserPolicy('/interfaces')).toBe('page');
     expect(browserPolicy('/platform')).toBe('page');
+    expect(browserPolicy('/operations/reports')).toBe('page');
     expect(browserPolicy('/edge')).toBeUndefined();
     expect(applicationRoutes.some((route) => route.pattern === '/v1/things')).toBe(false);
   });

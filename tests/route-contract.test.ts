@@ -1,10 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
-  frontendViewUrl,
-  operationsSurfaceViews,
-} from '../src/demos/registry';
-import {
   applicationRouteRegistry,
   routeUrl,
 } from '../src/routing/application-routes';
@@ -50,12 +46,9 @@ function internalLinks(html: string, sourceRoute: string): URL[] {
 }
 
 function registeredPageUrls(): string[] {
-  return [
-    ...applicationRouteRegistry.declarations
-      .filter((route) => route.kind === 'page')
-      .map((route) => routeUrl(route.id)),
-    ...operationsSurfaceViews.map((view) => frontendViewUrl('operations.page', view.id)),
-  ];
+  return applicationRouteRegistry.declarations
+    .filter((route) => route.kind === 'page')
+    .map((route) => routeUrl(route.id));
 }
 
 async function get(path: string): Promise<Response> {

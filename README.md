@@ -9,12 +9,12 @@ The canonical standard is [`docs/ARCHITECTURE-STANDARD.md`](docs/ARCHITECTURE-ST
 
 ## Architecture laboratory
 
-The frontend has exactly eight server-rendered HTML page pathnames: `/`, `/platform`, `/interfaces`, `/assurance`, `/security`, `/operations`, `/admin`, and `/offline`. The surface and view inventory is declared once in `src/demos/registry.ts`; navigation and sitemap publication derive from the same declarations. See [`docs/FRONTEND-ROUTES.md`](docs/FRONTEND-ROUTES.md) for the complete information architecture.
+The server-rendered frontend hierarchy is declared in the application route registry; navigation and sitemap publication derive from those same declarations. See [`docs/FRONTEND-ROUTES.md`](docs/FRONTEND-ROUTES.md) for the complete information architecture.
 
-- **Platform:** `/platform` selects safe edge-context inspection, bounded stateless Worker compute, the coordinated Durable Object counter, the session-isolated D1 users-and-tasks lab, or the bounded R2 mini file manager through ordinary `?view=` query state.
-- **Interfaces:** `/interfaces` selects REST/OpenAPI, GraphQL/GraphiQL, signed webhooks, identity, MCP, internationalization, and accessibility demonstrations. Protocol and API endpoints remain separate machine contracts.
-- **Assurance:** `/assurance` selects delivery, governance, evidence, compliance, risks, incidents, and public-concern views while preserving stable record fragments. `/security` remains the separate public security/advisory and private-reporting boundary.
-- **Operations:** `/operations` selects overview, availability, public-safe logs, usage/cost, reporting, and documentation views. `/admin` and `/offline` remain dedicated control/recovery pages.
+- **Platform:** `/platform` links to canonical child resources for safe edge-context inspection, bounded stateless Worker compute, the coordinated Durable Object counter, the session-isolated D1 users-and-tasks lab, and the bounded R2 mini file manager.
+- **Interfaces:** `/interfaces` links to canonical child resources for REST/OpenAPI, GraphQL/GraphiQL, signed webhooks, identity, MCP, internationalization, and accessibility demonstrations. Protocol and API endpoints remain separate machine contracts.
+- **Assurance:** `/assurance` links to canonical child resources for delivery, governance, evidence, compliance, risks, incidents, and public concerns while preserving stable record fragments. `/security` remains the separate public security/advisory and private-reporting boundary.
+- **Operations:** `/operations` is the live overview and links to canonical child resources for availability, public-safe logs, usage/cost, reporting, and documentation. `/admin` and `/offline` remain dedicated control/recovery pages.
 
 Core invariants:
 
@@ -38,18 +38,17 @@ The demo uses the `wizardgang.ai` design tokens: dark by default, with a light t
 
 `/assurance` is the public assurance index. Its canonical child resources preserve filters, reporting contracts, and stable fragments such as `/assurance/risks#SEC-RISK-001`. `/security` remains a distinct page because vulnerability reporting and published security advisories have a separate disclosure boundary.
 
-There is no client-side router. Platform and interface navigation uses canonical child routes; assurance, operations, locale, accessibility mode, and request deep links keep true interaction state in query parameters. Application routing remains registry matching in `src/router.ts`.
+There is no client-side router. Platform, interface, assurance, and operations navigation uses canonical child routes; locale, accessibility mode, filters, pagination, and request deep links keep true interaction state in query parameters. Application routing remains registry matching in `src/router.ts`.
 
 ## Operations and admin
 
 ```text
 /operations
-├── overview
-├── ?view=availability
-├── ?view=logs
-├── ?view=usage
-├── ?view=reports
-└── ?view=docs
+├── /availability
+├── /logs
+├── /usage
+├── /reports
+└── /docs
 
 /admin       protected D1-backed demo control
 /offline     public maintenance page

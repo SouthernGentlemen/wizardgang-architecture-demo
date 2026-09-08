@@ -5,6 +5,7 @@ import { renderReportingPresentation } from '../reporting/html';
 import { presentReportingQuery } from '../reporting/presentation';
 import { queryReportingCollection, reportingCollectionInventory } from '../reporting/service';
 import { routeUrl } from '../routing/application-routes';
+import { cursorLink } from '../routing/cursor-link';
 import { secondaryNavigation } from '../routing/navigation';
 import type { Env } from '../types';
 import { pageContent, type PageContent } from '../ui/page';
@@ -41,17 +42,6 @@ const presentationCollections: Record<AssurancePresentation, string> = {
   concerns: 'governance',
 };
 
-const presentationRouteIds: Record<AssurancePresentation, string> = {
-  index: 'assurance.index',
-  delivery: 'assurance.delivery',
-  governance: 'assurance.governance',
-  evidence: 'assurance.evidence',
-  compliance: 'assurance.compliance',
-  risks: 'assurance.risks',
-  incidents: 'assurance.incidents',
-  concerns: 'assurance.concerns',
-};
-
 const indexDescription = 'Public assurance posture, qualifications, and inspectable delivery, governance, evidence, compliance, risk, incident, and concern resources.';
 
 function publicPrincipal(): Principal {
@@ -62,17 +52,6 @@ function requestedLimit(url: URL): number {
   const value = Number(url.searchParams.get('limit') || '25');
   if (!Number.isInteger(value)) return 25;
   return Math.max(1, Math.min(50, value));
-}
-
-function nextHref(
-  request: Request,
-  presentation: AssurancePresentation,
-  cursor: string | null | undefined,
-): string | null {
-  if (!cursor) return null;
-  const url = new URL(request.url);
-  const query = Object.fromEntries(url.searchParams.entries());
-  return routeUrl(presentationRouteIds[presentation], {}, { ...query, cursor });
 }
 
 export function assuranceIndexContent(env: Env): PageContent {
@@ -129,7 +108,7 @@ export async function renderSharedReporting(
     <p class="subtle">This route queries the registered reporting collection and renders it through the shared disclosure-aware presentation layer. Canonical lifecycle, qualification, provenance, and public/private boundaries remain upstream of this page.</p>
     ${renderReportingPresentation(rendered, {
       headingId: `assurance-${presentation}-records-heading`,
-      nextHref: nextHref(request, presentation, rendered.pagination?.nextCursor),
+      nextHref: cursorLink(request, rendered.pagination?.nextCursor),
       recordAnchors: presentation === 'index',
     })}
   </section>`;

@@ -28,7 +28,7 @@ Preserve these invariants:
 
 - Keep public routes stable once released unless a controlled change explicitly retires a route without compatibility aliases.
 - Keep one architecture concern per demo module.
-- Keep `src/demos/registry.ts`, `docs/ROUTES.md`, and `docs/route-manifest.json` consistent.
+- Keep route declarations, `docs/ROUTES.md`, and `docs/route-manifest.json` consistent.
 - Keep the consolidated `/operations` surface and admin/offline controls working as cross-cutting infrastructure while individual demos are implemented.
 - Never let ordinary demo behavior execute behind the intentional offline gate.
 - Keep `/operations`, `/security`, `/api/operations/health`, `/api/operations/version`, `/api/operations/logs`, `/api/operations/budget`, `/admin`, and `/offline` reachable while intentionally offline. Reporting routes remain governed by their declarative offline policy.

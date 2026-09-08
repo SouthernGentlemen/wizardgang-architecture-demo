@@ -16,7 +16,7 @@ Each architecture demo change must:
 
 1. Preserve or intentionally version the stable route.
 2. Keep a clear primary implementation module under `src/demos/` or a directly owned submodule.
-3. Keep `src/demos/registry.ts`, `docs/ROUTES.md`, and `docs/route-manifest.json` consistent.
+3. Keep application route declarations, `docs/ROUTES.md`, and `docs/route-manifest.json` consistent.
 4. Link the running page back to its public GitHub source, schema/contracts, and tests where relevant.
 5. Include tests for public routes and demo-specific backend behavior.
 6. Use `DEMO_DB` / `demo-blob` for shared records/audit metadata unless another primitive is specifically being demonstrated.

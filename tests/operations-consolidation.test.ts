@@ -42,71 +42,87 @@ function env(state: 'online' | 'offline' = 'online'): Env {
 }
 
 const basic = `Basic ${btoa('operator:test-admin-password')}`;
-const views = ['overview', 'availability', 'logs', 'usage', 'reports', 'docs'] as const;
+const routes = [
+  '/operations',
+  '/operations/availability',
+  '/operations/logs',
+  '/operations/usage',
+  '/operations/reports',
+  '/operations/docs',
+] as const;
 
-describe('consolidated operations surface', () => {
-  it('renders all six server-rendered views behind the one canonical route', async () => {
+const navigationHrefs = [
+  '/operations',
+  '/operations/availability',
+  '/operations/logs',
+  '/operations/usage',
+  '/operations/reports',
+  '/operations/docs',
+] as const;
+
+describe('canonical operations routes', () => {
+  it('renders all six server-rendered pages with one derived navigation', async () => {
     const environment = env();
-    for (const view of views) {
-      const suffix = view === 'overview' ? '' : `?view=${view}`;
-      const response = await routeRequest(new Request(`https://demo.wizardgang.ai/operations${suffix}`, { headers: { accept: 'text/html' } }), environment);
-      expect(response.status, view).toBe(200);
+    for (const path of routes) {
+      const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`, { headers: { accept: 'text/html' } }), environment);
+      expect(response.status, path).toBe(200);
       const html = await response.text();
-      expect(html, view).toContain('aria-label="Operations views"');
-      expect(html, view).toContain('href="/operations"');
-      expect(html, view).toContain('href="/operations?view=availability"');
-      expect(html, view).toContain('href="/operations?view=logs"');
-      expect(html, view).toContain('href="/operations?view=usage"');
-      expect(html, view).toContain('href="/operations?view=reports"');
-      expect(html, view).toContain('href="/operations?view=docs"');
-      expect(html, view).toContain('aria-current="page"');
-      expect(html, view).toContain('<a class="skip-link" href="#main">Skip to main content</a>');
-      expect(html, view).not.toContain('href="/dashboard');
+      expect(html, path).toContain('aria-label="Operations views"');
+      for (const href of navigationHrefs) expect(html, `${path} -> ${href}`).toContain(`href="${href}"`);
+      expect(html, path).toContain('aria-current="page"');
+      expect(html, path).toContain('<a class="skip-link" href="#main">Skip to main content</a>');
+      expect(html, path).not.toContain('href="/operations?view=');
+      expect(html, path).not.toContain('href="/dashboard');
     }
   });
 
-  it('preserves availability classification, public-safe operations data, usage controls, deployment evidence, and docs', async () => {
+  it('preserves availability classification, public-safe logs, usage controls, deployment evidence, and docs', async () => {
     const environment = env();
     const overview = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations'), environment)).text();
     expect(overview).toContain('Current operational state');
     expect(overview).toContain('id="health"');
     expect(overview).toContain('Deployment evidence');
+    expect(overview).toContain('href="/operations/availability"');
+    expect(overview).toContain('href="/operations/logs"');
+    expect(overview).toContain('href="/operations/usage"');
 
-    const availability = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations?view=availability'), environment)).text();
+    const availability = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations/availability'), environment)).text();
     expect(availability).toContain('planned/manual offline');
     expect(availability).toContain('planned / unexpected');
 
-    const logs = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations?view=logs'), environment)).text();
+    const logs = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations/logs?level=warn&source=rest&limit=25&requestId=req-1'), environment)).text();
     expect(logs).toContain('Application Logs');
     expect(logs).toContain('Public-safe');
-    expect(logs).toContain('name="view" value="logs"');
+    expect(logs).not.toContain('name="view"');
+    expect(logs).toContain('action="/operations/logs"');
+    expect(logs).toContain('href="/operations/logs"');
 
-    const usage = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations?view=usage'), environment)).text();
+    const usage = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations/usage'), environment)).text();
     expect(usage).toContain('Cloudflare Usage &amp; Cost');
     expect(usage).toContain('Cost guardrail simulator');
     expect(usage).toContain('Usage-based spend');
     expect(usage).toContain('Provider billing cost is unavailable; no local pricing fallback is used.');
 
-    const docs = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations?view=docs'), environment)).text();
+    const docs = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations/docs'), environment)).text();
     expect(docs).toContain('OpenAPI JSON');
     expect(docs).toContain('docs/INTERACTIVE-DEMO-SPEC.md');
   });
 
-  it('uses the shared reporting presenter for the reports view', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/operations?view=reports', { headers: { accept: 'text/html' } }), env());
+  it('uses the shared reporting presenter without retaining view query state', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/operations/reports?report=operations&limit=10', { headers: { accept: 'text/html' } }), env());
     expect(response.status).toBe(200);
     const html = await response.text();
     expect(html).toContain('Unified reporting');
     expect(html).toContain('Collection discovery comes from reporting ownership and registered capabilities.');
     expect(html).toContain('src/reporting/presentation.ts');
-    expect(html).toContain('name="view" value="reports"');
+    expect(html).not.toContain('name="view"');
+    expect(html).toContain('action="/operations/reports"');
   });
 
-  it('keeps operations, admin, offline, security, and machine recovery interfaces reachable while intentionally offline', async () => {
+  it('keeps all six operations pages and recovery interfaces reachable while intentionally offline', async () => {
     const environment = env('offline');
     const alwaysReachable: Array<[string, RequestInit | undefined, number]> = [
-      ['/operations', { headers: { accept: 'text/html' } }, 200],
-      ['/operations?view=availability', { headers: { accept: 'text/html' } }, 200],
+      ...routes.map((path) => [path, { headers: { accept: 'text/html' } }, 200] as [string, RequestInit, number]),
       ['/security', { headers: { accept: 'text/html' } }, 200],
       ['/api/operations/health', undefined, 503],
       ['/api/operations/version', undefined, 200],
@@ -117,6 +133,19 @@ describe('consolidated operations surface', () => {
     for (const [path, init, status] of alwaysReachable) {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`, init), environment);
       expect(response.status, path).toBe(status);
+    }
+  });
+
+  it('keeps gated API/non-HTML/write traffic on structured 503 responses while offline', async () => {
+    const environment = env('offline');
+    for (const request of [
+      new Request('https://demo.wizardgang.ai/api/reporting/operations', { headers: { accept: 'application/json' } }),
+      new Request('https://demo.wizardgang.ai/platform', { headers: { accept: 'application/json' } }),
+      new Request('https://demo.wizardgang.ai/api/labs/workers', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' }),
+    ]) {
+      const response = await routeRequest(request, environment);
+      expect(response.status).toBe(503);
+      expect(response.headers.get('content-type')).toContain('application/json');
     }
   });
 
@@ -135,17 +164,21 @@ describe('consolidated operations surface', () => {
     }
   });
 
-  it('publishes only the canonical operations page in the sitemap', async () => {
+  it('publishes all six canonical operations pages in the sitemap', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/sitemap.xml'), env());
     expect(response.status).toBe(200);
     const sitemap = await response.text();
-    expect(sitemap).toContain('<loc>https://demo.wizardgang.ai/operations</loc>');
+    for (const path of routes) expect(sitemap, path).toContain(`<loc>https://demo.wizardgang.ai${path}</loc>`);
     expect(sitemap).not.toContain('/dashboard');
+    expect(sitemap).not.toContain('?view=');
   });
 
-  it('rejects unknown operations views instead of creating aliases', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/operations?view=not-a-view', { headers: { accept: 'text/html' } }), env());
-    expect(response.status).toBe(404);
-    expect(response.headers.get('location')).toBeNull();
+  it('returns ordinary 404s for every retired operations view URL', async () => {
+    const environment = env();
+    for (const view of ['overview', 'availability', 'logs', 'usage', 'reports', 'docs', 'not-a-view']) {
+      const response = await routeRequest(new Request(`https://demo.wizardgang.ai/operations?view=${view}`, { headers: { accept: 'text/html' } }), environment);
+      expect(response.status, view).toBe(404);
+      expect(response.headers.get('location'), view).toBeNull();
+    }
   });
 });

@@ -1,12 +1,17 @@
 # Operations
 
-`/operations` is the canonical server-rendered operations surface. Operational health, version, logs, and the synthetic budget control use `/api/operations/*`; normalized usage observations use the single reporting contract at `/api/reporting/operations`.
+`/operations` is the canonical server-rendered operations index. Availability, logs, usage, reports, and documentation are separately declared child resources. Operational health, version, logs, and the synthetic budget control use `/api/operations/*`; normalized usage observations use the single reporting contract at `/api/reporting/operations`.
 
 ## Canonical routes
 
 | Route | Method | Purpose | Offline |
 |---|---|---|---|
-| `/operations` | `GET` | Public operations UI with overview, availability, logs, usage, reports, and documentation views. | available |
+| `/operations` | `GET` | Public operations index and live overview. | available |
+| `/operations/availability` | `GET` | Availability and health interpretation. | available |
+| `/operations/logs` | `GET` | Public-safe application log viewer. | available |
+| `/operations/usage` | `GET` | Usage and cost telemetry presentation. | available |
+| `/operations/reports` | `GET` | Shared reporting presentation. | available |
+| `/operations/docs` | `GET` | Machine interfaces and source references. | available |
 | `/api/operations/health` | `GET` | Runtime and dependency health. | available |
 | `/api/operations/version` | `GET` | Deployed version and source metadata. | available |
 | `/api/operations/logs` | `GET` | Sanitized application log telemetry. | available |
@@ -19,14 +24,16 @@ The application route registry owns these paths. Removed operational API paths a
 
 ## Operations UI
 
-The browser surface remains `/operations`. Views are expressed as query state rather than separate page routes:
+The browser surface uses canonical page resources:
 
 - `/operations` — overview;
-- `/operations?view=availability` — availability and health interpretation;
-- `/operations?view=logs` — sanitized logs;
-- `/operations?view=usage` — usage telemetry;
-- `/operations?view=reports` — reporting summaries;
-- `/operations?view=docs` — current machine interfaces and source references.
+- `/operations/availability` — availability and health interpretation;
+- `/operations/logs` — sanitized logs;
+- `/operations/usage` — usage telemetry;
+- `/operations/reports` — reporting summaries;
+- `/operations/docs` — current machine interfaces and source references.
+
+The retired `?view=` forms are not aliases and return the ordinary 404. Query parameters remain available for true interaction state such as log filters, reporting collection selection, page size, and signed pagination cursors.
 
 The UI may link to the canonical machine endpoints when raw JSON is useful, but it does not own a second machine contract.
 
@@ -46,13 +53,13 @@ The endpoint is operational metadata, not a release action. DEMO-184 does not de
 
 `GET /api/operations/logs` returns the disclosure-safe application log projection. Log records are sanitized before they cross the public HTTP boundary and the endpoint retains its existing operational request limits and no-store behavior.
 
-The `/operations?view=logs` page consumes the same operational data instead of maintaining an independent log API.
+The `/operations/logs` page consumes the same operational data instead of maintaining an independent log API.
 
 ## Usage
 
 `GET /api/reporting/operations` returns cached, sanitized Cloudflare observations in the canonical reporting query envelope. Provider credentials and raw private provider payloads are never returned to the browser.
 
-The usage service remains responsible for provider acquisition, observation windows, freshness, normalization, and safe cache behavior. `/operations?view=usage` is only a presentation surface over that contract.
+The usage service remains responsible for provider acquisition, observation windows, freshness, normalization, and safe cache behavior. `/operations/usage` is only a presentation surface over that contract.
 
 ## Budget demonstration
 
@@ -66,7 +73,7 @@ The intentional offline gate distinguishes recovery/operations routes from ordin
 
 When the demo is offline:
 
-- `/operations`, `/security`, `/admin`, and `/offline` remain reachable;
+- all six `/operations` pages, `/security`, `/admin`, and `/offline` remain reachable;
 - `/api/operations/health` and `/api/operations/version` remain reachable for machine observation;
 - the registered operational telemetry routes remain governed by their declared offline policy;
 - ordinary gated APIs return the normal structured `503` response;

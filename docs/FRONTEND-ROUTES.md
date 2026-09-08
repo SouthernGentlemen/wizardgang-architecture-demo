@@ -1,6 +1,6 @@
 # Frontend Information Architecture
 
-DEMO-195 extends the application-owned browser hierarchy to assurance. `/platform`, `/interfaces`, and `/assurance` are real index pages, and each architectural presentation is a separately declared child resource. Assurance metadata references application route IDs; it does not own browser pathnames.
+DEMO-196 completes the application-owned browser hierarchy for the operations surface. `/platform`, `/interfaces`, `/assurance`, and `/operations` are real index pages, and each architectural presentation is a separately declared child resource. Feature metadata references application route IDs; it does not own browser pathnames.
 
 | Surface | Route ID | Path | Browser state |
 | --- | --- | --- | --- |
@@ -28,17 +28,22 @@ DEMO-195 extends the application-owned browser hierarchy to assurance. `/platfor
 | Incident assurance | `assurance.incidents` | `/assurance/incidents` | reporting state and stable fragments |
 | Concern intake | `assurance.concerns` | `/assurance/concerns` | none |
 | Security | `security.index` | `/security` | none |
-| Operations | `operations.page` | `/operations` | named `view` |
+| Operations index | `operations.index` | `/operations` | none |
+| Availability | `operations.availability` | `/operations/availability` | none |
+| Public-safe logs | `operations.logs` | `/operations/logs` | log filter and request-correlation state |
+| Usage and cost | `operations.usage` | `/operations/usage` | none |
+| Operations reports | `operations.reports` | `/operations/reports` | reporting/filter state only |
+| Operations documentation | `operations.docs` | `/operations/docs` | none |
 | Admin | `operations.admin` | `/admin` | none |
 | Offline | `operations.offline` | `/offline` | none |
 
-Route metadata owns labels, summaries, parentage, navigation placement, architecture-map membership, visibility, indexing policy, sitemap publication, and source provenance. `src/demos/registry.ts` retains query-view inventories only for surfaces where the view is true state rather than a separate resource.
+Route metadata owns labels, summaries, parentage, navigation placement, architecture-map membership, visibility, indexing policy, sitemap publication, and source provenance. There is no separate frontend route or query-view inventory.
 
 ## Resources versus state
 
-Platform, interface, and assurance presentations are resources, so they use canonical child pathnames. Retired resource-selection `view` forms have no redirect or alias and return the ordinary 404.
+Platform, interface, assurance, and operations presentations are resources, so they use canonical child pathnames. Retired resource-selection `view` forms have no redirect or alias and return the ordinary 404.
 
-Query parameters remain appropriate for interaction state. Examples include `/interfaces/i18n?locale=ar`, `/interfaces/accessibility?mode=broken`, REST `requestId` deep links, `/assurance/risks?residual=high#SEC-RISK-001`, and `/operations?view=logs`.
+Query parameters remain appropriate for interaction state. Examples include `/interfaces/i18n?locale=ar`, `/interfaces/accessibility?mode=broken`, REST `requestId` deep links, `/assurance/risks?residual=high#SEC-RISK-001`, and `/operations/logs?level=warn&source=rest`.
 
 ## Protocol and machine endpoints
 

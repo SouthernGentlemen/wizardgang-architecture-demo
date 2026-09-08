@@ -1877,6 +1877,112 @@
     "status": "working"
   },
   {
+    "id": "operations.availability",
+    "route": "/operations/availability",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Operations availability",
+    "description": "Measured availability history with planned maintenance separated from unexpected failures.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/operations-pages.ts",
+      "exportName": "uptimeContent",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "parent": "operations.index",
+      "label": "Availability",
+      "order": 0,
+      "navigation": "secondary",
+      "architectureMap": false,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.docs",
+    "route": "/operations/docs",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Operations documentation",
+    "description": "Repository-native standards, contracts, implementation sources, and live machine interfaces.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/operations-pages.ts",
+      "exportName": "docsContent",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "parent": "operations.index",
+      "label": "Documentation",
+      "order": 4,
+      "navigation": "secondary",
+      "architectureMap": false,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
     "id": "operations.health",
     "route": "/api/operations/health",
     "methods": [
@@ -1918,6 +2024,112 @@
         "tests/operational-route-registry.test.ts",
         "tests/router.test.ts"
       ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.index",
+    "route": "/operations",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Operations",
+    "description": "Canonical operations index for live health, availability, public-safe logs, usage, reporting, and documentation.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/operations-pages.ts",
+      "exportName": "dashboardContent",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "parent": "interfaces.frontend.index",
+      "label": "Operations",
+      "order": 4,
+      "navigation": "primary",
+      "architectureMap": true,
+      "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.logs",
+    "route": "/operations/logs",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Operations logs",
+    "description": "Public-safe application log viewer with bounded filtering and request correlation.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/logs.ts",
+      "exportName": "logsContent",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "parent": "operations.index",
+      "label": "Logs",
+      "order": 1,
+      "navigation": "secondary",
+      "architectureMap": false,
+      "sitemap": true
     },
     "status": "working"
   },
@@ -1967,8 +2179,8 @@
     "status": "working"
   },
   {
-    "id": "operations.page",
-    "route": "/operations",
+    "id": "operations.reports",
+    "route": "/operations/reports",
     "methods": [
       "GET"
     ],
@@ -1994,8 +2206,8 @@
       "crawling": "controlled",
       "indexing": "allow"
     },
-    "title": "Operations",
-    "description": "Canonical server-rendered operations surface for overview, availability, logs, usage, reports, and documentation.",
+    "title": "Operations reports",
+    "description": "Shared operational and assurance reporting through the canonical reporting presenter.",
     "docs": [
       "docs/ROUTES.md",
       "docs/OPERATIONS.md",
@@ -2003,18 +2215,18 @@
     ],
     "source": {
       "module": "src/demos/operations.ts",
-      "exportName": "renderOperations",
+      "exportName": "reportsContent",
       "tests": [
         "tests/operational-route-registry.test.ts",
         "tests/router.test.ts"
       ]
     },
     "navigation": {
-      "parent": "interfaces.frontend.index",
-      "label": "Operations",
-      "order": 4,
-      "navigation": "primary",
-      "architectureMap": true,
+      "parent": "operations.index",
+      "label": "Reports",
+      "order": 3,
+      "navigation": "secondary",
+      "architectureMap": false,
       "sitemap": true
     },
     "status": "working"
@@ -2155,6 +2367,59 @@
         "tests/operational-route-registry.test.ts",
         "tests/router.test.ts"
       ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.usage",
+    "route": "/operations/usage",
+    "methods": [
+      "GET"
+    ],
+    "kind": "page",
+    "visibility": "public",
+    "browser_html": "page",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "available"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "allow"
+    },
+    "title": "Operations usage and cost",
+    "description": "Live Cloudflare resource consumption with controlled cost-degradation scenarios.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/operations-pages.ts",
+      "exportName": "billingContent",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "navigation": {
+      "parent": "operations.index",
+      "label": "Usage & cost",
+      "order": 2,
+      "navigation": "secondary",
+      "architectureMap": false,
+      "sitemap": true
     },
     "status": "working"
   },

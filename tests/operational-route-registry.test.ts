@@ -2,6 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { matchRoute } from '../src/routing/registry';
 import { operationalRouteRegistry } from '../src/routing/operational-routes';
 
+const publicPagePolicy = {
+  methods: ['GET'], kind: 'page', visibility: 'public',
+  authentication: { mode: 'anonymous' }, authorization: { mode: 'none' }, sameOrigin: { mode: 'not-required' },
+  offline: { mode: 'available' }, cache: { mode: 'no-store' }, crawler: { crawling: 'controlled', indexing: 'allow' },
+} as const;
+
 const expectedPolicies = [
   {
     id: 'operations.admin', pattern: '/admin', methods: ['GET', 'POST'], kind: 'page', visibility: 'private',
@@ -44,11 +50,14 @@ const expectedPolicies = [
     authentication: { mode: 'anonymous' }, authorization: { mode: 'none' }, sameOrigin: { mode: 'not-required' },
     offline: { mode: 'gated' }, cache: { mode: 'public', maxAgeSeconds: 3600 }, crawler: { crawling: 'controlled', indexing: 'deny' },
   },
-  {
-    id: 'operations.page', pattern: '/operations', methods: ['GET'], kind: 'page', visibility: 'public',
-    authentication: { mode: 'anonymous' }, authorization: { mode: 'none' }, sameOrigin: { mode: 'not-required' },
-    offline: { mode: 'available' }, cache: { mode: 'no-store' }, crawler: { crawling: 'controlled', indexing: 'allow' },
-  },
+  ...[
+    ['operations.index', '/operations'],
+    ['operations.availability', '/operations/availability'],
+    ['operations.logs', '/operations/logs'],
+    ['operations.usage', '/operations/usage'],
+    ['operations.reports', '/operations/reports'],
+    ['operations.docs', '/operations/docs'],
+  ].map(([id, pattern]) => ({ id, pattern, ...publicPagePolicy })),
   ...[
     ['operations.api-logs', '/api/operations/logs', ['GET']],
     ['operations.api-budget', '/api/operations/budget', ['POST']],
@@ -90,11 +99,20 @@ describe('global operational route policies', () => {
     }
   });
 
-  it('does not register retired dashboard paths or unknown operations paths', () => {
+  it('does not register retired dashboard paths, old view aliases, or unknown operations paths', () => {
     for (const path of ['/dashboard', '/dashboard/uptime', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing', '/dashboard/not-a-route']) {
       expect(matchRoute(operationalRouteRegistry, 'GET', path), path).toEqual({ status: 'not-found', statusCode: 404 });
     }
     expect(matchRoute(operationalRouteRegistry, 'GET', '/api/operations/not-a-route')).toEqual({ status: 'not-found', statusCode: 404 });
+    expect(matchRoute(operationalRouteRegistry, 'GET', '/operations/not-a-route')).toEqual({ status: 'not-found', statusCode: 404 });
+  });
+
+  it('declares every operations page available while intentionally offline', () => {
+    for (const path of ['/operations', '/operations/availability', '/operations/logs', '/operations/usage', '/operations/reports', '/operations/docs']) {
+      const route = operationalRouteRegistry.declarations.find((candidate) => candidate.pattern === path);
+      expect(route?.offline, path).toEqual({ mode: 'available' });
+      expect(route?.kind, path).toBe('page');
+    }
   });
 
   it('attaches documentation and source metadata to every migrated route', () => {

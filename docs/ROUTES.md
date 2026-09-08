@@ -23,7 +23,12 @@ This file is generated from the active declarative application registry. Route I
 | `interfaces.mcp.console` | `/interfaces/mcp` | `GET` | page | public | gated | allow | Model Context Protocol console | `src/demos/mcp-page.ts` |
 | `interfaces.rest` | `/interfaces/rest` | `GET` | page | public | gated | allow | REST API | `src/demos/api-page.ts` |
 | `interfaces.webhooks.console` | `/interfaces/webhooks` | `GET` | page | public | gated | allow | Signed webhooks console | `src/demos/webhook-console.ts` |
-| `operations.page` | `/operations` | `GET` | page | public | available | allow | Operations | `src/demos/operations.ts` |
+| `operations.index` | `/operations` | `GET` | page | public | available | allow | Operations | `src/demos/operations-pages.ts` |
+| `operations.availability` | `/operations/availability` | `GET` | page | public | available | allow | Operations availability | `src/demos/operations-pages.ts` |
+| `operations.docs` | `/operations/docs` | `GET` | page | public | available | allow | Operations documentation | `src/demos/operations-pages.ts` |
+| `operations.logs` | `/operations/logs` | `GET` | page | public | available | allow | Operations logs | `src/demos/logs.ts` |
+| `operations.reports` | `/operations/reports` | `GET` | page | public | available | allow | Operations reports | `src/demos/operations.ts` |
+| `operations.usage` | `/operations/usage` | `GET` | page | public | available | allow | Operations usage and cost | `src/demos/operations-pages.ts` |
 | `platform.index` | `/platform` | `GET` | page | public | gated | allow | Platform demonstrations | `src/demos/platform.ts` |
 | `platform.d1` | `/platform/d1` | `GET` | page | public | gated | allow | Cloudflare D1 | `src/demos/d1-page.ts` |
 | `platform.durable-objects` | `/platform/durable-objects` | `GET` | page | public | gated | allow | Durable Objects | `src/demos/durable-objects.ts` |

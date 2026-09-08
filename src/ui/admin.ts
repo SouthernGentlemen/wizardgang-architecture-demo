@@ -9,6 +9,8 @@ import { referenceDetails, pageResponse } from './page';
 export function renderAdmin(env: Env, control: DemoControl, crawlerControl: CrawlerControl, notice = ''): Response {
   const offline = control.state === 'offline';
   const crawlEnabled = crawlerControl.state === 'enabled';
+  const adminRoute = routeUrl('operations.admin');
+  const robotsRoute = routeUrl('operations.robots');
   return pageResponse(env, 'Demo Admin', `
 <section class="page-header">
   <p class="eyebrow">Operations / protected</p>
@@ -34,7 +36,7 @@ ${notice ? `<section class="panel" role="status"><strong>${escapeHtml(notice)}</
     <dt>Current state</dt><dd><strong>${escapeHtml(control.state)}</strong></dd>
     <dt>Last changed</dt><dd>${escapeHtml(control.updatedAt)}${control.updatedBy ? ` by ${escapeHtml(control.updatedBy)}` : ''}</dd>
   </dl>
-  <form method="post" action="/admin">
+  <form method="post" action="${escapeHtml(adminRoute)}">
     <input type="hidden" name="control" value="demo">
     <div class="field">
       <label for="message">Public message</label>
@@ -58,10 +60,10 @@ ${notice ? `<section class="panel" role="status"><strong>${escapeHtml(notice)}</
   <dl style="margin-bottom:1.4rem">
     <dt>Current state</dt><dd><strong>${escapeHtml(crawlerControl.state)}</strong></dd>
     <dt>Last changed</dt><dd>${escapeHtml(crawlerControl.updatedAt)}${crawlerControl.updatedBy ? ` by ${escapeHtml(crawlerControl.updatedBy)}` : ''}</dd>
-    <dt>Published policy</dt><dd><a href="/robots.txt">Inspect <code>/robots.txt</code></a></dd>
+    <dt>Published policy</dt><dd><a href="${escapeHtml(robotsRoute)}">Inspect <code>${escapeHtml(robotsRoute)}</code></a></dd>
     <dt>Agent reference</dt><dd><a href="https://developers.openai.com/api/docs/bots">OpenAI crawler documentation</a></dd>
   </dl>
-  <form method="post" action="/admin">
+  <form method="post" action="${escapeHtml(adminRoute)}">
     <input type="hidden" name="control" value="chatgpt-crawl">
     <div class="meta">
       <button class="button-primary" name="state" value="enabled" type="submit">Enable ChatGPT access</button>
@@ -74,15 +76,16 @@ ${notice ? `<section class="panel" role="status"><strong>${escapeHtml(notice)}</
   <ul>
     <li>Ordinary browser demo pages redirect to the public offline message.</li>
     <li>Ordinary gated API, non-HTML, and write requests return structured <code>503</code> responses.</li>
-    <li>Operations, security, <code>/api/operations/health</code>, <code>/api/operations/version</code>, offline, admin, and required machine recovery routes remain reachable.</li>
+    <li>Operations, security, <code>${escapeHtml(routeUrl('operations.health'))}</code>, <code>${escapeHtml(routeUrl('operations.version'))}</code>, offline, admin, and required machine recovery routes remain reachable.</li>
     <li>Every state transition is written to the shared audit event stream.</li>
   </ul>
-</section>`, { cacheControl: 'no-store', noindex: true, canonicalPath: '/admin' });
+</section>`, { cacheControl: 'no-store', noindex: true, canonicalPath: adminRoute });
 }
 
 export function renderOffline(env: Env, control: DemoControl, requestedPath: string): Response {
   const offline = control.state === 'offline';
   const safePath = requestedPath.startsWith('/') && !requestedPath.startsWith('//') ? requestedPath : '/';
+  const operationsRoute = routeUrl('operations.index');
   const body = offline
     ? `<section>
   <p class="eyebrow">Demo status / offline</p>
@@ -101,15 +104,15 @@ export function renderOffline(env: Env, control: DemoControl, requestedPath: str
   <h2>Always reachable</h2>
   <p class="subtle">Operational and security surfaces stay available during an intentional offline window so the demo can be observed and recovered while ordinary demos are down.</p>
   <div class="meta">
-    <a href="/operations">Operations</a>
-    <a href="/operations#health">Health</a>
-    <a href="/operations?view=availability">Availability</a>
-    <a href="/operations?view=docs">Docs</a>
+    <a href="${escapeHtml(operationsRoute)}">Operations</a>
+    <a href="${escapeHtml(operationsRoute)}#health">Health</a>
+    <a href="${escapeHtml(routeUrl('operations.availability'))}">Availability</a>
+    <a href="${escapeHtml(routeUrl('operations.docs'))}">Docs</a>
     <a href="${escapeHtml(routeUrl('security.index'))}">Security</a>
-    <a href="/api/operations/health">Health JSON</a>
-    <a href="/api/operations/version">Version JSON</a>
-    <a href="/admin">Admin</a>
+    <a href="${escapeHtml(routeUrl('operations.health'))}">Health JSON</a>
+    <a href="${escapeHtml(routeUrl('operations.version'))}">Version JSON</a>
+    <a href="${escapeHtml(routeUrl('operations.admin'))}">Admin</a>
     <a href="${escapeHtml(repoUrl(env))}">Public source</a>
   </div>
-</section>`, { cacheControl: 'no-store', noindex: true, status: offline ? 503 : 200, canonicalPath: '/offline' });
+</section>`, { cacheControl: 'no-store', noindex: true, status: offline ? 503 : 200, canonicalPath: routeUrl('operations.offline') });
 }

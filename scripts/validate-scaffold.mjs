@@ -109,8 +109,7 @@ for (const removedToken of ['const machine =', 'requiredRoutes =', '/__api/', '/
   if (generator.includes(removedToken)) failures.push(`route generator still contains a hardcoded route inventory: ${removedToken}`);
 }
 
-const demoRegistry = read('src/demos/registry.ts');
-if (demoRegistry.includes('demosByRoute')) failures.push('removed demosByRoute lookup remains in the demo registry');
+if (exists('src/demos/registry.ts')) failures.push('retired demo query-view registry must not remain');
 
 const assurancePresentationModule = read('src/assurance/presentation.ts');
 if (assurancePresentationModule.includes('export *')) failures.push('src/assurance/presentation.ts must not remain an export-only barrel');

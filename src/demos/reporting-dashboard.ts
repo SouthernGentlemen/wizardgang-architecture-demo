@@ -6,6 +6,8 @@ import { escapeHtml } from '../lib/html';
 import type { Env } from '../types';
 import { renderReportingPresentation } from '../reporting/html';
 import { presentReportingQuery } from '../reporting/presentation';
+import { routeUrl } from '../routing/application-routes';
+import { cursorLink } from '../routing/cursor-link';
 import {
   queryReportingCollection,
   reportingCollectionFilters,
@@ -48,7 +50,8 @@ export function dashboardReportingRequestUrl(
 }
 
 function familyCard(env: Env, family: ReportingCollectionDescriptor, selected: boolean): string {
-  const links = [`<a href="/operations?view=reports&amp;report=${encodeURIComponent(family.id)}#reporting-browser">${selected ? 'Selected' : 'Inspect'} <span aria-hidden="true">→</span></a>`];
+  const reportRoute = `${routeUrl('operations.reports', {}, { report: family.id })}#reporting-browser`;
+  const links = [`<a href="${escapeHtml(reportRoute)}">${selected ? 'Selected' : 'Inspect'} <span aria-hidden="true">→</span></a>`];
   if (family.kind === 'structured' && family.sourcePaths[0]) {
     links.push(`<a href="${escapeHtml(sourceUrl(env, family.sourcePaths[0]))}">Canonical source ↗</a>`);
   }
@@ -66,13 +69,6 @@ function pageSize(url: URL): number {
   const value = Number(url.searchParams.get('limit') || '10');
   if (!Number.isInteger(value)) return 10;
   return Math.max(1, Math.min(50, value));
-}
-
-function nextHref(request: Request, cursor: string | null | undefined): string | null {
-  if (!cursor) return null;
-  const url = new URL(request.url);
-  url.searchParams.set('cursor', cursor);
-  return `${url.pathname}${url.search}${url.hash}`;
 }
 
 export async function renderUnifiedReportingPresentation(
@@ -95,7 +91,7 @@ export async function renderUnifiedReportingPresentation(
     usage,
   });
   const presentation = presentReportingQuery(result, { label: selected.label });
-  const next = nextHref(request, presentation.pagination?.nextCursor);
+  const next = cursorLink(request, presentation.pagination?.nextCursor);
   const limit = pageSize(url);
 
   return `<section class="operations-section" id="reporting" aria-labelledby="reporting-heading">
@@ -105,8 +101,7 @@ export async function renderUnifiedReportingPresentation(
   </section>
   <section class="operations-section" id="reporting-browser" aria-labelledby="reporting-browser-heading">
     <div class="operations-section-heading"><div><p class="eyebrow">Authorized selection</p><h2 id="reporting-browser-heading">Reporting browser</h2></div></div>
-    <form method="get" action="/operations" class="filter-form">
-      <input type="hidden" name="view" value="reports">
+    <form method="get" action="${escapeHtml(routeUrl('operations.reports'))}" class="filter-form">
       <label>Collection <select name="report">${families.map((family) => `<option value="${escapeHtml(family.id)}"${family.id === selected.id ? ' selected' : ''}>${escapeHtml(family.label)}</option>`).join('')}</select></label>
       ${filterControls(selected, url)}
       <label>Page size <select name="limit"><option value="10"${limit === 10 ? ' selected' : ''}>10</option><option value="25"${limit === 25 ? ' selected' : ''}>25</option><option value="50"${limit === 50 ? ' selected' : ''}>50</option></select></label>
