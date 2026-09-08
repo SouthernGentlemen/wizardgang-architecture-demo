@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.15.1 — 2026-09-08
+
+- Corrected the v0.15.0 release defect that still accepted retired `/assurance?view=` selectors. Any legacy `?view=` selector now falls through the ordinary 404 with no redirect, matching the canonical hierarchy contract.
+- Added a regression test for every former assurance selector and aligned package metadata with the forward correction release.
+
 ## 0.15.0 — 2026-09-08
 
 - Replaced query-selected frontend views with a canonical resource hierarchy of 30 public sitemap routes while preserving the generic declarative router, capability-owned declarations, generated route artifacts, and all API and protocol contracts.

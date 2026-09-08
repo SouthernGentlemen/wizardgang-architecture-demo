@@ -44,6 +44,17 @@ describe('canonical frontend route contract', () => {
     }
   });
 
+  it('uses the ordinary 404 for every retired assurance ?view= URL', async () => {
+    for (const view of ['overview', 'delivery', 'governance', 'evidence', 'compliance', 'risks', 'incidents', 'concerns', 'unknown']) {
+      const response = await routeRequest(new Request(`https://demo.wizardgang.ai/assurance?view=${view}`, {
+        headers: { accept: 'text/html' },
+      }), environment);
+      expect(response.status, view).toBe(404);
+      expect(response.headers.get('location'), view).toBeNull();
+      expect(await response.text(), view).toContain('404 / unknown route');
+    }
+  });
+
   it('keeps protocol URLs out of the frontend page registry', () => {
     const graphql = applicationRouteRegistry.declarations.find((route) => route.pattern === '/graphql');
     expect(graphql).toMatchObject({ kind: 'protocol', browserHtml: 'never' });

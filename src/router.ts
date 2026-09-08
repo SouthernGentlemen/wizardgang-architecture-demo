@@ -109,6 +109,11 @@ export async function routeRequest(request: Request, env: Env): Promise<Response
 async function routeRequestUnsafe(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
   const path = normalizeRoutePath(url.pathname);
+
+  // The former frontend selected conceptual pages with ?view=. Canonical child
+  // routes replaced that contract; every retired selector is an ordinary 404.
+  if (url.searchParams.has('view')) return renderNotFound(env);
+
   const match = matchRoute(applicationRouteRegistry, request.method, path);
 
   if (match.status === 'not-found') return renderNotFound(env);
