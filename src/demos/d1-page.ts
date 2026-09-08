@@ -18,7 +18,6 @@ export function d1Content(env: Env): PageContent {
 
   return pageContent(env, 'Cloudflare D1', `
 <section class="page-header lab-page-header d1-page-header">
-  <p class="eyebrow">Platform / D1</p>
   <h1>Cloudflare D1 Database</h1>
   <p class="lede">Create and modify relational data while inspecting the SQL executed against the live database.</p>
   <div class="page-tools"><a class="text-link" href="${sourceUrl(env, 'src/demos/d1-page.ts')}">View source ↗</a></div>
@@ -49,7 +48,7 @@ export function d1Content(env: Env): PageContent {
         <p class="operation-status d1-form-status" role="status" aria-live="polite" data-form-status="users"></p>
         <div class="button-row"><button class="button-primary" type="submit">Create user</button><button type="button" data-cancel="users">Cancel</button></div>
       </form>
-      <div class="table-wrap"><table><caption class="sr-only">Users in the demo_users table</caption><thead><tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Role</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead><tbody data-rows="users"><tr><td colspan="4">Loading users…</td></tr></tbody></table></div>
+      <div class="table-wrap" tabindex="0" aria-label="Users table"><table><caption class="sr-only">Users in the demo_users table</caption><thead><tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Role</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead><tbody data-rows="users"><tr><td colspan="4">Loading users…</td></tr></tbody></table></div>
     </section>
 
     <section class="panel d1-table-panel" id="d1-tasks-panel" role="tabpanel" aria-labelledby="d1-tasks-tab" data-table-panel="tasks" hidden>
@@ -67,7 +66,7 @@ export function d1Content(env: Env): PageContent {
         <p class="operation-status d1-form-status" role="status" aria-live="polite" data-form-status="tasks"></p>
         <div class="button-row"><button class="button-primary" type="submit">Create task</button><button type="button" data-cancel="tasks">Cancel</button></div>
       </form>
-      <div class="table-wrap"><table><caption class="sr-only">Tasks in the demo_tasks table</caption><thead><tr><th scope="col">Task</th><th scope="col">Assignee</th><th scope="col">Status</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead><tbody data-rows="tasks"><tr><td colspan="4">Loading tasks…</td></tr></tbody></table></div>
+      <div class="table-wrap" tabindex="0" aria-label="Tasks table"><table><caption class="sr-only">Tasks in the demo_tasks table</caption><thead><tr><th scope="col">Task</th><th scope="col">Assignee</th><th scope="col">Status</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead><tbody data-rows="tasks"><tr><td colspan="4">Loading tasks…</td></tr></tbody></table></div>
     </section>
   </div>
 

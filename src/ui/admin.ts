@@ -13,7 +13,6 @@ export function renderAdmin(env: Env, control: DemoControl, crawlerControl: Craw
   const robotsRoute = routeUrl('operations.robots');
   return pageResponse(env, 'Demo Admin', `
 <section class="page-header">
-  <p class="eyebrow">Operations / protected</p>
   <h1>Demo Admin</h1>
   <p class="lede">Control public demo availability and ChatGPT web access without disabling the operations, security, health, recovery, or administration surfaces.</p>
   <div class="page-tools">
@@ -79,7 +78,7 @@ ${notice ? `<section class="panel" role="status"><strong>${escapeHtml(notice)}</
     <li>Operations, security, <code>${escapeHtml(routeUrl('operations.health'))}</code>, <code>${escapeHtml(routeUrl('operations.version'))}</code>, offline, admin, and required machine recovery routes remain reachable.</li>
     <li>Every state transition is written to the shared audit event stream.</li>
   </ul>
-</section>`, { cacheControl: 'no-store', noindex: true, canonicalPath: adminRoute });
+</section>`, { routeId: 'operations.admin', cacheControl: 'no-store', noindex: true, canonicalPath: adminRoute });
 }
 
 export function renderOffline(env: Env, control: DemoControl, requestedPath: string): Response {
@@ -114,5 +113,5 @@ export function renderOffline(env: Env, control: DemoControl, requestedPath: str
     <a href="${escapeHtml(routeUrl('operations.admin'))}">Admin</a>
     <a href="${escapeHtml(repoUrl(env))}">Public source</a>
   </div>
-</section>`, { cacheControl: 'no-store', noindex: true, status: offline ? 503 : 200, canonicalPath: routeUrl('operations.offline') });
+</section>`, { routeId: 'operations.offline', cacheControl: 'no-store', noindex: true, status: offline ? 503 : 200, canonicalPath: routeUrl('operations.offline') });
 }

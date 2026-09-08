@@ -112,7 +112,7 @@ describe('operations proof surface', () => {
     expect(dashboard).toContain('User-requested ChatGPT fetch');
     expect(dashboard).toContain('href="/admin"');
     expect(dashboard).toContain('href="/robots.txt"');
-    expect(dashboard).toContain('aria-label="Operations views"');
+    expect(dashboard).toContain('aria-label="Operations sections"');
     expect(dashboard).toContain('Collection discovery comes from reporting ownership and registered capabilities.');
     expect(dashboard).toContain('href="/operations/reports?report=compliance#reporting-browser"');
     expect(dashboard).toContain('Shared reporting presenter');

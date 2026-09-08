@@ -52,7 +52,7 @@ export function renderReportingPresentation(
     ? `<div class="availability-empty">${presentation.availability === 'available' ? 'No records in this authorized selection.' : `Source ${escapeHtml(availabilityLabel(presentation.availability).toLowerCase())}.`}</div>`
     : '';
   const pagination = presentation.pagination
-    ? `<nav class="link-row" aria-label="Reporting pagination"><span>Showing ${presentation.pagination.returned} of ${presentation.pagination.total}</span>${presentation.pagination.nextCursor && options.nextHref ? `<a href="${escapeHtml(options.nextHref)}">Next page →</a>` : presentation.pagination.completeness === 'partial' ? `<span>Partial result${presentation.pagination.partialReason ? ` · ${escapeHtml(presentation.pagination.partialReason)}` : ''}</span>` : ''}</nav>`
+    ? `<nav class="link-row" aria-label="${escapeHtml(presentation.label)} pagination"><span>Showing ${presentation.pagination.returned} of ${presentation.pagination.total}</span>${presentation.pagination.nextCursor && options.nextHref ? `<a href="${escapeHtml(options.nextHref)}">Next page →</a>` : presentation.pagination.completeness === 'partial' ? `<span>Partial result${presentation.pagination.partialReason ? ` · ${escapeHtml(presentation.pagination.partialReason)}` : ''}</span>` : ''}</nav>`
     : '';
   return `<section aria-labelledby="${escapeHtml(headingId)}">
     <div class="operations-section-heading"><div><p class="eyebrow">Shared reporting presenter</p><h2 id="${escapeHtml(headingId)}">${escapeHtml(presentation.label)}</h2></div><span class="${badgeClass(presentation.availability)}">${escapeHtml(availabilityLabel(presentation.availability))}</span></div>

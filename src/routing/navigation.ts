@@ -38,9 +38,15 @@ export function secondaryNavigation(parentRouteId: string): RegisteredRouteMetad
     .filter((route) => route.page?.navigation === 'secondary' && route.page.parent === parentRouteId);
 }
 
+/** Every public, stable child page belongs on the homepage architecture map. */
 export function architectureMapEntries(): RegisteredRouteMetadataView[] {
   return registeredPages()
-    .filter((route) => route.page?.architectureMap && route.visibility === 'public' && route.methods.includes('GET'));
+    .filter((route) => (
+      route.visibility === 'public'
+      && route.methods.includes('GET')
+      && Boolean(route.page?.parent)
+      && !route.pattern.includes(':')
+    ));
 }
 
 export function sitemapPaths(): string[] {

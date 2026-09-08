@@ -54,7 +54,6 @@ export function i18nContent(request: Request, env: Env): PageContent {
   const localeOptions = (Object.keys(resources) as Locale[]).map((code) => `<option value="${code}"${code === locale ? ' selected' : ''}>${escapeHtml(localeNames[code])}</option>`).join('');
   const initialExcerpt = { [selectedPluralKey]: m(selectedPluralKey) };
   const body = `<section class="page-header">
-    <div class="eyebrow" data-copy="demo.eyebrow">${escapeHtml(m('demo.eyebrow'))}</div>
     <h1 data-copy="demo.title">${escapeHtml(m('demo.title'))}</h1>
     <p data-copy="demo.summary">${escapeHtml(m('demo.summary'))}</p>
     <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/i18n.ts'))}">Route source</a>${referenceDetails([

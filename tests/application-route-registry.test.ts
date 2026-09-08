@@ -76,12 +76,17 @@ describe('complete declarative application routing', () => {
     expect(primaryNavigation().map((route) => route.page?.label)).toEqual([
       'Architecture', 'Platform', 'Interfaces', 'Assurance', 'Operations', 'Security',
     ]);
-    expect(architectureMapEntries().map((route) => route.pattern)).toEqual([
-      '/interfaces/rest', '/platform/edge', '/interfaces/graphql', '/platform',
-      '/platform/workers', '/interfaces', '/interfaces/webhooks', '/platform/durable-objects',
-      '/assurance', '/interfaces/identity', '/platform/d1', '/interfaces/mcp',
-      '/operations', '/platform/r2', '/security', '/interfaces/i18n', '/interfaces/accessibility',
-    ]);
+    const expectedArchitectureRoutes = applicationRouteRegistry.declarations
+      .filter((route) => (
+        route.kind === 'page'
+        && route.page?.parent
+        && route.visibility === 'public'
+        && route.methods.includes('GET')
+        && !route.pattern.includes(':')
+      ))
+      .map((route) => route.id)
+      .sort();
+    expect(architectureMapEntries().map((route) => route.id).sort()).toEqual(expectedArchitectureRoutes);
     expect(secondaryNavigation('interfaces.frontend.index')).toEqual([]);
     expect(secondaryNavigation('platform.index').map((route) => route.pattern)).toEqual([
       '/platform/edge', '/platform/workers', '/platform/durable-objects', '/platform/d1', '/platform/r2',

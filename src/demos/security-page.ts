@@ -59,7 +59,6 @@ export function securityContent(env: Env): PageContent {
 
   return pageContent(env, 'Security', `
   <section class="page-header assurance-header">
-    <p class="eyebrow"><a href="${escapeHtml(routeUrl('assurance.index'))}">Delivery &amp; Governance</a> / ${escapeHtml(SECURITY_ROUTE)}</p>
     <h1>Report security privately.</h1>
     <p class="lede">Use the repository's private vulnerability channel for suspected vulnerabilities, active security incidents, credentials, exploit details, or sensitive infrastructure information.</p>
     <p class="assurance-notice"><strong>Do not open a public issue for sensitive security information.</strong> Private report contents are never exposed through the public assurance registry.</p>

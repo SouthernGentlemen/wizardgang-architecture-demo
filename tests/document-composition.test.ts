@@ -51,7 +51,6 @@ describe('document composition', () => {
       canonicalPath: '/platform?view=edge',
       lang: 'ar', dir: 'rtl', status: 404, cacheControl: 'no-store', noindex: true,
       headExtra: '<meta name="boundary-proof" content="yes">',
-      beforeMain: '<div class="site-main"><nav aria-label="Views">View selector</nav></div>',
     };
     const response = renderPage(env, content);
     const html = await response.text();
@@ -65,7 +64,6 @@ describe('document composition', () => {
     expect(html).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/platform?view=edge">');
     expect(html).toContain('<meta property="og:url" content="https://demo.wizardgang.ai/platform?view=edge">');
     expect(html).toContain('<meta name="boundary-proof" content="yes">');
-    expect(html.indexOf('aria-label="Views"')).toBeLessThan(html.indexOf('<main'));
     expect(headings(html)).toEqual([1, 2, 3]);
   });
 
@@ -83,6 +81,9 @@ describe('document composition', () => {
       expect(topLevelHtmlElements(html), path).toHaveLength(1);
       expect(html.match(/<main\b/g), path).toHaveLength(1);
       expect(html.match(/<h1(?:\s|>)/g), path).toHaveLength(1);
+      expect(html.match(/<[a-z][^>]*\baria-current="page"[^>]*>/gi), path).toHaveLength(1);
+      const pageHeader = html.match(/<section class="page-header[^"]*"[^>]*>([\s\S]*?)<\/section>/)?.[1] ?? '';
+      expect(pageHeader, path).not.toContain('class="eyebrow"');
       expect(levels[0], path).toBe(1);
       expect(html.indexOf('<h1'), path).toBeGreaterThan(html.indexOf('<main'));
       for (let index = 1; index < levels.length; index += 1) {

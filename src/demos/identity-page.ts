@@ -17,7 +17,6 @@ export function identityContent(env: Env): PageContent {
   ];
   return pageContent(env, 'Authentication & SSO', `
 <section class="page-header lab-page-header identity-page-header">
-  <p class="eyebrow">Interfaces / Identity</p>
   <h1>Authentication &amp; SSO</h1>
   <p class="lede">Authenticate against real identity providers, inspect the validated identity payload, and see how provider-specific claims become one application identity.</p>
   <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/identity-page.ts'))}">View source ↗</a></div>
@@ -92,7 +91,7 @@ export function identityContent(env: Env): PageContent {
 
 <section class="identity-architecture" aria-labelledby="identity-architecture-heading">
   <div class="identity-section-heading"><div><p class="eyebrow">Trust boundary</p><h2 id="identity-architecture-heading">Many providers. One application identity.</h2></div></div>
-  <div class="identity-architecture-map">
+  <div class="identity-architecture-map" tabindex="0" aria-label="Identity providers pass through protocol validation into one normalized identity, authorization policy, and WizardGang session">
     <div class="identity-source-stack"><span>Microsoft <small>OIDC</small></span><span>Microsoft <small>SAML 2.0</small></span><span>Google <small>OIDC</small></span><span>GitHub <small>OAuth 2.0</small></span></div>
     <span class="identity-arrow" aria-hidden="true">→</span><strong>Protocol<br>validation</strong><span class="identity-arrow" aria-hidden="true">→</span><strong>Normalized<br>identity</strong><span class="identity-arrow" aria-hidden="true">→</span><strong>Authorization<br>policy</strong><span class="identity-arrow" aria-hidden="true">→</span><strong>WizardGang<br>session</strong>
   </div>

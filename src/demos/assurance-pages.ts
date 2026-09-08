@@ -29,7 +29,6 @@ import {
   type PublishedAssuranceRecordMap,
 } from '../assurance/publication';
 
-const ASSURANCE_INDEX_ROUTE = routeUrl('assurance.index');
 const CONCERNS_ROUTE = routeUrl('assurance.concerns');
 const RISK_ROUTE = assuranceHtmlRoute('risks');
 const INCIDENT_ROUTE = assuranceHtmlRoute('incidents');
@@ -47,7 +46,6 @@ export function concernsContent(env: Env): PageContent {
 
   return pageContent(env, 'Report a Concern', `
   <section class="page-header assurance-header">
-    <p class="eyebrow"><a href="${escapeHtml(ASSURANCE_INDEX_ROUTE)}">Delivery &amp; Governance</a> / ${escapeHtml(CONCERNS_ROUTE)}</p>
     <h1>Put concerns into controlled work.</h1>
     <p class="lede">Choose a structured public issue form. The submitted issue becomes part of the reviewable work and change history for this demonstration.</p>
     <p class="assurance-notice"><strong>Public intake only:</strong> remove credentials, personal data, private infrastructure details, and unreleased exploit information.</p>
@@ -123,7 +121,6 @@ export function risksContent(request: Request, env: Env): PageContent {
 
   return pageContent(env, 'Risk Assurance', `
   <section class="page-header assurance-header">
-    <p class="eyebrow"><a href="${escapeHtml(ASSURANCE_INDEX_ROUTE)}">Delivery &amp; Governance</a> / ${escapeHtml(RISK_ROUTE)}</p>
     <h1>Review the public risk assurance record.</h1>
     <p class="lede">This disclosure-safe view carries stable security and AI risk identifiers, current scores, treatment direction, lifecycle state, and reviewable evidence/control links from the controlled registers.</p>
     <p class="assurance-notice"><strong>Public assurance boundary:</strong> private treatment actions, risk-owner and acceptance detail, sensitive infrastructure context, and acceptance rationale are intentionally omitted. These records do not claim certification or residual-risk acceptance.</p>
@@ -200,7 +197,6 @@ export function incidentsContent(env: Env): PageContent {
 
   return pageContent(env, 'Incidents & Exercises', `
   <section class="page-header assurance-header">
-    <p class="eyebrow"><a href="${escapeHtml(ASSURANCE_INDEX_ROUTE)}">Delivery &amp; Governance</a> / ${escapeHtml(INCIDENT_ROUTE)}</p>
     <h1>Incidents and exercises stay distinct.</h1>
     <p class="lede">This public register exposes disclosure-safe incident and response-exercise records without turning vulnerabilities, advisories, simulations, or unknown history into incidents.</p>
     <p class="assurance-notice"><strong>Current retained posture:</strong> ${counts.actualIncidents} established actual incident records; ${counts.exercises} exercise record, of which ${counts.plannedExercises} is planned and ${counts.completedExercises} is completed or in post-exercise follow-up. Zero retained incident records is not a claim that an incident has never occurred.</p>

@@ -10,7 +10,6 @@ const ROUTE_ID = 'interfaces.index';
 export function interfacesContent(env: Env): PageContent {
   const children = secondaryNavigation(ROUTE_ID);
   const body = `<section class="page-header">
-    <p class="eyebrow">Architecture / Interfaces</p>
     <h1>Interfaces</h1>
     <p class="lede">Explore each application interface, identity surface, localization proof, and accessibility laboratory at its own canonical route.</p>
     <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/interfaces.ts'))}">Interfaces index source</a></div>
