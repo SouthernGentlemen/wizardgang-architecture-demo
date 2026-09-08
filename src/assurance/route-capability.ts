@@ -1,3 +1,4 @@
+import type { PageMetadata } from '../routing/application-routes';
 import type { Env } from '../types';
 
 export interface AssuranceRouteSourceMetadata {
@@ -15,6 +16,7 @@ export interface AssuranceHtmlRouteHandlerRegistration {
   handler: AssuranceRouteResponseHandler;
   source: AssuranceRouteSourceMetadata;
   offline?: 'available' | 'gated';
+  page?: PageMetadata;
 }
 
 export interface AssuranceRouteCapability {

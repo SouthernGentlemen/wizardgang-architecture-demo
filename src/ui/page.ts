@@ -1,6 +1,10 @@
 import type { DemoDefinition, Env } from '../types';
-import type { FrontendSurfaceDefinition } from '../demos/registry';
-import { frontendUrl } from '../demos/registry';
+import { routeUrl } from '../routing/application-routes';
+import {
+  primaryNavigation,
+  registeredRouteMetadata,
+  type RegisteredRouteMetadataView,
+} from '../routing/navigation';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
 import { styles } from './styles';
@@ -8,9 +12,8 @@ import { withSecurityHeaders } from '../lib/http';
 
 const SITE_NAME = 'WizardGang Architecture Demo';
 const DEFAULT_DESCRIPTION = 'Executable companion to WG-ARCH-001. Every architecture concept has a stable route, a live implementation, and a direct link to the public code behind it.';
-const HOME_ROUTE = frontendUrl('interfaces.frontend.index');
-const OPERATIONS_ROUTE = frontendUrl('operations.page');
-const ASSURANCE_ROUTE = frontendUrl('assurance.wizardgang-public-assurance.html');
+const ROOT_ROUTE_ID = 'interfaces.frontend.index';
+const OPERATIONS_ROUTE_ID = 'operations.page';
 
 /** Acid square with an offset violet square — the same mark as the wordmark. */
 const FAVICON = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#08080b"/><rect x="5" y="15" width="12" height="12" fill="#d9ff43"/><rect x="15" y="5" width="12" height="12" fill="#a489ff"/></svg>')}`;
@@ -31,6 +34,7 @@ export interface PageContent {
   cacheControl?: string;
   noindex?: boolean;
   canonicalPath?: string;
+  routeId?: string;
   /** Surface-level navigation/chrome rendered before main without participating in the document heading outline. */
   beforeMain?: string;
 }
@@ -51,14 +55,36 @@ export function pageContent(
     description,
     body,
     ...contentOptions,
-    canonicalPath: contentOptions.canonicalPath ?? HOME_ROUTE,
+    canonicalPath: contentOptions.canonicalPath ?? routeUrl(ROOT_ROUTE_ID),
   };
 }
 
+function ancestorRouteIds(routeId: string | undefined): ReadonlySet<string> {
+  if (!routeId) return new Set();
+  const byId = new Map(registeredRouteMetadata().map((route) => [route.id, route]));
+  const ancestors = new Set<string>();
+  let current = byId.get(routeId);
+  while (current?.page?.parent) {
+    const parentId = current.page.parent;
+    if (ancestors.has(parentId)) break;
+    ancestors.add(parentId);
+    current = byId.get(parentId);
+  }
+  return ancestors;
+}
+
+function primaryNavigationHtml(currentRouteId: string | undefined): string {
+  const ancestors = ancestorRouteIds(currentRouteId);
+  return primaryNavigation().map((route) => {
+    const current = route.id === currentRouteId;
+    const sectionCurrent = !current && ancestors.has(route.id);
+    return `<a href="${escapeHtml(routeUrl(route.id))}"${current ? ' aria-current="page"' : ''}${sectionCurrent ? ' data-section-current style="color:var(--paper)"' : ''}>${escapeHtml(route.page!.label)}</a>`;
+  }).join('\n    ');
+}
+
 function shell(env: Env, content: PageContent): Response {
-  const operationsCurrent = content.canonicalPath?.startsWith(OPERATIONS_ROUTE) ? ' aria-current="page"' : '';
-  const assuranceCurrent = content.canonicalPath?.startsWith(ASSURANCE_ROUTE) ? ' aria-current="page"' : '';
-  const canonicalHref = new URL(content.canonicalPath ?? HOME_ROUTE, 'https://demo.wizardgang.ai').toString();
+  const homeRoute = routeUrl(ROOT_ROUTE_ID);
+  const canonicalHref = new URL(content.canonicalPath ?? homeRoute, 'https://demo.wizardgang.ai').toString();
   const html = `<!doctype html>
 <html lang="${escapeHtml(content.lang ?? 'en')}"${content.dir ? ` dir="${content.dir}"` : ''}>
 <head>
@@ -88,13 +114,12 @@ function shell(env: Env, content: PageContent): Response {
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
 <header class="site-header">
-  <a class="brand" href="${escapeHtml(HOME_ROUTE)}" aria-label="WizardGang Architecture Demo home">
+  <a class="brand" href="${escapeHtml(homeRoute)}" aria-label="WizardGang Architecture Demo home">
     <span class="brand-mark" aria-hidden="true"></span>
     <span class="brand-copy"><strong>WIZARDGANG</strong><small>Architecture demo</small></span>
   </a>
   <nav class="nav" aria-label="Primary">
-    <a href="${escapeHtml(OPERATIONS_ROUTE)}"${operationsCurrent}>Operations</a>
-    <a href="${escapeHtml(ASSURANCE_ROUTE)}"${assuranceCurrent}>Assurance</a>
+    ${primaryNavigationHtml(content.routeId)}
     <a href="https://wizardgang.ai/">Main site <span aria-hidden="true">↗</span></a>
     <button type="button" data-theme-toggle aria-label="Switch to light theme" aria-pressed="false">Theme: Light</button>
   </nav>
@@ -129,8 +154,9 @@ export function pageResponse(
   return renderPage(env, pageContent(env, title, body, options));
 }
 
-export function renderIndex(env: Env, list: FrontendSurfaceDefinition[]): Response {
-  const groups = [...new Set(list.map((surface) => surface.group))];
+export function renderIndex(env: Env, list: RegisteredRouteMetadataView[]): Response {
+  const homeRoute = routeUrl(ROOT_ROUTE_ID);
+  const operationsRoute = routeUrl(OPERATIONS_ROUTE_ID);
   const body = `
 <section class="page-header home-header">
   <p class="eyebrow">WG-ARCH-001 / executable companion</p>
@@ -139,23 +165,19 @@ export function renderIndex(env: Env, list: FrontendSurfaceDefinition[]): Respon
 </section>
 <section class="status-strip" aria-label="Live service state">
   <a href="/api/operations/version"><span>Version</span><strong>${escapeHtml(env.DEPLOYED_VERSION || 'development')}</strong></a>
-  <a href="${escapeHtml(OPERATIONS_ROUTE)}#health"><span>Health</span><strong data-health>Checking…</strong></a>
+  <a href="${escapeHtml(operationsRoute)}#health"><span>Health</span><strong data-health>Checking…</strong></a>
 </section>
-${groups.map((group) => {
-    const inGroup = list.filter((surface) => surface.group === group);
-    return `
-<section id="${escapeHtml(slug(group))}">
-  <div class="section-head"><h2>${escapeHtml(group)}</h2><span>${inGroup.length} surface${inGroup.length === 1 ? '' : 's'}</span></div>
+<section id="architecture-map">
+  <div class="section-head"><h2>Public domains</h2><span>${list.length} surfaces</span></div>
   <div class="grid">
-    ${inGroup.map((surface) => `
-      <a class="card" href="${escapeHtml(surface.route)}">
-        <p class="eyebrow">${escapeHtml(surface.route)}</p>
-        <h3>${escapeHtml(surface.title)}</h3>
-        <p>${escapeHtml(surface.summary)}</p>
+    ${list.map((route) => `
+      <a class="card" href="${escapeHtml(routeUrl(route.id))}">
+        <p class="eyebrow">${escapeHtml(route.pattern)}</p>
+        <h3>${escapeHtml(route.page!.label)}</h3>
+        <p>${escapeHtml(route.page!.summary)}</p>
       </a>`).join('')}
   </div>
-</section>`;
-  }).join('')}
+</section>
 <script>
 fetch('/api/operations/health').then((r) => r.json()).then((h) => {
   const slot = document.querySelector('[data-health]');
@@ -165,11 +187,11 @@ fetch('/api/operations/health').then((r) => r.json()).then((h) => {
   if (slot) slot.textContent = 'Unavailable';
 });
 </script>`;
-  return pageResponse(env, 'Architecture', body, { canonicalPath: HOME_ROUTE, description: DEFAULT_DESCRIPTION });
-}
-
-function slug(value: string): string {
-  return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return pageResponse(env, 'Architecture', body, {
+    routeId: ROOT_ROUTE_ID,
+    canonicalPath: homeRoute,
+    description: DEFAULT_DESCRIPTION,
+  });
 }
 
 /** Previous/next within the same group keeps adjacent proofs easy to reach. */
@@ -225,7 +247,7 @@ export function demoContent(env: Env, demo: DemoDefinition, all: DemoDefinition[
   ];
   const body = `
 <section class="page-header">
-  <p class="eyebrow"><a href="${escapeHtml(HOME_ROUTE)}#${escapeHtml(slug(demo.group))}">${escapeHtml(demo.group)}</a> / ${escapeHtml(demo.route)}</p>
+  <p class="eyebrow"><a href="${escapeHtml(routeUrl(ROOT_ROUTE_ID))}">${escapeHtml(demo.group)}</a> / ${escapeHtml(demo.route)}</p>
   <h1>${escapeHtml(demo.title)}</h1>
   <p class="lede">${escapeHtml(demo.summary)}</p>
   ${demo.notice ? `<p class="subtle">${escapeHtml(demo.notice)}</p>` : ''}
@@ -272,6 +294,6 @@ export function renderNotFound(env: Env): Response {
   <p class="eyebrow">404 / unknown route</p>
   <h1>That route does not exist.</h1>
   <p class="lede">Every published route is registered in the route map and backed by a source module.</p>
-  <div class="meta"><a href="${escapeHtml(HOME_ROUTE)}">Architecture map</a><a href="${escapeHtml(OPERATIONS_ROUTE)}">Operations</a><a href="${escapeHtml(sourceUrl(env, 'docs/ROUTES.md'))}">Route map</a></div>
+  <div class="meta"><a href="${escapeHtml(routeUrl(ROOT_ROUTE_ID))}">Architecture map</a><a href="${escapeHtml(routeUrl(OPERATIONS_ROUTE_ID))}">Operations</a><a href="${escapeHtml(sourceUrl(env, 'docs/ROUTES.md'))}">Route map</a></div>
 </section>`, { status: 404, noindex: true });
 }

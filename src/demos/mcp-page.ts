@@ -83,7 +83,7 @@ export async function mcpContent(request: Request, env: Env): Promise<PageConten
 
   const body = `
 <section class="page-header mcp-page-header">
-  <p class="eyebrow"><a href="/#interfaces">Interfaces</a> / MCP</p>
+  <p class="eyebrow"><a href="/interfaces">Interfaces</a> / MCP</p>
   <h1>Model Context Protocol</h1>
   <p class="lede">Connect Claude, Codex, or any compatible MCP client to the live demo and invoke read-only tools through the same application permissions used by the rest of the platform.</p>
   <div class="mcp-badges" aria-label="MCP server characteristics">

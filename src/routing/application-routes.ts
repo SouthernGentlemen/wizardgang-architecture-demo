@@ -1,6 +1,5 @@
 import type { AdminIdentity } from '../lib/admin-auth';
 import type { Env } from '../types';
-import { surfaces } from '../demos/registry';
 import {
   assuranceDeclarativeRouteRegistry,
   type AssuranceRouteContext,
@@ -24,13 +23,19 @@ import {
   type RouteModule,
   type RouteRegistry,
 } from './registry';
-import {
-  configureRegisteredRoutes,
-  type RegisteredPageMetadata,
-} from './navigation';
+import { configureRegisteredRoutes } from './navigation';
 import { withRouteQuery, type RouteQuery } from './route-url';
 
 export type BrowserHtmlPolicy = 'page' | 'never';
+
+export interface PageMetadata {
+  parent?: string;
+  label: string;
+  summary: string;
+  order: number;
+  navigation: 'primary' | 'secondary' | 'none';
+  architectureMap: boolean;
+}
 
 export interface ApplicationRouteContext {
   env: Env;
@@ -39,30 +44,14 @@ export interface ApplicationRouteContext {
 
 export interface ApplicationRouteDeclaration extends RouteDeclaration<ApplicationRouteContext> {
   browserHtml: BrowserHtmlPolicy;
-  navigation?: RegisteredPageMetadata;
+  page?: PageMetadata;
 }
 
-const surfaceMetadata = new Map<string, (typeof surfaces)[number]>(
-  surfaces.map((surface) => [surface.routeId, surface]),
-);
+type RouteWithPage<TContext> = RouteDeclaration<TContext> & { page?: PageMetadata };
 
 function browserHtmlFor<TContext>(route: RouteDeclaration<TContext>): BrowserHtmlPolicy {
   const explicit = (route as RouteDeclaration<TContext> & { browserHtml?: BrowserHtmlPolicy }).browserHtml;
   return explicit ?? (route.kind === 'page' ? 'page' : 'never');
-}
-
-function navigationFor<TContext>(route: RouteDeclaration<TContext>): RegisteredPageMetadata | undefined {
-  const surface = surfaceMetadata.get(route.id);
-  if (!surface?.navigation) return undefined;
-  return {
-    group: surface.group,
-    label: surface.title,
-    summary: surface.summary,
-    order: surface.order,
-    index: surface.index,
-    sitemap: surface.sitemap,
-    surface,
-  };
 }
 
 function validateApplicationDeclaration(route: ApplicationRouteDeclaration): void {
@@ -78,15 +67,25 @@ function validateApplicationDeclaration(route: ApplicationRouteDeclaration): voi
   if (route.kind === 'page' && !route.methods.includes('GET')) {
     throw new Error(`Route '${route.id}' is unreachable as a page because it does not support GET`);
   }
-  if (route.navigation) {
-    if (route.visibility !== 'public' || !route.methods.includes('GET') || route.pattern.includes(':')) {
-      throw new Error(`Route '${route.id}' has unreachable navigation metadata`);
+  if (route.kind === 'page' && !route.page) {
+    throw new Error(`Route '${route.id}' is a page without page metadata`);
+  }
+  if (route.kind !== 'page' && route.page) {
+    throw new Error(`Route '${route.id}' has page metadata but is not a page`);
+  }
+  if (route.page) {
+    if (!route.page.label.trim() || !route.page.summary.trim() || !Number.isFinite(route.page.order)) {
+      throw new Error(`Route '${route.id}' has incomplete page metadata`);
     }
-    if (!route.navigation.group.trim() || !route.navigation.label.trim() || !route.navigation.summary.trim()) {
-      throw new Error(`Route '${route.id}' has incomplete navigation metadata`);
+    if (route.page.navigation !== 'none' && (
+      route.visibility !== 'public' || !route.methods.includes('GET') || route.pattern.includes(':')
+    )) {
+      throw new Error(`Route '${route.id}' has unreachable page navigation metadata`);
     }
-    if (!Number.isFinite(route.navigation.order)) {
-      throw new Error(`Route '${route.id}' has an invalid navigation order`);
+    if (route.page.architectureMap && (
+      route.visibility !== 'public' || !route.methods.includes('GET') || route.pattern.includes(':')
+    )) {
+      throw new Error(`Route '${route.id}' has unreachable architecture-map metadata`);
     }
   }
   if (route.visibility === 'private' && route.crawler.indexing === 'allow') {
@@ -97,16 +96,32 @@ function validateApplicationDeclaration(route: ApplicationRouteDeclaration): voi
   }
 }
 
-function validateCanonicalFrontendPages(registry: RouteRegistry<ApplicationRouteContext>): void {
-  const expected = surfaces
-    .map((surface) => `${surface.routeId}:${normalizeRoutePath(surface.route)}`)
-    .sort();
-  const actual = registry.declarations
-    .filter((route) => route.kind === 'page')
-    .map((route) => `${route.id}:${normalizeRoutePath(route.pattern)}`)
-    .sort();
-  if (actual.length !== expected.length || actual.some((entry, index) => entry !== expected[index])) {
-    throw new Error(`Frontend page registry must contain only the eight canonical surfaces. Expected ${expected.join(', ')}; received ${actual.join(', ')}`);
+function validatePageHierarchy(registry: RouteRegistry<ApplicationRouteContext>): void {
+  const pages = (registry.declarations as readonly ApplicationRouteDeclaration[])
+    .filter((route) => route.kind === 'page');
+  const pageById = new Map(pages.map((route) => [route.id, route]));
+
+  for (const route of pages) {
+    const parentId = route.page?.parent;
+    if (parentId && !pageById.has(parentId)) {
+      throw new Error(`Route '${route.id}' declares unknown page parent '${parentId}'`);
+    }
+  }
+
+  const roots = pages.filter((route) => !route.page?.parent);
+  if (roots.length !== 1 || roots[0]?.id !== 'interfaces.frontend.index') {
+    throw new Error(`Page hierarchy must have exactly one root: interfaces.frontend.index`);
+  }
+
+  for (const route of pages) {
+    const seen = new Set<string>();
+    let current: ApplicationRouteDeclaration | undefined = route;
+    while (current?.page?.parent) {
+      if (!seen.add(current.id)) {
+        throw new Error(`Page hierarchy contains a cycle at route '${current.id}'`);
+      }
+      current = pageById.get(current.page.parent);
+    }
   }
 }
 
@@ -114,11 +129,11 @@ function adaptRoute<TContext>(
   route: RouteDeclaration<TContext>,
   handler: ApplicationRouteDeclaration['handler'],
 ): ApplicationRouteDeclaration {
+  const applicationRoute = route as RouteWithPage<TContext>;
   return {
-    ...route,
+    ...applicationRoute,
     handler,
     browserHtml: browserHtmlFor(route),
-    navigation: navigationFor(route),
   };
 }
 
@@ -200,7 +215,7 @@ export function createApplicationRouteRegistry(
   for (const route of registry.declarations as readonly ApplicationRouteDeclaration[]) {
     validateApplicationDeclaration(route);
   }
-  validateCanonicalFrontendPages(registry);
+  validatePageHierarchy(registry);
   return registry;
 }
 

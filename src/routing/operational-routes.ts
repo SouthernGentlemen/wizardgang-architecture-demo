@@ -12,8 +12,6 @@ import { billingScenarioResponse } from '../api/billing';
 import { securityTxtResponse } from '../api/security-policy';
 import { sitemapResponse } from '../api/sitemap';
 import { uiAssetResponse } from '../ui/assets';
-import { renderAdmin, renderOffline } from '../ui/admin';
-import { renderOperations } from '../demos/operations';
 import {
   createRouteRegistry,
   defineRouteModule,
@@ -23,6 +21,7 @@ import {
   type RouteKind,
   type RouteMethod,
 } from './registry';
+import type { PageMetadata } from './application-routes';
 
 export interface OperationalRouteContext {
   env: Env;
@@ -47,11 +46,12 @@ interface OperationalRouteInput {
   authentication?: RouteDeclaration<OperationalRouteContext>['authentication'];
   authorization?: RouteDeclaration<OperationalRouteContext>['authorization'];
   sameOrigin?: RouteDeclaration<OperationalRouteContext>['sameOrigin'];
+  page?: PageMetadata;
 }
 
 const POLICY_TEST = 'tests/operational-route-registry.test.ts';
 
-function operationalRoute(input: OperationalRouteInput): RouteDeclaration<OperationalRouteContext> {
+function operationalRoute(input: OperationalRouteInput): RouteDeclaration<OperationalRouteContext> & { page?: PageMetadata } {
   return {
     id: input.id,
     pattern: input.pattern,
@@ -78,6 +78,7 @@ function operationalRoute(input: OperationalRouteInput): RouteDeclaration<Operat
       exportName: input.sourceExport,
       tests: [POLICY_TEST, 'tests/router.test.ts'],
     },
+    ...(input.page ? { page: input.page } : {}),
   };
 }
 
@@ -119,6 +120,7 @@ async function adminHandler(request: Request, context: OperationalRouteContext):
     : changed === 'chatgpt-crawl-enabled' || changed === 'chatgpt-crawl-disabled'
       ? `ChatGPT crawl access is now ${changed.endsWith('enabled') ? 'enabled' : 'disabled'}.`
       : '';
+  const { renderAdmin } = await import('../ui/admin');
   return renderAdmin(env, demoControl, crawlerControl, notice);
 }
 
@@ -129,12 +131,31 @@ const globalOperationalRoutes = [
     sourceModule: 'src/ui/admin.ts', sourceExport: 'renderAdmin', visibility: 'private', crawling: 'allow', indexing: 'deny',
     authentication: { mode: 'required', provider: 'admin-basic' }, authorization: { mode: 'policy', policy: 'admin' },
     sameOrigin: { mode: 'required', methods: ['POST'] },
+    page: {
+      parent: 'operations.page',
+      label: 'Demo administration',
+      summary: 'Protected control surface for demo availability and ChatGPT fetch policy.',
+      order: 0,
+      navigation: 'none',
+      architectureMap: false,
+    },
   }),
   operationalRoute({
     id: 'operations.offline', pattern: '/offline', methods: ['GET'], kind: 'page',
-    handler: async (request, { env }) => renderOffline(env, await getDemoControl(env), new URL(request.url).searchParams.get('from') || '/'),
+    handler: async (request, { env }) => {
+      const { renderOffline } = await import('../ui/admin');
+      return renderOffline(env, await getDemoControl(env), new URL(request.url).searchParams.get('from') || '/');
+    },
     title: 'Offline recovery page', description: 'Public maintenance page shown when ordinary demo routes are intentionally offline.',
     sourceModule: 'src/ui/admin.ts', sourceExport: 'renderOffline', indexing: 'deny',
+    page: {
+      parent: 'operations.page',
+      label: 'Offline recovery page',
+      summary: 'Public maintenance page shown when ordinary demo routes are intentionally offline.',
+      order: 1,
+      navigation: 'none',
+      architectureMap: false,
+    },
   }),
   operationalRoute({
     id: 'operations.health', pattern: '/api/operations/health', methods: ['GET'], kind: 'api', handler: (_request, { env }) => healthResponse(env),
@@ -172,9 +193,20 @@ const globalOperationalRoutes = [
     cache: { mode: 'public', maxAgeSeconds: 3600 },
   }),
   operationalRoute({
-    id: 'operations.page', pattern: '/operations', methods: ['GET'], kind: 'page', handler: (request, { env }) => renderOperations(request, env),
+    id: 'operations.page', pattern: '/operations', methods: ['GET'], kind: 'page', handler: async (request, { env }) => {
+      const { renderOperations } = await import('../demos/operations');
+      return renderOperations(request, env);
+    },
     title: 'Operations', description: 'Canonical server-rendered operations surface for overview, availability, logs, usage, reports, and documentation.',
     sourceModule: 'src/demos/operations.ts', sourceExport: 'renderOperations', indexing: 'allow',
+    page: {
+      parent: 'interfaces.frontend.index',
+      label: 'Operations',
+      summary: 'One server-rendered operations surface for health, availability, public-safe logs, usage and cost, shared reporting, deployment evidence, and documentation.',
+      order: 4,
+      navigation: 'primary',
+      architectureMap: true,
+    },
   }),
   operationalRoute({
     id: 'operations.api-logs', pattern: '/api/operations/logs', methods: ['GET'], kind: 'api', handler: (request, { env }) => logsResponse(request, env),

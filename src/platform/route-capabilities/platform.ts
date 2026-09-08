@@ -1,12 +1,9 @@
-import { renderPlatform } from '../../demos/platform';
-import { frontendSurface } from '../../demos/registry';
 import {
   NO_STORAGE,
   definePlatformLaboratoryCapability,
   noRequestBody,
 } from '../route-capability';
 
-const platformSurface = frontendSurface('platform.page');
 const tests = ['tests/platform-laboratory-routing.test.ts', 'tests/router.test.ts', 'tests/interface.test.ts'] as const;
 const docs = ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'] as const;
 
@@ -15,10 +12,13 @@ export const platformPageCapability = definePlatformLaboratoryCapability({
   routes: [
     {
       id: 'platform.page',
-      pattern: platformSurface.route,
+      pattern: '/platform',
       methods: ['GET'],
       kind: 'page',
-      handler: (request, env) => renderPlatform(request, env),
+      handler: async (request, env) => {
+        const { renderPlatform } = await import('../../demos/platform');
+        return renderPlatform(request, env);
+      },
       authentication: { mode: 'anonymous' },
       authorization: { mode: 'none' },
       visibility: 'public',
@@ -27,8 +27,8 @@ export const platformPageCapability = definePlatformLaboratoryCapability({
       cache: { mode: 'no-store' },
       crawler: { crawling: 'controlled', indexing: 'allow' },
       documentation: {
-        title: platformSurface.title,
-        description: platformSurface.summary,
+        title: 'Cloudflare Platform',
+        description: 'One server-rendered surface for edge inspection, Worker compute, Durable Objects, D1, and R2 demonstrations.',
         docs,
       },
       source: {
@@ -38,6 +38,14 @@ export const platformPageCapability = definePlatformLaboratoryCapability({
       },
       requestLimits: noRequestBody('The platform page selects a server-rendered view from the query string and consumes no request body.'),
       storage: NO_STORAGE,
+      page: {
+        parent: 'interfaces.frontend.index',
+        label: 'Platform',
+        summary: 'One server-rendered surface for edge inspection, Worker compute, Durable Objects, D1, and R2 demonstrations.',
+        order: 1,
+        navigation: 'primary',
+        architectureMap: true,
+      },
     },
   ],
 });

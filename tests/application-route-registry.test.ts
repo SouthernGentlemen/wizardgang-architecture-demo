@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { indexedSurfaces } from '../src/demos/registry';
 import { sitemapResponse } from '../src/api/sitemap';
 import { routeRequest } from '../src/router';
 import type { Env } from '../src/types';
@@ -9,11 +8,13 @@ import {
   routeUrl,
   routeUrlFromRegistry,
   type ApplicationRouteContext,
+  type PageMetadata,
 } from '../src/routing/application-routes';
 import {
-  registeredSurfaceNavigation,
-  registeredPageMetadata,
-  registeredSitemapPaths,
+  architectureMapEntries,
+  primaryNavigation,
+  secondaryNavigation,
+  sitemapPaths,
 } from '../src/routing/navigation';
 import { defineRouteModule, matchRoute, type RouteDeclaration } from '../src/routing/registry';
 
@@ -22,7 +23,8 @@ function syntheticRoute(
   pattern: string,
   methods: RouteDeclaration<ApplicationRouteContext>['methods'] = ['GET'],
   kind: RouteDeclaration<ApplicationRouteContext>['kind'] = 'api',
-): RouteDeclaration<ApplicationRouteContext> {
+  page?: PageMetadata,
+): RouteDeclaration<ApplicationRouteContext> & { page?: PageMetadata } {
   return {
     id,
     pattern,
@@ -45,6 +47,7 @@ function syntheticRoute(
       module: 'tests/application-route-registry.test.ts',
       tests: ['tests/application-route-registry.test.ts'],
     },
+    ...(page ? { page } : {}),
   };
 }
 
@@ -61,17 +64,30 @@ function noDatabaseEnv(): Env {
 }
 
 describe('complete declarative application routing', () => {
-  it('builds architecture navigation from registered page metadata', () => {
-    expect(registeredSurfaceNavigation().map((surface) => surface.route)).toEqual(indexedSurfaces.map((surface) => surface.route));
-    expect(registeredPageMetadata().filter((route) => route.navigation?.index)).toHaveLength(indexedSurfaces.length);
-    expect(registeredPageMetadata().every((route) => route.visibility === 'public')).toBe(true);
+  it('derives global navigation and the architecture map from page declarations', () => {
+    expect(primaryNavigation().map((route) => route.id)).toEqual([
+      'interfaces.frontend.index',
+      'platform.page',
+      'interfaces.page',
+      'assurance.wizardgang-public-assurance.html',
+      'operations.page',
+      'assurance.advisories.html',
+    ]);
+    expect(primaryNavigation().map((route) => route.page?.label)).toEqual([
+      'Architecture', 'Platform', 'Interfaces', 'Assurance', 'Operations', 'Security',
+    ]);
+    expect(architectureMapEntries().map((route) => route.pattern)).toEqual([
+      '/platform', '/interfaces', '/assurance', '/operations', '/security',
+    ]);
+    expect(secondaryNavigation('interfaces.frontend.index')).toEqual([]);
+    expect(primaryNavigation().every((route) => route.visibility === 'public')).toBe(true);
   });
 
-  it('generates sitemap entries from public registered page metadata', async () => {
-    expect(registeredSitemapPaths()).toEqual(['/', ...indexedSurfaces.map((surface) => surface.route)]);
+  it('generates sitemap entries from public indexable registered pages', async () => {
+    expect(sitemapPaths()).toEqual(['/', '/platform', '/interfaces', '/assurance', '/operations', '/security']);
     const response = sitemapResponse(new Request('https://demo.wizardgang.ai/sitemap.xml'));
     const xml = await response.text();
-    for (const routePath of registeredSitemapPaths()) {
+    for (const routePath of sitemapPaths()) {
       expect(xml).toContain(`<loc>https://demo.wizardgang.ai${routePath}</loc>`);
     }
     expect(xml).not.toContain('/admin</loc>');
@@ -88,6 +104,31 @@ describe('complete declarative application routing', () => {
     expect(resolved).not.toContain(':');
     expect(resolved).toContain('A%20B');
     expect(() => routeUrlFromRegistry(applicationRouteRegistry, parameterized!.id)).toThrow('Missing route parameter');
+  });
+
+  it('allows an additional page without encoding an eight-page inventory', () => {
+    const extraPage = syntheticRoute(
+      'synthetic.page',
+      '/synthetic-page',
+      ['GET'],
+      'page',
+      {
+        parent: 'interfaces.frontend.index',
+        label: 'Synthetic page',
+        summary: 'A compatible ninth page registered by a test capability.',
+        order: 99,
+        navigation: 'secondary',
+        architectureMap: true,
+      },
+    );
+    extraPage.crawler = { crawling: 'controlled', indexing: 'allow' };
+    const registry = createApplicationRouteRegistry([
+      defineRouteModule('synthetic.page', [extraPage]),
+    ]);
+    expect(registry.declarations.find((route) => route.id === 'synthetic.page')).toMatchObject({
+      pattern: '/synthetic-page',
+      kind: 'page',
+    });
   });
 
   it('uses one consistent method result from the application registry', () => {
@@ -107,13 +148,21 @@ describe('complete declarative application routing', () => {
     });
   });
 
-  it('requires complete reachable policy and documentation metadata', () => {
+  it('requires complete reachable policy, documentation, and page hierarchy metadata', () => {
     for (const route of applicationRouteRegistry.declarations) {
       expect(route.documentation.title.trim(), route.id).not.toBe('');
       expect(route.documentation.description.trim(), route.id).not.toBe('');
       expect(route.documentation.docs.length, route.id).toBeGreaterThan(0);
       expect(route.source.module.trim(), route.id).not.toBe('');
-      if (route.kind === 'page') expect(route.methods, route.id).toContain('GET');
+      if (route.kind === 'page') {
+        expect(route.methods, route.id).toContain('GET');
+        expect(route.page, route.id).toBeDefined();
+        if (route.page?.parent) {
+          expect(applicationRouteRegistry.declarations.some((candidate) => (
+            candidate.kind === 'page' && candidate.id === route.page?.parent
+          )), route.id).toBe(true);
+        }
+      }
       if (route.visibility === 'private') {
         expect(route.crawler.indexing, route.id).toBe('deny');
         expect(route.cache.mode, route.id).not.toBe('public');
@@ -126,7 +175,14 @@ describe('complete declarative application routing', () => {
       defineRouteModule('synthetic.undocumented', [undocumented]),
     ])).toThrow('undocumented');
 
-    const unreachable = syntheticRoute('synthetic.unreachable', '/synthetic-unreachable', ['POST'], 'page');
+    const unreachable = syntheticRoute('synthetic.unreachable', '/synthetic-unreachable', ['POST'], 'page', {
+      parent: 'interfaces.frontend.index',
+      label: 'Unreachable',
+      summary: 'Synthetic unreachable page.',
+      order: 100,
+      navigation: 'none',
+      architectureMap: false,
+    });
     expect(() => createApplicationRouteRegistry([
       defineRouteModule('synthetic.unreachable', [unreachable]),
     ])).toThrow('unreachable as a page');

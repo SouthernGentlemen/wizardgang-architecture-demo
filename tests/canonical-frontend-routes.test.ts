@@ -1,9 +1,15 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { assuranceRecordUrls } from '../src/assurance/routes';
-import { frontendViewUrl, htmlPagePathnames, surfaces } from '../src/demos/registry';
+import {
+  assuranceSurfaceViews,
+  frontendViewUrl,
+  interfaceSurfaceViews,
+  operationsSurfaceViews,
+  platformSurfaceViews,
+} from '../src/demos/registry';
 import { routeRequest } from '../src/router';
-import { applicationRouteRegistry } from '../src/routing/application-routes';
+import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import type { Env } from '../src/types';
 import { removedHtml404Pathnames, removedHtmlPathnames } from './fixtures/removed-html-pathnames';
 
@@ -18,24 +24,19 @@ const environment: Env = {
 };
 
 describe('canonical frontend route contract', () => {
-  it('registers exactly the eight canonical HTML page pathnames', () => {
-    const registeredPages = applicationRouteRegistry.declarations
-      .filter((route) => route.kind === 'page')
-      .map((route) => route.pattern)
-      .sort();
-    expect(registeredPages).toEqual([...htmlPagePathnames].sort());
-    expect(htmlPagePathnames).toEqual([
-      '/', '/platform', '/interfaces', '/assurance', '/security', '/operations', '/admin', '/offline',
-    ]);
-  });
-
-  it('models every named view as query state on its owning surface', () => {
-    for (const surface of surfaces) {
-      for (const view of surface.views) {
-        const href = frontendViewUrl(surface.routeId, view.id);
+  it('models every named view as query state on its owning route declaration', () => {
+    const inventories = [
+      ['platform.page', platformSurfaceViews],
+      ['interfaces.page', interfaceSurfaceViews],
+      ['assurance.wizardgang-public-assurance.html', assuranceSurfaceViews],
+      ['operations.page', operationsSurfaceViews],
+    ] as const;
+    for (const [routeId, views] of inventories) {
+      for (const view of views) {
+        const href = frontendViewUrl(routeId, view.id);
         const url = new URL(href, 'https://demo.wizardgang.ai');
-        expect(url.pathname, `${surface.routeId}:${view.id}`).toBe(surface.route);
-        expect(url.searchParams.get('view'), `${surface.routeId}:${view.id}`).toBe(view.id);
+        expect(url.pathname, `${routeId}:${view.id}`).toBe(routeUrl(routeId));
+        expect(url.searchParams.get('view'), `${routeId}:${view.id}`).toBe(view.id);
       }
     }
   });

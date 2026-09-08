@@ -1,4 +1,5 @@
 import type { Env } from '../types';
+import type { PageMetadata } from '../routing/application-routes';
 import type {
   CachePolicy,
   RouteDeclaration,
@@ -15,6 +16,7 @@ export type BrowserHtmlPolicy = 'page' | 'never';
 
 export interface InterfaceIdentityRouteDeclaration extends RouteDeclaration<InterfaceIdentityRouteContext> {
   browserHtml: BrowserHtmlPolicy;
+  page?: PageMetadata;
 }
 
 export interface InterfaceIdentityCapability {
@@ -42,6 +44,7 @@ interface InterfaceIdentityRouteInput {
   crawling?: InterfaceIdentityRouteDeclaration['crawler']['crawling'];
   indexing?: InterfaceIdentityRouteDeclaration['crawler']['indexing'];
   browserHtml?: BrowserHtmlPolicy;
+  page?: PageMetadata;
 }
 
 const ROUTE_TEST = 'tests/interface-identity-routing.test.ts';
@@ -74,6 +77,7 @@ export function interfaceIdentityRoute(input: InterfaceIdentityRouteInput): Inte
       ...(input.sourceExport ? { exportName: input.sourceExport } : {}),
       tests: [ROUTE_TEST, ...(input.tests ?? [])],
     },
+    ...(input.page ? { page: input.page } : {}),
   };
 }
 

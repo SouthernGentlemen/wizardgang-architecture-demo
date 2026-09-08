@@ -1,14 +1,4 @@
-import type { FrontendSurfaceDefinition } from '../demos/registry';
-
-export interface RegisteredPageMetadata {
-  group: string;
-  label: string;
-  summary: string;
-  order: number;
-  index: boolean;
-  sitemap: boolean;
-  surface: FrontendSurfaceDefinition;
-}
+import type { PageMetadata } from './application-routes';
 
 export interface RegisteredRouteMetadataView {
   id: string;
@@ -19,7 +9,7 @@ export interface RegisteredRouteMetadataView {
   crawler: { crawling: string; indexing: 'allow' | 'deny' };
   documentation: { title: string; description: string; docs: readonly string[] };
   source: { module: string; exportName?: string; tests?: readonly string[] };
-  navigation?: RegisteredPageMetadata;
+  page?: PageMetadata;
 }
 
 let registeredRoutes: readonly RegisteredRouteMetadataView[] = Object.freeze([]);
@@ -32,20 +22,29 @@ export function registeredRouteMetadata(): readonly RegisteredRouteMetadataView[
   return registeredRoutes;
 }
 
-export function registeredPageMetadata(): readonly RegisteredRouteMetadataView[] {
+function registeredPages(): RegisteredRouteMetadataView[] {
   return registeredRoutes
-    .filter((route) => route.navigation && route.visibility === 'public' && route.methods.includes('GET'))
-    .sort((left, right) => (left.navigation?.order ?? 0) - (right.navigation?.order ?? 0));
+    .filter((route) => route.kind === 'page' && route.page)
+    .sort((left, right) => (left.page?.order ?? 0) - (right.page?.order ?? 0) || left.id.localeCompare(right.id));
 }
 
-export function registeredSurfaceNavigation(): FrontendSurfaceDefinition[] {
-  return registeredPageMetadata()
-    .filter((route) => route.navigation?.index)
-    .map((route) => route.navigation!.surface);
+export function primaryNavigation(): RegisteredRouteMetadataView[] {
+  return registeredPages()
+    .filter((route) => route.page?.navigation === 'primary' && route.visibility === 'public' && route.methods.includes('GET'));
 }
 
-export function registeredSitemapPaths(): string[] {
-  return registeredPageMetadata()
-    .filter((route) => route.navigation?.sitemap && route.crawler.indexing === 'allow' && !route.pattern.includes(':'))
+export function secondaryNavigation(parentRouteId: string): RegisteredRouteMetadataView[] {
+  return registeredPages()
+    .filter((route) => route.page?.navigation === 'secondary' && route.page.parent === parentRouteId);
+}
+
+export function architectureMapEntries(): RegisteredRouteMetadataView[] {
+  return registeredPages()
+    .filter((route) => route.page?.architectureMap && route.visibility === 'public' && route.methods.includes('GET'));
+}
+
+export function sitemapPaths(): string[] {
+  return registeredPages()
+    .filter((route) => route.visibility === 'public' && route.crawler.indexing === 'allow' && !route.pattern.includes(':'))
     .map((route) => route.pattern);
 }

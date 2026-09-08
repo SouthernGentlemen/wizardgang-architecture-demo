@@ -18,10 +18,11 @@ export interface RouteManifestEntry {
   docs: readonly string[];
   source: ApplicationRouteDeclaration['source'];
   navigation?: {
-    group: string;
+    parent?: string;
     label: string;
     order: number;
-    index: boolean;
+    navigation: 'primary' | 'secondary';
+    architectureMap: boolean;
     sitemap: boolean;
   };
   status: 'working';
@@ -29,6 +30,13 @@ export interface RouteManifestEntry {
 
 function publishedPattern(pattern: string): string {
   return pattern.replace(/:([A-Za-z_][A-Za-z0-9_]*)/g, '{$1}');
+}
+
+function sitemapMember(route: ApplicationRouteDeclaration): boolean {
+  return route.kind === 'page'
+    && route.visibility === 'public'
+    && route.crawler.indexing === 'allow'
+    && !route.pattern.includes(':');
 }
 
 export function buildRouteManifest(
@@ -52,13 +60,14 @@ export function buildRouteManifest(
       description: route.documentation.description,
       docs: [...route.documentation.docs],
       source: route.source,
-      ...(route.navigation ? {
+      ...(route.page && route.page.navigation !== 'none' ? {
         navigation: {
-          group: route.navigation.group,
-          label: route.navigation.label,
-          order: route.navigation.order,
-          index: route.navigation.index,
-          sitemap: route.navigation.sitemap,
+          ...(route.page.parent ? { parent: route.page.parent } : {}),
+          label: route.page.label,
+          order: route.page.order,
+          navigation: route.page.navigation,
+          architectureMap: route.page.architectureMap,
+          sitemap: sitemapMember(route),
         },
       } : {}),
       status: 'working' as const,
@@ -99,7 +108,7 @@ function documentationTable(
 export function buildRoutesDocumentation(
   declarations: readonly ApplicationRouteDeclaration[],
 ): string {
-  const navigable = documentationTable(declarations, (route) => Boolean(route.navigation));
-  const service = documentationTable(declarations, (route) => !route.navigation);
+  const navigable = documentationTable(declarations, (route) => Boolean(route.page && route.page.navigation !== 'none'));
+  const service = documentationTable(declarations, (route) => !route.page || route.page.navigation === 'none');
   return `# Route-to-source map\n\nThis file is generated from the active declarative application registry. Route IDs, URL patterns, methods, policy metadata, documentation, and source ownership must be changed in route declarations rather than edited here.\n\n## Registered public navigation\n\n${navigable}\n\n## Registered service, protocol, asset, and private routes\n\n${service}\n\n## Generation\n\n- Runtime registry: \`src/routing/application-routes.ts\`\n- Route contract: \`src/routing/registry.ts\`\n- Artifact projection: \`src/routing/artifacts.ts\`\n- Regenerate: \`npm run generate:routes\`\n- Validate: \`npm run validate:routes\`\n\nUnknown paths are not inferred from prefixes or aliases; they use the normal 404 response.\n`;
 }

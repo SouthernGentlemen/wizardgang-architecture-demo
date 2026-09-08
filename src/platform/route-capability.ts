@@ -1,4 +1,5 @@
 import type { Env } from '../types';
+import type { PageMetadata } from '../routing/application-routes';
 import type { RouteDeclaration, RouteMethod } from '../routing/registry';
 
 export interface LaboratoryRequestLimits {
@@ -28,6 +29,7 @@ export interface LaboratoryRouteDeclaration extends RouteDeclaration<Env> {
   requestSchemas?: LaboratoryRequestSchemas;
   requestLimits: LaboratoryRequestLimits;
   storage: LaboratoryStorageBoundary;
+  page?: PageMetadata;
 }
 
 export interface PlatformLaboratoryCapability {

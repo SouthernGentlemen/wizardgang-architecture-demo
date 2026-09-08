@@ -1,10 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { indexedSurfaces } from '../src/demos/registry';
 import { sitemapResponse } from '../src/api/sitemap';
 import {
   applicationRouteRegistry,
   type ApplicationRouteDeclaration,
 } from '../src/routing/application-routes';
+import {
+  architectureMapEntries,
+  primaryNavigation,
+  sitemapPaths,
+} from '../src/routing/navigation';
 import { operationalRouteRegistry } from '../src/routing/operational-routes';
 import { matchRoute } from '../src/routing/registry';
 import { readFileSync } from 'node:fs';
@@ -12,67 +16,80 @@ import { readFileSync } from 'node:fs';
 const applicationRoutes = applicationRouteRegistry.declarations as readonly ApplicationRouteDeclaration[];
 
 describe('architecture demo registry', () => {
-  it('publishes the consolidated HTML routes in four architecture groups', () => {
-    expect(indexedSurfaces).toHaveLength(5);
-    expect([...new Set(indexedSurfaces.map((surface) => surface.group))]).toEqual([
-      'Platform', 'Interfaces', 'Delivery & Governance', 'Operations',
+  it('derives primary navigation and architecture cards from page declarations', () => {
+    const primary = primaryNavigation();
+    expect(primary.map((route) => route.page?.label)).toEqual([
+      'Architecture', 'Platform', 'Interfaces', 'Assurance', 'Operations', 'Security',
+    ]);
+    expect(primary.every((route) => route.page?.navigation === 'primary')).toBe(true);
+    expect(architectureMapEntries().map((route) => route.pattern)).toEqual([
+      '/platform', '/interfaces', '/assurance', '/operations', '/security',
     ]);
   });
 
-  it('uses unique public routes', () => {
-    expect(new Set(indexedSurfaces.map((surface) => surface.route)).size).toBe(indexedSurfaces.length);
+  it('uses unique public architecture routes', () => {
+    const entries = architectureMapEntries();
+    expect(new Set(entries.map((route) => route.pattern)).size).toBe(entries.length);
   });
 
   it('uses one source module per architecture demo route', () => {
-    const indexedRoutes = applicationRoutes.filter((route) => route.navigation?.index);
-    expect(indexedRoutes).toHaveLength(indexedSurfaces.length);
-    expect(new Set(indexedRoutes.map((route) => route.source.module)).size).toBe(indexedSurfaces.length);
+    const entries = architectureMapEntries();
+    expect(new Set(entries.map((route) => route.source.module)).size).toBe(entries.length);
   });
 
   it('keeps every architecture route absolute', () => {
-    expect(indexedSurfaces.every((surface) => surface.route.startsWith('/'))).toBe(true);
+    expect(architectureMapEntries().every((route) => route.pattern.startsWith('/'))).toBe(true);
   });
 
   it('publishes one canonical operations route and retires the dashboard route family', () => {
-    const routes = new Set(indexedSurfaces.map((surface) => surface.route));
+    const routes = new Set(architectureMapEntries().map((route) => route.pattern));
     expect([...routes].filter((route) => route === '/operations')).toEqual(['/operations']);
     expect([...routes].filter((route) => route.startsWith('/dashboard'))).toEqual([]);
   });
 
-  it('places consolidated assurance and separate security in delivery and governance', () => {
-    const assurance = indexedSurfaces.find((surface) => surface.route === '/assurance');
-    expect(assurance).toMatchObject({ group: 'Delivery & Governance' });
-    expect(applicationRoutes.find((route) => route.pattern === '/assurance')?.source.module).toBe('src/demos/assurance.ts');
-    const security = indexedSurfaces.find((surface) => surface.route === '/security');
-    expect(security).toMatchObject({ group: 'Delivery & Governance' });
-    expect(applicationRoutes.find((route) => route.pattern === '/security')?.source.module).toBe('src/demos/security-page.ts');
+  it('keeps consolidated assurance and separate security as registered architecture entries', () => {
+    const assurance = architectureMapEntries().find((route) => route.pattern === '/assurance');
+    expect(assurance?.page).toMatchObject({ label: 'Assurance', architectureMap: true });
+    expect(assurance?.source.module).toBe('src/demos/assurance.ts');
+    const security = architectureMapEntries().find((route) => route.pattern === '/security');
+    expect(security?.page).toMatchObject({ label: 'Security', architectureMap: true });
+    expect(security?.source.module).toBe('src/demos/security-page.ts');
     for (const retired of ['/git', '/governance', '/evidence', '/compliance', '/governance/concerns', '/governance/risks', '/governance/incidents']) {
-      expect(indexedSurfaces.some((surface) => surface.route === retired), retired).toBe(false);
+      expect(architectureMapEntries().some((route) => route.pattern === retired), retired).toBe(false);
     }
-    expect(indexedSurfaces.some((surface) => surface.route === '/dashboard/compliance')).toBe(false);
+    expect(architectureMapEntries().some((route) => route.pattern === '/dashboard/compliance')).toBe(false);
   });
 
-  it('keeps registry metadata synchronized with the machine route manifest', () => {
+  it('keeps derived page metadata synchronized with the machine route manifest', () => {
     const manifest = JSON.parse(readFileSync('docs/route-manifest.json', 'utf8')) as Array<{
+      id: string;
       route: string;
       source: { module: string };
       status: string;
-      navigation?: { group: string; label: string; index: boolean; sitemap: boolean };
+      navigation?: {
+        parent?: string;
+        label: string;
+        order: number;
+        navigation: 'primary' | 'secondary';
+        architectureMap: boolean;
+        sitemap: boolean;
+      };
     }>;
-    for (const surface of indexedSurfaces) {
-      const entry = manifest.find((candidate) => candidate.route === surface.route);
-      const declaration = applicationRoutes.find((route) => route.pattern === surface.route);
-      expect(entry, `missing manifest entry for ${surface.route}`).toBeDefined();
-      expect(entry?.source.module).toBe(declaration?.source.module);
+    for (const route of primaryNavigation()) {
+      const entry = manifest.find((candidate) => candidate.id === route.id);
+      expect(entry, `missing manifest entry for ${route.id}`).toBeDefined();
+      expect(entry?.source.module).toBe(route.source.module);
       expect(entry?.status).toBe('working');
       expect(entry?.navigation).toMatchObject({
-        group: surface.group,
-        label: surface.title,
-        index: true,
-        sitemap: true,
+        label: route.page?.label,
+        order: route.page?.order,
+        navigation: 'primary',
+        architectureMap: route.page?.architectureMap,
+        sitemap: sitemapPaths().includes(route.pattern),
       });
+      expect(entry?.navigation?.parent).toBe(route.page?.parent);
     }
-    expect(manifest.filter((entry) => entry.navigation?.index)).toHaveLength(indexedSurfaces.length);
+    expect(manifest.filter((entry) => entry.navigation?.architectureMap)).toHaveLength(architectureMapEntries().length);
   });
 });
 
@@ -118,12 +135,11 @@ describe('intentional offline route policies', () => {
 });
 
 describe('public sitemap', () => {
-  it('publishes every registered route over https', async () => {
+  it('publishes every derived sitemap path over https', async () => {
     const xml = await sitemapResponse(new Request('https://demo.wizardgang.ai/sitemap.xml')).text();
-    expect(xml).toContain('<loc>https://demo.wizardgang.ai/</loc>');
-    for (const surface of indexedSurfaces) {
-      expect(xml, surface.route).toContain(`<loc>https://demo.wizardgang.ai${surface.route}</loc>`);
+    for (const path of sitemapPaths()) {
+      expect(xml, path).toContain(`<loc>https://demo.wizardgang.ai${path}</loc>`);
     }
-    expect((xml.match(/<loc>/g) ?? []).length).toBe(indexedSurfaces.length + 1);
+    expect((xml.match(/<loc>/g) ?? []).length).toBe(sitemapPaths().length);
   });
 });

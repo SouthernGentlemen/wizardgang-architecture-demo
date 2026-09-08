@@ -43,10 +43,11 @@
       ]
     },
     "navigation": {
-      "group": "Delivery & Governance",
+      "parent": "interfaces.frontend.index",
       "label": "Security",
-      "order": 4,
-      "index": true,
+      "order": 5,
+      "navigation": "primary",
+      "architectureMap": true,
       "sitemap": true
     },
     "status": "working"
@@ -95,10 +96,11 @@
       ]
     },
     "navigation": {
-      "group": "Delivery & Governance",
+      "parent": "interfaces.frontend.index",
       "label": "Assurance",
       "order": 3,
-      "index": true,
+      "navigation": "primary",
+      "architectureMap": true,
       "sitemap": true
     },
     "status": "working"
@@ -149,10 +151,10 @@
       ]
     },
     "navigation": {
-      "group": "Navigation",
-      "label": "Architecture demo index",
+      "label": "Architecture",
       "order": 0,
-      "index": false,
+      "navigation": "primary",
+      "architectureMap": false,
       "sitemap": true
     },
     "status": "working"
@@ -947,10 +949,11 @@
       ]
     },
     "navigation": {
-      "group": "Interfaces",
+      "parent": "interfaces.frontend.index",
       "label": "Interfaces",
       "order": 2,
-      "index": true,
+      "navigation": "primary",
+      "architectureMap": true,
       "sitemap": true
     },
     "status": "working"
@@ -1323,10 +1326,11 @@
       ]
     },
     "navigation": {
-      "group": "Operations",
+      "parent": "interfaces.frontend.index",
       "label": "Operations",
-      "order": 5,
-      "index": true,
+      "order": 4,
+      "navigation": "primary",
+      "architectureMap": true,
       "sitemap": true
     },
     "status": "working"
@@ -2328,10 +2332,11 @@
       ]
     },
     "navigation": {
-      "group": "Platform",
-      "label": "Cloudflare Platform",
+      "parent": "interfaces.frontend.index",
+      "label": "Platform",
       "order": 1,
-      "index": true,
+      "navigation": "primary",
+      "architectureMap": true,
       "sitemap": true
     },
     "status": "working"

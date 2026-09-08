@@ -93,7 +93,7 @@ export function evidenceContent(request: Request, env: Env): PageContent {
 
   return pageContent(env, 'Evidence Registry', `
   <section class="page-header assurance-header">
-    <p class="eyebrow"><a href="/#delivery-governance">Delivery &amp; Governance</a> / ${escapeHtml(EVIDENCE_ROUTE)}</p>
+    <p class="eyebrow"><a href="/#architecture-map">Delivery &amp; Governance</a> / ${escapeHtml(EVIDENCE_ROUTE)}</p>
     <h1>Evidence you can trace.</h1>
     <p class="lede">Search stable public evidence IDs, see which assurance records use them, understand how freshness is determined, and open repository evidence at the exact deployed commit.</p>
     <p class="assurance-notice"><strong>Projection rule:</strong> canonical JSON stores IDs, paths, routes, and policies. Counts, URLs, exact source revisions, lifecycle presentation, time-sensitive observation state, and reverse <code>usedBy</code> relationships are derived when this route or the assurance API is served.</p>

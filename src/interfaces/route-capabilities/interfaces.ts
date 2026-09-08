@@ -1,20 +1,27 @@
-import { renderInterfaces } from '../../demos/interfaces';
-import { frontendSurface } from '../../demos/registry';
 import { defineInterfaceIdentityCapability, interfaceIdentityRoute } from '../route-capability';
-
-const interfacesSurface = frontendSurface('interfaces.page');
 
 export const interfacesRouteCapability = defineInterfaceIdentityCapability('interfaces.page', [
   interfaceIdentityRoute({
     id: 'interfaces.page',
-    pattern: interfacesSurface.route,
+    pattern: '/interfaces',
     methods: ['GET'],
     kind: 'page',
-    handler: (request, { env }) => renderInterfaces(request, env),
-    title: interfacesSurface.title,
-    description: interfacesSurface.summary,
+    handler: async (request, { env }) => {
+      const { renderInterfaces } = await import('../../demos/interfaces');
+      return renderInterfaces(request, env);
+    },
+    title: 'Interfaces',
+    description: 'One server-rendered surface for REST, GraphQL, webhooks, identity, MCP, internationalization, and accessibility.',
     sourceModule: 'src/demos/interfaces.ts',
     sourceExport: 'renderInterfaces',
     tests: ['tests/interface-consolidation.test.ts', 'tests/interface.test.ts'],
+    page: {
+      parent: 'interfaces.frontend.index',
+      label: 'Interfaces',
+      summary: 'One server-rendered surface for REST, GraphQL, webhooks, identity, MCP, internationalization, and accessibility.',
+      order: 2,
+      navigation: 'primary',
+      architectureMap: true,
+    },
   }),
 ]);

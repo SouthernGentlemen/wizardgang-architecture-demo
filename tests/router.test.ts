@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import openapi from '../contracts/openapi/openapi.json';
-import { indexedSurfaces } from '../src/demos/registry';
+import { architectureMapEntries } from '../src/routing/navigation';
 import { routeRequest } from '../src/router';
 import { applicationRouteRegistry } from '../src/routing/application-routes';
 import type { D1PreparedStatement, Env } from '../src/types';
@@ -41,13 +41,13 @@ const basic = `Basic ${btoa('operator:test-admin-password')}`;
 describe('public route contract', () => {
   it('resolves every registered human demo route and links to its exact primary source', async () => {
     const environment = env();
-    for (const surface of indexedSurfaces) {
-      const declaration = applicationRouteRegistry.declarations.find((route) => route.pattern === surface.route);
-      expect(declaration, `${surface.route} declaration`).toBeDefined();
-      const response = await routeRequest(new Request(`https://demo.wizardgang.ai${surface.route}`, { headers: { accept: 'text/html' } }), environment);
-      expect(response.status, surface.route).toBe(200);
+    for (const surface of architectureMapEntries()) {
+      const declaration = applicationRouteRegistry.declarations.find((route) => route.id === surface.id);
+      expect(declaration, `${surface.pattern} declaration`).toBeDefined();
+      const response = await routeRequest(new Request(`https://demo.wizardgang.ai${surface.pattern}`, { headers: { accept: 'text/html' } }), environment);
+      expect(response.status, surface.pattern).toBe(200);
       const html = await response.text();
-      expect(html, surface.route).toContain(`https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/main/${declaration?.source.module}`);
+      expect(html, surface.pattern).toContain(`https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/main/${declaration?.source.module}`);
     }
   });
 
