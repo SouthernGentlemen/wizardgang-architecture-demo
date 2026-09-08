@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.15.0 — 2026-09-08
+
+- Replaced query-selected frontend views with a canonical resource hierarchy of 30 public sitemap routes while preserving the generic declarative router, capability-owned declarations, generated route artifacts, and all API and protocol contracts.
+- Retired every former `?view=` location and legacy page family as an ordinary 404 with no redirect, intentionally breaking old bookmarks while preserving assurance record fragments on their new canonical bases.
+- Repaired the DEMO-191 compliance-framework link regression, derived navigation, breadcrumbs, and the homepage architecture map from route declarations, and completed the dead-contract audit and URL-lint guard.
+
 ## 0.9.0 — 2026-09-02
 
 - Added canonical `/compliance` assurance ownership with explicit aligned/supporting and uncertified posture statements, links to existing evidence owners, and a separate dashboard entry point.
