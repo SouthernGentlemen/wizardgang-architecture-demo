@@ -248,7 +248,7 @@ describe('public route contract', () => {
     expect(index).toContain('WG-ARCH-001 · <a href="https://github.com/SouthernGentlemen/wizardgang-architecture-demo">Public source</a>');
 
     const operations = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations'), environment)).text();
-    expect(operations).toContain('aria-label="Operations views"');
+    expect(operations).toContain('aria-label="Operations sections"');
     expect(operations).not.toContain('Operational proof surfaces');
     expect(operations).toContain('User-requested ChatGPT fetch');
     expect(operations).toContain('Model-training crawl');

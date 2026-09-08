@@ -50,7 +50,6 @@ function activityValue(activity: McpActivity | undefined, key: keyof McpActivity
 
 export async function mcpContent(request: Request, env: Env): Promise<PageContent> {
   const endpoint = `${new URL(request.url).origin}${MCP_SERVER_PATH}`;
-  const interfacesUrl = routeUrl('interfaces.index');
   const mcpUrl = routeUrl('interfaces.mcp.console');
   const identityUrl = routeUrl('interfaces.identity.page');
   const i18nUrl = routeUrl('interfaces.i18n');
@@ -88,7 +87,6 @@ export async function mcpContent(request: Request, env: Env): Promise<PageConten
 
   const body = `
 <section class="page-header mcp-page-header">
-  <p class="eyebrow"><a href="${escapeHtml(interfacesUrl)}">Interfaces</a> / MCP</p>
   <h1>Model Context Protocol</h1>
   <p class="lede">Connect Claude, Codex, or any compatible MCP client to the live demo and invoke read-only tools through the same application permissions used by the rest of the platform.</p>
   <div class="mcp-badges" aria-label="MCP server characteristics">
@@ -189,7 +187,7 @@ export async function mcpContent(request: Request, env: Env): Promise<PageConten
 <section class="mcp-section" aria-labelledby="mcp-architecture-heading">
   <div class="section-head"><h2 id="mcp-architecture-heading">Architecture</h2><span>One shared trust boundary</span></div>
   <div class="panel mcp-architecture">
-    <div class="mcp-flow" aria-label="AI client through Streamable HTTP, MCP, authorization, D1, and audit log">
+    <div class="mcp-flow" aria-label="AI client through Streamable HTTP, MCP, authorization, D1, and audit log" tabindex="0">
       ${['AI Client', 'Streamable HTTP', 'MCP', 'Application Authorization', 'D1', 'Audit Log'].map((label, index) => `${index ? '<span aria-hidden="true">→</span>' : ''}<strong>${label}</strong>`).join('')}
     </div>
     <h3>MCP is another interface—not another trust boundary.</h3>

@@ -10,7 +10,6 @@ const ROUTE_ID = 'platform.index';
 export function platformContent(env: Env): PageContent {
   const children = secondaryNavigation(ROUTE_ID);
   const body = `<section class="page-header">
-    <p class="eyebrow">Architecture / Platform</p>
     <h1>Cloudflare Platform</h1>
     <p class="lede">Inspect the edge, compute, coordination, relational, and object-storage demonstrations as distinct registered resources.</p>
     <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/platform.ts'))}">Platform index source</a></div>

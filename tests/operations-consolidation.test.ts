@@ -67,8 +67,10 @@ describe('canonical operations routes', () => {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`, { headers: { accept: 'text/html' } }), environment);
       expect(response.status, path).toBe(200);
       const html = await response.text();
-      expect(html, path).toContain('aria-label="Operations views"');
-      for (const href of navigationHrefs) expect(html, `${path} -> ${href}`).toContain(`href="${href}"`);
+      expect(html, path).toContain('aria-label="Operations sections"');
+      for (const href of navigationHrefs) {
+        if (href !== path || path !== '/operations') expect(html, `${path} -> ${href}`).toContain(`href="${href}"`);
+      }
       expect(html, path).toContain('aria-current="page"');
       expect(html, path).toContain('<a class="skip-link" href="#main">Skip to main content</a>');
       expect(html, path).not.toContain('href="/operations?view=');

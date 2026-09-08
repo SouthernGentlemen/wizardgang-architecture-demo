@@ -7,7 +7,6 @@ export function r2Content(env: Env): PageContent {
   const r2Url = routeUrl('platform.r2');
   return pageContent(env, 'Cloudflare R2', `
 <section class="page-header lab-page-header">
-  <p class="eyebrow">Platform / R2</p>
   <h1>Cloudflare R2 Storage</h1>
   <p class="lede">Upload a file and inspect how its bytes and metadata move through the live stack.</p>
   <div class="page-tools"><a class="text-link" href="${sourceUrl(env, 'src/demos/r2.ts')}">View source <span aria-hidden="true">↗</span></a></div>

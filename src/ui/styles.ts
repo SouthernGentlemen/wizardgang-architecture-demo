@@ -188,7 +188,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
 .error { border-left: 3px solid #ff9d9d; padding-left: .7rem; }
 :root[data-theme="light"] .error { border-left-color: #a11; }
 
-.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 0; }
+.table-wrap { position: relative; overflow-x: auto; border: 1px solid var(--line); border-radius: 0; }
 table { width: 100%; border-collapse: collapse; font-size: .86rem; }
 th, td { padding: .65rem .8rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
 th { color: var(--muted); font: 800 .66rem/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
@@ -198,6 +198,7 @@ summary { cursor: pointer; }
 
 .info-grid, .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: .75rem; margin: 1rem 0; }
 .lab-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(280px, .85fr); gap: 1rem; align-items: start; }
+.lab-grid > * { min-width: 0; }
 .lab-grid aside { position: sticky; top: 1rem; }
 .lab-heading { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
 .lab-heading .eyebrow { margin-bottom: .45rem; }

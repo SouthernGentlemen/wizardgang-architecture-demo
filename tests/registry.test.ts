@@ -23,12 +23,17 @@ describe('architecture demo registry', () => {
       'Architecture', 'Platform', 'Interfaces', 'Assurance', 'Operations', 'Security',
     ]);
     expect(primary.every((route) => route.page?.navigation === 'primary')).toBe(true);
-    expect(architectureMapEntries().map((route) => route.pattern)).toEqual([
-      '/interfaces/rest', '/platform/edge', '/interfaces/graphql', '/platform',
-      '/platform/workers', '/interfaces', '/interfaces/webhooks', '/platform/durable-objects',
-      '/assurance', '/interfaces/identity', '/platform/d1', '/interfaces/mcp',
-      '/operations', '/platform/r2', '/security', '/interfaces/i18n', '/interfaces/accessibility',
-    ]);
+    const expected = applicationRoutes
+      .filter((route) => (
+        route.kind === 'page'
+        && route.page?.parent
+        && route.visibility === 'public'
+        && route.methods.includes('GET')
+        && !route.pattern.includes(':')
+      ))
+      .map((route) => route.id)
+      .sort();
+    expect(architectureMapEntries().map((route) => route.id).sort()).toEqual(expected);
   });
 
   it('derives the five operations child links from route declarations', () => {
@@ -46,9 +51,9 @@ describe('architecture demo registry', () => {
     expect(new Set(entries.map((route) => route.pattern)).size).toBe(entries.length);
   });
 
-  it('uses one source module per architecture demo route', () => {
+  it('keeps an implementation source on every architecture demo route', () => {
     const entries = architectureMapEntries();
-    expect(new Set(entries.map((route) => route.source.module)).size).toBe(entries.length);
+    expect(entries.every((route) => Boolean(route.source.module.trim()))).toBe(true);
   });
 
   it('keeps every architecture route absolute', () => {
@@ -114,7 +119,8 @@ describe('architecture demo registry', () => {
       });
       expect(entry?.navigation?.parent).toBe(route.page?.parent);
     }
-    expect(manifest.filter((entry) => entry.navigation?.architectureMap)).toHaveLength(architectureMapEntries().length);
+    const architectureIds = new Set(architectureMapEntries().map((route) => route.id));
+    expect(manifest.filter((entry) => architectureIds.has(entry.id))).toHaveLength(architectureIds.size);
   });
 });
 

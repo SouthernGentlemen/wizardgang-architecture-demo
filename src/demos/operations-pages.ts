@@ -55,7 +55,6 @@ function operationalPage(
   env: Env,
   route: string,
   title: string,
-  eyebrow: string,
   heading: string,
   description: string,
   primarySource: string,
@@ -63,7 +62,6 @@ function operationalPage(
   liveState = '',
 ): PageContent {
   return pageContent(env, title, `<section class="page-header operations-header">
-  <p class="eyebrow">${escapeHtml(eyebrow)}</p>
   <h1>${escapeHtml(heading)}</h1>
   <p class="lede">${escapeHtml(description)}</p>
   ${liveState}
@@ -175,7 +173,7 @@ export async function dashboardContent(env: Env, request: Request = new Request(
   const currentStatus = `<div class="operations-live-state"><span class="status-pulse" data-state="${overall}"></span><strong>${escapeHtml(overallLabel)}</strong><span>Checked ${relativeTime(health.checkedAt)}</span><span>${escapeHtml(env.DEPLOYMENT_ENVIRONMENT || 'local')} · ${escapeHtml(version)}</span></div>`;
   const reporting = await renderUnifiedReportingPresentation(request, env, usage);
 
-  return operationalPage(env, routeUrl('operations.index'), 'System Operations', 'OPERATIONS / LIVE', 'System Operations', 'Live health, availability, deployment, shared reporting, activity, and cost-control evidence for the architecture demo.', 'src/demos/operations-pages.ts', `
+  return operationalPage(env, routeUrl('operations.index'), 'System Operations', 'System Operations', 'Live health, availability, deployment, shared reporting, activity, and cost-control evidence for the architecture demo.', 'src/demos/operations-pages.ts', `
   <section class="operations-kpis" aria-label="Current operational state">
     <article><p class="eyebrow">System</p><strong class="${statusClass(overall)}">${escapeHtml(overallLabel)}</strong><span>${healthy} / 4 dependencies healthy</span></article>
     <article><p class="eyebrow">Availability</p><strong>${availabilityValue}</strong><span>${availability.unexpected} unexpected outage${availability.unexpected === 1 ? '' : 's'}</span></article>
@@ -249,7 +247,7 @@ export async function uptimeContent(env: Env): Promise<PageContent> {
   const statusLabel = latest ? state === 'planned' ? 'PLANNED MAINTENANCE' : state.toUpperCase() : 'AWAITING DATA';
   const recent = rows.slice(0, 20); const remainder = rows.slice(20);
   const liveState = `<div class="operations-live-state"><span class="status-pulse" data-state="${state}"></span><strong>${statusLabel}</strong><span>${latest ? `Last observation ${relativeTime(latest.checked_at)}` : 'Cron monitoring has not stored an observation yet'}</span></div>`;
-  return operationalPage(env, routeUrl('operations.availability'), 'Availability', 'OPERATIONS / AVAILABILITY', 'Availability', 'Measured runtime availability with planned maintenance kept separate from unexpected dependency failures.', 'src/demos/operations-pages.ts', `
+  return operationalPage(env, routeUrl('operations.availability'), 'Availability', 'Availability', 'Measured runtime availability with planned maintenance kept separate from unexpected dependency failures.', 'src/demos/operations-pages.ts', `
   <section class="availability-kpis"><article><p class="eyebrow">Current window</p><strong>${summary.excludingPlanned === null ? '—' : `${summary.excludingPlanned.toFixed(3)}%`}</strong><span>excluding planned maintenance</span></article><article><p class="eyebrow">Raw observations</p><strong>${summary.raw === null ? '—' : `${summary.raw.toFixed(3)}%`}</strong><span>all stored states included</span></article><article><p class="eyebrow">Events</p><strong>${summary.intentional} / ${summary.unexpected}</strong><span>planned / unexpected</span></article></section>
   <section class="operations-section"><div class="operations-section-heading"><div><p class="eyebrow">Latest ${Math.min(rows.length, 40)} observations</p><h2 id="availability-heading">Availability history</h2></div><span class="subtle">Every 5 minutes</span></div>${availabilityTimeline(rows)}<div class="availability-legend"><span><i data-state="operational"></i>Operational</span><span><i data-state="planned"></i>Planned maintenance</span><span><i data-state="degraded"></i>Unexpected failure</span></div><p class="subtle">This is measured history, not an SLA.</p></section>
   <section class="operations-section"><div class="operations-section-heading"><div><p class="eyebrow">Most recent first</p><h2>Observations</h2></div><span class="subtle">Showing ${recent.length} of ${rows.length}</span></div><div class="table-wrap"><table><thead><tr><th>Checked</th><th>State</th><th>D1 latency</th><th>Classification</th></tr></thead><tbody>${historyRows(recent) || '<tr><td colspan="4">Scheduled monitoring will populate this history after deployment.</td></tr>'}</tbody></table></div>${remainder.length ? `<details class="full-history"><summary>Show full history</summary><div class="table-wrap"><table><thead><tr><th>Checked</th><th>State</th><th>D1 latency</th><th>Classification</th></tr></thead><tbody>${historyRows(remainder)}</tbody></table></div></details>` : ''}<p><a href="${escapeHtml(sourceUrl(env, 'migrations/0002_operations_dashboard.sql'))}">View history schema</a></p></section>`, liveState);
@@ -263,7 +261,7 @@ export function docsContent(env: Env): PageContent {
   const graphql = routeUrl('interfaces.graphql.endpoint');
   const complianceReporting = routeUrl('reporting.collection', { collection: 'compliance' });
   const operationsReporting = routeUrl('reporting.collection', { collection: 'operations' });
-  return operationalPage(env, routeUrl('operations.docs'), 'Documentation', 'OPERATIONS / DOCS', 'Documentation', 'Repository-native standards, contracts, implementation sources, and live machine interfaces.', 'src/demos/operations-pages.ts', `<section class="resource-list" aria-label="Repository documentation">${links.map(([label, path]) => `<a href="${escapeHtml(sourceUrl(env, path))}"><strong>${escapeHtml(label)}</strong><code>${escapeHtml(path)}</code></a>`).join('')}</section><section class="machine-links"><h2>Live interfaces</h2><nav class="link-row" aria-label="Live machine interfaces"><a href="${escapeHtml(openapi)}">OpenAPI JSON</a><a href="${escapeHtml(graphql)}">GraphQL</a><a href="${escapeHtml(complianceReporting)}">Compliance JSON</a><a href="${escapeHtml(operationsReporting)}">Operations Reporting JSON</a><a href="${escapeHtml(routeUrl('operations.health'))}">Health JSON</a><a href="${escapeHtml(routeUrl('operations.version'))}">Version JSON</a><a href="${escapeHtml(routeUrl('operations.api-logs'))}">Logs JSON</a><a href="${escapeHtml(repoUrl(env))}/releases">Releases</a><a href="${escapeHtml(repoUrl(env))}/tags">Tags</a></nav></section>`);
+  return operationalPage(env, routeUrl('operations.docs'), 'Documentation', 'Documentation', 'Repository-native standards, contracts, implementation sources, and live machine interfaces.', 'src/demos/operations-pages.ts', `<section class="resource-list" aria-label="Repository documentation">${links.map(([label, path]) => `<a href="${escapeHtml(sourceUrl(env, path))}"><strong>${escapeHtml(label)}</strong><code>${escapeHtml(path)}</code></a>`).join('')}</section><section class="machine-links"><h2>Live interfaces</h2><nav class="link-row" aria-label="Live machine interfaces"><a href="${escapeHtml(openapi)}">OpenAPI JSON</a><a href="${escapeHtml(graphql)}">GraphQL</a><a href="${escapeHtml(complianceReporting)}">Compliance JSON</a><a href="${escapeHtml(operationsReporting)}">Operations Reporting JSON</a><a href="${escapeHtml(routeUrl('operations.health'))}">Health JSON</a><a href="${escapeHtml(routeUrl('operations.version'))}">Version JSON</a><a href="${escapeHtml(routeUrl('operations.api-logs'))}">Logs JSON</a><a href="${escapeHtml(repoUrl(env))}/releases">Releases</a><a href="${escapeHtml(repoUrl(env))}/tags">Tags</a></nav></section>`);
 }
 
 type CloudflareMetricAvailability = CloudflareUsageSnapshot['products']['workers']['availability'];
@@ -307,7 +305,7 @@ export async function billingContent(env: Env): Promise<PageContent> {
   const breakdownMaximum = Math.max(0.0001, ...usage.cost.breakdown.map((row) => row.amountUsd));
   const liveState = `<div class="operations-live-state"><span class="status-pulse" data-state="${usage.status}"></span><strong>${telemetryStatusLabel(usage.status)}</strong><span>${usage.capturedAt ? `Updated ${relativeTime(usage.capturedAt)}` : escapeHtml(usage.cost.note)}</span></div>`;
   const budgetRoute = routeUrl('operations.api-budget');
-  return operationalPage(env, routeUrl('operations.usage'), 'Cloudflare Usage & Cost', 'OPERATIONS / USAGE', 'Cloudflare Usage & Cost', 'Live Cloudflare resource consumption with controlled cost-degradation scenarios.', 'src/demos/operations-pages.ts', `
+  return operationalPage(env, routeUrl('operations.usage'), 'Cloudflare Usage & Cost', 'Cloudflare Usage & Cost', 'Live Cloudflare resource consumption with controlled cost-degradation scenarios.', 'src/demos/operations-pages.ts', `
   <section class="billing-period"><div><p class="eyebrow">Current usage window</p><strong>${escapeHtml(usage.cost.periodStart.slice(0, 10))} → ${escapeHtml(usage.cost.periodEnd.slice(0, 10))}</strong></div><div><p class="eyebrow">${escapeHtml(costLabel)}</p><strong>${costValue}</strong><span class="${badgeClass(costBadgeState)}">${escapeHtml(costStateLabel)}</span></div><p>${escapeHtml(usage.cost.note)}</p></section>
   <section class="operations-section"><div class="operations-section-heading"><div><p class="eyebrow">Normalized, public-safe metrics</p><h2>Resource usage</h2></div><span class="subtle">${usage.capturedAt ? `Updated ${relativeTime(usage.capturedAt)}` : 'Awaiting first refresh'}</span></div><div class="usage-products">
     ${productCard('Workers', usage.products.workers.availability, [['Requests', formatNumber(usage.products.workers.requests, false)], ['Errors', formatNumber(usage.products.workers.errors, false)], ['Success rate', usage.products.workers.requests ? `${((usage.products.workers.requests - usage.products.workers.errors) / usage.products.workers.requests * 100).toFixed(3)}%` : '—'], ['CPU p50', usage.products.workers.cpuP50Ms === null ? '—' : `${usage.products.workers.cpuP50Ms.toFixed(1)} ms`], ['CPU p99', usage.products.workers.cpuP99Ms === null ? '—' : `${usage.products.workers.cpuP99Ms.toFixed(1)} ms`], ['Subrequests', formatNumber(usage.products.workers.subrequests, false)]])}

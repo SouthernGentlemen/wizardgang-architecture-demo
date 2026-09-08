@@ -3,10 +3,12 @@ import { routeUrl } from '../routing/application-routes';
 import {
   primaryNavigation,
   registeredRouteMetadata,
+  secondaryNavigation,
   type RegisteredRouteMetadataView,
 } from '../routing/navigation';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
+import { navigationStyles } from './navigation-styles';
 import { styles } from './styles';
 import { withSecurityHeaders } from '../lib/http';
 
@@ -14,6 +16,9 @@ const SITE_NAME = 'WizardGang Architecture Demo';
 const DEFAULT_DESCRIPTION = 'Executable companion to WG-ARCH-001. Every architecture concept has a stable route, a live implementation, and a direct link to the public code behind it.';
 const ROOT_ROUTE_ID = 'interfaces.frontend.index';
 const OPERATIONS_ROUTE_ID = 'operations.index';
+const RELATED_NAVIGATION: Readonly<Record<string, readonly string[]>> = Object.freeze({
+  'assurance.index': Object.freeze(['security.index']),
+});
 
 /** Acid square with an offset violet square — the same mark as the wordmark. */
 const FAVICON = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#08080b"/><rect x="5" y="15" width="12" height="12" fill="#d9ff43"/><rect x="15" y="5" width="12" height="12" fill="#a489ff"/></svg>')}`;
@@ -35,8 +40,6 @@ export interface PageContent {
   noindex?: boolean;
   canonicalPath?: string;
   routeId?: string;
-  /** Surface-level navigation/chrome rendered before main without participating in the document heading outline. */
-  beforeMain?: string;
 }
 
 export interface PageContentOptions extends Partial<Omit<PageContent, 'title' | 'description' | 'body'>> {
@@ -59,6 +62,11 @@ export function pageContent(
   };
 }
 
+function routeMetadata(routeId: string | undefined): RegisteredRouteMetadataView | undefined {
+  if (!routeId) return undefined;
+  return registeredRouteMetadata().find((route) => route.id === routeId);
+}
+
 function ancestorRouteIds(routeId: string | undefined): ReadonlySet<string> {
   if (!routeId) return new Set();
   const byId = new Map(registeredRouteMetadata().map((route) => [route.id, route]));
@@ -78,8 +86,69 @@ function primaryNavigationHtml(currentRouteId: string | undefined): string {
   return primaryNavigation().map((route) => {
     const current = route.id === currentRouteId;
     const sectionCurrent = !current && ancestors.has(route.id);
-    return `<a href="${escapeHtml(routeUrl(route.id))}"${current ? ' aria-current="page"' : ''}${sectionCurrent ? ' data-section-current style="color:var(--paper)"' : ''}>${escapeHtml(route.page!.label)}</a>`;
+    return `<a href="${escapeHtml(routeUrl(route.id))}"${current || sectionCurrent ? ' data-section-current' : ''}>${escapeHtml(route.page!.label)}</a>`;
   }).join('\n    ');
+}
+
+/** Project the registered parent chain into a single canonical breadcrumb trail. */
+export function breadcrumbNavigation(currentRouteId: string | undefined): string {
+  const current = routeMetadata(currentRouteId);
+  if (!current?.page) return '';
+  const byId = new Map(registeredRouteMetadata().map((route) => [route.id, route]));
+  const chain: RegisteredRouteMetadataView[] = [current];
+  const seen = new Set([current.id]);
+  let parentId = current.page.parent;
+  while (parentId) {
+    if (seen.has(parentId)) throw new Error(`Breadcrumb parent cycle detected at '${parentId}'`);
+    const parent = byId.get(parentId);
+    if (!parent?.page) throw new Error(`Breadcrumb parent '${parentId}' is not a registered page`);
+    chain.push(parent);
+    seen.add(parentId);
+    parentId = parent.page.parent;
+  }
+  chain.reverse();
+  return `<nav class="breadcrumb" aria-label="Breadcrumb"><ol>${chain.map((route, index) => {
+    const final = index === chain.length - 1;
+    return final
+      ? `<li aria-current="page">${escapeHtml(route.page!.label)}</li>`
+      : `<li><a href="${escapeHtml(routeUrl(route.id))}">${escapeHtml(route.page!.label)}</a></li>`;
+  }).join('')}</ol></nav>`;
+}
+
+function secondaryParent(current: RegisteredRouteMetadataView): { id: string; routes: RegisteredRouteMetadataView[] } | undefined {
+  if (current.page?.parent) {
+    const siblingRoutes = secondaryNavigation(current.page.parent);
+    if (siblingRoutes.length && (current.page.navigation === 'secondary' || siblingRoutes.some((route) => route.id === current.id))) {
+      return { id: current.page.parent, routes: siblingRoutes };
+    }
+  }
+  const childRoutes = secondaryNavigation(current.id);
+  return childRoutes.length ? { id: current.id, routes: childRoutes } : undefined;
+}
+
+/** Project child-route navigation once in the shell; related domains remain a separate landmark. */
+export function secondaryNavigationHtml(currentRouteId: string | undefined): string {
+  const current = routeMetadata(currentRouteId);
+  if (!current?.page) return '';
+  const projection = secondaryParent(current);
+  if (!projection) return '';
+  const parent = routeMetadata(projection.id);
+  if (!parent?.page) return '';
+  const siblingList = `<nav class="secondary-navigation" aria-label="${escapeHtml(parent.page.label)} sections"><ul class="secondary-navigation-list">${projection.routes.map((route) =>
+    `<li><a href="${escapeHtml(routeUrl(route.id))}"${route.id === current.id ? ' data-route-current' : ''}>${escapeHtml(route.page!.label)}</a></li>`
+  ).join('')}</ul></nav>`;
+  const relatedIds = RELATED_NAVIGATION[projection.id] ?? [];
+  const relatedRoutes = relatedIds.map((routeId) => routeMetadata(routeId)).filter((route): route is RegisteredRouteMetadataView => Boolean(route?.page));
+  const relatedList = relatedRoutes.length
+    ? `<nav class="related-navigation" aria-label="${escapeHtml(parent.page.label)} related destinations"><ul class="related-navigation-list">${relatedRoutes.map((route) => `<li><a href="${escapeHtml(routeUrl(route.id))}">${escapeHtml(route.page!.label)}</a></li>`).join('')}</ul></nav>`
+    : '';
+  return `<div class="secondary-navigation-shell">${siblingList}${relatedList}</div>`;
+}
+
+function shellNavigation(currentRouteId: string | undefined): string {
+  const breadcrumb = breadcrumbNavigation(currentRouteId);
+  const secondary = secondaryNavigationHtml(currentRouteId);
+  return breadcrumb || secondary ? `<div class="shell-navigation">${breadcrumb}${secondary}</div>` : '';
 }
 
 function shell(env: Env, content: PageContent): Response {
@@ -114,7 +183,7 @@ function shell(env: Env, content: PageContent): Response {
   <link rel="canonical" href="${escapeHtml(canonicalHref)}">
   ${content.headExtra ?? ''}
   <link rel="icon" href="${FAVICON}">
-  <style>${styles}</style>
+  <style>${styles}${navigationStyles}</style>
   <script>${THEME_BOOT}</script>
 </head>
 <body>
@@ -130,7 +199,7 @@ function shell(env: Env, content: PageContent): Response {
     <button type="button" data-theme-toggle aria-label="Switch to light theme" aria-pressed="false">Theme: Light</button>
   </nav>
 </header>
-${content.beforeMain ?? ''}
+${shellNavigation(content.routeId)}
 <main class="site-main" id="main">${content.body}</main>
 <footer class="site-footer">
   <span>WG-ARCH-001 · <a href="${escapeHtml(repoUrl(env))}">Public source</a>${routeSourceLink}</span>
@@ -160,29 +229,58 @@ export function pageResponse(
   return renderPage(env, pageContent(env, title, body, options));
 }
 
+function architectureMapSections(list: RegisteredRouteMetadataView[]): string {
+  const byId = new Map(registeredRouteMetadata().map((route) => [route.id, route]));
+  const groups = new Map<string, RegisteredRouteMetadataView[]>();
+  for (const route of list) {
+    if (!route.page) continue;
+    const parentId = route.page.parent ?? ROOT_ROUTE_ID;
+    const entries = groups.get(parentId) ?? [];
+    entries.push(route);
+    groups.set(parentId, entries);
+  }
+  const orderedGroups = [...groups.entries()].sort(([leftId], [rightId]) => {
+    const left = byId.get(leftId)?.page?.order ?? Number.MAX_SAFE_INTEGER;
+    const right = byId.get(rightId)?.page?.order ?? Number.MAX_SAFE_INTEGER;
+    return left - right || leftId.localeCompare(rightId);
+  });
+  return orderedGroups.map(([parentId, entries]) => {
+    const parent = byId.get(parentId);
+    const isRoot = parentId === ROOT_ROUTE_ID;
+    const heading = isRoot ? 'Public domains' : (parent?.page?.label ?? parentId);
+    const headingHtml = !isRoot && parent?.page
+      ? `<a href="${escapeHtml(routeUrl(parent.id))}">${escapeHtml(heading)}</a>`
+      : escapeHtml(heading);
+    return `<section class="architecture-domain" data-parent-route="${escapeHtml(parentId)}">
+  <div class="section-head"><h2>${headingHtml}</h2><span>${entries.length} destination${entries.length === 1 ? '' : 's'}</span></div>
+  <div class="grid">
+    ${entries.map((route) => {
+      const href = routeUrl(route.id);
+      return `<a class="card" href="${escapeHtml(href)}">
+        <p class="eyebrow">${escapeHtml(href)}</p>
+        <h3>${escapeHtml(route.page!.label)}</h3>
+        <p>${escapeHtml(route.page!.summary)}</p>
+      </a>`;
+    }).join('')}
+  </div>
+</section>`;
+  }).join('\n');
+}
+
 export function renderIndex(env: Env, list: RegisteredRouteMetadataView[]): Response {
   const homeRoute = routeUrl(ROOT_ROUTE_ID);
   const operationsRoute = routeUrl(OPERATIONS_ROUTE_ID);
   const body = `
 <section class="page-header home-header">
-  <p class="eyebrow">WG-ARCH-001 / executable companion</p>
   <h1>Architecture <span>you can inspect.</span></h1>
-  <p class="lede home-lede">${list.length} live surfaces expose the platform, interfaces, assurance, security, and operations behind a production edge system.</p>
+  <p class="lede home-lede">${list.length} live destinations expose the platform, interfaces, assurance, security, and operations behind a production edge system.</p>
 </section>
 <section class="status-strip" aria-label="Live service state">
   <a href="/api/operations/version"><span>Version</span><strong>${escapeHtml(env.DEPLOYED_VERSION || 'development')}</strong></a>
   <a href="${escapeHtml(operationsRoute)}#health"><span>Health</span><strong data-health>Checking…</strong></a>
 </section>
 <section id="architecture-map">
-  <div class="section-head"><h2>Public domains</h2><span>${list.length} surfaces</span></div>
-  <div class="grid">
-    ${list.map((route) => `
-      <a class="card" href="${escapeHtml(routeUrl(route.id))}">
-        <p class="eyebrow">${escapeHtml(route.pattern)}</p>
-        <h3>${escapeHtml(route.page!.label)}</h3>
-        <p>${escapeHtml(route.page!.summary)}</p>
-      </a>`).join('')}
-  </div>
+  ${architectureMapSections(list)}
 </section>
 <script>
 fetch('/api/operations/health').then((r) => r.json()).then((h) => {
@@ -205,19 +303,6 @@ function demoRoute(demo: DemoDefinition): string {
   return demo.route;
 }
 
-/** Previous/next within the same group keeps adjacent proofs easy to reach. */
-function groupPager(demo: DemoDefinition, all: DemoDefinition[]): string {
-  const siblings = all.filter((candidate) => candidate.group === demo.group);
-  const index = siblings.findIndex((candidate) => candidate.id === demo.id);
-  const previous = siblings[index - 1];
-  const next = siblings[index + 1];
-  if (!previous && !next) return '';
-  return `<nav class="meta" aria-label="${escapeHtml(demo.group)} routes" style="margin-top:2.5rem;padding-top:1.1rem;border-top:1px solid var(--line)">
-    ${previous ? `<a href="${escapeHtml(demoRoute(previous))}">← ${escapeHtml(previous.title)}</a>` : ''}
-    ${next ? `<a href="${escapeHtml(demoRoute(next))}">${escapeHtml(next.title)} →</a>` : ''}
-  </nav>`;
-}
-
 export interface ReferenceLink {
   label: string;
   href: string;
@@ -229,7 +314,7 @@ export function referenceDetails(links: ReferenceLink[], label = 'References'): 
   return `<details class="reference-details"><summary>${escapeHtml(label)}</summary><div class="reference-links">${links.map((link) => `<a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a>`).join('')}</div></details>`;
 }
 
-export function demoContent(env: Env, demo: DemoDefinition, all: DemoDefinition[] = [], extra = ''): PageContent {
+export function demoContent(env: Env, demo: DemoDefinition, _all: DemoDefinition[] = [], extra = ''): PageContent {
   const route = demoRoute(demo);
   const actions = demo.actions ?? (demo.action ? [{
     ...demo.action,
@@ -259,7 +344,6 @@ export function demoContent(env: Env, demo: DemoDefinition, all: DemoDefinition[
   ];
   const body = `
 <section class="page-header">
-  <p class="eyebrow"><a href="${escapeHtml(routeUrl(ROOT_ROUTE_ID))}">${escapeHtml(demo.group)}</a> / ${escapeHtml(route)}</p>
   <h1>${escapeHtml(demo.title)}</h1>
   <p class="lede">${escapeHtml(demo.summary)}</p>
   ${demo.notice ? `<p class="subtle">${escapeHtml(demo.notice)}</p>` : ''}
@@ -272,7 +356,6 @@ ${sections}
 ${extra}
 ${runPanels}
 <details class="implementation-notes"><summary id="proves-heading">Implementation notes</summary><ul>${demo.proves.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></details>
-${groupPager(demo, all)}
 <script>
 (() => {
   const actions = ${JSON.stringify(actions)};

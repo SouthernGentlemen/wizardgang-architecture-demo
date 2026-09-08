@@ -160,7 +160,7 @@ function renderOperation(entry: OperationEntry, index: number, spec: OpenApiDocu
   const inputs = operationParameters.map((parameter) => renderParameterInput(parameter, id, spec)).join('');
   const examples = codeExamples(entry, spec);
   const secured = Array.isArray(entry.operation.security) && entry.operation.security.length > 0;
-  return `<article class="api-operation" id="${escapeHtml(id)}" role="tabpanel" data-api-operation="${index}"${index ? ' hidden' : ''}>
+  return `<div class="api-operation" id="${escapeHtml(id)}" role="tabpanel" aria-labelledby="${escapeHtml(id)}-tab" data-api-operation="${index}"${index ? ' hidden' : ''}>
     <div class="api-operation-heading">
       <div><p class="eyebrow">${secured ? 'Authenticated · visitor sandbox' : 'Public'}</p><h2><span class="http-method http-${entry.method.toLowerCase()}">${entry.method}</span> <code>${escapeHtml(`${basePath(spec)}${entry.path}`)}</code></h2></div>
       <span class="badge${secured ? '' : ' badge-ok'}">${secured ? 'Scoped write' : 'Public'}</span>
@@ -184,7 +184,7 @@ function renderOperation(entry: OperationEntry, index: number, spec: OpenApiDocu
       <pre data-response-panel="0" data-response-body></pre><pre data-response-panel="1" data-response-headers hidden></pre><pre data-response-panel="2" data-response-request hidden></pre>
       <a class="text-link" data-request-log hidden>View request in logs →</a>
     </section>
-  </article>`;
+  </div>`;
 }
 
 function renderSchemas(schemas: Record<string, JsonObject>): string {
@@ -335,7 +335,7 @@ export function openApiConsole(): string {
   </section>
   <section class="api-explorer" id="rest" aria-labelledby="endpoints-heading">
     <aside class="api-endpoint-nav"><div><p class="eyebrow">OpenAPI generated</p><h2 id="endpoints-heading">Endpoints</h2></div><div role="tablist" aria-label="REST operations">
-      ${entries.map((entry, index) => `<button type="button" role="tab" aria-selected="${index === 0}" aria-controls="${escapeHtml(operationId(entry))}" data-api-endpoint="${index}"${index ? ' tabindex="-1"' : ''}><span class="http-method http-${entry.method.toLowerCase()}">${entry.method}</span><code>${escapeHtml(entry.path)}</code></button>`).join('')}
+      ${entries.map((entry, index) => `<button type="button" role="tab" id="${escapeHtml(operationId(entry))}-tab" aria-selected="${index === 0}" aria-controls="${escapeHtml(operationId(entry))}" data-api-endpoint="${index}"${index ? ' tabindex="-1"' : ''}><span class="http-method http-${entry.method.toLowerCase()}">${entry.method}</span><code>${escapeHtml(entry.path)}</code></button>`).join('')}
     </div></aside>
     <div class="api-operation-stage">${entries.map((entry, index) => renderOperation(entry, index, spec)).join('')}</div>
   </section>

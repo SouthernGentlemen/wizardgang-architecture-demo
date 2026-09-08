@@ -28,7 +28,6 @@ export function webhooksContent(env: Env): PageContent {
   ];
   return pageContent(env, 'Signed Webhooks', `
 <section class="page-header lab-page-header webhook-page-header" id="webhooks">
-  <p class="eyebrow">Interfaces / Webhooks</p>
   <h1>Signed Webhooks</h1>
   <p class="lede">Receive GitHub-shaped events, verify every trust condition, and inspect only the sanitized delivery evidence.</p>
   <div class="api-hero-badges"><span class="badge">HMAC-SHA256</span><span class="badge">GitHub</span><span class="badge">Replay protection</span><span class="badge">D1</span></div>
@@ -40,7 +39,7 @@ export function webhooksContent(env: Env): PageContent {
 </section>
 <section class="webhook-test panel" aria-labelledby="webhook-test-heading">
   <div class="webhook-section-heading"><div><p class="eyebrow">Executable proof</p><h2 id="webhook-test-heading">Send a test event</h2><p>Generate a GitHub-shaped payload. The Worker signs it server-side and sends it through the same verifier and persistence path as a configured GitHub delivery.</p></div><button class="button-primary" type="button" data-webhook-send>Generate signed event</button></div>
-  <ol class="webhook-pipeline" aria-label="Webhook verification stages"><li><span>1</span><strong>Payload received</strong></li><li><span>2</span><strong>Signature valid</strong></li><li><span>3</span><strong>Repository allowed</strong></li><li><span>4</span><strong>Delivery unique</strong></li><li><span>5</span><strong>Event allowed</strong></li><li><span>6</span><strong>Summary stored</strong></li></ol>
+  <ol class="webhook-pipeline" aria-label="Webhook verification stages" tabindex="0"><li><span>1</span><strong>Payload received</strong></li><li><span>2</span><strong>Signature valid</strong></li><li><span>3</span><strong>Repository allowed</strong></li><li><span>4</span><strong>Delivery unique</strong></li><li><span>5</span><strong>Event allowed</strong></li><li><span>6</span><strong>Summary stored</strong></li></ol>
 </section>
 <section class="webhook-deliveries" aria-labelledby="webhook-deliveries-heading">
   <div class="webhook-section-heading"><div><p class="eyebrow">Sanitized D1 history</p><h2 id="webhook-deliveries-heading">Verified deliveries</h2><p class="subtle" data-webhook-meta aria-live="polite">Loading verified deliveries…</p></div><button type="button" data-webhook-reset>Reset my synthetic events</button></div>

@@ -93,13 +93,13 @@ export async function governanceContent(
     cursor: url.searchParams.get('cursor'),
   });
   const presentation = presentReportingQuery(result, { label: collection.label });
-  const reporting = `<section class="operations-section" id="governance-records" aria-labelledby="governance-records-heading">
+  const reporting = `<div class="operations-section" id="governance-records">
     <p class="subtle">Governance inventory is discovered from reporting ownership and registry capabilities, including every registered governance partition.</p>
     ${renderReportingPresentation(presentation, {
       headingId: 'governance-records-heading',
       nextHref: nextHref(request, presentation.pagination?.nextCursor),
     })}
-  </section>`;
+  </div>`;
   return demoContent(env, demo, all, reporting);
 }
 

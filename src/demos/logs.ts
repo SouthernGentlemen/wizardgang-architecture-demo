@@ -60,7 +60,6 @@ export async function logsContent(request: Request, env: Env): Promise<PageConte
 
   const body = `
 <section class="page-header">
-  <div class="eyebrow">OPERATIONS / LOGS</div>
   <h1>Application Logs</h1>
   <p class="lede">${escapeHtml(demo.summary)}</p>
   <div class="page-tools">

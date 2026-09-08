@@ -13,7 +13,6 @@ export function apiContent(env: Env): PageContent {
   const identityUrl = routeUrl('interfaces.identity.page');
   return pageContent(env, 'REST API', `
 <section class="page-header lab-page-header api-page-header">
-  <p class="eyebrow">Interfaces / API</p>
   <h1>REST API</h1>
   <p class="lede">Execute requests against the live versioned API and inspect the OpenAPI 3.1 contract that generates this explorer.</p>
   <div class="api-hero-badges"><span class="badge">REST</span><span class="badge">OpenAPI 3.1</span><span class="badge">D1</span><span class="badge">v1</span></div>

@@ -23,7 +23,6 @@ export function graphqlContent(env: Env): PageContent {
   const d1Url = routeUrl('platform.d1');
   return pageContent(env, 'GraphQL API', `
 <section class="page-header lab-page-header graphql-page-header" id="graphql">
-  <p class="eyebrow">Interfaces / GraphQL</p>
   <h1>GraphQL API</h1>
   <p class="lede">Query and mutate the same D1-backed users through a typed GraphQL schema.</p>
   <div class="api-hero-badges"><span class="badge">GraphQL Yoga</span><span class="badge">GraphiQL</span><span class="badge">D1</span><span class="badge">Shared policy</span></div>

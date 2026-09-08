@@ -65,7 +65,6 @@ export function assuranceIndexContent(env: Env): PageContent {
   </a>`).join('');
 
   return pageContent(env, 'Assurance', `<section class="page-header assurance-header">
-    <p class="eyebrow">Delivery &amp; Governance / ${escapeHtml(assuranceRoute)}</p>
     <h1>Public assurance, one inspectable surface.</h1>
     <p class="lede">Browse delivery, governance, evidence, compliance, risk, incident, and concern records without duplicating the canonical reporting or publication contracts behind them.</p>
     <p class="assurance-notice"><strong>Qualification:</strong> ${escapeHtml(qualificationNotice)}</p>
@@ -93,7 +92,7 @@ export async function renderSharedReporting(
   const collectionId = presentationCollections[presentation];
   const collection = reportingCollectionInventory(principal).find((candidate) => candidate.id === collectionId);
   if (!collection) {
-    return `<section class="operations-section" id="assurance-reporting"><div class="availability-empty">No compatible public reporting collection is registered for this presentation.</div></section>`;
+    return `<div class="operations-section" id="assurance-reporting"><div class="availability-empty">No compatible public reporting collection is registered for this presentation.</div></div>`;
   }
   const url = new URL(request.url);
   const result = await queryReportingCollection(env, principal, collection, {
@@ -103,7 +102,7 @@ export async function renderSharedReporting(
   });
   const label = presentationLabels[presentation];
   const rendered = presentReportingQuery(result, { label: `${label} reporting` });
-  return `<section class="operations-section" id="assurance-reporting" aria-labelledby="assurance-reporting-heading">
+  return `<div class="operations-section" id="assurance-reporting">
     <div class="operations-section-heading"><div><p class="eyebrow">Shared reporting projection</p><h2 id="assurance-reporting-heading">${escapeHtml(label)} reporting</h2></div><a href="${escapeHtml(sourceUrl(env, 'src/reporting/service.ts'))}">Reporting source <span aria-hidden="true">↗</span></a></div>
     <p class="subtle">This route queries the registered reporting collection and renders it through the shared disclosure-aware presentation layer. Canonical lifecycle, qualification, provenance, and public/private boundaries remain upstream of this page.</p>
     ${renderReportingPresentation(rendered, {
@@ -111,5 +110,5 @@ export async function renderSharedReporting(
       nextHref: cursorLink(request, rendered.pagination?.nextCursor),
       recordAnchors: presentation === 'index',
     })}
-  </section>`;
+  </div>`;
 }
