@@ -46,6 +46,24 @@ export async function logsContent(request: Request, env: Env): Promise<PageConte
     requestId: requestId || undefined,
   });
 
+  const filtered = Boolean(level || source || requestId);
+  const explorerOpen = ['level', 'source', 'requestId', 'limit'].some((key) => url.searchParams.has(key));
+  const eventKinds = new Set<string>();
+  const examples = logs.filter((log) => {
+    const key = JSON.stringify([log.source, log.event_key]);
+    if (eventKinds.has(key)) return false;
+    eventKinds.add(key);
+    return true;
+  }).slice(0, 3);
+  const preview = examples.map((log) => `<article class="operations-tour-card log-example">
+    <p class="eyebrow">${escapeHtml(log.level)} · ${escapeHtml(log.source)}</p>
+    <h3><code>${escapeHtml(log.event_key)}</code></h3>
+    <p>${escapeHtml(log.message)}</p>
+    <p class="subtle"><strong>Recorded</strong> <time datetime="${escapeHtml(log.created_at)}">${escapeHtml(log.created_at)}</time></p>
+    <p class="subtle"><strong>Route</strong> <code>${escapeHtml(log.route || 'Not recorded')}</code></p>
+    <p class="subtle"><strong>Request ID</strong> <code>${escapeHtml(log.request_id || 'Not recorded')}</code></p>
+  </article>`).join('');
+
   const rows = logs.map((log) => `
     <tr>
       <td><time datetime="${escapeHtml(log.created_at)}">${escapeHtml(log.created_at)}</time></td>
@@ -61,16 +79,26 @@ export async function logsContent(request: Request, env: Env): Promise<PageConte
   const body = `
 <section class="page-header">
   <h1>Application Logs</h1>
-  <p class="lede">${escapeHtml(demo.summary)}</p>
+  <p class="lede">Can we explain what happened without exposing sensitive data?</p>
   <div class="page-tools">
     <a class="text-link" href="${escapeHtml(sourceUrl(env, demo.sourcePath))}">Route source</a>
-    ${referenceDetails([
-      { label: 'Log persistence', href: sourceUrl(env, 'src/lib/logs.ts') },
-      { label: 'Log schema', href: sourceUrl(env, 'migrations/0004_application_logs.sql') },
-      { label: 'Operations design', href: sourceUrl(env, 'docs/OPERATIONS.md') },
-    ])}
   </div>
 </section>
+<section class="operations-tour" aria-labelledby="logging-demonstrates-heading">
+  <p class="eyebrow">What this demonstrates</p><h2 id="logging-demonstrates-heading">Explain runtime behavior with public-safe events</h2>
+  <div class="operations-tour-grid">
+    <article class="operations-tour-card"><h3>Structured events</h3><p>Named events, levels, and sources make behavior queryable. Structured detail provides context beyond an arbitrary message string.</p></article>
+    <article class="operations-tour-card"><h3>Sanitized telemetry</h3><p>This public demonstration exposes bounded diagnostic records. Sensitive detail keys and recognized credential values are redacted before storage, and log queries have a capped size.</p></article>
+    <article class="operations-tour-card"><h3>Traceability</h3><p>Sources identify the emitting subsystem. When recorded, routes and request IDs help connect an event to the activity that produced it.</p></article>
+  </div>
+</section>
+<section class="operations-tour" aria-labelledby="log-examples-heading">
+  <p class="eyebrow">See the result</p><h2 id="log-examples-heading">Recent event examples</h2>
+  <p>Up to three distinct source and event pairs from the latest ${logs.length} ${filtered ? 'matching ' : ''}record${logs.length === 1 ? '' : 's'}, newest first. These are real stored events; repeated event types remain available in the explorer.</p>
+  ${preview ? `<div class="operations-tour-grid">${preview}</div>` : `<p class="availability-empty">${filtered ? 'No events match the selected filters. Adjust or reset them in the log explorer.' : 'No logs have been recorded yet. Stored events will appear here as the application runs.'}</p>`}
+</section>
+<details class="operations-inspection" id="log-explorer"${explorerOpen ? ' open' : ''}>
+  <summary>Open log explorer</summary>
 <section class="panel" aria-labelledby="filters-heading">
   <h2 id="filters-heading">Filter logs</h2>
   <form method="get" action="${escapeHtml(logsRoute)}" class="filters">
@@ -99,13 +127,20 @@ export async function logsContent(request: Request, env: Env): Promise<PageConte
   <div class="table-wrap">
     <table>
       <thead><tr><th>Time</th><th>Level</th><th>Source</th><th>Event</th><th>Request ID</th><th>Message</th><th>Route</th><th>Detail</th></tr></thead>
-      <tbody>${rows || '<tr><td colspan="8">No logs have been recorded yet.</td></tr>'}</tbody>
+      <tbody>${rows || `<tr><td colspan="8">${filtered ? 'No events match the selected filters.' : 'No logs have been recorded yet.'}</td></tr>`}</tbody>
     </table>
   </div>
   <p><a href="${escapeHtml(logsApiRoute)}">View JSON</a></p>
-</section>`;
+</section>
+</details>
+${referenceDetails([
+  { label: 'Log persistence and redaction', href: sourceUrl(env, 'src/lib/logs.ts') },
+  { label: 'Log schema', href: sourceUrl(env, 'migrations/0004_application_logs.sql') },
+  { label: 'Redaction tests', href: sourceUrl(env, 'tests/logs.test.ts') },
+  { label: 'Operations design', href: sourceUrl(env, 'docs/OPERATIONS.md') },
+], 'Implementation sources')}`;
 
-  return pageContent(env, demo.title, body, { cacheControl: 'no-store', canonicalPath: logsRoute });
+  return pageContent(env, demo.title, body, { cacheControl: 'no-store', canonicalPath: logsRoute, description: demo.summary });
 }
 
 export default demo;
