@@ -83,8 +83,8 @@ describe('canonical operations routes', () => {
     expect(overview).toContain('href="/operations/usage"');
 
     const availability = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations/availability'), environment)).text();
-    expect(availability).toContain('planned/manual offline');
-    expect(availability).toContain('planned / unexpected');
+    expect(availability).toContain('Intentional demo offline');
+    expect(availability).toContain('Planned maintenance observed');
 
     const logs = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations/logs?level=warn&source=rest&limit=25&requestId=req-1'), environment)).text();
     expect(logs).toContain('Application Logs');

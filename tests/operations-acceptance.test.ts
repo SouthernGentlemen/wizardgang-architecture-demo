@@ -33,7 +33,7 @@ describe('Operations acceptance journey', () => {
       for (const sibling of pages.slice(1)) expect(html).toContain(`href="${routeUrl(sibling)}"`);
       expect(html).toContain('>Route source</a>');
       if (routeId === 'operations.index') expect(html).toContain(offline ? 'PLANNED MAINTENANCE' : 'AWAITING DATA');
-      if (routeId === 'operations.availability') expect(html).toContain('Awaiting the first scheduled observation.');
+      if (routeId === 'operations.availability') expect(html).toContain('Awaiting the first verified scheduled observation.');
       if (routeId === 'operations.logs') expect(html).toContain('No logs have been recorded yet.');
       if (routeId === 'operations.usage') expect(html).toContain('it does not establish an application outage');
     }

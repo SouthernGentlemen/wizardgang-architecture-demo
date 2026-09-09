@@ -5,6 +5,10 @@ import { json } from '../lib/http';
 
 type Readiness = 'operational' | 'unavailable' | 'unconfigured';
 
+export const AVAILABILITY_INTERVAL_MINUTES = 5;
+export const AVAILABILITY_RETENTION_DAYS = 365;
+const DAY_MS = 86_400_000;
+
 export interface HealthSnapshot {
   status: 'operational' | 'degraded' | 'offline';
   checkedAt: string;
@@ -28,7 +32,19 @@ async function timed(check: () => Promise<unknown>): Promise<{ status: 'operatio
   }
 }
 
-export async function collectHealth(env: Env, persist = true): Promise<HealthSnapshot> {
+export function availabilityRetentionCutoff(referenceTime = Date.now()): string {
+  return new Date(referenceTime - AVAILABILITY_RETENTION_DAYS * DAY_MS).toISOString();
+}
+
+export async function purgeAvailabilityHistory(env: Env, referenceTime = Date.now()): Promise<number> {
+  const result = await env.DEMO_DB.prepare(
+    `DELETE FROM service_health_checks
+     WHERE service_key = 'public-demo' AND checked_at < ?`,
+  ).bind(availabilityRetentionCutoff(referenceTime)).run();
+  return result.meta.changes ?? 0;
+}
+
+export async function collectHealth(env: Env, persist = false, scheduledTime?: number): Promise<HealthSnapshot> {
   const checkedAt = new Date().toISOString();
   const control = await getDemoControl(env);
   const d1 = await timed(() => env.DEMO_DB.prepare('SELECT 1').all());
@@ -63,16 +79,28 @@ export async function collectHealth(env: Env, persist = true): Promise<HealthSna
   };
 
   if (persist && d1.status === 'operational') {
+    const persistedAt = new Date(scheduledTime ?? Date.now()).toISOString();
     try {
+      // The scheduled timestamp is the availability-record identity. Remove an existing
+      // retry of the same slot before inserting so scheduler retries cannot inflate uptime.
+      await env.DEMO_DB.prepare(
+        `DELETE FROM service_health_checks WHERE service_key = ? AND checked_at = ?`,
+      ).bind('public-demo', persistedAt).run();
       await env.DEMO_DB.prepare(
         `INSERT INTO service_health_checks (service_key, status, response_ms, detail_json, checked_at)
-         VALUES (?, ?, ?, ?, ?)`
+         VALUES (?, ?, ?, ?, ?)`,
       ).bind(
         'public-demo',
         status === 'offline' ? 'down' : status,
         d1.responseMs,
-        JSON.stringify({ intentionalOffline: control.state === 'offline', services: snapshot.services }),
-        checkedAt,
+        JSON.stringify({
+          intentionalOffline: control.state === 'offline',
+          observationSource: 'scheduled',
+          observedAt: checkedAt,
+          scheduledAt: persistedAt,
+          services: snapshot.services,
+        }),
+        persistedAt,
       ).run();
       await recordApplicationLog(env, {
         level: status === 'operational' ? 'info' : 'warn',
@@ -82,7 +110,7 @@ export async function collectHealth(env: Env, persist = true): Promise<HealthSna
           ? 'Runtime checked; public demo intentionally offline.'
           : status === 'degraded' ? 'Runtime operational; one or more dependencies unavailable.' : 'Runtime dependency checks passed.',
         route: '/api/operations/health',
-        detail: { demoState: control.state, services: snapshot.services, responseMs: snapshot.responseMs },
+        detail: { demoState: control.state, services: snapshot.services, responseMs: snapshot.responseMs, scheduledAt: persistedAt },
       });
     } catch {
       // Health reporting should still respond even if history/log persistence is unavailable.
@@ -93,7 +121,7 @@ export async function collectHealth(env: Env, persist = true): Promise<HealthSna
 }
 
 export async function healthResponse(env: Env): Promise<Response> {
-  const snapshot = await collectHealth(env);
+  const snapshot = await collectHealth(env, false);
   return json(snapshot, { status: snapshot.status === 'operational' ? 200 : 503, headers: { 'cache-control': 'no-store' } });
 }
 
