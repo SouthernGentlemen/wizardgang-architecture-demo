@@ -289,17 +289,17 @@
       "indexing": "allow"
     },
     "title": "Incidents",
-    "description": "Disclosure-safe incident and exercise records with explicit record boundaries.",
+    "description": "Disclosure-safe incident posture and response-exercise readiness with traceable records.",
     "docs": [
       "docs/ASSURANCE-REGISTRY.md",
       "docs/REPORTING.md",
       "docs/ROUTES.md"
     ],
     "source": {
-      "module": "src/demos/assurance-pages.ts",
+      "module": "src/demos/incidents-page.ts",
       "exportName": "incidentsContent",
       "tests": [
-        "tests/assurance-consolidation.test.ts"
+        "tests/incidents-page.test.ts"
       ]
     },
     "navigation": {

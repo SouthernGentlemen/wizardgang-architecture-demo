@@ -13,7 +13,7 @@ This file is generated from the active declarative application registry. Route I
 | `assurance.delivery` | `/assurance/delivery` | `GET` | page | public | gated | allow | Delivery | `src/demos/git-page.ts` |
 | `assurance.evidence` | `/assurance/evidence` | `GET` | page | public | gated | allow | Evidence | `src/demos/evidence-page.ts` |
 | `assurance.governance` | `/assurance/governance` | `GET` | page | public | gated | allow | Governance | `src/demos/governance.ts` |
-| `assurance.incidents` | `/assurance/incidents` | `GET` | page | public | gated | allow | Incidents | `src/demos/assurance-pages.ts` |
+| `assurance.incidents` | `/assurance/incidents` | `GET` | page | public | gated | allow | Incidents | `src/demos/incidents-page.ts` |
 | `assurance.risks` | `/assurance/risks` | `GET` | page | public | gated | allow | Risks | `src/demos/assurance-pages.ts` |
 | `interfaces.index` | `/interfaces` | `GET` | page | public | gated | allow | Application interfaces | `src/demos/interfaces.ts` |
 | `interfaces.accessibility` | `/interfaces/accessibility` | `GET` | page | public | gated | allow | WCAG 2.2 accessibility laboratory | `src/demos/accessibility-page.ts` |
