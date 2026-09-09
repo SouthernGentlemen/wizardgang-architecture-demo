@@ -258,7 +258,7 @@ const DURABLE_OBJECTS_QUERY = `query DashboardDurableObjects($accountTag: string
   viewer { accounts(filter: { accountTag: $accountTag }) {
     invocations: durableObjectsInvocationsAdaptiveGroups(limit: 10000, filter: { date_geq: $start, date_leq: $end, namespaceId: $namespaceId }) { sum { requests } }
     periodic: durableObjectsPeriodicGroups(limit: 10000, filter: { date_geq: $start, date_leq: $end, namespaceId: $namespaceId }) { sum { cpuTime } }
-    storage: durableObjectsSqlStorageGroups(limit: 1, filter: { date_geq: $start, date_leq: $end, namespaceId: $namespaceId }, orderBy: [date_DESC]) { max { storedBytes } }
+    storage: durableObjectsStorageGroups(limit: 1, filter: { date_geq: $start, date_leq: $end, namespaceId: $namespaceId }, orderBy: [date_DESC]) { max { storedBytes } }
   } }
 }`;
 
@@ -506,7 +506,7 @@ export function cloudflareUsageObservations(
     observation(r2, 'objects', 'objects', snapshot.products.r2.availability, snapshot.products.r2.objects, provenance('graphql', 'r2StorageAdaptiveGroups')),
     observation(durableObjects, 'requests', 'requests', snapshot.products.durableObjects.availability, snapshot.products.durableObjects.requests, provenance('graphql', 'durableObjectsInvocationsAdaptiveGroups')),
     observation(durableObjects, 'cpu-time', 'milliseconds', snapshot.products.durableObjects.availability, snapshot.products.durableObjects.cpuTimeMs, provenance('graphql', 'durableObjectsPeriodicGroups')),
-    observation(durableObjects, 'storage', 'bytes', snapshot.products.durableObjects.availability, snapshot.products.durableObjects.storageBytes, provenance('graphql', 'durableObjectsSqlStorageGroups')),
+    observation(durableObjects, 'storage', 'bytes', snapshot.products.durableObjects.availability, snapshot.products.durableObjects.storageBytes, provenance('graphql', 'durableObjectsStorageGroups')),
   ];
   if (snapshot.cost.kind === 'billed' && snapshot.cost.observedAt && snapshot.cost.validUntil) {
     records.push(observation(
