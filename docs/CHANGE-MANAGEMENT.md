@@ -18,6 +18,10 @@ Commit `45f2ff42d2b92ea1f820e037306f07104480f8b5` was published through pull req
 
 This is a SHA-exact correction of one published operator error, not a general allowance to reuse IDs. A different commit cannot claim the exception, and future corrections continue to receive new sequential IDs.
 
+Commit `e79f108224612ff48946c2905318010ad5b14a91` was opened as `DEMO-225` before the Cloudflare usage correction claimed and shipped that ID, but its pull request was merged afterward. Because both commits are now immutable on published `main`, `scripts/validate-history.mjs` excludes the late-merged presentation commit from the sequential count while continuing to validate its structured body. The Cloudflare correction remains the sequential `DEMO-225`; subsequent changes retain their published IDs.
+
+This exception is exact to the late-merged commit SHA. It records the collision without renumbering or rewriting published work and does not permit future ID reuse.
+
 ## Controlled record
 
 Rigor scales with risk. A meaningful commit records:

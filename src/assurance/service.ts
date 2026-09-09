@@ -290,9 +290,14 @@ export function assuranceRecordUrls(dataset: string, recordId?: string): { html?
 }
 
 export function assuranceRecordUrlsById(recordId: string): { html?: string; api?: string } {
-  const dataset = assuranceDatasetForRecordId(recordId);
+  const indexed = assuranceRuntimeRecordIndex.get(recordId);
+  const dataset = indexed?.dataset;
   if (!dataset || !assuranceRoutesForDataset(dataset)) return {};
-  return canonicalAssuranceRecordUrls(dataset, recordId);
+  const urls = canonicalAssuranceRecordUrls(dataset, recordId);
+  if (dataset !== 'compliance' || !urls.html) return urls;
+  const record = indexed.record as CanonicalAssuranceRecordMap['compliance'];
+  const params = new URLSearchParams({ framework: record.framework, section: record.section });
+  return { ...urls, html: `${urls.html.split('#')[0]}?${params.toString()}#${canonicalAssuranceAnchor(recordId)}` };
 }
 
 export const complianceFrameworks = assuranceComplianceFrameworks;

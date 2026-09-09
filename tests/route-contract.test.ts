@@ -106,7 +106,7 @@ describe('public link and route contract', () => {
       const response = await get(target);
       expect(response.status, target).toBe(200);
       const html = await response.text();
-      expect(html, `${framework} filter was not applied`).toContain(`<option value="${framework}" selected>`);
+      expect(html, `${framework} filter was not applied`).toContain(`<input type="hidden" name="framework" value="${framework}">`);
     }
   });
 

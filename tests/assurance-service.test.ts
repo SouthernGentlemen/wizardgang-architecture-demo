@@ -32,7 +32,7 @@ const environment = {
 } as unknown as Env;
 
 function complianceIds(html: string): string[] {
-  return [...html.matchAll(/<tr id="((?:ISO27001|ISO42001|WCAG)-[^"]+)">/g)].map((match) => match[1]);
+  return [...html.matchAll(/<details class="implementation-notes" id="((?:ISO27001|ISO42001|WCAG)-[^"]+)">/g)].map((match) => match[1]);
 }
 
 function riskIds(html: string): string[] {
@@ -45,9 +45,10 @@ describe('common canonical assurance query and presentation service', () => {
     const complianceQuery = serializeAssuranceFilters('compliance', complianceFilters);
     const complianceExpected = filterPublishedAssuranceRecords('compliance', complianceFilters).map((record) => record.id);
     const complianceApi = await (await reportingCollectionResponse(new Request(`https://demo.wizardgang.ai/api/reporting/compliance?${complianceQuery}`), environment, 'compliance')).json() as { records: Array<{ id: string }> };
-    const complianceHtml = await renderPage(environment, complianceContent(new Request(`https://demo.wizardgang.ai/assurance/compliance?${complianceQuery}`), environment)).text();
+    const focusedComplianceId = complianceExpected[0];
+    const complianceHtml = await renderPage(environment, complianceContent(new Request(`https://demo.wizardgang.ai/assurance/compliance?${complianceQuery}&q=${focusedComplianceId}`), environment)).text();
     expect(complianceApi.records.map((record) => record.id)).toEqual(complianceExpected);
-    expect(complianceIds(complianceHtml)).toEqual(complianceExpected);
+    expect(complianceIds(complianceHtml)).toEqual([focusedComplianceId]);
 
     const riskFilters = { framework: 'security', residual: 'high' };
     const riskQuery = serializeAssuranceFilters('risks', riskFilters);

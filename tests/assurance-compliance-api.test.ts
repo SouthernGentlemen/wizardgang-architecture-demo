@@ -90,21 +90,19 @@ describe('canonical compliance presentation and API contract', () => {
 
   it('renders accessible filters, stable row anchors, evidence links, exact lookup links, and current primary navigation', async () => {
     const response = complianceContent(
-      new Request('https://demo.wizardgang.ai/assurance/compliance?framework=wcag-2.2&level=A'),
+      new Request('https://demo.wizardgang.ai/assurance/compliance?framework=wcag-2.2&level=A&section=1.%20Perceivable'),
       environment,
     );
     const html = await renderPage(environment, {
       ...response,
       routeId: 'assurance.compliance',
     }).text();
-    expect(html).toContain('<label for="compliance-framework">Framework</label>');
+    expect(html).toContain('<input type="hidden" name="framework" value="wcag-2.2">');
     expect(html).toContain('<label for="compliance-status">Status</label>');
-    expect(html).toContain('<label for="compliance-level">WCAG level</label>');
-    expect(html).toContain('<caption class="subtle">');
-    expect(html).toContain('id="WCAG-4.1.2"');
-    expect(html).toContain('href="#WCAG-4.1.2"');
-    expect(html).toContain('/api/reporting/compliance/WCAG-4.1.2');
-    const criterion = canonicalComplianceRecords.find((record) => record.id === 'WCAG-4.1.2');
+    expect(html).toContain('<label for="compliance-level">Level</label>');
+    expect(html).toContain('id="WCAG-1.1.1"');
+    expect(html).toContain('/api/reporting/compliance/WCAG-1.1.1');
+    const criterion = canonicalComplianceRecords.find((record) => record.id === 'WCAG-1.1.1');
     expect(criterion).toBeDefined();
     expect(html).toContain(`/assurance/evidence#${assuranceRelationshipIds(criterion?.relationships, 'evidence')[0]}`);
     expect(html).toContain('<a href="/assurance" data-section-current');

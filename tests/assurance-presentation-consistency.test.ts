@@ -26,16 +26,17 @@ describe('assurance presentation consistency', () => {
     expect(rendered).toEqual(expected);
   });
 
-  it('keeps compliance HTML and API selection aligned on canonical ids', async () => {
+  it('keeps compliance API selection canonical while progressively disclosing HTML records', async () => {
     const filters = { framework: 'wcag-2.2', level: 'A' };
     const query = serializeAssuranceFilters('compliance', filters);
     const expected = filterPublishedAssuranceRecords('compliance', filters).map((record) => record.id);
     const api = await (await reportingCollectionResponse(new Request(`https://demo.wizardgang.ai/api/reporting/compliance?${query}`), environment, 'compliance')).json() as { records: Array<{ id: string }>; derived: { count: number } };
-    const html = await renderPage(environment, complianceContent(new Request(`https://demo.wizardgang.ai/assurance/compliance?${query}`), environment)).text();
-    const rendered = [...html.matchAll(/<tr id="((?:ISO27001|ISO42001|WCAG)-[^"]+)">/g)].map((match) => match[1]);
+    const focusedId = expected[0];
+    const html = await renderPage(environment, complianceContent(new Request(`https://demo.wizardgang.ai/assurance/compliance?${query}&q=${focusedId}`), environment)).text();
+    const rendered = [...html.matchAll(/<details class="implementation-notes" id="((?:ISO27001|ISO42001|WCAG)-[^"]+)">/g)].map((match) => match[1]);
     expect(api.records.map((record) => record.id)).toEqual(expected);
     expect(api.derived.count).toBe(expected.length);
-    expect(rendered).toEqual(expected);
+    expect(rendered).toEqual([focusedId]);
   });
 
   it('presents incidents and exercises from their canonical collections through the same presenter', async () => {

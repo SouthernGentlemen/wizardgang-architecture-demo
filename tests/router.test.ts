@@ -216,22 +216,17 @@ describe('public route contract', () => {
     expect(await edge.text()).not.toContain('alignment targets, not certification claims');
   });
 
-  it('renders compliance as a canonical record registry without certification claims', async () => {
+  it('renders compliance as an instructional framework review without certification claims', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance/compliance', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     expect(response.status).toBe(200);
-    for (const statement of ['WCAG 2.2', 'ISO/IEC 27001:2022', 'ISO/IEC 42001:2023', 'Canonical frameworks', 'Filter records', 'Compliance records']) {
+    for (const statement of ['WCAG 2.2', 'ISO/IEC 27001:2022', 'ISO/IEC 42001:2023', 'Framework posture', 'Needs attention', 'Choose a framework to inspect']) {
       expect(html).toContain(statement);
     }
-    for (const control of ['compliance-framework', 'compliance-status', 'compliance-level']) {
-      expect(html).toContain(`id="${control}"`);
-    }
-    for (const anchor of ['ISO27001-4.1', 'ISO42001-4.1', 'WCAG-4.1.2']) {
-      expect(html).toContain(`id="${anchor}"`);
-    }
     expect(html).toContain('href="/api/reporting/compliance"');
-    expect(html).toContain('href="/api/reporting/compliance/WCAG-4.1.2"');
     expect(html).toContain('href="/assurance/evidence"');
+    expect(html).not.toContain('<table');
+    expect(html).not.toContain('Compliance records');
     expect(html).not.toMatch(/>\s*(?:COMPLIANT|CERTIFIED)\s*</i);
   });
 
