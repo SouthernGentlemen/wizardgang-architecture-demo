@@ -1,113 +1,139 @@
+import {
+  restDemoOpenApiDocument as spec,
+  type RestDemoMediaType,
+  type RestDemoOperation,
+  type RestDemoParameter,
+  type RestDemoResponseDefinition,
+  type RestDemoSchema,
+} from '../api/rest-demo-openapi';
 import { escapeHtml } from '../lib/html';
 
-interface DemoOperation {
-  method: string;
+const HTTP_METHODS = ['get', 'post', 'put', 'patch', 'delete'] as const;
+
+interface RenderedOperation {
+  method: Uppercase<(typeof HTTP_METHODS)[number]>;
   path: string;
-  summary: string;
-  description: string;
-  request?: Record<string, unknown>;
-  response: Record<string, unknown>;
+  operation: RestDemoOperation;
+  parameters: RestDemoParameter[];
 }
 
-const BASE_URL = 'https://demo.wizardgang.ai';
-const COLLECTION_PATH = '/api/labs/rest-demo-records';
-const ITEM_PATH = `${COLLECTION_PATH}/{id}`;
-
-const operations: DemoOperation[] = [
-  { method: 'GET', path: COLLECTION_PATH, summary: 'List records', description: 'Return the records in this browser session.', response: { results: [{ id: 1, key: 'hello', value: { message: 'Hello from a Worker' }, createdAt: '2026-09-08T12:00:00.000Z', updatedAt: '2026-09-08T12:00:00.000Z' }], count: 1 } },
-  { method: 'POST', path: COLLECTION_PATH, summary: 'Create a record', description: 'Create a new record with a unique key.', request: { key: 'hello', value: { message: 'Hello from a Worker' } }, response: { id: 1, key: 'hello', value: { message: 'Hello from a Worker' }, createdAt: '2026-09-08T12:00:00.000Z', updatedAt: '2026-09-08T12:00:00.000Z' } },
-  { method: 'GET', path: ITEM_PATH, summary: 'Read a record', description: 'Read one record by its key.', response: { id: 1, key: 'hello', value: { message: 'Hello from a Worker' }, createdAt: '2026-09-08T12:00:00.000Z', updatedAt: '2026-09-08T12:00:00.000Z' } },
-  { method: 'PUT', path: ITEM_PATH, summary: 'Replace a record', description: 'Replace the complete value at a key, creating it when it does not exist.', request: { value: { message: 'Replaced by a Worker' } }, response: { id: 1, key: 'hello', value: { message: 'Replaced by a Worker' }, createdAt: '2026-09-08T12:00:00.000Z', updatedAt: '2026-09-08T12:01:00.000Z' } },
-  { method: 'PATCH', path: ITEM_PATH, summary: 'Update a record', description: 'Update the value at a key without changing its identity.', request: { value: { message: 'Patched by a Worker', priority: 'high' } }, response: { id: 1, key: 'hello', value: { message: 'Patched by a Worker', priority: 'high' }, createdAt: '2026-09-08T12:00:00.000Z', updatedAt: '2026-09-08T12:02:00.000Z' } },
-  { method: 'DELETE', path: ITEM_PATH, summary: 'Delete a record', description: 'Delete one record by its key.', response: {} },
-];
-
-function operationId(operation: DemoOperation, index: number): string {
-  return `rest-demo-${operation.method.toLowerCase()}-${index}`;
+function referenceName(schema?: RestDemoSchema): string {
+  if (!schema) return '—';
+  if (schema.$ref) return schema.$ref.split('/').pop() || schema.$ref;
+  if (schema.type === 'array') return `array<${referenceName(schema.items)}>`;
+  return schema.format ? `${schema.type || 'value'} (${schema.format})` : schema.type || 'object';
 }
 
-function exampleUrl(operation: DemoOperation): string {
-  return `${BASE_URL}${operation.path.replace('{id}', 'hello')}`;
+function firstMediaType(content?: Record<string, RestDemoMediaType>): [string, RestDemoMediaType] | undefined {
+  return content ? Object.entries(content)[0] : undefined;
 }
 
-function codeExamples(operation: DemoOperation): string[] {
-  const body = operation.request ? JSON.stringify(operation.request, null, 2) : '';
-  const curl = [`curl${operation.method === 'GET' ? '' : ` -X ${operation.method}`} "${exampleUrl(operation)}"`, ...(body ? ['  -H "Content-Type: application/json"', `  --data '${body.replaceAll('\n', '')}'`] : [])].join(' \\\n');
-  const javascript = `const response = await fetch('${operation.path.replace('{id}', 'hello')}', {\n  method: '${operation.method}',${body ? "\n  headers: { 'Content-Type': 'application/json' }," : ''}${body ? `\n  body: JSON.stringify(${body.replaceAll('\n', '\n  ')}),` : ''}\n});\nconsole.log(response.status, await response.text());`;
-  const python = `import requests\n\nresponse = requests.${operation.method.toLowerCase()}('${exampleUrl(operation)}'${body ? `, json=${body.replaceAll('null', 'None').replaceAll('true', 'True').replaceAll('false', 'False')}` : ''})\nprint(response.status_code, response.text)`;
+function operationsFromDocument(): RenderedOperation[] {
+  return Object.entries(spec.paths).flatMap(([path, pathItem]) => HTTP_METHODS.flatMap((method) => {
+    const operation = pathItem[method] as RestDemoOperation | undefined;
+    return operation ? [{
+      method: method.toUpperCase() as RenderedOperation['method'],
+      path,
+      operation,
+      parameters: [...(pathItem.parameters || []), ...(operation.parameters || [])],
+    }] : [];
+  }));
+}
+
+function operationId(operation: RestDemoOperation): string {
+  return `rest-demo-${operation.operationId}`;
+}
+
+function examplePath(operation: RenderedOperation): string {
+  return operation.parameters.reduce((path, parameter) => path.replace(`{${parameter.name}}`, encodeURIComponent(String(parameter.example ?? parameter.schema.example ?? parameter.name))), operation.path);
+}
+
+function requestExample(operation: RestDemoOperation): unknown {
+  return firstMediaType(operation.requestBody?.content)?.[1].example;
+}
+
+function codeExamples(rendered: RenderedOperation): string[] {
+  const { method, operation } = rendered;
+  const url = `${spec.servers[0].url}${examplePath(rendered)}`;
+  const example = requestExample(operation);
+  const body = example === undefined ? '' : JSON.stringify(example, null, 2);
+  const curl = [`curl${method === 'GET' ? '' : ` -X ${method}`} "${url}"`, ...(body ? ['  -H "Content-Type: application/json"', `  --data '${JSON.stringify(example)}'`] : [])].join(' \\\n');
+  const javascript = `const response = await fetch('${url}', {\n  method: '${method}',${body ? "\n  headers: { 'Content-Type': 'application/json' }," : ''}${body ? `\n  body: JSON.stringify(${body.replaceAll('\n', '\n  ')}),` : ''}\n});\n\nconsole.log(response.status, await response.text());`;
+  const python = `import requests\n\nresponse = requests.${method.toLowerCase()}('${url}'${body ? `, json=${body.replaceAll('null', 'None').replaceAll('true', 'True').replaceAll('false', 'False')}` : ''})\nprint(response.status_code, response.text)`;
   return [curl, javascript, python];
 }
 
-function renderOperation(operation: DemoOperation, index: number): string {
-  const id = operationId(operation, index);
-  const body = operation.request ? JSON.stringify(operation.request, null, 2) : '';
-  const examples = codeExamples(operation);
-  return `<details class="openapi-operation" id="${id}" data-rest-operation="${index}"${index === 0 ? ' open' : ''}>
-    <summary><span class="http-method http-${operation.method.toLowerCase()}">${operation.method}</span><span class="openapi-route"><strong>${escapeHtml(operation.summary)}</strong><code>${escapeHtml(operation.path)}</code></span><span class="badge badge-ok">200–204</span></summary>
-    <div class="openapi-operation-body">
-      <p class="lede">${escapeHtml(operation.description)}</p>
-      <form data-rest-form data-method="${operation.method}" data-path="${escapeHtml(operation.path)}">
-        <fieldset><legend>Try it out</legend>
-          ${operation.path.includes('{id}') ? `<label for="${id}-id">id <span class="parameter-meta">path · required · string</span><input id="${id}-id" data-rest-id value="hello" required autocomplete="off"></label>` : ''}
-          ${operation.request ? `<label for="${id}-body">Request body <span class="parameter-meta">application/json</span><textarea id="${id}-body" data-rest-body spellcheck="false" required>${escapeHtml(body)}</textarea></label>` : ''}
-          <button class="button-primary" type="submit">Execute</button>
-        </fieldset>
-      </form>
-      <section class="api-code" aria-labelledby="${id}-code"><div class="api-subheading"><h3 id="${id}-code">Request</h3><button type="button" data-copy-code>Copy code</button></div>
-        <div class="api-tabs" role="tablist" aria-label="Code example language">${['curl', 'JavaScript', 'Python'].map((label, tabIndex) => `<button type="button" role="tab" aria-selected="${tabIndex === 0}" data-code-tab="${tabIndex}"${tabIndex ? ' tabindex="-1"' : ''}>${label}</button>`).join('')}</div>
-        ${examples.map((example, tabIndex) => `<pre data-code-panel="${tabIndex}"${tabIndex ? ' hidden' : ''}>${escapeHtml(example)}</pre>`).join('')}
-      </section>
-      <section class="api-response" data-rest-result hidden aria-live="polite"><div class="api-response-heading"><div><p class="eyebrow">Response</p><h3 data-rest-status>Waiting</h3></div><p data-rest-meta></p></div><pre data-rest-response></pre></section>
-    </div>
-  </details>`;
+function renderParameters(parameters: RestDemoParameter[]): string {
+  const rows = parameters.length
+    ? parameters.map((parameter) => `<tr><td><code>${escapeHtml(parameter.name)}</code></td><td>${escapeHtml(parameter.in)}</td><td>${parameter.required ? 'Yes' : 'No'}</td><td><code>${escapeHtml(referenceName(parameter.schema))}</code></td><td>${escapeHtml(parameter.description)}</td></tr>`).join('')
+    : '<tr><td colspan="5" class="rest-empty-cell">No parameters</td></tr>';
+  return `<section class="rest-detail-block"><h3>Parameters</h3><div class="table-wrap"><table><thead><tr><th>Parameter</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+}
+
+function renderRequestBody(operation: RestDemoOperation): string {
+  if (!operation.requestBody) return '<section class="rest-detail-block"><h3>Request body</h3><p class="subtle">No request body.</p></section>';
+  const [contentType, media] = firstMediaType(operation.requestBody.content) as [string, RestDemoMediaType];
+  return `<section class="rest-detail-block"><h3>Request body</h3><p>${escapeHtml(operation.requestBody.description)}</p><div class="table-wrap"><table><thead><tr><th>Content type</th><th>Required</th><th>Schema</th></tr></thead><tbody><tr><td><code>${escapeHtml(contentType)}</code></td><td>${operation.requestBody.required ? 'Yes' : 'No'}</td><td><code>${escapeHtml(referenceName(media.schema))}</code></td></tr></tbody></table></div></section>`;
+}
+
+function responseSchema(response: RestDemoResponseDefinition): string {
+  return referenceName(firstMediaType(response.content)?.[1].schema);
+}
+
+function renderResponses(operation: RestDemoOperation): string {
+  const rows = Object.entries(operation.responses).map(([code, response]) => `<tr><td><code>${escapeHtml(code)}</code></td><td>${escapeHtml(response.description)}</td><td><code>${escapeHtml(responseSchema(response))}</code></td></tr>`).join('');
+  return `<section class="rest-detail-block"><h3>Responses</h3><div class="table-wrap"><table><thead><tr><th>Code</th><th>Meaning</th><th>Schema</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+}
+
+function renderCodeSamples(rendered: RenderedOperation): string {
+  const id = operationId(rendered.operation);
+  const examples = codeExamples(rendered);
+  return `<details class="rest-code-samples"><summary>Code samples</summary><div class="rest-code-samples-body"><div class="api-subheading"><div class="api-tabs" role="tablist" aria-label="Code sample language">${['curl', 'JavaScript', 'Python'].map((label, tabIndex) => `<button type="button" role="tab" aria-selected="${tabIndex === 0}" data-code-tab="${tabIndex}"${tabIndex ? ' tabindex="-1"' : ''}>${label}</button>`).join('')}</div><button type="button" data-copy-code>Copy</button></div>${examples.map((example, tabIndex) => `<pre id="${id}-code-${tabIndex}" data-code-panel="${tabIndex}"${tabIndex ? ' hidden' : ''}>${escapeHtml(example)}</pre>`).join('')}</div></details>`;
+}
+
+function renderTryItOut(rendered: RenderedOperation): string {
+  const { operation, method, path, parameters } = rendered;
+  const id = operationId(operation);
+  const media = firstMediaType(operation.requestBody?.content);
+  const body = media?.[1].example === undefined ? '' : JSON.stringify(media[1].example, null, 2);
+  return `<section class="rest-detail-block rest-try" aria-labelledby="${id}-try-heading"><div class="rest-try-heading"><h3 id="${id}-try-heading">Try it out</h3><button type="button" data-rest-enable>Try it out</button></div><form data-rest-form data-method="${method}" data-path="${escapeHtml(path)}"><div class="openapi-inputs" data-rest-inputs hidden>${parameters.map((parameter) => `<label for="${id}-${escapeHtml(parameter.name)}">${escapeHtml(parameter.name)} <span class="parameter-meta">${escapeHtml(parameter.in)} · ${parameter.required ? 'required' : 'optional'} · ${escapeHtml(referenceName(parameter.schema))}</span><input id="${id}-${escapeHtml(parameter.name)}" data-rest-parameter="${escapeHtml(parameter.name)}" value="${escapeHtml(String(parameter.example ?? parameter.schema.example ?? ''))}"${parameter.required ? ' required' : ''} autocomplete="off" disabled></label>`).join('')}${media ? `<label class="openapi-body" for="${id}-body">Request body <span class="parameter-meta">${escapeHtml(media[0])}</span><textarea id="${id}-body" data-rest-body spellcheck="false" required disabled>${escapeHtml(body)}</textarea></label>` : ''}<button class="button-primary" type="submit" data-rest-execute disabled>Execute</button></div></form><section class="rest-exchange" data-rest-result hidden aria-live="polite"><h3>Generated request and response</h3><dl><dt>Request URL</dt><dd><code data-rest-request-url></code></dd><dt>Request headers/body</dt><dd><pre data-rest-request></pre></dd><dt>Response status</dt><dd><strong data-rest-status></strong></dd><dt>Response headers</dt><dd><pre data-rest-response-headers></pre></dd><dt>Response body</dt><dd><pre data-rest-response-body></pre></dd></dl></section></section>`;
+}
+
+function renderOperation(rendered: RenderedOperation): string {
+  const { method, path, operation, parameters } = rendered;
+  const id = operationId(operation);
+  return `<details class="openapi-operation" id="${id}" data-rest-operation><summary><span class="http-method http-${method.toLowerCase()}">${method}</span><code>${escapeHtml(path)}</code><strong>${escapeHtml(operation.summary)}</strong><span class="rest-expand-label" aria-hidden="true">Expand</span></summary><div class="openapi-operation-body"><section class="rest-detail-block rest-description"><h3>Description</h3><p>${escapeHtml(operation.description)}</p></section>${renderParameters(parameters)}${renderRequestBody(operation)}${renderResponses(operation)}${renderCodeSamples(rendered)}${renderTryItOut(rendered)}</div></details>`;
+}
+
+function renderSchema(name: string, schema: RestDemoSchema): string {
+  const required = new Set(schema.required || []);
+  const rows = Object.entries(schema.properties || {}).map(([property, definition]) => `<tr><td><code>${escapeHtml(property)}</code></td><td><code>${escapeHtml(referenceName(definition))}</code></td><td>${required.has(property) ? 'Yes' : 'No'}</td><td>${escapeHtml(definition.description || '—')}</td><td><code>${escapeHtml(definition.example === undefined ? '—' : JSON.stringify(definition.example))}</code></td></tr>`).join('');
+  return `<details class="rest-schema"><summary><code>${escapeHtml(name)}</code><span>${escapeHtml(schema.description || referenceName(schema))}</span></summary><div class="table-wrap"><table><thead><tr><th>Property</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead><tbody>${rows}</tbody></table></div></details>`;
 }
 
 const REST_RUNNER = `(() => {
   const q = (selector, root = document) => root.querySelector(selector);
   const qa = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const select = (buttons, panels, selected) => { buttons.forEach((button, index) => { button.setAttribute('aria-selected', String(index === selected)); button.tabIndex = index === selected ? 0 : -1; }); panels.forEach((panel, index) => { panel.hidden = index !== selected; }); };
+  q('[data-copy-server]')?.addEventListener('click', async (event) => { await navigator.clipboard.writeText(event.currentTarget.dataset.copyServer); event.currentTarget.textContent = 'Copied'; setTimeout(() => { event.currentTarget.textContent = 'Copy'; }, 1200); });
   qa('[data-code-tab]').forEach((button) => button.addEventListener('click', () => { const operation = button.closest('[data-rest-operation]'); select(qa('[data-code-tab]', operation), qa('[data-code-panel]', operation), Number(button.dataset.codeTab)); }));
-  qa('[data-copy-code]').forEach((button) => button.addEventListener('click', async () => { const operation = button.closest('[data-rest-operation]'); await navigator.clipboard.writeText(qa('[data-code-panel]', operation).find((panel) => !panel.hidden)?.textContent || ''); button.textContent = 'Copied'; setTimeout(() => { button.textContent = 'Copy code'; }, 1200); }));
+  qa('[data-copy-code]').forEach((button) => button.addEventListener('click', async () => { const operation = button.closest('[data-rest-operation]'); await navigator.clipboard.writeText(qa('[data-code-panel]', operation).find((panel) => !panel.hidden)?.textContent || ''); button.textContent = 'Copied'; setTimeout(() => { button.textContent = 'Copy'; }, 1200); }));
+  qa('[data-rest-enable]').forEach((button) => button.addEventListener('click', () => { const section = button.closest('.rest-try'); const inputs = q('[data-rest-inputs]', section); inputs.hidden = false; qa('input, textarea, button[data-rest-execute]', inputs).forEach((control) => { control.disabled = false; }); button.hidden = true; q('input, textarea', inputs)?.focus(); }));
   qa('[data-rest-form]').forEach((form) => form.addEventListener('submit', async (event) => {
     event.preventDefault();
-    const operation = form.closest('[data-rest-operation]'); const result = q('[data-rest-result]', operation); const status = q('[data-rest-status]', result); const meta = q('[data-rest-meta]', result); const output = q('[data-rest-response]', result); result.hidden = false; status.textContent = 'Sending…'; meta.textContent = '';
-    try {
-      let path = form.dataset.path; const id = q('[data-rest-id]', form)?.value.trim(); if (id) path = path.replace('{id}', encodeURIComponent(id));
-      const bodyInput = q('[data-rest-body]', form); const init = { method: form.dataset.method, headers: {}, ...(bodyInput ? { body: JSON.stringify(JSON.parse(bodyInput.value)) } : {}) }; if (bodyInput) init.headers['content-type'] = 'application/json';
-      const started = performance.now(); const response = await fetch(path, init); const text = await response.text(); const duration = Math.round(performance.now() - started); let formatted = text || '(no content)'; try { formatted = JSON.stringify(JSON.parse(text), null, 2); } catch {}
-      status.textContent = response.status + ' ' + response.statusText; meta.textContent = duration + ' ms · ' + (response.headers.get('content-type') || 'no content type').split(';')[0]; output.textContent = formatted;
-    } catch (error) { status.textContent = 'Request not sent'; meta.textContent = 'Fix the request body and try again.'; output.textContent = String(error); }
+    const section = form.closest('.rest-try'); const result = q('[data-rest-result]', section); const requestUrl = q('[data-rest-request-url]', result); const requestOutput = q('[data-rest-request]', result); const status = q('[data-rest-status]', result); const responseHeaders = q('[data-rest-response-headers]', result); const responseBody = q('[data-rest-response-body]', result); const execute = q('[data-rest-execute]', form);
+    let path = form.dataset.path; qa('[data-rest-parameter]', form).forEach((input) => { path = path.replace('{' + input.dataset.restParameter + '}', encodeURIComponent(input.value.trim())); });
+    const url = new URL(path, window.location.origin).toString(); const bodyInput = q('[data-rest-body]', form); const headers = {}; let body;
+    try { if (bodyInput) { body = JSON.stringify(JSON.parse(bodyInput.value)); headers['content-type'] = 'application/json'; } } catch (error) { result.hidden = false; requestUrl.textContent = url; requestOutput.textContent = 'Body could not be parsed as JSON.'; status.textContent = 'Request not sent'; responseHeaders.textContent = '—'; responseBody.textContent = String(error); return; }
+    result.hidden = false; requestUrl.textContent = url; requestOutput.textContent = JSON.stringify({ headers, ...(body ? { body: JSON.parse(body) } : {}) }, null, 2); status.textContent = 'Sending…'; responseHeaders.textContent = 'Waiting for response…'; responseBody.textContent = 'Waiting for response…'; execute.disabled = true;
+    try { const response = await fetch(path, { method: form.dataset.method, headers, ...(body ? { body } : {}) }); const text = await response.text(); let formatted = text || '(no content)'; try { formatted = JSON.stringify(JSON.parse(text), null, 2); } catch {} status.textContent = response.status + ' ' + response.statusText; responseHeaders.textContent = [...response.headers.entries()].map(([name, value]) => name + ': ' + value).join('\\n') || '(no headers)'; responseBody.textContent = formatted; }
+    catch (error) { status.textContent = 'Request failed'; responseHeaders.textContent = '—'; responseBody.textContent = String(error); }
+    finally { execute.disabled = false; }
   }));
 })();`;
 
-export function openApiConsole(): string {
-  const spec = {
-    openapi: '3.0.3',
-    info: { title: 'WizardGang REST demo', version: '1.0.0', description: 'A small anonymous CRUD API for learning the shape of an OpenAPI 3.0 document.' },
-    servers: [{ url: BASE_URL, description: 'Live demo server' }],
-    tags: [{ name: 'Records', description: 'Visitor-scoped demo records' }],
-    paths: {
-      [COLLECTION_PATH]: {
-        get: { tags: ['Records'], operationId: 'listRecords', summary: 'List records', responses: { '200': { description: 'A list of records.' } } },
-        post: { tags: ['Records'], operationId: 'createRecord', summary: 'Create a record', requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/RecordInput' } } } }, responses: { '201': { description: 'The created record.' }, '409': { description: 'The key already exists.' } } },
-      },
-      [ITEM_PATH]: {
-        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
-        get: { tags: ['Records'], operationId: 'getRecord', summary: 'Read a record', responses: { '200': { description: 'The requested record.' }, '404': { description: 'Record not found.' } } },
-        put: { tags: ['Records'], operationId: 'replaceRecord', summary: 'Replace a record', requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/RecordValue' } } } }, responses: { '200': { description: 'The replaced record.' } } },
-        patch: { tags: ['Records'], operationId: 'updateRecord', summary: 'Update a record', requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/RecordValue' } } } }, responses: { '200': { description: 'The updated record.' } } },
-        delete: { tags: ['Records'], operationId: 'deleteRecord', summary: 'Delete a record', responses: { '204': { description: 'Record deleted.' } } },
-      },
-    },
-    components: {
-      schemas: {
-        RecordInput: { type: 'object', required: ['key', 'value'], properties: { key: { type: 'string', example: 'hello' }, value: { type: 'object', additionalProperties: true, example: { message: 'Hello from a Worker' } } } },
-        RecordValue: { type: 'object', required: ['value'], properties: { value: { type: 'object', additionalProperties: true, example: { message: 'Updated by a Worker' } } } },
-      },
-    },
-  };
-  return `<section class="api-base" aria-labelledby="rest-contract-heading"><div><p class="eyebrow">OpenAPI document</p><h2 id="rest-contract-heading"><code>${escapeHtml(spec.openapi)}</code> · ${escapeHtml(spec.info.title)}</h2><p class="subtle">${escapeHtml(spec.info.description)}</p></div><button type="button" data-copy-base="${BASE_URL}">Copy server URL</button></section>
-  <section class="api-explorer" id="rest" aria-labelledby="rest-operations-heading"><aside class="api-endpoint-nav"><div><p class="eyebrow">Operations</p><h2 id="rest-operations-heading">REST resources</h2></div><div role="tablist" aria-label="REST operations">${operations.map((operation, index) => `<a href="#${operationId(operation, index)}"><span class="http-method http-${operation.method.toLowerCase()}">${operation.method}</span><code>${escapeHtml(operation.path)}</code></a>`).join('')}</div></aside><div class="api-operation-stage">${operations.map(renderOperation).join('')}</div></section>
-  <section class="api-contract" id="openapi" aria-labelledby="rest-contract-details-heading"><div class="api-contract-heading"><div><p class="eyebrow">Contract shape</p><h2 id="rest-contract-details-heading">What this demo exposes</h2></div><span class="badge badge-ok">No authentication</span></div><dl><dt>Server</dt><dd><code>${BASE_URL}</code></dd><dt>Resources</dt><dd><code>${COLLECTION_PATH}</code> and <code>${ITEM_PATH}</code></dd><dt>Methods</dt><dd>GET · POST · PUT · PATCH · DELETE</dd><dt>Request format</dt><dd><code>application/json</code> for POST, PUT, and PATCH</dd></dl><p class="subtle">Every visitor gets an isolated session cookie. This intentionally small contract is for the demo; the full server contract is maintained separately.</p><details class="schema-browser"><summary>View this demo's OpenAPI JSON</summary><pre>${escapeHtml(JSON.stringify(spec, null, 2))}</pre></details></section>
-  <script>${REST_RUNNER}</script>`;
+export function openApiConsole(documentPath: string): string {
+  const operations = operationsFromDocument();
+  const server = spec.servers[0];
+  return `<div class="rest-docs"><section class="rest-overview" aria-labelledby="rest-document-heading"><h2 id="rest-document-heading">${escapeHtml(spec.info.title)} <span>· OpenAPI ${escapeHtml(spec.openapi)} · v${escapeHtml(spec.info.version)}</span></h2><p>${escapeHtml(spec.info.description)}</p><div class="rest-server"><div><span>Server</span><code>${escapeHtml(server.url)}</code></div><button type="button" data-copy-server="${escapeHtml(server.url)}">Copy</button></div><nav class="rest-artifacts" aria-label="OpenAPI document actions"><a class="button" href="${escapeHtml(documentPath)}">OpenAPI JSON</a><a class="button" href="${escapeHtml(documentPath)}?download=1" download>Download</a></nav></section>${spec.tags.map((tag) => `<section class="rest-tag" id="rest" aria-labelledby="rest-tag-${escapeHtml(tag.name)}"><div class="rest-tag-heading"><h2 id="rest-tag-${escapeHtml(tag.name)}">${escapeHtml(tag.name)}</h2><p>${escapeHtml(tag.description)}</p></div><div class="openapi-operation-list">${operations.filter(({ operation }) => operation.tags.includes(tag.name)).map(renderOperation).join('')}</div></section>`).join('')}<details class="rest-schemas" id="openapi"><summary><h2>Schemas</h2><span>${Object.keys(spec.components.schemas).length} definitions</span></summary><div class="rest-schema-list">${Object.entries(spec.components.schemas).map(([name, schema]) => renderSchema(name, schema)).join('')}</div></details></div><script>${REST_RUNNER}</script>`;
 }
