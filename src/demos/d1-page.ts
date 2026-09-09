@@ -332,7 +332,8 @@ export function d1Content(env: Env): PageContent {
   document.querySelector('[data-confirm-action]').addEventListener('click', async (event) => {
     const pending = state.pending;
     if (!pending) return;
-    event.currentTarget.disabled = true;
+    const confirmButton = event.currentTarget;
+    confirmButton.disabled = true;
     try {
       if (pending.type === 'reset') {
         await request('/api/labs/d1-reset', { method: 'POST' });
@@ -347,7 +348,7 @@ export function d1Content(env: Env): PageContent {
     } catch (error) {
       setDatabaseMessage(error.message, 'error');
     } finally {
-      event.currentTarget.disabled = false;
+      confirmButton.disabled = false;
       closeDialog();
     }
   });
