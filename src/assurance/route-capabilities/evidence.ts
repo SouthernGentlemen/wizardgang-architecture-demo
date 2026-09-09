@@ -5,14 +5,12 @@ export const evidenceRouteCapability = defineAssuranceRouteCapability({
   pattern: '/assurance/evidence',
   html: {
     handler: async (request, env) => {
-      const [{ evidenceContent }, { renderSharedReporting }, { renderPage }] = await Promise.all([
+      const [{ evidenceContent }, { renderPage }] = await Promise.all([
         import('../../demos/evidence-page'),
-        import('../../demos/assurance'),
         import('../../ui/page'),
       ]);
       const content = evidenceContent(request, env);
-      const reporting = await renderSharedReporting(request, env, 'evidence');
-      return renderPage(env, { ...content, routeId: 'assurance.evidence', body: `${content.body}\n${reporting}` });
+      return renderPage(env, { ...content, routeId: 'assurance.evidence' });
     },
     source: {
       module: 'src/demos/evidence-page.ts',
