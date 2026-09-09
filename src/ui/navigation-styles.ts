@@ -151,8 +151,8 @@ body[data-route-id^='platform.'] main.site-main {
 
 .related-navigation {
   flex: 0 0 auto;
-  padding-left: 0.75rem;
-  border-left: 1px solid var(--line);
+  padding-inline-start: 0.75rem;
+  border-inline-start: 1px solid var(--line);
 }
 
 .architecture-domain + .architecture-domain {
@@ -219,8 +219,8 @@ body[data-route-id^='platform.'] main.site-main {
 
   .related-navigation {
     margin-top: 0.25rem;
-    padding-left: 0;
-    border-left: 0;
+    padding-inline-start: 0;
+    border-inline-start: 0;
   }
 
   .secondary-navigation a,

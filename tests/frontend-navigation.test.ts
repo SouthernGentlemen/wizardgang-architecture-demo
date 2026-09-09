@@ -24,8 +24,9 @@ describe('derived frontend navigation', () => {
     const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === 'platform.d1');
     if (!route) throw new Error('Missing platform.d1 route');
     const html = await (await route.handler(new Request('https://demo.wizardgang.ai/platform/d1'), { env }, {})).text();
-    expect(currentPageCount(html)).toBe(1);
+    expect(currentPageCount(html)).toBe(2);
     expect(html).toContain('<li aria-current="page">D1</li>');
+    expect(html).toContain(`<a href="${route.pattern}" aria-current="page" data-route-current>`);
     expect(html).toContain('<a href="/platform" data-section-current');
     expect(html).not.toContain('data-view-current');
   });
@@ -34,8 +35,9 @@ describe('derived frontend navigation', () => {
     const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === 'assurance.risks');
     if (!route) throw new Error('Missing assurance.risks route');
     const html = await (await route.handler(new Request('https://demo.wizardgang.ai/assurance/risks'), { env }, {})).text();
-    expect(currentPageCount(html)).toBe(1);
+    expect(currentPageCount(html)).toBe(2);
     expect(html).toContain('<li aria-current="page">Risks</li>');
+    expect(html).toContain(`<a href="${route.pattern}" aria-current="page" data-route-current>`);
     expect(html).toContain('<a href="/assurance" data-section-current');
     expect(html).not.toContain('data-view-current');
     expect(html).not.toContain('name="view"');

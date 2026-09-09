@@ -1,8 +1,16 @@
-# Accessibility demonstration, criterion registry, and manual matrix
+# Accessibility demonstration, global rendering baseline, criterion registry, and manual matrix
 
-The whole site follows WCAG 2.2-oriented engineering practices. `/interfaces/accessibility` makes twelve behaviors explicit through an accessible default and an opt-in broken teaching preset. Broken content runs in a titled `srcdoc` frame with `sandbox="allow-scripts allow-forms"`; it is not evidence about the surrounding site.
+The whole site follows WCAG 2.2-oriented engineering practices. Accessibility defaults belong to ordinary rendering: there is no separate accessible version of the site. `/interfaces/accessibility` makes twelve behaviors explicit through an accessible default and an opt-in broken teaching preset. Broken content runs in a titled `srcdoc` frame with `sandbox="allow-scripts allow-forms"`; it is not evidence about the surrounding site.
 
 Status language is **WCAG 2.2 engineering evidence — no conformance claim**. The repository does not claim Level A, AA, or AAA conformance or certification. Criterion-level status describes implementation and evidence only; a demonstrated or partial record is not a success-criterion result.
+
+## Global rendering baseline
+
+`src/ui/page.ts` owns the ordinary HTML shell and `src/ui/runtime-styles.ts` owns the small shared runtime additions. The shell provides the primary `main` landmark, a working skip link to that landmark, visible focus styling, named navigation landmarks, semantic breadcrumbs, current-route state, a keyboard-operable theme control with programmatic state, and a native language selector. The request-scoped localization runtime supplies document `lang` and `dir` before HTML is emitted; Arabic therefore exercises the same shell in RTL rather than entering a separate accessibility or localization mode.
+
+Shared CSS removes nonessential animation and smooth scrolling when `prefers-reduced-motion: reduce` is active, preserves focus and boundaries in forced-colors environments, uses logical properties for direction-sensitive shared navigation, and keeps the shell responsive for zoom/reflow. These are engineering defaults, not a conformance result.
+
+The global baseline does not replace manual evaluation. Keyboard order, screen-reader semantics, focus visibility/obscuring, zoom and reflow, forced colors, target sizing, language/bidi behavior, and other content-dependent success criteria still require manual verification on representative pages and releases.
 
 ## Public WCAG 2.2 criterion registry
 
@@ -51,6 +59,6 @@ The isolated frame bundles `axe-core` from the locked application dependency and
 
 ## Repository checks
 
-`tests/interface.test.ts` verifies the sandbox boundary, accessible and broken fixtures, locally executed axe protocol, default mode, and all twelve criterion cards. `tests/assurance-wcag.test.ts` verifies registry exhaustiveness, A/AA/AAA level counts, removal of obsolete 4.1.1, evidence resolution, W3C source identity, non-conformance wording, validation distinction, and freshness metadata. `tests/assurance-compliance-api.test.ts` verifies the accessible compliance projection, stable WCAG anchors, shared filters, derived counts, and exact-record API lookup. `npm run validate:wcag` repeats the canonical ID/name/level validation and evidence checks from a standalone repository validator.
+`tests/interface.test.ts` verifies the shared localization/accessibility shell on representative ordinary pages as well as the sandbox boundary, accessible and broken fixtures, locally executed axe protocol, default mode, and all twelve criterion cards. `tests/assurance-wcag.test.ts` verifies registry exhaustiveness, A/AA/AAA level counts, removal of obsolete 4.1.1, evidence resolution, W3C source identity, non-conformance wording, validation distinction, and freshness metadata. `tests/assurance-compliance-api.test.ts` verifies the accessible compliance projection, stable WCAG anchors, shared filters, derived counts, and exact-record API lookup. `npm run validate:wcag` repeats the canonical ID/name/level validation and evidence checks from a standalone repository validator.
 
 CI also validates types, localization, contracts, security, dependencies, migrations, and the Worker build. Browser and assistive-technology results must be recorded separately for a release; CI evidence does not replace those tests.

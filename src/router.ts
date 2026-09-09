@@ -11,6 +11,14 @@ import {
   identifyOpenAIAgent,
 } from './lib/crawler-control';
 import {
+  bindLocalization,
+  localeNormalizationRedirect,
+  localePreferenceCookie,
+  resolveLocalization,
+  shouldPersistLocale,
+  type LocalizationContext,
+} from './i18n/runtime';
+import {
   applicationRouteRegistry,
   type ApplicationRouteContext,
   type ApplicationRouteDeclaration,
@@ -47,6 +55,24 @@ function applyResponsePolicy(response: Response, route: ApplicationRouteDeclarat
   });
 }
 
+function withLocalizationHeaders(
+  response: Response,
+  localization: LocalizationContext,
+  persistPreference: boolean,
+): Response {
+  const headers = new Headers(response.headers);
+  headers.set('content-language', localization.lang);
+  if (persistPreference) headers.set('set-cookie', localePreferenceCookie(localization));
+  if (persistPreference || localization.locale !== localization.defaultLocale) {
+    headers.set('cache-control', 'private, no-store');
+  }
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 async function crawlerPolicyFailure(
   request: Request,
   env: Env,
@@ -65,12 +91,18 @@ function acceptsHtml(request: Request): boolean {
   return accept.includes('text/html') || accept === '';
 }
 
-function offlineResponse(request: Request, route: ApplicationRouteDeclaration, message: string): Response {
+function offlineResponse(
+  request: Request,
+  route: ApplicationRouteDeclaration,
+  message: string,
+  localization: LocalizationContext,
+): Response {
   if (request.method === 'GET' && route.browserHtml !== 'never' && acceptsHtml(request)) {
     const url = new URL(request.url);
     const target = new URL('/offline', url.origin);
     target.searchParams.set('from', url.pathname);
-    return Response.redirect(target.toString(), 302);
+    const localizedTarget = localization.href(`${target.pathname}${target.search}`);
+    return Response.redirect(new URL(localizedTarget, url.origin).toString(), 302);
   }
   return json({ status: 'offline', message }, {
     status: 503,
@@ -109,22 +141,40 @@ export async function routeRequest(request: Request, env: Env): Promise<Response
 async function routeRequestUnsafe(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
   const path = normalizeRoutePath(url.pathname);
+  const localization = resolveLocalization(request);
+  const localizedEnv = bindLocalization(env, localization);
 
   // The former frontend selected conceptual pages with ?view=. Canonical child
   // routes replaced that contract; every retired selector is an ordinary 404.
-  if (url.searchParams.has('view')) return renderNotFound(env);
+  if (url.searchParams.has('view')) return renderNotFound(localizedEnv);
 
   const match = matchRoute(applicationRouteRegistry, request.method, path);
 
-  if (match.status === 'not-found') return renderNotFound(env);
+  if (match.status === 'not-found') return renderNotFound(localizedEnv);
   const route = match.route as ApplicationRouteDeclaration;
+  const localizedHtml = route.browserHtml === 'page' && acceptsHtml(request);
+  const persistPreference = localizedHtml && shouldPersistLocale(request);
+
+  if (localizedHtml) {
+    const normalizedLocaleUrl = localeNormalizationRedirect(request);
+    if (normalizedLocaleUrl) {
+      const redirect = new Response(null, {
+        status: 302,
+        headers: { location: normalizedLocaleUrl },
+      });
+      return withLocalizationHeaders(redirect, localization, persistPreference);
+    }
+  }
 
   const crawlerFailure = await crawlerPolicyFailure(request, env, route);
   if (crawlerFailure) return crawlerFailure;
 
   if (route.offline.mode === 'gated') {
     const control = await getDemoControl(env);
-    if (control.state === 'offline') return offlineResponse(request, route, control.publicMessage);
+    if (control.state === 'offline') {
+      const response = offlineResponse(request, route, control.publicMessage, localization);
+      return localizedHtml ? withLocalizationHeaders(response, localization, persistPreference) : response;
+    }
   }
 
   if (match.status === 'method-not-allowed') return methodNotAllowed([...match.allowedMethods]);
@@ -138,9 +188,12 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
   }
 
   const context: ApplicationRouteContext = {
-    env,
+    env: route.browserHtml === 'page' && request.method === 'GET' ? localizedEnv : env,
     ...(authentication ? { adminIdentity: authentication } : {}),
   };
   const response = await route.handler(request, context, match.params);
-  return applyResponsePolicy(response, route);
+  const policyResponse = applyResponsePolicy(response, route);
+  return localizedHtml
+    ? withLocalizationHeaders(policyResponse, localization, persistPreference)
+    : policyResponse;
 }

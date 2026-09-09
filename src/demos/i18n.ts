@@ -6,16 +6,16 @@ const demo: DemoDefinition = {
   "title": "Internationalization",
   "group": "Standards",
   "sourcePath": "src/demos/i18n.ts",
-  "summary": "Locale-ready interface architecture including language, formatting, translation resources, and RTL readiness.",
+  "summary": "Application-owned locale resolution, formatting, translation resources, navigation persistence, and RTL behavior.",
   "proves": [
-    "Synchronized resources for English, Spanish, French, German, Japanese, and Arabic",
-    "Locale-aware number, date, currency, and plural formatting",
-    "Instant client-side switching with shareable server-rendered fallback",
-    "Inspectable translation keys and correct right-to-left direction"
+    "One global localization context serves English, Spanish, French, German, Japanese, and Arabic",
+    "Server-rendered shell language and direction resolve before document emission",
+    "Locale-aware number, date, currency, list, and plural formatting share the same runtime",
+    "Language state persists through application navigation without changing canonical route identity"
   ],
   "status": "working",
-  "interfaces": [{ "method": "GET", "path": routeUrl('interfaces.i18n', {}, { locale: 'ar', count: '3' }), "description": "Render the live locale and RTL demonstration." }],
-  "supportingSources": [{ "label": "View rendered i18n page", "path": "src/demos/i18n-page.ts" }, { "label": "View locale configuration", "path": "config/i18n.json" }]
+  "interfaces": [{ "method": "GET", "path": routeUrl('interfaces.i18n', {}, { lang: 'ar', count: '3' }), "description": "Inspect the application localization runtime in Arabic and RTL mode." }],
+  "supportingSources": [{ "label": "View global i18n runtime", "path": "src/i18n/runtime.ts" }, { "label": "View rendered i18n inspection page", "path": "src/demos/i18n-page.ts" }, { "label": "View locale configuration", "path": "config/i18n.json" }]
 };
 
 export default demo;

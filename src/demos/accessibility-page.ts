@@ -24,15 +24,16 @@ export function accessibilityContent(request: Request, env: Env): PageContent {
   const cards = behaviors.map(([name, accessible, broken, criterion]) => `<article class="criterion-card"><p class="eyebrow">${criterion}</p><h3>${name}</h3><p><strong>Accessible:</strong> ${accessible}</p><p><strong>Broken:</strong> ${broken}</p></article>`).join('');
   return pageContent(env, 'WCAG 2.2 engineering', `
   <a class="skip-link" href="#accessibility-demo">Skip to interactive demonstration</a>
-  <section class="page-header"><h1>Accessibility is behavior.</h1><p class="lede">Compare an accessible interaction with deterministic teaching failures, then inspect partial automated evidence and the manual verification matrix.</p><div class="page-tools"><span class="badge">WCAG 2.2 AA demonstration — uncertified</span>${referenceDetails([
+  <section class="page-header"><h1>Accessibility is behavior.</h1><p class="lede">Compare an accessible interaction with deterministic teaching failures, then inspect partial automated evidence and the manual verification matrix.</p><div class="page-tools"><span class="badge">WCAG 2.2 engineering evidence — no conformance claim</span>${referenceDetails([
     { label: 'Route source', href: sourceUrl(env, 'src/demos/accessibility.ts') },
     { label: 'Lab source', href: sourceUrl(env, 'src/ui/accessibility-lab.ts') },
+    { label: 'Global shell source', href: sourceUrl(env, 'src/ui/page.ts') },
     { label: 'Manual verification matrix', href: sourceUrl(env, 'docs/ACCESSIBILITY.md') },
     { label: 'Interface tests', href: sourceUrl(env, 'tests/interface.test.ts') },
   ])}</div></section>
   <section class="panel" id="accessibility-demo" aria-labelledby="interaction-heading">
     <div class="lab-heading"><div><p class="eyebrow">Isolated comparison frame</p><h2 id="interaction-heading">Accessible / broken laboratory</h2></div><button type="button" data-a11y-reset>Reset</button></div>
-    <p>The surrounding controls always remain accessible. Broken mode is opt-in and contained in a script-and-form-only sandbox.</p>
+    <p>The ordinary application shell already owns the accessibility baseline. This opt-in laboratory isolates deterministic accessible and broken interaction variants for instruction and regression inspection.</p>
     <div class="locale-switcher" role="group" aria-label="Demonstration mode"><button type="button" data-a11y-mode="accessible" aria-pressed="${initialMode === 'accessible'}">Accessible</button><button type="button" data-a11y-mode="broken" aria-pressed="${initialMode === 'broken'}">Broken</button></div>
     <p class="error" data-broken-warning${initialMode === 'broken' ? '' : ' hidden'}><strong>Teaching warning:</strong> Broken mode intentionally introduces accessibility failures. Its scan is not a conformance result.</p>
     <div class="accessibility-frame"><iframe title="WCAG accessible and broken behavior comparison" sandbox="allow-scripts allow-forms" srcdoc="<!doctype html><html lang='en'><title>Loading accessibility lab</title><body><p>Loading laboratory…</p></body></html>" data-a11y-frame></iframe></div>
