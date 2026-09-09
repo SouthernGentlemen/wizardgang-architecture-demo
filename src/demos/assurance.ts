@@ -17,8 +17,7 @@ export type AssurancePresentation =
   | 'evidence'
   | 'compliance'
   | 'risks'
-  | 'incidents'
-  | 'concerns';
+  | 'incidents';
 
 const presentationLabels: Record<AssurancePresentation, string> = {
   index: 'Assurance',
@@ -28,7 +27,6 @@ const presentationLabels: Record<AssurancePresentation, string> = {
   compliance: 'Compliance',
   risks: 'Risks',
   incidents: 'Incidents',
-  concerns: 'Concerns',
 };
 
 const presentationCollections: Record<AssurancePresentation, string> = {
@@ -39,7 +37,6 @@ const presentationCollections: Record<AssurancePresentation, string> = {
   compliance: 'compliance',
   risks: 'risks',
   incidents: 'incidents',
-  concerns: 'governance',
 };
 
 const indexDescription = 'Public assurance posture, qualifications, and inspectable delivery, governance, evidence, compliance, risk, incident, and concern resources.';
@@ -66,7 +63,7 @@ export function assuranceIndexContent(env: Env): PageContent {
 
   return pageContent(env, 'Assurance', `<section class="page-header assurance-header">
     <h1>Public assurance, one inspectable surface.</h1>
-    <p class="lede">Browse delivery, governance, evidence, compliance, risk, incident, and concern records without duplicating the canonical reporting or publication contracts behind them.</p>
+    <p class="lede">Browse delivery, governance, evidence, compliance, risk, incident, and concern resources without duplicating the canonical reporting or publication contracts behind them.</p>
     <p class="assurance-notice"><strong>Qualification:</strong> ${escapeHtml(qualificationNotice)}</p>
     <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/assurance.ts'))}">Assurance route source</a></div>
   </section>
