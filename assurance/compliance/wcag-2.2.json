@@ -49,6 +49,28 @@
         "source": "github.structured-records.evidence",
         "native": "EVD-CI-001"
       }
+    },
+    {
+      "relation": "evidence",
+      "from": {
+        "source": "github.structured-records.compliance.wcag-2.2",
+        "native": "wcag-2-2-public-registry"
+      },
+      "to": {
+        "source": "github.structured-records.evidence",
+        "native": "EVD-TST-004"
+      }
+    },
+    {
+      "relation": "evidence",
+      "from": {
+        "source": "github.structured-records.compliance.wcag-2.2",
+        "native": "wcag-2-2-public-registry"
+      },
+      "to": {
+        "source": "github.structured-records.evidence",
+        "native": "EVD-DOC-007"
+      }
     }
   ]
 }

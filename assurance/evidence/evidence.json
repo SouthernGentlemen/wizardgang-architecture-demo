@@ -276,6 +276,30 @@
       "freshnessPolicy": "observation-bound",
       "visibility": "public",
       "relationships": []
+    },
+    {
+      "id": "EVD-TST-004",
+      "kind": "test",
+      "title": "Site-wide accessibility and localization verification",
+      "description": "Registry-derived public-route coverage, six-locale deterministic checks, Arabic RTL coverage, structural assertions, and a local Chromium/axe sweep across public routes and critical states. A clean automated run means no automatically detectable violation was observed in the bounded matrix; it does not establish WCAG conformance or AAA certification.",
+      "locator": {
+        "repositoryPath": "scripts/site-browser-audit.mjs"
+      },
+      "freshnessPolicy": "release-bound",
+      "visibility": "public",
+      "relationships": []
+    },
+    {
+      "id": "EVD-DOC-007",
+      "kind": "governance-record",
+      "title": "Manual accessibility verification matrix",
+      "description": "Structured browser, assistive-technology, reflow, contrast, RTL, motion, target-size, error-handling, and content-review procedures. Unexecuted checks remain explicitly pending.",
+      "locator": {
+        "repositoryPath": "docs/accessibility-manual-verification.json"
+      },
+      "freshnessPolicy": "event-driven",
+      "visibility": "public",
+      "relationships": []
     }
   ]
 }

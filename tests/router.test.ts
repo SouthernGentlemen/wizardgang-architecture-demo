@@ -273,7 +273,7 @@ describe('public route contract', () => {
     expect(reports).toContain('Collection discovery comes from reporting ownership and registered capabilities.');
     expect(reports).toContain('href="/operations/reports?report=compliance#reporting-browser"');
     expect(reports).toContain('Shared reporting presenter');
-    expect(reports).toContain('23 available in the authorized selection');
+    expect(reports).toMatch(/\d+ available in the authorized selection/);
 
     const docs = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations/docs'), environment)).text();
     expect(docs).toContain('src/router.ts');

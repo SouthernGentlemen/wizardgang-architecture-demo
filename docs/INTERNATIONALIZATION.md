@@ -49,8 +49,20 @@ RTL is owned by the application localization context, not by the i18n demonstrat
 
 Likewise, accessibility is not a locale-specific or demonstration-only mode. The same shared shell is expected to remain keyboard operable, focus visible, reflow safe, reduced-motion aware, and usable in forced-colors environments for every supported locale.
 
+## Adding translation keys and locales
+
+A new user-facing key must be represented in every configured locale. Core runtime keys belong in each `src/i18n/locales/<locale>.json` file; site presentation strings belong in `src/i18n/presentation.json`. Preserve placeholders exactly and keep intentional canonical English or technical tokens behind the narrow explicit allowlist used by the acceptance tests. Do not replace that allowlist with a broad English-detection exemption.
+
+When adding a locale, update `config/i18n.json`, add its core resource, add it to every presentation-catalog entry, wire the resource and localized display name into `src/i18n/runtime.ts`, and declare it in `rtlLocales` only when appropriate. Then run `npm run validate:locales`, `npm run validate:site-i18n`, and the browser accessibility audit. Manual language and bidi review remains required before any evidence status that depends on human review can be strengthened.
+
+## Site-wide verification
+
+DEMO-238 derives the public page inventory from the canonical route registry and exercises critical route states in every supported locale. `config/site-audit-states.json` owns only additional state fixtures; it is not a second route inventory. Fixed public routes inherit coverage automatically, while a new parameterized public surface must supply a concrete fixture and otherwise fails with `new public surface requires accessibility/i18n coverage`.
+
+The deterministic localization gate is `npm run validate:site-i18n`. CI also runs `npm run test:site-accessibility`, which uses the locally built Worker and Chromium for rendered English and Arabic/RTL coverage alongside accessibility checks. Full procedures and evidence boundaries are documented in `docs/SITE-ACCESSIBILITY-VERIFICATION.md`.
+
 ## Validation and limits
 
-`npm run validate:locales` requires every configured locale to exist and to expose the same non-empty key inventory as the fallback resource. Runtime and interface tests cover representative server-rendered language/direction behavior, shell translations, query preservation, persistence, and RTL-safe shared layout.
+`npm run validate:locales` requires every configured locale to exist and to expose the same non-empty key inventory as the fallback resource. Runtime and interface tests cover representative server-rendered language/direction behavior, shell translations, query preservation, persistence, and RTL-safe shared layout. `npm run validate:site-i18n` extends that to the canonical public-route inventory and configured critical states.
 
 Translations in this repository are engineering demonstration resources and are not claimed to be professionally certified. Localization infrastructure also does not establish WCAG conformance. Manual language review, bidi review, assistive-technology testing, zoom/reflow testing, and release accessibility verification remain required where applicable.
