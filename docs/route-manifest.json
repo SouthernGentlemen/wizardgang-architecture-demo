@@ -1590,6 +1590,51 @@
     "status": "working"
   },
   {
+    "id": "interfaces.rest.openapi.json",
+    "route": "/api/labs/rest-demo-openapi.json",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "public",
+      "maxAgeSeconds": 300
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "REST demo OpenAPI JSON",
+    "description": "OpenAPI 3.0.3 contract that drives the interactive REST demo documentation.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/rest-demo-openapi.ts",
+      "exportName": "restDemoOpenApiResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
     "id": "interfaces.webhooks.console",
     "route": "/interfaces/webhooks",
     "methods": [

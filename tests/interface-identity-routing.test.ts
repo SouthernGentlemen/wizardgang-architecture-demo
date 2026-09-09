@@ -57,6 +57,7 @@ describe('interface and identity declarative routing', () => {
       routeUrl('interfaces.identity.page'),
       routeUrl('interfaces.mcp.console'),
       routeUrl('interfaces.i18n'),
+      routeUrl('interfaces.rest.openapi.json'),
       '/api/openapi.json',
       '/graphql',
       '/webhooks/github',

@@ -80,14 +80,36 @@ describe('public route contract', () => {
     for (const anchor of ['rest', 'openapi']) expect(html).toContain(`id="${anchor}"`);
     expect(html).toContain('/api/labs/rest-demo-records');
     expect(html.match(/<form data-rest-form/g)).toHaveLength(6);
+    expect(html.match(/<details class="openapi-operation"/g)).toHaveLength(6);
+    expect(html).not.toMatch(/<details class="openapi-operation"[^>]* open/);
     expect(html).toContain('3.0.3');
     expect(html).toContain('REST API');
+    expect(html).toContain('RecordReplacement');
+    expect(html).toContain('RecordPatch');
+    expect(html).toContain('<th>Code</th><th>Meaning</th><th>Schema</th>');
+    expect(html).toContain('/api/labs/rest-demo-openapi.json?download=1');
+    expect(html).not.toContain('200–204');
+    expect(html).not.toContain('OpenAPI document</p>');
+    expect(html).not.toContain('REST resources');
+    expect(html).not.toContain('Contract shape');
     expect(html).not.toContain('Your API sandbox');
     expect(html).not.toContain('Sign in to enable writes');
     for (const language of ['curl', 'JavaScript', 'Python']) expect(html).toContain(language);
     const runner = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((match) => match[1]).find((script) => script.includes("data-rest-form"));
     expect(() => new Function(runner || '')).not.toThrow();
 
+  });
+
+  it('serves the REST documentation contract as an inline or downloadable artifact', async () => {
+    const inline = await routeRequest(new Request('https://demo.wizardgang.ai/api/labs/rest-demo-openapi.json'), env());
+    const document = await inline.json() as { openapi: string; components: { schemas: Record<string, unknown> } };
+    expect(inline.status).toBe(200);
+    expect(inline.headers.get('content-disposition')).toContain('inline');
+    expect(document.openapi).toBe('3.0.3');
+    expect(Object.keys(document.components.schemas)).toEqual(['Record', 'RecordInput', 'RecordReplacement', 'RecordPatch', 'Error']);
+
+    const download = await routeRequest(new Request('https://demo.wizardgang.ai/api/labs/rest-demo-openapi.json?download=1'), env());
+    expect(download.headers.get('content-disposition')).toContain('attachment');
   });
 
   it('renders focused GraphQL and webhook interface routes', async () => {
