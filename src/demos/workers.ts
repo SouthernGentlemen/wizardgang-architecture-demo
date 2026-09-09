@@ -7,16 +7,16 @@ const demo: DemoDefinition = {
   "title": "Cloudflare Workers",
   "group": "Platform",
   "sourcePath": "src/demos/workers.ts",
-  "summary": "Stateless TypeScript application compute and the mediation layer between clients, platform state, and integrations.",
+  "summary": "Apply an edge cache and routing policy before a request reaches origin.",
   "proves": [
-    "Bounded TypeScript computation inside a Worker request",
-    "No process-memory persistence",
-    "D1 is used only for audit evidence, not computation state"
+    "A Worker inspects request method, path, and credentials at the edge",
+    "Cacheability and routing are decided before origin work",
+    "The policy decision is stateless and uses no process-memory persistence"
   ],
   "status": "working",
-  "interfaces": [{ "method": "POST", "path": "/api/labs/workers", "description": "Compute a bounded sum, average, minimum, or maximum." }],
+  "interfaces": [{ "method": "POST", "path": "/api/labs/workers", "description": "Apply an edge cache and routing policy to a request." }],
   "supportingSources": [{ "label": "View runtime API", "path": "src/api/runtime.ts" }, { "label": "View Worker entry point", "path": "src/index.ts" }],
-  "action": { "label": "Run stateless average", "method": "POST", "path": "/api/labs/workers", "body": { "operation": "average", "values": [8, 13, 21, 34] } }
+  "action": { "label": "Apply edge request policy", "method": "POST", "path": "/api/labs/workers", "body": { "operation": "edge-policy", "request": { "method": "GET", "path": "/assets/architecture-map.svg", "hasCookie": false, "hasAuthorization": false } } }
 };
 
 export function workersContent(env: Env): PageContent {

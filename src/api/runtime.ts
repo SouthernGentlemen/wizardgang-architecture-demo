@@ -7,6 +7,7 @@ import { currentBudgetState } from '../lib/billing';
 interface ComputeInput {
   operation?: unknown;
   values?: unknown;
+  request?: unknown;
 }
 
 export async function edgeInspectionResponse(request: Request, env: Env): Promise<Response> {
@@ -43,6 +44,32 @@ export async function workerComputeResponse(request: Request, env: Env): Promise
     }
     const body = await readJson<ComputeInput>(request, 4096);
     const operation = typeof body.operation === 'string' ? body.operation : '';
+    if (operation === 'edge-policy') {
+      if (!body.request || typeof body.request !== 'object' || Array.isArray(body.request)) throw new HttpError(400, 'invalid_request');
+      const candidate = body.request as Record<string, unknown>;
+      const method = typeof candidate.method === 'string' ? candidate.method.toUpperCase() : '';
+      const path = typeof candidate.path === 'string' ? candidate.path.trim() : '';
+      const hasCookie = candidate.hasCookie === true;
+      const hasAuthorization = candidate.hasAuthorization === true;
+      if (!['GET', 'HEAD', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) throw new HttpError(400, 'invalid_method');
+      if (!/^\/[a-zA-Z0-9/_?=&.%-]{1,199}$/.test(path)) throw new HttpError(400, 'invalid_path');
+      const edgeCacheable = ['GET', 'HEAD'].includes(method) && !hasCookie && !hasAuthorization && !path.startsWith('/api/');
+      const route = path.startsWith('/api/') ? 'worker-api' : 'edge-cache';
+      const cache = edgeCacheable ? 'public' : 'private';
+      const reason = edgeCacheable
+        ? 'Anonymous read requests for non-API assets can be served from the nearest edge location.'
+        : 'Requests with credentials, state-changing methods, or API paths stay private and continue to the Worker boundary.';
+      const event = await recordDemoEvent(env, 'workers', 'edge_policy_applied', { method, path, route, cache });
+      await recordApplicationLog(env, { source: 'workers', eventKey: 'edge_policy_applied', message: `Worker classified ${method} ${path} at the edge.`, route: '/api/labs/workers', detail: { method, path, route, cache, eventId: event.id } });
+      return json({
+        operation,
+        request: { method, path, hasCookie, hasAuthorization },
+        decision: { route, cache, originRequired: !edgeCacheable },
+        reason,
+        state: 'No process memory was used for persistence.',
+        auditEventId: event.id,
+      });
+    }
     if (!['sum', 'average', 'min', 'max'].includes(operation)) throw new HttpError(400, 'invalid_operation');
     if (!Array.isArray(body.values) || body.values.length < 1 || body.values.length > 100 || !body.values.every((value) => typeof value === 'number' && Number.isFinite(value))) {
       throw new HttpError(400, 'invalid_values', 'values must contain 1–100 finite numbers.');

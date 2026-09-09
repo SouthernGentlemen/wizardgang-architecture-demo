@@ -39,7 +39,7 @@ export function r2Content(env: Env): PageContent {
 
     <div class="r2-files-heading">
       <div><p class="eyebrow">Objects in this session</p><h3>Files</h3></div>
-      <div class="file-count-actions"><span class="badge" data-count>Loading</span><button class="icon-button" type="button" data-refresh aria-label="Refresh files" title="Refresh files">↻</button></div>
+      <div class="file-count-actions"><button class="icon-button" type="button" data-refresh aria-label="Refresh files" title="Refresh files">↻</button></div>
     </div>
     <div class="file-list" data-files><p class="file-list-empty">Loading R2 objects…</p></div>
 
@@ -64,16 +64,6 @@ export function r2Content(env: Env): PageContent {
       </div>
       <p class="request-metrics" data-request-metrics>Choose an action to inspect the live result.</p>
       <details class="r2-response-details"><summary>View response JSON</summary><pre data-r2-output>No request yet.</pre></details>
-      <details class="r2-technical-details"><summary>Storage details</summary><dl><dt>Binding</dt><dd><code>DEMO_R2</code></dd><dt>Bucket</dt><dd><code>wizardgang-demo-r2</code></dd></dl></details>
-    </section>
-
-    <section class="panel how-it-works" aria-labelledby="flow-heading">
-      <p class="eyebrow">How this works</p><h2 id="flow-heading">One request, two stores</h2>
-      <div class="storage-flow" role="img" aria-label="The browser sends a request to the Worker. The Worker stores object bytes in R2 and bounded metadata in D1.">
-        <div><span>Browser</span><i aria-hidden="true">→</i><span>Worker</span><i aria-hidden="true">→</i><span>R2</span></div>
-        <div class="flow-branch"><i aria-hidden="true">↘</i><span>D1 metadata</span></div>
-      </div>
-      <dl class="storage-roles"><dt>R2</dt><dd>Object bytes</dd><dt>D1</dt><dd>Bounded metadata</dd><dt>Worker</dt><dd>Authorization + ownership</dd></dl>
     </section>
   </aside>
 </section>
@@ -178,21 +168,29 @@ export function r2Content(env: Env): PageContent {
       throw error;
     }
   };
-  const previewMarkup = (file) => '<section class="r2-inline-preview" aria-labelledby="selected-preview-heading"><div class="inline-preview-heading"><div><p class="eyebrow">Selected file</p><h3 id="selected-preview-heading" tabindex="-1">' + escape(file.displayName) + '</h3></div><div class="file-actions"><a class="button" href="/api/labs/r2-files/' + encodeURIComponent(file.id) + '?download=1">Download</a><button type="button" data-close-preview>Close</button></div></div><div class="file-preview"><iframe title="Preview of ' + escape(file.displayName) + '" src="/api/labs/r2-files/' + encodeURIComponent(file.id) + '"></iframe></div></section>';
+  const previewMarkup = (file) => {
+    const deleteAction = file.canDelete ? '<button class="danger-text-button" type="button" data-delete-id="' + escape(file.id) + '">Delete</button>' : '';
+    const source = '/api/labs/r2-files/' + encodeURIComponent(file.id);
+    const content = file.contentType === 'text/plain'
+      ? '<pre class="file-preview file-preview-text" data-preview-text>Loading text preview…</pre>'
+      : file.contentType === 'image/svg+xml'
+        ? '<img class="file-preview file-preview-image" alt="Preview of ' + escape(file.displayName) + '" src="' + source + '">'
+        : '<div class="file-preview"><iframe title="Preview of ' + escape(file.displayName) + '" src="' + source + '"></iframe></div>';
+    return '<section class="r2-inline-preview" aria-labelledby="selected-preview-heading"><div class="inline-preview-heading"><div><p class="eyebrow">Selected file</p><h3 id="selected-preview-heading" tabindex="-1">' + escape(file.displayName) + '</h3></div><div class="file-actions">' + deleteAction + '<button type="button" data-close-preview>Close</button></div></div>' + content + '</section>';
+  };
   const fileMarkup = (file) => {
     const selected = state.previewId === file.id;
     const deleting = state.confirmDeleteId === file.id;
     const owner = file.canDelete ? 'Yours' : 'Demo';
     const preview = file.canPreview ? '<button type="button" data-preview-id="' + escape(file.id) + '" aria-pressed="' + String(selected) + '">' + (selected ? 'Viewing' : 'Preview') + '</button>' : '';
     const deleteAction = file.canDelete ? (deleting ? '<div class="delete-confirm" role="group" aria-label="Confirm deletion of ' + escape(file.displayName) + '"><span>Delete?</span><button class="danger-button" type="button" data-confirm-delete="' + escape(file.id) + '">Confirm</button><button type="button" data-cancel-delete>Cancel</button></div>' : '<button class="danger-text-button" type="button" data-delete-id="' + escape(file.id) + '">Delete</button>') : '';
-    const row = '<article class="file-row"' + (selected ? ' data-selected="true"' : '') + '><div class="file-summary"><div class="file-name-line"><strong>' + escape(file.displayName) + '</strong><span class="ownership-badge" data-owner="' + owner.toLowerCase() + '">' + owner + '</span></div><span class="file-facts">' + escape(typeLabel(file.contentType, file.displayName)) + ' · ' + size(file.sizeBytes) + '</span><details class="file-details"><summary>Details</summary><dl><dt>Internal key</dt><dd><code>' + escape(file.key) + '</code></dd><dt>MIME type</dt><dd>' + escape(file.contentType) + '</dd><dt>Ownership</dt><dd>' + escape(file.ownership) + '</dd><dt>Updated</dt><dd>' + escape(new Date(file.updatedAt).toLocaleString()) + '</dd></dl></details></div><div class="file-actions">' + preview + '<a class="button" href="/api/labs/r2-files/' + encodeURIComponent(file.id) + '?download=1">Download</a>' + deleteAction + '</div></article>';
+    const row = '<article class="file-row"' + (selected ? ' data-selected="true"' : '') + '><div class="file-summary"><div class="file-name-line"><strong>' + escape(file.displayName) + '</strong><span class="ownership-badge" data-owner="' + owner.toLowerCase() + '">' + owner + '</span></div><span class="file-facts">' + escape(typeLabel(file.contentType, file.displayName)) + ' · ' + size(file.sizeBytes) + '</span><details class="file-details"><summary>Details</summary><dl><dt>Internal key</dt><dd><code>' + escape(file.key) + '</code></dd><dt>MIME type</dt><dd>' + escape(file.contentType) + '</dd><dt>Ownership</dt><dd>' + escape(file.ownership) + '</dd><dt>Updated</dt><dd>' + escape(new Date(file.updatedAt).toLocaleString()) + '</dd></dl></details></div><div class="file-actions">' + preview + '<a class="button" data-download-id="' + escape(file.id) + '" href="/api/labs/r2-files/' + encodeURIComponent(file.id) + '?download=1">Download</a>' + deleteAction + '</div></article>';
     return row + (selected ? previewMarkup(file) : '');
   };
   const render = () => {
     const own = ownFiles();
     const ownBytes = own.reduce((sum, file) => sum + file.sizeBytes, 0);
     q('[data-sandbox-usage]').textContent = own.length + ' / ' + MAX_OBJECTS + ' uploads · ' + size(ownBytes) + ' / 20 MiB';
-    q('[data-count]').textContent = state.files.length + ' visible';
     if (state.previewId && !state.files.some((file) => file.id === state.previewId)) state.previewId = null;
     if (state.confirmDeleteId && !state.files.some((file) => file.id === state.confirmDeleteId)) state.confirmDeleteId = null;
     filesSlot.innerHTML = state.files.map(fileMarkup).join('') || '<p class="file-list-empty">No files are visible yet.</p>';
@@ -216,6 +214,46 @@ export function r2Content(env: Env): PageContent {
     state.selectedFile = null;
     fileInput.value = '';
     updateSelection(true);
+  };
+  const loadTextPreview = async (file) => {
+    const preview = q('[data-preview-text]');
+    if (!preview || state.previewId !== file.id) return;
+    try {
+      const response = await fetch('/api/labs/r2-files/' + encodeURIComponent(file.id));
+      if (!response.ok) throw new Error('Preview unavailable.');
+      preview.textContent = await response.text();
+    } catch (error) {
+      preview.textContent = 'Preview unavailable.';
+    }
+  };
+  const downloadFile = async (file) => {
+    const started = performance.now();
+    let response;
+    setStatus('Downloading ' + file.displayName + '…');
+    try {
+      response = await fetch('/api/labs/r2-files/' + encodeURIComponent(file.id) + '?download=1');
+      const payload = {
+        operation: 'r2.files.download',
+        objectCount: response.ok ? 1 : 0,
+        bytes: response.ok ? file.sizeBytes : 0,
+        result: response.ok ? { file: file.displayName } : { error: 'download_failed' },
+      };
+      showLiveResult(payload, response, performance.now() - started, 'GET');
+      if (!response.ok) throw new Error('Download failed — try again.');
+      const blob = await response.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = objectUrl;
+      anchor.download = file.displayName;
+      document.body.append(anchor);
+      anchor.click();
+      anchor.remove();
+      setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+      setStatus(file.displayName + ' downloaded.', 'success');
+    } catch (error) {
+      if (!response) showLiveResult({operation:'r2.files.download', objectCount:0, bytes:0, result:{error:'network_error'}}, {ok:false, status:0}, performance.now() - started, 'GET');
+      setStatus(friendlyError(error, 'Download failed — try again.'), 'error');
+    }
   };
 
   q('[data-upload-form]').addEventListener('submit', async (event) => {
@@ -256,6 +294,13 @@ export function r2Content(env: Env): PageContent {
   });
 
   document.addEventListener('click', async (event) => {
+    const link = event.target.closest('a[data-download-id]');
+    if (link) {
+      event.preventDefault();
+      const file = state.files.find((item) => item.id === link.dataset.downloadId);
+      if (file) await downloadFile(file);
+      return;
+    }
     const button = event.target.closest('button');
     if (!button) return;
     if (button.hasAttribute('data-clear-selection')) { clearSelection(); return; }
@@ -270,6 +315,8 @@ export function r2Content(env: Env): PageContent {
       state.confirmDeleteId = null;
       render();
       if (state.previewId) q('#selected-preview-heading')?.focus({preventScroll:true});
+      const file = state.files.find((item) => item.id === state.previewId);
+      if (file?.contentType === 'text/plain') loadTextPreview(file);
       return;
     }
     if (button.hasAttribute('data-close-preview')) { state.previewId = null; render(); return; }

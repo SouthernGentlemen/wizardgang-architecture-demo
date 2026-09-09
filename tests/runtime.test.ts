@@ -62,6 +62,20 @@ describe('edge and Worker demonstrations', () => {
     }), env());
     expect(await response.json()).toMatchObject({ result: 5, inputCount: 3 });
   });
+
+  it('applies a stateless edge policy before origin work', async () => {
+    const response = await workerComputeResponse(new Request('https://demo.example/api/labs/workers', {
+      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({
+        operation: 'edge-policy',
+        request: { method: 'GET', path: '/assets/app.js', hasCookie: false, hasAuthorization: false },
+      }),
+    }), env());
+    expect(await response.json()).toMatchObject({
+      operation: 'edge-policy',
+      request: { method: 'GET', path: '/assets/app.js' },
+      decision: { route: 'edge-cache', cache: 'public', originRequired: false },
+    });
+  });
 });
 
 describe('R2 object boundary', () => {

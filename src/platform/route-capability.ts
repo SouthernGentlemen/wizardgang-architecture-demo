@@ -79,7 +79,7 @@ export const NO_STORAGE: LaboratoryStorageBoundary = {
 
 export const STATELESS_COMPUTE_STORAGE: LaboratoryStorageBoundary = {
   kind: 'stateless-compute',
-  description: 'Worker computation is stateless; D1 is used only for audit and log evidence, not computation state.',
+  description: 'Worker edge policy is stateless; D1 is used only for audit and log evidence, not request state.',
 };
 
 export const D1_RELATIONAL_STORAGE: LaboratoryStorageBoundary = {

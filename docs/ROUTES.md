@@ -67,7 +67,7 @@ This file is generated from the active declarative application registry. Route I
 | `platform.webhooks.synthetic` | `/api/labs/webhook-demo` | `POST` | api | public | gated | deny | Synthetic webhook laboratory action | `src/platform/route-capabilities/webhooks.ts` |
 | `platform.webhooks.events` | `/api/labs/webhook-events` | `GET` | api | public | gated | deny | Synthetic webhook event laboratory API | `src/platform/route-capabilities/webhooks.ts` |
 | `platform.webhooks.reset` | `/api/labs/webhook-reset` | `POST` | api | public | gated | deny | Synthetic webhook reset laboratory API | `src/platform/route-capabilities/webhooks.ts` |
-| `platform.workers.compute` | `/api/labs/workers` | `POST` | api | public | gated | deny | Worker computation laboratory API | `src/platform/route-capabilities/workers.ts` |
+| `platform.workers.compute` | `/api/labs/workers` | `POST` | api | public | gated | deny | Worker edge-policy laboratory API | `src/platform/route-capabilities/workers.ts` |
 | `interfaces.openapi.json` | `/api/openapi.json` | `GET` | api | public | gated | deny | OpenAPI JSON contract | `src/api/openapi.ts` |
 | `operations.api-budget` | `/api/operations/budget` | `POST` | api | public | available | deny | Operations budget API | `src/api/billing.ts` |
 | `operations.health` | `/api/operations/health` | `GET` | api | public | available | deny | Operations health | `src/api/operations.ts` |

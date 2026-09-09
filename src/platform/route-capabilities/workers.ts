@@ -23,10 +23,10 @@ export const workersLaboratoryCapability = definePlatformLaboratoryCapability({
   authentication: { mode: 'anonymous' }, authorization: { mode: 'none' }, visibility: 'public',
   sameOrigin: { mode: 'not-required' }, offline: { mode: 'gated' }, cache: { mode: 'no-store' },
   crawler: { crawling: 'controlled', indexing: 'allow' },
-  documentation: { title: 'Cloudflare Workers', description: 'Stateless TypeScript application compute and the mediation layer between clients, platform state, and integrations.', docs: ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'] },
+  documentation: { title: 'Cloudflare Workers', description: 'Apply an edge cache and routing policy before a request reaches origin.', docs: ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'] },
   source: { module: 'src/demos/workers.ts', exportName: 'workersContent', tests },
   requestLimits: noRequestBody('GET renders the Worker compute laboratory and consumes no request body.'), storage: STATELESS_COMPUTE_STORAGE,
-  page: { parent: 'platform.index', label: 'Workers', summary: 'Stateless TypeScript application compute between clients, platform state, and integrations.', order: 1, navigation: 'secondary', architectureMap: true },
+  page: { parent: 'platform.index', label: 'Workers', summary: 'Apply an edge cache and routing policy before a request reaches origin.', order: 1, navigation: 'secondary', architectureMap: true },
 },
     {
       id: 'platform.workers.compute',
@@ -44,8 +44,8 @@ export const workersLaboratoryCapability = definePlatformLaboratoryCapability({
       cache: { mode: 'no-store' },
       crawler: { crawling: 'controlled', indexing: 'deny' },
       documentation: {
-        title: 'Worker computation laboratory API',
-        description: 'Runs bounded stateless arithmetic in the Worker and records audit evidence separately.',
+        title: 'Worker edge-policy laboratory API',
+        description: 'Applies a stateless edge cache and routing policy in the Worker and records audit evidence separately.',
         docs: ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'],
       },
       source: {
@@ -55,8 +55,7 @@ export const workersLaboratoryCapability = definePlatformLaboratoryCapability({
       },
       requestLimits: {
         maxBodyBytes: 4_096,
-        maxItems: 100,
-        notes: ['JSON only; values must contain 1-100 finite numbers.'],
+        notes: ['JSON only; the request policy describes one method, path, and credential state.'],
       },
       storage: STATELESS_COMPUTE_STORAGE,
     },

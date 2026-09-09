@@ -171,6 +171,7 @@ describe('platform laboratory declarative routing', () => {
     expect(html, path).not.toContain('WG-ARCH-001');
     expect(html, path).not.toContain('References');
     expect(html, path).not.toContain('Implementation notes');
+    expect(html, path).not.toContain('Request body');
     expect(html, path).toContain('Route source');
     expect(html, path).toContain('<a href="/platform" data-section-current');
     for (const removed of removedPagePaths) expect(html, `${path} legacy ${removed}`).not.toContain(`href="${removed}"`);

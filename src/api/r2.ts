@@ -92,7 +92,7 @@ interface AggregateRow { object_count: number; total_bytes: number }
 const MAX_FILE_BYTES = 5 * 1024 * 1024;
 const MAX_TOTAL_BYTES = 20 * 1024 * 1024;
 const MAX_OBJECTS = 10;
-const INLINE_TYPES = new Set(['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'text/plain', 'application/pdf']);
+const INLINE_TYPES = new Set(['image/png', 'image/jpeg', 'image/gif', 'image/svg+xml', 'image/webp', 'text/plain', 'application/pdf']);
 
 const sharedSeeds = [
   { key: 'documents/architecture-demo.txt', name: 'architecture-demo.txt', type: 'text/plain', body: 'WizardGang architecture demonstration\nThis immutable object is stored in Cloudflare R2.\n' },
