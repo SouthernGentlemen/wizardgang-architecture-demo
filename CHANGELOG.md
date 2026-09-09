@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.16.5 — 2026-09-09
+
+- Rebuilt the REST interface as a focused anonymous OpenAPI 3.0-style CRUD demo with executable GET, POST, PUT, PATCH, and DELETE operations.
+- Added runnable public GraphQL examples and replaced the webhook test payload with a meaningful latest-release notification.
+- Removed the requested implementation-only architecture, reference, and authorization panels from the REST, GraphQL, Webhooks, Identity, and MCP pages.
+
 ## 0.16.4 — 2026-09-09
 
 - Simplified the Platform tabs by removing implementation-only D1 and R2 panels and the Workers request-body disclosure.
