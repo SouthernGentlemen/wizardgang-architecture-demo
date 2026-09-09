@@ -49,3 +49,10 @@ npx vitest run tests/operations-acceptance.test.ts --maxWorkers=2 --minWorkers=1
 The functional acceptance checks passed. The required dependency audit must be
 resolved before treating the delivery as fully green. Browser checks used the local
 in-app browser, not a cross-browser or assistive-technology certification suite.
+
+## Release follow-up — DEMO-208
+
+The release preparation updates Vitest and Wrangler and overrides transitive Sharp
+with the patched 0.35.4 line. The dependency audit now reports zero vulnerabilities.
+The historical DEMO-207 audit failure above is retained as evidence of the original
+acceptance run; the release PR and exact-tag workflow revalidate the updated toolchain.
