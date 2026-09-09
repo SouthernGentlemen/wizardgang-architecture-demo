@@ -373,7 +373,7 @@ ${runPanels}
       });
       const contentType = response.headers.get('content-type') || '';
       const result = contentType.includes('application/json') ? await response.json() : await response.text();
-      output.textContent = response.status + ' ' + response.statusText + '\n\n' + (typeof result === 'string' ? result : JSON.stringify(result, null, 2));
+      output.textContent = response.status + ' ' + response.statusText + '\\n\\n' + (typeof result === 'string' ? result : JSON.stringify(result, null, 2));
     } catch (error) {
       output.textContent = String(error);
     }
