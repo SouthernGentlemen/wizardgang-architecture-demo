@@ -4,6 +4,10 @@ export const navigationStyles = `
   margin: 0.75rem auto 0;
 }
 
+body[data-route-id^='platform.'] main.site-main {
+  padding-top: clamp(1.75rem, 3.5vw, 3.5rem);
+}
+
 .breadcrumb {
   font-size: 0.76rem;
   color: var(--muted);
@@ -59,7 +63,7 @@ export const navigationStyles = `
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-top: 0.45rem;
+  margin-top: 0.2rem;
   min-width: 0;
 }
 
@@ -73,6 +77,7 @@ export const navigationStyles = `
   overflow-x: auto;
   overscroll-behavior-inline: contain;
   scrollbar-width: thin;
+  border-bottom: 1px solid var(--line);
 }
 
 .secondary-navigation-list,
@@ -83,21 +88,64 @@ export const navigationStyles = `
   width: max-content;
 }
 
+.secondary-navigation-list {
+  gap: 0;
+  width: 100%;
+}
+
 .secondary-navigation a,
 .related-navigation a {
   display: inline-flex;
   min-height: 44px;
   align-items: center;
   padding: 0.45rem 0.7rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
   text-decoration: none;
   white-space: nowrap;
 }
 
-.secondary-navigation a[data-route-current],
+.secondary-navigation a {
+  position: relative;
+  justify-content: center;
+  min-height: 52px;
+  padding-inline: clamp(0.75rem, 2vw, 1.35rem);
+  color: var(--muted);
+  font: 800 0.74rem/1 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.related-navigation a {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.secondary-navigation a::after {
+  position: absolute;
+  inset-inline: 0.55rem;
+  bottom: -1px;
+  height: 3px;
+  background: transparent;
+  content: '';
+}
+
+.secondary-navigation a:hover,
+.secondary-navigation a:focus-visible {
+  color: var(--paper);
+  background: var(--panel-2);
+}
+
+.secondary-navigation a[data-route-current] {
+  color: var(--paper);
+  background: var(--panel-2);
+}
+
+.secondary-navigation a[data-route-current]::after {
+  background: var(--acid);
+}
+
 .related-navigation a[data-route-current] {
-  border-color: var(--acid);
+  border: 1px solid var(--acid);
+  border-radius: 999px;
   color: var(--paper);
 }
 
@@ -179,6 +227,10 @@ export const navigationStyles = `
   .related-navigation a {
     min-height: 44px;
     padding-block: 0.35rem;
+  }
+
+  .secondary-navigation a {
+    min-height: 48px;
   }
 
   .site-main {

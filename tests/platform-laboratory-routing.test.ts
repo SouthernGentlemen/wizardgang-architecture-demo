@@ -168,6 +168,10 @@ describe('platform laboratory declarative routing', () => {
     const inlineScripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map((match) => match[1]);
     expect(inlineScripts.length, path).toBeGreaterThan(0);
     for (const script of inlineScripts) expect(() => new vm.Script(script), path).not.toThrow();
+    expect(html, path).not.toContain('WG-ARCH-001');
+    expect(html, path).not.toContain('References');
+    expect(html, path).not.toContain('Implementation notes');
+    expect(html, path).toContain('Route source');
     expect(html, path).toContain('<a href="/platform" data-section-current');
     for (const removed of removedPagePaths) expect(html, `${path} legacy ${removed}`).not.toContain(`href="${removed}"`);
     expect(html, path).not.toContain(absent);

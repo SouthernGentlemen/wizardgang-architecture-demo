@@ -13,7 +13,7 @@ import { styles } from './styles';
 import { withSecurityHeaders } from '../lib/http';
 
 const SITE_NAME = 'WizardGang Architecture Demo';
-const DEFAULT_DESCRIPTION = 'Executable companion to WG-ARCH-001. Every architecture concept has a stable route, a live implementation, and a direct link to the public code behind it.';
+const DEFAULT_DESCRIPTION = 'Executable companion to the WizardGang architecture. Every concept has a stable route, a live implementation, and a direct link to the public code behind it.';
 const ROOT_ROUTE_ID = 'interfaces.frontend.index';
 const OPERATIONS_ROUTE_ID = 'operations.index';
 const RELATED_NAVIGATION: Readonly<Record<string, readonly string[]>> = Object.freeze({
@@ -186,7 +186,7 @@ function shell(env: Env, content: PageContent): Response {
   <style>${styles}${navigationStyles}</style>
   <script>${THEME_BOOT}</script>
 </head>
-<body>
+<body${content.routeId ? ` data-route-id="${escapeHtml(content.routeId)}"` : ''}>
 <a class="skip-link" href="#main">Skip to main content</a>
 <header class="site-header">
   <a class="brand" href="${escapeHtml(homeRoute)}" aria-label="WizardGang Architecture Demo home">
@@ -202,7 +202,7 @@ function shell(env: Env, content: PageContent): Response {
 ${shellNavigation(content.routeId)}
 <main class="site-main" id="main">${content.body}</main>
 <footer class="site-footer">
-  <span>WG-ARCH-001 · <a href="${escapeHtml(repoUrl(env))}">Public source</a>${routeSourceLink}</span>
+  <span><a href="${escapeHtml(repoUrl(env))}">Public source</a>${routeSourceLink}</span>
 </footer>
 <script>${THEME_TOGGLE}</script>
 </body>
@@ -316,6 +316,7 @@ export function referenceDetails(links: ReferenceLink[], label = 'References'): 
 
 export function demoContent(env: Env, demo: DemoDefinition, _all: DemoDefinition[] = [], extra = ''): PageContent {
   const route = demoRoute(demo);
+  const isPlatformDemo = demo.group === 'Platform';
   const actions = demo.actions ?? (demo.action ? [{
     ...demo.action,
     description: demo.action.description ?? demo.interfaces?.find((item) => item.path === demo.action?.path)?.description,
@@ -342,20 +343,21 @@ export function demoContent(env: Env, demo: DemoDefinition, _all: DemoDefinition
     ...(demo.supportingSources ?? []).map((source) => ({ label: source.label, href: sourceUrl(env, source.path) })),
     ...(demo.repositoryLinks ?? []).map((link) => ({ label: link.label, href: `${repoUrl(env)}${link.path}` })),
   ];
+  const pageTools = isPlatformDemo ? '' : `<div class="page-tools">
+    <a class="text-link" href="${escapeHtml(sourceUrl(env, demo.sourcePath))}">Route source</a>
+    ${referenceDetails(references)}
+  </div>`;
   const body = `
 <section class="page-header">
   <h1>${escapeHtml(demo.title)}</h1>
   <p class="lede">${escapeHtml(demo.summary)}</p>
   ${demo.notice ? `<p class="subtle">${escapeHtml(demo.notice)}</p>` : ''}
-  <div class="page-tools">
-    <a class="text-link" href="${escapeHtml(sourceUrl(env, demo.sourcePath))}">Route source</a>
-    ${referenceDetails(references)}
-  </div>
+  ${pageTools}
 </section>
 ${sections}
 ${extra}
 ${runPanels}
-<details class="implementation-notes"><summary id="proves-heading">Implementation notes</summary><ul>${demo.proves.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></details>
+${isPlatformDemo ? '' : `<details class="implementation-notes"><summary id="proves-heading">Implementation notes</summary><ul>${demo.proves.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></details>`}
 <script>
 (() => {
   const actions = ${JSON.stringify(actions)};

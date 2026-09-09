@@ -1,26 +1,15 @@
 import type { Env } from '../types';
-import { sourceUrl } from '../lib/github';
 import { routeUrl } from '../routing/application-routes';
 import { pageContent, type PageContent } from '../ui/page';
 
 export function d1Content(env: Env): PageContent {
   const d1Url = routeUrl('platform.d1');
   const graphqlUrl = routeUrl('interfaces.graphql.console');
-  const implementationLinks = [
-    { label: 'Page implementation', path: 'src/demos/d1-page.ts' },
-    { label: 'Route definition', path: 'src/demos/d1.ts' },
-    { label: 'Worker implementation', path: 'src/api/d1-lab.ts' },
-    { label: 'Shared repository', path: 'src/lib/demo-users.ts' },
-    { label: 'D1 schema', path: 'migrations/0008_interactive_demo.sql' },
-    { label: 'Tests', path: 'tests/d1-lab.test.ts' },
-    { label: 'CI workflow', path: '.github/workflows/ci.yml' },
-  ];
 
   return pageContent(env, 'Cloudflare D1', `
 <section class="page-header lab-page-header d1-page-header">
   <h1>Cloudflare D1 Database</h1>
   <p class="lede">Create and modify relational data while inspecting the SQL executed against the live database.</p>
-  <div class="page-tools"><a class="text-link" href="${sourceUrl(env, 'src/demos/d1-page.ts')}">View source ↗</a></div>
 </section>
 
 <section class="d1-database-bar" aria-label="Database tables">
@@ -96,14 +85,6 @@ export function d1Content(env: Env): PageContent {
     </section>
   </aside>
 </section>
-
-<details class="panel d1-implementation">
-  <summary><span>Implementation details</span><span>Browser → Worker → D1</span></summary>
-  <div class="d1-implementation-body">
-    <div><p class="eyebrow">How it works</p><h2>One relational boundary</h2><p>The Worker validates every request, scopes it to this browser, and binds values before D1 executes the statement. GraphQL reads through the same repository.</p></div>
-    <nav class="reference-links" aria-label="D1 implementation sources">${implementationLinks.map((link) => `<a href="${sourceUrl(env, link.path)}">${link.label}</a>`).join('')}</nav>
-  </div>
-</details>
 
 <section class="panel d1-sandbox" aria-labelledby="sandbox-heading">
   <div><p class="eyebrow">Sandbox</p><h2 id="sandbox-heading">Changes stay in this browser</h2><p class="subtle">Reset restores three fictional users and four related tasks.</p></div>

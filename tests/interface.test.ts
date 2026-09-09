@@ -28,7 +28,7 @@ describe('D1 database console', () => {
     expect(html).toContain('data-form="tasks" hidden');
     expect(html).toContain('demo_tasks.assignee_id');
     expect(html).toContain('SQL Inspector');
-    expect(html).toContain('Implementation details');
+    expect(html).not.toContain('Implementation details');
     expect(html).not.toContain('Platform / /d1');
     expect(html).not.toContain('laboratory');
     expect(html).not.toContain('data-refresh');
@@ -58,7 +58,7 @@ describe('R2 storage workspace', () => {
     expect(html).toContain('data-upload-button disabled');
     expect(html).toContain('data-operation-status');
     expect(html).toContain('View response JSON');
-    expect(html).toContain('Implementation details');
+    expect(html).not.toContain('Implementation details');
     expect(html).not.toContain('Platform / /r2');
     expect(html).not.toContain('Latest R2 operation');
   });
