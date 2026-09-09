@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.16.1 — 2026-09-08
+
+- Restored every shared `Run it` API control by correcting invalid JavaScript emitted by the server-side page template.
+- Added regression coverage that compiles the rendered inline scripts for every platform child page before release.
+
 ## 0.15.1 — 2026-09-08
 
 - Corrected the v0.15.0 release defect that still accepted retired `/assurance?view=` selectors. Any legacy `?view=` selector now falls through the ordinary 404 with no redirect, matching the canonical hierarchy contract.
