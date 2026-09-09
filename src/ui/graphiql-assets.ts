@@ -36,7 +36,7 @@ export function graphiqlAssetResponse(request: Request, rawName: string): Respon
 export function localGraphiqlDocument(request: Request): string {
   if (request.method !== 'GET') throw new Error('GraphiQL document requires GET.');
   const options = JSON.stringify({
-    endpoint: '/graphql',
+    endpoint: new URL('/graphql', request.url).toString(),
     title: 'WizardGang GraphiQL',
     defaultQuery,
     defaultTabs: [{ query: defaultQuery }],
