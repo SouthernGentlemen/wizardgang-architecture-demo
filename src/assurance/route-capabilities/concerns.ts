@@ -4,20 +4,18 @@ export const concernsRouteCapability = defineAssuranceRouteCapability({
   routeId: 'assurance.concerns',
   pattern: '/assurance/concerns',
   html: {
-    handler: async (request, env) => {
-      const [{ concernsContent }, { renderSharedReporting }, { renderPage }] = await Promise.all([
-        import('../../demos/assurance-pages'),
-        import('../../demos/assurance'),
+    handler: async (_request, env) => {
+      const [{ concernsContent }, { renderPage }] = await Promise.all([
+        import('../../demos/concerns-page'),
         import('../../ui/page'),
       ]);
       const content = concernsContent(env);
-      const reporting = await renderSharedReporting(request, env, 'concerns');
-      return renderPage(env, { ...content, routeId: 'assurance.concerns', body: `${content.body}\n${reporting}` });
+      return renderPage(env, { ...content, routeId: 'assurance.concerns' });
     },
     source: {
-      module: 'src/demos/assurance-pages.ts',
+      module: 'src/demos/concerns-page.ts',
       exportName: 'concernsContent',
-      tests: ['tests/assurance-consolidation.test.ts'],
+      tests: ['tests/concerns-page.test.ts', 'tests/security-intake.test.ts'],
     },
     page: {
       parent: 'assurance.index',

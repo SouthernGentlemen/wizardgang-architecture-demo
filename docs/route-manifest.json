@@ -88,10 +88,11 @@
       "docs/ROUTES.md"
     ],
     "source": {
-      "module": "src/demos/assurance-pages.ts",
+      "module": "src/demos/concerns-page.ts",
       "exportName": "concernsContent",
       "tests": [
-        "tests/assurance-consolidation.test.ts"
+        "tests/concerns-page.test.ts",
+        "tests/security-intake.test.ts"
       ]
     },
     "navigation": {
