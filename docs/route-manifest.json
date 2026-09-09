@@ -3915,7 +3915,7 @@
       "indexing": "allow"
     },
     "title": "Cloudflare Workers",
-    "description": "Stateless TypeScript application compute and the mediation layer between clients, platform state, and integrations.",
+    "description": "Apply an edge cache and routing policy before a request reaches origin.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -3967,8 +3967,8 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "Worker computation laboratory API",
-    "description": "Runs bounded stateless arithmetic in the Worker and records audit evidence separately.",
+    "title": "Worker edge-policy laboratory API",
+    "description": "Applies a stateless edge cache and routing policy in the Worker and records audit evidence separately.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"

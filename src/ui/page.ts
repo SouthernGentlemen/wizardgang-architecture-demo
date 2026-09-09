@@ -327,7 +327,7 @@ export function demoContent(env: Env, demo: DemoDefinition, _all: DemoDefinition
   <h2 id="${escapeHtml(headingId)}">${escapeHtml(action.title ?? 'Run it')}</h2>
   ${action.description ? `<p>${escapeHtml(action.description)}</p>` : ''}
   <div class="request-line"><span class="http-method http-${action.method.toLowerCase()}">${escapeHtml(action.method)}</span><code>${escapeHtml(action.path)}</code></div>
-  ${action.body === undefined ? '' : `<details class="request-example"><summary>Request body</summary><pre>${escapeHtml(JSON.stringify(action.body, null, 2))}</pre></details>`}
+  ${action.body === undefined || isPlatformDemo ? '' : `<details class="request-example"><summary>Request body</summary><pre>${escapeHtml(JSON.stringify(action.body, null, 2))}</pre></details>`}
   <button class="button-primary" type="button" data-run-demo="${index}">${escapeHtml(action.label)}</button>
   <pre class="action-output" aria-live="polite" data-demo-output="${index}" hidden></pre>
 </section>`;

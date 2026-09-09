@@ -4,7 +4,6 @@ import { pageContent, type PageContent } from '../ui/page';
 
 export function d1Content(env: Env): PageContent {
   const d1Url = routeUrl('platform.d1');
-  const graphqlUrl = routeUrl('interfaces.graphql.console');
 
   return pageContent(env, 'Cloudflare D1', `
 <section class="page-header lab-page-header d1-page-header">
@@ -70,18 +69,7 @@ export function d1Content(env: Env): PageContent {
         <span>Statement</span>
         <pre data-inspector-sql>Select a table or modify a row to inspect its parameterized SQL.</pre>
       </div>
-      <div class="d1-parameter-block">
-        <span>Parameters</span>
-        <div class="d1-parameters" data-inspector-parameters><span>—</span></div>
-      </div>
       <details class="d1-response-details"><summary>Response JSON</summary><pre data-state-output>No response yet.</pre></details>
-      <div class="d1-inspector-footer"><span>D1</span><code>DEMO_DB</code><code>demo-blob</code></div>
-    </section>
-    <section class="panel d1-relationship" aria-labelledby="relationship-heading">
-      <p class="eyebrow">Relationship</p><h2 id="relationship-heading">Tasks belong to users</h2>
-      <p><code>demo_tasks.assignee_id</code><br><span aria-hidden="true">↓</span><br><code>demo_users.id</code></p>
-      <p class="subtle">Deleting an assigned user keeps their tasks intact and marks them Unassigned.</p>
-      <a class="text-link" href="${graphqlUrl}">Query these users with GraphQL →</a>
     </section>
   </aside>
 </section>
@@ -123,7 +111,6 @@ export function d1Content(env: Env): PageContent {
     status: document.querySelector('[data-inspector-status]'),
     metrics: document.querySelector('[data-inspector-metrics]'),
     sql: document.querySelector('[data-inspector-sql]'),
-    parameters: document.querySelector('[data-inspector-parameters]'),
     output: document.querySelector('[data-state-output]'),
   };
   const dialog = document.querySelector('[data-confirm-dialog]');
@@ -158,9 +145,6 @@ export function d1Content(env: Env): PageContent {
     inspector.status.textContent = meta.status + (meta.statusText ? ' ' + meta.statusText : '');
     inspector.metrics.textContent = Number(duration).toFixed(1) + ' ms' + (rows === undefined ? '' : ' · ' + rows + ' ' + (rows === 1 ? 'row' : 'rows'));
     inspector.sql.textContent = formatSql(payload.statement);
-    inspector.parameters.innerHTML = Array.isArray(payload.parameters) && payload.parameters.length
-      ? payload.parameters.map((parameter) => '<code>' + escape(parameter) + '</code>').join('')
-      : '<span>None</span>';
     inspector.output.textContent = JSON.stringify(payload, null, 2);
   };
   const request = async (path, options = {}, inspect = true) => {
