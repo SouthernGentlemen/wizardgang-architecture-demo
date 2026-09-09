@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.16.6 — 2026-09-09
+
+- Fixed the embedded GraphiQL endpoint URL so the live IDE can initialize from its iframe document.
+- Fixed the webhook send control's async lifecycle so successful delivery no longer leaves a browser console error.
+
 ## 0.16.5 — 2026-09-09
 
 - Rebuilt the REST interface as a focused anonymous OpenAPI 3.0-style CRUD demo with executable GET, POST, PUT, PATCH, and DELETE operations.
