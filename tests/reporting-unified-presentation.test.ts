@@ -205,6 +205,7 @@ describe('DEMO-178 unified reporting presentation', () => {
     const governancePage = readFileSync('src/demos/governance.ts', 'utf8');
     expect(governancePage).toContain('queryReportingCollection');
     expect(governancePage).toContain('presentReportingQuery');
-    expect(governancePage).toContain('renderReportingPresentation');
+    expect(governancePage).toContain('renderGovernanceInventory');
+    expect(governancePage).not.toContain('renderReportingPresentation');
   });
 });
