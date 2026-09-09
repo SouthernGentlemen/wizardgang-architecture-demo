@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.16.2 — 2026-09-09
+
+- Reframed the Edge, Workers, Durable Objects, D1, and R2 pages as a compact, full-width tabbed Platform surface with an active-route indicator and reduced top whitespace.
+- Moved Public source and Route source attribution to the shared footer and removed WG-ARCH identifiers, inline references, source panels, and implementation notes from Platform pages.
+
 ## 0.16.1 — 2026-09-08
 
 - Restored every shared `Run it` API control by correcting invalid JavaScript emitted by the server-side page template.
