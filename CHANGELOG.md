@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.16.4 — 2026-09-09
+
+- Simplified the Platform tabs by removing implementation-only D1 and R2 panels and the Workers request-body disclosure.
+- Replaced the Workers arithmetic example with an edge cache and routing policy demonstration.
+- Made R2 previews, downloads, and deletes explicit, added text and SVG previews, and surfaced downloads in the latest-operation card.
+
 ## 0.16.3 — 2026-09-09
 
 - Fixed the D1 reset and delete confirmation handlers so asynchronous API actions restore the button state and close their dialog after completion.
