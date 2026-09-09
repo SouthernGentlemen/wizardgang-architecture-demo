@@ -11,6 +11,7 @@ const workerTextAssets = [
 ];
 
 export default defineConfig({
+  test: { maxWorkers: 2 },
   ssr: { noExternal: true },
   plugins: [{
     name: 'worker-text-assets',

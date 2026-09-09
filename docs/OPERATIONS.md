@@ -46,7 +46,7 @@ Usage reporting uses the canonical reporting contract and normalized provider ob
 
 The usage service remains responsible for acquisition, observation windows, freshness, normalization, and safe cache behavior. The browser resource is only a presentation over that contract.
 
-The synthetic budget action remains a demonstration and must not be treated as billing authorization or a real provider charge operation.
+The synthetic budget action remains a demonstration and must not be treated as billing authorization or a real provider charge operation. The usage page leads with the existing Normal, Warning, and Degraded simulator and explains which workloads remain available. Live provider telemetry follows with its original availability and freshness states; missing billing data is distinguished from application health. Scenario percentages are example inputs, while the existing 70% warning and 90% degradation thresholds retain their behavior.
 
 ## Offline behavior
 
@@ -71,3 +71,13 @@ Adding a compatible operational route requires a declaration with method, author
 ## Validation
 
 Relevant validation includes operational route-registry tests, operations behavior tests, dead-route tests, generated route-artifact tests, and the complete `npm run check` chain.
+
+## Reporting presentation
+
+Reports leads with “One reporting contract, many evidence families” and an illustrative family → shared authorization/presentation/pagination → HTML/JSON/machine consumer flow. The registry-derived inventory and unchanged record browser remain under **Explore all reporting sources**. The diagram is explanatory copy, not a second source registry.
+
+Query-bearing requests open the explorer on the server so selections, filters, and pagination remain visible. Fragment navigation opens the containing disclosure on initial load and hash changes, preserving existing reporting anchors and record deep links. Reporting ownership, authorization, source discovery, and cursor handling remain in their existing services.
+
+## Documentation portal
+
+Documentation groups existing deterministic source links into **Start here**, **Governance & assurance**, **Interfaces & contracts**, and **Implementation**, with an explanation of what each group helps verify. In-page group links support direct navigation. The live interfaces section retains its canonical machine routes, releases, and tags. These groups organize reading; they do not introduce another route or contract inventory.
