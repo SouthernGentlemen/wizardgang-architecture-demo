@@ -120,7 +120,7 @@ describe('visitor webhook viewer', () => {
     const cookie = generated.headers.get('set-cookie')?.split(';')[0];
     expect(cookie).toMatch(/^wg_demo_session=/);
     const listed = await webhookEventsResponse(new Request('https://demo.example/api/labs/webhook-events', { headers: { cookie: cookie! } }), env);
-    expect(await listed.json()).toMatchObject({ events: [{ provider: 'demo', eventType: 'push', actor: 'demo-visitor' }], pollingIntervalMs: 2000 });
+    expect(await listed.json()).toMatchObject({ events: [{ provider: 'demo', eventType: 'release', actor: 'wizardgang-release-bot' }], pollingIntervalMs: 2000 });
     expect((await webhookResetResponse(new Request('https://demo.example/api/labs/webhook-reset', { method: 'POST', headers: { cookie: cookie!, origin: 'https://demo.example' } }), env)).status).toBe(200);
     const afterReset = await webhookEventsResponse(new Request('https://demo.example/api/labs/webhook-events', { headers: { cookie: cookie! } }), env);
     expect(await afterReset.json()).toMatchObject({ events: [] });

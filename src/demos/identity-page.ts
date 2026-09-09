@@ -6,15 +6,6 @@ import { pageContent, type PageContent } from '../ui/page';
 
 export function identityContent(env: Env): PageContent {
   const identityPageUrl = routeUrl('interfaces.identity.page');
-  const sources = [
-    ['Route definition', 'src/demos/identity.ts'],
-    ['Identity console', 'src/demos/identity-page.ts'],
-    ['Provider boundary', 'src/api/identity.ts'],
-    ['Session protection', 'src/lib/identity-session.ts'],
-    ['Identity design', 'docs/IDENTITY.md'],
-    ['Session schema', 'migrations/0010_identity_sessions.sql'],
-    ['Tests', 'tests/identity.test.ts'],
-  ];
   return pageContent(env, 'Authentication & SSO', `
 <section class="page-header lab-page-header identity-page-header">
   <h1>Authentication &amp; SSO</h1>
@@ -89,23 +80,10 @@ export function identityContent(env: Env): PageContent {
   </section>
 </section>
 
-<section class="identity-architecture" aria-labelledby="identity-architecture-heading">
-  <div class="identity-section-heading"><div><p class="eyebrow">Trust boundary</p><h2 id="identity-architecture-heading">Many providers. One application identity.</h2></div></div>
-  <div class="identity-architecture-map" tabindex="0" aria-label="Identity providers pass through protocol validation into one normalized identity, authorization policy, and WizardGang session">
-    <div class="identity-source-stack"><span>Microsoft <small>OIDC</small></span><span>Microsoft <small>SAML 2.0</small></span><span>Google <small>OIDC</small></span><span>GitHub <small>OAuth 2.0</small></span></div>
-    <span class="identity-arrow" aria-hidden="true">→</span><strong>Protocol<br>validation</strong><span class="identity-arrow" aria-hidden="true">→</span><strong>Normalized<br>identity</strong><span class="identity-arrow" aria-hidden="true">→</span><strong>Authorization<br>policy</strong><span class="identity-arrow" aria-hidden="true">→</span><strong>WizardGang<br>session</strong>
-  </div>
-</section>
-
 <section class="panel identity-federation" id="saml" aria-labelledby="identity-federation-heading">
   <div><p class="eyebrow">Enterprise federation</p><h2 id="identity-federation-heading">Microsoft Entra ID / SAML 2.0</h2><p>Authenticate through an Entra enterprise application. The Worker validates the signed assertion before any claim reaches application policy.</p><div class="identity-provider-meta"><span>Signed assertion</span><span>Audience</span><span>Time bounds</span><span>Replay protection</span><span data-config-status="saml">Checking configuration…</span></div></div>
   <div class="identity-provider-actions"><a class="button" href="/auth/saml" data-provider-action="saml">Try SAML authentication</a><a class="text-link" href="/auth/saml/metadata">View SP metadata ↗</a></div>
 </section>
-
-<details class="panel identity-implementation">
-  <summary><span>Implementation details</span><span>Provider → validation → identity → policy → session</span></summary>
-  <div class="identity-implementation-body"><div><p class="eyebrow">Security boundary</p><h2>No protocol secrets in the inspector</h2><p>Access tokens, authorization codes, PKCE verifiers, client secrets, signing keys, raw cookies, and unsanitized assertions are never returned to the browser or written to public logs.</p></div><nav class="reference-links" aria-label="Identity implementation sources">${sources.map(([label, path]) => `<a href="${escapeHtml(sourceUrl(env, path))}">${escapeHtml(label)}</a>`).join('')}</nav></div>
-</details>
 
 <script>
 (() => {

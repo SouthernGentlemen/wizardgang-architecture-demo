@@ -61,6 +61,8 @@ This file is generated from the active declarative application registry. Route I
 | `platform.r2.file` | `/api/labs/r2-files/{id}` | `GET`, `DELETE` | api | public | gated | deny | R2 file item laboratory API | `src/platform/route-capabilities/r2.ts` |
 | `platform.r2.object` | `/api/labs/r2-objects` | `GET`, `PUT`, `DELETE` | api | public | gated | deny | R2 object laboratory API | `src/platform/route-capabilities/r2.ts` |
 | `platform.r2.reset` | `/api/labs/r2-reset` | `POST` | api | public | gated | deny | R2 files reset laboratory API | `src/platform/route-capabilities/r2.ts` |
+| `platform.d1.rest-demo-records` | `/api/labs/rest-demo-records` | `GET`, `POST` | api | public | gated | deny | Anonymous REST demo collection API | `src/platform/route-capabilities/d1.ts` |
+| `platform.d1.rest-demo-record` | `/api/labs/rest-demo-records/{id}` | `GET`, `PUT`, `PATCH`, `DELETE` | api | public | gated | deny | Anonymous REST demo item API | `src/platform/route-capabilities/d1.ts` |
 | `platform.d1.records` | `/api/labs/rest-records` | `GET`, `POST` | api | public | gated | deny | REST records laboratory API | `src/platform/route-capabilities/d1.ts` |
 | `platform.d1.records-reset` | `/api/labs/rest-records-reset` | `POST` | api | public | gated | deny | REST record sandbox reset laboratory API | `src/platform/route-capabilities/d1.ts` |
 | `platform.d1.record` | `/api/labs/rest-records/{id}` | `GET`, `PUT`, `DELETE` | api | public | gated | deny | REST record item laboratory API | `src/platform/route-capabilities/d1.ts` |

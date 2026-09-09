@@ -5,11 +5,11 @@ const demo: DemoDefinition = {
   "title": "REST API",
   "group": "Interfaces",
   "sourcePath": "src/demos/api.ts",
-  "summary": "Explore a versioned D1-backed REST API, execute live requests, and inspect the OpenAPI 3.1 contract behind it.",
+  "summary": "Explore a small anonymous REST API through an OpenAPI 3.0-style contract and live CRUD examples.",
   "proves": [
     "GET, POST, PUT, and DELETE retain distinct REST resource semantics",
-    "Public reads and identity-derived sandbox writes cross one normalized application-principal boundary",
-    "The served OpenAPI 3.1 contract generates the live endpoint navigator and code examples",
+    "Every visitor receives an isolated browser session for reads and writes",
+    "The focused OpenAPI 3.0-style document shows method, path, body, and response examples",
     "Every request carries a request ID into the public-safe operational log"
   ],
   "status": "working",

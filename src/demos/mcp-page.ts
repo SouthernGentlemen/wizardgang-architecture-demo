@@ -1,10 +1,9 @@
 import type { Env } from '../types';
 import { escapeHtml } from '../lib/html';
-import { sourceUrl } from '../lib/github';
 import { routeUrl } from '../routing/application-routes';
 import { recentApplicationLogs, type ApplicationLogRow } from '../lib/logs';
 import { MCP_PROTOCOL_VERSION, MCP_SERVER_PATH, mcpMetaKeys } from '../api/mcp';
-import { referenceDetails, pageContent, type PageContent } from '../ui/page';
+import { pageContent, type PageContent } from '../ui/page';
 
 interface McpActivity {
   id: number;
@@ -51,8 +50,6 @@ function activityValue(activity: McpActivity | undefined, key: keyof McpActivity
 export async function mcpContent(request: Request, env: Env): Promise<PageContent> {
   const endpoint = `${new URL(request.url).origin}${MCP_SERVER_PATH}`;
   const mcpUrl = routeUrl('interfaces.mcp.console');
-  const identityUrl = routeUrl('interfaces.identity.page');
-  const i18nUrl = routeUrl('interfaces.i18n');
   const activity = activityFromLog((await recentApplicationLogs(env, { source: 'mcp', limit: 1 }))[0]);
   const claudeCommand = `claude mcp add --transport http wizardgang ${endpoint}`;
   const codexCommand = `codex mcp add wizardgang --url ${endpoint}`;
@@ -98,15 +95,6 @@ export async function mcpContent(request: Request, env: Env): Promise<PageConten
     <span>Endpoint</span>
     <code id="mcp-endpoint">${escapeHtml(endpoint)}</code>
     <button type="button" data-copy-target="mcp-endpoint">Copy endpoint</button>
-  </div>
-  <div class="page-tools">
-    <a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/mcp.ts'))}">Route source</a>
-    ${referenceDetails([
-      { label: 'MCP server', href: sourceUrl(env, 'src/api/mcp.ts') },
-      { label: 'Tool contract', href: sourceUrl(env, 'contracts/mcp/tools.json') },
-      { label: 'Interoperability tests', href: sourceUrl(env, 'tests/mcp-client.test.ts') },
-      { label: 'Shared authorization', href: sourceUrl(env, 'src/lib/authorization.ts') },
-    ], 'Implementation details')}
   </div>
 </section>
 
@@ -183,27 +171,6 @@ export async function mcpContent(request: Request, env: Env): Promise<PageConten
     <p class="subtle">Client name, version, protocol, tool, authorization mode, result, and duration are retained. Credentials, IP addresses, request bodies, and arbitrary client metadata are not.</p>
   </div>
 </section>
-
-<section class="mcp-section" aria-labelledby="mcp-architecture-heading">
-  <div class="section-head"><h2 id="mcp-architecture-heading">Architecture</h2><span>One shared trust boundary</span></div>
-  <div class="panel mcp-architecture">
-    <div class="mcp-flow" aria-label="AI client through Streamable HTTP, MCP, authorization, D1, and audit log" tabindex="0">
-      ${['AI Client', 'Streamable HTTP', 'MCP', 'Application Authorization', 'D1', 'Audit Log'].map((label, index) => `${index ? '<span aria-hidden="true">→</span>' : ''}<strong>${label}</strong>`).join('')}
-    </div>
-    <h3>MCP is another interface—not another trust boundary.</h3>
-    <p>The same application policy governs REST, GraphQL, and MCP. Anonymous clients receive <code>demo:read</code>; bearer-authenticated clients can receive <code>demo:read</code> and <code>demo:write</code>, although this public MCP catalog exposes only read-only tools.</p>
-  </div>
-</section>
-
-<details class="implementation-notes"><summary>What this route proves</summary><ul>
-  <li>Real MCP clients connect through the official Streamable HTTP transport.</li>
-  <li>MCP ${MCP_PROTOCOL_VERSION} uses one SDK-backed protocol and tool implementation.</li>
-  <li>Tool discovery exposes explicit input schemas, output schemas, and read-only behavioral annotations.</li>
-  <li><code>list_demo_records</code> returns one normalized public contract while D1 column names remain behind the repository boundary.</li>
-  <li>Every successful tool invocation records bounded, sanitized operational evidence.</li>
-  <li>The official TypeScript MCP client performs discovery and both tool calls in CI.</li>
-</ul></details>
-<nav class="meta mcp-pager" aria-label="Interfaces routes"><a href="${escapeHtml(identityUrl)}">← Authentication &amp; Authorization</a><a href="${escapeHtml(i18nUrl)}">Internationalization →</a></nav>
 
 <script>
 (() => {

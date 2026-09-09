@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import openapi from '../contracts/openapi/openapi.json';
 import { architectureMapEntries } from '../src/routing/navigation';
 import { routeRequest } from '../src/router';
 import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
@@ -78,26 +77,15 @@ describe('public route contract', () => {
   it('renders a focused REST client generated from the OpenAPI contract', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/rest', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
-    const openapiOperationCount = Object.values(openapi.paths).reduce((count, path) => count + Object.keys(path).filter((method) => ['get', 'post', 'put', 'patch', 'delete', 'head', 'options'].includes(method)).length, 0);
     for (const anchor of ['rest', 'openapi']) expect(html).toContain(`id="${anchor}"`);
-    for (const endpoint of [
-      '/api/labs/rest-records',
-      '/api/openapi.json',
-      routeUrl('interfaces.graphql.console'),
-      routeUrl('interfaces.webhooks.console'),
-    ]) expect(html).toContain(endpoint);
-    expect(html.match(/<form data-api-form/g)).toHaveLength(openapiOperationCount);
-    expect(html.match(/data-api-endpoint=/g)).toHaveLength(openapiOperationCount);
-    expect(html).toContain('OpenAPI 3.1');
+    expect(html).toContain('/api/labs/rest-demo-records');
+    expect(html.match(/<form data-rest-form/g)).toHaveLength(6);
+    expect(html).toContain('3.0.3');
     expect(html).toContain('REST API');
-    expect(html).toContain('Your API sandbox');
-    expect(html).toContain('Sign in to enable writes');
-    expect(html).toContain('View request in logs');
-    for (const language of ['curl', 'JavaScript', 'Python', 'C#']) expect(html).toContain(language);
-    expect(html).toContain('openapi-schema-RecordInput');
-    expect(html).not.toContain('openapi-schema-WebhookEvent');
-    expect(html).not.toContain('DEMO_API_TOKEN');
-    const runner = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((match) => match[1]).find((script) => script.includes("data-api-endpoint"));
+    expect(html).not.toContain('Your API sandbox');
+    expect(html).not.toContain('Sign in to enable writes');
+    for (const language of ['curl', 'JavaScript', 'Python']) expect(html).toContain(language);
+    const runner = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((match) => match[1]).find((script) => script.includes("data-rest-form"));
     expect(() => new Function(runner || '')).not.toThrow();
 
   });
@@ -132,7 +120,7 @@ describe('public route contract', () => {
     const webhooksPage = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/webhooks', { headers: { accept: 'text/html' } }), environment);
     const webhooksHtml = await webhooksPage.text();
     expect(webhooksHtml).toContain('/webhooks/github');
-    expect(webhooksHtml).toContain('Generate signed event');
+    expect(webhooksHtml).toContain('Pull latest release');
     expect(webhooksHtml).toContain('Signature valid');
     expect(webhooksHtml).toContain('Verified deliveries');
   });
@@ -160,7 +148,7 @@ describe('public route contract', () => {
     expect(html).toContain('codex mcp add wizardgang --url');
     expect(html).toContain('MCP-Protocol-Version: 2026-07-28');
     expect(html).toContain('Live MCP activity');
-    expect(html).toContain('MCP is another interface—not another trust boundary.');
+    expect(html).not.toContain('MCP is another interface—not another trust boundary.');
 
     const oldTransport = await routeRequest(new Request('https://demo.wizardgang.ai/mcp/server', { method: 'POST' }), environment);
     expect(oldTransport.status).toBe(404);
