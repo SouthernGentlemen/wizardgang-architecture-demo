@@ -24,6 +24,28 @@ else {
   }
 }
 
+const presentationPath = 'src/i18n/presentation.json';
+if (!fs.existsSync(presentationPath)) failures.push(`missing presentation resource: ${presentationPath}`);
+else {
+  const presentation = JSON.parse(fs.readFileSync(presentationPath, 'utf8'));
+  const expectedLocales = [...config.supportedLocales].sort();
+  const allowedNamespaces = new Set(['common', 'nav', 'home', 'platform', 'interfaces', 'operations', 'assurance', 'security', 'errors', 'client', 'reporting', 'summary', 'meta']);
+  for (const [key, translations] of Object.entries(presentation)) {
+    const namespace = key.split('.')[0];
+    if (!allowedNamespaces.has(namespace)) failures.push(`presentation key has unsupported namespace: ${key}`);
+    if (!translations || typeof translations !== 'object' || Array.isArray(translations)) {
+      failures.push(`presentation.${key} must contain locale translations`);
+      continue;
+    }
+    const actualLocales = Object.keys(translations).sort();
+    if (JSON.stringify(actualLocales) !== JSON.stringify(expectedLocales)) failures.push(`presentation.${key} locale coverage differs from configured locales`);
+    for (const locale of expectedLocales) {
+      const value = translations[locale];
+      if (typeof value !== 'string' || !value.trim()) failures.push(`presentation.${key}.${locale} must be a non-empty string`);
+    }
+  }
+}
+
 for (const locale of config.rtlLocales) if (!config.supportedLocales.includes(locale)) failures.push(`RTL locale is not supported: ${locale}`);
 
 if (failures.length) {
@@ -31,4 +53,4 @@ if (failures.length) {
   failures.forEach((failure) => console.error(`- ${failure}`));
   process.exit(1);
 }
-console.log(`Localization validation passed: ${resources.size} locales with ${Object.keys(fallback).length} synchronized keys.`);
+console.log(`Localization validation passed: ${resources.size} locale cores with ${Object.keys(fallback).length} synchronized keys plus the complete sitewide presentation catalog.`);

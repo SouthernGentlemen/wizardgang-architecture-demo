@@ -1,9 +1,6 @@
 import { escapeHtml } from '../lib/html';
 import type { ReportingAvailability } from './contracts';
-import type {
-  ReportingQueryPresentation,
-  ReportingRecordPresentation,
-} from './presentation';
+import type { ReportingQueryPresentation, ReportingRecordPresentation } from './presentation';
 
 export interface ReportingHtmlOptions {
   headingId?: string;
@@ -15,38 +12,36 @@ function availabilityLabel(value: ReportingAvailability): string {
   if (value === 'rate-limited') return 'Rate limited';
   return value.replaceAll('-', ' ').replace(/(^|\s)\S/g, (match) => match.toUpperCase());
 }
-
 function badgeClass(value: ReportingAvailability): string {
   if (value === 'available') return 'badge badge-ok';
   if (value === 'partial' || value === 'stale' || value === 'rate-limited') return 'badge badge-warn';
   return 'badge badge-down';
 }
-
+function canonical(value: string): string {
+  return `<bdi data-canonical-source lang="en" dir="ltr">${escapeHtml(value)}</bdi>`;
+}
 function renderRecord(record: ReportingRecordPresentation, recordAnchors = false): string {
   const metadata = [
-    record.recordType ? `Type ${record.recordType}` : '',
-    record.status ? `Status ${record.status}` : '',
+    record.recordType ? `Type ${canonical(record.recordType)}` : '',
+    record.status ? `Status ${canonical(record.status)}` : '',
     record.availability ? `Availability ${availabilityLabel(record.availability)}` : '',
   ].filter(Boolean);
   const fields = record.fields.length
-    ? `<dl>${record.fields.map((field) => `<dt>${escapeHtml(field.label)}</dt><dd>${escapeHtml(field.value)}</dd>`).join('')}</dl>`
+    ? `<dl>${record.fields.map((field) => `<dt>${escapeHtml(field.label)}</dt><dd>${canonical(field.value)}</dd>`).join('')}</dl>`
     : '';
   const relationships = record.relationships.length
-    ? `<details><summary>${record.relationshipCount} authorized relationship${record.relationshipCount === 1 ? '' : 's'}</summary><ul>${record.relationships.map((relationship) => `<li><strong>${escapeHtml(relationship.label)}</strong>: ${relationship.targets.map(escapeHtml).join(', ')}</li>`).join('')}</ul></details>`
+    ? `<details><summary>${record.relationshipCount} authorized relationship${record.relationshipCount === 1 ? '' : 's'}</summary><ul>${record.relationships.map((relationship) => `<li><strong>${escapeHtml(relationship.label)}</strong>: ${relationship.targets.map(canonical).join(', ')}</li>`).join('')}</ul></details>`
     : '';
-  return `<article class="activity-item"${recordAnchors ? ` id="${escapeHtml(record.id)}"` : ''}><div><h3>${escapeHtml(record.title)}</h3>${metadata.length ? `<p>${metadata.map(escapeHtml).join(' · ')}</p>` : ''}${fields}${relationships}${record.sourceLink ? `<p><a href="${escapeHtml(record.sourceLink)}">Open source ↗</a></p>` : ''}</div></article>`;
+  return `<article class="activity-item"${recordAnchors ? ` id="${escapeHtml(record.id)}"` : ''}><div><h3>${canonical(record.title)}</h3>${metadata.length ? `<p>${metadata.join(' · ')}</p>` : ''}${fields}${relationships}${record.sourceLink ? `<p><a href="${escapeHtml(record.sourceLink)}">Open source ↗</a></p>` : ''}</div></article>`;
 }
 
-export function renderReportingPresentation(
-  presentation: ReportingQueryPresentation,
-  options: ReportingHtmlOptions = {},
-): string {
+export function renderReportingPresentation(presentation: ReportingQueryPresentation, options: ReportingHtmlOptions = {}): string {
   const headingId = options.headingId ?? 'reporting-results-heading';
   const sources = presentation.sources.length
-    ? `<div class="usage-products" aria-label="Reporting sources">${presentation.sources.map((source) => `<article class="usage-product"><div><p class="eyebrow">${escapeHtml(source.provider)}</p><h3>${escapeHtml(source.label)}</h3><span class="${badgeClass(source.availability)}">${escapeHtml(availabilityLabel(source.availability))}</span></div><p>${source.recordCount} record${source.recordCount === 1 ? '' : 's'} on this page</p><small>${escapeHtml(source.resource)}${source.repository ? ` · ${escapeHtml(source.repository)}` : ''}</small></article>`).join('')}</div>`
+    ? `<div class="usage-products" aria-label="Reporting sources">${presentation.sources.map((source) => `<article class="usage-product"><div><p class="eyebrow">${canonical(source.provider)}</p><h3>${escapeHtml(source.label)}</h3><span class="${badgeClass(source.availability)}">${escapeHtml(availabilityLabel(source.availability))}</span></div><p>${source.recordCount} record${source.recordCount === 1 ? '' : 's'} on this page</p><small>${canonical(source.resource)}${source.repository ? ` · ${canonical(source.repository)}` : ''}</small></article>`).join('')}</div>`
     : '';
   const facets = Object.keys(presentation.facets).length
-    ? `<details><summary>Facets</summary><ul>${Object.entries(presentation.facets).map(([name, values]) => `<li><strong>${escapeHtml(name)}</strong>: ${Object.entries(values).map(([value, count]) => `${escapeHtml(value)} ${count}`).join(' · ')}</li>`).join('')}</ul></details>`
+    ? `<details><summary>Facets</summary><ul>${Object.entries(presentation.facets).map(([name, values]) => `<li><strong>${canonical(name)}</strong>: ${Object.entries(values).map(([value, count]) => `${canonical(value)} ${count}`).join(' · ')}</li>`).join('')}</ul></details>`
     : '';
   const empty = presentation.records.length === 0
     ? `<div class="availability-empty">${presentation.availability === 'available' ? 'No records in this authorized selection.' : `Source ${escapeHtml(availabilityLabel(presentation.availability).toLowerCase())}.`}</div>`
@@ -58,6 +53,7 @@ export function renderReportingPresentation(
     <div class="operations-section-heading"><div><p class="eyebrow">Shared reporting presenter</p><h2 id="${escapeHtml(headingId)}">${escapeHtml(presentation.label)}</h2></div><span class="${badgeClass(presentation.availability)}">${escapeHtml(availabilityLabel(presentation.availability))}</span></div>
     <p>${presentation.count} record${presentation.count === 1 ? '' : 's'} shown · ${presentation.totalAvailable} available in the authorized selection.</p>
     <p class="subtle">Source availability is independent from record status. A current record may come from an unavailable source snapshot, and an available source may contain no records.</p>
+    <p class="subtle">Canonical record titles and values below are shown exactly as published source content.</p>
     ${sources}${facets}${empty}<div class="activity-list">${presentation.records.map((record) => renderRecord(record, options.recordAnchors)).join('')}</div>${pagination}
   </section>`;
 }

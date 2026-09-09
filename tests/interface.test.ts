@@ -131,7 +131,7 @@ describe('internationalized interface', () => {
     expect(html).toContain('href="/interfaces/i18n?count=7&amp;lang=fr"');
     expect(html).toContain('href="/interfaces/i18n?count=7&amp;lang=de"');
     expect(html).toContain('aria-current="page">日本語</a>');
-    expect(html).toContain('Global context inspector');
+    expect(html).toContain('グローバルコンテキスト検査');
     expect(html).toContain('items_other');
     expect(html).not.toContain('history.replaceState');
   });
