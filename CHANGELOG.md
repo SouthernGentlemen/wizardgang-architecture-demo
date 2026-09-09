@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.16.7 — 2026-09-09
+
+- Restored live Durable Objects request, CPU-time, and storage metrics by querying Cloudflare's current storage analytics dataset.
+- Completed the production telemetry configuration with a dedicated read-only Cloudflare account token and the deployed Durable Objects namespace scope.
+
 ## 0.16.6 — 2026-09-09
 
 - Fixed the embedded GraphiQL endpoint URL so the live IDE can initialize from its iframe document.
