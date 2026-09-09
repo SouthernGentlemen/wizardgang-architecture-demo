@@ -53,6 +53,12 @@ describe('final common reporting audit guards', () => {
     expect(presentation).not.toContain("usage.cost.kind === 'estimated'");
   });
 
+  it('queries the current Durable Objects storage analytics dataset', () => {
+    const collector = readFileSync('src/lib/cloudflare-usage.ts', 'utf8');
+    expect(collector).toContain('durableObjectsStorageGroups');
+    expect(collector).not.toContain('durableObjectsSqlStorageGroups');
+  });
+
   it('keeps assurance status normalization in the common reporting layer instead of the dashboard', () => {
     const service = readFileSync('src/reporting/service.ts', 'utf8');
     const dashboard = readFileSync('src/demos/reporting-dashboard.ts', 'utf8');
