@@ -5,14 +5,12 @@ export const governanceRouteCapability = defineAssuranceRouteCapability({
   pattern: '/assurance/governance',
   html: {
     handler: async (request, env) => {
-      const [{ governanceContent }, { renderSharedReporting }, { renderPage }] = await Promise.all([
+      const [{ governanceContent }, { renderPage }] = await Promise.all([
         import('../../demos/governance'),
-        import('../../demos/assurance'),
         import('../../ui/page'),
       ]);
       const content = await governanceContent(request, env, []);
-      const reporting = await renderSharedReporting(request, env, 'governance');
-      return renderPage(env, { ...content, routeId: 'assurance.governance', body: `${content.body}\n${reporting}` });
+      return renderPage(env, { ...content, routeId: 'assurance.governance' });
     },
     source: {
       module: 'src/demos/governance.ts',
