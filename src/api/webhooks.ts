@@ -161,19 +161,18 @@ export async function webhookDemoResponse(request: Request, env: Env): Promise<R
     session = await ensureDemoSession(request, env);
     const deliveryId = `visitor-${crypto.randomUUID()}`;
     const repository = configuredRepository(env);
+    const version = env.DEPLOYED_VERSION || 'development';
     const payload = JSON.stringify({
-      ref: `refs/heads/demo/${session.id.slice(0, 8)}`,
-      after: '0000000000000000000000000000000000000000',
+      action: 'published',
+      release: { tag_name: `v${version.replace(/^v/, '')}`, name: `WizardGang architecture demo ${version}`, html_url: `${env.GITHUB_REPO_URL}/releases` },
       repository: { full_name: repository, html_url: env.GITHUB_REPO_URL },
-      pusher: { name: 'demo-visitor' },
-      sender: { login: 'demo-visitor' },
-      head_commit: { id: '0000000000000000000000000000000000000000', message: 'Synthetic visitor delivery', url: `${env.GITHUB_REPO_URL}/commits/main` },
+      sender: { login: 'wizardgang-release-bot' },
     });
     const response = await acceptGitHubShape(new Request(new URL('/webhooks/github', request.url), {
       method: 'POST', body: payload, headers: {
         'content-type': 'application/json',
         'x-github-delivery': deliveryId,
-        'x-github-event': 'push',
+        'x-github-event': 'release',
         'x-hub-signature-256': `sha256=${await hmac(env.WEBHOOK_DEMO_SECRET, payload)}`,
       },
     }), env, { provider: 'demo', secret: env.WEBHOOK_DEMO_SECRET, sessionId: session.id });

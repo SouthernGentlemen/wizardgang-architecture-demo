@@ -70,6 +70,8 @@ describe('platform laboratory declarative routing', () => {
       '/api/labs/r2-files/:id',
       '/api/labs/r2-objects',
       '/api/labs/r2-reset',
+      '/api/labs/rest-demo-records',
+      '/api/labs/rest-demo-records/:id',
       '/api/labs/rest-records',
       '/api/labs/rest-records/:id',
       '/api/labs/rest-records-reset',

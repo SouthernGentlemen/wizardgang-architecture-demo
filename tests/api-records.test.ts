@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { recordsResponse } from '../src/api/records';
+import { restDemoResponse } from '../src/api/rest-demo';
 import { authorize } from '../src/lib/authorization';
 import { createDemoAccessToken, type IdentitySession } from '../src/lib/identity-session';
 import type { D1PreparedStatement, Env } from '../src/types';
@@ -15,9 +16,13 @@ class MemoryStatement implements D1PreparedStatement {
     }
     if (this.sql.startsWith('DELETE FROM demo_records') && this.values.length > 1) this.database.records.delete(`${this.values[0]}/${this.values[1]}`);
     else if (this.sql.startsWith('DELETE FROM demo_records')) for (const record of [...this.database.records.keys()]) if (record.startsWith(`${this.values[0]}/`)) this.database.records.delete(record);
+    if (this.sql.includes('INSERT INTO demo_sessions')) this.database.sessions.add(String(this.values[0]));
     return { meta: { last_row_id: this.database.nextId++ } };
   }
   async all<T>() {
+    if (this.sql.includes('FROM demo_sessions')) {
+      return { results: this.database.sessions.has(String(this.values[0])) ? [{ id: this.values[0], expires_at: new Date(Date.now() + 60_000).toISOString() }] as T[] : [] };
+    }
     if (this.sql.includes('FROM demo_records')) {
       const namespace = this.values[0];
       const key = this.values[1];
@@ -30,6 +35,7 @@ class MemoryStatement implements D1PreparedStatement {
 
 class MemoryD1 {
   records = new Map<string, { id: number; namespace: string; record_key: string; value_json: string; created_at: string; updated_at: string }>();
+  sessions = new Set<string>();
   nextId = 1;
   prepare(sql: string) { return new MemoryStatement(this, sql); }
 }
@@ -38,6 +44,7 @@ function env(): Env {
   return {
     DEMO_DB: new MemoryD1(),
     IDENTITY_SESSION_SECRET: 'test-identity-secret-with-at-least-32-characters',
+    DEMO_SESSION_SECRET: 'test-demo-session-secret-with-at-least-32-characters',
     GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
   };
@@ -128,5 +135,27 @@ describe('D1 REST records', () => {
       method: 'POST', headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' }, body: JSON.stringify({ key: '../escape', value: true }),
     }), environment);
     expect(invalid.status).toBe(400);
+  });
+});
+
+describe('anonymous REST demo records', () => {
+  it('supports OpenAPI-style CRUD without an authorization header', async () => {
+    const environment = env();
+    const created = await restDemoResponse(new Request('https://demo.example/api/labs/rest-demo-records', {
+      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ key: 'hello', value: { message: 'worker' } }),
+    }), environment);
+    expect(created.status).toBe(201);
+    const cookie = created.headers.get('set-cookie');
+    expect(cookie).toContain('wg_demo_session=');
+    const sessionHeaders = { cookie: cookie!.split(';')[0] };
+
+    const listed = await restDemoResponse(new Request('https://demo.example/api/labs/rest-demo-records', { headers: sessionHeaders }), environment);
+    expect(await listed.json()).toMatchObject({ results: [{ key: 'hello', value: { message: 'worker' } }], count: 1 });
+    const patched = await restDemoResponse(new Request('https://demo.example/api/labs/rest-demo-records/hello', {
+      method: 'PATCH', headers: { ...sessionHeaders, 'content-type': 'application/json' }, body: JSON.stringify({ value: { message: 'patched' } }),
+    }), environment, 'hello');
+    expect(patched.status).toBe(200);
+    const deleted = await restDemoResponse(new Request('https://demo.example/api/labs/rest-demo-records/hello', { method: 'DELETE', headers: sessionHeaders }), environment, 'hello');
+    expect(deleted.status).toBe(204);
   });
 });

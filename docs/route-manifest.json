@@ -553,7 +553,7 @@
       "indexing": "allow"
     },
     "title": "GraphQL console",
-    "description": "Query and mutate the shared D1-backed schema through a locally bundled GraphiQL IDE.",
+    "description": "Run public GraphQL examples against the shared D1-backed schema and bundled GraphiQL IDE.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -1080,7 +1080,7 @@
       "indexing": "allow"
     },
     "title": "Authentication and SSO",
-    "description": "Authenticate with supported providers and inspect the normalized application identity boundary.",
+    "description": "Authenticate with supported providers and inspect the resulting application session.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -1566,7 +1566,7 @@
       "indexing": "allow"
     },
     "title": "REST API",
-    "description": "Execute live REST requests and inspect the versioned OpenAPI 3.1 contract.",
+    "description": "Explore live anonymous CRUD operations through a focused OpenAPI 3.0-style contract.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -1618,7 +1618,7 @@
       "indexing": "allow"
     },
     "title": "Signed webhooks console",
-    "description": "Verify GitHub-compatible signed deliveries and inspect replay-protected evidence.",
+    "description": "Pull a release notification, verify it like a GitHub delivery, and inspect sanitized evidence.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -2744,6 +2744,102 @@
     },
     "title": "D1 users and tasks reset laboratory API",
     "description": "Resets the visitor-scoped D1 users and tasks sandbox to deterministic seed rows.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/d1.ts",
+      "exportName": "d1LaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/d1-lab.test.ts",
+        "tests/api-records.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.d1.rest-demo-record",
+    "route": "/api/labs/rest-demo-records/{id}",
+    "methods": [
+      "GET",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Anonymous REST demo item API",
+    "description": "Reads, replaces, partially updates, or deletes one visitor-scoped record without authentication.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/platform/route-capabilities/d1.ts",
+      "exportName": "d1LaboratoryCapability",
+      "tests": [
+        "tests/platform-laboratory-routing.test.ts",
+        "tests/d1-lab.test.ts",
+        "tests/api-records.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "platform.d1.rest-demo-records",
+    "route": "/api/labs/rest-demo-records",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Anonymous REST demo collection API",
+    "description": "Lists or creates visitor-scoped records for the OpenAPI interface demo without authentication.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"

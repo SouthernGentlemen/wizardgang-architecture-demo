@@ -51,6 +51,37 @@ describe('canonical interface demonstrations', () => {
     expect(new Set(bodies).size).toBe(pages.length);
   });
 
+  it('keeps the interface demos focused and executable', async () => {
+    const rest = await (await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/rest', { headers: { accept: 'text/html' } }), environment)).text();
+    expect(rest).toContain('3.0.3');
+    expect(rest).toContain('PATCH');
+    expect(rest).toContain('/api/labs/rest-demo-records');
+    expect(rest).not.toContain('Your API sandbox');
+    expect(rest).not.toContain('Same policy, different transports');
+    expect(rest).not.toContain('Authorization');
+
+    const graphql = await (await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/graphql', { headers: { accept: 'text/html' } }), environment)).text();
+    expect(graphql).toContain('Working examples');
+    expect(graphql).toContain('data-graphql-example');
+    expect(graphql).not.toContain('GraphQL Yoga');
+    expect(graphql).not.toContain('Application interfaces');
+
+    const webhooks = await (await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/webhooks', { headers: { accept: 'text/html' } }), environment)).text();
+    expect(webhooks).toContain('Pull the latest release');
+    expect(webhooks).toContain('release.published');
+    expect(webhooks).not.toContain('HMAC-SHA256');
+    expect(webhooks).not.toContain('Event contract');
+
+    const identity = await (await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/identity', { headers: { accept: 'text/html' } }), environment)).text();
+    expect(identity).not.toContain('Many providers. One application identity.');
+    expect(identity).not.toContain('No protocol secrets in the inspector');
+
+    const mcp = await (await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/mcp', { headers: { accept: 'text/html' } }), environment)).text();
+    expect(mcp).not.toContain('One shared trust boundary');
+    expect(mcp).not.toContain('What this route proves');
+    expect(mcp).not.toContain('Internationalization →');
+  });
+
   it('renders /interfaces as a real index and publishes every child link', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces', { headers: { accept: 'text/html' } }), environment);
     const html = await response.text();

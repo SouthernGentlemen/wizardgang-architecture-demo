@@ -647,11 +647,11 @@ summary { cursor: pointer; }
 .api-endpoint-nav .eyebrow { margin-bottom: .4rem; }
 .api-endpoint-nav h2 { margin: 0; font-size: 1.6rem; }
 .api-endpoint-nav [role="tablist"] { display: grid; }
-.api-endpoint-nav button { display: grid; grid-template-columns: 4.8rem minmax(0, 1fr); align-items: center; gap: .65rem; min-height: 64px; padding: .65rem .8rem; border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; transform: none; }
-.api-endpoint-nav button:last-child { border-bottom: 0; }
-.api-endpoint-nav button:hover { background: var(--panel-2); }
-.api-endpoint-nav button[aria-selected="true"] { background: var(--panel-2); box-shadow: inset 3px 0 0 var(--acid); }
-.api-endpoint-nav button code { color: var(--paper); font-size: .78rem; overflow-wrap: anywhere; }
+.api-endpoint-nav button, .api-endpoint-nav a { display: grid; grid-template-columns: 4.8rem minmax(0, 1fr); align-items: center; gap: .65rem; min-height: 64px; padding: .65rem .8rem; border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; transform: none; }
+.api-endpoint-nav button:last-child, .api-endpoint-nav a:last-child { border-bottom: 0; }
+.api-endpoint-nav button:hover, .api-endpoint-nav a:hover { background: var(--panel-2); }
+.api-endpoint-nav button[aria-selected="true"], .api-endpoint-nav a:focus-visible { background: var(--panel-2); box-shadow: inset 3px 0 0 var(--acid); }
+.api-endpoint-nav button code, .api-endpoint-nav a code { color: var(--paper); font-size: .78rem; overflow-wrap: anywhere; }
 .api-operation { padding: clamp(1.15rem, 3vw, 1.65rem); border: 1px solid var(--line); background: var(--panel); }
 .api-operation-heading h2 { display: flex; align-items: center; flex-wrap: wrap; gap: .65rem; margin: 0; font-size: clamp(1.25rem, 2.5vw, 1.8rem); }
 .api-operation-heading h2 code { color: var(--paper); overflow-wrap: anywhere; }
@@ -682,6 +682,14 @@ summary { cursor: pointer; }
 
 .graphql-page-header, .webhook-page-header { max-width: 980px; margin-bottom: 2.5rem; }
 .graphql-workspace { margin-top: 1rem; }
+.graphql-examples { margin: 1rem 0 2.5rem; }
+.graphql-example-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: .75rem; }
+.graphql-example { padding: 1rem; border: 1px solid var(--line); background: var(--panel); }
+.graphql-example .section-head { margin: 0 0 .75rem; padding: 0; border: 0; align-items: center; }
+.graphql-example .section-head h3 { margin: 0; }
+.graphql-example .button { min-height: 40px; padding: .45rem .7rem; font-size: .72rem; }
+.graphql-example pre { min-height: 0; margin-top: .65rem; }
+.graphql-example-result { border-color: var(--acid); }
 .graphql-workspace-heading { align-items: end; margin-bottom: 1rem; }
 .graphql-workspace-heading > p { max-width: 48ch; margin: 0; color: var(--muted); text-align: right; }
 .graphql-frame { height: min(74vh, 820px); min-height: 600px; }
