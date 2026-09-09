@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.16.8 — 2026-09-09
+
+- Corrected Durable Objects storage scoping to use Cloudflare's namespace-membership filter, restoring all three configured Durable Objects metrics without broadening the resource boundary.
+
 ## 0.16.7 — 2026-09-09
 
 - Restored live Durable Objects request, CPU-time, and storage metrics by querying Cloudflare's current storage analytics dataset.
