@@ -42,6 +42,8 @@ describe('D1 database console', () => {
     expect(html).toContain("' become Unassigned.'");
     expect(html).toContain('data-confirm-dialog');
     expect(html).toContain('Reset sample data?');
+    expect(html).toContain('const confirmButton = event.currentTarget;');
+    expect(html).not.toContain('event.currentTarget.disabled');
     expect(html).not.toContain('catch (_) {}');
   });
 });
