@@ -214,11 +214,11 @@ const globalOperationalRoutes = [
     },
   }),
   operationalRoute({
-    id: 'operations.availability', pattern: '/operations/availability', methods: ['GET'], kind: 'page', handler: async (_request, { env }) => {
-      const [{ uptimeContent }, { operationsPageContent }, { renderPage }] = await Promise.all([
-        import('../demos/operations-pages'), import('../demos/operations'), import('../ui/page'),
+    id: 'operations.availability', pattern: '/operations/availability', methods: ['GET'], kind: 'page', handler: async (request, { env }) => {
+      const [{ availabilityContent }, { operationsPageContent }, { renderPage }] = await Promise.all([
+        import('../demos/availability-page'), import('../demos/operations'), import('../ui/page'),
       ]);
-      return renderPage(env, operationsPageContent(await uptimeContent(env), 'operations.availability'));
+      return renderPage(env, operationsPageContent(await availabilityContent(request, env), 'operations.availability'));
     },
     title: 'Operations availability', description: 'Measured availability history with planned maintenance separated from unexpected failures.',
     sourceModule: 'src/demos/operations-pages.ts', sourceExport: 'uptimeContent', indexing: 'allow', offline: 'available',
