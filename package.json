@@ -10,7 +10,7 @@
     "lint": "node scripts/lint.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:accessibility": "vitest run tests/interface.test.ts",
+    "test:accessibility": "vitest run tests/interface.test.ts tests/wcag-aaa-remediation.test.ts",
     "test:assurance-integrity": "vitest run tests/assurance-integrity.test.ts tests/assurance-semantic-partitions.test.ts tests/assurance-lifecycle.test.ts tests/assurance-publication-policy.test.ts tests/assurance-presentation-consistency.test.ts tests/assurance-registry-completeness.test.ts tests/assurance-record-discovery.test.ts",
     "generate:openapi": "node scripts/sync-openapi-schemas.mjs",
     "validate:contracts": "node scripts/sync-openapi-schemas.mjs --check && node scripts/validate-contracts.mjs",
