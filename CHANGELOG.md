@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.17.0 — 2026-09-09
+
+- Rebuilt the evidence, compliance, risk, incident, and concern assurance pages as focused, progressively disclosed presentations backed by canonical records.
+- Corrected availability history so only scheduled observations contribute to measured uptime, with explicit coverage gaps, planned-maintenance handling, and 365-day retention.
+- Preserved resolvable compliance deep links and recorded the immutable late-merged DEMO-225 identity collision.
+
 ## 0.16.9 — 2026-09-09
 
 - Completed the Durable Objects analytics query by selecting the storage date dimension required for provider-side date ordering.
