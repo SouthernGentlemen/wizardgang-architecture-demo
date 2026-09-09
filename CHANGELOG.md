@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.16.9 — 2026-09-09
+
+- Completed the Durable Objects analytics query by selecting the storage date dimension required for provider-side date ordering.
+
 ## 0.16.8 — 2026-09-09
 
 - Corrected Durable Objects storage scoping to use Cloudflare's namespace-membership filter, restoring all three configured Durable Objects metrics without broadening the resource boundary.
