@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.16.3 — 2026-09-09
+
+- Fixed the D1 reset and delete confirmation handlers so asynchronous API actions restore the button state and close their dialog after completion.
+
 ## 0.16.2 — 2026-09-09
 
 - Reframed the Edge, Workers, Durable Objects, D1, and R2 pages as a compact, full-width tabbed Platform surface with an active-route indicator and reduced top whitespace.
