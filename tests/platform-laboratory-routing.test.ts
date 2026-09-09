@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import vm from 'node:vm';
 import { describe, expect, it } from 'vitest';
 import { platformLaboratoryCapabilities } from '../src/platform/route-capabilities';
 import {
@@ -164,6 +165,9 @@ describe('platform laboratory declarative routing', () => {
     expect(html, path).toContain('class="skip-link" href="#main"');
     expect(html, path).toContain('<main class="site-main" id="main">');
     expect(html.match(/<h1\b/g), path).toHaveLength(1);
+    const inlineScripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map((match) => match[1]);
+    expect(inlineScripts.length, path).toBeGreaterThan(0);
+    for (const script of inlineScripts) expect(() => new vm.Script(script), path).not.toThrow();
     expect(html, path).toContain('<a href="/platform" data-section-current');
     for (const removed of removedPagePaths) expect(html, `${path} legacy ${removed}`).not.toContain(`href="${removed}"`);
     expect(html, path).not.toContain(absent);
