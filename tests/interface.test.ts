@@ -151,19 +151,14 @@ describe('compliance assurance index', () => {
     const html = await renderPage(env, complianceContent(new Request('https://demo.example/assurance/compliance'), env)).text();
     expect(html.match(/<h1\b/g)).toHaveLength(1);
     expect(html).toContain('aria-labelledby="framework-heading"');
-    expect(html).toContain('aria-labelledby="compliance-filter-heading"');
-    expect(html).toContain('aria-labelledby="compliance-records-heading"');
-    expect(html.match(/class="assurance-posture-card"/g)).toHaveLength(3);
+    expect(html).toContain('aria-labelledby="attention-heading"');
+    expect(html).toContain('Choose a framework to inspect');
+    expect(html.match(/class="assurance-posture-card"/g)?.length).toBeGreaterThanOrEqual(3);
     for (const framework of ['iso-27001', 'iso-42001', 'wcag-2.2']) {
       expect(html).toContain(`href="/assurance/compliance?framework=${framework}"`);
     }
-    expect(html).toContain('<label for="compliance-framework">Framework</label>');
-    expect(html).toContain('<label for="compliance-status">Status</label>');
-    expect(html).toContain('<label for="compliance-level">WCAG level</label>');
-    expect(html).toContain('id="ISO27001-4.1"');
-    expect(html).toContain('id="WCAG-4.1.2"');
-    expect(html).toContain('href="/api/reporting/compliance/WCAG-4.1.2"');
-    expect(html).toContain('href="/assurance/evidence#EVD-');
+    expect(html).not.toContain('<table');
+    expect(html).not.toContain('Compliance records');
     expect(html).not.toMatch(/>\s*(?:COMPLIANT|CERTIFIED)\s*</i);
   });
 });

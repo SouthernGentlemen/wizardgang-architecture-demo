@@ -15,6 +15,10 @@ const publishedContinuationExceptions = new Map([
     '45f2ff42d2b92ea1f820e037306f07104480f8b5',
     'This follow-up was published with DEMO-175 in error, but its body and pull-request topology identify it as the completion of DEMO-174; it does not consume a new sequential change ID.',
   ],
+  [
+    'e79f108224612ff48946c2905318010ad5b14a91',
+    'DEMO-225 was merged after DEMO-225 through DEMO-228 had already shipped; the late-merged presentation commit retains its published identity but does not consume another sequential change ID.',
+  ],
 ]);
 const controlled = [];
 const failures = [];
