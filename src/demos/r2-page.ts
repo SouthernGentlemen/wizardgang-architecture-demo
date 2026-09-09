@@ -1,7 +1,6 @@
 import type { Env } from '../types';
-import { sourceUrl } from '../lib/github';
 import { routeUrl } from '../routing/application-routes';
-import { referenceDetails, pageContent, type PageContent } from '../ui/page';
+import { pageContent, type PageContent } from '../ui/page';
 
 export function r2Content(env: Env): PageContent {
   const r2Url = routeUrl('platform.r2');
@@ -9,7 +8,6 @@ export function r2Content(env: Env): PageContent {
 <section class="page-header lab-page-header">
   <h1>Cloudflare R2 Storage</h1>
   <p class="lede">Upload a file and inspect how its bytes and metadata move through the live stack.</p>
-  <div class="page-tools"><a class="text-link" href="${sourceUrl(env, 'src/demos/r2.ts')}">View source <span aria-hidden="true">↗</span></a></div>
 </section>
 
 <section class="lab-grid r2-lab" aria-label="R2 storage demonstration">
@@ -79,19 +77,6 @@ export function r2Content(env: Env): PageContent {
     </section>
   </aside>
 </section>
-
-<details class="implementation-notes r2-implementation">
-  <summary>Implementation details</summary>
-  <p>The Worker derives every object key from the signed visitor session. If metadata persistence fails after an upload, it removes the R2 object to keep both stores consistent.</p>
-  ${referenceDetails([
-    { label: 'Page implementation', href: sourceUrl(env, 'src/demos/r2-page.ts') },
-    { label: 'Worker implementation', href: sourceUrl(env, 'src/api/r2.ts') },
-    { label: 'R2 storage boundary', href: sourceUrl(env, 'src/storage/r2.ts') },
-    { label: 'Metadata schema', href: sourceUrl(env, 'migrations/0008_interactive_demo.sql') },
-    { label: 'Tests', href: sourceUrl(env, 'tests/r2-lab.test.ts') },
-    { label: 'CI workflow', href: sourceUrl(env, '.github/workflows/ci.yml') },
-  ], 'Source evidence')}
-</details>
 
 <script>
 (() => {

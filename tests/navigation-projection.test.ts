@@ -109,7 +109,11 @@ describe('navigation projection', () => {
     expect(navigationStyles).toMatch(/\.nav a,[\s\S]*?min-height:\s*44px/);
     expect(navigationStyles).toMatch(/\.breadcrumb a\s*\{[\s\S]*?min-height:\s*44px/);
     expect(navigationStyles).toMatch(/\.secondary-navigation,[\s\S]*?overflow-x:\s*auto/);
+    expect(navigationStyles).toContain('.secondary-navigation a::after');
+    expect(navigationStyles).toContain("border-radius: 999px"); // Related navigation retains its compact pill affordance.
+    expect(navigationStyles).toMatch(/\.secondary-navigation a\s*\{[\s\S]*?text-transform:\s*uppercase/);
     expect(styles).toContain('.lab-grid > * { min-width: 0; }');
+    expect(navigationStyles).toMatch(/body\[data-route-id\^='platform\.'\] main\.site-main/);
     expect(navigationStyles).toMatch(/\.site-main\s*\{[\s\S]*?padding-top:\s*0\.6rem/);
     expect(navigationStyles).toContain('@media (prefers-reduced-motion: reduce)');
   });

@@ -251,7 +251,8 @@ describe('public route contract', () => {
     expect(index).not.toContain('>Map</a>');
     expect(index).not.toContain('>Docs</a>');
     expect(index).not.toContain('>GitHub <span');
-    expect(index).toContain('WG-ARCH-001 · <a href="https://github.com/SouthernGentlemen/wizardgang-architecture-demo">Public source</a>');
+    expect(index).not.toContain('WG-ARCH-001');
+    expect(index).toContain('<a href="https://github.com/SouthernGentlemen/wizardgang-architecture-demo">Public source</a>');
 
     const operations = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations'), environment)).text();
     expect(operations).toContain('aria-label="Operations sections"');
