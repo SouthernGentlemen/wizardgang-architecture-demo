@@ -53,9 +53,11 @@ describe('final common reporting audit guards', () => {
     expect(presentation).not.toContain("usage.cost.kind === 'estimated'");
   });
 
-  it('queries the current Durable Objects storage analytics dataset', () => {
+  it('queries the current Durable Objects storage analytics dataset with its namespace membership filter', () => {
     const collector = readFileSync('src/lib/cloudflare-usage.ts', 'utf8');
     expect(collector).toContain('durableObjectsStorageGroups');
+    expect(collector).toContain('namespaceIds_has: $namespaceId');
+    expect(collector).not.toMatch(/durableObjectsStorageGroups[^\n]+namespaceId: \$namespaceId/);
     expect(collector).not.toContain('durableObjectsSqlStorageGroups');
   });
 
