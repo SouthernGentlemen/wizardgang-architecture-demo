@@ -57,6 +57,7 @@ describe('final common reporting audit guards', () => {
     const collector = readFileSync('src/lib/cloudflare-usage.ts', 'utf8');
     expect(collector).toContain('durableObjectsStorageGroups');
     expect(collector).toContain('namespaceIds_has: $namespaceId');
+    expect(collector).toContain('orderBy: [date_DESC]) { max { storedBytes } dimensions { date } }');
     expect(collector).not.toMatch(/durableObjectsStorageGroups[^\n]+namespaceId: \$namespaceId/);
     expect(collector).not.toContain('durableObjectsSqlStorageGroups');
   });

@@ -258,7 +258,7 @@ const DURABLE_OBJECTS_QUERY = `query DashboardDurableObjects($accountTag: string
   viewer { accounts(filter: { accountTag: $accountTag }) {
     invocations: durableObjectsInvocationsAdaptiveGroups(limit: 10000, filter: { date_geq: $start, date_leq: $end, namespaceId: $namespaceId }) { sum { requests } }
     periodic: durableObjectsPeriodicGroups(limit: 10000, filter: { date_geq: $start, date_leq: $end, namespaceId: $namespaceId }) { sum { cpuTime } }
-    storage: durableObjectsStorageGroups(limit: 1, filter: { date_geq: $start, date_leq: $end, namespaceIds_has: $namespaceId }, orderBy: [date_DESC]) { max { storedBytes } }
+    storage: durableObjectsStorageGroups(limit: 1, filter: { date_geq: $start, date_leq: $end, namespaceIds_has: $namespaceId }, orderBy: [date_DESC]) { max { storedBytes } dimensions { date } }
   } }
 }`;
 
