@@ -101,8 +101,9 @@ describe('canonical interface demonstrations', () => {
     }
   });
 
-  it('keeps locale and accessibility mode as query state on canonical resources', async () => {
-    const i18n = await (await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/i18n?locale=ar&count=3'), environment)).text();
+  it('keeps language and accessibility mode as query state on canonical resources', async () => {
+    const i18nPath = routeUrl('interfaces.i18n', {}, { lang: 'ar', count: '3' });
+    const i18n = await (await routeRequest(new Request(`https://demo.wizardgang.ai${i18nPath}`), environment)).text();
     expect(i18n).toContain('<html lang="ar" dir="rtl">');
     expect(i18n).not.toContain('name="view"');
     expect(i18n).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/interfaces/i18n">');

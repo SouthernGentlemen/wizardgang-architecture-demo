@@ -38,6 +38,10 @@ function topLevelHtmlElements(html: string): RegExpMatchArray | null {
   return html.match(/^<html\b/gm);
 }
 
+function navigationLandmarks(html: string): string[] {
+  return [...html.matchAll(/<nav\b[\s\S]*?<\/nav>/g)].map((match) => match[0]);
+}
+
 const publicPages = applicationRouteRegistry.declarations
   .filter((route) => route.kind === 'page' && route.visibility === 'public' && !route.pattern.includes(':'))
   .map((route) => route.pattern);
@@ -82,7 +86,9 @@ describe('document composition', () => {
       expect(topLevelHtmlElements(html), path).toHaveLength(1);
       expect(html.match(/<main\b/g), path).toHaveLength(1);
       expect(html.match(/<h1(?:\s|>)/g), path).toHaveLength(1);
-      expect(html.match(/<[a-z][^>]*\baria-current="page"[^>]*>/gi), path).toHaveLength(1);
+      const currentPageCounts = navigationLandmarks(html).map((landmark) => (landmark.match(/\baria-current="page"/g) ?? []).length);
+      expect(currentPageCounts.some((count) => count === 1), path).toBe(true);
+      expect(currentPageCounts.every((count) => count <= 1), path).toBe(true);
       const pageHeader = html.match(/<section class="page-header[^"]*"[^>]*>([\s\S]*?)<\/section>/)?.[1] ?? '';
       expect(pageHeader, path).not.toContain('class="eyebrow"');
       expect(levels[0], path).toBe(1);

@@ -4,7 +4,15 @@ import { complianceContent } from '../src/demos/compliance-page';
 import { d1Content } from '../src/demos/d1-page';
 import { i18nContent } from '../src/demos/i18n-page';
 import { r2Content } from '../src/demos/r2-page';
+import {
+  bindLocalization,
+  localeNormalizationRedirect,
+  resolveLocalization,
+} from '../src/i18n/runtime';
+import { routeUrl } from '../src/routing/application-routes';
+import { navigationStyles } from '../src/ui/navigation-styles';
 import { renderPage } from '../src/ui/page';
+import { runtimeStyles } from '../src/ui/runtime-styles';
 import { styles } from '../src/ui/styles';
 import { accessibilityLabResponse } from '../src/ui/accessibility-lab';
 import type { Env } from '../src/types';
@@ -13,6 +21,11 @@ const env = {
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
 } as Env;
+
+function localized(url: string, headers: HeadersInit = {}): { request: Request; env: Env } {
+  const request = new Request(url, { headers });
+  return { request, env: bindLocalization(env, resolveLocalization(request)) };
+}
 
 describe('D1 database console', () => {
   it('leads with table navigation and progressively discloses relational CRUD controls', async () => {
@@ -93,29 +106,87 @@ describe('R2 storage workspace', () => {
 });
 
 describe('internationalized interface', () => {
-  it('renders Arabic with a matching lang, RTL direction, resources, and locale formats', async () => {
-    const response = renderPage(env, i18nContent(new Request('https://demo.example/i18n?locale=ar&count=3'), env));
+  it('renders Arabic from the shared application context with matching lang and RTL direction', async () => {
+    const context = localized('https://demo.example/interfaces/i18n?lang=ar&count=3');
+    const response = renderPage(context.env, i18nContent(context.request, context.env));
     const html = await response.text();
     expect(html).toContain('<html lang="ar" dir="rtl">');
     expect(html).toContain('التدويل في الواجهة');
     expect(html).toContain('src/i18n/locales/ar.json');
     expect(html).toContain('<code data-direction>rtl</code>');
+    expect(html).toContain('src/i18n/runtime.ts');
+    expect(html).toContain('انتقل إلى المحتوى الرئيسي');
   });
 
-  it('falls back to English for unsupported locale input', async () => {
-    const html = await renderPage(env, i18nContent(new Request('https://demo.example/i18n?locale=xx'), env)).text();
-    expect(html).toContain('<html lang="en" dir="ltr">');
+  it('falls back to English and normalizes unsupported locale input without losing other state', () => {
+    const request = new Request('https://demo.example/interfaces/i18n?lang=xx&count=7');
+    expect(resolveLocalization(request).locale).toBe('en');
+    expect(localeNormalizationRedirect(request)).toBe('https://demo.example/interfaces/i18n?count=7');
   });
 
-  it('ships six synchronized instant-switch resources and an inspector', async () => {
-    const html = await renderPage(env, i18nContent(new Request('https://demo.example/i18n?locale=ja&count=7'), env)).text();
+  it('keeps six synchronized resources while language changes use ordinary server navigation', async () => {
+    const context = localized('https://demo.example/interfaces/i18n?lang=ja&count=7');
+    const html = await renderPage(context.env, i18nContent(context.request, context.env)).text();
     expect(html).toContain('<html lang="ja" dir="ltr">');
-    expect(html).toContain('data-locale="fr"');
-    expect(html).toContain('data-locale="de"');
-    expect(html).toContain('data-locale="ja" aria-pressed="true"');
-    expect(html).toContain('Translation inspector');
-    expect(html).toContain('history.replaceState');
+    expect(html).toContain('href="/interfaces/i18n?count=7&amp;lang=fr"');
+    expect(html).toContain('href="/interfaces/i18n?count=7&amp;lang=de"');
+    expect(html).toContain('aria-current="page">日本語</a>');
+    expect(html).toContain('Global context inspector');
     expect(html).toContain('items_other');
+    expect(html).not.toContain('history.replaceState');
+  });
+});
+
+describe('global localization and accessibility runtime', () => {
+  it('makes the ordinary application shell English and accessible by default', async () => {
+    const html = await renderPage(env, { ...d1Content(env), routeId: 'platform.d1' }).text();
+    expect(html).toContain('<html lang="en" dir="ltr">');
+    expect(html).toContain('<a class="skip-link" href="#main">Skip to main content</a>');
+    expect(html).toContain('<main class="site-main" id="main">');
+    expect(html).toContain('aria-label="Primary navigation"');
+    expect(html).toContain('class="language-selector"');
+    expect(html).toContain('id="global-language" name="lang"');
+    expect(html).toContain('data-theme-toggle aria-label="Switch to Light theme" aria-pressed="true">Theme: Dark</button>');
+    expect(html).toContain('aria-current="page" data-route-current');
+  });
+
+  it('localizes shell-owned strings and preserves unrelated state on an ordinary RTL page', async () => {
+    const context = localized('https://demo.example/platform/d1?lang=ar&filter=recent');
+    const html = await renderPage(context.env, { ...d1Content(context.env), routeId: 'platform.d1' }).text();
+    expect(html).toContain('<html lang="ar" dir="rtl">');
+    expect(html).toContain('aria-label="التنقل الرئيسي"');
+    expect(html).toContain('>المنصة</a>');
+    expect(html).toContain('انتقل إلى المحتوى الرئيسي');
+    expect(html).toContain('name="filter" value="recent"');
+    expect(html).toContain('<option value="ar" selected>العربية</option>');
+    expect(html).toContain('data-theme-toggle aria-label="التبديل إلى السمة فاتح" aria-pressed="true">السمة: داكن</button>');
+    expect(html).toContain('href="/platform?lang=ar"');
+  });
+
+  it('uses explicit query, persisted preference, then configured default with clean default URLs', () => {
+    const explicit = resolveLocalization(new Request('https://demo.example/operations?lang=ar'));
+    expect(explicit.locale).toBe('ar');
+    const complianceRoute = routeUrl('assurance.compliance');
+    expect(explicit.href(`${complianceRoute}?framework=wcag-2.2`)).toBe(`${complianceRoute}?framework=wcag-2.2&lang=ar`);
+
+    const persisted = resolveLocalization(new Request('https://demo.example/operations', {
+      headers: { cookie: 'other=value; wg-lang=ja' },
+    }));
+    expect(persisted.locale).toBe('ja');
+
+    const defaultRequest = new Request('https://demo.example/operations?lang=en&window=24h');
+    expect(resolveLocalization(defaultRequest).locale).toBe('en');
+    expect(localeNormalizationRedirect(defaultRequest)).toBe('https://demo.example/operations?window=24h');
+  });
+
+  it('ships reduced-motion, forced-colors, and logical-direction shared CSS', () => {
+    expect(styles).toContain('@media (prefers-reduced-motion: reduce)');
+    expect(runtimeStyles).toContain('@media (forced-colors: active)');
+    expect(runtimeStyles).toContain('scroll-behavior: auto !important');
+    expect(navigationStyles).toContain('padding-inline-start');
+    expect(navigationStyles).toContain('border-inline-start');
+    expect(navigationStyles).not.toContain('padding-left');
+    expect(navigationStyles).not.toContain('border-left');
   });
 });
 
@@ -128,6 +199,7 @@ describe('accessible interaction surface', () => {
     expect(html).toContain('data-broken-warning hidden');
     expect(html.match(/class="criterion-card"/g)).toHaveLength(12);
     expect(html).toContain('axe-core / partial coverage');
+    expect(html).toContain('WCAG 2.2 engineering evidence — no conformance claim');
   });
 
   it('ships deterministic accessible and broken frame variants with local axe execution', async () => {

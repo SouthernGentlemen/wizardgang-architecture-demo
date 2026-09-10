@@ -70,7 +70,10 @@ describe('navigation projection', () => {
       }));
       const navigation = navMarkup(await response.text());
       expect(navigation, route.id).not.toContain('?view=');
-      expect(navigation.match(/aria-current="page"/g), route.id).toHaveLength(1);
+      const currentPageCounts = [...navigation.matchAll(/<nav\b[\s\S]*?<\/nav>/g)]
+        .map((match) => (match[0].match(/aria-current="page"/g) ?? []).length);
+      expect(currentPageCounts.some((count) => count === 1), route.id).toBe(true);
+      expect(currentPageCounts.every((count) => count <= 1), route.id).toBe(true);
       for (const match of navigation.matchAll(/href="([^"]+)"/g)) {
         const href = match[1];
         if (!href.startsWith('/')) continue;

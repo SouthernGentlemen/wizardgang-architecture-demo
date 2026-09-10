@@ -8,7 +8,15 @@ import {
 } from '../routing/navigation';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
+import {
+  localeNames,
+  localeQueryParameter,
+  localizationForEnv,
+  supportedLocales,
+  type LocalizationContext,
+} from '../i18n/runtime';
 import { navigationStyles } from './navigation-styles';
+import { runtimeStyles } from './runtime-styles';
 import { styles } from './styles';
 import { withSecurityHeaders } from '../lib/http';
 
@@ -26,7 +34,17 @@ const FAVICON = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www
 /** Restores the reader's stored theme before first paint so the page never flashes. */
 const THEME_BOOT = `try{var t=localStorage.getItem('wg-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}`;
 
-const THEME_TOGGLE = `(()=>{const b=document.querySelector('[data-theme-toggle]');if(!b)return;const r=document.documentElement;const sync=()=>{const light=r.dataset.theme==='light';const next=light?'dark':'light';b.textContent='Theme: '+(light?'Dark':'Light');b.setAttribute('aria-label','Switch to '+next+' theme');b.setAttribute('aria-pressed',String(light))};sync();b.addEventListener('click',()=>{const next=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=next;try{localStorage.setItem('wg-theme',next)}catch(e){}sync()})})()`;
+function safeScriptJson(value: string): string {
+  return JSON.stringify(value).replace(/</g, '\\u003c');
+}
+
+function themeToggleScript(localization: LocalizationContext): string {
+  const light = safeScriptJson(localization.t('shell.theme.light', 'Light'));
+  const dark = safeScriptJson(localization.t('shell.theme.dark', 'Dark'));
+  const label = safeScriptJson(localization.t('shell.theme.label', 'Theme: {theme}'));
+  const switchLabel = safeScriptJson(localization.t('shell.theme.switch', 'Switch to {theme} theme'));
+  return `(()=>{const b=document.querySelector('[data-theme-toggle]');if(!b)return;const r=document.documentElement;const light=${light};const dark=${dark};const label=${label};const switchLabel=${switchLabel};const format=(template,value)=>template.replace('{theme}',value);const sync=()=>{const isLight=r.dataset.theme==='light';const current=isLight?light:dark;const next=isLight?dark:light;b.textContent=format(label,current);b.setAttribute('aria-label',format(switchLabel,next));b.setAttribute('aria-pressed',String(!isLight))};sync();b.addEventListener('click',()=>{const next=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=next;try{localStorage.setItem('wg-theme',next)}catch(e){}sync()})})()`;
+}
 
 export interface PageContent {
   title: string;
@@ -67,6 +85,10 @@ function routeMetadata(routeId: string | undefined): RegisteredRouteMetadataView
   return registeredRouteMetadata().find((route) => route.id === routeId);
 }
 
+function localizedRouteLabel(localization: LocalizationContext, route: RegisteredRouteMetadataView): string {
+  return localization.t(`nav.${route.id}`, route.page?.label ?? route.id);
+}
+
 function ancestorRouteIds(routeId: string | undefined): ReadonlySet<string> {
   if (!routeId) return new Set();
   const byId = new Map(registeredRouteMetadata().map((route) => [route.id, route]));
@@ -81,17 +103,20 @@ function ancestorRouteIds(routeId: string | undefined): ReadonlySet<string> {
   return ancestors;
 }
 
-function primaryNavigationHtml(currentRouteId: string | undefined): string {
+function primaryNavigationHtml(localization: LocalizationContext, currentRouteId: string | undefined): string {
   const ancestors = ancestorRouteIds(currentRouteId);
   return primaryNavigation().map((route) => {
     const current = route.id === currentRouteId;
     const sectionCurrent = !current && ancestors.has(route.id);
-    return `<a href="${escapeHtml(routeUrl(route.id))}"${current || sectionCurrent ? ' data-section-current' : ''}>${escapeHtml(route.page!.label)}</a>`;
+    return `<a href="${escapeHtml(localization.href(routeUrl(route.id)))}"${current ? ' aria-current="page"' : ''}${sectionCurrent ? ' data-section-current' : ''}>${escapeHtml(localizedRouteLabel(localization, route))}</a>`;
   }).join('\n    ');
 }
 
 /** Project the registered parent chain into a single canonical breadcrumb trail. */
-export function breadcrumbNavigation(currentRouteId: string | undefined): string {
+export function breadcrumbNavigation(
+  currentRouteId: string | undefined,
+  localization: LocalizationContext = localizationForEnv({} as Env),
+): string {
   const current = routeMetadata(currentRouteId);
   if (!current?.page) return '';
   const byId = new Map(registeredRouteMetadata().map((route) => [route.id, route]));
@@ -107,11 +132,12 @@ export function breadcrumbNavigation(currentRouteId: string | undefined): string
     parentId = parent.page.parent;
   }
   chain.reverse();
-  return `<nav class="breadcrumb" aria-label="Breadcrumb"><ol>${chain.map((route, index) => {
+  return `<nav class="breadcrumb" aria-label="${escapeHtml(localization.t('shell.breadcrumb', 'Breadcrumb'))}"><ol>${chain.map((route, index) => {
     const final = index === chain.length - 1;
+    const label = localizedRouteLabel(localization, route);
     return final
-      ? `<li aria-current="page">${escapeHtml(route.page!.label)}</li>`
-      : `<li><a href="${escapeHtml(routeUrl(route.id))}">${escapeHtml(route.page!.label)}</a></li>`;
+      ? `<li aria-current="page">${escapeHtml(label)}</li>`
+      : `<li><a href="${escapeHtml(localization.href(routeUrl(route.id)))}">${escapeHtml(label)}</a></li>`;
   }).join('')}</ol></nav>`;
 }
 
@@ -127,50 +153,80 @@ function secondaryParent(current: RegisteredRouteMetadataView): { id: string; ro
 }
 
 /** Project child-route navigation once in the shell; related domains remain a separate landmark. */
-export function secondaryNavigationHtml(currentRouteId: string | undefined): string {
+export function secondaryNavigationHtml(
+  currentRouteId: string | undefined,
+  localization: LocalizationContext = localizationForEnv({} as Env),
+): string {
   const current = routeMetadata(currentRouteId);
   if (!current?.page) return '';
   const projection = secondaryParent(current);
   if (!projection) return '';
   const parent = routeMetadata(projection.id);
   if (!parent?.page) return '';
-  const siblingList = `<nav class="secondary-navigation" aria-label="${escapeHtml(parent.page.label)} sections"><ul class="secondary-navigation-list">${projection.routes.map((route) =>
-    `<li><a href="${escapeHtml(routeUrl(route.id))}"${route.id === current.id ? ' data-route-current' : ''}>${escapeHtml(route.page!.label)}</a></li>`
+  const parentLabel = localizedRouteLabel(localization, parent);
+  const siblingLabel = localization.t('shell.sections', '{section} sections', { section: parentLabel });
+  const siblingList = `<nav class="secondary-navigation" aria-label="${escapeHtml(siblingLabel)}"><ul class="secondary-navigation-list">${projection.routes.map((route) =>
+    `<li><a href="${escapeHtml(localization.href(routeUrl(route.id)))}"${route.id === current.id ? ' aria-current="page" data-route-current' : ''}>${escapeHtml(localizedRouteLabel(localization, route))}</a></li>`
   ).join('')}</ul></nav>`;
   const relatedIds = RELATED_NAVIGATION[projection.id] ?? [];
   const relatedRoutes = relatedIds.map((routeId) => routeMetadata(routeId)).filter((route): route is RegisteredRouteMetadataView => Boolean(route?.page));
+  const relatedLabel = localization.t('shell.related_destinations', '{section} related destinations', { section: parentLabel });
   const relatedList = relatedRoutes.length
-    ? `<nav class="related-navigation" aria-label="${escapeHtml(parent.page.label)} related destinations"><ul class="related-navigation-list">${relatedRoutes.map((route) => `<li><a href="${escapeHtml(routeUrl(route.id))}">${escapeHtml(route.page!.label)}</a></li>`).join('')}</ul></nav>`
+    ? `<nav class="related-navigation" aria-label="${escapeHtml(relatedLabel)}"><ul class="related-navigation-list">${relatedRoutes.map((route) => `<li><a href="${escapeHtml(localization.href(routeUrl(route.id)))}">${escapeHtml(localizedRouteLabel(localization, route))}</a></li>`).join('')}</ul></nav>`
     : '';
   return `<div class="secondary-navigation-shell">${siblingList}${relatedList}</div>`;
 }
 
-function shellNavigation(currentRouteId: string | undefined): string {
-  const breadcrumb = breadcrumbNavigation(currentRouteId);
-  const secondary = secondaryNavigationHtml(currentRouteId);
+function shellNavigation(localization: LocalizationContext, currentRouteId: string | undefined): string {
+  const breadcrumb = breadcrumbNavigation(currentRouteId, localization);
+  const secondary = secondaryNavigationHtml(currentRouteId, localization);
   return breadcrumb || secondary ? `<div class="shell-navigation">${breadcrumb}${secondary}</div>` : '';
 }
 
+function languageSelector(localization: LocalizationContext): string {
+  const parameter = localeQueryParameter();
+  const preserved = [...localization.currentUrl.searchParams.entries()]
+    .filter(([name]) => name !== parameter)
+    .map(([name, value]) => `<input type="hidden" name="${escapeHtml(name)}" value="${escapeHtml(value)}">`)
+    .join('');
+  const options = supportedLocales.map((locale) => `<option value="${escapeHtml(locale)}"${locale === localization.locale ? ' selected' : ''}>${escapeHtml(localeNames[locale])}</option>`).join('');
+  const languageLabel = localization.t('shell.language', 'Language');
+  return `<form class="language-selector" method="get" action="${escapeHtml(localization.currentUrl.pathname)}">
+    ${preserved}
+    <label for="global-language">${escapeHtml(languageLabel)}</label>
+    <select id="global-language" name="${escapeHtml(parameter)}" aria-label="${escapeHtml(languageLabel)}">${options}</select>
+    <button type="submit">${escapeHtml(localization.t('shell.apply_language', 'Apply'))}</button>
+  </form>`;
+}
+
 function shell(env: Env, content: PageContent): Response {
-  const homeRoute = routeUrl(ROOT_ROUTE_ID);
+  const localization = localizationForEnv(env);
+  const homeRoute = localization.href(routeUrl(ROOT_ROUTE_ID));
   const routeSourceModule = content.routeId
     ? registeredRouteMetadata().find((route) => route.id === content.routeId)?.source.module
     : undefined;
   const routeSourceLink = routeSourceModule
-    ? ` · <a href="${escapeHtml(sourceUrl(env, routeSourceModule))}">Route source</a>`
+    ? ` · <a href="${escapeHtml(sourceUrl(env, routeSourceModule))}">${escapeHtml(localization.t('shell.route_source', 'Route source'))}</a>`
     : '';
-  const canonicalHref = new URL(content.canonicalPath ?? homeRoute, 'https://demo.wizardgang.ai').toString();
+  const canonicalHref = new URL(content.canonicalPath ?? routeUrl(ROOT_ROUTE_ID), 'https://demo.wizardgang.ai').toString();
+  const lang = content.lang ?? localization.lang;
+  const dir = content.dir ?? localization.dir;
+  const siteName = localization.t('app.title', SITE_NAME);
+  const darkLabel = localization.t('shell.theme.dark', 'Dark');
+  const lightLabel = localization.t('shell.theme.light', 'Light');
+  const themeText = localization.t('shell.theme.label', 'Theme: {theme}', { theme: darkLabel });
+  const themeAria = localization.t('shell.theme.switch', 'Switch to {theme} theme', { theme: lightLabel });
   const html = `<!doctype html>
-<html lang="${escapeHtml(content.lang ?? 'en')}"${content.dir ? ` dir="${content.dir}"` : ''}>
+<html lang="${escapeHtml(lang)}" dir="${escapeHtml(dir)}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${escapeHtml(content.title)} · ${SITE_NAME}</title>
+  <title>${escapeHtml(content.title)} · ${escapeHtml(siteName)}</title>
   <meta name="description" content="${escapeHtml(content.description)}">
   <meta name="color-scheme" content="dark light">
   ${content.noindex ? '<meta name="robots" content="noindex, nofollow">' : ''}
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="${SITE_NAME}">
+  <meta property="og:site_name" content="${escapeHtml(siteName)}">
   <meta property="og:title" content="${escapeHtml(content.title)}">
   <meta property="og:description" content="${escapeHtml(content.description)}">
   <meta property="og:url" content="${escapeHtml(canonicalHref)}">
@@ -183,28 +239,29 @@ function shell(env: Env, content: PageContent): Response {
   <link rel="canonical" href="${escapeHtml(canonicalHref)}">
   ${content.headExtra ?? ''}
   <link rel="icon" href="${FAVICON}">
-  <style>${styles}${navigationStyles}</style>
+  <style>${styles}${navigationStyles}${runtimeStyles}</style>
   <script>${THEME_BOOT}</script>
 </head>
 <body${content.routeId ? ` data-route-id="${escapeHtml(content.routeId)}"` : ''}>
-<a class="skip-link" href="#main">Skip to main content</a>
+<a class="skip-link" href="#main">${escapeHtml(localization.t('shell.skip_main', 'Skip to main content'))}</a>
 <header class="site-header">
-  <a class="brand" href="${escapeHtml(homeRoute)}" aria-label="WizardGang Architecture Demo home">
+  <a class="brand" href="${escapeHtml(homeRoute)}" aria-label="${escapeHtml(localization.t('shell.home', 'WizardGang Architecture Demo home'))}">
     <span class="brand-mark" aria-hidden="true"></span>
-    <span class="brand-copy"><strong>WIZARDGANG</strong><small>Architecture demo</small></span>
+    <span class="brand-copy"><strong>WIZARDGANG</strong><small>${escapeHtml(localization.t('shell.brand.subtitle', 'Architecture demo'))}</small></span>
   </a>
-  <nav class="nav" aria-label="Primary">
-    ${primaryNavigationHtml(content.routeId)}
-    <a href="https://wizardgang.ai/">Main site <span aria-hidden="true">↗</span></a>
-    <button type="button" data-theme-toggle aria-label="Switch to light theme" aria-pressed="false">Theme: Light</button>
+  <nav class="nav" aria-label="${escapeHtml(localization.t('shell.primary_navigation', 'Primary navigation'))}">
+    ${primaryNavigationHtml(localization, content.routeId)}
+    <a href="https://wizardgang.ai/">${escapeHtml(localization.t('shell.main_site', 'Main site'))} <span aria-hidden="true">↗</span></a>
+    <button type="button" data-theme-toggle aria-label="${escapeHtml(themeAria)}" aria-pressed="true">${escapeHtml(themeText)}</button>
+    ${languageSelector(localization)}
   </nav>
 </header>
-${shellNavigation(content.routeId)}
+${shellNavigation(localization, content.routeId)}
 <main class="site-main" id="main">${content.body}</main>
 <footer class="site-footer">
-  <span><a href="${escapeHtml(repoUrl(env))}">Public source</a>${routeSourceLink}</span>
+  <span><a href="${escapeHtml(repoUrl(env))}">${escapeHtml(localization.t('shell.public_source', 'Public source'))}</a>${routeSourceLink}</span>
 </footer>
-<script>${THEME_TOGGLE}</script>
+<script>${themeToggleScript(localization)}</script>
 </body>
 </html>`;
   const headers = withSecurityHeaders(new Headers({ 'content-type': 'text/html; charset=utf-8' }));
@@ -229,7 +286,10 @@ export function pageResponse(
   return renderPage(env, pageContent(env, title, body, options));
 }
 
-function architectureMapSections(list: RegisteredRouteMetadataView[]): string {
+function architectureMapSections(
+  list: RegisteredRouteMetadataView[],
+  localization: LocalizationContext,
+): string {
   const byId = new Map(registeredRouteMetadata().map((route) => [route.id, route]));
   const groups = new Map<string, RegisteredRouteMetadataView[]>();
   for (const route of list) {
@@ -249,14 +309,14 @@ function architectureMapSections(list: RegisteredRouteMetadataView[]): string {
     const isRoot = parentId === ROOT_ROUTE_ID;
     const heading = isRoot ? 'Public domains' : (parent?.page?.label ?? parentId);
     const headingHtml = !isRoot && parent?.page
-      ? `<a href="${escapeHtml(routeUrl(parent.id))}">${escapeHtml(heading)}</a>`
+      ? `<a href="${escapeHtml(localization.href(routeUrl(parent.id)))}">${escapeHtml(heading)}</a>`
       : escapeHtml(heading);
     return `<section class="architecture-domain" data-parent-route="${escapeHtml(parentId)}">
   <div class="section-head"><h2>${headingHtml}</h2><span>${entries.length} destination${entries.length === 1 ? '' : 's'}</span></div>
   <div class="grid">
     ${entries.map((route) => {
       const href = routeUrl(route.id);
-      return `<a class="card" href="${escapeHtml(href)}">
+      return `<a class="card" href="${escapeHtml(localization.href(href))}">
         <p class="eyebrow">${escapeHtml(href)}</p>
         <h3>${escapeHtml(route.page!.label)}</h3>
         <p>${escapeHtml(route.page!.summary)}</p>
@@ -268,8 +328,9 @@ function architectureMapSections(list: RegisteredRouteMetadataView[]): string {
 }
 
 export function renderIndex(env: Env, list: RegisteredRouteMetadataView[]): Response {
+  const localization = localizationForEnv(env);
   const homeRoute = routeUrl(ROOT_ROUTE_ID);
-  const operationsRoute = routeUrl(OPERATIONS_ROUTE_ID);
+  const operationsRoute = localization.href(routeUrl(OPERATIONS_ROUTE_ID));
   const body = `
 <section class="page-header home-header">
   <h1>Architecture <span>you can inspect.</span></h1>
@@ -280,7 +341,7 @@ export function renderIndex(env: Env, list: RegisteredRouteMetadataView[]): Resp
   <a href="${escapeHtml(operationsRoute)}#health"><span>Health</span><strong data-health>Checking…</strong></a>
 </section>
 <section id="architecture-map">
-  ${architectureMapSections(list)}
+  ${architectureMapSections(list, localization)}
 </section>
 <script>
 fetch('/api/operations/health').then((r) => r.json()).then((h) => {
@@ -386,11 +447,12 @@ ${isPlatformDemo ? '' : `<details class="implementation-notes"><summary id="prov
 }
 
 export function renderNotFound(env: Env): Response {
+  const localization = localizationForEnv(env);
   return pageResponse(env, 'Not found', `
 <section>
   <p class="eyebrow">404 / unknown route</p>
   <h1>That route does not exist.</h1>
   <p class="lede">Every published route is registered in the route map and backed by a source module.</p>
-  <div class="meta"><a href="${escapeHtml(routeUrl(ROOT_ROUTE_ID))}">Architecture map</a><a href="${escapeHtml(routeUrl(OPERATIONS_ROUTE_ID))}">Operations</a><a href="${escapeHtml(sourceUrl(env, 'docs/ROUTES.md'))}">Route map</a></div>
+  <div class="meta"><a href="${escapeHtml(localization.href(routeUrl(ROOT_ROUTE_ID)))}">Architecture map</a><a href="${escapeHtml(localization.href(routeUrl(OPERATIONS_ROUTE_ID)))}">Operations</a><a href="${escapeHtml(sourceUrl(env, 'docs/ROUTES.md'))}">Route map</a></div>
 </section>`, { status: 404, noindex: true });
 }
