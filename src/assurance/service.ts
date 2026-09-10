@@ -296,7 +296,7 @@ export function assuranceRecordUrlsById(recordId: string): { html?: string; api?
   const urls = canonicalAssuranceRecordUrls(dataset, recordId);
   if (dataset !== 'compliance' || !urls.html) return urls;
   const record = indexed.record as CanonicalAssuranceRecordMap['compliance'];
-  const params = new URLSearchParams({ framework: record.framework, section: record.section });
+  const params = new URLSearchParams({ framework: record.framework });
   return { ...urls, html: `${urls.html.split('#')[0]}?${params.toString()}#${canonicalAssuranceAnchor(recordId)}` };
 }
 

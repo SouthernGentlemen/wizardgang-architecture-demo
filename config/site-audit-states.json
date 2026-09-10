@@ -3,11 +3,11 @@
   "states": [
     {
       "name": "wcag-framework",
-      "path": "/assurance/compliance?framework=wcag-2.2"
+      "path": "/assurance?framework=wcag-2.2#frameworks"
     },
     {
       "name": "wcag-filter-search",
-      "path": "/assurance/compliance?framework=wcag-2.2&level=AAA&q=focus"
+      "path": "/assurance?framework=wcag-2.2&level=AAA&q=focus#frameworks"
     },
     {
       "name": "accessibility-lab",
@@ -24,13 +24,13 @@
   ],
   "narrowViewportPaths": [
     "/",
-    "/assurance/compliance?framework=wcag-2.2",
+    "/assurance?framework=wcag-2.2#frameworks",
     "/demos#rest",
     "/demos#accessibility"
   ],
   "keyboardPaths": [
     "/",
-    "/assurance/compliance?framework=wcag-2.2",
+    "/assurance?framework=wcag-2.2#frameworks",
     "/demos#rest",
     "/demos#accessibility"
   ]

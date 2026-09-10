@@ -61,3 +61,9 @@ The v0.1.0 baseline completed the publication path below. Every later release re
 Outside a tagged production deployment, `/api/operations/version` intentionally reports development or missing commit metadata and the traceability API reports unavailable release evidence as `not-supplied`.
 
 No route or document claims WCAG, ISO/IEC 27001, or ISO/IEC 42001 certification.
+
+## DEMO-244 assurance consolidation
+
+The public assurance information architecture has one human-facing destination: `/assurance`. Delivery and release evidence, governance, evidence, compliance, risks, incidents, exercises, and non-sensitive concern intake are sections of that workbench. Stable record links use `assuranceAnchor` fragments on `/assurance`; query parameters are limited to filtering and search. Published advisories remain owned by `/security`.
+
+The retired assurance child paths return the ordinary 404 response. They have no aliases or redirects. The concern-intake live-route evidence identity is superseded immutably as `EVD-RUN-013`, current relationships follow that replacement, and `EVD-RUN-011` remains reserved in lifecycle history. Other canonical assurance datasets, reporting APIs, schemas, record identities, and publication boundaries are unchanged. The executable retired-route catalog remains the source of truth for the exact path set.

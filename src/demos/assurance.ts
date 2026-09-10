@@ -1,8 +1,9 @@
 import type { Principal } from '../lib/authorization';
-import { sourceUrl } from '../lib/github';
+import { repoUrl, sourceUrl } from '../lib/github';
 import { escapeHtml } from '../lib/html';
 import {
   assuranceAnchor,
+  assuranceFilterValues,
   assuranceFiltersFromUrl,
   assuranceRecordUrlsById,
   complianceFrameworks,
@@ -18,21 +19,18 @@ import {
   type PresentedPublishedEvidence,
   type PublishedAssuranceRecordMap,
 } from '../assurance/publication';
-import { renderReportingPresentation } from '../reporting/html';
 import { presentReportingQuery, type ReportingQueryPresentation } from '../reporting/presentation';
 import { queryReportingCollection, reportingCollectionInventory } from '../reporting/service';
 import { routeUrl } from '../routing/application-routes';
-import { cursorLink } from '../routing/cursor-link';
-import { secondaryNavigation } from '../routing/navigation';
-import type { Env } from '../types';
+import type { DemoAction, Env } from '../types';
 import { pageContent, type PageContent } from '../ui/page';
-import governanceDemo from './governance';
 import {
   renderAssuranceWorkbenchSection,
   renderComplianceRecordInspector,
   renderGovernanceActions,
   renderGovernanceRecordInspector,
 } from './assurance-workbench-renderers';
+import { renderAssuranceDeliveryWorkbench } from './assurance-delivery';
 
 type ComplianceRecord = PublishedAssuranceRecordMap['compliance'];
 type ClaimRecord = PublishedAssuranceRecordMap['claims'];
@@ -41,6 +39,33 @@ type IncidentRecord = PublishedAssuranceRecordMap['incidents'];
 type ExerciseRecord = PublishedAssuranceRecordMap['exercises'];
 
 const indexDescription = 'Summary-first public assurance workbench for posture, framework demonstrations, risks, evidence, governance, and operational assurance activity.';
+
+const governanceActions: DemoAction[] = [
+  {
+    id: 'iso-27001',
+    title: 'ISO/IEC 27001 alignment',
+    description: 'Inspect the published ISO/IEC 27001-related assurance claims and their deployment-aware canonical evidence.',
+    label: 'Inspect the security-control map',
+    method: 'GET',
+    path: '/api/labs/governance-security-controls',
+  },
+  {
+    id: 'iso-42001',
+    title: 'ISO/IEC 42001 alignment',
+    description: 'Execute and audit the approved, unknown-method, and invalid-scope cases at the controlled MCP boundary.',
+    label: 'Run the AI boundary evaluation',
+    method: 'POST',
+    path: '/api/labs/governance-ai-evaluation',
+  },
+  {
+    id: 'traceability',
+    title: 'Traceability & evidence',
+    description: 'Inspect the requirement-to-operation chain across source, validation, release metadata, deployment identity, and recent application audit events.',
+    label: 'Inspect the live evidence chain',
+    method: 'GET',
+    path: '/api/labs/governance-traceability',
+  },
+];
 
 function publicPrincipal(): Principal {
   return { subject: 'public-visitor', authentication: 'anonymous', role: 'viewer', permissions: ['demo:read'] };
@@ -54,6 +79,33 @@ function includesQuery(query: string, values: Array<string | number | null | und
   if (!query) return true;
   const haystack = values.filter((value) => value !== undefined).join(' ').toLowerCase();
   return haystack.includes(query.toLowerCase());
+}
+
+function scopedFilterValue(url: URL, parameter: string, allowed: readonly string[]): string | undefined {
+  const value = url.searchParams.get(parameter) ?? undefined;
+  return value && allowed.includes(value) ? value : undefined;
+}
+
+function filterOptions(values: readonly string[], current?: string): string {
+  return values.map((value) => `<option value="${escapeHtml(value)}"${current === value ? ' selected' : ''}>${escapeHtml(titleCase(value))}</option>`).join('');
+}
+
+function assuranceFragmentScript(): string {
+  return `<script>
+  (()=>{
+    const revealTarget=()=>{
+      if(!location.hash)return;
+      let id;
+      try{id=decodeURIComponent(location.hash.slice(1))}catch{return}
+      const target=document.getElementById(id);
+      if(!target)return;
+      let current=target;
+      while(current){if(current.tagName==='DETAILS')current.open=true;current=current.parentElement}
+    };
+    revealTarget();
+    window.addEventListener('hashchange',revealTarget);
+  })();
+  </script>`;
 }
 
 function complianceEvidenceCount(record: ComplianceRecord): number {
@@ -290,16 +342,12 @@ function governanceMatches(record: ReportingQueryPresentation['records'][number]
   ]);
 }
 
-function renderGovernanceRegistry(presentation: ReportingQueryPresentation, query: string): string {
-  const visible = presentation.records.filter((record) => governanceMatches(record, query));
+function renderGovernanceRegistry(presentation: ReportingQueryPresentation, query: string, sourceId?: string): string {
+  const visible = presentation.records.filter((record) => governanceMatches(record, query) && (!sourceId || record.sourceId === sourceId));
   const sourceLabels = new Map(presentation.sources.map((source) => [source.id, source.label]));
-  const truncated = presentation.totalAvailable > presentation.count
-    ? `<p class="assurance-notice"><strong>${presentation.totalAvailable - presentation.count} additional governance records are available.</strong> Use the temporary <a href="${escapeHtml(routeUrl('assurance.governance'))}">governance child route</a> for paginated access while consolidation is in progress.</p>`
-    : '';
   return `<details class="implementation-notes" data-assurance-collection="governance">
     <summary><span>Browse governance records</span><span>${visible.length} matching · ${presentation.totalAvailable} published</span></summary>
-    ${truncated}
-    ${visible.map((record) => renderGovernanceRecordInspector(record, record.sourceId ? (sourceLabels.get(record.sourceId) ?? 'Governance') : 'Governance')).join('') || '<div class="availability-empty">No governance records match the current search.</div>'}
+    ${visible.map((record) => renderGovernanceRecordInspector(record, record.sourceId ? (sourceLabels.get(record.sourceId) ?? 'Governance') : 'Governance')).join('') || '<div class="availability-empty">No governance records match the current filters.</div>'}
   </details>`;
 }
 
@@ -344,38 +392,33 @@ async function governancePresentation(env: Env): Promise<ReportingQueryPresentat
   const principal = publicPrincipal();
   const collection = reportingCollectionInventory(principal).find((candidate) => candidate.id === 'governance');
   if (!collection) throw new Error('Registered governance reporting collection is unavailable.');
-  const result = await queryReportingCollection(env, principal, collection, { limit: 100 });
-  return presentReportingQuery(result, { label: collection.label });
-}
 
-function requestedLimit(url: URL): number {
-  const value = Number(url.searchParams.get('limit') || '25');
-  if (!Number.isInteger(value)) return 25;
-  return Math.max(1, Math.min(50, value));
-}
+  let cursor: string | null = null;
+  let firstPage: ReportingQueryPresentation | undefined;
+  const records: ReportingQueryPresentation['records'] = [];
+  const seenCursors = new Set<string>();
+  do {
+    const result = await queryReportingCollection(env, principal, collection, { limit: 100, cursor });
+    const page = presentReportingQuery(result, { label: collection.label });
+    if (!firstPage) firstPage = page;
+    records.push(...page.records);
+    cursor = result.query.pagination?.nextCursor ?? null;
+    if (cursor && seenCursors.has(cursor)) throw new Error('Governance reporting pagination repeated a cursor.');
+    if (cursor) seenCursors.add(cursor);
+  } while (cursor);
 
-export async function renderDeliveryReporting(request: Request, env: Env): Promise<string> {
-  const principal = publicPrincipal();
-  const collection = reportingCollectionInventory(principal).find((candidate) => candidate.id === 'evidence');
-  if (!collection) {
-    return '<div class="operations-section" id="assurance-reporting"><div class="availability-empty">No compatible public reporting collection is registered for delivery evidence.</div></div>';
-  }
-  const url = new URL(request.url);
-  const result = await queryReportingCollection(env, principal, collection, {
-    searchParams: url.searchParams,
-    limit: requestedLimit(url),
-    cursor: url.searchParams.get('cursor'),
-  });
-  const rendered = presentReportingQuery(result, { label: 'Delivery reporting' });
-  return `<div class="operations-section" id="assurance-reporting">
-    <div class="operations-section-heading"><div><p class="eyebrow">Shared reporting projection</p><h2 id="assurance-reporting-heading">Delivery reporting</h2></div><a href="${escapeHtml(sourceUrl(env, 'src/reporting/service.ts'))}">Reporting source <span aria-hidden="true">↗</span></a></div>
-    <p class="subtle">This route queries the registered evidence collection through the shared disclosure-aware presentation layer.</p>
-    ${renderReportingPresentation(rendered, {
-      headingId: 'assurance-delivery-records-heading',
-      nextHref: cursorLink(request, rendered.pagination?.nextCursor),
-      recordAnchors: false,
-    })}
-  </div>`;
+  if (!firstPage) throw new Error('Governance reporting returned no presentation.');
+  return {
+    dataset: firstPage.dataset,
+    label: firstPage.label,
+    availability: firstPage.availability,
+    count: records.length,
+    totalAvailable: firstPage.totalAvailable,
+    records,
+    sources: firstPage.sources,
+    facets: firstPage.facets,
+    pagination: undefined,
+  };
 }
 
 export async function assuranceIndexContent(request: Request, env: Env): Promise<PageContent> {
@@ -383,23 +426,41 @@ export async function assuranceIndexContent(request: Request, env: Env): Promise
   const query = (url.searchParams.get('q') ?? '').trim().slice(0, 120);
   const complianceFilters = assuranceFiltersFromUrl('compliance', url);
   const selectedFramework = complianceFilters.framework;
+  const selectedComplianceStatus = complianceFilters.status;
+  const selectedComplianceLevel = complianceFilters.level;
   const assuranceRoute = routeUrl('assurance.index');
   const securityRoute = routeUrl('security.index');
+  const concernUrl = `${repoUrl(env)}/issues/new?template=concern.yml`;
+  const bugUrl = `${repoUrl(env)}/issues/new?template=bug.yml`;
+  const featureUrl = `${repoUrl(env)}/issues/new?template=feature.yml`;
 
   const allCompliance = listPublishedAssuranceRecords('compliance');
   const claims = listPublishedAssuranceRecords('claims');
   const filteredCompliance = filterPublishedAssuranceRecords('compliance', complianceFilters);
-  const risks = listPublishedAssuranceRecords('risks');
+  const allRisks = listPublishedAssuranceRecords('risks');
+  const riskFramework = scopedFilterValue(url, 'riskFramework', assuranceFilterValues('risks', 'framework'));
+  const riskStatus = scopedFilterValue(url, 'riskStatus', assuranceFilterValues('risks', 'status'));
+  const riskResidual = scopedFilterValue(url, 'riskResidual', assuranceFilterValues('risks', 'residual'));
+  const riskFilters: Record<string, string> = {};
+  if (riskFramework) riskFilters.framework = riskFramework;
+  if (riskStatus) riskFilters.status = riskStatus;
+  if (riskResidual) riskFilters.residual = riskResidual;
+  const risks = filterPublishedAssuranceRecords('risks', riskFilters);
   const incidents = listPublishedAssuranceRecords('incidents');
   const exercises = listPublishedAssuranceRecords('exercises');
-  const evidence = presentedPublishedEvidenceRecords(env, url.origin);
+  const allEvidence = presentedPublishedEvidenceRecords(env, url.origin);
+  const evidenceKinds = [...new Set(allEvidence.map((record) => record.kind))].sort();
+  const evidenceKind = scopedFilterValue(url, 'evidenceKind', evidenceKinds);
+  const evidence = evidenceKind ? allEvidence.filter((record) => record.kind === evidenceKind) : allEvidence;
   const governance = await governancePresentation(env);
+  const governanceSource = scopedFilterValue(url, 'governanceSource', governance.sources.map((source) => source.id));
+  const deliveryWorkbench = renderAssuranceDeliveryWorkbench(env);
 
   const complianceCounts = deriveComplianceCounts(allCompliance);
   const riskCounts = deriveRiskCounts(risks);
   const incidentCounts = deriveIncidentCounts(incidents, exercises);
   const materialCompliance = allCompliance.filter(needsAttention).length;
-  const materialRisks = risks.filter((record) => record.residual.rating === 'high' || record.residual.rating === 'critical').length;
+  const materialRisks = allRisks.filter((record) => record.residual.rating === 'high' || record.residual.rating === 'critical').length;
   const observationBoundEvidence = evidence.filter((record) => record.freshness.policy === 'observation-bound').length;
   const qualificationNotice = `WCAG 2.2 / ISO 27001 / ISO 42001 references are alignment targets, not certification claims. ${complianceQualification} Private vulnerability reporting remains at ${securityRoute}.`;
 
@@ -411,11 +472,10 @@ export async function assuranceIndexContent(request: Request, env: Env): Promise
     summary: 'Read the derived posture and material gaps before opening any registry. Framework status vocabularies remain distinct rather than being collapsed into one score.',
     body: `${frameworkPostureCards(allCompliance, selectedFramework)}
       <div class="section-head"><h3 id="material-gaps-heading">Material gaps and risks</h3><span>${materialCompliance} framework items · ${materialRisks} material residual risks</span></div>
-      ${materialGapCards(allCompliance, risks)}
+      ${materialGapCards(allCompliance, allRisks)}
       ${renderClaimRegistry(claims, query)}`,
   });
 
-  const governanceActions = governanceDemo.actions ?? [];
   const wcagRecords = allCompliance.filter((record) => record.framework === 'wcag-2.2');
   const frameworks = renderAssuranceWorkbenchSection({
     id: 'frameworks',
@@ -467,7 +527,7 @@ export async function assuranceIndexContent(request: Request, env: Env): Promise
     title: 'Governance',
     meta: `${governance.totalAvailable} published records`,
     summary: 'Governance registers remain supporting evidence for the executable framework demonstrations, not the first thing a visitor has to decode.',
-    body: renderGovernanceRegistry(governance, query),
+    body: renderGovernanceRegistry(governance, query, governanceSource),
   });
 
   const activitySection = renderAssuranceWorkbenchSection({
@@ -480,23 +540,31 @@ export async function assuranceIndexContent(request: Request, env: Env): Promise
       <article class="card"><p class="eyebrow">Actual incidents</p><h3>${incidentCounts.actualIncidents} retained records</h3><span>Zero retained records is not a claim that an incident has never occurred.</span></article>
       <article class="card"><p class="eyebrow">Exercises</p><h3>${incidentCounts.exercises} records</h3><span>${incidentCounts.plannedExercises} planned · ${incidentCounts.completedExercises} completed or follow-up</span></article>
     </div>
-    ${renderActivityRegistry(incidents, exercises, query)}`,
+    ${renderActivityRegistry(incidents, exercises, query)}
+    <div class="section-head"><h3 id="delivery-release-heading">Delivery and release evidence</h3><span>Live controlled workflow</span></div>
+    ${deliveryWorkbench}`,
   });
 
-
-  const temporaryChildRoutes = secondaryNavigation('assurance.index');
-  const migrationLinks = `<details class="implementation-notes" data-assurance-collection="temporary-child-routes">
-    <summary><span>Temporary detailed assurance routes</span><span>${temporaryChildRoutes.length} routes preserved during migration</span></summary>
-    <p class="subtle">These child pages remain available in this preparatory change. The workbench is the human-facing starting point while route retirement is handled separately.</p>
-    <div class="link-row">${temporaryChildRoutes.map((route) => `<a href="${escapeHtml(routeUrl(route.id))}">${escapeHtml(route.page!.label)}</a>`).join('')}</div>
-  </details>`;
+  const concernsSection = renderAssuranceWorkbenchSection({
+    id: 'concerns',
+    eyebrow: 'Act on what you find',
+    title: 'Concerns',
+    meta: 'GitHub issue forms',
+    summary: 'Non-sensitive concerns go directly into controlled GitHub issue forms. Sensitive security material stays on the private vulnerability-reporting path.',
+    body: `<div class="grid">
+      <a class="card" href="${escapeHtml(concernUrl)}"><p class="eyebrow">Assurance concern</p><h3>Report a non-sensitive concern</h3><span>Accessibility, AI/MCP, governance, evidence, documentation, privacy, or other public-safe concerns <span aria-hidden="true">→</span></span></a>
+      <a class="card" href="${escapeHtml(bugUrl)}"><p class="eyebrow">Defect</p><h3>Report a bug</h3><span>Open the purpose-built GitHub bug form <span aria-hidden="true">→</span></span></a>
+      <a class="card" href="${escapeHtml(featureUrl)}"><p class="eyebrow">Improvement</p><h3>Request a feature</h3><span>Open the purpose-built GitHub feature form <span aria-hidden="true">→</span></span></a>
+    </div>
+    <p class="assurance-notice"><strong>Public issue boundary:</strong> do not put credentials, exploit details, active incidents, or sensitive infrastructure information in GitHub issues. Use <a href="${escapeHtml(securityRoute)}">private vulnerability reporting</a> for sensitive security material.</p>`,
+  });
 
   return pageContent(env, 'Assurance', `<section class="page-header assurance-header">
     <h1>Assurance workbench.</h1>
     <p class="lede">Start with posture and live demonstrations, then drill into risks, evidence, governance, and activity without turning the page into an automatic record dump.</p>
     <p class="assurance-notice"><strong>Qualification:</strong> ${escapeHtml(qualificationNotice)}</p>
     <nav class="link-row" aria-label="Assurance workbench sections">
-      <a href="#posture">Posture</a><a href="#frameworks">Frameworks</a><a href="#risks">Risks</a><a href="#evidence">Evidence</a><a href="#governance">Governance</a><a href="#activity">Activity</a>
+      <a href="#posture">Posture</a><a href="#frameworks">Frameworks</a><a href="#risks">Risks</a><a href="#evidence">Evidence</a><a href="#governance">Governance</a><a href="#activity">Activity</a><a href="#concerns">Concerns</a>
     </nav>
     <form method="get" action="${escapeHtml(assuranceRoute)}" class="info-card" aria-labelledby="assurance-search-heading">
       <h2 id="assurance-search-heading">Filter and search the workbench</h2>
@@ -506,12 +574,47 @@ export async function assuranceIndexContent(request: Request, env: Env): Promise
           <option value="">All frameworks</option>
           ${complianceFrameworks.map((framework) => `<option value="${escapeHtml(framework.id)}"${selectedFramework === framework.id ? ' selected' : ''}>${escapeHtml(framework.label)}</option>`).join('')}
         </select>
+        <label for="assurance-compliance-status">Framework status</label>
+        <select id="assurance-compliance-status" name="status">
+          <option value="">All framework statuses</option>
+          ${filterOptions(assuranceFilterValues('compliance', 'status'), selectedComplianceStatus)}
+        </select>
+        <label for="assurance-compliance-level">WCAG level</label>
+        <select id="assurance-compliance-level" name="level">
+          <option value="">All WCAG levels</option>
+          ${filterOptions(assuranceFilterValues('compliance', 'level'), selectedComplianceLevel)}
+        </select>
+        <label for="assurance-risk-framework">Risk domain</label>
+        <select id="assurance-risk-framework" name="riskFramework">
+          <option value="">All risk domains</option>
+          ${filterOptions(assuranceFilterValues('risks', 'framework'), riskFramework)}
+        </select>
+        <label for="assurance-risk-status">Risk status</label>
+        <select id="assurance-risk-status" name="riskStatus">
+          <option value="">All risk statuses</option>
+          ${filterOptions(assuranceFilterValues('risks', 'status'), riskStatus)}
+        </select>
+        <label for="assurance-risk-residual">Residual risk</label>
+        <select id="assurance-risk-residual" name="riskResidual">
+          <option value="">All residual ratings</option>
+          ${filterOptions(assuranceFilterValues('risks', 'residual'), riskResidual)}
+        </select>
+        <label for="assurance-evidence-kind">Evidence kind</label>
+        <select id="assurance-evidence-kind" name="evidenceKind">
+          <option value="">All evidence kinds</option>
+          ${filterOptions(evidenceKinds, evidenceKind)}
+        </select>
+        <label for="assurance-governance-source">Governance register</label>
+        <select id="assurance-governance-source" name="governanceSource">
+          <option value="">All governance registers</option>
+          ${governance.sources.map((source) => `<option value="${escapeHtml(source.id)}"${governanceSource === source.id ? ' selected' : ''}>${escapeHtml(source.label)}</option>`).join('')}
+        </select>
         <label for="assurance-search">Search records</label>
         <input id="assurance-search" name="q" type="search" value="${escapeHtml(query)}" maxlength="120" placeholder="ID, title, control, evidence, risk…">
         <button type="submit">Apply</button>
         <a href="${escapeHtml(assuranceRoute)}">Clear</a>
       </p>
-      <p class="subtle">Fragments identify the six workbench sections. Query parameters only filter or search records on this page.</p>
+      <p class="subtle">Fragments identify the seven workbench sections. Query parameters only filter or search records on this page; they never choose a different human-facing assurance destination.</p>
     </form>
     <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/assurance.ts'))}">Assurance route source</a></div>
   </section>
@@ -521,11 +624,12 @@ export async function assuranceIndexContent(request: Request, env: Env): Promise
   ${evidenceSection}
   ${governanceSection}
   ${activitySection}
-  ${migrationLinks}
+  ${concernsSection}
   <section class="assurance-notice" aria-labelledby="security-boundary-heading">
     <h2 id="security-boundary-heading">Security stays separate</h2>
     <p>Suspected vulnerabilities, active security incidents, credentials, exploit detail, and other sensitive material belong in private vulnerability reporting. Published advisories remain on the canonical <a href="${escapeHtml(securityRoute)}">security page</a>.</p>
-  </section>`, {
+  </section>
+  ${assuranceFragmentScript()}`, {
     description: indexDescription,
     canonicalPath: assuranceRoute,
   });

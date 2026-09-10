@@ -105,11 +105,11 @@ describe('public link and route contract', () => {
 
   it('serves every compliance framework filter through the canonical assurance route', async () => {
     for (const framework of ['iso-27001', 'iso-42001', 'wcag-2.2']) {
-      const target = routeUrl('assurance.compliance', {}, { framework });
+      const target = routeUrl('assurance.index', {}, { framework });
       const response = await get(target);
       expect(response.status, target).toBe(200);
       const html = await response.text();
-      expect(html, `${framework} filter was not applied`).toContain(`<input type="hidden" name="framework" value="${framework}">`);
+      expect(html, `${framework} filter was not applied`).toContain(`<option value="${framework}" selected>`);
     }
   });
 

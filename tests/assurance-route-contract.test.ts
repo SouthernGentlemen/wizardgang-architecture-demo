@@ -18,21 +18,15 @@ const env = { GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-
 describe('assurance route contract', () => {
   it('keeps assurance metadata route-ID-only while deriving canonical browser and reporting URLs', () => {
     const declarations = assuranceRouteDeclarations();
-    expect(declarations.map((entry) => entry.routeId)).toEqual(expect.arrayContaining([
-      'assurance.index',
-      'assurance.evidence',
-      'assurance.governance',
-      'assurance.compliance',
-      'assurance.risks',
-      'assurance.incidents',
-      'security.index',
+    expect(new Set(declarations.map((entry) => entry.routeId))).toEqual(new Set([
+      'assurance.index', 'security.index',
     ]));
     expect(declarations.every((entry) => !('routes' in entry))).toBe(true);
     expect(assuranceCollectionApiRoute('compliance')).toBe('/api/reporting/compliance');
     expect(assuranceCollectionApiRoute('advisories')).toBe('/api/reporting/security');
     expect(assuranceRecordUrls('compliance', 'WCAG-4.1.2')).toMatchObject({
       api: '/api/reporting/compliance/WCAG-4.1.2',
-      html: `${routeUrl('assurance.compliance')}#WCAG-4.1.2`,
+      html: `${routeUrl('assurance.index')}#WCAG-4.1.2`,
     });
     for (const dataset of ['claims', 'evidence', 'compliance', 'risks', 'incidents', 'exercises', 'advisories', 'governance-records']) {
       expect(assuranceHtmlRoute(dataset), dataset).not.toContain('?');
@@ -40,17 +34,7 @@ describe('assurance route contract', () => {
   });
 
   it('matches every canonical assurance HTML route and all machine reporting through the generic reporting registry', () => {
-    for (const routeId of [
-      'assurance.index',
-      'assurance.delivery',
-      'assurance.governance',
-      'assurance.evidence',
-      'assurance.compliance',
-      'assurance.risks',
-      'assurance.incidents',
-      'assurance.concerns',
-      'security.index',
-    ] as const) {
+    for (const routeId of ['assurance.index', 'security.index'] as const) {
       const path = routeUrl(routeId);
       expect(matchRoute(assuranceDeclarativeRouteRegistry, 'GET', path)).toMatchObject({
         status: 'matched',

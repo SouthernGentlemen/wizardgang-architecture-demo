@@ -11,6 +11,7 @@ import {
 import { routeRequest } from '../src/router';
 import { routeUrl } from '../src/routing/application-routes';
 import type { D1PreparedStatement, Env } from '../src/types';
+import { removedHtml404Pathnames } from './fixtures/removed-html-pathnames';
 
 class AssuranceWorkbenchStatement implements D1PreparedStatement {
   constructor(private readonly sql: string) {}
@@ -105,24 +106,23 @@ describe('summary-first assurance workbench', () => {
     expect(legacy.headers.get('location')).toBeNull();
   });
 
-  it('preserves all canonical assurance child routes during the preparatory migration', async () => {
-    const childRouteIds = [
-      'assurance.delivery',
-      'assurance.governance',
-      'assurance.evidence',
-      'assurance.compliance',
-      'assurance.risks',
-      'assurance.incidents',
-      'assurance.concerns',
-    ] as const;
+  it('reveals records nested inside collapsed registries when a stable fragment is requested', async () => {
+    const { html } = await assuranceHtml(`${routeUrl('assurance.index')}#SEC-RISK-001`);
+    expect(html).toContain('id="SEC-RISK-001"');
+    expect(html).toContain("if(current.tagName==='DETAILS')current.open=true");
+    expect(html).toContain("window.addEventListener('hashchange',revealTarget)");
+  });
+
+  it('retires assurance child routes after their behavior moves into the workbench', async () => {
+    const childPaths = removedHtml404Pathnames.filter((path) => path.startsWith(`${routeUrl('assurance.index')}/`));
     const { html } = await assuranceHtml();
-    for (const routeId of childRouteIds) {
-      const path = routeUrl(routeId);
-      expect(html).toContain(`href="${path}"`);
+    for (const path of childPaths) {
+      expect(html).not.toContain(`href="${path}`);
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`, {
         headers: { accept: 'text/html' },
       }), environment);
-      expect(response.status, routeId).toBe(200);
+      expect(response.status, path).toBe(404);
+      expect(response.headers.get('location'), path).toBeNull();
     }
   });
 });

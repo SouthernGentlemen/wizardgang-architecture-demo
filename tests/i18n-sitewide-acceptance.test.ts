@@ -82,7 +82,6 @@ const UNTRANSLATED_PRESENTATION_ALLOWLIST = new Set([
   'platform.workers_title',
   'platform.do_title',
   'interfaces.mcp_title',
-  'assurance.delivery_title',
 ]);
 
 const direction = (locale: SupportedLocale) => locale === 'ar' ? 'rtl' : 'ltr';
@@ -182,14 +181,14 @@ describe('DEMO-236 sitewide localization acceptance', () => {
 
   it('keeps canonical, technical, and machine-source content invariant while localizing human navigation', () => {
     const canonical = 'SEC-RISK-001 · open · $1,234.56';
-    const body = `<p>Status <bdi data-canonical-source lang="en" dir="ltr">${canonical}</bdi></p><code>${canonical}</code><a href="/api/assurance/records?status=open&amp;limit=5">Machine source</a><a href="${routeUrl('assurance.risks', {}, { status: 'open' })}">Human route</a>`;
+    const body = `<p>Status <bdi data-canonical-source lang="en" dir="ltr">${canonical}</bdi></p><code>${canonical}</code><a href="/api/assurance/records?status=open&amp;limit=5">Machine source</a><a href="${routeUrl('assurance.index', {}, { riskStatus: 'open' })}#risks">Human route</a>`;
 
     for (const locale of supportedLocales.filter((candidate) => candidate !== defaultLocale)) {
       const localized = localizePresentation('Risk Assurance', 'Risk posture you can inspect.', body, localization(locale));
       expect(localized.body, locale).toContain(`<bdi data-canonical-source lang="en" dir="ltr">${canonical}</bdi>`);
       expect(localized.body, locale).toContain(`<code>${canonical}</code>`);
       expect(localized.body, locale).toContain('href="/api/assurance/records?status=open&amp;limit=5"');
-      expect(localized.body, locale).toContain(`href="/assurance/risks?status=open&amp;lang=${locale}"`);
+      expect(localized.body, locale).toContain(`href="/assurance?riskStatus=open&amp;lang=${locale}#risks"`);
     }
   });
 });

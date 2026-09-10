@@ -195,8 +195,9 @@ describe('public route contract', () => {
   });
 
   it('renders the consolidated delivery lifecycle with one runnable version proof', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance/delivery', { headers: { accept: 'text/html' } }), env());
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance#activity', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
+    expect(response.status).toBe(200);
     for (const anchor of ['source-of-truth', 'versioning', 'branching', 'actions', 'releases', 'environments']) expect(html).toContain(`id="${anchor}"`);
     expect(html).toContain("fetch('/api/reporting/'+encodeURIComponent(collection)");
     expect(html).toContain('/api/labs/git-delivery');
@@ -211,9 +212,9 @@ describe('public route contract', () => {
   });
 
   it('renders consolidated governance controls, evidence anchors, and the alignment notice', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance/governance', { headers: { accept: 'text/html' } }), env());
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance#frameworks', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
-    for (const anchor of ['iso-27001', 'iso-42001', 'traceability', 'governance-records']) expect(html).toContain(`id="${anchor}"`);
+    for (const anchor of ['iso-27001', 'iso-42001', 'traceability', 'governance']) expect(html).toContain(`id="${anchor}"`);
     for (const endpoint of ['/api/labs/governance-security-controls', '/api/labs/governance-ai-evaluation', '/api/labs/governance-traceability']) expect(html).toContain(endpoint);
     expect(html).toContain('alignment targets, not certification claims');
 
@@ -222,14 +223,14 @@ describe('public route contract', () => {
   });
 
   it('renders compliance as an instructional framework review without certification claims', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance/compliance', { headers: { accept: 'text/html' } }), env());
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance?framework=wcag-2.2#frameworks', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     expect(response.status).toBe(200);
-    for (const statement of ['WCAG 2.2', 'ISO/IEC 27001:2022', 'ISO/IEC 42001:2023', 'Framework posture', 'Needs attention', 'Choose a framework to inspect']) {
+    for (const statement of ['WCAG 2.2', 'ISO/IEC 27001:2022', 'ISO/IEC 42001:2023', 'Posture', 'Material gaps and risks', 'Browse framework records']) {
       expect(html).toContain(statement);
     }
-    expect(html).toContain('href="/api/reporting/compliance"');
-    expect(html).toContain('href="/assurance/evidence"');
+    expect(html).toContain('/api/reporting/compliance/');
+    expect(html).toContain('href="/assurance#');
     expect(html).not.toContain('<table');
     expect(html).not.toContain('Compliance records');
     expect(html).not.toMatch(/>\s*(?:COMPLIANT|CERTIFIED)\s*</i);

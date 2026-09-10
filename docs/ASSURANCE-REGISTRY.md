@@ -33,3 +33,9 @@ Disclosure projection, filtering, pagination, exact record lookup, response enve
 The published main-branch commit `207fd4e146054bd3c9da236c615753df9f927610` has the valid controlled title `[DEMO-125] [OPS] Canonicalize assurance data and release snapshots`, but its commit body predates this correction and omits the required `Change:`, `Reason:`, `Risk:`, `Validation:`, `Source:`, and `Release:` sections. Rewriting that published commit would alter shared history, so DEMO-126 does not rewrite it.
 
 `scripts/validate-history.mjs` contains one SHA-exact exception for that immutable commit body only. The exception does not accept a different SHA, does not relax controlled-title or sequential DEMO-ID validation, and does not weaken body validation for DEMO-126 or any future controlled change. CI continues to run `validate:history` as a required failing gate; it is not marked `continue-on-error`.
+
+## DEMO-244 assurance consolidation
+
+The public assurance information architecture has one human-facing destination: `/assurance`. Delivery and release evidence, governance, evidence, compliance, risks, incidents, exercises, and non-sensitive concern intake are sections of that workbench. Stable record links use `assuranceAnchor` fragments on `/assurance`; query parameters are limited to filtering and search. Published advisories remain owned by `/security`.
+
+The retired assurance child paths return the ordinary 404 response. They have no aliases or redirects. The concern-intake live-route evidence identity is superseded immutably as `EVD-RUN-013`, current relationships follow that replacement, and `EVD-RUN-011` remains reserved in lifecycle history. Other canonical assurance datasets, reporting APIs, schemas, record identities, and publication boundaries are unchanged. The executable retired-route catalog remains the source of truth for the exact path set.

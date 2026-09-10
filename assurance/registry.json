@@ -163,7 +163,7 @@
       "id": "evidence", "kind": "evidence", "role": "dataset",
       "path": "assurance/evidence/evidence.json", "schema": "contracts/assurance/evidence.schema.json",
       "visibility": "public", "capabilities": ["runtime", "records"],
-      "presentation": { "routeId": "assurance.evidence" },
+      "presentation": { "routeId": "assurance.index" },
       "recordCollection": { "path": "records", "identity": ["kind", "locator.repositoryPath", "locator.route"] }
     },
     {
@@ -183,7 +183,7 @@
       "id": "compliance.iso-27001", "kind": "compliance", "role": "dataset",
       "path": "assurance/compliance/iso-27001-2022.json", "schema": "contracts/assurance/iso-27001-compliance.schema.json",
       "visibility": "public", "capabilities": ["runtime", "records", "summary-source"],
-      "presentation": { "routeId": "assurance.compliance" },
+      "presentation": { "routeId": "assurance.index" },
       "recordCollection": { "path": "records", "identity": [{ "source": "resource", "path": "framework.id" }, { "source": "record", "path": "reference" }] },
       "qualification": "Public engineering-evidence projection only. Framework-specific qualifications remain authoritative; certification and formal conformance are not claimed.",
       "filters": {
@@ -254,7 +254,7 @@
       "id": "governance.records", "kind": "governance-records", "role": "dataset",
       "path": "assurance/governance/asset-inventory.json", "schema": "contracts/assurance/governance-record.schema.json",
       "visibility": "public", "capabilities": ["summary-source"],
-      "presentation": { "routeId": "assurance.governance" },
+      "presentation": { "routeId": "assurance.index" },
       "qualification": "Reportable governance register facts are canonical structured records; generated Markdown remains a presentation layer and policy prose remains authored in Markdown.",
       "resources": [
         {
@@ -328,7 +328,7 @@
       "id": "risks", "kind": "risks", "role": "dataset",
       "path": "assurance/risks/risks.json", "schema": "contracts/assurance/risk.schema.json",
       "visibility": "public", "capabilities": ["runtime", "records"],
-      "presentation": { "routeId": "assurance.risks" },
+      "presentation": { "routeId": "assurance.index" },
       "recordCollection": { "path": "records", "identity": ["framework", "title"] },
       "filters": {
         "framework": { "path": "framework", "label": "Framework" },
@@ -340,7 +340,7 @@
       "id": "incidents", "kind": "incidents", "role": "dataset",
       "path": "assurance/incidents/incidents.json", "schema": "contracts/assurance/incident.schema.json",
       "visibility": "public", "capabilities": ["runtime", "records"],
-      "presentation": { "routeId": "assurance.incidents" },
+      "presentation": { "routeId": "assurance.index" },
       "recordCollection": { "path": "records", "identity": ["recordType", "detectedAt", "title"] }
     },
     {
@@ -348,7 +348,7 @@
       "path": "assurance/incidents/exercises.json", "schema": "contracts/assurance/exercise.schema.json",
       "visibility": "public", "capabilities": ["runtime", "records"],
       "recordCollection": { "path": "records", "identity": ["recordType", "exerciseType", "scenario"] },
-      "presentation": { "routeId": "assurance.incidents" }
+      "routeOwner": "incidents"
     },
     {
       "id": "advisories", "kind": "advisories", "role": "dataset",

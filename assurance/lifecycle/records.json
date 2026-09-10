@@ -87,6 +87,13 @@
       "reviewedAt": "2026-09-10T14:45:00Z",
       "reviewer": "controlled-repository-review",
       "basis": "DEMO-242 review approves EVD-RUN-012 as the successor to the retired EVD-RUN-007 accessibility query-view locator, using the canonical Demos fragment. No evidence claim, observation, or disclosure scope is widened."
+    },
+    {
+      "id": "review-demo244-consolidated-assurance",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-10T17:35:16Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-244 review approves EVD-RUN-013 as the successor to the retired EVD-RUN-011 concern-intake child-route locator, migrates current relationship edges to the replacement identity, and approves the exact resulting public runtime source revisions. The public concern scope and disclosure boundary are unchanged."
     }
   ],
   "sourceApprovals": [
@@ -341,6 +348,30 @@
       "resource": "evidence",
       "revision": "4d8afa6496f03062eb54b838385d89f19149ae3b",
       "reviewRef": "review-demo242-consolidated-demos"
+    },
+    {
+      "id": "source-evidence-248106e25be7",
+      "resource": "evidence",
+      "revision": "248106e25be7f6809cf22d427249ff98986b8584",
+      "reviewRef": "review-demo244-consolidated-assurance"
+    },
+    {
+      "id": "source-claims-b2ebd29e4ce1",
+      "resource": "claims",
+      "revision": "b2ebd29e4ce103eb7710a11af56e1be931b3d3c0",
+      "reviewRef": "review-demo244-consolidated-assurance"
+    },
+    {
+      "id": "source-compliance-iso-42001-919a44d1ff73",
+      "resource": "compliance.iso-42001",
+      "revision": "919a44d1ff73bf441e1683039a5992968b8f22f7",
+      "reviewRef": "review-demo244-consolidated-assurance"
+    },
+    {
+      "id": "source-risks-e2ecc9dd4bfe",
+      "resource": "risks",
+      "revision": "e2ecc9dd4bfe67652f10a7698099471c6c43eec3",
+      "reviewRef": "review-demo244-consolidated-assurance"
     }
   ],
   "records": [
@@ -361,11 +392,11 @@
       ]
     },
     {
-      "id": "EVD-RUN-011",
+      "id": "EVD-RUN-013",
       "lifecycle": "Published",
-      "reviewRef": "review-demo195-assurance-child-routes",
+      "reviewRef": "review-demo244-consolidated-assurance",
       "supersedes": [
-        "EVD-RUN-008"
+        "EVD-RUN-011"
       ]
     },
     {
@@ -489,6 +520,17 @@
       "reviewRef": "review-demo181-assurance-surface-source",
       "supersededBy": [
         "EVD-RUN-008"
+      ]
+    },
+    {
+      "id": "EVD-RUN-011",
+      "lifecycle": "Superseded",
+      "reviewRef": "review-demo244-consolidated-assurance",
+      "supersedes": [
+        "EVD-RUN-008"
+      ],
+      "supersededBy": [
+        "EVD-RUN-013"
       ]
     },
     {

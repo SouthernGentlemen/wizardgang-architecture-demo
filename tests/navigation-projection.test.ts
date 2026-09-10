@@ -83,12 +83,14 @@ describe('navigation projection', () => {
     expect(primaryNavigation().every((route) => !routeUrl(route.id).includes('?'))).toBe(true);
   });
 
-  it('keeps cross-domain assurance navigation in its own landmark', () => {
-    const navigation = secondaryNavigationHtml('assurance.risks');
-    expect(navigation).toContain('aria-label="Assurance sections"');
-    expect(navigation).toContain('aria-label="Assurance related destinations"');
-    expect(navigation).toContain(`href="${routeUrl('security.index')}"`);
-    expect(navigation).not.toContain('?');
+  it('keeps consolidated assurance section navigation inside the workbench', async () => {
+    expect(secondaryNavigationHtml('assurance.index')).toBe('');
+    const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === 'assurance.index');
+    if (!route) throw new Error('Missing assurance.index route');
+    const html = await (await route.handler(new Request('https://demo.wizardgang.ai/assurance'), { env }, {})).text();
+    expect(html).toContain('aria-label="Assurance workbench sections"');
+    expect(html).toContain(`href="${routeUrl('security.index')}"`);
+    expect(html).toContain('href="#risks"');
   });
 
   it('renders every public destination from the homepage and groups map cards by parent', async () => {

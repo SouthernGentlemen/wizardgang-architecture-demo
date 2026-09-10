@@ -8,13 +8,6 @@ This file is generated from the active declarative application registry. Route I
 |---|---|---|---|---|---|---|---|---|
 | `interfaces.frontend.index` | `/` | `GET` | page | public | gated | allow | Architecture demo index | `src/ui/page.ts` |
 | `assurance.index` | `/assurance` | `GET` | page | public | gated | allow | Assurance | `src/demos/assurance.ts` |
-| `assurance.compliance` | `/assurance/compliance` | `GET` | page | public | gated | allow | Compliance | `src/demos/compliance-page.ts` |
-| `assurance.concerns` | `/assurance/concerns` | `GET` | page | public | gated | allow | Concerns | `src/demos/concerns-page.ts` |
-| `assurance.delivery` | `/assurance/delivery` | `GET` | page | public | gated | allow | Delivery | `src/demos/git-page.ts` |
-| `assurance.evidence` | `/assurance/evidence` | `GET` | page | public | gated | allow | Evidence | `src/demos/evidence-page.ts` |
-| `assurance.governance` | `/assurance/governance` | `GET` | page | public | gated | allow | Governance | `src/demos/governance.ts` |
-| `assurance.incidents` | `/assurance/incidents` | `GET` | page | public | gated | allow | Incidents | `src/demos/incidents-page.ts` |
-| `assurance.risks` | `/assurance/risks` | `GET` | page | public | gated | allow | Risks | `src/demos/assurance-pages.ts` |
 | `demos.index` | `/demos` | `GET` | page | public | gated | allow | Architecture Demos | `src/demos/demos-page.ts` |
 | `operations.index` | `/operations` | `GET` | page | public | available | allow | Operations | `src/demos/operations-pages.ts` |
 | `operations.availability` | `/operations/availability` | `GET` | page | public | available | allow | Operations availability | `src/demos/operations-pages.ts` |
