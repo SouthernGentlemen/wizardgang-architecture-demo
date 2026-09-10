@@ -90,6 +90,7 @@ describe('complete declarative application routing', () => {
     expect(secondaryNavigation('interfaces.frontend.index')).toEqual([]);
     expect(secondaryNavigation('demos.index')).toEqual([]);
     expect(secondaryNavigation('assurance.index')).toEqual([]);
+    expect(secondaryNavigation('operations.index')).toEqual([]);
     expect(primaryNavigation().every((route) => route.visibility === 'public')).toBe(true);
   });
 
@@ -97,8 +98,7 @@ describe('complete declarative application routing', () => {
     const sitemapRouteIds = [
       'interfaces.frontend.index', 'demos.index',
       'assurance.index',
-      'operations.index', 'operations.availability', 'operations.docs', 'operations.logs',
-      'operations.reports', 'operations.usage', 'security.index',
+      'operations.index', 'security.index',
     ];
     expect([...sitemapPaths()].sort()).toEqual(sitemapRouteIds.map((routeId) => routeUrl(routeId)).sort());
     const response = sitemapResponse(new Request('https://demo.wizardgang.ai/sitemap.xml'));

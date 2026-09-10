@@ -1,83 +1,33 @@
 # Operations
 
-Operations is a registry-owned domain with separately declared browser resources and machine contracts. Availability, diagnostics, usage/cost presentation, reporting, documentation, administration, and offline recovery all derive their location and policy from route declarations rather than a hand-maintained operations URL table.
+`/operations` is the single public human-facing operations dashboard. It is a task surface, not a collection of dataset pages.
 
-The current route IDs, pathnames, methods, offline policy, source ownership, and documentation links are generated in [`docs/ROUTES.md`](ROUTES.md) and [`docs/route-manifest.json`](route-manifest.json).
+## Public dashboard
 
-## Browser model
+The page is organized around stable fragments:
 
-The operations index and its child resources are canonical destinations. Navigation is projected from page metadata; page selection is never expressed through a `view` query parameter.
+- `/operations#status` — current service posture, dependency health, demo/crawler policy, and health/version endpoints.
+- `/operations#availability` — verified scheduled observations, 24-hour through 365-day windows, planned maintenance, and unexpected failures.
+- `/operations#activity` — bounded public-safe application-log search. Filters use query parameters on `/operations`; the public result set is capped at 200 records.
+- `/operations#usage` — usage, provider telemetry, billed-cost availability, the synthetic budget guardrail, and cost/degradation evidence.
+- `/operations#deployment` — deployed version, environment, release/commit evidence, source, Actions, and repository documentation.
 
-Query parameters remain valid for interaction state such as log filters, reporting filters, page size, search, sorting, and signed pagination cursors. Retired resource-selection query forms are not aliases and return the ordinary 404.
+The canonical URL is always `/operations`. Query parameters may filter data such as availability window or activity level/source/request ID/limit. They do not select a conceptual page or view. `?view=...` is not a supported routing mechanism and returns the ordinary 404.
 
-## Guided overview presentation
+## Retired human routes
 
-The operations index teaches five capabilities: availability, public-safe logging, cost resilience, unified reporting, and traceable implementation. Its live status strip remains first, followed by instructional cards, a runtime-to-evidence reading sequence, and live operational results. The sequence explains how to inspect the architecture; it is not a serial telemetry pipeline.
+The five former operations child pages are retired with no redirects or aliases. Their pathnames and expected outcomes are maintained in `tests/fixtures/removed-html-pathnames.ts`; each returns the normal application 404. Historical `/dashboard/*` locations remain retired under the same policy.
 
-The presentation pattern is **explanation → demonstration → result → evidence → source**. Cards link to existing child resources through route IDs. Runtime details and operational policy use native disclosure controls. **Inspect evidence** opens the existing Reports resource, which continues to own the full registered collection and record browser. Implementation sources remain available at the end of the overview.
+Reports and Documentation are no longer human navigation concepts. Operational reporting remains available through the machine reporting contract under `/api/reporting/*`. Documentation is linked contextually to repository source/docs from the relevant dashboard sections.
 
-This is a presentation contract, not a second route, capability, or reporting registry. Health, logs, availability, telemetry states, source links, and reporting authorization remain owned by their existing implementations. Other operations child pages can adopt the same sequence in subsequent changes.
+## Preserved operational contracts
 
-## Machine contracts
+DEMO-245 does not change the operational machine/protocol surface. `/admin` and `/offline` remain hidden operational pages. Health, version, log, and budget APIs remain available, as do the reporting APIs, reporting authorization, cursor/pagination behavior, `robots.txt`, `sitemap.xml`, `security.txt`, assets, offline policy, and crawler controls.
 
-Operational APIs remain separate declarations from browser pages. Their route IDs include the health, version, public-safe log, synthetic budget, and reporting contracts documented by the generated route artifacts and OpenAPI where applicable.
+Availability collection remains a scheduled five-minute observation stream with a 365-day retention window. Interactive health reads do not create availability evidence. Public log presentation continues to use the existing redaction pipeline and bounded query limit.
 
-The browser presentation may link to machine contracts when raw JSON is useful, but it does not own a second endpoint inventory.
+## Source ownership
 
-## Health and availability
+Human presentation is owned by `src/demos/operations.ts`. Operational API collection remains in `src/api/operations.ts`; usage/cost collection remains in `src/lib/cloudflare-usage.ts`; logs remain in `src/lib/logs.ts`; reporting APIs remain under the reporting route/API modules.
 
-The health declaration reports whether the Worker and required dependencies can serve the demo. It remains available according to its registered offline policy so operators and automation can observe and recover the system.
-
-The availability browser resource interprets the same operational evidence rather than defining an independent health contract. It explains stored observations and planned versus unexpected failures, then leads with the timeline, latest stored state, and measured results. Timestamp, latency, and classification tables remain available under **Inspect observations**, including the full retained window. Event counts classify observations rather than distinct incidents; percentages describe the stored sample window and do not constitute an SLA.
-
-## Version
-
-The version declaration returns deployed package and source identity metadata used by operators and release verification. It is operational metadata, not a release action.
-
-## Logs
-
-The public log API returns the disclosure-safe application log projection. Log records are sanitized before they cross the public HTTP boundary and retain bounded request and cache behavior.
-
-The browser log resource consumes the same operational data instead of maintaining an independent API. It introduces structured events, sanitized telemetry, and traceability, then shows up to three distinct source/event pairs from the current bounded query, newest first. The preview uses real stored records and inherits the active filters; it never fabricates sample events. **Open log explorer** reveals the existing filters, all returned rows, structured detail, and matching JSON link. Requests containing log filter or limit parameters open the explorer automatically. Implementation and redaction sources remain available after the explorer.
-
-## Usage and cost
-
-Usage reporting uses the canonical reporting contract and normalized provider observations. Provider credentials and raw private provider payloads are never returned to the browser.
-
-The usage service remains responsible for acquisition, observation windows, freshness, normalization, and safe cache behavior. The browser resource is only a presentation over that contract.
-
-The synthetic budget action remains a demonstration and must not be treated as billing authorization or a real provider charge operation. The usage page leads with the existing Normal, Warning, and Degraded simulator and explains which workloads remain available. Live provider telemetry follows with its original availability and freshness states; missing billing data is distinguished from application health. Scenario percentages are example inputs, while the existing 70% warning and 90% degradation thresholds retain their behavior.
-
-## Offline behavior
-
-Offline reachability comes from route metadata, not a hardcoded path list in the central router.
-
-When the demo is intentionally offline, declarations marked available remain reachable according to policy, ordinary gated APIs return structured `503` responses, and ordinary browser pages use the registered offline experience.
-
-## Cache, crawler, authorization, and disclosure
-
-Operational machine responses use the cache behavior declared by their route or response contract. Sensitive or operator data is never made publicly cacheable merely because a route is public.
-
-Operational APIs deny indexing. Public browser resources remain governed by the global crawler-control state.
-
-Public operational data is disclosure-safe. Protected administration remains separately authorized. Provider credentials, internal secrets, private infrastructure identifiers, and payment data are never serialized into public operations responses.
-
-## Route ownership
-
-Operational declarations live under the routing capability modules. The central router performs only normalization, global security/crawler processing, registry matching, shared policy enforcement, handler invocation, and safe error handling.
-
-Adding a compatible operational route requires a declaration with method, authorization, offline, cache, crawler, documentation, source, and handler metadata; it must not add path-specific dispatch logic to `src/router.ts`.
-
-## Validation
-
-Relevant validation includes operational route-registry tests, operations behavior tests, dead-route tests, generated route-artifact tests, and the complete `npm run check` chain.
-
-## Reporting presentation
-
-Reports leads with “One reporting contract, many evidence families” and an illustrative family → shared authorization/presentation/pagination → HTML/JSON/machine consumer flow. The registry-derived inventory and unchanged record browser remain under **Explore all reporting sources**. The diagram is explanatory copy, not a second source registry.
-
-Query-bearing requests open the explorer on the server so selections, filters, and pagination remain visible. Fragment navigation opens the containing disclosure on initial load and hash changes, preserving existing reporting anchors and record deep links. Reporting ownership, authorization, source discovery, and cursor handling remain in their existing services.
-
-## Documentation portal
-
-Documentation groups existing deterministic source links into **Start here**, **Governance & assurance**, **Interfaces & contracts**, and **Implementation**, with an explanation of what each group helps verify. In-page group links support direct navigation. The live interfaces section retains its canonical machine routes, releases, and tags. These groups organize reading; they do not introduce another route or contract inventory.
+Route ownership belongs to the application route registry. Generated route documentation is refreshed with `npm run generate:routes` after route changes.

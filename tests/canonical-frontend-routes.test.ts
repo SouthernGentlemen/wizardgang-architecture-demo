@@ -7,33 +7,23 @@ import type { Env } from '../src/types';
 import { removedHtml404Pathnames, removedHtmlPathnames } from './fixtures/removed-html-pathnames';
 
 const environment: Env = {
-  DEMO_DB: {
-    prepare() {
-      throw new Error('retired HTML paths must not consult application storage');
-    },
-  },
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
-  GITHUB_BRANCH: 'main',
+  DEMO_DB: { prepare() { throw new Error('retired HTML paths must not consult application storage'); } },
+  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main',
 };
 
 describe('canonical frontend route contract', () => {
   it('publishes task-oriented pages without a query-view route inventory', () => {
-    const canonicalChildren = [
-      'demos.index',
-      'assurance.index',
-      'operations.availability', 'operations.logs', 'operations.usage', 'operations.reports', 'operations.docs',
-    ] as const;
-    for (const routeId of canonicalChildren) {
+    const canonicalPages = ['demos.index', 'assurance.index', 'operations.index'] as const;
+    for (const routeId of canonicalPages) {
       const path = routeUrl(routeId);
       expect(path, routeId).not.toContain('?');
       expect(applicationRouteRegistry.declarations.some((route) => route.id === routeId && route.pattern === path), routeId).toBe(true);
     }
     const retiredIds = [
       'platform.index', 'platform.edge', 'platform.workers', 'platform.durable-objects', 'platform.d1', 'platform.r2',
-      'interfaces.index', 'interfaces.rest', 'interfaces.graphql.console', 'interfaces.webhooks.console',
-      'interfaces.identity.page', 'interfaces.mcp.console', 'interfaces.i18n', 'interfaces.accessibility',
-      'assurance.delivery', 'assurance.governance', 'assurance.evidence', 'assurance.compliance',
-      'assurance.risks', 'assurance.incidents', 'assurance.concerns',
+      'interfaces.index', 'interfaces.rest', 'interfaces.graphql.console', 'interfaces.webhooks.console', 'interfaces.identity.page', 'interfaces.mcp.console', 'interfaces.i18n', 'interfaces.accessibility',
+      'assurance.delivery', 'assurance.governance', 'assurance.evidence', 'assurance.compliance', 'assurance.risks', 'assurance.incidents', 'assurance.concerns',
+      'operations.availability', 'operations.logs', 'operations.usage', 'operations.reports', 'operations.docs',
     ];
     expect(applicationRouteRegistry.declarations.filter((route) => retiredIds.includes(route.id)).map((route) => route.id)).toEqual([]);
   });
@@ -41,22 +31,22 @@ describe('canonical frontend route contract', () => {
   it('uses the normal 404 for every removed HTML pathname', async () => {
     for (const pathname of removedHtml404Pathnames) {
       expect(applicationRouteRegistry.declarations.some((route) => route.pattern === pathname), pathname).toBe(false);
-      const response = await routeRequest(new Request(`https://demo.wizardgang.ai${pathname}`, {
-        headers: { accept: 'text/html' },
-      }), environment);
+      const response = await routeRequest(new Request(`https://demo.wizardgang.ai${pathname}`, { headers: { accept: 'text/html' } }), environment);
       expect(response.status, pathname).toBe(404);
       expect(response.headers.get('location'), pathname).toBeNull();
     }
   });
 
-  it('uses the ordinary 404 for every retired assurance ?view= URL', async () => {
-    for (const view of ['overview', 'delivery', 'governance', 'evidence', 'compliance', 'risks', 'incidents', 'concerns', 'unknown']) {
-      const response = await routeRequest(new Request(`https://demo.wizardgang.ai/assurance?view=${view}`, {
-        headers: { accept: 'text/html' },
-      }), environment);
-      expect(response.status, view).toBe(404);
-      expect(response.headers.get('location'), view).toBeNull();
-      expect(await response.text(), view).toContain('404 / unknown route');
+  it('uses the ordinary 404 for retired assurance and operations ?view= URLs', async () => {
+    for (const [pathname, views] of [
+      [routeUrl('assurance.index'), ['overview', 'delivery', 'governance', 'evidence', 'compliance', 'risks', 'incidents', 'concerns', 'unknown']],
+      [routeUrl('operations.index'), ['overview', 'availability', 'logs', 'usage', 'reports', 'docs', 'unknown']],
+    ] as const) {
+      for (const view of views) {
+        const response = await routeRequest(new Request(`https://demo.wizardgang.ai${pathname}?view=${view}`, { headers: { accept: 'text/html' } }), environment);
+        expect(response.status, `${pathname}?view=${view}`).toBe(404);
+        expect(response.headers.get('location'), `${pathname}?view=${view}`).toBeNull();
+      }
     }
   });
 

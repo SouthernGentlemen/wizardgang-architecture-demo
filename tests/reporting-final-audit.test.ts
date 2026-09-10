@@ -48,7 +48,7 @@ describe('final common reporting audit guards', () => {
 
   it('contains no legacy Cloudflare estimated-cost reporting discriminator', () => {
     const collector = readFileSync('src/lib/cloudflare-usage.ts', 'utf8');
-    const presentation = readFileSync('src/demos/operations-pages.ts', 'utf8');
+    const presentation = readFileSync('src/demos/operations.ts', 'utf8');
     expect(collector).not.toContain("'estimated'");
     expect(presentation).not.toContain("usage.cost.kind === 'estimated'");
   });
@@ -62,22 +62,21 @@ describe('final common reporting audit guards', () => {
     expect(collector).not.toContain('durableObjectsSqlStorageGroups');
   });
 
-  it('keeps assurance status normalization in the common reporting layer instead of the dashboard', () => {
+  it('keeps assurance reporting normalization in the common presentation model used by assurance', () => {
     const service = readFileSync('src/reporting/service.ts', 'utf8');
-    const dashboard = readFileSync('src/demos/reporting-dashboard.ts', 'utf8');
+    const assurance = readFileSync('src/demos/assurance.ts', 'utf8');
     expect(service).not.toContain('AssuranceCollectionStatus');
-    expect(dashboard).toContain('queryReportingCollection');
-    expect(dashboard).toContain('presentReportingQuery');
-    expect(dashboard).not.toContain('structuredAvailability(');
-    expect(dashboard).not.toContain('result.records.map');
+    expect(assurance).toContain('queryReportingCollection');
+    expect(assurance).toContain('presentReportingQuery');
+    expect(assurance).not.toContain('structuredAvailability(');
   });
 
   it('renders Cloudflare product and billed-cost state from common availability rather than boolean or kind shortcuts', () => {
-    const presentation = readFileSync('src/demos/operations-pages.ts', 'utf8');
-    expect(presentation).toContain("productCard('Workers', usage.products.workers.availability");
-    expect(presentation).toContain('const costBadgeState = usage.cost.availability');
-    expect(presentation).not.toContain("productCard('Workers', usage.products.workers.available");
-    expect(presentation).not.toContain("usage.cost.kind === 'billed' ? 'live' : 'unavailable'");
+    const presentation = readFileSync('src/demos/operations.ts', 'utf8');
+    expect(presentation).toContain('usage.products.workers.availability');
+    expect(presentation).toContain('usage.cost.availability');
+    expect(presentation).not.toContain('usage.products.workers.available');
+    expect(presentation).not.toContain("usage.cost.kind === 'billed'");
   });
 
   it('uses provider-native workflow attempts for reports without a branch-backed report copy', () => {

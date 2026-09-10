@@ -67,3 +67,9 @@ No route or document claims WCAG, ISO/IEC 27001, or ISO/IEC 42001 certification.
 The public assurance information architecture has one human-facing destination: `/assurance`. Delivery and release evidence, governance, evidence, compliance, risks, incidents, exercises, and non-sensitive concern intake are sections of that workbench. Stable record links use `assuranceAnchor` fragments on `/assurance`; query parameters are limited to filtering and search. Published advisories remain owned by `/security`.
 
 The retired assurance child paths return the ordinary 404 response. They have no aliases or redirects. The concern-intake live-route evidence identity is superseded immutably as `EVD-RUN-013`, current relationships follow that replacement, and `EVD-RUN-011` remains reserved in lifecycle history. Other canonical assurance datasets, reporting APIs, schemas, record identities, and publication boundaries are unchanged. The executable retired-route catalog remains the source of truth for the exact path set.
+
+## DEMO-245 operations consolidation
+
+`/operations` is the sole public operations task page, with stable `#status`, `#availability`, `#activity`, `#usage`, and `#deployment` fragments. Long availability history and bounded log search remain on that page through disclosures and query filters.
+
+The five former operations child pages and obsolete `?view=` selectors return the ordinary 404 with no aliases or redirects. Human Reports and Documentation presenters are removed; contextual source/docs links and the independent `/api/reporting/*` machine contracts remain. Administration, offline recovery, operational APIs, reporting authorization and pagination, schemas, collectors, crawler controls, and security boundaries are unchanged.

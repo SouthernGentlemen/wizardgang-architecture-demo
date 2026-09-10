@@ -3,9 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import type { Principal } from '../src/lib/authorization';
 import type { Env } from '../src/types';
-import { renderReportingPresentation } from '../src/reporting/html';
 import { presentReportingQuery } from '../src/reporting/presentation';
-import { routeUrl } from '../src/routing/application-routes';
 import {
   queryReportingCollection,
   reportingCollectionInventory,
@@ -55,7 +53,7 @@ const source: ReportingSource = {
 };
 
 describe('DEMO-178 unified reporting presentation', () => {
-  it('discovers owned and compatible reporting families without a dashboard allowlist', () => {
+  it('discovers owned and compatible reporting families from the common inventory', () => {
     const ids = reportingCollectionInventory(anonymous).map((entry) => entry.id);
     expect(ids).toEqual(expect.arrayContaining([
       'evidence',
@@ -68,12 +66,6 @@ describe('DEMO-178 unified reporting presentation', () => {
       'github.workflow-runs',
       'github.workflow-artifacts',
     ]));
-
-    const dashboard = readFileSync('src/demos/reporting-dashboard.ts', 'utf8');
-    expect(dashboard).toContain('reportingCollectionInventory');
-    expect(dashboard).not.toContain('__api/git/evidence');
-    expect(dashboard).not.toContain('__api/operations/cloudflare-usage');
-    expect(dashboard).not.toContain('fetch(');
   });
 
   it('includes every registered governance record partition and makes its records visible publicly', async () => {
@@ -135,7 +127,7 @@ describe('DEMO-178 unified reporting presentation', () => {
     expect(presentReportingQuery(unavailable).availability).toBe('unavailable');
   });
 
-  it('renders fields, status, availability, relationships, sources, facets, and pagination from the shared presenter', () => {
+  it('presents fields, status, availability, relationships, sources, facets, and pagination through the shared model', () => {
     const result: ReportingQueryResult<ReportingRecord> = {
       schemaVersion: 1,
       contract: 'contracts/assurance/reporting.schema.json',
@@ -193,19 +185,9 @@ describe('DEMO-178 unified reporting presentation', () => {
       expect.objectContaining({ name: 'severity', value: 'high' }),
     ]));
 
-    const html = renderReportingPresentation(presented, { nextHref: routeUrl('operations.reports', {}, { cursor: 'next' }) });
-    expect(html).toContain('Shared presentation record');
-    expect(html).toContain('Status <bdi data-canonical-source lang="en" dir="ltr">open</bdi>');
-    expect(html).toContain('Availability Available');
-    expect(html).toContain('Evidence');
-    expect(html).toContain('EVD-1');
-    expect(html).toContain('Facets');
-    expect(html).toContain('Next page');
-
     const assurancePage = readFileSync('src/demos/assurance.ts', 'utf8');
     expect(assurancePage).toContain('queryReportingCollection');
     expect(assurancePage).toContain('presentReportingQuery');
     expect(assurancePage).toContain('renderGovernanceRegistry');
-    expect(assurancePage).not.toContain('renderReportingPresentation');
   });
 });
