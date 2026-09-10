@@ -74,9 +74,12 @@ describe('public link and route contract', () => {
 
   it('resolves every internal page link and linked fragment', async () => {
     const targets = new Map<string, Set<string>>();
-    for (const page of registeredPageUrls()) {
+    const renderedPages = await Promise.all(registeredPageUrls().map(async (page) => {
       const response = await get(page);
       const html = await response.text();
+      return { page, html };
+    }));
+    for (const { page, html } of renderedPages) {
       for (const href of renderedHrefs(html)) {
         expect((href.match(/\?/g) ?? []).length, `multiple query delimiters in ${page} href ${href}`).toBeLessThanOrEqual(1);
       }
@@ -88,16 +91,16 @@ describe('public link and route contract', () => {
       }
     }
 
-    for (const [target, fragments] of targets) {
+    await Promise.all([...targets].map(async ([target, fragments]) => {
       const response = await get(target);
       expect(response.status, `dead internal link ${target}`).not.toBe(404);
       expect(response.status, `failed internal link ${target}`).toBeLessThan(500);
-      if (!fragments.size) continue;
+      if (!fragments.size) return;
       expect(response.headers.get('content-type'), `${target} fragment target is not HTML`).toContain('text/html');
       const html = await response.text();
       const ids = new Set([...html.matchAll(idPattern)].map((match) => match[1]));
       for (const fragment of fragments) expect(ids.has(fragment), `missing ${target}#${fragment}`).toBe(true);
-    }
+    }));
   }, 60_000);
 
   it('serves every compliance framework filter through the canonical assurance route', async () => {

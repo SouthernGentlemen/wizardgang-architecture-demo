@@ -73,6 +73,13 @@
       "reviewedAt": "2026-09-08T12:05:37Z",
       "reviewer": "controlled-repository-review",
       "basis": "DEMO-195 review approves superseding the retired assurance concern query-view evidence with a canonical assurance child-route record, migrating current relationship edges to the replacement identity, and the exact resulting public source revisions; later source revisions require a new disclosure decision."
+    },
+    {
+      "id": "review-demo238-accessibility-assurance",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-09T23:30:00Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-238 review approves publication of the bounded site-wide accessibility and localization automation evidence and the explicitly pending manual verification matrix, together with the exact resulting public evidence and WCAG framework source revisions. This disclosure review does not record manual accessibility execution or establish WCAG conformance."
     }
   ],
   "sourceApprovals": [
@@ -309,6 +316,18 @@
       "resource": "risks",
       "revision": "25e755a5d945f60c4f86d39a3123c349baa024c5",
       "reviewRef": "review-demo195-assurance-child-routes"
+    },
+    {
+      "id": "source-evidence-14406f65d147",
+      "resource": "evidence",
+      "revision": "14406f65d147f0bb981770e004e4444e6501e2e2",
+      "reviewRef": "review-demo238-accessibility-assurance"
+    },
+    {
+      "id": "source-wcag-manifest-aa4b084fc583",
+      "resource": "compliance.wcag-2.2",
+      "revision": "aa4b084fc583b5e3b902bc1b97ae40a8ac3bb649",
+      "reviewRef": "review-demo238-accessibility-assurance"
     }
   ],
   "records": [
@@ -343,6 +362,16 @@
       "supersedes": [
         "EVD-RUN-006"
       ]
+    },
+    {
+      "id": "EVD-TST-004",
+      "lifecycle": "Published",
+      "reviewRef": "review-demo238-accessibility-assurance"
+    },
+    {
+      "id": "EVD-DOC-007",
+      "lifecycle": "Published",
+      "reviewRef": "review-demo238-accessibility-assurance"
     },
     {
       "id": "AI-OBJ-001",

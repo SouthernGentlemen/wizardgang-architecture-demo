@@ -26,6 +26,10 @@ jobs:
         run: npm run check
       - name: Apply D1 migrations to a clean local database
         run: npm run validate:migrations
+      - name: Verify Chromium runtime
+        run: google-chrome --version
+      - name: Site-wide browser accessibility and localization audit
+        run: npm run test:site-accessibility
       - name: Audit dependencies
         run: npm run security:dependencies
       - name: Validate Worker build

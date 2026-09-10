@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "states": [
+    {
+      "name": "wcag-framework",
+      "path": "/assurance/compliance?framework=wcag-2.2"
+    },
+    {
+      "name": "wcag-filter-search",
+      "path": "/assurance/compliance?framework=wcag-2.2&level=AAA&q=focus"
+    },
+    {
+      "name": "accessibility-lab",
+      "path": "/interfaces/accessibility"
+    },
+    {
+      "name": "openapi-console",
+      "path": "/interfaces/rest"
+    },
+    {
+      "name": "availability-review",
+      "path": "/operations/availability"
+    }
+  ],
+  "narrowViewportPaths": [
+    "/",
+    "/assurance/compliance?framework=wcag-2.2",
+    "/interfaces/rest",
+    "/interfaces/accessibility"
+  ],
+  "keyboardPaths": [
+    "/",
+    "/assurance/compliance?framework=wcag-2.2",
+    "/interfaces/rest",
+    "/interfaces/accessibility"
+  ]
+}

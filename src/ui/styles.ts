@@ -291,7 +291,7 @@ summary { cursor: pointer; }
 .locale-app .button-primary { margin-top: 1.25rem; }
 .accessibility-frame { height: min(70vh, 680px); min-height: 520px; overflow: hidden; border: 1px solid var(--line); border-radius: 0; background: #fff; }
 .accessibility-frame iframe { width: 100%; height: 100%; border: 0; }
-.scan-counts { grid-template-columns: repeat(4, minmax(70px, 1fr)); text-align: center; }
+.scan-counts { grid-template-columns: repeat(4, minmax(0, 1fr)); text-align: center; }
 .scan-counts dt { grid-row: 1; }
 .scan-counts dd { grid-row: 2; color: var(--acid); font-size: 1.8rem; font-weight: 900; }
 .criterion-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: .75rem; }
@@ -689,6 +689,7 @@ summary { cursor: pointer; }
 .graphql-example .section-head h3 { margin: 0; }
 .graphql-example .button { min-height: 40px; padding: .45rem .7rem; font-size: .72rem; }
 .graphql-example pre { min-height: 0; margin-top: .65rem; }
+.graphql-example pre code { color: inherit; }
 .graphql-example-result { border-color: var(--acid); }
 .graphql-workspace-heading { align-items: end; margin-bottom: 1rem; }
 .graphql-workspace-heading > p { max-width: 48ch; margin: 0; color: var(--muted); text-align: right; }
@@ -869,7 +870,7 @@ summary { cursor: pointer; }
 .guardrail-states span { color: var(--muted); font: 800 .78rem/1 var(--mono); }
 .guardrail-states p { grid-column: 1 / -1; align-self: end; margin: 0; color: var(--muted); font-size: .82rem; }
 .guardrail-states [data-state="normal"] strong { color: var(--acid); }
-.guardrail-states [data-state="warning"] strong { color: var(--violet); }
+.guardrail-states [data-state="warning"] strong { color: var(--paper); }
 .guardrail-states [data-state="degraded"] strong { color: #ff9d9d; }
 
 .mcp-page-header { max-width: 1120px; margin-bottom: 2.5rem; }
@@ -932,7 +933,8 @@ footer a { color: var(--paper); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
 @media (max-width: 900px) {
   .operations-tour-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .home-header { grid-template-columns: 1fr; }
+  .home-header { grid-template-columns: minmax(0, 1fr); }
+  .home-header > * { min-width: 0; }
   .home-header .eyebrow { grid-column: auto; margin-bottom: 0; }
   .home-header h1 { max-width: 11ch; }
   .home-lede { max-width: 42rem; }
@@ -980,7 +982,9 @@ footer a { color: var(--paper); }
   .nav { justify-content: flex-start; }
   main { padding: 4rem 0 5rem; }
   h1 { font-size: clamp(3.1rem, 15vw, 5.4rem); }
+  :where(p, li, dd, a) { overflow-wrap: anywhere; }
   dl { grid-template-columns: 1fr; gap: .2rem 0; }
+  dl > * { min-width: 0; }
   dd { margin-bottom: .7rem; }
   .section-head { flex-direction: column; gap: .3rem; }
   .status-strip { flex-direction: column; }
