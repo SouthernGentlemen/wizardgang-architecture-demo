@@ -1,4 +1,3 @@
-import { architectureMapEntries } from '../../routing/navigation';
 import { defineInterfaceIdentityCapability, interfaceIdentityRoute } from '../route-capability';
 
 export const frontendRouteCapability = defineInterfaceIdentityCapability('interfaces.frontend', [
@@ -9,7 +8,7 @@ export const frontendRouteCapability = defineInterfaceIdentityCapability('interf
     kind: 'page',
     handler: async (_request, { env }) => {
       const { renderIndex } = await import('../../ui/page');
-      return renderIndex(env, architectureMapEntries());
+      return renderIndex(env);
     },
     title: 'Architecture demo index',
     description: 'Primary public frontend entry point assembled from registered page metadata.',

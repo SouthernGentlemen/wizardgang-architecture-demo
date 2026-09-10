@@ -49,7 +49,8 @@ describe('published security advisory assurance', () => {
     const records = listPublishedAssuranceRecords('advisories');
     const response = renderSecurity(env);
     const html = await response.text();
-    expect(html).toContain('id="disclosure-lifecycle"');
+    expect(html).toContain('id="disclosure-process"');
+    expect(html).toContain('<h2 id="disclosure-process-heading">Disclosure process</h2>');
     expect(html).toContain('Private report → triage → GHSA → fix/release → eligible CVE → public advisory');
     expect(html).toContain('id="published-advisories"');
     expect(html).toContain('/api/reporting/security');

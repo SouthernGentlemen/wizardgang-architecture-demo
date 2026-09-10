@@ -67,19 +67,20 @@ function noDatabaseEnv(): Env {
 describe('complete declarative application routing', () => {
   it('derives global navigation and the architecture map from page declarations', () => {
     expect(primaryNavigation().map((route) => route.id)).toEqual([
-      'interfaces.frontend.index',
       'demos.index',
       'assurance.index',
       'operations.index',
       'security.index',
     ]);
     expect(primaryNavigation().map((route) => route.page?.label)).toEqual([
-      'Architecture', 'Demos', 'Assurance', 'Operations', 'Security',
+      'Demos', 'Assurance', 'Operations', 'Security',
     ]);
+    expect(primaryNavigation().some((route) => route.id === 'interfaces.frontend.index')).toBe(false);
     const expectedArchitectureRoutes = applicationRouteRegistry.declarations
       .filter((route) => (
         route.kind === 'page'
         && route.page?.parent
+        && route.page.architectureMap
         && route.visibility === 'public'
         && route.methods.includes('GET')
         && !route.pattern.includes(':')
@@ -123,7 +124,7 @@ describe('complete declarative application routing', () => {
     expect(() => routeUrlFromRegistry(applicationRouteRegistry, parameterized!.id)).toThrow('Missing route parameter');
   });
 
-  it('allows an additional page without encoding an eight-page inventory', () => {
+  it('allows an additional page without encoding a fixed page inventory', () => {
     const extraPage = syntheticRoute(
       'synthetic.page',
       '/synthetic-page',
@@ -132,7 +133,7 @@ describe('complete declarative application routing', () => {
       {
         parent: 'interfaces.frontend.index',
         label: 'Synthetic page',
-        summary: 'A compatible ninth page registered by a test capability.',
+        summary: 'A compatible additional page registered by a test capability.',
         order: 99,
         navigation: 'secondary',
         architectureMap: true,

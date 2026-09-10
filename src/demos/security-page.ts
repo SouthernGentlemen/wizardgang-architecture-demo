@@ -16,6 +16,7 @@ import {
 } from '../assurance/publication';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
+import { localizationForEnv } from '../i18n/runtime';
 import { referenceDetails, pageContent, renderPage, type PageContent } from '../ui/page';
 import { routeUrl } from '../routing/application-routes';
 
@@ -50,6 +51,7 @@ function advisoryCard(env: Env, advisory: PublishedAssuranceRecordMap['advisorie
 }
 
 export function securityContent(env: Env): PageContent {
+  const localization = localizationForEnv(env);
   const reportUrl = escapeHtml(privateReportUrl(env));
   const advisories = listPublishedAssuranceRecords('advisories');
   const advisoryCards = advisories.map((record) => advisoryCard(env, record)).join('');
@@ -57,13 +59,24 @@ export function securityContent(env: Env): PageContent {
     <h3>No published advisories are established</h3>
     <p>The public assurance registry currently contains no published security advisory records. This is not a claim that no vulnerabilities, private reports, defects, or security investigations have existed.</p>
   </article>`;
+  const reportVulnerability = escapeHtml(localization.t('security.report_vulnerability', 'Report vulnerability'));
+  const disclosureProcess = escapeHtml(localization.t('security.disclosure_process', 'Disclosure process'));
+  const publishedAdvisories = escapeHtml(localization.t('security.published_advisories', 'Published advisories'));
+  const openPrivateReport = escapeHtml(localization.t('security.open_private_report', 'Open a private security report'));
 
   return pageContent(env, 'Security', `
   <section class="page-header assurance-header">
-    <h1>Report security privately.</h1>
-    <p class="lede">Use the repository's private vulnerability channel for suspected vulnerabilities, active security incidents, credentials, exploit details, or sensitive infrastructure information.</p>
+    <h1>Security</h1>
+    <p class="lede">Report suspected vulnerabilities privately, understand the coordinated disclosure process, and review disclosure-safe published advisories.</p>
     <p class="assurance-notice"><strong>Do not open a public issue for sensitive security information.</strong> Private report contents are never exposed through the public assurance registry.</p>
-    <div class="page-tools"><a class="button button-primary" href="${reportUrl}">Open a private security report</a><a class="text-link" href="${escapeHtml(ADVISORIES_API_ROUTE)}">Published advisory JSON</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/security-page.ts'))}">Route source</a>${referenceDetails([
+  </section>
+  <section id="report-vulnerability" class="assurance-section" aria-labelledby="report-vulnerability-heading">
+    <div class="section-heading">
+      <p class="eyebrow">Private reporting</p>
+      <h2 id="report-vulnerability-heading">${reportVulnerability}</h2>
+      <p>Use the repository's private vulnerability channel for suspected vulnerabilities, active security incidents, credentials, exploit details, or sensitive infrastructure information.</p>
+    </div>
+    <div class="page-tools"><a class="button button-primary" href="${reportUrl}">${openPrivateReport}</a><a class="text-link" href="${escapeHtml(ADVISORIES_API_ROUTE)}">Published advisory JSON</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/security-page.ts'))}">Route source</a>${referenceDetails([
       { label: 'Security page implementation', href: sourceUrl(env, 'src/demos/security-page.ts') },
       { label: 'Security policy source', href: sourceUrl(env, 'SECURITY.md') },
       { label: 'Machine-readable security.txt', href: '/.well-known/security.txt' },
@@ -74,17 +87,17 @@ export function securityContent(env: Env): PageContent {
       { label: 'Canonical reporting API', href: sourceUrl(env, 'src/api/reporting.ts') },
       { label: 'Publication policy', href: sourceUrl(env, 'src/assurance/publication-policy.js') },
     ])}</div>
+    <div class="info-grid">
+      <article class="info-card"><h3>What to report</h3><p>Describe the affected route, component, or release; the observed behavior and impact; reproducible steps; and any safe supporting evidence. Keep reporter identity, exploit detail, and sensitive infrastructure context inside the private channel.</p></article>
+      <article class="info-card"><h3>What happens next</h3><p>The report is privately triaged. Maintainers may request clarification, reject a non-security report, coordinate remediation in a draft GitHub Security Advisory, and publish only disclosure-safe information after a fix is released.</p></article>
+      <article class="info-card"><h3>Non-security concerns</h3><p>Bugs, feature requests, accessibility issues, AI/MCP concerns, and other non-sensitive feedback belong in the public concern intake.</p><p><a href="${escapeHtml(`${ASSURANCE_ROUTE}#concerns`)}">Choose a public concern form →</a></p></article>
+    </div>
   </section>
-  <div class="info-grid">
-    <article class="info-card"><h2>What to report</h2><p>Describe the affected route, component, or release; the observed behavior and impact; reproducible steps; and any safe supporting evidence. Keep reporter identity, exploit detail, and sensitive infrastructure context inside the private channel.</p></article>
-    <article class="info-card"><h2>What happens next</h2><p>The report is privately triaged. Maintainers may request clarification, reject a non-security report, coordinate remediation in a draft GitHub Security Advisory, and publish only disclosure-safe information after a fix is released.</p></article>
-    <article class="info-card"><h2>Advisories and CVEs</h2><p>A confirmed vulnerability may receive a GitHub Security Advisory. A CVE is recorded only when the vulnerability is eligible and a real identifier has been assigned; neither a GHSA nor a CVE is fabricated for demonstration purposes.</p></article>
-    <article class="info-card"><h2>Non-security concerns</h2><p>Bugs, feature requests, accessibility issues, AI/MCP concerns, and other non-sensitive feedback belong in the public concern intake.</p><p><a href="${escapeHtml(`${ASSURANCE_ROUTE}#concerns`)}">Choose a public concern form →</a></p></article>
-  </div>
-  <section id="disclosure-lifecycle" class="assurance-section" aria-labelledby="disclosure-lifecycle-heading">
+  <section id="disclosure-process" class="assurance-section" aria-labelledby="disclosure-process-heading">
     <div class="section-heading">
       <p class="eyebrow">Coordinated disclosure</p>
-      <h2 id="disclosure-lifecycle-heading">Private report → triage → GHSA → fix/release → eligible CVE → public advisory</h2>
+      <h2 id="disclosure-process-heading">${disclosureProcess}</h2>
+      <p>Private report → triage → GHSA → fix/release → eligible CVE → public advisory.</p>
     </div>
     <ol class="evidence-list">
       <li><strong>Private report.</strong> Suspected vulnerabilities enter GitHub private vulnerability reporting. Reporter identity, private reproduction detail, attachments, credentials, and sensitive infrastructure information remain private.</li>
@@ -99,7 +112,7 @@ export function securityContent(env: Env): PageContent {
   <section id="published-advisories" class="assurance-section" aria-labelledby="published-advisories-heading">
     <div class="section-heading">
       <p class="eyebrow">Published disclosure</p>
-      <h2 id="published-advisories-heading">Published advisories</h2>
+      <h2 id="published-advisories-heading">${publishedAdvisories}</h2>
       <p>${advisories.length} public advisory record${advisories.length === 1 ? '' : 's'} in the canonical assurance dataset. Private reports and private GitHub draft advisories are deliberately excluded; reviewed public assurance records may use the Draft lifecycle state.</p>
     </div>
     <div class="info-grid">${published}</div>

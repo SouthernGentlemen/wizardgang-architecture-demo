@@ -22,13 +22,16 @@ describe('architecture demo registry', () => {
   it('derives primary navigation and architecture cards from page declarations', () => {
     const primary = primaryNavigation();
     expect(primary.map((route) => route.page?.label)).toEqual([
-      'Architecture', 'Demos', 'Assurance', 'Operations', 'Security',
+      'Demos', 'Assurance', 'Operations', 'Security',
     ]);
     expect(primary.every((route) => route.page?.navigation === 'primary')).toBe(true);
+    expect(primary.every((route) => route.page?.parent === 'interfaces.frontend.index')).toBe(true);
+    expect(primary.some((route) => route.id === 'interfaces.frontend.index')).toBe(false);
     const expected = applicationRoutes
       .filter((route) => (
         route.kind === 'page'
         && route.page?.parent
+        && route.page.architectureMap
         && route.visibility === 'public'
         && route.methods.includes('GET')
         && !route.pattern.includes(':')

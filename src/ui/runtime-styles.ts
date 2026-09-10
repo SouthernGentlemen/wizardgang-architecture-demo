@@ -103,7 +103,6 @@ html[dir='rtl'] .nav { direction: rtl; }
     outline-offset: 3px;
   }
   .brand-mark,
-  .status-strip a::before,
   .secondary-navigation a[data-route-current]::after {
     forced-color-adjust: none;
   }

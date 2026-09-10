@@ -118,13 +118,6 @@ p { margin: 0 0 1rem; }
 .assurance-evidence-card p { color: var(--muted); font-size: .9rem; }
 .assurance-evidence-card .link-row { align-items: flex-start; margin-top: auto; flex-direction: column; gap: .45rem; }
 .assurance-evidence-card .link-row a { font-size: .72rem; }
-.status-strip { display: flex; gap: 1px; margin-bottom: clamp(4rem, 8vw, 7rem); overflow: hidden; border: 1px solid var(--line); background: var(--line); }
-.status-strip a { position: relative; flex: 1; display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; min-height: 84px; padding: 1.2rem 1.4rem; background: var(--panel); text-decoration: none; }
-.status-strip a::before { position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--acid); content: ""; }
-.status-strip a:last-child::before { background: var(--violet); }
-.status-strip a:hover { background: var(--panel-2); }
-.status-strip span { color: var(--muted); font: 800 .68rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
-.status-strip strong { font-size: 1.2rem; }
 .section-head { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin: clamp(4.5rem, 8vw, 7rem) 0 1.3rem; padding-top: 1.3rem; border-top: 1px solid var(--line); }
 .section-head h2,.section-head .surface-view-heading { margin: 0; }
 .section-head > span { color: var(--muted); font: 800 .68rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
@@ -868,7 +861,6 @@ footer a { color: var(--paper); }
   dl > * { min-width: 0; }
   dd { margin-bottom: .7rem; }
   .section-head { flex-direction: column; gap: .3rem; }
-  .status-strip { flex-direction: column; }
   .openapi-operation > summary { grid-template-columns: 1fr auto; gap: .55rem; }
   .openapi-operation > summary .openapi-route { grid-column: 1 / -1; }
   .info-grid, .action-grid { grid-template-columns: 1fr; }

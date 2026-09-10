@@ -155,21 +155,6 @@ body[data-route-id^='platform.'] main.site-main {
   border-inline-start: 1px solid var(--line);
 }
 
-.architecture-domain + .architecture-domain {
-  margin-top: 2.5rem;
-}
-
-.architecture-domain .section-head h2 a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.architecture-domain .section-head h2 a:hover,
-.architecture-domain .section-head h2 a:focus-visible {
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
 @media (max-width: 700px) {
   .site-header {
     gap: 0.2rem 0.6rem;

@@ -247,23 +247,27 @@ describe('public route contract', () => {
     expect(html).not.toContain('This button calls the live Worker interface below');
   });
 
-  it('keeps a compact live status strip on the index and links the canonical operations surface', async () => {
+  it('keeps a compact three-action launcher on the index and links the canonical operations surface', async () => {
     const environment = env();
     const index = await (await routeRequest(new Request('https://demo.wizardgang.ai/'), environment)).text();
     expect(index).not.toContain('<h2 class="eyebrow">Routes</h2>');
     expect(index).not.toContain('<h2 class="eyebrow">Groups</h2>');
-    expect(index).toContain('<section class="status-strip"');
-    expect(index).toContain('<span>Version</span>');
-    expect(index).toContain('<span>Health</span>');
-    expect(index).toContain('<strong>WIZARDGANG</strong>');
+    expect(index).toContain('<section class="grid home-actions"');
+    expect(index).toContain('<h2>Run it</h2>');
+    expect(index).toContain('<h2>Verify it</h2>');
+    expect(index).toContain('<h2>Observe it</h2>');
+    expect(index).not.toContain('<section class="status-strip"');
+    expect(index).not.toContain('data-health');
     expect(index).toContain('<meta property="og:image" content="https://demo.wizardgang.ai/assets/og.png">');
+    expect(index).toContain('href="/demos"');
+    expect(index).toContain('href="/assurance"');
     expect(index).toContain('href="/operations">Operations</a>');
     expect(index).not.toContain('href="/dashboard');
     expect(index).not.toContain('>Map</a>');
     expect(index).not.toContain('>Docs</a>');
     expect(index).not.toContain('>GitHub <span');
     expect(index).not.toContain('WG-ARCH-001');
-    expect(index).toContain('<a href="https://github.com/SouthernGentlemen/wizardgang-architecture-demo">Public source</a>');
+    expect(index).toContain('<a href="https://github.com/SouthernGentlemen/wizardgang-architecture-demo/issues/new?template=bug.yml">Report an issue</a>');
 
     const operations = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations'), environment)).text();
     expect(operations).toContain('aria-label="Operations sections"');
