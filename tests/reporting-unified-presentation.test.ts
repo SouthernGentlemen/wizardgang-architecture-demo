@@ -195,7 +195,7 @@ describe('DEMO-178 unified reporting presentation', () => {
 
     const html = renderReportingPresentation(presented, { nextHref: routeUrl('operations.reports', {}, { cursor: 'next' }) });
     expect(html).toContain('Shared presentation record');
-    expect(html).toContain('Status open');
+    expect(html).toContain('Status <bdi data-canonical-source lang="en" dir="ltr">open</bdi>');
     expect(html).toContain('Availability Available');
     expect(html).toContain('Evidence');
     expect(html).toContain('EVD-1');

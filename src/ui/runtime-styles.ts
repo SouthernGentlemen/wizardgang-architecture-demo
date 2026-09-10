@@ -29,6 +29,12 @@ html[dir='rtl'] .secondary-navigation-list,
 html[dir='rtl'] .related-navigation-list,
 html[dir='rtl'] .nav { direction: rtl; }
 
+:where(pre, code, samp, kbd, bdi, [data-canonical-source]) {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+[data-canonical-source] { text-align: start; }
+
 @media (max-width: 760px) {
   .language-selector { flex: 1 1 100%; justify-content: flex-start; }
 }

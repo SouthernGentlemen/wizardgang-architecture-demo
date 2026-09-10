@@ -15,6 +15,7 @@ import {
   supportedLocales,
   type LocalizationContext,
 } from '../i18n/runtime';
+import { localizePresentation } from '../i18n/presentation';
 import { navigationStyles } from './navigation-styles';
 import { runtimeStyles } from './runtime-styles';
 import { styles } from './styles';
@@ -65,16 +66,17 @@ export interface PageContentOptions extends Partial<Omit<PageContent, 'title' | 
 }
 
 export function pageContent(
-  _env: Env,
+  env: Env,
   title: string,
   body: string,
   options: PageContentOptions = {},
 ): PageContent {
   const { description = DEFAULT_DESCRIPTION, ...contentOptions } = options;
+  const localized = localizePresentation(title, description, body, localizationForEnv(env));
   return {
-    title,
-    description,
-    body,
+    title: localized.title,
+    description: localized.description,
+    body: localized.body,
     ...contentOptions,
     canonicalPath: contentOptions.canonicalPath ?? routeUrl(ROOT_ROUTE_ID),
   };
@@ -216,6 +218,7 @@ function shell(env: Env, content: PageContent): Response {
   const lightLabel = localization.t('shell.theme.light', 'Light');
   const themeText = localization.t('shell.theme.label', 'Theme: {theme}', { theme: darkLabel });
   const themeAria = localization.t('shell.theme.switch', 'Switch to {theme} theme', { theme: lightLabel });
+  const ogImageAlt = localization.t('meta.og_image_alt', 'WizardGang Architecture — Architecture you can inspect.');
   const html = `<!doctype html>
 <html lang="${escapeHtml(lang)}" dir="${escapeHtml(dir)}">
 <head>
@@ -233,7 +236,7 @@ function shell(env: Env, content: PageContent): Response {
   <meta property="og:image" content="https://demo.wizardgang.ai/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="WizardGang Architecture — Architecture you can inspect.">
+  <meta property="og:image:alt" content="${escapeHtml(ogImageAlt)}">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://demo.wizardgang.ai/assets/og.png">
   <link rel="canonical" href="${escapeHtml(canonicalHref)}">
@@ -307,19 +310,20 @@ function architectureMapSections(
   return orderedGroups.map(([parentId, entries]) => {
     const parent = byId.get(parentId);
     const isRoot = parentId === ROOT_ROUTE_ID;
-    const heading = isRoot ? 'Public domains' : (parent?.page?.label ?? parentId);
+    const heading = isRoot ? localization.t('home.public_domains', 'Public domains') : (parent?.page ? localizedRouteLabel(localization, parent) : parentId);
     const headingHtml = !isRoot && parent?.page
       ? `<a href="${escapeHtml(localization.href(routeUrl(parent.id)))}">${escapeHtml(heading)}</a>`
       : escapeHtml(heading);
+    const destinationCount = localization.t(entries.length === 1 ? 'home.destination_one' : 'home.destination_other', `${entries.length} destination${entries.length === 1 ? '' : 's'}`, { count: localization.number(entries.length) });
     return `<section class="architecture-domain" data-parent-route="${escapeHtml(parentId)}">
-  <div class="section-head"><h2>${headingHtml}</h2><span>${entries.length} destination${entries.length === 1 ? '' : 's'}</span></div>
+  <div class="section-head"><h2>${headingHtml}</h2><span>${escapeHtml(destinationCount)}</span></div>
   <div class="grid">
     ${entries.map((route) => {
       const href = routeUrl(route.id);
       return `<a class="card" href="${escapeHtml(localization.href(href))}">
-        <p class="eyebrow">${escapeHtml(href)}</p>
-        <h3>${escapeHtml(route.page!.label)}</h3>
-        <p>${escapeHtml(route.page!.summary)}</p>
+        <p class="eyebrow"><bdi dir="ltr">${escapeHtml(href)}</bdi></p>
+        <h3>${escapeHtml(localizedRouteLabel(localization, route))}</h3>
+        <p>${escapeHtml(localization.t(`summary.${route.id}`, route.page!.summary))}</p>
       </a>`;
     }).join('')}
   </div>
@@ -331,31 +335,38 @@ export function renderIndex(env: Env, list: RegisteredRouteMetadataView[]): Resp
   const localization = localizationForEnv(env);
   const homeRoute = routeUrl(ROOT_ROUTE_ID);
   const operationsRoute = localization.href(routeUrl(OPERATIONS_ROUTE_ID));
+  const liveDestinations = localization.t('home.live_destinations', '{count} live destinations expose the platform, interfaces, assurance, security, and operations behind a production edge system.', { count: localization.number(list.length) });
+  const healthLabels = safeScriptJson(JSON.stringify({
+    healthy: localization.t('common.healthy', 'Healthy'),
+    degraded: localization.t('common.degraded', 'Degraded'),
+    unavailable: localization.t('common.unavailable', 'Unavailable'),
+  }));
   const body = `
 <section class="page-header home-header">
-  <h1>Architecture <span>you can inspect.</span></h1>
-  <p class="lede home-lede">${list.length} live destinations expose the platform, interfaces, assurance, security, and operations behind a production edge system.</p>
+  <h1>${escapeHtml(localization.t('nav.interfaces.frontend.index', 'Architecture'))} <span>${escapeHtml(localization.t('home.inspectable', 'you can inspect.'))}</span></h1>
+  <p class="lede home-lede">${escapeHtml(liveDestinations)}</p>
 </section>
-<section class="status-strip" aria-label="Live service state">
-  <a href="/api/operations/version"><span>Version</span><strong>${escapeHtml(env.DEPLOYED_VERSION || 'development')}</strong></a>
-  <a href="${escapeHtml(operationsRoute)}#health"><span>Health</span><strong data-health>Checking…</strong></a>
+<section class="status-strip" aria-label="${escapeHtml(localization.t('home.live_state', 'Live service state'))}">
+  <a href="/api/operations/version"><span>${escapeHtml(localization.t('home.version', 'Version'))}</span><strong><bdi dir="ltr">${escapeHtml(env.DEPLOYED_VERSION || 'development')}</bdi></strong></a>
+  <a href="${escapeHtml(operationsRoute)}#health"><span>${escapeHtml(localization.t('home.health', 'Health'))}</span><strong data-health>${escapeHtml(localization.t('common.checking', 'Checking…'))}</strong></a>
 </section>
 <section id="architecture-map">
   ${architectureMapSections(list, localization)}
 </section>
 <script>
+const healthLabels = JSON.parse(${healthLabels});
 fetch('/api/operations/health').then((r) => r.json()).then((h) => {
   const slot = document.querySelector('[data-health]');
-  if (slot) slot.textContent = h.status;
+  if (slot) slot.textContent = healthLabels[h.status] || h.status;
 }).catch(() => {
   const slot = document.querySelector('[data-health]');
-  if (slot) slot.textContent = 'Unavailable';
+  if (slot) slot.textContent = healthLabels.unavailable;
 });
 </script>`;
-  return pageResponse(env, 'Architecture', body, {
+  return pageResponse(env, localization.t('nav.interfaces.frontend.index', 'Architecture'), body, {
     routeId: ROOT_ROUTE_ID,
     canonicalPath: homeRoute,
-    description: DEFAULT_DESCRIPTION,
+    description: localization.t('meta.default_description', DEFAULT_DESCRIPTION),
   });
 }
 
