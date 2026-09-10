@@ -116,7 +116,9 @@ describe('public route contract', () => {
     const environment = env();
     const graphqlPage = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/graphql', { headers: { accept: 'text/html' } }), environment);
     const graphqlHtml = await graphqlPage.text();
-    expect(graphqlHtml).toContain('srcdoc="');
+    expect(graphqlHtml).not.toContain('<iframe');
+    expect(graphqlHtml).toContain('data-graphql-form');
+    expect(graphqlHtml).toContain('Accessible query runner');
     expect(graphqlHtml).not.toContain('/graphql/console');
     for (const control of ['Depth limit', 'Field limit', 'Batching', 'Request limit']) expect(graphqlHtml).toContain(control);
     expect(graphqlHtml).toContain('GraphQL ↔ D1 Users');

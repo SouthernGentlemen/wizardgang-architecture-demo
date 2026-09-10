@@ -88,7 +88,7 @@ function renderResponses(operation: RestDemoOperation): string {
 function renderCodeSamples(rendered: RenderedOperation): string {
   const id = operationId(rendered.operation);
   const examples = codeExamples(rendered);
-  return `<details class="rest-code-samples"><summary>Code samples</summary><div class="rest-code-samples-body"><div class="api-subheading"><div class="api-tabs" role="tablist" aria-label="Code sample language">${['curl', 'JavaScript', 'Python'].map((label, tabIndex) => `<button type="button" role="tab" aria-selected="${tabIndex === 0}" data-code-tab="${tabIndex}"${tabIndex ? ' tabindex="-1"' : ''}>${label}</button>`).join('')}</div><button type="button" data-copy-code>Copy</button></div>${examples.map((example, tabIndex) => `<pre id="${id}-code-${tabIndex}" data-code-panel="${tabIndex}"${tabIndex ? ' hidden' : ''}>${escapeHtml(example)}</pre>`).join('')}</div></details>`;
+  return `<details class="rest-code-samples"><summary>Code samples</summary><div class="rest-code-samples-body"><div class="api-subheading"><div class="api-tabs" role="tablist" aria-label="Code sample language">${['curl', 'JavaScript', 'Python'].map((label, tabIndex) => `<button id="${id}-tab-${tabIndex}" type="button" role="tab" aria-selected="${tabIndex === 0}" aria-controls="${id}-code-${tabIndex}" data-code-tab="${tabIndex}"${tabIndex ? ' tabindex="-1"' : ''}>${label}</button>`).join('')}</div><button type="button" data-copy-code>Copy selected code sample</button></div>${examples.map((example, tabIndex) => `<pre id="${id}-code-${tabIndex}" role="tabpanel" aria-labelledby="${id}-tab-${tabIndex}" tabindex="0" data-code-panel="${tabIndex}"${tabIndex ? ' hidden' : ''}>${escapeHtml(example)}</pre>`).join('')}</div></details>`;
 }
 
 function renderTryItOut(rendered: RenderedOperation): string {
@@ -114,10 +114,18 @@ function renderSchema(name: string, schema: RestDemoSchema): string {
 const REST_RUNNER = `(() => {
   const q = (selector, root = document) => root.querySelector(selector);
   const qa = (selector, root = document) => Array.from(root.querySelectorAll(selector));
-  const select = (buttons, panels, selected) => { buttons.forEach((button, index) => { button.setAttribute('aria-selected', String(index === selected)); button.tabIndex = index === selected ? 0 : -1; }); panels.forEach((panel, index) => { panel.hidden = index !== selected; }); };
+  const select = (buttons, panels, selected, moveFocus = false) => { buttons.forEach((button, index) => { button.setAttribute('aria-selected', String(index === selected)); button.tabIndex = index === selected ? 0 : -1; }); panels.forEach((panel, index) => { panel.hidden = index !== selected; }); if (moveFocus) buttons[selected]?.focus(); };
   q('[data-copy-server]')?.addEventListener('click', async (event) => { await navigator.clipboard.writeText(event.currentTarget.dataset.copyServer); event.currentTarget.textContent = 'Copied'; setTimeout(() => { event.currentTarget.textContent = 'Copy'; }, 1200); });
-  qa('[data-code-tab]').forEach((button) => button.addEventListener('click', () => { const operation = button.closest('[data-rest-operation]'); select(qa('[data-code-tab]', operation), qa('[data-code-panel]', operation), Number(button.dataset.codeTab)); }));
-  qa('[data-copy-code]').forEach((button) => button.addEventListener('click', async () => { const operation = button.closest('[data-rest-operation]'); await navigator.clipboard.writeText(qa('[data-code-panel]', operation).find((panel) => !panel.hidden)?.textContent || ''); button.textContent = 'Copied'; setTimeout(() => { button.textContent = 'Copy'; }, 1200); }));
+  qa('[data-code-tab]').forEach((button) => {
+    button.addEventListener('click', () => { const operation = button.closest('[data-rest-operation]'); select(qa('[data-code-tab]', operation), qa('[data-code-panel]', operation), Number(button.dataset.codeTab)); });
+    button.addEventListener('keydown', (event) => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+      const operation = button.closest('[data-rest-operation]'); const buttons = qa('[data-code-tab]', operation); const panels = qa('[data-code-panel]', operation); const current = buttons.indexOf(button); const rtl = getComputedStyle(button.closest('[role="tablist"]')).direction === 'rtl'; let next = current;
+      if (event.key === 'Home') next = 0; else if (event.key === 'End') next = buttons.length - 1; else if (event.key === 'ArrowRight') next = (current + (rtl ? -1 : 1) + buttons.length) % buttons.length; else next = (current + (rtl ? 1 : -1) + buttons.length) % buttons.length;
+      event.preventDefault(); select(buttons, panels, next, true);
+    });
+  });
+  qa('[data-copy-code]').forEach((button) => button.addEventListener('click', async () => { const operation = button.closest('[data-rest-operation]'); await navigator.clipboard.writeText(qa('[data-code-panel]', operation).find((panel) => !panel.hidden)?.textContent || ''); button.textContent = 'Copied'; setTimeout(() => { button.textContent = 'Copy selected code sample'; }, 1200); }));
   qa('[data-rest-enable]').forEach((button) => button.addEventListener('click', () => { const section = button.closest('.rest-try'); const inputs = q('[data-rest-inputs]', section); inputs.hidden = false; qa('input, textarea, button[data-rest-execute]', inputs).forEach((control) => { control.disabled = false; }); button.hidden = true; q('input, textarea', inputs)?.focus(); }));
   qa('[data-rest-form]').forEach((form) => form.addEventListener('submit', async (event) => {
     event.preventDefault();
