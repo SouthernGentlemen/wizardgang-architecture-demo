@@ -15,26 +15,13 @@ This file is generated from the active declarative application registry. Route I
 | `assurance.governance` | `/assurance/governance` | `GET` | page | public | gated | allow | Governance | `src/demos/governance.ts` |
 | `assurance.incidents` | `/assurance/incidents` | `GET` | page | public | gated | allow | Incidents | `src/demos/incidents-page.ts` |
 | `assurance.risks` | `/assurance/risks` | `GET` | page | public | gated | allow | Risks | `src/demos/assurance-pages.ts` |
-| `interfaces.index` | `/interfaces` | `GET` | page | public | gated | allow | Application interfaces | `src/demos/interfaces.ts` |
-| `interfaces.accessibility` | `/interfaces/accessibility` | `GET` | page | public | gated | allow | WCAG 2.2 accessibility laboratory | `src/demos/accessibility-page.ts` |
-| `interfaces.graphql.console` | `/interfaces/graphql` | `GET` | page | public | gated | allow | GraphQL console | `src/demos/graphql-console.ts` |
-| `interfaces.i18n` | `/interfaces/i18n` | `GET` | page | public | gated | allow | Internationalization | `src/demos/i18n-page.ts` |
-| `interfaces.identity.page` | `/interfaces/identity` | `GET` | page | public | gated | allow | Authentication and SSO | `src/demos/identity-page.ts` |
-| `interfaces.mcp.console` | `/interfaces/mcp` | `GET` | page | public | gated | allow | Model Context Protocol console | `src/demos/mcp-page.ts` |
-| `interfaces.rest` | `/interfaces/rest` | `GET` | page | public | gated | allow | REST API | `src/demos/api-page.ts` |
-| `interfaces.webhooks.console` | `/interfaces/webhooks` | `GET` | page | public | gated | allow | Signed webhooks console | `src/demos/webhook-console.ts` |
+| `demos.index` | `/demos` | `GET` | page | public | gated | allow | Architecture Demos | `src/demos/demos-page.ts` |
 | `operations.index` | `/operations` | `GET` | page | public | available | allow | Operations | `src/demos/operations-pages.ts` |
 | `operations.availability` | `/operations/availability` | `GET` | page | public | available | allow | Operations availability | `src/demos/operations-pages.ts` |
 | `operations.docs` | `/operations/docs` | `GET` | page | public | available | allow | Operations documentation | `src/demos/operations-pages.ts` |
 | `operations.logs` | `/operations/logs` | `GET` | page | public | available | allow | Operations logs | `src/demos/logs.ts` |
 | `operations.reports` | `/operations/reports` | `GET` | page | public | available | allow | Operations reports | `src/demos/operations.ts` |
 | `operations.usage` | `/operations/usage` | `GET` | page | public | available | allow | Operations usage and cost | `src/demos/operations-pages.ts` |
-| `platform.index` | `/platform` | `GET` | page | public | gated | allow | Platform demonstrations | `src/demos/platform.ts` |
-| `platform.d1` | `/platform/d1` | `GET` | page | public | gated | allow | Cloudflare D1 | `src/demos/d1-page.ts` |
-| `platform.durable-objects` | `/platform/durable-objects` | `GET` | page | public | gated | allow | Durable Objects | `src/demos/durable-objects.ts` |
-| `platform.edge` | `/platform/edge` | `GET` | page | public | gated | allow | Cloudflare Edge | `src/demos/edge.ts` |
-| `platform.r2` | `/platform/r2` | `GET` | page | public | gated | allow | Cloudflare R2 | `src/demos/r2-page.ts` |
-| `platform.workers` | `/platform/workers` | `GET` | page | public | gated | allow | Cloudflare Workers | `src/demos/workers.ts` |
 | `security.index` | `/security` | `GET` | page | public | available | allow | Security | `src/demos/security-page.ts` |
 
 ## Registered service, protocol, asset, and private routes

@@ -64,10 +64,10 @@ export const assuranceRuntimeSourceRevisions: Readonly<Record<string, string>> =
   "compliance.wcag-2.2.perceivable": "164da8b3a1b7f4633b9e15fcddcf7c69b4465e54",
   "compliance.wcag-2.2.robust": "0ee0623d42fcd08489630fff421dca7ca45444a0",
   "compliance.wcag-2.2.understandable": "f369390e8795f4c42fa0bd97e5f81fc6da9eeca9",
-  "evidence": "14406f65d147f0bb981770e004e4444e6501e2e2",
+  "evidence": "4d8afa6496f03062eb54b838385d89f19149ae3b",
   "exercises": "6c6e8f646a696ce66599f45c8e7c15776f01ad6b",
   "incidents": "1ff3b01fe53498e0bfd4b0af369bc8f1cfb8614e",
-  "lifecycle.records": "b2d89bd1a26eba0bd53d429b26b94484107087df",
+  "lifecycle.records": "273c0c0b9bc166dd1885256f2fcd6f87d602e5dc",
   "objectives": "b655f90065611c778e36f322bcc0b9bfdefa456d",
   "risks": "25e755a5d945f60c4f86d39a3123c349baa024c5"
 };

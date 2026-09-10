@@ -1,6 +1,6 @@
 # Application internationalization runtime
 
-Internationalization is an application capability, not a mode owned by `/interfaces/i18n`. Every ordinary server-rendered HTML request resolves a localization context before its route handler emits the shared page shell. The interface route remains an inspection and teaching surface for that same runtime.
+Internationalization is an application capability, not a mode owned by the demonstration at `/demos#i18n`. Every ordinary server-rendered HTML request resolves a localization context before its route handler emits the shared page shell. The demonstration remains an inspection and teaching surface for that same runtime.
 
 The canonical implementation is `src/i18n/runtime.ts`. `config/i18n.json` owns the configured default, fallback, supported-locale inventory, and RTL inventory. The synchronized resources remain under `src/i18n/locales/`.
 
@@ -45,7 +45,7 @@ The HTML document always emits the active `lang`. It also emits an explicit dire
 
 ## RTL and accessibility relationship
 
-RTL is owned by the application localization context, not by the i18n demonstration. Shared layout uses logical CSS properties where direction matters, including navigation separation and inline spacing. `/interfaces/i18n` shows the resolved direction and formatting behavior, but it does not create an alternate application shell.
+RTL is owned by the application localization context, not by the i18n demonstration. Shared layout uses logical CSS properties where direction matters, including navigation separation and inline spacing. `/demos#i18n` shows the resolved direction and formatting behavior, but it does not create an alternate application shell.
 
 Likewise, accessibility is not a locale-specific or demonstration-only mode. The same shared shell is expected to remain keyboard operable, focus visible, reflow safe, reduced-motion aware, and usable in forced-colors environments for every supported locale.
 

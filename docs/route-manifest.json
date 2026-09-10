@@ -419,8 +419,8 @@
     "status": "working"
   },
   {
-    "id": "interfaces.accessibility",
-    "route": "/interfaces/accessibility",
+    "id": "demos.index",
+    "route": "/demos",
     "methods": [
       "GET"
     ],
@@ -446,26 +446,27 @@
       "crawling": "controlled",
       "indexing": "allow"
     },
-    "title": "WCAG 2.2 accessibility laboratory",
-    "description": "Isolated accessible and intentionally broken teaching states with partial automated evidence.",
+    "title": "Architecture Demos",
+    "description": "One task-oriented destination for the interactive architecture demonstrations.",
     "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
+      "docs/FRONTEND-ROUTES.md",
+      "docs/ROUTES.md"
     ],
     "source": {
-      "module": "src/demos/accessibility-page.ts",
-      "exportName": "accessibilityContent",
+      "module": "src/demos/demos-page.ts",
+      "exportName": "demosContent",
       "tests": [
-        "tests/platform-laboratory-routing.test.ts",
-        "tests/interface.test.ts",
-        "tests/router.test.ts"
+        "tests/interface-identity-routing.test.ts",
+        "tests/demos-consolidation.test.ts",
+        "tests/router.test.ts",
+        "tests/interface.test.ts"
       ]
     },
     "navigation": {
-      "parent": "interfaces.index",
-      "label": "Accessibility",
-      "order": 6,
-      "navigation": "secondary",
+      "parent": "interfaces.frontend.index",
+      "label": "Demos",
+      "order": 1,
+      "navigation": "primary",
       "architectureMap": true,
       "sitemap": true
     },
@@ -526,59 +527,6 @@
     "status": "working"
   },
   {
-    "id": "interfaces.graphql.console",
-    "route": "/interfaces/graphql",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "GraphQL console",
-    "description": "Run public GraphQL examples against the shared D1-backed schema and bundled GraphiQL IDE.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/graphql-console.ts",
-      "exportName": "graphqlContent",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/interface-consolidation.test.ts",
-        "tests/graphql.test.ts"
-      ]
-    },
-    "navigation": {
-      "parent": "interfaces.index",
-      "label": "GraphQL",
-      "order": 1,
-      "navigation": "secondary",
-      "architectureMap": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
     "id": "interfaces.graphql.endpoint",
     "route": "/graphql",
     "methods": [
@@ -626,59 +574,6 @@
         "tests/interface-consolidation.test.ts",
         "tests/canonical-frontend-routes.test.ts"
       ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "interfaces.i18n",
-    "route": "/interfaces/i18n",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Internationalization",
-    "description": "Locale-aware language, formatting, translation-resource, pluralization, and RTL demonstration.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/i18n-page.ts",
-      "exportName": "i18nContent",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/interface-consolidation.test.ts",
-        "tests/interface.test.ts"
-      ]
-    },
-    "navigation": {
-      "parent": "interfaces.index",
-      "label": "Internationalization",
-      "order": 5,
-      "navigation": "secondary",
-      "architectureMap": true,
-      "sitemap": true
     },
     "status": "working"
   },
@@ -1053,59 +948,6 @@
     "status": "working"
   },
   {
-    "id": "interfaces.identity.page",
-    "route": "/interfaces/identity",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Authentication and SSO",
-    "description": "Authenticate with supported providers and inspect the resulting application session.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/identity-page.ts",
-      "exportName": "identityContent",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/interface-consolidation.test.ts",
-        "tests/identity.test.ts"
-      ]
-    },
-    "navigation": {
-      "parent": "interfaces.index",
-      "label": "Identity",
-      "order": 3,
-      "navigation": "secondary",
-      "architectureMap": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
     "id": "interfaces.identity.saml.acs",
     "route": "/auth/saml/acs",
     "methods": [
@@ -1336,114 +1178,6 @@
     "status": "working"
   },
   {
-    "id": "interfaces.index",
-    "route": "/interfaces",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Application interfaces",
-    "description": "Index of canonical application interface demonstration routes.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/interfaces.ts",
-      "exportName": "interfacesContent",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/interface-consolidation.test.ts",
-        "tests/router.test.ts",
-        "tests/interface.test.ts",
-        "tests/application-route-registry.test.ts"
-      ]
-    },
-    "navigation": {
-      "parent": "interfaces.frontend.index",
-      "label": "Interfaces",
-      "order": 2,
-      "navigation": "primary",
-      "architectureMap": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
-    "id": "interfaces.mcp.console",
-    "route": "/interfaces/mcp",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Model Context Protocol console",
-    "description": "Connect compatible MCP clients and inspect read-only tool activity.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/mcp-page.ts",
-      "exportName": "mcpContent",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/interface-consolidation.test.ts",
-        "tests/mcp-client.test.ts"
-      ]
-    },
-    "navigation": {
-      "parent": "interfaces.index",
-      "label": "MCP",
-      "order": 4,
-      "navigation": "secondary",
-      "architectureMap": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
     "id": "interfaces.mcp.server",
     "route": "/mcp",
     "methods": [
@@ -1539,58 +1273,6 @@
     "status": "working"
   },
   {
-    "id": "interfaces.rest",
-    "route": "/interfaces/rest",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "REST API",
-    "description": "Explore live anonymous CRUD operations through a focused OpenAPI 3.0-style contract.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/api-page.ts",
-      "exportName": "apiContent",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/interface-consolidation.test.ts"
-      ]
-    },
-    "navigation": {
-      "parent": "interfaces.index",
-      "label": "REST",
-      "order": 0,
-      "navigation": "secondary",
-      "architectureMap": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
     "id": "interfaces.rest.openapi.json",
     "route": "/api/labs/rest-demo-openapi.json",
     "methods": [
@@ -1632,59 +1314,6 @@
         "tests/interface-identity-routing.test.ts",
         "tests/router.test.ts"
       ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "interfaces.webhooks.console",
-    "route": "/interfaces/webhooks",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Signed webhooks console",
-    "description": "Pull a release notification, verify it like a GitHub delivery, and inspect sanitized evidence.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/webhook-console.ts",
-      "exportName": "webhooksContent",
-      "tests": [
-        "tests/interface-identity-routing.test.ts",
-        "tests/interface-consolidation.test.ts",
-        "tests/webhooks.test.ts"
-      ]
-    },
-    "navigation": {
-      "parent": "interfaces.index",
-      "label": "Webhooks",
-      "order": 2,
-      "navigation": "secondary",
-      "architectureMap": true,
-      "sitemap": true
     },
     "status": "working"
   },
@@ -2560,60 +2189,6 @@
     "status": "working"
   },
   {
-    "id": "platform.d1",
-    "route": "/platform/d1",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Cloudflare D1",
-    "description": "Isolated Users and Tasks CRUD with live parameterized SQL, timing, row counts, shared GraphQL data, and resettable D1 state.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/d1-page.ts",
-      "exportName": "d1Content",
-      "tests": [
-        "tests/platform-laboratory-routing.test.ts",
-        "tests/d1-lab.test.ts",
-        "tests/api-records.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "parent": "platform.index",
-      "label": "D1",
-      "order": 3,
-      "navigation": "secondary",
-      "architectureMap": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
     "id": "platform.d1.record",
     "route": "/api/labs/rest-records/{id}",
     "methods": [
@@ -3105,59 +2680,6 @@
     "status": "working"
   },
   {
-    "id": "platform.durable-objects",
-    "route": "/platform/durable-objects",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Durable Objects",
-    "description": "Coordinated stateful compute for cases where independent Worker requests must agree on shared state.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/durable-objects.ts",
-      "exportName": "durableObjectsContent",
-      "tests": [
-        "tests/platform-laboratory-routing.test.ts",
-        "tests/runtime.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "parent": "platform.index",
-      "label": "Durable Objects",
-      "order": 2,
-      "navigation": "secondary",
-      "architectureMap": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
     "id": "platform.durable-objects.counter",
     "route": "/api/labs/durable-counter",
     "methods": [
@@ -3200,58 +2722,6 @@
         "tests/runtime.test.ts",
         "tests/router.test.ts"
       ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "platform.edge",
-    "route": "/platform/edge",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Cloudflare Edge",
-    "description": "Public edge boundary for DNS, TLS, CDN, routing, traffic filtering, rate controls, and security policy.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/edge.ts",
-      "exportName": "edgeContent",
-      "tests": [
-        "tests/platform-laboratory-routing.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "parent": "platform.index",
-      "label": "Edge",
-      "order": 0,
-      "navigation": "secondary",
-      "architectureMap": true,
-      "sitemap": true
     },
     "status": "working"
   },
@@ -3535,113 +3005,6 @@
         "tests/mcp-client.test.ts",
         "tests/router.test.ts"
       ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "platform.index",
-    "route": "/platform",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Platform demonstrations",
-    "description": "Index of canonical Cloudflare platform demonstration routes.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/platform.ts",
-      "exportName": "platformContent",
-      "tests": [
-        "tests/platform-laboratory-routing.test.ts",
-        "tests/router.test.ts",
-        "tests/interface.test.ts",
-        "tests/application-route-registry.test.ts"
-      ]
-    },
-    "navigation": {
-      "parent": "interfaces.frontend.index",
-      "label": "Platform",
-      "order": 1,
-      "navigation": "primary",
-      "architectureMap": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
-    "id": "platform.r2",
-    "route": "/platform/r2",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Cloudflare R2",
-    "description": "Session-isolated file management backed by real R2 bytes and D1 metadata.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/r2-page.ts",
-      "exportName": "r2Content",
-      "tests": [
-        "tests/platform-laboratory-routing.test.ts",
-        "tests/r2-lab.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "parent": "platform.index",
-      "label": "R2",
-      "order": 4,
-      "navigation": "secondary",
-      "architectureMap": true,
-      "sitemap": true
     },
     "status": "working"
   },
@@ -4025,59 +3388,6 @@
         "tests/webhooks.test.ts",
         "tests/router.test.ts"
       ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "platform.workers",
-    "route": "/platform/workers",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Cloudflare Workers",
-    "description": "Apply an edge cache and routing policy before a request reaches origin.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/workers.ts",
-      "exportName": "workersContent",
-      "tests": [
-        "tests/platform-laboratory-routing.test.ts",
-        "tests/runtime.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "parent": "platform.index",
-      "label": "Workers",
-      "order": 1,
-      "navigation": "secondary",
-      "architectureMap": true,
-      "sitemap": true
     },
     "status": "working"
   },

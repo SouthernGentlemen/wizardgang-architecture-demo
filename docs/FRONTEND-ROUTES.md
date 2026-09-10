@@ -20,6 +20,12 @@ Stable sections and URL fragments are explicitly permitted for content that must
 
 Fragments identify a location inside the already-selected page. They must be stable enough for durable internal links when the underlying demonstration or record is intended to be linkable. They must not be used to disguise a second application router or to create competing canonical page identities.
 
+## Architecture demos destination — DEMO-242
+
+`/demos` is the single public Architecture Demos task page. The former Platform and Interfaces browser hierarchies are retired; their machine/API/protocol endpoints are unchanged.
+
+The demos page exposes these durable section fragments: `#edge`, `#workers`, `#durable-objects`, `#d1`, `#r2`, `#rest`, `#graphql`, `#webhooks`, `#identity`, `#mcp`, `#accessibility`, and `#i18n`. Native disclosure controls keep demonstrations collapsed until selected, while a small hash enhancement opens and focuses the referenced section on initial load and `hashchange`. The fragment behavior does not perform application routing.
+
 ## Query-state policy
 
 Query parameters are interaction state, not primary resource selectors. They may filter, search, sort, paginate, localise, or otherwise refine the task already selected by the pathname.
@@ -68,4 +74,4 @@ The application has no client-side router. `src/router.ts` normalizes requests, 
 
 ## Migration guardrail
 
-DEMO-240 is documentation-only. Runtime route declarations, generated route artifacts, APIs, protocol endpoints, `/admin`, and `/offline` remain as they are until subsequent controlled changes implement this contract. The ordered migration is recorded in [`docs/IMPLEMENTATION-PLAN.md`](IMPLEMENTATION-PLAN.md).
+DEMO-240 established the contract and DEMO-241 established reusable presentation sections. DEMO-242 implements the `/demos` slice by retiring the Platform and Interfaces browser hierarchies while leaving machine/API/protocol routes, `/admin`, and `/offline` unchanged. Remaining task-page consolidation continues in subsequent controlled changes. The ordered migration is recorded in [`docs/IMPLEMENTATION-PLAN.md`](IMPLEMENTATION-PLAN.md).

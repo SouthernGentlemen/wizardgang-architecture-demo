@@ -45,6 +45,8 @@ Implement the frontend consolidation in this order:
 
 Throughout the migration, machine/API/protocol route declarations remain unchanged unless a separate controlled change explicitly scopes such a modification.
 
+**DEMO-242 status:** the Architecture Demos slice is complete. `/demos` now owns the Edge, Workers, Durable Objects, D1, R2, REST/OpenAPI, GraphQL, Webhooks, Identity, MCP, Accessibility, and i18n presentations through stable fragments. The former Platform and Interfaces browser paths are retired as ordinary 404s; machine/API/protocol routes remain unchanged.
+
 ## Release evidence
 
 The v0.1.0 baseline completed the publication path below. Every later release repeats it without inventing external evidence:

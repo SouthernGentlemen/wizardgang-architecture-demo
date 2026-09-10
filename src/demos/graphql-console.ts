@@ -4,9 +4,9 @@ import { escapeHtml } from '../lib/html';
 import { pageContent, type PageContent } from '../ui/page';
 
 export function graphqlContent(env: Env): PageContent {
-  const graphqlUrl = routeUrl('interfaces.graphql.console');
-  const identityUrl = routeUrl('interfaces.identity.page');
-  const d1Url = routeUrl('platform.d1');
+  const graphqlUrl = `${routeUrl('demos.index')}#graphql`;
+  const identityUrl = `${routeUrl('demos.index')}#identity`;
+  const d1Url = `${routeUrl('demos.index')}#d1`;
   const examples = [
     { title: 'List users', query: 'query Users { users { id name email role } }' },
     { title: 'Read one user', query: 'query User { user(id: "user-001") { id name email role } }' },

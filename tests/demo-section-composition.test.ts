@@ -33,7 +33,7 @@ const env: Env = {
   BILLING_DEMO_MONTHLY_BUDGET_USD: '10',
 };
 
-const request = new Request('https://demo.wizardgang.ai/platform?count=3', {
+const request = new Request('https://demo.wizardgang.ai/demos?count=3', {
   headers: { accept: 'text/html' },
 });
 
@@ -125,7 +125,7 @@ describe('composable demo presentations', () => {
   });
 
   it('parameterizes presentation ownership while preserving machine and protocol targets', async () => {
-    const presentationPath = routeUrl('platform.index');
+    const presentationPath = routeUrl('demos.index');
     const options = { presentationPath, canonicalPath: presentationPath } as const;
     const identity = identitySection(env, options);
     const i18n = i18nSection(request, env, options);
@@ -134,8 +134,8 @@ describe('composable demo presentations', () => {
 
     expect(identity.page.canonicalPath).toBe(presentationPath);
     expect(i18n.page.canonicalPath).toBe(presentationPath);
-    expect(identity.body).not.toContain(routeUrl('interfaces.identity.page'));
-    expect(i18n.body).not.toContain(routeUrl('interfaces.i18n'));
+    expect(identity.body).not.toContain(`${routeUrl('demos.index')}#identity`);
+    expect(i18n.body).not.toContain(`${routeUrl('demos.index')}#i18n`);
     expect(identity.body).toContain('/auth/session');
     expect(graphql.body).toContain('/graphql');
     expect(mcp.body).toContain(MCP_SERVER_PATH);
@@ -162,6 +162,6 @@ describe('composable demo presentations', () => {
     expect(page.body).toContain('data-demo-section="edge"');
     expect(page.body).not.toContain('id="edge-edge-');
     expect(headings(withoutScripts(page.body))[0]).toBe(1);
-    expect(page.canonicalPath).toBe(routeUrl('platform.edge'));
+    expect(page.canonicalPath).toBe(`${routeUrl('demos.index')}#edge`);
   });
 });

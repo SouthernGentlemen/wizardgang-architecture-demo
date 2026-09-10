@@ -20,7 +20,7 @@ const demo: DemoDefinition = {
 };
 
 export function durableObjectsContent(env: Env): PageContent {
-  return demoContent(env, { ...demo, route: routeUrl('platform.durable-objects') });
+  return demoContent(env, { ...demo, route: `${routeUrl('demos.index')}#durable-objects` });
 }
 
 export default demo;

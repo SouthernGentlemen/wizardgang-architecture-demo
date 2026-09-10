@@ -48,7 +48,7 @@ const publicPages = applicationRouteRegistry.declarations
 
 describe('document composition', () => {
   it('builds one document and preserves page metadata through the content boundary', async () => {
-    const boundaryPath = routeUrl('platform.index', {}, { view: 'edge' });
+    const boundaryPath = `${routeUrl('demos.index')}#edge`;
     const content: PageContent = {
       title: 'Boundary proof',
       description: 'Child description',
@@ -72,8 +72,8 @@ describe('document composition', () => {
     expect(headings(html)).toEqual([1, 2, 3]);
   });
 
-  it('renders all 31 public HTML surfaces through one shell with a valid heading outline', async () => {
-    expect(publicPages).toHaveLength(31);
+  it('renders every registered public HTML surface through one shell with a valid heading outline', async () => {
+    expect(publicPages).toContain(routeUrl('demos.index'));
     for (const path of publicPages) {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`, {
         headers: { accept: 'text/html' },

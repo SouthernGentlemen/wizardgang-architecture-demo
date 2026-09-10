@@ -49,7 +49,7 @@ function activityValue(activity: McpActivity | undefined, key: keyof McpActivity
 
 export async function mcpContent(request: Request, env: Env): Promise<PageContent> {
   const endpoint = `${new URL(request.url).origin}${MCP_SERVER_PATH}`;
-  const mcpUrl = routeUrl('interfaces.mcp.console');
+  const mcpUrl = `${routeUrl('demos.index')}#mcp`;
   const activity = activityFromLog((await recentApplicationLogs(env, { source: 'mcp', limit: 1 }))[0]);
   const claudeCommand = `claude mcp add --transport http wizardgang ${endpoint}`;
   const codexCommand = `codex mcp add wizardgang --url ${endpoint}`;

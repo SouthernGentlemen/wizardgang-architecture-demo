@@ -27,8 +27,8 @@ const environment: Env = {
 };
 
 const EVIDENCE_ROUTE = routeUrl('assurance.evidence');
-const ACCESSIBILITY_ROUTE = routeUrl('interfaces.accessibility');
-const LEGACY_ACCESSIBILITY_VIEW = `${routeUrl('interfaces.index')}?view=accessibility`;
+const ACCESSIBILITY_ROUTE = `${routeUrl('demos.index')}#accessibility`;
+const LEGACY_ACCESSIBILITY_VIEW = `${routeUrl('demos.index')}?view=accessibility`;
 
 async function evidencePage(path = EVIDENCE_ROUTE) {
   const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`, {

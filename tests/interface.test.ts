@@ -29,10 +29,10 @@ function localized(url: string, headers: HeadersInit = {}): { request: Request; 
 
 describe('D1 database console', () => {
   it('leads with table navigation and progressively discloses relational CRUD controls', async () => {
-    const html = await renderPage(env, { ...d1Content(env), routeId: 'platform.d1' }).text();
+    const html = await renderPage(env, { ...d1Content(env), routeId: 'demos.index' }).text();
     expect(html).toContain('aria-label="Breadcrumb"');
-    expect(html).toContain('<a href="/platform">Platform</a>');
-    expect(html).toContain('<li aria-current="page">D1</li>');
+    expect(html).toContain('<a href="/">Architecture</a>');
+    expect(html).toContain('<li aria-current="page">Demos</li>');
     expect(html).toContain('Cloudflare D1 Database');
     expect(html).toContain('role="tablist"');
     expect(html).toContain('Users <span><strong data-count="users">—</strong> / 10');
@@ -68,10 +68,10 @@ describe('D1 database console', () => {
 
 describe('R2 storage workspace', () => {
   it('leads with the sandbox workflow and progressively discloses technical evidence', async () => {
-    const html = await renderPage(env, { ...r2Content(env), routeId: 'platform.r2' }).text();
+    const html = await renderPage(env, { ...r2Content(env), routeId: 'demos.index' }).text();
     expect(html).toContain('aria-label="Breadcrumb"');
-    expect(html).toContain('<a href="/platform">Platform</a>');
-    expect(html).toContain('<li aria-current="page">R2</li>');
+    expect(html).toContain('<a href="/">Architecture</a>');
+    expect(html).toContain('<li aria-current="page">Demos</li>');
     expect(html).toContain('Cloudflare R2 Storage');
     expect(html).toContain('Your R2 sandbox');
     expect(html).toContain('Drop a file here');
@@ -128,8 +128,8 @@ describe('internationalized interface', () => {
     const context = localized('https://demo.example/interfaces/i18n?lang=ja&count=7');
     const html = await renderPage(context.env, i18nContent(context.request, context.env)).text();
     expect(html).toContain('<html lang="ja" dir="ltr">');
-    expect(html).toContain('href="/interfaces/i18n?count=7&amp;lang=fr"');
-    expect(html).toContain('href="/interfaces/i18n?count=7&amp;lang=de"');
+    expect(html).toContain('href="/demos?count=7&amp;lang=fr#i18n"');
+    expect(html).toContain('href="/demos?count=7&amp;lang=de#i18n"');
     expect(html).toContain('aria-current="page">日本語</a>');
     expect(html).toContain('グローバルコンテキスト検査');
     expect(html).toContain('items_other');
@@ -139,7 +139,7 @@ describe('internationalized interface', () => {
 
 describe('global localization and accessibility runtime', () => {
   it('makes the ordinary application shell English and accessible by default', async () => {
-    const html = await renderPage(env, { ...d1Content(env), routeId: 'platform.d1' }).text();
+    const html = await renderPage(env, { ...d1Content(env), routeId: 'demos.index' }).text();
     expect(html).toContain('<html lang="en" dir="ltr">');
     expect(html).toContain('<a class="skip-link" href="#main">Skip to main content</a>');
     expect(html).toContain('<main class="site-main" id="main">');
@@ -147,20 +147,20 @@ describe('global localization and accessibility runtime', () => {
     expect(html).toContain('class="language-selector"');
     expect(html).toContain('id="global-language" name="lang"');
     expect(html).toContain('data-theme-toggle aria-label="Switch to Light theme" aria-pressed="true">Theme: Dark</button>');
-    expect(html).toContain('aria-current="page" data-route-current');
+    expect(html).toContain('<a href="/demos" aria-current="page">Demos</a>');
   });
 
   it('localizes shell-owned strings and preserves unrelated state on an ordinary RTL page', async () => {
-    const context = localized('https://demo.example/platform/d1?lang=ar&filter=recent');
-    const html = await renderPage(context.env, { ...d1Content(context.env), routeId: 'platform.d1' }).text();
+    const context = localized('https://demo.example/demos?lang=ar&filter=recent');
+    const html = await renderPage(context.env, { ...d1Content(context.env), routeId: 'demos.index' }).text();
     expect(html).toContain('<html lang="ar" dir="rtl">');
     expect(html).toContain('aria-label="التنقل الرئيسي"');
-    expect(html).toContain('>المنصة</a>');
+    expect(html).toContain('>العروض التوضيحية</a>');
     expect(html).toContain('انتقل إلى المحتوى الرئيسي');
     expect(html).toContain('name="filter" value="recent"');
     expect(html).toContain('<option value="ar" selected>العربية</option>');
     expect(html).toContain('data-theme-toggle aria-label="التبديل إلى السمة فاتح" aria-pressed="true">السمة: داكن</button>');
-    expect(html).toContain('href="/platform?lang=ar"');
+    expect(html).toContain('href="/demos?lang=ar"');
   });
 
   it('uses explicit query, persisted preference, then configured default with clean default URLs', () => {

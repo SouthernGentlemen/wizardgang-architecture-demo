@@ -20,23 +20,6 @@ export const d1LaboratoryCapability = definePlatformLaboratoryCapability({
   id: 'platform.d1',
   routes: [
 
-{
-  id: 'platform.d1',
-  pattern: '/platform/d1',
-  methods: ['GET'],
-  kind: 'page',
-  handler: async (_request, env) => {
-    const [{ d1Content }, { renderPage }] = await Promise.all([import('../../demos/d1-page'), import('../../ui/page')]);
-    return renderPage(env, { ...d1Content(env), routeId: 'platform.d1' });
-  },
-  authentication: { mode: 'anonymous' }, authorization: { mode: 'none' }, visibility: 'public',
-  sameOrigin: { mode: 'not-required' }, offline: { mode: 'gated' }, cache: { mode: 'no-store' },
-  crawler: { crawling: 'controlled', indexing: 'allow' },
-  documentation: { title: 'Cloudflare D1', description: 'Isolated Users and Tasks CRUD with live parameterized SQL, timing, row counts, shared GraphQL data, and resettable D1 state.', docs },
-  source: { module: 'src/demos/d1-page.ts', exportName: 'd1Content', tests },
-  requestLimits: noRequestBody('GET renders the D1 laboratory and consumes no request body.'), storage: D1_RELATIONAL_STORAGE,
-  page: { parent: 'platform.index', label: 'D1', summary: 'Relational Users and Tasks CRUD with live parameterized SQL and resettable state.', order: 3, navigation: 'secondary', architectureMap: true },
-},
     {
       id: 'platform.d1.users',
       labId: 'd1-users',

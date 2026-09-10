@@ -20,7 +20,7 @@ const demo: DemoDefinition = {
 };
 
 export function edgeContent(env: Env): PageContent {
-  return demoContent(env, { ...demo, route: routeUrl('platform.edge') });
+  return demoContent(env, { ...demo, route: `${routeUrl('demos.index')}#edge` });
 }
 
 export default demo;

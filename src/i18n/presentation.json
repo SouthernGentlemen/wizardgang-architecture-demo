@@ -39,6 +39,7 @@
   "common.canonical_note": {"en":"Canonical record titles and values below are shown exactly as published source content.","es":"Los títulos y valores canónicos de los registros se muestran a continuación exactamente como contenido publicado de origen.","fr":"Les titres et valeurs canoniques des enregistrements ci-dessous sont affichés exactement comme dans la source publiée.","de":"Kanonische Datensatztitel und -werte werden unten exakt wie in der veröffentlichten Quelle angezeigt.","ja":"以下の正規レコードのタイトルと値は、公開されたソース内容をそのまま表示しています。","ar":"تُعرض عناوين السجلات والقيم المعيارية أدناه كما نُشرت في محتوى المصدر تمامًا."},
 
   "nav.interfaces.frontend.index": {"en":"Architecture","es":"Arquitectura","fr":"Architecture","de":"Architektur","ja":"アーキテクチャ","ar":"البنية"},
+  "nav.demos.index": {"en":"Demos","es":"Demostraciones","fr":"Démonstrations","de":"Demos","ja":"デモ","ar":"العروض التوضيحية"},
   "nav.platform.index": {"en":"Platform","es":"Plataforma","fr":"Plateforme","de":"Plattform","ja":"プラットフォーム","ar":"المنصة"},
   "nav.platform.edge": {"en":"Edge","es":"Perímetro","fr":"Périphérie","de":"Edge","ja":"エッジ","ar":"الحافة"},
   "nav.platform.workers": {"en":"Workers","es":"Workers","fr":"Workers","de":"Workers","ja":"Workers","ar":"Workers"},

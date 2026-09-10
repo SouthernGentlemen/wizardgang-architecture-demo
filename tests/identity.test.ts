@@ -129,7 +129,7 @@ describe('identity protocol boundaries', () => {
   it('redirects an unconfigured provider start back to the identity console', async () => {
     const response = await providerStartResponse(new Request('https://demo.example/auth/google'), env(), 'google');
     expect(response.status).toBe(303);
-    expect(response.headers.get('location')).toBe('https://demo.example/interfaces/identity?error=provider_unconfigured&provider=google');
+    expect(response.headers.get('location')).toBe('https://demo.example/demos?error=provider_unconfigured&provider=google#identity');
   }, 10_000);
 
   it('validates a Google ID token against discovery and JWKS before creating the application session', async () => {
@@ -159,7 +159,7 @@ describe('identity protocol boundaries', () => {
     }));
     const callback = await providerCallbackResponse(new Request('https://demo.example/auth/google/callback?state=browser-state&code=one-time-code', { headers: { cookie: flowCookie } }), environment, 'google');
     expect(callback.status).toBe(303);
-    expect(callback.headers.get('location')).toBe('https://demo.example/interfaces/identity?authenticated=google');
+    expect(callback.headers.get('location')).toBe('https://demo.example/demos?authenticated=google#identity');
     const sessionCookie = callback.headers.get('set-cookie')?.match(/__Host-wg_identity=([^;,]+)/)?.[1];
     expect(sessionCookie).toBeTruthy();
     const sessionResponse = await identitySessionResponse(new Request('https://demo.example/auth/session', { headers: { cookie: `__Host-wg_identity=${sessionCookie}` } }), environment);
@@ -184,7 +184,7 @@ describe('identity protocol boundaries', () => {
       return new Response(null, { status: 404 });
     }));
     const callback = await providerCallbackResponse(new Request('https://demo.example/auth/github/callback?state=github-state&code=one-time-code', { headers: { cookie: flowCookie } }), environment, 'github');
-    expect(callback.headers.get('location')).toBe('https://demo.example/interfaces/identity?authenticated=github');
+    expect(callback.headers.get('location')).toBe('https://demo.example/demos?authenticated=github#identity');
     const sessionCookie = callback.headers.get('set-cookie')?.match(/__Host-wg_identity=([^;,]+)/)?.[1];
     const response = await identitySessionResponse(new Request('https://demo.example/auth/session', { headers: { cookie: `__Host-wg_identity=${sessionCookie}` } }), environment);
     const body = await response.json() as Record<string, unknown>;

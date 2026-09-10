@@ -22,23 +22,6 @@ export const r2LaboratoryCapability = definePlatformLaboratoryCapability({
   id: 'platform.r2',
   routes: [
 
-{
-  id: 'platform.r2',
-  pattern: '/platform/r2',
-  methods: ['GET'],
-  kind: 'page',
-  handler: async (_request, env) => {
-    const [{ r2Content }, { renderPage }] = await Promise.all([import('../../demos/r2-page'), import('../../ui/page')]);
-    return renderPage(env, { ...r2Content(env), routeId: 'platform.r2' });
-  },
-  authentication: { mode: 'anonymous' }, authorization: { mode: 'none' }, visibility: 'public',
-  sameOrigin: { mode: 'not-required' }, offline: { mode: 'gated' }, cache: { mode: 'no-store' },
-  crawler: { crawling: 'controlled', indexing: 'allow' },
-  documentation: { title: 'Cloudflare R2', description: 'Session-isolated file management backed by real R2 bytes and D1 metadata.', docs },
-  source: { module: 'src/demos/r2-page.ts', exportName: 'r2Content', tests },
-  requestLimits: noRequestBody('GET renders the R2 laboratory and consumes no request body.'), storage: R2_OBJECT_STORAGE,
-  page: { parent: 'platform.index', label: 'R2', summary: 'Session-isolated file management backed by real R2 bytes and D1 metadata.', order: 4, navigation: 'secondary', architectureMap: true },
-},
     {
       id: 'platform.r2.demo-object',
       labId: 'r2-demo',

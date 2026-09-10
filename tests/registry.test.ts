@@ -22,7 +22,7 @@ describe('architecture demo registry', () => {
   it('derives primary navigation and architecture cards from page declarations', () => {
     const primary = primaryNavigation();
     expect(primary.map((route) => route.page?.label)).toEqual([
-      'Architecture', 'Platform', 'Interfaces', 'Assurance', 'Operations', 'Security',
+      'Architecture', 'Demos', 'Assurance', 'Operations', 'Security',
     ]);
     expect(primary.every((route) => route.page?.navigation === 'primary')).toBe(true);
     const expected = applicationRoutes
@@ -160,8 +160,8 @@ describe('intentional offline route policies', () => {
     ]) expect(browserPolicy(pattern), pattern).toBe('never');
     expect(browserPolicy('/graphql')).toBe('never');
     expect(browserPolicy('/mcp/server')).toBeUndefined();
-    expect(browserPolicy(routeUrl('interfaces.index'))).toBe('page');
-    expect(browserPolicy(routeUrl('platform.index'))).toBe('page');
+    expect(browserPolicy(routeUrl('demos.index'))).toBe('page');
+    expect(browserPolicy(routeUrl('demos.index'))).toBe('page');
     expect(browserPolicy(routeUrl('operations.reports'))).toBe('page');
     expect(browserPolicy('/edge')).toBeUndefined();
     expect(applicationRoutes.some((route) => route.pattern === `${retiredApiReferencePrefixes[0]}/things`)).toBe(false);

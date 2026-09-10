@@ -4,7 +4,7 @@ import { pageContent, type PageContent } from '../ui/page';
 import { openApiConsole } from './openapi-console';
 
 export function apiContent(env: Env): PageContent {
-  const restUrl = routeUrl('interfaces.rest');
+  const restUrl = `${routeUrl('demos.index')}#rest`;
   return pageContent(env, 'REST API', `
 <section class="page-header lab-page-header api-page-header">
   <h1>REST API</h1>

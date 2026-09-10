@@ -415,9 +415,9 @@ export function demoContent(env: Env, demo: DemoDefinition, _all: DemoDefinition
     ...(demo.supportingSources ?? []).map((source) => ({ label: source.label, href: sourceUrl(env, source.path) })),
     ...(demo.repositoryLinks ?? []).map((link) => ({ label: link.label, href: `${repoUrl(env)}${link.path}` })),
   ];
-  const pageTools = isPlatformDemo ? '' : `<div class="page-tools">
+  const pageTools = `<div class="page-tools">
     <a class="text-link" href="${escapeHtml(sourceUrl(env, demo.sourcePath))}">Route source</a>
-    ${referenceDetails(references)}
+    ${isPlatformDemo ? '' : referenceDetails(references)}
   </div>`;
   const body = `
 <section class="page-header">

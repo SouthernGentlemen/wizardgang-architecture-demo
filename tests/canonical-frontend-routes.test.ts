@@ -17,11 +17,9 @@ const environment: Env = {
 };
 
 describe('canonical frontend route contract', () => {
-  it('publishes canonical child resources without a query-view route inventory', () => {
+  it('publishes task-oriented pages without a query-view route inventory', () => {
     const canonicalChildren = [
-      'platform.edge', 'platform.workers', 'platform.durable-objects', 'platform.d1', 'platform.r2',
-      'interfaces.rest', 'interfaces.graphql.console', 'interfaces.webhooks.console', 'interfaces.identity.page',
-      'interfaces.mcp.console', 'interfaces.i18n', 'interfaces.accessibility',
+      'demos.index',
       'assurance.delivery', 'assurance.governance', 'assurance.evidence', 'assurance.compliance',
       'assurance.risks', 'assurance.incidents', 'assurance.concerns',
       'operations.availability', 'operations.logs', 'operations.usage', 'operations.reports', 'operations.docs',
@@ -31,6 +29,12 @@ describe('canonical frontend route contract', () => {
       expect(path, routeId).not.toContain('?');
       expect(applicationRouteRegistry.declarations.some((route) => route.id === routeId && route.pattern === path), routeId).toBe(true);
     }
+    const retiredIds = [
+      'platform.index', 'platform.edge', 'platform.workers', 'platform.durable-objects', 'platform.d1', 'platform.r2',
+      'interfaces.index', 'interfaces.rest', 'interfaces.graphql.console', 'interfaces.webhooks.console',
+      'interfaces.identity.page', 'interfaces.mcp.console', 'interfaces.i18n', 'interfaces.accessibility',
+    ];
+    expect(applicationRouteRegistry.declarations.filter((route) => retiredIds.includes(route.id)).map((route) => route.id)).toEqual([]);
   });
 
   it('uses the normal 404 for every removed HTML pathname', async () => {

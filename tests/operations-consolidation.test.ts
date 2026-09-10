@@ -136,7 +136,7 @@ describe('canonical operations routes', () => {
     const environment = env('offline');
     for (const request of [
       new Request('https://demo.wizardgang.ai/api/reporting/operations', { headers: { accept: 'application/json' } }),
-      new Request('https://demo.wizardgang.ai/platform', { headers: { accept: 'application/json' } }),
+      new Request('https://demo.wizardgang.ai/demos', { headers: { accept: 'application/json' } }),
       new Request('https://demo.wizardgang.ai/api/labs/workers', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' }),
     ]) {
       const response = await routeRequest(request, environment);

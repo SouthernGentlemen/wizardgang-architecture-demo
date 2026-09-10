@@ -23,25 +23,6 @@ const EVIDENCE_ROUTE = assuranceHtmlRoute('evidence');
 const EVIDENCE_API_ROUTE = assuranceCollectionApiRoute('evidence');
 const ASSURANCE_API_ROUTE = assuranceRegistryApiRoute();
 
-const CANONICAL_EVIDENCE_VIEW_ROUTES: Readonly<Record<string, Readonly<Record<string, string>>>> = {
-  'platform.index': {
-    edge: 'platform.edge',
-    workers: 'platform.workers',
-    'durable-objects': 'platform.durable-objects',
-    d1: 'platform.d1',
-    r2: 'platform.r2',
-  },
-  'interfaces.index': {
-    rest: 'interfaces.rest',
-    graphql: 'interfaces.graphql.console',
-    webhooks: 'interfaces.webhooks.console',
-    identity: 'interfaces.identity.page',
-    mcp: 'interfaces.mcp.console',
-    i18n: 'interfaces.i18n',
-    accessibility: 'interfaces.accessibility',
-  },
-};
-
 const KIND_LABELS: Readonly<Record<string, string>> = {
   source: 'Source',
   'governance-record': 'Governance',
@@ -63,15 +44,8 @@ type RelationshipGroupKey = typeof RELATIONSHIP_GROUPS[number]['key'];
 
 function canonicalEvidenceRoute(route: string): string {
   const parsed = new URL(route, 'https://demo.wizardgang.ai');
-  for (const [parentId, views] of Object.entries(CANONICAL_EVIDENCE_VIEW_ROUTES)) {
-    if (parsed.pathname !== routeUrl(parentId)) continue;
-    const view = parsed.searchParams.get('view');
-    const routeId = view ? views[view] : undefined;
-    if (!routeId) return route;
-    parsed.searchParams.delete('view');
-    return `${routeUrl(routeId)}${parsed.search}${parsed.hash}`;
-  }
-  return route;
+  if (parsed.pathname !== routeUrl('demos.index')) return route;
+  return `${routeUrl('demos.index')}${parsed.search}${parsed.hash}`;
 }
 
 function titleCase(value: string): string {
