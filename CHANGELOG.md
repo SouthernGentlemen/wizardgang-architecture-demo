@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.18.0 — 2026-09-09
+
+- Promoted accessibility and internationalization into the global runtime and localized all public application presentation across English, Spanish, French, German, Japanese, and Arabic.
+- Remediated shared WCAG 2.2 engineering gaps in focus, contrast, target sizing, reflow, motion, forced-colors, RTL, GraphQL, OpenAPI, and the accessibility teaching surface without making a conformance claim.
+- Added registry-derived site-wide deterministic and local Chromium/axe gates, critical-state fixtures, conservative assurance evidence, and a truthful pending manual-verification matrix.
+
 ## 0.17.0 — 2026-09-09
 
 - Rebuilt the evidence, compliance, risk, incident, and concern assurance pages as focused, progressively disclosed presentations backed by canonical records.
