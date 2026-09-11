@@ -117,7 +117,7 @@ if (assurancePresentationModule.includes('export *')) failures.push('src/assuran
 if (exists('src/api/assurance-v1.ts')) failures.push('removed v1 assurance serializer must not remain in the current contract');
 
 const adminUi = read('src/ui/admin.ts');
-if (!adminUi.includes('Oops! demo is down.')) failures.push('offline UI missing required recovery message');
+if (!adminUi.includes("localization.t('offline.title', 'Demo temporarily offline')")) failures.push('offline UI missing required planned-maintenance recovery message');
 const crawlerControl = read('src/lib/crawler-control.ts');
 for (const token of ['OAI-SearchBot', 'ChatGPT-User', 'GPTBot', 'chatgpt_crawl_access_changed']) {
   if (!crawlerControl.includes(token)) failures.push(`crawler control invariant missing: ${token}`);

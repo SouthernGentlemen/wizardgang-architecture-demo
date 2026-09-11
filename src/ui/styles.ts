@@ -65,11 +65,15 @@ header { position: relative; z-index: 5; display: flex; align-items: center; jus
 .brand-copy { display: grid; gap: .18rem; }
 .brand-copy strong { font: 900 .82rem/1 var(--mono); letter-spacing: .16em; }
 .brand-copy small { color: var(--muted); font: 750 .58rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
-.nav { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: clamp(.8rem, 2vw, 1.35rem); }
+.nav { display: flex; flex: 1 1 auto; align-items: center; flex-wrap: nowrap; justify-content: center; gap: clamp(.8rem, 2vw, 1.35rem); }
 .nav a, .nav button { display: inline-flex; align-items: center; min-height: 44px; padding: 0; border: 0; background: none; color: var(--muted); cursor: pointer; font: 800 .73rem/1 var(--mono); letter-spacing: .08em; text-decoration: none; text-transform: uppercase; }
 .nav a:hover, .nav button:hover, .nav a[aria-current="page"] { color: var(--paper); }
 .nav a[aria-current="page"] { box-shadow: inset 0 -2px 0 var(--acid); }
 .nav a span { margin-inline-start: .18rem; color: var(--acid); }
+.header-utilities { display: flex; align-items: center; justify-content: flex-end; gap: .65rem; color: var(--muted); font-size: .72rem; }
+.header-utilities > a { min-height: 44px; display: inline-flex; align-items: center; color: var(--muted); text-decoration: none; }
+.header-utilities > a:hover { color: var(--paper); }
+.header-utilities > button { border: 0; background: none; color: var(--muted); cursor: pointer; font-size: .72rem; }
 
 /* Parked above the viewport, never off to the side: a large negative inline offset
    would extend the scrollable width and strand RTL pages on an empty canvas. */
@@ -92,6 +96,15 @@ p { margin: 0 0 1rem; }
 .home-header .eyebrow { grid-column: 1 / -1; margin-bottom: -1rem; }
 .home-header h1 { max-width: 9ch; margin: 0; }
 .home-lede { margin: 0 0 .4rem; }
+.home-intro { max-width: 42rem; }
+.architecture-strip { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1.35fr) auto minmax(0,1fr); align-items: stretch; gap: .65rem; margin: -2rem 0 3rem; }
+.architecture-strip article { display: grid; gap: .45rem; padding: 1rem; border-top: 3px solid var(--violet); background: var(--panel); }
+.architecture-strip article:nth-of-type(2) { border-color: var(--acid); }
+.architecture-strip article:nth-of-type(3) { border-color: var(--cyan); }
+.architecture-strip article:nth-of-type(4) { border-color: var(--violet); }
+.architecture-strip article strong { font-size: 1rem; }
+.architecture-strip article span { color: var(--muted); font-size: .82rem; }
+.architecture-strip > i { align-self: center; color: var(--acid); font-style: normal; }
 .page-tools { display: flex; align-items: center; flex-wrap: wrap; gap: .75rem 1.1rem; margin-top: 1.25rem; }
 .text-link { color: var(--paper); font: 800 .72rem/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; text-decoration-thickness: 2px; }
 .text-link:hover { color: var(--acid); }
@@ -105,8 +118,18 @@ p { margin: 0 0 1rem; }
 .reference-links a { color: var(--muted); font-size: .85rem; }
 .reference-links a:hover { color: var(--paper); }
 .assurance-header { max-width: 900px; }
+.assurance-filters { margin-top: 1.25rem; }
+.assurance-filters > summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; cursor: pointer; }
+.assurance-filters > summary span { color: var(--muted); font-size: .78rem; }
+.assurance-filters > form { margin-top: 1rem; }
 .assurance-notice { max-width: 68ch; margin: 1.4rem 0 0; padding: 1rem 1.1rem; border-left: 3px solid var(--violet); background: var(--panel); color: var(--muted); }
 .assurance-notice strong { color: var(--paper); }
+.disclosure-timeline { counter-reset: disclosure; padding-left: 0; list-style: none; }
+.disclosure-timeline li { position: relative; margin-left: 1rem; padding: 0 0 1.5rem 2.5rem; border-left: 2px solid var(--line); }
+.disclosure-timeline li::before { position: absolute; left: -1rem; top: -.2rem; display: grid; place-items: center; width: 1.85rem; height: 1.85rem; border: 2px solid var(--acid); border-radius: 50%; background: var(--ink); color: var(--acid); content: counter(list-item); font: 800 .7rem/1 var(--mono); }
+.offline-message-preview { display: grid; gap: .35rem; margin-top: 1rem; padding: 1rem; border: 1px solid var(--line); background: var(--panel-2); }
+.offline-message-preview span { color: var(--muted); font-size: .75rem; text-transform: uppercase; }
+.offline-message-preview p { margin: 0; }
 .assurance-posture-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin-bottom: clamp(3rem, 6vw, 5rem); border: 1px solid var(--line); background: var(--line); }
 .assurance-posture-card { display: grid; align-content: start; min-height: 240px; padding: clamp(1.2rem, 3vw, 1.8rem); background: var(--panel); text-decoration: none; }
 .assurance-posture-card:hover { background: var(--panel-2); }
@@ -877,6 +900,8 @@ footer a { color: var(--paper); }
   .home-header .eyebrow { grid-column: auto; margin-bottom: 0; }
   .home-header h1 { max-width: 11ch; }
   .home-lede { max-width: 42rem; }
+  .architecture-strip { grid-template-columns: 1fr 1fr; margin-top: -1.5rem; }
+  .architecture-strip > i { display: none; }
   .identity-provider-grid { grid-template-columns: 1fr; }
   .identity-architecture-map > strong { flex-basis: 115px; }
   .mcp-activity-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -889,8 +914,10 @@ footer a { color: var(--paper); }
   .assurance-evidence-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {
-  header { align-items: flex-start; flex-wrap: wrap; }
-  .nav { flex: 0 0 100%; justify-content: flex-start; padding-top: .75rem; border-top: 1px solid var(--line); }
+  header { align-items: center; flex-wrap: wrap; }
+  .nav { order: 3; flex: 0 0 100%; justify-content: flex-start; gap: 1rem; padding-top: .35rem; overflow-x: auto; border-top: 1px solid var(--line); }
+  .header-utilities { margin-inline-start: auto; }
+  .header-utilities > a { display: none; }
   .d1-database-bar { flex-wrap: wrap; }
   .d1-database-id { flex: 1 0 100%; border-right: 0; border-bottom: 1px solid var(--line); }
   .d1-table-tabs { flex: 1 1 auto; }

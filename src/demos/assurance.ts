@@ -496,7 +496,7 @@ export async function assuranceIndexContent(request: Request, env: Env): Promise
   const risksSection = renderAssuranceWorkbenchSection({
     id: 'risks',
     eyebrow: 'Prioritize exposure',
-    title: 'Risks',
+    title: 'Risks — What could go wrong?',
     meta: `${riskCounts.total} published risks`,
     summary: 'Review derived residual posture and treatment state first; expand the register only when record-level detail is needed.',
     body: `<div class="grid">
@@ -510,7 +510,7 @@ export async function assuranceIndexContent(request: Request, env: Env): Promise
   const evidenceSection = renderAssuranceWorkbenchSection({
     id: 'evidence',
     eyebrow: 'Follow the proof',
-    title: 'Evidence',
+    title: 'Evidence — What proves our claims?',
     meta: `${evidence.length} published evidence records`,
     summary: 'Trace claims to source, tests, governance records, workflows, routes, and observations. Freshness remains explicit and separate from lifecycle state.',
     body: `<div class="grid">
@@ -524,7 +524,7 @@ export async function assuranceIndexContent(request: Request, env: Env): Promise
   const governanceSection = renderAssuranceWorkbenchSection({
     id: 'governance',
     eyebrow: 'Inspect controlled decisions',
-    title: 'Governance',
+    title: 'Governance — What controlled decisions exist?',
     meta: `${governance.totalAvailable} published records`,
     summary: 'Governance registers remain supporting evidence for the executable framework demonstrations, not the first thing a visitor has to decode.',
     body: renderGovernanceRegistry(governance, query, governanceSource),
@@ -533,7 +533,7 @@ export async function assuranceIndexContent(request: Request, env: Env): Promise
   const activitySection = renderAssuranceWorkbenchSection({
     id: 'activity',
     eyebrow: 'Separate events from exercises',
-    title: 'Activity',
+    title: 'Activity — What happened or was exercised?',
     meta: `${incidentCounts.actualIncidents} incidents · ${incidentCounts.exercises} exercises`,
     summary: 'Actual incidents and simulated response exercises remain distinct canonical record families with their own lifecycle semantics.',
     body: `<div class="grid">
@@ -566,7 +566,9 @@ export async function assuranceIndexContent(request: Request, env: Env): Promise
     <nav class="link-row" aria-label="Assurance workbench sections">
       <a href="#posture">Posture</a><a href="#frameworks">Frameworks</a><a href="#risks">Risks</a><a href="#evidence">Evidence</a><a href="#governance">Governance</a><a href="#activity">Activity</a><a href="#concerns">Concerns</a>
     </nav>
-    <form method="get" action="${escapeHtml(assuranceRoute)}" class="info-card" aria-labelledby="assurance-search-heading">
+    <details class="info-card assurance-filters"${url.search ? ' open' : ''}>
+      <summary><strong>Filter assurance records</strong><span>Auditor-grade controls</span></summary>
+    <form method="get" action="${escapeHtml(assuranceRoute)}" aria-labelledby="assurance-search-heading">
       <h2 id="assurance-search-heading">Filter and search the workbench</h2>
       <p>
         <label for="assurance-framework">Framework</label>
@@ -615,7 +617,7 @@ export async function assuranceIndexContent(request: Request, env: Env): Promise
         <a href="${escapeHtml(assuranceRoute)}">Clear</a>
       </p>
       <p class="subtle">Fragments identify the seven workbench sections. Query parameters only filter or search records on this page; they never choose a different human-facing assurance destination.</p>
-    </form>
+    </form></details>
     <div class="page-tools"><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/assurance.ts'))}">Assurance route source</a></div>
   </section>
   ${posture}

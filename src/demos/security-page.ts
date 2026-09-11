@@ -69,6 +69,7 @@ export function securityContent(env: Env): PageContent {
     <h1>Security</h1>
     <p class="lede">Report suspected vulnerabilities privately, understand the coordinated disclosure process, and review disclosure-safe published advisories.</p>
     <p class="assurance-notice"><strong>Do not open a public issue for sensitive security information.</strong> Private report contents are never exposed through the public assurance registry.</p>
+    <nav class="link-row" aria-label="Security sections"><a href="#report-vulnerability">Report</a><a href="#disclosure-process">Process</a><a href="#published-advisories">Advisories</a></nav>
   </section>
   <section id="report-vulnerability" class="assurance-section" aria-labelledby="report-vulnerability-heading">
     <div class="section-heading">
@@ -99,7 +100,7 @@ export function securityContent(env: Env): PageContent {
       <h2 id="disclosure-process-heading">${disclosureProcess}</h2>
       <p>Private report → triage → GHSA → fix/release → eligible CVE → public advisory.</p>
     </div>
-    <ol class="evidence-list">
+    <ol class="evidence-list disclosure-timeline">
       <li><strong>Private report.</strong> Suspected vulnerabilities enter GitHub private vulnerability reporting. Reporter identity, private reproduction detail, attachments, credentials, and sensitive infrastructure information remain private.</li>
       <li><strong>Triage.</strong> Maintainers validate scope and impact, request clarification when needed, and decide whether the report is a security vulnerability. Triage data is not public assurance data.</li>
       <li><strong>GHSA coordination.</strong> A confirmed issue may be managed in a draft GitHub Security Advisory while remediation is coordinated. Draft advisory content remains private.</li>

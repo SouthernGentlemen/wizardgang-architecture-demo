@@ -42,8 +42,9 @@ describe('DEMO-246 five-destination frontend', () => {
       { href: routeUrl('assurance.index'), text: 'Assurance' },
       { href: routeUrl('operations.index'), text: 'Operations' },
       { href: routeUrl('security.index'), text: 'Security' },
-      { href: repositoryUrl, text: 'Source ↗' },
     ]);
+    expect(header).toContain('<div class="header-utilities"');
+    expect(header).toContain(`href="${repositoryUrl}">Source`);
     expect(nav).not.toMatch(/>Architecture<|>Architecture\s*</);
   });
 
@@ -62,6 +63,8 @@ describe('DEMO-246 five-destination frontend', () => {
     expect(main).not.toContain('data-parent-route=');
     expect(main).not.toContain('destination count');
     expect(main).not.toContain('data-health');
+    expect(main).toContain('A live Cloudflare architecture lab');
+    expect(main).toContain('aria-label="Architecture at a glance"');
   });
 
   it('organizes Security around reporting, disclosure, and published advisories', async () => {

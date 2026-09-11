@@ -72,7 +72,8 @@ describe('navigation projection', () => {
       expect(navigation, route.id).not.toContain('?view=');
       const currentPageCounts = [...navigation.matchAll(/<nav\b[\s\S]*?<\/nav>/g)]
         .map((match) => (match[0].match(/aria-current="page"/g) ?? []).length);
-      expect(currentPageCounts.some((count) => count === 1), route.id).toBe(true);
+      const primaryIds = new Set(primaryNavigation().map((item) => item.id));
+      expect(currentPageCounts.some((count) => count === 1), route.id).toBe(primaryIds.has(route.id));
       expect(currentPageCounts.every((count) => count <= 1), route.id).toBe(true);
       for (const match of navigation.matchAll(/href="([^"]+)"/g)) {
         const href = match[1];

@@ -347,7 +347,7 @@ describe('offline routing matrix', () => {
 
     const offlinePage = await routeRequest(new Request('https://demo.wizardgang.ai/offline', { headers: { accept: 'text/html' } }), environment);
     expect(offlinePage.status).toBe(503);
-    expect(await offlinePage.text()).toContain('Oops! demo is down.');
+    expect(await offlinePage.text()).toContain('Demo temporarily offline');
 
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/operations'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/logs'), environment)).status).toBe(200);
