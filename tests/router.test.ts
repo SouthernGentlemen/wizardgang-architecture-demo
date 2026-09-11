@@ -145,7 +145,7 @@ describe('public route contract', () => {
     const webhooksPage = await routeRequest(new Request('https://demo.wizardgang.ai/api/demos/webhooks', { headers: { accept: 'text/html' } }), environment);
     const webhooksHtml = await webhooksPage.text();
     expect(webhooksHtml).toContain('/webhooks/github');
-    expect(webhooksHtml).toContain('Pull latest release');
+    expect(webhooksHtml).toContain('Simulate signed release webhook');
     expect(webhooksHtml).toContain('Signature valid');
     expect(webhooksHtml).toContain('Verified deliveries');
   });
@@ -172,7 +172,7 @@ describe('public route contract', () => {
     expect(html).toContain('claude mcp add --transport http wizardgang');
     expect(html).toContain('codex mcp add wizardgang --url');
     expect(html).toContain('MCP-Protocol-Version: 2026-07-28');
-    expect(html).toContain('Live MCP activity');
+    expect(html).toContain('Latest public demo MCP activity');
     expect(html).not.toContain('MCP is another interface—not another trust boundary.');
 
     const oldTransport = await routeRequest(new Request('https://demo.wizardgang.ai/mcp/server', { method: 'POST' }), environment);

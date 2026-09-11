@@ -100,6 +100,7 @@ export async function mcpContent(request: Request, env: Env): Promise<PageConten
 
 <section class="mcp-section" aria-labelledby="mcp-connect-heading">
   <div class="section-head"><h2 id="mcp-connect-heading">Connect</h2><span>Choose a client</span></div>
+  <ol class="mcp-success-loop" aria-label="MCP success loop"><li><span>1</span><strong>Connect your client</strong></li><li><span>2</span><strong>Call <code>ping</code></strong></li><li><span>3</span><strong>Watch this page observe the invocation</strong></li></ol>
   <div class="mcp-connect panel">
     <div class="mcp-tabs" role="tablist" aria-label="MCP client setup">
       ${['Claude Code', 'Codex CLI', 'curl', 'Inspector'].map((label, index) => `<button type="button" role="tab" id="mcp-tab-${index}" aria-controls="mcp-panel-${index}" aria-selected="${index === 0}" tabindex="${index === 0 ? '0' : '-1'}" data-mcp-tab="${index}">${label}</button>`).join('')}
@@ -108,15 +109,17 @@ export async function mcpContent(request: Request, env: Env): Promise<PageConten
       <p class="eyebrow">Claude Code</p>
       <h3>Add the remote HTTP server</h3>
       <div class="mcp-command"><pre id="mcp-claude-command">${escapeHtml(claudeCommand)}</pre><button type="button" data-copy-target="mcp-claude-command">Copy</button></div>
-      <p>Confirm it with <code>claude mcp get wizardgang</code>, launch <code>claude</code>, open <code>${escapeHtml(mcpUrl)}</code>, then ask:</p>
+      <p>Confirm it with <code>claude mcp get wizardgang</code>, launch <code>claude</code>, then ask:</p>
       <blockquote>Use the wizardgang MCP server and call its ping tool.</blockquote>
+      <p class="subtle">Keep this page open if you want to watch the invocation appear below.</p>
     </div>
     <div class="mcp-tab-panel" role="tabpanel" id="mcp-panel-1" aria-labelledby="mcp-tab-1" data-mcp-panel="1" hidden>
       <p class="eyebrow">Codex CLI <span>OpenAI / ChatGPT</span></p>
       <h3>Add the remote HTTP server</h3>
       <div class="mcp-command"><pre id="mcp-codex-command">${escapeHtml(codexCommand)}</pre><button type="button" data-copy-target="mcp-codex-command">Copy</button></div>
-      <p>Confirm it with <code>codex mcp list</code>, launch <code>codex</code>, open <code>${escapeHtml(mcpUrl)}</code>, then ask:</p>
+      <p>Confirm it with <code>codex mcp list</code>, launch <code>codex</code>, then ask:</p>
       <blockquote>Use the wizardgang MCP server and ping it.</blockquote>
+      <p class="subtle">Keep this page open if you want to watch the invocation appear below.</p>
       <p class="subtle">Codex CLI, the ChatGPT desktop app, and the IDE extension share MCP configuration on the same Codex host. ChatGPT web uses plugin-provided remote MCP tools instead of local Codex configuration.</p>
     </div>
     <div class="mcp-tab-panel" role="tabpanel" id="mcp-panel-2" aria-labelledby="mcp-tab-2" data-mcp-panel="2" hidden>
@@ -152,7 +155,7 @@ export async function mcpContent(request: Request, env: Env): Promise<PageConten
 </section>
 
 <section class="mcp-section" aria-labelledby="mcp-activity-heading" data-mcp-activity-id="${activity?.id ?? 0}">
-  <div class="section-head"><h2 id="mcp-activity-heading">Live MCP activity</h2><span>Sanitized operational evidence</span></div>
+  <div class="section-head"><h2 id="mcp-activity-heading">Latest public demo MCP activity</h2><span>Shared, sanitized operational evidence</span></div>
   <div class="panel mcp-activity">
     <div class="mcp-activity-state"><span class="mcp-pulse" aria-hidden="true"></span><strong data-mcp-field="state">${activity ? 'CONNECTED' : 'WAITING'}</strong><span data-mcp-field="createdAt">${escapeHtml(activityValue(activity, 'createdAt', 'Run ping from a client'))}</span></div>
     <dl class="mcp-activity-grid">

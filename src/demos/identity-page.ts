@@ -17,6 +17,7 @@ export function identityContent(env: Env): PageContent {
 
 <section class="identity-signin" id="sso" aria-labelledby="identity-signin-heading">
   <div class="identity-section-heading"><div><p class="eyebrow">Sign in</p><h2 id="identity-signin-heading">Choose a trust relationship</h2></div><p>Credentials and protocol secrets stay on the Worker.</p></div>
+  <p class="identity-boundary-note">Multiple identity protocols enter here. The application receives one normalized authorization identity.</p>
   <article class="identity-provider identity-enterprise" id="oauth">
     <div class="identity-provider-mark microsoft-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
     <div class="identity-provider-copy">
@@ -26,8 +27,8 @@ export function identityContent(env: Env): PageContent {
       <div class="identity-provider-meta"><span>OIDC</span><span>OAuth 2.0</span><span data-config-status="microsoft">Checking configuration…</span></div>
     </div>
     <div class="identity-provider-actions">
-      <a class="button button-primary" href="/auth/microsoft" data-provider-action="microsoft">Sign in with Microsoft</a>
-      <a class="text-link" href="/auth/saml" data-provider-action="saml">Use SAML 2.0 instead →</a>
+      <a class="button button-primary" data-provider-href="/auth/microsoft" data-provider-action="microsoft" aria-disabled="true">Sign in with Microsoft</a>
+      <a class="text-link" data-provider-href="/auth/saml" data-provider-action="saml" aria-disabled="true">Use SAML 2.0 instead →</a>
     </div>
   </article>
 
@@ -36,12 +37,12 @@ export function identityContent(env: Env): PageContent {
     <article class="identity-provider">
       <div class="identity-provider-mark google-mark" aria-hidden="true">G</div>
       <div class="identity-provider-copy"><p class="identity-provider-kind">OpenID Connect</p><h3>Google</h3><p>Standard Google-account authentication with no Workspace or organizational-domain assumption.</p><div class="identity-provider-meta"><span>OIDC</span><span data-config-status="google">Checking configuration…</span></div></div>
-      <div class="identity-provider-actions"><a class="button" href="/auth/google" data-provider-action="google">Sign in with Google</a></div>
+      <div class="identity-provider-actions"><a class="button" data-provider-href="/auth/google" data-provider-action="google" aria-disabled="true">Sign in with Google</a></div>
     </article>
     <article class="identity-provider">
       <div class="identity-provider-mark github-mark" aria-hidden="true">GH</div>
       <div class="identity-provider-copy"><p class="identity-provider-kind">Developer identity</p><h3>GitHub</h3><p>OAuth authentication with minimal profile and verified-email scopes, followed by API identity revalidation.</p><div class="identity-provider-meta"><span>OAuth 2.0</span><span data-config-status="github">Checking configuration…</span></div></div>
-      <div class="identity-provider-actions"><a class="button" href="/auth/github" data-provider-action="github">Sign in with GitHub</a></div>
+      <div class="identity-provider-actions"><a class="button" data-provider-href="/auth/github" data-provider-action="github" aria-disabled="true">Sign in with GitHub</a></div>
     </article>
   </div>
 </section>
@@ -82,7 +83,7 @@ export function identityContent(env: Env): PageContent {
 
 <section class="panel identity-federation" id="saml" aria-labelledby="identity-federation-heading">
   <div><p class="eyebrow">Enterprise federation</p><h2 id="identity-federation-heading">Microsoft Entra ID / SAML 2.0</h2><p>Authenticate through an Entra enterprise application. The Worker validates the signed assertion before any claim reaches application policy.</p><div class="identity-provider-meta"><span>Signed assertion</span><span>Audience</span><span>Time bounds</span><span>Replay protection</span><span data-config-status="saml">Checking configuration…</span></div></div>
-  <div class="identity-provider-actions"><a class="button" href="/auth/saml" data-provider-action="saml">Try SAML authentication</a><a class="text-link" href="/auth/saml/metadata">View SP metadata ↗</a></div>
+  <div class="identity-provider-actions"><a class="button" data-provider-href="/auth/saml" data-provider-action="saml" aria-disabled="true">Try SAML authentication</a><a class="text-link" href="/auth/saml/metadata">View SP metadata ↗</a></div>
 </section>
 
 <script>
@@ -113,7 +114,11 @@ export function identityContent(env: Env): PageContent {
     if (!response.ok) throw new Error('session unavailable');
     const body = await response.json();
     Object.entries(body.providers || {}).forEach(([key, provider]) => {
-      document.querySelectorAll('[data-config-status="' + key + '"]').forEach((slot) => { slot.textContent = provider.configured ? 'Available' : 'Needs configuration'; slot.dataset.configured = String(provider.configured); });
+      document.querySelectorAll('[data-config-status="' + key + '"]').forEach((slot) => { slot.textContent = provider.configured ? 'Available — Sign in' : 'Not configured in this environment'; slot.dataset.configured = String(provider.configured); });
+      document.querySelectorAll('[data-provider-action="' + key + '"]').forEach((action) => {
+        if (provider.configured) { action.href = action.dataset.providerHref; action.setAttribute('aria-disabled', 'false'); }
+        else { action.removeAttribute('href'); action.setAttribute('aria-disabled', 'true'); }
+      });
     });
     if (!body.authenticated || !body.session) return;
     const session = body.session;
@@ -136,7 +141,10 @@ export function identityContent(env: Env): PageContent {
     if (session.protocol.sanitizedAssertion) { const details = document.querySelector('[data-assertion-details]'); details.hidden = false; document.querySelector('[data-sanitized-assertion]').textContent = session.protocol.sanitizedAssertion; }
     result.scrollIntoView({ block: 'start', behavior: params.has('authenticated') && !matchMedia('(prefers-reduced-motion: reduce)').matches ? 'smooth' : 'auto' });
   };
-  load().catch(() => showNotice('The identity session service is temporarily unavailable.', 'error'));
+  load().catch(() => {
+    document.querySelectorAll('[data-config-status]').forEach((slot) => { slot.textContent = 'Configuration check failed'; delete slot.dataset.configured; });
+    showNotice('The identity session service is temporarily unavailable.', 'error');
+  });
 
   document.querySelectorAll('[data-authorize]').forEach((button) => button.addEventListener('click', async () => {
     const output = document.querySelector('[data-authorization-result]');

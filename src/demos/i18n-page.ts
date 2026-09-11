@@ -1,26 +1,9 @@
 import type { Env } from '../types';
-import {
-  localeNames,
-  localeResources,
-  localizationForEnv,
-  supportedLocales,
-  type SupportedLocale,
-} from '../i18n/runtime';
+import { localeResources, localizationForEnv } from '../i18n/runtime';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
 import { routeUrl } from '../routing/application-routes';
 import { referenceDetails, pageContent, type PageContent } from '../ui/page';
-
-function localeHref(
-  localization: ReturnType<typeof localizationForEnv>,
-  route: string,
-  count: number,
-  locale: SupportedLocale,
-): string {
-  const url = new URL(route, 'https://demo.wizardgang.ai');
-  url.searchParams.set('count', String(count));
-  return localization.href(`${url.pathname}${url.search}${url.hash}`, locale);
-}
 
 export function i18nContent(request: Request, env: Env): PageContent {
   const url = new URL(request.url);
@@ -33,8 +16,6 @@ export function i18nContent(request: Request, env: Env): PageContent {
   const formattedItems = m(selectedPluralKey).replace('{count}', localization.number(count));
   const fixedDate = new Date('2026-09-01T12:00:00Z');
   const resourceHref = sourceUrl(env, `src/i18n/locales/${locale}.json`);
-  const localeLinks = supportedLocales.map((code) => `<a class="button" href="${escapeHtml(localeHref(localization, i18nUrl, count, code))}"${code === locale ? ' aria-current="page"' : ''}>${escapeHtml(localeNames[code])}</a>`).join('');
-  const localeOptions = supportedLocales.map((code) => `<option value="${code}"${code === locale ? ' selected' : ''}>${escapeHtml(localeNames[code])}</option>`).join('');
   const resolvedResource = localeResources[locale] as Readonly<Record<string, string>>;
   const body = `<section class="page-header">
     <h1>${escapeHtml(m('demo.title'))}</h1>
@@ -48,25 +29,25 @@ export function i18nContent(request: Request, env: Env): PageContent {
   </section>
   <section class="panel i18n-controls" aria-labelledby="i18n-controls-title">
     <div class="lab-heading"><div><p class="eyebrow">Shared application capability</p><h2 id="i18n-controls-title">${escapeHtml(m('controls'))}</h2></div><code data-direction>${localization.dir}</code></div>
-    <div class="locale-switcher" aria-label="${escapeHtml(m('language'))}">${localeLinks}</div>
+    <p>Use the language control in the global header to change the document language and direction. This control only changes the count used to demonstrate plural rules.</p>
     <form method="get" action="${escapeHtml(i18nUrl)}" class="filters" data-i18n-form>
-      <label for="locale-demo"><span>${escapeHtml(m('language'))}</span><select id="locale-demo" name="lang">${localeOptions}</select></label>
+      ${locale === localization.defaultLocale ? '' : `<input type="hidden" name="lang" value="${escapeHtml(locale)}">`}
       <label for="count"><span>${escapeHtml(m('count'))}</span><input id="count" name="count" type="number" min="0" max="9999" value="${count}"></label>
       <button type="submit">${escapeHtml(m('apply'))}</button>
     </form>
   </section>
   <div class="lab-grid i18n-lab">
     <section class="panel locale-app" dir="${localization.dir}" aria-labelledby="localized-card-title">
-      <p class="eyebrow" tabindex="0" data-inspect="card.kicker">${escapeHtml(m('card.kicker'))}</p>
-      <h2 id="localized-card-title" tabindex="0" data-inspect="card.title">${escapeHtml(m('card.title'))}</h2>
-      <p tabindex="0" data-inspect="card.body">${escapeHtml(m('card.body'))}</p>
-      <p class="stat" tabindex="0" data-inspect="${escapeHtml(selectedPluralKey)}">${escapeHtml(formattedItems)}</p>
+      <p class="eyebrow">${escapeHtml(m('card.kicker'))}</p>
+      <h2 id="localized-card-title" data-inspect-value="card.title">${escapeHtml(m('card.title'))}</h2>
+      <p data-inspect-value="card.body">${escapeHtml(m('card.body'))}</p>
+      <p class="stat" data-inspect-value="${escapeHtml(selectedPluralKey)}">${escapeHtml(formattedItems)}</p>
       <dl>
-        <dt>${escapeHtml(m('format.number'))}</dt><dd tabindex="0" data-inspect="Intl.NumberFormat">${escapeHtml(localization.number(1234567.89))}</dd>
-        <dt>${escapeHtml(m('date'))}</dt><dd tabindex="0" data-inspect="Intl.DateTimeFormat">${escapeHtml(localization.dateTime(fixedDate, { dateStyle: 'full', timeZone: 'UTC' }))}</dd>
-        <dt>${escapeHtml(m('currency'))}</dt><dd tabindex="0" data-inspect="Intl.NumberFormat.currency">${escapeHtml(localization.currency(1234.56, 'USD'))}</dd>
+        <dt>${escapeHtml(m('format.number'))}</dt><dd data-inspect-value="Intl.NumberFormat">${escapeHtml(localization.number(1234567.89))}</dd>
+        <dt>${escapeHtml(m('date'))}</dt><dd data-inspect-value="Intl.DateTimeFormat">${escapeHtml(localization.dateTime(fixedDate, { dateStyle: 'full', timeZone: 'UTC' }))}</dd>
+        <dt>${escapeHtml(m('currency'))}</dt><dd data-inspect-value="Intl.NumberFormat.currency">${escapeHtml(localization.currency(1234.56, 'USD'))}</dd>
       </dl>
-      <button class="button-primary" type="button" tabindex="0" data-inspect="card.action">${escapeHtml(m('card.action'))}</button>
+      <button class="button-primary" type="button" data-inspect-value="card.action">${escapeHtml(m('card.action'))}</button>
     </section>
     <aside class="panel technical-state" aria-live="polite">
       <p class="eyebrow">Global context inspector</p>
@@ -78,6 +59,14 @@ export function i18nContent(request: Request, env: Env): PageContent {
         <dt>direction</dt><dd><code>${localization.dir}</code></dd>
         <dt>plural category</dt><dd><code>${localization.pluralCategory(count)}</code></dd>
       </dl>
+      <fieldset class="i18n-inspect-controls"><legend>Inspect a value</legend>${[
+        ['card.title', 'Title'],
+        [selectedPluralKey, 'Items'],
+        ['Intl.NumberFormat', 'Number'],
+        ['Intl.DateTimeFormat', 'Date'],
+        ['Intl.NumberFormat.currency', 'Currency'],
+        ['card.action', 'Action'],
+      ].map(([key, label]) => `<button type="button" data-inspect-target="${escapeHtml(key)}">${label}</button>`).join('')}</fieldset>
       <pre data-resource-excerpt>${escapeHtml(JSON.stringify({ [selectedPluralKey]: resolvedResource[selectedPluralKey] }, null, 2))}</pre>
       <a class="text-link" href="${escapeHtml(resourceHref)}">${escapeHtml(m('resource'))}</a>
     </aside>
@@ -85,13 +74,13 @@ export function i18nContent(request: Request, env: Env): PageContent {
   <script>
   (() => {
     const output = document.querySelector('[data-resource-excerpt]');
-    document.querySelectorAll('[data-inspect]').forEach((node) => {
-      const inspect = () => {
+    document.querySelectorAll('[data-inspect-target]').forEach((button) => {
+      button.addEventListener('click', () => {
         if (!output) return;
-        output.textContent = JSON.stringify({ key: node.dataset.inspect, value: node.textContent }, null, 2);
-      };
-      node.addEventListener('click', inspect);
-      node.addEventListener('focus', inspect);
+        const key = button.dataset.inspectTarget;
+        const node = [...document.querySelectorAll('[data-inspect-value]')].find((candidate) => candidate.dataset.inspectValue === key);
+        output.textContent = JSON.stringify({ key, value: node?.textContent || '' }, null, 2);
+      });
     });
   })();
   </script>`;
