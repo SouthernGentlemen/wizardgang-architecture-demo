@@ -37,15 +37,12 @@ async function demosHtml(path = routeUrl('demos.index')): Promise<string> {
   return response.text();
 }
 
-function demoMarkup(html: string, id: string): string {
-  const start = html.indexOf(`<details class="demo-disclosure" id="${id}"`);
-  if (start < 0) throw new Error(`Missing demo disclosure ${id}`);
-  const end = html.indexOf('<details class="demo-disclosure"', start + 1);
-  return html.slice(start, end < 0 ? undefined : end);
+async function presentationHtml(id: string, query = ''): Promise<string> {
+  return demosHtml(`${routeUrl('demos.presentation', { demo: id })}${query}`);
 }
 
 describe('canonical interface demonstrations', () => {
-  it('server-renders every interface presentation in one canonical accessible document', async () => {
+  it('server-renders lightweight disclosures and loads each interface presentation independently', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/demos#rest', { headers: { accept: 'text/html' } }), environment);
     const html = await response.text();
     expect(response.status).toBe(200);
@@ -56,14 +53,15 @@ describe('canonical interface demonstrations', () => {
     expect(html.match(/<h1\b/g)).toHaveLength(1);
     for (const page of pages) {
       expect(html, page.view).toContain(`class="demo-disclosure" id="${page.view}"`);
-      expect(html, page.view).toContain(page.marker);
+      expect(html, page.view).not.toContain(page.marker);
+      expect(await presentationHtml(page.view), page.view).toContain(page.marker);
     }
+    expect(html).not.toContain('/auth/session');
     expect(html).not.toContain('/graphql/console');
   });
 
   it('keeps the interface demos focused and executable', async () => {
-    const html = await demosHtml(`${routeUrl('demos.index')}#rest`);
-    const rest = demoMarkup(html, 'rest');
+    const rest = await presentationHtml('rest');
     expect(rest).toContain('3.0.3');
     expect(rest).toContain('PATCH');
     expect(rest).toContain('/api/labs/rest-demo-records');
@@ -71,23 +69,23 @@ describe('canonical interface demonstrations', () => {
     expect(rest).not.toContain('Same policy, different transports');
     expect(rest).not.toContain('Authorization');
 
-    const graphql = demoMarkup(html, 'graphql');
+    const graphql = await presentationHtml('graphql');
     expect(graphql).toContain('Working examples');
     expect(graphql).toContain('data-graphql-example');
     expect(graphql).not.toContain('GraphQL Yoga');
     expect(graphql).not.toContain('Application interfaces');
 
-    const webhooks = demoMarkup(html, 'webhooks');
+    const webhooks = await presentationHtml('webhooks');
     expect(webhooks).toContain('Pull the latest release');
     expect(webhooks).toContain('release.published');
     expect(webhooks).not.toContain('HMAC-SHA256');
     expect(webhooks).not.toContain('Event contract');
 
-    const identity = demoMarkup(html, 'identity');
+    const identity = await presentationHtml('identity');
     expect(identity).not.toContain('Many providers. One application identity.');
     expect(identity).not.toContain('No protocol secrets in the inspector');
 
-    const mcp = demoMarkup(html, 'mcp');
+    const mcp = await presentationHtml('mcp');
     expect(mcp).not.toContain('One shared trust boundary');
     expect(mcp).not.toContain('What this route proves');
     expect(mcp).not.toContain('Internationalization →');
@@ -118,9 +116,9 @@ describe('canonical interface demonstrations', () => {
     expect(i18n).not.toContain('name="view"');
     expect(i18n).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/demos">');
 
-    const accessibility = await (await routeRequest(new Request('https://demo.wizardgang.ai/demos?mode=broken#accessibility'), environment)).text();
+    const accessibility = await presentationHtml('accessibility', '?mode=broken');
     expect(accessibility).toContain('Teaching warning:');
-    expect(accessibility).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/demos">');
+    expect(accessibility).toContain('data-a11y-frame');
   });
 
   it('retires standalone pages while preserving GraphQL and MCP machine endpoints', async () => {
