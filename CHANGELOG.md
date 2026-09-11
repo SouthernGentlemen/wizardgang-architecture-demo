@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 0.19.0 — 2026-09-10
+
+- Replaced the technology-shaped public browser hierarchy with five indexable destinations: `/`, `/demos`, `/assurance`, `/operations`, and `/security`.
+- Consolidated twelve interactive demonstrations, assurance evidence and governance, and operational status into task-oriented pages with durable fragment targets while preserving machine, API, protocol, identity, reporting, crawler, admin, and offline contracts.
+- Retired superseded browser paths as ordinary 404 responses without redirects or compatibility aliases, and reduced the homepage to Run it, Verify it, and Observe it actions.
+- Completed the localized global header, source and issue-reporting links, security disclosure workflow, regression coverage, and site-wide accessibility/localization verification.
+
 ## 0.18.0 — 2026-09-09
 
 - Promoted accessibility and internationalization into the global runtime and localized all public application presentation across English, Spanish, French, German, Japanese, and Arabic.
