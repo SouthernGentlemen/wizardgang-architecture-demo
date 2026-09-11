@@ -11,6 +11,9 @@ export function apiContent(env: Env): PageContent {
   <h1>REST API</h1>
   <p class="lede">Create and change one isolated resource, then inspect the complete machine-readable contract.</p>
 </section>
+<aside class="assurance-notice" aria-label="REST API boundary">
+  <strong>Two deliberate REST boundaries.</strong> This page runs the anonymous, signed-cookie visitor tutorial documented by <code>/api/labs/rest-demo-openapi.json</code>. The general <code>/api/openapi.json</code> contract uses <code>/api/labs/rest-records</code> to demonstrate bearer-capable <code>demo:read</code> and <code>demo:write</code> policy instead.
+</aside>
 <section class="panel rest-guided-flow" aria-labelledby="rest-guided-heading">
   <div class="section-head"><div><p class="eyebrow">Executable proof</p><h2 id="rest-guided-heading">REST in three steps</h2></div><span>GET → POST → PATCH</span></div>
   <p>Each step calls the live visitor sandbox and shows the exact request and response. Complete them in order.</p>

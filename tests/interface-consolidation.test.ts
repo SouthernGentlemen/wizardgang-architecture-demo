@@ -65,6 +65,8 @@ describe('canonical interface demonstrations', () => {
     expect(rest).toContain('3.0.3');
     expect(rest).toContain('PATCH');
     expect(rest).toContain('/api/labs/rest-demo-records');
+    expect(rest).toContain('Two deliberate REST boundaries.');
+    expect(rest).toContain('/api/labs/rest-records');
     expect(rest).not.toContain('Your API sandbox');
     expect(rest).not.toContain('Same policy, different transports');
     expect(rest).not.toContain('Authorization');

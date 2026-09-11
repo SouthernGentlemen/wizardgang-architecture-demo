@@ -4,7 +4,7 @@
   "info": {
     "title": "WizardGang Architecture Demo REST API",
     "version": "1.4.0",
-    "description": "Executable OpenAPI 3.1 contract for the current canonical REST, laboratory, and reporting interfaces. Reporting response schemas are mechanically synchronized from the canonical assurance contracts."
+    "description": "Executable OpenAPI 3.1 contract for the current canonical bearer-capable machine API and public reporting interfaces. Its /api/labs/rest-records resource demonstrates authorization policy; the separate /api/labs/rest-demo-openapi.json contract drives the anonymous, cookie-isolated browser tutorial. Reporting response schemas are mechanically synchronized from the canonical assurance contracts."
   },
   "servers": [
     {
@@ -15,7 +15,7 @@
   "tags": [
     {
       "name": "Records",
-      "description": "D1-backed demonstration records with public reads and visitor-scoped authenticated writes."
+      "description": "General D1-backed machine resource with public reads and bearer-authorized, identity-derived visitor writes. This is intentionally separate from the anonymous REST browser tutorial."
     },
     {
       "name": "Assurance",
