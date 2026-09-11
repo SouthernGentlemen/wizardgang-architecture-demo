@@ -13,7 +13,7 @@ interface ComputeInput {
 export async function edgeInspectionResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'GET') return methodNotAllowed(['GET']);
   const cf = (request as Request & { cf?: Record<string, unknown> }).cf ?? {};
-  const allowedCfFields = ['colo', 'country', 'region', 'city', 'timezone', 'httpProtocol', 'asOrganization'];
+  const allowedCfFields = ['colo', 'country', 'region', 'city', 'timezone', 'httpProtocol', 'tlsVersion', 'asOrganization'];
   const edge = Object.fromEntries(allowedCfFields.filter((key) => cf[key] !== undefined).map((key) => [key, cf[key]]));
   await recordApplicationLog(env, {
     source: 'edge', eventKey: 'request_inspected', message: 'A visitor inspected safe edge request context.', route: '/api/labs/edge',
@@ -21,8 +21,9 @@ export async function edgeInspectionResponse(request: Request, env: Env): Promis
   });
   return json({
     deliveredBy: 'Cloudflare Worker',
-    request: { method: request.method, protocol: new URL(request.url).protocol, accepts: request.headers.get('accept') || null },
+    request: { method: request.method, protocol: new URL(request.url).protocol, host: new URL(request.url).host, accepts: request.headers.get('accept') || null },
     edge,
+    delivery: { cacheControl: 'no-store', boundary: 'Cloudflare Worker' },
     privacy: 'Client IP addresses, cookies, authorization, and raw request headers are intentionally excluded.',
   }, { headers: { 'cache-control': 'no-store' } });
 }
@@ -53,12 +54,13 @@ export async function workerComputeResponse(request: Request, env: Env): Promise
       const hasAuthorization = candidate.hasAuthorization === true;
       if (!['GET', 'HEAD', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) throw new HttpError(400, 'invalid_method');
       if (!/^\/[a-zA-Z0-9/_?=&.%-]{1,199}$/.test(path)) throw new HttpError(400, 'invalid_path');
-      const edgeCacheable = ['GET', 'HEAD'].includes(method) && !hasCookie && !hasAuthorization && !path.startsWith('/api/');
-      const route = path.startsWith('/api/') ? 'worker-api' : 'edge-cache';
+      const asset = path.startsWith('/assets/');
+      const edgeCacheable = ['GET', 'HEAD'].includes(method) && asset && !hasCookie && !hasAuthorization;
+      const route = asset ? 'asset' : 'worker';
       const cache = edgeCacheable ? 'public' : 'private';
       const reason = edgeCacheable
         ? 'Anonymous read requests for non-API assets can be served from the nearest edge location.'
-        : 'Requests with credentials, state-changing methods, or API paths stay private and continue to the Worker boundary.';
+        : 'Dynamic routes, credentialed requests, and state-changing methods stay private and continue through the Worker boundary.';
       const event = await recordDemoEvent(env, 'workers', 'edge_policy_applied', { method, path, route, cache });
       await recordApplicationLog(env, { source: 'workers', eventKey: 'edge_policy_applied', message: `Worker classified ${method} ${path} at the edge.`, route: '/api/labs/workers', detail: { method, path, route, cache, eventId: event.id } });
       return json({
