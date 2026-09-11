@@ -14,7 +14,7 @@ const demo: DemoDefinition = {
     "Language state persists through application navigation without changing canonical route identity"
   ],
   "status": "working",
-  "interfaces": [{ "method": "GET", "path": routeUrl('interfaces.i18n', {}, { lang: 'ar', count: '3' }), "description": "Inspect the application localization runtime in Arabic and RTL mode." }],
+  "interfaces": [{ "method": "GET", "path": `${routeUrl('demos.index', {}, { lang: 'ar', count: '3' })}#i18n`, "description": "Inspect the application localization runtime in Arabic and RTL mode." }],
   "supportingSources": [{ "label": "View global i18n runtime", "path": "src/i18n/runtime.ts" }, { "label": "View rendered i18n inspection page", "path": "src/demos/i18n-page.ts" }, { "label": "View locale configuration", "path": "config/i18n.json" }]
 };
 

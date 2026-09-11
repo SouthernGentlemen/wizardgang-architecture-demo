@@ -1,6 +1,6 @@
 # Site-wide accessibility and localization verification
 
-Accessibility and localization are application-wide invariants. They are not capabilities owned only by `/interfaces/accessibility` or `/interfaces/i18n`, and a new public route does not opt out of either invariant.
+Accessibility and localization are application-wide invariants. They are not capabilities confined to the demonstrations at `/demos#accessibility` and `/demos#i18n`, and a new public route does not opt out of either invariant.
 
 DEMO-238 verifies the application at three separate evidence levels:
 

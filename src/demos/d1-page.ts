@@ -3,7 +3,7 @@ import { routeUrl } from '../routing/application-routes';
 import { pageContent, type PageContent } from '../ui/page';
 
 export function d1Content(env: Env): PageContent {
-  const d1Url = routeUrl('platform.d1');
+  const d1Url = `${routeUrl('demos.index')}#d1`;
 
   return pageContent(env, 'Cloudflare D1', `
 <section class="page-header lab-page-header d1-page-header">

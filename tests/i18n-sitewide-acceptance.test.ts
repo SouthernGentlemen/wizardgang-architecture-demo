@@ -64,7 +64,7 @@ function environment(): Env {
   };
 }
 
-function localization(locale: SupportedLocale, pathname = routeUrl('interfaces.i18n')) {
+function localization(locale: SupportedLocale, pathname = `${routeUrl('demos.index')}#i18n`) {
   const url = new URL(pathname, 'https://demo.wizardgang.ai');
   if (locale !== defaultLocale) url.searchParams.set('lang', locale);
   return resolveLocalization(new Request(url));
@@ -95,7 +95,7 @@ describe('DEMO-236 sitewide localization acceptance', () => {
       && route.methods.includes('GET'),
     );
 
-    expect(publicPages.length).toBeGreaterThan(20);
+    expect(publicPages.map((route) => route.id)).toContain('demos.index');
     expect(publicPages.filter((route) => route.pattern.includes(':'))).toEqual([]);
 
     for (const route of publicPages) {
@@ -150,15 +150,15 @@ describe('DEMO-236 sitewide localization acceptance', () => {
   });
 
   it('preserves query state and explicit locale targets without duplicate or encoded locale parameters', async () => {
-    const i18nUrl = new URL(routeUrl('interfaces.i18n'), 'https://demo.wizardgang.ai');
+    const i18nUrl = new URL(`${routeUrl('demos.index')}#i18n`, 'https://demo.wizardgang.ai');
     i18nUrl.searchParams.set('lang', 'ja');
     i18nUrl.searchParams.set('count', '7');
     const response = await routeRequest(new Request(i18nUrl, { headers: { accept: 'text/html' } }), environment());
     expect(response.status).toBe(200);
     const html = await response.text();
 
-    expect(html).toContain('href="/interfaces/i18n?count=7&amp;lang=fr"');
-    expect(html).toContain('href="/interfaces/i18n?count=7&amp;lang=de"');
+    expect(html).toContain('href="/demos?count=7&amp;lang=fr#i18n"');
+    expect(html).toContain('href="/demos?count=7&amp;lang=de#i18n"');
     expect(html).toContain('aria-current="page">日本語</a>');
     expect(html).toContain('<input type="hidden" name="count" value="7">');
     expect(html).not.toContain('&amp%3B');

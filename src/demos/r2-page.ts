@@ -3,7 +3,7 @@ import { routeUrl } from '../routing/application-routes';
 import { pageContent, type PageContent } from '../ui/page';
 
 export function r2Content(env: Env): PageContent {
-  const r2Url = routeUrl('platform.r2');
+  const r2Url = `${routeUrl('demos.index')}#r2`;
   return pageContent(env, 'Cloudflare R2', `
 <section class="page-header lab-page-header">
   <h1>Cloudflare R2 Storage</h1>

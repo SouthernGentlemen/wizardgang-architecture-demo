@@ -4,13 +4,6 @@ import { defineInterfaceIdentityCapability, interfaceIdentityRoute } from '../ro
 
 export const restRouteCapability = defineInterfaceIdentityCapability('interfaces.rest', [
 
-interfaceIdentityRoute({
-  id: 'interfaces.rest', pattern: '/interfaces/rest', methods: ['GET'], kind: 'page',
-  handler: async (_request, { env }) => { const [{ apiContent }, { renderPage }] = await Promise.all([import('../../demos/api-page'), import('../../ui/page')]); return renderPage(env, { ...apiContent(env), routeId: 'interfaces.rest' }); },
-  title: 'REST API', description: 'Explore live anonymous CRUD operations through a focused OpenAPI 3.0-style contract.',
-  sourceModule: 'src/demos/api-page.ts', sourceExport: 'apiContent', tests: ['tests/interface-consolidation.test.ts'],
-  page: { parent: 'interfaces.index', label: 'REST', summary: 'A focused anonymous OpenAPI 3.0-style CRUD contract with executable examples.', order: 0, navigation: 'secondary', architectureMap: true },
-}),
   interfaceIdentityRoute({
     id: 'interfaces.rest.openapi.json',
     pattern: '/api/labs/rest-demo-openapi.json',

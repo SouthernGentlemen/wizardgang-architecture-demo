@@ -19,7 +19,7 @@ const behaviors = [
 ] as const;
 
 export function accessibilityContent(request: Request, env: Env): PageContent {
-  const accessibilityUrl = routeUrl('interfaces.accessibility');
+  const accessibilityUrl = `${routeUrl('demos.index')}#accessibility`;
   const initialMode = new URL(request.url).searchParams.get('mode') === 'broken' ? 'broken' : 'accessible';
   const cards = behaviors.map(([name, accessible, broken, criterion]) => `<article class="criterion-card"><p class="eyebrow">${criterion}</p><h3>${name}</h3><p><strong>Accessible:</strong> ${accessible}</p><p><strong>Failure example:</strong> ${broken}</p></article>`).join('');
   return pageContent(env, 'WCAG 2.2 engineering', `

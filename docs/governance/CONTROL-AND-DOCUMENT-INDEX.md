@@ -54,7 +54,7 @@ The management system distinguishes different record types because a policy, reg
 | **Release / deployment evidence** | Connects accepted source to production | PR, merge, annotated tag, release, deploy run, `/api/operations/version` | What source was accepted and deployed |
 | **Operational evidence** | Demonstrates behavior over time | `/api/operations/health`, dashboard, D1 audit events, public-safe logs, usage/uptime, incidents | Runtime/operational behavior for the observed period |
 | **Management evidence** | Demonstrates review and decision activity | audit record, management review, risk acceptance, corrective action, competence review | Human governance activity and attributable decisions |
-| **Public assurance presentation** | Makes the evidence understandable to reviewers | `/assurance/compliance`, `/assurance/governance`, `/interfaces/accessibility`, `/operations` | Presentation/traceability only; not independent certification |
+| **Public assurance presentation** | Makes the evidence understandable to reviewers | `/assurance/compliance`, `/assurance/governance`, `/demos#accessibility`, `/operations` | Presentation/traceability only; not independent certification |
 
 A document moving to `Approved` does **not** by itself make the associated control `Met` or prove effectiveness.
 
@@ -240,7 +240,7 @@ WCAG evidence is intentionally not buried inside the ISO governance documents.
 The detailed accessibility owner is:
 
 - `docs/ACCESSIBILITY.md`;
-- `/interfaces/accessibility` interactive/manual evidence route;
+- `/demos#accessibility` interactive/manual evidence route;
 - `tests/interface.test.ts` and other applicable interface tests;
 - automated axe evidence where implemented;
 - dated browser/assistive-technology manual results when actually completed;
@@ -278,7 +278,7 @@ The most important technical evidence owners are:
 | Health/uptime | `/api/operations/health`, `/api/operations/version`, scheduled observations, `/operations/availability` |
 | Cost/degradation | `/operations/usage`, usage collector, degradation behavior |
 | Recovery | release reconstruction path, recovery procedure/register, future RT-001 evidence |
-| Accessibility | `docs/ACCESSIBILITY.md`, `/interfaces/accessibility`, interface tests, manual records |
+| Accessibility | `docs/ACCESSIBILITY.md`, `/demos#accessibility`, interface tests, manual records |
 | Traceability | `docs/EVIDENCE.md`, Git/PR/CI/tag/release/deploy/runtime chain |
 | Public assurance data | `assurance/registry.json`, `docs/ASSURANCE.md`, `contracts/assurance/**` |
 
@@ -291,7 +291,7 @@ The intended public assurance architecture is:
 | Route | Ownership |
 |---|---|
 | **`/assurance/compliance`** | Canonical human-readable projection of the structured WCAG/ISO checklist and current evidence posture |
-| **`/interfaces/accessibility`** | Detailed WCAG interactive, automated and manual evidence |
+| **`/demos#accessibility`** | Detailed WCAG interactive, automated and manual evidence |
 | **`/assurance/governance`** | Governance, security-management and AI-management evidence summaries |
 | **`/assurance/concerns`** | Public, non-sensitive bug, feature, accessibility, AI/MCP and other concern intake |
 | **`/security`** | Vulnerability disclosure policy and private-reporting boundary |

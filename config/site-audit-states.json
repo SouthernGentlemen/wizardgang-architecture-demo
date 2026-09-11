@@ -11,11 +11,11 @@
     },
     {
       "name": "accessibility-lab",
-      "path": "/interfaces/accessibility"
+      "path": "/demos#accessibility"
     },
     {
       "name": "openapi-console",
-      "path": "/interfaces/rest"
+      "path": "/demos#rest"
     },
     {
       "name": "availability-review",
@@ -25,13 +25,13 @@
   "narrowViewportPaths": [
     "/",
     "/assurance/compliance?framework=wcag-2.2",
-    "/interfaces/rest",
-    "/interfaces/accessibility"
+    "/demos#rest",
+    "/demos#accessibility"
   ],
   "keyboardPaths": [
     "/",
     "/assurance/compliance?framework=wcag-2.2",
-    "/interfaces/rest",
-    "/interfaces/accessibility"
+    "/demos#rest",
+    "/demos#accessibility"
   ]
 }

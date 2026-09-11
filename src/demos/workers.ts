@@ -20,7 +20,7 @@ const demo: DemoDefinition = {
 };
 
 export function workersContent(env: Env): PageContent {
-  return demoContent(env, { ...demo, route: routeUrl('platform.workers') });
+  return demoContent(env, { ...demo, route: `${routeUrl('demos.index')}#workers` });
 }
 
 export default demo;

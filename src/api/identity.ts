@@ -90,7 +90,7 @@ function redirect(location: URL, cookies: string[] = []): Response {
 
 async function identityRedirect(request: Request, parameters: Record<string, string>, cookies: string[] = []): Promise<Response> {
   const { routeUrl } = await import('../routing/application-routes');
-  const location = new URL(routeUrl('interfaces.identity.page'), request.url);
+  const location = new URL(`${routeUrl('demos.index')}#identity`, request.url);
   for (const [key, value] of Object.entries(parameters)) location.searchParams.set(key, value);
   return redirect(location, cookies);
 }

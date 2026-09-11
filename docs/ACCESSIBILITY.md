@@ -1,6 +1,6 @@
 # Accessibility demonstration, global rendering baseline, criterion registry, and manual matrix
 
-The whole site follows WCAG 2.2-oriented engineering practices, with Level AAA as the engineering target wherever the success criteria apply. Accessibility defaults belong to ordinary rendering: there is no separate accessible version of the site. `/interfaces/accessibility` makes twelve behaviors explicit through an operable interaction and an opt-in annotated-failure teaching preset. Failure examples are static code and explanation inside a titled `srcdoc` frame; intentionally inaccessible controls are not served as a normal public application state.
+The whole site follows WCAG 2.2-oriented engineering practices, with Level AAA as the engineering target wherever the success criteria apply. Accessibility defaults belong to ordinary rendering: there is no separate accessible version of the site. `/demos#accessibility` makes twelve behaviors explicit through an operable interaction and an opt-in annotated-failure teaching preset. Failure examples are static code and explanation inside a titled `srcdoc` frame; intentionally inaccessible controls are not served as a normal public application state.
 
 Status language is **WCAG 2.2 engineering evidence — no conformance claim**. The repository does not claim Level A, AA, or AAA conformance or certification. Criterion-level status describes implementation and evidence only; a demonstrated or partial record is not a success-criterion result. Automated checks are partial evidence and never prove AAA conformance.
 

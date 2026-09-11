@@ -122,7 +122,7 @@ describe('DEMO-238 site-wide accessibility assurance', () => {
       expectedPublicStatus: 200,
       stateFixtures: configuredStatesFor(route),
     }));
-    expect(inventory.length).toBeGreaterThan(20);
+    expect(inventory.map((entry) => entry.id)).toContain('demos.index');
     expect(new Set(inventory.map((entry) => entry.id)).size).toBe(inventory.length);
 
     const manifestIds = (routeManifest as Array<{ id: string; kind: string; visibility: string; methods: string[] }>)
@@ -197,7 +197,7 @@ describe('DEMO-238 site-wide localization assurance', () => {
   });
 
   it('keeps mixed-direction technical material isolated on the Arabic API surface', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/rest?lang=ar', { headers: { accept: 'text/html' } }), environment());
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/demos?lang=ar#rest', { headers: { accept: 'text/html' } }), environment());
     expect(response.status).toBe(200);
     const html = await response.text();
     expect(html).toContain('<html lang="ar" dir="rtl">');

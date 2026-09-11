@@ -79,7 +79,7 @@ function localizedPath(routePathname, locale) {
   // Otherwise the preceding Arabic navigation persists an RTL cookie and makes
   // the next nominally English case depend on execution order.
   url.searchParams.set('lang', locale);
-  return `${url.pathname}${url.search}`;
+  return `${url.pathname}${url.search}${url.hash}`;
 }
 
 class CdpClient {
@@ -180,9 +180,20 @@ function inspectionExpression(expectedLocale) {
     const clippedControls = [...document.querySelectorAll('button,select,input:not([type="hidden"]),textarea,[role="button"],[role="tab"]')]
       .filter((node)=>{
         const style=getComputedStyle(node); if(style.display==='none'||style.visibility==='hidden') return false;
+        for (let ancestor=node.parentElement; ancestor; ancestor=ancestor.parentElement) {
+          if (ancestor instanceof HTMLDetailsElement && !ancestor.open) {
+            const summary=ancestor.querySelector(':scope > summary');
+            if (!summary || !summary.contains(node)) return false;
+          }
+        }
         const rect=node.getBoundingClientRect(); if(rect.width===0&&rect.height===0) return false;
         return rect.left < -1 || rect.right > viewportWidth + 1;
-      }).length;
+      })
+      .map((node)=>{
+        const rect=node.getBoundingClientRect();
+        const identity=node.id ? '#' + node.id : node.classList.length ? node.tagName.toLowerCase() + '.' + [...node.classList].join('.') : node.tagName.toLowerCase();
+        return identity + '[' + Math.round(rect.left) + '..' + Math.round(rect.right) + ']';
+      });
     return {
       lang: document.documentElement.lang,
       dir: document.documentElement.dir,
@@ -219,7 +230,7 @@ async function inspectCurrentPage(cdp, expectedLocale, label) {
   if (report.tablesWithoutHeaders) failures.push(`tables without headers=${report.tablesWithoutHeaders}`);
   if (!report.localeSelectorNamed) failures.push('locale selector is not named');
   if (report.ordinaryHorizontalOverflow) failures.push(`page-level horizontal overflow (${report.overflowingElements.join(', ')})`);
-  if (report.clippedControls) failures.push(`horizontally clipped controls=${report.clippedControls}`);
+  if (report.clippedControls.length) failures.push(`horizontally clipped controls=${report.clippedControls.join(', ')}`);
   if (report.violations.length) failures.push(`axe=${report.violations.map((item)=>`${item.id}(${item.nodes}: ${item.targets.join(', ')})`).join('; ')}`);
   if (failures.length) throw new Error(`${label}: ${failures.join('; ')}`);
   return report;
@@ -275,7 +286,8 @@ async function keyboardSmoke(cdp, pathname) {
 
 async function main() {
   const pages = publicPages();
-  if (pages.length < 20) throw new Error(`Expected application-wide public-page coverage, found ${pages.length}`);
+  if (!pages.length) throw new Error('Expected application-wide public-page coverage, found no registered public pages');
+  if (!pages.some((route) => route.id === 'demos.index')) throw new Error('Application-wide browser coverage is missing the consolidated demos route');
   for (const state of auditConfig.states) {
     const pathname = new URL(state.path, origin).pathname;
     if (!pages.some((route) => patternMatches(route.route, pathname))) {

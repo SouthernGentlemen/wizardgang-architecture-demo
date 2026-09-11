@@ -14,7 +14,7 @@ function repositoryName(env: Env): string {
 
 export function webhooksContent(env: Env): PageContent {
   const repository = repositoryName(env);
-  const webhooksUrl = routeUrl('interfaces.webhooks.console');
+  const webhooksUrl = `${routeUrl('demos.index')}#webhooks`;
   return pageContent(env, 'Signed Webhooks', `
 <section class="page-header lab-page-header webhook-page-header" id="webhooks">
   <h1>Signed Webhooks</h1>

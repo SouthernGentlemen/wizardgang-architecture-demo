@@ -68,14 +68,13 @@ describe('complete declarative application routing', () => {
   it('derives global navigation and the architecture map from page declarations', () => {
     expect(primaryNavigation().map((route) => route.id)).toEqual([
       'interfaces.frontend.index',
-      'platform.index',
-      'interfaces.index',
+      'demos.index',
       'assurance.index',
       'operations.index',
       'security.index',
     ]);
     expect(primaryNavigation().map((route) => route.page?.label)).toEqual([
-      'Architecture', 'Platform', 'Interfaces', 'Assurance', 'Operations', 'Security',
+      'Architecture', 'Demos', 'Assurance', 'Operations', 'Security',
     ]);
     const expectedArchitectureRoutes = applicationRouteRegistry.declarations
       .filter((route) => (
@@ -89,13 +88,7 @@ describe('complete declarative application routing', () => {
       .sort();
     expect(architectureMapEntries().map((route) => route.id).sort()).toEqual(expectedArchitectureRoutes);
     expect(secondaryNavigation('interfaces.frontend.index')).toEqual([]);
-    expect(secondaryNavigation('platform.index').map((route) => route.id)).toEqual([
-      'platform.edge', 'platform.workers', 'platform.durable-objects', 'platform.d1', 'platform.r2',
-    ]);
-    expect(secondaryNavigation('interfaces.index').map((route) => route.id)).toEqual([
-      'interfaces.rest', 'interfaces.graphql.console', 'interfaces.webhooks.console', 'interfaces.identity.page',
-      'interfaces.mcp.console', 'interfaces.i18n', 'interfaces.accessibility',
-    ]);
+    expect(secondaryNavigation('demos.index')).toEqual([]);
     expect(secondaryNavigation('assurance.index').map((route) => route.id)).toEqual([
       'assurance.delivery', 'assurance.governance', 'assurance.evidence', 'assurance.compliance',
       'assurance.risks', 'assurance.incidents', 'assurance.concerns',
@@ -105,13 +98,11 @@ describe('complete declarative application routing', () => {
 
   it('generates sitemap entries from public indexable registered pages', async () => {
     const sitemapRouteIds = [
-      'interfaces.frontend.index', 'interfaces.rest', 'platform.edge', 'interfaces.graphql.console', 'platform.index',
-      'platform.workers', 'interfaces.index', 'interfaces.webhooks.console', 'platform.durable-objects',
+      'interfaces.frontend.index', 'demos.index',
       'assurance.index', 'assurance.delivery', 'assurance.governance', 'assurance.evidence',
       'assurance.compliance', 'assurance.risks', 'assurance.incidents', 'assurance.concerns',
-      'interfaces.identity.page', 'platform.d1', 'interfaces.mcp.console', 'operations.index',
-      'operations.availability', 'operations.docs', 'operations.logs', 'operations.reports', 'operations.usage', 'platform.r2',
-      'security.index', 'interfaces.i18n', 'interfaces.accessibility',
+      'operations.index', 'operations.availability', 'operations.docs', 'operations.logs',
+      'operations.reports', 'operations.usage', 'security.index',
     ];
     expect([...sitemapPaths()].sort()).toEqual(sitemapRouteIds.map((routeId) => routeUrl(routeId)).sort());
     const response = sitemapResponse(new Request('https://demo.wizardgang.ai/sitemap.xml'));
@@ -162,10 +153,10 @@ describe('complete declarative application routing', () => {
   });
 
   it('uses one consistent method result from the application registry', () => {
-    expect(matchRoute(applicationRouteRegistry, 'POST', routeUrl('interfaces.index'))).toMatchObject({
+    expect(matchRoute(applicationRouteRegistry, 'POST', routeUrl('demos.index'))).toMatchObject({
       status: 'method-not-allowed',
       allowedMethods: ['GET'],
-      route: { id: 'interfaces.index' },
+      route: { id: 'demos.index' },
     });
     expect(matchRoute(applicationRouteRegistry, 'PUT', '/mcp')).toMatchObject({
       status: 'method-not-allowed',

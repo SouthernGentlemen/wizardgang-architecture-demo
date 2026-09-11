@@ -22,37 +22,48 @@ const environment: Env = {
 };
 
 const pages = [
-  { view: 'rest', path: routeUrl('interfaces.rest'), marker: 'id="rest"' },
-  { view: 'graphql', path: routeUrl('interfaces.graphql.console'), marker: 'srcdoc=' },
-  { view: 'webhooks', path: routeUrl('interfaces.webhooks.console'), marker: 'id="webhooks"' },
-  { view: 'identity', path: routeUrl('interfaces.identity.page'), marker: 'id="oauth"' },
-  { view: 'mcp', path: routeUrl('interfaces.mcp.console'), marker: 'id="mcp-endpoint"' },
-  { view: 'i18n', path: routeUrl('interfaces.i18n'), marker: 'data-i18n-form' },
-  { view: 'accessibility', path: routeUrl('interfaces.accessibility'), marker: 'id="accessibility-demo"' },
+  { view: 'rest', marker: 'id="rest-rest"' },
+  { view: 'graphql', marker: 'srcdoc=' },
+  { view: 'webhooks', marker: 'id="webhooks-webhooks"' },
+  { view: 'identity', marker: 'id="identity-oauth"' },
+  { view: 'mcp', marker: 'id="mcp-mcp-endpoint"' },
+  { view: 'i18n', marker: 'data-i18n-form' },
+  { view: 'accessibility', marker: 'id="accessibility-accessibility-demo"' },
 ] as const;
 
+async function demosHtml(path = routeUrl('demos.index')): Promise<string> {
+  const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`, { headers: { accept: 'text/html' } }), environment);
+  expect(response.status).toBe(200);
+  return response.text();
+}
+
+function demoMarkup(html: string, id: string): string {
+  const start = html.indexOf(`<details class="demo-disclosure" id="${id}"`);
+  if (start < 0) throw new Error(`Missing demo disclosure ${id}`);
+  const end = html.indexOf('<details class="demo-disclosure"', start + 1);
+  return html.slice(start, end < 0 ? undefined : end);
+}
+
 describe('canonical interface demonstrations', () => {
-  it('server-renders every child route with canonical metadata, one H1 and the shared skip link', async () => {
-    const bodies: string[] = [];
+  it('server-renders every interface presentation in one canonical accessible document', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/demos#rest', { headers: { accept: 'text/html' } }), environment);
+    const html = await response.text();
+    expect(response.status).toBe(200);
+    expect(response.headers.get('content-type')).toContain('text/html');
+    expect(html).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/demos">');
+    expect(html).toContain('class="skip-link" href="#main"');
+    expect(html).toContain('<main class="site-main" id="main">');
+    expect(html.match(/<h1\b/g)).toHaveLength(1);
     for (const page of pages) {
-      const response = await routeRequest(new Request(`https://demo.wizardgang.ai${page.path}`, { headers: { accept: 'text/html' } }), environment);
-      const html = await response.text();
-      bodies.push(html);
-      expect(response.status, page.path).toBe(200);
-      expect(response.headers.get('content-type'), page.path).toContain('text/html');
-      expect(html, page.path).toContain(page.marker);
-      expect(html, page.path).toContain(`<link rel="canonical" href="https://demo.wizardgang.ai${page.path}">`);
-      expect(html, page.path).toContain('class="skip-link" href="#main"');
-      expect(html, page.path).toContain('<main class="site-main" id="main">');
-      expect(html.match(/<h1\b/g), page.path).toHaveLength(1);
-      expect(html, page.path).toContain('<a href="/interfaces" data-section-current');
-      expect(html, page.path).not.toContain('/graphql/console');
+      expect(html, page.view).toContain(`class="demo-disclosure" id="${page.view}"`);
+      expect(html, page.view).toContain(page.marker);
     }
-    expect(new Set(bodies).size).toBe(pages.length);
+    expect(html).not.toContain('/graphql/console');
   });
 
   it('keeps the interface demos focused and executable', async () => {
-    const rest = await (await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/rest', { headers: { accept: 'text/html' } }), environment)).text();
+    const html = await demosHtml(`${routeUrl('demos.index')}#rest`);
+    const rest = demoMarkup(html, 'rest');
     expect(rest).toContain('3.0.3');
     expect(rest).toContain('PATCH');
     expect(rest).toContain('/api/labs/rest-demo-records');
@@ -60,41 +71,40 @@ describe('canonical interface demonstrations', () => {
     expect(rest).not.toContain('Same policy, different transports');
     expect(rest).not.toContain('Authorization');
 
-    const graphql = await (await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/graphql', { headers: { accept: 'text/html' } }), environment)).text();
+    const graphql = demoMarkup(html, 'graphql');
     expect(graphql).toContain('Working examples');
     expect(graphql).toContain('data-graphql-example');
     expect(graphql).not.toContain('GraphQL Yoga');
     expect(graphql).not.toContain('Application interfaces');
 
-    const webhooks = await (await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/webhooks', { headers: { accept: 'text/html' } }), environment)).text();
+    const webhooks = demoMarkup(html, 'webhooks');
     expect(webhooks).toContain('Pull the latest release');
     expect(webhooks).toContain('release.published');
     expect(webhooks).not.toContain('HMAC-SHA256');
     expect(webhooks).not.toContain('Event contract');
 
-    const identity = await (await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/identity', { headers: { accept: 'text/html' } }), environment)).text();
+    const identity = demoMarkup(html, 'identity');
     expect(identity).not.toContain('Many providers. One application identity.');
     expect(identity).not.toContain('No protocol secrets in the inspector');
 
-    const mcp = await (await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/mcp', { headers: { accept: 'text/html' } }), environment)).text();
+    const mcp = demoMarkup(html, 'mcp');
     expect(mcp).not.toContain('One shared trust boundary');
     expect(mcp).not.toContain('What this route proves');
     expect(mcp).not.toContain('Internationalization →');
   });
 
-  it('renders /interfaces as a real index and publishes every child link', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/interfaces', { headers: { accept: 'text/html' } }), environment);
+  it('renders /demos as a real index and publishes every child link', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/demos', { headers: { accept: 'text/html' } }), environment);
     const html = await response.text();
     expect(response.status).toBe(200);
-    expect(html).toContain('<h1>Interfaces</h1>');
-    expect(html).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/interfaces">');
-    expect(html).not.toContain('id="rest"');
-    for (const page of pages) expect(html, page.path).toContain(`href="${page.path}"`);
+    expect(html).toContain('<h1>Architecture Demos</h1>');
+    expect(html).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/demos">');
+    for (const page of pages) expect(html, page.view).toContain(`href="#${page.view}"`);
   });
 
   it('returns ordinary 404s for every retired interfaces ?view= URL', async () => {
     for (const view of [...pages.map((page) => page.view), 'unknown']) {
-      const response = await routeRequest(new Request(`https://demo.wizardgang.ai/interfaces?view=${view}`, { headers: { accept: 'text/html' } }), environment);
+      const response = await routeRequest(new Request(`https://demo.wizardgang.ai/demos?view=${view}`, { headers: { accept: 'text/html' } }), environment);
       expect(response.status, view).toBe(404);
       expect(response.headers.get('location'), view).toBeNull();
       expect(await response.text(), view).toContain('404 / unknown route');
@@ -102,15 +112,15 @@ describe('canonical interface demonstrations', () => {
   });
 
   it('keeps language and accessibility mode as query state on canonical resources', async () => {
-    const i18nPath = routeUrl('interfaces.i18n', {}, { lang: 'ar', count: '3' });
+    const i18nPath = `${routeUrl('demos.index', {}, { lang: 'ar', count: '3' })}#i18n`;
     const i18n = await (await routeRequest(new Request(`https://demo.wizardgang.ai${i18nPath}`), environment)).text();
     expect(i18n).toContain('<html lang="ar" dir="rtl">');
     expect(i18n).not.toContain('name="view"');
-    expect(i18n).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/interfaces/i18n">');
+    expect(i18n).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/demos">');
 
-    const accessibility = await (await routeRequest(new Request('https://demo.wizardgang.ai/interfaces/accessibility?mode=broken'), environment)).text();
+    const accessibility = await (await routeRequest(new Request('https://demo.wizardgang.ai/demos?mode=broken#accessibility'), environment)).text();
     expect(accessibility).toContain('Teaching warning:');
-    expect(accessibility).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/interfaces/accessibility">');
+    expect(accessibility).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/demos">');
   });
 
   it('retires standalone pages while preserving GraphQL and MCP machine endpoints', async () => {
@@ -137,14 +147,14 @@ describe('canonical interface demonstrations', () => {
     }
   });
 
-  it('lands all unconfigured identity starts and a failed callback on /interfaces/identity', async () => {
+  it('lands all unconfigured identity starts and a failed callback on /demos#identity', async () => {
     for (const [path, provider] of [['/auth/microsoft', 'microsoft'], ['/auth/google', 'google'], ['/auth/github', 'github'], ['/auth/saml', 'saml']] as const) {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`), environment);
       expect(response.status, path).toBe(303);
-      expect(response.headers.get('location'), path).toBe(`https://demo.wizardgang.ai/interfaces/identity?error=provider_unconfigured&provider=${provider}`);
+      expect(response.headers.get('location'), path).toBe(`https://demo.wizardgang.ai/demos?error=provider_unconfigured&provider=${provider}#identity`);
     }
     const callback = await routeRequest(new Request('https://demo.wizardgang.ai/auth/google/callback?error=access_denied'), environment);
     expect(callback.status).toBe(303);
-    expect(callback.headers.get('location')).toBe('https://demo.wizardgang.ai/interfaces/identity?error=authentication_failed&provider=google');
+    expect(callback.headers.get('location')).toBe('https://demo.wizardgang.ai/demos?error=authentication_failed&provider=google#identity');
   });
 });

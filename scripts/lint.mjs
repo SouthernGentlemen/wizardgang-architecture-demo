@@ -6,7 +6,7 @@ const failures = [];
 const maxReportedFailures = 100;
 const extensions = new Set(['.ts', '.mjs', '.json', '.jsonc', '.md', '.yml', '.yaml', '.graphql', '.sql', '.xml']);
 const urlLiteralExtensions = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']);
-const canonicalPageSegments = ['platform', 'interfaces', 'assurance', 'operations', 'security'];
+const canonicalPageSegments = ['demos', 'assurance', 'operations', 'security'];
 
 function allowsCanonicalPageLiteral(file) {
   const normalized = file.replaceAll('\\', '/');

@@ -1,9 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { renderPlatform } from '../src/demos/platform';
 import { applicationRouteRegistry } from '../src/routing/application-routes';
 import type { Env } from '../src/types';
 
 const env: Env = {
+  DEMO_DB: {
+    prepare: () => ({
+      bind() { return this; },
+      async all() { return { results: [] }; },
+      async run() { return { meta: {} }; },
+    }),
+  },
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
 };
@@ -13,22 +19,25 @@ function currentPageCount(html: string): number {
 }
 
 describe('derived frontend navigation', () => {
-  it('renders all six public domains in the primary header', async () => {
-    const html = await (await renderPlatform(new Request('https://demo.wizardgang.ai/platform'), env)).text();
-    for (const label of ['Architecture', 'Platform', 'Interfaces', 'Assurance', 'Operations', 'Security']) {
+  it('renders the consolidated public domains in the primary header', async () => {
+    const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === 'demos.index');
+    if (!route) throw new Error('Missing demos.index route');
+    const html = await (await route.handler(new Request('https://demo.wizardgang.ai/demos'), { env }, {})).text();
+    for (const label of ['Architecture', 'Demos', 'Assurance', 'Operations', 'Security']) {
       expect(html).toContain(`>${label}</a>`);
     }
+    expect(html).not.toContain('>Platform</a>');
+    expect(html).not.toContain('>Interfaces</a>');
   });
 
-  it('marks Platform as the current section on /platform/d1', async () => {
-    const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === 'platform.d1');
-    if (!route) throw new Error('Missing platform.d1 route');
-    const html = await (await route.handler(new Request('https://demo.wizardgang.ai/platform/d1'), { env }, {})).text();
-    expect(currentPageCount(html)).toBe(2);
-    expect(html).toContain('<li aria-current="page">D1</li>');
-    expect(html).toContain(`<a href="${route.pattern}" aria-current="page" data-route-current>`);
-    expect(html).toContain('<a href="/platform" data-section-current');
-    expect(html).not.toContain('data-view-current');
+  it('marks Demos as the current task on /demos#d1', async () => {
+    const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === 'demos.index');
+    if (!route) throw new Error('Missing demos.index route');
+    const html = await (await route.handler(new Request('https://demo.wizardgang.ai/demos#d1'), { env }, {})).text();
+    expect(html).toContain('<li aria-current="page">Demos</li>');
+    expect(html).toContain(`<a href="${route.pattern}" aria-current="page">Demos</a>`);
+    expect(html).not.toContain('name="view"');
+    expect(html).not.toContain(`${route.pattern}?view=`);
   });
 
   it('marks Assurance as the current section on /assurance/risks without query-view navigation', async () => {

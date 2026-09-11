@@ -80,6 +80,13 @@
       "reviewedAt": "2026-09-09T23:30:00Z",
       "reviewer": "controlled-repository-review",
       "basis": "DEMO-238 review approves publication of the bounded site-wide accessibility and localization automation evidence and the explicitly pending manual verification matrix, together with the exact resulting public evidence and WCAG framework source revisions. This disclosure review does not record manual accessibility execution or establish WCAG conformance."
+    },
+    {
+      "id": "review-demo242-consolidated-demos",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-10T14:45:00Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-242 review approves EVD-RUN-012 as the successor to the retired EVD-RUN-007 accessibility query-view locator, using the canonical Demos fragment. No evidence claim, observation, or disclosure scope is widened."
     }
   ],
   "sourceApprovals": [
@@ -328,6 +335,12 @@
       "resource": "compliance.wcag-2.2",
       "revision": "aa4b084fc583b5e3b902bc1b97ae40a8ac3bb649",
       "reviewRef": "review-demo238-accessibility-assurance"
+    },
+    {
+      "id": "source-evidence-4d8afa6496f0",
+      "resource": "evidence",
+      "revision": "4d8afa6496f03062eb54b838385d89f19149ae3b",
+      "reviewRef": "review-demo242-consolidated-demos"
     }
   ],
   "records": [
@@ -356,11 +369,11 @@
       ]
     },
     {
-      "id": "EVD-RUN-007",
+      "id": "EVD-RUN-012",
       "lifecycle": "Published",
-      "reviewRef": "review-demo180-interface-route-source",
+      "reviewRef": "review-demo242-consolidated-demos",
       "supersedes": [
-        "EVD-RUN-006"
+        "EVD-RUN-007"
       ]
     },
     {
@@ -457,6 +470,17 @@
       "reviewRef": "review-demo180-interface-route-source",
       "supersededBy": [
         "EVD-RUN-007"
+      ]
+    },
+    {
+      "id": "EVD-RUN-007",
+      "lifecycle": "Superseded",
+      "reviewRef": "review-demo242-consolidated-demos",
+      "supersedes": [
+        "EVD-RUN-006"
+      ],
+      "supersededBy": [
+        "EVD-RUN-012"
       ]
     },
     {

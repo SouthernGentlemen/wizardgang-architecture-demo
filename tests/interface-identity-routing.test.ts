@@ -47,16 +47,10 @@ const routeById = (id: string) => {
 };
 
 describe('interface and identity declarative routing', () => {
-  it('owns only interface, protocol, identity, i18n, and frontend routes after lab consolidation', () => {
+  it('owns the consolidated demo page and canonical interface protocols', () => {
     expect(routes.map((route) => route.pattern).sort()).toEqual([
       '/',
-      routeUrl('interfaces.index'),
-      routeUrl('interfaces.rest'),
-      routeUrl('interfaces.graphql.console'),
-      routeUrl('interfaces.webhooks.console'),
-      routeUrl('interfaces.identity.page'),
-      routeUrl('interfaces.mcp.console'),
-      routeUrl('interfaces.i18n'),
+      routeUrl('demos.index'),
       routeUrl('interfaces.rest.openapi.json'),
       '/api/openapi.json',
       '/graphql',
@@ -129,7 +123,7 @@ describe('interface and identity declarative routing', () => {
   it('keeps browser response behavior in declarative route metadata', () => {
     expect(routeById('interfaces.graphql.endpoint').browserHtml).toBe('never');
     expect(routeById('interfaces.mcp.server').browserHtml).toBe('never');
-    expect(routeById('interfaces.index').browserHtml).toBe('page');
+    expect(routeById('demos.index').browserHtml).toBe('page');
   });
 
   it('can register a compatible new interface without modifying the central router', async () => {

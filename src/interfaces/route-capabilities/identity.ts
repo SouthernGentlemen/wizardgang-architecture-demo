@@ -46,13 +46,6 @@ const providerRoutes = providers.flatMap((provider) => [
 
 export const identityRouteCapability = defineInterfaceIdentityCapability('interfaces.identity', [
 
-interfaceIdentityRoute({
-  id: 'interfaces.identity.page', pattern: '/interfaces/identity', methods: ['GET'], kind: 'page',
-  handler: async (_request, { env }) => { const [{ identityContent }, { renderPage }] = await Promise.all([import('../../demos/identity-page'), import('../../ui/page')]); return renderPage(env, { ...identityContent(env), routeId: 'interfaces.identity.page' }); },
-  title: 'Authentication and SSO', description: 'Authenticate with supported providers and inspect the resulting application session.',
-  sourceModule: 'src/demos/identity-page.ts', sourceExport: 'identityContent', tests: ['tests/interface-consolidation.test.ts', 'tests/identity.test.ts'],
-  page: { parent: 'interfaces.index', label: 'Identity', summary: 'Sign in with OIDC, OAuth, or SAML and inspect the application session.', order: 3, navigation: 'secondary', architectureMap: true },
-}),
   interfaceIdentityRoute({
     id: 'interfaces.identity.authorize',
     pattern: '/auth/authorize',

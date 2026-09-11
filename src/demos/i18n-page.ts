@@ -19,12 +19,12 @@ function localeHref(
 ): string {
   const url = new URL(route, 'https://demo.wizardgang.ai');
   url.searchParams.set('count', String(count));
-  return localization.href(`${url.pathname}${url.search}`, locale);
+  return localization.href(`${url.pathname}${url.search}${url.hash}`, locale);
 }
 
 export function i18nContent(request: Request, env: Env): PageContent {
   const url = new URL(request.url);
-  const i18nUrl = routeUrl('interfaces.i18n');
+  const i18nUrl = `${routeUrl('demos.index')}#i18n`;
   const localization = localizationForEnv(env);
   const locale = localization.locale;
   const count = Math.max(0, Math.min(Number(url.searchParams.get('count') || '3') || 0, 9999));

@@ -5,7 +5,7 @@ import { routeUrl } from '../routing/application-routes';
 import { pageContent, type PageContent } from '../ui/page';
 
 export function identityContent(env: Env): PageContent {
-  const identityPageUrl = routeUrl('interfaces.identity.page');
+  const identityPageUrl = `${routeUrl('demos.index')}#identity`;
   return pageContent(env, 'Authentication & SSO', `
 <section class="page-header lab-page-header identity-page-header">
   <h1>Authentication &amp; SSO</h1>
