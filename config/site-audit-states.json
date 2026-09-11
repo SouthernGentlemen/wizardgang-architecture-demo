@@ -19,7 +19,7 @@
     },
     {
       "name": "availability-review",
-      "path": "/operations/availability"
+      "path": "/operations?window=365d#availability"
     }
   ],
   "narrowViewportPaths": [

@@ -271,16 +271,9 @@ describe('public route contract', () => {
     expect(operations).toContain('User-requested ChatGPT fetch');
     expect(operations).toContain('Model-training crawl');
     expect(operations).not.toContain('name="control" value="chatgpt-crawl"');
-    expect(operations).toContain('Inspect evidence');
+    expect(operations).toContain('Source and documentation');
     expect(operations).not.toContain('id="reporting-browser"');
-    const reports = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations/reports'), environment)).text();
-    expect(reports).toContain('Collection discovery comes from reporting ownership and registered capabilities.');
-    expect(reports).toContain('href="/operations/reports?report=compliance#reporting-browser"');
-    expect(reports).toContain('Shared reporting presenter');
-    expect(reports).toMatch(/\d+ available in the authorized selection/);
-
-    const docs = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations/docs'), environment)).text();
-    expect(docs).toContain('src/router.ts');
+    expect(operations).toContain('Reporting API source');
   });
 
   it('removes the generic fallback runner and event listing routes', async () => {

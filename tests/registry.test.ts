@@ -38,14 +38,8 @@ describe('architecture demo registry', () => {
     expect(architectureMapEntries().map((route) => route.id).sort()).toEqual(expected);
   });
 
-  it('derives the five operations child links from route declarations', () => {
-    expect(secondaryNavigation('operations.index').map((route) => [route.id, route.pattern, route.page?.label])).toEqual([
-      ['operations.availability', routeUrl('operations.availability'), 'Availability'],
-      ['operations.logs', routeUrl('operations.logs'), 'Logs'],
-      ['operations.usage', routeUrl('operations.usage'), 'Usage & cost'],
-      ['operations.reports', routeUrl('operations.reports'), 'Reports'],
-      ['operations.docs', routeUrl('operations.docs'), 'Documentation'],
-    ]);
+  it('keeps operations as one page without child navigation', () => {
+    expect(secondaryNavigation('operations.index')).toEqual([]);
   });
 
   it('uses unique public architecture routes', () => {
@@ -62,19 +56,12 @@ describe('architecture demo registry', () => {
     expect(architectureMapEntries().every((route) => route.pattern.startsWith('/'))).toBe(true);
   });
 
-  it('publishes canonical operations paths and retires the dashboard route family', () => {
-    const operations = [
-      applicationRoutes.find((route) => route.id === 'operations.index'),
-      ...secondaryNavigation('operations.index'),
-    ].filter((route): route is ApplicationRouteDeclaration => Boolean(route));
-    expect(operations.map((route) => route.pattern)).toEqual([
-      'operations.index',
-      'operations.availability',
-      'operations.logs',
-      'operations.usage',
-      'operations.reports',
-      'operations.docs',
-    ].map((routeId) => routeUrl(routeId)));
+  it('publishes one canonical operations page and retires the dashboard route family', () => {
+    const operations = applicationRoutes.filter((route) => (
+      route.id === 'operations.index'
+      || (route.page?.parent === 'operations.index' && route.page.navigation !== 'none')
+    ));
+    expect(operations.map((route) => route.pattern)).toEqual([routeUrl('operations.index')]);
     expect(applicationRoutes.some((route) => route.id === 'operations.page')).toBe(false);
     expect(applicationRoutes.some((route) => route.pattern.startsWith('/dashboard'))).toBe(false);
   });
@@ -129,7 +116,7 @@ describe('architecture demo registry', () => {
 describe('intentional offline route policies', () => {
   it('keeps registered operational recovery surfaces reachable', () => {
     for (const route of [
-      ...['operations.index', 'operations.availability', 'operations.logs', 'operations.usage', 'operations.reports', 'operations.docs'].map((routeId) => routeUrl(routeId)),
+      routeUrl('operations.index'),
       '/api/operations/health', '/api/operations/version', '/api/operations/logs',
       '/api/operations/budget', '/offline', '/admin', '/robots.txt', '/.well-known/security.txt', '/assets/:asset',
     ]) {
@@ -162,7 +149,7 @@ describe('intentional offline route policies', () => {
     expect(browserPolicy('/mcp/server')).toBeUndefined();
     expect(browserPolicy(routeUrl('demos.index'))).toBe('page');
     expect(browserPolicy(routeUrl('demos.index'))).toBe('page');
-    expect(browserPolicy(routeUrl('operations.reports'))).toBe('page');
+    expect(browserPolicy(routeUrl('operations.index'))).toBe('page');
     expect(browserPolicy('/edge')).toBeUndefined();
     expect(applicationRoutes.some((route) => route.pattern === `${retiredApiReferencePrefixes[0]}/things`)).toBe(false);
   });

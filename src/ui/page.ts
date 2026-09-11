@@ -348,7 +348,7 @@ export function renderIndex(env: Env, list: RegisteredRouteMetadataView[]): Resp
 </section>
 <section class="status-strip" aria-label="${escapeHtml(localization.t('home.live_state', 'Live service state'))}">
   <a href="/api/operations/version"><span>${escapeHtml(localization.t('home.version', 'Version'))}</span><strong><bdi dir="ltr">${escapeHtml(env.DEPLOYED_VERSION || 'development')}</bdi></strong></a>
-  <a href="${escapeHtml(operationsRoute)}#health"><span>${escapeHtml(localization.t('home.health', 'Health'))}</span><strong data-health>${escapeHtml(localization.t('common.checking', 'Checking…'))}</strong></a>
+  <a href="${escapeHtml(operationsRoute)}#status"><span>${escapeHtml(localization.t('home.health', 'Health'))}</span><strong data-health>${escapeHtml(localization.t('common.checking', 'Checking…'))}</strong></a>
 </section>
 <section id="architecture-map">
   ${architectureMapSections(list, localization)}

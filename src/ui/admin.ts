@@ -104,9 +104,12 @@ export function renderOffline(env: Env, control: DemoControl, requestedPath: str
   <p class="subtle">Operational and security surfaces stay available during an intentional offline window so the demo can be observed and recovered while ordinary demos are down.</p>
   <div class="meta">
     <a href="${escapeHtml(operationsRoute)}">Operations</a>
-    <a href="${escapeHtml(operationsRoute)}#health">Health</a>
-    <a href="${escapeHtml(routeUrl('operations.availability'))}">Availability</a>
-    <a href="${escapeHtml(routeUrl('operations.docs'))}">Docs</a>
+    <a href="${escapeHtml(operationsRoute)}#status">Status</a>
+    <a href="${escapeHtml(operationsRoute)}#availability">Availability</a>
+    <a href="${escapeHtml(operationsRoute)}#activity">Activity</a>
+    <a href="${escapeHtml(operationsRoute)}#usage">Usage</a>
+    <a href="${escapeHtml(operationsRoute)}#deployment">Deployment</a>
+    <a href="${escapeHtml(sourceUrl(env, 'docs/OPERATIONS.md'))}">Operations docs ↗</a>
     <a href="${escapeHtml(routeUrl('security.index'))}">Security</a>
     <a href="${escapeHtml(routeUrl('operations.health'))}">Health JSON</a>
     <a href="${escapeHtml(routeUrl('operations.version'))}">Version JSON</a>

@@ -9,12 +9,7 @@ This file is generated from the active declarative application registry. Route I
 | `interfaces.frontend.index` | `/` | `GET` | page | public | gated | allow | Architecture demo index | `src/ui/page.ts` |
 | `assurance.index` | `/assurance` | `GET` | page | public | gated | allow | Assurance | `src/demos/assurance.ts` |
 | `demos.index` | `/demos` | `GET` | page | public | gated | allow | Architecture Demos | `src/demos/demos-page.ts` |
-| `operations.index` | `/operations` | `GET` | page | public | available | allow | Operations | `src/demos/operations-pages.ts` |
-| `operations.availability` | `/operations/availability` | `GET` | page | public | available | allow | Operations availability | `src/demos/operations-pages.ts` |
-| `operations.docs` | `/operations/docs` | `GET` | page | public | available | allow | Operations documentation | `src/demos/operations-pages.ts` |
-| `operations.logs` | `/operations/logs` | `GET` | page | public | available | allow | Operations logs | `src/demos/logs.ts` |
-| `operations.reports` | `/operations/reports` | `GET` | page | public | available | allow | Operations reports | `src/demos/operations.ts` |
-| `operations.usage` | `/operations/usage` | `GET` | page | public | available | allow | Operations usage and cost | `src/demos/operations-pages.ts` |
+| `operations.index` | `/operations` | `GET` | page | public | available | allow | Operations | `src/demos/operations.ts` |
 | `security.index` | `/security` | `GET` | page | public | available | allow | Security | `src/demos/security-page.ts` |
 
 ## Registered service, protocol, asset, and private routes

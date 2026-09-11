@@ -57,7 +57,7 @@ See `docs/REPORTING-CURSORS.md` for the cursor envelope and validation rules.
 
 ### Presentation
 
-`src/reporting/presentation.ts` and `src/reporting/html.ts` normalize reporting results for the public UI. `/assurance` and operations reporting views consume the same service result instead of reconstructing resource-specific tables or pagination rules.
+`src/reporting/presentation.ts` normalizes reporting query results for browser consumers that need the shared reporting model. `/assurance` uses that model inside its consolidated workbench. `/operations` presents operational availability, activity, usage/cost, and deployment evidence directly; it does not expose a generic human reporting browser. The canonical machine reporting boundary remains `/api/reporting`.
 
 ## Structured assurance collections
 
@@ -157,7 +157,7 @@ New reporting consumers should:
 
 1. register or reuse a reporting collection;
 2. query through `src/reporting/service.ts`;
-3. present through the shared presentation layer when rendering HTML;
+3. use the shared presentation model where a current browser surface needs normalized reporting results;
 4. use `/api/reporting` for HTTP access;
 5. preserve disclosure, cursor, export, schema, and cache behavior rather than recreating them locally.
 
