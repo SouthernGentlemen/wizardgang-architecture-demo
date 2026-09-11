@@ -51,6 +51,7 @@ describe('interface and identity declarative routing', () => {
     expect(routes.map((route) => route.pattern).sort()).toEqual([
       '/',
       routeUrl('demos.index'),
+      '/api/demos/:demo',
       routeUrl('interfaces.rest.openapi.json'),
       '/api/openapi.json',
       '/graphql',
@@ -124,6 +125,7 @@ describe('interface and identity declarative routing', () => {
     expect(routeById('interfaces.graphql.endpoint').browserHtml).toBe('never');
     expect(routeById('interfaces.mcp.server').browserHtml).toBe('never');
     expect(routeById('demos.index').browserHtml).toBe('page');
+    expect(routeById('demos.presentation')).toMatchObject({ kind: 'api', browserHtml: 'never' });
   });
 
   it('can register a compatible new interface without modifying the central router', async () => {

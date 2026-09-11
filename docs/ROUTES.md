@@ -18,6 +18,7 @@ This file is generated from the active declarative application registry. Route I
 |---|---|---|---|---|---|---|---|---|
 | `operations.security-txt` | `/.well-known/security.txt` | `GET`, `HEAD` | protocol | public | available | deny | Security contact | `src/api/security-policy.ts` |
 | `operations.admin` | `/admin` | `GET`, `POST` | page | private | available | deny | Demo administration | `src/ui/admin.ts` |
+| `demos.presentation` | `/api/demos/{demo}` | `GET` | api | public | gated | deny | Lazy demo presentation fragment | `src/demos/demos-page.ts` |
 | `platform.accessibility.lab` | `/api/labs/accessibility` | `GET` | api | public | gated | deny | Accessibility teaching laboratory API | `src/platform/route-capabilities/accessibility.ts` |
 | `platform.d1.reset` | `/api/labs/d1-reset` | `POST` | api | public | gated | deny | D1 users and tasks reset laboratory API | `src/platform/route-capabilities/d1.ts` |
 | `platform.d1.tasks` | `/api/labs/d1-tasks` | `GET`, `POST` | api | public | gated | deny | D1 tasks laboratory API | `src/platform/route-capabilities/d1.ts` |

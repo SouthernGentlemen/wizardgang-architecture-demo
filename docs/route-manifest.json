@@ -107,6 +107,51 @@
     "status": "working"
   },
   {
+    "id": "demos.presentation",
+    "route": "/api/demos/{demo}",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Lazy demo presentation fragment",
+    "description": "Returns one scoped demonstration presentation for activation inside the consolidated demos page.",
+    "docs": [
+      "docs/ROUTES.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/demos/demos-page.ts",
+      "exportName": "demoPresentationResponse",
+      "tests": [
+        "tests/interface-identity-routing.test.ts",
+        "tests/demos-consolidation.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
     "id": "interfaces.frontend.index",
     "route": "/",
     "methods": [
