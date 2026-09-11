@@ -204,6 +204,8 @@ function languageSelector(localization: LocalizationContext): string {
 function shell(env: Env, content: PageContent): Response {
   const localization = localizationForEnv(env);
   const homeRoute = localization.href(routeUrl(ROOT_ROUTE_ID));
+  const repositoryUrl = repoUrl(env);
+  const issueUrl = `${repositoryUrl}/issues/new?template=bug.yml`;
   const routeSourceModule = content.routeId
     ? registeredRouteMetadata().find((route) => route.id === content.routeId)?.source.module
     : undefined;
@@ -254,7 +256,7 @@ function shell(env: Env, content: PageContent): Response {
   </a>
   <nav class="nav" aria-label="${escapeHtml(localization.t('shell.primary_navigation', 'Primary navigation'))}">
     ${primaryNavigationHtml(localization, content.routeId)}
-    <a href="https://wizardgang.ai/">${escapeHtml(localization.t('shell.main_site', 'Main site'))} <span aria-hidden="true">↗</span></a>
+    <a href="${escapeHtml(repositoryUrl)}">${escapeHtml(localization.t('shell.source', 'Source'))} <span aria-hidden="true">↗</span></a>
     <button type="button" data-theme-toggle aria-label="${escapeHtml(themeAria)}" aria-pressed="true">${escapeHtml(themeText)}</button>
     ${languageSelector(localization)}
   </nav>
@@ -262,7 +264,7 @@ function shell(env: Env, content: PageContent): Response {
 ${shellNavigation(localization, content.routeId)}
 <main class="site-main" id="main">${content.body}</main>
 <footer class="site-footer">
-  <span><a href="${escapeHtml(repoUrl(env))}">${escapeHtml(localization.t('shell.public_source', 'Public source'))}</a>${routeSourceLink}</span>
+  <span><a href="${escapeHtml(issueUrl)}">${escapeHtml(localization.t('shell.report_issue', 'Report an issue'))}</a>${routeSourceLink}</span>
 </footer>
 <script>${themeToggleScript(localization)}</script>
 </body>
@@ -289,80 +291,37 @@ export function pageResponse(
   return renderPage(env, pageContent(env, title, body, options));
 }
 
-function architectureMapSections(
-  list: RegisteredRouteMetadataView[],
-  localization: LocalizationContext,
-): string {
-  const byId = new Map(registeredRouteMetadata().map((route) => [route.id, route]));
-  const groups = new Map<string, RegisteredRouteMetadataView[]>();
-  for (const route of list) {
-    if (!route.page) continue;
-    const parentId = route.page.parent ?? ROOT_ROUTE_ID;
-    const entries = groups.get(parentId) ?? [];
-    entries.push(route);
-    groups.set(parentId, entries);
-  }
-  const orderedGroups = [...groups.entries()].sort(([leftId], [rightId]) => {
-    const left = byId.get(leftId)?.page?.order ?? Number.MAX_SAFE_INTEGER;
-    const right = byId.get(rightId)?.page?.order ?? Number.MAX_SAFE_INTEGER;
-    return left - right || leftId.localeCompare(rightId);
-  });
-  return orderedGroups.map(([parentId, entries]) => {
-    const parent = byId.get(parentId);
-    const isRoot = parentId === ROOT_ROUTE_ID;
-    const heading = isRoot ? localization.t('home.public_domains', 'Public domains') : (parent?.page ? localizedRouteLabel(localization, parent) : parentId);
-    const headingHtml = !isRoot && parent?.page
-      ? `<a href="${escapeHtml(localization.href(routeUrl(parent.id)))}">${escapeHtml(heading)}</a>`
-      : escapeHtml(heading);
-    const destinationCount = localization.t(entries.length === 1 ? 'home.destination_one' : 'home.destination_other', `${entries.length} destination${entries.length === 1 ? '' : 's'}`, { count: localization.number(entries.length) });
-    return `<section class="architecture-domain" data-parent-route="${escapeHtml(parentId)}">
-  <div class="section-head"><h2>${headingHtml}</h2><span>${escapeHtml(destinationCount)}</span></div>
-  <div class="grid">
-    ${entries.map((route) => {
-      const href = routeUrl(route.id);
-      return `<a class="card" href="${escapeHtml(localization.href(href))}">
-        <p class="eyebrow"><bdi dir="ltr">${escapeHtml(href)}</bdi></p>
-        <h3>${escapeHtml(localizedRouteLabel(localization, route))}</h3>
-        <p>${escapeHtml(localization.t(`summary.${route.id}`, route.page!.summary))}</p>
-      </a>`;
-    }).join('')}
-  </div>
-</section>`;
-  }).join('\n');
-}
-
-export function renderIndex(env: Env, list: RegisteredRouteMetadataView[]): Response {
+export function renderIndex(env: Env): Response {
   const localization = localizationForEnv(env);
   const homeRoute = routeUrl(ROOT_ROUTE_ID);
-  const operationsRoute = localization.href(routeUrl(OPERATIONS_ROUTE_ID));
-  const liveDestinations = localization.t('home.live_destinations', '{count} live destinations expose the platform, interfaces, assurance, security, and operations behind a production edge system.', { count: localization.number(list.length) });
-  const healthLabels = safeScriptJson(JSON.stringify({
-    healthy: localization.t('common.healthy', 'Healthy'),
-    degraded: localization.t('common.degraded', 'Degraded'),
-    unavailable: localization.t('common.unavailable', 'Unavailable'),
-  }));
+  const actions = [
+    {
+      routeId: 'demos.index',
+      label: localization.t('home.run_it', 'Run it'),
+      summary: localization.t('home.run_summary', 'Execute the interactive architecture demonstrations.'),
+    },
+    {
+      routeId: 'assurance.index',
+      label: localization.t('home.verify_it', 'Verify it'),
+      summary: localization.t('home.verify_summary', 'Inspect assurance, evidence, governance, and compliance records.'),
+    },
+    {
+      routeId: 'operations.index',
+      label: localization.t('home.observe_it', 'Observe it'),
+      summary: localization.t('home.observe_summary', 'Review runtime status, availability, activity, usage, and deployment evidence.'),
+    },
+  ] as const;
   const body = `
 <section class="page-header home-header">
   <h1>${escapeHtml(localization.t('nav.interfaces.frontend.index', 'Architecture'))} <span>${escapeHtml(localization.t('home.inspectable', 'you can inspect.'))}</span></h1>
-  <p class="lede home-lede">${escapeHtml(liveDestinations)}</p>
+  <p class="lede home-lede">${escapeHtml(localization.t('home.choose_action', 'Choose what you want to do.'))}</p>
 </section>
-<section class="status-strip" aria-label="${escapeHtml(localization.t('home.live_state', 'Live service state'))}">
-  <a href="/api/operations/version"><span>${escapeHtml(localization.t('home.version', 'Version'))}</span><strong><bdi dir="ltr">${escapeHtml(env.DEPLOYED_VERSION || 'development')}</bdi></strong></a>
-  <a href="${escapeHtml(operationsRoute)}#status"><span>${escapeHtml(localization.t('home.health', 'Health'))}</span><strong data-health>${escapeHtml(localization.t('common.checking', 'Checking…'))}</strong></a>
-</section>
-<section id="architecture-map">
-  ${architectureMapSections(list, localization)}
-</section>
-<script>
-const healthLabels = JSON.parse(${healthLabels});
-fetch('/api/operations/health').then((r) => r.json()).then((h) => {
-  const slot = document.querySelector('[data-health]');
-  if (slot) slot.textContent = healthLabels[h.status] || h.status;
-}).catch(() => {
-  const slot = document.querySelector('[data-health]');
-  if (slot) slot.textContent = healthLabels.unavailable;
-});
-</script>`;
+<section class="grid home-actions" aria-label="${escapeHtml(localization.t('home.primary_actions', 'Primary actions'))}">
+  ${actions.map((action) => `<a class="card" href="${escapeHtml(localization.href(routeUrl(action.routeId)))}">
+    <h2>${escapeHtml(action.label)}</h2>
+    <p>${escapeHtml(action.summary)}</p>
+  </a>`).join('')}
+</section>`;
   return pageResponse(env, localization.t('nav.interfaces.frontend.index', 'Architecture'), body, {
     routeId: ROOT_ROUTE_ID,
     canonicalPath: homeRoute,
@@ -464,6 +423,6 @@ export function renderNotFound(env: Env): Response {
   <p class="eyebrow">404 / unknown route</p>
   <h1>That route does not exist.</h1>
   <p class="lede">Every published route is registered in the route map and backed by a source module.</p>
-  <div class="meta"><a href="${escapeHtml(localization.href(routeUrl(ROOT_ROUTE_ID)))}">Architecture map</a><a href="${escapeHtml(localization.href(routeUrl(OPERATIONS_ROUTE_ID)))}">Operations</a><a href="${escapeHtml(sourceUrl(env, 'docs/ROUTES.md'))}">Route map</a></div>
+  <div class="meta"><a href="${escapeHtml(localization.href(routeUrl(ROOT_ROUTE_ID)))}">Home</a><a href="${escapeHtml(localization.href(routeUrl(OPERATIONS_ROUTE_ID)))}">Operations</a><a href="${escapeHtml(sourceUrl(env, 'docs/ROUTES.md'))}">Route map</a></div>
 </section>`, { status: 404, noindex: true });
 }

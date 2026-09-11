@@ -6,7 +6,7 @@ export type DemoHeadingLevel = 1 | 2 | 3;
 export interface DemoSectionOptions {
   /** Unique instance key used to isolate client behavior when sections share a document. */
   scope?: string;
-  /** Prefix for DOM IDs. Use an empty string only for a compatibility full-page render. */
+  /** Prefix for DOM IDs. An empty string disables ID namespacing. */
   idPrefix?: string;
   /** Root heading level for the presentation. Reusable sections default to h2. */
   headingLevel?: DemoHeadingLevel;
@@ -132,12 +132,4 @@ export function createDemoSection(
     body: `<div class="demo-presentation-section" data-demo-section="${escapeHtml(scope)}" style="display: contents">${body}</div>`,
     page: { ...page, canonicalPath },
   };
-}
-
-export function demoSectionPage(section: DemoSection): PageContent {
-  return { ...section.page, body: section.body };
-}
-
-export function fullPageSectionOptions(scope: string): DemoSectionOptions {
-  return { scope, idPrefix: '', headingLevel: 1 };
 }

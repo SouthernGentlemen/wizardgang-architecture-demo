@@ -29,8 +29,15 @@ function registeredPages(): RegisteredRouteMetadataView[] {
 }
 
 export function primaryNavigation(): RegisteredRouteMetadataView[] {
+  const root = registeredPages().find((route) => !route.page?.parent);
+  if (!root) return [];
   return registeredPages()
-    .filter((route) => route.page?.navigation === 'primary' && route.visibility === 'public' && route.methods.includes('GET'));
+    .filter((route) => (
+      route.page?.navigation === 'primary'
+      && route.page.parent === root.id
+      && route.visibility === 'public'
+      && route.methods.includes('GET')
+    ));
 }
 
 export function secondaryNavigation(parentRouteId: string): RegisteredRouteMetadataView[] {
@@ -38,13 +45,14 @@ export function secondaryNavigation(parentRouteId: string): RegisteredRouteMetad
     .filter((route) => route.page?.navigation === 'secondary' && route.page.parent === parentRouteId);
 }
 
-/** Every public, stable child page belongs on the homepage architecture map. */
+/** Project every public, stable child page carrying architecture-map metadata. */
 export function architectureMapEntries(): RegisteredRouteMetadataView[] {
   return registeredPages()
     .filter((route) => (
       route.visibility === 'public'
       && route.methods.includes('GET')
       && Boolean(route.page?.parent)
+      && route.page?.architectureMap === true
       && !route.pattern.includes(':')
     ));
 }

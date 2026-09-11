@@ -93,20 +93,23 @@ describe('navigation projection', () => {
     expect(html).toContain('href="#risks"');
   });
 
-  it('renders every public destination from the homepage and groups map cards by parent', async () => {
+  it('links every indexable public destination from the homepage shell while keeping recovery hidden', async () => {
     const entries = architectureMapEntries();
-    const html = await renderIndex(env, entries).text();
+    const html = await renderIndex(env).text();
     const hrefs = new Set([...html.matchAll(/href="([^"]+)"/g)].map((match) => match[1]));
-    for (const route of publicPages) {
+    for (const route of publicPages.filter((candidate) => candidate.crawler.indexing === 'allow')) {
       expect(hrefs.has(routeUrl(route.id)), route.id).toBe(true);
+    }
+    for (const route of publicPages.filter((candidate) => candidate.crawler.indexing === 'deny')) {
+      expect(hrefs.has(routeUrl(route.id)), route.id).toBe(false);
     }
     for (const route of entries) {
       expect(route.page?.parent, route.id).toBeTruthy();
-      expect(html, route.id).toContain(`data-parent-route="${route.page!.parent}"`);
       expect(html, route.id).toContain(`href="${routeUrl(route.id)}"`);
-      expect(html, route.id).toContain(route.page!.summary);
+      expect(route.page?.summary.trim(), route.id).not.toBe('');
     }
-    expect(html).toContain(`${entries.length} live destinations`);
+    expect(html).not.toContain('data-parent-route=');
+    expect(html).not.toContain(`${entries.length} live destinations`);
   });
 
   it('keeps 44px targets and horizontal secondary navigation in the mobile shell', () => {

@@ -4,7 +4,6 @@ import {
   accessibilitySection,
   d1Section,
   durableObjectsSection,
-  edgePageContent,
   edgeSection,
   graphqlSection,
   i18nSection,
@@ -153,15 +152,12 @@ describe('composable demo presentations', () => {
     for (const [body, endpoint] of endpointEvidence) expect(body).toContain(endpoint);
   });
 
-  it('builds compatibility full pages from the same section renderer without changing legacy IDs or headings', () => {
+  it('owns each presentation under the consolidated demos route with stable scoped IDs and headings', () => {
     const section = edgeSection(env);
-    const page = edgePageContent(env);
     expect(section.body).toContain('data-demo-section="edge"');
     expect(section.body).toContain('id="edge-');
+    expect(section.body).not.toContain('id="edge-edge-');
     expect(headings(withoutScripts(section.body))[0]).toBe(2);
-    expect(page.body).toContain('data-demo-section="edge"');
-    expect(page.body).not.toContain('id="edge-edge-');
-    expect(headings(withoutScripts(page.body))[0]).toBe(1);
-    expect(page.canonicalPath).toBe(`${routeUrl('demos.index')}#edge`);
+    expect(section.page.canonicalPath).toBe(`${routeUrl('demos.index')}#edge`);
   });
 });

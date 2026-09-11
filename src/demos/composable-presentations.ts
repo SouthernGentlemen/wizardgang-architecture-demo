@@ -2,8 +2,6 @@ import type { Env } from '../types';
 import { routeUrl } from '../routing/application-routes';
 import {
   createDemoSection,
-  demoSectionPage,
-  fullPageSectionOptions,
   type DemoSection,
   type DemoSectionOptions,
 } from '../ui/demo-section';
@@ -76,16 +74,3 @@ export function accessibilitySection(request: Request, env: Env, options: DemoSe
 export function i18nSection(request: Request, env: Env, options: DemoSectionOptions = {}): DemoSection {
   return section(i18nContent(request, env), 'i18n', `${routeUrl('demos.index')}#i18n`, options);
 }
-
-export const edgePageContent = (env: Env) => demoSectionPage(edgeSection(env, fullPageSectionOptions('edge')));
-export const workersPageContent = (env: Env) => demoSectionPage(workersSection(env, fullPageSectionOptions('workers')));
-export const durableObjectsPageContent = (env: Env) => demoSectionPage(durableObjectsSection(env, fullPageSectionOptions('durable-objects')));
-export const d1PageContent = (env: Env) => demoSectionPage(d1Section(env, fullPageSectionOptions('d1')));
-export const r2PageContent = (env: Env) => demoSectionPage(r2Section(env, fullPageSectionOptions('r2')));
-export const restPageContent = (env: Env) => demoSectionPage(restSection(env, fullPageSectionOptions('rest')));
-export const graphqlPageContent = (env: Env) => demoSectionPage(graphqlSection(env, fullPageSectionOptions('graphql')));
-export const webhooksPageContent = (env: Env) => demoSectionPage(webhooksSection(env, fullPageSectionOptions('webhooks')));
-export const identityPageContent = (env: Env) => demoSectionPage(identitySection(env, fullPageSectionOptions('identity')));
-export const mcpPageContent = async (request: Request, env: Env) => demoSectionPage(await mcpSection(request, env, fullPageSectionOptions('mcp')));
-export const accessibilityPageContent = (request: Request, env: Env) => demoSectionPage(accessibilitySection(request, env, fullPageSectionOptions('accessibility')));
-export const i18nPageContent = (request: Request, env: Env) => demoSectionPage(i18nSection(request, env, fullPageSectionOptions('i18n')));
