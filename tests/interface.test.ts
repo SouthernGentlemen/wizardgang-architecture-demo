@@ -30,9 +30,7 @@ function localized(url: string, headers: HeadersInit = {}): { request: Request; 
 describe('D1 database console', () => {
   it('leads with table navigation and progressively discloses relational CRUD controls', async () => {
     const html = await renderPage(env, { ...d1Content(env), routeId: 'demos.index' }).text();
-    expect(html).toContain('aria-label="Breadcrumb"');
-    expect(html).toContain('<a href="/">Architecture</a>');
-    expect(html).toContain('<li aria-current="page">Demos</li>');
+    expect(html).not.toContain('aria-label="Breadcrumb"');
     expect(html).toContain('Cloudflare D1 Database');
     expect(html).toContain('role="tablist"');
     expect(html).toContain('Users <span><strong data-count="users">—</strong> / 10');
@@ -69,9 +67,7 @@ describe('D1 database console', () => {
 describe('R2 storage workspace', () => {
   it('leads with the sandbox workflow and progressively discloses technical evidence', async () => {
     const html = await renderPage(env, { ...r2Content(env), routeId: 'demos.index' }).text();
-    expect(html).toContain('aria-label="Breadcrumb"');
-    expect(html).toContain('<a href="/">Architecture</a>');
-    expect(html).toContain('<li aria-current="page">Demos</li>');
+    expect(html).not.toContain('aria-label="Breadcrumb"');
     expect(html).toContain('Cloudflare R2 Storage');
     expect(html).toContain('Your R2 sandbox');
     expect(html).toContain('Drop a file here');

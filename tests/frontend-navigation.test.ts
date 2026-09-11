@@ -31,7 +31,7 @@ describe('derived frontend navigation', () => {
     for (const label of ['Architecture', 'Platform', 'Interfaces']) {
       expect(primary).not.toContain(`>${label}</a>`);
     }
-    for (const label of ['Architecture', 'Demos', 'Assurance', 'Operations', 'Security']) {
+    for (const label of ['Demos', 'Assurance', 'Operations', 'Security']) {
       expect(html).toContain(`>${label}</a>`);
     }
   });
@@ -40,7 +40,7 @@ describe('derived frontend navigation', () => {
     const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === 'demos.index');
     if (!route) throw new Error('Missing demos.index route');
     const html = await (await route.handler(new Request('https://demo.wizardgang.ai/demos#d1'), { env }, {})).text();
-    expect(html).toContain('<li aria-current="page">Demos</li>');
+    expect(currentPageCount(html)).toBe(1);
     expect(html).toContain(`<a href="${route.pattern}" aria-current="page">Demos</a>`);
     expect(html).not.toContain('name="view"');
     expect(html).not.toContain(`${route.pattern}?view=`);
@@ -50,8 +50,7 @@ describe('derived frontend navigation', () => {
     const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === 'assurance.index');
     if (!route) throw new Error('Missing assurance.index route');
     const html = await (await route.handler(new Request('https://demo.wizardgang.ai/assurance#risks'), { env }, {})).text();
-    expect(currentPageCount(html)).toBe(2);
-    expect(html).toContain('<li aria-current="page">Assurance</li>');
+    expect(currentPageCount(html)).toBe(1);
     expect(html).toContain(`<a href="${route.pattern}" aria-current="page">Assurance</a>`);
     expect(html).toContain('href="#risks"');
     expect(html).not.toContain('data-view-current');
