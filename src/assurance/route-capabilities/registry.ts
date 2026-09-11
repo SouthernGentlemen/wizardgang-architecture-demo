@@ -5,16 +5,14 @@ export const assuranceRegistryRouteCapability = defineAssuranceRouteCapability({
   pattern: '/assurance',
   html: {
     handler: async (request, env) => {
-      const [{ assuranceIndexContent, renderSharedReporting }, { renderPage }] = await Promise.all([
+      const [{ assuranceIndexContent }, { renderPage }] = await Promise.all([
         import('../../demos/assurance'),
         import('../../ui/page'),
       ]);
-      const content = assuranceIndexContent(env);
-      const reporting = await renderSharedReporting(request, env, 'index');
+      const content = await assuranceIndexContent(request, env);
       return renderPage(env, {
         ...content,
         routeId: 'assurance.index',
-        body: `${content.body}\n${reporting}`,
       });
     },
     source: {

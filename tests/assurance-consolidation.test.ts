@@ -66,13 +66,14 @@ describe('canonical assurance child routes', () => {
     }
   });
 
-  it('makes /assurance a real index whose cards derive from canonical child routes', async () => {
+  it('makes /assurance a summary-first workbench while preserving canonical child routes', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance', {
       headers: { accept: 'text/html' },
     }), environment);
     const html = await response.text();
     expect(response.status).toBe(200);
-    expect(html).toContain('Public assurance, one inspectable surface.');
+    expect(html).toContain('<h1>Assurance workbench.</h1>');
+    expect(html).toContain('data-assurance-workbench-section="posture"');
     expect(html).toContain('Security stays separate');
     expect(html).toContain('href="/security"');
     for (const [, path] of assurancePages.slice(1)) expect(html).toContain(`href="${path}"`);

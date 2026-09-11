@@ -5,13 +5,13 @@ export const deliveryRouteCapability = defineAssuranceRouteCapability({
   pattern: '/assurance/delivery',
   html: {
     handler: async (request, env) => {
-      const [{ gitContent }, { renderSharedReporting }, { renderPage }] = await Promise.all([
+      const [{ gitContent }, { renderDeliveryReporting }, { renderPage }] = await Promise.all([
         import('../../demos/git-page'),
         import('../../demos/assurance'),
         import('../../ui/page'),
       ]);
       const content = gitContent(env);
-      const reporting = await renderSharedReporting(request, env, 'delivery');
+      const reporting = await renderDeliveryReporting(request, env);
       return renderPage(env, { ...content, routeId: 'assurance.delivery', body: `${content.body}\n${reporting}` });
     },
     source: {
