@@ -188,8 +188,8 @@ export const d1LaboratoryCapability = definePlatformLaboratoryCapability({
       cache: { mode: 'no-store' },
       crawler: { crawling: 'controlled', indexing: 'deny' },
       documentation: {
-        title: 'REST records laboratory API',
-        description: 'Lists readable demo records or creates an authorized record in D1.',
+        title: 'Authorized REST records machine API',
+        description: 'General machine contract: lists readable D1 records or creates one through demo:read and demo:write authorization policy.',
         docs,
       },
       source: {
@@ -201,7 +201,7 @@ export const d1LaboratoryCapability = definePlatformLaboratoryCapability({
         maxBodyBytes: 16_384,
         maxValueBytes: 4_096,
         maxIdentifierCharacters: 64,
-        notes: ['POST accepts JSON; record values are serialized to at most 4096 bytes.'],
+        notes: ['This bearer-capable machine interface is separate from the anonymous, cookie-isolated REST browser tutorial.', 'POST accepts JSON; record values are serialized to at most 4096 bytes.'],
       },
       storage: D1_RELATIONAL_STORAGE,
     },
@@ -221,8 +221,8 @@ export const d1LaboratoryCapability = definePlatformLaboratoryCapability({
       cache: { mode: 'no-store' },
       crawler: { crawling: 'controlled', indexing: 'deny' },
       documentation: {
-        title: 'REST record item laboratory API',
-        description: 'Reads, replaces, or deletes one authorized demo record in D1.',
+        title: 'Authorized REST record item machine API',
+        description: 'General machine contract: reads, replaces, or deletes one D1 record through demo:read and demo:write authorization policy.',
         docs,
       },
       source: {
@@ -234,7 +234,7 @@ export const d1LaboratoryCapability = definePlatformLaboratoryCapability({
         maxBodyBytes: 16_384,
         maxValueBytes: 4_096,
         maxIdentifierCharacters: 64,
-        notes: ['PUT accepts JSON; GET and DELETE consume no request body.'],
+        notes: ['This bearer-capable machine interface is separate from the anonymous, cookie-isolated REST browser tutorial.', 'PUT accepts JSON; GET and DELETE consume no request body.'],
       },
       storage: D1_RELATIONAL_STORAGE,
     },
@@ -254,8 +254,8 @@ export const d1LaboratoryCapability = definePlatformLaboratoryCapability({
       cache: { mode: 'no-store' },
       crawler: { crawling: 'controlled', indexing: 'deny' },
       documentation: {
-        title: 'REST record sandbox reset laboratory API',
-        description: 'Deletes the authenticated visitor sandbox records from D1.',
+        title: 'Authorized REST record sandbox reset machine API',
+        description: 'General machine contract: deletes the identity-derived visitor namespace after demo:write authorization.',
         docs,
       },
       source: {
@@ -282,8 +282,8 @@ export const d1LaboratoryCapability = definePlatformLaboratoryCapability({
       cache: { mode: 'no-store' },
       crawler: { crawling: 'controlled', indexing: 'deny' },
       documentation: {
-        title: 'Anonymous REST demo collection API',
-        description: 'Lists or creates visitor-scoped records for the OpenAPI interface demo without authentication.',
+        title: 'Anonymous REST browser tutorial collection API',
+        description: 'Focused browser tutorial: lists or creates records isolated by a signed visitor-session cookie without bearer authentication.',
         docs,
       },
       source: {
@@ -295,7 +295,7 @@ export const d1LaboratoryCapability = definePlatformLaboratoryCapability({
         maxBodyBytes: 16_384,
         maxValueBytes: 4_096,
         maxIdentifierCharacters: 64,
-        notes: ['POST accepts JSON; records are isolated to an anonymous browser session.'],
+        notes: ['This focused browser tutorial is separate from the authorized general machine contract.', 'POST accepts JSON; records are isolated to an anonymous browser session.'],
       },
       storage: D1_RELATIONAL_STORAGE,
     },
@@ -315,8 +315,8 @@ export const d1LaboratoryCapability = definePlatformLaboratoryCapability({
       cache: { mode: 'no-store' },
       crawler: { crawling: 'controlled', indexing: 'deny' },
       documentation: {
-        title: 'Anonymous REST demo item API',
-        description: 'Reads, replaces, partially updates, or deletes one visitor-scoped record without authentication.',
+        title: 'Anonymous REST browser tutorial item API',
+        description: 'Focused browser tutorial: reads, replaces, partially updates, or deletes one cookie-isolated visitor record without bearer authentication.',
         docs,
       },
       source: {
@@ -328,7 +328,7 @@ export const d1LaboratoryCapability = definePlatformLaboratoryCapability({
         maxBodyBytes: 16_384,
         maxValueBytes: 4_096,
         maxIdentifierCharacters: 64,
-        notes: ['PUT and PATCH accept JSON; DELETE consumes no request body.'],
+        notes: ['This focused browser tutorial is separate from the authorized general machine contract.', 'PUT and PATCH accept JSON; DELETE consumes no request body.'],
       },
       storage: D1_RELATIONAL_STORAGE,
     },

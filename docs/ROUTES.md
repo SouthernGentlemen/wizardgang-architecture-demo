@@ -32,17 +32,15 @@ This file is generated from the active declarative application registry. Route I
 | `platform.governance.ai-evaluation` | `/api/labs/governance-ai-evaluation` | `POST` | api | public | gated | deny | Governance AI-boundary laboratory API | `src/platform/route-capabilities/governance.ts` |
 | `platform.governance.security-controls` | `/api/labs/governance-security-controls` | `GET` | api | public | gated | deny | Governance security-controls laboratory API | `src/platform/route-capabilities/governance.ts` |
 | `platform.governance.traceability` | `/api/labs/governance-traceability` | `GET` | api | public | gated | deny | Governance traceability laboratory API | `src/platform/route-capabilities/governance.ts` |
-| `platform.r2.demo-object` | `/api/labs/r2-demo` | `POST` | api | public | gated | deny | R2 demonstration object laboratory API | `src/platform/route-capabilities/r2.ts` |
 | `platform.r2.files` | `/api/labs/r2-files` | `GET`, `POST` | api | public | gated | deny | R2 files laboratory API | `src/platform/route-capabilities/r2.ts` |
 | `platform.r2.file` | `/api/labs/r2-files/{id}` | `GET`, `DELETE` | api | public | gated | deny | R2 file item laboratory API | `src/platform/route-capabilities/r2.ts` |
-| `platform.r2.object` | `/api/labs/r2-objects` | `GET`, `PUT`, `DELETE` | api | public | gated | deny | R2 object laboratory API | `src/platform/route-capabilities/r2.ts` |
 | `platform.r2.reset` | `/api/labs/r2-reset` | `POST` | api | public | gated | deny | R2 files reset laboratory API | `src/platform/route-capabilities/r2.ts` |
 | `interfaces.rest.openapi.json` | `/api/labs/rest-demo-openapi.json` | `GET` | api | public | gated | deny | REST demo OpenAPI JSON | `src/api/rest-demo-openapi.ts` |
-| `platform.d1.rest-demo-records` | `/api/labs/rest-demo-records` | `GET`, `POST` | api | public | gated | deny | Anonymous REST demo collection API | `src/platform/route-capabilities/d1.ts` |
-| `platform.d1.rest-demo-record` | `/api/labs/rest-demo-records/{id}` | `GET`, `PUT`, `PATCH`, `DELETE` | api | public | gated | deny | Anonymous REST demo item API | `src/platform/route-capabilities/d1.ts` |
-| `platform.d1.records` | `/api/labs/rest-records` | `GET`, `POST` | api | public | gated | deny | REST records laboratory API | `src/platform/route-capabilities/d1.ts` |
-| `platform.d1.records-reset` | `/api/labs/rest-records-reset` | `POST` | api | public | gated | deny | REST record sandbox reset laboratory API | `src/platform/route-capabilities/d1.ts` |
-| `platform.d1.record` | `/api/labs/rest-records/{id}` | `GET`, `PUT`, `DELETE` | api | public | gated | deny | REST record item laboratory API | `src/platform/route-capabilities/d1.ts` |
+| `platform.d1.rest-demo-records` | `/api/labs/rest-demo-records` | `GET`, `POST` | api | public | gated | deny | Anonymous REST browser tutorial collection API | `src/platform/route-capabilities/d1.ts` |
+| `platform.d1.rest-demo-record` | `/api/labs/rest-demo-records/{id}` | `GET`, `PUT`, `PATCH`, `DELETE` | api | public | gated | deny | Anonymous REST browser tutorial item API | `src/platform/route-capabilities/d1.ts` |
+| `platform.d1.records` | `/api/labs/rest-records` | `GET`, `POST` | api | public | gated | deny | Authorized REST records machine API | `src/platform/route-capabilities/d1.ts` |
+| `platform.d1.records-reset` | `/api/labs/rest-records-reset` | `POST` | api | public | gated | deny | Authorized REST record sandbox reset machine API | `src/platform/route-capabilities/d1.ts` |
+| `platform.d1.record` | `/api/labs/rest-records/{id}` | `GET`, `PUT`, `DELETE` | api | public | gated | deny | Authorized REST record item machine API | `src/platform/route-capabilities/d1.ts` |
 | `platform.webhooks.synthetic` | `/api/labs/webhook-demo` | `POST` | api | public | gated | deny | Synthetic webhook laboratory action | `src/platform/route-capabilities/webhooks.ts` |
 | `platform.webhooks.events` | `/api/labs/webhook-events` | `GET` | api | public | gated | deny | Synthetic webhook event laboratory API | `src/platform/route-capabilities/webhooks.ts` |
 | `platform.webhooks.reset` | `/api/labs/webhook-reset` | `POST` | api | public | gated | deny | Synthetic webhook reset laboratory API | `src/platform/route-capabilities/webhooks.ts` |

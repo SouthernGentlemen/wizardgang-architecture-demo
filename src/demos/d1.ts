@@ -13,12 +13,14 @@ const demo: DemoDefinition = {
   ],
   "status": "working",
   "interfaces": [
-    { "method": "GET", "path": "/api/labs/rest-records?namespace=public", "description": "List public records using anonymous demo:read authorization." },
-    { "method": "POST", "path": "/api/labs/rest-records", "description": "Create a bounded record using scoped demo:write authorization." },
-    { "method": "GET / PUT / DELETE", "path": "/api/labs/rest-records/{key}", "description": "Read publicly or replace/delete within an authorized namespace." }
+    { "method": "GET / POST", "path": "/api/labs/d1-users", "description": "List or create visitor-scoped users in D1." },
+    { "method": "GET / PUT / DELETE", "path": "/api/labs/d1-users/{id}", "description": "Read, replace, or delete one visitor-scoped user." },
+    { "method": "GET / POST", "path": "/api/labs/d1-tasks", "description": "List or create tasks related to users in the same D1 sandbox." },
+    { "method": "GET / PUT / DELETE", "path": "/api/labs/d1-tasks/{id}", "description": "Read, replace, or delete one visitor-scoped task." },
+    { "method": "POST", "path": "/api/labs/d1-reset", "description": "Restore deterministic users and tasks for the current visitor sandbox." }
   ],
   "supportingSources": [
-    { "label": "View D1 API implementation", "path": "src/api/records.ts" },
+    { "label": "View D1 API implementation", "path": "src/api/d1-lab.ts" },
     { "label": "View visitor sandbox", "path": "src/lib/demo-session.ts" },
     { "label": "View interactive schema", "path": "migrations/0008_interactive_demo.sql" }
   ]

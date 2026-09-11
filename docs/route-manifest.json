@@ -935,7 +935,7 @@
       "indexing": "deny"
     },
     "title": "OpenAPI JSON contract",
-    "description": "Canonical OpenAPI 3.1 contract exposed as JSON.",
+    "description": "General OpenAPI 3.1 machine contract, including bearer-capable authorized record operations.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -981,7 +981,7 @@
       "indexing": "deny"
     },
     "title": "REST demo OpenAPI JSON",
-    "description": "OpenAPI 3.0.3 contract that drives the interactive REST demo documentation.",
+    "description": "Focused OpenAPI 3.0.3 browser-tutorial contract for anonymous, signed-cookie visitor records.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -1633,8 +1633,8 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "REST record item laboratory API",
-    "description": "Reads, replaces, or deletes one authorized demo record in D1.",
+    "title": "Authorized REST record item machine API",
+    "description": "General machine contract: reads, replaces, or deletes one D1 record through demo:read and demo:write authorization policy.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -1681,8 +1681,8 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "REST records laboratory API",
-    "description": "Lists readable demo records or creates an authorized record in D1.",
+    "title": "Authorized REST records machine API",
+    "description": "General machine contract: lists readable D1 records or creates one through demo:read and demo:write authorization policy.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -1728,8 +1728,8 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "REST record sandbox reset laboratory API",
-    "description": "Deletes the authenticated visitor sandbox records from D1.",
+    "title": "Authorized REST record sandbox reset machine API",
+    "description": "General machine contract: deletes the identity-derived visitor namespace after demo:write authorization.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -1826,8 +1826,8 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "Anonymous REST demo item API",
-    "description": "Reads, replaces, partially updates, or deletes one visitor-scoped record without authentication.",
+    "title": "Anonymous REST browser tutorial item API",
+    "description": "Focused browser tutorial: reads, replaces, partially updates, or deletes one cookie-isolated visitor record without bearer authentication.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -1873,8 +1873,8 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "Anonymous REST demo collection API",
-    "description": "Lists or creates visitor-scoped records for the OpenAPI interface demo without authentication.",
+    "title": "Anonymous REST browser tutorial collection API",
+    "description": "Focused browser tutorial: lists or creates records isolated by a signed visitor-session cookie without bearer authentication.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
@@ -2423,51 +2423,6 @@
     "status": "working"
   },
   {
-    "id": "platform.r2.demo-object",
-    "route": "/api/labs/r2-demo",
-    "methods": [
-      "POST"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "R2 demonstration object laboratory API",
-    "description": "Writes the deterministic public demonstration object to R2 with D1 metadata.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/platform/route-capabilities/r2.ts",
-      "exportName": "r2LaboratoryCapability",
-      "tests": [
-        "tests/platform-laboratory-routing.test.ts",
-        "tests/r2-lab.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
     "id": "platform.r2.file",
     "route": "/api/labs/r2-files/{id}",
     "methods": [
@@ -2550,54 +2505,6 @@
     },
     "title": "R2 files laboratory API",
     "description": "Lists or uploads visitor-scoped files whose bytes live in R2 and metadata lives in D1.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/platform/route-capabilities/r2.ts",
-      "exportName": "r2LaboratoryCapability",
-      "tests": [
-        "tests/platform-laboratory-routing.test.ts",
-        "tests/r2-lab.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "platform.r2.object",
-    "route": "/api/labs/r2-objects",
-    "methods": [
-      "GET",
-      "PUT",
-      "DELETE"
-    ],
-    "kind": "api",
-    "visibility": "public",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "policy",
-      "policy": "demo:read GET; demo:write PUT/DELETE"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "R2 object laboratory API",
-    "description": "Reads, stores, or deletes object bytes in R2 while D1 retains relational metadata.",
     "docs": [
       "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"

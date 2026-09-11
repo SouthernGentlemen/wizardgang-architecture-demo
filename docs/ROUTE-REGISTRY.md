@@ -85,3 +85,14 @@ Platform declarations retain their request-limit and storage-boundary metadata. 
 The route suite verifies generated artifact consistency, derived sitemap membership, navigation projection, route-ID URL generation, method handling, page-hierarchy validity, shared policy completeness, cross-family collision rejection, compatible additional-page registration, active-state semantics, unreachable/undocumented route rejection, and normal 404 behavior for removed aliases and arbitrary unknown paths.
 
 The current registry is the complete route contract. Route removals are deliberate and receive the ordinary 404; release and deployment remain separate controlled actions.
+
+## Public laboratory API boundaries
+
+The R2 laboratory has one public object surface: `/api/labs/r2-files` and its item/reset operations. It owns the complete visitor workflow—shared seed discovery, visitor-scoped upload, preview, download, delete, and reset—while R2 stores bytes and D1 stores metadata. The earlier fixed-object and low-level object APIs were retired because they duplicated this proof without a separate consumer or contract.
+
+The two REST record families are intentionally distinct:
+
+- `/api/labs/rest-demo-records` is the focused browser tutorial. A signed cookie isolates anonymous visitor state, its contract is `/api/labs/rest-demo-openapi.json`, and it includes PATCH so the guided page can teach method semantics.
+- `/api/labs/rest-records` is the general bearer-capable machine resource in `/api/openapi.json`. Anonymous requests can read the public namespace, while identity-derived `demo:write` authorization controls mutations and namespace ownership.
+
+Neither REST family is an alias for the other. Their route descriptions and OpenAPI documents identify the applicable state and authorization boundary so consumers can choose the correct contract.
