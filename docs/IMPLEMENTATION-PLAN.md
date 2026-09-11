@@ -30,6 +30,21 @@ The v0.5.0 interaction work adds visitor-scoped D1 users/tasks, GraphQL Yoga and
 
 Each route identifies what it proves, links to primary/supporting source and tests, exposes behavior a visitor can execute or inspect, emits appropriate D1 evidence, and fails safely during intentional offline or dependency-failure conditions.
 
+## Task-oriented frontend migration
+
+DEMO-240 defines the target frontend information architecture in [`FRONTEND-ROUTES.md`](FRONTEND-ROUTES.md) before changing the runtime inventory. The migration intentionally separates browser information architecture from machine/API/protocol contracts.
+
+Implement the frontend consolidation in this order:
+
+1. **Define the contract — DEMO-240.** Establish that a page route represents a distinct user task or browser-visible security/protocol boundary. Permit stable page sections and fragments for independently linkable demonstrations and records. Do not change runtime route declarations in this step.
+2. **Consolidate browser route declarations.** Reduce the intended public browser destinations to `/`, `/demos`, `/assurance`, `/operations`, and `/security`. Preserve `/admin` and `/offline` as hidden operational pages with their existing protected/recovery responsibilities.
+3. **Consolidate presentation inside each task.** Move framework-, dataset-, technology-, renderer-, registry-, and reporting-view distinctions into sections, controls, and stable fragments on the appropriate task page. Query parameters may filter, search, sort, paginate, or localise, but may not select the primary conceptual destination.
+4. **Rebuild route-derived discovery.** Project navigation, breadcrumbs, homepage task links, canonical links, sitemap membership, and internal links from the consolidated declarations. Link directly to stable fragments when a demonstration or record needs an independently shareable target.
+5. **Retire superseded browser locations.** Remove old browser pathnames and obsolete query-selected destinations without redirects, aliases, or compatibility routes. Verify that retired browser locations return the ordinary 404 and that no public/internal navigation continues to emit them.
+6. **Regenerate and validate route artifacts.** For each runtime route change, run `npm run generate:routes`, commit the resulting `docs/ROUTES.md` and `docs/route-manifest.json`, then complete the repository validation loop required by `AGENTS.md`.
+
+Throughout the migration, machine/API/protocol route declarations remain unchanged unless a separate controlled change explicitly scopes such a modification.
+
 ## Release evidence
 
 The v0.1.0 baseline completed the publication path below. Every later release repeats it without inventing external evidence:
