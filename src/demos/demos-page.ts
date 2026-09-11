@@ -42,7 +42,7 @@ export const demonstrations: readonly ArchitectureDemo[] = [
   { id: 'webhooks', label: 'Webhooks', group: 'Interfaces', summary: 'Generate and inspect signed synthetic webhook delivery behavior.', render: (_request, env, options) => webhooksSection(env, options) },
   { id: 'identity', label: 'Identity', group: 'Interfaces', summary: 'Inspect OAuth, OIDC, SAML, session, and authorization demonstrations.', render: (_request, env, options) => identitySection(env, options) },
   { id: 'mcp', label: 'MCP', group: 'Interfaces', summary: 'Inspect the Model Context Protocol boundary and authorized tool behavior.', render: (request, env, options) => mcpSection(request, env, options) },
-  { id: 'accessibility', label: 'Accessibility', group: 'Experience', summary: 'Compare accessible and intentionally broken teaching states.', render: (request, env, options) => accessibilitySection(request, env, options) },
+  { id: 'accessibility', label: 'Accessibility', group: 'Experience', summary: 'Operate accessible behavior and inspect inert failure analysis.', render: (request, env, options) => accessibilitySection(request, env, options) },
   { id: 'i18n', label: 'Internationalization', group: 'Experience', summary: 'Exercise locale, formatting, pluralization, and RTL behavior.', render: (request, env, options) => i18nSection(request, env, options) },
 ] as const;
 

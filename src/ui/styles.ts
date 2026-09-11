@@ -287,11 +287,15 @@ summary { cursor: pointer; }
 .scan-counts { grid-template-columns: repeat(4, minmax(0, 1fr)); text-align: center; }
 .scan-counts dt { grid-row: 1; }
 .scan-counts dd { grid-row: 2; color: var(--acid); font-size: 1.8rem; font-weight: 900; }
-.criterion-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: .75rem; }
-.criterion-card { padding: 1rem; border: 1px solid var(--line); border-radius: 0; background: var(--panel); }
-.criterion-card .eyebrow { margin-bottom: .7rem; }
-.criterion-card p { color: var(--muted); font-size: .88rem; }
-.criterion-card strong { color: var(--paper); }
+.criterion-matrix-wrap { margin-top: 1.2rem; }
+.criterion-matrix { min-width: 980px; }
+.criterion-matrix th[scope="row"] { width: 12rem; color: var(--paper); white-space: normal; }
+.criterion-matrix th[scope="row"] span { display: block; margin-bottom: .45rem; color: var(--acid); }
+.criterion-matrix th[scope="row"] strong { font: 850 1rem/1.25 ui-sans-serif, system-ui, sans-serif; letter-spacing: 0; text-transform: none; }
+.criterion-matrix td { width: 24%; color: var(--muted); }
+.criterion-matrix td p { margin-bottom: .55rem; }
+.criterion-matrix pre { min-height: 0; max-height: 12rem; margin: 0; padding: .7rem; font-size: .72rem; }
+.criterion-matrix pre code { color: inherit; }
 .button-row { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0; }
 .webhook-events { display: grid; gap: .65rem; margin-top: 1rem; }
 .webhook-event { padding: 1rem; border: 1px solid var(--line); border-radius: 0; background: var(--panel-2); }
