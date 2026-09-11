@@ -6,7 +6,7 @@ import {
   listAssuranceRecords,
 } from '../src/assurance/service';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
-import { risksContent } from '../src/demos/assurance-pages';
+import { assuranceIndexContent } from '../src/demos/assurance';
 import { renderPage } from '../src/ui/page';
 import type { Env } from '../src/types';
 
@@ -84,15 +84,15 @@ describe('disclosure-safe public risk assurance', () => {
   });
 
   it('renders filter state and stable exact risk anchors', async () => {
-    const response = renderPage(environment, risksContent(new Request('https://demo.wizardgang.ai/assurance/risks?framework=security&residual=high'), environment));
+    const content = await assuranceIndexContent(new Request('https://demo.wizardgang.ai/assurance?riskFramework=security&riskResidual=high#risks'), environment);
+    const response = renderPage(environment, { ...content, routeId: 'assurance.index' });
     const html = await response.text();
     expect(response.status).toBe(200);
     expect(html).toContain('option value="security" selected');
     const firstMatching = filterAssuranceRecords('risks', { framework: 'security', residual: 'high' })[0];
     expect(firstMatching).toBeDefined();
     expect(html).toContain(`id="${firstMatching?.id}"`);
-    expect(html).toContain(`href="#${firstMatching?.id}"`);
     expect(html).not.toContain('id="AI-RISK-001"');
-    expect(html).toContain('/api/reporting/risks?framework=security&amp;residual=high');
+    expect(html).toContain('name="riskFramework"');
   });
 });

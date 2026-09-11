@@ -183,7 +183,7 @@ export function renderGovernanceRecordInspector(
   const relationships = record.relationships.length
     ? `<p><strong>Relationships:</strong> ${record.relationships.map((relationship) => `${escapeHtml(relationship.label)} — ${relationship.targets.map(escapeHtml).join(', ')}`).join('; ')}</p>`
     : '';
-  return `<details class="implementation-notes" id="${escapeHtml(record.id)}">
+  return `<details class="implementation-notes" id="${escapeHtml(assuranceAnchor(record.id))}">
     <summary><span><code>${escapeHtml(record.id)}</code> · ${escapeHtml(heading.title)}</span>${status ? `<span class="${reportingStatusClass(status.value)}">${escapeHtml(status.value)}</span>` : ''}</summary>
     <p class="eyebrow">${escapeHtml(registerLabel)}</p>
     ${details}${relationships}

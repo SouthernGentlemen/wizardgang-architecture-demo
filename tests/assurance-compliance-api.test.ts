@@ -5,7 +5,7 @@ import { matchRoute } from '../src/routing/registry';
 import { reportingRouteRegistry } from '../src/routing/reporting-routes';
 import { deriveComplianceCounts } from '../src/assurance/service';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
-import { complianceContent } from '../src/demos/compliance-page';
+import { assuranceIndexContent } from '../src/demos/assurance';
 import { renderPage } from '../src/ui/page';
 import type { Env } from '../src/types';
 import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
@@ -89,23 +89,23 @@ describe('canonical compliance presentation and API contract', () => {
   });
 
   it('renders accessible filters, stable row anchors, evidence links, exact lookup links, and current primary navigation', async () => {
-    const response = complianceContent(
-      new Request('https://demo.wizardgang.ai/assurance/compliance?framework=wcag-2.2&level=A&section=1.%20Perceivable'),
+    const response = await assuranceIndexContent(
+      new Request('https://demo.wizardgang.ai/assurance?framework=wcag-2.2&level=A&q=WCAG-1.1.1#frameworks'),
       environment,
     );
     const html = await renderPage(environment, {
       ...response,
-      routeId: 'assurance.compliance',
+      routeId: 'assurance.index',
     }).text();
-    expect(html).toContain('<input type="hidden" name="framework" value="wcag-2.2">');
-    expect(html).toContain('<label for="compliance-status">Status</label>');
-    expect(html).toContain('<label for="compliance-level">Level</label>');
+    expect(html).toContain('<option value="wcag-2.2" selected>');
+    expect(html).toContain('<label for="assurance-compliance-status">Framework status</label>');
+    expect(html).toContain('<label for="assurance-compliance-level">WCAG level</label>');
     expect(html).toContain('id="WCAG-1.1.1"');
     expect(html).toContain('/api/reporting/compliance/WCAG-1.1.1');
     const criterion = canonicalComplianceRecords.find((record) => record.id === 'WCAG-1.1.1');
     expect(criterion).toBeDefined();
-    expect(html).toContain(`/assurance/evidence#${assuranceRelationshipIds(criterion?.relationships, 'evidence')[0]}`);
-    expect(html).toContain('<a href="/assurance" data-section-current');
+    expect(html).toContain(`/assurance#${assuranceRelationshipIds(criterion?.relationships, 'evidence')[0]}`);
+    expect(html).toContain('<a href="/assurance" aria-current="page">Assurance</a>');
     expect(html).not.toContain('id="ISO27001-4.1"');
   });
 

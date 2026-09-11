@@ -202,10 +202,10 @@ describe('DEMO-178 unified reporting presentation', () => {
     expect(html).toContain('Facets');
     expect(html).toContain('Next page');
 
-    const governancePage = readFileSync('src/demos/governance.ts', 'utf8');
-    expect(governancePage).toContain('queryReportingCollection');
-    expect(governancePage).toContain('presentReportingQuery');
-    expect(governancePage).toContain('renderGovernanceInventory');
-    expect(governancePage).not.toContain('renderReportingPresentation');
+    const assurancePage = readFileSync('src/demos/assurance.ts', 'utf8');
+    expect(assurancePage).toContain('queryReportingCollection');
+    expect(assurancePage).toContain('presentReportingQuery');
+    expect(assurancePage).toContain('renderGovernanceRegistry');
+    expect(assurancePage).not.toContain('renderReportingPresentation');
   });
 });

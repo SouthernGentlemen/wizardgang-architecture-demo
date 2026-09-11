@@ -20,6 +20,7 @@ import { referenceDetails, pageContent, renderPage, type PageContent } from '../
 import { routeUrl } from '../routing/application-routes';
 
 const SECURITY_ROUTE = assuranceHtmlRoute('advisories');
+const ASSURANCE_ROUTE = routeUrl('assurance.index');
 const ADVISORIES_API_ROUTE = assuranceCollectionApiRoute('advisories');
 const privateReportUrl = (env: Env) => `${repoUrl(env)}/security/advisories/new`;
 const publishedAdvisoriesUrl = (env: Env) => `${repoUrl(env)}/security/advisories`;
@@ -78,7 +79,7 @@ export function securityContent(env: Env): PageContent {
     <article class="info-card"><h2>What to report</h2><p>Describe the affected route, component, or release; the observed behavior and impact; reproducible steps; and any safe supporting evidence. Keep reporter identity, exploit detail, and sensitive infrastructure context inside the private channel.</p></article>
     <article class="info-card"><h2>What happens next</h2><p>The report is privately triaged. Maintainers may request clarification, reject a non-security report, coordinate remediation in a draft GitHub Security Advisory, and publish only disclosure-safe information after a fix is released.</p></article>
     <article class="info-card"><h2>Advisories and CVEs</h2><p>A confirmed vulnerability may receive a GitHub Security Advisory. A CVE is recorded only when the vulnerability is eligible and a real identifier has been assigned; neither a GHSA nor a CVE is fabricated for demonstration purposes.</p></article>
-    <article class="info-card"><h2>Non-security concerns</h2><p>Bugs, feature requests, accessibility issues, AI/MCP concerns, and other non-sensitive feedback belong in the public concern intake.</p><p><a href="${escapeHtml(routeUrl('assurance.concerns'))}">Choose a public concern form →</a></p></article>
+    <article class="info-card"><h2>Non-security concerns</h2><p>Bugs, feature requests, accessibility issues, AI/MCP concerns, and other non-sensitive feedback belong in the public concern intake.</p><p><a href="${escapeHtml(`${ASSURANCE_ROUTE}#concerns`)}">Choose a public concern form →</a></p></article>
   </div>
   <section id="disclosure-lifecycle" class="assurance-section" aria-labelledby="disclosure-lifecycle-heading">
     <div class="section-heading">

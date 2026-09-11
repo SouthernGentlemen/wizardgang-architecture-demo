@@ -89,18 +89,14 @@ describe('complete declarative application routing', () => {
     expect(architectureMapEntries().map((route) => route.id).sort()).toEqual(expectedArchitectureRoutes);
     expect(secondaryNavigation('interfaces.frontend.index')).toEqual([]);
     expect(secondaryNavigation('demos.index')).toEqual([]);
-    expect(secondaryNavigation('assurance.index').map((route) => route.id)).toEqual([
-      'assurance.delivery', 'assurance.governance', 'assurance.evidence', 'assurance.compliance',
-      'assurance.risks', 'assurance.incidents', 'assurance.concerns',
-    ]);
+    expect(secondaryNavigation('assurance.index')).toEqual([]);
     expect(primaryNavigation().every((route) => route.visibility === 'public')).toBe(true);
   });
 
   it('generates sitemap entries from public indexable registered pages', async () => {
     const sitemapRouteIds = [
       'interfaces.frontend.index', 'demos.index',
-      'assurance.index', 'assurance.delivery', 'assurance.governance', 'assurance.evidence',
-      'assurance.compliance', 'assurance.risks', 'assurance.incidents', 'assurance.concerns',
+      'assurance.index',
       'operations.index', 'operations.availability', 'operations.docs', 'operations.logs',
       'operations.reports', 'operations.usage', 'security.index',
     ];

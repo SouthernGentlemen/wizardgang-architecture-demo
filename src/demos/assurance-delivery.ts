@@ -1,7 +1,6 @@
 import type { Env } from '../types';
-import { routeUrl } from '../routing/application-routes';
 import { sourceUrl } from '../lib/github';
-import { referenceDetails, pageContent, type PageContent } from '../ui/page';
+import { referenceDetails } from '../ui/page';
 
 const cards = [
   ['github.branches', 'Branches', 'Configured repository branches from the registered GitHub source.'],
@@ -16,12 +15,11 @@ const cards = [
 
 const lifecycleStages = ['Change', 'Branch', 'Commit', 'Pull request', 'CI', 'Review gate', 'Merge', 'Tag', 'Release', 'Deploy', 'Health check', 'Live'];
 
-export function gitContent(env: Env): PageContent {
+export function renderAssuranceDeliveryWorkbench(env: Env): string {
   const cardMarkup = cards.map(([key, title, description]) => `<article class="evidence-card" data-evidence-card="${key}"><p class="eyebrow">Registered GitHub source</p><h2>${title}</h2><p>${description}</p><p class="subtle" data-evidence-status>Loading source…</p><div data-evidence-items></div></article>`).join('');
   const lifecycleMarkup = lifecycleStages.map((label) => `<span data-lifecycle-stage>${label}</span>`).join('');
-  return pageContent(env, 'Git / GitHub', `
-  <section class="page-header"><h1>Ship a real release, live.</h1><p class="lede">Create a controlled branch, commit, and open pull request in this repository; watch its real GitHub Actions jobs; then explicitly merge, tag, deploy, and verify the reviewed version.</p><div class="page-tools"><a class="text-link" href="${sourceUrl(env, 'src/demos/assurance.ts')}">Route source</a>${referenceDetails([
-    { label: 'Page source', href: sourceUrl(env, 'src/demos/git-page.ts') },
+  return `<p>Create a controlled branch, commit, and open pull request in this repository; watch its real GitHub Actions jobs; then explicitly merge, tag, deploy, and verify the reviewed version.</p><div class="page-tools"><a class="text-link" href="${sourceUrl(env, 'src/demos/assurance.ts')}">Workbench source</a>${referenceDetails([
+    { label: 'Delivery section source', href: sourceUrl(env, 'src/demos/assurance-delivery.ts') },
     { label: 'Lifecycle API', href: sourceUrl(env, 'src/api/git-demo.ts') },
     { label: 'Reporting provider', href: sourceUrl(env, 'src/reporting/github.ts') },
     { label: 'Reporting registry', href: sourceUrl(env, 'assurance/registry.json') },
@@ -29,7 +27,7 @@ export function gitContent(env: Env): PageContent {
     { label: 'Change policy', href: sourceUrl(env, 'docs/CHANGE-MANAGEMENT.md') },
     { label: 'CI workflow', href: sourceUrl(env, '.github/workflows/ci.yml') },
     { label: 'Deploy workflow', href: sourceUrl(env, '.github/workflows/deploy.yml') },
-  ])}</div></section>
+  ])}</div>
   <section class="panel live-git-control" id="live-git-demo">
     <div class="lab-heading"><div><p class="eyebrow">Authenticated write path</p><h2>Run Live Git Demo</h2></div><span class="badge" data-live-stage>Connecting</span></div>
     <p>Choose the semantic version component. The existing demo-admin credentials authorize only this Worker request; GitHub credentials remain server-side managed secrets.</p>
@@ -145,5 +143,5 @@ export function gitContent(env: Env): PageContent {
     q('[data-evidence-refresh]').addEventListener('click',()=>{document.querySelectorAll('[data-evidence-items]').forEach((node)=>node.innerHTML='');loadEvidence()});
     loadStatus();loadEvidence();
   })();
-  </script>`, { canonicalPath: routeUrl('assurance.delivery'), cacheControl: 'no-store' });
+  </script>`;
 }

@@ -20,8 +20,7 @@ describe('canonical frontend route contract', () => {
   it('publishes task-oriented pages without a query-view route inventory', () => {
     const canonicalChildren = [
       'demos.index',
-      'assurance.delivery', 'assurance.governance', 'assurance.evidence', 'assurance.compliance',
-      'assurance.risks', 'assurance.incidents', 'assurance.concerns',
+      'assurance.index',
       'operations.availability', 'operations.logs', 'operations.usage', 'operations.reports', 'operations.docs',
     ] as const;
     for (const routeId of canonicalChildren) {
@@ -33,6 +32,8 @@ describe('canonical frontend route contract', () => {
       'platform.index', 'platform.edge', 'platform.workers', 'platform.durable-objects', 'platform.d1', 'platform.r2',
       'interfaces.index', 'interfaces.rest', 'interfaces.graphql.console', 'interfaces.webhooks.console',
       'interfaces.identity.page', 'interfaces.mcp.console', 'interfaces.i18n', 'interfaces.accessibility',
+      'assurance.delivery', 'assurance.governance', 'assurance.evidence', 'assurance.compliance',
+      'assurance.risks', 'assurance.incidents', 'assurance.concerns',
     ];
     expect(applicationRouteRegistry.declarations.filter((route) => retiredIds.includes(route.id)).map((route) => route.id)).toEqual([]);
   });
@@ -67,9 +68,10 @@ describe('canonical frontend route contract', () => {
   });
 
   it('preserves stable assurance record fragments', () => {
-    expect(assuranceRecordUrls('evidence', 'EV-001').html).toBe(`${routeUrl('assurance.evidence')}#EV-001`);
-    expect(assuranceRecordUrls('risks', 'SEC-RISK-001').html).toBe(`${routeUrl('assurance.risks')}#SEC-RISK-001`);
-    expect(assuranceRecordUrls('incidents', 'INC-001').html).toBe(`${routeUrl('assurance.incidents')}#INC-001`);
+    const assurance = routeUrl('assurance.index');
+    expect(assuranceRecordUrls('evidence', 'EV-001').html).toBe(`${assurance}#EV-001`);
+    expect(assuranceRecordUrls('risks', 'SEC-RISK-001').html).toBe(`${assurance}#SEC-RISK-001`);
+    expect(assuranceRecordUrls('incidents', 'INC-001').html).toBe(`${assurance}#INC-001`);
     expect(assuranceRecordUrls('advisories', 'ADV-001').html).toBe(`${routeUrl('security.index')}#ADV-001`);
   });
 
