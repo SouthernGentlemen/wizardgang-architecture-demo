@@ -94,6 +94,13 @@
       "reviewedAt": "2026-09-10T17:35:16Z",
       "reviewer": "controlled-repository-review",
       "basis": "DEMO-244 review approves EVD-RUN-013 as the successor to the retired EVD-RUN-011 concern-intake child-route locator, migrates current relationship edges to the replacement identity, and approves the exact resulting public runtime source revisions. The public concern scope and disclosure boundary are unchanged."
+    },
+    {
+      "id": "review-demo258-minimal-assurance",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-15T04:36:50Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-258 review approves EVD-RUN-014 as the successor to EVD-RUN-013, moves the concern-intake locator from the removed Assurance inventory to the contextual non-security feedback handoff on Security, migrates active relationship edges, and approves the exact resulting public runtime source revisions. The public issue-form scope and disclosure boundary are unchanged."
     }
   ],
   "sourceApprovals": [
@@ -356,6 +363,12 @@
       "reviewRef": "review-demo244-consolidated-assurance"
     },
     {
+      "id": "source-evidence-fa4f93602a7d",
+      "resource": "evidence",
+      "revision": "fa4f93602a7db27390ead74d48bf4046e0921db7",
+      "reviewRef": "review-demo258-minimal-assurance"
+    },
+    {
       "id": "source-claims-b2ebd29e4ce1",
       "resource": "claims",
       "revision": "b2ebd29e4ce103eb7710a11af56e1be931b3d3c0",
@@ -372,6 +385,24 @@
       "resource": "risks",
       "revision": "e2ecc9dd4bfe67652f10a7698099471c6c43eec3",
       "reviewRef": "review-demo244-consolidated-assurance"
+    },
+    {
+      "id": "source-claims-f5efd00c1e6a",
+      "resource": "claims",
+      "revision": "f5efd00c1e6a348d09ed8a122e3a45426ec0cdcd",
+      "reviewRef": "review-demo258-minimal-assurance"
+    },
+    {
+      "id": "source-risks-7e4400d5e779",
+      "resource": "risks",
+      "revision": "7e4400d5e77959fb95e746ef9f04e38d5565f235",
+      "reviewRef": "review-demo258-minimal-assurance"
+    },
+    {
+      "id": "source-compliance-iso-42001-7d459b71df0f",
+      "resource": "compliance.iso-42001",
+      "revision": "7d459b71df0f20ab58bc9b783ba75fda4172d5d5",
+      "reviewRef": "review-demo258-minimal-assurance"
     }
   ],
   "records": [
@@ -392,11 +423,11 @@
       ]
     },
     {
-      "id": "EVD-RUN-013",
+      "id": "EVD-RUN-014",
       "lifecycle": "Published",
-      "reviewRef": "review-demo244-consolidated-assurance",
+      "reviewRef": "review-demo258-minimal-assurance",
       "supersedes": [
-        "EVD-RUN-011"
+        "EVD-RUN-013"
       ]
     },
     {
@@ -520,6 +551,17 @@
       "reviewRef": "review-demo181-assurance-surface-source",
       "supersededBy": [
         "EVD-RUN-008"
+      ]
+    },
+    {
+      "id": "EVD-RUN-013",
+      "lifecycle": "Superseded",
+      "reviewRef": "review-demo258-minimal-assurance",
+      "supersedes": [
+        "EVD-RUN-011"
+      ],
+      "supersededBy": [
+        "EVD-RUN-014"
       ]
     },
     {

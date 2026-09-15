@@ -34,48 +34,57 @@ async function get(path = assurancePath) {
   return routeRequest(new Request(`https://demo.wizardgang.ai${path}`, { headers: { accept: 'text/html' } }), environment);
 }
 
-describe('DEMO-244 consolidated assurance route', () => {
-  it('makes /assurance the sole human-facing assurance workbench while security stays distinct', async () => {
+describe('minimal assurance route', () => {
+  it('makes /assurance a four-check verification surface while security stays distinct', async () => {
     const response = await get();
     const html = await response.text();
     expect(response.status).toBe(200);
     expect(html).toContain(`<link rel="canonical" href="https://demo.wizardgang.ai${assurancePath}">`);
-    for (const section of ['posture', 'frameworks', 'risks', 'evidence', 'governance', 'activity', 'concerns']) expect(html).toContain(`data-assurance-workbench-section="${section}"`);
-    for (const collection of ['frameworks', 'risks', 'evidence', 'governance', 'activity']) expect(html).toContain(`data-assurance-collection="${collection}"`);
-    for (const action of ['/api/labs/governance-security-controls', '/api/labs/governance-ai-evaluation', '/api/labs/governance-traceability']) expect(html).toContain(action);
-    expect(html).toContain('Delivery and release evidence');
-    expect(html).toContain('issues/new?template=concern.yml');
-    expect(html).toContain('issues/new?template=bug.yml');
-    expect(html).toContain('issues/new?template=feature.yml');
-    expect(html).toContain('Security stays separate');
+    for (const section of ['security-controls', 'ai-boundary', 'traceability', 'accessibility-posture']) {
+      expect(html).toContain(`id="${section}"`);
+      expect(html).toContain(`href="#${section}"`);
+    }
+    for (const action of ['/api/labs/governance-security-controls', '/api/labs/governance-ai-evaluation', '/api/labs/governance-traceability']) {
+      expect(html).toContain(action);
+    }
+    expect(html).toContain('No ISO/IEC or WCAG certification is claimed');
     expect(html).toContain(`href="${securityPath}"`);
     for (const path of retiredPaths.filter((path) => path.startsWith(`${assurancePath}/`))) expect(html).not.toContain(`href="${path}`);
   });
 
-  it('resolves every non-advisory presented assurance family to /assurance and preserves stable fragments', () => {
-    for (const dataset of ['claims', 'evidence', 'compliance', 'risks', 'incidents', 'exercises', 'governance-records']) expect(assuranceHtmlRoute(dataset), dataset).toBe(assurancePath);
-    expect(assuranceRecordUrls('evidence', 'EV-001').html).toBe(`${assurancePath}#EV-001`);
-    expect(assuranceRecordUrls('risks', 'SEC-RISK-003').html).toBe(`${assurancePath}#SEC-RISK-003`);
-    expect(assuranceRecordUrls('incidents', 'INC-001').html).toBe(`${assurancePath}#INC-001`);
-    expect(assuranceRecordUrls('exercises', 'EX-001').html).toBe(`${assurancePath}#EX-001`);
+  it('preserves canonical machine record URLs without exposing internal record families as page sections', async () => {
+    for (const dataset of ['claims', 'evidence', 'compliance', 'risks', 'incidents', 'exercises', 'governance-records']) {
+      expect(assuranceHtmlRoute(dataset), dataset).toBe(assurancePath);
+    }
+    expect(assuranceRecordUrls('evidence', 'EV-001').api).toContain('/api/reporting/');
     expect(assuranceRecordUrls('advisories', 'ADV-001').html).toBe(`${securityPath}#ADV-001`);
+
+    const html = await (await get()).text();
+    for (const hidden of [
+      'data-assurance-collection="risks"',
+      'data-assurance-collection="activity"',
+      'Browse risk records',
+      'Browse incident and exercise records',
+      'Report a non-sensitive concern',
+      'Supplier',
+      'Objectives',
+    ]) expect(html).not.toContain(hidden);
   });
 
-  it('keeps framework, risk, evidence, governance, and search state as filters on /assurance', async () => {
-    const response = await get(`${assurancePath}?framework=wcag-2.2&riskFramework=security&riskResidual=high&evidenceKind=route&q=focus#risks`);
-    const html = await response.text();
-    expect(response.status).toBe(200);
-    expect(html).toContain(`action="${assurancePath}"`);
-    expect(html).toContain('option value="wcag-2.2" selected');
-    expect(html).toContain('option value="security" selected');
-    expect(html).toContain('option value="high" selected');
-    expect(html).toContain('name="evidenceKind"');
-    expect(html).toContain('name="governanceSource"');
-    expect(html).toContain('name="q"');
-    expect(html).not.toContain('name="view"');
+  it('rejects the retired view selector while ordinary localization and fragments remain valid', async () => {
+    const legacy = await get(`${assurancePath}?view=compliance`);
+    expect(legacy.status).toBe(404);
+    expect(legacy.headers.get('location')).toBeNull();
+
+    const localized = await get(`${assurancePath}?lang=ar#accessibility-posture`);
+    const html = await localized.text();
+    expect(localized.status).toBe(200);
+    expect(localized.headers.get('content-language')).toBe('ar');
+    expect(html).toContain('<html lang="ar" dir="rtl">');
+    expect(html).toContain('href="#accessibility-posture"');
   });
 
-  it('returns ordinary 404 responses with no redirects for every retired assurance-owned HTML pathname', async () => {
+  it('returns ordinary 404 responses with no redirects for retired assurance-owned HTML pathnames', async () => {
     for (const path of retiredPaths) {
       const response = await get(path);
       expect(response.status, path).toBe(404);
@@ -94,16 +103,5 @@ describe('DEMO-244 consolidated assurance route', () => {
     expect(sitemap).toContain(`<loc>https://demo.wizardgang.ai${assurancePath}</loc>`);
     expect(sitemap).toContain(`<loc>https://demo.wizardgang.ai${securityPath}</loc>`);
     for (const path of retiredPaths) expect(sitemap).not.toContain(`<loc>https://demo.wizardgang.ai${path}</loc>`);
-  });
-
-  it('retains localization and RTL shell coverage on the consolidated route', async () => {
-    for (const locale of ['es', 'ar']) {
-      const response = await get(`${assurancePath}?lang=${locale}#evidence`);
-      const html = await response.text();
-      expect(response.status, locale).toBe(200);
-      expect(response.headers.get('content-language'), locale).toBe(locale);
-      expect(html, locale).toContain(`<html lang="${locale}" dir="${locale === 'ar' ? 'rtl' : 'ltr'}">`);
-      expect(html, locale).toContain('href="#evidence"');
-    }
   });
 });

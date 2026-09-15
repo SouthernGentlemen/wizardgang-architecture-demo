@@ -18,13 +18,12 @@ import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
 import { localizationForEnv } from '../i18n/runtime';
 import { referenceDetails, pageContent, renderPage, type PageContent } from '../ui/page';
-import { routeUrl } from '../routing/application-routes';
 
 const SECURITY_ROUTE = assuranceHtmlRoute('advisories');
-const ASSURANCE_ROUTE = routeUrl('assurance.index');
 const ADVISORIES_API_ROUTE = assuranceCollectionApiRoute('advisories');
 const privateReportUrl = (env: Env) => `${repoUrl(env)}/security/advisories/new`;
 const publishedAdvisoriesUrl = (env: Env) => `${repoUrl(env)}/security/advisories`;
+const publicIssuesUrl = (env: Env) => `${repoUrl(env)}/issues/new/choose`;
 
 function advisoryCard(env: Env, advisory: PublishedAssuranceRecordMap['advisories']): string {
   const advisoryUrl = `${publishedAdvisoriesUrl(env)}/${encodeURIComponent(advisory.id)}`;
@@ -91,7 +90,7 @@ export function securityContent(env: Env): PageContent {
     <div class="info-grid">
       <article class="info-card"><h3>What to report</h3><p>Describe the affected route, component, or release; the observed behavior and impact; reproducible steps; and any safe supporting evidence. Keep reporter identity, exploit detail, and sensitive infrastructure context inside the private channel.</p></article>
       <article class="info-card"><h3>What happens next</h3><p>The report is privately triaged. Maintainers may request clarification, reject a non-security report, coordinate remediation in a draft GitHub Security Advisory, and publish only disclosure-safe information after a fix is released.</p></article>
-      <article class="info-card"><h3>Non-security concerns</h3><p>Bugs, feature requests, accessibility issues, AI/MCP concerns, and other non-sensitive feedback belong in the public concern intake.</p><p><a href="${escapeHtml(`${ASSURANCE_ROUTE}#concerns`)}">Choose a public concern form →</a></p></article>
+      <article class="info-card" id="non-security-feedback"><h3>Non-security concerns</h3><p>Bugs, feature requests, accessibility issues, AI/MCP concerns, and other non-sensitive feedback belong in the repository's public issue forms.</p><p><a href="${escapeHtml(publicIssuesUrl(env))}">Choose a public issue form →</a></p></article>
     </div>
   </section>
   <section id="disclosure-process" class="assurance-section" aria-labelledby="disclosure-process-heading">

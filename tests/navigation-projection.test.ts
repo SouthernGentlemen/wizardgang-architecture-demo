@@ -90,14 +90,16 @@ describe('navigation projection', () => {
     expect(primaryNavigation().every((route) => !routeUrl(route.id).includes('?'))).toBe(true);
   });
 
-  it('keeps consolidated assurance section navigation inside the workbench', async () => {
+  it('keeps the four focused assurance checks inside the assurance page', async () => {
     expect(secondaryNavigationHtml('assurance.index')).toBe('');
     const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === 'assurance.index');
     if (!route) throw new Error('Missing assurance.index route');
     const html = await (await route.handler(new Request('https://demo.wizardgang.ai/assurance'), { env }, {})).text();
-    expect(html).toContain('aria-label="Assurance workbench sections"');
+    expect(html).toContain('aria-label="Assurance checks"');
     expect(html).toContain(`href="${routeUrl('security.index')}"`);
-    expect(html).toContain('href="#risks"');
+    for (const fragment of ['security-controls', 'ai-boundary', 'traceability', 'accessibility-posture']) {
+      expect(html).toContain(`href="#${fragment}"`);
+    }
   });
 
   it('keeps the homepage focused on architecture product destinations while support surfaces stay contextual', async () => {

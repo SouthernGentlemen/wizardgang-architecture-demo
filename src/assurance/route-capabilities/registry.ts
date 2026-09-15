@@ -5,25 +5,26 @@ export const assuranceRegistryRouteCapability = defineAssuranceRouteCapability({
   pattern: '/assurance',
   html: {
     handler: async (request, env) => {
-      const [{ assuranceIndexContent }, { renderPage }] = await Promise.all([
-        import('../../demos/assurance'),
+      const [{ minimalAssuranceContent }, { renderNotFound, renderPage }] = await Promise.all([
+        import('../../demos/assurance-minimal'),
         import('../../ui/page'),
       ]);
-      const content = await assuranceIndexContent(request, env);
+      if (new URL(request.url).searchParams.has('view')) return renderNotFound(env);
+      const content = await minimalAssuranceContent(request, env);
       return renderPage(env, {
         ...content,
         routeId: 'assurance.index',
       });
     },
     source: {
-      module: 'src/demos/assurance.ts',
-      exportName: 'assuranceIndexContent',
-      tests: ['tests/assurance-consolidation.test.ts', 'tests/router.test.ts'],
+      module: 'src/demos/assurance-minimal.ts',
+      exportName: 'minimalAssuranceContent',
+      tests: ['tests/demo-258-minimal-assurance.test.ts', 'tests/assurance-consolidation.test.ts'],
     },
     page: {
       parent: 'interfaces.frontend.index',
       label: 'Assurance',
-      summary: 'Public assurance index for delivery evidence, governance, compliance, risks, incidents, concerns, and evidence records.',
+      summary: 'Four focused public checks for security controls, the AI boundary, traceability, and accessibility posture.',
       order: 3,
       navigation: 'primary',
       architectureMap: true,

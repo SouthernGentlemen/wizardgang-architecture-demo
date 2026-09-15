@@ -44,13 +44,13 @@ describe('derived frontend navigation', () => {
     expect(html).not.toContain(`${route.pattern}?view=`);
   });
 
-  it('marks Assurance as the current task on the fragment-based workbench', async () => {
+  it('marks Assurance as the current task on the focused traceability check', async () => {
     const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === 'assurance.index');
     if (!route) throw new Error('Missing assurance.index route');
-    const html = await (await route.handler(new Request('https://demo.wizardgang.ai/assurance#risks'), { env }, {})).text();
+    const html = await (await route.handler(new Request('https://demo.wizardgang.ai/assurance#traceability'), { env }, {})).text();
     expect(currentPageCount(html)).toBe(1);
     expect(html).toContain(`<a href="${route.pattern}" aria-current="page">Assurance</a>`);
-    expect(html).toContain('href="#risks"');
+    expect(html).toContain('href="#traceability"');
     expect(html).not.toContain('data-view-current');
     expect(html).not.toContain('name="view"');
   });

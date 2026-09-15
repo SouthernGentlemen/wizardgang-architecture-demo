@@ -20,14 +20,19 @@ const env: Env = {
   GITHUB_BRANCH: 'main',
 };
 
-describe('consolidated concern intake', () => {
-  it('puts direct public-safe GitHub issue-form actions in /assurance', async () => {
+describe('public concern intake boundary', () => {
+  it('keeps concern inventory out of assurance and points non-security feedback to repository issue forms', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance#concerns', { headers: { accept: 'text/html' } }), env);
     const html = await response.text();
     expect(response.status).toBe(200);
-    expect(html).toContain('data-assurance-workbench-section="concerns"');
-    for (const template of ['bug.yml', 'feature.yml', 'concern.yml']) expect(html).toContain(`issues/new?template=${template}`);
-    expect(html).toContain('private vulnerability reporting');
+    expect(html).not.toContain('data-assurance-workbench-section="concerns"');
+    expect(html).not.toContain('issues/new?template=concern.yml');
+
+    const security = await routeRequest(new Request('https://demo.wizardgang.ai/security#non-security-feedback', { headers: { accept: 'text/html' } }), env);
+    const securityHtml = await security.text();
+    expect(security.status).toBe(200);
+    expect(securityHtml).toContain('id="non-security-feedback"');
+    expect(securityHtml).toContain('issues/new/choose');
   });
 
   it('retires the concerns child route without an alias or redirect', async () => {

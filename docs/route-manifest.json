@@ -28,18 +28,18 @@
       "indexing": "allow"
     },
     "title": "Assurance",
-    "description": "Public assurance index for delivery evidence, governance, compliance, risks, incidents, concerns, and evidence records.",
+    "description": "Four focused public checks for security controls, the AI boundary, traceability, and accessibility posture.",
     "docs": [
       "docs/ASSURANCE-REGISTRY.md",
       "docs/REPORTING.md",
       "docs/ROUTES.md"
     ],
     "source": {
-      "module": "src/demos/assurance.ts",
-      "exportName": "assuranceIndexContent",
+      "module": "src/demos/assurance-minimal.ts",
+      "exportName": "minimalAssuranceContent",
       "tests": [
-        "tests/assurance-consolidation.test.ts",
-        "tests/router.test.ts"
+        "tests/demo-258-minimal-assurance.test.ts",
+        "tests/assurance-consolidation.test.ts"
       ]
     },
     "navigation": {

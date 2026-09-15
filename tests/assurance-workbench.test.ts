@@ -1,15 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import {
-  listPublishedAssuranceRecords,
-  presentedPublishedEvidenceRecords,
-} from '../src/assurance/publication';
-import {
-  deriveComplianceCounts,
-  deriveIncidentCounts,
-  deriveRiskCounts,
-} from '../src/assurance/service';
+import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import { routeRequest } from '../src/router';
-import { routeUrl } from '../src/routing/application-routes';
+import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import type { D1PreparedStatement, Env } from '../src/types';
 import { removedHtml404Pathnames } from './fixtures/removed-html-pathnames';
 
@@ -42,78 +34,58 @@ async function assuranceHtml(path = routeUrl('assurance.index')): Promise<{ resp
   return { response, html: await response.text() };
 }
 
-describe('summary-first assurance workbench', () => {
-  it('orders the workbench by human task and keeps demonstrations above registries', async () => {
+describe('minimal assurance presentation', () => {
+  it('orders exactly four public checks by the MVP verification task', async () => {
     const { response, html } = await assuranceHtml();
     expect(response.status).toBe(200);
 
-    const orderedIds = ['posture', 'frameworks', 'risks', 'evidence', 'governance', 'activity'];
+    const orderedIds = ['security-controls', 'ai-boundary', 'traceability', 'accessibility-posture'];
     const positions = orderedIds.map((id) => html.indexOf(`id="${id}"`));
     expect(positions.every((position) => position >= 0)).toBe(true);
     expect(positions).toEqual([...positions].sort((left, right) => left - right));
-
-    expect(html.indexOf('id="iso-27001"')).toBeLessThan(html.indexOf('data-assurance-collection="frameworks"'));
-    expect(html.indexOf('id="iso-42001"')).toBeLessThan(html.indexOf('data-assurance-collection="frameworks"'));
-    expect(html.indexOf('id="wcag-2-2-posture"')).toBeLessThan(html.indexOf('data-assurance-collection="frameworks"'));
-    expect(html.indexOf('id="traceability"')).toBeLessThan(html.indexOf('data-assurance-collection="frameworks"'));
+    expect((html.match(/class="assurance-check"/g) ?? [])).toHaveLength(4);
   });
 
-  it('derives visible summary counts from canonical assurance services', async () => {
+  it('keeps the three executable governance checks obvious and focused evidence collapsed', async () => {
     const { html } = await assuranceHtml();
-    const compliance = listPublishedAssuranceRecords('compliance');
-    const risks = listPublishedAssuranceRecords('risks');
-    const incidents = listPublishedAssuranceRecords('incidents');
-    const exercises = listPublishedAssuranceRecords('exercises');
-    const evidence = presentedPublishedEvidenceRecords(environment, 'https://demo.wizardgang.ai');
-    const complianceCounts = deriveComplianceCounts(compliance);
-    const riskCounts = deriveRiskCounts(risks);
-    const incidentCounts = deriveIncidentCounts(incidents, exercises);
-
-    expect(html).toContain(`${complianceCounts.total} framework records`);
-    expect(html).toContain(`${riskCounts.total} published risks`);
-    expect(html).toContain(`${evidence.length} published evidence records`);
-    expect(html).toContain(`${incidentCounts.actualIncidents} incidents · ${incidentCounts.exercises} exercises`);
+    for (const endpoint of [
+      '/api/labs/governance-security-controls',
+      '/api/labs/governance-ai-evaluation',
+      '/api/labs/governance-traceability',
+    ]) expect(html).toContain(endpoint);
+    expect((html.match(/<button[^>]*data-assurance-run/g) ?? [])).toHaveLength(3);
+    expect((html.match(/<details class="implementation-notes"/g) ?? []).length).toBeGreaterThanOrEqual(4);
+    expect(html).not.toMatch(/<details class="implementation-notes"[^>]*\sopen(?:[=\s>])/);
   });
 
-  it('does not append the generic reporting presenter or eagerly expose raw collections', async () => {
+  it('does not project management-system inventories into ordinary HTML', async () => {
     const { html } = await assuranceHtml();
-    expect(html).not.toContain('Shared reporting projection');
-    expect(html).not.toContain('id="assurance-reporting"');
-    expect(html).not.toContain('assurance-reporting-heading');
-
-    for (const collection of ['claims', 'frameworks', 'risks', 'evidence', 'governance', 'activity']) {
-      expect(html).toMatch(new RegExp(`<details class="implementation-notes" data-assurance-collection="${collection}">`));
-      expect(html).not.toMatch(new RegExp(`<details[^>]*data-assurance-collection="${collection}"[^>]*\\sopen(?:[=\\s>])`));
-    }
+    for (const forbidden of [
+      'Browse risk records',
+      'Browse incident and exercise records',
+      'Browse governance records',
+      'Report a non-sensitive concern',
+      'Delivery and release evidence',
+      'data-assurance-collection="risks"',
+      'data-assurance-collection="activity"',
+      'data-assurance-collection="governance"',
+    ]) expect(html).not.toContain(forbidden);
   });
 
-  it('uses query parameters only for filtering/search while fragments identify workbench sections', async () => {
-    const assuranceRoute = routeUrl('assurance.index');
-    const { response, html } = await assuranceHtml(`${assuranceRoute}?framework=wcag-2.2&q=keyboard`);
-    expect(response.status).toBe(200);
-    expect(html).toContain('option value="wcag-2.2" selected');
-    expect(html).toContain('name="q" type="search" value="keyboard"');
-    expect(html).not.toContain('name="view"');
-    expect(html).not.toContain(`${assuranceRoute}?view=`);
-    for (const section of ['posture', 'frameworks', 'risks', 'evidence', 'governance', 'activity']) {
-      expect(html).toContain(`href="#${section}"`);
-    }
+  it('preserves canonical assurance data and reporting machine contracts behind the reduced page', () => {
+    expect(listPublishedAssuranceRecords('compliance').length).toBeGreaterThan(0);
+    expect(listPublishedAssuranceRecords('claims').length).toBeGreaterThan(0);
+    expect(listPublishedAssuranceRecords('evidence').length).toBeGreaterThan(0);
+    expect(listPublishedAssuranceRecords('risks').length).toBeGreaterThan(0);
+    expect(listPublishedAssuranceRecords('exercises').length).toBeGreaterThan(0);
 
-    const legacy = await routeRequest(new Request(`https://demo.wizardgang.ai${assuranceRoute}?view=compliance`, {
-      headers: { accept: 'text/html' },
-    }), environment);
-    expect(legacy.status).toBe(404);
-    expect(legacy.headers.get('location')).toBeNull();
+    const routes = new Map(applicationRouteRegistry.declarations.map((route) => [route.id, route]));
+    expect(routes.get('reporting.index')?.pattern).toBe('/api/reporting');
+    expect(routes.get('reporting.collection')?.pattern).toBe('/api/reporting/:collection');
+    expect(routes.get('reporting.record')?.pattern).toBe('/api/reporting/:collection/:recordId');
   });
 
-  it('reveals records nested inside collapsed registries when a stable fragment is requested', async () => {
-    const { html } = await assuranceHtml(`${routeUrl('assurance.index')}#SEC-RISK-001`);
-    expect(html).toContain('id="SEC-RISK-001"');
-    expect(html).toContain("if(current.tagName==='DETAILS')current.open=true");
-    expect(html).toContain("window.addEventListener('hashchange',revealTarget)");
-  });
-
-  it('retires assurance child routes after their behavior moves into the workbench', async () => {
+  it('retires assurance child routes after their behavior moves into the single assurance destination', async () => {
     const childPaths = removedHtml404Pathnames.filter((path) => path.startsWith(`${routeUrl('assurance.index')}/`));
     const { html } = await assuranceHtml();
     for (const path of childPaths) {

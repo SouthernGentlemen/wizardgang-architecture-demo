@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "states": [
     {
-      "name": "wcag-framework",
-      "path": "/assurance?framework=wcag-2.2#frameworks"
+      "name": "security-control-check",
+      "path": "/assurance#security-controls"
     },
     {
-      "name": "wcag-filter-search",
-      "path": "/assurance?framework=wcag-2.2&level=AAA&q=focus#frameworks"
+      "name": "accessibility-posture",
+      "path": "/assurance#accessibility-posture"
     },
     {
       "name": "accessibility-lab",
@@ -24,13 +24,13 @@
   ],
   "narrowViewportPaths": [
     "/",
-    "/assurance?framework=wcag-2.2#frameworks",
+    "/assurance#accessibility-posture",
     "/demos#rest",
     "/demos#accessibility"
   ],
   "keyboardPaths": [
     "/",
-    "/assurance?framework=wcag-2.2#frameworks",
+    "/assurance#security-controls",
     "/demos#rest",
     "/demos#accessibility"
   ]
