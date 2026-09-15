@@ -155,13 +155,16 @@ describe('DEMO-236 sitewide localization acceptance', () => {
     const response = await routeRequest(new Request(i18nUrl, { headers: { accept: 'text/html' } }), environment());
     expect(response.status).toBe(200);
     const html = await response.text();
+    const presentationResponse = await routeRequest(new Request('https://demo.wizardgang.ai/api/demos/i18n?lang=ja&count=7', { headers: { accept: 'text/html' } }), environment());
+    expect(presentationResponse.status).toBe(200);
+    const presentation = await presentationResponse.text();
 
-    expect(html).toContain('href="/demos?count=7&amp;lang=fr#i18n"');
-    expect(html).toContain('href="/demos?count=7&amp;lang=de#i18n"');
-    expect(html).toContain('aria-current="page">日本語</a>');
+    expect(presentation).toContain('href="/demos?count=7&amp;lang=fr#i18n"');
+    expect(presentation).toContain('href="/demos?count=7&amp;lang=de#i18n"');
+    expect(presentation).toContain('aria-current="page">日本語</a>');
     expect(html).toContain('<input type="hidden" name="count" value="7">');
-    expect(html).not.toContain('&amp%3B');
-    expect(html).not.toContain('lang=fr&amp;lang=ja');
+    expect(html + presentation).not.toContain('&amp%3B');
+    expect(html + presentation).not.toContain('lang=fr&amp;lang=ja');
   });
 
   it('localizes accessible attributes and client-side feedback from the same catalog', () => {

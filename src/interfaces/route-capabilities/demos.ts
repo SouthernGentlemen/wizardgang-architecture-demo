@@ -29,4 +29,19 @@ export const demosRouteCapability = defineInterfaceIdentityCapability('demos.sur
       architectureMap: true,
     },
   }),
+  interfaceIdentityRoute({
+    id: 'demos.presentation',
+    pattern: '/api/demos/:demo',
+    methods: ['GET'],
+    kind: 'api',
+    handler: async (request, { env }, params) => {
+      const { demoPresentationResponse } = await import('../../demos/demos-page');
+      return demoPresentationResponse(request, env, params.demo ?? '');
+    },
+    title: 'Lazy demo presentation fragment',
+    description: 'Returns one scoped demonstration presentation for activation inside the consolidated demos page.',
+    sourceModule: 'src/demos/demos-page.ts',
+    sourceExport: 'demoPresentationResponse',
+    tests: ['tests/demos-consolidation.test.ts', 'tests/router.test.ts'],
+  }),
 ]);

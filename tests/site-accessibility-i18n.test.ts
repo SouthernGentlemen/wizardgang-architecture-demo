@@ -201,6 +201,8 @@ describe('DEMO-238 site-wide localization assurance', () => {
     expect(response.status).toBe(200);
     const html = await response.text();
     expect(html).toContain('<html lang="ar" dir="rtl">');
-    expect(html).toMatch(/<(?:bdi|code)\b[^>]*(?:dir="ltr"|data-canonical-source)|<code\b/);
+    const presentation = await routeRequest(new Request('https://demo.wizardgang.ai/api/demos/rest?lang=ar', { headers: { accept: 'text/html' } }), environment());
+    expect(presentation.status).toBe(200);
+    expect(await presentation.text()).toMatch(/<(?:bdi|code)\b[^>]*(?:dir="ltr"|data-canonical-source)|<code\b/);
   });
 });

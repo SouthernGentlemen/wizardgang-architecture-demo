@@ -93,6 +93,10 @@ function scopeInlineScripts(html: string, scope: string): string {
   const sectionRoot = document.querySelector('[data-demo-section="${scope}"]');
   if (!sectionRoot) return;
   const pageDocument = document;
+  const pageWindow = window;
+  const lifecycle = new AbortController();
+  const intervalIds = new Set();
+  const timeoutIds = new Set();
   const pageDocumentProperties = new Set(['activeElement', 'body', 'cookie', 'defaultView', 'documentElement', 'hidden', 'location', 'title', 'visibilityState']);
   const sectionDocument = new Proxy(sectionRoot, {
     get(target, property) {
@@ -101,9 +105,47 @@ function scopeInlineScripts(html: string, scope: string): string {
       return typeof value === 'function' ? value.bind(owner) : value;
     },
   });
-  ((document) => {
+  const sectionWindow = new Proxy(pageWindow, {
+    get(target, property) {
+      if (property === 'setInterval') return (callback, delay, ...args) => {
+        const id = target.setInterval(callback, delay, ...args);
+        intervalIds.add(id);
+        return id;
+      };
+      if (property === 'clearInterval') return (id) => { intervalIds.delete(id); target.clearInterval(id); };
+      if (property === 'setTimeout') return (callback, delay, ...args) => {
+        const id = target.setTimeout(callback, delay, ...args);
+        timeoutIds.add(id);
+        return id;
+      };
+      if (property === 'clearTimeout') return (id) => { timeoutIds.delete(id); target.clearTimeout(id); };
+      if (property === 'addEventListener') return (type, listener, options = {}) => {
+        const normalized = typeof options === 'boolean' ? { capture: options } : options;
+        target.addEventListener(type, listener, { ...normalized, signal: normalized.signal || lifecycle.signal });
+      };
+      const value = target[property];
+      return typeof value === 'function' ? value.bind(target) : value;
+    },
+  });
+  const sectionFetch = (input, init = {}) => pageWindow.fetch(input, { ...init, signal: init.signal || lifecycle.signal });
+  sectionRoot.addEventListener('demo:deactivate', () => {
+    lifecycle.abort();
+    intervalIds.forEach((id) => pageWindow.clearInterval(id));
+    timeoutIds.forEach((id) => pageWindow.clearTimeout(id));
+    intervalIds.clear();
+    timeoutIds.clear();
+  }, { once: true });
+  ((document, window, fetch, setInterval, clearInterval, setTimeout, clearTimeout) => {
 ${source}
-  })(sectionDocument);
+  })(
+    sectionDocument,
+    sectionWindow,
+    sectionFetch,
+    sectionWindow.setInterval,
+    sectionWindow.clearInterval,
+    sectionWindow.setTimeout,
+    sectionWindow.clearTimeout,
+  );
 })();
 </script>`;
   });

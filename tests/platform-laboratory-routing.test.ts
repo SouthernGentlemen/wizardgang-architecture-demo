@@ -134,7 +134,7 @@ describe('platform laboratory declarative routing', () => {
     })).toThrow(/must declare method request schemas/);
   });
 
-  it('renders the platform presentations inside the canonical demos workbench', async () => {
+  it('renders lazy platform presentations for the canonical demos workbench', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/demos#edge', { headers: { accept: 'text/html' } }), onlineEnv);
     const html = await response.text();
     expect(response.status).toBe(200);
@@ -144,15 +144,19 @@ describe('platform laboratory declarative routing', () => {
     expect(html.match(/<h1\b/g)).toHaveLength(1);
     for (const id of platformDemoIds) {
       expect(html, id).toContain(`class="demo-disclosure" id="${id}"`);
-      expect(html, id).toContain(`data-demo-section="${id}"`);
+      expect(html, id).not.toContain(`data-demo-section="${id}"`);
     }
-    for (const heading of ['Cloudflare Edge', 'Cloudflare Workers', 'Durable Objects', 'Cloudflare D1 Database', 'Cloudflare R2 Storage']) {
-      expect(html, heading).toContain(`<h2>${heading}</h2>`);
+    for (const [id, heading] of [['edge', 'Cloudflare Edge'], ['workers', 'Cloudflare Workers'], ['durable-objects', 'Durable Objects'], ['d1', 'Cloudflare D1 Database'], ['r2', 'Cloudflare R2 Storage']] as const) {
+      const presentation = await routeRequest(new Request(`https://demo.wizardgang.ai/api/demos/${id}`, { headers: { accept: 'text/html' } }), onlineEnv);
+      const presentationHtml = await presentation.text();
+      expect(presentation.status, id).toBe(200);
+      expect(presentationHtml, heading).toContain(`<h2>${heading}</h2>`);
+      expect(presentationHtml, id).toContain(`data-demo-section="${id}"`);
+      if (['edge', 'workers', 'durable-objects'].includes(id)) expect(presentationHtml, id).toContain('Route source');
     }
     const inlineScripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map((match) => match[1]);
     expect(inlineScripts.length).toBeGreaterThan(0);
     for (const script of inlineScripts) expect(() => new vm.Script(script)).not.toThrow();
-    expect(html).toContain('Route source');
     for (const removed of removedPagePaths) expect(html, removed).not.toContain(`href="${removed}"`);
   });
 
