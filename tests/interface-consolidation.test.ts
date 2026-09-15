@@ -22,7 +22,7 @@ const environment: Env = {
 };
 
 const pages = [
-  { view: 'rest', marker: 'id="rest-rest"' },
+  { view: 'rest', marker: 'data-rest-operation-browser' },
   { view: 'graphql', marker: 'srcdoc=' },
   { view: 'webhooks', marker: 'id="webhooks-webhooks"' },
   { view: 'identity', marker: 'id="identity-oauth"' },
@@ -66,8 +66,11 @@ describe('canonical interface demonstrations', () => {
     expect(rest).toContain('3.0.3');
     expect(rest).toContain('PATCH');
     expect(rest).toContain('/api/labs/rest-demo-records');
-    expect(rest).toContain('Two deliberate REST boundaries.');
-    expect(rest).toContain('/api/labs/rest-records');
+    expect(rest).toContain('Focused browser tutorial.');
+    expect(rest).toContain('/api/openapi.json');
+    expect(rest).toContain('data-rest-operation-select="listRecords"');
+    expect(rest).toContain('data-rest-full-openapi');
+    expect(rest).not.toContain('Two deliberate REST boundaries.');
     expect(rest).not.toContain('Your API sandbox');
     expect(rest).not.toContain('Same policy, different transports');
     expect(rest).not.toContain('Authorization');
