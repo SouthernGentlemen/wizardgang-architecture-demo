@@ -22,7 +22,7 @@ const env = {
 } as Env;
 
 describe('DEMO-257 curated demos', () => {
-  it('puts the visitor-facing capabilities ahead of runtime and quality proof', () => {
+  it('keeps the visitor-facing capability metadata ahead of runtime and quality proof', () => {
     const primary = demonstrations.filter((demo) => demo.tier === 'primary');
     const secondary = demonstrations.filter((demo) => demo.tier === 'secondary');
     expect([...new Set(primary.map((demo) => demo.group))]).toEqual([
@@ -33,14 +33,18 @@ describe('DEMO-257 curated demos', () => {
     expect(secondary.map((demo) => demo.id)).toEqual(['edge', 'workers', 'durable-objects', 'accessibility', 'i18n']);
   });
 
-  it('presents the five primary groups immediately while keeping stable fragments', async () => {
+  it('keeps all released demonstrations reachable through stable fragments in the workbench navigation', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/demos', { headers: { accept: 'text/html' } }), env);
     const html = await response.text();
     expect(response.status).toBe(200);
-    expect(html).toContain('>Primary capabilities</h2>');
-    for (const label of ['Data', 'APIs', 'Integrations', 'Identity', 'AI / MCP']) expect(html).toContain(`>${label}</strong>`);
-    expect(html.indexOf('>Primary capabilities</h2>')).toBeLessThan(html.indexOf('>Supporting proof</h2>'));
-    for (const fragment of demonstrations.map((demo) => demo.id)) expect(html).toContain(`id="${fragment}"`);
+    expect(html).toContain('aria-label="Demo categories"');
+    for (const category of ['Data', 'APIs', 'Integrations', 'Identity', 'AI', 'Platform', 'Quality']) {
+      expect(html).toContain(`>${category}</strong>`);
+    }
+    for (const fragment of demonstrations.map((demo) => demo.id)) expect(html).toContain(`href="#${fragment}"`);
+    expect((html.match(/<div class="demo-panel" data-demo-panel>/g) ?? [])).toHaveLength(1);
+    expect(html).not.toContain('Primary demonstrations');
+    expect(html).not.toContain('Supporting proof');
   });
 
   it('makes MCP endpoint, tools, one run action, and connection guidance the default success path', async () => {

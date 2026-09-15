@@ -142,8 +142,9 @@ describe('platform laboratory declarative routing', () => {
     expect(html).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/demos">');
     expect(html).toContain('class="skip-link" href="#main"');
     expect(html.match(/<h1\b/g)).toHaveLength(1);
+    expect(html.match(/data-demo-workbench(?:\s|>)/g)).toHaveLength(1);
     for (const id of platformDemoIds) {
-      expect(html, id).toContain(`class="demo-disclosure" id="${id}"`);
+      expect(html, id).toContain(`href="#${id}"`);
       expect(html, id).not.toContain(`data-demo-section="${id}"`);
     }
     for (const [id, heading] of [['edge', 'Cloudflare Edge'], ['workers', 'Cloudflare Workers'], ['durable-objects', 'Durable Objects'], ['d1', 'Cloudflare D1 Database'], ['r2', 'Cloudflare R2 Storage']] as const) {
