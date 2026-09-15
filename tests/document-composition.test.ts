@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { routeRequest } from '../src/router';
 import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
+import { primaryNavigation } from '../src/routing/navigation';
 import { renderPage, type PageContent } from '../src/ui/page';
 import type { D1PreparedStatement, Env } from '../src/types';
 
@@ -45,7 +46,7 @@ function navigationLandmarks(html: string): string[] {
 const publicPages = applicationRouteRegistry.declarations
   .filter((route) => route.kind === 'page' && route.visibility === 'public' && !route.pattern.includes(':'))
   .map((route) => route.pattern);
-const primaryPagePaths = new Set(['demos.index', 'assurance.index', 'operations.index', 'security.index'].map((id) => routeUrl(id)));
+const primaryPagePaths = new Set(primaryNavigation().map((route) => route.pattern));
 
 describe('document composition', () => {
   it('builds one document and preserves page metadata through the content boundary', async () => {
