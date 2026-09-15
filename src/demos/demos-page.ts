@@ -23,27 +23,30 @@ import {
 const ROUTE_ID = 'demos.index';
 const PRESENTATION_ROUTE_ID = 'demos.presentation';
 
+type DemoTier = 'primary' | 'secondary';
+
 interface ArchitectureDemo {
   id: string;
   label: string;
   group: string;
+  tier: DemoTier;
   summary: string;
   render: (request: Request, env: Env, options: DemoSectionOptions) => DemoSection | Promise<DemoSection>;
 }
 
 export const demonstrations: readonly ArchitectureDemo[] = [
-  { id: 'edge', label: 'Edge', group: 'Cloudflare', summary: 'Inspect the public DNS, TLS, CDN, routing, and request boundary.', render: (_request, env, options) => edgeSection(env, options) },
-  { id: 'workers', label: 'Workers', group: 'Cloudflare', summary: 'Exercise stateless edge compute and request policy behavior.', render: (_request, env, options) => workersSection(env, options) },
-  { id: 'durable-objects', label: 'Durable Objects', group: 'Cloudflare', summary: 'Coordinate stateful requests against one shared object.', render: (_request, env, options) => durableObjectsSection(env, options) },
-  { id: 'd1', label: 'D1', group: 'Cloudflare', summary: 'Explore relational CRUD, parameterized SQL, and resettable state.', render: (_request, env, options) => d1Section(env, options) },
-  { id: 'r2', label: 'R2', group: 'Cloudflare', summary: 'Inspect bounded object storage and file lifecycle behavior.', render: (_request, env, options) => r2Section(env, options) },
-  { id: 'rest', label: 'REST / OpenAPI', group: 'Interfaces', summary: 'Run the focused anonymous CRUD contract and inspect its OpenAPI description.', render: (_request, env, options) => restSection(env, options) },
-  { id: 'graphql', label: 'GraphQL', group: 'Interfaces', summary: 'Execute GraphQL operations against the live protocol endpoint.', render: (_request, env, options) => graphqlSection(env, options) },
-  { id: 'webhooks', label: 'Webhooks', group: 'Interfaces', summary: 'Generate and inspect signed synthetic webhook delivery behavior.', render: (_request, env, options) => webhooksSection(env, options) },
-  { id: 'identity', label: 'Identity', group: 'Interfaces', summary: 'Inspect OAuth, OIDC, SAML, session, and authorization demonstrations.', render: (_request, env, options) => identitySection(env, options) },
-  { id: 'mcp', label: 'MCP', group: 'Interfaces', summary: 'Inspect the Model Context Protocol boundary and authorized tool behavior.', render: (request, env, options) => mcpSection(request, env, options) },
-  { id: 'accessibility', label: 'Accessibility', group: 'Experience', summary: 'Operate accessible behavior and inspect inert failure analysis.', render: (request, env, options) => accessibilitySection(request, env, options) },
-  { id: 'i18n', label: 'Internationalization', group: 'Experience', summary: 'Exercise locale, formatting, pluralization, and RTL behavior.', render: (request, env, options) => i18nSection(request, env, options) },
+  { id: 'd1', label: 'D1', group: 'Data', tier: 'primary', summary: 'Run relational CRUD against resettable shared demo state.', render: (_request, env, options) => d1Section(env, options) },
+  { id: 'r2', label: 'R2', group: 'Data', tier: 'primary', summary: 'Upload, inspect, and remove bounded objects in live storage.', render: (_request, env, options) => r2Section(env, options) },
+  { id: 'rest', label: 'REST / OpenAPI', group: 'APIs', tier: 'primary', summary: 'Run the focused REST contract and inspect its OpenAPI description.', render: (_request, env, options) => restSection(env, options) },
+  { id: 'graphql', label: 'GraphQL', group: 'APIs', tier: 'primary', summary: 'Execute GraphQL operations against the live protocol endpoint.', render: (_request, env, options) => graphqlSection(env, options) },
+  { id: 'webhooks', label: 'Webhooks', group: 'Integrations', tier: 'primary', summary: 'Generate and inspect signed synthetic webhook delivery behavior.', render: (_request, env, options) => webhooksSection(env, options) },
+  { id: 'identity', label: 'Identity', group: 'Identity', tier: 'primary', summary: 'Inspect the OAuth, OIDC, SAML, session, and authorization behavior available here.', render: (_request, env, options) => identitySection(env, options) },
+  { id: 'mcp', label: 'MCP', group: 'AI / MCP', tier: 'primary', summary: 'Inspect the endpoint, available tools, and one executable read-only MCP call.', render: (request, env, options) => mcpSection(request, env, options) },
+  { id: 'edge', label: 'Edge', group: 'Runtime architecture', tier: 'secondary', summary: 'Inspect the public DNS, TLS, CDN, routing, and request boundary.', render: (_request, env, options) => edgeSection(env, options) },
+  { id: 'workers', label: 'Workers', group: 'Runtime architecture', tier: 'secondary', summary: 'Exercise stateless edge compute and request policy behavior.', render: (_request, env, options) => workersSection(env, options) },
+  { id: 'durable-objects', label: 'Durable Objects', group: 'Runtime architecture', tier: 'secondary', summary: 'Coordinate stateful requests against one shared object.', render: (_request, env, options) => durableObjectsSection(env, options) },
+  { id: 'accessibility', label: 'Accessibility', group: 'Quality', tier: 'secondary', summary: 'Operate accessible behavior and inspect bounded failure analysis.', render: (request, env, options) => accessibilitySection(request, env, options) },
+  { id: 'i18n', label: 'Internationalization', group: 'Quality', tier: 'secondary', summary: 'Exercise locale, formatting, pluralization, and RTL behavior.', render: (request, env, options) => i18nSection(request, env, options) },
 ] as const;
 
 function demoHref(id: string): string {
@@ -51,7 +54,7 @@ function demoHref(id: string): string {
 }
 
 const pageStyles = `<style>
-.demo-selector{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:1rem 0 1.5rem}.demo-selector-group{display:grid;align-content:start;gap:.5rem}.demo-selector-group>strong{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.demo-selector-links{display:flex;flex-wrap:wrap;gap:.5rem}.demo-selector a{display:inline-flex;align-items:center;min-height:2.5rem;padding:.4rem .7rem;border:1px solid var(--line);border-radius:999px;text-decoration:none}.demo-selector a[aria-current="location"]{border-color:var(--acid);background:var(--panel-2);color:var(--paper)}.demo-list{display:grid;gap:.75rem}.demo-disclosure{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}.demo-disclosure>summary{cursor:pointer;display:grid;gap:.2rem;padding:1rem;list-style-position:inside}.demo-disclosure>summary strong{font-size:1.05rem}.demo-disclosure>summary span:last-child{color:var(--muted)}.demo-disclosure[open]>summary{border-bottom:1px solid var(--line)}.demo-panel{padding:1rem}.demo-panel-state{margin:0;color:var(--muted)}.demo-disclosure:target{scroll-margin-top:1rem}@media(max-width:760px){.demo-selector{grid-template-columns:1fr}}
+.demo-tier{margin:1rem 0 1.5rem}.demo-tier-heading{display:flex;align-items:end;justify-content:space-between;gap:1rem;margin-bottom:.65rem}.demo-tier-heading h2{margin:0}.demo-tier-heading span{color:var(--muted);font-size:.9rem}.demo-selector{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}.demo-selector-group{display:grid;align-content:start;gap:.5rem}.demo-selector-group>strong{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.demo-selector-links{display:flex;flex-wrap:wrap;gap:.5rem}.demo-selector a{display:inline-flex;align-items:center;min-height:2.5rem;padding:.4rem .7rem;border:1px solid var(--line);border-radius:999px;text-decoration:none}.demo-selector a[aria-current="location"]{border-color:var(--acid);background:var(--panel-2);color:var(--paper)}.demo-secondary{padding-top:.25rem;border-top:1px solid var(--line)}.demo-list{display:grid;gap:.75rem}.demo-list-heading{margin:1.75rem 0 .75rem}.demo-disclosure{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}.demo-disclosure>summary{cursor:pointer;display:grid;gap:.2rem;padding:1rem;list-style-position:inside}.demo-disclosure>summary strong{font-size:1.05rem}.demo-disclosure>summary span:last-child{color:var(--muted)}.demo-disclosure[open]>summary{border-bottom:1px solid var(--line)}.demo-panel{padding:1rem}.demo-panel-state{margin:0;color:var(--muted)}.demo-disclosure:target{scroll-margin-top:1rem}@media(max-width:760px){.demo-selector{grid-template-columns:1fr}.demo-tier-heading{align-items:start;flex-direction:column}}
 </style>`;
 
 function fragmentScript(): string {
@@ -158,28 +161,42 @@ function fragmentScript(): string {
 </script>`;
 }
 
-export async function demosContent(request: Request, env: Env): Promise<PageContent> {
-  const canonicalPath = routeUrl(ROUTE_ID);
-  const groups = ['Cloudflare', 'Interfaces', 'Experience'];
-  const selector = `<nav class="demo-selector" aria-label="Choose an architecture demonstration">${groups.map((group) => `<section class="demo-selector-group" aria-labelledby="demo-group-${group.toLowerCase()}"><strong id="demo-group-${group.toLowerCase()}">${group}</strong><div class="demo-selector-links">${demonstrations.filter((demo) => demo.group === group).map((demo) => `<a href="#${escapeHtml(demo.id)}" data-demo-link="${escapeHtml(demo.id)}">${escapeHtml(demo.label)}</a>`).join('')}</div></section>`).join('')}</nav>`;
-  const disclosures = demonstrations.map((demo) => `<details class="demo-disclosure" id="${escapeHtml(demo.id)}" name="architecture-demo" data-architecture-demo>
+function selectorFor(tier: DemoTier, label: string): string {
+  const tierDemos = demonstrations.filter((demo) => demo.tier === tier);
+  const groups = [...new Set(tierDemos.map((demo) => demo.group))];
+  return `<section class="demo-tier${tier === 'secondary' ? ' demo-secondary' : ''}" aria-labelledby="demo-${tier}-heading">
+    <div class="demo-tier-heading"><h2 id="demo-${tier}-heading">${escapeHtml(label)}</h2><span>${tier === 'primary' ? 'Start here' : 'Supporting architecture and quality evidence'}</span></div>
+    <nav class="demo-selector" aria-label="${escapeHtml(label)}">${groups.map((group, index) => `<section class="demo-selector-group" aria-labelledby="demo-${tier}-group-${index}"><strong id="demo-${tier}-group-${index}">${escapeHtml(group)}</strong><div class="demo-selector-links">${tierDemos.filter((demo) => demo.group === group).map((demo) => `<a href="#${escapeHtml(demo.id)}" data-demo-link="${escapeHtml(demo.id)}">${escapeHtml(demo.label)}</a>`).join('')}</div></section>`).join('')}</nav>
+  </section>`;
+}
+
+function disclosuresFor(tier: DemoTier): string {
+  return demonstrations.filter((demo) => demo.tier === tier).map((demo) => `<details class="demo-disclosure" id="${escapeHtml(demo.id)}" name="architecture-demo" data-architecture-demo>
     <summary><span class="eyebrow">${escapeHtml(demo.group)}</span><strong>${escapeHtml(demo.label)}</strong><span>${escapeHtml(demo.summary)}</span></summary>
     <div class="demo-panel" data-demo-panel><p class="demo-panel-state">Open this demonstration to initialize it.</p></div>
   </details>`).join('');
+}
+
+export async function demosContent(request: Request, env: Env): Promise<PageContent> {
+  const canonicalPath = routeUrl(ROUTE_ID);
   const body = `<section class="page-header">
     <h1>Architecture Demos</h1>
-    <p class="lede">Choose one demonstration, inspect the live behavior, and follow the evidence without navigating a technology-shaped page hierarchy.</p>
-    ${selector}
+    <p class="lede">Start with the primary capabilities below. Open one demonstration to run or inspect it; deeper implementation detail stays optional.</p>
   </section>
-  <section aria-label="${demonstrations.length} architecture demonstrations">
-    <div class="demo-list">${disclosures}</div>
+  ${selectorFor('primary', 'Primary capabilities')}
+  ${selectorFor('secondary', 'Supporting proof')}
+  <section aria-label="Architecture demonstrations">
+    <h2 class="demo-list-heading">Primary demonstrations</h2>
+    <div class="demo-list">${disclosuresFor('primary')}</div>
+    <h2 class="demo-list-heading">Supporting proof</h2>
+    <div class="demo-list">${disclosuresFor('secondary')}</div>
   </section>
   ${fragmentScript()}`;
 
   return pageContent(env, 'Architecture Demos', body, {
     routeId: ROUTE_ID,
     canonicalPath,
-    description: 'Interactive architecture demonstrations consolidated under one task-oriented browser destination.',
+    description: 'Curated executable architecture demonstrations for data, APIs, integrations, identity, MCP, runtime architecture, and quality.',
     headExtra: pageStyles,
   });
 }

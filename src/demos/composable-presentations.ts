@@ -14,7 +14,7 @@ import { apiContent } from './api-page';
 import { graphqlContent } from './graphql-console';
 import { webhooksContent } from './webhook-console';
 import { identityContent } from './identity-page';
-import { mcpContent } from './mcp-page';
+import { curatedMcpContent } from './mcp-curated';
 import { accessibilityContent } from './accessibility-page';
 import { i18nContent } from './i18n-page';
 
@@ -63,8 +63,8 @@ export function identitySection(env: Env, options: DemoSectionOptions = {}): Dem
   return section(identityContent(env), 'identity', `${routeUrl('demos.index')}#identity`, options);
 }
 
-export async function mcpSection(request: Request, env: Env, options: DemoSectionOptions = {}): Promise<DemoSection> {
-  return section(await mcpContent(request, env), 'mcp', `${routeUrl('demos.index')}#mcp`, options);
+export function mcpSection(request: Request, env: Env, options: DemoSectionOptions = {}): DemoSection {
+  return section(curatedMcpContent(request, env), 'mcp', `${routeUrl('demos.index')}#mcp`, options);
 }
 
 export function accessibilitySection(request: Request, env: Env, options: DemoSectionOptions = {}): DemoSection {

@@ -116,7 +116,7 @@ describe('composable demo presentations', () => {
       }
     }
 
-    for (const scope of ['d1', 'identity', 'mcp']) {
+    for (const scope of ['d1', 'identity']) {
       const item = sections.find((candidate) => candidate.scope === scope);
       expect(item?.body, scope).toContain('ArrowLeft');
       expect(item?.body, scope).toContain('ArrowRight');
