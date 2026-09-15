@@ -192,43 +192,41 @@ describe('public route contract', () => {
     }
   });
 
-  it('renders the consolidated delivery lifecycle with one runnable version proof', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance#activity', { headers: { accept: 'text/html' } }), env());
+  it('renders focused traceability without restoring the delivery inventory', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance#traceability', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     expect(response.status).toBe(200);
-    for (const anchor of ['source-of-truth', 'versioning', 'branching', 'actions', 'releases', 'environments']) expect(html).toContain(`id="${anchor}"`);
-    expect(html).toContain("fetch('/api/reporting/'+encodeURIComponent(collection)");
-    expect(html).toContain('/api/labs/git-delivery');
-    expect(html).toContain('Run Live Git Demo');
-    expect(html).toContain('Merge &amp; Release');
-    expect(html).toContain('GitHub Actions live feed');
-    expect(html).toContain('data-feed-cadence');
-    expect(html).toContain('state.feedStores');
-    expect(html).not.toContain("q('[data-ci-jobs]').innerHTML");
-    expect(html).toContain('data-evidence-refresh');
-    expect(html).toContain('Not publicly verifiable');
+    expect(html).toContain('id="traceability"');
+    expect(html).toContain('/api/labs/governance-traceability');
+    expect(html).toContain('Inspect live traceability');
+    expect(html).toContain('<summary>Inspect focused evidence</summary>');
+    for (const retired of ['source-of-truth', 'versioning', 'branching', 'actions', 'releases', 'environments']) {
+      expect(html).not.toContain(`id="${retired}"`);
+    }
   });
 
-  it('renders consolidated governance controls, evidence anchors, and the alignment notice', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance#frameworks', { headers: { accept: 'text/html' } }), env());
+  it('renders the four assurance checks and explicit uncertified qualification', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
-    for (const anchor of ['iso-27001', 'iso-42001', 'traceability', 'governance']) expect(html).toContain(`id="${anchor}"`);
+    for (const anchor of ['security-controls', 'ai-boundary', 'traceability', 'accessibility-posture']) expect(html).toContain(`id="${anchor}"`);
     for (const endpoint of ['/api/labs/governance-security-controls', '/api/labs/governance-ai-evaluation', '/api/labs/governance-traceability']) expect(html).toContain(endpoint);
-    expect(html).toContain('alignment targets, not certification claims');
+    expect(html).toContain('No ISO/IEC or WCAG certification is claimed');
 
     const edge = await routeRequest(new Request('https://demo.wizardgang.ai/demos#edge', { headers: { accept: 'text/html' } }), env());
-    expect(await edge.text()).not.toContain('alignment targets, not certification claims');
+    expect(await edge.text()).not.toContain('No ISO/IEC or WCAG certification is claimed');
   });
 
-  it('renders compliance as an instructional framework review without certification claims', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance?framework=wcag-2.2#frameworks', { headers: { accept: 'text/html' } }), env());
+  it('renders concise framework posture without restoring the framework registry', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance?framework=wcag-2.2#accessibility-posture', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     expect(response.status).toBe(200);
-    for (const statement of ['WCAG 2.2', 'ISO/IEC 27001:2022', 'ISO/IEC 42001:2023', 'Posture', 'Material gaps and risks', 'Browse framework records']) {
+    for (const statement of ['Bounded WCAG 2.2 evidence', 'ISO/IEC 27001-aligned control evidence', 'ISO/IEC 42001-aligned MCP boundary evaluation']) {
       expect(html).toContain(statement);
     }
     expect(html).toContain('/api/reporting/compliance/');
-    expect(html).toContain('href="/assurance#');
+    expect(html).not.toContain('Browse framework records');
+    expect(html).not.toContain('id="assurance-compliance-framework"');
+    expect(html).not.toContain('<option value="wcag-2.2" selected>');
     expect(html).not.toContain('<table');
     expect(html).not.toContain('Compliance records');
     expect(html).not.toMatch(/>\s*(?:COMPLIANT|CERTIFIED)\s*</i);

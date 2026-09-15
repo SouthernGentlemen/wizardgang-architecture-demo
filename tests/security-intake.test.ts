@@ -55,14 +55,15 @@ describe('public concern and security routes', () => {
     expect(security.status).toBe(200);
     expect(securityHtml).toContain('security/advisories/new');
     expect(securityHtml).toContain('/.well-known/security.txt');
-    expect(securityHtml).toContain(`${routeUrl('assurance.index')}#concerns`);
+    expect(securityHtml).toContain('id="non-security-feedback"');
+    expect(securityHtml).toContain('issues/new/choose');
+    expect(securityHtml).not.toContain(`${routeUrl('assurance.index')}#concerns`);
 
-    const concerns = await routeRequest(new Request('https://demo.wizardgang.ai/assurance#concerns', { headers: { accept: 'text/html' } }), env);
-    const concernsHtml = await concerns.text();
-    expect(concerns.status).toBe(200);
-    for (const template of ['bug.yml', 'feature.yml', 'concern.yml']) expect(concernsHtml).toContain(`issues/new?template=${template}`);
-    expect(concernsHtml).toContain('href="/security"');
-    expect(concernsHtml).toContain('private vulnerability reporting');
+    const assurance = await routeRequest(new Request('https://demo.wizardgang.ai/assurance', { headers: { accept: 'text/html' } }), env);
+    const assuranceHtml = await assurance.text();
+    expect(assurance.status).toBe(200);
+    expect(assuranceHtml).toContain('href="/security"');
+    expect(assuranceHtml).not.toContain('issues/new?template=concern.yml');
   });
 
   it('offers no public security issue form', () => {

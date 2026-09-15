@@ -24,7 +24,7 @@ const environment: Env = {
   GITHUB_BRANCH: 'main',
 };
 
-async function renderWorkbench(): Promise<string> {
+async function renderAssurance(): Promise<string> {
   const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance', {
     headers: { accept: 'text/html' },
   }), environment);
@@ -32,37 +32,36 @@ async function renderWorkbench(): Promise<string> {
   return response.text();
 }
 
-describe('assurance workbench accessibility contract', () => {
-  it('provides labelled section landmarks and one page heading', async () => {
-    const html = await renderWorkbench();
+describe('minimal assurance accessibility contract', () => {
+  it('provides four labelled check sections and one page heading', async () => {
+    const html = await renderAssurance();
     expect(html.match(/<h1\b/g)).toHaveLength(1);
-    for (const section of ['posture', 'frameworks', 'risks', 'evidence', 'governance', 'activity']) {
-      expect(html).toContain(`<section id="${section}" aria-labelledby="${section}-heading"`);
+    for (const section of ['security-controls', 'ai-boundary', 'traceability', 'accessibility-posture']) {
+      expect(html).toContain(`id="${section}" aria-labelledby="${section}-heading"`);
       expect(html).toContain(`id="${section}-heading"`);
     }
   });
 
-  it('labels section navigation and filter/search controls without a view selector', async () => {
-    const html = await renderWorkbench();
-    expect(html).toContain('<nav class="link-row" aria-label="Assurance workbench sections">');
-    expect(html).toContain('<label for="assurance-framework">Framework</label>');
-    expect(html).toContain('<label for="assurance-search">Search records</label>');
-    expect(html).toContain('aria-labelledby="assurance-search-heading"');
+  it('labels the compact assurance navigation without exposing a view selector or record search', async () => {
+    const html = await renderAssurance();
+    expect(html).toContain('<nav class="link-row" aria-label="Assurance checks">');
+    for (const target of ['security-controls', 'ai-boundary', 'traceability', 'accessibility-posture']) {
+      expect(html).toContain(`href="#${target}"`);
+    }
     expect(html).not.toContain('name="view"');
+    expect(html).not.toContain('name="q"');
   });
 
-  it('keeps record collections in native disclosures and live action output announced politely', async () => {
-    const html = await renderWorkbench();
-    expect((html.match(/data-assurance-collection=/g) ?? []).length).toBeGreaterThanOrEqual(6);
-    expect((html.match(/<summary>/g) ?? []).length).toBeGreaterThanOrEqual(6);
-    expect(html).toContain('type="button" data-governance-run="0"');
-    expect(html).toContain('type="button" data-governance-run="1"');
-    expect(html).toContain('type="button" data-governance-run="2"');
-    expect((html.match(/aria-live="polite"/g) ?? []).length).toBeGreaterThanOrEqual(3);
+  it('keeps focused evidence in native disclosures and live action output announced politely', async () => {
+    const html = await renderAssurance();
+    expect((html.match(/<summary>/g) ?? []).length).toBeGreaterThanOrEqual(4);
+    expect((html.match(/type="button" data-assurance-run/g) ?? [])).toHaveLength(3);
+    expect((html.match(/aria-live="polite"/g) ?? [])).toHaveLength(3);
+    expect(html).toContain('href="#accessibility-evidence"');
   });
 
-  it('does not emit duplicate element ids in the server-rendered workbench', async () => {
-    const html = await renderWorkbench();
+  it('does not emit duplicate element ids in the server-rendered assurance page', async () => {
+    const html = await renderAssurance();
     const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
     expect(new Set(ids).size).toBe(ids.length);
   });

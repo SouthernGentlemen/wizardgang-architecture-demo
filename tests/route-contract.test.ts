@@ -103,13 +103,18 @@ describe('public link and route contract', () => {
     }));
   }, 60_000);
 
-  it('serves every compliance framework filter through the canonical assurance route', async () => {
+  it('keeps legacy framework query values from restoring the retired public registry', async () => {
     for (const framework of ['iso-27001', 'iso-42001', 'wcag-2.2']) {
       const target = routeUrl('assurance.index', {}, { framework });
       const response = await get(target);
       expect(response.status, target).toBe(200);
       const html = await response.text();
-      expect(html, `${framework} filter was not applied`).toContain(`<option value="${framework}" selected>`);
+      expect(html, framework).not.toContain('id="assurance-compliance-framework"');
+      expect(html, framework).not.toContain(`<option value="${framework}" selected>`);
+      expect(html, framework).not.toContain('Browse framework records');
+      for (const fragment of ['security-controls', 'ai-boundary', 'traceability', 'accessibility-posture']) {
+        expect(html, framework).toContain(`id="${fragment}"`);
+      }
     }
   });
 

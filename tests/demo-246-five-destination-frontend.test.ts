@@ -86,7 +86,8 @@ describe('public frontend shell', () => {
     expect(html).toContain(`${repositoryUrl}/security/advisories/new`);
     expect(html).toContain('>Open a private security report</a>');
     expect(html).toContain('/.well-known/security.txt');
-    expect(html).toContain(routeUrl('assurance.index') + '#concerns');
+    expect(html).toContain('/issues/new/choose');
+    expect(html).not.toContain(routeUrl('assurance.index') + '#concerns');
   });
 
   it('keeps Security reachable contextually without promoting it to primary navigation', async () => {

@@ -56,20 +56,20 @@ export const assuranceRuntimeDatasets: Record<string, unknown> = {
 export const assuranceRuntimeSourceRevisions: Readonly<Record<string, string>> =
 {
   "advisories": "88a0999d1ceae96e02cbc7861de3ab35779f5495",
-  "claims": "b2ebd29e4ce103eb7710a11af56e1be931b3d3c0",
+  "claims": "f5efd00c1e6a348d09ed8a122e3a45426ec0cdcd",
   "compliance.iso-27001": "705a4ac4e80a24ae63d6ae344b620ab9dd1c5a6f",
-  "compliance.iso-42001": "919a44d1ff73bf441e1683039a5992968b8f22f7",
+  "compliance.iso-42001": "7d459b71df0f20ab58bc9b783ba75fda4172d5d5",
   "compliance.wcag-2.2": "aa4b084fc583b5e3b902bc1b97ae40a8ac3bb649",
   "compliance.wcag-2.2.operable": "4d33a4fd6915abc2a2545443359922ded0b0b4bd",
   "compliance.wcag-2.2.perceivable": "164da8b3a1b7f4633b9e15fcddcf7c69b4465e54",
   "compliance.wcag-2.2.robust": "0ee0623d42fcd08489630fff421dca7ca45444a0",
   "compliance.wcag-2.2.understandable": "f369390e8795f4c42fa0bd97e5f81fc6da9eeca9",
-  "evidence": "248106e25be7f6809cf22d427249ff98986b8584",
+  "evidence": "fa4f93602a7db27390ead74d48bf4046e0921db7",
   "exercises": "6c6e8f646a696ce66599f45c8e7c15776f01ad6b",
   "incidents": "1ff3b01fe53498e0bfd4b0af369bc8f1cfb8614e",
-  "lifecycle.records": "c17f7632c49c55e24d6c6c64fbd9bdda16b45f1f",
+  "lifecycle.records": "7c55cc21651a2eb76a93f705b5ee6c21424a61e6",
   "objectives": "b655f90065611c778e36f322bcc0b9bfdefa456d",
-  "risks": "e2ecc9dd4bfe67652f10a7698099471c6c43eec3"
+  "risks": "7e4400d5e77959fb95e746ef9f04e38d5565f235"
 };
 
 export const assuranceRuntimeSchemas: Record<string, unknown> = {

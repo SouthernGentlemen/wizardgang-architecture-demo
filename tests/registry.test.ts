@@ -63,7 +63,7 @@ describe('architecture demo registry', () => {
   it('keeps consolidated assurance and separate security as canonical registered entries', () => {
     const assurance = applicationRoutes.find((route) => route.pattern === routeUrl('assurance.index'));
     expect(assurance?.page).toMatchObject({ label: 'Assurance', architectureMap: true });
-    expect(assurance?.source.module).toBe('src/demos/assurance.ts');
+    expect(assurance?.source.module).toBe('src/demos/assurance-minimal.ts');
     const security = applicationRoutes.find((route) => route.pattern === routeUrl('security.index'));
     expect(security?.page).toMatchObject({ label: 'Security', architectureMap: true });
     expect(security?.source.module).toBe('src/demos/security-page.ts');

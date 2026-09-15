@@ -21,17 +21,20 @@ const env: Env = {
   GITHUB_BRANCH: 'main',
 };
 
-describe('consolidated assurance activity', () => {
-  it('presents incident state, exercises, and delivery/release evidence under Activity', async () => {
+describe('assurance activity boundary', () => {
+  it('keeps incident and exercise inventories out of the focused assurance presentation', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance#activity', { headers: { accept: 'text/html' } }), env);
     const html = await response.text();
     expect(response.status).toBe(200);
-    expect(html).toContain('data-assurance-workbench-section="activity"');
-    expect(html).toContain('Actual incidents');
-    expect(html).toContain('Exercises');
-    expect(html).toContain('Delivery and release evidence');
-    expect(html).toContain('GitHub source of truth');
-    expect(html).toContain('Canonical reporting contract');
+    expect(html).not.toContain('data-assurance-workbench-section="activity"');
+    expect(html).not.toContain('Browse incident and exercise records');
+    expect(html).toContain('id="traceability"');
+    expect(html).toContain('/api/labs/governance-traceability');
+
+    for (const collection of ['incidents', 'exercises']) {
+      const reporting = await routeRequest(new Request(`https://demo.wizardgang.ai/api/reporting/${collection}`, { headers: { accept: 'application/json' } }), env);
+      expect(reporting.status, collection).toBe(200);
+    }
   });
 
   it('retires the incidents child route without an alias or redirect', async () => {

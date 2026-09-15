@@ -170,12 +170,12 @@
       "relationships": []
     },
     {
-      "id": "EVD-RUN-013",
+      "id": "EVD-RUN-014",
       "kind": "live-route",
       "title": "Public concern intake",
-      "description": "Structured public bug, feature, accessibility, AI/MCP, governance, documentation, and other concern routing.",
+      "description": "Contextual handoff from the Security support boundary to public repository issue forms for bugs, features, accessibility, AI/MCP, governance, documentation, and other non-sensitive feedback.",
       "locator": {
-        "route": "/assurance#concerns"
+        "route": "/security#non-security-feedback"
       },
       "freshnessPolicy": "event-driven",
       "visibility": "public",
