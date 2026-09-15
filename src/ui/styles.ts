@@ -296,6 +296,28 @@ summary { cursor: pointer; }
 .criterion-matrix td p { margin-bottom: .55rem; }
 .criterion-matrix pre { min-height: 0; max-height: 12rem; margin: 0; padding: .7rem; font-size: .72rem; }
 .criterion-matrix pre code { color: inherit; }
+.edge-evidence-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin: 1.25rem 0; border: 1px solid var(--line); background: var(--line); }
+.edge-evidence-grid article { min-width: 0; padding: 1rem; background: var(--panel-2); }
+.edge-evidence-grid .eyebrow { margin-bottom: .55rem; }
+.edge-evidence-grid h3 { font-size: 1.05rem; }
+.edge-evidence-grid dl { grid-template-columns: minmax(6rem, .8fr) 1.2fr; }
+.edge-evidence-grid ul { padding-left: 1.1rem; color: var(--muted); }
+.worker-policy-form { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.worker-policy-check { align-self: end; display: flex; align-items: center; gap: .55rem; min-height: 46px; padding: .55rem .7rem; border: 1px solid var(--line); background: var(--panel-2); color: var(--paper); }
+.worker-policy-check input { min-height: 1rem; width: 1rem; margin: 0; }
+.worker-decision-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin: 1rem 0; border: 1px solid var(--line); background: var(--line); }
+.worker-decision-grid article { display: grid; gap: .5rem; padding: 1rem; background: var(--panel-2); }
+.worker-decision-grid span { color: var(--muted); font: 800 .68rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.worker-decision-grid strong { color: var(--acid); font-size: 1.35rem; }
+.durable-flow { display: grid; grid-template-columns: repeat(7, auto); align-items: center; gap: .55rem; margin: 1.2rem 0; overflow-x: auto; }
+.durable-flow strong { min-width: 9rem; padding: .8rem; border: 1px solid var(--line); background: var(--panel-2); text-align: center; }
+.durable-flow span { color: var(--acid); font-weight: 900; }
+.durable-results { margin-top: 1rem; padding: 1rem; border: 1px solid var(--line); background: var(--panel-2); }
+@media (max-width: 760px) {
+  .edge-evidence-grid, .worker-decision-grid { grid-template-columns: 1fr; }
+  .worker-policy-form { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 520px) { .worker-policy-form { grid-template-columns: 1fr; } }
 .button-row { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0; }
 .webhook-events { display: grid; gap: .65rem; margin-top: 1rem; }
 .webhook-event { padding: 1rem; border: 1px solid var(--line); border-radius: 0; background: var(--panel-2); }
