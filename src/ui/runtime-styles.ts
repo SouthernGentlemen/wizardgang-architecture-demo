@@ -72,11 +72,12 @@ html[dir='rtl'] .related-navigation-list,
 html[dir='rtl'] .nav { direction: rtl; }
 
 @media (max-width: 760px) {
-  .language-selector { flex: 1 1 100%; justify-content: flex-start; }
+  .language-selector { justify-content: flex-end; }
+  .language-selector label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
 }
 
 @media (max-width: 620px) {
-  .language-selector { align-items: stretch; flex-wrap: wrap; }
+  .language-selector { align-items: center; flex-wrap: nowrap; }
   .language-selector label { display: inline-flex; align-items: center; min-height: 44px; }
   .language-selector select { flex: 1 1 8rem; max-width: none; }
 }

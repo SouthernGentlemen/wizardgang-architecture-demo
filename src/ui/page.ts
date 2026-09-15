@@ -22,7 +22,7 @@ import { styles } from './styles';
 import { withSecurityHeaders } from '../lib/http';
 
 const SITE_NAME = 'WizardGang Architecture Demo';
-const DEFAULT_DESCRIPTION = 'Executable companion to the WizardGang architecture. Every concept has a stable route, a live implementation, and a direct link to the public code behind it.';
+const DEFAULT_DESCRIPTION = 'A live Cloudflare architecture lab with stable task routes and demonstration fragments, executable behavior, and direct links to the public code behind it.';
 const ROOT_ROUTE_ID = 'interfaces.frontend.index';
 const OPERATIONS_ROUTE_ID = 'operations.index';
 const RELATED_NAVIGATION: Readonly<Record<string, readonly string[]>> = Object.freeze({
@@ -180,9 +180,8 @@ export function secondaryNavigationHtml(
 }
 
 function shellNavigation(localization: LocalizationContext, currentRouteId: string | undefined): string {
-  const breadcrumb = breadcrumbNavigation(currentRouteId, localization);
   const secondary = secondaryNavigationHtml(currentRouteId, localization);
-  return breadcrumb || secondary ? `<div class="shell-navigation">${breadcrumb}${secondary}</div>` : '';
+  return secondary ? `<div class="shell-navigation">${secondary}</div>` : '';
 }
 
 function languageSelector(localization: LocalizationContext): string {
@@ -193,7 +192,7 @@ function languageSelector(localization: LocalizationContext): string {
     .join('');
   const options = supportedLocales.map((locale) => `<option value="${escapeHtml(locale)}"${locale === localization.locale ? ' selected' : ''}>${escapeHtml(localeNames[locale])}</option>`).join('');
   const languageLabel = localization.t('shell.language', 'Language');
-  return `<form class="language-selector" method="get" action="${escapeHtml(localization.currentUrl.pathname)}">
+  return `<form class="language-selector" method="get" action="${escapeHtml(localization.currentUrl.pathname)}" data-preserve-fragment>
     ${preserved}
     <label for="global-language">${escapeHtml(languageLabel)}</label>
     <select id="global-language" name="${escapeHtml(parameter)}" aria-label="${escapeHtml(languageLabel)}">${options}</select>
@@ -256,17 +255,19 @@ function shell(env: Env, content: PageContent): Response {
   </a>
   <nav class="nav" aria-label="${escapeHtml(localization.t('shell.primary_navigation', 'Primary navigation'))}">
     ${primaryNavigationHtml(localization, content.routeId)}
+  </nav>
+  <div class="header-utilities" aria-label="Site utilities">
     <a href="${escapeHtml(repositoryUrl)}">${escapeHtml(localization.t('shell.source', 'Source'))} <span aria-hidden="true">↗</span></a>
     <button type="button" data-theme-toggle aria-label="${escapeHtml(themeAria)}" aria-pressed="true">${escapeHtml(themeText)}</button>
     ${languageSelector(localization)}
-  </nav>
+  </div>
 </header>
 ${shellNavigation(localization, content.routeId)}
 <main class="site-main" id="main">${content.body}</main>
 <footer class="site-footer">
   <span><a href="${escapeHtml(issueUrl)}">${escapeHtml(localization.t('shell.report_issue', 'Report an issue'))}</a>${routeSourceLink}</span>
 </footer>
-<script>${themeToggleScript(localization)}</script>
+<script>${themeToggleScript(localization)};(()=>{const form=document.querySelector('[data-preserve-fragment]');if(!form)return;form.addEventListener('submit',()=>{form.action=location.pathname+location.hash})})()</script>
 </body>
 </html>`;
   const headers = withSecurityHeaders(new Headers({ 'content-type': 'text/html; charset=utf-8' }));
@@ -314,7 +315,13 @@ export function renderIndex(env: Env): Response {
   const body = `
 <section class="page-header home-header">
   <h1>${escapeHtml(localization.t('nav.interfaces.frontend.index', 'Architecture'))} <span>${escapeHtml(localization.t('home.inspectable', 'you can inspect.'))}</span></h1>
-  <p class="lede home-lede">${escapeHtml(localization.t('home.choose_action', 'Choose what you want to do.'))}</p>
+  <div class="home-intro"><p class="lede home-lede">A live Cloudflare architecture lab demonstrating edge compute, persistent storage, APIs, identity, MCP, accessibility, operations, and assurance against the deployed system.</p><p>${escapeHtml(localization.t('home.choose_action', 'Choose what you want to do.'))}</p></div>
+</section>
+<section class="architecture-strip" aria-label="Architecture at a glance">
+  <article><strong>Client</strong><span>Browser · MCP · Webhooks</span></article><i aria-hidden="true">→</i>
+  <article><strong>Worker</strong><span>Routing · policy · APIs</span></article><i aria-hidden="true">→</i>
+  <article><strong>Services &amp; Data</strong><span>D1 · R2 · Durable Objects · Identity</span></article><i aria-hidden="true">→</i>
+  <article><strong>Operational Evidence</strong><span>Logs · health · assurance</span></article>
 </section>
 <section class="grid home-actions" aria-label="${escapeHtml(localization.t('home.primary_actions', 'Primary actions'))}">
   ${actions.map((action) => `<a class="card" href="${escapeHtml(localization.href(routeUrl(action.routeId)))}">
@@ -423,6 +430,6 @@ export function renderNotFound(env: Env): Response {
   <p class="eyebrow">404 / unknown route</p>
   <h1>That route does not exist.</h1>
   <p class="lede">Every published route is registered in the route map and backed by a source module.</p>
-  <div class="meta"><a href="${escapeHtml(localization.href(routeUrl(ROOT_ROUTE_ID)))}">Home</a><a href="${escapeHtml(localization.href(routeUrl(OPERATIONS_ROUTE_ID)))}">Operations</a><a href="${escapeHtml(sourceUrl(env, 'docs/ROUTES.md'))}">Route map</a></div>
+  <div class="meta"><a href="${escapeHtml(localization.href(routeUrl(ROOT_ROUTE_ID)))}">Home</a><a href="${escapeHtml(localization.href(routeUrl('demos.index')))}">Browse demos</a><a href="${escapeHtml(localization.href(routeUrl(OPERATIONS_ROUTE_ID)))}">Operations</a></div>
 </section>`, { status: 404, noindex: true });
 }

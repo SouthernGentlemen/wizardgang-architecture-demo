@@ -45,6 +45,7 @@ function navigationLandmarks(html: string): string[] {
 const publicPages = applicationRouteRegistry.declarations
   .filter((route) => route.kind === 'page' && route.visibility === 'public' && !route.pattern.includes(':'))
   .map((route) => route.pattern);
+const primaryPagePaths = new Set(['demos.index', 'assurance.index', 'operations.index', 'security.index'].map((id) => routeUrl(id)));
 
 describe('document composition', () => {
   it('builds one document and preserves page metadata through the content boundary', async () => {
@@ -87,7 +88,7 @@ describe('document composition', () => {
       expect(html.match(/<main\b/g), path).toHaveLength(1);
       expect(html.match(/<h1(?:\s|>)/g), path).toHaveLength(1);
       const currentPageCounts = navigationLandmarks(html).map((landmark) => (landmark.match(/\baria-current="page"/g) ?? []).length);
-      expect(currentPageCounts.some((count) => count === 1), path).toBe(true);
+      expect(currentPageCounts.some((count) => count === 1), path).toBe(primaryPagePaths.has(path));
       expect(currentPageCounts.every((count) => count <= 1), path).toBe(true);
       const pageHeader = html.match(/<section class="page-header[^"]*"[^>]*>([\s\S]*?)<\/section>/)?.[1] ?? '';
       expect(pageHeader, path).not.toContain('class="eyebrow"');

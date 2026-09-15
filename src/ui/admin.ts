@@ -4,6 +4,7 @@ import type { CrawlerControl } from '../lib/crawler-control';
 import { escapeHtml } from '../lib/html';
 import { repoUrl, sourceUrl } from '../lib/github';
 import { routeUrl } from '../routing/application-routes';
+import { localizationForEnv } from '../i18n/runtime';
 import { referenceDetails, pageResponse } from './page';
 
 export function renderAdmin(env: Env, control: DemoControl, crawlerControl: CrawlerControl, notice = ''): Response {
@@ -41,10 +42,11 @@ ${notice ? `<section class="panel" role="status"><strong>${escapeHtml(notice)}</
       <label for="message">Public message</label>
       <p class="subtle" id="message-help">Displayed on the offline page. Maximum 500 characters. Do not place secrets or internal incident details here.</p>
       <textarea id="message" name="message" rows="4" maxlength="500" aria-describedby="message-help" style="width:100%">${escapeHtml(control.publicMessage)}</textarea>
+      <aside class="offline-message-preview"><span>Public offline preview</span><strong>Demo temporarily offline</strong><p data-offline-message-preview>${escapeHtml(control.publicMessage)}</p></aside>
     </div>
     <div class="meta" style="margin-top:1.2rem">
-      <button class="button-primary" name="state" value="online" type="submit">Take demo online</button>
-      <button name="state" value="offline" type="submit">Take demo offline</button>
+      <button class="button-primary" name="state" value="online" type="submit"${offline ? '' : ' disabled'}>Take demo online</button>
+      <button name="state" value="offline" type="submit" data-confirm-change="Ordinary public demos will become unavailable and visitors will see the offline message. Continue?"${offline ? ' disabled' : ''}>Take demo offline</button>
     </div>
   </form>
 </section>
@@ -65,8 +67,8 @@ ${notice ? `<section class="panel" role="status"><strong>${escapeHtml(notice)}</
   <form method="post" action="${escapeHtml(adminRoute)}">
     <input type="hidden" name="control" value="chatgpt-crawl">
     <div class="meta">
-      <button class="button-primary" name="state" value="enabled" type="submit">Enable ChatGPT access</button>
-      <button name="state" value="disabled" type="submit">Disable ChatGPT access</button>
+      <button class="button-primary" name="state" value="enabled" type="submit"${crawlEnabled ? ' disabled' : ''}>Enable ChatGPT access</button>
+      <button name="state" value="disabled" type="submit" data-confirm-change="OAI-SearchBot and ChatGPT-User will immediately receive 403 responses. Continue?"${crawlEnabled ? '' : ' disabled'}>Disable ChatGPT access</button>
     </div>
   </form>
 </section>
@@ -78,17 +80,19 @@ ${notice ? `<section class="panel" role="status"><strong>${escapeHtml(notice)}</
     <li>Operations, security, <code>${escapeHtml(routeUrl('operations.health'))}</code>, <code>${escapeHtml(routeUrl('operations.version'))}</code>, offline, admin, and required machine recovery routes remain reachable.</li>
     <li>Every state transition is written to the shared audit event stream.</li>
   </ul>
-</section>`, { routeId: 'operations.admin', cacheControl: 'no-store', noindex: true, canonicalPath: adminRoute });
+</section>
+<script>(()=>{const message=document.querySelector('#message');const preview=document.querySelector('[data-offline-message-preview]');message?.addEventListener('input',()=>{if(preview)preview.textContent=message.value||'No public message supplied.'});document.querySelectorAll('[data-confirm-change]').forEach((button)=>button.addEventListener('click',(event)=>{if(!window.confirm(button.dataset.confirmChange||'Continue?'))event.preventDefault()}))})()</script>`, { routeId: 'operations.admin', cacheControl: 'no-store', noindex: true, canonicalPath: adminRoute });
 }
 
 export function renderOffline(env: Env, control: DemoControl, requestedPath: string): Response {
   const offline = control.state === 'offline';
+  const localization = localizationForEnv(env);
   const safePath = requestedPath.startsWith('/') && !requestedPath.startsWith('//') ? requestedPath : '/';
   const operationsRoute = routeUrl('operations.index');
   const body = offline
     ? `<section>
   <p class="eyebrow">Demo status / offline</p>
-  <h1>Oops! demo is down.</h1>
+  <h1>${escapeHtml(localization.t('offline.title', 'Demo temporarily offline'))}</h1>
   <p class="lede">${escapeHtml(control.publicMessage)}</p>
   <p class="subtle">Requested route: <code>${escapeHtml(safePath)}</code></p>
 </section>`
@@ -100,21 +104,13 @@ export function renderOffline(env: Env, control: DemoControl, requestedPath: str
 </section>`;
   return pageResponse(env, offline ? 'Demo offline' : 'Demo online', `${body}
 <section class="panel">
-  <h2>Always reachable</h2>
-  <p class="subtle">Operational and security surfaces stay available during an intentional offline window so the demo can be observed and recovered while ordinary demos are down.</p>
+  <h2>Still available</h2>
+  <p class="subtle">Status, security reporting, and public source remain reachable during an intentional offline window.</p>
   <div class="meta">
-    <a href="${escapeHtml(operationsRoute)}">Operations</a>
-    <a href="${escapeHtml(operationsRoute)}#status">Status</a>
-    <a href="${escapeHtml(operationsRoute)}#availability">Availability</a>
-    <a href="${escapeHtml(operationsRoute)}#activity">Activity</a>
-    <a href="${escapeHtml(operationsRoute)}#usage">Usage</a>
-    <a href="${escapeHtml(operationsRoute)}#deployment">Deployment</a>
-    <a href="${escapeHtml(sourceUrl(env, 'docs/OPERATIONS.md'))}">Operations docs ↗</a>
+    <a href="${escapeHtml(operationsRoute)}">View system status</a>
     <a href="${escapeHtml(routeUrl('security.index'))}">Security</a>
-    <a href="${escapeHtml(routeUrl('operations.health'))}">Health JSON</a>
-    <a href="${escapeHtml(routeUrl('operations.version'))}">Version JSON</a>
-    <a href="${escapeHtml(routeUrl('operations.admin'))}">Admin</a>
     <a href="${escapeHtml(repoUrl(env))}">Public source</a>
   </div>
+  <details class="operations-inspection"><summary>Operator and developer recovery links</summary><div class="meta"><a href="${escapeHtml(operationsRoute)}#availability">Availability</a><a href="${escapeHtml(operationsRoute)}#activity">Activity</a><a href="${escapeHtml(routeUrl('operations.health'))}">Health JSON</a><a href="${escapeHtml(routeUrl('operations.version'))}">Version JSON</a><a href="${escapeHtml(sourceUrl(env, 'docs/OPERATIONS.md'))}">Operations docs ↗</a></div></details>
 </section>`, { routeId: 'operations.offline', cacheControl: 'no-store', noindex: true, status: offline ? 503 : 200, canonicalPath: routeUrl('operations.offline') });
 }
