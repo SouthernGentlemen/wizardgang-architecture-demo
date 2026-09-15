@@ -6,7 +6,7 @@ This repository is a public architecture demonstration, not a generic applicatio
 
 Implementation plans and roadmaps are valid planning tools when a controlled change or multi-change sequence benefits from an explicit source of truth. Keep an active plan clearly scoped, keep it current while the work is active, and retire or delete it when it becomes obsolete so it does not compete with permanent contracts.
 
-The root `IMPLEMENTATION_PLAN.md` is currently active for the DEMO-264 through DEMO-270 Demo Workbench sequence. Read it before starting any controlled change in that sequence, preserve its reserved IDs and ordering, and keep implementation within its stated scope. Retire or delete the plan after the sequence is released and its durable requirements have been absorbed into permanent contracts/tests.
+The root `IMPLEMENTATION_PLAN.md` is currently active for the DEMO-264 through DEMO-271 Demo Workbench sequence. Read it before starting any controlled change in that sequence, preserve its reserved IDs and ordering, and keep implementation within its stated scope. Retire or delete the plan after the sequence is released and its durable requirements have been absorbed into permanent contracts/tests.
 
 A plan may coordinate intended work, but it does not replace runtime declarations or permanent contract documentation unless the controlled change explicitly updates those contracts.
 
@@ -34,6 +34,26 @@ After every task that changes repository files, finish the delivery loop before 
 Production is deployed only from an annotated semantic-version release tag, never from an arbitrary branch commit. See `docs/CHANGE-MANAGEMENT.md` and `docs/RELEASE-MANAGEMENT.md`.
 
 If a required check, push, pull request, release, deployment, or live verification cannot be completed, report the exact blocker and leave all recoverable work intact.
+
+## CI failure troubleshooting
+
+CI troubleshooting is a mandatory part of the normal delivery loop, not an optional debugging technique. When CI investigation begins:
+
+1. Explicitly discover and load the GitHub connector actions for workflow runs, jobs, and job logs, searching for `workflow` and/or `log` capabilities as needed.
+2. Fetch the actual workflow run associated with the current branch head or pull request; do not substitute a previous run.
+3. Enumerate the workflow run's jobs.
+4. Identify every failing job.
+5. Fetch the complete failing workflow job log body for each failure using its numeric GitHub Actions job ID.
+6. Diagnose the failure from that complete log body.
+7. Do not infer the failure solely from commit status, combined status, pull-request check summaries, step names, annotations, previous runs, or remembered failures.
+8. If the dedicated job-log action is not initially exposed, rediscover connector actions using `workflow` and/or `log` before declaring logs inaccessible.
+9. If the log action exists but access is denied, surface the exact connector or API error and identify the missing GitHub permission instead of guessing at the failure.
+10. When the log proves a concrete failing assertion or test, fix only that demonstrated regression unless later complete logs prove additional failures.
+11. Re-run or fetch CI after each controlled fix and continue until the complete required validation set is green.
+12. Do not stop merely because the first failure was repaired.
+13. Preserve the controlled-history rules throughout troubleshooting. Temporary fix commits must be squashed or rebuilt when the DEMO requires one controlled commit.
+
+Retrieving a complete job log for diagnosis does not permit copying unbounded output into another CI log or report; keep reported failure evidence bounded and actionable as required below.
 
 ## Cloud development contract
 

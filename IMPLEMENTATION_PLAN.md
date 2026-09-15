@@ -4,7 +4,7 @@ Status: **Active**
 
 Scope: post-v0.21.0 refinement of the public `/demos` MVP.
 
-This file is the active planning source of truth for DEMO-264 through DEMO-270. Runtime route declarations and permanent contract documents remain authoritative for shipped behavior. Retire or delete this plan after the sequence is released and its durable requirements have been absorbed by permanent contracts/tests.
+This file is the active planning source of truth for DEMO-264 through DEMO-271. Runtime route declarations and permanent contract documents remain authoritative for shipped behavior. Retire or delete this plan after the sequence is released and its durable requirements have been absorbed by permanent contracts/tests.
 
 ## Context
 
@@ -209,7 +209,7 @@ Changes are sequential and should normally branch from the latest merged `main`.
 
 - create this active root implementation plan;
 - bind `AGENTS.md` to it while active;
-- reserve DEMO-265 through DEMO-270;
+- reserve DEMO-265 through DEMO-271;
 - no runtime or route changes.
 
 ### DEMO-265 — REFACTOR — Build tabbed demo workbench shell
@@ -227,7 +227,31 @@ Replace the duplicated selector + disclosure-list presentation with the structur
 
 This change should primarily establish the new page geometry and selection lifecycle, not comprehensively redesign every demo body.
 
-### DEMO-266 — FEAT — Add focused demo pane and inspector
+### DEMO-266 — DOCS — Standardize CI failure troubleshooting
+
+#### Goal
+
+Make complete GitHub Actions job-log retrieval mandatory before diagnosing CI failures.
+
+#### Required behavior
+
+- discover and load GitHub connector workflow and job-log actions when CI investigation begins;
+- fetch the workflow run associated with the current branch head or pull request;
+- enumerate its jobs and identify every failing job;
+- fetch each complete failing job log body by numeric GitHub Actions job ID;
+- diagnose the exact failing assertion or test from the primary log evidence;
+- avoid guessing from statuses, check summaries, step names, annotations, previous runs, or remembered failures;
+- expose connector, connectivity, or permission errors precisely instead of substituting an assumed diagnosis;
+- continue the complete validation and CI loop until green rather than stopping after the first repaired failure;
+- preserve the one-change/one-ID controlled history, squashing or rebuilding temporary fix commits when required.
+
+#### Expected outcome
+
+Future DEMO sessions reliably troubleshoot CI failures from primary GitHub Actions job evidence instead of repeatedly stopping at check or status summaries.
+
+This is a repository process/documentation hardening change only. It does not implement the focused pane, inspector, REST/OpenAPI containment, or any other product work reserved below.
+
+### DEMO-267 — FEAT — Add focused demo pane and inspector
 
 Standardize the selected-demo experience:
 
@@ -239,7 +263,7 @@ Standardize the selected-demo experience:
 
 Use demo-specific data honestly; inspector modes may be omitted where a demo has no meaningful content for them.
 
-### DEMO-267 — REFACTOR — Contain REST and oversized demo evidence
+### DEMO-268 — REFACTOR — Contain REST and oversized demo evidence
 
 Refine the densest presentations so they fit the workbench model:
 
@@ -249,7 +273,7 @@ Refine the densest presentations so they fit the workbench model:
 - contain advanced evidence behind bounded inspector/disclosure surfaces;
 - preserve all existing machine/API behavior.
 
-### DEMO-268 — A11Y — Harden workbench navigation and responsive behavior
+### DEMO-269 — A11Y — Harden workbench navigation and responsive behavior
 
 Make the new interaction model robust:
 
@@ -261,7 +285,7 @@ Make the new interaction model robust:
 - loading/error announcements;
 - browser accessibility/localization audit coverage for representative workbench states.
 
-### DEMO-269 — TEST — Enforce demo workbench MVP acceptance
+### DEMO-270 — TEST — Enforce demo workbench MVP acceptance
 
 Add focused regression coverage that locks the public contract:
 
@@ -275,9 +299,9 @@ Add focused regression coverage that locks the public contract:
 - inactive demos do not continue ordinary execution;
 - keyboard, history, locale, and narrow-layout expectations remain covered by the appropriate test layer.
 
-### DEMO-270 — BUILD — Release demo workbench as v0.22.0
+### DEMO-271 — BUILD — Release demo workbench as v0.22.0
 
-After DEMO-265 through DEMO-269 are merged and green:
+After DEMO-265 through DEMO-270 are merged and green:
 
 - release the workbench MVP as `v0.22.0`;
 - record validation, deployment, rollback, and release evidence according to `docs/RELEASE-MANAGEMENT.md`;

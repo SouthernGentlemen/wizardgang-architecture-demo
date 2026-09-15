@@ -9,6 +9,7 @@ Every controlled change to WizardGang Architecture Demo receives exactly one per
 - A revert keeps the original change intact and receives a new ID with type `REVERT`.
 - A correction receives a new ID and names the corrected change in its body.
 - Merge commits preserve pull-request topology and are excluded from the sequential controlled-commit check.
+- Troubleshooting may use temporary branch commits, but a change that requires one controlled commit must be squashed or rebuilt before merge. Follow the mandatory CI failure investigation sequence in the root `AGENTS.md` without weakening these identity rules.
 
 Allowed primary types are `INIT`, `FEAT`, `FIX`, `SEC`, `API`, `A11Y`, `I18N`, `AI`, `DB`, `OPS`, `TEST`, `DOCS`, `REFACTOR`, `PERF`, `BUILD`, `REVERT`, and `CHORE`.
 
