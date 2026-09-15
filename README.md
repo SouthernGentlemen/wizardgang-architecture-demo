@@ -79,6 +79,14 @@ npm run build
 git diff --check
 ```
 
+CI parity and diagnostics:
+
+```text
+npm run validate:ci
+```
+
+This runs the strict CI sequence locally with the same Chromium requirement. It stops on the first failing command, preserves its exit code, writes complete command output and safe runtime/repository facts under `.ci-diagnostics/`, and records generated-artifact first-pass drift, second-pass drift, and idempotence. The directory is ignored by Git. GitHub Actions publishes it as a failure artifact when a client cannot expose the complete log body.
+
 ## Delivery
 
 Commit pattern: `[DEMO-NNN] [TYPE] Imperative description`.

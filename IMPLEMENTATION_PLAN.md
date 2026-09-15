@@ -4,7 +4,7 @@ Status: **Active**
 
 Scope: post-v0.21.0 refinement of the public `/demos` MVP.
 
-This file is the active planning source of truth for DEMO-264 through DEMO-271. Runtime route declarations and permanent contract documents remain authoritative for shipped behavior. Retire or delete this plan after the sequence is released and its durable requirements have been absorbed by permanent contracts/tests.
+This file is the active planning source of truth for DEMO-264 through DEMO-272. Runtime route declarations and permanent contract documents remain authoritative for shipped behavior. Retire or delete this plan after the sequence is released and its durable requirements have been absorbed by permanent contracts/tests.
 
 ## Context
 
@@ -209,7 +209,7 @@ Changes are sequential and should normally branch from the latest merged `main`.
 
 - create this active root implementation plan;
 - bind `AGENTS.md` to it while active;
-- reserve DEMO-265 through DEMO-271;
+- reserve DEMO-265 through DEMO-272;
 - no runtime or route changes.
 
 ### DEMO-265 — REFACTOR — Build tabbed demo workbench shell
@@ -273,7 +273,21 @@ Refine the densest presentations so they fit the workbench model:
 - contain advanced evidence behind bounded inspector/disclosure surfaces;
 - preserve all existing machine/API behavior.
 
-### DEMO-269 — A11Y — Harden workbench navigation and responsive behavior
+### DEMO-269 — BUILD — Make CI failures self-diagnosing
+
+Add CI-log visibility, complete failure evidence, deterministic local reproduction, and generated-artifact parity diagnostics:
+
+- provide one local command that runs the same strict validation sequence as CI;
+- capture the exact command, exit code, bounded safe runtime facts, repository state, and full command output without enumerating the full environment;
+- preserve every authoritative failure and pipeline exit code;
+- publish a concise Actions step summary and a bounded diagnostic artifact when validation fails;
+- identify generated-artifact inputs, outputs, first-pass drift, second-pass drift, and idempotence;
+- document primary GitHub Actions log retrieval plus the artifact fallback for clients that cannot expose redirected or large log bodies;
+- extend the active sequence reservation through DEMO-272 without changing any merged DEMO identity.
+
+This is CI, local tooling, documentation, and test scope only. It must not change application behavior or implement any shifted workbench item.
+
+### DEMO-270 — A11Y — Harden workbench navigation and responsive behavior
 
 Make the new interaction model robust:
 
@@ -285,7 +299,7 @@ Make the new interaction model robust:
 - loading/error announcements;
 - browser accessibility/localization audit coverage for representative workbench states.
 
-### DEMO-270 — TEST — Enforce demo workbench MVP acceptance
+### DEMO-271 — TEST — Enforce demo workbench MVP acceptance
 
 Add focused regression coverage that locks the public contract:
 
@@ -299,9 +313,9 @@ Add focused regression coverage that locks the public contract:
 - inactive demos do not continue ordinary execution;
 - keyboard, history, locale, and narrow-layout expectations remain covered by the appropriate test layer.
 
-### DEMO-271 — BUILD — Release demo workbench as v0.22.0
+### DEMO-272 — BUILD — Release demo workbench as v0.22.0
 
-After DEMO-265 through DEMO-270 are merged and green:
+After DEMO-265 through DEMO-271 are merged and green:
 
 - release the workbench MVP as `v0.22.0`;
 - record validation, deployment, rollback, and release evidence according to `docs/RELEASE-MANAGEMENT.md`;
