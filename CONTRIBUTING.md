@@ -55,6 +55,6 @@ npm run build
 git diff --check
 ```
 
-CI repeats these checks and validates controlled history and the pull-request title. Delivery evidence remains in GitHub's native workflow runs, attempts, and artifacts and is queried through the canonical reporting layer. Never edit an applied migration; add the next numbered migration. Releases and production deployment follow [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md).
+CI repeats these checks and validates controlled history and the pull-request title. When CI fails, follow the mandatory full-job-log troubleshooting sequence in [`AGENTS.md`](AGENTS.md); status and check summaries are not substitutes for the complete failing GitHub Actions job log. Delivery evidence remains in GitHub's native workflow runs, attempts, and artifacts and is queried through the canonical reporting layer. Never edit an applied migration; add the next numbered migration. Releases and production deployment follow [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md).
 
 Do not add PDF documentation unless explicitly requested; architecture and operational standards are maintained in reviewable Markdown/text.
