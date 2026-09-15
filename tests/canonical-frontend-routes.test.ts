@@ -4,7 +4,7 @@ import { assuranceRecordUrls } from '../src/assurance/routes';
 import { routeRequest } from '../src/router';
 import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import type { Env } from '../src/types';
-import { removedHtml404Pathnames, removedHtmlPathnames } from './fixtures/removed-html-pathnames';
+import { removedHtml404Pathnames, removedHtmlPathnames, retiredOperationsHtmlPathname } from './fixtures/removed-html-pathnames';
 
 const environment: Env = {
   DEMO_DB: { prepare() { throw new Error('retired HTML paths must not consult application storage'); } },
@@ -13,7 +13,7 @@ const environment: Env = {
 
 describe('canonical frontend route contract', () => {
   it('publishes task-oriented pages without a query-view route inventory', () => {
-    const canonicalPages = ['demos.index', 'assurance.index', 'operations.index'] as const;
+    const canonicalPages = ['demos.index', 'assurance.index'] as const;
     for (const routeId of canonicalPages) {
       const path = routeUrl(routeId);
       expect(path, routeId).not.toContain('?');
@@ -23,7 +23,7 @@ describe('canonical frontend route contract', () => {
       'platform.index', 'platform.edge', 'platform.workers', 'platform.durable-objects', 'platform.d1', 'platform.r2',
       'interfaces.index', 'interfaces.rest', 'interfaces.graphql.console', 'interfaces.webhooks.console', 'interfaces.identity.page', 'interfaces.mcp.console', 'interfaces.i18n', 'interfaces.accessibility',
       'assurance.delivery', 'assurance.governance', 'assurance.evidence', 'assurance.compliance', 'assurance.risks', 'assurance.incidents', 'assurance.concerns',
-      'operations.availability', 'operations.logs', 'operations.usage', 'operations.reports', 'operations.docs',
+      'operations.index', 'operations.availability', 'operations.logs', 'operations.usage', 'operations.reports', 'operations.docs',
     ];
     expect(applicationRouteRegistry.declarations.filter((route) => retiredIds.includes(route.id)).map((route) => route.id)).toEqual([]);
   });
@@ -40,7 +40,7 @@ describe('canonical frontend route contract', () => {
   it('uses the ordinary 404 for retired assurance and operations ?view= URLs', async () => {
     for (const [pathname, views] of [
       [routeUrl('assurance.index'), ['overview', 'delivery', 'governance', 'evidence', 'compliance', 'risks', 'incidents', 'concerns', 'unknown']],
-      [routeUrl('operations.index'), ['overview', 'availability', 'logs', 'usage', 'reports', 'docs', 'unknown']],
+      [retiredOperationsHtmlPathname, ['overview', 'availability', 'logs', 'usage', 'reports', 'docs', 'unknown']],
     ] as const) {
       for (const view of views) {
         const response = await routeRequest(new Request(`https://demo.wizardgang.ai${pathname}?view=${view}`, { headers: { accept: 'text/html' } }), environment);

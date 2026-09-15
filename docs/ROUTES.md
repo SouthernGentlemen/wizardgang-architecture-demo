@@ -9,7 +9,6 @@ This file is generated from the active declarative application registry. Route I
 | `interfaces.frontend.index` | `/` | `GET` | page | public | gated | allow | Architecture demo index | `src/ui/page.ts` |
 | `assurance.index` | `/assurance` | `GET` | page | public | gated | allow | Assurance | `src/demos/assurance-minimal.ts` |
 | `demos.index` | `/demos` | `GET` | page | public | gated | allow | Architecture Demos | `src/demos/demos-page.ts` |
-| `operations.index` | `/operations` | `GET` | page | public | available | allow | Operations | `src/demos/operations.ts` |
 | `security.index` | `/security` | `GET` | page | public | available | allow | Security | `src/demos/security-page.ts` |
 
 ## Registered service, protocol, asset, and private routes

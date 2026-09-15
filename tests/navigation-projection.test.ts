@@ -11,6 +11,7 @@ import {
 } from '../src/ui/page';
 import { navigationStyles } from '../src/ui/navigation-styles';
 import { styles } from '../src/ui/styles';
+import { retiredOperationsHtmlPathname } from './fixtures/removed-html-pathnames';
 
 const env = {
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
@@ -112,7 +113,7 @@ describe('navigation projection', () => {
       expect(hrefs.has(routeUrl(route.id)), route.id).toBe(true);
       expect(route.page?.summary.trim(), route.id).not.toBe('');
     }
-    expect(hrefs.has(routeUrl('operations.index'))).toBe(false);
+    expect(hrefs.has(retiredOperationsHtmlPathname)).toBe(false);
     expect(hrefs.has(routeUrl('security.index'))).toBe(true);
     expect(html).not.toContain('data-parent-route=');
     expect(html).not.toContain(`${entries.length} live destinations`);

@@ -35,7 +35,6 @@ export async function workerComputeResponse(request: Request, env: Env): Promise
     if (budget.state === 'degraded') {
       const { routeUrl } = await import('../routing/application-routes');
       const criticalRoutesRemainAvailable = [
-        'operations.index',
         'operations.health',
         'operations.version',
         'operations.admin',

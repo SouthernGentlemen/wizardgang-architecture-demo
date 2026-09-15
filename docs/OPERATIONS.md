@@ -1,33 +1,35 @@
 # Operations
 
-`/operations` is the single public human-facing operations dashboard. It is a task surface, not a collection of dataset pages.
+The ordinary human-facing `/operations` page is retired by DEMO-259. It is not redirected, aliased, or replaced; requests fall through to the application's standard 404 response, including requests with query parameters.
 
-## Public dashboard
+## Visitor-facing proof
 
-The page is organized around stable fragments:
+The homepage carries the intentionally small public operational proof established by DEMO-256:
 
-- `/operations#status` — current service posture, dependency health, demo/crawler policy, and health/version endpoints.
-- `/operations#availability` — verified scheduled observations, 24-hour through 365-day windows, planned maintenance, and unexpected failures.
-- `/operations#activity` — bounded public-safe application-log search. Filters use query parameters on `/operations`; the public result set is capped at 200 records.
-- `/operations#usage` — usage, provider telemetry, billed-cost availability, the synthetic budget guardrail, and cost/degradation evidence.
-- `/operations#deployment` — deployed version, environment, release/commit evidence, source, Actions, and repository documentation.
+- current service/dependency state;
+- measured scheduled-availability summary and monitoring qualification;
+- running semantic version and source/commit identity.
 
-The canonical URL is always `/operations`. Query parameters may filter data such as availability window or activity level/source/request ID/limit. They do not select a conceptual page or view. `?view=...` is not a supported routing mechanism and returns the ordinary 404.
-
-## Retired human routes
-
-The five former operations child pages are retired with no redirects or aliases. Their pathnames and expected outcomes are maintained in `tests/fixtures/removed-html-pathnames.ts`; each returns the normal application 404. Historical `/dashboard/*` locations remain retired under the same policy.
-
-Reports and Documentation are no longer human navigation concepts. Operational reporting remains available through the machine reporting contract under `/api/reporting/*`. Documentation is linked contextually to repository source/docs from the relevant dashboard sections.
+Do not rebuild the retired dashboard on the homepage. Detailed logs, raw health payloads, observation tables, usage/cost dashboards, synthetic billing controls, resource-pressure internals, and deployment-internals views are not ordinary public HTML destinations.
 
 ## Preserved operational contracts
 
-DEMO-245 does not change the operational machine/protocol surface. `/admin` and `/offline` remain hidden operational pages. Health, version, log, and budget APIs remain available, as do the reporting APIs, reporting authorization, cursor/pagination behavior, `robots.txt`, `sitemap.xml`, `security.txt`, assets, offline policy, and crawler controls.
+Route retirement does not remove the operational system. The following remain independently declared and supported:
 
-Availability collection remains a scheduled five-minute observation stream with a 365-day retention window. Interactive health reads do not create availability evidence. Public log presentation continues to use the existing redaction pipeline and bounded query limit.
+- `/api/operations/health` and `/api/operations/version`;
+- the existing operational log/budget and reporting machine contracts;
+- scheduled availability collection and persistence;
+- the 365-day availability retention policy;
+- current service/dependency and provider observations;
+- version, commit, source, and release identity;
+- bounded public-safe logging plus internal operational data;
+- protected `/admin` and recovery `/offline` pages;
+- crawler controls, `robots.txt`, `/.well-known/security.txt`, assets, and the sitemap protocol route.
 
-## Source ownership
+Interactive health reads remain read-only. Scheduled five-minute observations are the measured availability evidence and records older than 365 days are purged by the existing collector behavior.
 
-Human presentation is owned by `src/demos/operations.ts`. Operational API collection remains in `src/api/operations.ts`; usage/cost collection remains in `src/lib/cloudflare-usage.ts`; logs remain in `src/lib/logs.ts`; reporting APIs remain under the reporting route/API modules.
+## Route and source ownership
 
-Route ownership belongs to the application route registry. Generated route documentation is refreshed with `npm run generate:routes` after route changes.
+Operational route declarations remain in `src/routing/operational-routes.ts`; machine collection remains in `src/api/operations.ts`; usage/provider observation remains in `src/lib/cloudflare-usage.ts`; logs remain in `src/lib/logs.ts`; reporting APIs remain under the reporting route/API modules.
+
+There is no public operations presentation module after DEMO-259. Route declarations are authoritative; `docs/ROUTES.md` and `docs/route-manifest.json` are generated projections and must be refreshed with `npm run generate:routes` after route changes.

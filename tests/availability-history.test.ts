@@ -1,8 +1,6 @@
-import { describe, expect, it, vi } from 'vitest';
-import { operationsAvailabilitySection } from '../src/demos/operations';
+import { describe, expect, it } from 'vitest';
 import { AVAILABILITY_RETENTION_DAYS, availabilityRetentionCutoff, healthResponse } from '../src/api/operations';
 import { runScheduledOperations } from '../src/index';
-import { routeUrl } from '../src/routing/application-routes';
 import type { D1PreparedStatement, Env } from '../src/types';
 
 interface RunRecord { sql: string; values: unknown[] }
@@ -48,27 +46,5 @@ describe('availability history integrity', () => {
     expect(insert?.values.at(-1)).toBe('2026-09-09T12:05:00.000Z'); expect(String(insert?.values[3])).toContain('"observationSource":"scheduled"');
     expect(db.runs.find((run) => run.sql.includes("service_key = 'public-demo' AND checked_at < ?"))?.values).toEqual([availabilityRetentionCutoff(scheduledTime)]);
     expect(availabilityRetentionCutoff(scheduledTime)).toBe('2025-09-09T12:05:00.000Z'); expect(AVAILABILITY_RETENTION_DAYS).toBe(365);
-  });
-
-  it('presents scheduled-only availability and retained legacy qualification inside /operations', async () => {
-    vi.useFakeTimers(); vi.setSystemTime(new Date('2026-09-09T12:05:00.000Z'));
-    try {
-      const section = await operationsAvailabilitySection(new Request('https://demo.wizardgang.ai/operations'), env());
-      expect(section.html).toContain('365 days of measured history');
-      expect(section.html).toContain('Only scheduled 5-minute observations count toward measured availability.');
-      expect(section.html).toContain('legacy observation');
-      expect(section.html).toContain('excluded from availability calculations');
-      expect(section.html).toContain('<strong>66.667%</strong>');
-      expect(section.html).toContain('verified scheduled observations');
-      expect(section.html).toContain('id="availability"');
-    } finally { vi.useRealTimers(); }
-  });
-
-  it('supports bounded review windows without changing the 365-day retention policy or route identity', async () => {
-    vi.useFakeTimers(); vi.setSystemTime(new Date('2026-09-09T12:05:00.000Z'));
-    try {
-      const section = await operationsAvailabilitySection(new Request('https://demo.wizardgang.ai/operations?window=24h'), env());
-      expect(section.html).toContain('24 hours of measured history'); expect(section.html).toContain('retained for 365 days'); expect(section.html).toContain(`${routeUrl('operations.index')}?window=365d#availability`);
-    } finally { vi.useRealTimers(); }
   });
 });

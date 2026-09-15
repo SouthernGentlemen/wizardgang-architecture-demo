@@ -18,6 +18,7 @@ import {
 } from '../src/routing/navigation';
 import { defineRouteModule, matchRoute, type RouteDeclaration } from '../src/routing/registry';
 import { retiredApiReferencePrefixes } from './fixtures/removed-api-pathnames';
+import { retiredOperationsHtmlPathname } from './fixtures/removed-html-pathnames';
 
 function syntheticRoute(
   id: string,
@@ -81,15 +82,13 @@ describe('complete declarative application routing', () => {
     expect(secondaryNavigation('interfaces.frontend.index')).toEqual([]);
     expect(secondaryNavigation('demos.index')).toEqual([]);
     expect(secondaryNavigation('assurance.index')).toEqual([]);
-    expect(secondaryNavigation('operations.index')).toEqual([]);
     expect(primaryNavigation().every((route) => route.visibility === 'public')).toBe(true);
   });
 
   it('generates sitemap entries from public indexable registered pages', async () => {
     const sitemapRouteIds = [
       'interfaces.frontend.index', 'demos.index',
-      'assurance.index',
-      'operations.index', 'security.index',
+      'assurance.index', 'security.index',
     ];
     expect([...sitemapPaths()].sort()).toEqual(sitemapRouteIds.map((routeId) => routeUrl(routeId)).sort());
     const response = sitemapResponse(new Request('https://demo.wizardgang.ai/sitemap.xml'));
@@ -97,6 +96,7 @@ describe('complete declarative application routing', () => {
     for (const routePath of sitemapPaths()) {
       expect(xml).toContain(`<loc>https://demo.wizardgang.ai${routePath}</loc>`);
     }
+    expect(xml).not.toContain(`<loc>https://demo.wizardgang.ai${retiredOperationsHtmlPathname}</loc>`);
     expect(xml).not.toContain('/admin</loc>');
     expect(xml).not.toContain(`${retiredApiReferencePrefixes[0]}/`);
   });
@@ -211,7 +211,7 @@ describe('complete declarative application routing', () => {
 
   it('keeps removed aliases and unknown paths on the normal 404 even while offline state is unavailable', async () => {
     for (const path of [
-      '/api', '/webhooks', '/identity', '/mcp/server', '/i18n', '/accessibility',
+      '/api', '/webhooks', '/identity', '/mcp/server', '/i18n', '/accessibility', retiredOperationsHtmlPathname,
       '/not-registered', '/legacy/compliance',
     ]) {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`), noDatabaseEnv());
