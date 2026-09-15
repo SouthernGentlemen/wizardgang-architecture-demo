@@ -6,6 +6,8 @@ This repository is a public architecture demonstration, not a generic applicatio
 
 Implementation plans and roadmaps are valid planning tools when a controlled change or multi-change sequence benefits from an explicit source of truth. Keep an active plan clearly scoped, keep it current while the work is active, and retire or delete it when it becomes obsolete so it does not compete with permanent contracts.
 
+The root `IMPLEMENTATION_PLAN.md` is currently active for the DEMO-264 through DEMO-270 Demo Workbench sequence. Read it before starting any controlled change in that sequence, preserve its reserved IDs and ordering, and keep implementation within its stated scope. Retire or delete the plan after the sequence is released and its durable requirements have been absorbed into permanent contracts/tests.
+
 A plan may coordinate intended work, but it does not replace runtime declarations or permanent contract documentation unless the controlled change explicitly updates those contracts.
 
 Use these authorities for their respective concerns:
@@ -44,6 +46,9 @@ If a required check, push, pull request, release, deployment, or live verificati
 Preserve these invariants:
 
 - Keep the ordinary public browser surface task-oriented and minimal: `/`, `/demos`, and `/assurance`; keep `/security` as a contextual support/security boundary; keep `/admin` protected and `/offline` as recovery.
+- While the active Demo Workbench plan is in force, `/demos` is one focused workbench, not a catalog page: one demo is selected/mounted at a time, D1 is the default, the released demo fragments remain stable deep links, category/demo controls are navigation, and an `All demos` mode or giant trailing inventory must not be introduced.
+- Preserve the released demo set and capabilities while changing their presentation; hiding inactive demos from the page body is not permission to remove their underlying behavior or machine contracts.
+- Keep verbose schemas, raw protocol payloads, logs, source detail, and assurance/control evidence subordinate to the executable demo task through bounded inspector/advanced surfaces when practical.
 - The retired human `/operations` pathname remains an ordinary 404. Preserve operational machine APIs, scheduled collection, retention, bounded logs, protected controls, and the compact homepage operational proof without recreating a public operations dashboard.
 - Keep public routes stable once released unless a controlled change explicitly retires a route without compatibility aliases.
 - Keep one architecture concern per demo module.
