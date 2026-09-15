@@ -1,6 +1,6 @@
 # Unified Reporting Pagination and Cursors
 
-DEMO-176 introduced the pagination and continuation contract shared by reporting sources. All current structured and provider consumers now use that contract.
+Reporting sources share one pagination and continuation contract. Structured and provider-backed consumers use the same public shape and opaque cursor codec.
 
 ## Pagination contract
 
@@ -10,7 +10,7 @@ Reporting pagination has one public shape:
 - `returned` — records returned in the current result.
 - `total` — records observed by the bounded query represented by the result. For a partial result this is not an assertion about the provider's global total.
 - `nextCursor` — the only public continuation field. It is either one common opaque cursor or `null`.
-- `completeness` — `complete` or `partial` for consumers that have adopted the DEMO-176 pagination constructor.
+- `completeness` — `complete` or `partial` for current producers.
 - `partialReason` — `null` for complete results, otherwise one of `page-boundary`, `sample`, `provider-export-bound`, or `provider-unavailable`.
 
 The common constructor emits and validates `completeness` and `partialReason` for every current producer. New reporting code must use this constructor instead of defining another pagination shape.
@@ -55,7 +55,7 @@ These errors intentionally say nothing about whether the caller is authorized fo
 
 Provider adapters may impose a hard export bound to protect the Worker and upstream provider. Reaching that bound is never represented as a complete export.
 
-A migrated producer must return:
+A producer that reaches this bound must return:
 
 - `completeness: "partial"`;
 - `partialReason: "provider-export-bound"`;

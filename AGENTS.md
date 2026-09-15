@@ -4,9 +4,11 @@ This repository is a public architecture demonstration, not a generic applicatio
 
 ## Repository authority
 
-Do not create or maintain implementation-plan or roadmap Markdown files. Short-lived planning belongs in the active controlled change, pull request, or issue; durable repository documentation describes contracts that remain true after the change is complete.
+Implementation plans and roadmaps are valid planning tools when a controlled change or multi-change sequence benefits from an explicit source of truth. Keep an active plan clearly scoped, keep it current while the work is active, and retire or delete it when it becomes obsolete so it does not compete with permanent contracts.
 
-Use these authorities in order for their respective concerns:
+A plan may coordinate intended work, but it does not replace runtime declarations or permanent contract documentation unless the controlled change explicitly updates those contracts.
+
+Use these authorities for their respective concerns:
 
 - application route declarations are authoritative for runtime routes and route policy;
 - `docs/ROUTES.md` and `docs/route-manifest.json` are generated projections of those declarations;

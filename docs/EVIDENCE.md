@@ -21,7 +21,7 @@ Primary sources:
 - Cloudflare: deployment/runtime/edge configuration and operational behavior;
 - D1: audit events, relational demo records, health observations, synthetic usage snapshots, demo control state;
 - R2: actual demo objects/artifacts plus D1 references;
-- application UI: accessibility/i18n behavior, AI evaluations/fallback demonstrations, operational views.
+- application UI: accessibility/i18n behavior, AI evaluations/fallback demonstrations, and compact visitor-facing operational proof.
 
 The controlled public assurance data layer lives under `assurance/` and is described in `docs/ASSURANCE.md`. It assigns stable identifiers to disclosure-safe evidence and derives counts, claim/risk/incident/exercise/advisory-to-evidence relationships, and reverse `usedBy` relationships without duplicating URLs or counts in canonical JSON. Registry-declared `governance.records` partitions own reportable register facts; narrative governance records remain authoritative for policy, method, rationale, and professional judgment.
 

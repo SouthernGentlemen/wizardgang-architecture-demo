@@ -38,16 +38,16 @@ The W3C criterion IDs, names, and levels are kept distinct from WizardGang-added
 
 The registry is reassessed before releases that change public accessibility behavior, on relevant content or interaction changes, and at least every 90 days for the documented manual review. These freshness rules describe when evidence must be revisited; they do not create a conformance claim.
 
-## DEMO-237 remediation scope
+## Current remediation baseline
 
-DEMO-237 treats the canonical public route registry and canonical WCAG registry as the audit inventories rather than maintaining a separate hand-written subset. The implementation changes are grouped by WCAG principle:
+The canonical public route registry and canonical WCAG registry are the audit inventories rather than a separate hand-written subset. The current baseline is grouped by WCAG principle:
 
-- **Perceivable:** raise shared normal-text accent contrast toward the AAA enhanced threshold, keep ordinary reading measure bounded, preserve technical overflow/bidi isolation, and retain forced-colors boundaries.
-- **Operable:** raise shared actionable target sizing to the enhanced 44×44 target where applicable, strengthen focus scroll clearance, remove nonessential motion under reduced-motion preference, and complete Arrow/Home/End keyboard behavior plus tab/tabpanel relationships for OpenAPI code samples.
-- **Understandable:** replace the intentionally broken live accessibility fixture with accessible static annotations, preserve consistent help and authentication guidance, and provide a plain-language first-party GraphQL query workflow.
-- **Robust:** remove the public embedded GraphiQL interaction, expose native labels/status regions in the first-party runner, keep `/graphql` machine-only for browser HTML requests, and preserve explicit names/roles/relationships for generated code-sample tabs.
+- **Perceivable:** shared normal-text accent contrast targets the AAA enhanced threshold, ordinary reading measure stays bounded, technical overflow/bidi isolation is preserved, and forced-colors boundaries remain visible.
+- **Operable:** shared actionable target sizing targets 44×44 CSS pixels where applicable, focus scroll clearance is preserved, nonessential motion is removed under reduced-motion preference, and OpenAPI code-sample tabs support Arrow/Home/End behavior with tab/tabpanel relationships.
+- **Understandable:** intentionally broken accessibility examples remain accessible static annotations, help and authentication guidance stay consistent, and GraphQL has a plain-language first-party query workflow.
+- **Robust:** the public surface uses first-party GraphQL interaction rather than embedded GraphiQL, native labels/status regions remain exposed, `/graphql` stays machine-only for browser HTML requests, and generated code-sample tabs retain explicit names/roles/relationships.
 
-No criterion is promoted to conforming because of this remediation. No new criterion is classified as not applicable by DEMO-237; applicability and any N/A rationale remain owned by the canonical criterion records.
+No criterion is promoted to conforming because of these engineering controls. Applicability and any N/A rationale remain owned by the canonical criterion records.
 
 ## Automated evidence
 
@@ -76,16 +76,16 @@ Repository regression coverage verifies the shared runtime baseline, inert teach
 | Link purpose | Review repeated actions such as source/evidence/details links | Purpose is determinable from the link or its programmatic context as required | Required |
 | Consistent help | Compare sibling routes and repeated view states | Help and repeated controls remain predictably located and named | Required |
 
-### DEMO-237 manual evidence record
+### Verification evidence record
 
-Performed during implementation: source-level review of the canonical public route declarations, global page shell/runtime styles, accessibility laboratory, public GraphQL surface, OpenAPI generated UI, WCAG registry/validator, localization acceptance coverage, and existing accessibility tests. The review identified and remediated the shared target-size/contrast baseline, the live broken fixture, the embedded GraphiQL surface, and incomplete OpenAPI tab keyboard behavior.
+The current baseline includes source-level review of the canonical public route declarations, global page shell/runtime styles, accessibility laboratory, public GraphQL surface, OpenAPI generated UI, WCAG registry/validator, localization acceptance coverage, and accessibility regression tests.
 
-DEMO-238 now provides the site-wide automated gate described in `docs/SITE-ACCESSIBILITY-VERIFICATION.md`. Its deterministic checks and local Chromium/axe audit cover the canonical public-route inventory, configured critical states, all six locales, Arabic RTL, representative themes, 320 CSS-pixel reflow, reduced motion, forced colors, and keyboard smoke behavior. A green run means only that no automatically detectable violation was observed in that bounded matrix; it is not a WCAG 2.2 or Level AAA conformance claim.
+The site-wide automated gate is described in `docs/SITE-ACCESSIBILITY-VERIFICATION.md`. Its deterministic checks and local Chromium/axe audit cover the canonical public-route inventory, configured critical states, all six locales, Arabic RTL, representative themes, 320 CSS-pixel reflow, reduced motion, forced colors, and keyboard smoke behavior. A green run means only that no automatically detectable violation was observed in that bounded matrix; it is not a WCAG 2.2 or Level AAA conformance claim.
 
 Manual verification remains pending in `docs/accessibility-manual-verification.json`. Human keyboard traversal, named screen-reader review, 400% zoom and text-spacing review, rendered contrast interpretation, RTL visual/focus-order review, target-size exception review, dynamic announcement quality, and authenticated-state review must not be marked complete until actually performed and recorded with a reviewer, date, observed result, and evidence.
 
 ## Repository checks
 
-`tests/interface.test.ts` verifies the shared localization/accessibility shell on representative ordinary pages as well as the sandbox boundary, accessible and annotated-failure fixtures, locally executed axe protocol, default mode, and all twelve criterion cards. `tests/wcag-aaa-remediation.test.ts` locks the DEMO-237 shared baseline and prevents reintroduction of live broken controls or the public embedded GraphiQL UI. `tests/assurance-wcag.test.ts` verifies registry exhaustiveness, A/AA/AAA level counts, removal of obsolete 4.1.1, evidence resolution, W3C source identity, non-conformance wording, validation distinction, and freshness metadata. `tests/assurance-compliance-api.test.ts` verifies reporting filters, derived counts, relationships, and exact-record API lookup; `tests/demo-258-minimal-assurance.test.ts` locks the bounded human presentation. `npm run validate:wcag` repeats the canonical ID/name/level validation and evidence checks from a standalone repository validator.
+`tests/interface.test.ts` verifies the shared localization/accessibility shell on representative ordinary pages as well as the sandbox boundary, accessible and annotated-failure fixtures, locally executed axe protocol, default mode, and all twelve criterion cards. `tests/wcag-aaa-remediation.test.ts` locks the shared baseline and prevents reintroduction of live broken controls or the public embedded GraphiQL UI. `tests/assurance-wcag.test.ts` verifies registry exhaustiveness, A/AA/AAA level counts, removal of obsolete 4.1.1, evidence resolution, W3C source identity, non-conformance wording, validation distinction, and freshness metadata. `tests/assurance-compliance-api.test.ts` verifies reporting filters, derived counts, relationships, and exact-record API lookup; `tests/demo-258-minimal-assurance.test.ts` locks the bounded human presentation. `npm run validate:wcag` repeats the canonical ID/name/level validation and evidence checks from a standalone repository validator.
 
 CI also validates types, localization, contracts, security, dependencies, migrations, the Worker build, and the site-wide local Chromium/axe audit. Automated browser evidence remains distinct from human browser and assistive-technology review; CI does not replace the pending manual matrix.

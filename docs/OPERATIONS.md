@@ -1,10 +1,10 @@
 # Operations
 
-The ordinary human-facing `/operations` page is retired by DEMO-259. It is not redirected, aliased, or replaced; requests fall through to the application's standard 404 response, including requests with query parameters.
+The ordinary human-facing `/operations` page is retired. It is not redirected, aliased, or replaced; requests fall through to the application's standard 404 response, including requests with query parameters.
 
 ## Visitor-facing proof
 
-The homepage carries the intentionally small public operational proof established by DEMO-256:
+The homepage carries intentionally small public operational proof:
 
 - current service/dependency state;
 - measured scheduled-availability summary and monitoring qualification;
@@ -32,4 +32,4 @@ Interactive health reads remain read-only. Scheduled five-minute observations ar
 
 Operational route declarations remain in `src/routing/operational-routes.ts`; machine collection remains in `src/api/operations.ts`; usage/provider observation remains in `src/lib/cloudflare-usage.ts`; logs remain in `src/lib/logs.ts`; reporting APIs remain under the reporting route/API modules.
 
-There is no public operations presentation module after DEMO-259. Route declarations are authoritative; `docs/ROUTES.md` and `docs/route-manifest.json` are generated projections and must be refreshed with `npm run generate:routes` after route changes.
+There is no public operations presentation module. Route declarations are authoritative; `docs/ROUTES.md` and `docs/route-manifest.json` are generated projections and must be refreshed with `npm run generate:routes` after route changes.

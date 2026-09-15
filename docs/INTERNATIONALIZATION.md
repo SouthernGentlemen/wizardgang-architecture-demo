@@ -57,7 +57,7 @@ When adding a locale, update `config/i18n.json`, add its core resource, add it t
 
 ## Site-wide verification
 
-DEMO-238 derives the public page inventory from the canonical route registry and exercises critical route states in every supported locale. `config/site-audit-states.json` owns only additional state fixtures; it is not a second route inventory. Fixed public routes inherit coverage automatically, while a new parameterized public surface must supply a concrete fixture and otherwise fails with `new public surface requires accessibility/i18n coverage`.
+Site-wide verification derives the public page inventory from the canonical route registry and exercises critical route states in every supported locale. `config/site-audit-states.json` owns only additional state fixtures; it is not a second route inventory. Fixed public routes inherit coverage automatically, while a new parameterized public surface must supply a concrete fixture and otherwise fails with `new public surface requires accessibility/i18n coverage`.
 
 The deterministic localization gate is `npm run validate:site-i18n`. CI also runs `npm run test:site-accessibility`, which uses the locally built Worker and Chromium for rendered English and Arabic/RTL coverage alongside accessibility checks. Full procedures and evidence boundaries are documented in `docs/SITE-ACCESSIBILITY-VERIFICATION.md`.
 
