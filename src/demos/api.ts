@@ -14,9 +14,11 @@ const demo: DemoDefinition = {
   ],
   "status": "working",
   "supportingSources": [
-    { "label": "View REST implementation", "path": "src/api/records.ts" },
+    { "label": "View browser tutorial implementation", "path": "src/api/rest-demo.ts" },
+    { "label": "View authorized machine API implementation", "path": "src/api/records.ts" },
     { "label": "View shared authorization", "path": "src/lib/authorization.ts" },
-    { "label": "View OpenAPI contract", "path": "contracts/openapi/openapi.json" },
+    { "label": "View focused tutorial contract", "path": "src/api/rest-demo-openapi.ts" },
+    { "label": "View general machine contract", "path": "contracts/openapi/openapi.json" },
     { "label": "View explorer implementation", "path": "src/demos/openapi-console.ts" }
   ]
 };

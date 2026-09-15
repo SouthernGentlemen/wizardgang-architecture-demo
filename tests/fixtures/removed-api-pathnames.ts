@@ -17,6 +17,8 @@ export const removedPlatformLaboratoryPathnames = [
   '/__api/r2/files',
   '/__api/r2/files/example',
   '/__api/r2/reset',
+  '/api/labs/r2-demo',
+  '/api/labs/r2-objects',
   '/__api/accessibility/lab',
   '/__api/webhooks/demo',
   '/__api/webhooks/events',

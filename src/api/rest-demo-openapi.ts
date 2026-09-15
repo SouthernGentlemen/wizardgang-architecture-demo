@@ -86,10 +86,10 @@ export const restDemoOpenApiDocument: RestDemoOpenApiDocument = {
   info: {
     title: 'WizardGang REST demo',
     version: '1.0.0',
-    description: 'A small anonymous CRUD API for learning the shape of an OpenAPI 3.0 document.',
+    description: 'Focused browser tutorial: a small anonymous CRUD API isolated by a signed visitor-session cookie. The separate /api/openapi.json contract documents the bearer-capable machine API.',
   },
   servers: [{ url: 'https://demo.wizardgang.ai', description: 'Live demo server' }],
-  tags: [{ name: 'Records', description: 'Visitor-scoped demo records' }],
+  tags: [{ name: 'Records', description: 'Cookie-isolated visitor records for the interactive browser tutorial' }],
   paths: {
     '/api/labs/rest-demo-records': {
       get: {

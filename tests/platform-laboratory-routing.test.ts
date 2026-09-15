@@ -59,10 +59,8 @@ describe('platform laboratory declarative routing', () => {
       '/api/labs/governance-ai-evaluation',
       '/api/labs/governance-security-controls',
       '/api/labs/governance-traceability',
-      '/api/labs/r2-demo',
       '/api/labs/r2-files',
       '/api/labs/r2-files/:id',
-      '/api/labs/r2-objects',
       '/api/labs/r2-reset',
       '/api/labs/rest-demo-records',
       '/api/labs/rest-demo-records/:id',
@@ -101,6 +99,8 @@ describe('platform laboratory declarative routing', () => {
       binding: 'DEMO_R2',
       metadataBinding: 'DEMO_DB',
     });
+    expect(routes.find((route) => route.id === 'platform.d1.rest-demo-records')?.documentation.description).toContain('browser tutorial');
+    expect(routes.find((route) => route.id === 'platform.d1.records')?.documentation.description).toContain('machine contract');
   });
 
   it('rejects a laboratory API that is noncanonical or lacks a method schema', () => {

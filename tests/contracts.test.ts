@@ -30,6 +30,7 @@ type OpenApiOperation = {
 
 type OpenApiDocument = {
   openapi: string;
+  info: { description: string };
   servers: Array<{ url: string }>;
   paths: Record<string, Record<string, OpenApiOperation>>;
   components: {
@@ -52,6 +53,8 @@ describe('executable interface contracts', () => {
   it('maps every documented OpenAPI operation directly to the application route registry', () => {
     const openapi = readOpenApi();
     expect(openapi.openapi).toBe('3.1.0');
+    expect(openapi.info.description).toContain('bearer-capable machine API');
+    expect(openapi.info.description).toContain('/api/labs/rest-demo-openapi.json');
     expect(new URL(openapi.servers[0].url).pathname).toBe('/');
 
     for (const [path, pathItem] of Object.entries(openapi.paths)) {

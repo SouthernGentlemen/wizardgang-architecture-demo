@@ -1,45 +1,23 @@
 import { describe, expect, it } from 'vitest';
 import { edgeInspectionResponse, workerComputeResponse } from '../src/api/runtime';
-import { r2DemoObjectResponse, r2ObjectResponse } from '../src/api/r2';
 import { DemoCoordinator } from '../src/durable/demo-coordinator';
 import type { D1PreparedStatement, Env } from '../src/types';
 
 class RuntimeStatement implements D1PreparedStatement {
-  private values: unknown[] = [];
-  constructor(private readonly db: RuntimeD1, private readonly sql: string) {}
-  bind(...values: unknown[]) { this.values = values; return this; }
-  async run() {
-    if (this.sql.includes('INSERT INTO r2_object_metadata')) {
-      this.db.metadata.set(String(this.values[0]), { object_key: this.values[0], content_type: this.values[1], size_bytes: this.values[2], updated_at: this.values[3], updated_by: this.values[4] });
-    }
-    return { meta: { last_row_id: this.db.nextId++ } };
-  }
-  async all<T>() {
-    if (this.sql.includes('FROM r2_object_metadata')) {
-      const row = this.db.metadata.get(String(this.values[0]));
-      return { results: (row ? [row] : []) as T[] };
-    }
-    return { results: [] as T[] };
-  }
+  constructor(private readonly db: RuntimeD1) {}
+  bind() { return this; }
+  async run() { return { meta: { last_row_id: this.db.nextId++ } }; }
+  async all<T>() { return { results: [] as T[] }; }
 }
 
 class RuntimeD1 {
   nextId = 1;
-  metadata = new Map<string, Record<string, unknown>>();
-  prepare(sql: string) { return new RuntimeStatement(this, sql); }
-}
-
-class MemoryR2 {
-  objects = new Map<string, string>();
-  async put(key: string, value: string) { this.objects.set(key, value); }
-  async get(key: string) { const value = this.objects.get(key); return value === undefined ? null : { text: async () => value }; }
-  async delete(key: string) { this.objects.delete(key); }
+  prepare() { return new RuntimeStatement(this); }
 }
 
 function env(): Env {
   return {
     DEMO_DB: new RuntimeD1(),
-    DEMO_R2: new MemoryR2(),
     GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
   };
@@ -91,19 +69,6 @@ describe('edge and Worker demonstrations', () => {
       }),
     }), env());
     expect(await response.json()).toMatchObject({ decision: { route, cache, originRequired } });
-  });
-});
-
-describe('R2 object boundary', () => {
-  it('writes the object to R2 and stores only metadata in D1', async () => {
-    const environment = env();
-    const created = await r2DemoObjectResponse(new Request('https://demo.example/api/labs/r2-demo', { method: 'POST' }), environment);
-    expect(await created.json()).toMatchObject({ storage: 'R2', metadata: 'D1 demo-blob', key: 'public/visitor-demo.txt' });
-
-    const fetched = await r2ObjectResponse(new Request('https://demo.example/api/labs/r2-objects?key=public%2Fvisitor-demo.txt'), environment);
-    const body = await fetched.json() as { content: string; metadata: { object_key: string } };
-    expect(body.content).toContain('WizardGang R2 demonstration object');
-    expect(body.metadata.object_key).toBe('public/visitor-demo.txt');
   });
 });
 

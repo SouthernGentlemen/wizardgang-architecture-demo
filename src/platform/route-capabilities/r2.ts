@@ -1,8 +1,6 @@
 import {
-  r2DemoObjectResponse,
   r2FilesResetResponse,
   r2FilesResponse,
-  r2ObjectResponse,
 } from '../../api/r2';
 import {
   R2_OBJECT_STORAGE,
@@ -21,68 +19,6 @@ const docs = ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'] as const;
 export const r2LaboratoryCapability = definePlatformLaboratoryCapability({
   id: 'platform.r2',
   routes: [
-
-    {
-      id: 'platform.r2.demo-object',
-      labId: 'r2-demo',
-      pattern: '/api/labs/r2-demo',
-      methods: ['POST'],
-      requestSchemas: { POST: 'none' },
-      kind: 'api',
-      handler: (request, env) => r2DemoObjectResponse(request, env),
-      authentication: { mode: 'anonymous' },
-      authorization: { mode: 'none' },
-      visibility: 'public',
-      sameOrigin: { mode: 'not-required' },
-      offline: { mode: 'gated' },
-      cache: { mode: 'no-store' },
-      crawler: { crawling: 'controlled', indexing: 'deny' },
-      documentation: {
-        title: 'R2 demonstration object laboratory API',
-        description: 'Writes the deterministic public demonstration object to R2 with D1 metadata.',
-        docs,
-      },
-      source: {
-        module: 'src/platform/route-capabilities/r2.ts',
-        exportName: 'r2LaboratoryCapability',
-        tests,
-      },
-      requestLimits: noRequestBody('POST writes a generated demonstration object and consumes no request body.'),
-      storage: R2_OBJECT_STORAGE,
-    },
-    {
-      id: 'platform.r2.object',
-      labId: 'r2-objects',
-      pattern: '/api/labs/r2-objects',
-      methods: ['GET', 'PUT', 'DELETE'],
-      requestSchemas: { GET: 'r2-object-key-query-v1', PUT: 'r2-object-put-v1', DELETE: 'r2-object-key-query-v1' },
-      kind: 'api',
-      handler: (request, env) => r2ObjectResponse(request, env),
-      authentication: { mode: 'anonymous' },
-      authorization: { mode: 'policy', policy: 'demo:read GET; demo:write PUT/DELETE' },
-      visibility: 'public',
-      sameOrigin: { mode: 'not-required' },
-      offline: { mode: 'gated' },
-      cache: { mode: 'no-store' },
-      crawler: { crawling: 'controlled', indexing: 'deny' },
-      documentation: {
-        title: 'R2 object laboratory API',
-        description: 'Reads, stores, or deletes object bytes in R2 while D1 retains relational metadata.',
-        docs,
-      },
-      source: {
-        module: 'src/platform/route-capabilities/r2.ts',
-        exportName: 'r2LaboratoryCapability',
-        tests,
-      },
-      requestLimits: {
-        maxBodyBytes: 16_384,
-        maxObjectBytes: 16_384,
-        maxIdentifierCharacters: 80,
-        notes: ['PUT accepts JSON up to the shared readJson limit; stored text content is capped at 16384 bytes.'],
-      },
-      storage: R2_OBJECT_STORAGE,
-    },
     {
       id: 'platform.r2.files',
       labId: 'r2-files',
