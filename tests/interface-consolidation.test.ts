@@ -117,7 +117,8 @@ describe('canonical interface demonstrations', () => {
     expect(i18n).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/demos">');
 
     const accessibility = await presentationHtml('accessibility', '?mode=broken');
-    expect(accessibility).toContain('Teaching warning:');
+    expect(accessibility).toContain('Failure analysis');
+    expect(accessibility).not.toContain('data-a11y-mode');
     expect(accessibility).toContain('data-a11y-frame');
   });
 

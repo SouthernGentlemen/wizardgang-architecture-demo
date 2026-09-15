@@ -191,14 +191,20 @@ describe('global localization and accessibility runtime', () => {
 });
 
 describe('accessible interaction surface', () => {
-  it('keeps parent controls accessible and isolates opt-in broken content', async () => {
+  it('pairs one accessible interaction with inert criterion-level failure analysis', async () => {
     const html = await renderPage(env, accessibilityContent(new Request('https://demo.example/accessibility'), env)).text();
-    expect(html).toContain('class="skip-link"');
+    expect(html.match(/class="skip-link"/g)).toHaveLength(1);
     expect(html).toContain('sandbox="allow-scripts allow-forms"');
-    expect(html).toContain('data-a11y-mode="accessible" aria-pressed="true"');
-    expect(html).toContain('data-broken-warning hidden');
-    expect(html.match(/class="criterion-card"/g)).toHaveLength(12);
+    expect(html).not.toContain('data-a11y-mode');
+    expect(html).not.toContain('data-broken-warning');
+    expect(html.match(/<th scope="row">/g)).toHaveLength(12);
+    expect(html).toContain('<th scope="col">Working behavior</th>');
+    expect(html).toContain('<th scope="col">Failure fixture</th>');
+    expect(html).toContain('<th scope="col">How we verify it</th>');
+    expect(html).toContain('&lt;input type=&quot;password&quot; onpaste=&quot;return false&quot;&gt;');
+    expect(html).not.toMatch(/<input\b[^>]*\bonpaste=/i);
     expect(html).toContain('axe-core / partial coverage');
+    expect(html).toContain('The inert failure fixtures were not scanned.');
     expect(html).toContain('WCAG 2.2 engineering evidence — no conformance claim');
   });
 
