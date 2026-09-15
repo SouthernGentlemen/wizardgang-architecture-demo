@@ -12,7 +12,7 @@ Primary types follow WG-ARCH-001 conventions: `INIT`, `FEAT`, `FIX`, `SEC`, `API
 
 Use an isolated branch named for its controlled change, such as `demo-NNN-imperative-summary`. A pull-request title follows the same controlled-title format. See [`docs/CHANGE-MANAGEMENT.md`](docs/CHANGE-MANAGEMENT.md).
 
-Do not create repository implementation-plan or roadmap Markdown files. Keep temporary sequencing in the active pull request or issue, and update permanent contract documentation only when the durable contract changes.
+Implementation plans and roadmap documents may be used to coordinate substantial, stacked, or multi-step work. Keep them scoped to the active effort, keep them current while they are authoritative, and retire or delete them when they become obsolete so stale planning does not compete with current contracts.
 
 Each architecture demo change must:
 

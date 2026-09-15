@@ -1,6 +1,6 @@
 # Declarative route registry
 
-DEMO-166 introduced the typed matcher foundation, and DEMO-167 through DEMO-171 moved the application onto one declarative route registry. Later controlled changes promoted browser views to canonical child resources and made route declarations own frontend presentation metadata as well as transport policy.
+The application uses one declarative route registry built on the shared typed matcher. Route declarations own transport policy and browser presentation metadata; generated navigation and route documentation are projections of the same contract.
 
 ## Final dispatch boundary
 
@@ -60,7 +60,7 @@ The generated manifest records stable ID, route pattern, methods, kind, visibili
 
 ## Matcher and collision rules
 
-The shared matcher retains the deterministic rules established by the registry migration:
+The shared matcher uses these deterministic rules:
 
 - trailing slashes normalize to the canonical path;
 - exact routes take precedence over parameter routes;

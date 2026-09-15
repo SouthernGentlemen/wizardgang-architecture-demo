@@ -2,7 +2,7 @@
 
 Accessibility and localization are application-wide invariants. They are not capabilities confined to the demonstrations at `/demos#accessibility` and `/demos#i18n`, and a new public route does not opt out of either invariant.
 
-DEMO-238 verifies the application at three separate evidence levels:
+The verification model has three separate evidence levels:
 
 1. **Deterministic repository checks** derive public page coverage from the canonical application route registry, verify generated route-manifest parity, exercise structural HTML requirements, and render critical states across every supported locale.
 2. **Browser automation** starts the repository-built Worker locally, drives installed Chromium through the DevTools protocol, and runs the locked `axe-core` dependency against the actual rendered application. It covers every public route in English and Arabic, critical state fixtures, representative dark/light themes, 320 CSS-pixel reflow samples, reduced-motion and forced-colors media features, and representative keyboard interaction patterns.

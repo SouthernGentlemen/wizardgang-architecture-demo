@@ -63,7 +63,7 @@ The ordinary public product is intentionally small:
 
 `/security` is a contextual support/security boundary for vulnerability reporting and advisories. It is reachable from footer or contextual security links rather than primary product navigation.
 
-The former `/operations` browser page is retired by DEMO-259. It is not a canonical page, navigation destination, sitemap member, homepage action, discovery entry, redirect, or alias. Requests for that pathname, including query-string variants, fall through the ordinary application 404. Operational machine APIs, scheduled collection, 365-day retention, bounded logs, protected controls, and compact homepage proof remain independent of that retirement.
+The former `/operations` browser page is retired. It is not a canonical page, navigation destination, sitemap member, homepage action, discovery entry, redirect, or alias. Requests for that pathname, including query-string variants, fall through the ordinary application 404. Operational machine APIs, scheduled collection, 365-day retention, bounded logs, protected controls, and compact homepage proof remain independent of that retirement.
 
 ## Hidden operational browser pages
 
@@ -87,6 +87,6 @@ REST/JSON endpoints, OpenAPI, GraphQL, MCP, identity callbacks, webhooks, labora
 
 The application has no client-side router. `src/router.ts` normalizes requests, matches the registry, enforces shared policy, and invokes the declared handler. Client scripts may enhance controls, update interaction state, or focus a fragment target, but they do not emulate application routing.
 
-## Change guardrail
+## Planning and change guardrail
 
-Prefer presentation reduction, grouping, hiding, and progressive disclosure over introducing another public destination or dashboard. Short-lived implementation sequencing belongs in the controlled change or pull request rather than a permanent implementation-plan document.
+Prefer presentation reduction, grouping, hiding, and progressive disclosure over introducing another public destination or dashboard. Implementation plans may coordinate active work and may propose changes to this contract. A plan does not itself change runtime route declarations; when planned changes land, update the permanent contract as part of the controlled change and retire obsolete planning content when it is no longer useful.
