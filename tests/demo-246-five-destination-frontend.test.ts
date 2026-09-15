@@ -6,13 +6,22 @@ import {
   type ApplicationRouteDeclaration,
 } from '../src/routing/application-routes';
 import { primaryNavigation, sitemapPaths } from '../src/routing/navigation';
-import { renderIndex, renderPage } from '../src/ui/page';
+import { renderPage } from '../src/ui/page';
 import type { Env } from '../src/types';
 
 const repositoryUrl = 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo';
 const env = {
+  DEMO_DB: {
+    prepare: () => ({
+      bind() { return this; },
+      async all() { return { results: [] }; },
+      async run() { return { meta: {} }; },
+    }),
+  },
   GITHUB_REPO_URL: repositoryUrl,
   GITHUB_BRANCH: 'main',
+  DEPLOYED_VERSION: 'v0.test',
+  DEPLOYED_SHA: '1234567890abcdef',
 } as Env;
 
 function textContent(fragment: string): string {
@@ -24,47 +33,49 @@ function anchorDestinations(fragment: string): Array<{ href: string; text: strin
     .map((match) => ({ href: match[1], text: textContent(match[2]) }));
 }
 
-describe('DEMO-246 five-destination frontend', () => {
-  it('projects the exact public header destinations while the logo remains Home', async () => {
+async function publicHome(): Promise<string> {
+  const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === 'interfaces.frontend.index');
+  if (!route) throw new Error('Missing interfaces.frontend.index route');
+  return (await route.handler(new Request('https://demo.wizardgang.ai/'), { env }, {})).text();
+}
+
+describe('public frontend shell', () => {
+  it('projects only Demos and Assurance in primary navigation while Source remains direct', async () => {
     expect(primaryNavigation().map((route) => [route.page?.label, route.pattern])).toEqual([
       ['Demos', routeUrl('demos.index')],
       ['Assurance', routeUrl('assurance.index')],
-      ['Operations', routeUrl('operations.index')],
-      ['Security', routeUrl('security.index')],
     ]);
 
-    const html = await renderIndex(env).text();
+    const html = await publicHome();
     const header = html.match(/<header class="site-header">([\s\S]*?)<\/header>/)?.[0] ?? '';
     const nav = header.match(/<nav class="nav"[^>]*>([\s\S]*?)<\/nav>/)?.[0] ?? '';
     expect(header).toContain(`<a class="brand" href="${routeUrl('interfaces.frontend.index')}"`);
     expect(anchorDestinations(nav)).toEqual([
       { href: routeUrl('demos.index'), text: 'Demos' },
       { href: routeUrl('assurance.index'), text: 'Assurance' },
-      { href: routeUrl('operations.index'), text: 'Operations' },
-      { href: routeUrl('security.index'), text: 'Security' },
     ]);
     expect(header).toContain('<div class="header-utilities"');
     expect(header).toContain(`href="${repositoryUrl}">Source`);
-    expect(nav).not.toMatch(/>Architecture<|>Architecture\s*</);
+    expect(nav).not.toMatch(/>Architecture<|>Architecture\s*|>Operations<|>Security</);
   });
 
-  it('makes the homepage a three-action launcher without route-count marketing', async () => {
-    const html = await renderIndex(env).text();
+  it('makes the homepage a two-action launcher with compact operational proof', async () => {
+    const html = await publicHome();
     const main = html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[0] ?? '';
-    const actions = main.match(/<section class="grid home-actions"[\s\S]*?<\/section>/)?.[0] ?? '';
     expect(main).not.toBe('');
-    expect(anchorDestinations(actions)).toEqual([
-      { href: routeUrl('demos.index'), text: 'Run it Execute the interactive architecture demonstrations.' },
-      { href: routeUrl('assurance.index'), text: 'Verify it Inspect assurance, evidence, governance, and compliance records.' },
-      { href: routeUrl('operations.index'), text: 'Observe it Review runtime status, availability, activity, usage, and deployment evidence.' },
-    ]);
+    expect(main).toContain('A live Cloudflare architecture laboratory');
+    expect(main).toContain(`href="${routeUrl('demos.index')}">Explore demos</a>`);
+    expect(main).toContain(`href="${routeUrl('assurance.index')}">View assurance</a>`);
+    expect(main).not.toContain(`href="${routeUrl('operations.index')}"`);
+    expect(main).toContain('aria-label="Live proof"');
+    expect(main).toContain('Current service state');
+    expect(main).toContain('Scheduled observations');
+    expect(main).toContain('v0.test');
+    expect(main).toContain('Commit 1234567');
+    expect(main).toContain(`href="${routeUrl('security.index')}">Security boundary</a>`);
     expect(main).not.toContain('live destinations');
     expect(main).not.toContain('id="architecture-map"');
     expect(main).not.toContain('data-parent-route=');
-    expect(main).not.toContain('destination count');
-    expect(main).not.toContain('data-health');
-    expect(main).toContain('A live Cloudflare architecture lab');
-    expect(main).toContain('aria-label="Architecture at a glance"');
   });
 
   it('organizes Security around reporting, disclosure, and published advisories', async () => {
@@ -78,16 +89,15 @@ describe('DEMO-246 five-destination frontend', () => {
     expect(html).toContain(routeUrl('assurance.index') + '#concerns');
   });
 
-  it('links the global footer directly to the existing public-safe bug issue form', async () => {
-    const html = await renderIndex(env).text();
-    const footer = html.match(/<footer class="site-footer">([\s\S]*?)<\/footer>/)?.[0] ?? '';
-    expect(anchorDestinations(footer)).toContainEqual({
-      href: `${repositoryUrl}/issues/new?template=bug.yml`,
-      text: 'Report an issue',
-    });
+  it('keeps Security reachable contextually without promoting it to primary navigation', async () => {
+    const html = await publicHome();
+    const main = html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[0] ?? '';
+    const nav = html.match(/<nav class="nav"[^>]*>([\s\S]*?)<\/nav>/)?.[0] ?? '';
+    expect(main).toContain(`href="${routeUrl('security.index')}"`);
+    expect(nav).not.toContain(`href="${routeUrl('security.index')}"`);
   });
 
-  it('derives the public indexable browser inventory from declarations and keeps hidden pages out', () => {
+  it('keeps the transitional public browser inventory stable until Operations retirement', () => {
     const declarations = applicationRouteRegistry.declarations as readonly ApplicationRouteDeclaration[];
     const publicIndexableBrowserPaths = declarations
       .filter((route) => (

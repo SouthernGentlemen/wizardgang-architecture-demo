@@ -19,26 +19,17 @@ import { retiredApiReferencePrefixes } from './fixtures/removed-api-pathnames';
 const applicationRoutes = applicationRouteRegistry.declarations as readonly ApplicationRouteDeclaration[];
 
 describe('architecture demo registry', () => {
-  it('derives primary navigation and architecture cards from page declarations', () => {
+  it('derives visitor navigation and architecture cards from page declarations', () => {
     const primary = primaryNavigation();
     expect(primary.map((route) => route.page?.label)).toEqual([
-      'Demos', 'Assurance', 'Operations', 'Security',
+      'Demos', 'Assurance',
     ]);
     expect(primary.every((route) => route.page?.navigation === 'primary')).toBe(true);
     expect(primary.every((route) => route.page?.parent === 'interfaces.frontend.index')).toBe(true);
     expect(primary.some((route) => route.id === 'interfaces.frontend.index')).toBe(false);
-    const expected = applicationRoutes
-      .filter((route) => (
-        route.kind === 'page'
-        && route.page?.parent
-        && route.page.architectureMap
-        && route.visibility === 'public'
-        && route.methods.includes('GET')
-        && !route.pattern.includes(':')
-      ))
-      .map((route) => route.id)
-      .sort();
-    expect(architectureMapEntries().map((route) => route.id).sort()).toEqual(expected);
+    expect(architectureMapEntries().map((route) => route.id)).toEqual([
+      'demos.index', 'assurance.index',
+    ]);
   });
 
   it('keeps operations as one page without child navigation', () => {
@@ -69,17 +60,17 @@ describe('architecture demo registry', () => {
     expect(applicationRoutes.some((route) => route.pattern.startsWith('/dashboard'))).toBe(false);
   });
 
-  it('keeps consolidated assurance and separate security as registered architecture entries', () => {
-    const assurance = architectureMapEntries().find((route) => route.pattern === routeUrl('assurance.index'));
+  it('keeps consolidated assurance and separate security as canonical registered entries', () => {
+    const assurance = applicationRoutes.find((route) => route.pattern === routeUrl('assurance.index'));
     expect(assurance?.page).toMatchObject({ label: 'Assurance', architectureMap: true });
     expect(assurance?.source.module).toBe('src/demos/assurance.ts');
-    const security = architectureMapEntries().find((route) => route.pattern === routeUrl('security.index'));
+    const security = applicationRoutes.find((route) => route.pattern === routeUrl('security.index'));
     expect(security?.page).toMatchObject({ label: 'Security', architectureMap: true });
     expect(security?.source.module).toBe('src/demos/security-page.ts');
     for (const retired of ['/git', '/governance', '/evidence', '/compliance', '/governance/concerns', '/governance/risks', '/governance/incidents']) {
-      expect(architectureMapEntries().some((route) => route.pattern === retired), retired).toBe(false);
+      expect(applicationRoutes.some((route) => route.pattern === retired), retired).toBe(false);
     }
-    expect(architectureMapEntries().some((route) => route.pattern === '/dashboard/compliance')).toBe(false);
+    expect(applicationRoutes.some((route) => route.pattern === '/dashboard/compliance')).toBe(false);
   });
 
   it('keeps derived page metadata synchronized with the machine route manifest', () => {

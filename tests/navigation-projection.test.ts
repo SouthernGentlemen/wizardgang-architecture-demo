@@ -6,7 +6,6 @@ import type { Env } from '../src/types';
 import {
   breadcrumbNavigation,
   pageContent,
-  renderIndex,
   renderPage,
   secondaryNavigationHtml,
 } from '../src/ui/page';
@@ -45,6 +44,12 @@ function navMarkup(html: string): string {
   return [...html.matchAll(/<nav\b[\s\S]*?<\/nav>/g)].map((match) => match[0]).join('\n');
 }
 
+async function publicHome(): Promise<string> {
+  const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === 'interfaces.frontend.index');
+  if (!route) throw new Error('Missing interfaces.frontend.index route');
+  return (await route.handler(new Request('https://demo.wizardgang.ai/'), { env }, {})).text();
+}
+
 describe('navigation projection', () => {
   it('projects breadcrumb chains from registered parent walks', () => {
     for (const route of publicPages) {
@@ -81,6 +86,7 @@ describe('navigation projection', () => {
         expect(registeredPageUrls.has(href), `${route.id}: ${href}`).toBe(true);
       }
     }
+    expect(primaryNavigation().map((route) => route.id)).toEqual(['demos.index', 'assurance.index']);
     expect(primaryNavigation().every((route) => !routeUrl(route.id).includes('?'))).toBe(true);
   });
 
@@ -94,21 +100,18 @@ describe('navigation projection', () => {
     expect(html).toContain('href="#risks"');
   });
 
-  it('links every indexable public destination from the homepage shell while keeping recovery hidden', async () => {
+  it('keeps the homepage focused on architecture product destinations while support surfaces stay contextual', async () => {
     const entries = architectureMapEntries();
-    const html = await renderIndex(env).text();
+    const html = await publicHome();
     const hrefs = new Set([...html.matchAll(/href="([^"]+)"/g)].map((match) => match[1]));
-    for (const route of publicPages.filter((candidate) => candidate.crawler.indexing === 'allow')) {
-      expect(hrefs.has(routeUrl(route.id)), route.id).toBe(true);
-    }
-    for (const route of publicPages.filter((candidate) => candidate.crawler.indexing === 'deny')) {
-      expect(hrefs.has(routeUrl(route.id)), route.id).toBe(false);
-    }
+    expect(entries.map((route) => route.id)).toEqual(['demos.index', 'assurance.index']);
     for (const route of entries) {
       expect(route.page?.parent, route.id).toBeTruthy();
-      expect(html, route.id).toContain(`href="${routeUrl(route.id)}"`);
+      expect(hrefs.has(routeUrl(route.id)), route.id).toBe(true);
       expect(route.page?.summary.trim(), route.id).not.toBe('');
     }
+    expect(hrefs.has(routeUrl('operations.index'))).toBe(false);
+    expect(hrefs.has(routeUrl('security.index'))).toBe(true);
     expect(html).not.toContain('data-parent-route=');
     expect(html).not.toContain(`${entries.length} live destinations`);
   });
@@ -119,7 +122,7 @@ describe('navigation projection', () => {
     expect(navigationStyles).toMatch(/\.breadcrumb a\s*\{[\s\S]*?min-height:\s*44px/);
     expect(navigationStyles).toMatch(/\.secondary-navigation,[\s\S]*?overflow-x:\s*auto/);
     expect(navigationStyles).toContain('.secondary-navigation a::after');
-    expect(navigationStyles).toContain("border-radius: 999px"); // Related navigation retains its compact pill affordance.
+    expect(navigationStyles).toContain("border-radius: 999px");
     expect(navigationStyles).toMatch(/\.secondary-navigation a\s*\{[\s\S]*?text-transform:\s*uppercase/);
     expect(styles).toContain('.lab-grid > * { min-width: 0; }');
     expect(navigationStyles).toMatch(/body\[data-route-id\^='platform\.'\] main\.site-main/);

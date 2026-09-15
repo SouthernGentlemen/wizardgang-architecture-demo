@@ -245,21 +245,23 @@ describe('public route contract', () => {
     expect(html).not.toContain('This button calls the live Worker interface below');
   });
 
-  it('keeps a compact three-action launcher on the index and links the canonical operations surface', async () => {
+  it('keeps the demo-first launcher while Operations remains a canonical surface', async () => {
     const environment = env();
     const index = await (await routeRequest(new Request('https://demo.wizardgang.ai/'), environment)).text();
     expect(index).not.toContain('<h2 class="eyebrow">Routes</h2>');
     expect(index).not.toContain('<h2 class="eyebrow">Groups</h2>');
-    expect(index).toContain('<section class="grid home-actions"');
-    expect(index).toContain('<h2>Run it</h2>');
-    expect(index).toContain('<h2>Verify it</h2>');
-    expect(index).toContain('<h2>Observe it</h2>');
-    expect(index).not.toContain('<section class="status-strip"');
+    expect(index).toContain('<div class="link-row home-actions"');
+    expect(index).toContain('>Explore demos</a>');
+    expect(index).toContain('>View assurance</a>');
+    expect(index).toContain('aria-label="Live proof"');
+    expect(index).toContain('Current service state');
+    expect(index).toContain('Scheduled observations');
     expect(index).not.toContain('data-health');
     expect(index).toContain('<meta property="og:image" content="https://demo.wizardgang.ai/assets/og.png">');
     expect(index).toContain('href="/demos"');
     expect(index).toContain('href="/assurance"');
-    expect(index).toContain('href="/operations">Operations</a>');
+    expect(index).not.toContain('href="/operations"');
+    expect(index).toContain('href="/security"');
     expect(index).not.toContain('href="/dashboard');
     expect(index).not.toContain('>Map</a>');
     expect(index).not.toContain('>Docs</a>');

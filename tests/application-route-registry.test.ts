@@ -65,29 +65,19 @@ function noDatabaseEnv(): Env {
 }
 
 describe('complete declarative application routing', () => {
-  it('derives global navigation and the architecture map from page declarations', () => {
+  it('derives visitor navigation and architecture projection from page declarations', () => {
     expect(primaryNavigation().map((route) => route.id)).toEqual([
       'demos.index',
       'assurance.index',
-      'operations.index',
-      'security.index',
     ]);
     expect(primaryNavigation().map((route) => route.page?.label)).toEqual([
-      'Demos', 'Assurance', 'Operations', 'Security',
+      'Demos', 'Assurance',
     ]);
     expect(primaryNavigation().some((route) => route.id === 'interfaces.frontend.index')).toBe(false);
-    const expectedArchitectureRoutes = applicationRouteRegistry.declarations
-      .filter((route) => (
-        route.kind === 'page'
-        && route.page?.parent
-        && route.page.architectureMap
-        && route.visibility === 'public'
-        && route.methods.includes('GET')
-        && !route.pattern.includes(':')
-      ))
-      .map((route) => route.id)
-      .sort();
-    expect(architectureMapEntries().map((route) => route.id).sort()).toEqual(expectedArchitectureRoutes);
+    expect(architectureMapEntries().map((route) => route.id)).toEqual([
+      'demos.index',
+      'assurance.index',
+    ]);
     expect(secondaryNavigation('interfaces.frontend.index')).toEqual([]);
     expect(secondaryNavigation('demos.index')).toEqual([]);
     expect(secondaryNavigation('assurance.index')).toEqual([]);

@@ -13,6 +13,7 @@ export interface RegisteredRouteMetadataView {
 }
 
 let registeredRoutes: readonly RegisteredRouteMetadataView[] = Object.freeze([]);
+const MVP_PRODUCT_ROUTE_IDS = new Set(['demos.index', 'assurance.index']);
 
 export function configureRegisteredRoutes(routes: readonly RegisteredRouteMetadataView[]): void {
   registeredRoutes = Object.freeze([...routes]);
@@ -33,7 +34,8 @@ export function primaryNavigation(): RegisteredRouteMetadataView[] {
   if (!root) return [];
   return registeredPages()
     .filter((route) => (
-      route.page?.navigation === 'primary'
+      MVP_PRODUCT_ROUTE_IDS.has(route.id)
+      && route.page?.navigation === 'primary'
       && route.page.parent === root.id
       && route.visibility === 'public'
       && route.methods.includes('GET')
@@ -45,11 +47,12 @@ export function secondaryNavigation(parentRouteId: string): RegisteredRouteMetad
     .filter((route) => route.page?.navigation === 'secondary' && route.page.parent === parentRouteId);
 }
 
-/** Project every public, stable child page carrying architecture-map metadata. */
+/** Project only the visitor-facing MVP product destinations into the homepage architecture map. */
 export function architectureMapEntries(): RegisteredRouteMetadataView[] {
   return registeredPages()
     .filter((route) => (
-      route.visibility === 'public'
+      MVP_PRODUCT_ROUTE_IDS.has(route.id)
+      && route.visibility === 'public'
       && route.methods.includes('GET')
       && Boolean(route.page?.parent)
       && route.page?.architectureMap === true

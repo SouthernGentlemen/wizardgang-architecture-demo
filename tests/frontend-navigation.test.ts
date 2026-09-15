@@ -19,21 +19,19 @@ function currentPageCount(html: string): number {
 }
 
 describe('derived frontend navigation', () => {
-  it('renders the consolidated public domains in the primary header', async () => {
+  it('renders only the primary MVP product destinations in the header', async () => {
     const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === 'demos.index');
     if (!route) throw new Error('Missing demos.index route');
     const html = await (await route.handler(new Request('https://demo.wizardgang.ai/demos'), { env }, {})).text();
     const primary = html.match(/<nav class="nav"[^>]*>([\s\S]*?)<\/nav>/)?.[0] ?? '';
     expect(primary).not.toBe('');
-    for (const label of ['Demos', 'Assurance', 'Operations', 'Security']) {
+    for (const label of ['Demos', 'Assurance']) {
       expect(primary).toContain(`>${label}</a>`);
     }
-    for (const label of ['Architecture', 'Platform', 'Interfaces']) {
+    for (const label of ['Architecture', 'Platform', 'Interfaces', 'Operations', 'Security']) {
       expect(primary).not.toContain(`>${label}</a>`);
     }
-    for (const label of ['Demos', 'Assurance', 'Operations', 'Security']) {
-      expect(html).toContain(`>${label}</a>`);
-    }
+    expect(html).toContain('>Source <span aria-hidden="true">↗</span></a>');
   });
 
   it('marks Demos as the current task on /demos#d1', async () => {
