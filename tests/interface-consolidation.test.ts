@@ -42,7 +42,7 @@ async function presentationHtml(id: string, query = ''): Promise<string> {
 }
 
 describe('canonical interface demonstrations', () => {
-  it('server-renders lightweight disclosures and loads each interface presentation independently', async () => {
+  it('server-renders lightweight workbench navigation and loads each interface presentation independently', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/demos#rest', { headers: { accept: 'text/html' } }), environment);
     const html = await response.text();
     expect(response.status).toBe(200);
@@ -51,8 +51,9 @@ describe('canonical interface demonstrations', () => {
     expect(html).toContain('class="skip-link" href="#main"');
     expect(html).toContain('<main class="site-main" id="main">');
     expect(html.match(/<h1\b/g)).toHaveLength(1);
+    expect(html.match(/data-demo-workbench(?:\s|>)/g)).toHaveLength(1);
     for (const page of pages) {
-      expect(html, page.view).toContain(`class="demo-disclosure" id="${page.view}"`);
+      expect(html, page.view).toContain(`href="#${page.view}"`);
       expect(html, page.view).not.toContain(page.marker);
       expect(await presentationHtml(page.view), page.view).toContain(page.marker);
     }

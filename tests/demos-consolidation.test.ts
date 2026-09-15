@@ -48,25 +48,27 @@ describe('consolidated architecture demos', () => {
     expect(declarations.some((route) => route.pattern === '/webhooks/github' && route.kind === 'protocol')).toBe(true);
   });
 
-  it('publishes the stable fragment disclosures and hash-only reveal enhancement', () => {
+  it('publishes the stable fragment-driven workbench selection contract', () => {
     const source = readFileSync('src/demos/demos-page.ts', 'utf8');
     for (const fragment of fragments) expect(source).toContain(`id: '${fragment}'`);
-    expect(source).toContain('name="architecture-demo"');
-    expect(source).toContain("window.addEventListener('hashchange', revealHashDemo)");
-    expect(source).toContain('target.open = true');
-    expect(source).toContain('summary.focus({ preventScroll: true })');
-    expect(source).not.toContain('history.pushState');
-    expect(source).not.toContain('history.replaceState');
+    expect(source).toContain("const DEFAULT_DEMO_ID = 'd1'");
+    expect(source).toContain("window.addEventListener('hashchange', () => applySelection(true))");
+    expect(source).toContain("window.addEventListener('popstate', () => applySelection(true))");
+    expect(source).toContain("history.pushState(null, '', nextHash)");
+    expect(source).toContain("section.dispatchEvent(new CustomEvent('demo:deactivate'))");
+    expect(source).not.toContain('name="architecture-demo"');
+    expect(source).not.toContain('target.open = true');
   });
 
-  it('keeps presentations out of the initial document and exposes one registered lazy fragment at a time', async () => {
+  it('keeps presentations out of the initial document and exposes one registered lazy workbench mount', async () => {
     const page = await routeRequest(new Request('https://demo.wizardgang.ai/demos', { headers: { accept: 'text/html' } }), env);
     const html = await page.text();
     expect(page.status).toBe(200);
     expect(html).not.toContain('/api/labs/edge');
     expect(html).not.toContain('/auth/session');
-    expect(html).toContain('data-demo-panel');
-    expect(html).toContain("section.dispatchEvent(new CustomEvent('demo:deactivate'))");
+    expect((html.match(/<div class="demo-panel" data-demo-panel>/g) ?? [])).toHaveLength(1);
+    expect((html.match(/<section id="demo-workbench" class="demo-workbench" data-demo-workbench/g) ?? [])).toHaveLength(1);
+    expect(html).not.toContain('<details class="demo-disclosure"');
 
     const edge = await routeRequest(new Request('https://demo.wizardgang.ai/api/demos/edge', { headers: { accept: 'text/html' } }), env);
     expect(edge.status).toBe(200);
