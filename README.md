@@ -3,70 +3,70 @@
 Public, executable companion to **WG-ARCH-001 — WizardGang Systems Architecture**.
 
 Target site: `https://demo.wizardgang.ai`  
-Intended public repository: `SouthernGentlemen/wizardgang-architecture-demo`
+Public repository: `SouthernGentlemen/wizardgang-architecture-demo`
 
-The canonical standard is [`docs/ARCHITECTURE-STANDARD.md`](docs/ARCHITECTURE-STANDARD.md). This repository intentionally contains no PDFs. All registered architecture routes have working implementations; external production deployment and identity-provider credentials remain environment-specific steps.
+The canonical architecture standard is [`docs/ARCHITECTURE-STANDARD.md`](docs/ARCHITECTURE-STANDARD.md). This repository intentionally keeps architecture and operational documentation in reviewable Markdown/text rather than PDFs.
 
-## Architecture laboratory
+## Public surface
 
-The server-rendered application hierarchy is declared once in the route registry. Each user-facing conceptual destination has one stable route ID and one canonical pathname, while navigation, breadcrumbs, the homepage architecture map, sitemap membership, canonical links, and route documentation are projections of the same declarations.
+The ordinary browser experience is intentionally small:
 
-Query parameters are reserved for interaction state such as filters, search, sorting, pagination, locale, accessibility mode, or request deep links. They do not select the primary resource. Retired resource-selection query forms and retired aliases remain ordinary unknown routes.
+- `/` — project orientation and compact live proof;
+- `/demos` — executable architecture demonstrations;
+- `/assurance` — four bounded engineering-assurance checks;
+- `/security` — contextual vulnerability-reporting and advisory boundary.
 
-The demonstration is organized into Platform, Interfaces, Assurance, Operations, and Security domains. Browser presentations and machine protocols remain separate contracts even when they demonstrate the same capability.
+`/admin` is a protected operational page and `/offline` is the recovery page. The former human `/operations` page is retired and returns the ordinary 404. Operational machine APIs, scheduled availability collection, 365-day retention, bounded logs, provider observations, and protected controls remain independent contracts.
 
-Do not maintain a route list in this README. The current human-readable and machine-readable inventories are generated in [`docs/ROUTES.md`](docs/ROUTES.md) and [`docs/route-manifest.json`](docs/route-manifest.json). The frontend model and replacement invariants are documented in [`docs/FRONTEND-ROUTES.md`](docs/FRONTEND-ROUTES.md).
+The server-rendered application hierarchy is declared once in the route registry. Navigation, sitemap membership, canonical links, page metadata, and generated route documentation are projections of those declarations. Do not maintain a second route list in this README. The current inventories are generated in [`docs/ROUTES.md`](docs/ROUTES.md) and [`docs/route-manifest.json`](docs/route-manifest.json); the permanent browser contract is [`docs/FRONTEND-ROUTES.md`](docs/FRONTEND-ROUTES.md).
+
+## Demonstrated architecture
+
+`/demos` groups the live demonstrations around visitor tasks rather than implementation inventory:
+
+- Data — D1 and R2;
+- APIs — REST/OpenAPI and GraphQL;
+- Integrations — signed webhooks;
+- Identity — OAuth/OIDC/SAML behavior;
+- AI / MCP — MCP endpoint, tools, executable proof, and connection guidance;
+- supporting runtime proof — Edge, Workers, and Durable Objects;
+- supporting quality proof — accessibility and internationalization.
+
+Browser presentation and machine/protocol contracts remain separate. REST, OpenAPI, GraphQL, MCP, identity callbacks, webhooks, reporting, laboratory, operational, crawler, admin, and recovery routes keep their own declarations and policies.
 
 Core invariants:
 
-- Shared relational state uses `DEMO_DB` -> `demo-blob`.
-- R2 content stays in R2; D1 stores metadata/references only.
-- Coordinated counter state stays in a Durable Object; D1 stores audit evidence only.
-- Workers mediate application state and integrations.
-- Public REST, GraphQL, and MCP reads share one authorization boundary; identity sessions produce short-lived bearer tokens whose REST writes are limited to server-derived visitor sandboxes.
-- Secrets, credentials, private account metadata, and real billing/payment data never belong in Git or public logs.
+- shared relational state uses `DEMO_DB` / `demo-blob`;
+- R2 stores object bytes while D1 stores metadata/references;
+- Durable Objects own coordinated state and D1 stores audit evidence where applicable;
+- Workers mediate application state and integrations;
+- public REST, GraphQL, and MCP reads share an explicit authorization boundary;
+- secrets, credentials, private account metadata, and real billing/payment data never belong in Git or public logs;
 - WCAG 2.2, ISO/IEC 27001, and ISO/IEC 42001 references mean **aligned — uncertified**.
 
-## Interface
+## Assurance
 
-The demo uses the `wizardgang.ai` design tokens: dark by default, with a light theme the reader can toggle and the browser remembers. Every HTML surface carries a skip link and shared page chrome.
+`/assurance` is a focused verification surface for:
 
-There is no client-side router. Browser navigation resolves registered route IDs through the server-side routing contract; client scripts may enhance controls and maintain true interaction state, but they do not emulate application routing.
+1. security controls;
+2. the AI/MCP boundary;
+3. traceability and evidence;
+4. accessibility posture.
 
-Protocol endpoints, browser consoles, identity callbacks, reporting APIs, laboratory APIs, and operational APIs keep independent declarations and policies. Their current concrete locations are published by the generated route artifacts and OpenAPI.
+Canonical risks, incidents, exercises, governance records, objectives, framework records, and other management-system data remain available through their governed structured sources and reporting contracts without being projected as ordinary public navigation. See [`docs/ASSURANCE.md`](docs/ASSURANCE.md) and [`docs/ASSURANCE-API.md`](docs/ASSURANCE-API.md).
 
-## Operations and admin
+## Operations and administration
 
-The operations domain combines browser presentations with separately declared health, release-identity, public-safe logging, usage, reporting, synthetic budget, administration, crawler-control, and offline-recovery contracts.
+The homepage exposes only compact visitor-facing operational proof: current service/dependency state, measured scheduled availability, and running release/source identity. Detailed operational data remains behind machine contracts such as `/api/operations/*` and the reporting layer rather than a public dashboard.
 
-Availability while intentionally offline is declared per route rather than protected by a hardcoded pathname list. Ordinary gated API traffic returns structured `503` responses while ordinary gated browser navigation uses the registered offline experience.
-
-The protected administration surface can control demonstration availability and ChatGPT web access. Crawler policy is backed by D1 and the dynamic robots response. `GPTBot` remains blocked regardless of the user-facing search/fetch control; the control never opts the demo into foundation-model training.
-
-## Shared D1 backend
-
-The numbered migrations establish:
-
-- `demo_events` — common audit/evidence stream;
-- `demo_records` — versioned REST/GraphQL/MCP demonstration records;
-- `service_health_checks` — timestamped availability history;
-- `usage_snapshots` and normalized provider observation tables required by current contracts;
-- `demo_control` and `crawler_control` — availability and crawler-control state;
-- `application_logs` — bounded public-safe diagnostics;
-- `r2_object_metadata` — relational references to real R2 objects;
-- `webhook_receipts` and `webhook_events` — signed-delivery evidence and replay protection;
-- visitor-scoped D1 demo state for users, tasks, records, and reset behavior;
-- identity session and SAML correlation/replay state.
-
-Machine contracts for OpenAPI, GraphQL, MCP, webhooks, and SAML service-provider metadata are versioned beside their implementations.
+Availability while intentionally offline is declared per route. Gated API traffic returns structured `503` responses; browser demo navigation uses the registered recovery experience. `/admin` controls demonstration availability and crawler-access state under its authentication boundary.
 
 ## Local setup
 
 1. Run `npm ci` using the committed lock file.
-2. The committed D1 identifier targets the public `demo-blob`; local mode still uses isolated Wrangler state.
-3. Copy `.dev.vars.example` to ignored `.dev.vars` and replace every local placeholder.
-4. Apply migrations with `npm run validate:migrations`.
-5. Run `npm run dev`.
+2. Copy `.dev.vars.example` to ignored `.dev.vars` and replace local placeholders.
+3. Run `npm run validate:migrations`.
+4. Run `npm run dev`.
 
 Validation:
 
@@ -79,25 +79,20 @@ npm run build
 git diff --check
 ```
 
-CI repeats the required validation controls. Delivery reporting queries GitHub's native workflow runs, attempts, and artifacts through the canonical reporting layer; no workflow creates a reporting branch or stores a second report shape.
-
 ## Delivery
 
 Commit pattern: `[DEMO-NNN] [TYPE] Imperative description`.
 
-Primary types: `INIT`, `FEAT`, `FIX`, `SEC`, `API`, `A11Y`, `I18N`, `AI`, `DB`, `OPS`, `TEST`, `DOCS`, `REFACTOR`, `PERF`, `BUILD`, `REVERT`, `CHORE`.
-
-`main` is the accepted production baseline. Changes flow through isolated branches, pull requests, automated validation, review, annotated semantic tags, GitHub Releases, and tag-only deployment. Production requires real Cloudflare resource identifiers, managed Worker secrets, the custom domain, and preferably Cloudflare Access in front of protected administration.
-
-See [`docs/CHANGE-MANAGEMENT.md`](docs/CHANGE-MANAGEMENT.md), [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md), and [`docs/RELEASE.md`](docs/RELEASE.md).
+`main` is the accepted production baseline. Changes flow through isolated branches, pull requests, automated validation, review, annotated semantic tags, GitHub Releases, and exact-tag deployment. See [`docs/CHANGE-MANAGEMENT.md`](docs/CHANGE-MANAGEMENT.md) and [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md).
 
 ## Start here
 
 - [`docs/ARCHITECTURE-STANDARD.md`](docs/ARCHITECTURE-STANDARD.md) — governing architecture.
-- [`docs/FRONTEND-ROUTES.md`](docs/FRONTEND-ROUTES.md) — registry-derived frontend model and query-state policy.
-- [`docs/OPERATIONS.md`](docs/OPERATIONS.md) — operations, health, logs, usage/cost, admin, and offline behavior.
-- [`docs/CHANGE-MANAGEMENT.md`](docs/CHANGE-MANAGEMENT.md) — permanent change IDs, commit records, and risk controls.
-- [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md) — reproducible releases, annotated tags, and rollback records.
-- [`docs/ROUTES.md`](docs/ROUTES.md) — generated routes mapped to implementation source.
-- [`docs/IMPLEMENTATION-PLAN.md`](docs/IMPLEMENTATION-PLAN.md) — implementation status and external prerequisites.
-- [`docs/INTERACTIVE-DEMO-SPEC.md`](docs/INTERACTIVE-DEMO-SPEC.md) — current browser, protocol, reporting, and security interaction contract.
+- [`docs/FRONTEND-ROUTES.md`](docs/FRONTEND-ROUTES.md) — browser information architecture and retirement rules.
+- [`docs/ASSURANCE.md`](docs/ASSURANCE.md) — canonical assurance model and publication boundary.
+- [`docs/OPERATIONS.md`](docs/OPERATIONS.md) — operational machine contracts, retention, admin, and recovery behavior.
+- [`docs/IDENTITY.md`](docs/IDENTITY.md) — identity and authorization model.
+- [`docs/REPORTING.md`](docs/REPORTING.md) — canonical reporting architecture.
+- [`docs/CHANGE-MANAGEMENT.md`](docs/CHANGE-MANAGEMENT.md) — controlled change identity and history.
+- [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md) — reproducible releases, deployment, and rollback.
+- [`docs/ROUTES.md`](docs/ROUTES.md) — generated route-to-source projection.
