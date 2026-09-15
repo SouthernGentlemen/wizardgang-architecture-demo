@@ -124,13 +124,14 @@ describe('internationalized interface', () => {
     expect(localeNormalizationRedirect(request)).toBe('https://demo.example/interfaces/i18n?count=7');
   });
 
-  it('keeps six synchronized resources while language changes use ordinary server navigation', async () => {
+  it('keeps six synchronized resources while the demonstration defers language changes to the global control', async () => {
     const context = localized('https://demo.example/interfaces/i18n?lang=ja&count=7');
     const html = await renderPage(context.env, i18nContent(context.request, context.env)).text();
     expect(html).toContain('<html lang="ja" dir="ltr">');
-    expect(html).toContain('href="/demos?count=7&amp;lang=fr#i18n"');
-    expect(html).toContain('href="/demos?count=7&amp;lang=de#i18n"');
-    expect(html).toContain('aria-current="page">日本語</a>');
+    expect(html).toContain('<input type="hidden" name="lang" value="ja">');
+    expect(html).toContain('Use the language control in the global header');
+    expect(html).not.toContain('id="locale-demo"');
+    expect(html).toContain('data-inspect-target="Intl.NumberFormat.currency"');
     expect(html).toContain('グローバルコンテキスト検査');
     expect(html).toContain('items_other');
     expect(html).not.toContain('history.replaceState');

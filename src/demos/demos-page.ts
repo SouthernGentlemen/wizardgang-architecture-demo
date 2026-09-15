@@ -51,7 +51,7 @@ function demoHref(id: string): string {
 }
 
 const pageStyles = `<style>
-.demo-selector{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0 1.5rem}.demo-selector a{display:inline-flex;align-items:center;min-height:2.5rem;padding:.4rem .7rem;border:1px solid var(--line);border-radius:999px;text-decoration:none}.demo-selector a[aria-current="location"]{border-color:var(--acid);background:var(--panel-2);color:var(--paper)}.demo-list{display:grid;gap:.75rem}.demo-disclosure{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}.demo-disclosure>summary{cursor:pointer;display:grid;gap:.2rem;padding:1rem;list-style-position:inside}.demo-disclosure>summary strong{font-size:1.05rem}.demo-disclosure>summary span:last-child{color:var(--muted)}.demo-disclosure[open]>summary{border-bottom:1px solid var(--line)}.demo-panel{padding:1rem}.demo-panel-state{margin:0;color:var(--muted)}.demo-disclosure:target{scroll-margin-top:1rem}
+.demo-selector{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:1rem 0 1.5rem}.demo-selector-group{display:grid;align-content:start;gap:.5rem}.demo-selector-group>strong{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.demo-selector-links{display:flex;flex-wrap:wrap;gap:.5rem}.demo-selector a{display:inline-flex;align-items:center;min-height:2.5rem;padding:.4rem .7rem;border:1px solid var(--line);border-radius:999px;text-decoration:none}.demo-selector a[aria-current="location"]{border-color:var(--acid);background:var(--panel-2);color:var(--paper)}.demo-list{display:grid;gap:.75rem}.demo-disclosure{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}.demo-disclosure>summary{cursor:pointer;display:grid;gap:.2rem;padding:1rem;list-style-position:inside}.demo-disclosure>summary strong{font-size:1.05rem}.demo-disclosure>summary span:last-child{color:var(--muted)}.demo-disclosure[open]>summary{border-bottom:1px solid var(--line)}.demo-panel{padding:1rem}.demo-panel-state{margin:0;color:var(--muted)}.demo-disclosure:target{scroll-margin-top:1rem}@media(max-width:760px){.demo-selector{grid-template-columns:1fr}}
 </style>`;
 
 function fragmentScript(): string {
@@ -160,7 +160,8 @@ function fragmentScript(): string {
 
 export async function demosContent(request: Request, env: Env): Promise<PageContent> {
   const canonicalPath = routeUrl(ROUTE_ID);
-  const selector = `<nav class="demo-selector" aria-label="Choose an architecture demonstration">${demonstrations.map((demo) => `<a href="#${escapeHtml(demo.id)}" data-demo-link="${escapeHtml(demo.id)}">${escapeHtml(demo.label)}</a>`).join('')}</nav>`;
+  const groups = ['Cloudflare', 'Interfaces', 'Experience'];
+  const selector = `<nav class="demo-selector" aria-label="Choose an architecture demonstration">${groups.map((group) => `<section class="demo-selector-group" aria-labelledby="demo-group-${group.toLowerCase()}"><strong id="demo-group-${group.toLowerCase()}">${group}</strong><div class="demo-selector-links">${demonstrations.filter((demo) => demo.group === group).map((demo) => `<a href="#${escapeHtml(demo.id)}" data-demo-link="${escapeHtml(demo.id)}">${escapeHtml(demo.label)}</a>`).join('')}</div></section>`).join('')}</nav>`;
   const disclosures = demonstrations.map((demo) => `<details class="demo-disclosure" id="${escapeHtml(demo.id)}" name="architecture-demo" data-architecture-demo>
     <summary><span class="eyebrow">${escapeHtml(demo.group)}</span><strong>${escapeHtml(demo.label)}</strong><span>${escapeHtml(demo.summary)}</span></summary>
     <div class="demo-panel" data-demo-panel><p class="demo-panel-state">Open this demonstration to initialize it.</p></div>
@@ -170,8 +171,7 @@ export async function demosContent(request: Request, env: Env): Promise<PageCont
     <p class="lede">Choose one demonstration, inspect the live behavior, and follow the evidence without navigating a technology-shaped page hierarchy.</p>
     ${selector}
   </section>
-  <section aria-labelledby="demo-list-heading">
-    <div class="section-head"><h2 id="demo-list-heading">Demonstrations</h2><span>${demonstrations.length} stable fragments</span></div>
+  <section aria-label="${demonstrations.length} architecture demonstrations">
     <div class="demo-list">${disclosures}</div>
   </section>
   ${fragmentScript()}`;

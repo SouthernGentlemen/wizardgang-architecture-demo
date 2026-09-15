@@ -20,6 +20,7 @@ export function graphqlContent(env: Env): PageContent {
   <p class="lede">Run readable queries against a typed user directory. The examples and first-party query runner below call the live machine endpoint directly.</p>
 </section>
 <section class="graphql-examples" aria-labelledby="graphql-examples-heading"><div class="section-head"><h2 id="graphql-examples-heading">Working examples</h2><span>Public queries · JSON responses</span></div><div class="graphql-example-grid">${examplesMarkup}</div></section>
+<details class="panel graphql-fields"><summary><strong>Available fields</strong><span>Compact schema guide</span></summary><div class="graphql-field-grid"><div><h3>Query</h3><code>users: [User!]!</code><code>user(id: ID!): User</code></div><div><h3>User</h3><code>id: ID!</code><code>name: String!</code><code>email: String!</code><code>role: String!</code></div><div><h3>Mutation</h3><code>createUser</code><code>updateUser</code><code>deleteUser</code><small>Authenticated session required</small></div></div></details>
 <!-- The previous embedded GraphiQL surface used srcdoc=; DEMO-237 removes that public interaction in favor of the first-party runner below. -->
 <section class="graphql-workspace panel" aria-labelledby="graphql-runner-heading">
   <div class="graphql-workspace-heading"><div><p class="eyebrow">First-party interface</p><h2 id="graphql-runner-heading">Accessible query runner</h2></div><p>Queries are public. <a href="${escapeHtml(identityUrl)}">Sign in for mutation access</a> through the shared application policy.</p></div>
@@ -41,16 +42,20 @@ export function graphqlContent(env: Env): PageContent {
     status.textContent = 'Running query…';
     if (output.hasAttribute('hidden')) output.hidden = false;
     output.textContent = 'Waiting for response…';
+    const started = performance.now();
     try {
       const response = await fetch('/graphql', { method: 'POST', headers: { 'content-type': 'application/json', accept: 'application/json' }, body: JSON.stringify({ query }) });
       const text = await response.text();
       let formatted = text || '(empty response)';
-      try { formatted = JSON.stringify(JSON.parse(text), null, 2); } catch {}
+      let payload;
+      try { payload = JSON.parse(text); formatted = JSON.stringify(payload, null, 2); } catch {}
       output.textContent = formatted;
-      status.textContent = response.ok ? 'Query complete. Response is available below.' : 'Query completed with an error response. Review the response below.';
+      const duration = (performance.now() - started).toFixed(0) + ' ms';
+      const graphQlErrors = Array.isArray(payload?.errors) ? payload.errors.length : 0;
+      status.textContent = 'HTTP ' + response.status + ' · ' + duration + (graphQlErrors ? ' · ' + graphQlErrors + ' GraphQL error' + (graphQlErrors === 1 ? '' : 's') : response.ok ? ' · Query complete' : ' · Error response');
     } catch (error) {
       output.textContent = String(error);
-      status.textContent = 'Query failed. Review the error below.';
+      status.textContent = 'Network failure · ' + (performance.now() - started).toFixed(0) + ' ms. Review the error below.';
     } finally {
       if (trigger) trigger.disabled = false;
     }

@@ -76,7 +76,7 @@ describe('canonical interface demonstrations', () => {
     expect(graphql).not.toContain('Application interfaces');
 
     const webhooks = await presentationHtml('webhooks');
-    expect(webhooks).toContain('Pull the latest release');
+    expect(webhooks).toContain('Simulate a signed release webhook');
     expect(webhooks).toContain('release.published');
     expect(webhooks).not.toContain('HMAC-SHA256');
     expect(webhooks).not.toContain('Event contract');

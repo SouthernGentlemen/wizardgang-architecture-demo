@@ -35,6 +35,7 @@ export function r2Content(env: Env): PageContent {
           <p class="operation-status" role="status" aria-live="polite" data-operation-status>Select one file to begin.</p>
         </div>
       </form>
+      <ol class="r2-upload-evidence" data-upload-evidence aria-label="Upload path evidence" hidden></ol>
     </div>
 
     <div class="r2-files-heading">
@@ -102,6 +103,18 @@ export function r2Content(env: Env): PageContent {
   const setStatus = (message, tone = '') => {
     status.textContent = message;
     if (tone) status.dataset.tone = tone; else delete status.dataset.tone;
+  };
+  const showUploadEvidence = (uploaded, visible) => {
+    const evidence = q('[data-upload-evidence]');
+    const stages = [
+      ['Browser uploaded file', uploaded.displayName],
+      ['Worker accepted size', size(uploaded.sizeBytes)],
+      ['R2 object stored under key', uploaded.key],
+      ['Metadata returned', uploaded.contentType + ' · ' + new Date(uploaded.updatedAt).toLocaleString()],
+      ['File appeared in visitor inventory', visible ? 'Confirmed in current list' : 'Inventory refresh pending'],
+    ];
+    evidence.innerHTML = stages.map(([label, detail], index) => '<li><span>' + (index + 1) + '</span><div><strong>' + escape(label) + '</strong><small>' + escape(detail) + '</small></div></li>').join('');
+    evidence.hidden = false;
   };
   const ownFiles = () => state.files.filter((file) => file.canDelete);
   const selectionError = () => {
@@ -268,10 +281,12 @@ export function r2Content(env: Env): PageContent {
     uploadButton.textContent = 'Uploading…';
     setStatus('Uploading ' + file.name + '…');
     try {
-      await call('/api/labs/r2-files', {method:'POST', body}, 'PUT');
+      const payload = await call('/api/labs/r2-files', {method:'POST', body}, 'PUT');
+      const uploaded = payload.result.file;
       state.selectedFile = null;
       fileInput.value = '';
       await load(false);
+      showUploadEvidence(uploaded, state.files.some((item) => item.id === uploaded.id));
       setStatus(file.name + ' uploaded successfully.', 'success');
     } catch (error) {
       setStatus(friendlyError(error, 'Upload failed — try again.'), 'error');

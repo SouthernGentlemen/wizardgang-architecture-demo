@@ -148,7 +148,7 @@ describe('DEMO-236 sitewide localization acceptance', () => {
     }
   });
 
-  it('preserves query state and explicit locale targets without duplicate or encoded locale parameters', async () => {
+  it('preserves query state while keeping one global language control', async () => {
     const i18nUrl = new URL(`${routeUrl('demos.index')}#i18n`, 'https://demo.wizardgang.ai');
     i18nUrl.searchParams.set('lang', 'ja');
     i18nUrl.searchParams.set('count', '7');
@@ -159,9 +159,9 @@ describe('DEMO-236 sitewide localization acceptance', () => {
     expect(presentationResponse.status).toBe(200);
     const presentation = await presentationResponse.text();
 
-    expect(presentation).toContain('href="/demos?count=7&amp;lang=fr#i18n"');
-    expect(presentation).toContain('href="/demos?count=7&amp;lang=de#i18n"');
-    expect(presentation).toContain('aria-current="page">日本語</a>');
+    expect(presentation).toContain('<input type="hidden" name="lang" value="ja">');
+    expect(presentation).toContain('Use the language control in the global header');
+    expect(presentation).not.toContain('id="locale-demo"');
     expect(html).toContain('<input type="hidden" name="count" value="7">');
     expect(html + presentation).not.toContain('&amp%3B');
     expect(html + presentation).not.toContain('lang=fr&amp;lang=ja');

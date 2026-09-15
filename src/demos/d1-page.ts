@@ -75,7 +75,7 @@ export function d1Content(env: Env): PageContent {
 </section>
 
 <section class="panel d1-sandbox" aria-labelledby="sandbox-heading">
-  <div><p class="eyebrow">Sandbox</p><h2 id="sandbox-heading">Changes stay in this browser</h2><p class="subtle">Reset restores three fictional users and four related tasks.</p></div>
+  <div><p class="eyebrow">Sandbox</p><h2 id="sandbox-heading">Your isolated D1 sandbox</h2><p class="subtle">These rows are persisted server-side in D1 and isolated to this visitor sandbox. Reset restores three fictional users and four related tasks.</p></div>
   <button type="button" data-reset>Reset sample data</button>
 </section>
 
@@ -304,9 +304,9 @@ export function d1Content(env: Env): PageContent {
       if (!item) { setDatabaseMessage('That row no longer exists.', 'error'); return; }
       if (deleteResource === 'users') {
         const assigned = state.tasks.filter((task) => task.assigneeId === id).length;
-        openDialog({ type: 'delete', resource: deleteResource, id }, 'Delete ' + item.name + '?', assigned + ' assigned ' + (assigned === 1 ? 'task will' : 'tasks will') + ' become Unassigned.', 'Delete user');
+        openDialog({ type: 'delete', resource: deleteResource, id, assigned }, 'Delete ' + item.name + '?', assigned + ' assigned ' + (assigned === 1 ? 'task will' : 'tasks will') + ' become Unassigned.', 'Delete user');
       } else {
-        openDialog({ type: 'delete', resource: deleteResource, id }, 'Delete this task?', '“' + item.title + '” will be removed from this browser sandbox.', 'Delete task');
+        openDialog({ type: 'delete', resource: deleteResource, id }, 'Delete this task?', '“' + item.title + '” will be removed from this visitor sandbox.', 'Delete task');
       }
     }
   });
@@ -327,7 +327,9 @@ export function d1Content(env: Env): PageContent {
         await request('/api/labs/d1-' + pending.resource + '/' + encodeURIComponent(pending.id), { method: 'DELETE' });
         closeForm(pending.resource);
         await loadAll();
-        setDatabaseMessage((pending.resource === 'users' ? 'User' : 'Task') + ' deleted.', 'success');
+        setDatabaseMessage(pending.resource === 'users'
+          ? 'User deleted. ' + pending.assigned + ' related ' + (pending.assigned === 1 ? 'task became' : 'tasks became') + ' Unassigned.'
+          : 'Task deleted.', 'success');
       }
     } catch (error) {
       setDatabaseMessage(error.message, 'error');
