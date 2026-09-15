@@ -132,7 +132,7 @@ const globalOperationalRoutes = [
     authentication: { mode: 'required', provider: 'admin-basic' }, authorization: { mode: 'policy', policy: 'admin' },
     sameOrigin: { mode: 'required', methods: ['POST'] },
     page: {
-      parent: 'operations.index',
+      parent: 'interfaces.frontend.index',
       label: 'Demo administration',
       summary: 'Protected control surface for demo availability and ChatGPT fetch policy.',
       order: 0,
@@ -149,7 +149,7 @@ const globalOperationalRoutes = [
     title: 'Offline recovery page', description: 'Public maintenance page shown when ordinary demo routes are intentionally offline.',
     sourceModule: 'src/ui/admin.ts', sourceExport: 'renderOffline', indexing: 'deny',
     page: {
-      parent: 'operations.index',
+      parent: 'interfaces.frontend.index',
       label: 'Offline recovery page',
       summary: 'Public maintenance page shown when ordinary demo routes are intentionally offline.',
       order: 1,
@@ -191,26 +191,6 @@ const globalOperationalRoutes = [
     handler: (request) => sitemapResponse(request), title: 'Sitemap', description: 'Registry-generated public sitemap.',
     sourceModule: 'src/api/sitemap.ts', sourceExport: 'sitemapResponse', offline: 'gated',
     cache: { mode: 'public', maxAgeSeconds: 3600 },
-  }),
-  operationalRoute({
-    id: 'operations.index', pattern: '/operations', methods: ['GET'], kind: 'page', handler: async (request, { env }) => {
-      const [{ operationsContent }, { renderNotFound, renderPage }] = await Promise.all([
-        import('../demos/operations'),
-        import('../ui/page'),
-      ]);
-      if (new URL(request.url).searchParams.has('view')) return renderNotFound(env);
-      return renderPage(env, await operationsContent(request, env));
-    },
-    title: 'Operations', description: 'Single public operations dashboard for status, availability, activity, usage and cost, and deployment evidence.',
-    sourceModule: 'src/demos/operations.ts', sourceExport: 'operationsContent', indexing: 'allow', offline: 'available',
-    page: {
-      parent: 'interfaces.frontend.index',
-      label: 'Operations',
-      summary: 'Inspect current status, measured availability, public-safe activity, usage and cost pressure, and deployment evidence.',
-      order: 4,
-      navigation: 'primary',
-      architectureMap: true,
-    },
   }),
   operationalRoute({
     id: 'operations.api-logs', pattern: '/api/operations/logs', methods: ['GET'], kind: 'api', handler: (request, { env }) => logsResponse(request, env),

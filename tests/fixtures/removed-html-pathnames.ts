@@ -1,3 +1,5 @@
+export const retiredOperationsHtmlPathname = '/operations' as const;
+
 export const removedHtmlPathnames = [
   { pathname: '/platform', outcome: '404', references: 'forbidden', supersededBy: 'demos.index' },
   { pathname: '/platform/edge', outcome: '404', references: 'forbidden', supersededBy: 'demos.index' },
@@ -41,16 +43,17 @@ export const removedHtmlPathnames = [
   { pathname: '/assurance/risks', outcome: '404', references: 'forbidden', supersededBy: 'assurance.index' },
   { pathname: '/assurance/incidents', outcome: '404', references: 'forbidden', supersededBy: 'assurance.index' },
   { pathname: '/assurance/concerns', outcome: '404', references: 'forbidden', supersededBy: 'assurance.index' },
-  { pathname: '/operations/availability', outcome: '404', references: 'forbidden', supersededBy: 'operations.index' },
-  { pathname: '/operations/logs', outcome: '404', references: 'forbidden', supersededBy: 'operations.index' },
-  { pathname: '/operations/usage', outcome: '404', references: 'forbidden', supersededBy: 'operations.index' },
-  { pathname: '/operations/reports', outcome: '404', references: 'forbidden', supersededBy: 'operations.index' },
-  { pathname: '/operations/docs', outcome: '404', references: 'forbidden', supersededBy: 'operations.index' },
-  { pathname: '/dashboard', outcome: '404', supersededBy: 'operations.index' },
-  { pathname: '/dashboard/uptime', outcome: '404', supersededBy: 'operations.index' },
-  { pathname: '/dashboard/docs', outcome: '404', supersededBy: 'operations.index' },
-  { pathname: '/dashboard/logs', outcome: '404', supersededBy: 'operations.index' },
-  { pathname: '/dashboard/billing', outcome: '404', supersededBy: 'operations.index' },
+  { pathname: retiredOperationsHtmlPathname, outcome: '404' },
+  { pathname: '/operations/availability', outcome: '404', references: 'forbidden' },
+  { pathname: '/operations/logs', outcome: '404', references: 'forbidden' },
+  { pathname: '/operations/usage', outcome: '404', references: 'forbidden' },
+  { pathname: '/operations/reports', outcome: '404', references: 'forbidden' },
+  { pathname: '/operations/docs', outcome: '404', references: 'forbidden' },
+  { pathname: '/dashboard', outcome: '404' },
+  { pathname: '/dashboard/uptime', outcome: '404' },
+  { pathname: '/dashboard/docs', outcome: '404' },
+  { pathname: '/dashboard/logs', outcome: '404' },
+  { pathname: '/dashboard/billing', outcome: '404' },
   { pathname: '/api/rest', outcome: '404', references: 'forbidden' },
   { pathname: '/api/openapi', outcome: '404', references: 'forbidden' },
   { pathname: '/api/graphql', outcome: '404', references: 'forbidden' },
@@ -65,7 +68,7 @@ export const removedHtmlPathnames = [
   { pathname: '/governance/iso-27001', outcome: '404', references: 'forbidden', supersededBy: 'assurance.index' },
   { pathname: '/governance/iso-42001', outcome: '404', references: 'forbidden', supersededBy: 'assurance.index' },
   { pathname: '/traceability', outcome: '404', references: 'forbidden', supersededBy: 'assurance.index' },
-  { pathname: '/dashboard/health', outcome: '404', references: 'forbidden', supersededBy: 'operations.index' },
+  { pathname: '/dashboard/health', outcome: '404', references: 'forbidden' },
 ] as const;
 
 export const removedHtml404Pathnames = removedHtmlPathnames

@@ -48,9 +48,8 @@ describe('final common reporting audit guards', () => {
 
   it('contains no legacy Cloudflare estimated-cost reporting discriminator', () => {
     const collector = readFileSync('src/lib/cloudflare-usage.ts', 'utf8');
-    const presentation = readFileSync('src/demos/operations.ts', 'utf8');
     expect(collector).not.toContain("'estimated'");
-    expect(presentation).not.toContain("usage.cost.kind === 'estimated'");
+    expect(collector).toContain("kind: 'billed' | 'unavailable'");
   });
 
   it('queries the current Durable Objects storage analytics dataset with its namespace membership filter', () => {
@@ -71,12 +70,13 @@ describe('final common reporting audit guards', () => {
     expect(assurance).not.toContain('structuredAvailability(');
   });
 
-  it('renders Cloudflare product and billed-cost state from common availability rather than boolean or kind shortcuts', () => {
-    const presentation = readFileSync('src/demos/operations.ts', 'utf8');
-    expect(presentation).toContain('usage.products.workers.availability');
-    expect(presentation).toContain('usage.cost.availability');
-    expect(presentation).not.toContain('usage.products.workers.available');
-    expect(presentation).not.toContain("usage.cost.kind === 'billed'");
+  it('models Cloudflare product and billed-cost state with common reporting availability after dashboard retirement', () => {
+    const collector = readFileSync('src/lib/cloudflare-usage.ts', 'utf8');
+    expect(collector).toContain('interface DatasetState');
+    expect(collector).toContain('availability: ReportingAvailability;');
+    expect(collector).toMatch(/cost:\s*\{[\s\S]*?availability: ReportingAvailability;/);
+    expect(collector).not.toContain('available: boolean');
+    expect(collector).not.toContain("kind: 'estimated'");
   });
 
   it('uses provider-native workflow attempts for reports without a branch-backed report copy', () => {

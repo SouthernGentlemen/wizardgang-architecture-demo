@@ -8,6 +8,7 @@ import {
 import { primaryNavigation, sitemapPaths } from '../src/routing/navigation';
 import { renderPage } from '../src/ui/page';
 import type { Env } from '../src/types';
+import { retiredOperationsHtmlPathname } from './fixtures/removed-html-pathnames';
 
 const repositoryUrl = 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo';
 const env = {
@@ -66,7 +67,7 @@ describe('public frontend shell', () => {
     expect(main).toContain('A live Cloudflare architecture laboratory');
     expect(main).toContain(`href="${routeUrl('demos.index')}">Explore demos</a>`);
     expect(main).toContain(`href="${routeUrl('assurance.index')}">View assurance</a>`);
-    expect(main).not.toContain(`href="${routeUrl('operations.index')}"`);
+    expect(main).not.toContain(`href="${retiredOperationsHtmlPathname}"`);
     expect(main).toContain('aria-label="Live proof"');
     expect(main).toContain('Current service state');
     expect(main).toContain('Scheduled observations');
@@ -98,7 +99,7 @@ describe('public frontend shell', () => {
     expect(nav).not.toContain(`href="${routeUrl('security.index')}"`);
   });
 
-  it('keeps the transitional public browser inventory stable until Operations retirement', () => {
+  it('keeps the minimal public browser inventory after Operations retirement', () => {
     const declarations = applicationRouteRegistry.declarations as readonly ApplicationRouteDeclaration[];
     const publicIndexableBrowserPaths = declarations
       .filter((route) => (
@@ -114,11 +115,11 @@ describe('public frontend shell', () => {
       routeUrl('interfaces.frontend.index'),
       routeUrl('demos.index'),
       routeUrl('assurance.index'),
-      routeUrl('operations.index'),
       routeUrl('security.index'),
     ].sort();
     expect(publicIndexableBrowserPaths).toEqual(expected);
     expect([...sitemapPaths()].sort()).toEqual(expected);
+    expect(publicIndexableBrowserPaths).not.toContain(retiredOperationsHtmlPathname);
 
     expect(declarations.find((route) => route.pattern === '/admin')).toMatchObject({
       kind: 'page', visibility: 'private', crawler: { indexing: 'deny' },
@@ -139,6 +140,10 @@ describe('public frontend shell', () => {
       ['reporting.index', '/api/reporting', ['GET', 'OPTIONS'], 'api'],
       ['reporting.collection', '/api/reporting/:collection', ['GET', 'OPTIONS'], 'api'],
       ['reporting.record', '/api/reporting/:collection/:recordId', ['GET', 'PATCH', 'OPTIONS'], 'api'],
+      ['operations.health', '/api/operations/health', ['GET'], 'api'],
+      ['operations.version', '/api/operations/version', ['GET'], 'api'],
+      ['operations.api-logs', '/api/operations/logs', ['GET'], 'api'],
+      ['operations.api-budget', '/api/operations/budget', ['POST'], 'api'],
       ['operations.security-txt', '/.well-known/security.txt', ['GET', 'HEAD'], 'protocol'],
       ['operations.robots', '/robots.txt', ['GET', 'HEAD'], 'protocol'],
       ['operations.sitemap', '/sitemap.xml', ['GET'], 'protocol'],

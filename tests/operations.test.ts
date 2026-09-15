@@ -2,12 +2,10 @@ import { describe, expect, it, vi } from 'vitest';
 import { billingScenarioResponse } from '../src/api/billing';
 import { reportingCollectionResponse } from '../src/api/reporting';
 import { workerComputeResponse } from '../src/api/runtime';
-import { operationsContent } from '../src/demos/operations';
 import { runScheduledOperations } from '../src/index';
 import { collectCloudflareUsage } from '../src/lib/cloudflare-usage';
 import { routeUrl } from '../src/routing/application-routes';
 import type { D1PreparedStatement, Env } from '../src/types';
-import { removedHtmlPathnames } from './fixtures/removed-html-pathnames';
 
 interface Usage { id: number; service_key: string; metric_key: string; quantity: number; unit: string; estimated_cost_usd: number; budget_limit_usd: number; captured_at: string }
 
@@ -75,33 +73,12 @@ function analyticsFetch(options: { zero?: boolean; missingAccount?: boolean; mal
   };
 }
 
-describe('operations proof surface', () => {
-  it('renders one canonical dashboard with five operational sections and contextual evidence', async () => {
-    const content = await operationsContent(new Request('https://demo.wizardgang.ai/operations'), env());
-    expect(content.canonicalPath).toBe(routeUrl('operations.index'));
-    expect(content.routeId).toBe('operations.index');
-    for (const id of ['status', 'availability', 'activity', 'usage', 'deployment']) { expect(content.body).toContain(`id="${id}"`); expect(content.body).toContain(`href="#${id}"`); }
-    expect(content.body).toContain('365 days of measured history');
-    expect(content.body).toContain('Open bounded log explorer');
-    expect(content.body).toContain('Cost guardrail simulator');
-    expect(content.body).toContain('Release evidence');
-    expect(content.body).toContain('docs/OPERATIONS.md');
-    const retiredOperationsPaths = removedHtmlPathnames
-      .filter((entry) => entry.outcome === '404' && entry.supersededBy === 'operations.index')
-      .map((entry) => entry.pathname);
-    for (const path of retiredOperationsPaths) {
-      expect(content.body).not.toContain(`href="${path}"`);
-      expect(content.body).not.toContain(`action="${path}"`);
-    }
-  });
-
+describe('operations machine behavior', () => {
   it('retains workload behavior across each simulator state and recovery', async () => {
     const environment = env();
     for (const state of ['normal', 'warning', 'degraded', 'normal']) {
       const response = await billingScenarioResponse(new Request('https://demo.example' + routeUrl('operations.api-budget'), { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ scenario: state }) }), environment);
       expect(await response.json()).toMatchObject({ state, optionalWorkerCompute: state === 'degraded' ? 'paused' : 'available' });
-      const content = await operationsContent(new Request('https://demo.example/operations#usage'), environment);
-      expect(content.body).toContain(`data-budget="${state}" aria-pressed="true"`);
       const compute = await workerComputeResponse(new Request('https://demo.example/api/labs/workers', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ operation: 'sum', values: [1, 2] }) }), environment);
       expect(compute.status).toBe(state === 'degraded' ? 429 : 200);
     }

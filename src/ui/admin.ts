@@ -77,7 +77,7 @@ ${notice ? `<section class="panel" role="status"><strong>${escapeHtml(notice)}</
   <ul>
     <li>Ordinary browser demo pages redirect to the public offline message.</li>
     <li>Ordinary gated API, non-HTML, and write requests return structured <code>503</code> responses.</li>
-    <li>Operations, security, <code>${escapeHtml(routeUrl('operations.health'))}</code>, <code>${escapeHtml(routeUrl('operations.version'))}</code>, offline, admin, and required machine recovery routes remain reachable.</li>
+    <li>Operational machine endpoints, security, <code>${escapeHtml(routeUrl('operations.health'))}</code>, <code>${escapeHtml(routeUrl('operations.version'))}</code>, offline, admin, and required machine recovery routes remain reachable.</li>
     <li>Every state transition is written to the shared audit event stream.</li>
   </ul>
 </section>
@@ -88,7 +88,8 @@ export function renderOffline(env: Env, control: DemoControl, requestedPath: str
   const offline = control.state === 'offline';
   const localization = localizationForEnv(env);
   const safePath = requestedPath.startsWith('/') && !requestedPath.startsWith('//') ? requestedPath : '/';
-  const operationsRoute = routeUrl('operations.index');
+  const healthRoute = routeUrl('operations.health');
+  const versionRoute = routeUrl('operations.version');
   const body = offline
     ? `<section>
   <p class="eyebrow">Demo status / offline</p>
@@ -105,12 +106,12 @@ export function renderOffline(env: Env, control: DemoControl, requestedPath: str
   return pageResponse(env, offline ? 'Demo offline' : 'Demo online', `${body}
 <section class="panel">
   <h2>Still available</h2>
-  <p class="subtle">Status, security reporting, and public source remain reachable during an intentional offline window.</p>
+  <p class="subtle">Operational health, security reporting, and public source remain reachable during an intentional offline window.</p>
   <div class="meta">
-    <a href="${escapeHtml(operationsRoute)}">View system status</a>
+    <a href="${escapeHtml(healthRoute)}">View system health</a>
     <a href="${escapeHtml(routeUrl('security.index'))}">Security</a>
     <a href="${escapeHtml(repoUrl(env))}">Public source</a>
   </div>
-  <details class="operations-inspection"><summary>Operator and developer recovery links</summary><div class="meta"><a href="${escapeHtml(operationsRoute)}#availability">Availability</a><a href="${escapeHtml(operationsRoute)}#activity">Activity</a><a href="${escapeHtml(routeUrl('operations.health'))}">Health JSON</a><a href="${escapeHtml(routeUrl('operations.version'))}">Version JSON</a><a href="${escapeHtml(sourceUrl(env, 'docs/OPERATIONS.md'))}">Operations docs ↗</a></div></details>
+  <details class="operations-inspection"><summary>Developer recovery links</summary><div class="meta"><a href="${escapeHtml(healthRoute)}">Health JSON</a><a href="${escapeHtml(versionRoute)}">Version JSON</a><a href="${escapeHtml(sourceUrl(env, 'docs/OPERATIONS.md'))}">Operations docs ↗</a></div></details>
 </section>`, { routeId: 'operations.offline', cacheControl: 'no-store', noindex: true, status: offline ? 503 : 200, canonicalPath: routeUrl('operations.offline') });
 }

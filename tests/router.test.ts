@@ -4,6 +4,7 @@ import { routeRequest } from '../src/router';
 import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import type { D1PreparedStatement, Env } from '../src/types';
 import { removedRouterFallbackPathnames } from './fixtures/removed-api-pathnames';
+import { retiredOperationsHtmlPathname } from './fixtures/removed-html-pathnames';
 
 class RouterStatement implements D1PreparedStatement {
   private values: unknown[] = [];
@@ -243,7 +244,7 @@ describe('public route contract', () => {
     expect(html).not.toContain('This button calls the live Worker interface below');
   });
 
-  it('keeps the demo-first launcher while Operations remains a canonical surface', async () => {
+  it('keeps the demo-first launcher and retires the public operations dashboard', async () => {
     const environment = env();
     const index = await (await routeRequest(new Request('https://demo.wizardgang.ai/'), environment)).text();
     expect(index).not.toContain('<h2 class="eyebrow">Routes</h2>');
@@ -258,7 +259,7 @@ describe('public route contract', () => {
     expect(index).toContain('<meta property="og:image" content="https://demo.wizardgang.ai/assets/og.png">');
     expect(index).toContain('href="/demos"');
     expect(index).toContain('href="/assurance"');
-    expect(index).not.toContain('href="/operations"');
+    expect(index).not.toContain(`href="${retiredOperationsHtmlPathname}"`);
     expect(index).toContain('href="/security"');
     expect(index).not.toContain('href="/dashboard');
     expect(index).not.toContain('>Map</a>');
@@ -267,15 +268,9 @@ describe('public route contract', () => {
     expect(index).not.toContain('WG-ARCH-001');
     expect(index).toContain('<a href="https://github.com/SouthernGentlemen/wizardgang-architecture-demo/issues/new?template=bug.yml">Report an issue</a>');
 
-    const operations = await (await routeRequest(new Request('https://demo.wizardgang.ai/operations'), environment)).text();
-    expect(operations).toContain('aria-label="Operations sections"');
-    expect(operations).not.toContain('Operational proof surfaces');
-    expect(operations).toContain('User-requested ChatGPT fetch');
-    expect(operations).toContain('Model-training crawl');
-    expect(operations).not.toContain('name="control" value="chatgpt-crawl"');
-    expect(operations).toContain('Source and documentation');
-    expect(operations).not.toContain('id="reporting-browser"');
-    expect(operations).toContain('Reporting API source');
+    const retiredOperations = await routeRequest(new Request(`https://demo.wizardgang.ai${retiredOperationsHtmlPathname}`, { headers: { accept: 'text/html' } }), environment);
+    expect(retiredOperations.status).toBe(404);
+    expect(retiredOperations.headers.get('location')).toBeNull();
   });
 
   it('removes the generic fallback runner and event listing routes', async () => {
@@ -330,7 +325,7 @@ describe('ChatGPT crawler control', () => {
 });
 
 describe('offline routing matrix', () => {
-  it('blocks ordinary behavior before execution while keeping operations reachable', async () => {
+  it('blocks ordinary behavior before execution while keeping operational machine and recovery routes reachable', async () => {
     const environment = env('offline');
     const html = await routeRequest(new Request('https://demo.wizardgang.ai/demos', { headers: { accept: 'text/html' } }), environment);
     expect(html.status).toBe(302);
@@ -349,7 +344,9 @@ describe('offline routing matrix', () => {
     expect(offlinePage.status).toBe(503);
     expect(await offlinePage.text()).toContain('Demo temporarily offline');
 
-    expect((await routeRequest(new Request('https://demo.wizardgang.ai/operations'), environment)).status).toBe(200);
+    const retiredOperations = await routeRequest(new Request(`https://demo.wizardgang.ai${retiredOperationsHtmlPathname}`, { headers: { accept: 'text/html' } }), environment);
+    expect(retiredOperations.status).toBe(404);
+    expect(retiredOperations.headers.get('location')).toBeNull();
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/logs'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/version'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/health'), environment)).status).toBe(503);

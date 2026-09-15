@@ -15,6 +15,7 @@ import { operationalRouteRegistry } from '../src/routing/operational-routes';
 import { matchRoute } from '../src/routing/registry';
 import { readFileSync } from 'node:fs';
 import { retiredApiReferencePrefixes } from './fixtures/removed-api-pathnames';
+import { retiredOperationsHtmlPathname } from './fixtures/removed-html-pathnames';
 
 const applicationRoutes = applicationRouteRegistry.declarations as readonly ApplicationRouteDeclaration[];
 
@@ -32,8 +33,9 @@ describe('architecture demo registry', () => {
     ]);
   });
 
-  it('keeps operations as one page without child navigation', () => {
+  it('keeps the retired operations page out of secondary navigation', () => {
     expect(secondaryNavigation('operations.index')).toEqual([]);
+    expect(applicationRoutes.some((route) => route.id === 'operations.index')).toBe(false);
   });
 
   it('uses unique public architecture routes', () => {
@@ -50,14 +52,12 @@ describe('architecture demo registry', () => {
     expect(architectureMapEntries().every((route) => route.pattern.startsWith('/'))).toBe(true);
   });
 
-  it('publishes one canonical operations page and retires the dashboard route family', () => {
-    const operations = applicationRoutes.filter((route) => (
-      route.id === 'operations.index'
-      || (route.page?.parent === 'operations.index' && route.page.navigation !== 'none')
-    ));
-    expect(operations.map((route) => route.pattern)).toEqual([routeUrl('operations.index')]);
+  it('retires the canonical operations page and dashboard route family without an alias', () => {
+    expect(applicationRoutes.some((route) => route.id === 'operations.index')).toBe(false);
+    expect(applicationRoutes.some((route) => route.pattern === retiredOperationsHtmlPathname)).toBe(false);
     expect(applicationRoutes.some((route) => route.id === 'operations.page')).toBe(false);
     expect(applicationRoutes.some((route) => route.pattern.startsWith('/dashboard'))).toBe(false);
+    expect(sitemapPaths()).not.toContain(retiredOperationsHtmlPathname);
   });
 
   it('keeps consolidated assurance and separate security as canonical registered entries', () => {
@@ -108,9 +108,8 @@ describe('architecture demo registry', () => {
 });
 
 describe('intentional offline route policies', () => {
-  it('keeps registered operational recovery surfaces reachable', () => {
+  it('keeps registered operational machine and recovery surfaces reachable', () => {
     for (const route of [
-      routeUrl('operations.index'),
       '/api/operations/health', '/api/operations/version', '/api/operations/logs',
       '/api/operations/budget', '/offline', '/admin', '/robots.txt', '/.well-known/security.txt', '/assets/:asset',
     ]) {
@@ -118,6 +117,7 @@ describe('intentional offline route policies', () => {
       expect(declaration, route).toBeDefined();
       expect(declaration?.offline.mode, route).toBe('available');
     }
+    expect(operationalRouteRegistry.declarations.some((route) => route.pattern === retiredOperationsHtmlPathname)).toBe(false);
   });
 
   it('keeps sitemap gated and ordinary demo routes outside the operational registry', () => {
@@ -142,8 +142,8 @@ describe('intentional offline route policies', () => {
     expect(browserPolicy('/graphql')).toBe('never');
     expect(browserPolicy('/mcp/server')).toBeUndefined();
     expect(browserPolicy(routeUrl('demos.index'))).toBe('page');
-    expect(browserPolicy(routeUrl('demos.index'))).toBe('page');
-    expect(browserPolicy(routeUrl('operations.index'))).toBe('page');
+    expect(browserPolicy(routeUrl('assurance.index'))).toBe('page');
+    expect(browserPolicy(retiredOperationsHtmlPathname)).toBeUndefined();
     expect(browserPolicy('/edge')).toBeUndefined();
     expect(applicationRoutes.some((route) => route.pattern === `${retiredApiReferencePrefixes[0]}/things`)).toBe(false);
   });

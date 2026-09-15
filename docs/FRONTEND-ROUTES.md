@@ -61,7 +61,7 @@ This preserves shareable filtering without recreating route selection through va
 
 ## Target MVP browser structure
 
-The active MVP target is intentionally smaller than the previously released five-destination frontend:
+The active MVP browser structure is intentionally small:
 
 - `/` — understand the project and choose a task;
 - `/demos` — execute or inspect architecture demonstrations;
@@ -69,9 +69,7 @@ The active MVP target is intentionally smaller than the previously released five
 
 `/security` remains a narrow browser-visible support/security boundary for vulnerability reporting and advisories. It should remain reachable from the footer or contextual security links rather than primary navigation.
 
-`/operations` is scheduled for controlled retirement from the human browser surface under the root implementation roadmap after current service state, measured availability summary, version, and commit/source identity have been projected into a compact public proof. Its machine APIs, scheduled collection, retention, bounded logs, and protected controls are not retired merely because the browser page is removed.
-
-Until the relevant controlled change lands, the route declarations remain authoritative for the currently deployed runtime inventory.
+The former `/operations` browser page is retired by DEMO-259. It is not a canonical page, navigation destination, sitemap member, homepage action, discovery entry, redirect, or alias. Requests for that pathname—including query-string variants—fall through the ordinary application 404. Operational machine APIs, scheduled collection, 365-day retention, bounded logs, protected controls, and the compact homepage proof remain independent of that browser-route retirement.
 
 ## Hidden operational browser pages
 

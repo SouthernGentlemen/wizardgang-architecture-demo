@@ -18,8 +18,8 @@
       "path": "/demos#rest"
     },
     {
-      "name": "availability-review",
-      "path": "/operations?window=365d#availability"
+      "name": "homepage-availability-proof",
+      "path": "/"
     }
   ],
   "narrowViewportPaths": [

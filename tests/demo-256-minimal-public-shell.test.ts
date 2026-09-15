@@ -34,7 +34,7 @@ describe('DEMO-256 minimal public shell', () => {
     const nav = header.match(/<nav class="nav"[^>]*>([\s\S]*?)<\/nav>/)?.[0] ?? '';
     expect(nav).toContain(`href="${routeUrl('demos.index')}"`);
     expect(nav).toContain(`href="${routeUrl('assurance.index')}"`);
-    expect(nav).not.toContain(`href="${routeUrl('operations.index')}"`);
+    expect(nav).not.toContain('href="/operations"');
     expect(nav).not.toContain(`href="${routeUrl('security.index')}"`);
     expect(header).toContain(`href="${repositoryUrl}">Source`);
   });
@@ -50,10 +50,10 @@ describe('DEMO-256 minimal public shell', () => {
     expect(main).toContain('100 measured intervals · planned offline excluded');
     expect(main).toContain('v0.21.0-test');
     expect(main).toContain('Commit abcdef0');
-    expect(main).not.toContain(`href="${routeUrl('operations.index')}"`);
+    expect(main).not.toContain('href="/operations"');
   });
 
-  it('keeps Security and Operations canonical but removes them from visitor-facing navigation projections', async () => {
+  it('keeps Security discoverable while operations stays out of visitor-facing projections', async () => {
     const html = await homeHtml();
     expect(html).toContain(`href="${routeUrl('security.index')}">Security boundary</a>`);
     expect(primaryNavigation().map((route) => route.id)).not.toContain('security.index');
@@ -63,6 +63,6 @@ describe('DEMO-256 minimal public shell', () => {
     const security = applicationRouteRegistry.declarations.find((route) => route.id === 'security.index');
     const operations = applicationRouteRegistry.declarations.find((route) => route.id === 'operations.index');
     expect(security?.pattern).toBe(routeUrl('security.index'));
-    expect(operations?.pattern).toBe(routeUrl('operations.index'));
+    expect(operations).toBeUndefined();
   });
 });

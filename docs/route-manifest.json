@@ -1276,59 +1276,6 @@
     "status": "working"
   },
   {
-    "id": "operations.index",
-    "route": "/operations",
-    "methods": [
-      "GET"
-    ],
-    "kind": "page",
-    "visibility": "public",
-    "browser_html": "page",
-    "authentication": {
-      "mode": "anonymous"
-    },
-    "authorization": {
-      "mode": "none"
-    },
-    "same_origin": {
-      "mode": "not-required"
-    },
-    "offline": {
-      "mode": "available"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "allow"
-    },
-    "title": "Operations",
-    "description": "Single public operations dashboard for status, availability, activity, usage and cost, and deployment evidence.",
-    "docs": [
-      "docs/ROUTES.md",
-      "docs/OPERATIONS.md",
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/demos/operations.ts",
-      "exportName": "operationsContent",
-      "tests": [
-        "tests/operational-route-registry.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "navigation": {
-      "parent": "interfaces.frontend.index",
-      "label": "Operations",
-      "order": 4,
-      "navigation": "primary",
-      "architectureMap": true,
-      "sitemap": true
-    },
-    "status": "working"
-  },
-  {
     "id": "operations.offline",
     "route": "/offline",
     "methods": [

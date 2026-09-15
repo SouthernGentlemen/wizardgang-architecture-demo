@@ -1,14 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { routeUrl } from '../src/routing/application-routes';
 import { matchRoute } from '../src/routing/registry';
 import { operationalRouteRegistry } from '../src/routing/operational-routes';
-import { removedHtmlPathnames } from './fixtures/removed-html-pathnames';
-
-const publicPagePolicy = {
-  methods: ['GET'], kind: 'page', visibility: 'public',
-  authentication: { mode: 'anonymous' }, authorization: { mode: 'none' }, sameOrigin: { mode: 'not-required' },
-  offline: { mode: 'available' }, cache: { mode: 'no-store' }, crawler: { crawling: 'controlled', indexing: 'allow' },
-} as const;
+import { removedHtmlPathnames, retiredOperationsHtmlPathname } from './fixtures/removed-html-pathnames';
 
 const expectedPolicies = [
   {
@@ -52,7 +45,6 @@ const expectedPolicies = [
     authentication: { mode: 'anonymous' }, authorization: { mode: 'none' }, sameOrigin: { mode: 'not-required' },
     offline: { mode: 'gated' }, cache: { mode: 'public', maxAgeSeconds: 3600 }, crawler: { crawling: 'controlled', indexing: 'deny' },
   },
-  { id: 'operations.index', pattern: routeUrl('operations.index'), ...publicPagePolicy },
   ...[
     ['operations.api-logs', '/api/operations/logs', ['GET']],
     ['operations.api-budget', '/api/operations/budget', ['POST']],
@@ -64,7 +56,7 @@ const expectedPolicies = [
 ];
 
 const retiredOperationsPaths = removedHtmlPathnames
-  .filter((entry) => entry.outcome === '404' && entry.supersededBy === 'operations.index')
+  .filter((entry) => entry.outcome === '404' && (entry.pathname === retiredOperationsHtmlPathname || entry.pathname.startsWith(`${retiredOperationsHtmlPathname}/`) || entry.pathname.startsWith('/dashboard')))
   .map((entry) => entry.pathname);
 
 describe('global operational route policies', () => {
@@ -98,23 +90,18 @@ describe('global operational route policies', () => {
     }
   });
 
-  it('does not register retired dashboard paths, retired operations child paths, old view aliases, or unknown paths', () => {
-    for (const path of [
-      '/dashboard', '/dashboard/uptime', '/dashboard/docs', '/dashboard/logs', '/dashboard/billing', '/dashboard/not-a-route',
-      ...retiredOperationsPaths,
-    ]) {
+  it('does not register the retired public operations page, dashboard paths, child paths, aliases, or unknown paths', () => {
+    for (const path of [...retiredOperationsPaths, '/dashboard/not-a-route', `${retiredOperationsHtmlPathname}/not-a-route`]) {
       expect(matchRoute(operationalRouteRegistry, 'GET', path), path).toEqual({ status: 'not-found', statusCode: 404 });
     }
     expect(matchRoute(operationalRouteRegistry, 'GET', '/api/operations/not-a-route')).toEqual({ status: 'not-found', statusCode: 404 });
-    expect(matchRoute(operationalRouteRegistry, 'GET', `${routeUrl('operations.index')}/not-a-route`)).toEqual({ status: 'not-found', statusCode: 404 });
   });
 
-  it('keeps the single operations page available while intentionally offline', () => {
-    const route = operationalRouteRegistry.declarations.find((candidate) => candidate.id === 'operations.index');
-    expect(route?.pattern).toBe(routeUrl('operations.index'));
-    expect(route?.offline).toEqual({ mode: 'available' });
-    expect(route?.kind).toBe('page');
-    expect(operationalRouteRegistry.declarations.filter((candidate) => candidate.kind === 'page' && candidate.visibility === 'public' && candidate.crawler.indexing === 'allow').map((candidate) => candidate.pattern)).toEqual([routeUrl('operations.index')]);
+  it('keeps hidden admin/offline pages but no indexable public operations page', () => {
+    expect(operationalRouteRegistry.declarations.find((route) => route.id === 'operations.index')).toBeUndefined();
+    expect(operationalRouteRegistry.declarations.find((route) => route.id === 'operations.admin')?.offline).toEqual({ mode: 'available' });
+    expect(operationalRouteRegistry.declarations.find((route) => route.id === 'operations.offline')?.offline).toEqual({ mode: 'available' });
+    expect(operationalRouteRegistry.declarations.filter((route) => route.kind === 'page' && route.visibility === 'public' && route.crawler.indexing === 'allow')).toEqual([]);
   });
 
   it('attaches documentation and source metadata to every operational route', () => {

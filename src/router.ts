@@ -1,5 +1,5 @@
 import type { Env } from './types';
-import { renderNotFound } from './ui/page';
+import { renderNotFound } from './ui/not-found';
 import type { AdminIdentity } from './lib/admin-auth';
 import { requireAdmin, requireSameOrigin } from './lib/admin-auth';
 import { getDemoControl } from './lib/demo-control';
