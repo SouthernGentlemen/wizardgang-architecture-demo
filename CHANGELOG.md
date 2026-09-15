@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 0.20.0 — 2026-09-14
+
+- Activated consolidated demonstrations only when opened, with registered lazy presentation fragments and scoped cleanup for requests, timers, and listeners.
+- Replaced the misleading accessibility mode comparison with one live accessible workflow and an inert, escaped failure-analysis matrix with explicit automated and manual verification boundaries.
+- Made the Edge, Workers, and Durable Objects demonstrations directly interactive and clarified evidence, action, status, and supporting-detail hierarchy throughout the task-oriented site.
+- Simplified the public API surface by preserving the visitor-scoped R2 workspace as the canonical object workflow, retiring duplicate R2 endpoints, and documenting the distinct REST browser and authorized machine contracts.
+
 ## 0.19.0 — 2026-09-10
 
 - Replaced the technology-shaped public browser hierarchy with five indexable destinations: `/`, `/demos`, `/assurance`, `/operations`, and `/security`.
