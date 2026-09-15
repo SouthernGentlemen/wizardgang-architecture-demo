@@ -6,7 +6,7 @@ This repository is a public architecture demonstration, not a generic applicatio
 
 Implementation plans and roadmaps are valid planning tools when a controlled change or multi-change sequence benefits from an explicit source of truth. Keep an active plan clearly scoped, keep it current while the work is active, and retire or delete it when it becomes obsolete so it does not compete with permanent contracts.
 
-The root `IMPLEMENTATION_PLAN.md` is currently active for the DEMO-264 through DEMO-271 Demo Workbench sequence. Read it before starting any controlled change in that sequence, preserve its reserved IDs and ordering, and keep implementation within its stated scope. Retire or delete the plan after the sequence is released and its durable requirements have been absorbed into permanent contracts/tests.
+The root `IMPLEMENTATION_PLAN.md` is currently active for the DEMO-264 through DEMO-272 Demo Workbench sequence. Read it before starting any controlled change in that sequence, preserve its reserved IDs and ordering, and keep implementation within its stated scope. Retire or delete the plan after the sequence is released and its durable requirements have been absorbed into permanent contracts/tests.
 
 A plan may coordinate intended work, but it does not replace runtime declarations or permanent contract documentation unless the controlled change explicitly updates those contracts.
 
@@ -54,6 +54,8 @@ CI troubleshooting is a mandatory part of the normal delivery loop, not an optio
 13. Preserve the controlled-history rules throughout troubleshooting. Temporary fix commits must be squashed or rebuilt when the DEMO requires one controlled commit.
 
 Retrieving a complete job log for diagnosis does not permit copying unbounded output into another CI log or report; keep reported failure evidence bounded and actionable as required below.
+
+The repository-local equivalent is `npm run validate:ci`. It records complete redacted command output under `.ci-diagnostics/`, preserves the first authoritative exit code, and publishes the same directory as a failed-run artifact. If a client cannot expose a redirected or large job-log body, retrieve `ci-diagnostics-<run_id>-<run_attempt>` and inspect `validation.log` and `report.json`; see `docs/CI-DIAGNOSTICS.md` for `gh` and REST retrieval commands.
 
 ## Cloud development contract
 

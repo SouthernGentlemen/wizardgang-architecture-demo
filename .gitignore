@@ -2,6 +2,7 @@ node_modules/
 .wrangler/
 dist/
 coverage/
+.ci-diagnostics/
 .dev.vars
 .env
 .DS_Store

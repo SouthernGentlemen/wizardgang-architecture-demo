@@ -20,24 +20,20 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - name: Install locked dependencies
-        run: npm ci
-      - name: Full repository check
-        run: npm run check
-      - name: Apply D1 migrations to a clean local database
-        run: npm run validate:migrations
-      - name: Verify Chromium runtime
-        run: google-chrome --version
-      - name: Site-wide browser accessibility and localization audit
-        run: npm run test:site-accessibility
-      - name: Audit dependencies
-        run: npm run security:dependencies
-      - name: Validate Worker build
-        run: npm run build
-      - name: Validate patch whitespace
+      - name: Run strict CI validation with diagnostics
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-        run: git diff --check "$BASE_SHA...HEAD"
+          CI_DIAGNOSTICS_DIR: .ci-diagnostics
+        run: npm run validate:ci
+      - name: Upload failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .ci-diagnostics
+          if-no-files-found: error
+          retention-days: 14
+          include-hidden-files: true
   change-id:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
