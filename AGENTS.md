@@ -2,6 +2,21 @@
 
 This repository is a public architecture demonstration, not a generic application template.
 
+## Active implementation source of truth
+
+Before planning or implementing a controlled change, read the root [`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md).
+
+That file is authoritative for the active public product target, ordered roadmap, and reserved `DEMO-###` IDs. Application route declarations remain authoritative for the routes that actually exist at runtime; generated route artifacts remain projections of those declarations.
+
+If an older planning, frontend, release, or historical document conflicts with the root implementation plan about intended public presentation or roadmap order, follow the root implementation plan. Historical documents remain evidence of prior decisions and released states, not a competing active backlog.
+
+While an ordered roadmap is active:
+
+- do not reuse a reserved `DEMO-###` ID for unrelated work;
+- do not broaden the public browser surface, add another dashboard, or re-expose intentionally hidden internal inventories unless the root implementation plan is deliberately updated in a controlled change;
+- prefer the smallest visitor-facing presentation that visibly proves the architecture while preserving valid machine contracts and canonical evidence underneath;
+- update the root implementation plan when roadmap scope, order, status, or reserved IDs materially change.
+
 ## Definition of done
 
 After every task that changes repository files, finish the delivery loop before handing the task back:
@@ -11,6 +26,7 @@ After every task that changes repository files, finish the delivery loop before 
 3. Commit each intended controlled change with one permanent `DEMO-###` ID and one primary bracketed type.
 4. Push the isolated branch and open a pull request. Do not push ordinary changes directly to `main`.
 5. Confirm the worktree is clean before reporting completion.
+6. If the controlled change implements or changes an item in the active root implementation plan, keep that plan accurate before finalizing the change.
 
 Production is deployed only from an annotated semantic-version release tag, never from an arbitrary branch commit. See `docs/CHANGE-MANAGEMENT.md` and `docs/RELEASE-MANAGEMENT.md`.
 
@@ -28,7 +44,7 @@ Preserve these invariants:
 
 - Keep public routes stable once released unless a controlled change explicitly retires a route without compatibility aliases.
 - Keep one architecture concern per demo module.
-- Treat route declarations as the route source of truth; generated route documentation and manifests are projections, not parallel inventories.
+- Treat route declarations as the runtime route source of truth; generated route documentation and manifests are projections, not parallel inventories.
 - Keep registry-declared operations, security, administration, and offline-recovery capabilities available according to each declaration's offline policy; do not protect them with a hardcoded pathname inventory.
 - Never let ordinary demo behavior execute behind the intentional offline gate.
 - API/non-HTML/write requests receive `503` JSON while offline; browser HTML demo navigation may redirect to the registered offline recovery page.
