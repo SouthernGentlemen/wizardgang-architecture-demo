@@ -2892,14 +2892,6 @@
         "tests/router.test.ts"
       ]
     },
-    "navigation": {
-      "parent": "interfaces.frontend.index",
-      "label": "Security",
-      "order": 4,
-      "navigation": "primary",
-      "architectureMap": true,
-      "sitemap": true
-    },
     "status": "working"
   }
 ]

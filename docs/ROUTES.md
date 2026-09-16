@@ -9,7 +9,6 @@ This file is generated from the active declarative application registry. Route I
 | `interfaces.frontend.index` | `/` | `GET` | page | public | gated | allow | Architecture demo index | `src/ui/page.ts` |
 | `assurance.index` | `/assurance` | `GET` | page | public | gated | allow | Assurance | `src/demos/assurance-minimal.ts` |
 | `demos.index` | `/demos` | `GET` | page | public | gated | allow | Architecture Demos | `src/demos/demos-page.ts` |
-| `security.index` | `/security` | `GET` | page | public | available | allow | Security | `src/demos/security-page.ts` |
 
 ## Registered service, protocol, asset, and private routes
 
@@ -70,6 +69,7 @@ This file is generated from the active declarative application registry. Route I
 | `interfaces.mcp.server` | `/mcp` | `GET`, `POST`, `DELETE` | protocol | public | gated | deny | MCP streamable HTTP server | `src/api/mcp.ts` |
 | `operations.offline` | `/offline` | `GET` | page | public | available | deny | Offline recovery page | `src/ui/admin.ts` |
 | `operations.robots` | `/robots.txt` | `GET`, `HEAD` | protocol | public | available | deny | Robots policy | `src/lib/crawler-control.ts` |
+| `security.index` | `/security` | `GET` | page | public | available | allow | Security | `src/demos/security-page.ts` |
 | `operations.sitemap` | `/sitemap.xml` | `GET` | protocol | public | gated | deny | Sitemap | `src/api/sitemap.ts` |
 | `interfaces.webhooks.github` | `/webhooks/github` | `POST` | protocol | public | gated | deny | GitHub webhook receiver | `src/api/webhooks.ts` |
 
