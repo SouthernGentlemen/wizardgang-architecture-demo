@@ -54,5 +54,6 @@
   "nav.interfaces.index": "インターフェース",
   "nav.assurance.index": "保証",
   "nav.security.index": "セキュリティ",
-  "nav.operations.index": "運用"
+  "nav.operations.index": "運用",
+  "shell.theme_toggle": "テーマ"
 }

@@ -436,7 +436,9 @@ async function keyboardSmoke(cdp, pathname) {
   // so subsequent checks would otherwise race the replacement document.
   const languageBefore = await evaluate(cdp, `(()=>{const s=document.querySelector('#global-language'); if(!s)return null; s.focus(); return s.selectedIndex})()`);
   if (languageBefore !== null) {
+    const loaded = cdp.once('Page.loadEventFired');
     await dispatchKey(cdp, 'ArrowDown', 'ArrowDown');
+    await loaded;
     const languageAfter = await evaluate(cdp, `document.querySelector('#global-language')?.selectedIndex ?? null`);
     if (languageAfter === languageBefore) throw new Error(`${pathname}: language selector did not respond to keyboard navigation`);
   }

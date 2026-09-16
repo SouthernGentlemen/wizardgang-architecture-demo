@@ -54,5 +54,6 @@
   "nav.interfaces.index": "الواجهات",
   "nav.assurance.index": "الضمان",
   "nav.security.index": "الأمان",
-  "nav.operations.index": "العمليات"
+  "nav.operations.index": "العمليات",
+  "shell.theme_toggle": "السمة"
 }

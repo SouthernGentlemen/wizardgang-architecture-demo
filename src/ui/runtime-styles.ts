@@ -12,15 +12,9 @@ html {
 
 .language-selector {
   display: inline-flex;
+  flex: 0 0 auto;
   align-items: center;
-  gap: .4rem;
   min-height: 44px;
-}
-.language-selector label {
-  color: var(--muted);
-  font: 800 .65rem/1 var(--mono);
-  letter-spacing: .06em;
-  text-transform: uppercase;
 }
 .language-selector select,
 .language-selector button {
@@ -30,8 +24,8 @@ html {
   color: var(--paper);
   font: 750 .7rem/1 var(--mono);
 }
-.language-selector select { max-width: 9rem; padding: .35rem .45rem; }
-.language-selector button { padding: .35rem .55rem; cursor: pointer; }
+.language-selector select { max-width: 6rem; padding: .35rem .4rem; }
+.language-selector button { margin-inline-start: .3rem; padding: .35rem .55rem; cursor: pointer; }
 .language-selector button:hover { border-color: var(--paper); }
 
 :where(button, input:not([type="checkbox"]):not([type="radio"]), select, textarea, summary, [role="button"], [role="tab"], a.button, .button) {
@@ -68,15 +62,21 @@ html {
 html[dir='rtl'] .brand-mark { box-shadow: -.5rem -.5rem 0 var(--violet); }
 html[dir='rtl'] .nav { direction: rtl; }
 
-@media (max-width: 760px) {
-  .language-selector { justify-content: flex-end; }
-  .language-selector label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+@media (max-width: 620px) {
+  .language-selector select { max-width: 4.75rem; padding-inline: .25rem; }
 }
 
-@media (max-width: 620px) {
-  .language-selector { align-items: center; flex-wrap: nowrap; }
-  .language-selector label { display: inline-flex; align-items: center; min-height: 44px; }
-  .language-selector select { flex: 1 1 8rem; max-width: none; }
+@media (max-width: 340px) {
+  .site-header, .site-main, .site-footer { width: min(100% - 16px, var(--shell-width)); }
+  .site-header { gap: .08rem; }
+  .brand { min-inline-size: 44px; min-block-size: 44px; justify-content: center; gap: 0; }
+  .brand-copy { display: none; }
+  .nav { flex: 0 1 auto; gap: .1rem; }
+  .nav a, .nav button { flex: 0 0 auto; min-inline-size: 44px; justify-content: center; font-size: .54rem; letter-spacing: 0; }
+  .header-utilities { gap: .05rem; }
+  .header-utilities > a { min-inline-size: 44px; justify-content: center; font-size: .54rem; }
+  .header-utilities > button { font-size: .54rem; }
+  .language-selector select { inline-size: 3rem; max-width: 3rem; padding-inline: .15rem; font-size: .6rem; }
 }
 
 @media (max-width: 420px) {

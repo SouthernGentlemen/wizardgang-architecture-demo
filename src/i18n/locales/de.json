@@ -54,5 +54,6 @@
   "nav.interfaces.index": "Schnittstellen",
   "nav.assurance.index": "Nachweise",
   "nav.security.index": "Sicherheit",
-  "nav.operations.index": "Betrieb"
+  "nav.operations.index": "Betrieb",
+  "shell.theme_toggle": "Design"
 }
