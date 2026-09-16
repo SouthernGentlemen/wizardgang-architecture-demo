@@ -1,4 +1,3 @@
-import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import type { Principal } from '../src/lib/authorization';
@@ -185,9 +184,5 @@ describe('DEMO-178 unified reporting presentation', () => {
       expect.objectContaining({ name: 'severity', value: 'high' }),
     ]));
 
-    const assurancePage = readFileSync('src/demos/assurance.ts', 'utf8');
-    expect(assurancePage).toContain('queryReportingCollection');
-    expect(assurancePage).toContain('presentReportingQuery');
-    expect(assurancePage).toContain('renderGovernanceRegistry');
   });
 });

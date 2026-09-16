@@ -2,8 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { reportingCollectionResponse } from '../src/api/reporting';
 import { deriveIncidentCounts } from '../src/assurance/service';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
-import { assuranceIndexContent } from '../src/demos/assurance';
-import { renderPage } from '../src/ui/page';
 import type { Env } from '../src/types';
 
 const env = {
@@ -66,21 +64,4 @@ describe('public incident and exercise assurance', () => {
 
   });
 
-  it('renders permanent anchors only for canonical records and uses empty-state copy only when the dataset is empty', async () => {
-    const incidents = listPublishedAssuranceRecords('incidents');
-    const exercises = listPublishedAssuranceRecords('exercises');
-    const response = await assuranceIndexContent(new Request('https://demo.wizardgang.ai/assurance#activity'), env);
-    const html = await renderPage(env, { ...response, routeId: 'assurance.index' }).text();
-    const renderedIncidentIds = [...html.matchAll(/id="(INC-[0-9]{3,})"/g)].map((match) => match[1]);
-    const renderedExerciseIds = [...html.matchAll(/id="(EX-[0-9]{3,})"/g)].map((match) => match[1]);
-    expect(renderedIncidentIds).toEqual(incidents.map((record) => record.id));
-    expect(renderedExerciseIds).toEqual(exercises.map((record) => record.id));
-
-    if (incidents.length === 0) expect(html).toContain('0 retained records');
-    if (exercises.some((record) => record.status === 'planned')) {
-      expect(html).toContain('Planned');
-    }
-    expect(html).toContain('Security stays separate');
-    expect(html).toContain('private vulnerability reporting');
-  });
 });

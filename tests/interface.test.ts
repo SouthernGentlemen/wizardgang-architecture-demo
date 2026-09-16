@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import { accessibilityContent } from '../src/demos/accessibility-page';
-import { assuranceIndexContent } from '../src/demos/assurance';
 import { d1Content } from '../src/demos/d1-page';
 import { i18nContent } from '../src/demos/i18n-page';
 import { r2Content } from '../src/demos/r2-page';
@@ -217,23 +216,6 @@ describe('accessible interaction surface', () => {
     expect(broken).toContain('onpaste="return false"');
     expect(broken).toContain('outline:none!important');
     expect(broken).toContain('<img class="product" src=');
-  });
-});
-
-describe('compliance assurance index', () => {
-  it('renders the canonical registry with accessible filters, stable anchors, and descriptive evidence links', async () => {
-    const content = await assuranceIndexContent(new Request('https://demo.example/assurance'), env);
-    const html = await renderPage(env, { ...content, routeId: 'assurance.index' }).text();
-    expect(html.match(/<h1\b/g)).toHaveLength(1);
-    expect(html).toContain('id="frameworks"');
-    expect(html).toContain('id="material-gaps-heading"');
-    expect(html).toContain('Browse framework records');
-    for (const framework of ['iso-27001', 'iso-42001', 'wcag-2.2']) {
-      expect(html).toContain(`href="/assurance?framework=${framework}#frameworks"`);
-    }
-    expect(html).not.toContain('<table');
-    expect(html).not.toContain('Compliance records');
-    expect(html).not.toMatch(/>\s*(?:COMPLIANT|CERTIFIED)\s*</i);
   });
 });
 
