@@ -54,5 +54,6 @@
   "nav.interfaces.index": "Interfaces",
   "nav.assurance.index": "Garantía",
   "nav.security.index": "Seguridad",
-  "nav.operations.index": "Operaciones"
+  "nav.operations.index": "Operaciones",
+  "shell.theme_toggle": "Tema"
 }

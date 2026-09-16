@@ -34,12 +34,8 @@ function safeScriptJson(value: string): string {
   return JSON.stringify(value).replace(/</g, '\\u003c');
 }
 
-function themeToggleScript(localization: LocalizationContext): string {
-  const light = safeScriptJson(localization.t('shell.theme.light', 'Light'));
-  const dark = safeScriptJson(localization.t('shell.theme.dark', 'Dark'));
-  const label = safeScriptJson(localization.t('shell.theme.label', 'Theme: {theme}'));
-  const switchLabel = safeScriptJson(localization.t('shell.theme.switch', 'Switch to {theme} theme'));
-  return `(()=>{const b=document.querySelector('[data-theme-toggle]');if(!b)return;const r=document.documentElement;const light=${light};const dark=${dark};const label=${label};const switchLabel=${switchLabel};const format=(template,value)=>template.replace('{theme}',value);const sync=()=>{const isLight=r.dataset.theme==='light';const current=isLight?light:dark;const next=isLight?dark:light;b.textContent=format(label,current);b.setAttribute('aria-label',format(switchLabel,next));b.setAttribute('aria-pressed',String(!isLight))};sync();b.addEventListener('click',()=>{const next=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=next;try{localStorage.setItem('wg-theme',next)}catch(e){}sync()})})()`;
+function themeToggleScript(): string {
+  return `(()=>{const b=document.querySelector('[data-theme-toggle]');if(!b)return;const r=document.documentElement;const sync=()=>{const isLight=r.dataset.theme==='light';b.setAttribute('aria-pressed',String(!isLight))};sync();b.addEventListener('click',()=>{const next=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=next;try{localStorage.setItem('wg-theme',next)}catch(e){}sync()})})()`;
 }
 
 export interface PageContent {
@@ -98,9 +94,8 @@ function languageSelector(localization: LocalizationContext): string {
   const languageLabel = localization.t('shell.language', 'Language');
   return `<form class="language-selector" method="get" action="${escapeHtml(localization.currentUrl.pathname)}" data-preserve-fragment>
     ${preserved}
-    <label for="global-language">${escapeHtml(languageLabel)}</label>
-    <select id="global-language" name="${escapeHtml(parameter)}" aria-label="${escapeHtml(languageLabel)}">${options}</select>
-    <button type="submit">${escapeHtml(localization.t('shell.apply_language', 'Apply'))}</button>
+    <select id="global-language" name="${escapeHtml(parameter)}" aria-label="${escapeHtml(languageLabel)}" onchange="this.form.requestSubmit()">${options}</select>
+    <noscript><button type="submit">${escapeHtml(localization.t('shell.apply_language', 'Apply'))}</button></noscript>
   </form>`;
 }
 
@@ -119,10 +114,7 @@ function shell(env: Env, content: PageContent): Response {
   const lang = content.lang ?? localization.lang;
   const dir = content.dir ?? localization.dir;
   const siteName = localization.t('app.title', SITE_NAME);
-  const darkLabel = localization.t('shell.theme.dark', 'Dark');
-  const lightLabel = localization.t('shell.theme.light', 'Light');
-  const themeText = localization.t('shell.theme.label', 'Theme: {theme}', { theme: darkLabel });
-  const themeAria = localization.t('shell.theme.switch', 'Switch to {theme} theme', { theme: lightLabel });
+  const themeLabel = localization.t('shell.theme_toggle', 'Theme');
   const ogImageAlt = localization.t('meta.og_image_alt', 'WizardGang Architecture — Architecture you can inspect.');
   const html = `<!doctype html>
 <html lang="${escapeHtml(lang)}" dir="${escapeHtml(dir)}">
@@ -155,14 +147,14 @@ function shell(env: Env, content: PageContent): Response {
 <header class="site-header">
   <a class="brand" href="${escapeHtml(homeRoute)}" aria-label="${escapeHtml(localization.t('shell.home', 'WizardGang Architecture Demo home'))}">
     <span class="brand-mark" aria-hidden="true"></span>
-    <span class="brand-copy"><strong>WIZARDGANG</strong><small>${escapeHtml(localization.t('shell.brand.subtitle', 'Architecture demo'))}</small></span>
+    <span class="brand-copy"><strong>WIZARDGANG</strong></span>
   </a>
   <nav class="nav" aria-label="${escapeHtml(localization.t('shell.primary_navigation', 'Primary navigation'))}">
     ${primaryNavigationHtml(localization, content.routeId)}
   </nav>
   <div class="header-utilities" aria-label="Site utilities">
     <a href="${escapeHtml(repositoryUrl)}">${escapeHtml(localization.t('shell.source', 'Source'))} <span aria-hidden="true">↗</span></a>
-    <button type="button" data-theme-toggle aria-label="${escapeHtml(themeAria)}" aria-pressed="true">${escapeHtml(themeText)}</button>
+    <button type="button" data-theme-toggle aria-label="${escapeHtml(themeLabel)}" aria-pressed="true">${escapeHtml(themeLabel)}</button>
     ${languageSelector(localization)}
   </div>
 </header>
@@ -171,7 +163,7 @@ function shell(env: Env, content: PageContent): Response {
 <footer class="site-footer">
   <span><a href="${escapeHtml(issueUrl)}">${escapeHtml(localization.t('shell.report_issue', 'Report an issue'))}</a>${routeSourceLink}</span>
 </footer>
-<script>${themeToggleScript(localization)};(()=>{const form=document.querySelector('[data-preserve-fragment]');if(!form)return;form.addEventListener('submit',()=>{form.action=location.pathname+location.hash})})()</script>
+<script>${themeToggleScript()};(()=>{const form=document.querySelector('[data-preserve-fragment]');if(!form)return;form.addEventListener('submit',()=>{form.action=location.pathname+location.hash})})()</script>
 </body>
 </html>`;
   const headers = withSecurityHeaders(new Headers({ 'content-type': 'text/html; charset=utf-8' }));
