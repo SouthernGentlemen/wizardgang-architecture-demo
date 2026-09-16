@@ -76,7 +76,7 @@ export function securityContent(env: Env): PageContent {
       <h2 id="report-vulnerability-heading">${reportVulnerability}</h2>
       <p>Use the repository's private vulnerability channel for suspected vulnerabilities, active security incidents, credentials, exploit details, or sensitive infrastructure information.</p>
     </div>
-    <div class="page-tools"><a class="button button-primary" href="${reportUrl}">${openPrivateReport}</a><a class="text-link" href="${escapeHtml(ADVISORIES_API_ROUTE)}">Published advisory JSON</a><a class="text-link" href="${escapeHtml(sourceUrl(env, 'src/demos/security-page.ts'))}">Route source</a>${referenceDetails([
+    <div class="page-tools"><a class="button button-primary" href="${reportUrl}">${openPrivateReport}</a><a class="text-link" href="${escapeHtml(ADVISORIES_API_ROUTE)}">Published advisory JSON</a>${referenceDetails([
       { label: 'Security page implementation', href: sourceUrl(env, 'src/demos/security-page.ts') },
       { label: 'Security policy source', href: sourceUrl(env, 'SECURITY.md') },
       { label: 'Machine-readable security.txt', href: '/.well-known/security.txt' },
