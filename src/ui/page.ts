@@ -15,8 +15,7 @@ import {
   type LocalizationContext,
 } from '../i18n/runtime';
 import { localizePresentation } from '../i18n/presentation';
-import { runtimeStyles } from './runtime-styles';
-import { styles } from './styles';
+import { criticalStyles, demoStyles, shellStylesheetAsset } from './style-delivery';
 import { versionProof } from './version-proof';
 import { withSecurityHeaders } from '../lib/http';
 
@@ -119,6 +118,8 @@ function shell(env: Env, content: PageContent): Response {
   const siteName = localization.t('app.title', SITE_NAME);
   const themeLabel = localization.t('shell.theme_toggle', 'Theme');
   const ogImageAlt = localization.t('meta.og_image_alt', 'WizardGang Architecture — Architecture you can inspect.');
+  const shellStylesheetHref = routeUrl('operations.assets', { asset: shellStylesheetAsset });
+  const headExtra = `${content.routeId === 'demos.index' ? `<style data-demo-styles>${demoStyles}</style>` : ''}${content.headExtra ?? ''}`;
   const html = `<!doctype html>
 <html lang="${escapeHtml(lang)}" dir="${escapeHtml(dir)}">
 <head>
@@ -140,9 +141,10 @@ function shell(env: Env, content: PageContent): Response {
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://demo.wizardgang.ai/assets/og.png">
   <link rel="canonical" href="${escapeHtml(canonicalHref)}">
-  ${content.headExtra ?? ''}
+  <style data-critical-shell>${criticalStyles}</style>
+  <link rel="stylesheet" href="${escapeHtml(shellStylesheetHref)}">
+  ${headExtra}
   <link rel="icon" href="${FAVICON}">
-  <style>${styles}${runtimeStyles}</style>
   <script>${THEME_BOOT}</script>
 </head>
 <body${content.routeId ? ` data-route-id="${escapeHtml(content.routeId)}"` : ''}>
