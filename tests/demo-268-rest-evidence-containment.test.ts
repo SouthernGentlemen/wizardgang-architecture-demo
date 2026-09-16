@@ -28,8 +28,8 @@ describe('DEMO-268 REST evidence containment', () => {
     const source = readFileSync('src/demos/demos-page.ts', 'utf8');
     expect(source).toContain("const DEFAULT_DEMO_ID = 'd1'");
     expect(source).toContain("history.pushState(null, '', nextHash)");
-    expect(source).toContain("window.addEventListener('hashchange', () => applySelection(true))");
-    expect(source).toContain("window.addEventListener('popstate', () => applySelection(true))");
+    expect(source).toContain("window.addEventListener('hashchange', applySelection)");
+    expect(source).toContain("window.addEventListener('popstate', applySelection)");
     expect(source).not.toContain('All demos');
   });
 

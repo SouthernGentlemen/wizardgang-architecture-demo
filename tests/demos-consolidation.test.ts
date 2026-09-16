@@ -52,8 +52,8 @@ describe('consolidated architecture demos', () => {
     const source = readFileSync('src/demos/demos-page.ts', 'utf8');
     for (const fragment of fragments) expect(source).toContain(`id: '${fragment}'`);
     expect(source).toContain("const DEFAULT_DEMO_ID = 'd1'");
-    expect(source).toContain("window.addEventListener('hashchange', () => applySelection(true))");
-    expect(source).toContain("window.addEventListener('popstate', () => applySelection(true))");
+    expect(source).toContain("window.addEventListener('hashchange', applySelection)");
+    expect(source).toContain("window.addEventListener('popstate', applySelection)");
     expect(source).toContain("history.pushState(null, '', nextHash)");
     expect(source).toContain("section.dispatchEvent(new CustomEvent('demo:deactivate'))");
     expect(source).not.toContain('name="architecture-demo"');
@@ -66,7 +66,7 @@ describe('consolidated architecture demos', () => {
     expect(page.status).toBe(200);
     expect(html).not.toContain('/api/labs/edge');
     expect(html).not.toContain('/auth/session');
-    expect((html.match(/<div class="demo-panel" data-demo-panel>/g) ?? [])).toHaveLength(1);
+    expect((html.match(/<div class="demo-panel" data-demo-panel\b/g) ?? [])).toHaveLength(1);
     expect((html.match(/<section id="demo-workbench" class="demo-workbench" data-demo-workbench/g) ?? [])).toHaveLength(1);
     expect(html).not.toContain('<details class="demo-disclosure"');
 

@@ -79,7 +79,7 @@ export function accessibilityContent(_request: Request, env: Env): PageContent {
     const load=async()=>{
       state.textContent='Scanning';
       meta.textContent='Loading the accessible behavior…';
-      try{const response=await fetch('/api/labs/accessibility?mode=accessible');if(!response.ok)throw new Error('frame unavailable');frame.srcdoc=await response.text()}catch{state.textContent='Unavailable';meta.textContent='The accessible behavior and automated scan are unavailable.'}
+      try{const response=await fetch('/api/labs/accessibility?mode=accessible');if(!response.ok)throw new Error('frame unavailable');const html=await response.text();frame.contentWindow.location.replace('data:text/html;charset=utf-8,'+encodeURIComponent(html))}catch{state.textContent='Unavailable';meta.textContent='The accessible behavior and automated scan are unavailable.'}
     };
     load();
   })();

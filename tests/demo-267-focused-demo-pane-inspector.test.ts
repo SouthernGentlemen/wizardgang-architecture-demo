@@ -57,7 +57,7 @@ describe('DEMO-267 focused demo pane and inspector', () => {
     const source = readFileSync('src/demos/demos-page.ts', 'utf8');
     expect(source).toContain('grid-template-columns:minmax(0,7fr) minmax(16rem,3fr)');
     expect(source).toContain('@media(max-width:900px){.demo-workbench-layout{grid-template-columns:minmax(0,1fr)}');
-    expect(source).toContain('.demo-panel{min-width:0;min-height:20rem;padding:1rem;overflow-x:auto}');
+    expect(source).toContain('.demo-panel{min-width:0;max-width:100%;min-height:20rem;padding:1rem;overflow-x:auto}');
   });
 
   it('mirrors real D1 request evidence and delegates reset to the mounted demo instead of fabricating state', () => {
@@ -74,8 +74,8 @@ describe('DEMO-267 focused demo pane and inspector', () => {
     expect(source).toContain("section.dispatchEvent(new CustomEvent('demo:deactivate'))");
     expect(source).toContain('if (activeId !== id || controller.signal.aborted) return');
     expect(source).toContain('if (htmlCache.size >= demos.length');
-    expect(source).toContain("window.addEventListener('hashchange', () => applySelection(true))");
-    expect(source).toContain("window.addEventListener('popstate', () => applySelection(true))");
+    expect(source).toContain("window.addEventListener('hashchange', applySelection)");
+    expect(source).toContain("window.addEventListener('popstate', applySelection)");
     expect(source).toContain("history.pushState(null, '', nextHash)");
     expect((source.match(/const DEFAULT_DEMO_ID = 'd1'/g) ?? [])).toHaveLength(1);
   });

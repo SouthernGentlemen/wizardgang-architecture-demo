@@ -242,11 +242,112 @@ async function inspectPath(cdp, pathname, locale, label) {
 }
 
 async function dispatchKey(cdp, key, code = key) {
-  const virtualKeyCodes = { Tab: 9, Enter: 13, ' ': 32, ArrowDown: 40 };
+  const virtualKeyCodes = { Tab: 9, Enter: 13, ' ': 32, Home: 36, End: 35, ArrowLeft: 37, ArrowRight: 39, ArrowDown: 40 };
   const virtualKeyCode = virtualKeyCodes[key] ?? 0;
   const params = { key, code, windowsVirtualKeyCode: virtualKeyCode, nativeVirtualKeyCode: virtualKeyCode };
   await cdp.call('Input.dispatchKeyEvent', { type: 'keyDown', ...params });
   await cdp.call('Input.dispatchKeyEvent', { type: 'keyUp', ...params });
+}
+
+async function waitForExpression(cdp, expression, label, attempts = 80) {
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    if (await evaluate(cdp, expression)) return;
+    await sleep(50);
+  }
+  throw new Error(`Timed out waiting for ${label}`);
+}
+
+async function assertWorkbenchState(cdp, expectedId, label) {
+  await waitForExpression(
+    cdp,
+    `document.querySelector('[data-demo-workbench]')?.dataset.demoId === ${JSON.stringify(expectedId)} && document.querySelector('[data-demo-workbench]')?.dataset.demoMounted === 'true'`,
+    `${label} to mount`,
+  );
+  const state = await evaluate(cdp, `(()=>{
+    const selectedCategories=[...document.querySelectorAll('[data-demo-category][aria-selected="true"]')];
+    const categoryTabStops=[...document.querySelectorAll('[data-demo-category]')].filter((node)=>node.tabIndex===0);
+    const visibleSections=[...document.querySelectorAll('[data-demo-panel] [data-demo-section]')].filter((node)=>!node.hidden);
+    return {
+      hash: location.hash,
+      id: document.querySelector('[data-demo-workbench]')?.dataset.demoId,
+      mounted: visibleSections.length,
+      selectedCategories: selectedCategories.length,
+      categoryTabStops: categoryTabStops.length,
+      busy: document.querySelector('[data-demo-panel]')?.getAttribute('aria-busy'),
+    };
+  })()`);
+  const failures = [];
+  if (state.hash !== `#${expectedId}`) failures.push(`hash=${state.hash}`);
+  if (state.id !== expectedId) failures.push(`demo=${state.id}`);
+  if (state.mounted !== 1) failures.push(`mounted presentations=${state.mounted}`);
+  if (state.selectedCategories !== 1) failures.push(`selected categories=${state.selectedCategories}`);
+  if (state.categoryTabStops !== 1) failures.push(`category tab stops=${state.categoryTabStops}`);
+  if (state.busy !== 'false') failures.push(`aria-busy=${state.busy}`);
+  if (failures.length) throw new Error(`${label}: ${failures.join('; ')}`);
+}
+
+async function switchWorkbenchLocale(cdp, locale, expectedId) {
+  const loaded = cdp.once('Page.loadEventFired');
+  await evaluate(cdp, `(()=>{
+    const form=document.querySelector('[data-preserve-fragment]');
+    const select=document.querySelector('#global-language');
+    if (!(form instanceof HTMLFormElement) || !(select instanceof HTMLSelectElement)) return false;
+    select.value=${JSON.stringify(locale)};
+    form.requestSubmit();
+    return true;
+  })()`);
+  await loaded;
+  await assertWorkbenchState(cdp, expectedId, `${expectedId} ${locale} locale switch`);
+  const localeState = await evaluate(cdp, `({lang:document.documentElement.lang,dir:document.documentElement.dir,hash:location.hash})`);
+  if (localeState.lang !== locale || localeState.dir !== (locale === 'ar' ? 'rtl' : 'ltr') || localeState.hash !== `#${expectedId}`) {
+    throw new Error(`${expectedId}: locale switch lost state (${JSON.stringify(localeState)})`);
+  }
+}
+
+async function traverseBrowserHistory(cdp, offset, expectedId, label) {
+  const history = await cdp.call('Page.getNavigationHistory');
+  const entry = history.entries[history.currentIndex + offset];
+  if (!entry) throw new Error(`${label}: browser history has no entry at offset ${offset}`);
+  await cdp.call('Page.navigateToHistoryEntry', { entryId: entry.id });
+  await assertWorkbenchState(cdp, expectedId, label);
+}
+
+async function workbenchInteractionAudit(cdp) {
+  await navigate(cdp, `${origin}/demos?lang=en#d1`);
+  await assertWorkbenchState(cdp, 'd1', 'D1 default');
+  await inspectCurrentPage(cdp, 'en', 'D1 workbench');
+
+  await evaluate(cdp, `document.querySelector('[data-demo-category][aria-selected="true"]')?.focus()`);
+  await dispatchKey(cdp, 'ArrowRight', 'ArrowRight');
+  await assertWorkbenchState(cdp, 'rest', 'category ArrowRight');
+  const categoryFocus = await evaluate(cdp, `document.activeElement?.getAttribute('data-demo-category')`);
+  if (categoryFocus !== 'APIs') throw new Error(`Category navigation lost focus: ${categoryFocus}`);
+
+  await evaluate(cdp, `document.querySelector('[data-demo-link="graphql"]')?.click()`);
+  await assertWorkbenchState(cdp, 'graphql', 'GraphQL secondary selector');
+  await evaluate(cdp, `document.querySelector('[data-demo-link="workers"]')?.click()`);
+  await assertWorkbenchState(cdp, 'workers', 'Workers selection');
+  await evaluate(cdp, `document.querySelector('[data-demo-link="accessibility"]')?.click()`);
+  await assertWorkbenchState(cdp, 'accessibility', 'Accessibility selection');
+
+  await traverseBrowserHistory(cdp, -1, 'workers', 'first Back');
+  await traverseBrowserHistory(cdp, -1, 'graphql', 'second Back');
+  await traverseBrowserHistory(cdp, 1, 'workers', 'Forward');
+
+  await evaluate(cdp, `document.querySelector('[data-demo-inspector-mode="Guide"]')?.focus()`);
+  await dispatchKey(cdp, 'End', 'End');
+  const inspector = await evaluate(cdp, `(()=>{const tab=document.activeElement;const panel=document.querySelector('[data-demo-inspector-panel]');return {mode:tab?.getAttribute('data-demo-inspector-mode'),selected:tab?.getAttribute('aria-selected'),labelledBy:panel?.getAttribute('aria-labelledby')}})()`);
+  if (inspector.mode !== 'Evidence' || inspector.selected !== 'true' || inspector.labelledBy !== 'demo-inspector-tab-evidence') {
+    throw new Error(`Inspector keyboard relationship failed: ${JSON.stringify(inspector)}`);
+  }
+
+  for (const id of ['d1', 'rest', 'workers', 'accessibility', 'i18n']) {
+    await navigate(cdp, `${origin}/demos?lang=en#${id}`);
+    await assertWorkbenchState(cdp, id, `${id} English direct fragment`);
+    await switchWorkbenchLocale(cdp, 'ar', id);
+    await inspectCurrentPage(cdp, 'ar', `${id} Arabic workbench`);
+    await switchWorkbenchLocale(cdp, 'en', id);
+  }
 }
 
 async function keyboardSmoke(cdp, pathname) {
@@ -357,9 +458,25 @@ async function main() {
     await inspectCurrentPage(cdp, 'en', 'home light theme');
     axeRuns += 1;
 
+    await workbenchInteractionAudit(cdp);
+    axeRuns += 6;
+
     for (const pathname of auditConfig.narrowViewportPaths) {
       await cdp.call('Emulation.setDeviceMetricsOverride', { width: 320, height: 900, deviceScaleFactor: 1, mobile: true });
       await inspectPath(cdp, pathname, 'en', `${pathname} 320px`);
+      if (new URL(pathname, origin).pathname === manifest.find((route) => route.id === 'demos.index')?.route) {
+        const expectedId = new URL(pathname, origin).hash.slice(1) || 'd1';
+        await assertWorkbenchState(cdp, expectedId, `${pathname} narrow workbench`);
+        const reflow = await evaluate(cdp, `(()=>{
+          const stage=document.querySelector('.demo-stage')?.getBoundingClientRect();
+          const inspector=document.querySelector('.demo-inspector')?.getBoundingClientRect();
+          const layout=document.querySelector('.demo-workbench-layout');
+          return {stageBottom:stage?.bottom,inspectorTop:inspector?.top,columns:layout ? getComputedStyle(layout).gridTemplateColumns : ''};
+        })()`);
+        if (!(reflow.inspectorTop >= reflow.stageBottom - 1) || reflow.columns.trim().split(/\s+/).length !== 1) {
+          throw new Error(`${pathname}: inspector did not stack below the live demonstration (${JSON.stringify(reflow)})`);
+        }
+      }
       axeRuns += 1;
     }
     await cdp.call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 1000, deviceScaleFactor: 1, mobile: false });
@@ -376,7 +493,7 @@ async function main() {
 
     for (const pathname of auditConfig.keyboardPaths) await keyboardSmoke(cdp, pathname);
 
-    console.log(`Site browser audit passed: ${pages.length} canonical public routes, ${browserPages} route/locale renders, ${auditConfig.states.length} explicit state fixtures, ${axeRuns} axe runs, ${auditConfig.narrowViewportPaths.length} narrow reflow samples, and ${auditConfig.keyboardPaths.length} keyboard smoke samples.`);
+    console.log(`Site browser audit passed: ${pages.length} canonical public routes, ${browserPages} route/locale renders, ${auditConfig.states.length} explicit state fixtures, ${axeRuns} axe runs, one complete Demo Workbench interaction/history/locale audit, ${auditConfig.narrowViewportPaths.length} narrow reflow samples, and ${auditConfig.keyboardPaths.length} keyboard smoke samples.`);
     console.log('Automated accessibility result: no automatically detectable violation observed in the bounded Chromium/axe matrix. This is not WCAG conformance or AAA certification.');
   } catch (error) {
     if (wrangler.exitCode !== null) console.error(`wrangler exited ${wrangler.exitCode}: ${wranglerError.slice(-4000)}`);

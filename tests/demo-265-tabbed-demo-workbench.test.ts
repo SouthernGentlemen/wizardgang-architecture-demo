@@ -49,7 +49,7 @@ describe('DEMO-265 tabbed demo workbench', () => {
     expect(html).toContain('aria-label="Demo categories"');
     expect(html).toContain('data-demo-id="d1"');
     expect((html.match(/<section id="demo-workbench" class="demo-workbench" data-demo-workbench/g) ?? [])).toHaveLength(1);
-    expect((html.match(/<div class="demo-panel" data-demo-panel>/g) ?? [])).toHaveLength(1);
+    expect((html.match(/<div class="demo-panel" data-demo-panel\b/g) ?? [])).toHaveLength(1);
     expect(html).not.toContain('<details');
     expect(html).not.toContain('Primary demonstrations');
     expect(html).not.toContain('Supporting proof');
@@ -74,8 +74,8 @@ describe('DEMO-265 tabbed demo workbench', () => {
     const source = readFileSync('src/demos/demos-page.ts', 'utf8');
     expect(source).toContain("const DEFAULT_DEMO_ID = 'd1'");
     expect(source).toContain('return byId.has(id) ? id : defaultDemoId');
-    expect(source).toContain("window.addEventListener('hashchange', () => applySelection(true))");
-    expect(source).toContain("window.addEventListener('popstate', () => applySelection(true))");
+    expect(source).toContain("window.addEventListener('hashchange', applySelection)");
+    expect(source).toContain("window.addEventListener('popstate', applySelection)");
     expect(source).toContain("history.pushState(null, '', nextHash)");
   });
 
