@@ -19,8 +19,6 @@ import {
   listPublishedAssuranceRecords,
   presentedPublishedEvidenceRecords,
 } from '../src/assurance/publication';
-import { assuranceIndexContent } from '../src/demos/assurance';
-import { renderPage } from '../src/ui/page';
 import type { Env } from '../src/types';
 import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
 
@@ -30,37 +28,19 @@ const environment = {
   DEPLOYED_SHA: '0123456789abcdef0123456789abcdef01234567',
 } as unknown as Env;
 
-function complianceIds(html: string): string[] {
-  return [...html.matchAll(/<details class="implementation-notes" id="((?:ISO27001|ISO42001|WCAG)-[^"]+)">/g)].map((match) => match[1]);
-}
-
-function riskIds(html: string): string[] {
-  return [...html.matchAll(/<details class="implementation-notes" id="((?:SEC|AI)-RISK-[^"]+)">/g)].map((match) => match[1]);
-}
-
-async function assuranceHtml(path: string): Promise<string> {
-  const content = await assuranceIndexContent(new Request(`https://demo.wizardgang.ai${path}`), environment);
-  return renderPage(environment, { ...content, routeId: 'assurance.index' }).text();
-}
-
 describe('common canonical assurance query and presentation service', () => {
   it('selects the same canonical records for API and HTML consumers', async () => {
     const complianceFilters = { framework: 'wcag-2.2', status: 'partial', level: 'AA' };
     const complianceQuery = serializeAssuranceFilters('compliance', complianceFilters);
     const complianceExpected = filterPublishedAssuranceRecords('compliance', complianceFilters).map((record) => record.id);
     const complianceApi = await (await reportingCollectionResponse(new Request(`https://demo.wizardgang.ai/api/reporting/compliance?${complianceQuery}`), environment, 'compliance')).json() as { records: Array<{ id: string }> };
-    const focusedComplianceId = complianceExpected[0];
-    const complianceHtml = await assuranceHtml(`/assurance?${complianceQuery}&q=${focusedComplianceId}#frameworks`);
     expect(complianceApi.records.map((record) => record.id)).toEqual(complianceExpected);
-    expect(complianceIds(complianceHtml)).toEqual([focusedComplianceId]);
 
     const riskFilters = { framework: 'security', residual: 'high' };
     const riskQuery = serializeAssuranceFilters('risks', riskFilters);
     const riskExpected = filterPublishedAssuranceRecords('risks', riskFilters).map((record) => record.id);
     const riskApi = await (await reportingCollectionResponse(new Request(`https://demo.wizardgang.ai/api/reporting/risks?${riskQuery}`), environment, 'risks')).json() as { records: Array<{ id: string }> };
-    const riskHtml = await assuranceHtml(`/assurance?riskFramework=${riskFilters.framework}&riskResidual=${riskFilters.residual}#risks`);
     expect(riskApi.records.map((record) => record.id)).toEqual(riskExpected);
-    expect(riskIds(riskHtml)).toEqual(riskExpected);
   });
 
   it('derives filter vocabulary, counts, lookup, and URLs from registered contracts', () => {
@@ -130,7 +110,7 @@ describe('common canonical assurance query and presentation service', () => {
     expect(apiSource).not.toContain('serializeAssuranceV1');
     expect(apiSource).not.toContain('riskLinks:');
     expect(apiSource).not.toContain('frameworkReferences:');
-    for (const path of ['src/demos/assurance.ts', 'src/demos/assurance-workbench-renderers.ts', 'src/demos/security-page.ts']) {
+    for (const path of ['src/demos/security-page.ts']) {
       const source = readFileSync(path, 'utf8');
       expect(source).not.toContain('.riskLinks');
       expect(source).not.toContain('.controlLinks');

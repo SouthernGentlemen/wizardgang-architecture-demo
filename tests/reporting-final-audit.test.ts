@@ -63,11 +63,7 @@ describe('final common reporting audit guards', () => {
 
   it('keeps assurance reporting normalization in the common presentation model used by assurance', () => {
     const service = readFileSync('src/reporting/service.ts', 'utf8');
-    const assurance = readFileSync('src/demos/assurance.ts', 'utf8');
     expect(service).not.toContain('AssuranceCollectionStatus');
-    expect(assurance).toContain('queryReportingCollection');
-    expect(assurance).toContain('presentReportingQuery');
-    expect(assurance).not.toContain('structuredAvailability(');
   });
 
   it('models Cloudflare product and billed-cost state with common reporting availability after dashboard retirement', () => {
