@@ -17,6 +17,7 @@ import {
 import { localizePresentation } from '../i18n/presentation';
 import { runtimeStyles } from './runtime-styles';
 import { styles } from './styles';
+import { versionProof } from './version-proof';
 import { withSecurityHeaders } from '../lib/http';
 
 const SITE_NAME = 'WizardGang Architecture Demo';
@@ -102,8 +103,10 @@ function languageSelector(localization: LocalizationContext): string {
 function shell(env: Env, content: PageContent): Response {
   const localization = localizationForEnv(env);
   const homeRoute = localization.href(routeUrl(ROOT_ROUTE_ID));
+  const securityRoute = localization.href(routeUrl('security.index'));
   const repositoryUrl = repoUrl(env);
   const issueUrl = `${repositoryUrl}/issues/new?template=bug.yml`;
+  const version = versionProof(env);
   const routeSourceModule = content.routeId
     ? registeredRouteMetadata().find((route) => route.id === content.routeId)?.source.module
     : undefined;
@@ -161,7 +164,8 @@ function shell(env: Env, content: PageContent): Response {
 
 <main class="site-main" id="main">${content.body}</main>
 <footer class="site-footer">
-  <span><a href="${escapeHtml(issueUrl)}">${escapeHtml(localization.t('shell.report_issue', 'Report an issue'))}</a>${routeSourceLink}</span>
+  <span class="site-footer-links"><a href="${escapeHtml(securityRoute)}">${escapeHtml(localization.t('nav.security.index', 'Security'))}</a> · <a href="${escapeHtml(issueUrl)}">${escapeHtml(localization.t('shell.report_issue', 'Report an issue'))}</a>${routeSourceLink}</span>
+  <span class="site-footer-build"><a href="${escapeHtml(version.href)}">${escapeHtml(version.label)}</a> · <span>${escapeHtml(version.detail)}</span></span>
 </footer>
 <script>${themeToggleScript()};(()=>{const form=document.querySelector('[data-preserve-fragment]');if(!form)return;form.addEventListener('submit',()=>{form.action=location.pathname+location.hash})})()</script>
 </body>
@@ -277,10 +281,8 @@ export function demoContent(env: Env, demo: DemoDefinition, _all: DemoDefinition
     ...(demo.supportingSources ?? []).map((source) => ({ label: source.label, href: sourceUrl(env, source.path) })),
     ...(demo.repositoryLinks ?? []).map((link) => ({ label: link.label, href: `${repoUrl(env)}${link.path}` })),
   ];
-  const pageTools = `<div class="page-tools">
-    <a class="text-link" href="${escapeHtml(sourceUrl(env, demo.sourcePath))}">Route source</a>
-    ${isPlatformDemo ? '' : referenceDetails(references)}
-  </div>`;
+  const referenceTools = isPlatformDemo ? '' : referenceDetails(references);
+  const pageTools = referenceTools ? `<div class="page-tools">${referenceTools}</div>` : '';
   const body = `
 <section class="page-header">
   <h1>${escapeHtml(demo.title)}</h1>

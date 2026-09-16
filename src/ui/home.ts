@@ -1,10 +1,10 @@
 import { AVAILABILITY_RETENTION_DAYS, collectHealth } from '../api/operations';
 import { escapeHtml } from '../lib/html';
-import { repoUrl } from '../lib/github';
 import { routeUrl } from '../routing/application-routes';
 import type { Env } from '../types';
 import { localizationForEnv } from '../i18n/runtime';
 import { pageResponse } from './page';
+import { versionProof } from './version-proof';
 
 interface AvailabilityProof {
   label: string;
@@ -50,16 +50,6 @@ async function measuredAvailability(env: Env): Promise<AvailabilityProof> {
   } catch {
     return { label: 'Unavailable', detail: `Scheduled observations · ${AVAILABILITY_RETENTION_DAYS}-day retention` };
   }
-}
-
-function versionProof(env: Env): { label: string; detail: string; href: string } {
-  const version = env.DEPLOYED_VERSION || 'development';
-  const commit = env.DEPLOYED_SHA?.trim() || '';
-  return {
-    label: version,
-    detail: commit ? `Commit ${commit.slice(0, 7)}` : 'Commit not supplied',
-    href: commit ? `${repoUrl(env)}/commit/${encodeURIComponent(commit)}` : repoUrl(env),
-  };
 }
 
 export async function renderHome(env: Env): Promise<Response> {

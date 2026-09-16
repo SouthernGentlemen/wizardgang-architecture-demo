@@ -889,7 +889,7 @@ summary { cursor: pointer; }
 .mcp-architecture p { max-width: 76ch; color: var(--muted); }
 .mcp-pager { justify-content: space-between; margin-top: 2.5rem; }
 
-.site-footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .9rem; padding: 1.6rem 0 2.6rem; border-top: 1px solid var(--line); color: var(--muted); font: .7rem/1.6 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+.site-footer { display: flex; justify-content: space-between; gap: .9rem; padding: 1.6rem 0 2.6rem; border-top: 1px solid var(--line); color: var(--muted); font: .7rem/1.6 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
 .site-footer a { color: var(--paper); }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
@@ -998,7 +998,6 @@ summary { cursor: pointer; }
   .mcp-tool-card > p { min-height: 0; }
   .mcp-activity-state { align-items: flex-start; flex-wrap: wrap; }
   .mcp-activity-state > span:last-child { flex: 1 0 100%; margin-left: 1.2rem; }
-  .site-footer { flex-direction: column; }
   .operations-kpis, .availability-kpis, .usage-products { grid-template-columns: 1fr; }
   .operations-section-heading { align-items: flex-start; flex-direction: column; }
 }
