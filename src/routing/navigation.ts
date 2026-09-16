@@ -42,11 +42,6 @@ export function primaryNavigation(): RegisteredRouteMetadataView[] {
     ));
 }
 
-export function secondaryNavigation(parentRouteId: string): RegisteredRouteMetadataView[] {
-  return registeredPages()
-    .filter((route) => route.page?.navigation === 'secondary' && route.page.parent === parentRouteId);
-}
-
 /** Project only the visitor-facing MVP product destinations into the homepage architecture map. */
 export function architectureMapEntries(): RegisteredRouteMetadataView[] {
   return registeredPages()

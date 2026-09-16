@@ -3,7 +3,6 @@ import { routeUrl } from '../routing/application-routes';
 import {
   primaryNavigation,
   registeredRouteMetadata,
-  secondaryNavigation,
   type RegisteredRouteMetadataView,
 } from '../routing/navigation';
 import { escapeHtml } from '../lib/html';
@@ -16,7 +15,6 @@ import {
   type LocalizationContext,
 } from '../i18n/runtime';
 import { localizePresentation } from '../i18n/presentation';
-import { navigationStyles } from './navigation-styles';
 import { runtimeStyles } from './runtime-styles';
 import { styles } from './styles';
 import { withSecurityHeaders } from '../lib/http';
@@ -25,9 +23,6 @@ const SITE_NAME = 'WizardGang Architecture Demo';
 const DEFAULT_DESCRIPTION = 'A live Cloudflare architecture lab with stable task routes and demonstration fragments, executable behavior, and direct links to the public code behind it.';
 const ROOT_ROUTE_ID = 'interfaces.frontend.index';
 const OPERATIONS_ROUTE_ID = 'operations.index';
-const RELATED_NAVIGATION: Readonly<Record<string, readonly string[]>> = Object.freeze({
-  'assurance.index': Object.freeze(['security.index']),
-});
 
 /** Acid square with an offset violet square — the same mark as the wordmark. */
 const FAVICON = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#08080b"/><rect x="5" y="15" width="12" height="12" fill="#d9ff43"/><rect x="15" y="5" width="12" height="12" fill="#a489ff"/></svg>')}`;
@@ -82,106 +77,15 @@ export function pageContent(
   };
 }
 
-function routeMetadata(routeId: string | undefined): RegisteredRouteMetadataView | undefined {
-  if (!routeId) return undefined;
-  return registeredRouteMetadata().find((route) => route.id === routeId);
-}
-
 function localizedRouteLabel(localization: LocalizationContext, route: RegisteredRouteMetadataView): string {
   return localization.t(`nav.${route.id}`, route.page?.label ?? route.id);
 }
 
-function ancestorRouteIds(routeId: string | undefined): ReadonlySet<string> {
-  if (!routeId) return new Set();
-  const byId = new Map(registeredRouteMetadata().map((route) => [route.id, route]));
-  const ancestors = new Set<string>();
-  let current = byId.get(routeId);
-  while (current?.page?.parent) {
-    const parentId = current.page.parent;
-    if (ancestors.has(parentId)) break;
-    ancestors.add(parentId);
-    current = byId.get(parentId);
-  }
-  return ancestors;
-}
-
 function primaryNavigationHtml(localization: LocalizationContext, currentRouteId: string | undefined): string {
-  const ancestors = ancestorRouteIds(currentRouteId);
   return primaryNavigation().map((route) => {
     const current = route.id === currentRouteId;
-    const sectionCurrent = !current && ancestors.has(route.id);
-    return `<a href="${escapeHtml(localization.href(routeUrl(route.id)))}"${current ? ' aria-current="page"' : ''}${sectionCurrent ? ' data-section-current' : ''}>${escapeHtml(localizedRouteLabel(localization, route))}</a>`;
+    return `<a href="${escapeHtml(localization.href(routeUrl(route.id)))}"${current ? ' aria-current="page"' : ''}>${escapeHtml(localizedRouteLabel(localization, route))}</a>`;
   }).join('\n    ');
-}
-
-/** Project the registered parent chain into a single canonical breadcrumb trail. */
-export function breadcrumbNavigation(
-  currentRouteId: string | undefined,
-  localization: LocalizationContext = localizationForEnv({} as Env),
-): string {
-  const current = routeMetadata(currentRouteId);
-  if (!current?.page) return '';
-  const byId = new Map(registeredRouteMetadata().map((route) => [route.id, route]));
-  const chain: RegisteredRouteMetadataView[] = [current];
-  const seen = new Set([current.id]);
-  let parentId = current.page.parent;
-  while (parentId) {
-    if (seen.has(parentId)) throw new Error(`Breadcrumb parent cycle detected at '${parentId}'`);
-    const parent = byId.get(parentId);
-    if (!parent?.page) throw new Error(`Breadcrumb parent '${parentId}' is not a registered page`);
-    chain.push(parent);
-    seen.add(parentId);
-    parentId = parent.page.parent;
-  }
-  chain.reverse();
-  return `<nav class="breadcrumb" aria-label="${escapeHtml(localization.t('shell.breadcrumb', 'Breadcrumb'))}"><ol>${chain.map((route, index) => {
-    const final = index === chain.length - 1;
-    const label = localizedRouteLabel(localization, route);
-    return final
-      ? `<li aria-current="page">${escapeHtml(label)}</li>`
-      : `<li><a href="${escapeHtml(localization.href(routeUrl(route.id)))}">${escapeHtml(label)}</a></li>`;
-  }).join('')}</ol></nav>`;
-}
-
-function secondaryParent(current: RegisteredRouteMetadataView): { id: string; routes: RegisteredRouteMetadataView[] } | undefined {
-  if (current.page?.parent) {
-    const siblingRoutes = secondaryNavigation(current.page.parent);
-    if (siblingRoutes.length && (current.page.navigation === 'secondary' || siblingRoutes.some((route) => route.id === current.id))) {
-      return { id: current.page.parent, routes: siblingRoutes };
-    }
-  }
-  const childRoutes = secondaryNavigation(current.id);
-  return childRoutes.length ? { id: current.id, routes: childRoutes } : undefined;
-}
-
-/** Project child-route navigation once in the shell; related domains remain a separate landmark. */
-export function secondaryNavigationHtml(
-  currentRouteId: string | undefined,
-  localization: LocalizationContext = localizationForEnv({} as Env),
-): string {
-  const current = routeMetadata(currentRouteId);
-  if (!current?.page) return '';
-  const projection = secondaryParent(current);
-  if (!projection) return '';
-  const parent = routeMetadata(projection.id);
-  if (!parent?.page) return '';
-  const parentLabel = localizedRouteLabel(localization, parent);
-  const siblingLabel = localization.t('shell.sections', '{section} sections', { section: parentLabel });
-  const siblingList = `<nav class="secondary-navigation" aria-label="${escapeHtml(siblingLabel)}"><ul class="secondary-navigation-list">${projection.routes.map((route) =>
-    `<li><a href="${escapeHtml(localization.href(routeUrl(route.id)))}"${route.id === current.id ? ' aria-current="page" data-route-current' : ''}>${escapeHtml(localizedRouteLabel(localization, route))}</a></li>`
-  ).join('')}</ul></nav>`;
-  const relatedIds = RELATED_NAVIGATION[projection.id] ?? [];
-  const relatedRoutes = relatedIds.map((routeId) => routeMetadata(routeId)).filter((route): route is RegisteredRouteMetadataView => Boolean(route?.page));
-  const relatedLabel = localization.t('shell.related_destinations', '{section} related destinations', { section: parentLabel });
-  const relatedList = relatedRoutes.length
-    ? `<nav class="related-navigation" aria-label="${escapeHtml(relatedLabel)}"><ul class="related-navigation-list">${relatedRoutes.map((route) => `<li><a href="${escapeHtml(localization.href(routeUrl(route.id)))}">${escapeHtml(localizedRouteLabel(localization, route))}</a></li>`).join('')}</ul></nav>`
-    : '';
-  return `<div class="secondary-navigation-shell">${siblingList}${relatedList}</div>`;
-}
-
-function shellNavigation(localization: LocalizationContext, currentRouteId: string | undefined): string {
-  const secondary = secondaryNavigationHtml(currentRouteId, localization);
-  return secondary ? `<div class="shell-navigation">${secondary}</div>` : '';
 }
 
 function languageSelector(localization: LocalizationContext): string {
@@ -243,7 +147,7 @@ function shell(env: Env, content: PageContent): Response {
   <link rel="canonical" href="${escapeHtml(canonicalHref)}">
   ${content.headExtra ?? ''}
   <link rel="icon" href="${FAVICON}">
-  <style>${styles}${navigationStyles}${runtimeStyles}</style>
+  <style>${styles}${runtimeStyles}</style>
   <script>${THEME_BOOT}</script>
 </head>
 <body${content.routeId ? ` data-route-id="${escapeHtml(content.routeId)}"` : ''}>
@@ -262,7 +166,7 @@ function shell(env: Env, content: PageContent): Response {
     ${languageSelector(localization)}
   </div>
 </header>
-${shellNavigation(localization, content.routeId)}
+
 <main class="site-main" id="main">${content.body}</main>
 <footer class="site-footer">
   <span><a href="${escapeHtml(issueUrl)}">${escapeHtml(localization.t('shell.report_issue', 'Report an issue'))}</a>${routeSourceLink}</span>

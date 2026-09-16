@@ -66,9 +66,6 @@ html {
 [data-canonical-source] { text-align: start; }
 
 html[dir='rtl'] .brand-mark { box-shadow: -.5rem -.5rem 0 var(--violet); }
-html[dir='rtl'] .breadcrumb ol,
-html[dir='rtl'] .secondary-navigation-list,
-html[dir='rtl'] .related-navigation-list,
 html[dir='rtl'] .nav { direction: rtl; }
 
 @media (max-width: 760px) {
@@ -103,13 +100,11 @@ html[dir='rtl'] .nav { direction: rtl; }
     outline: 3px solid Highlight !important;
     outline-offset: 3px;
   }
-  .brand-mark,
-  .secondary-navigation a[data-route-current]::after {
+  .brand-mark {
     forced-color-adjust: none;
   }
   .language-selector select,
   .language-selector button,
-  .related-navigation a,
   .card,
   .panel,
   .status-pill,

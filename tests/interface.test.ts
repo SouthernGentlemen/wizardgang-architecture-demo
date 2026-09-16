@@ -10,7 +10,6 @@ import {
   resolveLocalization,
 } from '../src/i18n/runtime';
 import { routeUrl } from '../src/routing/application-routes';
-import { navigationStyles } from '../src/ui/navigation-styles';
 import { renderPage } from '../src/ui/page';
 import { runtimeStyles } from '../src/ui/runtime-styles';
 import { styles } from '../src/ui/styles';
@@ -180,10 +179,10 @@ describe('global localization and accessibility runtime', () => {
     expect(styles).toContain('@media (prefers-reduced-motion: reduce)');
     expect(runtimeStyles).toContain('@media (forced-colors: active)');
     expect(runtimeStyles).toContain('scroll-behavior: auto !important');
-    expect(navigationStyles).toContain('padding-inline-start');
-    expect(navigationStyles).toContain('border-inline-start');
-    expect(navigationStyles).not.toContain('padding-left');
-    expect(navigationStyles).not.toContain('border-left');
+    expect(runtimeStyles).toContain('padding-inline');
+    expect(runtimeStyles).toContain('max-inline-size');
+    expect(runtimeStyles).not.toContain('padding-left');
+    expect(runtimeStyles).not.toContain('border-left');
   });
 });
 

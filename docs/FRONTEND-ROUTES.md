@@ -75,7 +75,7 @@ Removed browser locations are retired, not aliased. A retired browser pathname f
 
 ## Projection model
 
-Route declarations remain the runtime source of truth. Primary/secondary navigation, breadcrumbs, homepage task links, sitemap membership, canonical links, and generated route documentation should be derived from or validated against those declarations.
+Route declarations remain the runtime source of truth. Primary navigation, homepage task links, sitemap membership, canonical links, and generated route documentation should be derived from or validated against those declarations.
 
 Parent relationships are expressed as route IDs, not inferred from pathname prefixes. Projections may report the number of routes they observe, but documentation and tests must not freeze a manually counted route inventory.
 

@@ -1104,4 +1104,14 @@ footer a { color: var(--paper); }
   .rest-schema > summary { grid-template-columns: minmax(0, 1fr) auto; }
   .rest-schema > summary > span { grid-column: 1 / -1; }
 }
+
+@media (max-width: 700px) {
+  .site-header { gap: .2rem .6rem; padding-block: .4rem; }
+  .brand { min-height: 44px; }
+  .brand-copy small { display: none; }
+  .nav { gap: 0; row-gap: 0; }
+  .nav a, .nav button { display: inline-flex; align-items: center; min-height: 44px; padding: .35rem .5rem; }
+  .site-main { padding-top: .6rem; }
+  .page-header, .home-header { margin-top: 0; padding-top: 0; }
+}
 `;

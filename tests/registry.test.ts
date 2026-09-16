@@ -8,7 +8,6 @@ import {
 import {
   architectureMapEntries,
   primaryNavigation,
-  secondaryNavigation,
   sitemapPaths,
 } from '../src/routing/navigation';
 import { operationalRouteRegistry } from '../src/routing/operational-routes';
@@ -33,8 +32,7 @@ describe('architecture demo registry', () => {
     ]);
   });
 
-  it('keeps the retired operations page out of secondary navigation', () => {
-    expect(secondaryNavigation('operations.index')).toEqual([]);
+  it('keeps the retired operations page out of the registered routes', () => {
     expect(applicationRoutes.some((route) => route.id === 'operations.index')).toBe(false);
   });
 

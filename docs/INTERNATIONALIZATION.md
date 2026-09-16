@@ -37,7 +37,7 @@ The context provides translation lookup with configured fallback, plural-categor
 
 ## Shared shell ownership
 
-`src/ui/page.ts` owns shell language. Locale resources provide the skip-link text, landmark names, shell navigation labels, breadcrumb and related-destination labels, brand/home accessible name, main-site text, source labels, theme-control state text, and the global language selector.
+`src/ui/page.ts` owns shell language. Locale resources provide the skip-link text, landmark names, shell navigation labels, brand/home accessible name, main-site text, source labels, theme-control state text, and the global language selector.
 
 The language selector is a native `select` in a GET form. It is available without JavaScript, preserves unrelated query parameters, and submits before the next server-rendered document is emitted. Theme switching remains keyboard operable and preserves focus on the activating button.
 

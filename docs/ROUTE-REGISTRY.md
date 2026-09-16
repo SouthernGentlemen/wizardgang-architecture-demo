@@ -28,15 +28,15 @@ The application module also exposes route-ID URL helpers. Internal callers resol
 A page declaration owns its frontend contract through the `page` block:
 
 - `parent` — the parent page route ID, omitted only for the single root;
-- `label` — navigation and breadcrumb text;
+- `label` — navigation text;
 - `summary` — concise architecture-map and documentation description;
 - `order` — sibling ordering;
-- `navigation` — primary, secondary, or no navigation membership;
+- `navigation` — primary or no navigation membership;
 - `architectureMap` — whether the page participates in the homepage architecture projection.
 
 The hierarchy is expressed in route IDs rather than inferred from pathname prefixes. Canonical pathname ownership remains on the route declaration itself.
 
-Those declarations are projected into primary navigation, secondary navigation, breadcrumbs, the homepage architecture map, sitemap membership, canonical links, and generated route documentation. No projection owns or restates a pathname inventory, and route counts are derived when reported rather than fixed as assertions.
+Those declarations are projected into primary navigation, the homepage architecture map, sitemap membership, canonical links, and generated route documentation. No projection owns or restates a pathname inventory, and route counts are derived when reported rather than fixed as assertions.
 
 `src/routing/navigation.ts` performs the navigation and architecture projections while the shell consumes the result. Active state is matched by route ID so only the current document receives `aria-current="page"`.
 
