@@ -265,18 +265,18 @@ function inspectorModes(demo: ArchitectureDemo): readonly InspectorMode[] {
 }
 
 const pageStyles = `<style>
-.demo-workbench-nav{display:grid;gap:.75rem;margin:1rem 0}.demo-category-tabs{display:flex;gap:.2rem;overflow-x:auto;border-bottom:1px solid var(--line);scrollbar-width:thin}.demo-category-tab{display:inline-flex;align-items:center;min-height:2.75rem;padding:.55rem .8rem;border-bottom:2px solid transparent;color:var(--muted);text-decoration:none;white-space:nowrap}.demo-category-tab:hover{color:var(--paper)}.demo-category-tab[aria-current="location"]{border-bottom-color:var(--acid);color:var(--paper)}.demo-selector-slot{min-height:2.75rem}.demo-local-selector{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}.demo-local-selector a{display:inline-flex;align-items:center;min-height:2.5rem;padding:.4rem .7rem;border:1px solid var(--line);border-radius:999px;text-decoration:none}.demo-local-selector a[aria-current="location"]{border-color:var(--acid);background:var(--panel-2);color:var(--paper)}.demo-workbench{min-width:0;min-height:20rem;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);overflow:hidden}.demo-workbench:focus{outline:2px solid var(--acid);outline-offset:3px}.demo-active-header{display:grid;gap:.35rem;padding:1rem 1.1rem;border-bottom:1px solid var(--line);background:var(--panel-2)}.demo-active-context{margin:0;color:var(--muted);font-size:.82rem;text-transform:uppercase;letter-spacing:.06em}.demo-active-heading{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}.demo-active-heading h2{margin:0;font-size:clamp(1.35rem,2.5vw,1.8rem)}.demo-statuses{display:flex;flex-wrap:wrap;gap:.35rem}.demo-statuses[hidden]{display:none}.demo-status-chip{display:inline-flex;align-items:center;min-height:1.65rem;padding:.15rem .45rem;border:1px solid var(--line);border-radius:999px;color:var(--muted);font:700 .72rem/1 var(--mono)}.demo-active-purpose,.demo-try-this{margin:0;max-width:72rem}.demo-active-purpose{color:var(--muted)}.demo-try-this strong{margin-right:.35rem}.demo-workbench-layout{display:grid;grid-template-columns:minmax(0,7fr) minmax(16rem,3fr);align-items:stretch;min-width:0}.demo-stage{min-width:0}.demo-panel{min-width:0;min-height:20rem;padding:1rem;overflow-x:auto}.demo-panel [data-demo-section]>.page-header:first-child{display:none}.demo-panel-state{display:grid;gap:.65rem;justify-items:start;margin:0;color:var(--muted)}.demo-panel-state.error{color:var(--danger)}.demo-panel-state button{min-height:2.5rem}.demo-inspector{min-width:0;border-left:1px solid var(--line);background:color-mix(in srgb,var(--panel-2) 72%,transparent)}.demo-inspector-header{display:flex;justify-content:space-between;gap:.6rem;align-items:center;padding:.75rem .85rem;border-bottom:1px solid var(--line)}.demo-inspector-header strong{font-size:.92rem}.demo-inspector-tabs{display:flex;gap:.15rem;overflow-x:auto;padding:.45rem .55rem;border-bottom:1px solid var(--line)}.demo-inspector-tab{min-height:2.4rem;padding:.35rem .55rem;border:0;border-bottom:2px solid transparent;border-radius:0;background:transparent;color:var(--muted)}.demo-inspector-tab[aria-selected="true"]{border-bottom-color:var(--acid);color:var(--paper)}.demo-inspector-panel{display:grid;gap:.75rem;padding:.85rem;min-width:0}.demo-inspector-panel p{margin:0;color:var(--muted)}.demo-guide-list{display:grid;gap:.55rem;margin:0;padding-left:1.25rem}.demo-request-grid{display:grid;gap:.7rem;margin:0}.demo-request-field{display:grid;gap:.25rem;min-width:0}.demo-request-field dt{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.demo-request-field dd{margin:0}.demo-request-field pre{max-width:100%;max-height:14rem;margin:0;padding:.6rem;border:1px solid var(--line);border-radius:.45rem;background:var(--panel);overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}.demo-evidence-list{display:grid;gap:.55rem;margin:0;padding:0;list-style:none}.demo-evidence-list code{overflow-wrap:anywhere}.demo-workbench-tools{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:.45rem;align-items:center;padding:.7rem 1rem;border-top:1px solid var(--line);background:var(--panel-2)}.demo-workbench-tools button,.demo-workbench-tools a{display:inline-flex;align-items:center;min-height:2.35rem;padding:.35rem .6rem}.demo-workbench-tools [hidden]{display:none}@media(max-width:900px){.demo-workbench-layout{grid-template-columns:minmax(0,1fr)}.demo-inspector{border-left:0;border-top:1px solid var(--line)}.demo-panel{overflow-x:auto}}@media(max-width:760px){.demo-category-tabs{margin-inline:-.25rem;padding-inline:.25rem}.demo-workbench,.demo-panel{min-height:16rem}.demo-active-header{padding:.85rem}.demo-panel{padding:.75rem}.demo-inspector-panel{padding:.75rem}}
+.demo-workbench-nav{display:grid;gap:.75rem;margin:1rem 0;min-width:0}.demo-category-tabs{display:flex;gap:.2rem;max-width:100%;overflow-x:auto;border-bottom:1px solid var(--line);scrollbar-width:thin}.demo-category-tab{display:inline-flex;align-items:center;min-height:2.75rem;padding:.55rem .8rem;border-bottom:2px solid transparent;color:var(--muted);text-decoration:none;white-space:nowrap}.demo-category-tab:hover{color:var(--paper)}.demo-category-tab[aria-selected="true"]{border-bottom-color:var(--acid);color:var(--paper)}.demo-category-tab:focus-visible,.demo-local-selector a:focus-visible,.demo-inspector-tab:focus-visible{outline:3px solid var(--focus,var(--acid));outline-offset:-3px}.demo-selector-slot{min-height:2.75rem;min-width:0}.demo-local-selector{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}.demo-local-selector a{display:inline-flex;align-items:center;min-height:2.75rem;padding:.4rem .7rem;border:1px solid var(--line);border-radius:999px;text-decoration:none}.demo-local-selector a[aria-current="location"]{border-color:var(--acid);background:var(--panel-2);color:var(--paper)}.demo-workbench{min-width:0;max-width:100%;min-height:20rem;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);overflow:hidden}.demo-active-header{display:grid;gap:.35rem;padding:1rem 1.1rem;border-bottom:1px solid var(--line);background:var(--panel-2)}.demo-active-context{margin:0;color:var(--muted);font-size:.82rem;text-transform:uppercase;letter-spacing:.06em}.demo-active-heading{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}.demo-active-heading h2{margin:0;font-size:clamp(1.35rem,2.5vw,1.8rem)}.demo-statuses{display:flex;flex-wrap:wrap;gap:.35rem}.demo-statuses[hidden]{display:none}.demo-status-chip{display:inline-flex;align-items:center;min-height:1.65rem;padding:.15rem .45rem;border:1px solid var(--line);border-radius:999px;color:var(--muted);font:700 .72rem/1 var(--mono)}.demo-active-purpose,.demo-try-this{margin:0;max-width:72rem}.demo-active-purpose{color:var(--muted)}.demo-try-this strong{margin-right:.35rem}.demo-workbench-layout{display:grid;grid-template-columns:minmax(0,7fr) minmax(16rem,3fr);align-items:stretch;min-width:0}.demo-stage{min-width:0;max-width:100%}.demo-panel{min-width:0;max-width:100%;min-height:20rem;padding:1rem;overflow-x:auto}.demo-panel :is(pre,table,.table-wrap){max-width:100%}.demo-panel [data-demo-section]>.page-header:first-child{display:none}.demo-panel-state{display:grid;gap:.65rem;justify-items:start;margin:0;color:var(--muted)}.demo-panel-state.error{color:var(--danger)}.demo-panel-state button{min-height:2.75rem}.demo-inspector{min-width:0;max-width:100%;border-left:1px solid var(--line);background:color-mix(in srgb,var(--panel-2) 72%,transparent)}.demo-inspector-header{display:flex;justify-content:space-between;gap:.6rem;align-items:center;padding:.75rem .85rem;border-bottom:1px solid var(--line)}.demo-inspector-header strong{font-size:.92rem}.demo-inspector-tabs{display:flex;gap:.15rem;max-width:100%;overflow-x:auto;padding:.45rem .55rem;border-bottom:1px solid var(--line)}.demo-inspector-tab{min-height:2.75rem;padding:.35rem .55rem;border:0;border-bottom:2px solid transparent;border-radius:0;background:transparent;color:var(--muted)}.demo-inspector-tab[aria-selected="true"]{border-bottom-color:var(--acid);color:var(--paper)}.demo-inspector-panel{display:grid;gap:.75rem;padding:.85rem;min-width:0;max-width:100%;overflow-wrap:anywhere}.demo-inspector-panel p{margin:0;color:var(--muted)}.demo-guide-list{display:grid;gap:.55rem;margin:0;padding-inline-start:1.25rem}.demo-request-grid{display:grid;gap:.7rem;margin:0}.demo-request-field{display:grid;gap:.25rem;min-width:0}.demo-request-field dt{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.demo-request-field dd{margin:0}.demo-request-field pre{max-width:100%;max-height:14rem;margin:0;padding:.6rem;border:1px solid var(--line);border-radius:.45rem;background:var(--panel);overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}.demo-evidence-list{display:grid;gap:.55rem;margin:0;padding:0;list-style:none}.demo-evidence-list code{direction:ltr;unicode-bidi:isolate;overflow-wrap:anywhere}.demo-workbench-tools{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:.45rem;align-items:center;padding:.7rem 1rem;border-top:1px solid var(--line);background:var(--panel-2)}.demo-workbench-tools button,.demo-workbench-tools a{display:inline-flex;align-items:center;min-height:2.75rem;padding:.35rem .6rem}.demo-workbench-tools [hidden]{display:none}@media(max-width:900px){.demo-workbench-layout{grid-template-columns:minmax(0,1fr)}.demo-inspector{border-left:0;border-top:1px solid var(--line)}.demo-panel{overflow-x:auto}}@media(max-width:760px){.demo-category-tabs{flex-wrap:wrap;overflow-x:visible;margin-inline:-.25rem;padding-inline:.25rem}.demo-workbench,.demo-panel{min-height:16rem}.demo-active-header{padding:.85rem}.demo-panel{padding:.75rem}.demo-inspector-panel{padding:.75rem}}
 </style>`;
 
 function categoryTabs(): string {
-  return `<nav class="demo-category-tabs" aria-label="Demo categories">${demoCategories.map((category) => {
+  return `<div class="demo-category-tabs" role="tablist" aria-label="Demo categories">${demoCategories.map((category) => {
     const demos = demosForCategory(category);
     const defaultDemo = defaultDemoForCategory(category);
-    const selected = category === 'Data' ? ' aria-current="location"' : '';
+    const selected = category === 'Data';
     const fragmentId = demos.length === 1 ? ` id="${escapeHtml(defaultDemo.id)}"` : '';
     const legacyAiGroup = category === 'AI' ? '<span hidden><strong>AI / MCP</strong></span>' : '';
-    return `<a class="demo-category-tab"${fragmentId} href="#${escapeHtml(defaultDemo.id)}" data-demo-link="${escapeHtml(defaultDemo.id)}" data-demo-category="${escapeHtml(category)}"${selected}>${legacyAiGroup}<strong>${escapeHtml(category)}</strong></a>`;
-  }).join('')}</nav>`;
+    return `<a class="demo-category-tab"${fragmentId} href="#${escapeHtml(defaultDemo.id)}" role="tab" aria-controls="demo-workbench" aria-selected="${selected}" tabindex="${selected ? '0' : '-1'}" data-demo-link="${escapeHtml(defaultDemo.id)}" data-demo-category="${escapeHtml(category)}">${legacyAiGroup}<strong>${escapeHtml(category)}</strong></a>`;
+  }).join('')}</div>`;
 }
 
 function localSelectors(): string {
@@ -297,8 +297,8 @@ function defaultInspector(env: Env): string {
   const modes = inspectorModes(demo);
   return `<aside class="demo-inspector" data-demo-inspector aria-label="${escapeHtml(demo.label)} inspector">
     <div class="demo-inspector-header"><strong>Inspector</strong><span class="subtle" data-demo-inspector-context>${escapeHtml(demo.category)}</span></div>
-    <div class="demo-inspector-tabs" role="tablist" aria-label="Inspector modes" data-demo-inspector-tabs>${modes.map((mode, index) => `<button class="demo-inspector-tab" type="button" role="tab" aria-selected="${index === 0 ? 'true' : 'false'}" tabindex="${index === 0 ? '0' : '-1'}" data-demo-inspector-mode="${mode}">${mode}</button>`).join('')}</div>
-    <div class="demo-inspector-panel" role="tabpanel" tabindex="0" data-demo-inspector-panel>
+    <div class="demo-inspector-tabs" role="tablist" aria-label="Inspector modes" data-demo-inspector-tabs>${modes.map((mode, index) => `<button id="demo-inspector-tab-${mode.toLowerCase()}" class="demo-inspector-tab" type="button" role="tab" aria-controls="demo-inspector-panel" aria-selected="${index === 0 ? 'true' : 'false'}" tabindex="${index === 0 ? '0' : '-1'}" data-demo-inspector-mode="${mode}">${mode}</button>`).join('')}</div>
+    <div id="demo-inspector-panel" class="demo-inspector-panel" role="tabpanel" aria-labelledby="demo-inspector-tab-guide" tabindex="0" data-demo-inspector-panel>
       <ol class="demo-guide-list">${demo.guide.map((step) => `<li>${escapeHtml(step)}</li>`).join('')}</ol>
     </div>
   </aside>
@@ -444,6 +444,7 @@ function workbenchScript(env: Env): string {
       const selected = tab.dataset.demoInspectorMode === inspectorMode;
       tab.setAttribute('aria-selected', String(selected));
       tab.tabIndex = selected ? 0 : -1;
+      if (selected) inspectorPanel.setAttribute('aria-labelledby', tab.id);
       if (selected && focus) tab.focus();
     });
     renderInspectorPanel(demo);
@@ -457,7 +458,9 @@ function workbenchScript(env: Env): string {
       const button = document.createElement('button');
       button.className = 'demo-inspector-tab';
       button.type = 'button';
+      button.id = 'demo-inspector-tab-' + mode.toLowerCase();
       button.setAttribute('role', 'tab');
+      button.setAttribute('aria-controls', 'demo-inspector-panel');
       button.setAttribute('aria-selected', String(mode === inspectorMode));
       button.tabIndex = mode === inspectorMode ? 0 : -1;
       button.dataset.demoInspectorMode = mode;
@@ -467,7 +470,8 @@ function workbenchScript(env: Env): string {
         if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
         event.preventDefault();
         const current = modes.indexOf(button.dataset.demoInspectorMode);
-        const next = event.key === 'Home' ? 0 : event.key === 'End' ? modes.length - 1 : event.key === 'ArrowRight' ? (current + 1) % modes.length : (current - 1 + modes.length) % modes.length;
+        const forward = document.documentElement.dir === 'rtl' ? event.key === 'ArrowLeft' : event.key === 'ArrowRight';
+        const next = event.key === 'Home' ? 0 : event.key === 'End' ? modes.length - 1 : forward ? (current + 1) % modes.length : (current - 1 + modes.length) % modes.length;
         selectInspectorMode(demo, modes[next], true);
       });
       inspectorTabs.append(button);
@@ -503,6 +507,7 @@ function workbenchScript(env: Env): string {
       state.append(retry);
     }
     panel.replaceChildren(state);
+    panel.setAttribute('aria-busy', String(!error));
     if (resetControl instanceof HTMLButtonElement) resetControl.hidden = true;
   };
 
@@ -521,12 +526,14 @@ function workbenchScript(env: Env): string {
 
   const syncNavigation = (demo) => {
     navigationLinks.forEach((link) => {
+      if (link.dataset.demoCategory) return;
       if (link.dataset.demoLink === demo.id) link.setAttribute('aria-current', 'location');
-      else if (!link.dataset.demoCategory || link.dataset.demoCategory !== demo.category) link.removeAttribute('aria-current');
+      else link.removeAttribute('aria-current');
     });
     categoryTabs.forEach((tab) => {
-      if (tab.dataset.demoCategory === demo.category) tab.setAttribute('aria-current', 'location');
-      else tab.removeAttribute('aria-current');
+      const selected = tab.dataset.demoCategory === demo.category;
+      tab.setAttribute('aria-selected', String(selected));
+      tab.tabIndex = selected ? 0 : -1;
     });
     let hasLocalSelector = false;
     localSelectors.forEach((selector) => {
@@ -565,7 +572,7 @@ function workbenchScript(env: Env): string {
     activeId = id;
     const controller = new AbortController();
     pending.set(id, controller);
-    renderState('Loading demonstration…');
+    renderState('Loading ' + demo.label + ' demonstration…');
     try {
       let html = htmlCache.get(id);
       if (!html) {
@@ -580,6 +587,7 @@ function workbenchScript(env: Env): string {
       }
       if (activeId !== id || controller.signal.aborted) return;
       panel.innerHTML = html;
+      panel.setAttribute('aria-busy', 'false');
       workbench.dataset.demoMounted = 'true';
       runScripts(panel);
       syncTools(demo);
@@ -594,7 +602,7 @@ function workbenchScript(env: Env): string {
     }
   };
 
-  const applySelection = (focusWorkbench = false) => {
+  const applySelection = () => {
     const id = selectedId();
     const demo = byId.get(id) ?? byId.get(defaultDemoId);
     if (!demo) return;
@@ -603,7 +611,6 @@ function workbenchScript(env: Env): string {
       deactivate();
       void mount(id);
     }
-    if (focusWorkbench) window.requestAnimationFrame(() => workbench.focus({ preventScroll: true }));
   };
 
   const navigate = (event) => {
@@ -613,7 +620,21 @@ function workbenchScript(env: Env): string {
     event.preventDefault();
     const nextHash = '#' + encodeURIComponent(id);
     if (window.location.hash !== nextHash) history.pushState(null, '', nextHash);
-    applySelection(true);
+    applySelection();
+  };
+
+  const activateCategoryFromKeyboard = (event) => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+    const current = categoryTabs.indexOf(event.currentTarget);
+    if (current < 0) return;
+    event.preventDefault();
+    const forward = document.documentElement.dir === 'rtl' ? event.key === 'ArrowLeft' : event.key === 'ArrowRight';
+    const next = event.key === 'Home' ? 0 : event.key === 'End' ? categoryTabs.length - 1 : forward ? (current + 1) % categoryTabs.length : (current - 1 + categoryTabs.length) % categoryTabs.length;
+    const tab = categoryTabs[next];
+    if (tab instanceof HTMLAnchorElement) {
+      tab.focus();
+      tab.click();
+    }
   };
 
   if (resetControl instanceof HTMLButtonElement) {
@@ -623,9 +644,10 @@ function workbenchScript(env: Env): string {
     });
   }
   navigationLinks.forEach((link) => link.addEventListener('click', navigate));
-  window.addEventListener('hashchange', () => applySelection(true));
-  window.addEventListener('popstate', () => applySelection(true));
-  applySelection(false);
+  categoryTabs.forEach((tab) => tab.addEventListener('keydown', activateCategoryFromKeyboard));
+  window.addEventListener('hashchange', applySelection);
+  window.addEventListener('popstate', applySelection);
+  applySelection();
 })();
 </script>`;
 }
@@ -642,7 +664,7 @@ export async function demosContent(_request: Request, env: Env): Promise<PageCon
     ${categoryTabs()}
     ${localSelectors()}
   </section>
-  <section id="demo-workbench" class="demo-workbench" data-demo-workbench data-demo-id="${DEFAULT_DEMO_ID}" aria-labelledby="demo-active-title" tabindex="-1">
+  <section id="demo-workbench" class="demo-workbench" data-demo-workbench data-demo-id="${DEFAULT_DEMO_ID}" aria-labelledby="demo-active-title">
     <header class="demo-active-header">
       <p class="demo-active-context" data-demo-active-context>${escapeHtml(defaultDemo.category)} / ${escapeHtml(defaultDemo.group)}</p>
       <div class="demo-active-heading"><h2 id="demo-active-title" data-demo-active-title>${escapeHtml(defaultDemo.label)}</h2><div class="demo-statuses" data-demo-statuses${defaultDemo.status?.length ? '' : ' hidden'}>${(defaultDemo.status ?? []).map((status) => `<span class="demo-status-chip">${escapeHtml(status)}</span>`).join('')}</div></div>
@@ -651,7 +673,7 @@ export async function demosContent(_request: Request, env: Env): Promise<PageCon
     </header>
     <div class="demo-workbench-layout">
       <div class="demo-stage">
-        <div class="demo-panel" data-demo-panel><div class="demo-panel-state" role="status"><span>Loading demonstration…</span></div></div>
+        <div class="demo-panel" data-demo-panel aria-busy="true"><div class="demo-panel-state" role="status"><span>Loading D1 demonstration…</span></div></div>
       </div>
       ${defaultInspector(env)}
     </div>

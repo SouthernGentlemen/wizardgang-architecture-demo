@@ -42,7 +42,7 @@ describe('DEMO-257 curated demos', () => {
       expect(html).toContain(`>${category}</strong>`);
     }
     for (const fragment of demonstrations.map((demo) => demo.id)) expect(html).toContain(`href="#${fragment}"`);
-    expect((html.match(/<div class="demo-panel" data-demo-panel>/g) ?? [])).toHaveLength(1);
+    expect((html.match(/<div class="demo-panel" data-demo-panel\b/g) ?? [])).toHaveLength(1);
     expect(html).not.toContain('Primary demonstrations');
     expect(html).not.toContain('Supporting proof');
   });
