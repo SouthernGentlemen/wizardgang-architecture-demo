@@ -169,6 +169,8 @@ Closes F5, F8, F9, and the selector-convention and `.bar` parts of F12.
 
 ### DEMO-277 — FIX — Complete the site footer contract
 
+Status: **Resolved** — closes F6 and the remaining F12.
+
 - add the Security link, making `docs/FRONTEND-ROUTES.md` true;
 - add version and commit, reusing the existing `versionProof()` projection rather than a second source;
 - remove `Route source` from `.page-tools` now that the shell carries it;
