@@ -63,7 +63,7 @@ describe('architecture demo registry', () => {
     expect(assurance?.page).toMatchObject({ label: 'Assurance', architectureMap: true });
     expect(assurance?.source.module).toBe('src/demos/assurance-minimal.ts');
     const security = applicationRoutes.find((route) => route.pattern === routeUrl('security.index'));
-    expect(security?.page).toMatchObject({ label: 'Security', architectureMap: true });
+    expect(security?.page).toMatchObject({ label: 'Security', navigation: 'none', architectureMap: false });
     expect(security?.source.module).toBe('src/demos/security-page.ts');
     for (const retired of ['/git', '/governance', '/evidence', '/compliance', '/governance/concerns', '/governance/risks', '/governance/incidents']) {
       expect(applicationRoutes.some((route) => route.pattern === retired), retired).toBe(false);

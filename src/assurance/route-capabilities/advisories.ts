@@ -22,8 +22,8 @@ export const advisoriesRouteCapability = defineAssuranceRouteCapability({
       label: 'Security',
       summary: 'Private vulnerability reporting, coordinated disclosure, and disclosure-safe published security advisory assurance.',
       order: 4,
-      navigation: 'primary',
-      architectureMap: true,
+      navigation: 'none',
+      architectureMap: false,
     },
   },
 });
