@@ -12,6 +12,12 @@ const serverPort = Number(process.env.SITE_AUDIT_PORT || 8787);
 const debugPort = Number(process.env.SITE_AUDIT_DEBUG_PORT || 9222);
 const origin = `http://127.0.0.1:${serverPort}`;
 const axeTags = ['wcag2a', 'wcag2aa', 'wcag2aaa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
+const workbenchDemos = {
+  d1: ['Data', 'D1'], r2: ['Data', 'R2'], rest: ['APIs', 'REST / OpenAPI'], graphql: ['APIs', 'GraphQL'],
+  webhooks: ['Integrations', 'Webhooks'], identity: ['Identity', 'Identity'], mcp: ['AI', 'MCP'],
+  edge: ['Platform', 'Edge'], workers: ['Platform', 'Workers'], 'durable-objects': ['Platform', 'Durable Objects'],
+  accessibility: ['Quality', 'Accessibility'], i18n: ['Quality', 'Internationalization'],
+};
 
 function sleep(ms) { return new Promise((resolve) => setTimeout(resolve, ms)); }
 
@@ -257,7 +263,7 @@ async function waitForExpression(cdp, expression, label, attempts = 80) {
   throw new Error(`Timed out waiting for ${label}`);
 }
 
-async function assertWorkbenchState(cdp, expectedId, label) {
+async function assertWorkbenchState(cdp, expectedId, label, expectedHash = `#${expectedId}`) {
   await waitForExpression(
     cdp,
     `document.querySelector('[data-demo-workbench]')?.dataset.demoId === ${JSON.stringify(expectedId)} && document.querySelector('[data-demo-workbench]')?.dataset.demoMounted === 'true'`,
@@ -270,16 +276,23 @@ async function assertWorkbenchState(cdp, expectedId, label) {
     return {
       hash: location.hash,
       id: document.querySelector('[data-demo-workbench]')?.dataset.demoId,
+      category: selectedCategories[0]?.getAttribute('data-demo-category'),
+      heading: document.querySelector('[data-demo-active-title]')?.textContent?.trim(),
       mounted: visibleSections.length,
+      currentDemoLinks: document.querySelectorAll('[data-demo-link][aria-current="location"]').length,
       selectedCategories: selectedCategories.length,
       categoryTabStops: categoryTabStops.length,
       busy: document.querySelector('[data-demo-panel]')?.getAttribute('aria-busy'),
     };
   })()`);
   const failures = [];
-  if (state.hash !== `#${expectedId}`) failures.push(`hash=${state.hash}`);
+  if (state.hash !== expectedHash) failures.push(`hash=${state.hash}`);
   if (state.id !== expectedId) failures.push(`demo=${state.id}`);
+  if (state.category !== workbenchDemos[expectedId]?.[0]) failures.push(`category=${state.category}`);
+  if (state.heading !== workbenchDemos[expectedId]?.[1]) failures.push(`heading=${state.heading}`);
   if (state.mounted !== 1) failures.push(`mounted presentations=${state.mounted}`);
+  const expectedCurrentLinks = ['webhooks', 'identity', 'mcp'].includes(expectedId) ? 0 : 1;
+  if (state.currentDemoLinks !== expectedCurrentLinks) failures.push(`current demo links=${state.currentDemoLinks}`);
   if (state.selectedCategories !== 1) failures.push(`selected categories=${state.selectedCategories}`);
   if (state.categoryTabStops !== 1) failures.push(`category tab stops=${state.categoryTabStops}`);
   if (state.busy !== 'false') failures.push(`aria-busy=${state.busy}`);
@@ -313,6 +326,18 @@ async function traverseBrowserHistory(cdp, offset, expectedId, label) {
 }
 
 async function workbenchInteractionAudit(cdp) {
+  await navigate(cdp, `${origin}/demos?lang=en`);
+  await assertWorkbenchState(cdp, 'd1', 'missing fragment default', '');
+  await navigate(cdp, `${origin}/demos?lang=en#not-a-demo`);
+  await waitForExpression(cdp, `document.querySelector('[data-demo-workbench]')?.dataset.demoMounted === 'true'`, 'invalid fragment fallback');
+  const invalidFallback = await evaluate(cdp, `({id:document.querySelector('[data-demo-workbench]')?.dataset.demoId,heading:document.querySelector('[data-demo-active-title]')?.textContent?.trim(),mounted:document.querySelectorAll('[data-demo-panel] [data-demo-section]').length})`);
+  if (invalidFallback.id !== 'd1' || invalidFallback.heading !== 'D1' || invalidFallback.mounted !== 1) throw new Error(`Invalid fragment did not safely fall back to D1: ${JSON.stringify(invalidFallback)}`);
+
+  for (const id of Object.keys(workbenchDemos)) {
+    await navigate(cdp, `${origin}/demos?lang=en#${id}`);
+    await assertWorkbenchState(cdp, id, `${id} released fragment`);
+  }
+
   await navigate(cdp, `${origin}/demos?lang=en#d1`);
   await assertWorkbenchState(cdp, 'd1', 'D1 default');
   await inspectCurrentPage(cdp, 'en', 'D1 workbench');
@@ -323,6 +348,20 @@ async function workbenchInteractionAudit(cdp) {
   const categoryFocus = await evaluate(cdp, `document.activeElement?.getAttribute('data-demo-category')`);
   if (categoryFocus !== 'APIs') throw new Error(`Category navigation lost focus: ${categoryFocus}`);
 
+  await dispatchKey(cdp, 'End', 'End');
+  await assertWorkbenchState(cdp, 'accessibility', 'category End');
+  await dispatchKey(cdp, 'Home', 'Home');
+  await assertWorkbenchState(cdp, 'd1', 'category Home');
+  await dispatchKey(cdp, 'ArrowLeft', 'ArrowLeft');
+  await assertWorkbenchState(cdp, 'accessibility', 'category ArrowLeft wrap');
+
+  for (const id of ['d1', 'r2', 'rest', 'graphql', 'workers', 'd1']) {
+    await evaluate(cdp, `document.querySelector('[data-demo-link=${JSON.stringify(id)}]')?.click()`);
+    await assertWorkbenchState(cdp, id, `${id} rapid sequence`);
+  }
+
+  await evaluate(cdp, `document.querySelector('[data-demo-link="rest"]')?.click()`);
+  await assertWorkbenchState(cdp, 'rest', 'REST history sequence');
   await evaluate(cdp, `document.querySelector('[data-demo-link="graphql"]')?.click()`);
   await assertWorkbenchState(cdp, 'graphql', 'GraphQL secondary selector');
   await evaluate(cdp, `document.querySelector('[data-demo-link="workers"]')?.click()`);
@@ -340,6 +379,24 @@ async function workbenchInteractionAudit(cdp) {
   if (inspector.mode !== 'Evidence' || inspector.selected !== 'true' || inspector.labelledBy !== 'demo-inspector-tab-evidence') {
     throw new Error(`Inspector keyboard relationship failed: ${JSON.stringify(inspector)}`);
   }
+
+  await navigate(cdp, `${origin}/demos?lang=en#d1`);
+  await assertWorkbenchState(cdp, 'd1', 'deterministic loading baseline');
+  await evaluate(cdp, `(()=>{const nativeFetch=window.fetch.bind(window);window.__demoNativeFetch=nativeFetch;window.fetch=(input,init)=>String(input).includes('/api/demos/r2')?Promise.reject(new Error('DEMO-271 deterministic load failure')):nativeFetch(input,init);document.querySelector('[data-demo-link="r2"]').click();return true})()`);
+  await waitForExpression(cdp, `document.querySelector('[data-demo-panel] [role="alert"]')?.textContent.includes('DEMO-271 deterministic load failure')`, 'contained workbench error');
+  const errorState = await evaluate(cdp, `(()=>({demo:document.querySelector('[data-demo-workbench]')?.dataset.demoId,busy:document.querySelector('[data-demo-panel]')?.getAttribute('aria-busy'),retry:document.querySelector('[data-demo-panel] button')?.textContent,nav:document.querySelectorAll('[data-demo-category]').length}))()`);
+  if (errorState.demo !== 'r2' || errorState.busy !== 'false' || errorState.retry !== 'Retry demo' || errorState.nav !== 7) throw new Error(`Workbench error containment failed: ${JSON.stringify(errorState)}`);
+  const retryFocusable = await evaluate(cdp, `(()=>{window.fetch=window.__demoNativeFetch;const button=document.querySelector('[data-demo-panel] button');button?.focus();return button instanceof HTMLButtonElement&&document.activeElement===button})()`);
+  if (!retryFocusable) throw new Error('Workbench retry is not a keyboard-focusable native button.');
+  await evaluate(cdp, `document.querySelector('[data-demo-panel] button')?.click();true`);
+  await assertWorkbenchState(cdp, 'r2', 'keyboard-accessible retry');
+
+  await navigate(cdp, `${origin}/demos?lang=en#d1`);
+  await assertWorkbenchState(cdp, 'd1', 'stale response baseline');
+  await evaluate(cdp, `(()=>{const nativeFetch=window.fetch.bind(window);window.fetch=(input,init)=>String(input).includes('/api/demos/graphql')?new Promise((resolve)=>setTimeout(()=>nativeFetch(input,init).then(resolve),350)):nativeFetch(input,init);document.querySelector('[data-demo-link="graphql"]').click();document.querySelector('[data-demo-link="workers"]').click();return true})()`);
+  await assertWorkbenchState(cdp, 'workers', 'late inactive response containment');
+  await sleep(500);
+  await assertWorkbenchState(cdp, 'workers', 'late inactive response remained contained');
 
   for (const id of ['d1', 'rest', 'workers', 'accessibility', 'i18n']) {
     await navigate(cdp, `${origin}/demos?lang=en#${id}`);
@@ -462,22 +519,25 @@ async function main() {
     axeRuns += 6;
 
     for (const pathname of auditConfig.narrowViewportPaths) {
-      await cdp.call('Emulation.setDeviceMetricsOverride', { width: 320, height: 900, deviceScaleFactor: 1, mobile: true });
-      await inspectPath(cdp, pathname, 'en', `${pathname} 320px`);
-      if (new URL(pathname, origin).pathname === manifest.find((route) => route.id === 'demos.index')?.route) {
-        const expectedId = new URL(pathname, origin).hash.slice(1) || 'd1';
-        await assertWorkbenchState(cdp, expectedId, `${pathname} narrow workbench`);
-        const reflow = await evaluate(cdp, `(()=>{
-          const stage=document.querySelector('.demo-stage')?.getBoundingClientRect();
-          const inspector=document.querySelector('.demo-inspector')?.getBoundingClientRect();
-          const layout=document.querySelector('.demo-workbench-layout');
-          return {stageBottom:stage?.bottom,inspectorTop:inspector?.top,columns:layout ? getComputedStyle(layout).gridTemplateColumns : ''};
-        })()`);
-        if (!(reflow.inspectorTop >= reflow.stageBottom - 1) || reflow.columns.trim().split(/\s+/).length !== 1) {
-          throw new Error(`${pathname}: inspector did not stack below the live demonstration (${JSON.stringify(reflow)})`);
+      const isWorkbench = new URL(pathname, origin).pathname === manifest.find((route) => route.id === 'demos.index')?.route;
+      for (const locale of isWorkbench ? ['en', 'ar'] : ['en']) {
+        await cdp.call('Emulation.setDeviceMetricsOverride', { width: 320, height: 900, deviceScaleFactor: 1, mobile: true });
+        await inspectPath(cdp, pathname, locale, `${pathname} ${locale} 320px`);
+        if (isWorkbench) {
+          const expectedId = new URL(pathname, origin).hash.slice(1) || 'd1';
+          await assertWorkbenchState(cdp, expectedId, `${pathname} ${locale} narrow workbench`);
+          const reflow = await evaluate(cdp, `(()=>{
+            const stage=document.querySelector('.demo-stage')?.getBoundingClientRect();
+            const inspector=document.querySelector('.demo-inspector')?.getBoundingClientRect();
+            const layout=document.querySelector('.demo-workbench-layout');
+            return {stageBottom:stage?.bottom,inspectorTop:inspector?.top,columns:layout ? getComputedStyle(layout).gridTemplateColumns : ''};
+          })()`);
+          if (!(reflow.inspectorTop >= reflow.stageBottom - 1) || reflow.columns.trim().split(/\s+/).length !== 1) {
+            throw new Error(`${pathname} ${locale}: inspector did not stack below the live demonstration (${JSON.stringify(reflow)})`);
+          }
         }
+        axeRuns += 1;
       }
-      axeRuns += 1;
     }
     await cdp.call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 1000, deviceScaleFactor: 1, mobile: false });
 
