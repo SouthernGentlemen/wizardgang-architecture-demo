@@ -39,8 +39,9 @@
     "validate:security": "node scripts/validate-security.mjs",
     "generate:routes": "ROUTE_ARTIFACTS_WRITE=1 vitest run tests/route-artifacts.test.ts",
     "validate:routes": "vitest run tests/route-artifacts.test.ts",
+    "validate:stylesheet-classes": "node scripts/validate-stylesheet-classes.mjs",
     "security:dependencies": "npm audit --audit-level=high",
-    "check": "npm run validate:routes && npm run validate:scaffold && npm run validate:history && npm run lint && npm run typecheck && npm run validate:site-accessibility && npm run validate:site-i18n && npm run test && npm run validate:contracts && npm run validate:locales && npm run validate:security && npm run validate:governance && npm run validate:assurance",
+    "check": "npm run validate:routes && npm run validate:scaffold && npm run validate:history && npm run validate:stylesheet-classes && npm run lint && npm run typecheck && npm run validate:site-accessibility && npm run validate:site-i18n && npm run test && npm run validate:contracts && npm run validate:locales && npm run validate:security && npm run validate:governance && npm run validate:assurance",
     "validate:scaffold": "node scripts/validate-scaffold.mjs"
   },
   "devDependencies": {
