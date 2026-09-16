@@ -6,8 +6,6 @@ This repository is a public architecture demonstration, not a generic applicatio
 
 Implementation plans and roadmaps are valid planning tools when a controlled change or multi-change sequence benefits from an explicit source of truth. Keep an active plan clearly scoped, keep it current while the work is active, and retire or delete it when it becomes obsolete so it does not compete with permanent contracts.
 
-The root `IMPLEMENTATION_PLAN.md` is currently active for the DEMO-273 through DEMO-281 Shell Consolidation sequence. Read it before starting any controlled change in that sequence, preserve its reserved IDs and ordering, and keep implementation within its stated scope. Retire or delete the plan after the sequence is released and its durable requirements have been absorbed into permanent contracts/tests.
-
 A plan may coordinate intended work, but it does not replace runtime declarations or permanent contract documentation unless the controlled change explicitly updates those contracts.
 
 Use these authorities for their respective concerns:
@@ -68,7 +66,7 @@ The repository-local equivalent is `npm run validate:ci`. It records complete re
 Preserve these invariants:
 
 - Keep the ordinary public browser surface task-oriented and minimal: `/`, `/demos`, and `/assurance`; keep `/security` as a contextual support/security boundary; keep `/admin` protected and `/offline` as recovery.
-- While the active Shell Consolidation plan is in force, the shared shell stays minimal: the header is one non-wrapping row of brand, primary navigation, and utilities at every width; the footer carries the `/security` reachability link the frontend contract requires; navigation projections derive from route declarations without a hardcoded route allowlist; and breadcrumbs, secondary navigation, and related-destination navigation are not reintroduced.
+- The shared shell stays minimal: the header is one non-wrapping row of brand, primary navigation, and utilities at every width; the footer carries the `/security` reachability link the frontend contract requires; navigation projections derive from route declarations without a hardcoded route allowlist; and breadcrumbs, secondary navigation, and related-destination navigation are not reintroduced.
 - Do not leave a retired surface's stylesheet rules behind. A controlled change that removes markup removes the rules that styled it in the same change.
 - `/demos` is one focused workbench, not a catalog page: one demo is selected/mounted at a time, D1 is the default, the released demo fragments remain stable deep links, category/demo controls are navigation, and an `All demos` mode or giant trailing inventory must not be introduced.
 - Preserve the released demo set and capabilities while changing their presentation; hiding inactive demos from the page body is not permission to remove their underlying behavior or machine contracts.
