@@ -13,7 +13,6 @@ import {
 import {
   architectureMapEntries,
   primaryNavigation,
-  secondaryNavigation,
   sitemapPaths,
 } from '../src/routing/navigation';
 import { defineRouteModule, matchRoute, type RouteDeclaration } from '../src/routing/registry';
@@ -79,9 +78,6 @@ describe('complete declarative application routing', () => {
       'demos.index',
       'assurance.index',
     ]);
-    expect(secondaryNavigation('interfaces.frontend.index')).toEqual([]);
-    expect(secondaryNavigation('demos.index')).toEqual([]);
-    expect(secondaryNavigation('assurance.index')).toEqual([]);
     expect(primaryNavigation().every((route) => route.visibility === 'public')).toBe(true);
   });
 

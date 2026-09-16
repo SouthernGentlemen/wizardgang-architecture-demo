@@ -33,7 +33,7 @@ export interface PageMetadata {
   label: string;
   summary: string;
   order: number;
-  navigation: 'primary' | 'secondary' | 'none';
+  navigation: 'primary' | 'none';
   architectureMap: boolean;
 }
 

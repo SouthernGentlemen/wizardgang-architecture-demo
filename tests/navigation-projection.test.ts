@@ -1,15 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import { architectureMapEntries, primaryNavigation } from '../src/routing/navigation';
-import { escapeHtml } from '../src/lib/html';
 import type { Env } from '../src/types';
-import {
-  breadcrumbNavigation,
-  pageContent,
-  renderPage,
-  secondaryNavigationHtml,
-} from '../src/ui/page';
-import { navigationStyles } from '../src/ui/navigation-styles';
+import { pageContent, renderPage } from '../src/ui/page';
 import { styles } from '../src/ui/styles';
 import { retiredOperationsHtmlPathname } from './fixtures/removed-html-pathnames';
 
@@ -27,19 +20,13 @@ const publicPages = applicationRouteRegistry.declarations.filter((route) => (
   && !route.pattern.includes(':')
 ));
 
-function parentWalk(routeId: string) {
-  const byId = new Map(applicationRouteRegistry.declarations.map((route) => [route.id, route]));
-  const chain = [];
-  let current = byId.get(routeId);
-  const seen = new Set<string>();
-  while (current?.page) {
-    if (seen.has(current.id)) throw new Error(`Parent cycle at ${current.id}`);
-    seen.add(current.id);
-    chain.unshift(current);
-    current = current.page.parent ? byId.get(current.page.parent) : undefined;
-  }
-  return chain;
-}
+const retiredShellNavigationMarkers = [
+  'shell-navigation',
+  'breadcrumb',
+  'secondary-navigation',
+  'related-navigation',
+  'data-section-current',
+];
 
 function navMarkup(html: string): string {
   return [...html.matchAll(/<nav\b[\s\S]*?<\/nav>/g)].map((match) => match[0]).join('\n');
@@ -52,22 +39,7 @@ async function publicHome(): Promise<string> {
 }
 
 describe('navigation projection', () => {
-  it('projects breadcrumb chains from registered parent walks', () => {
-    for (const route of publicPages) {
-      const chain = parentWalk(route.id);
-      const breadcrumb = breadcrumbNavigation(route.id);
-      expect(breadcrumb, route.id).toContain('aria-label="Breadcrumb"');
-      expect(breadcrumb, route.id).not.toContain('?');
-      for (const ancestor of chain.slice(0, -1)) {
-        expect(breadcrumb, route.id).toContain(`href="${routeUrl(ancestor.id)}"`);
-        expect(breadcrumb, route.id).toContain(`>${escapeHtml(ancestor.page!.label)}</a>`);
-      }
-      expect(breadcrumb, route.id).toContain(`<li aria-current="page">${escapeHtml(route.page!.label)}</li>`);
-      expect(breadcrumb, route.id).not.toContain(`>${route.pattern}<`);
-    }
-  });
-
-  it('uses registered route URLs for primary, secondary, related, and breadcrumb links', async () => {
+  it('uses registered route URLs for primary navigation links', async () => {
     const registeredPageUrls = new Set(publicPages.map((route) => routeUrl(route.id)));
     for (const route of publicPages) {
       const response = renderPage(env, pageContent(env, route.page!.label, '<section class="page-header"><h1>Projection</h1></section>', {
@@ -91,8 +63,17 @@ describe('navigation projection', () => {
     expect(primaryNavigation().every((route) => !routeUrl(route.id).includes('?'))).toBe(true);
   });
 
+  it('ships no breadcrumb, secondary, or related-destination navigation in the shell', async () => {
+    for (const route of publicPages) {
+      const html = await (await route.handler(new Request(`https://demo.wizardgang.ai${route.pattern}`), { env }, {})).text();
+      for (const marker of retiredShellNavigationMarkers) {
+        expect(html, `${route.id}: ${marker}`).not.toContain(marker);
+      }
+      expect(navMarkup(html), route.id).not.toContain('<ol>');
+    }
+  });
+
   it('keeps the four focused assurance checks inside the assurance page', async () => {
-    expect(secondaryNavigationHtml('assurance.index')).toBe('');
     const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === 'assurance.index');
     if (!route) throw new Error('Missing assurance.index route');
     const html = await (await route.handler(new Request('https://demo.wizardgang.ai/assurance'), { env }, {})).text();
@@ -119,17 +100,9 @@ describe('navigation projection', () => {
     expect(html).not.toContain(`${entries.length} live destinations`);
   });
 
-  it('keeps 44px targets and horizontal secondary navigation in the mobile shell', () => {
-    expect(navigationStyles).toContain('@media (max-width: 700px)');
-    expect(navigationStyles).toMatch(/\.nav a,[\s\S]*?min-height:\s*44px/);
-    expect(navigationStyles).toMatch(/\.breadcrumb a\s*\{[\s\S]*?min-height:\s*44px/);
-    expect(navigationStyles).toMatch(/\.secondary-navigation,[\s\S]*?overflow-x:\s*auto/);
-    expect(navigationStyles).toContain('.secondary-navigation a::after');
-    expect(navigationStyles).toContain("border-radius: 999px");
-    expect(navigationStyles).toMatch(/\.secondary-navigation a\s*\{[\s\S]*?text-transform:\s*uppercase/);
+  it('keeps 44px primary navigation targets in the mobile shell', () => {
+    expect(styles).toContain('@media (max-width: 700px)');
+    expect(styles).toMatch(/\.nav a, \.nav button \{[^}]*min-height: 44px/);
     expect(styles).toContain('.lab-grid > * { min-width: 0; }');
-    expect(navigationStyles).toMatch(/body\[data-route-id\^='platform\.'\] main\.site-main/);
-    expect(navigationStyles).toMatch(/\.site-main\s*\{[\s\S]*?padding-top:\s*0\.6rem/);
-    expect(navigationStyles).toContain('@media (prefers-reduced-motion: reduce)');
   });
 });

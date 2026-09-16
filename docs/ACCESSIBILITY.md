@@ -6,7 +6,7 @@ Status language is **WCAG 2.2 engineering evidence — no conformance claim**. T
 
 ## Global rendering baseline
 
-`src/ui/page.ts` owns the ordinary HTML shell and `src/ui/runtime-styles.ts` owns the shared runtime accessibility additions. The shell provides the primary `main` landmark, a working skip link to that landmark, visible focus styling, named navigation landmarks, semantic breadcrumbs, current-route state, a keyboard-operable theme control with programmatic state, and a native language selector. The request-scoped localization runtime supplies document `lang` and `dir` before HTML is emitted; Arabic therefore exercises the same shell in RTL rather than entering a separate accessibility or localization mode.
+`src/ui/page.ts` owns the ordinary HTML shell and `src/ui/runtime-styles.ts` owns the shared runtime accessibility additions. The shell provides the primary `main` landmark, a working skip link to that landmark, visible focus styling, a named primary navigation landmark, current-route state, a keyboard-operable theme control with programmatic state, and a native language selector. The request-scoped localization runtime supplies document `lang` and `dir` before HTML is emitted; Arabic therefore exercises the same shell in RTL rather than entering a separate accessibility or localization mode.
 
 The shared runtime targets at least 44×44 CSS pixels for actionable controls where the enhanced target-size criterion applies, while preserving legitimate inline-link exceptions. Shared normal-text accent tokens are chosen to clear a 7:1 contrast ratio against their theme backgrounds; actual computed foreground/background combinations still require browser verification. Ordinary reading content is limited to a readable measure, technical content is isolated for bidi safety, and overflow containers are reserved for code/data presentations that may legitimately require horizontal scrolling.
 
@@ -72,7 +72,7 @@ Repository regression coverage verifies the shared runtime baseline, inert teach
 | Contrast | Inspect actual computed text/background, non-text, focus, helper and status combinations in both themes | Applicable AA/AAA contrast thresholds are met in real usage, not just token definitions | Required |
 | Forced colors | Enable a forced-colors/high-contrast mode | Focus, controls, boundaries and state remain perceivable | Required |
 | Reduced motion | Enable reduced motion and exercise interactive demos | Nonessential animation, transitions and smooth movement are removed or effectively disabled | Required |
-| RTL | Exercise Arabic across navigation, breadcrumbs, forms, dialogs, tables, charts and code | Logical/visual order remains understandable; technical identifiers remain bidi-isolated | Required |
+| RTL | Exercise Arabic across navigation, forms, dialogs, tables, charts and code | Logical/visual order remains understandable; technical identifiers remain bidi-isolated | Required |
 | Link purpose | Review repeated actions such as source/evidence/details links | Purpose is determinable from the link or its programmatic context as required | Required |
 | Consistent help | Compare sibling routes and repeated view states | Help and repeated controls remain predictably located and named | Required |
 

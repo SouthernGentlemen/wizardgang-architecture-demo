@@ -18,7 +18,6 @@ import {
 import {
   architectureMapEntries,
   primaryNavigation,
-  secondaryNavigation,
   sitemapPaths,
 } from '../src/routing/navigation';
 import type { D1PreparedStatement, Env } from '../src/types';
@@ -208,7 +207,6 @@ describe('DEMO-260 MVP acceptance contract', () => {
     }
 
     expect(primaryNavigation().map((route) => route.id)).toEqual(['demos.index', 'assurance.index']);
-    expect(pages.flatMap((route) => secondaryNavigation(route.id)).map((route) => route.id)).not.toContain('operations.index');
     expect(architectureMapEntries().map((route) => route.id)).toEqual(['demos.index', 'assurance.index']);
     expect([...sitemapPaths()].sort()).toEqual([
       routeUrl('interfaces.frontend.index'),
