@@ -44,13 +44,14 @@ describe('derived frontend navigation', () => {
     expect(html).not.toContain(`${route.pattern}?view=`);
   });
 
-  it('marks Assurance as the current task on the focused traceability check', async () => {
+  it('marks Assurance as the current task on a focused assurance record', async () => {
     const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === 'assurance.index');
     if (!route) throw new Error('Missing assurance.index route');
-    const html = await (await route.handler(new Request('https://demo.wizardgang.ai/assurance#traceability'), { env }, {})).text();
+    const html = await (await route.handler(new Request('https://demo.wizardgang.ai/assurance#ISO27001-A.5.1'), { env }, {})).text();
     expect(currentPageCount(html)).toBe(1);
     expect(html).toContain(`<a href="${route.pattern}" aria-current="page">Assurance</a>`);
-    expect(html).toContain('href="#traceability"');
+    expect(html).toContain('id="ISO27001-A.5.1"');
+    expect(html).toContain('href="#ISO27001-A.5.1"');
     expect(html).not.toContain('data-view-current');
     expect(html).not.toContain('name="view"');
   });

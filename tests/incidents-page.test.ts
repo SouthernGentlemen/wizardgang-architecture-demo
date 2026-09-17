@@ -22,13 +22,14 @@ const env: Env = {
 };
 
 describe('assurance activity boundary', () => {
-  it('keeps incident and exercise inventories out of the focused assurance presentation', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance#activity', { headers: { accept: 'text/html' } }), env);
+  it('keeps incident and exercise inventories out of the assurance workbench', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance#ISO27001-A.5.1', { headers: { accept: 'text/html' } }), env);
     const html = await response.text();
     expect(response.status).toBe(200);
+    expect(html).toContain('data-assurance-workbench');
+    expect(html).toContain('data-assurance-record="ISO27001-A.5.1"');
     expect(html).not.toContain('data-assurance-workbench-section="activity"');
     expect(html).not.toContain('Browse incident and exercise records');
-    expect(html).toContain('id="traceability"');
     expect(html).not.toContain('/api/labs/governance-traceability');
 
     for (const collection of ['incidents', 'exercises']) {

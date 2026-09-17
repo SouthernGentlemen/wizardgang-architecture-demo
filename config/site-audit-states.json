@@ -2,12 +2,20 @@
   "schemaVersion": 1,
   "states": [
     {
-      "name": "security-control-check",
-      "path": "/assurance#security-controls"
+      "name": "assurance-security-record",
+      "path": "/assurance#ISO27001-A.5.1"
     },
     {
-      "name": "accessibility-posture",
-      "path": "/assurance#accessibility-posture"
+      "name": "assurance-evidence-record",
+      "path": "/assurance#ISO27001-A.5.19"
+    },
+    {
+      "name": "assurance-accessibility-record",
+      "path": "/assurance#WCAG-1.1.1"
+    },
+    {
+      "name": "assurance-rtl-record",
+      "path": "/assurance?lang=ar#ISO27001-A.5.1"
     },
     {
       "name": "accessibility-lab",
@@ -24,13 +32,15 @@
   ],
   "narrowViewportPaths": [
     "/",
-    "/assurance#accessibility-posture",
+    "/assurance#ISO27001-A.5.1",
+    "/assurance#WCAG-1.1.1",
     "/demos#rest",
     "/demos#accessibility"
   ],
   "keyboardPaths": [
     "/",
-    "/assurance#security-controls",
+    "/assurance#ISO27001-A.5.1",
+    "/assurance#WCAG-1.1.1",
     "/demos#rest",
     "/demos#accessibility"
   ]

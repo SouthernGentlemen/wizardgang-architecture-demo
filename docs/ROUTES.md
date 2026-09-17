@@ -7,7 +7,7 @@ This file is generated from the active declarative application registry. Route I
 | Route ID | Route | Methods | Kind | Visibility | Offline | Indexing | Purpose | Source |
 |---|---|---|---|---|---|---|---|---|
 | `interfaces.frontend.index` | `/` | `GET` | page | public | gated | allow | Architecture demo index | `src/ui/page.ts` |
-| `assurance.index` | `/assurance` | `GET` | page | public | gated | allow | Assurance | `src/demos/assurance-minimal.ts` |
+| `assurance.index` | `/assurance` | `GET` | page | public | gated | allow | Assurance | `src/demos/assurance-workbench.ts` |
 | `demos.index` | `/demos` | `GET` | page | public | gated | allow | Architecture Demos | `src/demos/demos-page.ts` |
 
 ## Registered service, protocol, asset, and private routes
@@ -16,6 +16,7 @@ This file is generated from the active declarative application registry. Route I
 |---|---|---|---|---|---|---|---|---|
 | `operations.security-txt` | `/.well-known/security.txt` | `GET`, `HEAD` | protocol | public | available | deny | Security contact | `src/api/security-policy.ts` |
 | `operations.admin` | `/admin` | `GET`, `POST` | page | private | available | deny | Demo administration | `src/ui/admin.ts` |
+| `assurance.presentation` | `/api/assurance/{record}` | `GET` | api | public | gated | deny | Assurance record presentation fragment | `src/demos/assurance-workbench.ts` |
 | `demos.presentation` | `/api/demos/{demo}` | `GET` | api | public | gated | deny | Lazy demo presentation fragment | `src/demos/demos-page.ts` |
 | `platform.accessibility.lab` | `/api/labs/accessibility` | `GET` | api | public | gated | deny | Accessibility teaching laboratory API | `src/platform/route-capabilities/accessibility.ts` |
 | `platform.d1.reset` | `/api/labs/d1-reset` | `POST` | api | public | gated | deny | D1 users and tasks reset laboratory API | `src/platform/route-capabilities/d1.ts` |

@@ -14,7 +14,7 @@ A new page route is appropriate when moving to that location changes the user's 
 
 One task page may contain multiple independently linkable demonstrations, framework views, datasets, reporting presentations, and records. These are page content, not automatically separate page resources.
 
-Stable sections and URL fragments are permitted for content that must be directly linkable within a task page. A demonstration or record may therefore expose a durable section or record anchor such as `/demos#graphql` or `/assurance#traceability` without receiving another page route, canonical pathname, sitemap entry, or route ID.
+Stable sections and URL fragments are permitted for content that must be directly linkable within a task page. A demonstration or record may therefore expose a durable section or record anchor such as `/demos#graphql` or `/assurance#ISO27001-A.5.19` without receiving another page route, canonical pathname, sitemap entry, or route ID.
 
 Fragments identify a location inside the already-selected page. They must not be used to disguise a second application router or create competing canonical page identities.
 
@@ -38,14 +38,11 @@ Advanced material may remain behind native disclosure controls. Fragment handlin
 
 ## Assurance destination
 
-`/assurance` is the single public engineering-assurance task page. Its ordinary human presentation is centered on four checks:
+`/assurance` is the single public engineering-assurance task page. It is a framework workbench rather than a checklist or inventory. ISO/IEC 27001, ISO/IEC 42001, and WCAG 2.2 are framework tabs inside the page; section selection, derived posture, a record grid, and the focused assessment pane remain interaction state inside that one canonical destination.
 
-- security controls;
-- AI boundary;
-- traceability/evidence;
-- accessibility posture.
+Published assessment record IDs are durable fragments, for example `/assurance#ISO27001-A.5.19`. A missing or invalid fragment selects `ISO27001-A.5.1` without creating another page identity. The focused pane may be refreshed from `GET /api/assurance/{record}`, an HTML presentation fragment route rather than a page route.
 
-Canonical risks, incidents, exercises, concerns, governance records, suppliers, objectives, framework records, and other management-system inventories remain in canonical data/reporting contracts rather than ordinary public HTML navigation. Their existence does not create a browser-route requirement.
+Canonical risks, incidents, exercises, concerns, governance records, suppliers, objectives, and other management-system inventories remain in canonical data/reporting contracts rather than ordinary public HTML navigation. Their existence does not create a browser-route requirement.
 
 ## Query-state policy
 
@@ -59,7 +56,7 @@ The ordinary public product is intentionally small:
 
 - `/` — understand the project and choose a task;
 - `/demos` — execute or inspect architecture demonstrations;
-- `/assurance` — verify bounded engineering-assurance claims.
+- `/assurance` — inspect framework assessment records, posture, documentation, and evidence.
 
 `/security` is a contextual support/security boundary for vulnerability reporting and advisories. It is reachable from footer or contextual security links rather than primary product navigation.
 
