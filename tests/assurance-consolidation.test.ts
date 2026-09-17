@@ -44,9 +44,11 @@ describe('minimal assurance route', () => {
       expect(html).toContain(`id="${section}"`);
       expect(html).toContain(`href="#${section}"`);
     }
-    for (const action of ['/api/labs/governance-security-controls', '/api/labs/governance-ai-evaluation', '/api/labs/governance-traceability']) {
-      expect(html).toContain(action);
+    for (const retiredAction of ['/api/labs/governance-security-controls', '/api/labs/governance-ai-evaluation', '/api/labs/governance-traceability']) {
+      expect(html).not.toContain(retiredAction);
     }
+    expect(html).not.toContain('data-assurance-run');
+    expect(html).not.toContain('data-assurance-output');
     expect(html).toContain('No ISO/IEC or WCAG certification is claimed');
     expect(html).toContain(`href="${securityPath}"`);
     for (const path of retiredPaths.filter((path) => path.startsWith(`${assurancePath}/`))) expect(html).not.toContain(`href="${path}`);

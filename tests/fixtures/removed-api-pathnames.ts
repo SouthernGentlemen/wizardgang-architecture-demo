@@ -28,6 +28,9 @@ export const removedPlatformLaboratoryPathnames = [
   '/__api/evidence/traceability',
   '/__api/governance/security-controls',
   '/__api/governance/ai-evaluation',
+  '/api/labs/governance-security-controls',
+  '/api/labs/governance-ai-evaluation',
+  '/api/labs/governance-traceability',
 ] as const;
 
 export const removedIdentityAndProtocolPathnames = [

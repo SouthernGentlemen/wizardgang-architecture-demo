@@ -29,7 +29,7 @@ describe('assurance activity boundary', () => {
     expect(html).not.toContain('data-assurance-workbench-section="activity"');
     expect(html).not.toContain('Browse incident and exercise records');
     expect(html).toContain('id="traceability"');
-    expect(html).toContain('/api/labs/governance-traceability');
+    expect(html).not.toContain('/api/labs/governance-traceability');
 
     for (const collection of ['incidents', 'exercises']) {
       const reporting = await routeRequest(new Request(`https://demo.wizardgang.ai/api/reporting/${collection}`, { headers: { accept: 'application/json' } }), env);

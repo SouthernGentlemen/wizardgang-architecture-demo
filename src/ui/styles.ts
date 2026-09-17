@@ -517,7 +517,6 @@ summary { cursor: pointer; }
 .request-example summary::after, .console-write > summary::after, .implementation-notes summary::after { content: '+'; margin-left: auto; padding-left: .75rem; color: var(--muted); }
 .request-example[open] summary::after, .console-write[open] > summary::after, .implementation-notes[open] summary::after { content: '−'; }
 .request-example pre { max-width: none; }
-.action-output { margin-top: 1rem; }
 .implementation-notes { margin-top: 1.25rem; padding: .9rem 1.1rem; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .implementation-notes summary { min-height: 44px; display: flex; align-items: center; list-style: none; color: var(--muted); font: 800 .72rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
 .implementation-notes summary::-webkit-details-marker { display: none; }

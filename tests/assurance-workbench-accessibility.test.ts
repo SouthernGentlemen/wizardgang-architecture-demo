@@ -52,11 +52,12 @@ describe('minimal assurance accessibility contract', () => {
     expect(html).not.toContain('name="q"');
   });
 
-  it('keeps focused evidence in native disclosures and live action output announced politely', async () => {
+  it('keeps focused evidence in native disclosures without retired live action controls', async () => {
     const html = await renderAssurance();
     expect((html.match(/<summary>/g) ?? []).length).toBeGreaterThanOrEqual(4);
-    expect((html.match(/type="button" data-assurance-run/g) ?? [])).toHaveLength(3);
-    expect((html.match(/aria-live="polite"/g) ?? [])).toHaveLength(3);
+    expect(html).not.toContain('data-assurance-run');
+    expect(html).not.toContain('data-assurance-output');
+    expect(html).not.toContain('aria-live="polite"');
     expect(html).toContain('href="#accessibility-evidence"');
   });
 
