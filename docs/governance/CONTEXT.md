@@ -296,7 +296,7 @@ Primary evidence supporting this context includes:
 
 ## 12. Alignment
 
-**Controls:** ISO27001-4.1
+**Controls:** ISO27001-4.1, ISO42001-4.1
 
 This document supports:
 

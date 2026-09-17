@@ -332,7 +332,7 @@ The management system currently includes or is expected to include:
 
 ## 19. Alignment
 
-**Controls:** ISO27001-4.4
+**Controls:** ISO27001-4.4, ISO42001-4.4
 
 This document supports:
 

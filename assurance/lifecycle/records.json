@@ -115,6 +115,13 @@
       "reviewedAt": "2026-09-17T10:00:00Z",
       "reviewer": "controlled-repository-self-assessment",
       "basis": "DEMO-287 owner/operator Self-Assessment reassesses all ISO/IEC 27001:2022 clause and Annex A records under the current rubric, includes ISO/IEC 27001:2022/Amd 1:2024 climate considerations, preserves all evidence relationships, and approves disclosure of the exact resulting public compliance source revision. This is not an internal audit or certification claim."
+    },
+    {
+      "id": "review-demo288-iso42001-reassessment",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-17T10:53:48Z",
+      "reviewer": "controlled-repository-self-assessment",
+      "basis": "DEMO-288 owner/operator Self-Assessment reassesses all ISO/IEC 42001:2023 clause and Annex A records under the current rubric, records the DEMO-284 MCP boundary tests in the governed security-testing register, preserves all evidence relationships, and approves disclosure of the exact resulting public compliance source revision. This is not an internal audit or certification claim."
     }
   ],
   "sourceApprovals": [
@@ -459,6 +466,12 @@
       "resource": "compliance.iso-27001",
       "revision": "d968c8917c3879fa3620aa4d42c78d01e864f85d",
       "reviewRef": "review-demo287-iso27001-reassessment"
+    },
+    {
+      "id": "source-iso42001-b70cea20bf31",
+      "resource": "compliance.iso-42001",
+      "revision": "b70cea20bf31f36b15bd4f82370562a196181b7f",
+      "reviewRef": "review-demo288-iso42001-reassessment"
     }
   ],
   "records": [

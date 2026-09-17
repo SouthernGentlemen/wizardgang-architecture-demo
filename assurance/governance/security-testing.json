@@ -739,6 +739,20 @@
         "currentLimitationNextAction": "Provider-side evidence incomplete; GitHub branch/ruleset enforcement unverified"
       },
       "relationships": []
+    },
+    {
+      "id": "ST-051",
+      "view": "security-testing",
+      "order": 51,
+      "fields": {
+        "category": "AI/MCP boundary",
+        "testControl": "MCP boundary rejects unknown methods, invalid namespaces, and prohibited write tools",
+        "currentEvidence": "`tests/mcp-client.test.ts` (DEMO-284)",
+        "status": "Active",
+        "triggerCadence": "Relevant MCP change / full tests",
+        "currentLimitationNextAction": "Covers the current read-only application boundary; it is not a comprehensive AI safety, misuse, or provider-behavior evaluation"
+      },
+      "relationships": []
     }
   ]
 }

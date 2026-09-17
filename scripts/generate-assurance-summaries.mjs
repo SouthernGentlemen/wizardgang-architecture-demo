@@ -121,7 +121,7 @@ Generated Markdown is not an input to runtime, validation, APIs, or dashboards.
 - Missing implementation remains \`Gap\` or \`Partial\`; it is never converted to N/A merely because evidence is incomplete.
 - This repository remains aligned — uncertified; no status implies certification, control effectiveness, or residual-risk acceptance.
 `;
-  if (framework.id !== 'iso-27001') {
+  if (!['iso-27001', 'iso-42001'].includes(framework.id)) {
     return `${base}
 ## Regeneration
 
@@ -159,7 +159,7 @@ Run \`npm run generate:assurance-summaries\` after an approved structured assura
 ## Dated self-assessment projection
 
 **Assessment type:** Self-Assessment under \`INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md\` §4.2; not an internal audit.
-**Assessment record:** \`docs/governance/assessments/ISO-27001-${framework.assessmentDate}-SELF-ASSESSMENT.md\`
+**Assessment record:** \`docs/governance/assessments/${framework.id === 'iso-27001' ? 'ISO-27001' : 'ISO-42001'}-${framework.assessmentDate}-SELF-ASSESSMENT.md\`
 
 | Date | Ref | Kind | Applicability | Status | Title | Rationale | Gaps | Evidence | Documentation |
 |---|---|---|---|---|---|---|---|---|---|

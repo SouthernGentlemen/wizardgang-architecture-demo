@@ -467,7 +467,7 @@ Supporting evidence includes:
 
 ## 22. Alignment
 
-**Controls:** ISO27001-A.5.12, ISO27001-A.5.13, ISO27001-A.5.14, ISO27001-A.8.10, ISO27001-A.8.11, ISO27001-A.8.12
+**Controls:** ISO27001-A.5.12, ISO27001-A.5.13, ISO27001-A.5.14, ISO27001-A.8.10, ISO27001-A.8.11, ISO27001-A.8.12, ISO42001-A.4.3, ISO42001-A.7.3, ISO42001-A.7.4, ISO42001-A.7.5
 
 This procedure supports applicable ISO/IEC 27001:2022 and ISO/IEC 42001:2023 requirements for information/data classification, appropriate handling, access restriction, logging/evidence, retention/deletion, supplier data boundaries, backup/recovery, AI data governance, transparency, impact reassessment, and controlled change.
 

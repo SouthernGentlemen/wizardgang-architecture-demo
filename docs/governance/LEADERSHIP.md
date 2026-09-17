@@ -300,7 +300,7 @@ Changes are controlled through the normal `DEMO-###` Git process.
 
 ## 11. Alignment
 
-**Controls:** ISO27001-5.1, ISO27001-A.5.4
+**Controls:** ISO27001-5.1, ISO27001-A.5.4, ISO42001-5.1
 
 This document supports:
 

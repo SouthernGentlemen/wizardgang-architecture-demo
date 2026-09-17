@@ -143,7 +143,7 @@ Management review must consider:
 
 ## 8. Alignment
 
-**Controls:** ISO27001-6.2
+**Controls:** ISO27001-6.2, ISO42001-6.2
 
 This register supports:
 

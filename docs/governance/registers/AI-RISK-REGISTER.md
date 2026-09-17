@@ -74,3 +74,9 @@ Risk status, treatment direction, review dates, evidence relationships, and reco
 ## Governance Process
 
 Edit canonical risk records in `assurance/risks/risks.json`, then run `npm run generate:assurance-summaries`. Narrative outside the generated markers may explain purpose, assessment method, or interpretation, but it must not restate record status, rationale, evidence, ownership, lifecycle state, or counts as an independent source.
+
+## Alignment
+
+**Controls:** ISO42001-6.1, ISO42001-6.1.2, ISO42001-6.1.3
+
+This document supports the listed assurance requirements within its declared scope.

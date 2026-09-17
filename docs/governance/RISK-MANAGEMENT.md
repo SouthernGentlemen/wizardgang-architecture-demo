@@ -480,7 +480,7 @@ Until those activities occur, this methodology demonstrates that the process is 
 
 ## 23. Alignment
 
-**Controls:** ISO27001-6.1, ISO27001-6.1.1, ISO27001-6.1.2, ISO27001-6.1.3
+**Controls:** ISO27001-6.1, ISO27001-6.1.1, ISO27001-6.1.2, ISO27001-6.1.3, ISO42001-6.1.1, ISO42001-6.1.2
 
 This methodology supports:
 

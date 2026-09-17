@@ -119,6 +119,7 @@ CI validates reference uniqueness, registry/header agreement, governed-file exis
 |---|---|---|
 | `assessments/MCP-AI-IMPACT-ASSESSMENT.md` | Current read-only public MCP impact assessment | Authoritative only for the assessed current capability; material AI changes require reassessment |
 | `assessments/ISO-27001-2026-09-17-SELF-ASSESSMENT.md` | Dated owner/operator ISO/IEC 27001 reassessment | Self-Assessment under WG-GOV-018 §4.2; explicitly not an internal audit or certification claim |
+| `assessments/ISO-42001-2026-09-17-SELF-ASSESSMENT.md` | Dated owner/operator ISO/IEC 42001 reassessment | Self-Assessment under WG-GOV-018 §4.2; explicitly not an internal audit or certification claim |
 | `soa/ISO-27001-SOA.md` | Generated ISO/IEC 27001:2022 Annex A summary | Generated presentation only; canonical applicability/rationale/status is `assurance/compliance/iso-27001-2022.json` |
 | `soa/ISO-42001-SOA.md` | Generated ISO/IEC 42001:2023 Annex A summary | Generated presentation only; canonical applicability/rationale/status is `assurance/compliance/iso-42001-2023.json` |
 

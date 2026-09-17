@@ -295,7 +295,7 @@ Primary related evidence includes:
 
 ## 13. Alignment
 
-**Controls:** ISO27001-6.3
+**Controls:** ISO27001-6.3, ISO42001-6.3
 
 This document supports:
 

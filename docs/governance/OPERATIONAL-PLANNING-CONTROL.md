@@ -427,7 +427,7 @@ Primary supporting material includes:
 
 ## 18. Alignment
 
-**Controls:** ISO27001-8.1, ISO27001-A.5.37, ISO27001-A.8.6
+**Controls:** ISO27001-8.1, ISO27001-A.5.37, ISO27001-A.8.6, ISO42001-8.1
 
 This document supports:
 

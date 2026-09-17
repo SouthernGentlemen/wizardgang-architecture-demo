@@ -539,7 +539,7 @@ Each item should be treated according to its real source and significance; not e
 
 ## 25. Alignment
 
-**Controls:** ISO27001-10.1, ISO27001-10.2
+**Controls:** ISO27001-10.1, ISO27001-10.2, ISO42001-10.1, ISO42001-10.2
 
 This procedure supports:
 
