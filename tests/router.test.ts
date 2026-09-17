@@ -199,8 +199,8 @@ describe('public route contract', () => {
     const html = await response.text();
     expect(response.status).toBe(200);
     expect(html).toContain('id="traceability"');
-    expect(html).toContain('/api/labs/governance-traceability');
-    expect(html).toContain('Inspect live traceability');
+    expect(html).not.toContain('/api/labs/governance-traceability');
+    expect(html).not.toContain('Inspect live traceability');
     expect(html).toContain('<summary>Inspect focused evidence</summary>');
     for (const retired of ['source-of-truth', 'versioning', 'branching', 'actions', 'releases', 'environments']) {
       expect(html).not.toContain(`id="${retired}"`);
@@ -211,7 +211,9 @@ describe('public route contract', () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     for (const anchor of ['security-controls', 'ai-boundary', 'traceability', 'accessibility-posture']) expect(html).toContain(`id="${anchor}"`);
-    for (const endpoint of ['/api/labs/governance-security-controls', '/api/labs/governance-ai-evaluation', '/api/labs/governance-traceability']) expect(html).toContain(endpoint);
+    for (const endpoint of ['/api/labs/governance-security-controls', '/api/labs/governance-ai-evaluation', '/api/labs/governance-traceability']) expect(html).not.toContain(endpoint);
+    expect(html).not.toContain('data-assurance-run');
+    expect(html).not.toContain('data-assurance-output');
     expect(html).toContain('No ISO/IEC or WCAG certification is claimed');
 
     const edge = await routeRequest(new Request('https://demo.wizardgang.ai/demos#edge', { headers: { accept: 'text/html' } }), env());

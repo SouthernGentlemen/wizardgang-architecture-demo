@@ -22,27 +22,18 @@ const CHECKS = [
     eyebrow: 'Security controls',
     title: 'ISO/IEC 27001-aligned control evidence',
     explanation: 'Inspect how published security-control claims connect to deployed implementation evidence. Alignment only; no certification is claimed.',
-    method: 'GET',
-    path: '/api/labs/governance-security-controls',
-    action: 'Run security-control check',
   },
   {
     id: 'ai-boundary',
     eyebrow: 'AI boundary',
     title: 'ISO/IEC 42001-aligned MCP boundary evaluation',
     explanation: 'Execute approved, unknown-method, and invalid-scope cases against the controlled MCP boundary.',
-    method: 'POST',
-    path: '/api/labs/governance-ai-evaluation',
-    action: 'Run AI boundary evaluation',
   },
   {
     id: 'traceability',
     eyebrow: 'Traceability',
     title: 'Requirement-to-deployment evidence chain',
     explanation: 'Inspect the public chain from requirement and source through validation, release identity, deployment, and recent operational observation.',
-    method: 'GET',
-    path: '/api/labs/governance-traceability',
-    action: 'Inspect live traceability',
   },
 ] as const;
 
@@ -104,15 +95,10 @@ function traceabilityEvidence(limit = 4): string {
   }).join('')}</div>`;
 }
 
-function executableCheck(check: typeof CHECKS[number], posture: string, evidence: string): string {
+function assuranceCheck(check: typeof CHECKS[number], posture: string, evidence: string): string {
   return `<section class="assurance-check" id="${check.id}" aria-labelledby="${check.id}-heading">
     <div class="section-head"><div><p class="eyebrow">${check.eyebrow}</p><h2 id="${check.id}-heading">${check.title}</h2></div><span class="badge">${escapeHtml(posture)}</span></div>
     <p>${escapeHtml(check.explanation)}</p>
-    <div class="action-card">
-      <div class="request-line"><span class="http-method http-${check.method.toLowerCase()}">${check.method}</span><code>${check.path}</code></div>
-      <button class="button-primary" type="button" data-assurance-run data-method="${check.method}" data-path="${check.path}">${check.action}</button>
-      <pre class="action-output" aria-live="polite" data-assurance-output hidden></pre>
-    </div>
     <details class="implementation-notes"><summary>Inspect focused evidence</summary>${evidence}</details>
   </section>`;
 }
@@ -125,31 +111,6 @@ function accessibilityCheck(): string {
     <a class="button-primary" href="#accessibility-evidence">Inspect accessibility evidence</a>
     <details class="implementation-notes" id="accessibility-evidence"><summary>Focused WCAG evidence</summary>${complianceEvidence('wcag-2.2', 6)}</details>
   </section>`;
-}
-
-function actionScript(): string {
-  return `<script>
-(() => {
-  document.querySelectorAll('[data-assurance-run]').forEach((button) => button.addEventListener('click', async () => {
-    const output = button.parentElement?.querySelector('[data-assurance-output]');
-    if (!(output instanceof HTMLElement)) return;
-    output.hidden = false;
-    output.textContent = 'Running…';
-    try {
-      const response = await fetch(button.dataset.path || '', {
-        method: button.dataset.method || 'GET',
-        headers: { accept: 'application/json' },
-      });
-      const text = await response.text();
-      let rendered = text;
-      try { rendered = JSON.stringify(JSON.parse(text), null, 2); } catch {}
-      output.textContent = response.status + ' ' + response.statusText + '\\n\\n' + rendered;
-    } catch (error) {
-      output.textContent = String(error);
-    }
-  }));
-})();
-</script>`;
 }
 
 export async function minimalAssuranceContent(_request: Request, env: Env): Promise<PageContent> {
@@ -170,11 +131,10 @@ export async function minimalAssuranceContent(_request: Request, env: Env): Prom
     <a href="#traceability">Traceability</a>
     <a href="#accessibility-posture">Accessibility posture</a>
   </nav>
-  ${executableCheck(CHECKS[0], securityPosture, complianceEvidence('iso-27001'))}
-  ${executableCheck(CHECKS[1], aiPosture, complianceEvidence('iso-42001'))}
-  ${executableCheck(CHECKS[2], traceabilityPosture, traceabilityEvidence())}
-  ${accessibilityCheck()}
-  ${actionScript()}`;
+  ${assuranceCheck(CHECKS[0], securityPosture, complianceEvidence('iso-27001'))}
+  ${assuranceCheck(CHECKS[1], aiPosture, complianceEvidence('iso-42001'))}
+  ${assuranceCheck(CHECKS[2], traceabilityPosture, traceabilityEvidence())}
+  ${accessibilityCheck()}`;
 
   return pageContent(env, 'Assurance', body, {
     routeId: 'assurance.index',

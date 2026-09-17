@@ -51,23 +51,22 @@ function inProcessTransport(env: Env): StreamableHTTPClientTransport {
   });
 }
 
-function modernPingRequest(headerName = 'ping'): Request {
+function modernRequest(method: string, params: Record<string, unknown> = {}, headerName?: string): Request {
   return new Request('https://demo.example/mcp', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
       accept: 'application/json, text/event-stream',
       'mcp-protocol-version': MCP_PROTOCOL_VERSION,
-      'mcp-method': 'tools/call',
-      'mcp-name': headerName,
+      'mcp-method': method,
+      ...(headerName ? { 'mcp-name': headerName } : {}),
     },
     body: JSON.stringify({
       jsonrpc: '2.0',
       id: 1,
-      method: 'tools/call',
+      method,
       params: {
-        name: 'ping',
-        arguments: {},
+        ...params,
         _meta: {
           [mcpMetaKeys.protocolVersion]: MCP_PROTOCOL_VERSION,
           [mcpMetaKeys.clientInfo]: { name: 'curl', version: '1.0' },
@@ -76,6 +75,10 @@ function modernPingRequest(headerName = 'ping'): Request {
       },
     }),
   });
+}
+
+function modernPingRequest(headerName = 'ping'): Request {
+  return modernRequest('tools/call', { name: 'ping', arguments: {} }, headerName);
 }
 
 async function exerciseClient(client: Client, env: Env & { DEMO_DB: McpD1 }) {
@@ -147,6 +150,37 @@ describe('official MCP client interoperability', () => {
   it('rejects a modern request when the tool-name header disagrees with the body', async () => {
     const response = await mcpResponse(modernPingRequest('list_demo_records'), environment());
     expect(response.status).toBe(400);
+  });
+
+  it('rejects an unknown MCP method at the real MCP boundary', async () => {
+    const response = await mcpResponse(modernRequest('tools/deleteEverything'), environment());
+    expect(response.status).toBe(404);
+    const payload = await response.json() as { error?: { code?: number } };
+    expect(payload.error?.code).toBe(-32601);
+  });
+
+  it('rejects an invalid demo-record namespace at the real MCP boundary', async () => {
+    const response = await mcpResponse(modernRequest(
+      'tools/call',
+      { name: 'list_demo_records', arguments: { namespace: '../private' } },
+      'list_demo_records',
+    ), environment());
+    expect(response.status).toBe(200);
+    const payload = await response.json() as { result?: { isError?: boolean } };
+    expect(payload.result?.isError).toBe(true);
+  });
+
+  it('rejects a prohibited write tool at the real MCP boundary', async () => {
+    const env = environment();
+    const response = await mcpResponse(modernRequest(
+      'tools/call',
+      { name: 'create_demo_record', arguments: { namespace: 'public', key: 'blocked', valueJson: '{}' } },
+      'create_demo_record',
+    ), env);
+    expect(response.status).toBe(200);
+    const payload = await response.json() as { error?: { code?: number } };
+    expect(payload.error?.code).toBe(-32602);
+    expect(env.DEMO_DB.records).toEqual([{ id: 7, namespace: 'public', record_key: 'architecture', value_json: '{"edge":true}' }]);
   });
 
   it('accepts a standard initialization notification without creating a compatibility route', async () => {

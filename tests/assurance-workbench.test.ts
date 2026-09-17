@@ -46,14 +46,15 @@ describe('minimal assurance presentation', () => {
     expect((html.match(/class="assurance-check"/g) ?? [])).toHaveLength(4);
   });
 
-  it('keeps the three executable governance checks obvious and focused evidence collapsed', async () => {
+  it('keeps retired governance execution controls absent and focused evidence collapsed', async () => {
     const { html } = await assuranceHtml();
     for (const endpoint of [
       '/api/labs/governance-security-controls',
       '/api/labs/governance-ai-evaluation',
       '/api/labs/governance-traceability',
-    ]) expect(html).toContain(endpoint);
-    expect((html.match(/<button[^>]*data-assurance-run/g) ?? [])).toHaveLength(3);
+    ]) expect(html).not.toContain(endpoint);
+    expect(html).not.toContain('data-assurance-run');
+    expect(html).not.toContain('data-assurance-output');
     expect((html.match(/<details class="implementation-notes"/g) ?? []).length).toBeGreaterThanOrEqual(4);
     expect(html).not.toMatch(/<details class="implementation-notes"[^>]*\sopen(?:[=\s>])/);
   });

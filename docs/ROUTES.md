@@ -27,9 +27,6 @@ This file is generated from the active declarative application registry. Route I
 | `platform.edge.inspect` | `/api/labs/edge` | `GET` | api | public | gated | deny | Edge inspection laboratory API | `src/platform/route-capabilities/edge.ts` |
 | `platform.git.delivery` | `/api/labs/git-delivery` | `GET`, `POST` | api | public | gated | deny | Git delivery laboratory API | `src/platform/route-capabilities/git.ts` |
 | `platform.git.release` | `/api/labs/git-release` | `POST` | api | private | gated | deny | Git release laboratory action | `src/platform/route-capabilities/git.ts` |
-| `platform.governance.ai-evaluation` | `/api/labs/governance-ai-evaluation` | `POST` | api | public | gated | deny | Governance AI-boundary laboratory API | `src/platform/route-capabilities/governance.ts` |
-| `platform.governance.security-controls` | `/api/labs/governance-security-controls` | `GET` | api | public | gated | deny | Governance security-controls laboratory API | `src/platform/route-capabilities/governance.ts` |
-| `platform.governance.traceability` | `/api/labs/governance-traceability` | `GET` | api | public | gated | deny | Governance traceability laboratory API | `src/platform/route-capabilities/governance.ts` |
 | `platform.r2.files` | `/api/labs/r2-files` | `GET`, `POST` | api | public | gated | deny | R2 files laboratory API | `src/platform/route-capabilities/r2.ts` |
 | `platform.r2.file` | `/api/labs/r2-files/{id}` | `GET`, `DELETE` | api | public | gated | deny | R2 file item laboratory API | `src/platform/route-capabilities/r2.ts` |
 | `platform.r2.reset` | `/api/labs/r2-reset` | `POST` | api | public | gated | deny | R2 files reset laboratory API | `src/platform/route-capabilities/r2.ts` |
