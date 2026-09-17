@@ -116,17 +116,12 @@ p { margin: 0 0 1rem; }
 .reference-links { display: flex; flex-wrap: wrap; gap: .55rem 1rem; margin-top: .35rem; padding: .8rem 1rem; border: 1px solid var(--line); background: var(--panel); }
 .reference-links a { color: var(--muted); font-size: .85rem; }
 .reference-links a:hover { color: var(--paper); }
-.assurance-header { max-width: 900px; }
-.assurance-notice { max-width: 68ch; margin: 1.4rem 0 0; padding: 1rem 1.1rem; border-left: 3px solid var(--violet); background: var(--panel); color: var(--muted); }
-.assurance-notice strong { color: var(--paper); }
 .disclosure-timeline { counter-reset: disclosure; padding-left: 0; list-style: none; }
 .disclosure-timeline li { position: relative; margin-left: 1rem; padding: 0 0 1.5rem 2.5rem; border-left: 2px solid var(--line); }
 .disclosure-timeline li::before { position: absolute; left: -1rem; top: -.2rem; display: grid; place-items: center; width: 1.85rem; height: 1.85rem; border: 2px solid var(--acid); border-radius: 50%; background: var(--ink); color: var(--acid); content: counter(list-item); font: 800 .7rem/1 var(--mono); }
 .offline-message-preview { display: grid; gap: .35rem; margin-top: 1rem; padding: 1rem; border: 1px solid var(--line); background: var(--panel-2); }
 .offline-message-preview span { color: var(--muted); font-size: .75rem; text-transform: uppercase; }
 .offline-message-preview p { margin: 0; }
-.assurance-evidence-card .link-row { align-items: flex-start; margin-top: auto; flex-direction: column; gap: .45rem; }
-.assurance-evidence-card .link-row a { font-size: .72rem; }
 .section-head { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin: clamp(4.5rem, 8vw, 7rem) 0 1.3rem; padding-top: 1.3rem; border-top: 1px solid var(--line); }
 .section-head h2,.section-head .surface-view-heading { margin: 0; }
 .section-head > span { color: var(--muted); font: 800 .68rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
@@ -149,7 +144,6 @@ a.card:hover h3 { color: var(--acid); }
 
 .badge { display: inline-flex; align-items: center; align-self: flex-start; padding: .3rem .5rem; border: 1px solid var(--line); color: var(--muted); font: 700 .64rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
 .badge-ok { border-color: var(--acid); color: var(--acid); }
-.badge-warn { border-color: var(--violet); color: var(--violet); }
 .badge-down { border-color: #ff9d9d; color: #ff9d9d; }
 :root[data-theme="light"] .badge-down { border-color: #a11; color: #a11; }
 

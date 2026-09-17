@@ -112,9 +112,9 @@ describe('public link and route contract', () => {
       expect(html, framework).not.toContain('id="assurance-compliance-framework"');
       expect(html, framework).not.toContain(`<option value="${framework}" selected>`);
       expect(html, framework).not.toContain('Browse framework records');
-      for (const fragment of ['security-controls', 'ai-boundary', 'traceability', 'accessibility-posture']) {
-        expect(html, framework).toContain(`id="${fragment}"`);
-      }
+      expect(html, framework).toContain('data-assurance-workbench');
+      expect(html, framework).toContain('id="ISO27001-A.5.1"');
+      for (const tab of ['iso-27001', 'iso-42001', 'wcag-2.2']) expect(html, framework).toContain(`data-assurance-framework="${tab}"`);
     }
   });
 

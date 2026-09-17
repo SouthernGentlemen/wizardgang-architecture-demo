@@ -73,15 +73,15 @@ describe('navigation projection', () => {
     }
   });
 
-  it('keeps the four focused assurance checks inside the assurance page', async () => {
+  it('keeps the assurance workbench inside the assurance page', async () => {
     const route = applicationRouteRegistry.declarations.find((candidate) => candidate.id === 'assurance.index');
     if (!route) throw new Error('Missing assurance.index route');
     const html = await (await route.handler(new Request('https://demo.wizardgang.ai/assurance'), { env }, {})).text();
-    expect(html).toContain('aria-label="Assurance checks"');
+    expect(html).toContain('aria-label="Frameworks"');
     expect(html).toContain(`href="${routeUrl('security.index')}"`);
-    for (const fragment of ['security-controls', 'ai-boundary', 'traceability', 'accessibility-posture']) {
-      expect(html).toContain(`href="#${fragment}"`);
-    }
+    for (const framework of ['iso-27001', 'iso-42001', 'wcag-2.2']) expect(html).toContain(`data-assurance-framework="${framework}"`);
+    expect(html).toContain('id="ISO27001-A.5.1"');
+    expect(html).toContain('href="#ISO27001-A.5.1"');
   });
 
   it('keeps the homepage focused on architecture product destinations while support surfaces stay contextual', async () => {

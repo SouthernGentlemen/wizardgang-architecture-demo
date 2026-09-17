@@ -13,7 +13,7 @@ The ordinary browser experience is intentionally small:
 
 - `/` — project orientation and compact live proof;
 - `/demos` — executable architecture demonstrations;
-- `/assurance` — four bounded engineering-assurance checks;
+- `/assurance` — framework assessment workbench with focused record drilldown;
 - `/security` — contextual vulnerability-reporting and advisory boundary.
 
 `/admin` is a protected operational page and `/offline` is the recovery page. The former human `/operations` page is retired and returns the ordinary 404. Operational machine APIs, scheduled availability collection, 365-day retention, bounded logs, provider observations, and protected controls remain independent contracts.
@@ -46,14 +46,9 @@ Core invariants:
 
 ## Assurance
 
-`/assurance` is a focused verification surface for:
+`/assurance` is a single workbench for the published ISO/IEC 27001, ISO/IEC 42001, and WCAG 2.2 assessment records. Framework tabs and section selection expose derived section/framework posture, while stable record fragments such as `/assurance#ISO27001-A.5.19` select one focused assessment.
 
-1. security controls;
-2. the AI/MCP boundary;
-3. traceability and evidence;
-4. accessibility posture.
-
-Canonical risks, incidents, exercises, governance records, objectives, framework records, and other management-system data remain available through their governed structured sources and reporting contracts without being projected as ordinary public navigation. See [`docs/ASSURANCE.md`](docs/ASSURANCE.md) and [`docs/ASSURANCE-API.md`](docs/ASSURANCE-API.md).
+The focused pane presents the assessment, recorded gaps, assessment date, Markdown references, and linked evidence without projecting risk, incident, register, or other management-system inventories into public HTML. The presentation fragment at `GET /api/assurance/{record}` serves one record pane for workbench activation; exhaustive structured records remain available through the governed reporting contracts. See [`docs/ASSURANCE.md`](docs/ASSURANCE.md) and [`docs/ASSURANCE-API.md`](docs/ASSURANCE-API.md).
 
 ## Operations and administration
 

@@ -327,15 +327,15 @@ describe('DEMO-260 MVP acceptance contract', () => {
     }
   });
 
-  it('keeps assurance to four focused checks and focused evidence', async () => {
+  it('keeps assurance focused on framework records and evidence without management inventories', async () => {
     const { response, html } = await page('assurance.index');
     expect(response.status).toBe(200);
-    expect((html.match(/class="assurance-check"/g) ?? [])).toHaveLength(4);
-    for (const id of ['security-controls', 'ai-boundary', 'traceability', 'accessibility-posture']) {
-      expect(html).toContain(`id="${id}"`);
-    }
-    expect(html).toContain('Inspect focused evidence');
-    expect(html).toContain('Focused WCAG evidence');
+    expect((html.match(/data-assurance-framework=/g) ?? [])).toHaveLength(3);
+    expect(html).toContain('data-assurance-section');
+    expect(html).toContain('data-assurance-record-grid');
+    expect(html).toContain('data-assurance-detail');
+    expect(html).toContain('data-assurance-record="ISO27001-A.5.1"');
+    for (const label of ['Assessment', 'What is missing', 'Assessed', 'Documentation', 'Evidence']) expect(html).toContain(label);
     expect(html).not.toContain('<table');
     for (const forbidden of [
       'Browse risk records',

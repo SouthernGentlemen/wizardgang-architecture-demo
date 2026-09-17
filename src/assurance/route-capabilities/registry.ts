@@ -5,29 +5,42 @@ export const assuranceRegistryRouteCapability = defineAssuranceRouteCapability({
   pattern: '/assurance',
   html: {
     handler: async (request, env) => {
-      const [{ minimalAssuranceContent }, { renderNotFound, renderPage }] = await Promise.all([
-        import('../../demos/assurance-minimal'),
+      const [{ assuranceWorkbenchContent }, { renderNotFound, renderPage }] = await Promise.all([
+        import('../../demos/assurance-workbench'),
         import('../../ui/page'),
       ]);
       if (new URL(request.url).searchParams.has('view')) return renderNotFound(env);
-      const content = await minimalAssuranceContent(request, env);
-      return renderPage(env, {
-        ...content,
-        routeId: 'assurance.index',
-      });
+      const content = await assuranceWorkbenchContent(request, env);
+      return renderPage(env, { ...content, routeId: 'assurance.index' });
     },
     source: {
-      module: 'src/demos/assurance-minimal.ts',
-      exportName: 'minimalAssuranceContent',
-      tests: ['tests/demo-258-minimal-assurance.test.ts', 'tests/assurance-consolidation.test.ts'],
+      module: 'src/demos/assurance-workbench.ts',
+      exportName: 'assuranceWorkbenchContent',
+      tests: ['tests/assurance-workbench.test.ts', 'tests/assurance-workbench-accessibility.test.ts'],
     },
     page: {
       parent: 'interfaces.frontend.index',
       label: 'Assurance',
-      summary: 'Four focused public checks for security controls, the AI boundary, traceability, and accessibility posture.',
+      summary: 'Inspect framework assessment records, posture, evidence, and documentation in one workbench.',
       order: 3,
       navigation: 'primary',
       architectureMap: true,
     },
   },
+  api: [{
+    routeId: 'assurance.presentation',
+    pattern: '/api/assurance/:record',
+    cache: { mode: 'response' },
+    handler: async (request, env, params) => {
+      const { assurancePresentationResponse } = await import('../../demos/assurance-workbench');
+      return assurancePresentationResponse(request, env, params.record ?? '');
+    },
+    source: {
+      module: 'src/demos/assurance-workbench.ts',
+      exportName: 'assurancePresentationResponse',
+      tests: ['tests/assurance-workbench.test.ts', 'tests/router.test.ts'],
+    },
+    title: 'Assurance record presentation fragment',
+    description: 'Returns one focused assessment record pane for activation inside the assurance workbench.',
+  }],
 });

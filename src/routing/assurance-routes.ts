@@ -4,6 +4,7 @@ import {
 } from '../assurance/model';
 import { assuranceRouteCapabilities } from '../assurance/route-capabilities';
 import type {
+  AssuranceApiRouteHandlerRegistration,
   AssuranceRouteCapability,
   AssuranceRouteSourceMetadata,
 } from '../assurance/route-capability';
@@ -27,7 +28,7 @@ type AssuranceApplicationRouteDeclaration = RouteDeclaration<AssuranceRouteConte
 const ROUTE_TEST = 'tests/assurance-declarative-routing.test.ts';
 
 function routeSource(source: AssuranceRouteSourceMetadata | undefined): RouteSourceMetadata {
-  if (!source) throw new Error('Assurance HTML route is missing source metadata.');
+  if (!source) throw new Error('Assurance route is missing source metadata.');
   return { ...source, tests: source.tests ?? [ROUTE_TEST] };
 }
 
@@ -57,14 +58,39 @@ function htmlRoute(capability: AssuranceRouteCapability): AssuranceApplicationRo
   };
 }
 
+function apiRoute(api: AssuranceApiRouteHandlerRegistration): AssuranceApplicationRouteDeclaration {
+  return {
+    id: api.routeId,
+    pattern: api.pattern,
+    methods: ['GET'],
+    kind: 'api',
+    handler: (request, { env }, params) => api.handler(request, env, params),
+    authentication: { mode: 'anonymous' },
+    authorization: { mode: 'none' },
+    visibility: 'public',
+    sameOrigin: { mode: 'not-required' },
+    offline: { mode: api.offline ?? 'gated' },
+    cache: api.cache ?? { mode: 'no-store' },
+    crawler: { crawling: 'controlled', indexing: 'deny' },
+    documentation: {
+      title: api.title,
+      description: api.description,
+      docs: ['docs/FRONTEND-ROUTES.md', 'docs/EVIDENCE.md', 'docs/ROUTES.md'],
+    },
+    source: routeSource(api.source),
+  };
+}
+
 export function createAssuranceRouteRegistry(
   registry: AssuranceRegistry,
   capabilities: readonly AssuranceRouteCapability[],
 ): RouteRegistry<AssuranceRouteContext> {
-  const routes = capabilities.map((capability) => {
-    const route = htmlRoute(capability);
-    if (!route) throw new Error(`${capability.routeId} has no specialized HTML handler.`);
-    return route;
+  const routes = capabilities.flatMap((capability) => {
+    const html = htmlRoute(capability);
+    const api = (capability.api ?? []).map(apiRoute);
+    const capabilityRoutes = [...(html ? [html] : []), ...api];
+    if (capabilityRoutes.length === 0) throw new Error(`${capability.routeId} has no specialized handler.`);
+    return capabilityRoutes;
   });
 
   const contractErrors = contractValidateRouteContract(

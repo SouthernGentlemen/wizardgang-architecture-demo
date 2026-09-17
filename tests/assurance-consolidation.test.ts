@@ -35,26 +35,27 @@ async function get(path = assurancePath) {
 }
 
 describe('minimal assurance route', () => {
-  it('makes /assurance a four-check verification surface while security stays distinct', async () => {
+  it('makes /assurance a framework workbench while security stays distinct', async () => {
     const response = await get();
     const html = await response.text();
     expect(response.status).toBe(200);
     expect(html).toContain(`<link rel="canonical" href="https://demo.wizardgang.ai${assurancePath}">`);
-    for (const section of ['security-controls', 'ai-boundary', 'traceability', 'accessibility-posture']) {
-      expect(html).toContain(`id="${section}"`);
-      expect(html).toContain(`href="#${section}"`);
-    }
+    expect((html.match(/data-assurance-framework=/g) ?? [])).toHaveLength(3);
+    for (const framework of ['iso-27001', 'iso-42001', 'wcag-2.2']) expect(html).toContain(`data-assurance-framework="${framework}"`);
+    expect(html).toContain('data-assurance-section');
+    expect(html).toContain('data-assurance-record="ISO27001-A.5.1"');
+    expect(html).toContain('href="#ISO27001-A.5.1"');
     for (const retiredAction of ['/api/labs/governance-security-controls', '/api/labs/governance-ai-evaluation', '/api/labs/governance-traceability']) {
       expect(html).not.toContain(retiredAction);
     }
     expect(html).not.toContain('data-assurance-run');
     expect(html).not.toContain('data-assurance-output');
-    expect(html).toContain('No ISO/IEC or WCAG certification is claimed');
+    expect(html).not.toContain('No ISO/IEC or WCAG certification is claimed');
     expect(html).toContain(`href="${securityPath}"`);
     for (const path of retiredPaths.filter((path) => path.startsWith(`${assurancePath}/`))) expect(html).not.toContain(`href="${path}`);
   });
 
-  it('preserves canonical machine record URLs without exposing internal record families as page sections', async () => {
+  it('preserves canonical machine record URLs without exposing management inventories as page sections', async () => {
     for (const dataset of ['claims', 'evidence', 'compliance', 'risks', 'incidents', 'exercises', 'governance-records']) {
       expect(assuranceHtmlRoute(dataset), dataset).toBe(assurancePath);
     }
@@ -68,22 +69,24 @@ describe('minimal assurance route', () => {
       'Browse risk records',
       'Browse incident and exercise records',
       'Report a non-sensitive concern',
-      'Supplier',
-      'Objectives',
+      'Risk register',
+      'Supplier register',
+      'Registry browser',
     ]) expect(html).not.toContain(hidden);
   });
 
-  it('rejects the retired view selector while ordinary localization and fragments remain valid', async () => {
+  it('rejects the retired view selector while localization and record fragments remain valid', async () => {
     const legacy = await get(`${assurancePath}?view=compliance`);
     expect(legacy.status).toBe(404);
     expect(legacy.headers.get('location')).toBeNull();
 
-    const localized = await get(`${assurancePath}?lang=ar#accessibility-posture`);
+    const localized = await get(`${assurancePath}?lang=ar#ISO27001-A.5.1`);
     const html = await localized.text();
     expect(localized.status).toBe(200);
     expect(localized.headers.get('content-language')).toBe('ar');
     expect(html).toContain('<html lang="ar" dir="rtl">');
-    expect(html).toContain('href="#accessibility-posture"');
+    expect(html).toContain('id="ISO27001-A.5.1"');
+    expect(html).toContain('href="#ISO27001-A.5.1"');
   });
 
   it('returns ordinary 404 responses with no redirects for retired assurance-owned HTML pathnames', async () => {

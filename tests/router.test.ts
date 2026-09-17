@@ -194,40 +194,40 @@ describe('public route contract', () => {
     }
   });
 
-  it('renders focused traceability without restoring the delivery inventory', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance#traceability', { headers: { accept: 'text/html' } }), env());
+  it('renders a focused assurance record without restoring the delivery inventory', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance#ISO27001-A.5.1', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     expect(response.status).toBe(200);
-    expect(html).toContain('id="traceability"');
+    expect(html).toContain('data-assurance-workbench');
+    expect(html).toContain('id="ISO27001-A.5.1"');
+    expect(html).toContain('data-assurance-record="ISO27001-A.5.1"');
     expect(html).not.toContain('/api/labs/governance-traceability');
     expect(html).not.toContain('Inspect live traceability');
-    expect(html).toContain('<summary>Inspect focused evidence</summary>');
     for (const retired of ['source-of-truth', 'versioning', 'branching', 'actions', 'releases', 'environments']) {
       expect(html).not.toContain(`id="${retired}"`);
     }
   });
 
-  it('renders the four assurance checks and explicit uncertified qualification', async () => {
+  it('renders the assurance workbench without restoring retired lab actions or certification wording', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
-    for (const anchor of ['security-controls', 'ai-boundary', 'traceability', 'accessibility-posture']) expect(html).toContain(`id="${anchor}"`);
+    expect((html.match(/data-assurance-framework=/g) ?? [])).toHaveLength(3);
+    expect(html).toContain('data-assurance-section');
+    expect(html).toContain('data-assurance-record="ISO27001-A.5.1"');
     for (const endpoint of ['/api/labs/governance-security-controls', '/api/labs/governance-ai-evaluation', '/api/labs/governance-traceability']) expect(html).not.toContain(endpoint);
     expect(html).not.toContain('data-assurance-run');
     expect(html).not.toContain('data-assurance-output');
-    expect(html).toContain('No ISO/IEC or WCAG certification is claimed');
-
-    const edge = await routeRequest(new Request('https://demo.wizardgang.ai/demos#edge', { headers: { accept: 'text/html' } }), env());
-    expect(await edge.text()).not.toContain('No ISO/IEC or WCAG certification is claimed');
+    expect(html).not.toContain('No ISO/IEC or WCAG certification is claimed');
+    expect(html).not.toMatch(/>\s*(?:COMPLIANT|CERTIFIED)\s*</i);
   });
 
-  it('renders concise framework posture without restoring the framework registry', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance?framework=wcag-2.2#accessibility-posture', { headers: { accept: 'text/html' } }), env());
+  it('renders framework and section posture without restoring the retired framework registry', async () => {
+    const response = await routeRequest(new Request('https://demo.wizardgang.ai/assurance?framework=wcag-2.2#ISO27001-A.5.1', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     expect(response.status).toBe(200);
-    for (const statement of ['Bounded WCAG 2.2 evidence', 'ISO/IEC 27001-aligned control evidence', 'ISO/IEC 42001-aligned MCP boundary evaluation']) {
-      expect(html).toContain(statement);
-    }
-    expect(html).toContain('/api/reporting/compliance/');
+    expect(html).toContain('data-assurance-section-posture');
+    expect(html).toContain('data-assurance-framework-posture');
+    for (const status of ['pass', 'partial', 'gap', 'not-applicable']) expect(html).toContain(`data-posture-count="${status}"`);
     expect(html).not.toContain('Browse framework records');
     expect(html).not.toContain('id="assurance-compliance-framework"');
     expect(html).not.toContain('<option value="wcag-2.2" selected>');

@@ -28,18 +28,18 @@
       "indexing": "allow"
     },
     "title": "Assurance",
-    "description": "Four focused public checks for security controls, the AI boundary, traceability, and accessibility posture.",
+    "description": "Inspect framework assessment records, posture, evidence, and documentation in one workbench.",
     "docs": [
       "docs/ASSURANCE-REGISTRY.md",
       "docs/REPORTING.md",
       "docs/ROUTES.md"
     ],
     "source": {
-      "module": "src/demos/assurance-minimal.ts",
-      "exportName": "minimalAssuranceContent",
+      "module": "src/demos/assurance-workbench.ts",
+      "exportName": "assuranceWorkbenchContent",
       "tests": [
-        "tests/demo-258-minimal-assurance.test.ts",
-        "tests/assurance-consolidation.test.ts"
+        "tests/assurance-workbench.test.ts",
+        "tests/assurance-workbench-accessibility.test.ts"
       ]
     },
     "navigation": {
@@ -49,6 +49,51 @@
       "navigation": "primary",
       "architectureMap": true,
       "sitemap": true
+    },
+    "status": "working"
+  },
+  {
+    "id": "assurance.presentation",
+    "route": "/api/assurance/{record}",
+    "methods": [
+      "GET"
+    ],
+    "kind": "api",
+    "visibility": "public",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "anonymous"
+    },
+    "authorization": {
+      "mode": "none"
+    },
+    "same_origin": {
+      "mode": "not-required"
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "response"
+    },
+    "crawler": {
+      "crawling": "controlled",
+      "indexing": "deny"
+    },
+    "title": "Assurance record presentation fragment",
+    "description": "Returns one focused assessment record pane for activation inside the assurance workbench.",
+    "docs": [
+      "docs/FRONTEND-ROUTES.md",
+      "docs/EVIDENCE.md",
+      "docs/ROUTES.md"
+    ],
+    "source": {
+      "module": "src/demos/assurance-workbench.ts",
+      "exportName": "assurancePresentationResponse",
+      "tests": [
+        "tests/assurance-workbench.test.ts",
+        "tests/router.test.ts"
+      ]
     },
     "status": "working"
   },
