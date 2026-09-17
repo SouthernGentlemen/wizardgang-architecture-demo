@@ -291,4 +291,4 @@ After approval, the management system will have an explicit competence, awarenes
 
 ## Alignment
 
-**Controls:** ISO27001-7.2, ISO27001-7.3, ISO27001-7.4, ISO27001-A.6.3, ISO27001-A.6.8
+**Controls:** ISO27001-7.2, ISO27001-7.3, ISO27001-7.4, ISO27001-A.6.3, ISO27001-A.6.8, ISO42001-7.2, ISO42001-7.3, ISO42001-7.4, ISO42001-A.3.3, ISO42001-A.4.6

@@ -56,7 +56,7 @@
       "reference": "4.1",
       "title": "Understand the AI operating context",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -70,7 +70,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-4.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/CONTEXT.md#89-ai-related-expectations-and-risk"
+          }
         }
+      ],
+      "rationale": "The scoped AI/MCP context, public exposure, supplier dependencies, data boundary, and AI-specific expectations are documented. The recurring context review has not yet completed its first operating interval.",
+      "gaps": [
+        "Complete a dated AIMS context review through management review or an equivalent triggered operating review."
       ]
     },
     {
@@ -78,7 +93,7 @@
       "reference": "4.2",
       "title": "Identify interested-party AI expectations",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -92,7 +107,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-RUN-014"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-4.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INTERESTED-PARTIES.md#6-ai-related-requirements"
+          }
         }
+      ],
+      "rationale": "AI users, affected parties, external model/client providers, security researchers, and other interested-party requirement categories are documented. The first scheduled interested-party review has not yet operated.",
+      "gaps": [
+        "Complete and retain the first dated interested-party requirements review, including any resulting supplier or obligation changes."
       ]
     },
     {
@@ -100,7 +130,7 @@
       "reference": "4.3",
       "title": "Define the AI management-system boundary",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -114,7 +144,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-4.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#8-artificial-intelligence-management-system-boundary"
+          }
         }
+      ],
+      "rationale": "The AIMS boundary explicitly covers WizardGang-controlled MCP tools, permissions, data, testing, oversight, risk and impact management while excluding provider-owned model internals. Continued scope suitability has not yet been confirmed in management review.",
+      "gaps": [
+        "Complete the first management review and retain the AIMS scope-suitability decision."
       ]
     },
     {
@@ -122,7 +167,7 @@
       "reference": "4.4",
       "title": "Operate the AI management system",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -136,7 +181,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-4.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-SYSTEM.md#3-management-system-model"
+          }
         }
+      ],
+      "rationale": "The integrated management-system model, controlled change lifecycle, risk process, impact assessment, evidence model, and AI policy are documented and used. Formal internal audit and the first management review remain incomplete.",
+      "gaps": [
+        "Complete an appropriately objective internal audit and the first management review without treating owner self-assessment as an audit."
       ]
     },
     {
@@ -144,7 +204,7 @@
       "reference": "5.1",
       "title": "Establish leadership accountability for AI",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -158,7 +218,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-5.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/LEADERSHIP.md#4-leadership-commitments"
+          }
         }
+      ],
+      "rationale": "Human accountability, leadership duties, resource authority, risk acceptance, and AI decision rights are documented and reflected in controlled repository changes. Recurring leadership review has not yet been demonstrated through management review.",
+      "gaps": [
+        "Complete the first management review and retain attributable AI-management decisions, resources, and actions."
       ]
     },
     {
@@ -166,7 +241,7 @@
       "reference": "5.2",
       "title": "Set and maintain AI policy",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -180,7 +255,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-5.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/AI-POLICY.md#3-policy-commitments"
+          }
         }
+      ],
+      "rationale": "An approved AI policy defines intended use, system boundaries, human accountability, risk and impact management, data, security, testing, traceability, suppliers, and change. Its scheduled awareness/review cycle has not yet produced a dated operating record.",
+      "gaps": [
+        "Complete the applicable AI-policy awareness/review activity and retain dated evidence."
       ]
     },
     {
@@ -188,7 +278,7 @@
       "reference": "5.3",
       "title": "Assign AI governance roles and authority",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -202,7 +292,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-5.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/ROLES-RESPONSIBILITIES.md#4-responsibility-matrix"
+          }
         }
+      ],
+      "rationale": "AI governance, supplier, security, data, access, development, operations, and management-system responsibilities are assigned. The planned competence review and formal audit-independence demonstration remain incomplete.",
+      "gaps": [
+        "Complete the planned competence review and preserve sufficient objectivity for any formal internal audit."
       ]
     },
     {
@@ -210,7 +315,7 @@
       "reference": "6.1",
       "title": "Plan responses to AI risks and opportunities",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -224,7 +329,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#5-ai-risk-reassessment"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/registers/AI-RISK-REGISTER.md#current-register"
+          }
         }
+      ],
+      "rationale": "AI risks, opportunities, treatments, reassessment triggers, and impact-assessment integration are documented and represented in the current AI risk register. The recurring AI risk-review cycle has not yet completed its first interval.",
+      "gaps": [
+        "Perform and retain the next scheduled or triggered AI risk review, including treatment/effectiveness conclusions."
       ]
     },
     {
@@ -232,7 +363,7 @@
       "reference": "6.1.1",
       "title": "Set AI risk and opportunity planning rules",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -246,7 +377,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.1.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/RISK-MANAGEMENT.md#3-risk-principles"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.1.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#5-ai-risk-reassessment"
+          }
         }
+      ],
+      "rationale": "The management system defines how AI risks and opportunities enter planning and controlled work. A complete recurring planning/review interval has not yet been evidenced.",
+      "gaps": [
+        "Retain a dated AI planning/risk review showing resulting actions or an explicit no-change conclusion."
       ]
     },
     {
@@ -254,7 +411,7 @@
       "reference": "6.1.2",
       "title": "Assess AI risk consistently",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -268,7 +425,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.1.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/RISK-MANAGEMENT.md#5-risk-record"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.1.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/registers/AI-RISK-REGISTER.md#current-register"
+          }
         }
+      ],
+      "rationale": "A consistent AI risk method and a 15-record AI risk register cover authority, data, evaluation, supplier, protocol, oversight, provenance, and incident concerns. The next scheduled reassessment has not yet occurred.",
+      "gaps": [
+        "Complete and retain the scheduled or event-driven AI risk reassessment using the documented method."
       ]
     },
     {
@@ -276,7 +459,7 @@
       "reference": "6.1.3",
       "title": "Select and manage AI risk treatment",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -290,7 +473,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.1.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#8-treatment-planning"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.1.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/registers/AI-RISK-REGISTER.md#current-register"
+          }
         }
+      ],
+      "rationale": "AI risk treatment directions and residual-risk posture are recorded, with several treatments still active. Treatment effectiveness and any residual-risk acceptance must be demonstrated through operation rather than inferred from merged changes.",
+      "gaps": [
+        "Validate active AI risk treatments and record the resulting residual-risk decision or continued-treatment conclusion."
       ]
     },
     {
@@ -298,7 +507,7 @@
       "reference": "6.1.4",
       "title": "Assess AI system impacts",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -323,7 +532,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.1.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#1-purpose"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.1.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#operational-risk-assessment-treatment-and-ai-impact-reassessment"
+          }
         }
+      ],
+      "rationale": "The current read-only MCP capability has a dated impact assessment covering intended use, affected parties, foreseeable misuse, positive/adverse impacts, oversight, data and reassessment triggers. Several treatment directions remain open and no subsequent triggered reassessment has yet operated.",
+      "gaps": [
+        "Close or explicitly continue the assessment's open treatment directions and retain the next triggered/scheduled impact reassessment when due."
       ]
     },
     {
@@ -331,7 +566,7 @@
       "reference": "6.2",
       "title": "Set measurable AI objectives",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -345,7 +580,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/registers/OBJECTIVES.md#3-initial-objectives"
+          }
         }
+      ],
+      "rationale": "Measurable AI-management objectives are defined through the objectives process and linked to monitoring. Sufficient measurement history and a completed review cycle do not yet exist for Pass.",
+      "gaps": [
+        "Collect objective results through the defined interval and retain the first documented review of target performance."
       ]
     },
     {
@@ -353,7 +603,7 @@
       "reference": "6.3",
       "title": "Control AI management-system changes",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -367,7 +617,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-6.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-SYSTEM-CHANGE-PLANNING.md#5-management-system-change-review"
+          }
         }
+      ],
+      "rationale": "Material AI changes are subject to controlled change, risk, impact, supplier, data, testing, and SoA reassessment triggers. A complete AIMS change-review cycle has not yet been evaluated through management review.",
+      "gaps": [
+        "Retain a dated review confirming that material AI changes were evaluated against all required trigger domains."
       ]
     },
     {
@@ -375,7 +640,7 @@
       "reference": "7.1",
       "title": "Provide AI management-system resources",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -389,7 +654,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-7.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-SYSTEM-SUPPORT.md#3-resources-clause-71"
+          }
         }
+      ],
+      "rationale": "Repository, cloud, testing, documentation, supplier, and management resources are identified for the AIMS. Resource adequacy has not yet been evaluated in the first management review.",
+      "gaps": [
+        "Evaluate AIMS resource adequacy and resulting actions in the first management review."
       ]
     },
     {
@@ -397,7 +677,7 @@
       "reference": "7.2",
       "title": "Maintain AI-related competence",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -411,7 +691,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-7.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/COMPETENCE-AWARENESS-COMMUNICATION.md#5-competence-assessment-and-gaps"
+          }
         }
+      ],
+      "rationale": "AI/MCP competence expectations and role responsibilities are documented. The initial competence review remains pending.",
+      "gaps": [
+        "Complete the planned competence assessment and retain dated results for in-scope AI/MCP responsibilities."
       ]
     },
     {
@@ -419,7 +714,7 @@
       "reference": "7.3",
       "title": "Maintain AI governance awareness",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -433,7 +728,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-7.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/COMPETENCE-AWARENESS-COMMUNICATION.md#7-initial-awareness-baseline"
+          }
         }
+      ],
+      "rationale": "AI policy, risk, incident, supplier, and change-awareness expectations are documented. The planned awareness cycle has not yet produced completed operating records.",
+      "gaps": [
+        "Complete the applicable awareness records and retain attributable evidence."
       ]
     },
     {
@@ -441,7 +751,7 @@
       "reference": "7.4",
       "title": "Manage AI communications",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -455,7 +765,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-RUN-014"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-7.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/COMPETENCE-AWARENESS-COMMUNICATION.md#9-communication-matrix"
+          }
         }
+      ],
+      "rationale": "Internal, supplier, incident, concern, and public-assurance communication channels are defined. Their recurring effectiveness has not yet been demonstrated through the first review cycle.",
+      "gaps": [
+        "Retain dated evidence from the defined AI communication/review process as it actually occurs."
       ]
     },
     {
@@ -463,7 +788,7 @@
       "reference": "7.5",
       "title": "Control AI management documentation",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -477,7 +802,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-7.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-SYSTEM-SUPPORT.md#14-documented-information-clause-75"
+          }
         }
+      ],
+      "rationale": "AIMS policies, registers, assessments, SoA data, controlled history, and generated presentations are maintained as repository-controlled documented information. The first scheduled documented-information review cycle is still incomplete.",
+      "gaps": [
+        "Complete the first periodic documented-information review and retain resulting decisions or no-change conclusions."
       ]
     },
     {
@@ -485,7 +825,7 @@
       "reference": "7.5.1",
       "title": "Maintain the required AI documentation set",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -499,7 +839,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-7.5.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-SYSTEM-SUPPORT.md#14-documented-information-clause-75"
+          }
         }
+      ],
+      "rationale": "The AIMS documented-information model defines controlled policies, registers, assessments, SoAs, generated presentations and repository history. Its first periodic documented-information review has not yet completed.",
+      "gaps": [
+        "Complete the first periodic documented-information review and retain resulting decisions or a no-change conclusion."
       ]
     },
     {
@@ -507,7 +862,7 @@
       "reference": "7.5.2",
       "title": "Create and update controlled AI records",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -521,7 +876,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-7.5.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-SYSTEM-SUPPORT.md#15-creation-and-update-clause-752"
+          }
         }
+      ],
+      "rationale": "AIMS documents and structured records use controlled identifiers, ownership, approval, version history and generated projections. Scheduled review/approval refresh has not yet operated across a complete interval.",
+      "gaps": [
+        "Complete the scheduled documented-information review and refresh approvals only when the actual review occurs."
       ]
     },
     {
@@ -529,7 +899,7 @@
       "reference": "7.5.3",
       "title": "Protect and govern controlled AI records",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -543,7 +913,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-7.5.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-SYSTEM-SUPPORT.md#18-control-of-documented-information-clause-753"
+          }
         }
+      ],
+      "rationale": "Repository permissions, controlled history, canonical JSON ownership and generated-output validation protect AIMS documented information from uncontrolled change. Formal internal audit and first management review have not yet verified the control set end to end.",
+      "gaps": [
+        "Verify documented-information controls through the first formal internal audit and management review without inventing operating evidence."
       ]
     },
     {
@@ -551,7 +936,7 @@
       "reference": "8.1",
       "title": "Plan and control AI operations",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -565,7 +950,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-8.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/OPERATIONAL-PLANNING-CONTROL.md#4-existing-operational-control-system"
+          }
         }
+      ],
+      "rationale": "MCP authorization, validation, read-only tool design, controlled changes, tests, releases, logging, risk and impact processes provide operational controls. Recurring supplier, competence, risk, and management review evidence remains incomplete.",
+      "gaps": [
+        "Operate and retain the scheduled management-system reviews that verify the continuing suitability/effectiveness of these controls."
       ]
     },
     {
@@ -573,7 +973,7 @@
       "reference": "8.2",
       "title": "Reassess AI risk during operation",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -587,7 +987,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-8.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#5-ai-risk-reassessment"
+          }
         }
+      ],
+      "rationale": "AI risk reassessment triggers and the current AI risk register are defined and current to the baseline. The recurring reassessment cycle has not yet completed an operating interval.",
+      "gaps": [
+        "Perform and retain the next scheduled or triggered AI risk assessment."
       ]
     },
     {
@@ -595,7 +1010,7 @@
       "reference": "8.3",
       "title": "Execute and verify AI risk treatment",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -609,7 +1024,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-8.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#8-treatment-planning"
+          }
         }
+      ],
+      "rationale": "AI risk treatments are identified and tracked, but multiple treatments remain in Treating/Open posture and effectiveness is not yet established across a review interval.",
+      "gaps": [
+        "Validate treatment effectiveness and record residual-risk acceptance, continued treatment, closure, or escalation as applicable."
       ]
     },
     {
@@ -617,7 +1047,7 @@
       "reference": "8.4",
       "title": "Reassess AI system impacts during operation",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -642,7 +1072,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-8.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#1-purpose"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-8.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#operational-risk-assessment-treatment-and-ai-impact-reassessment"
+          }
         }
+      ],
+      "rationale": "A dated impact assessment exists for the current read-only MCP capability and defines reassessment triggers. Open treatment directions and the next operating reassessment remain incomplete.",
+      "gaps": [
+        "Address or explicitly continue the impact-assessment treatment directions and retain the next triggered/scheduled reassessment."
       ]
     },
     {
@@ -650,7 +1106,7 @@
       "reference": "9.1",
       "title": "Measure and evaluate AI management performance",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -664,7 +1120,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-9.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MONITORING-MEASUREMENT-EVALUATION.md#5-measurement-catalog"
+          }
         }
+      ],
+      "rationale": "AI monitoring inputs include objectives, MCP tests/logging, risk and impact reviews, supplier/incident signals, and controlled validation. The first complete measurement/evaluation review cycle has not yet operated.",
+      "gaps": [
+        "Complete and retain the first scheduled AIMS monitoring and evaluation review with conclusions and actions."
       ]
     },
     {
@@ -672,7 +1143,7 @@
       "reference": "9.3",
       "title": "Conduct AI management-system reviews",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -686,7 +1157,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-9.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-REVIEW.md#3-cadence"
+          }
         }
+      ],
+      "rationale": "Management-review requirements include AIMS performance, risks, objectives, suppliers, incidents, audits, changes, resources, and improvement. No completed management review exists yet.",
+      "gaps": [
+        "Conduct and retain the first management review covering the AIMS and this self-assessment."
       ]
     },
     {
@@ -694,7 +1180,7 @@
       "reference": "9.3.1",
       "title": "Set management-review cadence",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -708,7 +1194,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-9.3.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-REVIEW.md#3-cadence"
+          }
         }
+      ],
+      "rationale": "A management-review cadence and trigger model are documented. The first scheduled review has not yet occurred.",
+      "gaps": [
+        "Complete the first management review at the defined cadence or earlier trigger."
       ]
     },
     {
@@ -716,7 +1217,7 @@
       "reference": "9.3.2",
       "title": "Use defined AI management-review inputs",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -730,7 +1231,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-9.3.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-REVIEW.md#4-review-inputs"
+          }
         }
+      ],
+      "rationale": "Required management-review inputs are defined for security and AI management. They have not yet been assembled and evaluated in a completed review.",
+      "gaps": [
+        "Evaluate the defined inputs in the first management review, including this self-assessment and current AI control gaps."
       ]
     },
     {
@@ -738,7 +1254,7 @@
       "reference": "9.3.3",
       "title": "Record management-review decisions",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -752,7 +1268,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-9.3.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-REVIEW.md#5-review-outputs"
+          }
         }
+      ],
+      "rationale": "Required review outputs, decisions, owners, actions and follow-up are defined. No completed AIMS management-review output record exists yet.",
+      "gaps": [
+        "Retain the first management-review outputs and track resulting AI-management actions to closure."
       ]
     },
     {
@@ -760,7 +1291,7 @@
       "reference": "10.1",
       "title": "Improve the AI management system over time",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -774,7 +1305,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-10.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md#19-continual-improvement-sources"
+          }
         }
+      ],
+      "rationale": "Continual-improvement sources and controlled-change mechanisms are documented and active. A complete audit/management-review-driven AIMS improvement cycle has not yet operated.",
+      "gaps": [
+        "Use actual audit, review, measurement, incident, concern, or evaluation findings to create and verify improvement actions as they occur."
       ]
     },
     {
@@ -782,7 +1328,7 @@
       "reference": "10.2",
       "title": "Correct and learn from AI nonconformities",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -796,7 +1342,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-10.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md#7-response-workflow"
+          }
         }
+      ],
+      "rationale": "Nonconformity response, cause analysis, corrective action, effectiveness and closure criteria apply to AI-management findings. No formal AIMS audit/corrective-action effectiveness cycle has yet demonstrated the full process.",
+      "gaps": [
+        "Apply the process to actual AIMS findings when they occur and retain effectiveness evidence without creating synthetic nonconformities."
       ]
     },
     {
@@ -804,7 +1365,7 @@
       "reference": "9.2",
       "title": "Run objective internal AI management audits",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "gap",
       "applicability": "applicable",
       "relationships": [
@@ -818,7 +1379,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-CI-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-9.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md#43-formal-internal-audit"
+          }
         }
+      ],
+      "rationale": "The repository defines formal internal-audit criteria and separates owner self-assessment from audit, but no sufficiently objective formal AIMS internal audit has been completed.",
+      "gaps": [
+        "Perform and retain a formal AIMS internal audit with sufficient objectivity; DEMO-288 remains a Self-Assessment only."
       ]
     },
     {
@@ -826,7 +1402,7 @@
       "reference": "9.2.1",
       "title": "Maintain internal AI audit requirements",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "gap",
       "applicability": "applicable",
       "relationships": [
@@ -840,7 +1416,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-CI-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-9.2.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md#5-audit-program"
+          }
         }
+      ],
+      "rationale": "An internal-audit program and independence safeguards are documented, but the program has not yet produced its first formal AIMS audit record.",
+      "gaps": [
+        "Execute the first formal AIMS audit under the documented program and retain scope, criteria, sampling, reviewer, and findings."
       ]
     },
     {
@@ -848,7 +1439,7 @@
       "reference": "9.2.2",
       "title": "Operate and report the AI audit programme",
       "kind": "clause",
-      "section": "Clauses 4\u201310",
+      "section": "Clauses 4–10",
       "status": "gap",
       "applicability": "applicable",
       "relationships": [
@@ -862,7 +1453,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-CI-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-9.2.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md#14-audit-report"
+          }
         }
+      ],
+      "rationale": "Audit execution, reporting, findings, follow-up, and corrective-action interfaces are defined. No formal AIMS internal-audit report exists yet.",
+      "gaps": [
+        "Create a formal internal-audit report only after an objective AIMS audit is actually performed."
       ]
     },
     {
@@ -870,7 +1476,7 @@
       "reference": "A.2.2",
       "title": "Establish an AI governance policy",
       "kind": "control",
-      "section": "Annex A \u00b7 policies",
+      "section": "Annex A · policies",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -884,7 +1490,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.2.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/AI-POLICY.md#3-policy-commitments"
+          }
         }
+      ],
+      "rationale": "The approved AI policy establishes governance direction, intended use, boundaries, oversight, risk/impact, data, security, evaluation, traceability, suppliers and change requirements. Its recurring awareness/review activity is not yet evidenced.",
+      "gaps": [
+        "Complete the scheduled AI-policy awareness/review activity and retain dated evidence."
       ]
     },
     {
@@ -892,7 +1513,7 @@
       "reference": "A.2.3",
       "title": "Align AI policy with related governance",
       "kind": "control",
-      "section": "Annex A \u00b7 policies",
+      "section": "Annex A · policies",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -917,7 +1538,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.2.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/AI-POLICY.md#36-security"
+          }
         }
+      ],
+      "rationale": "The AI policy explicitly binds AI capability to ordinary security, authorization, data, supplier, change and incident governance. The first integrated management review has not yet confirmed continuing alignment across those policies.",
+      "gaps": [
+        "Confirm policy alignment during the first management review and retain any resulting changes or no-change conclusion."
       ]
     },
     {
@@ -925,7 +1561,7 @@
       "reference": "A.2.4",
       "title": "Review AI policy on schedule and change",
       "kind": "control",
-      "section": "Annex A \u00b7 policies",
+      "section": "Annex A · policies",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -939,7 +1575,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.2.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/AI-POLICY.md#9-review-and-continual-improvement"
+          }
         }
+      ],
+      "rationale": "Annual and event-driven AI-policy review triggers are defined, including material AI changes, incidents, provider changes and assessment findings. No scheduled policy-review operating record exists yet.",
+      "gaps": [
+        "Perform and retain the first triggered or scheduled AI-policy review when due."
       ]
     },
     {
@@ -947,7 +1598,7 @@
       "reference": "A.3.2",
       "title": "Assign AI governance responsibilities",
       "kind": "control",
-      "section": "Annex A \u00b7 organization",
+      "section": "Annex A · organization",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -961,7 +1612,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.3.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/ROLES-RESPONSIBILITIES.md#4-responsibility-matrix"
+          }
         }
+      ],
+      "rationale": "AI governance and supporting security/data/supplier/change responsibilities are assigned to accountable roles. The initial competence review remains incomplete.",
+      "gaps": [
+        "Complete the role competence review and retain evidence that assigned AI responsibilities remain adequately supported."
       ]
     },
     {
@@ -969,7 +1635,7 @@
       "reference": "A.3.3",
       "title": "Provide a channel for AI concerns",
       "kind": "control",
-      "section": "Annex A \u00b7 organization",
+      "section": "Annex A · organization",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -983,7 +1649,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-RUN-014"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.3.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/COMPETENCE-AWARENESS-COMMUNICATION.md#competence-awareness-communication-and-ai-concern-reporting"
+          }
         }
+      ],
+      "rationale": "The management system defines channels for AI concerns and escalation, including public feedback and incident/corrective-action handling. No AI concern or exercise is fabricated, so operating effectiveness remains untested.",
+      "gaps": [
+        "Exercise or use the concern/escalation process only through an actual or planned activity and retain the resulting record when it occurs."
       ]
     },
     {
@@ -991,7 +1672,7 @@
       "reference": "A.4.2",
       "title": "Inventory AI-related resources",
       "kind": "control",
-      "section": "Annex A \u00b7 resources",
+      "section": "Annex A · resources",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1005,7 +1686,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.4.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/registers/ASSET-ACCESS-REGISTER.md#8-current-access-review-records"
+          }
         }
+      ],
+      "rationale": "Material assets, data surfaces, suppliers, MCP capability and management-system resources are inventoried across governed registers. The first recurring resource/inventory review has not yet completed.",
+      "gaps": [
+        "Complete the scheduled resource/inventory review and reconcile any changes across asset, data, supplier and configuration records."
       ]
     },
     {
@@ -1013,7 +1709,7 @@
       "reference": "A.4.3",
       "title": "Govern AI-accessible data resources",
       "kind": "control",
-      "section": "Annex A \u00b7 resources",
+      "section": "Annex A · resources",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1027,7 +1723,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.4.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/DATA-GOVERNANCE.md#13-aimcp-data-boundary"
+          }
         }
+      ],
+      "rationale": "The MCP data boundary is explicitly limited to approved PUBLIC/PUBLIC-DEMO data and excludes visitor, identity, logs, audit, admin and confidential stores. Sensitive-field exclusion and provenance/freshness treatment remain incomplete.",
+      "gaps": [
+        "Complete the planned sensitive-field exclusion and provenance/freshness controls for AI-accessible data."
       ]
     },
     {
@@ -1035,7 +1746,7 @@
       "reference": "A.4.4",
       "title": "Govern AI tools and system resources",
       "kind": "control",
-      "section": "Annex A \u00b7 resources",
+      "section": "Annex A · resources",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1060,7 +1771,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.4.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/CONFIGURATION-BASELINE-DRIFT.md#configuration-baseline-and-drift-management"
+          }
         }
+      ],
+      "rationale": "MCP tools, permissions, application boundaries and relevant configuration resources are controlled and versioned. Provider-side state and recurring configuration/resource review remain only partially verified.",
+      "gaps": [
+        "Complete the scheduled configuration/resource review and retain provider-state verification where available."
       ]
     },
     {
@@ -1068,7 +1794,7 @@
       "reference": "A.4.5",
       "title": "Manage computing and service dependencies",
       "kind": "control",
-      "section": "Annex A \u00b7 resources",
+      "section": "Annex A · resources",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1082,7 +1808,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.4.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/registers/SUPPLIER-REGISTER.md#6-sup-003-openai-codex"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.4.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/registers/SUPPLIER-REGISTER.md#7-sup-004-anthropic-claude"
+          }
         }
+      ],
+      "rationale": "OpenAI Codex and Anthropic Claude are explicitly the only approved AI/MCP provider/client families, with WizardGang/provider responsibilities and limitations documented separately. Their periodic supplier reviews remain pending.",
+      "gaps": [
+        "Complete the scheduled Codex and Claude supplier reviews and retain the resulting approval/risk decisions."
       ]
     },
     {
@@ -1090,7 +1842,7 @@
       "reference": "A.4.6",
       "title": "Maintain AI competence requirements",
       "kind": "control",
-      "section": "Annex A \u00b7 resources",
+      "section": "Annex A · resources",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1104,7 +1856,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.4.6"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/COMPETENCE-AWARENESS-COMMUNICATION.md#5-competence-assessment-and-gaps"
+          }
         }
+      ],
+      "rationale": "AI/MCP competence requirements and responsibility boundaries are documented. The planned initial competence assessment has not yet been completed.",
+      "gaps": [
+        "Complete and retain the initial competence assessment for the roles carrying AI/MCP responsibilities."
       ]
     },
     {
@@ -1112,7 +1879,7 @@
       "reference": "A.5.2",
       "title": "Define an AI impact-assessment process",
       "kind": "control",
-      "section": "Annex A \u00b7 impact",
+      "section": "Annex A · impact",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1126,7 +1893,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.5.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#1-purpose"
+          }
         }
+      ],
+      "rationale": "The current MCP capability has a dated impact assessment with scope, intended use, affected parties, data, outputs, oversight, misuse and impact analysis. The reassessment cycle and open treatment directions remain incomplete.",
+      "gaps": [
+        "Retain the next triggered/scheduled impact assessment review and track open treatment directions to an explicit conclusion."
       ]
     },
     {
@@ -1134,7 +1916,7 @@
       "reference": "A.5.3",
       "title": "Retain AI impact-assessment records",
       "kind": "control",
-      "section": "Annex A \u00b7 impact",
+      "section": "Annex A · impact",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1148,7 +1930,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.5.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#11-negative-and-adverse-impact-assessment"
+          }
         }
+      ],
+      "rationale": "Positive and adverse impacts are documented, tied to affected parties and related risks, with treatment directions for material weaknesses. Those treatment directions have not all been completed or verified.",
+      "gaps": [
+        "Complete or explicitly continue the open impact-treatment directions and retain effectiveness evidence."
       ]
     },
     {
@@ -1156,7 +1953,7 @@
       "reference": "A.5.4",
       "title": "Assess impacts on people and groups",
       "kind": "control",
-      "section": "Annex A \u00b7 impact",
+      "section": "Annex A · impact",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1181,7 +1978,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.5.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#5-intended-users-and-affected-parties"
+          }
         }
+      ],
+      "rationale": "Direct users, indirectly affected parties and current impact sensitivity are identified, with downstream model behavior and accessibility/usability limits acknowledged. Reassessment after material affected-party change has not yet operated.",
+      "gaps": [
+        "Reassess affected parties and impact sensitivity when the documented trigger occurs and retain the decision."
       ]
     },
     {
@@ -1189,7 +2001,7 @@
       "reference": "A.5.5",
       "title": "Assess broader societal and ecosystem impacts",
       "kind": "control",
-      "section": "Annex A \u00b7 impact",
+      "section": "Annex A · impact",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1214,7 +2026,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-RUN-014"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.5.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#operational-risk-assessment-treatment-and-ai-impact-reassessment"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.5.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#8-human-oversight"
+          }
         }
+      ],
+      "rationale": "Impact reassessment triggers are integrated with risk, change, supplier, data, authority and incident governance. No subsequent material trigger has yet produced a completed reassessment cycle.",
+      "gaps": [
+        "Retain the first triggered impact reassessment when a material change or incident actually occurs."
       ]
     },
     {
@@ -1222,7 +2060,7 @@
       "reference": "A.6.1.2",
       "title": "Set responsible AI system objectives",
       "kind": "control",
-      "section": "Annex A \u00b7 lifecycle",
+      "section": "Annex A · lifecycle",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1236,7 +2074,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.1.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/AI-POLICY.md#4-ai-objectives"
+          }
         }
+      ],
+      "rationale": "The AI policy defines objectives for bounded authority, human accountability, security, risk/impact evaluation, traceability and honest limitation disclosure. Measurement history against those objectives is still immature.",
+      "gaps": [
+        "Collect and review objective measurements through the defined interval before treating objective achievement as demonstrated."
       ]
     },
     {
@@ -1244,7 +2097,7 @@
       "reference": "A.6.1.3",
       "title": "Use controlled AI design and development",
       "kind": "control",
-      "section": "Annex A \u00b7 lifecycle",
+      "section": "Annex A · lifecycle",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1269,7 +2122,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.1.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#secure-engineering-and-security-testing-standard"
+          }
         }
+      ],
+      "rationale": "AI-facing implementation follows controlled source, review, validation, security testing and release practices. The current governance still lacks a completed independent review/management cycle for overall AI design effectiveness.",
+      "gaps": [
+        "Complete the planned review activities and retain evidence that AI design controls remain effective across changes."
       ]
     },
     {
@@ -1277,7 +2145,7 @@
       "reference": "A.6.2.2",
       "title": "Specify responsible AI system requirements",
       "kind": "control",
-      "section": "Annex A \u00b7 lifecycle",
+      "section": "Annex A · lifecycle",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1302,7 +2170,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/AI-POLICY.md#31-defined-purpose-and-intended-use"
+          }
         }
+      ],
+      "rationale": "The current MCP capability has defined intended use, supported tools, data boundary, prohibited authority, human-control assumptions and reassessment triggers. Requirements are bounded to the present read-only capability and must be revisited before authority expands.",
+      "gaps": [
+        "Perform a requirements/risk/impact reassessment before any write, privileged, destructive, deployment, private-data or autonomous authority is introduced."
       ]
     },
     {
@@ -1310,7 +2193,7 @@
       "reference": "A.6.2.3",
       "title": "Document AI system design and operation",
       "kind": "control",
-      "section": "Annex A \u00b7 lifecycle",
+      "section": "Annex A · lifecycle",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1335,7 +2218,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/AI-POLICY.md#37-transparency-and-inspectability"
+          }
         }
+      ],
+      "rationale": "Public documentation distinguishes WizardGang-controlled behavior from provider-controlled model behavior and records intended use, boundaries and limitations. Periodic technical-documentation accuracy review has not yet completed its first interval.",
+      "gaps": [
+        "Complete the scheduled documentation review and update the AI system description when implementation or supplier assumptions change."
       ]
     },
     {
@@ -1343,7 +2241,7 @@
       "reference": "A.6.2.4",
       "title": "Verify and validate AI system behavior",
       "kind": "control",
-      "section": "Annex A \u00b7 lifecycle",
+      "section": "Annex A · lifecycle",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1357,7 +2255,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/registers/SECURITY-TESTING-REGISTER.md#3-testing-inventory"
+          }
         }
+      ],
+      "rationale": "The security-testing register now records ST-051, the DEMO-284 real-boundary tests for unknown methods, invalid namespaces and prohibited write tools. This is meaningful verification evidence, but the evaluation matrix remains intentionally narrow and does not establish comprehensive AI safety or all misuse/failure cases.",
+      "gaps": [
+        "Expand risk-based verification beyond the current boundary cases, including additional malformed, permission, data-exposure, fallback and misuse scenarios where justified."
       ]
     },
     {
@@ -1365,7 +2278,7 @@
       "reference": "A.6.2.5",
       "title": "Control AI deployment and release",
       "kind": "control",
-      "section": "Annex A \u00b7 lifecycle",
+      "section": "Annex A · lifecycle",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1390,7 +2303,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/AI-POLICY.md#310-change-management"
+          }
         }
+      ],
+      "rationale": "AI/MCP changes use controlled source, validation and release processes, and material authority/data/provider changes trigger reassessment. AI-specific release decisions have not yet accumulated a full operating review history.",
+      "gaps": [
+        "Retain release/change records that explicitly show required AI risk, impact, supplier, data and testing reviews when material AI changes occur."
       ]
     },
     {
@@ -1398,7 +2326,7 @@
       "reference": "A.6.2.6",
       "title": "Monitor AI system operation",
       "kind": "control",
-      "section": "Annex A \u00b7 lifecycle",
+      "section": "Annex A · lifecycle",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1423,7 +2351,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.6"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/AI-POLICY.md#39-logging-and-traceability"
+          }
         }
+      ],
+      "rationale": "MCP calls and relevant application events have bounded logging/traceability mechanisms and operational monitoring interfaces. A completed periodic AI-operation review has not yet demonstrated ongoing effectiveness.",
+      "gaps": [
+        "Complete and retain the first periodic review of AI/MCP operational signals, limitations and resulting actions."
       ]
     },
     {
@@ -1431,7 +2374,7 @@
       "reference": "A.6.2.7",
       "title": "Maintain AI system technical documentation",
       "kind": "control",
-      "section": "Annex A \u00b7 lifecycle",
+      "section": "Annex A · lifecycle",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1456,7 +2399,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.7"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/AI-POLICY.md#37-transparency-and-inspectability"
+          }
         }
+      ],
+      "rationale": "Technical documentation covers the MCP endpoint, tools, intended use, boundaries, data, suppliers and limitations. Provider-internal behavior remains outside WizardGang control and periodic documentation accuracy review is incomplete.",
+      "gaps": [
+        "Complete the scheduled technical-documentation review and keep provider/client limitations current."
       ]
     },
     {
@@ -1464,8 +2422,8 @@
       "reference": "A.6.2.8",
       "title": "Record AI system events and traceability",
       "kind": "control",
-      "section": "Annex A \u00b7 lifecycle",
-      "status": "pass",
+      "section": "Annex A · lifecycle",
+      "status": "partial",
       "applicability": "applicable",
       "relationships": [
         {
@@ -1500,7 +2458,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.6.2.8"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/AI-POLICY.md#39-logging-and-traceability"
+          }
         }
+      ],
+      "rationale": "Application logging and source/release traceability exist for AI-facing behavior, but source implementation alone does not demonstrate the broader event/traceability control operating effectively across a review interval. Client identity metadata is also explicitly best-effort rather than authenticated identity.",
+      "gaps": [
+        "Retain a dated review of AI event/traceability coverage and close any material logging or attribution gaps identified by that review."
       ]
     },
     {
@@ -1508,7 +2481,7 @@
       "reference": "A.7.3",
       "title": "Track AI data acquisition and provenance",
       "kind": "control",
-      "section": "Annex A \u00b7 data",
+      "section": "Annex A · data",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1522,7 +2495,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.7.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/DATA-GOVERNANCE.md#13-aimcp-data-boundary"
+          }
         }
+      ],
+      "rationale": "AI-accessible data is deliberately limited to public demo records and the data-governance procedure requires source/provenance and exposure review. Provenance/freshness metadata and related treatment are not yet complete for every returned record.",
+      "gaps": [
+        "Implement or document the planned provenance/freshness treatment for AI-accessible public demo data."
       ]
     },
     {
@@ -1530,7 +2518,7 @@
       "reference": "A.7.4",
       "title": "Manage AI data quality",
       "kind": "control",
-      "section": "Annex A \u00b7 data",
+      "section": "Annex A · data",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1555,7 +2543,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.7.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/DATA-GOVERNANCE.md#6-public-and-public-demo-data"
+          }
         }
+      ],
+      "rationale": "Public-demo data quality limitations, stale/incomplete-data risk and bounded exposure rules are documented. No complete quality measurement/review process has yet demonstrated those expectations across the dataset.",
+      "gaps": [
+        "Define and retain proportionate quality/freshness review evidence for AI-accessible data where downstream interpretation depends on it."
       ]
     },
     {
@@ -1563,7 +2566,7 @@
       "reference": "A.7.5",
       "title": "Maintain AI data lineage and records",
       "kind": "control",
-      "section": "Annex A \u00b7 data",
+      "section": "Annex A · data",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1588,7 +2591,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.7.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/DATA-GOVERNANCE.md#5-authoritative-data-inventory"
+          }
         }
+      ],
+      "rationale": "The authoritative data inventory records source/provenance, exposure, retention and ownership expectations, and MCP output is bounded to a known store. Recurring lineage/provenance review is not yet complete.",
+      "gaps": [
+        "Complete the scheduled data-inventory review and retain lineage/provenance changes or a no-change conclusion."
       ]
     },
     {
@@ -1596,10 +2614,10 @@
       "reference": "A.7.2",
       "title": "Govern model-development data",
       "kind": "control",
-      "section": "Annex A \u00b7 data",
+      "section": "Annex A · data",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "No model training, fine-tuning, or model-enhancement activity is in scope; reassess before model development is introduced.",
+      "rationale": "Model development, training, fine-tuning, model-weight control and provider proprietary training datasets are explicitly outside the current WizardGang AIMS scope; reassess before any model-development activity is introduced.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1611,6 +2629,17 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.7.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
         }
       ]
     },
@@ -1619,10 +2648,10 @@
       "reference": "A.7.6",
       "title": "Govern AI data preparation",
       "kind": "control",
-      "section": "Annex A \u00b7 data",
+      "section": "Annex A · data",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "No model-training data preparation, labeling, or enhancement pipeline is in scope; reassess before introducing one.",
+      "rationale": "No model-training data preparation, labeling, curation, enhancement or fine-tuning pipeline is in the approved scope; reassess before introducing one.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1634,6 +2663,17 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.7.6"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
         }
       ]
     },
@@ -1642,7 +2682,7 @@
       "reference": "A.8.2",
       "title": "Provide AI system information to users",
       "kind": "control",
-      "section": "Annex A \u00b7 interested Parties",
+      "section": "Annex A · interested Parties",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1667,7 +2707,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.8.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#4-intended-use"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.8.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/AI-POLICY.md#37-transparency-and-inspectability"
+          }
         }
+      ],
+      "rationale": "The impact assessment and AI policy publish the current MCP intended use, read-only authority, data boundary, limitations and provider boundary. External clients can still strip or misinterpret that context, and communication effectiveness has not been reviewed over time.",
+      "gaps": [
+        "Review user-facing AI system information after material client/interface changes and retain any resulting communication improvements."
       ]
     },
     {
@@ -1675,7 +2741,7 @@
       "reference": "A.8.3",
       "title": "Define external AI reporting obligations",
       "kind": "control",
-      "section": "Annex A \u00b7 interested Parties",
+      "section": "Annex A · interested Parties",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1700,7 +2766,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-RUN-014"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.8.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INCIDENT-MANAGEMENT.md#13-communication-and-notification-decisions"
+          }
         }
+      ],
+      "rationale": "Incident/concern procedures define escalation and external communication decision points for material AI issues. Applicable external reporting obligations remain subject to the obligations process and have not been exercised by a real AI incident.",
+      "gaps": [
+        "Confirm reporting obligations during the scheduled obligations review and retain actual reporting decisions only when an event requires them."
       ]
     },
     {
@@ -1708,7 +2789,7 @@
       "reference": "A.8.4",
       "title": "Communicate AI incidents when required",
       "kind": "control",
-      "section": "Annex A \u00b7 interested Parties",
+      "section": "Annex A · interested Parties",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1733,7 +2814,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-RUN-014"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.8.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INCIDENT-MANAGEMENT.md#13-communication-and-notification-decisions"
+          }
         }
+      ],
+      "rationale": "AI incidents fall under the incident-management communication and escalation process, but no real AI incident is invented and the planned incident exercise has not yet demonstrated the communication path.",
+      "gaps": [
+        "Complete EX-001 when scheduled or retain an actual incident communication record if a qualifying event occurs first."
       ]
     },
     {
@@ -1741,7 +2837,7 @@
       "reference": "A.8.5",
       "title": "Disclose AI system limitations and boundaries",
       "kind": "control",
-      "section": "Annex A \u00b7 interested Parties",
+      "section": "Annex A · interested Parties",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1766,7 +2862,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.8.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#3-what-wizardgang-controls"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.8.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/AI-POLICY.md#37-transparency-and-inspectability"
+          }
         }
+      ],
+      "rationale": "The impact assessment and AI policy distinguish WizardGang-controlled MCP behavior from provider-controlled model reasoning and disclose read-only scope, data limitations and assurance limits. Periodic review of those disclosures remains incomplete.",
+      "gaps": [
+        "Review limitation/boundary disclosures after material capability or supplier changes and retain the resulting decision."
       ]
     },
     {
@@ -1774,7 +2896,7 @@
       "reference": "A.9.2",
       "title": "Define responsible AI use rules",
       "kind": "control",
-      "section": "Annex A \u00b7 use",
+      "section": "Annex A · use",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1799,7 +2921,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.9.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/AI-POLICY.md#31-defined-purpose-and-intended-use"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.9.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#4-intended-use"
+          }
         }
+      ],
+      "rationale": "Responsible-use rules limit the current MCP capability to bounded public read operations and explicitly prohibit privileged/destructive authority without reassessment. Downstream external-model behavior remains outside WizardGang control.",
+      "gaps": [
+        "Reassess intended use, oversight and downstream risk before any broader AI authority or consequential use is introduced."
       ]
     },
     {
@@ -1807,7 +2955,7 @@
       "reference": "A.9.3",
       "title": "Measure AI use objectives",
       "kind": "control",
-      "section": "Annex A \u00b7 use",
+      "section": "Annex A · use",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1821,7 +2969,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.9.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/AI-POLICY.md#4-ai-objectives"
+          }
         }
+      ],
+      "rationale": "AI objectives are documented and linked to management-system measurement. The repository does not yet have enough completed measurement intervals to demonstrate sustained achievement.",
+      "gaps": [
+        "Collect and review AI objective results through the defined cadence and retain decisions/actions."
       ]
     },
     {
@@ -1829,8 +2992,8 @@
       "reference": "A.9.4",
       "title": "Prevent unintended AI use and authority",
       "kind": "control",
-      "section": "Annex A \u00b7 use",
-      "status": "pass",
+      "section": "Annex A · use",
+      "status": "partial",
       "applicability": "applicable",
       "relationships": [
         {
@@ -1865,7 +3028,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.9.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/registers/SECURITY-TESTING-REGISTER.md#3-testing-inventory"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.9.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/AI-POLICY.md#32-explicit-system-boundaries"
+          }
         }
+      ],
+      "rationale": "The security-testing register now records ST-051, and DEMO-284 directly verifies unknown-method rejection, invalid-namespace rejection, and rejection of a prohibited write tool with unchanged D1 state. The cases prove the current read-only boundary but remain a narrow regression set rather than a complete unintended-use evaluation.",
+      "gaps": [
+        "Expand risk-based unintended-use testing when new tools, permissions, data sources or misuse scenarios are introduced, and retain the resulting evaluation evidence."
       ]
     },
     {
@@ -1873,7 +3062,7 @@
       "reference": "A.10.2",
       "title": "Allocate AI responsibilities across suppliers",
       "kind": "control",
-      "section": "Annex A \u00b7 third Parties",
+      "section": "Annex A · third Parties",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1898,7 +3087,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.10.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/registers/SUPPLIER-REGISTER.md#6-sup-003-openai-codex"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.10.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/registers/SUPPLIER-REGISTER.md#7-sup-004-anthropic-claude"
+          }
         }
+      ],
+      "rationale": "The Codex and Claude supplier records explicitly allocate WizardGang-controlled MCP responsibilities versus provider/client-controlled reasoning, orchestration, storage and downstream actions. Periodic supplier review remains pending.",
+      "gaps": [
+        "Complete the scheduled Codex and Claude supplier reviews and retain any changed responsibility/risk decisions."
       ]
     },
     {
@@ -1906,7 +3121,7 @@
       "reference": "A.10.3",
       "title": "Govern approved AI suppliers and providers",
       "kind": "control",
-      "section": "Annex A \u00b7 third Parties",
+      "section": "Annex A · third Parties",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1931,7 +3146,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.10.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/registers/SUPPLIER-REGISTER.md#6-sup-003-openai-codex"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.10.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/registers/SUPPLIER-REGISTER.md#7-sup-004-anthropic-claude"
+          }
         }
+      ],
+      "rationale": "Codex and Claude are the only approved AI/MCP provider/client families and each has a documented approval boundary, risks, evidence and change triggers. Their first recurring supplier review has not yet occurred.",
+      "gaps": [
+        "Complete the first recurring review for SUP-003 and SUP-004 before treating supplier governance as operating across its review interval."
       ]
     },
     {
@@ -1939,7 +3180,7 @@
       "reference": "A.10.4",
       "title": "Communicate customer and user responsibilities",
       "kind": "control",
-      "section": "Annex A \u00b7 third Parties",
+      "section": "Annex A · third Parties",
       "status": "partial",
       "applicability": "applicable",
       "relationships": [
@@ -1964,7 +3205,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-RUN-014"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.10.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/registers/SUPPLIER-REGISTER.md#10-aimcp-provider-change-rule"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-42001",
+            "native": "ISO42001-A.10.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#4-intended-use"
+          }
         }
+      ],
+      "rationale": "The public intended-use/boundary documentation and supplier change rule communicate the current customer/user boundary and prohibit implicit provider or authority expansion. No separate acknowledgement mechanism exists and effectiveness is not independently measured.",
+      "gaps": [
+        "Review user/customer responsibility communication when the interface or authority changes and retain any resulting update."
       ]
     }
   ]

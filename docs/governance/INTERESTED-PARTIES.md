@@ -215,7 +215,7 @@ Supporting evidence includes:
 
 ## 13. Alignment
 
-**Controls:** ISO27001-4.2
+**Controls:** ISO27001-4.2, ISO42001-4.2
 
 This document supports:
 

@@ -373,3 +373,9 @@ The initial operating review due 2026-12-02 should confirm at minimum:
 - GitHub release/deployment evidence
 
 **Current posture after approval:** Initial supplier inventory and governance boundary defined; Codex and Claude are the only approved AI/MCP connection families; recurring supplier-review evidence remains to be produced through operation; certification is not claimed.
+
+## Alignment
+
+**Controls:** ISO42001-A.10.2, ISO42001-A.10.3, ISO42001-A.10.4, ISO42001-A.4.5
+
+This document supports the listed assurance requirements within its declared scope.

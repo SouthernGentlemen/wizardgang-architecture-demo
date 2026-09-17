@@ -514,7 +514,7 @@ Current follow-on work includes:
 
 ## 26. Alignment
 
-**Controls:** ISO27001-7.1, ISO27001-7.5, ISO27001-7.5.1, ISO27001-7.5.2, ISO27001-7.5.3
+**Controls:** ISO27001-7.1, ISO27001-7.5, ISO27001-7.5.1, ISO27001-7.5.2, ISO27001-7.5.3, ISO42001-7.1, ISO42001-7.5, ISO42001-7.5.1, ISO42001-7.5.2, ISO42001-7.5.3
 
 This document supports:
 

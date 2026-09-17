@@ -83,6 +83,7 @@ This register contains no fabricated penetration-test, external-assessment, fuzz
 | ST-048 | External AI evaluation | External-model reasoning/harm quality evaluation | MCP impact assessment / current bounded integration | Partial | Material AI change | Application authority is tested; model reasoning remains provider/external behavior |
 | ST-049 | Production abuse test | Safe targeted production security-boundary verification | Deployment verification framework | Partial | High-risk release | Must avoid destructive testing against public production |
 | ST-050 | Provider configuration | Verify GitHub/Cloudflare/identity provider security settings against desired state | Configuration/access/supplier governance | Partial | Quarterly/material change | Provider-side evidence incomplete; GitHub branch/ruleset enforcement unverified |
+| ST-051 | AI/MCP boundary | MCP boundary rejects unknown methods, invalid namespaces, and prohibited write tools | `tests/mcp-client.test.ts` (DEMO-284) | Active | Relevant MCP change / full tests | Covers the current read-only application boundary; it is not a comprehensive AI safety, misuse, or provider-behavior evaluation |
 <!-- GENERATED:governance-records:security-testing:end -->
 
 ## 4. Current Coverage Summary
@@ -150,3 +151,9 @@ Update this register when:
 This is a public secure-engineering testing inventory, not an independent test report or certification record.
 
 Statuses describe current control/evidence maturity under the WizardGang management-system model and remain **aligned — uncertified**.
+
+## Alignment
+
+**Controls:** ISO42001-A.6.2.4, ISO42001-A.9.4
+
+This document supports the listed assurance requirements within its declared scope.

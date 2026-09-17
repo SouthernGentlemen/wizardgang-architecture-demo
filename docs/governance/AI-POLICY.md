@@ -324,6 +324,9 @@ Evidence supporting this policy includes, as applicable:
 
 ## 11. Alignment
 
+**Controls:** ISO42001-5.2, ISO42001-A.2.2, ISO42001-A.2.3, ISO42001-A.2.4, ISO42001-A.6.1.2, ISO42001-A.6.2.2, ISO42001-A.6.2.3, ISO42001-A.6.2.5, ISO42001-A.6.2.6, ISO42001-A.6.2.7, ISO42001-A.6.2.8, ISO42001-A.8.2, ISO42001-A.8.5, ISO42001-A.9.2, ISO42001-A.9.3, ISO42001-A.9.4
+
+
 This policy supports **ISO/IEC 42001:2023 §5.2 — AI policy**.
 
 **Current posture after approval:** AI-management direction and commitments are formally defined and controlled; certification is not claimed.

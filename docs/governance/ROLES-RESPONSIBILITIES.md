@@ -403,7 +403,7 @@ Evidence supporting this responsibility model includes:
 
 ## 11. Alignment
 
-**Controls:** ISO27001-5.3, ISO27001-A.5.2, ISO27001-A.5.3
+**Controls:** ISO27001-5.3, ISO27001-A.5.2, ISO27001-A.5.3, ISO42001-5.3, ISO42001-A.3.2
 
 This document supports:
 

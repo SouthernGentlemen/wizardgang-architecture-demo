@@ -465,7 +465,7 @@ A material review should record at minimum:
 
 ## 24. Alignment
 
-**Controls:** ISO27001-A.8.4, ISO27001-A.8.9, ISO27001-A.8.19, ISO27001-A.8.31
+**Controls:** ISO27001-A.8.4, ISO27001-A.8.9, ISO27001-A.8.19, ISO27001-A.8.31, ISO42001-A.4.4
 
 This procedure primarily strengthens the evidence posture for:
 
