@@ -300,6 +300,8 @@ Changes are controlled through the normal `DEMO-###` Git process.
 
 ## 11. Alignment
 
+**Controls:** ISO27001-5.1, ISO27001-A.5.4
+
 This document supports:
 
 - **ISO/IEC 27001:2022 §5.1 — Leadership and commitment**

@@ -387,6 +387,8 @@ Procedure approval must not automatically change a Gap/Partial control to Met.
 
 ## 17. Alignment
 
+**Controls:** ISO27001-A.5.30, ISO27001-A.8.13
+
 This procedure supports the scoped ISO/IEC 27001 backup, ICT readiness, continuity, recovery, logging/evidence, supplier, and operational-control requirements and the ISO/IEC 42001 requirements affected by operational recovery of the AI/MCP boundary.
 
 **Current posture after approval:** Recovery process defined; source reconstruction path exists; D1/R2 restore effectiveness and measured recovery performance remain operating-evidence gaps. Alignment is uncertified.

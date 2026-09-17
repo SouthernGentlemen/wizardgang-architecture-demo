@@ -96,7 +96,7 @@ export function renderSoaSummary(document, resource, data) {
   const framework = resource.framework;
   if (!framework) throw new Error(`${resource.id}: Statement of Applicability source requires canonical registry framework metadata`);
   const soa = { ...data.sourceSoa, assessmentDate: framework.assessmentDate };
-  return `# ${framework.label} Statement of Applicability
+  const base = `# ${framework.label} Statement of Applicability
 
 <!-- GENERATED FILE: scripts/generate-assurance-summaries.mjs; DO NOT EDIT. CANONICAL JSON IS THE ONLY ASSURANCE STATE AUTHORITY. -->
 
@@ -104,7 +104,7 @@ ${renderDocumentMetadata(document, soa)}
 
 ## Authority
 
-This Markdown file is a deterministic presentation of canonical structured assurance data. Per-control applicability, status, N/A rationale, title, and evidence relationships are maintained only in registry-owned structured records for ${framework.label}. Framework identity, qualification, edition, assessment date, and source-path ownership are maintained in \`assurance/registry.json\`; document ownership, lifecycle state, approval provenance, and review cadence are maintained by the SoA document/source metadata and \`assurance/presentation/documents.json\`.
+This Markdown file is a deterministic presentation of canonical structured assurance data. Per-control applicability, status, N/A rationale, title, evidence, and documentation relationships are maintained only in registry-owned structured records for ${framework.label}. Framework identity, qualification, edition, assessment date, and source-path ownership are maintained in \`assurance/registry.json\`; document ownership, lifecycle state, approval provenance, and review cadence are maintained by the SoA document/source metadata and \`assurance/presentation/documents.json\`.
 
 Generated Markdown is not an input to runtime, validation, APIs, or dashboards.
 
@@ -120,6 +120,50 @@ Generated Markdown is not an input to runtime, validation, APIs, or dashboards.
 - N/A rationales are required and live only in the canonical structured record for the affected control.
 - Missing implementation remains \`Gap\` or \`Partial\`; it is never converted to N/A merely because evidence is incomplete.
 - This repository remains aligned — uncertified; no status implies certification, control effectiveness, or residual-risk acceptance.
+`;
+  if (framework.id !== 'iso-27001') {
+    return `${base}
+## Regeneration
+
+Run \`npm run generate:assurance-summaries\` after an approved structured assurance change. CI runs the same generator in check mode and rejects stale or independently edited generated presentation.
+`;
+  }
+
+  function order(reference) {
+    const annex = reference.startsWith('A.');
+    return [annex ? 1 : 0, ...reference.replace(/^A\./, '').split('.').map((part) => Number(part))];
+  }
+  function compare(left, right) {
+    const a = order(left.reference);
+    const b = order(right.reference);
+    for (let index = 0; index < Math.max(a.length, b.length); index += 1) {
+      const delta = (a[index] ?? -1) - (b[index] ?? -1);
+      if (delta) return delta;
+    }
+    return 0;
+  }
+  function cell(value) {
+    return String(value ?? '—').replaceAll('|', '\\|').replaceAll('\n', ' ');
+  }
+
+  const rows = [...(data.records ?? [])].sort(compare).map((record) => {
+    const evidence = assuranceRelationshipIds(record.relationships, 'evidence').join(', ') || '—';
+    const documentation = assuranceRelationshipIds(record.relationships, 'documentation')
+      .map((value) => `\`${value}\``)
+      .join('<br>') || '—';
+    const gaps = (record.gaps ?? []).join('; ') || '—';
+    return `| ${framework.assessmentDate} | ${cell(record.reference)} | ${cell(record.kind)} | ${cell(record.applicability)} | ${cell(record.status)} | ${cell(record.title)} | ${cell(record.rationale)} | ${cell(gaps)} | ${cell(evidence)} | ${documentation} |`;
+  });
+
+  return `${base}
+## Dated self-assessment projection
+
+**Assessment type:** Self-Assessment under \`INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md\` §4.2; not an internal audit.
+**Assessment record:** \`docs/governance/assessments/ISO-27001-${framework.assessmentDate}-SELF-ASSESSMENT.md\`
+
+| Date | Ref | Kind | Applicability | Status | Title | Rationale | Gaps | Evidence | Documentation |
+|---|---|---|---|---|---|---|---|---|---|
+${rows.join('\n')}
 
 ## Regeneration
 

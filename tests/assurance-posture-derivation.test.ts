@@ -44,7 +44,7 @@ function expectRejected(result: SpawnSyncReturns<string>, messageFragment: strin
 }
 
 function postureCounts(data: any): Record<string, number> {
-  const counts: Record<string, number> = { met: 0, partial: 0, gap: 0, 'not-applicable': 0 };
+  const counts: Record<string, number> = { pass: 0, partial: 0, gap: 0, 'not-applicable': 0 };
   for (const record of data.records.filter((candidate: any) => candidate.kind === 'control')) {
     counts[record.status] = (counts[record.status] ?? 0) + 1;
   }

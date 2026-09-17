@@ -108,6 +108,13 @@
       "reviewedAt": "2026-09-17T00:52:17Z",
       "reviewer": "controlled-repository-review",
       "basis": "DEMO-285 review approves the mechanical compliance-status vocabulary migration and the exact resulting public compliance source revisions. No compliance record is reassessed, no evidence relationship changes, and documentation references remain unpopulated until DEMO-287 through DEMO-289."
+    },
+    {
+      "id": "review-demo287-iso27001-reassessment",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-17T10:00:00Z",
+      "reviewer": "controlled-repository-self-assessment",
+      "basis": "DEMO-287 owner/operator Self-Assessment reassesses all ISO/IEC 27001:2022 clause and Annex A records under the current rubric, includes ISO/IEC 27001:2022/Amd 1:2024 climate considerations, preserves all evidence relationships, and approves disclosure of the exact resulting public compliance source revision. This is not an internal audit or certification claim."
     }
   ],
   "sourceApprovals": [
@@ -446,6 +453,12 @@
       "resource": "compliance.wcag-2.2",
       "revision": "d3b44942376e7f3c7cf83d29ee8e926fa07108bf",
       "reviewRef": "review-demo285-assessment-documentation-contract"
+    },
+    {
+      "id": "source-iso27001-d968c8917c38",
+      "resource": "compliance.iso-27001",
+      "revision": "d968c8917c3879fa3620aa4d42c78d01e864f85d",
+      "reviewRef": "review-demo287-iso27001-reassessment"
     }
   ],
   "records": [

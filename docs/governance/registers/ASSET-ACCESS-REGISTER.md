@@ -315,3 +315,7 @@ The principal remaining evidence gaps are:
 - and developer/admin endpoint hardening/access evidence.
 
 No certification or independent access-control assurance is claimed.
+
+## Alignment
+
+**Controls:** ISO27001-A.5.9

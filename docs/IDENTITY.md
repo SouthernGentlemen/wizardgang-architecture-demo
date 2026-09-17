@@ -67,3 +67,7 @@ External provider registrations must use canonical callback, SAML entity/consume
 ## Audit evidence
 
 Authentication and policy transitions create sanitized events for authentication start/completion/failure, SAML validation, authorization allow/deny, and session create/destroy activity. Subject values are hashed. Tokens, cookies, raw assertions, and credentials are excluded.
+
+## Alignment
+
+**Controls:** ISO27001-A.8.5

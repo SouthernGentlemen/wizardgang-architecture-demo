@@ -33,3 +33,7 @@ Interactive health reads remain read-only. Scheduled five-minute observations ar
 Operational route declarations remain in `src/routing/operational-routes.ts`; machine collection remains in `src/api/operations.ts`; usage/provider observation remains in `src/lib/cloudflare-usage.ts`; logs remain in `src/lib/logs.ts`; reporting APIs remain under the reporting route/API modules.
 
 There is no public operations presentation module. Route declarations are authoritative; `docs/ROUTES.md` and `docs/route-manifest.json` are generated projections and must be refreshed with `npm run generate:routes` after route changes.
+
+## Alignment
+
+**Controls:** ISO27001-A.8.15

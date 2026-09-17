@@ -223,6 +223,14 @@ AI integrations may create risks involving inappropriate permissions, unintended
 
 AI-related changes must therefore remain subject to explicit authorization, testing, monitoring, risk evaluation, and human control.
 
+### 8.10 Climate-change relevance
+
+The 2024 climate-change amendment is included in this context review. For the current serverless public-demo scope, no distinct climate-specific information-security risk or objective has been identified beyond provider availability, resource, geographic-operation, and cost dependencies already evaluated above.
+
+This determination must be revisited when context, supplier, infrastructure, legal/contractual obligations, or management-review inputs materially change. The determination is documented here, but the first scheduled operating review has not yet occurred, so this reassessment does not treat clause 4.1 as a pass.
+
+---
+
 ## 9. Management-System Implications
 
 The internal and external context above establishes the need for controls covering at least:
@@ -287,6 +295,8 @@ Primary evidence supporting this context includes:
 - and AI/MCP boundary evaluations.
 
 ## 12. Alignment
+
+**Controls:** ISO27001-4.1
 
 This document supports:
 

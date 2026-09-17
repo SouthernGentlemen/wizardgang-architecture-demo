@@ -48,13 +48,13 @@ The management system distinguishes different record types because a policy, reg
 | **Architecture / engineering standard** | Defines system and delivery baseline | `docs/ARCHITECTURE-STANDARD.md`, `SECURITY.md`, `docs/CHANGE-MANAGEMENT.md` | Intended architecture and controlled engineering rules |
 | **Policy / governance procedure** | Defines management-system expectation and decision process | `docs/governance/*.md` | What must be done and who owns the decision |
 | **Structured assurance / risk / assessment / register** | Records current applicability, state, risk, objective, inventory, plan, or evaluation | `assurance/compliance/**`, `registers/**`, `assessments/**` | Current controlled assessment at a point in time; ISO control status/rationale is canonical only in structured assurance data |
-| **Generated SoA summary** | Presents ISO Annex A assessment identity and derived counts without duplicating row state | `soa/ISO-27001-SOA.md`, `soa/ISO-42001-SOA.md` | Human-readable summary of the canonical structured compliance state only |
+| **Generated SoA summary** | Presents framework assessment identity and deterministic dated rows without becoming a second authority | `soa/ISO-27001-SOA.md`, `soa/ISO-42001-SOA.md` | Human-readable projection of canonical structured compliance state only |
 | **Implementation evidence** | Demonstrates a technical control exists | `src/**`, `migrations/**`, `contracts/**`, workflow/config files | Implemented behavior/configuration within the verified source state |
 | **Validation evidence** | Demonstrates a check was executed for a specific state | tests, CI run, validation artifact, manual accessibility record, MCP evaluation | The tested condition at the stated commit/release/date |
 | **Release / deployment evidence** | Connects accepted source to production | PR, merge, annotated tag, release, deploy run, `/api/operations/version` | What source was accepted and deployed |
 | **Operational evidence** | Demonstrates behavior over time | `/api/operations/health`, dashboard, D1 audit events, public-safe logs, usage/uptime, incidents | Runtime/operational behavior for the observed period |
 | **Management evidence** | Demonstrates review and decision activity | audit record, management review, risk acceptance, corrective action, competence review | Human governance activity and attributable decisions |
-| **Public assurance presentation** | Makes bounded evidence understandable to reviewers | `/assurance#security-controls`, `/assurance#ai-boundary`, `/assurance#traceability`, `/assurance#accessibility-posture` | Presentation/traceability only; not independent certification |
+| **Public assurance presentation** | Makes framework, section, and record evidence understandable to reviewers | `/assurance`, `/api/assurance/{record}` | Presentation/traceability only; not independent certification |
 
 A document moving to `Approved` does **not** by itself make the associated control `Met` or prove effectiveness.
 
@@ -118,6 +118,7 @@ CI validates reference uniqueness, registry/header agreement, governed-file exis
 | Record | Purpose | Authority |
 |---|---|---|
 | `assessments/MCP-AI-IMPACT-ASSESSMENT.md` | Current read-only public MCP impact assessment | Authoritative only for the assessed current capability; material AI changes require reassessment |
+| `assessments/ISO-27001-2026-09-17-SELF-ASSESSMENT.md` | Dated owner/operator ISO/IEC 27001 reassessment | Self-Assessment under WG-GOV-018 §4.2; explicitly not an internal audit or certification claim |
 | `soa/ISO-27001-SOA.md` | Generated ISO/IEC 27001:2022 Annex A summary | Generated presentation only; canonical applicability/rationale/status is `assurance/compliance/iso-27001-2022.json` |
 | `soa/ISO-42001-SOA.md` | Generated ISO/IEC 42001:2023 Annex A summary | Generated presentation only; canonical applicability/rationale/status is `assurance/compliance/iso-42001-2023.json` |
 
@@ -244,7 +245,7 @@ The detailed accessibility owner is:
 - `tests/interface.test.ts` and other applicable interface tests;
 - automated axe evidence where implemented;
 - dated browser/assistive-technology manual results when actually completed;
-- the exhaustive `GET /api/reporting/compliance?framework=wcag-2.2` records for every WCAG 2.2 A/AA/AAA criterion, with a bounded posture sample at `/assurance#accessibility-posture`.
+- the exhaustive `GET /api/reporting/compliance?framework=wcag-2.2` records for every WCAG 2.2 A/AA/AAA criterion, with the current posture available through the `/assurance` framework/section workbench.
 
 | WCAG principle | Primary evidence concerns |
 |---|---|
@@ -274,9 +275,9 @@ The most important technical evidence owners are:
 | Data | migrations, D1/R2 source, data governance/register |
 | Configuration | `wrangler.jsonc`, workflows, config/contracts, configuration register |
 | Cryptography/secrets | identity/webhook/admin source, `SECURITY.md`, crypto/secrets governance/register |
-| Logging/audit | logging/audit libraries, D1 migrations, `/operations#activity`, `demo_events`/`application_logs` |
-| Health/uptime | `/api/operations/health`, `/api/operations/version`, scheduled observations, `/operations#availability` |
-| Cost/degradation | `/operations#usage`, usage collector, degradation behavior |
+| Logging/audit | logging/audit libraries, D1 migrations, `demo_events`/`application_logs`, public-safe reporting records |
+| Health/uptime | `/api/operations/health`, `/api/operations/version`, scheduled health/availability observations |
+| Cost/degradation | usage collector, provider observations, degradation behavior and tests |
 | Recovery | release reconstruction path, recovery procedure/register, future RT-001 evidence |
 | Accessibility | `docs/ACCESSIBILITY.md`, `/demos#accessibility`, interface tests, manual records |
 | Traceability | `docs/EVIDENCE.md`, Git/PR/CI/tag/release/deploy/runtime chain |
@@ -290,22 +291,16 @@ The intended public assurance architecture is:
 
 | Route | Ownership |
 |---|---|
-| **`/assurance#security-controls`** | Focused ISO/IEC 27001-aligned security-control check and bounded evidence sample |
-| **`/assurance#ai-boundary`** | Focused ISO/IEC 42001-aligned MCP boundary evaluation and bounded evidence sample |
-| **`/assurance#traceability`** | Focused requirement-to-deployment evidence-chain check |
-| **`/assurance#accessibility-posture`** | Bounded WCAG 2.2 engineering-evidence posture and sample |
+| **`/assurance`** | Framework/section workbench derived from canonical structured assurance records, including ISO/IEC 27001, ISO/IEC 42001, and WCAG posture |
+| **`/api/assurance/{record}`** | Focused presentation of one canonical assurance record and its relationships; no second status store |
 | **`/demos#accessibility`** | Detailed WCAG interactive, automated and manual evidence |
 | **`/security`** | Vulnerability disclosure policy, private-reporting boundary, and contextual handoff to public issue forms for non-sensitive feedback |
 | **`/.well-known/security.txt`** | Machine-readable vulnerability-reporting contact and policy |
-| **`/operations`** | Operational posture and links to evidence owners |
-| **`/operations#availability`** | Health/availability observations |
-| **`/operations#activity`** | Public-safe application diagnostics |
-| **`/operations#usage`** | Usage/cost/degradation evidence |
 | **`/api/operations/health`** | Machine-readable runtime/dependency health |
 | **`/api/operations/version`** | Deployed version/SHA identity |
 | **`/mcp`** | Current bounded MCP implementation surface |
 
-The focused `/assurance` checks must not duplicate canonical state in a second data store. They derive bounded presentation from structured assurance data and may deep-link exact reporting records, evidence owners, and detailed interactive demonstrations.
+The assurance workbench and focused record endpoint must not duplicate canonical state in a second data store. They derive presentation from structured assurance data and may link exact evidence owners and detailed interactive demonstrations.
 
 ## 12. Exhaustive Compliance Registry
 
@@ -451,7 +446,7 @@ This index intentionally preserves the following known gaps for cleanup or opera
 1. Canonical governance/register metadata references are unique and CI-validated; future drift is treated as a validation failure.
 2. The exhaustive structured WCAG/ISO compliance registry is present and generated/presentation drift is CI-validated, but many rows remain operating-evidence constrained rather than independently demonstrated.
 3. ISO SoA Markdown is generated from canonical structured compliance data; future status/rationale changes must be made in that structured source and pass generation checks.
-4. GitHub ruleset/classic branch-protection enforcement remains unverified through the available integration.
+4. Same-day GitHub API verification on 2026-09-17 reports `main` with `protected: false`, required-status-check enforcement `off`, and no repository rulesets. A direct protection-detail request is not accessible to this integration; merged-PR search reports 232 merged PRs and 0 matching GitHub `review:approved` events, so repository-level branch/review enforcement is not treated as demonstrated.
 5. No completed formal internal audit is claimed.
 6. No completed management review is claimed.
 7. No completed `RT-001` restore exercise is claimed.

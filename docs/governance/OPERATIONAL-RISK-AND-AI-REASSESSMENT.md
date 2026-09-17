@@ -503,6 +503,8 @@ Primary supporting records include:
 
 ## 23. Alignment
 
+**Controls:** ISO27001-6.1, ISO27001-6.1.2, ISO27001-6.1.3, ISO27001-8.2, ISO27001-8.3
+
 This document supports:
 
 - **ISO/IEC 27001:2022 §8.2 — Information-security risk assessment**;

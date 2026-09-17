@@ -97,7 +97,7 @@ Objective evidence should reuse existing operational evidence where possible rat
 Primary evidence sources include:
 
 - Git commits, pull requests, tags, releases, and workflow runs;
-- `/api/operations/version`, `/api/operations/health`, `/operations`, the availability view, and public-safe logs;
+- `/api/operations/version`, `/api/operations/health`, scheduled health/availability observations, and public-safe logs;
 - D1 audit/event evidence;
 - security and AI risk registers;
 - Statements of Applicability;
@@ -142,6 +142,8 @@ Management review must consider:
 - and whether new objectives are needed because of changed risks, interested parties, incidents, suppliers, or AI capability.
 
 ## 8. Alignment
+
+**Controls:** ISO27001-6.2
 
 This register supports:
 

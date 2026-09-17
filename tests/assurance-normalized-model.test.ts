@@ -16,7 +16,12 @@ describe('normalized assurance model', () => {
           expect(relationship.relation.length).toBeGreaterThan(0);
           expect(relationship.from).toMatchObject({ native: record.id });
           expect(relationship.from.source).toMatch(/^github\.structured-records\./);
-          expect(relationship.to.source).toMatch(/^github\.structured-records\./);
+          if (relationship.relation === 'documentation') {
+            expect(relationship.to.source).toBe('github.repository-markdown');
+            expect(relationship.to.native).toMatch(/^[^#]+\.md#[^#]+$/);
+          } else {
+            expect(relationship.to.source).toMatch(/^github\.structured-records\./);
+          }
           expect(relationship.to.native.length).toBeGreaterThan(0);
         }
         for (const alias of ['evidence', 'controls', 'riskLinks', 'controlLinks', 'objectiveLinks', 'incidentLinks', 'frameworkReferences']) {

@@ -508,3 +508,7 @@ The following remain intentionally visible:
 This standard demonstrates a repository-native secure-engineering and testing framework for the WizardGang Architecture Demo.
 
 It supports an **aligned — uncertified** posture. Test source, CI configuration, and engineering controls are evidence only for what they actually demonstrate; they are not certification, independent assurance, or proof that unknown production/provider conditions do not exist.
+
+## Alignment
+
+**Controls:** ISO27001-A.5.8, ISO27001-A.8.1, ISO27001-A.8.25, ISO27001-A.8.26, ISO27001-A.8.27, ISO27001-A.8.28, ISO27001-A.8.29, ISO27001-A.8.30, ISO27001-A.8.33

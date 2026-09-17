@@ -246,6 +246,8 @@ Evidence supporting this policy includes, as applicable:
 
 ## 10. Alignment
 
+**Controls:** ISO27001-5.2, ISO27001-A.5.1
+
 This policy supports **ISO/IEC 27001:2022 §5.2 — Information security policy**.
 
 **Current posture after approval:** Information-security direction and commitments are formally defined and controlled; certification is not claimed.

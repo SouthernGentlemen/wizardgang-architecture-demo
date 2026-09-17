@@ -220,6 +220,8 @@ Future risk registers, Statements of Applicability, AI impact assessments, audit
 
 ## 14. Alignment
 
+**Controls:** ISO27001-4.3, ISO27001-A.5.11, ISO27001-A.6.1, ISO27001-A.6.2, ISO27001-A.6.4, ISO27001-A.6.5, ISO27001-A.6.6, ISO27001-A.6.7, ISO27001-A.7.1, ISO27001-A.7.2, ISO27001-A.7.3, ISO27001-A.7.4, ISO27001-A.7.5, ISO27001-A.7.6, ISO27001-A.7.7, ISO27001-A.7.8, ISO27001-A.7.9, ISO27001-A.7.10, ISO27001-A.7.11, ISO27001-A.7.12, ISO27001-A.7.13, ISO27001-A.7.14, ISO27001-A.8.17, ISO27001-A.8.22, ISO27001-A.8.23
+
 This document supports:
 
 - **ISO/IEC 27001:2022 §4.3 — Determining the scope of the information security management system**

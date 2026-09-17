@@ -270,6 +270,8 @@ Formal recurring supplier-review evidence is not considered complete merely beca
 
 ## 16. Alignment
 
+**Controls:** ISO27001-A.5.19, ISO27001-A.5.20, ISO27001-A.5.21, ISO27001-A.5.22, ISO27001-A.5.23, ISO27001-A.8.30
+
 This process supports the supplier, externally provided process, supply-chain, third-party AI, and operational-control requirements relevant to the scoped ISO/IEC 27001:2022 ISMS and ISO/IEC 42001:2023 AIMS.
 
 **Current posture after approval:** Supplier governance process defined and the approved external-service boundary identified. Actual periodic supplier reviews and supplier-specific assurance remain operating evidence; certification is not claimed.

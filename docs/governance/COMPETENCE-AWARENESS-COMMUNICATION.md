@@ -288,3 +288,7 @@ This process and its records are reviewed when:
 After approval, the management system will have an explicit competence, awareness, communication, and AI-concern process. The first competence/awareness review and recurring operating evidence remain to be completed and retained.
 
 **Current posture after approval:** Process defined; operating evidence partial; certification is not claimed.
+
+## Alignment
+
+**Controls:** ISO27001-7.2, ISO27001-7.3, ISO27001-7.4, ISO27001-A.6.3, ISO27001-A.6.8

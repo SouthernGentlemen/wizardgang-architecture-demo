@@ -539,6 +539,8 @@ Each item should be treated according to its real source and significance; not e
 
 ## 25. Alignment
 
+**Controls:** ISO27001-10.1, ISO27001-10.2
+
 This procedure supports:
 
 - **ISO/IEC 27001:2022 §10.1–§10.2**;
