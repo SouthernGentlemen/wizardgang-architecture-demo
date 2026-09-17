@@ -83,7 +83,7 @@ export function renderIncidentProjection(document, incidents, exercises) {
 }
 
 function annexCounts(data) {
-  const counts = { met: 0, partial: 0, gap: 0, 'not-applicable': 0 };
+  const counts = { pass: 0, partial: 0, gap: 0, 'not-applicable': 0 };
   for (const record of data.records ?? []) {
     if (record.kind !== 'control') continue;
     counts[record.status] = (counts[record.status] ?? 0) + 1;
@@ -110,9 +110,9 @@ Generated Markdown is not an input to runtime, validation, APIs, or dashboards.
 
 ## Summary
 
-| Controls | Met | Partial | Gap | N/A |
+| Controls | Pass | Partial | Gap | N/A |
 |---:|---:|---:|---:|---:|
-| ${counts.total} | ${counts.met} | ${counts.partial} | ${counts.gap} | ${counts['not-applicable']} |
+| ${counts.total} | ${counts.pass} | ${counts.partial} | ${counts.gap} | ${counts['not-applicable']} |
 
 ## Interpretation
 

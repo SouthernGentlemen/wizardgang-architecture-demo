@@ -107,7 +107,7 @@
           },
           "status": {
             "enum": [
-              "met",
+              "pass",
               "partial",
               "gap",
               "not-applicable"
@@ -125,6 +125,14 @@
           },
           "relationships": {
             "$ref": "./relationships.schema.json"
+          },
+          "gaps": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
           }
         },
         "allOf": [
@@ -140,9 +148,6 @@
               ]
             },
             "then": {
-              "required": [
-                "rationale"
-              ],
               "properties": {
                 "applicability": {
                   "const": "not-applicable"

@@ -1465,7 +1465,7 @@
       "title": "Record AI system events and traceability",
       "kind": "control",
       "section": "Annex A \u00b7 lifecycle",
-      "status": "met",
+      "status": "pass",
       "applicability": "applicable",
       "relationships": [
         {
@@ -1830,7 +1830,7 @@
       "title": "Prevent unintended AI use and authority",
       "kind": "control",
       "section": "Annex A \u00b7 use",
-      "status": "met",
+      "status": "pass",
       "applicability": "applicable",
       "relationships": [
         {

@@ -70,6 +70,9 @@ export function registeredRelationshipTargets(registry, recordEntries, { framewo
         }));
       return [name, new Set(identities)];
     }
+    if (definition?.target === 'documentation') {
+      return [name, new Set()];
+    }
     if (definition?.target === 'governance-documents') {
       const resource = resources.find((candidate) => candidate.id === 'presentation.documents');
       const identities = resource

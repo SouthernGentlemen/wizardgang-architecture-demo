@@ -57,17 +57,17 @@ export const assuranceRuntimeSourceRevisions: Readonly<Record<string, string>> =
 {
   "advisories": "88a0999d1ceae96e02cbc7861de3ab35779f5495",
   "claims": "f5efd00c1e6a348d09ed8a122e3a45426ec0cdcd",
-  "compliance.iso-27001": "705a4ac4e80a24ae63d6ae344b620ab9dd1c5a6f",
-  "compliance.iso-42001": "7d459b71df0f20ab58bc9b783ba75fda4172d5d5",
-  "compliance.wcag-2.2": "aa4b084fc583b5e3b902bc1b97ae40a8ac3bb649",
-  "compliance.wcag-2.2.operable": "4d33a4fd6915abc2a2545443359922ded0b0b4bd",
-  "compliance.wcag-2.2.perceivable": "164da8b3a1b7f4633b9e15fcddcf7c69b4465e54",
+  "compliance.iso-27001": "429095157fc8737385837b06253900516f70322c",
+  "compliance.iso-42001": "c969864a67d1966c5b7d5d69adee4f19440bf62d",
+  "compliance.wcag-2.2": "d3b44942376e7f3c7cf83d29ee8e926fa07108bf",
+  "compliance.wcag-2.2.operable": "0f643478f927d1edacae05eda6050318c238d1fe",
+  "compliance.wcag-2.2.perceivable": "cbaddcf76a3deb0f9f42aaef09936498aac274d6",
   "compliance.wcag-2.2.robust": "0ee0623d42fcd08489630fff421dca7ca45444a0",
-  "compliance.wcag-2.2.understandable": "f369390e8795f4c42fa0bd97e5f81fc6da9eeca9",
+  "compliance.wcag-2.2.understandable": "780f842f9fd629022357e7982567a848e95f592b",
   "evidence": "fa4f93602a7db27390ead74d48bf4046e0921db7",
   "exercises": "6c6e8f646a696ce66599f45c8e7c15776f01ad6b",
   "incidents": "1ff3b01fe53498e0bfd4b0af369bc8f1cfb8614e",
-  "lifecycle.records": "7c55cc21651a2eb76a93f705b5ee6c21424a61e6",
+  "lifecycle.records": "ca531562e4c1967b9ce9fc2d771c54437f90b874",
   "objectives": "b655f90065611c778e36f322bcc0b9bfdefa456d",
   "risks": "7e4400d5e77959fb95e746ef9f04e38d5565f235"
 };
@@ -99,12 +99,10 @@ export const assuranceRuntimeFilterVocabularies: Readonly<Record<string, Readonl
       "wcag-2.2"
     ],
     "status": [
-      "met",
+      "pass",
       "partial",
       "gap",
-      "not-applicable",
-      "demonstrated",
-      "not-observed"
+      "not-applicable"
     ],
     "level": [
       "A",
@@ -132,6 +130,6 @@ export const assuranceRuntimeFilterVocabularies: Readonly<Record<string, Readonl
 
 export const assuranceRuntimeSchemaDependencyDigests: Readonly<Record<string, string>> =
 {
-  "contracts/assurance/relationships.schema.json": "600fd5c3d0d21b5d67b006425237dc4098ff37127f1b0f08ad3f55a7aa63c0c0",
+  "contracts/assurance/relationships.schema.json": "7976be6d0a93bf185d904fc8a449db2838769faab9cae9eae84e7bbf1702acf0",
   "contracts/assurance/risk-vocabulary.schema.json": "603a4d5e058f6fbab154f70ba12169ba66d0fd1c8a0a5085cda85d2be304181a"
 };

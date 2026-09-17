@@ -101,6 +101,13 @@
       "reviewedAt": "2026-09-15T04:36:50Z",
       "reviewer": "controlled-repository-review",
       "basis": "DEMO-258 review approves EVD-RUN-014 as the successor to EVD-RUN-013, moves the concern-intake locator from the removed Assurance inventory to the contextual non-security feedback handoff on Security, migrates active relationship edges, and approves the exact resulting public runtime source revisions. The public issue-form scope and disclosure boundary are unchanged."
+    },
+    {
+      "id": "review-demo285-assessment-documentation-contract",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-17T00:52:17Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-285 review approves the mechanical compliance-status vocabulary migration and the exact resulting public compliance source revisions. No compliance record is reassessed, no evidence relationship changes, and documentation references remain unpopulated until DEMO-287 through DEMO-289."
     }
   ],
   "sourceApprovals": [
@@ -403,6 +410,42 @@
       "resource": "compliance.iso-42001",
       "revision": "7d459b71df0f20ab58bc9b783ba75fda4172d5d5",
       "reviewRef": "review-demo258-minimal-assurance"
+    },
+    {
+      "id": "source-iso27001-429095157fc8",
+      "resource": "compliance.iso-27001",
+      "revision": "429095157fc8737385837b06253900516f70322c",
+      "reviewRef": "review-demo285-assessment-documentation-contract"
+    },
+    {
+      "id": "source-iso42001-c969864a67d1",
+      "resource": "compliance.iso-42001",
+      "revision": "c969864a67d1966c5b7d5d69adee4f19440bf62d",
+      "reviewRef": "review-demo285-assessment-documentation-contract"
+    },
+    {
+      "id": "source-wcag-perceivable-cbaddcf76a3d",
+      "resource": "compliance.wcag-2.2.perceivable",
+      "revision": "cbaddcf76a3deb0f9f42aaef09936498aac274d6",
+      "reviewRef": "review-demo285-assessment-documentation-contract"
+    },
+    {
+      "id": "source-wcag-operable-0f643478f927",
+      "resource": "compliance.wcag-2.2.operable",
+      "revision": "0f643478f927d1edacae05eda6050318c238d1fe",
+      "reviewRef": "review-demo285-assessment-documentation-contract"
+    },
+    {
+      "id": "source-wcag-understandable-780f842f9fd6",
+      "resource": "compliance.wcag-2.2.understandable",
+      "revision": "780f842f9fd629022357e7982567a848e95f592b",
+      "reviewRef": "review-demo285-assessment-documentation-contract"
+    },
+    {
+      "id": "source-wcag-manifest-d3b44942376e",
+      "resource": "compliance.wcag-2.2",
+      "revision": "d3b44942376e7f3c7cf83d29ee8e926fa07108bf",
+      "reviewRef": "review-demo285-assessment-documentation-contract"
     }
   ],
   "records": [

@@ -41,7 +41,7 @@ describe('WCAG 2.2 canonical public criterion registry', () => {
       expect(['partial', 'none']).toContain(record.validation.automated);
       expect(record.validation.manual).toBe('required');
       expect(record.gaps.length).toBeGreaterThan(0);
-      expect(record.applicability).toBe('applicable');
+      expect(record.applicability).toBe(record.status === 'not-applicable' ? 'not-applicable' : 'applicable');
     }
   });
 

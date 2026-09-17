@@ -6,7 +6,7 @@ import {
 } from './assurance-registry.mjs';
 import { assuranceRelationshipIds } from '../../src/assurance/relationship-contract.js';
 
-const ISO_POSTURE_STATUSES = ['met', 'partial', 'gap', 'not-applicable'];
+const ISO_POSTURE_STATUSES = ['pass', 'partial', 'gap', 'not-applicable'];
 
 function validApprovalProvenance(approval) {
   return Number.isInteger(approval?.pullRequest)
@@ -82,8 +82,8 @@ export function validateNormalizedIso({ root = process.cwd(), standard, edition,
     if (!ISO_POSTURE_STATUSES.includes(record.status)) errors.push(`${record.id}: unsupported normalized status ${record.status}`);
     const expectedApplicability = record.status === 'not-applicable' ? 'not-applicable' : 'applicable';
     if (record.applicability !== expectedApplicability) errors.push(`${record.id}: applicability must agree with status`);
-    if (record.status === 'not-applicable' && (!record.rationale || record.rationale.trim().length < 10)) errors.push(`${record.id}: N/A rationale is required`);
-    if (record.status !== 'not-applicable' && record.rationale) errors.push(`${record.id}: rationale is reserved for N/A controls`);
+    if (record.rationale !== undefined && (typeof record.rationale !== 'string' || record.rationale.trim().length < 10)) errors.push(`${record.id}: rationale must be a meaningful string when supplied`);
+    if (record.gaps !== undefined && (!Array.isArray(record.gaps) || record.gaps.length === 0 || record.gaps.some((gap) => typeof gap !== 'string' || gap.trim().length === 0))) errors.push(`${record.id}: gaps must be a non-empty string array when supplied`);
     const refs = assuranceRelationshipIds(record.relationships, 'evidence');
     if (refs.length === 0) errors.push(`${record.id}: at least one evidence relationship is required`);
     if (new Set(refs).size !== refs.length) errors.push(`${record.id}: duplicate evidence relationship`);

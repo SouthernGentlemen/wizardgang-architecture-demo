@@ -2680,7 +2680,7 @@
       "title": "Security-relevant logging",
       "kind": "control",
       "section": "Annex A · technological",
-      "status": "met",
+      "status": "pass",
       "applicability": "applicable",
       "relationships": [
         {
@@ -2702,7 +2702,7 @@
       "title": "Secure development lifecycle",
       "kind": "control",
       "section": "Annex A · technological",
-      "status": "met",
+      "status": "pass",
       "applicability": "applicable",
       "relationships": [
         {
@@ -2724,7 +2724,7 @@
       "title": "Controlled technical changes",
       "kind": "control",
       "section": "Annex A · technological",
-      "status": "met",
+      "status": "pass",
       "applicability": "applicable",
       "relationships": [
         {

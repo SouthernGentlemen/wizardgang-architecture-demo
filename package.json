@@ -31,7 +31,7 @@
     "validate:assurance-operations": "node scripts/validate-assurance-operations.mjs",
     "monitor:assurance": "node scripts/validate-assurance-operations.mjs --live",
     "snapshot:assurance": "node scripts/generate-assurance-snapshot.mjs",
-    "validate:assurance": "node scripts/validate-assurance-registry.mjs && npm run validate:assurance-runtime-binding && node scripts/validate-assurance.mjs && node scripts/validate-advisories.mjs && node scripts/validate-assurance-projection.mjs && node scripts/validate-iso27001-compliance.mjs && node scripts/validate-iso42001-compliance.mjs && node scripts/validate-wcag-compliance.mjs && npm run validate:assurance-publication && node scripts/validate-assurance-lifecycle.mjs && node scripts/validate-assurance-integrity.mjs && npm run validate:assurance-summaries && npm run validate:governance-registers && npm run validate:assurance-operations",
+    "validate:assurance": "node scripts/validate-assurance-registry.mjs && npm run validate:assurance-runtime-binding && node scripts/validate-assurance.mjs && node scripts/validate-advisories.mjs && node scripts/validate-assurance-projection.mjs && npm run validate:assurance-documentation && node scripts/validate-iso27001-compliance.mjs && node scripts/validate-iso42001-compliance.mjs && node scripts/validate-wcag-compliance.mjs && npm run validate:assurance-publication && node scripts/validate-assurance-lifecycle.mjs && node scripts/validate-assurance-integrity.mjs && npm run validate:assurance-summaries && npm run validate:governance-registers && npm run validate:assurance-operations",
     "validate:assurance-publication": "node scripts/validate-assurance-publication.mjs",
     "validate:migrations": "wrangler d1 migrations apply demo-blob --local",
     "verify:chromium": "node scripts/verify-chromium.mjs",
@@ -42,7 +42,8 @@
     "validate:stylesheet-classes": "node scripts/validate-stylesheet-classes.mjs",
     "security:dependencies": "npm audit --audit-level=high",
     "check": "npm run validate:routes && npm run validate:scaffold && npm run validate:history && npm run validate:stylesheet-classes && npm run lint && npm run typecheck && npm run validate:site-accessibility && npm run validate:site-i18n && npm run test && npm run validate:contracts && npm run validate:locales && npm run validate:security && npm run validate:governance && npm run validate:assurance",
-    "validate:scaffold": "node scripts/validate-scaffold.mjs"
+    "validate:scaffold": "node scripts/validate-scaffold.mjs",
+    "validate:assurance-documentation": "node scripts/validate-assurance-documentation.mjs"
   },
   "devDependencies": {
     "@modelcontextprotocol/client": "^2.0.0",

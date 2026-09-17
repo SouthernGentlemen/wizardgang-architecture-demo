@@ -1,5 +1,5 @@
 export interface AssuranceRelationshipDefinition {
-  target: 'records' | 'frameworks' | 'governance-documents';
+  target: 'records' | 'frameworks' | 'governance-documents' | 'documentation';
   kind?: string;
   recordKind?: string;
 }
@@ -28,6 +28,8 @@ export interface AssuranceRelationshipValidationOptions {
   internalTargetsOnly?: boolean;
 }
 
+export const ASSURANCE_DOCUMENTATION_SOURCE: 'github.repository-markdown';
+export function parseAssuranceDocumentationReference(value: unknown): { repositoryPath: string; anchor: string } | null;
 export const ASSURANCE_RELATIONSHIP_DEFINITIONS: Readonly<Record<string, AssuranceRelationshipDefinition>>;
 export function assuranceRelationshipNames(): string[];
 export function assuranceRelationshipDefinition(name: string): AssuranceRelationshipDefinition | undefined;

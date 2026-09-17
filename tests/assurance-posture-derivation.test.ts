@@ -73,18 +73,18 @@ describe('canonical assurance posture derivation', () => {
     const before = postureCounts(data);
     const changed = data.records.find((record: any) => record.kind === 'control' && record.status === 'partial');
     expect(changed).toBeDefined();
-    changed.status = 'met';
+    changed.status = 'pass';
     writeJson(root, dataPath, data);
 
     expectPassed(run(root, 'scripts/validate-iso27001-compliance.mjs'));
     expectPassed(run(root, 'scripts/generate-assurance-summaries.mjs'));
 
     const after = postureCounts(data);
-    expect(after.met).toBe(before.met + 1);
+    expect(after.pass).toBe(before.pass + 1);
     expect(after.partial).toBe(before.partial - 1);
     const total = Object.values(after).reduce((sum, count) => sum + count, 0);
     const summary = readFileSync(join(root, 'docs/governance/soa/ISO-27001-SOA.md'), 'utf8');
-    expect(summary).toContain(`| ${total} | ${after.met} | ${after.partial} | ${after.gap} | ${after['not-applicable']} |`);
+    expect(summary).toContain(`| ${total} | ${after.pass} | ${after.partial} | ${after.gap} | ${after['not-applicable']} |`);
   });
 
   it('still rejects unsupported assessment statuses', () => {

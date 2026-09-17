@@ -1,5 +1,6 @@
 import governanceReferenceData from '../../docs/governance/REFERENCE-REGISTRY.json';
-import { repoUrl } from '../lib/github';
+import { repoUrl, sourceUrl } from '../lib/github';
+import { parseAssuranceDocumentationReference } from './relationship-contract.js';
 import type { Env } from '../types';
 import { evidenceUsedBy } from './service';
 import type { EvidenceRecord, FreshnessPolicy } from './model';
@@ -80,6 +81,27 @@ export function assuranceDeploymentCommitUrl(
   context: AssuranceDeploymentContext = assuranceDeploymentContext(env),
 ): string | null {
   return context.commit ? `${repoUrl(env)}/commit/${encodeURIComponent(context.commit)}` : null;
+}
+
+export interface ResolvedDocumentationReference {
+  repositoryPath: string;
+  anchor: string;
+  revision: string;
+  url: string;
+  resolution: 'deployed-commit' | 'source-fallback';
+}
+
+export function resolveAssuranceDocumentationReference(reference: string, env: Env): ResolvedDocumentationReference {
+  const parsed = parseAssuranceDocumentationReference(reference);
+  if (!parsed) throw new TypeError(`Invalid assurance documentation reference ${reference}.`);
+  const deployedCommit = env.DEPLOYED_SHA?.trim();
+  const revision = deployedCommit || env.GITHUB_BRANCH?.trim() || 'main';
+  return {
+    ...parsed,
+    revision,
+    url: `${sourceUrl(env, parsed.repositoryPath)}#${parsed.anchor}`,
+    resolution: deployedCommit ? 'deployed-commit' : 'source-fallback',
+  };
 }
 
 export function presentEvidence<T extends EvidenceRecord>(record: T, env: Env, origin: string): PresentedEvidence<T> {
