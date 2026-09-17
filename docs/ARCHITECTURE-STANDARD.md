@@ -237,6 +237,8 @@ Relevant areas include access control, authentication, authorization, least priv
 
 ## 23 — ISO/IEC 42001 alignment
 
+**Controls:** ISO27001-A.8.20, ISO27001-A.8.21
+
 Systems containing AI capabilities may be engineered around ISO/IEC 42001 AI-management principles.
 
 Relevant considerations include identification of AI components, defined AI system boundaries, intended use, known limitations, human oversight, agent permissions, MCP tool boundaries, change tracking, data protection, AI-related testing, monitoring, risk evaluation, evidence retention, fallback behavior, and graceful degradation.

@@ -32,7 +32,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-4.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/CONTEXT.md#810-climate-change-relevance"
+          }
         }
+      ],
+      "rationale": "Context, including a 2024 climate-change relevance determination, is documented for the scoped service and its providers. The first scheduled context/management review has not yet operated, so recurring effectiveness is not demonstrated.",
+      "gaps": [
+        "Complete a dated context review through management review or an equivalent operating record after the defined interval or trigger."
       ]
     },
     {
@@ -54,7 +69,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-4.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INTERESTED-PARTIES.md#91-climate-related-interested-party-requirements"
+          }
         }
+      ],
+      "rationale": "Interested parties and requirement categories, including the 2024 climate-related requirement consideration, are documented. No specific climate-related stakeholder requirement is currently identified, and the first scheduled interested-party review has not yet operated.",
+      "gaps": [
+        "Complete a dated interested-party/requirements review and retain any resulting obligation or supplier changes."
       ]
     },
     {
@@ -76,7 +106,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-4.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#2-scope-statement"
+          }
         }
+      ],
+      "rationale": "The ISMS boundary, inclusions, exclusions, provider interfaces, and applicability rules are documented. Continued suitability has not yet been confirmed through the first management review.",
+      "gaps": [
+        "Complete the first management review and retain the scope-suitability decision."
       ]
     },
     {
@@ -98,7 +143,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-4.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-SYSTEM.md#3-management-system-model"
+          }
         }
+      ],
+      "rationale": "The ISMS operating model, controlled Git lifecycle, risk process, evidence model, and improvement interfaces are documented and used. Formal internal audit and the first management review remain incomplete.",
+      "gaps": [
+        "Complete an appropriately objective internal audit and the first management review without converting owner self-review into an audit."
       ]
     },
     {
@@ -120,7 +180,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-5.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/LEADERSHIP.md#4-leadership-commitments"
+          }
         }
+      ],
+      "rationale": "Leadership/accountability duties and decision rights are documented and reflected in controlled changes. The first management review and recurring leadership review evidence remain incomplete.",
+      "gaps": [
+        "Complete the first management review and retain attributable decisions/resources/actions."
       ]
     },
     {
@@ -142,7 +217,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-5.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INFORMATION-SECURITY-POLICY.md#3-policy-commitments"
+          }
         }
+      ],
+      "rationale": "The information-security policy is approved and available in the governed repository. The planned security-policy awareness record AW-001 has not been completed.",
+      "gaps": [
+        "Complete AW-001 and retain dated awareness evidence."
       ]
     },
     {
@@ -164,7 +254,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-5.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/ROLES-RESPONSIBILITIES.md#4-responsibility-matrix"
+          }
         }
+      ],
+      "rationale": "Security roles, authorities, delegation, and independence limits are documented. Competence review remains incomplete and formal internal-audit independence has not yet been demonstrated.",
+      "gaps": [
+        "Complete the planned competence review and use a sufficiently objective reviewer for any formal internal audit."
       ]
     },
     {
@@ -186,7 +291,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-6.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/RISK-MANAGEMENT.md#3-risk-principles"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-6.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#4-information-security-risk-reassessment"
+          }
         }
+      ],
+      "rationale": "Risk principles, treatment choices, and operational reassessment triggers are documented and linked to controlled change. The recurring risk-review cycle has not yet accumulated enough dated operating evidence for Pass.",
+      "gaps": [
+        "Complete and retain the scheduled/event-driven information-security risk reassessment record."
       ]
     },
     {
@@ -208,7 +339,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-6.1.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/RISK-MANAGEMENT.md#3-risk-principles"
+          }
         }
+      ],
+      "rationale": "The management system defines how risks and opportunities are incorporated into planning. A complete recurring planning-review interval has not yet been evidenced.",
+      "gaps": [
+        "Retain a dated planning/risk review showing resulting actions or an explicit no-change conclusion."
       ]
     },
     {
@@ -230,7 +376,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-6.1.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/RISK-MANAGEMENT.md#5-risk-record"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-6.1.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#7-performing-a-reassessment"
+          }
         }
+      ],
+      "rationale": "A consistent security-risk record, likelihood/impact method, triggers, and reassessment process are defined. Recurring reassessment evidence remains incomplete.",
+      "gaps": [
+        "Perform and retain the next scheduled/event-driven security risk assessment using the defined method."
       ]
     },
     {
@@ -252,7 +424,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-6.1.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/RISK-MANAGEMENT.md#18-control-selection-and-statement-of-applicability"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-6.1.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#8-treatment-planning"
+          }
         }
+      ],
+      "rationale": "Treatment selection, SoA applicability, implementation, and effectiveness interfaces are defined. Treatment verification over an operating interval remains incomplete for several planned controls.",
+      "gaps": [
+        "Retain dated treatment verification and update risk/SoA state when actual operating evidence changes the conclusion."
       ]
     },
     {
@@ -274,7 +472,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-6.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/registers/OBJECTIVES.md#3-initial-objectives"
+          }
         }
+      ],
+      "rationale": "Measurable security objectives, owners, metrics, targets, evidence sources, and cadences are defined. Objective measurement history and first management-review evaluation remain incomplete.",
+      "gaps": [
+        "Accumulate the defined objective measurements and evaluate them in the first management review."
       ]
     },
     {
@@ -296,7 +509,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-6.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-SYSTEM-CHANGE-PLANNING.md#5-management-system-change-review"
+          }
         }
+      ],
+      "rationale": "Management-system change triggers, review inputs, proportionality, and required record updates are documented. A full recurring change-review operating interval has not yet been evidenced.",
+      "gaps": [
+        "Retain dated management-system change reviews when a material trigger occurs and evaluate the process during management review."
       ]
     },
     {
@@ -318,7 +546,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-7.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-SYSTEM-SUPPORT.md#3-resources-clause-71"
+          }
         }
+      ],
+      "rationale": "Resource roles and current operating-resource model are documented. Adequacy has not yet been evaluated through the first management review.",
+      "gaps": [
+        "Evaluate resource adequacy and resulting actions in the first management review."
       ]
     },
     {
@@ -340,7 +583,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-7.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/COMPETENCE-AWARENESS-COMMUNICATION.md#5-competence-assessment-and-gaps"
+          }
         }
+      ],
+      "rationale": "Required competencies and a conservative competence baseline are documented. The initial competence/self-assessment review remains incomplete.",
+      "gaps": [
+        "Complete the planned competence review and retain dated role/evidence conclusions, including specialist-support needs."
       ]
     },
     {
@@ -362,7 +620,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-7.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/COMPETENCE-AWARENESS-COMMUNICATION.md#7-initial-awareness-baseline"
+          }
         }
+      ],
+      "rationale": "Awareness topics, audiences, and evidence requirements are defined. AW-001 through AW-007 are all still Planned and therefore cannot support Pass.",
+      "gaps": [
+        "Complete AW-001 through AW-007 as applicable and retain dated attributable evidence."
       ]
     },
     {
@@ -384,7 +657,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-RUN-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-7.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/COMPETENCE-AWARENESS-COMMUNICATION.md#9-communication-matrix"
+          }
         }
+      ],
+      "rationale": "Internal/external communication responsibilities and routes are documented. The planned awareness/reporting evidence, including AW-005, has not yet operated as a complete cycle.",
+      "gaps": [
+        "Complete the planned communication/awareness evidence and retain actual event communications when they occur."
       ]
     },
     {
@@ -406,7 +694,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-7.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-SYSTEM-SUPPORT.md#14-documented-information-clause-75"
+          }
         }
+      ],
+      "rationale": "Documented-information rules, Git control, approval, retention, and evidence-integrity expectations are established. This reassessment is the first reciprocal compliance-document mapping under the new contract, so operating maturity remains Partial.",
+      "gaps": [
+        "Retain subsequent dated document reviews/approvals and verify reciprocal mapping remains current after material changes."
       ]
     },
     {
@@ -428,7 +731,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-7.5.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-SYSTEM-SUPPORT.md#14-documented-information-clause-75"
+          }
         }
+      ],
+      "rationale": "The required management-system document set and authoritative record hierarchy are established. Recurring review of the full documented-information set has not yet completed.",
+      "gaps": [
+        "Complete the scheduled management-system documentation review and retain the resulting decisions."
       ]
     },
     {
@@ -450,7 +768,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-7.5.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-SYSTEM-SUPPORT.md#15-creation-and-update-clause-752"
+          }
         }
+      ],
+      "rationale": "Creation, update, controlled history, and approval rules are implemented in Git. Provider enforcement of required review is not configured on main, limiting effectiveness evidence.",
+      "gaps": [
+        "Establish or explicitly accept the lack of provider-enforced review/protection and retain the decision as a management-system record."
       ]
     },
     {
@@ -472,7 +805,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-7.5.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-SYSTEM-SUPPORT.md#18-control-of-documented-information-clause-753"
+          }
         }
+      ],
+      "rationale": "Public/restricted record handling, retention, disposal, and integrity expectations are documented. Access/configuration review evidence remains incomplete.",
+      "gaps": [
+        "Complete AR-001 and the applicable documented-information review without publishing restricted values."
       ]
     },
     {
@@ -494,7 +842,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-8.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/OPERATIONAL-PLANNING-CONTROL.md#4-existing-operational-control-system"
+          }
         }
+      ],
+      "rationale": "Operational control is implemented through controlled change, validation, release, security operations, and runtime evidence. Access, supplier, recovery, incident, and recurring review records remain incomplete.",
+      "gaps": [
+        "Complete the applicable planned AR-001, supplier review, RT-001, and EX-001 operating records before considering Pass."
       ]
     },
     {
@@ -516,7 +879,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-8.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#7-performing-a-reassessment"
+          }
         }
+      ],
+      "rationale": "Operational risk-reassessment triggers and method are documented and tied to controlled changes. Recurring reassessment evidence over the defined interval is incomplete.",
+      "gaps": [
+        "Retain a dated operational information-security risk reassessment when due or triggered."
       ]
     },
     {
@@ -538,7 +916,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-8.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#9-treatment-implementation-through-git-and-operations"
+          }
         }
+      ],
+      "rationale": "Risk treatment is linked to controlled Git implementation and verification. Several treatments still depend on planned operating records, so effectiveness is not yet demonstrated.",
+      "gaps": [
+        "Complete the treatment-specific planned operating evidence and retain effectiveness verification before closing related gaps."
       ]
     },
     {
@@ -560,7 +953,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-9.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MONITORING-MEASUREMENT-EVALUATION.md#5-measurement-catalog"
+          }
         }
+      ],
+      "rationale": "A measurement catalog defines security, release, vulnerability, risk, health, availability, and operational measures. The first complete trend/evaluation cycle and management-review use of those measurements remain incomplete.",
+      "gaps": [
+        "Complete the defined periodic measurement evaluation and retain the resulting analysis/actions."
       ]
     },
     {
@@ -582,7 +990,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-9.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-REVIEW.md#3-cadence"
+          }
         }
+      ],
+      "rationale": "Management-review authority, cadence, inputs, outputs, actions, and signoff are documented. The first management review has not yet occurred.",
+      "gaps": [
+        "Complete and retain the first management review with attributable inputs, decisions, and actions."
       ]
     },
     {
@@ -604,7 +1027,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-9.3.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-REVIEW.md#3-cadence"
+          }
         }
+      ],
+      "rationale": "A minimum management-review cadence and trigger model are defined. No completed management-review operating record exists yet.",
+      "gaps": [
+        "Perform the first management review at the defined cadence/trigger and retain the dated record."
       ]
     },
     {
@@ -626,7 +1064,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-9.3.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-REVIEW.md#4-review-inputs"
+          }
         }
+      ],
+      "rationale": "Required management-review inputs are comprehensively defined. They have not yet been assembled and evaluated in a completed management review.",
+      "gaps": [
+        "Evaluate the defined inputs in the first management review, including this self-assessment and current control gaps."
       ]
     },
     {
@@ -648,7 +1101,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-9.3.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MANAGEMENT-REVIEW.md#5-review-outputs"
+          }
         }
+      ],
+      "rationale": "Required management-review outputs, decisions, actions, owners, and signoff are defined. No completed output record exists yet.",
+      "gaps": [
+        "Retain the first management-review outputs and track resulting actions to closure."
       ]
     },
     {
@@ -670,7 +1138,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-10.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md#19-continual-improvement-sources"
+          }
         }
+      ],
+      "rationale": "Continual-improvement sources and workflow are documented and controlled changes demonstrate ongoing engineering improvement. A complete management-review/audit-driven improvement cycle has not yet operated.",
+      "gaps": [
+        "Use actual audit/review/measurement findings to create and verify improvement actions as they occur."
       ]
     },
     {
@@ -692,7 +1175,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-10.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md#7-response-workflow"
+          }
         }
+      ],
+      "rationale": "Nonconformity response, correction, cause analysis, corrective action, effectiveness, and closure criteria are defined. No formal internal-audit finding/effectiveness cycle has yet demonstrated the full process.",
+      "gaps": [
+        "Apply the process to actual findings when they occur and retain effectiveness evidence rather than creating synthetic nonconformities."
       ]
     },
     {
@@ -714,7 +1212,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-CI-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-9.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md#43-formal-internal-audit"
+          }
         }
+      ],
+      "rationale": "The repository defines formal internal-audit criteria and explicitly separates owner self-assessment from audit. No sufficiently objective formal internal audit has been completed.",
+      "gaps": [
+        "Perform and retain a formal internal audit with sufficient objectivity; DEMO-287 remains a Self-Assessment only."
       ]
     },
     {
@@ -736,7 +1249,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-CI-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-9.2.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md#5-audit-program"
+          }
         }
+      ],
+      "rationale": "An internal-audit program, cadence, coverage model, criteria, and independence safeguards are documented. The program has not yet produced its first formal internal-audit record.",
+      "gaps": [
+        "Execute the first formal internal audit using the defined program and retain scope, criteria, sampling, reviewer, and findings."
       ]
     },
     {
@@ -758,7 +1286,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-CI-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-9.2.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md#14-audit-report"
+          }
         }
+      ],
+      "rationale": "Audit reporting, findings, follow-up, and corrective-action interfaces are defined. No formal internal-audit report exists yet.",
+      "gaps": [
+        "Create a formal internal-audit report only after an objective audit is actually performed."
       ]
     },
     {
@@ -780,7 +1323,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INFORMATION-SECURITY-POLICY.md#3-policy-commitments"
+          }
         }
+      ],
+      "rationale": "The information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.",
+      "gaps": [
+        "Complete AW-001 and retain attributable awareness evidence."
       ]
     },
     {
@@ -802,7 +1360,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/ROLES-RESPONSIBILITIES.md#4-responsibility-matrix"
+          }
         }
+      ],
+      "rationale": "Roles/policy expectations meaningfully address assigned security accountabilities, but the initial competence/awareness operating cycle is incomplete. AW-001 through AW-007 remain Planned as applicable to their audiences.",
+      "gaps": [
+        "Complete the applicable AW-001–AW-007 awareness records and the planned competence review."
       ]
     },
     {
@@ -824,7 +1397,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/ROLES-RESPONSIBILITIES.md#7-independence-and-conflict-of-interest"
+          }
         }
+      ],
+      "rationale": "The repository documents and materially implements separation of conflicting duties for the current scoped system, with supporting source, configuration, or validation evidence. The current rubric does not treat design/implementation evidence alone as operating effectiveness, and a complete dated recurring review or effectiveness record is not yet available.",
+      "gaps": [
+        "Complete and retain the applicable dated operating/review evidence for this control before considering Pass."
       ]
     },
     {
@@ -846,7 +1434,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/LEADERSHIP.md#4-leadership-commitments"
+          }
         }
+      ],
+      "rationale": "Roles/policy expectations meaningfully address leadership security responsibilities, but the initial competence/awareness operating cycle is incomplete. AW-001 through AW-007 remain Planned as applicable to their audiences.",
+      "gaps": [
+        "Complete the applicable AW-001–AW-007 awareness records and the planned competence review."
       ]
     },
     {
@@ -868,7 +1471,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/VULNERABILITY-THREAT-SECURITY-MAINTENANCE.md#15-contacts-with-authorities"
+          }
         }
+      ],
+      "rationale": "The repository documents and materially implements authority contact readiness for the current scoped system, with supporting source, configuration, or validation evidence. The current rubric does not treat design/implementation evidence alone as operating effectiveness, and a complete dated recurring review or effectiveness record is not yet available.",
+      "gaps": [
+        "Complete and retain the applicable dated operating/review evidence for this control before considering Pass."
       ]
     },
     {
@@ -890,7 +1508,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.6"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/VULNERABILITY-THREAT-SECURITY-MAINTENANCE.md#16-security-communities-and-special-interest-sources"
+          }
         }
+      ],
+      "rationale": "The repository documents and materially implements security community contacts for the current scoped system, with supporting source, configuration, or validation evidence. The current rubric does not treat design/implementation evidence alone as operating effectiveness, and a complete dated recurring review or effectiveness record is not yet available.",
+      "gaps": [
+        "Complete and retain the applicable dated operating/review evidence for this control before considering Pass."
       ]
     },
     {
@@ -912,7 +1545,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.7"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/VULNERABILITY-THREAT-SECURITY-MAINTENANCE.md#9-threat-intelligence"
+          }
         }
+      ],
+      "rationale": "Documented vulnerability/threat processes and dependency/security checks meaningfully address threat information handling, but the defined recurring threat/vulnerability review history is not yet complete.",
+      "gaps": [
+        "Retain the next dated threat/vulnerability review with triage/treatment conclusions and resulting actions."
       ]
     },
     {
@@ -934,7 +1582,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.8"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#4-risk-scaled-engineering-requirements"
+          }
         }
+      ],
+      "rationale": "The repository documents and materially implements security in managed projects for the current scoped system, with supporting source, configuration, or validation evidence. The current rubric does not treat design/implementation evidence alone as operating effectiveness, and a complete dated recurring review or effectiveness record is not yet available.",
+      "gaps": [
+        "Complete and retain the applicable dated operating/review evidence for this control before considering Pass."
       ]
     },
     {
@@ -956,7 +1619,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.9"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/registers/ASSET-ACCESS-REGISTER.md#3-asset-inventory-summary"
+          }
         }
+      ],
+      "rationale": "The repository documents and materially implements asset and information inventory for the current scoped system, with supporting source, configuration, or validation evidence. The current rubric does not treat design/implementation evidence alone as operating effectiveness, and a complete dated recurring review or effectiveness record is not yet available.",
+      "gaps": [
+        "Complete and retain the applicable dated operating/review evidence for this control before considering Pass."
       ]
     },
     {
@@ -978,7 +1656,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.10"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#5-acceptable-use"
+          }
         }
+      ],
+      "rationale": "The repository documents and materially implements acceptable use expectations for the current scoped system, with supporting source, configuration, or validation evidence. The current rubric does not treat design/implementation evidence alone as operating effectiveness, and a complete dated recurring review or effectiveness record is not yet available.",
+      "gaps": [
+        "Complete and retain the applicable dated operating/review evidence for this control before considering Pass."
       ]
     },
     {
@@ -1000,7 +1693,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.12"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/DATA-GOVERNANCE.md#3-data-classification-model"
+          }
         }
+      ],
+      "rationale": "The repository documents and materially implements information classification model for the current scoped system, with supporting source, configuration, or validation evidence. The current rubric does not treat design/implementation evidence alone as operating effectiveness, and a complete dated recurring review or effectiveness record is not yet available.",
+      "gaps": [
+        "Complete and retain the applicable dated operating/review evidence for this control before considering Pass."
       ]
     },
     {
@@ -1022,7 +1730,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.13"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/DATA-GOVERNANCE.md#3-data-classification-model"
+          }
         }
+      ],
+      "rationale": "The repository documents and materially implements classification labels and handling for the current scoped system, with supporting source, configuration, or validation evidence. The current rubric does not treat design/implementation evidence alone as operating effectiveness, and a complete dated recurring review or effectiveness record is not yet available.",
+      "gaps": [
+        "Complete and retain the applicable dated operating/review evidence for this control before considering Pass."
       ]
     },
     {
@@ -1044,7 +1767,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.14"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/DATA-GOVERNANCE.md#3-data-classification-model"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.14"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/CRYPTOGRAPHY-SECRETS-KEY-MANAGEMENT.md#9-secret-distribution-and-use"
+          }
         }
+      ],
+      "rationale": "The repository documents and materially implements protected information transfer for the current scoped system, with supporting source, configuration, or validation evidence. The current rubric does not treat design/implementation evidence alone as operating effectiveness, and a complete dated recurring review or effectiveness record is not yet available.",
+      "gaps": [
+        "Complete and retain the applicable dated operating/review evidence for this control before considering Pass."
       ]
     },
     {
@@ -1066,7 +1815,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.15"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#7-access-classes"
+          }
         }
+      ],
+      "rationale": "The control design and current authorization/credential boundaries meaningfully address access governance, but the first consolidated privileged/provider/source/admin access review has not been completed. AR-001 remains Planned for the current review cycle.",
+      "gaps": [
+        "Complete AR-001 and retain the dated review conclusions/actions without disclosing credentials or private account details."
       ]
     },
     {
@@ -1088,7 +1852,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.16"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#8-access-lifecycle"
+          }
         }
+      ],
+      "rationale": "The control design and current authorization/credential boundaries meaningfully address identity lifecycle management, but the first consolidated privileged/provider/source/admin access review has not been completed. AR-001 remains Planned for the current review cycle.",
+      "gaps": [
+        "Complete AR-001 and retain the dated review conclusions/actions without disclosing credentials or private account details."
       ]
     },
     {
@@ -1110,7 +1889,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.17"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/CRYPTOGRAPHY-SECRETS-KEY-MANAGEMENT.md#6-secret-and-authentication-information-categories"
+          }
         }
+      ],
+      "rationale": "The control design and current authorization/credential boundaries meaningfully address authentication secret management, but the first consolidated privileged/provider/source/admin access review has not been completed. AR-001 remains Planned for the current review cycle.",
+      "gaps": [
+        "Complete AR-001 and retain the dated review conclusions/actions without disclosing credentials or private account details."
       ]
     },
     {
@@ -1132,7 +1926,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.18"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#11-periodic-access-review"
+          }
         }
+      ],
+      "rationale": "The control design and current authorization/credential boundaries meaningfully address access provisioning and review, but the first consolidated privileged/provider/source/admin access review has not been completed. AR-001 remains Planned for the current review cycle.",
+      "gaps": [
+        "Complete AR-001 and retain the dated review conclusions/actions without disclosing credentials or private account details."
       ]
     },
     {
@@ -1154,7 +1963,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.19"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md#4-supplier-classification"
+          }
         }
+      ],
+      "rationale": "Supplier/provider controls and boundaries are documented for supplier security governance, including current AI-assisted engineering where applicable. The scheduled initial periodic supplier review is still incomplete, so provider use or source documentation is not treated as effectiveness evidence.",
+      "gaps": [
+        "Complete the scheduled supplier review for the applicable GitHub/Cloudflare/Codex/Claude/dependency boundary and retain the dated result."
       ]
     },
     {
@@ -1176,7 +2000,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.20"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md#6-initial-review-and-approval"
+          }
         }
+      ],
+      "rationale": "Supplier/provider controls and boundaries are documented for security terms for suppliers, including current AI-assisted engineering where applicable. The scheduled initial periodic supplier review is still incomplete, so provider use or source documentation is not treated as effectiveness evidence.",
+      "gaps": [
+        "Complete the scheduled supplier review for the applicable GitHub/Cloudflare/Codex/Claude/dependency boundary and retain the dated result."
       ]
     },
     {
@@ -1198,7 +2037,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.21"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md#13-evidence-and-assurance"
+          }
         }
+      ],
+      "rationale": "Supplier/provider controls and boundaries are documented for ict supply-chain security, including current AI-assisted engineering where applicable. The scheduled initial periodic supplier review is still incomplete, so provider use or source documentation is not treated as effectiveness evidence.",
+      "gaps": [
+        "Complete the scheduled supplier review for the applicable GitHub/Cloudflare/Codex/Claude/dependency boundary and retain the dated result."
       ]
     },
     {
@@ -1220,7 +2074,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.22"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md#9-monitoring-and-periodic-review"
+          }
         }
+      ],
+      "rationale": "Supplier/provider controls and boundaries are documented for supplier service review and change, including current AI-assisted engineering where applicable. The scheduled initial periodic supplier review is still incomplete, so provider use or source documentation is not treated as effectiveness evidence.",
+      "gaps": [
+        "Complete the scheduled supplier review for the applicable GitHub/Cloudflare/Codex/Claude/dependency boundary and retain the dated result."
       ]
     },
     {
@@ -1242,7 +2111,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.23"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md#7-configuration-and-least-privilege"
+          }
         }
+      ],
+      "rationale": "Supplier/provider controls and boundaries are documented for cloud service security governance, including current AI-assisted engineering where applicable. The scheduled initial periodic supplier review is still incomplete, so provider use or source documentation is not treated as effectiveness evidence.",
+      "gaps": [
+        "Complete the scheduled supplier review for the applicable GitHub/Cloudflare/Codex/Claude/dependency boundary and retain the dated result."
       ]
     },
     {
@@ -1264,7 +2148,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.24"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INCIDENT-MANAGEMENT.md#2-incident-principles"
+          }
         }
+      ],
+      "rationale": "Incident governance and implementation boundaries meaningfully address incident response preparation, but readiness has not been demonstrated through an actual event or the planned exercise. EX-001 remains Planned and no synthetic incident record is created by this assessment.",
+      "gaps": [
+        "Complete EX-001 or retain an actual qualifying incident record with the defined triage, response, evidence, and follow-up."
       ]
     },
     {
@@ -1286,7 +2185,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.25"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INCIDENT-MANAGEMENT.md#7-initial-triage"
+          }
         }
+      ],
+      "rationale": "Incident governance and implementation boundaries meaningfully address security event triage, but readiness has not been demonstrated through an actual event or the planned exercise. EX-001 remains Planned and no synthetic incident record is created by this assessment.",
+      "gaps": [
+        "Complete EX-001 or retain an actual qualifying incident record with the defined triage, response, evidence, and follow-up."
       ]
     },
     {
@@ -1308,7 +2222,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.26"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INCIDENT-MANAGEMENT.md#8-containment"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.26"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INCIDENT-MANAGEMENT.md#14-recovery"
+          }
         }
+      ],
+      "rationale": "Incident governance and implementation boundaries meaningfully address incident response execution, but readiness has not been demonstrated through an actual event or the planned exercise. EX-001 remains Planned and no synthetic incident record is created by this assessment.",
+      "gaps": [
+        "Complete EX-001 or retain an actual qualifying incident record with the defined triage, response, evidence, and follow-up."
       ]
     },
     {
@@ -1330,7 +2270,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.27"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INCIDENT-MANAGEMENT.md#15-post-incident-review"
+          }
         }
+      ],
+      "rationale": "Incident governance and implementation boundaries meaningfully address learning from incidents, but readiness has not been demonstrated through an actual event or the planned exercise. EX-001 remains Planned and no synthetic incident record is created by this assessment.",
+      "gaps": [
+        "Complete EX-001 or retain an actual qualifying incident record with the defined triage, response, evidence, and follow-up."
       ]
     },
     {
@@ -1352,7 +2307,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.28"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INCIDENT-MANAGEMENT.md#9-evidence-preservation"
+          }
         }
+      ],
+      "rationale": "Incident governance and implementation boundaries meaningfully address preserving investigative evidence, but readiness has not been demonstrated through an actual event or the planned exercise. EX-001 remains Planned and no synthetic incident record is created by this assessment.",
+      "gaps": [
+        "Complete EX-001 or retain an actual qualifying incident record with the defined triage, response, evidence, and follow-up."
       ]
     },
     {
@@ -1374,7 +2344,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.29"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/CONTINUITY-RESILIENCE.md#5-operating-modes"
+          }
         }
+      ],
+      "rationale": "Continuity/recovery design and reconstruction procedures meaningfully address secure operation during disruption, but actual restore/continuity effectiveness has not been demonstrated. RT-001 remains Planned.",
+      "gaps": [
+        "Complete RT-001 and retain observed recovery/restore results, limitations, and follow-up actions."
       ]
     },
     {
@@ -1396,7 +2381,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.30"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/CONTINUITY-RESILIENCE.md#11-alternate-operating-paths"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.30"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/BACKUP-RECOVERY-RESTORE.md#10-recovery-testing"
+          }
         }
+      ],
+      "rationale": "Continuity/recovery design and reconstruction procedures meaningfully address technology continuity readiness, but actual restore/continuity effectiveness has not been demonstrated. RT-001 remains Planned.",
+      "gaps": [
+        "Complete RT-001 and retain observed recovery/restore results, limitations, and follow-up actions."
       ]
     },
     {
@@ -1418,7 +2429,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.31"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/LEGAL-CONTRACTUAL-IP-PRIVACY.md#3-obligation-sources"
+          }
         }
+      ],
+      "rationale": "Governance records establish the current obligation/privacy/IP/records baseline for legal and contractual obligations, but recurring legal/contract/privacy and retention review evidence remains incomplete.",
+      "gaps": [
+        "Complete the applicable obligation/privacy/retention reassessment when due or triggered and retain the dated conclusion."
       ]
     },
     {
@@ -1440,7 +2466,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.32"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/LEGAL-CONTRACTUAL-IP-PRIVACY.md#6-current-known-licensing-and-ip-baseline"
+          }
         }
+      ],
+      "rationale": "Governance records establish the current obligation/privacy/IP/records baseline for intellectual property safeguards, but recurring legal/contract/privacy and retention review evidence remains incomplete.",
+      "gaps": [
+        "Complete the applicable obligation/privacy/retention reassessment when due or triggered and retain the dated conclusion."
       ]
     },
     {
@@ -1462,7 +2503,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.33"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/LEGAL-CONTRACTUAL-IP-PRIVACY.md#12-records-retention-and-legal-hold"
+          }
         }
+      ],
+      "rationale": "Governance records establish the current obligation/privacy/IP/records baseline for protected business records, but recurring legal/contract/privacy and retention review evidence remains incomplete.",
+      "gaps": [
+        "Complete the applicable obligation/privacy/retention reassessment when due or triggered and retain the dated conclusion."
       ]
     },
     {
@@ -1484,7 +2540,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.34"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/LEGAL-CONTRACTUAL-IP-PRIVACY.md#8-privacy-and-personal-information"
+          }
         }
+      ],
+      "rationale": "Governance records establish the current obligation/privacy/IP/records baseline for privacy and personal-data safeguards, but recurring legal/contract/privacy and retention review evidence remains incomplete.",
+      "gaps": [
+        "Complete the applicable obligation/privacy/retention reassessment when due or triggered and retain the dated conclusion."
       ]
     },
     {
@@ -1506,7 +2577,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-CI-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.36"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md#7-audit-criteria"
+          }
         }
+      ],
+      "rationale": "The repository documents and materially implements compliance with security rules for the current scoped system, with supporting source, configuration, or validation evidence. The current rubric does not treat design/implementation evidence alone as operating effectiveness, and a complete dated recurring review or effectiveness record is not yet available.",
+      "gaps": [
+        "Complete and retain the applicable dated operating/review evidence for this control before considering Pass."
       ]
     },
     {
@@ -1528,7 +2614,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-CI-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.37"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/OPERATIONAL-PLANNING-CONTROL.md#2-operating-principle"
+          }
         }
+      ],
+      "rationale": "The repository documents and materially implements documented operating procedures for the current scoped system, with supporting source, configuration, or validation evidence. The current rubric does not treat design/implementation evidence alone as operating effectiveness, and a complete dated recurring review or effectiveness record is not yet available.",
+      "gaps": [
+        "Complete and retain the applicable dated operating/review evidence for this control before considering Pass."
       ]
     },
     {
@@ -1550,7 +2651,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-CI-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.35"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md#9-auditor-competence-and-objectivity"
+          }
         }
+      ],
+      "rationale": "The audit program defines independence safeguards, but no sufficiently objective independent security review or formal internal audit has been completed. DEMO-287 is an owner/operator Self-Assessment and is not counted as independent review.",
+      "gaps": [
+        "Complete an appropriately objective internal security review/formal internal audit and retain the dated report and follow-up."
       ]
     },
     {
@@ -1561,7 +2677,7 @@
       "section": "Annex A · organizational",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "No issued workforce assets are in scope; reassess if managed devices are added.",
+      "rationale": "No issued workforce assets are in the current system scope, so an equipment-return process has no triggering asset population. Reassess if WizardGang introduces managed devices or other issued assets.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1572,6 +2688,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.11"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.5.11"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -1595,7 +2733,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.6.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/COMPETENCE-AWARENESS-COMMUNICATION.md#7-initial-awareness-baseline"
+          }
         }
+      ],
+      "rationale": "Roles/policy expectations meaningfully address security awareness and learning, but the initial competence/awareness operating cycle is incomplete. AW-001 through AW-007 remain Planned as applicable to their audiences.",
+      "gaps": [
+        "Complete the applicable AW-001–AW-007 awareness records and the planned competence review."
       ]
     },
     {
@@ -1617,7 +2770,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-RUN-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.6.8"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INCIDENT-MANAGEMENT.md#6-detection-and-reporting-sources"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.6.8"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/COMPETENCE-AWARENESS-COMMUNICATION.md#9-communication-matrix"
+          }
         }
+      ],
+      "rationale": "Security-event and concern-reporting routes are documented, but the planned awareness/exercise evidence has not yet demonstrated use of the process. AW-005 and EX-001 remain Planned.",
+      "gaps": [
+        "Complete AW-005 and EX-001 or retain an actual qualifying event-reporting record."
       ]
     },
     {
@@ -1628,7 +2807,7 @@
       "section": "Annex A · people",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "Hiring and screening are outside system scope; reassess if personnel are added.",
+      "rationale": "Employment/workforce lifecycle processes are outside the current system scope; management-system roles are functional and do not assert an employer workforce. Reassess if employees, contractors, or equivalent personnel relationships enter scope.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1639,6 +2818,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.6.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.6.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -1651,7 +2852,7 @@
       "section": "Annex A · people",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "Employment and contractor terms are outside current system scope.",
+      "rationale": "Employment/workforce lifecycle processes are outside the current system scope; management-system roles are functional and do not assert an employer workforce. Reassess if employees, contractors, or equivalent personnel relationships enter scope.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1662,6 +2863,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.6.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.6.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -1674,7 +2897,7 @@
       "section": "Annex A · people",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "No workforce disciplinary process is in current system scope.",
+      "rationale": "Employment/workforce lifecycle processes are outside the current system scope; management-system roles are functional and do not assert an employer workforce. Reassess if employees, contractors, or equivalent personnel relationships enter scope.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1685,6 +2908,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.6.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.6.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -1697,7 +2942,7 @@
       "section": "Annex A · people",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "Personnel termination and role-change controls are outside system scope.",
+      "rationale": "Employment/workforce lifecycle processes are outside the current system scope; management-system roles are functional and do not assert an employer workforce. Reassess if employees, contractors, or equivalent personnel relationships enter scope.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1708,6 +2953,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.6.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.6.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -1720,7 +2987,7 @@
       "section": "Annex A · people",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "No workforce confidentiality-agreement process is in current scope.",
+      "rationale": "Employment/workforce lifecycle processes are outside the current system scope; management-system roles are functional and do not assert an employer workforce. Reassess if employees, contractors, or equivalent personnel relationships enter scope.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1731,6 +2998,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.6.6"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.6.6"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -1743,7 +3032,7 @@
       "section": "Annex A · people",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "Workplace and remote-work controls are outside current system scope.",
+      "rationale": "Employment/workforce lifecycle processes are outside the current system scope; management-system roles are functional and do not assert an employer workforce. Reassess if employees, contractors, or equivalent personnel relationships enter scope.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1754,6 +3043,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.6.7"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.6.7"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -1766,7 +3077,7 @@
       "section": "Annex A · physical",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "No WizardGang production facility is in scope; hosting is provider-managed.",
+      "rationale": "WizardGang operates no in-scope production facility, physical hosting equipment, cabling, utility system, or removable production-media boundary; provider physical facilities remain outside direct control. Reassess if WizardGang introduces directly managed facilities, equipment, media, or physical infrastructure.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1777,6 +3088,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -1789,7 +3122,7 @@
       "section": "Annex A · physical",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "No in-scope facility requires direct physical entry control.",
+      "rationale": "WizardGang operates no in-scope production facility, physical hosting equipment, cabling, utility system, or removable production-media boundary; provider physical facilities remain outside direct control. Reassess if WizardGang introduces directly managed facilities, equipment, media, or physical infrastructure.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1800,6 +3133,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -1812,7 +3167,7 @@
       "section": "Annex A · physical",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "No in-scope room or secure area requires direct facility protection.",
+      "rationale": "WizardGang operates no in-scope production facility, physical hosting equipment, cabling, utility system, or removable production-media boundary; provider physical facilities remain outside direct control. Reassess if WizardGang introduces directly managed facilities, equipment, media, or physical infrastructure.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1823,6 +3178,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -1835,7 +3212,7 @@
       "section": "Annex A · physical",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "No in-scope facility requires direct physical monitoring.",
+      "rationale": "WizardGang operates no in-scope production facility, physical hosting equipment, cabling, utility system, or removable production-media boundary; provider physical facilities remain outside direct control. Reassess if WizardGang introduces directly managed facilities, equipment, media, or physical infrastructure.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1846,6 +3223,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -1858,7 +3257,7 @@
       "section": "Annex A · physical",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "Provider infrastructure is outside WizardGang's physical boundary.",
+      "rationale": "WizardGang operates no in-scope production facility, physical hosting equipment, cabling, utility system, or removable production-media boundary; provider physical facilities remain outside direct control. Reassess if WizardGang introduces directly managed facilities, equipment, media, or physical infrastructure.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1869,6 +3268,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -1881,7 +3302,7 @@
       "section": "Annex A · physical",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "No in-scope restricted physical area requires secure-area rules.",
+      "rationale": "WizardGang operates no in-scope production facility, physical hosting equipment, cabling, utility system, or removable production-media boundary; provider physical facilities remain outside direct control. Reassess if WizardGang introduces directly managed facilities, equipment, media, or physical infrastructure.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1892,6 +3313,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.6"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.6"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -1904,7 +3347,7 @@
       "section": "Annex A · physical",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "Managed offices and workspaces are outside system scope.",
+      "rationale": "WizardGang operates no in-scope production facility, physical hosting equipment, cabling, utility system, or removable production-media boundary; provider physical facilities remain outside direct control. Reassess if WizardGang introduces directly managed facilities, equipment, media, or physical infrastructure.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1915,6 +3358,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.7"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.7"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -1927,7 +3392,7 @@
       "section": "Annex A · physical",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "No in-scope physical equipment requires controlled placement.",
+      "rationale": "WizardGang operates no in-scope production facility, physical hosting equipment, cabling, utility system, or removable production-media boundary; provider physical facilities remain outside direct control. Reassess if WizardGang introduces directly managed facilities, equipment, media, or physical infrastructure.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1938,6 +3403,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.8"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.8"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -1950,7 +3437,7 @@
       "section": "Annex A · physical",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "No in-scope equipment is used away from an organization-run site.",
+      "rationale": "WizardGang operates no in-scope production facility, physical hosting equipment, cabling, utility system, or removable production-media boundary; provider physical facilities remain outside direct control. Reassess if WizardGang introduces directly managed facilities, equipment, media, or physical infrastructure.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1961,6 +3448,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.9"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.9"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -1973,7 +3482,7 @@
       "section": "Annex A · physical",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "No removable physical production media are in scope.",
+      "rationale": "WizardGang operates no in-scope production facility, physical hosting equipment, cabling, utility system, or removable production-media boundary; provider physical facilities remain outside direct control. Reassess if WizardGang introduces directly managed facilities, equipment, media, or physical infrastructure.",
       "relationships": [
         {
           "relation": "evidence",
@@ -1984,6 +3493,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.10"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.10"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -1996,7 +3527,7 @@
       "section": "Annex A · physical",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "Production utilities are provider-operated and outside direct control.",
+      "rationale": "WizardGang operates no in-scope production facility, physical hosting equipment, cabling, utility system, or removable production-media boundary; provider physical facilities remain outside direct control. Reassess if WizardGang introduces directly managed facilities, equipment, media, or physical infrastructure.",
       "relationships": [
         {
           "relation": "evidence",
@@ -2007,6 +3538,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.11"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.11"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -2019,7 +3572,7 @@
       "section": "Annex A · physical",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "Production cabling is provider-operated and outside direct control.",
+      "rationale": "WizardGang operates no in-scope production facility, physical hosting equipment, cabling, utility system, or removable production-media boundary; provider physical facilities remain outside direct control. Reassess if WizardGang introduces directly managed facilities, equipment, media, or physical infrastructure.",
       "relationships": [
         {
           "relation": "evidence",
@@ -2030,6 +3583,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.12"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.12"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -2042,7 +3617,7 @@
       "section": "Annex A · physical",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "Hardware maintenance is provider-operated and outside direct control.",
+      "rationale": "WizardGang operates no in-scope production facility, physical hosting equipment, cabling, utility system, or removable production-media boundary; provider physical facilities remain outside direct control. Reassess if WizardGang introduces directly managed facilities, equipment, media, or physical infrastructure.",
       "relationships": [
         {
           "relation": "evidence",
@@ -2053,6 +3628,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.13"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.13"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -2065,7 +3662,7 @@
       "section": "Annex A · physical",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "Hardware disposal and reuse are provider-operated and outside direct control.",
+      "rationale": "WizardGang operates no in-scope production facility, physical hosting equipment, cabling, utility system, or removable production-media boundary; provider physical facilities remain outside direct control. Reassess if WizardGang introduces directly managed facilities, equipment, media, or physical infrastructure.",
       "relationships": [
         {
           "relation": "evidence",
@@ -2076,6 +3673,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.14"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.7.14"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -2099,7 +3718,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#13-privileged-access"
+          }
         }
+      ],
+      "rationale": "The control design and current authorization/credential boundaries meaningfully address privileged access restrictions, but the first consolidated privileged/provider/source/admin access review has not been completed. AR-001 remains Planned for the current review cycle.",
+      "gaps": [
+        "Complete AR-001 and retain the dated review conclusions/actions without disclosing credentials or private account details."
       ]
     },
     {
@@ -2121,7 +3755,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#7-access-classes"
+          }
         }
+      ],
+      "rationale": "The control design and current authorization/credential boundaries meaningfully address information access restrictions, but the first consolidated privileged/provider/source/admin access review has not been completed. AR-001 remains Planned for the current review cycle.",
+      "gaps": [
+        "Complete AR-001 and retain the dated review conclusions/actions without disclosing credentials or private account details."
       ]
     },
     {
@@ -2143,7 +3792,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#14-source-code-access"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/CONFIGURATION-BASELINE-DRIFT.md#9-github-configuration-baseline"
+          }
         }
+      ],
+      "rationale": "The control design and current authorization/credential boundaries meaningfully address source-code access restrictions, but the first consolidated privileged/provider/source/admin access review has not been completed. AR-001 remains Planned for the current review cycle.",
+      "gaps": [
+        "Complete AR-001 and retain the dated review conclusions/actions without disclosing credentials or private account details."
       ]
     },
     {
@@ -2165,7 +3840,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/IDENTITY.md#normalized-identity-and-authorization"
+          }
         }
+      ],
+      "rationale": "The control design and current authorization/credential boundaries meaningfully address strong authentication, but the first consolidated privileged/provider/source/admin access review has not been completed. AR-001 remains Planned for the current review cycle.",
+      "gaps": [
+        "Complete AR-001 and retain the dated review conclusions/actions without disclosing credentials or private account details."
       ]
     },
     {
@@ -2187,7 +3877,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.6"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/OPERATIONAL-PLANNING-CONTROL.md#10-availability-cost-and-graceful-degradation"
+          }
         }
+      ],
+      "rationale": "The repository documents and materially implements capacity and resource planning for the current scoped system, with supporting source, configuration, or validation evidence. The current rubric does not treat design/implementation evidence alone as operating effectiveness, and a complete dated recurring review or effectiveness record is not yet available.",
+      "gaps": [
+        "Complete and retain the applicable dated operating/review evidence for this control before considering Pass."
       ]
     },
     {
@@ -2209,7 +3914,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-CI-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.7"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/VULNERABILITY-THREAT-SECURITY-MAINTENANCE.md#11-malware-and-development-endpoint-security"
+          }
         }
+      ],
+      "rationale": "The repository documents and materially implements malware defenses for the current scoped system, with supporting source, configuration, or validation evidence. The current rubric does not treat design/implementation evidence alone as operating effectiveness, and a complete dated recurring review or effectiveness record is not yet available.",
+      "gaps": [
+        "Complete and retain the applicable dated operating/review evidence for this control before considering Pass."
       ]
     },
     {
@@ -2231,7 +3951,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-CI-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.8"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/VULNERABILITY-THREAT-SECURITY-MAINTENANCE.md#4-vulnerability-intake-sources"
+          }
         }
+      ],
+      "rationale": "Documented vulnerability/threat processes and dependency/security checks meaningfully address technical vulnerability handling, but the defined recurring threat/vulnerability review history is not yet complete.",
+      "gaps": [
+        "Retain the next dated threat/vulnerability review with triage/treatment conclusions and resulting actions."
       ]
     },
     {
@@ -2253,7 +3988,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-CI-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.9"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/CONFIGURATION-BASELINE-DRIFT.md#4-authoritative-baseline-sources"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.9"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/registers/CONFIGURATION-REGISTER.md#9-github-configuration"
+          }
         }
+      ],
+      "rationale": "Source configuration baselines and drift concepts are documented and partially validated, but comprehensive provider-state reconciliation is not implemented. CFG-028 remains a configuration-drift gap and provider-side review evidence is incomplete.",
+      "gaps": [
+        "Implement/perform provider configuration reconciliation, address CFG-028, and retain a dated configuration review."
       ]
     },
     {
@@ -2275,7 +4036,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.10"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/DATA-GOVERNANCE.md#16-deletion-and-expiration"
+          }
         }
+      ],
+      "rationale": "The repository documents and materially implements secure information deletion for the current scoped system, with supporting source, configuration, or validation evidence. The current rubric does not treat design/implementation evidence alone as operating effectiveness, and a complete dated recurring review or effectiveness record is not yet available.",
+      "gaps": [
+        "Complete and retain the applicable dated operating/review evidence for this control before considering Pass."
       ]
     },
     {
@@ -2297,7 +4073,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.11"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/DATA-GOVERNANCE.md#9-operational-data-and-public-diagnostics"
+          }
         }
+      ],
+      "rationale": "The repository documents and materially implements sensitive-data masking for the current scoped system, with supporting source, configuration, or validation evidence. The current rubric does not treat design/implementation evidence alone as operating effectiveness, and a complete dated recurring review or effectiveness record is not yet available.",
+      "gaps": [
+        "Complete and retain the applicable dated operating/review evidence for this control before considering Pass."
       ]
     },
     {
@@ -2319,7 +4110,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.12"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/DATA-GOVERNANCE.md#9-operational-data-and-public-diagnostics"
+          }
         }
+      ],
+      "rationale": "The repository documents and materially implements data-loss controls for the current scoped system, with supporting source, configuration, or validation evidence. The current rubric does not treat design/implementation evidence alone as operating effectiveness, and a complete dated recurring review or effectiveness record is not yet available.",
+      "gaps": [
+        "Complete and retain the applicable dated operating/review evidence for this control before considering Pass."
       ]
     },
     {
@@ -2341,7 +4147,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.13"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/BACKUP-RECOVERY-RESTORE.md#5-backup-and-export-expectations"
+          }
         }
+      ],
+      "rationale": "Continuity/recovery design and reconstruction procedures meaningfully address information backups, but actual restore/continuity effectiveness has not been demonstrated. RT-001 remains Planned.",
+      "gaps": [
+        "Complete RT-001 and retain observed recovery/restore results, limitations, and follow-up actions."
       ]
     },
     {
@@ -2363,7 +4184,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.14"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/CONTINUITY-RESILIENCE.md#11-alternate-operating-paths"
+          }
         }
+      ],
+      "rationale": "Continuity/recovery design and reconstruction procedures meaningfully address service redundancy, but actual restore/continuity effectiveness has not been demonstrated. RT-001 remains Planned.",
+      "gaps": [
+        "Complete RT-001 and retain observed recovery/restore results, limitations, and follow-up actions."
       ]
     },
     {
@@ -2385,7 +4221,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.16"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/MONITORING-MEASUREMENT-EVALUATION.md#5-measurement-catalog"
+          }
         }
+      ],
+      "rationale": "The repository documents and materially implements security monitoring for the current scoped system, with supporting source, configuration, or validation evidence. The current rubric does not treat design/implementation evidence alone as operating effectiveness, and a complete dated recurring review or effectiveness record is not yet available.",
+      "gaps": [
+        "Complete and retain the applicable dated operating/review evidence for this control before considering Pass."
       ]
     },
     {
@@ -2407,7 +4258,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.18"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#13-privileged-access"
+          }
         }
+      ],
+      "rationale": "The control design and current authorization/credential boundaries meaningfully address privileged utility restrictions, but the first consolidated privileged/provider/source/admin access review has not been completed. AR-001 remains Planned for the current review cycle.",
+      "gaps": [
+        "Complete AR-001 and retain the dated review conclusions/actions without disclosing credentials or private account details."
       ]
     },
     {
@@ -2429,7 +4295,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.19"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/CONFIGURATION-BASELINE-DRIFT.md#4-authoritative-baseline-sources"
+          }
         }
+      ],
+      "rationale": "The repository documents and materially implements controlled software installation for the current scoped system, with supporting source, configuration, or validation evidence. The current rubric does not treat design/implementation evidence alone as operating effectiveness, and a complete dated recurring review or effectiveness record is not yet available.",
+      "gaps": [
+        "Complete and retain the applicable dated operating/review evidence for this control before considering Pass."
       ]
     },
     {
@@ -2451,7 +4332,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.20"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/ARCHITECTURE-STANDARD.md#03-cloudflare-edge"
+          }
         }
+      ],
+      "rationale": "Supplier/provider controls and boundaries are documented for network security controls, including current AI-assisted engineering where applicable. The scheduled initial periodic supplier review is still incomplete, so provider use or source documentation is not treated as effectiveness evidence.",
+      "gaps": [
+        "Complete the scheduled supplier review for the applicable GitHub/Cloudflare/Codex/Claude/dependency boundary and retain the dated result."
       ]
     },
     {
@@ -2473,7 +4369,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.21"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/ARCHITECTURE-STANDARD.md#08-api-architecture"
+          }
         }
+      ],
+      "rationale": "Supplier/provider controls and boundaries are documented for security of networked services, including current AI-assisted engineering where applicable. The scheduled initial periodic supplier review is still incomplete, so provider use or source documentation is not treated as effectiveness evidence.",
+      "gaps": [
+        "Complete the scheduled supplier review for the applicable GitHub/Cloudflare/Codex/Claude/dependency boundary and retain the dated result."
       ]
     },
     {
@@ -2495,7 +4406,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.24"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/CRYPTOGRAPHY-SECRETS-KEY-MANAGEMENT.md#4-current-implemented-cryptographic-baseline"
+          }
         }
+      ],
+      "rationale": "Current cryptographic mechanisms, secret categories, storage boundaries, and compromise rules are documented and implemented in relevant code paths. Periodic provider/credential/key necessity and scope review remains incomplete.",
+      "gaps": [
+        "Complete the planned credential/cryptography review, including provider-side scope/rotation/revocation evidence where applicable."
       ]
     },
     {
@@ -2517,7 +4443,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-CI-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.26"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#5-security-requirements-analysis"
+          }
         }
+      ],
+      "rationale": "Secure-engineering requirements, implementation patterns, and automated validation meaningfully address application security requirements, but independent/adversarial testing and recurring security-review evidence remain incomplete.",
+      "gaps": [
+        "Retain dated security-review/testing evidence appropriate to the risk, including independent/adversarial coverage when required."
       ]
     },
     {
@@ -2539,7 +4480,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.27"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#6-secure-architecture-and-design"
+          }
         }
+      ],
+      "rationale": "Secure-engineering requirements, implementation patterns, and automated validation meaningfully address secure architecture principles, but independent/adversarial testing and recurring security-review evidence remain incomplete.",
+      "gaps": [
+        "Retain dated security-review/testing evidence appropriate to the risk, including independent/adversarial coverage when required."
       ]
     },
     {
@@ -2561,7 +4517,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-CI-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.28"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#7-secure-coding-expectations"
+          }
         }
+      ],
+      "rationale": "Secure-engineering requirements, implementation patterns, and automated validation meaningfully address secure coding practices, but independent/adversarial testing and recurring security-review evidence remain incomplete.",
+      "gaps": [
+        "Retain dated security-review/testing evidence appropriate to the risk, including independent/adversarial coverage when required."
       ]
     },
     {
@@ -2583,7 +4554,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-CI-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.29"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#8-required-validation-layers"
+          }
         }
+      ],
+      "rationale": "Secure-engineering requirements, implementation patterns, and automated validation meaningfully address security testing before acceptance, but independent/adversarial testing and recurring security-review evidence remain incomplete.",
+      "gaps": [
+        "Retain dated security-review/testing evidence appropriate to the risk, including independent/adversarial coverage when required."
       ]
     },
     {
@@ -2605,7 +4591,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.31"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/CONFIGURATION-BASELINE-DRIFT.md#8-environment-separation"
+          }
         }
+      ],
+      "rationale": "Development, preview, and production boundaries are documented and represented in source/configuration. Provider-side environment/secrets configuration has not been fully reconciled through the planned access/configuration review.",
+      "gaps": [
+        "Complete provider-side environment/configuration reconciliation and the applicable AR-001/configuration review."
       ]
     },
     {
@@ -2627,7 +4628,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.33"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#10-test-data-and-environment-rules"
+          }
         }
+      ],
+      "rationale": "Test-data minimization and environment rules are documented and tests use bounded demo data, but no complete dated review demonstrates that all test data paths remain within the defined classification/retention boundary.",
+      "gaps": [
+        "Retain a dated test-data/security review across current test fixtures, provider environments, and retention behavior."
       ]
     },
     {
@@ -2649,7 +4665,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#20-current-evidence-limitations"
+          }
         }
+      ],
+      "rationale": "Endpoint responsibilities and source controls are acknowledged, but the repository does not evidence a managed developer/admin endpoint security baseline or periodic verification. Source and CI controls do not substitute for endpoint controls.",
+      "gaps": [
+        "Define and verify an appropriate developer/admin endpoint security baseline before claiming this control is implemented."
       ]
     },
     {
@@ -2671,7 +4702,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-CI-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.34"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md#10-audit-evidence"
+          }
         }
+      ],
+      "rationale": "Audit-testing safeguards are documented conceptually, but no formal internal audit or authorized production audit test has been performed. The DEMO-287 Self-Assessment does not satisfy this control.",
+      "gaps": [
+        "Perform an appropriately authorized audit test with safeguards and retained evidence when a formal audit/testing activity occurs."
       ]
     },
     {
@@ -2680,7 +4726,7 @@
       "title": "Security-relevant logging",
       "kind": "control",
       "section": "Annex A · technological",
-      "status": "pass",
+      "status": "partial",
       "applicability": "applicable",
       "relationships": [
         {
@@ -2693,7 +4739,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.15"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/OPERATIONS.md#preserved-operational-contracts"
+          }
         }
+      ],
+      "rationale": "Security-relevant logging and audit-event mechanisms are implemented and validated in source/tests, but no dated recurring log-review operating record establishes continued effectiveness. The prior Pass therefore does not meet the current rubric.",
+      "gaps": [
+        "Retain a dated security-relevant log/audit review over the defined operating interval and resulting actions or no-change conclusion."
       ]
     },
     {
@@ -2702,7 +4763,7 @@
       "title": "Secure development lifecycle",
       "kind": "control",
       "section": "Annex A · technological",
-      "status": "pass",
+      "status": "partial",
       "applicability": "applicable",
       "relationships": [
         {
@@ -2715,7 +4776,22 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.25"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#3-existing-controlled-development-lifecycle"
+          }
         }
+      ],
+      "rationale": "The secure development lifecycle is documented and exercised through controlled changes, CI, tests, and PRs. On 2026-09-17, GitHub reports main unprotected with no repository rulesets and no merged PRs matching review:approved, so provider-enforced lifecycle/review effectiveness is not demonstrated.",
+      "gaps": [
+        "Establish or explicitly accept the lack of provider-enforced branch/review protection and retain an effectiveness review before considering Pass."
       ]
     },
     {
@@ -2724,7 +4800,7 @@
       "title": "Controlled technical changes",
       "kind": "control",
       "section": "Annex A · technological",
-      "status": "pass",
+      "status": "partial",
       "applicability": "applicable",
       "relationships": [
         {
@@ -2737,7 +4813,33 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.32"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/CHANGE-MANAGEMENT.md#controlled-record"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.32"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/registers/CONFIGURATION-REGISTER.md#9-github-configuration"
+          }
         }
+      ],
+      "rationale": "Technical changes use the DEMO controlled-change convention, CI, PRs, and release traceability. On 2026-09-17, main is unprotected, required-status-check enforcement is off, no repository rulesets are configured, and merged PR search returns no review:approved events, so change enforcement is not sufficient for Pass.",
+      "gaps": [
+        "Establish or explicitly accept provider-enforced branch/status/review controls and retain a dated effectiveness decision."
       ]
     },
     {
@@ -2748,7 +4850,7 @@
       "section": "Annex A · technological",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "Runtime time is provider-managed; no WizardGang clock service is in scope.",
+      "rationale": "Runtime time is provider-managed and WizardGang operates no clock-synchronization service in the scoped serverless architecture. Reassess if system-managed time sources or synchronization infrastructure enter scope.",
       "relationships": [
         {
           "relation": "evidence",
@@ -2759,6 +4861,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.17"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.17"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -2771,7 +4895,7 @@
       "section": "Annex A · technological",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "No managed VLAN exists; isolation uses platform, app, identity, and data boundaries.",
+      "rationale": "WizardGang operates no directly managed network fabric or VLAN boundary; isolation is implemented through provider, application, identity, and data boundaries. Reassess if a managed network-segmentation boundary is introduced.",
       "relationships": [
         {
           "relation": "evidence",
@@ -2782,6 +4906,28 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.22"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.22"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
           }
         }
       ]
@@ -2794,7 +4940,7 @@
       "section": "Annex A · technological",
       "status": "not-applicable",
       "applicability": "not-applicable",
-      "rationale": "This is not a managed workforce browsing environment and has no web filter.",
+      "rationale": "The scoped system is not a managed workforce browsing environment and does not operate a web-access filtering service. Reassess if managed user web access or a filtering boundary enters scope.",
       "relationships": [
         {
           "relation": "evidence",
@@ -2806,6 +4952,28 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.23"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.23"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SCOPE.md#11-applicability-and-na-decisions"
+          }
         }
       ]
     },
@@ -2815,9 +4983,9 @@
       "title": "Outsourced development oversight",
       "kind": "control",
       "section": "Annex A · technological",
-      "status": "not-applicable",
-      "applicability": "not-applicable",
-      "rationale": "No outsourced developer is in scope; AI assistance retains WizardGang accountability.",
+      "status": "partial",
+      "applicability": "applicable",
+      "rationale": "Supplier/provider controls and boundaries are documented for outsourced development oversight, including current AI-assisted engineering where applicable. The scheduled initial periodic supplier review is still incomplete, so provider use or source documentation is not treated as effectiveness evidence.",
       "relationships": [
         {
           "relation": "evidence",
@@ -2829,7 +4997,32 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-001"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.30"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md#8-data-and-ai-specific-supplier-controls"
+          }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.30"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#12-ai-assisted-engineering"
+          }
         }
+      ],
+      "gaps": [
+        "Complete the scheduled supplier review for the applicable GitHub/Cloudflare/Codex/Claude/dependency boundary and retain the dated result."
       ]
     }
   ]

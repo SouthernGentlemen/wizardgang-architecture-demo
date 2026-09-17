@@ -499,6 +499,8 @@ Primary supporting evidence includes:
 
 ## 13. Alignment
 
+**Controls:** ISO27001-9.3, ISO27001-9.3.1, ISO27001-9.3.2, ISO27001-9.3.3
+
 This process supports:
 
 - **ISO/IEC 27001:2022 §9.3 — Management review**;

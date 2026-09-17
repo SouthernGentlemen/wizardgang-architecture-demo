@@ -332,6 +332,8 @@ The management system currently includes or is expected to include:
 
 ## 19. Alignment
 
+**Controls:** ISO27001-4.4
+
 This document supports:
 
 - **ISO/IEC 27001:2022 §4.4 — Information security management system**

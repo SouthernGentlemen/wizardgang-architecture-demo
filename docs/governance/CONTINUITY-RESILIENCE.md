@@ -83,7 +83,6 @@ During disruption the operator must retain, or deliberately re-establish before 
 
 When the Worker/runtime remains healthy enough to serve requests safely, the design intends to keep these surfaces available:
 
-- `/operations` and operational dashboard routes;
 - `/api/operations/health`;
 - `/api/operations/version`;
 - `/offline`;
@@ -143,7 +142,7 @@ Current design behavior includes:
 
 - browser GETs to ordinary architecture routes redirecting to `/offline?from=...`;
 - API/non-HTML/write requests receiving safe JSON `503` responses;
-- `/operations`, `/api/operations/health`, `/api/operations/version`, `/offline`, and `/admin` remaining reachable where runtime permits;
+- `/api/operations/health`, `/api/operations/version`, `/offline`, and `/admin` remaining reachable where runtime permits;
 - no redirect loops;
 - no debugging-secret exposure.
 
@@ -709,7 +708,9 @@ Primary supporting records include:
 - `.github/workflows/deploy.yml`
 - `SECURITY.md`
 
-## 22. Alignment Statement
+## 22. Alignment
+
+**Controls:** ISO27001-A.5.29, ISO27001-A.5.30, ISO27001-A.8.14
 
 This plan supports the integrated WizardGang information-security and AI-management-system baseline by defining how approved security, data, supplier, operational, and AI boundaries are preserved during disruption and recovery.
 

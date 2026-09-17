@@ -439,6 +439,8 @@ Primary supporting material includes:
 
 ## 20. Alignment
 
+**Controls:** ISO27001-9.1, ISO27001-A.8.16
+
 This document supports:
 
 - **ISO/IEC 27001:2022 §9.1 — monitoring, measurement, analysis, and evaluation**;

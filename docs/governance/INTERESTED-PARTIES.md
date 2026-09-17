@@ -141,6 +141,14 @@ That published posture creates an internal requirement to:
 - review stale evidence;
 - and avoid `certified` or equivalent claims unless independent certification is actually obtained and evidenced.
 
+### 9.1 Climate-related interested-party requirements
+
+The 2024 climate-change amendment is included when evaluating relevant interested-party requirements. No specific climate-related legal, contractual, supplier, or user security requirement has been identified for the current public-demo scope as of 2026-09-17; that is a determination, not a permanent exclusion.
+
+The determination must be reconsidered when the obligation register, supplier terms, hosting footprint, stakeholder requirements, or management-system context changes. The first scheduled interested-party review has not yet operated, so this reassessment keeps clause 4.2 Partial.
+
+---
+
 ## 10. Determining Which Requirements Enter the Management System
 
 A requirement from an interested party is treated as relevant when it can materially affect:
@@ -206,6 +214,8 @@ Supporting evidence includes:
 - and AI/MCP evaluation evidence.
 
 ## 13. Alignment
+
+**Controls:** ISO27001-4.2
 
 This document supports:
 

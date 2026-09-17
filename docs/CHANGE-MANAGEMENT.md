@@ -61,3 +61,7 @@ v0.x.x | Unreleased
 Low risk covers documentation and non-authoritative presentation. Medium risk covers application behavior, routes, storage behavior, and new user workflows. High risk covers authentication, authorization, secrets, persistence schemas, deployment controls, privileged administration, and destructive data behavior. High-risk changes state explicit controls, validation, and a rollback target.
 
 The repository validates sequential IDs and controlled titles on every full check. Pull-request titles use the same syntax. `docs/history/CHANGE-MAP.csv` connects reconstructed commits to their original source objects without making those legacy objects part of the public branch graph.
+
+## Alignment
+
+**Controls:** ISO27001-A.8.32

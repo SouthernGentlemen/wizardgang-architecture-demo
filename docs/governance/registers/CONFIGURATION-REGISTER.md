@@ -148,13 +148,15 @@ Workflow source and release history provide controlled desired-state evidence.
 
 ### CFG-013 — repository permissions/protections — Partial
 
-Repository write/merge/protection settings exist outside source.
+Same-day GitHub API verification performed on **2026-09-17** found:
 
-Current caveat remains:
+- the `main` branch metadata reports `protected: false`;
+- required status-check enforcement is `off` with no configured contexts/checks in the branch metadata;
+- the repository rulesets endpoint returns no configured rulesets;
+- the classic protection-detail endpoint is not accessible to the connected integration, so no additional hidden setting is inferred from that denied request;
+- repository search reports **232 merged pull requests** and **0** merged pull requests matching GitHub's `review:approved` search qualifier as of the verification date.
 
-- no configured rulesets were observed through the available rulesets endpoint;
-- classic branch protection could not be fully verified through the available integration;
-- therefore enforcement must not be represented as verified.
+The repository has a strong controlled-change convention, CI validation, and PR history, but those process records are not equivalent to provider-enforced branch protection or required approving reviews. CFG-013 therefore remains **Partial**, and controls that depend on enforced source/review protection cannot be assessed as Pass from current provider state.
 
 ### CFG-014 — environment/secrets/variables — Partial
 
@@ -308,3 +310,7 @@ The project has a strong source-controlled configuration baseline for applicatio
 The principal remaining weakness is **provider-side reconciliation and recurring drift evidence**, especially for GitHub permission/protection state, Cloudflare account/resource settings, secret inventory review, and automated external drift detection.
 
 **Current posture:** Partial overall configuration-management assurance; aligned/uncertified only.
+
+## Alignment
+
+**Controls:** ISO27001-A.8.9, ISO27001-A.8.32

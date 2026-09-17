@@ -480,6 +480,8 @@ Until those activities occur, this methodology demonstrates that the process is 
 
 ## 23. Alignment
 
+**Controls:** ISO27001-6.1, ISO27001-6.1.1, ISO27001-6.1.2, ISO27001-6.1.3
+
 This methodology supports:
 
 - ISO/IEC 27001:2022 §6.1.1 — actions addressing risks and opportunities;

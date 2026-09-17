@@ -427,6 +427,8 @@ Primary supporting material includes:
 
 ## 18. Alignment
 
+**Controls:** ISO27001-8.1, ISO27001-A.5.37, ISO27001-A.8.6
+
 This document supports:
 
 - **ISO/IEC 27001:2022 §8.1 — Operational planning and control**

@@ -403,6 +403,8 @@ Evidence supporting this responsibility model includes:
 
 ## 11. Alignment
 
+**Controls:** ISO27001-5.3, ISO27001-A.5.2, ISO27001-A.5.3
+
 This document supports:
 
 - **ISO/IEC 27001:2022 §5.3 — Organizational roles, responsibilities and authorities**

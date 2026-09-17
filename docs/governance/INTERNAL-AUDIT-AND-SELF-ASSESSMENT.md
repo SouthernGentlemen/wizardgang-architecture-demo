@@ -530,6 +530,8 @@ Primary supporting material includes:
 
 ## 20. Alignment
 
+**Controls:** ISO27001-9.2, ISO27001-9.2.1, ISO27001-9.2.2, ISO27001-A.5.35, ISO27001-A.5.36, ISO27001-A.8.34
+
 This program supports:
 
 - **ISO/IEC 27001:2022 §9.2.1 — General internal-audit requirement**;

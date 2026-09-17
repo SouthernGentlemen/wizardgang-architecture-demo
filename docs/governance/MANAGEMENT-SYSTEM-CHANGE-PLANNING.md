@@ -295,6 +295,8 @@ Primary related evidence includes:
 
 ## 13. Alignment
 
+**Controls:** ISO27001-6.3
+
 This document supports:
 
 - **ISO/IEC 27001:2022 §6.3 — planning changes to the information security management system**;

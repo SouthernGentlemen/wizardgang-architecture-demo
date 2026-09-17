@@ -454,6 +454,8 @@ Primary evidence includes:
 
 ## 21. Alignment
 
+**Controls:** ISO27001-A.5.10, ISO27001-A.5.15, ISO27001-A.5.16, ISO27001-A.5.18, ISO27001-A.8.2, ISO27001-A.8.3, ISO27001-A.8.4, ISO27001-A.8.18
+
 This procedure principally strengthens evidence for:
 
 - ISO/IEC 27001 A.5.9 — inventory of information and associated assets;

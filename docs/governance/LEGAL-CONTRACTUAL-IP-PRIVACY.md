@@ -291,6 +291,8 @@ The Management-System Owner reviews the obligation register at least annually an
 
 ## 17. Alignment
 
+**Controls:** ISO27001-A.5.31, ISO27001-A.5.32, ISO27001-A.5.33, ISO27001-A.5.34
+
 This procedure principally supports:
 
 - ISO/IEC 27001:2022 Annex A legal/statutory/regulatory/contractual, intellectual-property, records, privacy, supplier, incident, and compliance-review controls;
