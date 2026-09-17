@@ -38,8 +38,8 @@ const CHECKS = [
 ] as const;
 
 function statusClass(value: string): string {
-  if (['met', 'demonstrated', 'passed'].includes(value)) return 'badge badge-ok';
-  if (['partial', 'not-observed'].includes(value)) return 'badge badge-warn';
+  if (['pass', 'passed'].includes(value)) return 'badge badge-ok';
+  if (value === 'partial') return 'badge badge-warn';
   if (['gap', 'failed'].includes(value)) return 'badge badge-down';
   return 'badge';
 }
@@ -51,10 +51,7 @@ function frameworkRecords(framework: string): ComplianceRecord[] {
 function frameworkPosture(framework: string): string {
   const records = frameworkRecords(framework);
   const counts = deriveComplianceCounts(records);
-  if (framework === 'wcag-2.2') {
-    return `${counts.byStatus.demonstrated} demonstrated · ${counts.byStatus['not-observed']} not observed`;
-  }
-  return `${counts.byStatus.met} met · ${counts.byStatus.partial} partial · ${counts.byStatus.gap} gap`;
+  return `${counts.byStatus.pass} pass · ${counts.byStatus.partial} partial · ${counts.byStatus.gap} gap · ${counts.byStatus['not-applicable']} not applicable`;
 }
 
 function evidenceLinks(ids: string[]): string {

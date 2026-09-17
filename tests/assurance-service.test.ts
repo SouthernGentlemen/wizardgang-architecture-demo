@@ -46,7 +46,7 @@ describe('common canonical assurance query and presentation service', () => {
   it('derives filter vocabulary, counts, lookup, and URLs from registered contracts', () => {
     expect(assuranceFilterNames('risks')).toEqual(['framework', 'status', 'residual']);
     expect(assuranceFilterValues('compliance', 'framework')).toEqual(['iso-27001', 'iso-42001', 'wcag-2.2']);
-    expect(assuranceFilterValues('compliance', 'status')).toEqual(['met', 'partial', 'gap', 'not-applicable', 'demonstrated', 'not-observed']);
+    expect(assuranceFilterValues('compliance', 'status')).toEqual(['pass', 'partial', 'gap', 'not-applicable']);
     expect(assuranceFilterValues('risks', 'status')).toEqual(['open', 'treating']);
     expect(assuranceFilterValues('risks', 'residual')).toEqual(['low', 'moderate', 'high', 'critical']);
     const normalized = normalizeAssuranceFilters('compliance', new URLSearchParams('level=AA&framework=wcag-2.2&status=partial'));

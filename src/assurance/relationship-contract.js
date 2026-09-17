@@ -1,5 +1,15 @@
+export const ASSURANCE_DOCUMENTATION_SOURCE = 'github.repository-markdown';
+const DOCUMENTATION_REFERENCE_PATTERN = /^(?!\/)(?!.*(?:^|\/)\.\.(?:\/|$))([^#\r\n]+\.md)#([a-z0-9][a-z0-9-]*)$/;
+
+export function parseAssuranceDocumentationReference(value) {
+  if (typeof value !== 'string') return null;
+  const match = value.match(DOCUMENTATION_REFERENCE_PATTERN);
+  return match ? { repositoryPath: match[1], anchor: match[2] } : null;
+}
+
 const definitions = {
   evidence: { target: 'records', kind: 'evidence' },
+  documentation: { target: 'documentation' },
   compliance: { target: 'records', kind: 'compliance' },
   frameworks: { target: 'frameworks' },
   claims: { target: 'records', kind: 'claims' },
@@ -128,6 +138,11 @@ export function validateAssuranceRelationshipSet(
     const key = `${relation}\u0000${fromKey}\u0000${toKey}`;
     if (seen.has(key)) errors.push(`${edgeLabel}: duplicate relationship edge`);
     seen.add(key);
+    if (definition.target === 'documentation') {
+      if (relationship.to.source !== ASSURANCE_DOCUMENTATION_SOURCE) errors.push(`${edgeLabel}.to.source: documentation source must be ${ASSURANCE_DOCUMENTATION_SOURCE}`);
+      if (!parseAssuranceDocumentationReference(relationship.to.native)) errors.push(`${edgeLabel}.to.native: documentation target must be a repository-relative .md path plus GitHub heading anchor`);
+      continue;
+    }
     if (options.internalTargetsOnly && definition.target !== 'records') continue;
     const identityTargets = context.targetIdentitiesByRelationship?.get?.(relation);
     if (identityTargets) {

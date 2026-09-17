@@ -30,17 +30,21 @@ Each architecture demo change must:
 
 ## Assurance editing workflow
 
-Canonical assurance JSON is the only authority for assurance record state. `assurance/registry.json` inventories every canonical structured resource, including non-runtime document metadata used to project governance Markdown.
+Canonical assurance JSON is the authority for compliance status, applicability, rationale, gaps, lifecycle, and evidence relationships. `assurance/registry.json` inventories every canonical structured resource, including non-runtime document metadata used to project governance Markdown. Governing Markdown is authoritative for human-readable policy/process text and reciprocal documentation traceability, but it is never a status store.
 
-For the security risk register, AI risk register, incident/exercise register, and ISO 27001/42001 SoAs:
+For ISO/IEC 27001, ISO/IEC 42001, and WCAG 2.2 compliance records:
 
-1. Edit record state only in the canonical JSON dataset registered for that resource.
-2. Edit document ownership, review cadence, approval method, or presentation-document identity in `assurance/presentation/documents.json` when those fields are not already owned by the record dataset.
-3. Keep manually authored Markdown outside generated markers limited to narrative such as purpose, methodology, interpretation, and governance process. Do not restate status, applicability, rationale, evidence, ownership, lifecycle/review state, or counts there.
-4. Run `npm run generate:assurance-summaries` to refresh deterministic Markdown projections.
-5. Run `npm run validate:assurance-summaries` or the full `npm run check` before review.
+1. Edit assessment state only in the registered canonical JSON record. Use only `pass`, `partial`, `gap`, or `not-applicable`; do not infer a status from document wording.
+2. Keep `rationale` and `gaps` in structured data. During the staged DEMO-285 through DEMO-289 migration those fields remain schema-optional; the later completeness gate makes the required combinations enforceable.
+3. Add governing-document traceability with a `documentation` relationship targeting `github.repository-markdown`; the native target is a repository-relative `.md` path followed by a GitHub heading anchor. Do not replace or repurpose an `evidence` relationship.
+4. In each non-dated governing document referenced by a compliance record, maintain an Alignment section with a `Controls:` line naming the canonical record IDs documented there. Every named record must link back to that document. Release records, SoAs, and assessment/evaluation reports are dated-record exemptions.
+5. Run `npm run validate:assurance-documentation`. It validates file existence, heading anchors, and reciprocal `Controls:` mappings only; it never reads prose to derive or validate compliance status.
+6. Run `npm run generate:assurance-summaries` after structured assurance changes, then `npm run validate:assurance-summaries` or the full `npm run check`.
+7. Refresh lifecycle source approval for each changed public structured dataset so publication remains bound to the exact Git blob revision.
 
-The ISO SoA Markdown files are fully generated. Risk and incident/exercise Markdown preserves narrative around explicitly delimited generated sections. Generated Markdown must never become an input to runtime code, APIs, dashboards, or assurance-state validators.
+For the security risk register, AI risk register, incident/exercise register, and generated ISO SoAs, continue editing record state only in the canonical registered JSON. Edit presentation-document ownership, review cadence, approval method, or identity in `assurance/presentation/documents.json` when those fields are not already owned by the record dataset. Keep authored Markdown outside generated markers limited to narrative such as purpose, methodology, interpretation, governance process, Alignment metadata, and control documentation; do not duplicate structured status or counts.
+
+The ISO SoA Markdown files are fully generated. Risk and incident/exercise Markdown preserves narrative around explicitly delimited generated sections. Generated Markdown never becomes input to runtime code, APIs, dashboards, or status/applicability assessment. The documentation validator may inspect Markdown headings and `Controls:` lines for structural traceability only; dated generated SoAs are exempt from reciprocal `Controls:` metadata.
 
 Reportable rows in the asset/access, competence/awareness, configuration, cryptography/secrets, data/retention, obligations, recovery-test, security-maintenance, security-testing, and supplier registers are owned by registry-declared `assurance/governance/*.json` partitions. Edit those JSON records, then run `npm run generate:governance-registers`. Rating rules, templates, trigger matrices, policy prose, rationale, and professional judgment remain authored in Markdown outside deterministic governance markers.
 

@@ -331,18 +331,22 @@ Rules:
 
 The generated SoA Markdown files preserve their WG-SOA identities and approval provenance, but they are not independent status/rationale authorities.
 
-## 13. Evidence Status Semantics
+## 13. Assessment Rubric
 
-The public compliance system uses:
+The public compliance assessment vocabulary is shared across ISO/IEC 27001, ISO/IEC 42001, and WCAG 2.2: `pass`, `partial`, `gap`, and `not-applicable`. These values are engineering assessment results for the stated repository scope; they are not certification scores and do not establish framework-level conformance.
 
-- **Met** — applicable requirement is implemented and supported by sufficient current evidence for the claimed scope;
-- **Partial** — meaningful implementation/evidence exists but a material portion, recurring activity, validation, independence, freshness, or effectiveness proof remains incomplete;
-- **Gap** — an applicable requirement materially lacks implementation or evidence;
-- **N/A** — requirement is outside current scope, with explicit rationale and reassessment trigger.
+- **Pass** — the scoped requirement is implemented, documented in governing Markdown, supported by current operating or validation evidence, and has no known nonconformity for that assessed scope. A pass record carries a rationale and at least one documentation relationship.
+- **Partial** — meaningful implementation or documentation exists, but a material portion, recurring activity, operating record, validation, independence, freshness, or effectiveness proof remains incomplete. A partial record states the rationale, names the remaining gaps, and links its governing documentation.
+- **Gap** — the requirement is not implemented, not documented, or has an evaluated failure that prevents a pass or partial conclusion. A gap record states the rationale and the missing work; documentation is linked when a governing section exists.
+- **Not applicable** — the requirement is outside the assessed scope. ISO Annex A exclusions require scope justification and a reassessment trigger; WCAG criteria may use N/A only when the triggering content or behavior is absent from the current public scope. ISO/IEC management-system clauses 4–10 are not treated as N/A.
+
+A requirement that implies recurring activity remains at most **Partial** until the repository has an actual operating record for that activity. Policy prose or schema support alone is not proof that a recurring process operated.
+
+Compliance records remain authoritative for status, rationale, gaps, applicability, and evidence relationships. Governing Markdown supplies human-readable control documentation and reciprocal traceability through an **Alignment** section containing a `Controls:` line. Documentation links identify a repository-relative Markdown file path plus GitHub heading anchor and resolve against the deployed commit. Validation of that documentation contract reads headings and `Controls:` lines only; it never derives or changes compliance status from prose. Dated release records, Statements of Applicability, and assessment/evaluation reports are exempt from the reciprocal `Controls:` requirement.
 
 Supporting registers may use additional workflow statuses such as Planned, Active, Restricted, Watch, At risk, Failed, or Passed with limitations. These are not automatically interchangeable with compliance statuses.
 
-A `Planned` exercise is not a `Met` control.
+A planned exercise is not a passed control.
 
 ## 14. Evidence Freshness
 

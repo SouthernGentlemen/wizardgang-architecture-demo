@@ -20,7 +20,7 @@ const manifest = readJsonFile(root, manifestPath);
 const framework = manifestResource.framework;
 const partitionResources = (manifestResource.resources ?? []).filter((resource) => resource.kind === 'compliance' && resource.role === 'partition');
 const evidenceIds = inventory.idsForKind('evidence');
-const allowedStatuses = new Set(['demonstrated', 'partial', 'gap', 'not-observed']);
+const allowedStatuses = new Set(['pass', 'partial', 'gap', 'not-applicable']);
 const freshnessRules = new Set(['release-bound', 'content-change', 'interaction-change', 'quarterly-manual']);
 const principleMap = new Map([['1', 'Perceivable'], ['2', 'Operable'], ['3', 'Understandable'], ['4', 'Robust']]);
 
@@ -66,10 +66,12 @@ for (const record of records) {
   seen.add(record.id);
   if (record.kind !== 'criterion') errors.push(`${record.id}: canonical WCAG record kind is invalid`);
   if (!allowedStatuses.has(record.status)) errors.push(`${record.id}: unsupported registry status ${record.status}`);
-  if (record.applicability !== 'applicable') errors.push(`${record.id}: WCAG applicability must remain explicit`);
+  const expectedApplicability = record.status === 'not-applicable' ? 'not-applicable' : 'applicable';
+  if (record.applicability !== expectedApplicability) errors.push(`${record.id}: WCAG applicability must agree with status`);
   if ('criterionId' in record || 'name' in record || 'evidenceIds' in record) errors.push(`${record.id}: legacy WCAG compatibility fields are not allowed`);
   if (!record.implementation || !record.owner) errors.push(`${record.id}: implementation and owner are required`);
-  if (!Array.isArray(record.gaps) || record.gaps.length === 0) errors.push(`${record.id}: explicit gaps/limitations are required`);
+  if (record.rationale !== undefined && (typeof record.rationale !== 'string' || record.rationale.trim().length < 10)) errors.push(`${record.id}: rationale must be a meaningful string when supplied`);
+  if (record.gaps !== undefined && (!Array.isArray(record.gaps) || record.gaps.length === 0 || record.gaps.some((gap) => typeof gap !== 'string' || gap.trim().length === 0))) errors.push(`${record.id}: gaps must be a non-empty string array when supplied`);
   if (!['partial', 'none'].includes(record.validation?.automated) || record.validation?.manual !== 'required') errors.push(`${record.id}: validation semantics changed`);
   const refs = assuranceRelationshipIds(record.relationships, 'evidence');
   if (refs.length === 0) errors.push(`${record.id}: evidence relationships are required`);

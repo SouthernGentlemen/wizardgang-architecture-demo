@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "id": "wcag-2-2-public-registry",
   "visibility": "public",
-  "scope": "Current public demo routes and repository implementations; statuses describe implementation/evidence inventory, not WCAG conformance.",
+  "scope": "Current public demo routes and repository implementations; statuses describe bounded assessment results and evidence posture, not WCAG conformance.",
   "statusDefinitions": {
-    "demonstrated": "Deliberate implementation or teaching evidence exists; no criterion pass is asserted.",
-    "partial": "Related implementation exists; criterion-specific scope or manual evidence is incomplete.",
-    "gap": "Criterion-specific implementation or evaluation evidence is incomplete.",
-    "not-observed": "Triggering content or behavior was not observed in documented current scope; reassess when scope changes."
+    "pass": "Self-evaluated as satisfied for the documented current scope with implementation, governing documentation, and current evidence; no framework-level conformance is asserted.",
+    "partial": "Meaningful implementation or evidence exists, but criterion-specific scope, manual evaluation, operating evidence, freshness, or another material part remains incomplete.",
+    "gap": "Criterion-specific implementation or evaluation has a known failure or missing requirement.",
+    "not-applicable": "Triggering content or behavior is absent from documented current scope; reassess applicability when scope changes."
   },
   "validationDefinitions": {
     "automated": "partial means bounded axe-core evidence only; none means no criterion-specific automated accessibility determination is registered.",

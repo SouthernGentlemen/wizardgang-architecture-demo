@@ -9,6 +9,7 @@ import {
   primaryAssuranceDatasetResource,
 } from './record-discovery.js';
 import {
+  ASSURANCE_DOCUMENTATION_SOURCE,
   assuranceIdentityKey,
   assuranceRelationshipDefinition,
   validateAssuranceRelationshipSet,
@@ -19,7 +20,7 @@ import type { RiskRating as DerivedRiskRating } from './risk-rating.js';
 
 export type EvidenceKind = 'source' | 'test' | 'workflow' | 'governance-record' | 'release' | 'live-route' | 'observation';
 export type FreshnessPolicy = 'release-bound' | 'event-driven' | 'observation-bound';
-export type AssurancePosture = 'met' | 'partial' | 'gap' | 'not-applicable';
+export type AssurancePosture = 'pass' | 'partial' | 'gap' | 'not-applicable';
 export type RiskFramework = 'security' | 'ai';
 export type RiskRating = DerivedRiskRating;
 export type RiskStatus = 'open' | 'treating';
@@ -28,12 +29,13 @@ export type IncidentStatus = 'investigating' | 'contained' | 'recovering' | 'mon
 export type ExerciseStatus = 'planned' | 'in-progress' | 'completed' | 'follow-up-open' | 'closed' | 'superseded';
 export type AdvisorySeverity = 'low' | 'moderate' | 'high' | 'critical';
 export type ComplianceFramework = 'iso-27001' | 'iso-42001' | 'wcag-2.2';
-export type ComplianceStatus = AssurancePosture | 'demonstrated' | 'not-observed';
+export type ComplianceStatus = AssurancePosture;
 export type ComplianceLevel = 'A' | 'AA' | 'AAA';
 export type ComplianceKind = 'clause' | 'control' | 'criterion';
 
 export type AssuranceRelationshipName =
   | 'evidence'
+  | 'documentation'
   | 'compliance'
   | 'frameworks'
   | 'claims'
@@ -418,24 +420,30 @@ for (const [dataset, records] of Object.entries(runtimeRecordCollections)) {
     for (const relationship of relationships) {
       const definition = assuranceRelationshipDefinition(relationship.relation);
       if (!definition) throw new Error(`Assurance runtime record ${record.id} declares invalid relation ${relationship.relation}.`);
-      const targetResource = resourceByReportingSource.get(relationship.to.source);
-      if (!targetResource) {
-        throw new Error(`Assurance runtime record ${record.id} has dangling ${relationship.relation} target source ${relationship.to.source}.`);
-      }
-      if (resource.visibility === 'public' && targetResource.visibility === 'private') {
-        throw new Error(`Assurance runtime record ${record.id} leaks public ${relationship.relation} relationship to private source ${relationship.to.source}.`);
-      }
-      if (definition.target === 'records') {
-        const target = runtimeIdentityIndex.get(assuranceIdentityKey(relationship.to));
-        if (!target || target.dataset !== definition.kind || (definition.recordKind && (target.record as { kind?: unknown }).kind !== definition.recordKind)) {
-          throw new Error(`Assurance runtime record ${record.id} has dangling ${relationship.relation} identity ${relationship.to.source}:${relationship.to.native}.`);
+      if (definition.target === 'documentation') {
+        if (relationship.to.source !== ASSURANCE_DOCUMENTATION_SOURCE) {
+          throw new Error(`Assurance runtime record ${record.id} has invalid documentation source ${relationship.to.source}.`);
         }
-      } else if (definition.target === 'frameworks') {
-        if (targetResource.framework?.id !== relationship.to.native) {
-          throw new Error(`Assurance runtime record ${record.id} has dangling framework identity ${relationship.to.source}:${relationship.to.native}.`);
+      } else {
+        const targetResource = resourceByReportingSource.get(relationship.to.source);
+        if (!targetResource) {
+          throw new Error(`Assurance runtime record ${record.id} has dangling ${relationship.relation} target source ${relationship.to.source}.`);
         }
-      } else if (definition.target === 'governance-documents' && targetResource.id !== 'presentation.documents') {
-        throw new Error(`Assurance runtime record ${record.id} has invalid governance document source ${relationship.to.source}.`);
+        if (resource.visibility === 'public' && targetResource.visibility === 'private') {
+          throw new Error(`Assurance runtime record ${record.id} leaks public ${relationship.relation} relationship to private source ${relationship.to.source}.`);
+        }
+        if (definition.target === 'records') {
+          const target = runtimeIdentityIndex.get(assuranceIdentityKey(relationship.to));
+          if (!target || target.dataset !== definition.kind || (definition.recordKind && (target.record as { kind?: unknown }).kind !== definition.recordKind)) {
+            throw new Error(`Assurance runtime record ${record.id} has dangling ${relationship.relation} identity ${relationship.to.source}:${relationship.to.native}.`);
+          }
+        } else if (definition.target === 'frameworks') {
+          if (targetResource.framework?.id !== relationship.to.native) {
+            throw new Error(`Assurance runtime record ${record.id} has dangling framework identity ${relationship.to.source}:${relationship.to.native}.`);
+          }
+        } else if (definition.target === 'governance-documents' && targetResource.id !== 'presentation.documents') {
+          throw new Error(`Assurance runtime record ${record.id} has invalid governance document source ${relationship.to.source}.`);
+        }
       }
       const references = reverseRelationshipIndex.get(relationship.to.native) ?? [];
       references.push({ sourceId: record.id, dataset, relation: relationship.relation });

@@ -20,7 +20,7 @@ const expectedAnnexRefs = [
 const frameworkOwner = (registry as any).datasets.find((resource: any) => resource.id === 'compliance.iso-27001');
 
 function postureCounts(records: typeof complianceData.records) {
-  const counts: Record<string, number> = { met: 0, partial: 0, gap: 0, 'not-applicable': 0 };
+  const counts: Record<string, number> = { pass: 0, partial: 0, gap: 0, 'not-applicable': 0 };
   for (const record of records.filter((record) => record.kind === 'control')) counts[record.status] = (counts[record.status] ?? 0) + 1;
   return counts;
 }
@@ -47,7 +47,7 @@ describe('ISO/IEC 27001:2022 canonical public compliance records', () => {
     const counts = postureCounts(complianceData.records);
     const summary = readFileSync('docs/governance/soa/ISO-27001-SOA.md', 'utf8');
     expect(Object.values(counts).reduce((sum, count) => sum + count, 0)).toBe(annex.length);
-    expect(summary).toContain(`| ${annex.length} | ${counts.met} | ${counts.partial} | ${counts.gap} | ${counts['not-applicable']} |`);
+    expect(summary).toContain(`| ${annex.length} | ${counts.pass} | ${counts.partial} | ${counts.gap} | ${counts['not-applicable']} |`);
     expect(JSON.stringify(complianceData)).not.toContain('notApplicable');
     expect(complianceData.sourceSoa).toMatchObject({
       id: 'WG-SOA-001', governanceDocumentReference: 'WG-SOA-001', status: 'approved',

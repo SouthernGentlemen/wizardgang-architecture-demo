@@ -24,7 +24,7 @@ Generated Markdown is not an input to runtime, validation, APIs, or dashboards.
 
 ## Summary
 
-| Controls | Met | Partial | Gap | N/A |
+| Controls | Pass | Partial | Gap | N/A |
 |---:|---:|---:|---:|---:|
 | 93 | 3 | 62 | 3 | 25 |
 

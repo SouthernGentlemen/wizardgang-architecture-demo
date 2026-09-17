@@ -21,7 +21,8 @@
         "exercises",
         "advisories",
         "governanceDocuments",
-        "objectives"
+        "objectives",
+        "documentation"
       ]
     },
     "identity": {
@@ -107,50 +108,256 @@
       },
       "allOf": [
         {
-          "if": { "properties": { "relation": { "const": "evidence" } } },
-          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/evidenceId" } } } } }
+          "if": {
+            "properties": {
+              "relation": {
+                "const": "evidence"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "to": {
+                "properties": {
+                  "native": {
+                    "$ref": "#/$defs/evidenceId"
+                  }
+                }
+              }
+            }
+          }
         },
         {
-          "if": { "properties": { "relation": { "const": "compliance" } } },
-          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/complianceId" } } } } }
+          "if": {
+            "properties": {
+              "relation": {
+                "const": "compliance"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "to": {
+                "properties": {
+                  "native": {
+                    "$ref": "#/$defs/complianceId"
+                  }
+                }
+              }
+            }
+          }
         },
         {
-          "if": { "properties": { "relation": { "const": "frameworks" } } },
-          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/frameworkId" } } } } }
+          "if": {
+            "properties": {
+              "relation": {
+                "const": "frameworks"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "to": {
+                "properties": {
+                  "native": {
+                    "$ref": "#/$defs/frameworkId"
+                  }
+                }
+              }
+            }
+          }
         },
         {
-          "if": { "properties": { "relation": { "const": "claims" } } },
-          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/claimId" } } } } }
+          "if": {
+            "properties": {
+              "relation": {
+                "const": "claims"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "to": {
+                "properties": {
+                  "native": {
+                    "$ref": "#/$defs/claimId"
+                  }
+                }
+              }
+            }
+          }
         },
         {
-          "if": { "properties": { "relation": { "const": "risks" } } },
-          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/riskId" } } } } }
+          "if": {
+            "properties": {
+              "relation": {
+                "const": "risks"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "to": {
+                "properties": {
+                  "native": {
+                    "$ref": "#/$defs/riskId"
+                  }
+                }
+              }
+            }
+          }
         },
         {
-          "if": { "properties": { "relation": { "const": "controls" } } },
-          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/controlId" } } } } }
+          "if": {
+            "properties": {
+              "relation": {
+                "const": "controls"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "to": {
+                "properties": {
+                  "native": {
+                    "$ref": "#/$defs/controlId"
+                  }
+                }
+              }
+            }
+          }
         },
         {
-          "if": { "properties": { "relation": { "const": "incidents" } } },
-          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/incidentId" } } } } }
+          "if": {
+            "properties": {
+              "relation": {
+                "const": "incidents"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "to": {
+                "properties": {
+                  "native": {
+                    "$ref": "#/$defs/incidentId"
+                  }
+                }
+              }
+            }
+          }
         },
         {
-          "if": { "properties": { "relation": { "const": "exercises" } } },
-          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/exerciseId" } } } } }
+          "if": {
+            "properties": {
+              "relation": {
+                "const": "exercises"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "to": {
+                "properties": {
+                  "native": {
+                    "$ref": "#/$defs/exerciseId"
+                  }
+                }
+              }
+            }
+          }
         },
         {
-          "if": { "properties": { "relation": { "const": "advisories" } } },
-          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/advisoryId" } } } } }
+          "if": {
+            "properties": {
+              "relation": {
+                "const": "advisories"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "to": {
+                "properties": {
+                  "native": {
+                    "$ref": "#/$defs/advisoryId"
+                  }
+                }
+              }
+            }
+          }
         },
         {
-          "if": { "properties": { "relation": { "const": "governanceDocuments" } } },
-          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/governanceDocumentId" } } } } }
+          "if": {
+            "properties": {
+              "relation": {
+                "const": "governanceDocuments"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "to": {
+                "properties": {
+                  "native": {
+                    "$ref": "#/$defs/governanceDocumentId"
+                  }
+                }
+              }
+            }
+          }
         },
         {
-          "if": { "properties": { "relation": { "const": "objectives" } } },
-          "then": { "properties": { "to": { "properties": { "native": { "$ref": "#/$defs/objectiveId" } } } } }
+          "if": {
+            "properties": {
+              "relation": {
+                "const": "objectives"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "to": {
+                "properties": {
+                  "native": {
+                    "$ref": "#/$defs/objectiveId"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "relation": {
+                "const": "documentation"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "to": {
+                "properties": {
+                  "source": {
+                    "$ref": "#/$defs/documentationSource"
+                  },
+                  "native": {
+                    "$ref": "#/$defs/documentationReference"
+                  }
+                }
+              }
+            }
+          }
         }
       ]
+    },
+    "documentationSource": {
+      "const": "github.repository-markdown"
+    },
+    "documentationReference": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^#\\r\\n]+\\.md#[a-z0-9][a-z0-9-]*$"
     }
   }
 }

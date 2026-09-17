@@ -2,7 +2,7 @@
 
 The whole site follows WCAG 2.2-oriented engineering practices, with Level AAA as the engineering target wherever the success criteria apply. Accessibility defaults belong to ordinary rendering: there is no separate accessible version of the site. `/demos#accessibility` makes twelve behaviors explicit through an operable interaction and an opt-in annotated-failure teaching preset. Failure examples are static code and explanation inside a titled `srcdoc` frame; intentionally inaccessible controls are not served as a normal public application state.
 
-Status language is **WCAG 2.2 engineering evidence — no conformance claim**. The repository does not claim Level A, AA, or AAA conformance or certification. Criterion-level status describes implementation and evidence only; a demonstrated or partial record is not a success-criterion result. Automated checks are partial evidence and never prove AAA conformance.
+Status language is **WCAG 2.2 engineering evidence — no conformance claim**. The repository does not claim Level A, AA, or AAA conformance or certification. Criterion-level status records a bounded engineering assessment only; a `pass` record does not establish WCAG level conformance for the product as a whole. Automated checks are partial evidence and never prove AAA conformance.
 
 ## Global rendering baseline
 
@@ -31,10 +31,10 @@ The W3C criterion IDs, names, and levels are kept distinct from WizardGang-added
 
 ### Registry status vocabulary
 
-- `demonstrated` — a deliberate implementation or teaching comparison exists with repository evidence; no criterion pass is asserted.
-- `partial` — related implementation exists, but criterion-specific scope or manual evidence is incomplete.
-- `gap` — criterion-specific implementation or evaluation evidence is known to be incomplete.
-- `not-observed` — triggering content or behavior was not observed in the documented current scope; applicability must be reassessed when that scope changes.
+- `pass` — the criterion is self-evaluated as satisfied for the documented current scope with implementation, governing documentation, and current evidence; this does not establish framework-level conformance or certification.
+- `partial` — meaningful implementation/evidence exists, but criterion-specific scope, manual evaluation, operating evidence, freshness, or another material part remains incomplete.
+- `gap` — criterion-specific implementation or evaluation has a known failure or missing requirement.
+- `not-applicable` — the triggering content or behavior is absent from the documented current scope; applicability must be reassessed when that scope changes.
 
 The registry is reassessed before releases that change public accessibility behavior, on relevant content or interaction changes, and at least every 90 days for the documented manual review. These freshness rules describe when evidence must be revisited; they do not create a conformance claim.
 

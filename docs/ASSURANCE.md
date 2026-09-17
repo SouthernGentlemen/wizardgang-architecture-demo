@@ -32,6 +32,10 @@ Canonical risks store scores rather than duplicated rating labels. The shared ri
 
 Compliance is registry-driven across ISO/IEC 27001, ISO/IEC 42001, and WCAG 2.2 resources/partitions. Source JSON remains framework-specific while runtime records are normalized by shared model/service code. Framework/status/level filter vocabularies come from registry metadata, registered schemas, or shared derivations rather than hardcoded handler inventories.
 
+All three compliance frameworks use the same assessment vocabulary: `pass`, `partial`, `gap`, and `not-applicable`. DEMO-285 mechanically maps the earlier labels (`met` → `pass`, `demonstrated` → `partial`, and `not-observed` → `not-applicable`) without reassessing any record. Optional `rationale` and `gaps` fields are part of the shared contract during the staged migration and become mandatory only when the later completeness gate is introduced.
+
+Compliance records may carry a `documentation` relationship whose target source is `github.repository-markdown` and whose native identity is a repository-relative `.md` path plus GitHub heading anchor, for example `docs/governance/registers/SUPPLIER-REGISTER.md#3-current-supplier-summary`. Presentation resolves that reference against the exact deployed commit; branch-relative documentation URLs are not treated as deployment evidence. Governing documents reciprocate the relationship with a `Controls:` line inside an Alignment section. The documentation validator checks only file existence, heading anchors, and that bidirectional mapping; it never reads Markdown to infer status. Dated release records, SoAs, and assessment/evaluation reports are exempt from reciprocal Alignment metadata.
+
 Public record IDs remain stable lookup and anchor keys:
 
 - `ISO27001-<reference>` for ISO/IEC 27001 records
@@ -54,6 +58,6 @@ Structured assurance sources are repository-governed and read-only at runtime. T
 
 ## CI integrity gates
 
-`npm run validate:assurance` and the broader `npm run check` suite validate registry completeness, schemas, lifecycle/disclosure review, source-revision approval, immutable identity, global duplicates, referential integrity, risk derivation, filter contracts, publication, generated summaries, monitoring ownership, and public disclosure boundaries.
+`npm run validate:assurance` and the broader `npm run check` suite validate registry completeness, schemas, lifecycle/disclosure review, source-revision approval, immutable identity, global duplicates, referential integrity, documentation file/anchor reciprocity, risk derivation, filter contracts, publication, generated summaries, monitoring ownership, and public disclosure boundaries.
 
 The current API tests assert one canonical relationship/query/export contract, deterministic pagination, revision conflicts, relationship validation, derived-field rejection, and disclosure-safe structured and provider projections.
