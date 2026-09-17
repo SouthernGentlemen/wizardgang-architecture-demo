@@ -6,17 +6,14 @@
       "reference": "2.1.1",
       "title": "Keyboard",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Lab uses native keyboard controls and a click-only failure comparison.",
+      "implementation": "2.1.1 Keyboard was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope manual review remains open; no criterion pass is asserted."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -57,25 +54,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.1.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-211-keyboard"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.1.1 Keyboard across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.1.2",
       "reference": "2.1.2",
       "title": "No Keyboard Trap",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for No Keyboard Trap; full criterion assessment remains open.",
+      "implementation": "2.1.2 No Keyboard Trap was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -105,25 +111,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-007"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.1.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-212-no-keyboard-trap"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.1.2 No Keyboard Trap across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.1.3",
       "reference": "2.1.3",
       "title": "Keyboard (No Exception)",
       "kind": "criterion",
-      "status": "gap",
+      "status": "pass",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Keyboard (No Exception).",
+      "implementation": "2.1.3 Keyboard (No Exception) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Implementation and manual evaluation remain open."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -142,8 +157,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.1.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-213-keyboard-no-exception"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.1.3 Keyboard (No Exception) across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.1.4",
@@ -153,13 +180,13 @@
       "status": "not-applicable",
       "level": "A",
       "applicability": "not-applicable",
-      "implementation": "No single-character shortcut is intentionally registered in the current public interaction model.",
+      "implementation": "2.1.4 Character Key Shortcuts was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Reassess applicability when relevant public scope changes."
+        "Reassess applicability when the triggering content or behavior enters the public scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -179,25 +206,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-006"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.1.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-214-character-key-shortcuts"
+          }
         }
-      ]
+      ],
+      "rationale": "The DEMO-289 content and behavior inventory found no triggering content for 2.1.4 Character Key Shortcuts across all canonical public HTML pages and every configured audit state in English and Arabic; applicability must be reassessed if that content or behavior is introduced."
     },
     {
       "id": "WCAG-2.2.1",
       "reference": "2.2.1",
       "title": "Timing Adjustable",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Timing Adjustable; full criterion assessment remains open.",
+      "implementation": "2.2.1 Timing Adjustable was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -227,8 +263,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-007"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.2.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-221-timing-adjustable"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.2.1 Timing Adjustable across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.2.2",
@@ -238,13 +286,13 @@
       "status": "not-applicable",
       "level": "A",
       "applicability": "not-applicable",
-      "implementation": "No moving/blinking/scrolling content requiring pause-stop-hide is intentionally registered.",
+      "implementation": "2.2.2 Pause, Stop, Hide was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Reassess applicability when relevant public scope changes."
+        "Reassess applicability when the triggering content or behavior enters the public scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -264,25 +312,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-006"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.2.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-222-pause-stop-hide"
+          }
         }
-      ]
+      ],
+      "rationale": "The DEMO-289 content and behavior inventory found no triggering content for 2.2.2 Pause, Stop, Hide across all canonical public HTML pages and every configured audit state in English and Arabic; applicability must be reassessed if that content or behavior is introduced."
     },
     {
       "id": "WCAG-2.2.3",
       "reference": "2.2.3",
       "title": "No Timing",
       "kind": "criterion",
-      "status": "gap",
+      "status": "pass",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for No Timing.",
+      "implementation": "2.2.3 No Timing was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Implementation and manual evaluation remain open."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -301,25 +358,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.2.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-223-no-timing"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.2.3 No Timing across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.2.4",
       "reference": "2.2.4",
       "title": "Interruptions",
       "kind": "criterion",
-      "status": "gap",
+      "status": "pass",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Interruptions.",
+      "implementation": "2.2.4 Interruptions was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Implementation and manual evaluation remain open."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -338,25 +404,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.2.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-224-interruptions"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.2.4 Interruptions across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.2.5",
       "reference": "2.2.5",
       "title": "Re-authenticating",
       "kind": "criterion",
-      "status": "gap",
+      "status": "pass",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Re-authenticating.",
+      "implementation": "2.2.5 Re-authenticating was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Implementation and manual evaluation remain open."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -375,25 +450,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.2.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-225-re-authenticating"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.2.5 Re-authenticating across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.2.6",
       "reference": "2.2.6",
       "title": "Timeouts",
       "kind": "criterion",
-      "status": "gap",
+      "status": "pass",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Timeouts.",
+      "implementation": "2.2.6 Timeouts was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Implementation and manual evaluation remain open."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -412,8 +496,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.2.6"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-226-timeouts"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.2.6 Timeouts across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.3.1",
@@ -423,13 +519,13 @@
       "status": "not-applicable",
       "level": "A",
       "applicability": "not-applicable",
-      "implementation": "No flashing content is intentionally registered in the current public scope.",
+      "implementation": "2.3.1 Three Flashes or Below Threshold was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Reassess applicability when relevant public scope changes."
+        "Reassess applicability when the triggering content or behavior enters the public scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -449,8 +545,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-006"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.3.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-231-three-flashes-or-below-threshold"
+          }
         }
-      ]
+      ],
+      "rationale": "The DEMO-289 content and behavior inventory found no triggering content for 2.3.1 Three Flashes or Below Threshold across all canonical public HTML pages and every configured audit state in English and Arabic; applicability must be reassessed if that content or behavior is introduced."
     },
     {
       "id": "WCAG-2.3.2",
@@ -460,13 +568,13 @@
       "status": "not-applicable",
       "level": "AAA",
       "applicability": "not-applicable",
-      "implementation": "No flashing content is intentionally registered in the current public scope.",
+      "implementation": "2.3.2 Three Flashes was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Reassess applicability when relevant public scope changes."
+        "Reassess applicability when the triggering content or behavior enters the public scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -486,25 +594,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-006"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.3.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-232-three-flashes"
+          }
         }
-      ]
+      ],
+      "rationale": "The DEMO-289 content and behavior inventory found no triggering content for 2.3.2 Three Flashes across all canonical public HTML pages and every configured audit state in English and Arabic; applicability must be reassessed if that content or behavior is introduced."
     },
     {
       "id": "WCAG-2.3.3",
       "reference": "2.3.3",
       "title": "Animation from Interactions",
       "kind": "criterion",
-      "status": "gap",
+      "status": "pass",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Animation from Interactions.",
+      "implementation": "2.3.3 Animation from Interactions was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Implementation and manual evaluation remain open."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -523,25 +640,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.3.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-233-animation-from-interactions"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.3.3 Animation from Interactions across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.4.1",
       "reference": "2.4.1",
       "title": "Bypass Blocks",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Bypass Blocks; full criterion assessment remains open.",
+      "implementation": "2.4.1 Bypass Blocks was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "partial",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -582,25 +708,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.4.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-241-bypass-blocks"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.4.1 Bypass Blocks across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.4.2",
       "reference": "2.4.2",
       "title": "Page Titled",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Page Titled; full criterion assessment remains open.",
+      "implementation": "2.4.2 Page Titled was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "partial",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -641,25 +776,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.4.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-242-page-titled"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.4.2 Page Titled across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.4.3",
       "reference": "2.4.3",
       "title": "Focus Order",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Lab demonstrates logical focus order and dialog focus management.",
+      "implementation": "2.4.3 Focus Order was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope manual review remains open; no criterion pass is asserted."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -700,25 +844,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.4.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-243-focus-order"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.4.3 Focus Order across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.4.4",
       "reference": "2.4.4",
       "title": "Link Purpose (In Context)",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Link Purpose (In Context); full criterion assessment remains open.",
+      "implementation": "2.4.4 Link Purpose (In Context) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "partial",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -759,25 +912,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.4.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-244-link-purpose-in-context"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.4.4 Link Purpose (In Context) across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.4.5",
       "reference": "2.4.5",
       "title": "Multiple Ways",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Multiple Ways; full criterion assessment remains open.",
+      "implementation": "2.4.5 Multiple Ways was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -807,25 +969,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-007"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.4.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-245-multiple-ways"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.4.5 Multiple Ways across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.4.6",
       "reference": "2.4.6",
       "title": "Headings and Labels",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Headings and Labels; full criterion assessment remains open.",
+      "implementation": "2.4.6 Headings and Labels was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "partial",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -866,25 +1037,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.4.6"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-246-headings-and-labels"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.4.6 Headings and Labels across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.4.7",
       "reference": "2.4.7",
       "title": "Focus Visible",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Lab demonstrates a visible 3 CSS-pixel focus token and removed-outline failure.",
+      "implementation": "2.4.7 Focus Visible was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope manual review remains open; no criterion pass is asserted."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -925,25 +1105,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.4.7"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-247-focus-visible"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.4.7 Focus Visible across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.4.8",
       "reference": "2.4.8",
       "title": "Location",
       "kind": "criterion",
-      "status": "gap",
+      "status": "pass",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Location.",
+      "implementation": "2.4.8 Location was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Implementation and manual evaluation remain open."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -962,24 +1151,36 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.4.8"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-248-location"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.4.8 Location across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.4.9",
       "reference": "2.4.9",
       "title": "Link Purpose (Link Only)",
       "kind": "criterion",
-      "status": "gap",
+      "status": "partial",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Link Purpose (Link Only).",
+      "implementation": "2.4.9 Link Purpose (Link Only) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Implementation and manual evaluation remain open."
+        "Complete the remaining criterion-specific AAA/manual coverage identified in the DEMO-289 evaluation report."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -999,25 +1200,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.4.9"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-249-link-purpose-link-only"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 reviewed the current implementation and public content for 2.4.9 Link Purpose (Link Only); meaningful support is present, but the full AAA condition was not established for every page/state and localized workflow, so the result is Partial."
     },
     {
       "id": "WCAG-2.4.10",
       "reference": "2.4.10",
       "title": "Section Headings",
       "kind": "criterion",
-      "status": "gap",
+      "status": "pass",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Section Headings.",
+      "implementation": "2.4.10 Section Headings was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Implementation and manual evaluation remain open."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -1036,25 +1246,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.4.10"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-2410-section-headings"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.4.10 Section Headings across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.4.11",
       "reference": "2.4.11",
       "title": "Focus Not Obscured (Minimum)",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Lab demonstrates content clearance and a focus-obscuring sticky-footer failure.",
+      "implementation": "2.4.11 Focus Not Obscured (Minimum) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope manual review remains open; no criterion pass is asserted."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -1095,25 +1314,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.4.11"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-2411-focus-not-obscured-minimum"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.4.11 Focus Not Obscured (Minimum) across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.4.12",
       "reference": "2.4.12",
       "title": "Focus Not Obscured (Enhanced)",
       "kind": "criterion",
-      "status": "gap",
+      "status": "pass",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Focus Not Obscured (Enhanced).",
+      "implementation": "2.4.12 Focus Not Obscured (Enhanced) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Implementation and manual evaluation remain open."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -1132,25 +1360,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.4.12"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-2412-focus-not-obscured-enhanced"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.4.12 Focus Not Obscured (Enhanced) across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.4.13",
       "reference": "2.4.13",
       "title": "Focus Appearance",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "Lab demonstrates enhanced focus appearance as AAA-oriented guidance only.",
+      "implementation": "2.4.13 Focus Appearance was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope manual review remains open; no criterion pass is asserted."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -1191,8 +1428,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.4.13"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-2413-focus-appearance"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.4.13 Focus Appearance across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.5.1",
@@ -1202,13 +1451,13 @@
       "status": "not-applicable",
       "level": "A",
       "applicability": "not-applicable",
-      "implementation": "No multipoint or path-based pointer gesture is intentionally required in current public interactions.",
+      "implementation": "2.5.1 Pointer Gestures was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Reassess applicability when relevant public scope changes."
+        "Reassess applicability when the triggering content or behavior enters the public scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -1228,25 +1477,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-006"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.5.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-251-pointer-gestures"
+          }
         }
-      ]
+      ],
+      "rationale": "The DEMO-289 content and behavior inventory found no triggering content for 2.5.1 Pointer Gestures across all canonical public HTML pages and every configured audit state in English and Arabic; applicability must be reassessed if that content or behavior is introduced."
     },
     {
       "id": "WCAG-2.5.2",
       "reference": "2.5.2",
       "title": "Pointer Cancellation",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Pointer Cancellation; full criterion assessment remains open.",
+      "implementation": "2.5.2 Pointer Cancellation was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -1276,25 +1534,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-007"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.5.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-252-pointer-cancellation"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.5.2 Pointer Cancellation across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.5.3",
       "reference": "2.5.3",
       "title": "Label in Name",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Label in Name; full criterion assessment remains open.",
+      "implementation": "2.5.3 Label in Name was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "partial",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -1335,8 +1602,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.5.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-253-label-in-name"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.5.3 Label in Name across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.5.4",
@@ -1346,13 +1625,13 @@
       "status": "not-applicable",
       "level": "A",
       "applicability": "not-applicable",
-      "implementation": "No motion-actuation control is intentionally registered in the current public scope.",
+      "implementation": "2.5.4 Motion Actuation was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Reassess applicability when relevant public scope changes."
+        "Reassess applicability when the triggering content or behavior enters the public scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -1372,24 +1651,36 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-006"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.5.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-254-motion-actuation"
+          }
         }
-      ]
+      ],
+      "rationale": "The DEMO-289 content and behavior inventory found no triggering content for 2.5.4 Motion Actuation across all canonical public HTML pages and every configured audit state in English and Arabic; applicability must be reassessed if that content or behavior is introduced."
     },
     {
       "id": "WCAG-2.5.5",
       "reference": "2.5.5",
       "title": "Target Size (Enhanced)",
       "kind": "criterion",
-      "status": "gap",
+      "status": "partial",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Target Size (Enhanced).",
+      "implementation": "2.5.5 Target Size (Enhanced) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Implementation and manual evaluation remain open."
+        "Review each sub-44 CSS-pixel target against the enhanced target-size criterion exceptions and remediate any non-exempt target."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -1409,25 +1700,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.5.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-255-target-size-enhanced"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 measured rendered actionable targets across the evaluated scope. The 24 CSS-pixel minimum gate passed, while 44 CSS-pixel enhanced-target coverage still contains controls requiring criterion-exception review, so 2.5.5 remains Partial."
     },
     {
       "id": "WCAG-2.5.6",
       "reference": "2.5.6",
       "title": "Concurrent Input Mechanisms",
       "kind": "criterion",
-      "status": "gap",
+      "status": "pass",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Concurrent Input Mechanisms.",
+      "implementation": "2.5.6 Concurrent Input Mechanisms was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Implementation and manual evaluation remain open."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -1446,25 +1746,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.5.6"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-256-concurrent-input-mechanisms"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.5.6 Concurrent Input Mechanisms across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.5.7",
       "reference": "2.5.7",
       "title": "Dragging Movements",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Lab provides move buttons as a non-drag alternative.",
+      "implementation": "2.5.7 Dragging Movements was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope manual review remains open; no criterion pass is asserted."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -1505,25 +1814,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.5.7"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-257-dragging-movements"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.5.7 Dragging Movements across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-2.5.8",
       "reference": "2.5.8",
       "title": "Target Size (Minimum)",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Lab demonstrates 24×24 CSS-pixel targets or the spacing exception.",
+      "implementation": "2.5.8 Target Size (Minimum) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope manual review remains open; no criterion pass is asserted."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -1564,8 +1882,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.5.8"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-258-target-size-minimum"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 2.5.8 Target Size (Minimum) across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     }
   ]
 }

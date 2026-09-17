@@ -12,7 +12,7 @@ The shared runtime targets at least 44×44 CSS pixels for actionable controls wh
 
 Shared CSS removes nonessential animation and smooth scrolling when `prefers-reduced-motion: reduce` is active, preserves focus and boundaries in forced-colors environments, uses logical properties for direction-sensitive shared navigation, and keeps the shell responsive for narrow layouts and zoom/reflow. These are engineering defaults, not a conformance result.
 
-The global baseline does not replace manual evaluation. Keyboard order, screen-reader semantics, focus visibility/obscuring, zoom and reflow, forced colors, target sizing, language/bidi behavior, actual computed contrast, text spacing, content comprehension, and other content-dependent success criteria still require manual verification on representative pages and releases.
+The global baseline does not replace criterion-appropriate evaluation. Keyboard order, screen-reader semantics, focus visibility/obscuring, zoom and reflow, forced colors, target sizing, language/bidi behavior, actual computed contrast, text spacing, content comprehension, and other content-dependent success criteria still require the appropriate scripted, manual, environmental, or assistive-technology verification before a status can be strengthened.
 
 ## Public WCAG 2.2 criterion registry
 
@@ -27,7 +27,7 @@ W3C remains the primary source for criterion identity and meaning:
 - Understanding Conformance: `https://www.w3.org/WAI/WCAG22/Understanding/conformance.html`
 - Understanding Techniques: `https://www.w3.org/WAI/WCAG22/Understanding/understanding-techniques.html`
 
-The W3C criterion IDs, names, and levels are kept distinct from WizardGang-added implementation/evidence annotations. Techniques are informative; they are not substituted for the success criteria. Automated evidence is always marked partial or absent, and manual evaluation remains explicitly required.
+The W3C criterion IDs, names, and levels are kept distinct from WizardGang-added implementation/evidence annotations. Techniques are informative; they are not substituted for the success criteria. Automated evidence is always bounded, and manual or assistive-technology evaluation remains explicitly required when the criterion cannot be established by the executed methods.
 
 ### Registry status vocabulary
 
@@ -80,16 +80,17 @@ Repository regression coverage verifies the shared runtime baseline, inert teach
 
 The current baseline includes source-level review of the canonical public route declarations, global page shell/runtime styles, accessibility laboratory, public GraphQL surface, OpenAPI generated UI, WCAG registry/validator, localization acceptance coverage, and accessibility regression tests.
 
-The site-wide automated gate is described in `docs/SITE-ACCESSIBILITY-VERIFICATION.md`. Its deterministic checks and local Chromium/axe audit cover the canonical public-route inventory, configured critical states, all six locales, Arabic RTL, representative themes, 320 CSS-pixel reflow, reduced motion, forced colors, and keyboard smoke behavior. A green run means only that no automatically detectable violation was observed in that bounded matrix; it is not a WCAG 2.2 or Level AAA conformance claim.
+The site-wide automated gate is described in `docs/SITE-ACCESSIBILITY-VERIFICATION.md`. Its deterministic checks and local Chromium/axe audit cover the canonical public-route inventory, configured critical states, all six locales for deterministic localization coverage, English and Arabic for the browser evaluation, representative themes, 320 CSS-pixel reflow, zoom-equivalent narrow viewports, text-spacing overrides, rendered target geometry, computed contrast, focus traversal/visibility/obscuring, reduced motion, and forced colors. A green run means the complete automated/scripted matrix executed successfully and produced no new or unrecorded regression beyond explicitly documented expected findings; it is not a WCAG 2.2 or Level AAA conformance claim.
 
-Manual verification remains pending in `docs/accessibility-manual-verification.json`. Human keyboard traversal, named screen-reader review, 400% zoom and text-spacing review, rendered contrast interpretation, RTL visual/focus-order review, target-size exception review, dynamic announcement quality, and authenticated-state review must not be marked complete until actually performed and recorded with a reviewer, date, observed result, and evidence.
+DEMO-289 records five content/source review procedures as completed in `docs/accessibility-manual-verification.json`: link purpose, section headings, unusual words/abbreviations/supplemental explanations, language of parts, and reading-level content review. Those rows record the actual evaluator, date, observed result, and `WG-A11Y-001` evaluation reference. They are not represented as human browser or assistive-technology testing.
+
+Human browser and environment-dependent verification remains pending for keyboard sequence, named screen-reader review, visual focus and focus-obscuring review, 400% zoom/reflow observation, forced-colors observation, target-size exception review, Arabic RTL visual/focus-order review, accessible authentication, error handling, and other procedures still marked `pending` in the structured matrix. No screen-reader result may be inferred from automation or source review.
 
 ## Repository checks
 
 `tests/interface.test.ts` verifies the shared localization/accessibility shell on representative ordinary pages as well as the sandbox boundary, accessible and annotated-failure fixtures, locally executed axe protocol, default mode, and all twelve criterion cards. `tests/wcag-aaa-remediation.test.ts` locks the shared baseline and prevents reintroduction of live broken controls or the public embedded GraphiQL UI. `tests/assurance-wcag.test.ts` verifies registry exhaustiveness, A/AA/AAA level counts, removal of obsolete 4.1.1, evidence resolution, W3C source identity, non-conformance wording, validation distinction, and freshness metadata. `tests/assurance-compliance-api.test.ts` verifies reporting filters, derived counts, relationships, and exact-record API lookup; `tests/demo-258-minimal-assurance.test.ts` locks the single-page assurance boundary, while `tests/assurance-workbench-accessibility.test.ts` covers framework/inspector tab semantics, keyboard history behavior, live announcements, and narrow layouts. `npm run validate:wcag` repeats the canonical ID/name/level validation and evidence checks from a standalone repository validator.
 
-CI also validates types, localization, contracts, security, dependencies, migrations, the Worker build, and the site-wide local Chromium/axe audit. Automated browser evidence remains distinct from human browser and assistive-technology review; CI does not replace the pending manual matrix.
-
+CI also validates types, localization, contracts, security, dependencies, migrations, the Worker build, and the site-wide local Chromium/axe audit. Automated and scripted browser evidence remains distinct from manual content/source review, human browser verification, and assistive-technology review; CI does not manufacture completion of pending manual procedures.
 
 ## Assurance workbench interaction
 

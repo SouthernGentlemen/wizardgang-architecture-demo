@@ -7,7 +7,7 @@ const registryPath = path.join(governanceRoot, 'REFERENCE-REGISTRY.json');
 const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
 const errors = [];
 const canonical = new Map();
-const referencePattern = /^WG-(?:GOV|POL|REG|OBJ|SOA|AIA)-\d{3}$/;
+const referencePattern = /^WG-(?:GOV|POL|REG|OBJ|SOA|AIA|A11Y)-\d{3}$/;
 
 function walk(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {

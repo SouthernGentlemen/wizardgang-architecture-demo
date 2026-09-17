@@ -36,12 +36,24 @@ describe('WCAG 2.2 canonical public criterion registry', () => {
     expect(JSON.stringify({ manifest, criteria }).toLowerCase()).not.toContain('wcag 2.2 compliant');
   });
 
-  it('distinguishes partial/no automation from required manual validation for every criterion', () => {
+  it('enforces validation, applicability, rationale, gaps, and documentation semantics for every criterion', () => {
     for (const record of criteria) {
       expect(['partial', 'none']).toContain(record.validation.automated);
       expect(record.validation.manual).toBe('required');
-      expect(record.gaps.length).toBeGreaterThan(0);
       expect(record.applicability).toBe(record.status === 'not-applicable' ? 'not-applicable' : 'applicable');
+      expect(record.rationale.trim().length).toBeGreaterThan(0);
+      expect(assuranceRelationshipIds(record.relationships, 'documentation').length).toBeGreaterThan(0);
+
+      const gaps = 'gaps' in record ? record.gaps : [];
+      if (record.status === 'partial' || record.status === 'gap') {
+        expect(gaps.length, record.id).toBeGreaterThan(0);
+      } else if (record.status === 'pass') {
+        expect(gaps, record.id).toEqual([]);
+      } else {
+        expect(gaps.length, record.id).toBeGreaterThan(0);
+        expect(gaps.join(' ').toLowerCase(), record.id).toContain('reassess');
+        expect(record.rationale.toLowerCase(), record.id).toContain('no triggering content');
+      }
     }
   });
 

@@ -122,6 +122,13 @@
       "reviewedAt": "2026-09-17T10:53:48Z",
       "reviewer": "controlled-repository-self-assessment",
       "basis": "DEMO-288 owner/operator Self-Assessment reassesses all ISO/IEC 42001:2023 clause and Annex A records under the current rubric, records the DEMO-284 MCP boundary tests in the governed security-testing register, preserves all evidence relationships, and approves disclosure of the exact resulting public compliance source revision. This is not an internal audit or certification claim."
+    },
+    {
+      "id": "review-demo289-wcag-evaluation",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-17T12:00:00Z",
+      "reviewer": "controlled-repository-accessibility-evaluation",
+      "basis": "DEMO-289 evaluates all 86 WCAG 2.2 A/AA/AAA criteria across every canonical public HTML page and configured state in English and Arabic, records only executed manual procedures, preserves every evidence relationship, and makes no WCAG conformance or certification claim."
     }
   ],
   "sourceApprovals": [
@@ -472,6 +479,36 @@
       "resource": "compliance.iso-42001",
       "revision": "b70cea20bf31f36b15bd4f82370562a196181b7f",
       "reviewRef": "review-demo288-iso42001-reassessment"
+    },
+    {
+      "id": "source-compliance-wcag-2-2-801b6e79d00e",
+      "resource": "compliance.wcag-2.2",
+      "revision": "801b6e79d00ee27d2ad232e5157405bd2d05fdbc",
+      "reviewRef": "review-demo289-wcag-evaluation"
+    },
+    {
+      "id": "source-compliance-wcag-2-2-perceivable-dc6784e704a8",
+      "resource": "compliance.wcag-2.2.perceivable",
+      "revision": "dc6784e704a82f8eee118b8d672ff6eb22d8777e",
+      "reviewRef": "review-demo289-wcag-evaluation"
+    },
+    {
+      "id": "source-compliance-wcag-2-2-operable-832e7c086268",
+      "resource": "compliance.wcag-2.2.operable",
+      "revision": "832e7c086268925e7df121556d466aad9bbf8c7d",
+      "reviewRef": "review-demo289-wcag-evaluation"
+    },
+    {
+      "id": "source-compliance-wcag-2-2-understandable-fcb66aead7a2",
+      "resource": "compliance.wcag-2.2.understandable",
+      "revision": "fcb66aead7a2c49d1529bf7a77029affabed211a",
+      "reviewRef": "review-demo289-wcag-evaluation"
+    },
+    {
+      "id": "source-compliance-wcag-2-2-robust-39db0388c98f",
+      "resource": "compliance.wcag-2.2.robust",
+      "revision": "39db0388c98f7c8cc123fc5281aeccd02c1aa22b",
+      "reviewRef": "review-demo289-wcag-evaluation"
     }
   ],
   "records": [

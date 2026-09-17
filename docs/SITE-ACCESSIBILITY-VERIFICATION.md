@@ -2,13 +2,14 @@
 
 Accessibility and localization are application-wide invariants. They are not capabilities confined to the demonstrations at `/demos#accessibility` and `/demos#i18n`, and a new public route does not opt out of either invariant.
 
-The verification model has three separate evidence levels:
+The verification model has four separate evidence levels:
 
 1. **Deterministic repository checks** derive public page coverage from the canonical application route registry, verify generated route-manifest parity, exercise structural HTML requirements, and render critical states across every supported locale.
-2. **Browser automation** starts the repository-built Worker locally, drives installed Chromium through the DevTools protocol, and runs the locked `axe-core` dependency against the actual rendered application. It covers every public route in English and Arabic, critical state fixtures, representative dark/light themes, 320 CSS-pixel reflow samples, reduced-motion and forced-colors media features, and representative keyboard interaction patterns.
-3. **Manual verification** is recorded in `docs/accessibility-manual-verification.json`. A procedure that was not actually performed remains `pending`; it is never inferred from CI.
+2. **Browser automation** starts the repository-built Worker locally, drives installed Chromium through the DevTools protocol, and runs the locked `axe-core` dependency against the actual rendered application. It covers every public route in English and Arabic plus the configured state fixtures.
+3. **Scripted browser evaluation** exercises the DEMO-289 matrix over the declared English/Arabic scope for 320 CSS-pixel reflow, 200%/400% zoom-equivalent viewports, WCAG text-spacing overrides, rendered target geometry, computed contrast, focus traversal/visibility/obscuring, reduced motion, and forced colors. These checks are deterministic browser evidence; they are not represented as human observation.
+4. **Manual/source/environment verification** is recorded in `docs/accessibility-manual-verification.json`. A procedure that was not actually performed remains `pending`; it is never inferred from CI. Source/content reviews are distinguished from human browser, real-environment, and assistive-technology procedures.
 
-A clean automated result means **no automatically detectable violation observed in the bounded automated matrix**. It does not mean WCAG conformance, Level AAA conformance, certification, or completion of manual success-criterion review.
+A green automated/scripted run means **the complete bounded matrix executed successfully and produced no new or unrecorded regression beyond explicitly documented expected findings**. It does not mean WCAG conformance, Level AAA conformance, certification, or completion of unperformed manual success-criterion review.
 
 ## Commands
 
@@ -83,38 +84,52 @@ The deterministic gate protects, among other things:
 - RTL technical-content isolation expectations;
 - shared focus, target-size, reduced-motion, forced-colors, reflow, and bidi CSS contracts.
 
-The Chromium gate adds rendered-browser evidence for:
+The Chromium gates add rendered-browser evidence for:
 
 - `axe-core` WCAG-tagged rules;
-- English and Arabic RTL on every public route;
-- explicit critical state fixtures;
-- both themes on representative coverage;
+- English and Arabic RTL on every canonical public route and configured state;
+- both themes on the base site audit's representative coverage;
 - page-level horizontal overflow and horizontally clipped controls;
 - image alternatives, table headers, duplicate IDs, landmarks, skip target, and locale selector;
-- 320 CSS-pixel viewport samples;
-- reduced-motion and forced-colors media activation;
-- keyboard focus progression and representative theme, language-selector, and disclosure activation.
+- 320 CSS-pixel reflow and 200%/400% zoom-equivalent layout checks;
+- WCAG text-spacing overrides;
+- rendered target geometry, including the 24 CSS-pixel minimum gate and a 44 CSS-pixel enhanced-target inventory;
+- computed text contrast through `axe-core`'s rendered color-contrast rule;
+- forward/reverse keyboard traversal, focus visibility, focus obscuring, and trap detection;
+- reduced-motion behavior with active-animation inspection;
+- forced-colors emulation with rendered focusable-state inspection;
+- browser-derived heading, link, language-part, terminology, abbreviation, and reading-complexity inventories used by the bounded content/source review.
 
 The browser harness deliberately uses the locked `axe-core` dependency and Chromium already available in CI instead of adding a large browser-test framework or external service.
 
-## What remains manual
+## What remains manual or environment-dependent
 
-Automation cannot establish whether every success criterion is satisfied in context. The structured manual matrix therefore remains authoritative for procedures such as:
+Automation cannot establish whether every success criterion is satisfied in context. The structured manual matrix therefore remains authoritative.
 
-- complete keyboard sequence and focus-order review;
+DEMO-289 records these content/source review procedures as completed because they were actually reviewed over the declared English/Arabic page/state inventory and recorded with evaluator/date/result/reference:
+
+- link purpose/context;
+- section heading structure/usefulness;
+- language of parts;
+- unusual words, abbreviations, and supplemental explanation;
+- reading-level content review.
+
+The following procedures remain pending unless and until their structured rows record a real execution:
+
+- complete human keyboard sequence and focus-order review;
 - named screen-reader testing and announcement quality;
-- visible focus and focus-not-obscured review;
+- human visible-focus and focus-not-obscured review;
 - 400% zoom and 320 CSS-pixel human reflow review;
-- text resizing and text-spacing overrides;
-- actual rendered contrast interpretation in both themes;
+- human text-resize/text-spacing observation beyond scripted geometry;
+- rendered contrast interpretation beyond the automated rule;
 - forced-colors and reduced-motion human observation;
 - Arabic RTL visual/focus-order review;
-- target-size measurement and exception review;
-- accessible authentication behavior in the required environment;
+- target-size exception review for enhanced 44 CSS-pixel coverage;
+- accessible authentication behavior in the required password-manager/credential environment;
 - error identification/recovery;
-- link purpose, section headings, consistent help, unusual words, abbreviations, and supplemental explanations.
+- consistent-help review.
 
-Never fill `reviewer`, `reviewDate`, `observedResult`, or evidence references unless that procedure was actually executed. An automated green build does not convert a pending manual row into a pass.
+Never fill `reviewer`, `reviewDate`, `observedResult`, or evidence references unless that procedure was actually executed. An automated green build does not convert a pending manual row into a pass, and source review is not represented as screen-reader or human browser testing.
 
 ## WCAG assurance evidence
 
@@ -122,12 +137,12 @@ Never fill `reviewer`, `reviewDate`, `observedResult`, or evidence references un
 
 That relationship does **not** change criterion semantics. In particular:
 
-- a clean axe sweep does not make a criterion `demonstrated`;
-- manual-only criteria require actual manual evidence;
+- a clean axe sweep does not make a criterion `pass`;
+- a criterion that depends on an unperformed manual, environment, or assistive-technology procedure remains `partial` when the current evidence cannot support a pass;
 - applicability stays explicit;
-- known gaps remain gaps until resolved and evidenced;
-- `not-observed` is not a substitute for evaluating applicable content;
+- known `gap` results remain gaps until resolved and evidenced;
+- `not-applicable` is used only when the triggering content or behavior is absent from the evaluated scope and must be reassessed when that scope changes;
 - evidence references must resolve through the canonical evidence registry;
 - freshness requirements continue to apply.
 
-Only strengthen a canonical WCAG status after the implementation exists, the required automated/manual evidence has actually been produced, and the criterion-specific gap text can truthfully be narrowed. Automated tools identify a bounded set of machine-detectable failures; they cannot evaluate all WCAG requirements or certify Level AAA.
+Only strengthen a canonical WCAG status after the implementation exists, the required automated/scripted/manual evidence has actually been produced, and the criterion-specific gap text can truthfully be narrowed. Automated tools identify a bounded set of machine-detectable failures; they cannot evaluate all WCAG requirements or certify Level AAA.

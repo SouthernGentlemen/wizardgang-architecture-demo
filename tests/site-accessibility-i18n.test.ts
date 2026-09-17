@@ -153,15 +153,37 @@ describe('DEMO-238 site-wide accessibility assurance', () => {
     expect(runtimeStyles).toContain('@media (forced-colors: active)');
   });
 
-  it('keeps manual-only evidence explicitly pending until a human performs it', () => {
+  it('keeps unperformed manual evidence pending and requires provenance for completed reviews', () => {
     expect(manualMatrix.schemaVersion).toBe(1);
     expect(manualMatrix.records.length).toBeGreaterThanOrEqual(17);
+    const completedAreas = [
+      'Language of parts',
+      'Link purpose',
+      'Reading level content review',
+      'Section headings',
+      'Unusual words, abbreviations and supplemental explanations',
+    ];
+    expect(manualMatrix.records.filter((record) => record.status === 'completed').map((record) => record.criterionArea).sort())
+      .toEqual([...completedAreas].sort());
+
     for (const record of manualMatrix.records) {
-      expect(record.status).toBe('pending');
-      expect(record.observedResult).toMatch(/pending/i);
-      expect(record.reviewDate).toBeNull();
-      expect(record.reviewer).toBeNull();
+      if (completedAreas.includes(record.criterionArea)) {
+        expect(record.status, record.criterionArea).toBe('completed');
+        expect(record.observedResult, record.criterionArea).not.toMatch(/pending/i);
+        expect(record.reviewDate, record.criterionArea).toBe('2026-09-17');
+        expect(record.reviewer, record.criterionArea).toMatch(/repository evaluation agent/i);
+        expect(record.evidenceReference, record.criterionArea).toBe('WG-A11Y-001');
+      } else {
+        expect(record.status, record.criterionArea).toBe('pending');
+        expect(record.observedResult, record.criterionArea).toMatch(/pending/i);
+        expect(record.reviewDate, record.criterionArea).toBeNull();
+        expect(record.reviewer, record.criterionArea).toBeNull();
+      }
     }
+
+    const screenReader = manualMatrix.records.find((record) => record.criterionArea === 'Screen-reader semantics');
+    expect(screenReader?.status).toBe('pending');
+    expect(screenReader?.reviewer).toBeNull();
   });
 });
 

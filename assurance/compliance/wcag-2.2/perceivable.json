@@ -6,17 +6,14 @@
       "reference": "1.1.1",
       "title": "Non-text Content",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Lab compares useful alt text with a missing-alt failure.",
+      "implementation": "1.1.1 Non-text Content was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "partial",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope manual review remains open; no criterion pass is asserted."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -57,8 +54,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.1.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-111-non-text-content"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 1.1.1 Non-text Content across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-1.2.1",
@@ -68,13 +77,13 @@
       "status": "not-applicable",
       "level": "A",
       "applicability": "not-applicable",
-      "implementation": "No time-based media is intentionally registered in the current public scope.",
+      "implementation": "1.2.1 Audio-only and Video-only (Prerecorded) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Reassess applicability when relevant public scope changes."
+        "Reassess applicability when the triggering content or behavior enters the public scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -94,8 +103,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-006"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.2.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-121-audio-only-and-video-only-prerecorded"
+          }
         }
-      ]
+      ],
+      "rationale": "The DEMO-289 content and behavior inventory found no triggering content for 1.2.1 Audio-only and Video-only (Prerecorded) across all canonical public HTML pages and every configured audit state in English and Arabic; applicability must be reassessed if that content or behavior is introduced."
     },
     {
       "id": "WCAG-1.2.2",
@@ -105,13 +126,13 @@
       "status": "not-applicable",
       "level": "A",
       "applicability": "not-applicable",
-      "implementation": "No time-based media is intentionally registered in the current public scope.",
+      "implementation": "1.2.2 Captions (Prerecorded) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Reassess applicability when relevant public scope changes."
+        "Reassess applicability when the triggering content or behavior enters the public scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -131,8 +152,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-006"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.2.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-122-captions-prerecorded"
+          }
         }
-      ]
+      ],
+      "rationale": "The DEMO-289 content and behavior inventory found no triggering content for 1.2.2 Captions (Prerecorded) across all canonical public HTML pages and every configured audit state in English and Arabic; applicability must be reassessed if that content or behavior is introduced."
     },
     {
       "id": "WCAG-1.2.3",
@@ -142,13 +175,13 @@
       "status": "not-applicable",
       "level": "A",
       "applicability": "not-applicable",
-      "implementation": "No time-based media is intentionally registered in the current public scope.",
+      "implementation": "1.2.3 Audio Description or Media Alternative (Prerecorded) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Reassess applicability when relevant public scope changes."
+        "Reassess applicability when the triggering content or behavior enters the public scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -168,8 +201,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-006"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.2.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-123-audio-description-or-media-alternative-prerecorded"
+          }
         }
-      ]
+      ],
+      "rationale": "The DEMO-289 content and behavior inventory found no triggering content for 1.2.3 Audio Description or Media Alternative (Prerecorded) across all canonical public HTML pages and every configured audit state in English and Arabic; applicability must be reassessed if that content or behavior is introduced."
     },
     {
       "id": "WCAG-1.2.4",
@@ -179,13 +224,13 @@
       "status": "not-applicable",
       "level": "AA",
       "applicability": "not-applicable",
-      "implementation": "No time-based media is intentionally registered in the current public scope.",
+      "implementation": "1.2.4 Captions (Live) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Reassess applicability when relevant public scope changes."
+        "Reassess applicability when the triggering content or behavior enters the public scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -205,8 +250,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-006"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.2.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-124-captions-live"
+          }
         }
-      ]
+      ],
+      "rationale": "The DEMO-289 content and behavior inventory found no triggering content for 1.2.4 Captions (Live) across all canonical public HTML pages and every configured audit state in English and Arabic; applicability must be reassessed if that content or behavior is introduced."
     },
     {
       "id": "WCAG-1.2.5",
@@ -216,13 +273,13 @@
       "status": "not-applicable",
       "level": "AA",
       "applicability": "not-applicable",
-      "implementation": "No time-based media is intentionally registered in the current public scope.",
+      "implementation": "1.2.5 Audio Description (Prerecorded) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Reassess applicability when relevant public scope changes."
+        "Reassess applicability when the triggering content or behavior enters the public scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -242,8 +299,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-006"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.2.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-125-audio-description-prerecorded"
+          }
         }
-      ]
+      ],
+      "rationale": "The DEMO-289 content and behavior inventory found no triggering content for 1.2.5 Audio Description (Prerecorded) across all canonical public HTML pages and every configured audit state in English and Arabic; applicability must be reassessed if that content or behavior is introduced."
     },
     {
       "id": "WCAG-1.2.6",
@@ -253,13 +322,13 @@
       "status": "not-applicable",
       "level": "AAA",
       "applicability": "not-applicable",
-      "implementation": "No time-based media is intentionally registered in the current public scope.",
+      "implementation": "1.2.6 Sign Language (Prerecorded) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Reassess applicability when relevant public scope changes."
+        "Reassess applicability when the triggering content or behavior enters the public scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -279,8 +348,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-006"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.2.6"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-126-sign-language-prerecorded"
+          }
         }
-      ]
+      ],
+      "rationale": "The DEMO-289 content and behavior inventory found no triggering content for 1.2.6 Sign Language (Prerecorded) across all canonical public HTML pages and every configured audit state in English and Arabic; applicability must be reassessed if that content or behavior is introduced."
     },
     {
       "id": "WCAG-1.2.7",
@@ -290,13 +371,13 @@
       "status": "not-applicable",
       "level": "AAA",
       "applicability": "not-applicable",
-      "implementation": "No time-based media is intentionally registered in the current public scope.",
+      "implementation": "1.2.7 Extended Audio Description (Prerecorded) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Reassess applicability when relevant public scope changes."
+        "Reassess applicability when the triggering content or behavior enters the public scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -316,8 +397,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-006"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.2.7"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-127-extended-audio-description-prerecorded"
+          }
         }
-      ]
+      ],
+      "rationale": "The DEMO-289 content and behavior inventory found no triggering content for 1.2.7 Extended Audio Description (Prerecorded) across all canonical public HTML pages and every configured audit state in English and Arabic; applicability must be reassessed if that content or behavior is introduced."
     },
     {
       "id": "WCAG-1.2.8",
@@ -327,13 +420,13 @@
       "status": "not-applicable",
       "level": "AAA",
       "applicability": "not-applicable",
-      "implementation": "No time-based media is intentionally registered in the current public scope.",
+      "implementation": "1.2.8 Media Alternative (Prerecorded) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Reassess applicability when relevant public scope changes."
+        "Reassess applicability when the triggering content or behavior enters the public scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -353,8 +446,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-006"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.2.8"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-128-media-alternative-prerecorded"
+          }
         }
-      ]
+      ],
+      "rationale": "The DEMO-289 content and behavior inventory found no triggering content for 1.2.8 Media Alternative (Prerecorded) across all canonical public HTML pages and every configured audit state in English and Arabic; applicability must be reassessed if that content or behavior is introduced."
     },
     {
       "id": "WCAG-1.2.9",
@@ -364,13 +469,13 @@
       "status": "not-applicable",
       "level": "AAA",
       "applicability": "not-applicable",
-      "implementation": "No time-based media is intentionally registered in the current public scope.",
+      "implementation": "1.2.9 Audio-only (Live) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Reassess applicability when relevant public scope changes."
+        "Reassess applicability when the triggering content or behavior enters the public scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -390,8 +495,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-006"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.2.9"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-129-audio-only-live"
+          }
         }
-      ]
+      ],
+      "rationale": "The DEMO-289 content and behavior inventory found no triggering content for 1.2.9 Audio-only (Live) across all canonical public HTML pages and every configured audit state in English and Arabic; applicability must be reassessed if that content or behavior is introduced."
     },
     {
       "id": "WCAG-1.3.1",
@@ -401,13 +518,13 @@
       "status": "partial",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Lab compares semantic regions/labels with generic unlabeled markup.",
+      "implementation": "1.3.1 Info and Relationships was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "partial",
         "manual": "required"
       },
       "gaps": [
-        "Full-scope manual review remains open; no criterion pass is asserted."
+        "Execute and record named real assistive-technology/screen-reader testing before considering a Pass."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -449,8 +566,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.3.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-131-info-and-relationships"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 found no automated or scripted failure for 1.3.1 Info and Relationships across all canonical public HTML pages and every configured audit state in English and Arabic, but real assistive-technology/screen-reader testing was not executed, so the criterion remains Partial."
     },
     {
       "id": "WCAG-1.3.2",
@@ -460,13 +589,13 @@
       "status": "partial",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Meaningful Sequence; full criterion assessment remains open.",
+      "implementation": "1.3.2 Meaningful Sequence was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
+        "Execute and record named real assistive-technology/screen-reader testing before considering a Pass."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -497,25 +626,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-007"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.3.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-132-meaningful-sequence"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 found no automated or scripted failure for 1.3.2 Meaningful Sequence across all canonical public HTML pages and every configured audit state in English and Arabic, but real assistive-technology/screen-reader testing was not executed, so the criterion remains Partial."
     },
     {
       "id": "WCAG-1.3.3",
       "reference": "1.3.3",
       "title": "Sensory Characteristics",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Sensory Characteristics; full criterion assessment remains open.",
+      "implementation": "1.3.3 Sensory Characteristics was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "partial",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -556,25 +694,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.3.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-133-sensory-characteristics"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 1.3.3 Sensory Characteristics across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-1.3.4",
       "reference": "1.3.4",
       "title": "Orientation",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Orientation; full criterion assessment remains open.",
+      "implementation": "1.3.4 Orientation was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -604,8 +751,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-007"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.3.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-134-orientation"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 1.3.4 Orientation across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-1.3.5",
@@ -615,13 +774,13 @@
       "status": "partial",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Identify Input Purpose; full criterion assessment remains open.",
+      "implementation": "1.3.5 Identify Input Purpose was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "partial",
         "manual": "required"
       },
       "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
+        "Execute and record named real assistive-technology/screen-reader testing before considering a Pass."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -663,24 +822,36 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.3.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-135-identify-input-purpose"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 found no automated or scripted failure for 1.3.5 Identify Input Purpose across all canonical public HTML pages and every configured audit state in English and Arabic, but real assistive-technology/screen-reader testing was not executed, so the criterion remains Partial."
     },
     {
       "id": "WCAG-1.3.6",
       "reference": "1.3.6",
       "title": "Identify Purpose",
       "kind": "criterion",
-      "status": "gap",
+      "status": "partial",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Identify Purpose.",
+      "implementation": "1.3.6 Identify Purpose was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Implementation and manual evaluation remain open."
+        "Execute and record named real assistive-technology/screen-reader testing before considering a Pass."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -700,25 +871,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.3.6"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-136-identify-purpose"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 found no automated or scripted failure for 1.3.6 Identify Purpose across all canonical public HTML pages and every configured audit state in English and Arabic, but real assistive-technology/screen-reader testing was not executed, so the criterion remains Partial."
     },
     {
       "id": "WCAG-1.4.1",
       "reference": "1.4.1",
       "title": "Use of Color",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Use of Color; full criterion assessment remains open.",
+      "implementation": "1.4.1 Use of Color was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "partial",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -759,8 +939,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.4.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-141-use-of-color"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 1.4.1 Use of Color across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-1.4.2",
@@ -770,13 +962,13 @@
       "status": "not-applicable",
       "level": "A",
       "applicability": "not-applicable",
-      "implementation": "No page-authored audio playback is intentionally registered in the current public scope.",
+      "implementation": "1.4.2 Audio Control was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Reassess applicability when relevant public scope changes."
+        "Reassess applicability when the triggering content or behavior enters the public scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -796,25 +988,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-006"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.4.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-142-audio-control"
+          }
         }
-      ]
+      ],
+      "rationale": "The DEMO-289 content and behavior inventory found no triggering content for 1.4.2 Audio Control across all canonical public HTML pages and every configured audit state in English and Arabic; applicability must be reassessed if that content or behavior is introduced."
     },
     {
       "id": "WCAG-1.4.3",
       "reference": "1.4.3",
       "title": "Contrast (Minimum)",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Lab compares shared contrast tokens with a known low-contrast pair.",
+      "implementation": "1.4.3 Contrast (Minimum) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "partial",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope manual review remains open; no criterion pass is asserted."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -855,25 +1056,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.4.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-143-contrast-minimum"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 1.4.3 Contrast (Minimum) across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-1.4.4",
       "reference": "1.4.4",
       "title": "Resize Text",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Resize Text; full criterion assessment remains open.",
+      "implementation": "1.4.4 Resize Text was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -903,25 +1113,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-007"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.4.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-144-resize-text"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 1.4.4 Resize Text across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-1.4.5",
       "reference": "1.4.5",
       "title": "Images of Text",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Images of Text; full criterion assessment remains open.",
+      "implementation": "1.4.5 Images of Text was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -951,24 +1170,36 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-007"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.4.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-145-images-of-text"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 1.4.5 Images of Text across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-1.4.6",
       "reference": "1.4.6",
       "title": "Contrast (Enhanced)",
       "kind": "criterion",
-      "status": "gap",
+      "status": "partial",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Contrast (Enhanced).",
+      "implementation": "1.4.6 Contrast (Enhanced) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Implementation and manual evaluation remain open."
+        "Complete an exhaustive enhanced-contrast (AAA threshold) review for rendered text/background combinations in both themes."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -988,8 +1219,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.4.6"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-146-contrast-enhanced"
+          }
         }
-      ]
+      ],
+      "rationale": "Rendered browser checks and axe computed contrast found no AA contrast failure across the evaluated scope, but DEMO-289 did not establish the enhanced AAA contrast threshold for every rendered text/background combination, so 1.4.6 remains Partial."
     },
     {
       "id": "WCAG-1.4.7",
@@ -999,13 +1242,13 @@
       "status": "not-applicable",
       "level": "AAA",
       "applicability": "not-applicable",
-      "implementation": "No page-authored audio playback is intentionally registered in the current public scope.",
+      "implementation": "1.4.7 Low or No Background Audio was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Reassess applicability when relevant public scope changes."
+        "Reassess applicability when the triggering content or behavior enters the public scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -1025,24 +1268,36 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-006"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.4.7"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-147-low-or-no-background-audio"
+          }
         }
-      ]
+      ],
+      "rationale": "The DEMO-289 content and behavior inventory found no triggering content for 1.4.7 Low or No Background Audio across all canonical public HTML pages and every configured audit state in English and Arabic; applicability must be reassessed if that content or behavior is introduced."
     },
     {
       "id": "WCAG-1.4.8",
       "reference": "1.4.8",
       "title": "Visual Presentation",
       "kind": "criterion",
-      "status": "gap",
+      "status": "partial",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Visual Presentation.",
+      "implementation": "1.4.8 Visual Presentation was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Implementation and manual evaluation remain open."
+        "Complete the remaining criterion-specific AAA/manual coverage identified in the DEMO-289 evaluation report."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -1062,25 +1317,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.4.8"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-148-visual-presentation"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 reviewed the current implementation and public content for 1.4.8 Visual Presentation; meaningful support is present, but the full AAA condition was not established for every page/state and localized workflow, so the result is Partial."
     },
     {
       "id": "WCAG-1.4.9",
       "reference": "1.4.9",
       "title": "Images of Text (No Exception)",
       "kind": "criterion",
-      "status": "gap",
+      "status": "pass",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Images of Text (No Exception).",
+      "implementation": "1.4.9 Images of Text (No Exception) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Implementation and manual evaluation remain open."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -1099,24 +1363,36 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.4.9"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-149-images-of-text-no-exception"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 1.4.9 Images of Text (No Exception) across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-1.4.10",
       "reference": "1.4.10",
       "title": "Reflow",
       "kind": "criterion",
-      "status": "partial",
+      "status": "gap",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Reflow; full criterion assessment remains open.",
+      "implementation": "DEMO-289 evaluated 1.4.10 Reflow across the declared public scope and found a bounded failure in the /demos D1 presentation/workbench at the 320 CSS px / 400%-equivalent viewport; details and scope limits are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
+        "/demos D1 presentation/workbench produces root-document horizontal overflow at the 320 CSS px / 400%-equivalent viewport: approximately 334px scroll width against a 320px viewport because the two D1 table-tab controls retain 145px minimum widths. Remediation is outside DEMO-289 evaluation scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -1147,25 +1423,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-007"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.4.10"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-1410-reflow"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 observed a real WCAG 1.4.10 reflow failure on /demos in the D1 presentation/workbench at 320 CSS px / 400%-equivalent layout: the root document measured approximately 334px scroll width against a 320px viewport. The two D1 table-tab controls with 145px minimum widths were isolated as the cause. No site-wide reflow failure is asserted, and remediation is outside DEMO-289 evaluation scope."
     },
     {
       "id": "WCAG-1.4.11",
       "reference": "1.4.11",
       "title": "Non-text Contrast",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Lab demonstrates control/focus contrast with a failing comparison.",
+      "implementation": "1.4.11 Non-text Contrast was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "partial",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope manual review remains open; no criterion pass is asserted."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -1206,25 +1491,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.4.11"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-1411-non-text-contrast"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 1.4.11 Non-text Contrast across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-1.4.12",
       "reference": "1.4.12",
       "title": "Text Spacing",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Text Spacing; full criterion assessment remains open.",
+      "implementation": "1.4.12 Text Spacing was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -1254,25 +1548,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-007"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.4.12"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-1412-text-spacing"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 1.4.12 Text Spacing across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-1.4.13",
       "reference": "1.4.13",
       "title": "Content on Hover or Focus",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Content on Hover or Focus; full criterion assessment remains open.",
+      "implementation": "1.4.13 Content on Hover or Focus was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -1302,8 +1605,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-007"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.4.13"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-1413-content-on-hover-or-focus"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 1.4.13 Content on Hover or Focus across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     }
   ]
 }
