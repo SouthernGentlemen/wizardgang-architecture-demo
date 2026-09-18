@@ -2,7 +2,7 @@ import type { Env } from '../types';
 import { sourceUrl } from '../lib/github';
 import { escapeHtml } from '../lib/html';
 import { routeUrl } from '../routing/application-routes';
-import { referenceDetails, pageContent, type PageContent } from '../ui/page';
+import { referenceDetails, routeSourceReference, pageContent, type PageContent } from '../ui/page';
 
 interface BehaviorComparison {
   criterion: string;
@@ -41,7 +41,7 @@ export function accessibilityContent(_request: Request, env: Env): PageContent {
   const accessibilityUrl = `${routeUrl('demos.index')}#accessibility`;
   return pageContent(env, 'WCAG 2.2 engineering', `
   <section class="page-header"><h1>Accessibility is behavior.</h1><p class="lede">Operate the accessible example, then compare each behavior with an inert failure fixture and an honest verification boundary.</p><div class="page-tools"><span class="badge">WCAG 2.2 engineering evidence — no conformance claim · AAA engineering target</span>${referenceDetails([
-    { label: 'Route source', href: sourceUrl(env, 'src/demos/accessibility.ts') },
+    routeSourceReference(env, 'src/demos/accessibility.ts'),
     { label: 'Lab source', href: sourceUrl(env, 'src/ui/accessibility-lab.ts') },
     { label: 'Global shell source', href: sourceUrl(env, 'src/ui/page.ts') },
     { label: 'Manual verification matrix', href: sourceUrl(env, 'docs/ACCESSIBILITY.md') },

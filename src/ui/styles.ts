@@ -207,7 +207,7 @@ summary { cursor: pointer; }
 .d1-database-id span { color: var(--muted); font: 800 .62rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
 .d1-database-id strong { font: 850 .92rem/1.2 var(--mono); }
 .d1-table-tabs { display: flex; align-items: stretch; }
-.d1-table-tabs button { display: grid; grid-template-columns: auto auto; align-content: center; gap: .35rem .55rem; min-width: 145px; border: 0; border-right: 1px solid var(--line); background: transparent; font-size: .86rem; }
+.d1-table-tabs button { display: grid; grid-template-columns: auto auto; align-content: center; gap: .35rem .55rem; min-width: 0; border: 0; border-right: 1px solid var(--line); background: transparent; font-size: .86rem; }
 .d1-table-tabs button:hover { background: var(--panel-2); transform: none; }
 .d1-table-tabs button[aria-selected="true"] { background: var(--panel-2); box-shadow: inset 0 -3px 0 var(--acid); }
 .d1-table-tabs button > span { color: var(--muted); font: 700 .68rem/1 var(--mono); }

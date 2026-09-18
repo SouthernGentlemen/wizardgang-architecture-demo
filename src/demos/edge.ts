@@ -1,7 +1,7 @@
 import type { DemoDefinition, Env } from '../types';
 import { sourceUrl } from '../lib/github';
 import { routeUrl } from '../routing/application-routes';
-import { pageContent, referenceDetails, type PageContent } from '../ui/page';
+import { pageContent, referenceDetails, routeSourceReference, type PageContent } from '../ui/page';
 
 const demo: DemoDefinition = {
   id: 'edge',
@@ -18,7 +18,7 @@ export function edgeContent(env: Env): PageContent {
   const edgeUrl = `${routeUrl('demos.index')}#edge`;
   return pageContent(env, demo.title, `
   <section class="page-header lab-page-header"><h1>Cloudflare Edge</h1><p class="lede">Follow one request into the Worker and separate received values from edge-derived context and deliberately excluded private data.</p><div class="page-tools">${referenceDetails([
-    { label: 'Route source', href: sourceUrl(env, 'src/demos/edge.ts') },
+    routeSourceReference(env, 'src/demos/edge.ts'),
     { label: 'Runtime API', href: sourceUrl(env, 'src/api/runtime.ts') },
     { label: 'Cloudflare configuration', href: sourceUrl(env, 'wrangler.jsonc') },
   ])}</div></section>
