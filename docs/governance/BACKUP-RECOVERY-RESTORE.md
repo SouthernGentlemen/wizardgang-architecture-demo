@@ -43,9 +43,9 @@ Includes:
 - infrastructure/application configuration stored in source;
 - management-system documents and registers;
 - `DEMO-###` controlled history;
-- semantic tags and release records;
+- annotated semantic tags and GitHub Releases;
 - CI/workflow definitions;
-- release and deployment documentation.
+- release workflow and deployment evidence.
 
 **Primary recovery source:** Git repository history and retained semantic tags/releases.
 

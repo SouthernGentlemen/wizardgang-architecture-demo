@@ -28,9 +28,15 @@ function deploymentRecords(markdown) {
 }
 
 describe('DEMO-305 release operations acceptance', () => {
-  it('publishes release notes from the immutable tag', () => {
-    expect(releaseWorkflow).toContain('git show "$GITHUB_REF_NAME:docs/releases/$GITHUB_REF_NAME.md"');
-    expect(releaseWorkflow).not.toContain('origin/main:docs/releases/$GITHUB_REF_NAME.md');
+  it('publishes release notes from the annotated tag and GitHub history', () => {
+    expect(releaseWorkflow).toContain('Verify annotated semantic release identity');
+    expect(releaseWorkflow).toContain('git cat-file -t "$tag_ref"');
+    expect(releaseWorkflow).toContain('tag_commit="$(git rev-list -n 1 "$GITHUB_REF_NAME")"');
+    expect(releaseWorkflow).toContain('checkout_commit="$(git rev-parse HEAD)"');
+    expect(releaseWorkflow).toContain('--generate-notes');
+    expect(releaseWorkflow).toContain('--notes-start-tag "$PREVIOUS_TAG"');
+    expect(releaseWorkflow).toContain('--verify-tag');
+    expect(releaseWorkflow).not.toContain(['docs', 'releases'].join('/'));
   });
 
   it('keeps deployment records on the documented format and includes v0.24.0', () => {

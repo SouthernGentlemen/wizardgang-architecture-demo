@@ -13,15 +13,11 @@ Every controlled change to WizardGang Architecture Demo receives exactly one per
 
 Allowed primary types are `INIT`, `FEAT`, `FIX`, `SEC`, `API`, `A11Y`, `I18N`, `AI`, `DB`, `OPS`, `TEST`, `DOCS`, `REFACTOR`, `PERF`, `BUILD`, `REVERT`, and `CHORE`.
 
-### Published identity correction
+### Published-history exceptions
 
-Commit `45f2ff42d2b92ea1f820e037306f07104480f8b5` was published through pull request #124 with `DEMO-175` in its title, but its controlled record identifies it as the completion of DEMO-174 in the same pull request. Rewriting published `main` history would invalidate shared commit identities, so `scripts/validate-history.mjs` excludes that exact SHA from the sequential count while continuing to validate its structured body. DEMO-175 is therefore assigned to the subsequent removal of duplicate relationship graphs.
+Published history is not rewritten to repair an already shared change identity. A correction moves forward under a new controlled ID.
 
-This is a SHA-exact correction of one published operator error, not a general allowance to reuse IDs. A different commit cannot claim the exception, and future corrections continue to receive new sequential IDs.
-
-Commit `e79f108224612ff48946c2905318010ad5b14a91` was opened as `DEMO-225` before the Cloudflare usage correction claimed and shipped that ID, but its pull request was merged afterward. Because both commits are now immutable on published `main`, `scripts/validate-history.mjs` excludes the late-merged presentation commit from the sequential count while continuing to validate its structured body. The Cloudflare correction remains the sequential `DEMO-225`; subsequent changes retain their published IDs.
-
-This exception is exact to the late-merged commit SHA. It records the collision without renumbering or rewriting published work and does not permit future ID reuse.
+Any exact immutable-history exception needed by sequential validation is encoded with the validator, test, or exception data that enforces it, including the exact immutable identity and reason. Permanent current-state policy does not enumerate old pull requests, merge SHAs, collisions, or prior numbering; Git and GitHub remain the authority for those historical facts.
 
 ## Controlled record
 
@@ -60,7 +56,7 @@ v0.x.x | Unreleased
 
 Low risk covers documentation and non-authoritative presentation. Medium risk covers application behavior, routes, storage behavior, and new user workflows. High risk covers authentication, authorization, secrets, persistence schemas, deployment controls, privileged administration, and destructive data behavior. High-risk changes state explicit controls, validation, and a rollback target.
 
-The repository validates sequential IDs and controlled titles on every full check. Pull-request titles use the same syntax. `docs/history/CHANGE-MAP.csv` connects reconstructed commits to their original source objects without making those legacy objects part of the public branch graph.
+The repository validates sequential IDs and controlled titles on every full check. Pull-request titles use the same syntax. Superseded or reconstructed repository states are recovered from Git/GitHub; current change-management policy does not duplicate their narrative.
 
 ## Alignment
 

@@ -123,7 +123,7 @@ Responsibilities include:
 
 - enforcing the `DEMO-###` controlled-change model;
 - ensuring changes are reviewed and validated before merge;
-- maintaining semantic versioning and release records;
+- maintaining semantic versioning and GitHub Release publication;
 - ensuring production deployments correspond to reviewed tagged versions;
 - confirming required deployment verification occurs;
 - ensuring rollback information exists where required;

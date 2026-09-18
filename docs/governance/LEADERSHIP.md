@@ -54,7 +54,7 @@ Management-system requirements are incorporated through mechanisms including:
 - automated CI validation;
 - security and dependency validation;
 - accessibility and localization validation;
-- release records;
+- annotated tags and GitHub Releases;
 - annotated version tags;
 - exact-version deployment;
 - health and version verification;
@@ -255,7 +255,7 @@ Evidence may include:
 - security and AI risk decisions;
 - Statements of Applicability;
 - management-system objectives;
-- release approvals and release records;
+- release approvals, annotated tags, and GitHub Releases;
 - corrective-action records;
 - internal audit or self-assessment records;
 - management-review records;

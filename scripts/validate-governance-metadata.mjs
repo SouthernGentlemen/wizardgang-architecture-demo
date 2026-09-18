@@ -6,8 +6,23 @@ const governanceRoot = path.join(root, 'docs/governance');
 const registryPath = path.join(governanceRoot, 'REFERENCE-REGISTRY.json');
 const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
 const errors = [];
-const canonical = new Map();
+const references = new Map();
 const referencePattern = /^WG-(?:GOV|POL|REG|OBJ|SOA|AIA|A11Y)-\d{3}$/;
+const currentStateAuthorityDocuments = [
+  'AGENTS.md',
+  'README.md',
+  'CONTRIBUTING.md',
+  'SECURITY.md',
+  'docs/ARCHITECTURE-STANDARD.md',
+  'docs/CHANGE-MANAGEMENT.md',
+  'docs/RELEASE-MANAGEMENT.md',
+  'docs/governance/CONTROL-AND-DOCUMENT-INDEX.md',
+];
+const historicalNarrativePatterns = [
+  { label: 'concrete DEMO change ID', pattern: /\bDEMO-\d{3,}\b/g },
+  { label: 'historical pull-request number', pattern: /\b(?:PR|pull request)\s*#\d+\b/gi },
+  { label: 'full Git SHA', pattern: /\b[0-9a-f]{40}\b/gi },
+];
 
 function walk(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -16,10 +31,14 @@ function walk(dir) {
   });
 }
 
+if (registry.authority !== 'reference-identity-only') {
+  errors.push('REFERENCE-REGISTRY.json: authority must be reference-identity-only; registration must not become a second state authority');
+}
+
 for (const record of registry.records ?? []) {
-  if (!referencePattern.test(record.reference)) errors.push(`${record.path}: invalid canonical reference ${record.reference}`);
-  if (canonical.has(record.reference)) errors.push(`${record.path}: duplicate canonical reference ${record.reference}; also ${canonical.get(record.reference)}`);
-  canonical.set(record.reference, record.path);
+  if (!referencePattern.test(record.reference)) errors.push(`${record.path}: invalid registered reference ${record.reference}`);
+  if (references.has(record.reference)) errors.push(`${record.path}: duplicate registered reference ${record.reference}; also ${references.get(record.reference)}`);
+  references.set(record.reference, record.path);
 
   const absolute = path.join(root, record.path);
   if (!fs.existsSync(absolute)) {
@@ -72,10 +91,24 @@ for (const token of codeTokens) {
   if (!candidates.some((candidate) => fs.existsSync(candidate))) errors.push(`CONTROL-AND-DOCUMENT-INDEX.md: unresolved local path token ${token}`);
 }
 
+for (const relativePath of currentStateAuthorityDocuments) {
+  const absolute = path.join(root, relativePath);
+  if (!fs.existsSync(absolute)) {
+    errors.push(`${relativePath}: current-state authority document does not exist`);
+    continue;
+  }
+  const text = fs.readFileSync(absolute, 'utf8');
+  for (const { label, pattern } of historicalNarrativePatterns) {
+    pattern.lastIndex = 0;
+    const match = pattern.exec(text);
+    if (match) errors.push(`${relativePath}: permanent current-state documentation contains ${label} "${match[0]}"; keep historical identity in Git/GitHub or validator/test exception data`);
+  }
+}
+
 if (errors.length) {
   console.error('Governance metadata validation failed:');
   for (const error of errors) console.error(`- ${error}`);
   process.exit(1);
 }
 
-console.log(`Governance metadata validation passed: ${registry.records.length} canonical records; ${liveReferences.size} live Reference headers; index paths resolved.`);
+console.log(`Governance metadata validation passed: ${registry.records.length} registered identities; ${liveReferences.size} live Reference headers; identity-only registry, current-state authority docs, and index paths validated.`);

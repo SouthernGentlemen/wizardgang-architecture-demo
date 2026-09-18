@@ -5,7 +5,6 @@
 **Status:** Approved
 **Owner:** Management-System Owner / Evidence Custodian  
 **Approval:** Controlled pull request and merge  
-**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually and after material scope, standards, architecture, supplier, AI/MCP, evidence-model, or compliance-registry change
 
 ## 1. Purpose
@@ -24,92 +23,78 @@ This index does not replace the structured assurance registry, its generated ISO
 
 The repository is engineered toward WCAG 2.2, ISO/IEC 27001:2022, and ISO/IEC 42001:2023 as **aligned — uncertified** references. Nothing in this index represents certification.
 
-## 2. Documentation Baseline Decision
+## 2. Current-State Documentation Rule
 
-With `DEMO-103`, the initial management-system **documentation baseline is complete**.
+This index is current-state navigation, not a chronology. Permanent governance documentation describes the controls, responsibilities, evidence owners, and assurance relationships that apply now.
 
-Future governance documents should be created only when one of these exists:
+Create another governance document only when an active requirement or control cannot be represented clearly in an existing authority. Superseded document versions, former implementations, prior route/label names, staged migrations, and old change/merge details remain available through Git/GitHub history rather than being repeated here.
 
-- a new applicable requirement;
-- a material scope change;
-- a new control/process that cannot be represented in an existing document;
-- a corrective action requiring a controlled procedure change;
-- a material supplier, legal, security, accessibility, data, or AI/MCP change;
-- or a management-review/audit decision requiring a new controlled record.
-
-The default next action is **operate, test, measure, clean up, and evidence the system**, not add more policy Markdown.
+The default action is to operate, test, measure, simplify, and evidence the system rather than expand the policy stack.
 
 ## 3. Authoritative Record Hierarchy
 
-The management system distinguishes different record types because a policy, register, test, and runtime signal do not prove the same thing.
+The management system uses one authority per concern and treats lower layers as projections or evidence, not competing stores of state.
 
-| Layer | Purpose | Examples | What it can prove |
-|---|---|---|---|
-| **Architecture / engineering standard** | Defines system and delivery baseline | `docs/ARCHITECTURE-STANDARD.md`, `SECURITY.md`, `docs/CHANGE-MANAGEMENT.md` | Intended architecture and controlled engineering rules |
-| **Policy / governance procedure** | Defines management-system expectation and decision process | `docs/governance/*.md` | What must be done and who owns the decision |
-| **Structured assurance / risk / assessment / register** | Records current applicability, state, risk, objective, inventory, plan, or evaluation | `assurance/compliance/**`, `registers/**`, `assessments/**` | Current controlled assessment at a point in time; ISO control status/rationale is canonical only in structured assurance data |
-| **Generated SoA summary** | Presents framework assessment identity and deterministic dated rows without becoming a second authority | `soa/ISO-27001-SOA.md`, `soa/ISO-42001-SOA.md` | Human-readable projection of canonical structured compliance state only |
-| **Implementation evidence** | Demonstrates a technical control exists | `src/**`, `migrations/**`, `contracts/**`, workflow/config files | Implemented behavior/configuration within the verified source state |
-| **Validation evidence** | Demonstrates a check was executed for a specific state | tests, CI run, validation artifact, manual accessibility record, MCP evaluation | The tested condition at the stated commit/release/date |
-| **Release / deployment evidence** | Connects accepted source to production | PR, merge, annotated tag, release, deploy run, `/api/operations/version` | What source was accepted and deployed |
-| **Operational evidence** | Demonstrates behavior over time | `/api/operations/health`, dashboard, D1 audit events, public-safe logs, usage/uptime, incidents | Runtime/operational behavior for the observed period |
-| **Management evidence** | Demonstrates review and decision activity | audit record, management review, risk acceptance, corrective action, competence review | Human governance activity and attributable decisions |
-| **Public assurance presentation** | Makes framework, section, and record evidence understandable to reviewers | `/assurance`, `/api/assurance/{record}` | Presentation/traceability only; not independent certification |
+| Layer | Authority | Role |
+|---|---|---|
+| **1. Executable source and contracts** | source declarations, configuration, migrations, schemas, interface contracts | Defines executable behavior and machine interfaces |
+| **2. Structured assurance records** | `assurance/**` and registered schemas | Defines current structured assurance state, rationale, lifecycle, and relationships |
+| **3. Generated artifacts** | generated manifests, summaries, registers, bindings, and machine-readable outputs | Deterministic projection of authoritative inputs; never independently hand-maintained |
+| **4. Human current-state architecture / policy** | architecture, security, change, release, governance, and operating procedures | Explains present intent, boundaries, responsibilities, and controls without duplicating machine-owned state |
+| **5. Operating evidence** | runtime observations, assessments, reviews, audit/accessibility records, logs, incidents, exercises, deployment records | Proves operation or evaluation for a stated time/scope |
+| **6. Historical repository/delivery state** | Git, annotated tags, GitHub Releases, workflow runs/artifacts, pull requests, commits | Reconstructs superseded source/docs, historical releases, and historical CI/deployment execution |
 
-A document moving to `Approved` does **not** by itself make the associated control `Met` or prove effectiveness.
+A document moving to `Approved` does not by itself prove implementation or effectiveness. Generated artifacts cannot establish a new authority merely because they are checked in. Dated evidence may preserve what was observed; permanent current-state policy does not narrate how the present implementation evolved.
 
 ## 4. Record Identity and Metadata Rule
 
-`DEMO-104` normalizes management-system metadata into unique canonical reference namespaces.
+The current identity model is:
 
-The authoritative identity model is now:
+1. repository path identifies the controlled document, register, or artifact;
+2. the `**Reference:**` header provides a stable management-system identifier where that document class uses one;
+3. `docs/governance/REFERENCE-REGISTRY.json` inventories those identifiers only and is not an authority for assurance/control state;
+4. `assurance/compliance/iso-27001-2022.json` and `assurance/compliance/iso-42001-2023.json` are authoritative for individual ISO applicability, status, rationale, title, and evidence links;
+5. the structured WCAG registry and partitions are authoritative for WCAG criteria state;
+6. generated SoAs/registers are projections of their structured inputs and cannot independently change state.
 
-1. repository path identifies the controlled document or register;
-2. `DEMO-###` history identifies the controlled change that introduced or materially changed it;
-3. the `**Reference:**` header provides a unique stable management-system identifier;
-4. `docs/governance/REFERENCE-REGISTRY.json` is the machine-readable inventory of those identifiers;
-5. `assurance/compliance/iso-27001-2022.json` and `assurance/compliance/iso-42001-2023.json` are authoritative for individual ISO Annex A applicability, status, rationale, title, and evidence links;
-6. `soa/ISO-27001-SOA.md` and `soa/ISO-42001-SOA.md` are generated summaries and cannot independently change control state;
-7. the structured WCAG registry and partitions are authoritative for WCAG criteria.
+Reference namespaces are separated by record type: `WG-GOV-*`, `WG-POL-*`, `WG-REG-*`, `WG-OBJ-*`, `WG-SOA-*`, `WG-AIA-*`, and `WG-A11Y-*`.
 
-Reference namespaces are separated by record type: `WG-GOV-*`, `WG-POL-*`, `WG-REG-*`, `WG-OBJ-*`, `WG-SOA-*`, and `WG-AIA-*`.
-
-CI validates reference uniqueness, registry/header agreement, governed-file existence, generated SoA agreement with structured assurance state, and local file links in this control/document index. A duplicate, mismatched reference, or independently edited generated SoA summary is a repository validation failure rather than a tolerated metadata ambiguity.
+CI validates reference uniqueness, registry/header agreement, governed-file existence, generated-artifact parity, assurance/documentation relationships, and local file links in this index. The reference registry is explicitly identity-only so registration cannot silently turn a generated or presentation document into a second canonical data source.
 
 ## 5. Core Governance Document Inventory
 
-| DEMO | Governing document | Primary purpose | Primary state/evidence companion |
-|---|---|---|---|
-| DEMO-070 | `CONTEXT.md` | Internal/external issues and organizational context | scope, interested parties, risk registers |
-| DEMO-071 | `INTERESTED-PARTIES.md` | Interested parties and relevant requirements | obligations/supplier registers, scope |
-| DEMO-072 | `SCOPE.md` | ISMS/AIMS boundaries, inclusions, exclusions, applicability | SoAs, asset/data registers |
-| DEMO-073 | `MANAGEMENT-SYSTEM.md` | Integrated management-system operating model | all governance records and controlled Git history |
-| DEMO-074 | `LEADERSHIP.md` | Leadership, accountability, resources, human decision rights | roles, policies, management review |
-| DEMO-075 | `INFORMATION-SECURITY-POLICY.md` | Information-security policy | security risk, security maintenance, incidents, testing |
-| DEMO-075 | `AI-POLICY.md` | AI governance and intended-use policy | AI risk, impact assessment, supplier/AI evidence |
-| DEMO-076 | `ROLES-RESPONSIBILITIES.md` | Functional roles, authorities, delegation and independence | competence/access registers |
-| DEMO-077 | `RISK-MANAGEMENT.md` | Security/AI risk method, scoring, treatment and acceptance | security and AI risk registers |
-| DEMO-083 | `MANAGEMENT-SYSTEM-CHANGE-PLANNING.md` | Management-system change planning | `DEMO-###` history, SoA/risk reassessment |
-| DEMO-084 | `MANAGEMENT-SYSTEM-SUPPORT.md` | Resources, competence, awareness, communications, documented information | competence-awareness register |
-| DEMO-085 | `OPERATIONAL-PLANNING-CONTROL.md` | Controlled execution of governance through actual operation | release/deploy/operations evidence |
-| DEMO-086 | `OPERATIONAL-RISK-AND-AI-REASSESSMENT.md` | Recurring risk treatment and AI impact reassessment | risk registers, AI impact assessment, SoAs |
-| DEMO-087 | `MONITORING-MEASUREMENT-EVALUATION.md` | Measurement catalogue and evaluation method | objectives, dashboard/health/log evidence |
-| DEMO-088 | `INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md` | Self-assessment vs formal internal audit and audit programme | future audit/self-assessment records |
-| DEMO-089 | `MANAGEMENT-REVIEW.md` | Management review inputs, outputs and decisions | future management-review records/actions |
-| DEMO-090 | `NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md` | Correction, cause, corrective action, effectiveness and improvement | future finding/corrective-action evidence |
-| DEMO-091 | `SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md` | Supplier classification, review and AI-provider boundary | supplier register |
-| DEMO-092 | `INCIDENT-MANAGEMENT.md` | Security/AI/data/supplier/operational incident handling | incident register, EX-001 |
-| DEMO-093 | `BACKUP-RECOVERY-RESTORE.md` | Backup/export, reconstruction, restore and testing | recovery-test register, RT-001 |
-| DEMO-094 | `COMPETENCE-AWARENESS-COMMUNICATION.md` | Role competence, awareness, communication and AI concerns | competence-awareness register, AI concern issue template |
-| DEMO-095 | `DATA-GOVERNANCE.md` | Data classification, provenance, retention/deletion, AI data boundary | data register |
-| DEMO-096 | `VULNERABILITY-THREAT-SECURITY-MAINTENANCE.md` | Vulnerability intake, threat intelligence and security maintenance | security-maintenance register |
-| DEMO-097 | `ASSET-ACCESS-ACCEPTABLE-USE.md` | Asset ownership, acceptable use, access lifecycle/review | asset-access register, AR-001 |
-| DEMO-098 | `LEGAL-CONTRACTUAL-IP-PRIVACY.md` | Legal/contractual/IP/privacy obligation identification | obligations register |
-| DEMO-099 | `CONFIGURATION-BASELINE-DRIFT.md` | Desired state, provider state, secrets/config split and drift | configuration register |
-| DEMO-100 | `CRYPTOGRAPHY-SECRETS-KEY-MANAGEMENT.md` | Cryptographic mechanisms, authentication information and secret lifecycle | cryptography-secrets register |
-| DEMO-101 | `SECURE-ENGINEERING-TESTING.md` | Risk-scaled secure engineering and security testing | security-testing register, CI/tests |
-| DEMO-102 | `CONTINUITY-RESILIENCE.md` | Safe continuity, degradation, supplier disruption and return to service | incident/recovery exercises, operations evidence |
-| DEMO-103 | `CONTROL-AND-DOCUMENT-INDEX.md` | Authoritative navigation and traceability index | `assurance/registry.json`, reporting API, focused `/assurance` checks, and consistency validation |
+| Governing document | Primary purpose | Primary state/evidence companion |
+|---|---|---|
+| `CONTEXT.md` | Internal/external issues and organizational context | scope, interested parties, risk registers |
+| `INTERESTED-PARTIES.md` | Interested parties and relevant requirements | obligations/supplier registers, scope |
+| `SCOPE.md` | ISMS/AIMS boundaries, inclusions, exclusions, applicability | SoAs, asset/data registers |
+| `MANAGEMENT-SYSTEM.md` | Integrated management-system operating model | all governance records and controlled Git history |
+| `LEADERSHIP.md` | Leadership, accountability, resources, human decision rights | roles, policies, management review |
+| `INFORMATION-SECURITY-POLICY.md` | Information-security policy | security risk, security maintenance, incidents, testing |
+| `AI-POLICY.md` | AI governance and intended-use policy | AI risk, impact assessment, supplier/AI evidence |
+| `ROLES-RESPONSIBILITIES.md` | Functional roles, authorities, delegation and independence | competence/access registers |
+| `RISK-MANAGEMENT.md` | Security/AI risk method, scoring, treatment and acceptance | security and AI risk registers |
+| `MANAGEMENT-SYSTEM-CHANGE-PLANNING.md` | Management-system change planning | `DEMO-###` history, SoA/risk reassessment |
+| `MANAGEMENT-SYSTEM-SUPPORT.md` | Resources, competence, awareness, communications, documented information | competence-awareness register |
+| `OPERATIONAL-PLANNING-CONTROL.md` | Controlled execution of governance through actual operation | release/deploy/operations evidence |
+| `OPERATIONAL-RISK-AND-AI-REASSESSMENT.md` | Recurring risk treatment and AI impact reassessment | risk registers, AI impact assessment, SoAs |
+| `MONITORING-MEASUREMENT-EVALUATION.md` | Measurement catalogue and evaluation method | objectives, dashboard/health/log evidence |
+| `INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md` | Self-assessment vs formal internal audit and audit programme | future audit/self-assessment records |
+| `MANAGEMENT-REVIEW.md` | Management review inputs, outputs and decisions | future management-review records/actions |
+| `NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md` | Correction, cause, corrective action, effectiveness and improvement | future finding/corrective-action evidence |
+| `SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md` | Supplier classification, review and AI-provider boundary | supplier register |
+| `INCIDENT-MANAGEMENT.md` | Security/AI/data/supplier/operational incident handling | incident register, EX-001 |
+| `BACKUP-RECOVERY-RESTORE.md` | Backup/export, reconstruction, restore and testing | recovery-test register, RT-001 |
+| `COMPETENCE-AWARENESS-COMMUNICATION.md` | Role competence, awareness, communication and AI concerns | competence-awareness register, AI concern issue template |
+| `DATA-GOVERNANCE.md` | Data classification, provenance, retention/deletion, AI data boundary | data register |
+| `VULNERABILITY-THREAT-SECURITY-MAINTENANCE.md` | Vulnerability intake, threat intelligence and security maintenance | security-maintenance register |
+| `ASSET-ACCESS-ACCEPTABLE-USE.md` | Asset ownership, acceptable use, access lifecycle/review | asset-access register, AR-001 |
+| `LEGAL-CONTRACTUAL-IP-PRIVACY.md` | Legal/contractual/IP/privacy obligation identification | obligations register |
+| `CONFIGURATION-BASELINE-DRIFT.md` | Desired state, provider state, secrets/config split and drift | configuration register |
+| `CRYPTOGRAPHY-SECRETS-KEY-MANAGEMENT.md` | Cryptographic mechanisms, authentication information and secret lifecycle | cryptography-secrets register |
+| `SECURE-ENGINEERING-TESTING.md` | Risk-scaled secure engineering and security testing | security-testing register, CI/tests |
+| `CONTINUITY-RESILIENCE.md` | Safe continuity, degradation, supplier disruption and return to service | incident/recovery exercises, operations evidence |
+| `CONTROL-AND-DOCUMENT-INDEX.md` | Authoritative navigation and traceability index | `assurance/registry.json`, reporting API, focused `/assurance` checks, and consistency validation |
 
 ## 6. Assessment, SoA, and Register Inventory
 
@@ -268,7 +253,7 @@ The most important technical evidence owners are:
 | Architecture | `docs/ARCHITECTURE-STANDARD.md`, `README.md` |
 | Security boundary | `SECURITY.md` |
 | Controlled change | `docs/CHANGE-MANAGEMENT.md`, Git commit/PR history |
-| Release/deployment | release docs, `.github/workflows/release.yml`, `.github/workflows/deploy.yml`, tags/releases |
+| Release/deployment | `.github/workflows/release.yml`, `.github/workflows/deploy.yml`, annotated tags, GitHub Releases, deployment records |
 | CI validation | `.github/workflows/ci.yml`, `package.json`, validation scripts, commit-bound evidence artifact |
 | REST / GraphQL / Webhooks | contracts, API handlers, tests |
 | Identity / SSO / OAuth / SAML | `docs/IDENTITY.md`, identity handlers/session library, tests |
@@ -338,7 +323,7 @@ The public compliance assessment vocabulary is shared across ISO/IEC 27001, ISO/
 
 A requirement that implies recurring activity remains at most **Partial** until the repository has an actual operating record for that activity. Policy prose or schema support alone is not proof that a recurring process operated.
 
-Compliance records remain authoritative for status, rationale, gaps, applicability, and evidence relationships. Governing Markdown supplies human-readable control documentation and reciprocal traceability through an **Alignment** section containing a `Controls:` line. Documentation links identify a repository-relative Markdown file path plus GitHub heading anchor and resolve against the deployed commit. Validation of that documentation contract reads headings and `Controls:` lines only; it never derives or changes compliance status from prose. Dated release records, Statements of Applicability, and assessment/evaluation reports are exempt from the reciprocal `Controls:` requirement.
+Compliance records remain authoritative for status, rationale, gaps, applicability, and evidence relationships. Governing Markdown supplies human-readable control documentation and reciprocal traceability through an **Alignment** section containing a `Controls:` line. Documentation links identify a repository-relative Markdown file path plus GitHub heading anchor and resolve against the deployed commit. Validation of that documentation contract reads headings and `Controls:` lines only; it never derives or changes compliance status from prose. Statements of Applicability and assessment/evaluation reports are exempt from the reciprocal `Controls:` requirement.
 
 Supporting registers may use additional workflow statuses such as Planned, Active, Restricted, Watch, At risk, Failed, or Passed with limitations. These are not automatically interchangeable with compliance statuses.
 
@@ -447,7 +432,7 @@ This index intentionally preserves the following known gaps for cleanup or opera
 1. Canonical governance/register metadata references are unique and CI-validated; future drift is treated as a validation failure.
 2. The exhaustive structured WCAG/ISO compliance registry is present and generated/presentation drift is CI-validated, but many rows remain operating-evidence constrained rather than independently demonstrated.
 3. ISO SoA Markdown is generated from canonical structured compliance data; future status/rationale changes must be made in that structured source and pass generation checks.
-4. GitHub API verification on 2026-09-18 demonstrates active `Protect main` and `Protect release tags` rulesets, required `validate` and `change-id` checks, merge-commit-only pull requests, protected `v*` tags, and automatic merged-branch deletion. Effectiveness over an operating interval and automated drift detection are not yet demonstrated, and the intentional zero-review requirement for the single-maintainer model is not independent review evidence.
+4. Repository rulesets require pull requests, the `validate` and `change-id` checks, merge-commit-only integration, protected `v*` tags, and automatic merged-branch deletion. Effectiveness over an operating interval and automated drift detection are not yet demonstrated, and the intentional zero-review requirement for the single-maintainer model is not independent review evidence.
 5. No completed formal internal audit is claimed.
 6. No completed management review is claimed.
 7. No completed `RT-001` restore exercise is claimed.
@@ -462,19 +447,14 @@ This index intentionally preserves the following known gaps for cleanup or opera
 
 These gaps are not reasons to invent new evidence or change a row to `Met`.
 
-## 19. Post-Baseline Work Sequence
+## 19. Current Operating Priorities
 
-The controlled baseline has progressed beyond the original DEMO-103 documentation milestone:
+Current maturity work focuses on operating evidence and effectiveness rather than more baseline prose:
 
-1. **Governance metadata consistency — DEMO-104 complete.** Canonical references are normalized, registered, and CI-validated.
-2. **SoA refresh — DEMO-105 complete.** ISO Annex A rows were reassessed against the completed governance baseline without upgrading unsupported effectiveness claims.
-3. **Structured public assurance and exhaustive compliance — DEMO-114 through DEMO-120 complete.** Evidence, ISO/WCAG compliance, risk, incident/exercise, and public projections are structured and linked.
-4. **Integrity, lifecycle, and API hardening — DEMO-121 through DEMO-124 complete.** Cross-dataset validation, stable record lifecycle/disclosure review, and the public API contract are enforced.
-5. **Canonical SoA authority, release snapshots, and recurring monitoring — DEMO-125.** Structured compliance data is the only per-control status/rationale authority; Markdown is generated, releases carry digest-bound registry snapshots, and scheduled checks cover expiry/freshness/reporting/ownership.
-6. **Operating evidence.** Complete actual access/supplier/competence/threat/recovery/incident/accessibility/objective review activities as they become due.
-7. **Self-assessment/audit and management review.** Evaluate the operating system once sufficient evidence exists; label owner-only review correctly as self-assessment.
-8. **Corrective action.** Create findings only against defined applicable requirements and verify effectiveness after implementation.
-9. **Release/public assurance updates.** Continue publishing evidence posture without certification overclaim.
+1. complete actual access, supplier, competence, threat, recovery, incident, accessibility, and objective review activities as they become due;
+2. perform self-assessment/audit and management review when sufficient operating evidence exists, preserving the distinction between owner self-assessment and independent audit;
+3. create corrective actions only against defined applicable requirements and verify effectiveness after implementation;
+4. keep release/public assurance projections synchronized with their authoritative structured and delivery sources without certification overclaim.
 
 ## 20. Traceability Standard
 
@@ -485,7 +465,7 @@ Requirement / criterion / control
 -> canonical structured applicability and rationale
 -> policy / procedure / risk / objective
 -> implementation source or controlled action
--> DEMO change / branch / commit / PR
+-> controlled change / commit / pull request
 -> validation
 -> merge / tag / release + registry snapshot
 -> deployment
@@ -495,36 +475,13 @@ Requirement / criterion / control
 
 Not every requirement needs every link. A policy clause may terminate in management-review evidence; a technical control may include source/tests/deployment/runtime evidence; an N/A control requires scope rationale rather than fake implementation.
 
-## 21. Baseline Completion Statement
+## 21. Current-State Coverage
 
-`DEMO-070` through `DEMO-103` established the initial repository-native governance documentation layer for the WizardGang Architecture Demo. Subsequent DEMO changes added the structured assurance registry, exhaustive compliance projections, lifecycle/disclosure controls, API contract, and release/monitoring integrity controls described above.
+The current management-system documentation covers:
 
-The system now has controlled documentation for:
+- context, interested parties, scope, leadership, policies, roles, security/AI risk, and AI impact;
+- objectives, management-system change planning, competence, awareness, communications, operational control, reassessment, monitoring, audit/self-assessment, management review, corrective action, and improvement;
+- supplier, incident, recovery, data, vulnerability/threat, asset/access, legal/privacy, configuration, cryptography/secrets, secure-engineering, and continuity controls;
+- structured public assurance/compliance state with generated projections, lifecycle controls, release-bound snapshots, and scheduled monitoring.
 
-- context, interested parties and scope;
-- integrated ISMS/AIMS governance;
-- leadership, policies and roles;
-- security and AI risk;
-- AI impact assessment;
-- generated ISO Statement of Applicability summaries backed by canonical structured data;
-- objectives and management-system change planning;
-- competence, awareness, communications and concerns;
-- operational control and risk reassessment;
-- monitoring, audit/self-assessment and management review;
-- nonconformity, corrective action and improvement;
-- suppliers and AI providers;
-- incidents;
-- backup/recovery/restore;
-- data governance;
-- vulnerability/threat/security maintenance;
-- assets, acceptable use and access review;
-- legal/contractual/IP/privacy obligations;
-- configuration/drift;
-- cryptography/secrets;
-- secure engineering/testing;
-- continuity/resilience;
-- public structured assurance/compliance data with stable lifecycle controls;
-- release-bound registry snapshots and scheduled assurance monitoring;
-- and this control/document index.
-
-The next maturity gain comes from **current operating evidence, completed reviews/exercises, independent assurance, and measured effectiveness**—not from duplicating state or expanding the policy stack.
+Further maturity comes from current operating evidence, completed reviews/exercises, independent assurance, measured effectiveness, and removal of redundant documentation—not from duplicating state or preserving implementation history in current-state prose.

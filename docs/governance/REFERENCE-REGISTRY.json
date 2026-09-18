@@ -1,7 +1,6 @@
 {
   "schemaVersion": 1,
-  "controlledBy": "DEMO-104",
-  "description": "Canonical management-system document and register references for the WizardGang Architecture Demo.",
+  "description": "Registered management-system document and register identities for the WizardGang Architecture Demo. Registration does not make a document authoritative for assurance or implementation state.",
   "records": [
     {
       "reference": "WG-A11Y-001",
@@ -199,5 +198,6 @@
       "reference": "WG-SOA-002",
       "path": "docs/governance/soa/ISO-42001-SOA.md"
     }
-  ]
+  ],
+  "authority": "reference-identity-only"
 }

@@ -1,10 +1,10 @@
 # Release management
 
-WizardGang Architecture Demo uses semantic versioning. Change IDs identify controlled changes; release tags identify reproducible product states. Not every change is tagged.
+WizardGang Architecture Demo uses semantic versioning. Controlled change IDs identify accepted changes; annotated semantic-version tags identify immutable product states. Not every change is tagged.
 
 ## Release rule
 
-A release tag may exist only when checking out that exact tag reproduces the recorded state:
+A release may be published only when the exact tagged state reproduces successfully:
 
 ```text
 npm ci
@@ -14,33 +14,54 @@ npm run security:dependencies
 npm run build
 ```
 
-Release tags are annotated. Published tags are never moved or deleted during ordinary development. Historical corrections move forward under a new change ID/version unless an explicitly documented immutable-history exception already exists.
+Release tags use `vMAJOR.MINOR.PATCH`, are annotated, and must point to the exact checked-out commit whose `package.json` version matches the tag. Published tags are never moved or deleted during ordinary development. Corrections move forward under a new controlled change and version.
 
-## Release record
+## Release authority and notes
 
-Every `docs/releases/vX.Y.Z.md` record states the product, version, release date, commit, scope, included changes, validation, deployment, known limitations, previous release, and rollback target. Release identity fields come from the annotated tag rather than from the date a release change was authored or merged:
+The annotated tag and GitHub Release are the historical release authority. The repository does not maintain a parallel per-version Markdown release archive or root changelog.
 
-- **Release date:** the annotated tag's date in UTC — `TZ=UTC git for-each-ref --format='%(taggerdate:short-local)' refs/tags/vX.Y.Z`.
-- **Commit:** the commit the tag names — `git rev-list -n1 vX.Y.Z`.
+The tag-triggered release workflow derives release publication from Git/GitHub state:
 
-The explicit UTC timezone is required because plain `%(taggerdate:short)` formats the tagger date in the tagger's local timezone and can disagree with UTC across a date boundary. This rule applies to new release records; historical release/deployment records describe the state that existed at that tag and keep the dates they already recorded rather than being rewritten to match the current rule or presentation.
+1. verify the tag is semantic and annotated;
+2. resolve the exact tagged commit and require the checkout to match it;
+3. require the package version to match the tag;
+4. capture the annotated tag date in UTC and the preceding semantic tag when one exists;
+5. reproduce the tagged source with the required validation gates;
+6. generate and retain the release-bound assurance registry snapshot;
+7. create the GitHub Release with an identity header derived from the tag and GitHub-generated notes for the changes since the preceding tag;
+8. attach the assurance registry snapshot to the GitHub Release;
+9. deploy only after release reproduction and publication succeed.
+
+Historical release notes are read from GitHub Releases. Superseded repository state remains reconstructable from the corresponding annotated tag and Git history.
 
 ## Flow
 
 ```text
 isolated branch -> controlled commit -> pull request -> CI -> review -> merge to main
-                -> release change -> annotated tag -> reproduce -> GitHub Release
+                -> annotated semantic tag -> reproduce exact tag
+                -> GitHub Release + assurance snapshot
                 -> deploy exact tag -> verify /api/operations/version and /api/operations/health
                 -> deployment record
 ```
 
-Production identity comes from the immutable release tag and commit, not from an arbitrary `main` commit. A security or release defect is corrected forward with a new change ID and patch version.
+Production identity comes from the immutable release tag and commit, not from an arbitrary `main` commit. A security or release defect is corrected forward with a new controlled change and patch version.
 
 ## Tag-triggered deployment
 
-The release workflow operates on an existing annotated semantic-version tag. Deployment checks out that exact tag, repeats required validation, applies pending D1 migrations, injects deployed version/commit identity, deploys the Worker, then verifies the public version and health machine endpoints against the released tag.
+The release workflow operates on an existing annotated semantic-version tag. Deployment checks out that exact tag and independently verifies that it is semantic and annotated before proceeding.
 
-A manual recovery deployment may select an already existing semantic tag; it does not deploy an arbitrary branch head. Repository and Worker credentials remain managed secrets and are documented by their owning security/identity configuration rather than duplicated in this release policy.
+The deploy workflow then:
+
+- installs the locked dependencies and validates the reviewed tagged source;
+- verifies required production Worker secret names before any migration;
+- captures the live identity-provider baseline before production mutation;
+- applies pending D1 migrations only after preflight checks pass;
+- deploys the exact tagged Worker source with version and commit identity;
+- verifies the public version and exact commit;
+- verifies Worker health and identity readiness;
+- verifies previously configured identity providers remain configured.
+
+A manual recovery deployment may select an already existing semantic tag; it does not deploy an arbitrary branch head. Repository and Worker credentials remain managed secrets and are documented by their owning security/identity configuration rather than duplicated in release prose.
 
 ### Worker secret preflight and provisioning
 
@@ -54,11 +75,11 @@ npm run provision:worker-secret -- IDENTITY_AUDIT_HMAC_SECRET
 
 The command generates high-entropy random material in-process and streams it directly to `wrangler secret put` on standard input. It does not print the generated value or place it on the command line. Use provider-specific provisioning for OAuth/client tokens, identifiers, certificates, and other provider-issued/operator-selected values.
 
-Deployment also captures the live identity-provider configuration before migrations. After the Worker deploys, verification requires DEMO-296 identity readiness not to regress from ready and requires every provider that was configured before deployment to remain configured. The first deployment that introduces the DEMO-296 health field derives the pre-deployment ready baseline from configured `/auth/session` providers when the older health payload does not yet expose that field.
+Deployment captures the live identity-provider configuration before migrations. After the Worker deploys, verification requires the current identity-readiness signal not to regress from ready and requires every provider configured before deployment to remain configured.
 
 ## Deployment record
 
-After a release has been deployed and its post-deployment verification is complete, record that deployment in `docs/history/DEPLOYMENTS.md` as its own controlled `OPS` change. The deployment record is created after verification rather than folded into the release change, because its evidence does not exist until the release has actually run in production.
+After a release has been deployed and its post-deployment verification is complete, record that deployment in `docs/history/DEPLOYMENTS.md` as its own controlled `OPS` change. The deployment record is created after verification because its evidence does not exist until the release has actually run in production.
 
 Each deployment record carries:
 
@@ -78,6 +99,6 @@ Do not edit an existing deployment record to claim checks that were not recorded
 
 ## Rollback
 
-Rollback means deploying a previously published immutable tag identified by the release/deployment record. Do not move a published tag to simulate rollback. Prefer a forward correction under a new controlled change and release.
+Rollback means deploying a previously published immutable tag identified by GitHub Release/deployment evidence. Do not move a published tag to simulate rollback. Prefer a forward correction under a new controlled change and release.
 
 If a proposed rollback target is older than a `SEC` change in the currently deployed release line, the rollback analysis must state the security behavior or control that the older target would reinstate. The deployment record must capture the owner's explicit acceptance of that reinstatement; without that acceptance, correct forward instead. If data/schema compatibility prevents safe tag rollback, correct forward instead.

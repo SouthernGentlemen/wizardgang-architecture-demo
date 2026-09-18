@@ -35,9 +35,9 @@ Canonical assurance JSON is the authority for compliance status, applicability, 
 For ISO/IEC 27001, ISO/IEC 42001, and WCAG 2.2 compliance records:
 
 1. Edit assessment state only in the registered canonical JSON record. Use only `pass`, `partial`, `gap`, or `not-applicable`; do not infer a status from document wording.
-2. Keep `rationale` and `gaps` in structured data. During the staged DEMO-285 through DEMO-289 migration those fields remain schema-optional; the later completeness gate makes the required combinations enforceable.
+2. Keep `rationale` and `gaps` in structured data and satisfy the current registered schema and validation rules for the record status.
 3. Add governing-document traceability with a `documentation` relationship targeting `github.repository-markdown`; the native target is a repository-relative `.md` path followed by a GitHub heading anchor. Do not replace or repurpose an `evidence` relationship.
-4. In each non-dated governing document referenced by a compliance record, maintain an Alignment section with a `Controls:` line naming the canonical record IDs documented there. Every named record must link back to that document. Release records, SoAs, and assessment/evaluation reports are dated-record exemptions.
+4. In each non-dated governing document referenced by a compliance record, maintain an Alignment section with a `Controls:` line naming the canonical record IDs documented there. Every named record must link back to that document. SoAs and assessment/evaluation reports are dated-record exemptions.
 5. Run `npm run validate:assurance-documentation`. It validates file existence, heading anchors, and reciprocal `Controls:` mappings only; it never reads prose to derive or validate compliance status.
 6. Run `npm run generate:assurance-summaries` after structured assurance changes, then `npm run validate:assurance-summaries` or the full `npm run check`.
 7. Refresh lifecycle source approval for each changed public structured dataset so publication remains bound to the exact Git blob revision.

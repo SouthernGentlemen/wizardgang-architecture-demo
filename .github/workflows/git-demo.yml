@@ -112,80 +112,28 @@ jobs:
       - name: Create semantic version change
         env:
           VERSION: ${{ steps.release.outputs.version }}
-          CURRENT_VERSION: ${{ steps.release.outputs.current }}
-          CHANGE_ID: ${{ steps.release.outputs.change_id }}
-        run: |
-          npm version "$VERSION" --no-git-tag-version
-          mkdir -p docs/releases
-          release_date="$(date -u +%Y-%m-%d)"
-          release_file="docs/releases/v$VERSION.md"
-          {
-            echo "# WizardGang Architecture Demo v$VERSION"
-            echo
-            echo "**Product:** WizardGang Architecture Demo"
-            echo
-            echo "**Version:** v$VERSION"
-            echo
-            echo "**Release date:** $release_date"
-            echo
-            echo "**Commit:** the commit this tag names — \`git rev-list -n1 v$VERSION\`"
-            echo
-            echo "## Scope"
-            echo
-            echo "Demonstrate the repository's controlled branch, commit, pull-request, CI, release, deployment, and production-verification lifecycle with a real patch, minor, or major version change."
-            echo
-            echo "## Included changes"
-            echo
-            echo "- [$CHANGE_ID] [BUILD] Demonstrate v$VERSION release lifecycle"
-            echo
-            echo "## Validation"
-            echo
-            echo "- Pull-request CI validates routes, controlled history, lint, types, tests, contracts, localization, security, migrations, dependencies, the Worker build, and commit-bound evidence."
-            echo "- Release automation reproduces the annotated tag before deployment."
-            echo "- Deployment automation verifies /api/operations/version and /api/operations/health against the exact tag commit."
-            echo
-            echo "## Deployment"
-            echo
-            echo "Target: \`demo.wizardgang.ai\`"
-            echo
-            echo "The release workflow deploys only the reviewed annotated tag and publishes this record as the matching GitHub Release."
-            echo
-            echo "## Known limitations"
-            echo
-            echo "- Merge and release still honor repository protections and managed-environment controls."
-            echo "- GitHub and Cloudflare availability can delay externally verified lifecycle updates."
-            echo "- WCAG and ISO references are alignment demonstrations, not certification claims."
-            echo
-            echo "## Previous release"
-            echo
-            echo "v$CURRENT_VERSION"
-            echo
-            echo "## Rollback target"
-            echo
-            echo "v$CURRENT_VERSION"
-          } > "$release_file"
+        run: npm version "$VERSION" --no-git-tag-version
       - name: Commit and push controlled branch
         env:
           VERSION: ${{ steps.release.outputs.version }}
-          CURRENT_VERSION: ${{ steps.release.outputs.current }}
           CHANGE_ID: ${{ steps.release.outputs.change_id }}
           BRANCH: ${{ steps.release.outputs.branch }}
         run: |
           git config user.name "WizardGang Live Demo"
           git config user.email "live-demo@users.noreply.github.com"
           git switch -c "$BRANCH"
-          git add package.json package-lock.json "docs/releases/v$VERSION.md"
+          git add package.json package-lock.json
           git commit -F - <<EOF
           [$CHANGE_ID] [BUILD] Demonstrate v$VERSION release lifecycle
 
           Change:
-          Increment the semantic version to $VERSION and add its controlled release record.
+          Increment the semantic version to $VERSION for the live release lifecycle.
 
           Reason:
           Demonstrate the repository's real delivery lifecycle from an authenticated /git action.
 
           Impact:
-          Package version metadata and release evidence only.
+          Package version metadata only; release notes are generated from Git/GitHub history after tagging.
 
           Risk:
           Medium
@@ -200,7 +148,6 @@ jobs:
           Evidence:
           - package.json
           - package-lock.json
-          - docs/releases/v$VERSION.md
 
           Source:
           Direct live Git demonstration.
@@ -325,7 +272,6 @@ jobs:
           git fetch origin "$BRANCH"
           git checkout --detach "$SHA"
           test "$(node -p "require('./package.json').version")" = "$VERSION"
-          test -f "docs/releases/v$VERSION.md"
       - name: Merge without bypassing repository protections
         env:
           GH_TOKEN: ${{ secrets.GIT_DEMO_PR_TOKEN }}

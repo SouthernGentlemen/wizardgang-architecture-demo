@@ -134,7 +134,20 @@ Typical concerns include semantic HTML, keyboard navigation, visible focus state
 
 ## 15 — Git repository architecture
 
-GitHub is the authoritative source for development. A repository should carry enough context for someone who did not build the system to understand, run, change, test, release, and deploy it.
+A repository carries the current executable system plus enough concise context for someone who did not build it to understand, run, change, test, release, and deploy it. Superseded repository states are recovered from Git/GitHub rather than restated in current architecture or policy documents.
+
+### Documentation authority
+
+Authority follows this order:
+
+1. executable source and contracts;
+2. structured assurance records under `assurance/**`;
+3. generated artifacts derived from authoritative inputs;
+4. concise human current-state architecture and policy documentation;
+5. operating evidence for a stated time, scope, or activity;
+6. Git/GitHub history for superseded states, releases, CI/deployment execution, pull requests, and commits.
+
+Generated artifacts are projections, not writable sources of truth. Current architecture/policy prose explains the present system and must not become an alternate store for structured assurance state, generated inventories, or implementation history. Concrete historical change IDs, old pull requests, merge SHAs, retired routes, former labels, staged migrations, and previous implementations belong in Git/GitHub history or in the exact validator/test exception data that still requires them.
 
 Representative structure:
 
@@ -144,7 +157,6 @@ Representative structure:
 ├── public/
 ├── tests/
 ├── docs/
-│   └── releases/
 ├── scripts/
 ├── migrations/
 ├── .github/workflows/
@@ -177,7 +189,7 @@ Commit pattern:
 
 Each controlled change has one permanent ID and one primary bracketed type. Types include `INIT`, `FEAT`, `FIX`, `SEC`, `API`, `A11Y`, `I18N`, `AI`, `DB`, `OPS`, `TEST`, `DOCS`, `REFACTOR`, `PERF`, `BUILD`, `REVERT`, and `CHORE`.
 
-Project-specific prefixes are encouraged, such as `[DEMO-001]` for this repository.
+Project-specific prefixes are encouraged; this repository uses the `[DEMO-###]` namespace.
 
 ## 17 — Branching
 
@@ -191,7 +203,7 @@ branch -> commits -> validation -> pull request -> review -> merge -> tag -> dep
 
 Production milestones are represented by annotated Git tags and GitHub Releases using semantic versioning: `MAJOR.MINOR.PATCH`.
 
-A deployed production version must be traceable to a specific Git tag and commit. Meaningful releases should document version, date, major changes, fixes, security-related changes, known limitations, compatibility changes, and migration requirements where applicable. Repository release history is maintained by the per-tag records under `docs/releases/` and the corresponding GitHub Releases rather than a parallel root changelog.
+A deployed production version must be traceable to a specific annotated Git tag and commit. GitHub Releases publish release identity and generated change notes from Git/GitHub state, with the release-bound assurance snapshot attached. Annotated tags and GitHub Releases are the historical release authority; the repository does not maintain a parallel per-version Markdown archive or changelog.
 
 ## 19 — GitHub Actions
 
@@ -274,7 +286,7 @@ GitHub records how the system changed. Cloudflare records how it was deployed an
 11. Accessible by design.
 12. Internationalization ready.
 13. AI as a controlled integration.
-14. Git as the source of truth.
+14. Git/GitHub for superseded and historical repository state.
 15. Release what you deploy.
 16. Automate repeatable controls.
 17. Trace production changes.
