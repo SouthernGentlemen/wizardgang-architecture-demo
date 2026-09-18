@@ -83,8 +83,7 @@ function controlsInAlignment(markdown) {
 
 function isDatedRecord(relativePath) {
   const normalized = relativePath.replaceAll('\\', '/');
-  return normalized.startsWith('docs/releases/')
-    || normalized.includes('/soa/')
+  return normalized.includes('/soa/')
     || normalized.includes('/assessments/')
     || /(?:^|\/)[^/]*(?:ASSESSMENT|EVALUATION|REPORT)[^/]*\.md$/i.test(normalized);
 }

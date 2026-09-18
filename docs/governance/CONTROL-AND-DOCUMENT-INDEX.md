@@ -253,7 +253,7 @@ The most important technical evidence owners are:
 | Architecture | `docs/ARCHITECTURE-STANDARD.md`, `README.md` |
 | Security boundary | `SECURITY.md` |
 | Controlled change | `docs/CHANGE-MANAGEMENT.md`, Git commit/PR history |
-| Release/deployment | release docs, `.github/workflows/release.yml`, `.github/workflows/deploy.yml`, tags/releases |
+| Release/deployment | `.github/workflows/release.yml`, `.github/workflows/deploy.yml`, annotated tags, GitHub Releases, deployment records |
 | CI validation | `.github/workflows/ci.yml`, `package.json`, validation scripts, commit-bound evidence artifact |
 | REST / GraphQL / Webhooks | contracts, API handlers, tests |
 | Identity / SSO / OAuth / SAML | `docs/IDENTITY.md`, identity handlers/session library, tests |
@@ -323,7 +323,7 @@ The public compliance assessment vocabulary is shared across ISO/IEC 27001, ISO/
 
 A requirement that implies recurring activity remains at most **Partial** until the repository has an actual operating record for that activity. Policy prose or schema support alone is not proof that a recurring process operated.
 
-Compliance records remain authoritative for status, rationale, gaps, applicability, and evidence relationships. Governing Markdown supplies human-readable control documentation and reciprocal traceability through an **Alignment** section containing a `Controls:` line. Documentation links identify a repository-relative Markdown file path plus GitHub heading anchor and resolve against the deployed commit. Validation of that documentation contract reads headings and `Controls:` lines only; it never derives or changes compliance status from prose. Dated release records, Statements of Applicability, and assessment/evaluation reports are exempt from the reciprocal `Controls:` requirement.
+Compliance records remain authoritative for status, rationale, gaps, applicability, and evidence relationships. Governing Markdown supplies human-readable control documentation and reciprocal traceability through an **Alignment** section containing a `Controls:` line. Documentation links identify a repository-relative Markdown file path plus GitHub heading anchor and resolve against the deployed commit. Validation of that documentation contract reads headings and `Controls:` lines only; it never derives or changes compliance status from prose. Statements of Applicability and assessment/evaluation reports are exempt from the reciprocal `Controls:` requirement.
 
 Supporting registers may use additional workflow statuses such as Planned, Active, Restricted, Watch, At risk, Failed, or Passed with limitations. These are not automatically interchangeable with compliance statuses.
 

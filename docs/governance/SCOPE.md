@@ -66,7 +66,7 @@ The scope includes information and assets required to operate or govern the demo
 - source code;
 - infrastructure and application configuration owned by the demo;
 - documentation;
-- release records;
+- annotated tag and GitHub Release evidence;
 - test and validation evidence;
 - audit metadata;
 - operational health records;
