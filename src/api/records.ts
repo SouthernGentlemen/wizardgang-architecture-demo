@@ -33,10 +33,8 @@ function present(row: RecordRow) {
   return { id: row.id, namespace: row.namespace, key: row.record_key, value, createdAt: row.created_at, updatedAt: row.updated_at };
 }
 
-function namespaceFor(principal: Principal, requested: unknown, fallback = 'public'): string {
-  if (principal.namespace) return principal.namespace;
-  if (principal.authentication === 'anonymous') return 'public';
-  return identifier(requested, 'namespace', fallback);
+function namespaceFor(principal: Principal): string {
+  return principal.namespace ?? 'public';
 }
 
 function publicPrincipal(principal: Principal) {
@@ -45,7 +43,7 @@ function publicPrincipal(principal: Principal) {
     authentication: principal.authentication,
     ...(principal.provider ? { provider: principal.provider } : {}),
     permissions: principal.permissions,
-    ...(principal.namespace ? { scope: 'visitor-sandbox' } : principal.authentication === 'anonymous' ? { scope: 'public' } : { scope: 'caller-selected' }),
+    ...(principal.namespace ? { scope: 'visitor-sandbox' } : { scope: 'public' }),
   };
 }
 
@@ -76,7 +74,7 @@ function valueJson(value: unknown): string {
 async function listRecords(request: Request, env: Env, id: string): Promise<Response> {
   const principal = await authorize(request, env, 'demo:read');
   if (principal instanceof Response) return principal;
-  const namespace = namespaceFor(principal, new URL(request.url).searchParams.get('namespace'));
+  const namespace = namespaceFor(principal);
   const result = await env.DEMO_DB.prepare(
     `SELECT id, namespace, record_key, value_json, created_at, updated_at
      FROM demo_records WHERE namespace = ? ORDER BY record_key LIMIT 100`,
@@ -91,7 +89,7 @@ async function listRecords(request: Request, env: Env, id: string): Promise<Resp
 async function getRecord(request: Request, env: Env, key: string, id: string): Promise<Response> {
   const principal = await authorize(request, env, 'demo:read');
   if (principal instanceof Response) return principal;
-  const namespace = namespaceFor(principal, new URL(request.url).searchParams.get('namespace'));
+  const namespace = namespaceFor(principal);
   const row = await findRecord(env, namespace, key);
   await recordApplicationLog(env, {
     source: 'rest', eventKey: row ? 'record_read' : 'record_not_found', message: row ? `REST read demo record ${namespace}/${key}.` : `REST could not find demo record ${namespace}/${key}.`,
@@ -104,7 +102,7 @@ async function createRecord(request: Request, env: Env, id: string): Promise<Res
   const principal = await authorize(request, env, 'demo:write');
   if (principal instanceof Response) return principal;
   const body = await readJson<RecordInput>(request);
-  const namespace = namespaceFor(principal, body.namespace);
+  const namespace = namespaceFor(principal);
   const key = identifier(body.key, 'key');
   if (await findRecord(env, namespace, key)) throw new HttpError(409, 'record_already_exists', 'POST creates a new resource. Use PUT to replace an existing key.');
   const serialized = valueJson(body.value);
@@ -135,7 +133,7 @@ async function replaceRecord(request: Request, env: Env, key: string, id: string
   if (principal instanceof Response) return principal;
   const body = await readJson<RecordInput>(request);
   if (body.key !== undefined && identifier(body.key, 'key') !== key) throw new HttpError(400, 'record_key_mismatch', 'The body key must match the resource path.');
-  const namespace = namespaceFor(principal, body.namespace, new URL(request.url).searchParams.get('namespace') || 'public');
+  const namespace = namespaceFor(principal);
   const existing = await findRecord(env, namespace, key);
   const serialized = valueJson(body.value);
   const now = new Date().toISOString();
@@ -159,7 +157,7 @@ async function replaceRecord(request: Request, env: Env, key: string, id: string
 async function deleteRecord(request: Request, env: Env, key: string, id: string): Promise<Response> {
   const principal = await authorize(request, env, 'demo:write');
   if (principal instanceof Response) return principal;
-  const namespace = namespaceFor(principal, new URL(request.url).searchParams.get('namespace'));
+  const namespace = namespaceFor(principal);
   await env.DEMO_DB.prepare('DELETE FROM demo_records WHERE namespace = ? AND record_key = ?').bind(namespace, key).run();
   const event = await recordDemoEvent(env, 'd1', 'record_deleted', { namespace, key, deletedBy: principal.subject });
   await recordApplicationLog(env, {

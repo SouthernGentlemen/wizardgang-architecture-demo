@@ -158,11 +158,11 @@
       "view": "access-classes",
       "order": 10,
       "fields": {
-        "accessClass": "Operator API bearer access",
-        "assetBoundary": "protected application writes",
-        "minimumIntendedAuthority": "Scoped application write",
-        "publicRecordPosture": "Credential private",
-        "reviewState": "Partial"
+        "accessClass": "Retired operator API bearer access",
+        "assetBoundary": "none — production credential revoked 2026-09-18",
+        "minimumIntendedAuthority": "None; no application authenticator accepts the retired credential",
+        "publicRecordPosture": "DEMO_API_TOKEN revocation recorded by name/date only; no value retained",
+        "reviewState": "Met"
       },
       "relationships": []
     },

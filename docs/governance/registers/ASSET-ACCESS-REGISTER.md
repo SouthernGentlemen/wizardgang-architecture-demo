@@ -45,7 +45,7 @@ Status is an evidence posture, not a certification score.
 | AST-011 | Cloudflare deployment/admin credentials | Security | Security / Operations Owner | Restricted managed tokens/secrets | Partial |
 | AST-012 | Cloudflare analytics/read credential | Security / operations | Operations Owner | Restricted read-only provider token where configured | Partial |
 | AST-013 | Application `/admin` boundary | Security / operations | Operations / Security Owner | Authenticated same-origin admin path | Partial |
-| AST-014 | Application API write credentials | Security | Security / Technical Owner | Managed bearer / identity-derived bounded write access | Partial |
+| AST-014 | Application API write authorization | Security | Security / Technical Owner | Identity-derived bounded visitor write access | Partial |
 | AST-015 | Webhook signing secrets | Security | Security / Technical Owner | Managed secret; HMAC verification | Partial |
 | AST-016 | Identity/session signing secrets and provider credentials | Security / identity | Security / Technical Owner | Restricted managed secret/provider config | Partial |
 | AST-017 | Public demo records (`demo_records`) | Data | Data / AI Capability Owner | Approved public/API/MCP read boundary | Partial |
@@ -106,11 +106,11 @@ Cloudflare assets include production runtime, DNS/TLS, D1, R2, Durable Objects w
 
 **Status:** Partial — control design exists; periodic credential/access review evidence remains pending.
 
-### AST-014 — Application Write Credentials
+### AST-014 — Application Write Authorization
 
-**Boundary:** managed operator bearer token or bounded identity-derived token where implemented.
+**Boundary:** bounded identity-derived visitor tokens where implemented. Every authenticated write principal carries a server-derived visitor sandbox namespace.
 
-**Important:** API write permission does not grant repository, provider, release, or MCP authority.
+**Important:** API write permission does not grant repository, provider, release, administrative, or MCP authority. The former operator bearer credential was revoked from production on 2026-09-18 and is not accepted by the application.
 
 **Status:** Partial.
 
@@ -191,7 +191,7 @@ These are the only approved AI/MCP connection families.
 | ACC-007 | Cloudflare deploy/admin access | Cloudflare account/runtime | Deployment/configuration according to token/account scope | Account details private | Partial |
 | ACC-008 | Cloudflare analytics access | Cloudflare analytics/billing API | Read only; Billing Read only when needed | Account/token details private | Partial |
 | ACC-009 | Application admin credential | `/admin`, `/assurance` app boundary | Administrative app actions | Credential private | Partial |
-| ACC-010 | Operator API bearer access | protected application writes | Scoped application write | Credential private | Partial |
+| ACC-010 | Retired operator API bearer access | none — production credential revoked 2026-09-18 | None; no application authenticator accepts the retired credential | DEMO_API_TOKEN revocation recorded by name/date only; no value retained | Met |
 | ACC-011 | Identity-derived write token | visitor namespace | 10-minute bounded visitor write authority | Runtime-derived; no public token detail | Partial |
 | ACC-012 | Webhook signing secrets | webhook receivers | Signature verification only | Secret private | Partial |
 | ACC-013 | Session/signing secrets | application/identity sessions | Session integrity/encryption | Secret private | Partial |
