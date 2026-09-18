@@ -13,7 +13,31 @@ This is a public architecture demonstration. Public source is intentional; secre
 
 Use Cloudflare/GitHub managed secret stores for production and ignored `.dev.vars` for local-only placeholders.
 
-The current core Worker secrets are `DEMO_ADMIN_USER`, `DEMO_ADMIN_PASSWORD`, `WEBHOOK_DEMO_SECRET`, `GITHUB_WEBHOOK_SECRET`, `GITHUB_DEMO_TOKEN`, `DEMO_SESSION_SECRET`, `IDENTITY_SESSION_SECRET`, `IDENTITY_AUDIT_HMAC_SECRET`, and the optional read-only `CLOUDFLARE_API_TOKEN`; provider credentials and the SAML certificate are documented in `docs/IDENTITY.md`. `GITHUB_READ_TOKEN` is an optional read-only GitHub API token. Secret values are never returned by health, version, logs, usage, evidence, or source-link surfaces.
+The authoritative Worker secret-name inventory is `config/worker-secrets.json`. Cloudflare's Worker secret store also carries some provider identifiers and verification material that are not intrinsically secret; they are inventoried here because deployment verifies the managed names as one set. Values are never checked in or exposed by health, version, logs, usage, evidence, or source-link surfaces.
+
+<!-- WORKER_SECRETS_START -->
+- `DEMO_ADMIN_USER`;
+- `DEMO_ADMIN_PASSWORD`;
+- `WEBHOOK_DEMO_SECRET`;
+- `GITHUB_WEBHOOK_SECRET`;
+- `GITHUB_READ_TOKEN` (optional);
+- `GITHUB_REPORTING_WRITE_TOKEN` (optional);
+- `GITHUB_DEMO_TOKEN`;
+- `DEMO_SESSION_SECRET`;
+- `IDENTITY_SESSION_SECRET`;
+- `IDENTITY_AUDIT_HMAC_SECRET`;
+- `MICROSOFT_CLIENT_ID`;
+- `MICROSOFT_CLIENT_SECRET`;
+- `MICROSOFT_TENANT_ID`;
+- `GOOGLE_CLIENT_ID`;
+- `GOOGLE_CLIENT_SECRET`;
+- `GITHUB_CLIENT_ID`;
+- `GITHUB_CLIENT_SECRET`;
+- `SAML_IDP_CERT` (optional);
+- `CLOUDFLARE_API_TOKEN` (optional);
+<!-- WORKER_SECRETS_END -->
+
+`IDENTITY_SESSION_SECRET` and `IDENTITY_AUDIT_HMAC_SECRET` each require at least 32 UTF-8 bytes. `DEMO_SESSION_SECRET` requires at least 32 characters. Other entries are currently enforced only as non-empty when their capability is used; provider-issued formats and strength requirements remain authoritative for provider credentials.
 
 Cloudflare usage collection uses a dedicated minimum-permission token with Analytics Read and, only when needed, Billing Read. Public projections exclude account/resource identifiers, account names, invoice/subscription identifiers, tokens, payment data, and raw upstream error text.
 
