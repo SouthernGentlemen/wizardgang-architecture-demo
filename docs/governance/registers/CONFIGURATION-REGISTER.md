@@ -41,7 +41,7 @@ A repository file may be `Met` as desired-state configuration while provider enf
 | CFG-010 | Managed secret names/requirements | `.dev.vars.example`, `SECURITY.md`, workflows/provider stores | Local/Production | names/purpose documented; values intentionally unverifiable publicly | Partial |
 | CFG-011 | CI validation configuration | `.github/workflows/ci.yml` | GitHub Actions | workflow source + runs when available | Met |
 | CFG-012 | Release/deployment workflows | workflow YAML + release docs | GitHub Actions/Production | source + tagged deployment evidence | Met |
-| CFG-013 | GitHub repository permissions/protections | GitHub provider state | GitHub | rulesets query/classic protection evidence incomplete | Partial |
+| CFG-013 | GitHub repository permissions/protections | GitHub provider state | GitHub | active main/tag rulesets and merge settings queried 2026-09-18; effectiveness review pending | Partial |
 | CFG-014 | GitHub environment/secrets/variables | GitHub provider state | GitHub | workflow references exist; full provider-state inventory not public/evidenced | Partial |
 | CFG-015 | Cloudflare account/token permissions | Cloudflare provider state + security docs | Production | least-privilege intent documented; recurring provider reconciliation pending | Partial |
 | CFG-016 | Application feature config | `config/*.json` + source | All | source/CI/tests | Met |
@@ -148,15 +148,16 @@ Workflow source and release history provide controlled desired-state evidence.
 
 ### CFG-013 — repository permissions/protections — Partial
 
-Same-day GitHub API verification performed on **2026-09-17** found:
+Immediately before DEMO-300, GitHub's REST API returned no repository rulesets, all three merge methods were enabled, and automatic deletion of merged head branches was disabled. Provider state verified on **2026-09-18 at 08:22 UTC** after the approved change shows:
 
-- the `main` branch metadata reports `protected: false`;
-- required status-check enforcement is `off` with no configured contexts/checks in the branch metadata;
-- the repository rulesets endpoint returns no configured rulesets;
-- the classic protection-detail endpoint is not accessible to the connected integration, so no additional hidden setting is inferred from that denied request;
-- repository search reports **232 merged pull requests** and **0** merged pull requests matching GitHub's `review:approved` search qualifier as of the verification date.
+- active branch ruleset `Protect main` (provider ID `23647109`) applies to `refs/heads/main`, has no bypass actors, blocks deletion and non-fast-forward updates, requires a pull request, permits only merge commits, and requires the `validate` and `change-id` status checks;
+- the pull-request rule requires zero approving reviews, matching the single-maintainer operating model, and does not claim that an independent review occurred;
+- active tag ruleset `Protect release tags` (provider ID `23647111`) applies to `refs/tags/v*`, has no bypass actors, and blocks update and deletion;
+- repository settings allow merge commits, disable squash and rebase merges, and delete merged head branches automatically.
 
-The repository has a strong controlled-change convention, CI validation, and PR history, but those process records are not equivalent to provider-enforced branch protection or required approving reviews. CFG-013 therefore remains **Partial**, and controls that depend on enforced source/review protection cannot be assessed as Pass from current provider state.
+Verification queried `GET /repos/SouthernGentlemen/wizardgang-architecture-demo/rulesets/23647109`, `GET /repos/SouthernGentlemen/wizardgang-architecture-demo/rulesets/23647111`, and `GET /repos/SouthernGentlemen/wizardgang-architecture-demo`; the exact reassessment is retained in `docs/governance/assessments/ISO-27001-2026-09-18-REPOSITORY-PROTECTION-ADDENDUM.md`.
+
+CFG-013 remains **Partial** because this verifies configured state, not effectiveness over an operating interval. A later review must confirm that the rules remain active, required checks gate representative changes, protected refs reject prohibited changes, and no unapproved provider drift has occurred.
 
 ### CFG-014 — environment/secrets/variables — Partial
 

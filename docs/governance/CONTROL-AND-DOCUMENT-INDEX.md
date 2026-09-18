@@ -447,7 +447,7 @@ This index intentionally preserves the following known gaps for cleanup or opera
 1. Canonical governance/register metadata references are unique and CI-validated; future drift is treated as a validation failure.
 2. The exhaustive structured WCAG/ISO compliance registry is present and generated/presentation drift is CI-validated, but many rows remain operating-evidence constrained rather than independently demonstrated.
 3. ISO SoA Markdown is generated from canonical structured compliance data; future status/rationale changes must be made in that structured source and pass generation checks.
-4. Same-day GitHub API verification on 2026-09-17 reports `main` with `protected: false`, required-status-check enforcement `off`, and no repository rulesets. A direct protection-detail request is not accessible to this integration; merged-PR search reports 232 merged PRs and 0 matching GitHub `review:approved` events, so repository-level branch/review enforcement is not treated as demonstrated.
+4. GitHub API verification on 2026-09-18 demonstrates active `Protect main` and `Protect release tags` rulesets, required `validate` and `change-id` checks, merge-commit-only pull requests, protected `v*` tags, and automatic merged-branch deletion. Effectiveness over an operating interval and automated drift detection are not yet demonstrated, and the intentional zero-review requirement for the single-maintainer model is not independent review evidence.
 5. No completed formal internal audit is claimed.
 6. No completed management review is claimed.
 7. No completed `RT-001` restore exercise is claimed.

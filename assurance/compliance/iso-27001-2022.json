@@ -4787,11 +4787,22 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#3-existing-controlled-development-lifecycle"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.25"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/ISO-27001-2026-09-18-REPOSITORY-PROTECTION-ADDENDUM.md#a825-secure-development-lifecycle"
+          }
         }
       ],
-      "rationale": "The secure development lifecycle is documented and exercised through controlled changes, CI, tests, and PRs. On 2026-09-17, GitHub reports main unprotected with no repository rulesets and no merged PRs matching review:approved, so provider-enforced lifecycle/review effectiveness is not demonstrated.",
+      "rationale": "The secure development lifecycle is documented and exercised through controlled changes, CI, tests, and PRs. On 2026-09-18, GitHub provider state requires pull requests and the validate/change-id checks on main, blocks deletion and force pushes, and permits only merge commits. The intentional zero-review requirement fits the single-maintainer model but is not independent review evidence, and effectiveness over an operating interval has not yet been reviewed.",
       "gaps": [
-        "Establish or explicitly accept the lack of provider-enforced branch/review protection and retain an effectiveness review before considering Pass."
+        "Retain a dated effectiveness review showing that the main ruleset remained active and gated representative changes over an operating interval before considering Pass."
       ]
     },
     {
@@ -4835,11 +4846,22 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/registers/CONFIGURATION-REGISTER.md#9-github-configuration"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.iso-27001",
+            "native": "ISO27001-A.8.32"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/ISO-27001-2026-09-18-REPOSITORY-PROTECTION-ADDENDUM.md#a832-controlled-technical-changes"
+          }
         }
       ],
-      "rationale": "Technical changes use the DEMO controlled-change convention, CI, PRs, and release traceability. On 2026-09-17, main is unprotected, required-status-check enforcement is off, no repository rulesets are configured, and merged PR search returns no review:approved events, so change enforcement is not sufficient for Pass.",
+      "rationale": "Technical changes use the DEMO controlled-change convention, CI, PRs, and release traceability. On 2026-09-18, GitHub provider state requires pull requests and validate/change-id checks on main, blocks main deletion and force pushes, blocks update/deletion of v* tags, permits only merge commits, and deletes merged head branches. Effectiveness and continuing provider-state alignment have not yet been reviewed over an operating interval.",
       "gaps": [
-        "Establish or explicitly accept provider-enforced branch/status/review controls and retain a dated effectiveness decision."
+        "Retain a dated effectiveness review showing that branch and tag rules remained active, rejected prohibited changes, and did not drift over an operating interval before considering Pass."
       ]
     },
     {
