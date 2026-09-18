@@ -17,8 +17,8 @@ The project already implements several concrete mechanisms, including:
 - HTTPS through the Cloudflare-hosted public service;
 - AES-GCM protection for identity-flow and identity-session state;
 - cryptographically random identifiers and PKCE material;
-- SHA-256 digests for bounded comparison, identifiers, and evidence;
-- HMAC-SHA256 webhook authentication;
+- SHA-256 digests for bounded comparison, non-account identifiers, and evidence;
+- HMAC-SHA256 for webhook authentication and domain-separated identity audit/sandbox derivation;
 - OIDC signature verification through trusted provider discovery/JWKS;
 - SAML assertion verification using the configured identity-provider signing certificate;
 - managed GitHub/Cloudflare secrets for production credentials;
@@ -55,8 +55,9 @@ The system distinguishes these functions:
 | **Transport protection** | HTTPS/TLS on public Cloudflare route | Protect data in transit |
 | **Authenticated encryption** | AES-GCM identity/session state | Confidentiality + integrity of application-managed state |
 | **Message authentication** | HMAC-SHA256 webhooks | Verify sender possession of a shared signing secret and request-body integrity |
+| **Keyed pseudonymous derivation** | HMAC-SHA256 identity audit identifiers and visitor sandbox namespaces | Domain-separated derivation without publishing provider subjects |
 | **Signature verification** | OIDC JWT/JWKS, SAML signing certificate | Verify provider-issued authentication assertions |
-| **Digest / fingerprint** | SHA-256 audit payload digests, subject/session identifiers | Integrity reference, comparison, pseudonymous lookup |
+| **Digest / fingerprint** | SHA-256 payload digests and opaque session/assertion identifiers | Integrity reference and bounded comparison for non-account values |
 | **Cryptographic random generation** | `crypto.getRandomValues` | Session IDs, flow state, nonce, PKCE-related random values |
 | **Proof-of-possession flow** | OAuth/OIDC authorization code + PKCE | Bind authorization response to the initiating browser flow |
 | **Credential authentication** | passwords, bearer/API tokens, provider client secrets | Authenticate an operator, workflow, or application to an authorized boundary |
@@ -126,12 +127,14 @@ The certificate is verification/trust material. The private signing key is contr
 SHA-256 is used for several non-password purposes, including:
 
 - bounded admin-credential comparison input;
-- session/subject identifiers stored as digests;
+- opaque session/assertion identifiers stored as digests;
 - webhook payload fingerprints;
 - sanitized audit evidence;
 - and internal cryptographic key derivation for the current AES-GCM implementation.
 
 A SHA-256 digest in logs or D1 must not be represented as encryption or as proof that source data can never be correlated.
+
+Provider-account audit correlation values use HMAC-SHA-256 under `IDENTITY_AUDIT_HMAC_SECRET`. Audit identifiers and visitor sandbox namespaces use separate domain labels, and the key is not reused for identity-session encryption. Public log and event projections withhold structured identity detail.
 
 ### 4.6 Administrative secret comparison
 
@@ -199,14 +202,15 @@ Examples:
 
 Each workflow/provider credential must be scoped to the function documented for it. Broader provider account ownership does not justify broader automation-token scope.
 
-### 6.4 Session/encryption secrets
+### 6.4 Session/encryption and identity-audit secrets
 
 Examples:
 
 - `DEMO_SESSION_SECRET`;
-- `IDENTITY_SESSION_SECRET`.
+- `IDENTITY_SESSION_SECRET`;
+- `IDENTITY_AUDIT_HMAC_SECRET`.
 
-These protect application session/flow state and must be high-entropy values, unavailable to clients and public logs.
+The session secrets protect application session/flow state. The identity-audit HMAC secret provides keyed, domain-separated derivation for internal identity audit identifiers and visitor sandbox namespaces. All must be high-entropy values, unavailable to clients and public logs.
 
 ### 6.5 Webhook signing secrets
 
@@ -235,7 +239,7 @@ New high-value shared secrets should be generated using a cryptographically secu
 
 Baseline expectations:
 
-- `IDENTITY_SESSION_SECRET` must meet the application's enforced minimum of 32 UTF-8 bytes;
+- `IDENTITY_SESSION_SECRET` and `IDENTITY_AUDIT_HMAC_SECRET` must each meet the application's enforced minimum of 32 UTF-8 bytes;
 - newly generated application session/signing/shared secrets should target at least 32 random bytes unless the provider defines an equivalent or stronger format;
 - provider-generated access tokens/API keys may use provider-defined formats/entropy;
 - operator passwords must be unique, non-default, and resistant to guessing; a password manager is preferred for high-entropy generated values;
@@ -509,7 +513,7 @@ The first consolidated review should verify, without publishing secret values:
 - each permission/scope is no broader than required;
 - stale/unused credentials are revoked;
 - provider/application recovery paths are known;
-- `IDENTITY_SESSION_SECRET` meets the application requirement;
+- `IDENTITY_SESSION_SECRET` and `IDENTITY_AUDIT_HMAC_SECRET` meet the application requirement;
 - shared webhook/session secrets have an acceptable generation basis;
 - SAML trust material is current;
 - OAuth app credentials/callback configuration remains intended;

@@ -60,13 +60,15 @@ The browser and public logs never receive access tokens, refresh tokens, client 
 
 ## Environment configuration and cutover
 
-Set identity secrets/provider credentials with Cloudflare secrets or local `.dev.vars`; never commit real values. Required variables are documented in `.dev.vars.example` and validated by the implementation.
+Set identity secrets/provider credentials with Cloudflare secrets or local `.dev.vars`; never commit real values. Required variables are documented in `.dev.vars.example` and validated by the implementation. `IDENTITY_AUDIT_HMAC_SECRET` is a separate Worker secret used for domain-separated identity audit identifiers and visitor sandbox namespaces and must be at least 32 UTF-8 bytes.
 
 External provider registrations must use canonical callback, SAML entity/consumer, metadata, and webhook URLs from the generated route contract for the released origin. A code change does not modify external provider configuration and does not deploy or release the application. Removed identity browser/protocol URLs remain ordinary unknown paths rather than compatibility aliases.
 
+The identity-audit hardening migration resets existing visitor sandbox rows and invalidates pre-change short-lived demo access tokens. Existing encrypted identity sessions remain valid because their encryption and lookup continue to use `IDENTITY_SESSION_SECRET`. An authenticated visitor can request a new access token to receive a fresh keyed sandbox. This is a one-time sandbox reset, not an identity-session reset.
+
 ## Audit evidence
 
-Authentication and policy transitions create sanitized events for authentication start/completion/failure, SAML validation, authorization allow/deny, and session create/destroy activity. Subject values are hashed. Tokens, cookies, raw assertions, and credentials are excluded.
+Authentication and policy transitions create sanitized events for authentication start/completion/failure, SAML validation, authorization allow/deny, and session create/destroy activity. Internal audit correlation uses a domain-separated HMAC-SHA-256 identifier under `IDENTITY_AUDIT_HMAC_SECRET`; visitor sandbox namespaces use a separate HMAC domain. Application logs omit subject-derived audit and namespace values, and public log/event projections omit identity detail. Tokens, cookies, raw assertions, and credentials are excluded.
 
 ## Alignment
 

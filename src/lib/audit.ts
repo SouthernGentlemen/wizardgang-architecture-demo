@@ -31,5 +31,8 @@ export async function recentDemoEvents(env: Env, limit = 20) {
     .bind(safeLimit)
     .all();
 
-  return result.results;
+  return result.results.map((row) => {
+    const event = row as Record<string, unknown>;
+    return event.demo_id === 'identity' ? { ...event, payload_json: null } : row;
+  });
 }

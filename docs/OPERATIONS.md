@@ -28,6 +28,8 @@ Route retirement does not remove the operational system. The following remain in
 
 Interactive health reads remain read-only. Scheduled five-minute observations are the measured availability evidence and records older than 365 days are purged by the existing collector behavior.
 
+The public log API returns only the identity log envelope needed for bounded diagnostics; structured identity detail is withheld. Identity audit-event payload detail is likewise excluded from public event projections. Subject-derived audit identifiers and visitor sandbox namespaces are not retained in application-log detail.
+
 ## Route and source ownership
 
 Operational route declarations remain in `src/routing/operational-routes.ts`; machine collection remains in `src/api/operations.ts`; usage/provider observation remains in `src/lib/cloudflare-usage.ts`; logs remain in `src/lib/logs.ts`; reporting APIs remain under the reporting route/API modules.
