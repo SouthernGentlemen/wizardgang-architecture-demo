@@ -56,10 +56,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          git fetch --quiet origin main
           notes=$(mktemp)
           snapshot="artifacts/assurance/registry-$GITHUB_REF_NAME.json"
-          git show "origin/main:docs/releases/$GITHUB_REF_NAME.md" > "$notes"
+          git show "$GITHUB_REF_NAME:docs/releases/$GITHUB_REF_NAME.md" > "$notes"
           gh release create "$GITHUB_REF_NAME" \
             "$snapshot#Assurance registry snapshot for $GITHUB_REF_NAME" \
             --title "WizardGang Architecture Demo $GITHUB_REF_NAME" \

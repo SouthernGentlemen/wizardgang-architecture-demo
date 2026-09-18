@@ -18,7 +18,12 @@ Release tags are annotated. Published tags are never moved or deleted during ord
 
 ## Release record
 
-Every `docs/releases/vX.Y.Z.md` record states the product, version, release date, commit, scope, included changes, validation, deployment, known limitations, previous release, and rollback target. Historical release/deployment records describe the state that existed at that tag and are not rewritten merely to match the current browser presentation.
+Every `docs/releases/vX.Y.Z.md` record states the product, version, release date, commit, scope, included changes, validation, deployment, known limitations, previous release, and rollback target. Release identity fields come from the annotated tag rather than from the date a release change was authored or merged:
+
+- **Release date:** the annotated tag's date in UTC — `TZ=UTC git for-each-ref --format='%(taggerdate:short-local)' refs/tags/vX.Y.Z`.
+- **Commit:** the commit the tag names — `git rev-list -n1 vX.Y.Z`.
+
+The explicit UTC timezone is required because plain `%(taggerdate:short)` formats the tagger date in the tagger's local timezone and can disagree with UTC across a date boundary. This rule applies to new release records; historical release/deployment records describe the state that existed at that tag and keep the dates they already recorded rather than being rewritten to match the current rule or presentation.
 
 ## Flow
 
@@ -73,4 +78,6 @@ Do not edit an existing deployment record to claim checks that were not recorded
 
 ## Rollback
 
-Rollback means deploying a previously published immutable tag identified by the release/deployment record. Do not move a published tag to simulate rollback. If data/schema compatibility prevents safe tag rollback, publish a forward correction under a new controlled change and release instead.
+Rollback means deploying a previously published immutable tag identified by the release/deployment record. Do not move a published tag to simulate rollback. Prefer a forward correction under a new controlled change and release.
+
+If a proposed rollback target is older than a `SEC` change in the currently deployed release line, the rollback analysis must state the security behavior or control that the older target would reinstate. The deployment record must capture the owner's explicit acceptance of that reinstatement; without that acceptance, correct forward instead. If data/schema compatibility prevents safe tag rollback, correct forward instead.

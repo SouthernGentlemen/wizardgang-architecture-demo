@@ -42,7 +42,6 @@ const removedRouteReferences = [...new Set([
 
 const textExtensions = new Set(['.css', '.html', '.js', '.json', '.md', '.mjs', '.ts', '.txt', '.yaml', '.yml']);
 const excludedFiles = new Set([
-  'CHANGELOG.md',
   'docs/INTERACTIVE-DEMO-SPEC.md',
   'tests/fixtures/removed-api-pathnames.ts',
   'tests/fixtures/removed-html-pathnames.ts',

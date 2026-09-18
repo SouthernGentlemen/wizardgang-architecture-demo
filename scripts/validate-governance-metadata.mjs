@@ -60,7 +60,7 @@ function resolveIndexToken(token) {
     candidates.push(path.join(governanceRoot, 'soa', token));
     candidates.push(path.join(root, 'docs', token));
     candidates.push(path.join(root, token));
-  } else if (['SECURITY.md','README.md','CONTRIBUTING.md','AGENTS.md','CHANGELOG.md','LICENSE','package.json','wrangler.jsonc'].includes(token)) {
+  } else if (['SECURITY.md','README.md','CONTRIBUTING.md','AGENTS.md','LICENSE','package.json','wrangler.jsonc'].includes(token)) {
     candidates.push(path.join(root, token));
   } else return null;
   return candidates;
