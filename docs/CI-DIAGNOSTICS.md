@@ -4,6 +4,14 @@ The `validate` job runs `npm run validate:ci`. The command is intentionally stri
 
 The site-wide browser command reports the start, completion, and duration of each of its three audit scripts. DEMO-289 additionally reports bounded page/state, locale, browser-operation, media-mode, and teardown progress so a timed-out CDP operation identifies its exact matrix coordinate and phase.
 
+## Pinned Node/npm toolchain
+
+The supported toolchain is Node 22 with npm 10. The exact workflow/runtime selection is recorded in `.node-version` and `packageManager`; `engines` records the supported majors, and `.npmrc` enables `engine-strict` so an unsupported Node or npm major cannot proceed with `npm ci`.
+
+`validate:ci` checks the pinned Node/npm majors before the locked install. It prints the expected and current versions on every run. A mismatch is reported locally and is a hard failure when `CI` is set, before dependency installation begins.
+
+npm 10 is intentional for this release line. Its locked install runs the install scripts required by `workerd@1.20260908.1`, Wrangler's nested `esbuild@0.28.1`, and the macOS-only optional `fsevents@2.3.3`. Do not run this repository's locked install under npm 11 or a later major and accept skipped-script warnings as equivalent behavior. A future npm-major change that introduces install-script approval must explicitly review and approve or deny these packages in the repository before changing `packageManager`.
+
 Every run writes `.ci-diagnostics/` (ignored by Git):
 
 - `validation.log` — complete redacted stdout/stderr, with the exact command, exit code, timestamps, and duration for every attempted step;
