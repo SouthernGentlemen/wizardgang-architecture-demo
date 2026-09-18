@@ -78,7 +78,7 @@ if (!args.length) {
   if (!process.exitCode) process.stdout.write(`Validated ${inventoryNames.length} Worker secret names across inventory, Env, .dev.vars.example, and SECURITY.md.\n`);
 } else if (args[0] === '--provisioned' && args[1] && args.length === 2) {
   const raw = JSON.parse(fs.readFileSync(path.resolve(args[1]), 'utf8'));
-  if (!Array.isArray(raw)) throw new Error('wrangler secret list --json output must be an array.');
+  if (!Array.isArray(raw)) throw new Error('wrangler secret list --format json output must be an array.');
   const provisioned = sorted(raw.map((entry) => typeof entry === 'string' ? entry : entry?.name).filter((name) => typeof name === 'string'));
   const required = inventory.secrets.filter((entry) => entry.required).map((entry) => entry.name);
   const missingRequired = required.filter((name) => !provisioned.includes(name));

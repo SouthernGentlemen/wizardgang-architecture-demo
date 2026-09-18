@@ -13,6 +13,7 @@ import {
   waitForPageTarget,
   waitForUrl,
 } from './lib/browser-audit.mjs';
+import { assuranceReviewState, waitForAssuranceRecordPane } from './lib/demo-289-content-review.mjs';
 
 const require = createRequire(import.meta.url);
 const axeSource = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
@@ -23,7 +24,6 @@ const debugPort = Number(process.env.DEMO289_DEBUG_PORT || 9224);
 const origin = `http://127.0.0.1:${port}`;
 const demosPath = manifest.find((route) => route.id === 'demos.index')?.route;
 const assurancePath = manifest.find((route) => route.id === 'assurance.index')?.route;
-const assuranceRecordPaneTimeoutMs = 5_000;
 if (!demosPath) throw new Error('DEMO-289 could not resolve demos.index from the route manifest.');
 if (!assurancePath) throw new Error('DEMO-289 could not resolve assurance.index from the route manifest.');
 
@@ -54,44 +54,6 @@ async function navigateForAudit(cdp, pathname, locale, phase) {
     await sleep(50);
   }
   throw new Error(`DEMO-289 ${phase} ${pathname} ${locale}: timed out waiting for ${expectedDemo} workbench presentation.`);
-}
-
-function assuranceReviewState(pathname) {
-  const url = new URL(pathname, origin);
-  if (url.pathname !== assurancePath) return null;
-  let recordId = '';
-  if (url.hash) {
-    try {
-      recordId = decodeURIComponent(url.hash.slice(1));
-    } catch {
-      recordId = url.hash.slice(1);
-    }
-  }
-  return {
-    page: url.pathname,
-    state: url.hash || '(default)',
-    recordId,
-  };
-}
-
-async function waitForAssuranceRecordPane(cdp, pathname, locale) {
-  const state = assuranceReviewState(pathname);
-  if (!state) return null;
-  const started = Date.now();
-  while (Date.now() - started < assuranceRecordPaneTimeoutMs) {
-    const result = await evaluate(cdp, `(()=>{
-      const expectedId=${JSON.stringify(state.recordId)};
-      const panes=[...document.querySelectorAll('[data-assurance-record]')];
-      const pane=expectedId ? panes.find((candidate)=>candidate.dataset.assuranceRecord===expectedId) : panes[0];
-      const heading=pane?.querySelector('.assurance-record-heading h2');
-      const inspector=pane?.querySelector('.assurance-inspector');
-      const headingText=(heading?.textContent||'').trim().replace(/\\s+/g,' ').slice(0,120);
-      return {ready:!!pane&&!!headingText&&!!inspector,headingText,recordId:pane?.dataset.assuranceRecord||''};
-    })()`, `DEMO-289 content review readiness ${pathname} ${locale}`);
-    if (result.ready) return result;
-    await sleep(50);
-  }
-  throw new Error(`DEMO-289 content review timed out after ${assuranceRecordPaneTimeoutMs}ms waiting for the assurance record pane: page=${state.page} state=${state.state} locale=${locale}${state.recordId ? ` record=${state.recordId}` : ''}.`);
 }
 
 async function dispatchTab(cdp, shift = false) {
@@ -244,10 +206,10 @@ async function runFocusAndTrap(cdp, label, findings) {
 async function contentSnapshot(cdp, label, locale, expectedAssuranceHeading = null) {
   const snapshot = await evaluate(cdp, `(()=>{
     const headings=[...document.querySelectorAll('h1,h2,h3,h4,h5,h6')].map((h)=>({level:Number(h.tagName.slice(1)),text:(h.textContent||'').trim().replace(/\\s+/g,' ').slice(0,120)}));
-    const links=[...document.querySelectorAll('a[href]')].map((a)=>({text:(a.textContent||'').trim().replace(/\\s+/g,' ').slice(0,80),href:a.getAttribute('href')}));
-    const vague=links.filter((l)=>/^(here|more|details|source|open|read more)$/i.test(l.text));
-    const byText=new Map();for(const link of links){const key=link.text.toLowerCase();if(!key)continue;const set=byText.get(key)||new Set();set.add(link.href);byText.set(key,set)}
-    const ambiguous=[...byText.entries()].filter(([,set])=>set.size>1).map(([text,set])=>({text,hrefs:[...set]})).slice(0,12);
+    const links=[...document.querySelectorAll('a[href]')].map((a)=>({name:(a.getAttribute('aria-label')||a.textContent||'').trim().replace(/\\s+/g,' ').slice(0,160),href:a.getAttribute('href')}));
+    const vague=links.filter((l)=>/^(here|more|details|source|open|read more)$/i.test(l.name));
+    const byName=new Map();for(const link of links){const key=link.name.toLowerCase();if(!key)continue;const set=byName.get(key)||new Set();set.add(link.href);byName.set(key,set)}
+    const ambiguous=[...byName.entries()].filter(([,set])=>set.size>1).map(([name,set])=>({name,hrefs:[...set]})).slice(0,12);
     const explicitLang=[...document.querySelectorAll('[lang]')].filter((el)=>el!==document.documentElement).length;
     const text=(document.querySelector('main')?.innerText||'').replace(/\\s+/g,' ').trim();
     const words=text.match(/[A-Za-z][A-Za-z'-]*/g)||[];const sentences=text.split(/[.!?]+/).filter((x)=>x.trim()).length||1;
@@ -256,8 +218,12 @@ async function contentSnapshot(cdp, label, locale, expectedAssuranceHeading = nu
   })()`);
   console.log(`DEMO289 content-review ${label} ${locale}: ${JSON.stringify(snapshot)}`);
   if (expectedAssuranceHeading && !snapshot.headings.some((heading) => heading.text === expectedAssuranceHeading)) {
-    const state = assuranceReviewState(label);
+    const state = assuranceReviewState(label, origin, assurancePath);
     throw new Error(`DEMO-289 content review heading inventory is missing the selected assurance record heading "${expectedAssuranceHeading}": page=${state?.page ?? label} state=${state?.state ?? '(unknown)'} locale=${locale}.`);
+  }
+  if (snapshot.ambiguous.length) {
+    const state = assuranceReviewState(label, origin, assurancePath);
+    throw new Error(`DEMO-289 content review found repeated link accessible names with different destinations: page=${state?.page ?? label} state=${state?.state ?? '(default)'} locale=${locale} ambiguous=${JSON.stringify(snapshot.ambiguous)}.`);
   }
   return snapshot;
 }
@@ -305,7 +271,7 @@ async function main() {
         });
         if (!initialNavigation.ok) continue;
         await captureStep(findings,'content snapshot',`${pathname} ${locale}`,async()=>{
-          const assurancePane=await waitForAssuranceRecordPane(cdp,pathname,locale);
+          const assurancePane=await waitForAssuranceRecordPane(cdp, pathname, locale, { origin, assurancePath, evaluatePage: evaluate, sleep });
           return contentSnapshot(cdp,pathname,locale,assurancePane?.headingText ?? null);
         });
         const targets=await captureStep(findings,'contrast/target harness',`${pathname} ${locale}`,()=>runContrastAndTargets(cdp,`${pathname} ${locale}`,findings));

@@ -150,6 +150,8 @@ Workflow source and release history provide controlled desired-state evidence.
 
 Immediately before DEMO-300, GitHub's REST API returned no repository rulesets, all three merge methods were enabled, and automatic deletion of merged head branches was disabled. Provider state verified on **2026-09-18 at 08:22 UTC** after the approved change shows:
 
+The committed expected-state baseline is `config/github-repository-settings.json`. `npm run validate:repository-settings` validates that baseline in CI. After authenticating the GitHub CLI with repository read access, run `npm run validate:repository-settings -- --live` to compare the baseline with the live repository settings and live rulesets without changing provider state.
+
 - active branch ruleset `Protect main` (provider ID `23647109`) applies to `refs/heads/main`, has no bypass actors, blocks deletion and non-fast-forward updates, requires a pull request, permits only merge commits, and requires the `validate` and `change-id` status checks;
 - the pull-request rule requires zero approving reviews, matching the single-maintainer operating model, and does not claim that an independent review occurred;
 - active tag ruleset `Protect release tags` (provider ID `23647111`) applies to `refs/tags/v*`, has no bypass actors, and blocks update and deletion;
@@ -163,7 +165,7 @@ CFG-013 remains **Partial** because this verifies configured state, not effectiv
 
 `config/worker-secrets.json` now defines the managed production Worker secret names together with required/optional status, consuming capability, enforced minimum length, and owner. `npm run check` validates that its names agree with the secret-field block in `src/types.ts`, `.dev.vars.example`, and `SECURITY.md`.
 
-Before production migrations, the deploy workflow compares `wrangler secret list --json` names against that inventory. Missing required names fail the deployment and undeclared provisioned names are reported without reading a value. Post-deployment identity verification also detects readiness regression and loss of any provider that was configured before deployment.
+Before production migrations, the deploy workflow compares `wrangler secret list --format json` names against that inventory. Missing required names fail the deployment and undeclared provisioned names are reported without reading a value. Post-deployment identity verification also detects readiness regression and loss of any provider that was configured before deployment.
 
 This remains **Partial**: the provider list API exposes names, not values, so the preflight cannot verify current secret contents, entropy, minimum length, provider-defined validity, or every external provider setting. The first access/configuration review should still verify purpose, scope, stale access, and provider-side validity without publishing values.
 
