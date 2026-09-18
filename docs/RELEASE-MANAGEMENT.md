@@ -37,6 +37,26 @@ The release workflow operates on an existing annotated semantic-version tag. Dep
 
 A manual recovery deployment may select an already existing semantic tag; it does not deploy an arbitrary branch head. Repository and Worker credentials remain managed secrets and are documented by their owning security/identity configuration rather than duplicated in this release policy.
 
+## Deployment record
+
+After a release has been deployed and its post-deployment verification is complete, record that deployment in `docs/history/DEPLOYMENTS.md` as its own controlled `OPS` change. The deployment record is created after verification rather than folded into the release change, because its evidence does not exist until the release has actually run in production.
+
+Each deployment record carries:
+
+- **Product:** the deployed product.
+- **Release:** the immutable annotated semantic-version tag.
+- **Commit:** the commit identified by that tag.
+- **Environment:** the deployment target.
+- **Date:** the deployment date.
+- **URL:** the production endpoint.
+- **Changes:** the controlled-change range included in the release.
+- **Validation:** only the release, deployment, migration, and post-deployment checks that actually occurred; include the relevant workflow run when available and do not infer missing verification.
+- **Previous:** the previously deployed release.
+- **Rollback:** the immutable rollback tag or the reason no rollback target exists.
+- **Note:** optional operator context needed to interpret the record without rewriting historical evidence.
+
+Do not edit an existing deployment record to claim checks that were not recorded when that deployment occurred. Historical gaps may be summarized retrospectively from immutable tag and GitHub Actions evidence, but must be labeled retrospective and must state when no further post-deployment verification was recorded.
+
 ## Rollback
 
 Rollback means deploying a previously published immutable tag identified by the release/deployment record. Do not move a published tag to simulate rollback. If data/schema compatibility prevents safe tag rollback, publish a forward correction under a new controlled change and release instead.
