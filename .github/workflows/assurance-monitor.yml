@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
 
 jobs:
   monitor:
@@ -26,3 +27,79 @@ jobs:
         run: npm run validate:assurance
       - name: Verify live disclosure and private reporting paths
         run: npm run monitor:assurance
+      - name: Maintain assurance monitor tracking issue
+        if: ${{ always() && !cancelled() }}
+        uses: actions/github-script@v8
+        env:
+          MONITOR_STATUS: ${{ job.status }}
+          MONITOR_ISSUE_TITLE: Assurance Monitor failure
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const title = process.env.MONITOR_ISSUE_TITLE;
+            const status = process.env.MONITOR_STATUS;
+            const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner,
+              repo,
+              state: 'all',
+              per_page: 100,
+            });
+            const issue = issues.find((candidate) => !candidate.pull_request && candidate.title === title);
+
+            if (status === 'success') {
+              if (issue?.state === 'open') {
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: issue.number,
+                  body: `Recovered in ${runUrl} at commit \`${context.sha}\`.`,
+                });
+                await github.rest.issues.update({
+                  owner,
+                  repo,
+                  issue_number: issue.number,
+                  state: 'closed',
+                });
+              }
+              return;
+            }
+
+            const body = [
+              'The Assurance Monitor failed.',
+              '',
+              `- Run: ${runUrl}`,
+              `- Commit: \`${context.sha}\``,
+              `- Event: \`${context.eventName}\``,
+              '',
+              'Use the Actions run for bounded diagnostic output. Do not copy credentials or secret values into this issue.',
+            ].join('\n');
+
+            if (!issue) {
+              await github.rest.issues.create({
+                owner,
+                repo,
+                title,
+                body,
+              });
+              return;
+            }
+
+            if (issue.state === 'closed') {
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: issue.number,
+                state: 'open',
+                body,
+              });
+              return;
+            }
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: issue.number,
+              body,
+            });

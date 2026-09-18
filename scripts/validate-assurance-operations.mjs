@@ -11,6 +11,7 @@ const live = process.argv.includes('--live');
 const nowValue = process.env.ASSURANCE_VALIDATION_NOW ?? new Date().toISOString();
 const validationNow = Date.parse(nowValue);
 const errors = [];
+const liveUserAgent = 'Mozilla/5.0 (compatible; WizardGangAssuranceMonitor/1.0; +https://github.com/SouthernGentlemen/wizardgang-architecture-demo)';
 const read = (relative) => fs.readFileSync(path.join(root, relative), 'utf8');
 const readJson = (relative) => JSON.parse(read(relative));
 
@@ -78,8 +79,15 @@ if (!expirySource || !fs.existsSync(path.join(root, expirySource))) {
 }
 
 async function fetchChecked(url, init = {}) {
+  const headers = new Headers(init.headers);
+  if (!headers.has('user-agent')) headers.set('user-agent', liveUserAgent);
+  const request = () => fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(15000), ...init, headers });
   try {
-    const response = await fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(15000), ...init });
+    let response = await request();
+    if (response.status === 403 && response.headers.get('cf-mitigated') === 'challenge') {
+      await response.arrayBuffer();
+      response = await request();
+    }
     if (!response.ok) {
       errors.push(`reporting link unavailable: ${url} returned ${response.status}`);
       return null;
@@ -116,14 +124,13 @@ if (live && errors.length === 0) {
     else if (!Number.isNaN(validationNow) && expiresAt <= validationNow) errors.push(`live security.txt expired at ${expiresValue}`);
 
     for (const key of ['Contact', 'Policy', 'Canonical']) {
-      for (const url of fields.get(key) ?? []) await fetchChecked(url, { headers: { 'user-agent': 'wizardgang-assurance-monitor' } });
+      for (const url of fields.get(key) ?? []) await fetchChecked(url);
     }
   }
 
   const response = await fetchChecked(reporting.privateReportingApi, {
     headers: {
       accept: 'application/vnd.github+json',
-      'user-agent': 'wizardgang-assurance-monitor',
       'x-github-api-version': '2026-03-10',
     },
   });
