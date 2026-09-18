@@ -70,8 +70,12 @@ for (const record of records) {
   if (record.applicability !== expectedApplicability) errors.push(`${record.id}: WCAG applicability must agree with status`);
   if ('criterionId' in record || 'name' in record || 'evidenceIds' in record) errors.push(`${record.id}: legacy WCAG compatibility fields are not allowed`);
   if (!record.implementation || !record.owner) errors.push(`${record.id}: implementation and owner are required`);
-  if (record.rationale !== undefined && (typeof record.rationale !== 'string' || record.rationale.trim().length < 10)) errors.push(`${record.id}: rationale must be a meaningful string when supplied`);
-  if (record.gaps !== undefined && (!Array.isArray(record.gaps) || record.gaps.length === 0 || record.gaps.some((gap) => typeof gap !== 'string' || gap.trim().length === 0))) errors.push(`${record.id}: gaps must be a non-empty string array when supplied`);
+  if (typeof record.rationale !== 'string' || record.rationale.trim().length < 10) errors.push(`${record.id}: rationale is required and must be a meaningful string`);
+  const validGaps = Array.isArray(record.gaps) && record.gaps.length > 0 && record.gaps.every((gap) => typeof gap === 'string' && gap.trim().length > 0);
+  if ((record.status === 'partial' || record.status === 'gap') && !validGaps) errors.push(`${record.id}: ${record.status} records require a non-empty gaps array`);
+  else if (record.gaps !== undefined && !validGaps) errors.push(`${record.id}: gaps must be a non-empty string array when supplied`);
+  const documentationRefs = assuranceRelationshipIds(record.relationships, 'documentation');
+  if (['pass', 'partial', 'not-applicable'].includes(record.status) && documentationRefs.length === 0) errors.push(`${record.id}: ${record.status} records require at least one documentation relationship`);
   if (!['partial', 'none'].includes(record.validation?.automated) || record.validation?.manual !== 'required') errors.push(`${record.id}: validation semantics changed`);
   const refs = assuranceRelationshipIds(record.relationships, 'evidence');
   if (refs.length === 0) errors.push(`${record.id}: evidence relationships are required`);

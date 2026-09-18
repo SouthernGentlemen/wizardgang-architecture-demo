@@ -82,8 +82,13 @@ export function validateNormalizedIso({ root = process.cwd(), standard, edition,
     if (!ISO_POSTURE_STATUSES.includes(record.status)) errors.push(`${record.id}: unsupported normalized status ${record.status}`);
     const expectedApplicability = record.status === 'not-applicable' ? 'not-applicable' : 'applicable';
     if (record.applicability !== expectedApplicability) errors.push(`${record.id}: applicability must agree with status`);
-    if (record.rationale !== undefined && (typeof record.rationale !== 'string' || record.rationale.trim().length < 10)) errors.push(`${record.id}: rationale must be a meaningful string when supplied`);
-    if (record.gaps !== undefined && (!Array.isArray(record.gaps) || record.gaps.length === 0 || record.gaps.some((gap) => typeof gap !== 'string' || gap.trim().length === 0))) errors.push(`${record.id}: gaps must be a non-empty string array when supplied`);
+    if (typeof record.rationale !== 'string' || record.rationale.trim().length < 10) errors.push(`${record.id}: rationale is required and must be a meaningful string`);
+    const validGaps = Array.isArray(record.gaps) && record.gaps.length > 0 && record.gaps.every((gap) => typeof gap === 'string' && gap.trim().length > 0);
+    if ((record.status === 'partial' || record.status === 'gap') && !validGaps) errors.push(`${record.id}: ${record.status} records require a non-empty gaps array`);
+    else if (record.gaps !== undefined && !validGaps) errors.push(`${record.id}: gaps must be a non-empty string array when supplied`);
+    const documentationRefs = assuranceRelationshipIds(record.relationships, 'documentation');
+    if (['pass', 'partial', 'not-applicable'].includes(record.status) && documentationRefs.length === 0) errors.push(`${record.id}: ${record.status} records require at least one documentation relationship`);
+    if (record.kind === 'clause' && (record.status === 'not-applicable' || record.applicability === 'not-applicable')) errors.push(`${record.id}: clauses cannot be not-applicable`);
     const refs = assuranceRelationshipIds(record.relationships, 'evidence');
     if (refs.length === 0) errors.push(`${record.id}: at least one evidence relationship is required`);
     if (new Set(refs).size !== refs.length) errors.push(`${record.id}: duplicate evidence relationship`);
