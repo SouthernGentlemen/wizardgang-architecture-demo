@@ -1,21 +1,12 @@
 # Copy to .dev.vars for local development. Never commit real credentials.
+# Worker secret names in this block must match config/worker-secrets.json.
+# WORKER_SECRETS_START
 DEMO_ADMIN_USER=admin
 DEMO_ADMIN_PASSWORD=replace-me-with-a-local-only-value
 WEBHOOK_DEMO_SECRET=replace-me-with-a-local-only-webhook-secret
 GITHUB_WEBHOOK_SECRET=replace-me-with-a-local-only-github-webhook-secret
+GITHUB_DEMO_TOKEN=replace-me-with-a-local-only-git-demo-token
 DEMO_SESSION_SECRET=replace-me-with-at-least-32-local-only-characters
-
-# Optional protected GitHub reporting. Public repositories use the anonymous GitHub API by default.
-# GITHUB_READ_TOKEN is a dedicated fine-grained read credential for configured private repositories
-# and protected security sources. Keep it server-side and repository-scoped.
-# GITHUB_READ_TOKEN=replace-me-with-a-local-only-read-token
-# GITHUB_REPORTING_BINDINGS=[{"repository":"SouthernGentlemen/wizardgang-architecture-demo","sources":["github.issues","github.workflow-runs"],"issueLabels":["corrective-action"]}]
-# GITHUB_REPORTING_MAX_PAGES=20
-# Native reporting writes are opt-in and currently support update-only GitHub issues.
-# Use a separate fine-grained Issues: write credential; the live Git demo token is not reused.
-# GITHUB_REPORTING_WRITE_TOKEN=replace-me-with-a-local-only-issues-write-token
-
-# Real identity providers. Register localhost callback URLs separately for local testing.
 IDENTITY_SESSION_SECRET=replace-me-with-at-least-32-local-only-characters
 IDENTITY_AUDIT_HMAC_SECRET=replace-me-with-at-least-32-local-only-characters
 MICROSOFT_CLIENT_ID=replace-me
@@ -26,18 +17,27 @@ GOOGLE_CLIENT_SECRET=replace-me
 GITHUB_CLIENT_ID=replace-me
 GITHUB_CLIENT_SECRET=replace-me
 SAML_IDP_CERT=replace-me-with-the-entra-signing-certificate
-# Optional overrides; defaults are derived from MICROSOFT_TENANT_ID.
+
+# Optional managed Worker secrets.
+# GITHUB_READ_TOKEN=replace-me-with-a-local-only-read-token
+# GITHUB_REPORTING_WRITE_TOKEN=replace-me-with-a-local-only-issues-write-token
+# CLOUDFLARE_API_TOKEN=replace-me-with-analytics-read-and-optional-billing-read
+# WORKER_SECRETS_END
+
+# Optional protected GitHub reporting. Public repositories use the anonymous GitHub API by default.
+# GITHUB_REPORTING_BINDINGS=[{"repository":"SouthernGentlemen/wizardgang-architecture-demo","sources":["github.issues","github.workflow-runs"],"issueLabels":["corrective-action"]}]
+# GITHUB_REPORTING_MAX_PAGES=20
+
+# Optional SAML overrides; defaults are derived from MICROSOFT_TENANT_ID.
 # SAML_IDP_ISSUER=https://sts.windows.net/replace-me/
 # SAML_SSO_URL=https://login.microsoftonline.com/replace-me/saml2
 
-# Optional live operations telemetry. Use a dedicated minimum-permission read token.
+# Optional live operations telemetry identifiers. The token itself is declared above.
 # CLOUDFLARE_ACCOUNT_ID=replace-me
-# CLOUDFLARE_API_TOKEN=replace-me-with-analytics-read-and-optional-billing-read
 # CLOUDFLARE_WORKER_NAME=wizardgang-architecture-demo
 # CLOUDFLARE_D1_DATABASE_ID=replace-me
 # CLOUDFLARE_R2_BUCKET=wizardgang-demo-r2
 # CLOUDFLARE_DO_NAMESPACE=replace-me
-
 
 # DEMO-186 canonical external endpoints. Provider-side settings are changed at release time, not by this file.
 # Microsoft redirect URI: <PUBLIC_ORIGIN>/auth/microsoft/callback

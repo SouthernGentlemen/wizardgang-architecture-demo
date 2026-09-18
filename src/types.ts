@@ -61,14 +61,14 @@ export interface Env {
   DEMO_COORDINATOR?: DurableObjectNamespace;
   GITHUB_REPO_URL: string;
   GITHUB_BRANCH: string;
+
+  // WORKER_SECRETS_START
   DEMO_ADMIN_USER?: string;
   DEMO_ADMIN_PASSWORD?: string;
   WEBHOOK_DEMO_SECRET?: string;
   GITHUB_WEBHOOK_SECRET?: string;
   GITHUB_READ_TOKEN?: string;
   GITHUB_REPORTING_WRITE_TOKEN?: string;
-  GITHUB_REPORTING_BINDINGS?: string;
-  GITHUB_REPORTING_MAX_PAGES?: string;
   GITHUB_DEMO_TOKEN?: string;
   DEMO_SESSION_SECRET?: string;
   IDENTITY_SESSION_SECRET?: string;
@@ -81,6 +81,11 @@ export interface Env {
   GITHUB_CLIENT_ID?: string;
   GITHUB_CLIENT_SECRET?: string;
   SAML_IDP_CERT?: string;
+  CLOUDFLARE_API_TOKEN?: string;
+  // WORKER_SECRETS_END
+
+  GITHUB_REPORTING_BINDINGS?: string;
+  GITHUB_REPORTING_MAX_PAGES?: string;
   SAML_IDP_ISSUER?: string;
   SAML_SSO_URL?: string;
   DEPLOYED_VERSION?: string;
@@ -89,7 +94,6 @@ export interface Env {
   DEPLOYMENT_CI_STATUS?: string;
   BILLING_DEMO_MONTHLY_BUDGET_USD?: string;
   CLOUDFLARE_ACCOUNT_ID?: string;
-  CLOUDFLARE_API_TOKEN?: string;
   CLOUDFLARE_WORKER_NAME?: string;
   CLOUDFLARE_R2_BUCKET?: string;
   CLOUDFLARE_D1_DATABASE_ID?: string;

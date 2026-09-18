@@ -57,6 +57,59 @@ jobs:
         run: npm ci
       - name: Validate reviewed tagged source
         run: npm run check
+      - name: Verify production Worker secret names
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          secret_names="$RUNNER_TEMP/worker-secret-names.json"
+          npx wrangler secret list --json > "$secret_names"
+          node scripts/validate-worker-secrets.mjs --provisioned "$secret_names"
+      - name: Capture pre-deployment identity baseline
+        env:
+          IDENTITY_BASELINE_FILE: ${{ runner.temp }}/identity-before.json
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+
+          const headers = {
+            accept: 'application/json',
+            'user-agent': 'Mozilla/5.0 (compatible; WizardGangDeploymentVerifier/1.0; +https://github.com/SouthernGentlemen/wizardgang-architecture-demo)'
+          };
+
+          async function fetchJson(url, acceptedStatuses) {
+            const response = await fetch(url, { headers, redirect: 'error' });
+            const text = await response.text();
+            if (!acceptedStatuses.includes(response.status)) throw new Error(`${url} returned HTTP ${response.status}`);
+            try {
+              return { response, body: JSON.parse(text) };
+            } catch {
+              throw new Error(`${url} returned non-JSON content`);
+            }
+          }
+
+          const { body: health } = await fetchJson('https://demo.wizardgang.ai/api/operations/health', [200, 503]);
+          const { response: sessionResponse, body: session } = await fetchJson('https://demo.wizardgang.ai/auth/session', [200, 503]);
+          const providers = sessionResponse.status === 200 && session.providers && typeof session.providers === 'object'
+            ? session.providers
+            : {};
+          const configuredProviders = Object.entries(providers)
+            .filter(([, value]) => value && typeof value === 'object' && value.configured === true)
+            .map(([name]) => name)
+            .sort();
+
+          const healthIdentity = health.identity;
+          const identity = healthIdentity === 'ready' || healthIdentity === 'not-configured'
+            ? healthIdentity
+            : configuredProviders.length ? 'ready' : 'unknown';
+
+          if (healthIdentity === 'ready' && sessionResponse.status !== 200) {
+            throw new Error('Pre-deployment identity surfaces disagree: health is ready but /auth/session is unavailable.');
+          }
+
+          fs.writeFileSync(process.env.IDENTITY_BASELINE_FILE, JSON.stringify({ identity, configuredProviders }) + '\n', { mode: 0o600 });
+          console.log(`Captured pre-deployment identity baseline: ${identity}; configured providers: ${configuredProviders.join(', ') || 'none'}.`);
+          NODE
       - name: Apply production D1 migrations
         run: npx wrangler d1 migrations apply demo-blob --remote
         env:
@@ -80,14 +133,17 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      - name: Verify public version and health surfaces
+      - name: Verify public version, health, and identity continuity
         env:
           EXPECTED_VERSION: ${{ steps.release.outputs.version }}
           EXPECTED_SHA: ${{ steps.release.outputs.sha }}
+          IDENTITY_BASELINE_FILE: ${{ runner.temp }}/identity-before.json
         run: |
           node - <<'NODE'
+          const fs = require('node:fs');
           const expectedVersion = process.env.EXPECTED_VERSION;
           const expectedSha = process.env.EXPECTED_SHA;
+          const baseline = JSON.parse(fs.readFileSync(process.env.IDENTITY_BASELINE_FILE, 'utf8'));
 
           const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
           const headers = {
@@ -138,5 +194,28 @@ jobs:
           if (body.services?.worker !== 'operational') {
             throw new Error(`Health verification failed: ${health.status} ${JSON.stringify(body)}`);
           }
-          console.log(`Verified ${metadata.version} (${metadata.commit}) with Worker status ${body.services.worker}.`);
+          if (!['ready', 'not-configured'].includes(body.identity)) {
+            throw new Error('Health verification did not return the DEMO-296 identity readiness value.');
+          }
+          if (baseline.identity === 'ready' && body.identity !== 'ready') {
+            throw new Error(`Identity readiness regressed from ready to ${body.identity}.`);
+          }
+
+          const { response: identitySessionResponse, body: identitySession } = await fetchJsonWithRetry(
+            'https://demo.wizardgang.ai/auth/session',
+            [200, 503]
+          );
+          const previouslyConfigured = Array.isArray(baseline.configuredProviders) ? baseline.configuredProviders : [];
+          if (previouslyConfigured.length && identitySessionResponse.status !== 200) {
+            throw new Error(`Identity provider continuity failed: /auth/session returned HTTP ${identitySessionResponse.status}.`);
+          }
+          const afterProviders = identitySession?.providers && typeof identitySession.providers === 'object'
+            ? identitySession.providers
+            : {};
+          const regressedProviders = previouslyConfigured.filter((name) => afterProviders[name]?.configured !== true);
+          if (regressedProviders.length) {
+            throw new Error(`Identity provider configuration regressed: ${regressedProviders.join(', ')}.`);
+          }
+
+          console.log(`Verified ${metadata.version} (${metadata.commit}) with Worker status ${body.services.worker}, identity ${body.identity}, and provider continuity for ${previouslyConfigured.join(', ') || 'none'}.`);
           NODE

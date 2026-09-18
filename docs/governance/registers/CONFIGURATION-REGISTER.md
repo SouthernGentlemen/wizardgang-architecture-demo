@@ -160,9 +160,11 @@ The repository has a strong controlled-change convention, CI validation, and PR 
 
 ### CFG-014 — environment/secrets/variables — Partial
 
-Workflow references demonstrate required configuration names, but public evidence intentionally does not expose secret values or every provider setting.
+`config/worker-secrets.json` now defines the managed production Worker secret names together with required/optional status, consuming capability, enforced minimum length, and owner. `npm run check` validates that its names agree with the secret-field block in `src/types.ts`, `.dev.vars.example`, and `SECURITY.md`.
 
-The first access/configuration review should verify existence, purpose, scope, and stale access without publishing values.
+Before production migrations, the deploy workflow compares `wrangler secret list --json` names against that inventory. Missing required names fail the deployment and undeclared provisioned names are reported without reading a value. Post-deployment identity verification also detects readiness regression and loss of any provider that was configured before deployment.
+
+This remains **Partial**: the provider list API exposes names, not values, so the preflight cannot verify current secret contents, entropy, minimum length, provider-defined validity, or every external provider setting. The first access/configuration review should still verify purpose, scope, stale access, and provider-side validity without publishing values.
 
 ## 10. Cloudflare Configuration
 
@@ -178,9 +180,9 @@ The live domain demonstrates functioning configuration, but availability of the 
 
 ### CFG-028 — automated provider drift — Gap
 
-No comprehensive automated comparison of GitHub/Cloudflare account state to an approved machine-readable configuration baseline is currently evidenced.
+A narrow automated reconciliation now exists for production Worker secret **names**: deployment compares Cloudflare's provisioned names with `config/worker-secrets.json`, fails when a required name is absent, and reports undeclared names. Deployment also compares pre/post identity readiness and configured-provider continuity.
 
-This is a control/evidence gap, not a claim that drift currently exists.
+CFG-028 remains **Gap** overall because this is not a comprehensive GitHub/Cloudflare provider-state reconciliation. The automation cannot read secret values or prove their strength/length, and it does not yet compare the rest of the account, resource, permission, ruleset, binding, DNS/TLS, or provider configuration state to a complete approved baseline. This is a control/evidence gap, not a claim that unobserved drift exists.
 
 ## 11. Secrets Configuration
 

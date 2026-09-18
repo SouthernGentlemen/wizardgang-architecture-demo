@@ -266,6 +266,14 @@ Before provisioning a new long-lived credential, identify:
 - recovery dependency;
 - audit/evidence requirements.
 
+For WizardGang-generated shared/session/HMAC secrets, provision through the repository command rather than typing a value into Wrangler:
+
+```text
+npm run provision:worker-secret -- IDENTITY_AUDIT_HMAC_SECRET
+```
+
+The command generates random material in-process and writes it only to the standard input of `wrangler secret put`; it does not print the value or pass it as a command-line argument. The requested name must exist in `config/worker-secrets.json`, and provider-issued/operator-selected credentials use their owning provider's non-echo provisioning path instead. Production deployment compares only provisioned secret names against that inventory. Provider secret stores do not expose values back to CI, so name verification cannot prove a current value's strength or length; runtime fail-closed checks remain authoritative where the application enforces minimum strength.
+
 Credentials must not be created “just in case” and left permanently enabled without a defined use.
 
 ## 9. Secret Distribution and Use
