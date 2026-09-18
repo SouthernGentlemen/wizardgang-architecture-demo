@@ -6,16 +6,12 @@
   "additionalProperties": false,
   "required": [
     "schemaVersion",
-    "sourceRegister",
     "qualification",
     "records"
   ],
   "properties": {
     "schemaVersion": {
       "const": 1
-    },
-    "sourceRegister": {
-      "const": "docs/governance/registers/INCIDENT-REGISTER.md"
     },
     "qualification": {
       "type": "string",

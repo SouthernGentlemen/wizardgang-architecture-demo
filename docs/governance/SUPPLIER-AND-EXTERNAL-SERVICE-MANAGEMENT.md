@@ -31,7 +31,7 @@ A supplier or external service enters this process when failure, compromise, mis
 - AI/MCP authority, data exposure, intended use, or downstream behavior;
 - or the accuracy of public assurance claims.
 
-The authoritative supplier inventory is `docs/governance/registers/SUPPLIER-REGISTER.md`.
+The authoritative supplier inventory is `assurance/governance/suppliers.json`.
 
 ## 3. Current Approved AI/MCP Boundary
 
@@ -55,7 +55,7 @@ The approval is deliberately narrow:
 Adding another AI/MCP provider or client family is a **material management-system change**. It requires, before the existing AI operating conclusion is reused:
 
 - a controlled `DEMO-###` change;
-- update of the supplier register and interested-party record;
+- update of the structured supplier records and interested-party record;
 - security and AI risk review;
 - review of AI-RISK-010, AI-RISK-011, and any newly applicable risks;
 - AI impact-assessment review and update where triggered;
@@ -172,7 +172,7 @@ Critical and Material suppliers are reviewed using evidence appropriate to the s
 - recovery or migration concerns;
 - and whether the supplier remains necessary and proportionate.
 
-Supplier review should update the supplier register and related risk records when conditions change.
+Supplier review should update the structured supplier records and related risk records when conditions change.
 
 ## 10. Supplier Incidents and Failures
 
@@ -253,14 +253,14 @@ Formal recurring supplier-review evidence is not considered complete merely beca
 
 ## 15. Supporting Records
 
-- `docs/governance/registers/SUPPLIER-REGISTER.md`
+- `assurance/governance/suppliers.json`
 - `docs/governance/INTERESTED-PARTIES.md`
 - `docs/governance/RISK-MANAGEMENT.md`
-- `docs/governance/registers/SECURITY-RISK-REGISTER.md`
-- `docs/governance/registers/AI-RISK-REGISTER.md`
+- `assurance/risks/risks.json`
+- `assurance/risks/risks.json`
 - `docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md`
-- `docs/governance/soa/ISO-27001-SOA.md`
-- `docs/governance/soa/ISO-42001-SOA.md`
+- `assurance/compliance/iso-27001-2022.json`
+- `assurance/compliance/iso-42001-2023.json`
 - `docs/governance/OPERATIONAL-PLANNING-CONTROL.md`
 - `docs/governance/MONITORING-MEASUREMENT-EVALUATION.md`
 - `SECURITY.md`
@@ -270,7 +270,7 @@ Formal recurring supplier-review evidence is not considered complete merely beca
 
 ## 16. Alignment
 
-**Controls:** ISO27001-A.5.19, ISO27001-A.5.20, ISO27001-A.5.21, ISO27001-A.5.22, ISO27001-A.5.23, ISO27001-A.8.30
+**Controls:** ISO27001-A.5.19, ISO27001-A.5.20, ISO27001-A.5.21, ISO27001-A.5.22, ISO27001-A.5.23, ISO27001-A.8.30, ISO42001-A.4.5, ISO42001-A.10.2, ISO42001-A.10.3, ISO42001-A.10.4
 
 This process supports the supplier, externally provided process, supply-chain, third-party AI, and operational-control requirements relevant to the scoped ISO/IEC 27001:2022 ISMS and ISO/IEC 42001:2023 AIMS.
 

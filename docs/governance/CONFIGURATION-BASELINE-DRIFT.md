@@ -61,7 +61,7 @@ A value may belong to more than one class. For example, a Cloudflare D1 binding 
 
 The current configuration inventory is maintained in:
 
-`docs/governance/registers/CONFIGURATION-REGISTER.md`
+`assurance/governance/configuration.json`
 
 The primary baseline sources include:
 
@@ -465,7 +465,7 @@ A material review should record at minimum:
 
 ## 24. Alignment
 
-**Controls:** ISO27001-A.8.4, ISO27001-A.8.9, ISO27001-A.8.19, ISO27001-A.8.31, ISO42001-A.4.4
+**Controls:** ISO27001-A.8.4, ISO27001-A.8.9, ISO27001-A.8.19, ISO27001-A.8.31, ISO42001-A.4.4, ISO27001-A.8.32
 
 This procedure primarily strengthens the evidence posture for:
 

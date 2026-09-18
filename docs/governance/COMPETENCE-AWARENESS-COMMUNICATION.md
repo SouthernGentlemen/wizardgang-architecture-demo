@@ -43,7 +43,7 @@ Evidence may include:
 - documented familiarity with the applicable policy, risk, procedure, or standard;
 - and evidence that prior identified competence gaps were addressed effectively.
 
-The authoritative lightweight competence/awareness record is `docs/governance/registers/COMPETENCE-AWARENESS-REGISTER.md`.
+The authoritative lightweight competence/awareness record is `assurance/governance/competence.json`.
 
 ## 4. Role-Based Competence Expectations
 
@@ -240,7 +240,7 @@ Client/provider identity remains descriptive only and must not be used as an aut
 
 Competence, awareness, communication, and concern evidence may include:
 
-- `docs/governance/registers/COMPETENCE-AWARENESS-REGISTER.md`;
+- `assurance/governance/competence.json`;
 - controlled governance changes;
 - policy acknowledgement or briefing records;
 - training/exercise records;
@@ -276,7 +276,7 @@ This process and its records are reviewed when:
 - `docs/governance/ROLES-RESPONSIBILITIES.md`
 - `docs/governance/INFORMATION-SECURITY-POLICY.md`
 - `docs/governance/AI-POLICY.md`
-- `docs/governance/registers/COMPETENCE-AWARENESS-REGISTER.md`
+- `assurance/governance/competence.json`
 - `docs/governance/INCIDENT-MANAGEMENT.md`
 - `docs/governance/NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md`
 - `docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md`

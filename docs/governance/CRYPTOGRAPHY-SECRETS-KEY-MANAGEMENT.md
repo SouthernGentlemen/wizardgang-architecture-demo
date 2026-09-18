@@ -64,7 +64,7 @@ The system distinguishes these functions:
 
 The current cryptographic/secret inventory is maintained in:
 
-`docs/governance/registers/CRYPTOGRAPHY-SECRETS-REGISTER.md`
+`assurance/governance/cryptography-secrets.json`
 
 ## 4. Current Implemented Cryptographic Baseline
 
@@ -545,10 +545,10 @@ This procedure should be read with:
 - `docs/governance/INCIDENT-MANAGEMENT.md`;
 - `docs/governance/BACKUP-RECOVERY-RESTORE.md`;
 - `docs/governance/DATA-GOVERNANCE.md`;
-- `docs/governance/registers/SECURITY-RISK-REGISTER.md`;
-- `docs/governance/registers/ASSET-ACCESS-REGISTER.md`;
-- `docs/governance/registers/CONFIGURATION-REGISTER.md`;
-- `docs/governance/registers/CRYPTOGRAPHY-SECRETS-REGISTER.md`;
+- `assurance/risks/risks.json`;
+- `assurance/governance/asset-inventory.json`;
+- `assurance/governance/configuration.json`;
+- `assurance/governance/cryptography-secrets.json`;
 - `src/lib/identity-session.ts`;
 - `src/lib/admin-auth.ts`;
 - `src/api/webhooks.ts`.

@@ -32,9 +32,9 @@ Canonical risks store scores rather than duplicated rating labels. The shared ri
 
 Compliance is registry-driven across ISO/IEC 27001, ISO/IEC 42001, and WCAG 2.2 resources/partitions. Source JSON remains framework-specific while runtime records are normalized by shared model/service code. Framework/status/level filter vocabularies come from registry metadata, registered schemas, or shared derivations rather than hardcoded handler inventories.
 
-All three compliance frameworks use the same assessment vocabulary: `pass`, `partial`, `gap`, and `not-applicable`. DEMO-285 mechanically maps the earlier labels (`met` → `pass`, `demonstrated` → `partial`, and `not-observed` → `not-applicable`) without reassessing any record. Optional `rationale` and `gaps` fields are part of the shared contract during the staged migration and become mandatory only when the later completeness gate is introduced.
+All three compliance frameworks use the same assessment vocabulary: `pass`, `partial`, `gap`, and `not-applicable`. Compliance status, rationale, gaps, applicability, evidence, and relationships are maintained only in canonical structured assurance records.
 
-Compliance records may carry a `documentation` relationship whose target source is `github.repository-markdown` and whose native identity is a repository-relative `.md` path plus GitHub heading anchor, for example `docs/governance/registers/SUPPLIER-REGISTER.md#3-current-supplier-summary`. Presentation resolves that reference against the exact deployed commit; branch-relative documentation URLs are not treated as deployment evidence. Governing documents reciprocate the relationship with a `Controls:` line inside an Alignment section. The documentation validator checks only file existence, heading anchors, and that bidirectional mapping; it never reads Markdown to infer status. SoAs and assessment/evaluation reports are exempt from reciprocal Alignment metadata.
+Compliance records may carry a `documentation` relationship whose target source is `github.repository-markdown` and whose native identity is a current governing Markdown procedure plus GitHub heading anchor. Presentation resolves that reference against the exact deployed commit; branch-relative documentation URLs are not deployment evidence. Governing procedures reciprocate the relationship with a `Controls:` line inside an Alignment section. The documentation validator checks file existence, heading anchors, and bidirectional mapping; it never reads Markdown to infer status. Dated assessment/evaluation reports remain evidence records and are exempt from reciprocal Alignment metadata.
 
 Public record IDs remain stable lookup and anchor keys:
 
@@ -42,7 +42,7 @@ Public record IDs remain stable lookup and anchor keys:
 - `ISO42001-<reference>` for ISO/IEC 42001 records
 - `WCAG-<criterionId>` for WCAG 2.2 success criteria
 
-The generated ISO Statements of Applicability under `docs/governance/soa/` are deterministic summaries of canonical structured data and are not independent control-state stores.
+Register and SoA identities are maintained in `assurance/presentation/documents.json` and resolve to canonical datasets under `assurance/**`. Browser/API views and optional human-readable exports are derived directly from structured records. The repository does not keep separate committed Markdown register or SoA projections.
 
 ## Evidence and publication rules
 
@@ -58,6 +58,6 @@ Structured assurance sources are repository-governed and read-only at runtime. T
 
 ## CI integrity gates
 
-`npm run validate:assurance` and the broader `npm run check` suite validate registry completeness, schemas, lifecycle/disclosure review, source-revision approval, immutable identity, global duplicates, referential integrity, documentation file/anchor reciprocity, risk derivation, filter contracts, publication, generated summaries, monitoring ownership, and public disclosure boundaries.
+`npm run validate:assurance` and the broader `npm run check` suite validate registry completeness, schemas, lifecycle/disclosure review, source-revision approval, immutable identity, global duplicates, referential integrity, documentation file/anchor reciprocity, risk derivation, filter contracts, publication, structured presentation metadata, runtime bindings, monitoring ownership, and public disclosure boundaries.
 
 The current API tests assert one canonical relationship/query/export contract, deterministic pagination, revision conflicts, relationship validation, derived-field rejection, and disclosure-safe structured and provider projections.

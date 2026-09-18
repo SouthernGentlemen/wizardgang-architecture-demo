@@ -143,6 +143,13 @@
       "reviewedAt": "2026-09-18T14:48:00Z",
       "reviewer": "controlled-repository-accessibility-evaluation",
       "basis": "DEMO-304 performs a focused WCAG 2.2 reassessment of 1.4.10, 2.4.4, and 2.4.9 after the D1 320 CSS-pixel reflow correction and destination-specific repeated-link accessible names. It preserves every evidence relationship, approves disclosure of the exact resulting public WCAG partition source revisions, and makes no WCAG conformance or certification claim."
+    },
+    {
+      "id": "review-demo313-structured-assurance-authority",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-18T21:56:00Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-313 retires duplicate checked-in register and SoA Markdown projections, migrates compliance documentation relationships to current governing procedures, and removes obsolete Markdown source-path metadata from the structured incident and exercise datasets. Only documentation relationships changed in the ISO/IEC 27001 and ISO/IEC 42001 structured sources; no assurance conclusion, status, rationale, gap, applicability, or evidence relationship changed. Incident and exercise record state and relationships are unchanged."
     }
   ],
   "sourceApprovals": [
@@ -541,6 +548,30 @@
       "resource": "compliance.wcag-2.2.operable",
       "revision": "2a5954e592d69901b0763a9de23449c03e6ade89",
       "reviewRef": "review-demo304-wcag-remediation"
+    },
+    {
+      "id": "source-iso27001-ddc8f9766ebc",
+      "resource": "compliance.iso-27001",
+      "revision": "ddc8f9766ebc5e51001e7f4aa56aca2a2917c6f4",
+      "reviewRef": "review-demo313-structured-assurance-authority"
+    },
+    {
+      "id": "source-iso42001-117540e8f13a",
+      "resource": "compliance.iso-42001",
+      "revision": "117540e8f13aa387dbdddc56caf50f9a1082f8f1",
+      "reviewRef": "review-demo313-structured-assurance-authority"
+    },
+    {
+      "id": "source-incidents-88c0ef5e10e9",
+      "resource": "incidents",
+      "revision": "88c0ef5e10e9ad3f95f9cdf231b77f6e54674e9a",
+      "reviewRef": "review-demo313-structured-assurance-authority"
+    },
+    {
+      "id": "source-exercises-daf5ba711004",
+      "resource": "exercises",
+      "revision": "daf5ba7110043471f7c335ed2a799a3e50dd83f5",
+      "reviewRef": "review-demo313-structured-assurance-authority"
     }
   ],
   "records": [

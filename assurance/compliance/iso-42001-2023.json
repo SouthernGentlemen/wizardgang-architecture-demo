@@ -340,17 +340,6 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#5-ai-risk-reassessment"
           }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-42001",
-            "native": "ISO42001-6.1"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/registers/AI-RISK-REGISTER.md#current-register"
-          }
         }
       ],
       "rationale": "AI risks, opportunities, treatments, reassessment triggers, and impact-assessment integration are documented and represented in the current AI risk register. The recurring AI risk-review cycle has not yet completed its first interval.",
@@ -436,17 +425,6 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/RISK-MANAGEMENT.md#5-risk-record"
           }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-42001",
-            "native": "ISO42001-6.1.2"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/registers/AI-RISK-REGISTER.md#current-register"
-          }
         }
       ],
       "rationale": "A consistent AI risk method and a 15-record AI risk register cover authority, data, evaluation, supplier, protocol, oversight, provenance, and incident concerns. The next scheduled reassessment has not yet occurred.",
@@ -483,17 +461,6 @@
           "to": {
             "source": "github.repository-markdown",
             "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#8-treatment-planning"
-          }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-42001",
-            "native": "ISO42001-6.1.3"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/registers/AI-RISK-REGISTER.md#current-register"
           }
         }
       ],
@@ -589,7 +556,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/registers/OBJECTIVES.md#3-initial-objectives"
+            "native": "docs/governance/MONITORING-MEASUREMENT-EVALUATION.md#10-relationship-to-objectives"
           }
         }
       ],
@@ -1695,7 +1662,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/registers/ASSET-ACCESS-REGISTER.md#8-current-access-review-records"
+            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#11-periodic-access-review"
           }
         }
       ],
@@ -1817,18 +1784,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/registers/SUPPLIER-REGISTER.md#6-sup-003-openai-codex"
-          }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-42001",
-            "native": "ISO42001-A.4.5"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/registers/SUPPLIER-REGISTER.md#7-sup-004-anthropic-claude"
+            "native": "docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md#3-current-approved-aimcp-boundary"
           }
         }
       ],
@@ -2264,7 +2220,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/registers/SECURITY-TESTING-REGISTER.md#3-testing-inventory"
+            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#85-mcpai-integration-testing"
           }
         }
       ],
@@ -3037,7 +2993,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/registers/SECURITY-TESTING-REGISTER.md#3-testing-inventory"
+            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#85-mcpai-integration-testing"
           }
         },
         {
@@ -3096,18 +3052,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/registers/SUPPLIER-REGISTER.md#6-sup-003-openai-codex"
-          }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-42001",
-            "native": "ISO42001-A.10.2"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/registers/SUPPLIER-REGISTER.md#7-sup-004-anthropic-claude"
+            "native": "docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md#3-current-approved-aimcp-boundary"
           }
         }
       ],
@@ -3155,18 +3100,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/registers/SUPPLIER-REGISTER.md#6-sup-003-openai-codex"
-          }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-42001",
-            "native": "ISO42001-A.10.3"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/registers/SUPPLIER-REGISTER.md#7-sup-004-anthropic-claude"
+            "native": "docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md#3-current-approved-aimcp-boundary"
           }
         }
       ],
@@ -3214,7 +3148,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/registers/SUPPLIER-REGISTER.md#10-aimcp-provider-change-rule"
+            "native": "docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md#11-change-control"
           }
         },
         {

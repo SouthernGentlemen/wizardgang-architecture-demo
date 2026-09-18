@@ -421,7 +421,7 @@ If performed, scope, tester independence/competence, date, environment, findings
 
 The current testing/control inventory is maintained in:
 
-`docs/governance/registers/SECURITY-TESTING-REGISTER.md`
+`assurance/governance/security-testing.json`
 
 Statuses describe the existence and evidence maturity of the testing control. They do not state that the latest branch currently passes unless a specific current CI result is cited.
 
@@ -511,4 +511,4 @@ It supports an **aligned — uncertified** posture. Test source, CI configuratio
 
 ## Alignment
 
-**Controls:** ISO27001-A.5.8, ISO27001-A.8.1, ISO27001-A.8.25, ISO27001-A.8.26, ISO27001-A.8.27, ISO27001-A.8.28, ISO27001-A.8.29, ISO27001-A.8.30, ISO27001-A.8.33, ISO42001-A.6.1.3
+**Controls:** ISO27001-A.5.8, ISO27001-A.8.1, ISO27001-A.8.25, ISO27001-A.8.26, ISO27001-A.8.27, ISO27001-A.8.28, ISO27001-A.8.29, ISO27001-A.8.30, ISO27001-A.8.33, ISO42001-A.6.1.3, ISO42001-A.6.2.4, ISO42001-A.9.4

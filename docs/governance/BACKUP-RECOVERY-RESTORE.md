@@ -264,7 +264,7 @@ Those observed results will inform future internal recovery objectives. Until me
 
 At least one documented restore/recovery exercise is required annually after this process becomes approved.
 
-The initial exercise is recorded as `RT-001` in `docs/governance/registers/RECOVERY-TEST-REGISTER.md` and is due **2026-12-02**, consistent with `SEC-OBJ-004`.
+The initial exercise is recorded as `RT-001` in `assurance/governance/recovery-tests.json` and is due **2026-12-02**, consistent with `SEC-OBJ-004`.
 
 The first exercise should test, in an isolated or otherwise controlled environment where practical:
 
@@ -372,10 +372,10 @@ Procedure approval must not automatically change a Gap/Partial control to Met.
 
 ## 16. Supporting Records
 
-- `docs/governance/registers/RECOVERY-TEST-REGISTER.md`
-- `docs/governance/registers/SECURITY-RISK-REGISTER.md`
-- `docs/governance/registers/OBJECTIVES.md`
-- `docs/governance/registers/SUPPLIER-REGISTER.md`
+- `assurance/governance/recovery-tests.json`
+- `assurance/risks/risks.json`
+- `assurance/objectives/objectives.json`
+- `assurance/governance/suppliers.json`
 - `docs/governance/INCIDENT-MANAGEMENT.md`
 - `docs/governance/NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md`
 - `docs/RELEASE.md`

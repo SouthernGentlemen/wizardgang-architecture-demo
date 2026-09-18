@@ -1,5 +1,4 @@
 import { readFileSync } from 'node:fs';
-import { spawnSync } from 'node:child_process';
 import { describe, expect, it } from 'vitest';
 import registry from '../assurance/registry.json';
 
@@ -19,14 +18,16 @@ const governanceResources = flatten(registry.datasets as RegistryResource[])
   .filter((resource) => resource.kind === 'governance-records');
 
 describe('canonical governance register records', () => {
-  it('registers 253 schema-covered records in 14 reviewable partitions and views', () => {
+  it('registers 253 schema-covered records in 14 structured views', () => {
     const documents = governanceResources.map((resource) => JSON.parse(readFileSync(resource.path, 'utf8')) as {
       source: string;
-      views: Array<{ id: string; document: string }>;
+      qualification: string;
+      views: Array<{ id: string; columns: Array<{ key: string; label: string }>; document?: string; section?: string }>;
       records: Array<{ id: string; view: string }>;
     });
     const views = documents.flatMap((document) => document.views);
     const records = documents.flatMap((document) => document.records);
+
     expect(governanceResources).toHaveLength(14);
     expect(governanceResources.every((resource) => resource.capabilities.includes('summary-source'))).toBe(true);
     expect(documents.every((document) => document.source === 'governance.records')).toBe(true);
@@ -35,34 +36,20 @@ describe('canonical governance register records', () => {
     expect(new Set(views.map((view) => view.id)).size).toBe(14);
     expect(new Set(records.map((record) => record.id)).size).toBe(253);
     expect(records.every((record) => views.some((view) => view.id === record.view))).toBe(true);
+    expect(views.every((view) => view.columns.length >= 2)).toBe(true);
   });
 
-  it('keeps every generated table current and bracketed by deterministic markers', () => {
-    const validation = spawnSync(process.execPath, ['scripts/generate-governance-registers.mjs', '--check'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-    });
-    expect(validation.status, `${validation.stdout}\n${validation.stderr}`).toBe(0);
+  it('keeps Markdown output paths out of canonical view metadata', () => {
     for (const resource of governanceResources) {
-      const document = JSON.parse(readFileSync(resource.path, 'utf8')) as { views: Array<{ id: string; document: string }> };
+      const document = JSON.parse(readFileSync(resource.path, 'utf8')) as {
+        qualification: string;
+        views: Array<Record<string, unknown>>;
+      };
+      expect(document.qualification).toContain('Canonical structured register facts');
       for (const view of document.views) {
-        const markdown = readFileSync(view.document, 'utf8');
-        expect(markdown).toContain(`<!-- GENERATED:governance-records:${view.id}:start -->`);
-        expect(markdown).toContain(`<!-- GENERATED:governance-records:${view.id}:end -->`);
+        expect(view).not.toHaveProperty('document');
+        expect(view).not.toHaveProperty('section');
       }
     }
-  });
-
-  it('leaves policy tables and existing assurance projections outside governance-record ownership', () => {
-    const viewIds = governanceResources.flatMap((resource) => {
-      const document = JSON.parse(readFileSync(resource.path, 'utf8')) as { views: Array<{ id: string }> };
-      return document.views.map((view) => view.id);
-    });
-    expect(viewIds).not.toContain('obligation-trigger-matrix');
-    expect(viewIds).not.toContain('security-testing-status-model');
-    expect(viewIds).not.toContain('security-risk-register');
-    expect(viewIds).not.toContain('ai-risk-register');
-    expect(viewIds).not.toContain('objectives');
-    expect(viewIds).not.toContain('incidents');
   });
 });

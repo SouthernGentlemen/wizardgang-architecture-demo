@@ -378,8 +378,8 @@ Where a change materially affects a recorded risk, the associated pull request o
 
 The management system will maintain separate but interoperable registers:
 
-- `docs/governance/registers/SECURITY-RISK-REGISTER.md`;
-- `docs/governance/registers/AI-RISK-REGISTER.md`.
+- `assurance/risks/risks.json`;
+- `assurance/risks/risks.json`.
 
 A shared risk may appear in both registers only when the distinction adds useful accountability. Otherwise, one authoritative record should reference both frameworks.
 

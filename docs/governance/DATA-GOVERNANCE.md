@@ -87,7 +87,7 @@ Functional ownership follows `docs/governance/ROLES-RESPONSIBILITIES.md`.
 
 The current inventory is maintained at:
 
-`docs/governance/registers/DATA-REGISTER.md`
+`assurance/governance/data-inventory.json`
 
 Each material data record should identify:
 
@@ -447,7 +447,7 @@ These gaps must remain visible in the compliance checklist, risk/treatment recor
 
 Supporting evidence includes:
 
-- `docs/governance/registers/DATA-REGISTER.md`;
+- `assurance/governance/data-inventory.json`;
 - `migrations/0001_demo_blob.sql`;
 - `migrations/0002_operations_dashboard.sql`;
 - `migrations/0004_application_logs.sql`;
@@ -459,8 +459,8 @@ Supporting evidence includes:
 - `SECURITY.md`;
 - `docs/OPERATIONS.md`;
 - `docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md`;
-- `docs/governance/registers/SECURITY-RISK-REGISTER.md`;
-- `docs/governance/registers/AI-RISK-REGISTER.md`;
+- `assurance/risks/risks.json`;
+- `assurance/risks/risks.json`;
 - `docs/governance/BACKUP-RECOVERY-RESTORE.md`;
 - `docs/governance/INCIDENT-MANAGEMENT.md`;
 - and controlled Git/release evidence.

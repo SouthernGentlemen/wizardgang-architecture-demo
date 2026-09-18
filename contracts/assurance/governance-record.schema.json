@@ -61,22 +61,12 @@
       "additionalProperties": false,
       "required": [
         "id",
-        "document",
-        "section",
         "columns"
       ],
       "properties": {
         "id": {
           "type": "string",
           "pattern": "^[a-z0-9.-]+$"
-        },
-        "document": {
-          "type": "string",
-          "pattern": "^docs/governance/registers/.+\\.md$"
-        },
-        "section": {
-          "type": "string",
-          "minLength": 1
         },
         "columns": {
           "type": "array",

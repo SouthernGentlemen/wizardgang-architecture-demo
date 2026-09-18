@@ -486,12 +486,12 @@ This document must not be used to imply those activities have already occurred.
 Primary supporting records include:
 
 - `docs/governance/RISK-MANAGEMENT.md`;
-- `docs/governance/registers/SECURITY-RISK-REGISTER.md`;
-- `docs/governance/registers/AI-RISK-REGISTER.md`;
+- `assurance/risks/risks.json`;
+- `assurance/risks/risks.json`;
 - `docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md`;
-- `docs/governance/soa/ISO-27001-SOA.md`;
-- `docs/governance/soa/ISO-42001-SOA.md`;
-- `docs/governance/registers/OBJECTIVES.md`;
+- `assurance/compliance/iso-27001-2022.json`;
+- `assurance/compliance/iso-42001-2023.json`;
+- `assurance/objectives/objectives.json`;
 - `docs/governance/MANAGEMENT-SYSTEM-CHANGE-PLANNING.md`;
 - `docs/governance/OPERATIONAL-PLANNING-CONTROL.md`;
 - `docs/CHANGE-MANAGEMENT.md`;
@@ -503,7 +503,7 @@ Primary supporting records include:
 
 ## 23. Alignment
 
-**Controls:** ISO27001-6.1, ISO27001-6.1.2, ISO27001-6.1.3, ISO27001-8.2, ISO27001-8.3
+**Controls:** ISO27001-6.1, ISO27001-6.1.2, ISO27001-6.1.3, ISO27001-8.2, ISO27001-8.3, ISO42001-6.1, ISO42001-6.1.3
 
 This document supports:
 

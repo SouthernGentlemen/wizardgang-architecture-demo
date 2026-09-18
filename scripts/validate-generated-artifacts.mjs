@@ -43,36 +43,6 @@ const definitions = [
     inputs: listFiles('assurance'),
     outputs: ['src/assurance/generated/registry-bindings.ts', 'src/assurance/generated/lifecycle-baseline-membership.json'],
   },
-  {
-    id: 'assurance-summaries',
-    command: ['npm', ['run', 'generate:assurance-summaries']],
-    inputs: [...listFiles('assurance'), 'docs/governance/REFERENCE-REGISTRY.json'],
-    outputs: [
-      'docs/governance/registers/SECURITY-RISK-REGISTER.md',
-      'docs/governance/registers/AI-RISK-REGISTER.md',
-      'docs/governance/registers/INCIDENT-REGISTER.md',
-      'docs/governance/registers/OBJECTIVES.md',
-      'docs/governance/soa/ISO-27001-SOA.md',
-      'docs/governance/soa/ISO-42001-SOA.md',
-    ],
-  },
-  {
-    id: 'governance-registers',
-    command: ['npm', ['run', 'generate:governance-registers']],
-    inputs: listFiles('assurance/governance'),
-    outputs: [
-      'docs/governance/registers/ASSET-ACCESS-REGISTER.md',
-      'docs/governance/registers/COMPETENCE-AWARENESS-REGISTER.md',
-      'docs/governance/registers/CONFIGURATION-REGISTER.md',
-      'docs/governance/registers/CRYPTOGRAPHY-SECRETS-REGISTER.md',
-      'docs/governance/registers/DATA-REGISTER.md',
-      'docs/governance/registers/OBLIGATIONS-REGISTER.md',
-      'docs/governance/registers/RECOVERY-TEST-REGISTER.md',
-      'docs/governance/registers/SECURITY-MAINTENANCE-REGISTER.md',
-      'docs/governance/registers/SECURITY-TESTING-REGISTER.md',
-      'docs/governance/registers/SUPPLIER-REGISTER.md',
-    ],
-  },
 ];
 
 function sha256(file, cwd = root) {

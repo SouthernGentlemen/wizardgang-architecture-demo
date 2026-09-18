@@ -5,6 +5,11 @@ const root = process.cwd();
 const governanceRoot = path.join(root, 'docs/governance');
 const registryPath = path.join(governanceRoot, 'REFERENCE-REGISTRY.json');
 const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
+const presentation = JSON.parse(fs.readFileSync(path.join(root, 'assurance/presentation/documents.json'), 'utf8'));
+const assuranceRegistry = JSON.parse(fs.readFileSync(path.join(root, 'assurance/registry.json'), 'utf8'));
+function flattenResources(resources = []) { return resources.flatMap((resource) => [resource, ...flattenResources(resource.resources ?? [])]); }
+const resourcePathById = new Map(flattenResources(assuranceRegistry.datasets ?? []).map((resource) => [resource.id, resource.path]));
+const presentationById = new Map((presentation.documents ?? []).map((document) => [document.id, document]));
 const errors = [];
 const references = new Map();
 const referencePattern = /^WG-(?:GOV|POL|REG|OBJ|SOA|AIA|A11Y)-\d{3}$/;
@@ -45,10 +50,29 @@ for (const record of registry.records ?? []) {
     errors.push(`${record.path}: registered file does not exist`);
     continue;
   }
-  const text = fs.readFileSync(absolute, 'utf8');
-  const matches = [...text.matchAll(/^\*\*Reference:\*\*\s+([^\s]+)\s*$/gm)];
-  if (matches.length !== 1) errors.push(`${record.path}: expected exactly one Reference header, found ${matches.length}`);
-  else if (matches[0][1] !== record.reference) errors.push(`${record.path}: header ${matches[0][1]} does not match registry ${record.reference}`);
+
+  if (record.path.endsWith('.md')) {
+    const text = fs.readFileSync(absolute, 'utf8');
+    const matches = [...text.matchAll(/^\*\*Reference:\*\*\s+([^\s]+)\s*$/gm)];
+    if (matches.length !== 1) errors.push(`${record.path}: expected exactly one Reference header, found ${matches.length}`);
+    else if (matches[0][1] !== record.reference) errors.push(`${record.path}: header ${matches[0][1]} does not match registry ${record.reference}`);
+    continue;
+  }
+
+  if (record.path.endsWith('.json') && /^WG-(?:REG|OBJ|SOA)-/.test(record.reference)) {
+    const document = presentationById.get(record.reference);
+    if (!document) {
+      errors.push(`${record.reference}: structured identity is missing from assurance/presentation/documents.json`);
+      continue;
+    }
+    const sourcePaths = new Set((document.sourceDatasets ?? []).map((id) => resourcePathById.get(id)).filter(Boolean));
+    if (!sourcePaths.has(record.path)) {
+      errors.push(`${record.reference}: registered structured authority ${record.path} is not one of its presentation source datasets`);
+    }
+    continue;
+  }
+
+  errors.push(`${record.path}: registered identity must resolve to governance Markdown or a structured assurance JSON authority`);
 }
 
 const registeredPaths = new Set((registry.records ?? []).map((record) => record.path));
@@ -70,7 +94,7 @@ const codeTokens = [...indexText.matchAll(/`([^`]+)`/g)].map((match) => match[1]
 function resolveIndexToken(token) {
   if (token.includes('*') || token.includes('→') || token.includes(' ') || token.startsWith('/')) return null;
   const candidates = [];
-  if (/^(?:docs|scripts|src|tests|migrations|contracts|\.github)\//.test(token)) candidates.push(path.join(root, token));
+  if (/^(?:assurance|docs|scripts|src|tests|migrations|contracts|\.github)\//.test(token)) candidates.push(path.join(root, token));
   else if (/^(?:registers|soa|assessments)\//.test(token)) candidates.push(path.join(governanceRoot, token));
   else if (/\.md$/.test(token)) {
     candidates.push(path.join(governanceRoot, token));
@@ -111,4 +135,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`Governance metadata validation passed: ${registry.records.length} registered identities; ${liveReferences.size} live Reference headers; identity-only registry, current-state authority docs, and index paths validated.`);
+console.log(`Governance metadata validation passed: ${registry.records.length} registered identities; ${liveReferences.size} live Markdown Reference headers; structured register/SoA identities, identity-only registry, current-state authority docs, and index paths validated.`);

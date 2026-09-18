@@ -136,7 +136,7 @@ Possible evidence includes:
 
 The management system may maintain a lightweight record at:
 
-`docs/governance/registers/COMPETENCE.md`
+`assurance/governance/competence.json`
 
 when recurring or multiple-person competence records are needed.
 
