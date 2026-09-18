@@ -6,6 +6,8 @@ This repository is a public architecture demonstration, not a generic applicatio
 
 Implementation plans and roadmaps are valid planning tools when a controlled change or multi-change sequence benefits from an explicit source of truth. Keep an active plan clearly scoped, keep it current while the work is active, and retire or delete it when it becomes obsolete so it does not compete with permanent contracts.
 
+The root `IMPLEMENTATION_PLAN.md` is currently active for the DEMO-294 through DEMO-306 Release Operations Hardening sequence. Read it before starting any controlled change in that sequence, preserve its reserved IDs and ordering, and keep implementation within its stated scope. Retire or delete the plan after the sequence is released and its durable requirements have been absorbed into permanent contracts/tests.
+
 A plan may coordinate intended work, but it does not replace runtime declarations or permanent contract documentation unless the controlled change explicitly updates those contracts.
 
 Use these authorities for their respective concerns:
@@ -79,6 +81,7 @@ Preserve these invariants:
 - Never let ordinary demo behavior execute behind the intentional offline gate.
 - API/non-HTML/write requests receive `503` JSON while offline; browser HTML demo navigation may redirect to the registered offline recovery page.
 - Do not commit secrets, real Cloudflare billing/account data, or admin credentials.
+- While the active Release Operations Hardening plan is in force, a controlled change that adds, renames, or removes a Worker secret names it in its controlled record, and the next release record lists it as a deployment prerequisite. Production must hold every required secret before a release tag is pushed. Record secrets by name, date, and purpose only, never by value.
 - Do not claim WCAG, ISO/IEC 27001, or ISO/IEC 42001 certification.
 - The canonical JSON evidence records and `evidence` relationships stay as they are, and every `/assurance` requirement references the Markdown documentation that governs it. Do not set a compliance status without a rationale, and do not set any status other than `gap` without a Markdown documentation reference. Never create, backdate, or simulate an operating record to improve a status.
 - Prefer the smallest implementation that visibly proves the architecture concept.
