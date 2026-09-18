@@ -130,8 +130,8 @@ function preserveLocaleInGetForms(body: string, localization: LocalizationContex
 function localizeBody(body: string, localization: LocalizationContext): string {
   const protectedBlocks: string[] = [];
   const protect = (value: string) => `@@WG_I18N_BLOCK_${protectedBlocks.push(value) - 1}@@`;
-  let localized = body.replace(TECHNICAL_BLOCK, protect);
-  localized = localized.replace(SCRIPT_BLOCK, (script) => protect(localizeClientScript(script, localization)));
+  let localized = body.replace(SCRIPT_BLOCK, (script) => protect(localizeClientScript(script, localization)));
+  localized = localized.replace(TECHNICAL_BLOCK, protect);
   localized = localized.split(/(<[^>]+>)/g).map((part) => part.startsWith('<') ? localizeAttributes(part, localization) : localizeText(part, localization)).join('');
   localized = localizeLinks(localized, localization);
   localized = preserveLocaleInGetForms(localized, localization);
