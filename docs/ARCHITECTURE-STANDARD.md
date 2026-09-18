@@ -157,7 +157,6 @@ Representative structure:
 ├── public/
 ├── tests/
 ├── docs/
-│   └── releases/
 ├── scripts/
 ├── migrations/
 ├── .github/workflows/
@@ -204,7 +203,7 @@ branch -> commits -> validation -> pull request -> review -> merge -> tag -> dep
 
 Production milestones are represented by annotated Git tags and GitHub Releases using semantic versioning: `MAJOR.MINOR.PATCH`.
 
-A deployed production version must be traceable to a specific annotated Git tag and commit. Meaningful releases should document version, date, major changes, fixes, security-related changes, known limitations, compatibility changes, and migration requirements where applicable. Annotated tags and GitHub Releases are the historical release authority; repository release records under `docs/releases/` are release-scoped inputs/evidence and do not become a parallel mutable history.
+A deployed production version must be traceable to a specific annotated Git tag and commit. GitHub Releases publish release identity and generated change notes from Git/GitHub state, with the release-bound assurance snapshot attached. Annotated tags and GitHub Releases are the historical release authority; the repository does not maintain a parallel per-version Markdown archive or changelog.
 
 ## 19 — GitHub Actions
 

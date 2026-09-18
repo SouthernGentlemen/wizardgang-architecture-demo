@@ -56,7 +56,7 @@ The repository records:
 - pull-request review and approval;
 - automated validation results;
 - corrective actions;
-- release records;
+- annotated tags and GitHub Releases;
 - and management-system history.
 
 Sensitive records that should not be public are retained in an appropriate protected system and referenced without exposing confidential content.

@@ -1,6 +1,6 @@
-import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { spawnSync } from 'node:child_process';
 import {
   loadAssuranceRegistry,
   primaryRegistryDataset,
@@ -12,6 +12,14 @@ import {
   validateRelationshipSet,
 } from './lib/assurance-relationships.mjs';
 import { validateRegisteredAssuranceResource } from './lib/assurance-validation.mjs';
+
+function hasAnnotatedReleaseTag(root, release) {
+  const result = spawnSync('git', ['cat-file', '-t', `refs/tags/${release}`], {
+    cwd: root,
+    encoding: 'utf8',
+  });
+  return result.status === 0 && result.stdout.trim() === 'tag';
+}
 
 export function validateAdvisories(root = process.cwd()) {
   const errors = [];
@@ -58,8 +66,8 @@ export function validateAdvisories(root = process.cwd()) {
     ));
 
     for (const release of record.fixedReleases ?? []) {
-      if (!fs.existsSync(path.join(root, `docs/releases/${release}.md`))) {
-        errors.push(`${record.id}: fixed release ${release} has no controlled release record`);
+      if (!hasAnnotatedReleaseTag(root, release)) {
+        errors.push(`${record.id}: fixed release ${release} is not an annotated release tag`);
       }
     }
   }
@@ -74,7 +82,7 @@ export function runAdvisoryValidation(root = process.cwd()) {
     for (const error of result.errors) console.error(`- ${error}`);
     return 1;
   }
-  console.log(`Public advisory validation passed: ${result.count} published advisories with canonical relationships and controlled fixed-release records.`);
+  console.log(`Public advisory validation passed: ${result.count} published advisories with canonical relationships and annotated fixed-release tags.`);
   return 0;
 }
 
