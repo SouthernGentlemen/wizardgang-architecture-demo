@@ -61,7 +61,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v5
         with:
-          node-version: 22
+          node-version-file: .node-version
           cache: npm
       - name: Require the dedicated automation token
         env:
@@ -273,6 +273,10 @@ jobs:
           ref: main
           fetch-depth: 0
           token: ${{ secrets.GIT_DEMO_PR_TOKEN }}
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .node-version
       - name: Require the dedicated automation token
         env:
           GH_TOKEN: ${{ secrets.GIT_DEMO_PR_TOKEN }}

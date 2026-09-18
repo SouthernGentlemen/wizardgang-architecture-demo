@@ -3,6 +3,11 @@
   "version": "0.24.0",
   "private": false,
   "type": "module",
+  "engines": {
+    "node": "22.x",
+    "npm": "10.x"
+  },
+  "packageManager": "npm@10.9.8",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",

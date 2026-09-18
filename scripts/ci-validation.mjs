@@ -8,6 +8,7 @@ const baseSha = process.env.BASE_SHA;
 if (baseSha && !/^[0-9a-f]{7,40}$/i.test(baseSha)) throw new Error('BASE_SHA must be a Git commit SHA.');
 
 const commands = [
+  { label: 'Validate pinned Node/npm toolchain', file: process.execPath, args: ['scripts/validate-toolchain.mjs'] },
   { label: 'Install locked dependencies', file: npm, args: ['ci'] },
   { label: 'Validate generated-artifact parity', file: npm, args: ['run', 'validate:generated-artifacts'], env: { CI_DIAGNOSTICS_DIR: diagnosticsDir } },
   { label: 'Full repository check', file: npm, args: ['run', 'check'] },

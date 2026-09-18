@@ -33,7 +33,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v5
         with:
-          node-version: 22
+          node-version-file: .node-version
           cache: npm
       - name: Verify an exact semantic version tag
         id: release
