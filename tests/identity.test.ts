@@ -38,6 +38,7 @@ function env(overrides: Partial<Env> = {}): Env {
     DEMO_DB: memoryDb(),
     GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
+    IDENTITY_SESSION_SECRET: 's'.repeat(32),
     IDENTITY_AUDIT_HMAC_SECRET: 'identity-audit-test-secret-that-is-at-least-thirty-two-characters',
     ...overrides,
   };
@@ -194,7 +195,7 @@ describe('identity protocol boundaries', () => {
   });
 
   it('serves origin-specific Entra SAML metadata', async () => {
-    const metadata = samlMetadataResponse(new Request('https://demo.example/auth/saml/metadata'));
+    const metadata = samlMetadataResponse(new Request('https://demo.example/auth/saml/metadata'), env());
     const xml = await metadata.text();
     expect(metadata.headers.get('content-type')).toContain('samlmetadata+xml');
     expect(xml).toContain('https://demo.example/auth/saml/acs');

@@ -111,12 +111,12 @@ export const identityRouteCapability = defineInterfaceIdentityCapability('interf
     pattern: '/auth/saml/metadata',
     methods: ['GET'],
     kind: 'protocol',
-    handler: (request) => samlMetadataResponse(request),
+    handler: (request, { env }) => samlMetadataResponse(request, env),
     title: 'SAML service-provider metadata',
     description: 'Public SAML service-provider metadata.',
     sourceModule: 'src/api/identity.ts',
     sourceExport: 'samlMetadataResponse',
-    cache: { mode: 'public', maxAgeSeconds: 300 },
+    cache: { mode: 'response' },
     tests: ['tests/identity.test.ts'],
   }),
   interfaceIdentityRoute({
@@ -130,7 +130,7 @@ export const identityRouteCapability = defineInterfaceIdentityCapability('interf
     sourceModule: 'src/api/identity.ts',
     sourceExport: 'identitySessionResponse',
     authorization: { mode: 'policy', policy: 'optional identity-session' },
-    cache: { mode: 'private' },
+    cache: { mode: 'response' },
     tests: ['tests/identity.test.ts'],
   }),
   interfaceIdentityRoute({
@@ -145,7 +145,7 @@ export const identityRouteCapability = defineInterfaceIdentityCapability('interf
     sourceExport: 'identityLogoutResponse',
     authorization: { mode: 'policy', policy: 'optional identity-session invalidation' },
     sameOrigin: { mode: 'required', methods: ['POST'] },
-    cache: { mode: 'private' },
+    cache: { mode: 'response' },
     tests: ['tests/identity.test.ts'],
   }),
 ]);

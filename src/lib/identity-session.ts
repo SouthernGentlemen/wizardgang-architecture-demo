@@ -143,6 +143,10 @@ export function hasIdentitySecret(env: Env): boolean {
   return identitySecret(env) !== null;
 }
 
+export function identityReadiness(env: Env): 'ready' | 'not-configured' {
+  return hasIdentitySecret(env) && hasIdentityAuditSecret(env) ? 'ready' : 'not-configured';
+}
+
 async function seal(value: unknown, secret: string, purpose: string): Promise<string> {
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const additionalData = encoder.encode(`v1:${purpose}`);

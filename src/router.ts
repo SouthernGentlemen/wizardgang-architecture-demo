@@ -3,7 +3,7 @@ import { renderNotFound } from './ui/not-found';
 import type { AdminIdentity } from './lib/admin-auth';
 import { requireAdmin, requireSameOrigin } from './lib/admin-auth';
 import { getDemoControl } from './lib/demo-control';
-import { readIdentitySession } from './lib/identity-session';
+import { identityReadiness, readIdentitySession } from './lib/identity-session';
 import { json, methodNotAllowed, safeError } from './lib/http';
 import {
   crawlerBlockedResponse,
@@ -121,6 +121,12 @@ async function authenticateRoute(
   if (route.authentication.mode === 'anonymous') return undefined;
   if (route.authentication.provider === 'admin-basic') return requireAdmin(request, env);
   if (route.authentication.provider === 'identity-session') {
+    if (identityReadiness(env) !== 'ready') {
+      return json({ error: 'identity_not_configured' }, {
+        status: 503,
+        headers: { 'cache-control': 'no-store', 'retry-after': '30' },
+      });
+    }
     if (await readIdentitySession(request, env)) return undefined;
     return json({ error: 'authentication_required' }, {
       status: 401,

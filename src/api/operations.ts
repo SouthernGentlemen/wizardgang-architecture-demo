@@ -2,6 +2,7 @@ import type { Env } from '../types';
 import { getDemoControl } from '../lib/demo-control';
 import { recordApplicationLog, recentApplicationLogs } from '../lib/logs';
 import { json } from '../lib/http';
+import { identityReadiness } from '../lib/identity-session';
 
 type Readiness = 'operational' | 'unavailable' | 'unconfigured';
 
@@ -13,6 +14,7 @@ export interface HealthSnapshot {
   status: 'operational' | 'degraded' | 'offline';
   checkedAt: string;
   demo: { state: 'online' | 'offline'; message: string };
+  identity: 'ready' | 'not-configured';
   services: {
     worker: 'operational';
     d1: Readiness;
@@ -65,6 +67,7 @@ export async function collectHealth(env: Env, persist = false, scheduledTime?: n
     status,
     checkedAt,
     demo: { state: control.state, message: control.publicMessage },
+    identity: identityReadiness(env),
     services: {
       worker: 'operational',
       d1: d1.status,

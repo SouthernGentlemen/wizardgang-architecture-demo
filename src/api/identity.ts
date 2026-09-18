@@ -13,6 +13,7 @@ import {
   hasIdentityAuditSecret,
   hasIdentitySecret,
   identitySubjectAuditId,
+  identityReadiness,
   randomValue,
   readFlowCookie,
   readIdentitySession,
@@ -63,7 +64,7 @@ function nonEmpty(value: string | undefined): boolean {
 }
 
 export function identityProviderConfiguration(env: Env): Record<string, ProviderConfiguration> {
-  const session = hasIdentitySecret(env) && hasIdentityAuditSecret(env);
+  const session = identityReadiness(env) === 'ready';
   return {
     microsoft: {
       configured: session && nonEmpty(env.MICROSOFT_CLIENT_ID) && nonEmpty(env.MICROSOFT_CLIENT_SECRET) && nonEmpty(env.MICROSOFT_TENANT_ID),
@@ -82,6 +83,17 @@ export function identityProviderConfiguration(env: Env): Record<string, Provider
       label: 'GitHub', protocol: 'OAuth 2.0', startPath: '/auth/github',
     },
   };
+}
+
+function identityUnavailableResponse(headers: HeadersInit = {}): Response {
+  const responseHeaders = new Headers(headers);
+  responseHeaders.set('cache-control', 'no-store');
+  responseHeaders.set('retry-after', '30');
+  return json({ error: 'identity_not_configured' }, { status: 503, headers: responseHeaders });
+}
+
+function requireIdentityReadiness(env: Env): Response | null {
+  return identityReadiness(env) === 'ready' ? null : identityUnavailableResponse();
 }
 
 function redirect(location: URL, cookies: string[] = []): Response {
@@ -268,6 +280,8 @@ async function auditFailure(env: Env, provider: IdentityProvider | 'saml', reaso
 
 export async function authorizationDecisionResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'POST') return methodNotAllowed(['POST']);
+  const unavailable = requireIdentityReadiness(env);
+  if (unavailable) return unavailable;
   try {
     const session = await readIdentitySession(request, env);
     if (!session) throw new HttpError(401, 'authentication_required');
@@ -287,6 +301,8 @@ export async function authorizationDecisionResponse(request: Request, env: Env):
 
 export async function demoAccessTokenResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'POST') return methodNotAllowed(['POST']);
+  const unavailable = requireIdentityReadiness(env);
+  if (unavailable) return unavailable;
   try {
     if (request.headers.get('origin') !== new URL(request.url).origin) throw new HttpError(403, 'same_origin_required');
     const session = await readIdentitySession(request, env);
@@ -306,6 +322,8 @@ export async function demoAccessTokenResponse(request: Request, env: Env): Promi
 
 export async function identitySessionResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'GET') return methodNotAllowed(['GET']);
+  const unavailable = requireIdentityReadiness(env);
+  if (unavailable) return unavailable;
   const session = await readIdentitySession(request, env);
   return json({ authenticated: Boolean(session), providers: identityProviderConfiguration(env), ...(session ? { session } : {}) }, { headers: { 'cache-control': 'no-store' } });
 }
@@ -314,14 +332,34 @@ export async function identityLogoutResponse(request: Request, env: Env): Promis
   if (request.method !== 'POST') return methodNotAllowed(['POST']);
   const origin = request.headers.get('origin');
   if (!origin || origin !== new URL(request.url).origin) return json({ error: 'same_origin_required' }, { status: 403, headers: { 'cache-control': 'no-store' } });
-  const session = await readIdentitySession(request, env);
-  await revokeIdentitySession(request, env);
-  if (session) await auditIdentity(env, 'session_destroyed', session.identity.provider, { subjectAuditId: await identitySubjectAuditId(env, session.identity.provider, session.identity.subject) });
-  return json({ authenticated: false }, { headers: { 'cache-control': 'no-store', 'set-cookie': clearIdentityCookie(IDENTITY_SESSION_COOKIE) } });
+
+  const sessionConfigured = hasIdentitySecret(env);
+  const auditConfigured = hasIdentityAuditSecret(env);
+  const clearCookie = clearIdentityCookie(IDENTITY_SESSION_COOKIE);
+  let session: IdentitySession | null = null;
+
+  if (sessionConfigured) {
+    session = await readIdentitySession(request, env);
+    await revokeIdentitySession(request, env);
+  }
+
+  if (session && auditConfigured) {
+    await auditIdentity(env, 'session_destroyed', session.identity.provider, {
+      subjectAuditId: await identitySubjectAuditId(env, session.identity.provider, session.identity.subject),
+    });
+  }
+
+  if (!sessionConfigured || !auditConfigured) {
+    return identityUnavailableResponse({ 'set-cookie': clearCookie });
+  }
+
+  return json({ authenticated: false }, { headers: { 'cache-control': 'no-store', 'set-cookie': clearCookie } });
 }
 
 export async function providerStartResponse(request: Request, env: Env, provider: IdentityProvider): Promise<Response> {
   if (request.method !== 'GET') return methodNotAllowed(['GET']);
+  const unavailable = requireIdentityReadiness(env);
+  if (unavailable) return unavailable;
   if (!identityProviderConfiguration(env)[provider].configured) return identityRedirect(request, { error: 'provider_unconfigured', provider });
   const flow: IdentityFlow = { provider, state: randomValue(), verifier: randomValue(), startedAt: Date.now(), ...(OIDC_PROVIDERS.has(provider) ? { nonce: randomValue() } : {}) };
   let location: URL;
@@ -413,6 +451,8 @@ async function exchangeGithubCode(request: Request, env: Env, code: string, flow
 
 export async function providerCallbackResponse(request: Request, env: Env, provider: IdentityProvider): Promise<Response> {
   if (request.method !== 'GET') return methodNotAllowed(['GET']);
+  const unavailable = requireIdentityReadiness(env);
+  if (unavailable) return unavailable;
   const url = new URL(request.url);
   const flow = await readFlowCookie(request, env, provider);
   try {
@@ -562,6 +602,8 @@ function samlSession(profile: Profile, assertion: ReturnType<typeof parseAsserti
 
 export async function samlStartResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'GET') return methodNotAllowed(['GET']);
+  const unavailable = requireIdentityReadiness(env);
+  if (unavailable) return unavailable;
   if (!identityProviderConfiguration(env).saml.configured) return identityRedirect(request, { error: 'provider_unconfigured', provider: 'saml' });
   const flow: IdentityFlow = { provider: 'saml', state: randomValue(), startedAt: Date.now() };
   const authorizeUrl = await samlClient(request, env).getAuthorizeUrlAsync(flow.state, undefined, {});
@@ -571,6 +613,8 @@ export async function samlStartResponse(request: Request, env: Env): Promise<Res
 
 export async function samlCallbackResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'POST') return methodNotAllowed(['POST']);
+  const unavailable = requireIdentityReadiness(env);
+  if (unavailable) return unavailable;
   const clear = clearFlowCookie('saml');
   try {
     const declared = Number(request.headers.get('content-length') || '0');
@@ -602,8 +646,10 @@ export async function samlCallbackResponse(request: Request, env: Env): Promise<
   }
 }
 
-export function samlMetadataResponse(request: Request): Response {
+export function samlMetadataResponse(request: Request, env: Env): Response {
   if (request.method !== 'GET') return methodNotAllowed(['GET']);
+  const unavailable = requireIdentityReadiness(env);
+  if (unavailable) return unavailable;
   const entityId = samlEntityId(request);
   const callback = samlCallbackUrl(request);
   const metadata = `<?xml version="1.0" encoding="UTF-8"?>

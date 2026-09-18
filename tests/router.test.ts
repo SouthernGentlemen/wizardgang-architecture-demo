@@ -33,6 +33,8 @@ function env(state: 'online' | 'offline' = 'online', crawlerState: 'enabled' | '
     GITHUB_BRANCH: 'main',
     DEMO_ADMIN_USER: 'operator',
     DEMO_ADMIN_PASSWORD: 'test-admin-password',
+    IDENTITY_SESSION_SECRET: 's'.repeat(32),
+    IDENTITY_AUDIT_HMAC_SECRET: 'a'.repeat(32),
     BILLING_DEMO_MONTHLY_BUDGET_USD: '10',
   };
 }

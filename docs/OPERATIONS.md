@@ -16,7 +16,7 @@ Do not rebuild the retired dashboard on the homepage. Detailed logs, raw health 
 
 Route retirement does not remove the operational system. The following remain independently declared and supported:
 
-- `/api/operations/health` and `/api/operations/version`;
+- `/api/operations/health` and `/api/operations/version`; the health payload includes one public-safe identity readiness value, `ready` or `not-configured`, without identifying a credential or its properties;
 - the existing operational log/budget and reporting machine contracts;
 - scheduled availability collection and persistence;
 - the 365-day availability retention policy;
@@ -26,7 +26,7 @@ Route retirement does not remove the operational system. The following remain in
 - protected `/admin` and recovery `/offline` pages;
 - crawler controls, `robots.txt`, `/.well-known/security.txt`, assets, and the sitemap protocol route.
 
-Interactive health reads remain read-only. Scheduled five-minute observations are the measured availability evidence and records older than 365 days are purged by the existing collector behavior.
+Interactive health reads remain read-only. Identity readiness is informational and does not change the existing health status or HTTP status-code semantics. Scheduled five-minute observations are the measured availability evidence and records older than 365 days are purged by the existing collector behavior.
 
 The public log API returns only the identity log envelope needed for bounded diagnostics; structured identity detail is withheld. Identity audit-event payload detail is likewise excluded from public event projections. Subject-derived audit identifiers and visitor sandbox namespaces are not retained in application-log detail.
 
