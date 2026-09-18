@@ -13,7 +13,7 @@ This is a public architecture demonstration. Public source is intentional; secre
 
 Use Cloudflare/GitHub managed secret stores for production and ignored `.dev.vars` for local-only placeholders.
 
-The current core Worker secrets are `DEMO_ADMIN_USER`, `DEMO_ADMIN_PASSWORD`, `WEBHOOK_DEMO_SECRET`, `GITHUB_WEBHOOK_SECRET`, `GITHUB_DEMO_TOKEN`, `DEMO_SESSION_SECRET`, `IDENTITY_SESSION_SECRET`, and the optional read-only `CLOUDFLARE_API_TOKEN`; provider credentials and the SAML certificate are documented in `docs/IDENTITY.md`. `GITHUB_READ_TOKEN` is an optional read-only GitHub API token. Secret values are never returned by health, version, logs, usage, evidence, or source-link surfaces.
+The current core Worker secrets are `DEMO_ADMIN_USER`, `DEMO_ADMIN_PASSWORD`, `WEBHOOK_DEMO_SECRET`, `GITHUB_WEBHOOK_SECRET`, `GITHUB_DEMO_TOKEN`, `DEMO_SESSION_SECRET`, `IDENTITY_SESSION_SECRET`, `IDENTITY_AUDIT_HMAC_SECRET`, and the optional read-only `CLOUDFLARE_API_TOKEN`; provider credentials and the SAML certificate are documented in `docs/IDENTITY.md`. `GITHUB_READ_TOKEN` is an optional read-only GitHub API token. Secret values are never returned by health, version, logs, usage, evidence, or source-link surfaces.
 
 Cloudflare usage collection uses a dedicated minimum-permission token with Analytics Read and, only when needed, Billing Read. Public projections exclude account/resource identifiers, account names, invoice/subscription identifiers, tokens, payment data, and raw upstream error text.
 
@@ -31,7 +31,7 @@ REST writes accept either the managed operator bearer credential or a short-live
 
 ## Public logging
 
-`/api/operations/logs` is a bounded public-safe diagnostic machine surface. There is no public human log explorer after retirement of `/operations`. Do not store or return passwords, authorization headers, cookies, bearer tokens, API keys, secrets, payment data, private account identifiers, or unreviewed request bodies. Structured detail is defensively redacted and size-bounded before it reaches `application_logs`.
+`/api/operations/logs` is a bounded public-safe diagnostic machine surface. There is no public human log explorer after retirement of `/operations`. Do not store or return passwords, authorization headers, cookies, bearer tokens, API keys, secrets, payment data, private account identifiers, or unreviewed request bodies. Structured detail is defensively redacted and size-bounded before it reaches `application_logs`. Identity log records never expose their structured detail through the public log projection.
 
 Keep operational logs distinct from the `demo_events` audit/evidence stream: logs explain runtime behavior; audit events preserve meaningful control/change evidence.
 

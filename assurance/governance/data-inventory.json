@@ -61,7 +61,7 @@
       "fields": {
         "storeSurface": "`demo_events`",
         "classification": "AUDIT-EVIDENCE",
-        "publicExposure": "Bounded evidence may be exposed; raw event store is not inherently public",
+        "publicExposure": "Selected sanitized evidence only; identity event detail is withheld from public projections",
         "mcpExposure": "No",
         "retentionDeletionPosture": "Evidence-oriented retention; no blanket pruning rule yet",
         "status": "Partial"
@@ -75,7 +75,7 @@
       "fields": {
         "storeSurface": "`application_logs`",
         "classification": "OPERATIONAL / public-safe after sanitization",
-        "publicExposure": "Yes, bounded sanitized viewer/API",
+        "publicExposure": "Yes, bounded sanitized API; identity event detail is withheld",
         "mcpExposure": "No",
         "retentionDeletionPosture": "Operational retention; explicit pruning baseline pending",
         "status": "Partial"

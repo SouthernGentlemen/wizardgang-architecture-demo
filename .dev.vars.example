@@ -17,6 +17,7 @@ DEMO_SESSION_SECRET=replace-me-with-at-least-32-local-only-characters
 
 # Real identity providers. Register localhost callback URLs separately for local testing.
 IDENTITY_SESSION_SECRET=replace-me-with-at-least-32-local-only-characters
+IDENTITY_AUDIT_HMAC_SECRET=replace-me-with-at-least-32-local-only-characters
 MICROSOFT_CLIENT_ID=replace-me
 MICROSOFT_CLIENT_SECRET=replace-me
 MICROSOFT_TENANT_ID=replace-me

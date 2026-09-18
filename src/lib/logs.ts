@@ -104,5 +104,5 @@ export async function recentApplicationLogs(
 
   binds.push(limit);
   const result = await env.DEMO_DB.prepare(sql).bind(...binds).all<ApplicationLogRow>();
-  return result.results;
+  return result.results.map((row) => row.source === 'identity' ? { ...row, detail_json: null } : row);
 }

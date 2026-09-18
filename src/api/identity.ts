@@ -10,7 +10,9 @@ import {
   clearIdentityCookie,
   createDemoAccessToken,
   createIdentitySession,
+  hasIdentityAuditSecret,
   hasIdentitySecret,
+  identitySubjectAuditId,
   randomValue,
   readFlowCookie,
   readIdentitySession,
@@ -61,7 +63,7 @@ function nonEmpty(value: string | undefined): boolean {
 }
 
 export function identityProviderConfiguration(env: Env): Record<string, ProviderConfiguration> {
-  const session = hasIdentitySecret(env);
+  const session = hasIdentitySecret(env) && hasIdentityAuditSecret(env);
   return {
     microsoft: {
       configured: session && nonEmpty(env.MICROSOFT_CLIENT_ID) && nonEmpty(env.MICROSOFT_CLIENT_SECRET) && nonEmpty(env.MICROSOFT_TENANT_ID),
@@ -248,11 +250,15 @@ function providerProtocol(provider: IdentityProvider | 'saml'): string {
 }
 
 async function auditIdentity(env: Env, eventType: string, provider: IdentityProvider | 'saml', detail: Record<string, unknown> = {}): Promise<void> {
-  const event = await recordDemoEvent(env, 'identity', `identity.${eventType}`, { provider: provider === 'saml' ? 'microsoft' : provider, protocol: providerProtocol(provider), ...detail });
+  const normalizedProvider = provider === 'saml' ? 'microsoft' : provider;
+  const event = await recordDemoEvent(env, 'identity', `identity.${eventType}`, { provider: normalizedProvider, protocol: providerProtocol(provider), ...detail });
+  const logDetail = Object.fromEntries(
+    Object.entries(detail).filter(([key]) => key !== 'subjectAuditId' && key !== 'namespace'),
+  );
   await recordApplicationLog(env, {
     source: 'identity', eventKey: `identity.${eventType}`, message: `${eventType.replaceAll('_', ' ')} for ${providerName(provider)}.`,
     route: provider === 'saml' ? '/auth/saml' : `/auth/${provider}`,
-    detail: { provider: provider === 'saml' ? 'microsoft' : provider, protocol: providerProtocol(provider), eventId: event.id, ...detail },
+    detail: { provider: normalizedProvider, protocol: providerProtocol(provider), eventId: event.id, ...logDetail },
   });
 }
 
@@ -270,10 +276,10 @@ export async function authorizationDecisionResponse(request: Request, env: Env):
     const action = body.requestedAction === 'demo:write' ? 'demo:write' : body.requestedAction === 'demo:read' ? 'demo:read' : null;
     if (!action) throw new HttpError(400, 'invalid_requested_action');
     const { identity } = session;
-    const principal = await principalFromIdentitySession(session);
+    const principal = await principalFromIdentitySession(env, session);
     const allowed = principal.permissions.includes(action);
     const eventType = allowed ? 'authorization_allowed' : 'authorization_denied';
-    const event = await recordDemoEvent(env, 'identity', `identity.${eventType}`, { subjectSha256: await sha256(`${identity.provider}:${identity.subject}`), provider: identity.provider, assurance: identity.assurance, role: identity.role, action });
+    const event = await recordDemoEvent(env, 'identity', `identity.${eventType}`, { subjectAuditId: await identitySubjectAuditId(env, identity.provider, identity.subject), provider: identity.provider, assurance: identity.assurance, role: identity.role, action });
     await recordApplicationLog(env, { source: 'identity', eventKey: `identity.${eventType}`, message: `Application policy ${allowed ? 'allowed' : 'denied'} ${action}.`, route: '/auth/authorize', detail: { provider: identity.provider, assurance: identity.assurance, role: identity.role, action, allowed, eventId: event.id } });
     return json({ identity: { provider: identity.provider, displayName: identity.displayName, assurance: identity.assurance, role: identity.role }, principal, authorization: { requestedAction: action, decision: allowed ? 'allow' : 'deny', policy: 'Authenticated identities receive demo:read and visitor-sandbox demo:write. Only the managed operator credential can address a caller-selected namespace.' }, separation: 'Authentication established the identity. Application policy independently decided the permitted action and data scope.', auditEventId: event.id }, { status: allowed ? 200 : 403, headers: { 'cache-control': 'no-store' } });
   } catch (error) { return errorResponse(error); }
@@ -286,13 +292,13 @@ export async function demoAccessTokenResponse(request: Request, env: Env): Promi
     const session = await readIdentitySession(request, env);
     if (!session) throw new HttpError(401, 'authentication_required');
     const { token, claims } = await createDemoAccessToken(env, session);
-    const subjectSha256 = await sha256(claims.subject);
+    const subjectAuditId = await identitySubjectAuditId(env, session.identity.provider, session.identity.subject);
     const event = await recordDemoEvent(env, 'identity', 'identity.demo_access_token_issued', {
-      subjectSha256, provider: claims.provider, permissions: claims.permissions, namespace: claims.namespace, expiresAt: claims.expiresAt,
+      subjectAuditId, provider: claims.provider, permissions: claims.permissions, namespace: claims.namespace, expiresAt: claims.expiresAt,
     });
     await recordApplicationLog(env, {
       source: 'identity', eventKey: 'identity.demo_access_token_issued', message: 'Issued a short-lived visitor API token.', route: '/auth/token',
-      detail: { subjectSha256, provider: claims.provider, permissions: claims.permissions, namespace: claims.namespace, expiresAt: claims.expiresAt, eventId: event.id },
+      detail: { provider: claims.provider, permissions: claims.permissions, expiresAt: claims.expiresAt, eventId: event.id },
     });
     return json({ tokenType: 'Bearer', accessToken: token, ...claims, sandboxLabel: 'Your API sandbox' }, { headers: { 'cache-control': 'no-store' } });
   } catch (error) { return errorResponse(error); }
@@ -310,7 +316,7 @@ export async function identityLogoutResponse(request: Request, env: Env): Promis
   if (!origin || origin !== new URL(request.url).origin) return json({ error: 'same_origin_required' }, { status: 403, headers: { 'cache-control': 'no-store' } });
   const session = await readIdentitySession(request, env);
   await revokeIdentitySession(request, env);
-  if (session) await auditIdentity(env, 'session_destroyed', session.identity.provider, { subjectSha256: await sha256(`${session.identity.provider}:${session.identity.subject}`) });
+  if (session) await auditIdentity(env, 'session_destroyed', session.identity.provider, { subjectAuditId: await identitySubjectAuditId(env, session.identity.provider, session.identity.subject) });
   return json({ authenticated: false }, { headers: { 'cache-control': 'no-store', 'set-cookie': clearIdentityCookie(IDENTITY_SESSION_COOKIE) } });
 }
 
@@ -417,9 +423,9 @@ export async function providerCallbackResponse(request: Request, env: Env, provi
     if (!code || code.length > 4096 || !flow.verifier) throw new IdentityError('invalid_authorization_code');
     const session = provider === 'github' ? await exchangeGithubCode(request, env, code, flow) : await exchangeOidcCode(request, env, provider, code, flow);
     const sessionCookie = await createIdentitySession(env, session);
-    const subjectSha256 = await sha256(`${session.identity.provider}:${session.identity.subject}`);
-    await auditIdentity(env, 'authentication_completed', provider, { subjectSha256, assurance: session.identity.assurance });
-    await auditIdentity(env, 'session_created', provider, { subjectSha256 });
+    const subjectAuditId = await identitySubjectAuditId(env, session.identity.provider, session.identity.subject);
+    await auditIdentity(env, 'authentication_completed', provider, { subjectAuditId, assurance: session.identity.assurance });
+    await auditIdentity(env, 'session_created', provider, { subjectAuditId });
     return identityRedirect(request, { authenticated: provider }, [sessionCookie, clearFlowCookie(provider)]);
   } catch (error) {
     const reason = error instanceof IdentityError ? error.code : 'provider_callback_failed';
@@ -584,10 +590,10 @@ export async function samlCallbackResponse(request: Request, env: Env): Promise<
     await env.DEMO_DB.prepare(`DELETE FROM identity_saml_assertions WHERE expires_at <= ?`).bind(new Date().toISOString()).run();
     await env.DEMO_DB.prepare(`INSERT INTO identity_saml_assertions (assertion_id_sha256, expires_at, validated_at) VALUES (?, ?, ?)`).bind(await sha256(assertion.id), session.expiresAt, new Date().toISOString()).run();
     const sessionCookie = await createIdentitySession(env, session);
-    const subjectSha256 = await sha256(`microsoft:${session.identity.subject}`);
-    await auditIdentity(env, 'saml_assertion_validated', 'saml', { subjectSha256 });
-    await auditIdentity(env, 'authentication_completed', 'saml', { subjectSha256, assurance: session.identity.assurance });
-    await auditIdentity(env, 'session_created', 'saml', { subjectSha256 });
+    const subjectAuditId = await identitySubjectAuditId(env, 'microsoft', session.identity.subject);
+    await auditIdentity(env, 'saml_assertion_validated', 'saml', { subjectAuditId });
+    await auditIdentity(env, 'authentication_completed', 'saml', { subjectAuditId, assurance: session.identity.assurance });
+    await auditIdentity(env, 'session_created', 'saml', { subjectAuditId });
     return identityRedirect(request, { authenticated: 'saml' }, [sessionCookie, clear]);
   } catch (error) {
     const reason = error instanceof IdentityError ? error.code : 'saml_validation_failed';

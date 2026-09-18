@@ -1,6 +1,6 @@
 import type { Env } from '../types';
 import { json } from './http';
-import { readDemoAccessToken, readIdentitySession, sha256, type IdentitySession } from './identity-session';
+import { identitySandboxNamespace, readDemoAccessToken, readIdentitySession, type IdentitySession } from './identity-session';
 
 export type Permission = 'demo:read' | 'demo:write' | 'reporting:private' | 'reporting:write';
 
@@ -18,7 +18,7 @@ interface AuthorizationOptions {
   allowIdentitySession?: boolean;
 }
 
-export async function principalFromIdentitySession(session: IdentitySession): Promise<Principal> {
+export async function principalFromIdentitySession(env: Env, session: IdentitySession): Promise<Principal> {
   const subject = `${session.identity.provider}:${session.identity.subject}`;
   const permissions: Permission[] = ['demo:read', 'demo:write'];
   if (session.identity.role === 'operator') permissions.push('reporting:private', 'reporting:write');
@@ -28,7 +28,7 @@ export async function principalFromIdentitySession(session: IdentitySession): Pr
     provider: session.identity.provider,
     role: session.identity.role,
     permissions,
-    namespace: `sandbox-${(await sha256(subject)).slice(0, 24)}`,
+    namespace: await identitySandboxNamespace(env, session.identity.provider, session.identity.subject),
     expiresAt: session.expiresAt,
   };
 }
@@ -59,7 +59,7 @@ export async function authorize(request: Request, env: Env, permission: Permissi
   if (options.allowIdentitySession) {
     const session = await readIdentitySession(request, env);
     if (session) {
-      const principal = await principalFromIdentitySession(session);
+      const principal = await principalFromIdentitySession(env, session);
       if (principal.permissions.includes(permission)) return principal;
       return denied();
     }

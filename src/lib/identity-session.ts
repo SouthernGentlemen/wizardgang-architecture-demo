@@ -90,9 +90,43 @@ export function randomValue(bytes = 32): string {
   return base64Url(crypto.getRandomValues(new Uint8Array(bytes)));
 }
 
-export async function sha256(value: string): Promise<string> {
-  const bytes = new Uint8Array(await crypto.subtle.digest('SHA-256', encoder.encode(value)));
+function hex(bytes: Uint8Array): string {
   return [...bytes].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+export async function sha256(value: string): Promise<string> {
+  return hex(new Uint8Array(await crypto.subtle.digest('SHA-256', encoder.encode(value))));
+}
+
+function identityAuditSecret(env: Env): string | null {
+  const secret = env.IDENTITY_AUDIT_HMAC_SECRET?.trim();
+  return secret && encoder.encode(secret).byteLength >= 32 ? secret : null;
+}
+
+export function hasIdentityAuditSecret(env: Env): boolean {
+  return identityAuditSecret(env) !== null;
+}
+
+async function identityHmac(env: Env, purpose: string, provider: IdentityProvider, subject: string): Promise<string> {
+  const secret = identityAuditSecret(env);
+  if (!secret) throw new Error('identity_audit_not_configured');
+  const key = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  );
+  const value = encoder.encode(`v1:${purpose}\u0000${provider}:${subject}`);
+  return hex(new Uint8Array(await crypto.subtle.sign('HMAC', key, value)));
+}
+
+export async function identitySubjectAuditId(env: Env, provider: IdentityProvider, subject: string): Promise<string> {
+  return identityHmac(env, 'identity-audit', provider, subject);
+}
+
+export async function identitySandboxNamespace(env: Env, provider: IdentityProvider, subject: string): Promise<string> {
+  return `sandbox-${(await identityHmac(env, 'sandbox-namespace', provider, subject)).slice(0, 24)}`;
 }
 
 async function keyFor(secret: string, purpose: string): Promise<CryptoKey> {
@@ -239,23 +273,22 @@ export async function createDemoAccessToken(env: Env, session: IdentitySession):
   const sessionExpiry = Date.parse(session.expiresAt);
   const expiresAt = new Date(Math.min(now + ACCESS_TOKEN_SECONDS * 1000, sessionExpiry));
   const subject = `${session.identity.provider}:${session.identity.subject}`;
-  const subjectSha256 = await sha256(subject);
   const claims: DemoAccessToken = {
     subject,
     authentication: session.identity.protocol,
     provider: session.identity.provider,
     permissions: ['demo:read', 'demo:write'],
-    namespace: `sandbox-${subjectSha256.slice(0, 24)}`,
+    namespace: await identitySandboxNamespace(env, session.identity.provider, session.identity.subject),
     issuedAt: new Date(now).toISOString(),
     expiresAt: expiresAt.toISOString(),
   };
-  return { token: await seal(claims, secret, 'demo-access-token'), claims };
+  return { token: await seal(claims, secret, 'demo-access-token-v2'), claims };
 }
 
 export async function readDemoAccessToken(env: Env, token: string): Promise<DemoAccessToken | null> {
   const secret = identitySecret(env);
   if (!secret || !token.startsWith('v1.')) return null;
-  const claims = await unseal<DemoAccessToken>(token, secret, 'demo-access-token');
+  const claims = await unseal<DemoAccessToken>(token, secret, 'demo-access-token-v2');
   const issuedAt = Date.parse(claims?.issuedAt ?? '');
   const expiresAt = Date.parse(claims?.expiresAt ?? '');
   if (!claims

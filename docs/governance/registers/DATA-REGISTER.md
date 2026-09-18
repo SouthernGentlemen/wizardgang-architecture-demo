@@ -32,8 +32,8 @@ Status is an evidence posture, not a certification score.
 | ID | Store / surface | Classification | Public exposure | MCP exposure | Retention / deletion posture | Status |
 |---|---|---|---|---|---|---|
 | DATA-001 | `demo_records` | PUBLIC / PUBLIC-DEMO | Yes, through approved app/API surfaces | **Yes — approved bounded source** | Persistent until controlled update/delete; provenance/freshness improvement pending | Partial |
-| DATA-002 | `demo_events` | AUDIT-EVIDENCE | Bounded evidence may be exposed; raw event store is not inherently public | No | Evidence-oriented retention; no blanket pruning rule yet | Partial |
-| DATA-003 | `application_logs` | OPERATIONAL / public-safe after sanitization | Yes, bounded sanitized viewer/API | No | Operational retention; explicit pruning baseline pending | Partial |
+| DATA-002 | `demo_events` | AUDIT-EVIDENCE | Selected sanitized evidence only; identity event detail is withheld from public projections | No | Evidence-oriented retention; no blanket pruning rule yet | Partial |
+| DATA-003 | `application_logs` | OPERATIONAL / public-safe after sanitization | Yes, bounded sanitized API; identity event detail is withheld | No | Operational retention; explicit pruning baseline pending | Partial |
 | DATA-004 | `service_health_checks` | OPERATIONAL | Yes, aggregate/bounded uptime views | No | Rolling operational history; pruning baseline pending | Partial |
 | DATA-005 | `usage_snapshots` | OPERATIONAL / PUBLIC-DEMO | Yes, synthetic degradation evidence | No | Rolling demo evidence; no universal retention duration defined | Partial |
 | DATA-006 | `cloudflare_usage_snapshots` | OPERATIONAL / provider-derived / public-safe after normalization | Yes, sanitized normalized view | No | Cached rolling snapshots; explicit pruning baseline pending | Partial |
@@ -113,7 +113,7 @@ The server validates namespace syntax, queries by exact namespace, orders by key
 **Purpose:** Retain meaningful demo/control/governance event evidence separate from operational diagnostics.  
 **Fields:** `demo_id`, `event_type`, optional `payload_json`, `created_at` plus identifier.
 
-**Public exposure:** Selected/sanitized evidence may support public assurance, but the existence of the table does not make arbitrary payload content public.
+**Public exposure:** Selected/sanitized evidence may support public assurance, but the existence of the table does not make arbitrary payload content public. Identity event payload detail is withheld from public projections.
 
 **AI/MCP exposure:** No.
 
@@ -121,6 +121,7 @@ The server validates namespace syntax, queries by exact namespace, orders by key
 
 - payloads must not contain passwords, tokens, cookies, authorization headers, secret values, or raw sensitive request bodies;
 - record significant control/action evidence with bounded context;
+- identity-provider correlation uses a keyed audit identifier and public projections omit the identity payload;
 - preserve distinction from `application_logs`.
 
 **Retention:** Evidence-oriented; preserve long enough for traceability, incident review, audit, management review, releases, and corrective action. No blanket deletion period is yet established.
@@ -141,7 +142,7 @@ The server validates namespace syntax, queries by exact namespace, orders by key
 **Purpose:** Explain runtime behavior through bounded application-generated diagnostics.  
 **Fields:** level, source, event key, message, route, request ID, detail JSON, timestamp.
 
-**Public exposure:** Yes through bounded sanitized log surfaces.
+**Public exposure:** Yes through bounded sanitized log surfaces. Identity records expose only the public-safe log envelope; structured identity detail is withheld.
 
 **AI/MCP exposure:** No.
 
@@ -153,6 +154,7 @@ The server validates namespace syntax, queries by exact namespace, orders by key
 - bearer/API tokens;
 - secret values;
 - private identity payloads;
+- subject-derived identity audit identifiers and visitor sandbox namespaces;
 - payment/account identifiers not intentionally public;
 - raw unreviewed request bodies;
 - unrestricted user-entered content.
@@ -475,6 +477,7 @@ The server validates namespace syntax, queries by exact namespace, orders by key
 - API bearer secret;
 - webhook signing secrets;
 - session/signing secrets;
+- identity audit HMAC secret;
 - GitHub workflow/dispatch tokens;
 - Cloudflare API token;
 - identity-provider credentials/signing material.

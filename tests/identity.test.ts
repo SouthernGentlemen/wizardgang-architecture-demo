@@ -38,6 +38,7 @@ function env(overrides: Partial<Env> = {}): Env {
     DEMO_DB: memoryDb(),
     GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
+    IDENTITY_AUDIT_HMAC_SECRET: 'identity-audit-test-secret-that-is-at-least-thirty-two-characters',
     ...overrides,
   };
 }

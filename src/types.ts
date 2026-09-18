@@ -72,6 +72,7 @@ export interface Env {
   GITHUB_DEMO_TOKEN?: string;
   DEMO_SESSION_SECRET?: string;
   IDENTITY_SESSION_SECRET?: string;
+  IDENTITY_AUDIT_HMAC_SECRET?: string;
   MICROSOFT_CLIENT_ID?: string;
   MICROSOFT_CLIENT_SECRET?: string;
   MICROSOFT_TENANT_ID?: string;
