@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "wcag-2-2-public-registry",
   "visibility": "public",
-  "scope": "Current public demo routes and repository implementations; statuses describe bounded assessment results and evidence posture, not WCAG conformance.",
+  "scope": "DEMO-289 evaluated every canonical public HTML page and every state in config/site-audit-states.json in English and Arabic; criterion statuses are bounded self-evaluation results, not a WCAG conformance claim.",
   "statusDefinitions": {
     "pass": "Self-evaluated as satisfied for the documented current scope with implementation, governing documentation, and current evidence; no framework-level conformance is asserted.",
     "partial": "Meaningful implementation or evidence exists, but criterion-specific scope, manual evaluation, operating evidence, freshness, or another material part remains incomplete.",
@@ -11,14 +11,14 @@
   },
   "validationDefinitions": {
     "automated": "partial means bounded axe-core evidence only; none means no criterion-specific automated accessibility determination is registered.",
-    "manual": "required means browser and assistive-technology review remains mandatory before any criterion or conformance-level determination."
+    "manual": "required identifies criteria that still need criterion-appropriate human or real assistive-technology verification; DEMO-289 records only manual procedures actually executed and leaves real screen-reader testing unclaimed."
   },
   "sources": {
     "normative": "https://www.w3.org/TR/WCAG22/",
     "machineReadable": "https://www.w3.org/WAI/WCAG22/wcag.json",
     "conformanceUnderstanding": "https://www.w3.org/WAI/WCAG22/Understanding/conformance.html",
     "techniquesUnderstanding": "https://www.w3.org/WAI/WCAG22/Understanding/understanding-techniques.html",
-    "retrievedDate": "2026-09-02",
+    "retrievedDate": "2026-09-17",
     "attribution": "Criterion IDs, names, and levels come from W3C WCAG 2.2; implementation/evidence annotations are WizardGang metadata."
   },
   "freshnessRules": {

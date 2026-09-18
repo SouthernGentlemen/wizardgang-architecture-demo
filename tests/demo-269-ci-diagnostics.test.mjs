@@ -51,7 +51,7 @@ describe('DEMO-269 CI diagnostics', () => {
     const report = await runDiagnosticCommands({
       cwd,
       diagnosticsDir: '.ci-diagnostics',
-      commands: [{ label: 'secret output', file: process.execPath, args: ['-e', "console.log(process.env.DEMO_TEST_SECRET)"], env: { DEMO_TEST_SECRET: secret } }],
+      commands: [{ label: 'secret output', file: process.execPath, args: ['-e', "process.stdout.write(process.env.DEMO_TEST_SECRET.slice(0, 8)); setTimeout(()=>console.log(process.env.DEMO_TEST_SECRET.slice(8)), 25)"], env: { DEMO_TEST_SECRET: secret } }],
       environment: { ...process.env, CI: 'true' },
       emitAnnotations: false,
     });
@@ -59,6 +59,25 @@ describe('DEMO-269 CI diagnostics', () => {
     expect(report.status).toBe('success');
     expect(log).toContain('***');
     expect(log).not.toContain(secret);
+  });
+
+  it('streams complete redacted lines before the command exits', async () => {
+    const cwd = temporaryGitRepository();
+    const reportPromise = runDiagnosticCommands({
+      cwd,
+      diagnosticsDir: '.ci-diagnostics',
+      commands: [{ label: 'stream output', file: process.execPath, args: ['-e', "console.log('progress visible'); setTimeout(()=>console.log('complete'), 300)"] }],
+      environment: { ...process.env, CI: 'true' },
+      emitAnnotations: false,
+    });
+    const logPath = path.join(cwd, '.ci-diagnostics', 'validation.log');
+    for (let attempt = 0; attempt < 20 && !fs.readFileSync(logPath, 'utf8').includes('progress visible'); attempt += 1) {
+      await new Promise((resolve) => setTimeout(resolve, 25));
+    }
+    expect(fs.readFileSync(logPath, 'utf8')).toContain('progress visible');
+    const report = await reportPromise;
+    expect(report.status).toBe('success');
+    expect(fs.readFileSync(logPath, 'utf8')).toContain('complete');
   });
 
   it('reports generated drift, proves the second pass, and bounds the diff', () => {

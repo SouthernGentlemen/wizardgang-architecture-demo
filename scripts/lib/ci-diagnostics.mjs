@@ -17,9 +17,10 @@ function commandText(command) {
 }
 
 function sensitiveValues(environment) {
-  return Object.entries(environment)
+  const values = Object.entries(environment)
     .filter(([key, value]) => SECRET_KEY.test(key) && typeof value === 'string' && value.length >= 4)
-    .map(([, value]) => value)
+    .flatMap(([, value]) => [value, ...value.split(/\r?\n/).filter((line) => line.length >= 4)]);
+  return [...new Set(values)]
     .sort((left, right) => right.length - left.length);
 }
 
@@ -76,27 +77,40 @@ function runtimeManifest(cwd, environment) {
 
 async function captureCommand(command, options) {
   const startedAt = new Date();
-  const chunks = [];
-  let sequence = 0;
+  const streams = { stdout: '', stderr: '' };
   const commandEnvironment = { ...options.environment, ...(command.env ?? {}) };
   const child = spawn(command.file, command.args ?? [], {
     cwd: options.cwd,
     env: commandEnvironment,
     stdio: ['ignore', 'pipe', 'pipe'],
   });
-  child.stdout.on('data', (chunk) => chunks.push({ sequence: sequence++, text: String(chunk) }));
-  child.stderr.on('data', (chunk) => chunks.push({ sequence: sequence++, text: String(chunk) }));
+  const emit = (text) => {
+    if (!text) return;
+    const safe = redactDiagnosticText(text, commandEnvironment);
+    options.onOutput?.(safe);
+  };
+  const consume = (stream, chunk) => {
+    streams[stream] += String(chunk);
+    const boundary = streams[stream].lastIndexOf('\n');
+    if (boundary < 0) return;
+    const complete = streams[stream].slice(0, boundary + 1);
+    for (const line of complete.match(/[^\n]*\n/g) ?? []) emit(line);
+    streams[stream] = streams[stream].slice(boundary + 1);
+  };
+  child.stdout.on('data', (chunk) => consume('stdout', chunk));
+  child.stderr.on('data', (chunk) => consume('stderr', chunk));
   const result = await new Promise((resolve) => {
     child.on('error', (error) => resolve({ code: 1, signal: null, spawnError: error.message }));
     child.on('close', (code, signal) => resolve({ code: code ?? 1, signal, spawnError: null }));
   });
-  const raw = chunks.sort((left, right) => left.sequence - right.sequence).map((chunk) => chunk.text).join('');
+  emit(streams.stdout);
+  emit(streams.stderr);
+  if (result.spawnError) emit(`${result.spawnError}\n`);
   return {
     ...result,
     startedAt: startedAt.toISOString(),
     completedAt: new Date().toISOString(),
     durationMs: Date.now() - startedAt.getTime(),
-    output: redactDiagnosticText(result.spawnError ? `${raw}\n${result.spawnError}\n` : raw, commandEnvironment),
   };
 }
 
@@ -140,9 +154,14 @@ export async function runDiagnosticCommands({ commands, cwd = process.cwd(), dia
     const heading = `\n===== ${command.label} =====\n$ ${rendered}\n`;
     process.stdout.write(heading);
     fs.appendFileSync(fullLogPath, heading);
-    const result = await captureCommand(command, { cwd, environment });
-    process.stdout.write(result.output);
-    fs.appendFileSync(fullLogPath, result.output);
+    const result = await captureCommand(command, {
+      cwd,
+      environment,
+      onOutput: (output) => {
+        fs.appendFileSync(fullLogPath, output);
+        process.stdout.write(boundedDiagnosticText(output, { maxChars: 8_192, maxLines: 2 }));
+      },
+    });
     const record = {
       label: command.label,
       command: rendered,

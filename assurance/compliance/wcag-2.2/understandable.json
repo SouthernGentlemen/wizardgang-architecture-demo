@@ -6,17 +6,14 @@
       "reference": "3.1.1",
       "title": "Language of Page",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Language of Page; full criterion assessment remains open.",
+      "implementation": "3.1.1 Language of Page was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "partial",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -57,25 +54,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.1.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-311-language-of-page"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 3.1.1 Language of Page across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-3.1.2",
       "reference": "3.1.2",
       "title": "Language of Parts",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Language of Parts; full criterion assessment remains open.",
+      "implementation": "3.1.2 Language of Parts was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -105,24 +111,36 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-007"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.1.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-312-language-of-parts"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 3.1.2 Language of Parts across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-3.1.3",
       "reference": "3.1.3",
       "title": "Unusual Words",
       "kind": "criterion",
-      "status": "gap",
+      "status": "partial",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Unusual Words.",
+      "implementation": "3.1.3 Unusual Words was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Implementation and manual evaluation remain open."
+        "Complete criterion-specific terminology, abbreviation, pronunciation, and reading-level support across the full localized content scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -142,24 +160,36 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.1.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-313-unusual-words"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 manually reviewed headings and public text inventories for 3.1.3 Unusual Words. Technical terminology, abbreviations, pronunciation/readability support, and translated explanatory coverage are not complete enough to record an AAA pass, so the result is Partial."
     },
     {
       "id": "WCAG-3.1.4",
       "reference": "3.1.4",
       "title": "Abbreviations",
       "kind": "criterion",
-      "status": "gap",
+      "status": "partial",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Abbreviations.",
+      "implementation": "3.1.4 Abbreviations was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Implementation and manual evaluation remain open."
+        "Complete criterion-specific terminology, abbreviation, pronunciation, and reading-level support across the full localized content scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -179,24 +209,36 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.1.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-314-abbreviations"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 manually reviewed headings and public text inventories for 3.1.4 Abbreviations. Technical terminology, abbreviations, pronunciation/readability support, and translated explanatory coverage are not complete enough to record an AAA pass, so the result is Partial."
     },
     {
       "id": "WCAG-3.1.5",
       "reference": "3.1.5",
       "title": "Reading Level",
       "kind": "criterion",
-      "status": "gap",
+      "status": "partial",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Reading Level.",
+      "implementation": "3.1.5 Reading Level was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Implementation and manual evaluation remain open."
+        "Complete criterion-specific terminology, abbreviation, pronunciation, and reading-level support across the full localized content scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -216,24 +258,36 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.1.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-315-reading-level"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 manually reviewed headings and public text inventories for 3.1.5 Reading Level. Technical terminology, abbreviations, pronunciation/readability support, and translated explanatory coverage are not complete enough to record an AAA pass, so the result is Partial."
     },
     {
       "id": "WCAG-3.1.6",
       "reference": "3.1.6",
       "title": "Pronunciation",
       "kind": "criterion",
-      "status": "gap",
+      "status": "partial",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Pronunciation.",
+      "implementation": "3.1.6 Pronunciation was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Implementation and manual evaluation remain open."
+        "Complete criterion-specific terminology, abbreviation, pronunciation, and reading-level support across the full localized content scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -253,25 +307,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.1.6"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-316-pronunciation"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 manually reviewed headings and public text inventories for 3.1.6 Pronunciation. Technical terminology, abbreviations, pronunciation/readability support, and translated explanatory coverage are not complete enough to record an AAA pass, so the result is Partial."
     },
     {
       "id": "WCAG-3.2.1",
       "reference": "3.2.1",
       "title": "On Focus",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for On Focus; full criterion assessment remains open.",
+      "implementation": "3.2.1 On Focus was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -301,25 +364,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-007"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.2.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-321-on-focus"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 3.2.1 On Focus across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-3.2.2",
       "reference": "3.2.2",
       "title": "On Input",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for On Input; full criterion assessment remains open.",
+      "implementation": "3.2.2 On Input was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -349,25 +421,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-007"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.2.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-322-on-input"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 3.2.2 On Input across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-3.2.3",
       "reference": "3.2.3",
       "title": "Consistent Navigation",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Consistent Navigation; full criterion assessment remains open.",
+      "implementation": "3.2.3 Consistent Navigation was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -397,25 +478,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-007"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.2.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-323-consistent-navigation"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 3.2.3 Consistent Navigation across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-3.2.4",
       "reference": "3.2.4",
       "title": "Consistent Identification",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Consistent Identification; full criterion assessment remains open.",
+      "implementation": "3.2.4 Consistent Identification was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -445,25 +535,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-007"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.2.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-324-consistent-identification"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 3.2.4 Consistent Identification across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-3.2.5",
       "reference": "3.2.5",
       "title": "Change on Request",
       "kind": "criterion",
-      "status": "gap",
+      "status": "pass",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Change on Request.",
+      "implementation": "3.2.5 Change on Request was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Implementation and manual evaluation remain open."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -482,25 +581,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.2.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-325-change-on-request"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 3.2.5 Change on Request across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-3.2.6",
       "reference": "3.2.6",
       "title": "Consistent Help",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Lab compares consistently placed help with missing-help failure behavior.",
+      "implementation": "3.2.6 Consistent Help was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope manual review remains open; no criterion pass is asserted."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -541,8 +649,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.2.6"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-326-consistent-help"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 3.2.6 Consistent Help across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-3.3.1",
@@ -552,13 +672,13 @@
       "status": "partial",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Error Identification; full criterion assessment remains open.",
+      "implementation": "3.3.1 Error Identification was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
+        "Execute and record named real assistive-technology/screen-reader testing before considering a Pass."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -589,25 +709,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-007"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.3.1"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-331-error-identification"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 found no automated or scripted failure for 3.3.1 Error Identification across all canonical public HTML pages and every configured audit state in English and Arabic, but real assistive-technology/screen-reader testing was not executed, so the criterion remains Partial."
     },
     {
       "id": "WCAG-3.3.2",
       "reference": "3.3.2",
       "title": "Labels or Instructions",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Lab compares explicit labels/instructions with an unlabeled-input failure.",
+      "implementation": "3.3.2 Labels or Instructions was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "partial",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope manual review remains open; no criterion pass is asserted."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -648,8 +777,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.3.2"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-332-labels-or-instructions"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 3.3.2 Labels or Instructions across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-3.3.3",
@@ -659,13 +800,13 @@
       "status": "partial",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Related shared UI support exists for Error Suggestion; full criterion assessment remains open.",
+      "implementation": "3.3.3 Error Suggestion was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Full-scope criterion-specific manual evidence is not recorded."
+        "Execute and record named real assistive-technology/screen-reader testing before considering a Pass."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -696,8 +837,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-SRC-007"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.3.3"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-333-error-suggestion"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 found no automated or scripted failure for 3.3.3 Error Suggestion across all canonical public HTML pages and every configured audit state in English and Arabic, but real assistive-technology/screen-reader testing was not executed, so the criterion remains Partial."
     },
     {
       "id": "WCAG-3.3.4",
@@ -707,13 +860,13 @@
       "status": "not-applicable",
       "level": "AA",
       "applicability": "not-applicable",
-      "implementation": "No legal, financial, or irreversible real-world transaction is intentionally executed by the public demo.",
+      "implementation": "3.3.4 Error Prevention (Legal, Financial, Data) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Reassess applicability when relevant public scope changes."
+        "Reassess applicability when the triggering content or behavior enters the public scope."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -733,24 +886,36 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-006"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.3.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-334-error-prevention-legal-financial-data"
+          }
         }
-      ]
+      ],
+      "rationale": "The DEMO-289 content and behavior inventory found no triggering content for 3.3.4 Error Prevention (Legal, Financial, Data) across all canonical public HTML pages and every configured audit state in English and Arabic; applicability must be reassessed if that content or behavior is introduced."
     },
     {
       "id": "WCAG-3.3.5",
       "reference": "3.3.5",
       "title": "Help",
       "kind": "criterion",
-      "status": "gap",
+      "status": "partial",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Help.",
+      "implementation": "3.3.5 Help was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Implementation and manual evaluation remain open."
+        "Complete the remaining criterion-specific AAA/manual coverage identified in the DEMO-289 evaluation report."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -770,24 +935,36 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.3.5"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-335-help"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 reviewed the current implementation and public content for 3.3.5 Help; meaningful support is present, but the full AAA condition was not established for every page/state and localized workflow, so the result is Partial."
     },
     {
       "id": "WCAG-3.3.6",
       "reference": "3.3.6",
       "title": "Error Prevention (All)",
       "kind": "criterion",
-      "status": "gap",
+      "status": "partial",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "No criterion-specific implementation evidence is registered for Error Prevention (All).",
+      "implementation": "3.3.6 Error Prevention (All) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Implementation and manual evaluation remain open."
+        "Complete the remaining criterion-specific AAA/manual coverage identified in the DEMO-289 evaluation report."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -807,25 +984,34 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-005"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.3.6"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-336-error-prevention-all"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 reviewed the current implementation and public content for 3.3.6 Error Prevention (All); meaningful support is present, but the full AAA condition was not established for every page/state and localized workflow, so the result is Partial."
     },
     {
       "id": "WCAG-3.3.7",
       "reference": "3.3.7",
       "title": "Redundant Entry",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "Lab reuses supplied email data and compares forced re-entry.",
+      "implementation": "3.3.7 Redundant Entry was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Full-scope manual review remains open; no criterion pass is asserted."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -866,8 +1052,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.3.7"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-337-redundant-entry"
+          }
         }
-      ]
+      ],
+      "rationale": "DEMO-289 evaluated 3.3.7 Redundant Entry across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
     },
     {
       "id": "WCAG-3.3.8",
@@ -877,13 +1075,13 @@
       "status": "partial",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "Lab preserves paste/password-manager/passkey paths and compares a cognitive puzzle.",
+      "implementation": "3.3.8 Accessible Authentication (Minimum) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Full-scope manual review remains open; no criterion pass is asserted."
+        "Execute the documented accessible-authentication procedure with paste and a real password-manager/credential environment."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -925,8 +1123,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.3.8"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-338-accessible-authentication-minimum"
+          }
         }
-      ]
+      ],
+      "rationale": "The public implementation for 3.3.8 Accessible Authentication (Minimum) was inspected and exercised in the browser matrix, but the credential/password-manager and real authentication environment procedure was not executed; the criterion therefore remains Partial."
     },
     {
       "id": "WCAG-3.3.9",
@@ -936,13 +1146,13 @@
       "status": "partial",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "Lab shows enhanced authentication guidance without asserting AAA conformance.",
+      "implementation": "3.3.9 Accessible Authentication (Enhanced) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
       "gaps": [
-        "Full-scope manual review remains open; no criterion pass is asserted."
+        "Execute the documented accessible-authentication procedure with paste and a real password-manager/credential environment."
       ],
       "owner": "Repository maintainer",
       "freshnessRules": [
@@ -984,8 +1194,20 @@
             "source": "github.structured-records.evidence",
             "native": "EVD-TST-002"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.understandable",
+            "native": "WCAG-3.3.9"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-339-accessible-authentication-enhanced"
+          }
         }
-      ]
+      ],
+      "rationale": "The public implementation for 3.3.9 Accessible Authentication (Enhanced) was inspected and exercised in the browser matrix, but the credential/password-manager and real authentication environment procedure was not executed; the criterion therefore remains Partial."
     }
   ]
 }

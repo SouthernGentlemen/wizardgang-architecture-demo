@@ -4,6 +4,10 @@
   "description": "Canonical management-system document and register references for the WizardGang Architecture Demo.",
   "records": [
     {
+      "reference": "WG-A11Y-001",
+      "path": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md"
+    },
+    {
       "reference": "WG-AIA-001",
       "path": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md"
     },
