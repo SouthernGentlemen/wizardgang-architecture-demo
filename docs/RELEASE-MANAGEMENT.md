@@ -44,7 +44,7 @@ A manual recovery deployment may select an already existing semantic tag; it doe
 
 ### Worker secret preflight and provisioning
 
-`config/worker-secrets.json` is the checked-in source of truth for production Worker secret names, required/optional status, consuming capability, enforced minimum length, and owner. Before production migrations, the deploy workflow runs `wrangler secret list --json` and compares names only. A missing required name fails deployment; a provisioned name not declared by the inventory is reported for reconciliation. The preflight never reads or prints a secret value, and the Cloudflare permission it adds is only the ability to list secret names. Provider-side secret APIs do not expose values or prove entropy/length, so runtime readiness remains the strength check where the application enforces one.
+`config/worker-secrets.json` is the checked-in source of truth for production Worker secret names, required/optional status, consuming capability, enforced minimum length, and owner. Before production migrations, the deploy workflow runs `wrangler secret list --format json` and compares names only. A missing required name fails deployment; a provisioned name not declared by the inventory is reported for reconciliation. The preflight never reads or prints a secret value, and the Cloudflare permission it adds is only the ability to list secret names. Provider-side secret APIs do not expose values or prove entropy/length, so runtime readiness remains the strength check where the application enforces one.
 
 For application-generated random secrets, use the non-echo provisioning command instead of the interactive Wrangler prompt:
 
