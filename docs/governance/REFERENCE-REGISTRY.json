@@ -8,6 +8,10 @@
       "path": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md"
     },
     {
+      "reference": "WG-A11Y-002",
+      "path": "docs/governance/assessments/WCAG-2.2-2026-09-18-REASSESSMENT.md"
+    },
+    {
       "reference": "WG-AIA-001",
       "path": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md"
     },

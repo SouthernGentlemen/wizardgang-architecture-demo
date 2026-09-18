@@ -143,7 +143,8 @@ function documentationReferences(record: ComplianceRecord, env: Env): string {
   if (!references.length) return `<p>${escapeHtml(localization.t('assurance.workbench.no_documentation', 'No Markdown references are recorded yet.'))}</p>`;
   return `<ul class="assurance-reference-list">${references.map((reference) => {
     const resolved = resolveAssuranceDocumentationReference(reference, env);
-    return `<li><code lang="en">${escapeHtml(reference)}</code><div><a href="${escapeHtml(resolved.url)}">${escapeHtml(localization.t('assurance.workbench.open_documentation', 'Open documentation'))}</a></div></li>`;
+    const linkLabel = localization.t('assurance.workbench.open_documentation', 'Open documentation');
+    return `<li><code lang="en">${escapeHtml(reference)}</code><div><a href="${escapeHtml(resolved.url)}">${escapeHtml(linkLabel)}<span class="sr-only">: ${escapeHtml(reference)}</span></a></div></li>`;
   }).join('')}</ul>`;
 }
 
@@ -161,10 +162,12 @@ function evidenceReferences(record: ComplianceRecord, env: Env, origin: string):
   return `<ul class="assurance-evidence-list">${evidence.map((item) => {
     const recordUrl = assuranceRecordUrlsById(item.id).api;
     const locationUrl = item.resolved.url;
+    const locationLabel = localization.t('assurance.workbench.open_location', 'Open location');
+    const recordLabel = localization.t('assurance.workbench.open_evidence_record', 'Open evidence record');
     return `<li>
       <strong lang="en">${escapeHtml(item.title)}</strong>
       <div class="assurance-evidence-meta"><span lang="en">${escapeHtml(item.kind)}</span><span>${escapeHtml(localization.t('assurance.workbench.freshness', 'Freshness'))}: ${escapeHtml(item.freshness.policy)}</span></div>
-      <div class="assurance-evidence-links">${locationUrl ? `<a href="${escapeHtml(locationUrl)}">${escapeHtml(localization.t('assurance.workbench.open_location', 'Open location'))}</a>` : ''}${recordUrl ? `<a href="${escapeHtml(recordUrl)}">${escapeHtml(localization.t('assurance.workbench.open_evidence_record', 'Open evidence record'))}</a>` : ''}</div>
+      <div class="assurance-evidence-links">${locationUrl ? `<a href="${escapeHtml(locationUrl)}">${escapeHtml(locationLabel)}<span class="sr-only">: ${escapeHtml(item.title)}</span></a>` : ''}${recordUrl ? `<a href="${escapeHtml(recordUrl)}">${escapeHtml(recordLabel)}<span class="sr-only">: ${escapeHtml(item.title)}</span></a>` : ''}</div>
     </li>`;
   }).join('')}</ul>`;
 }

@@ -1383,17 +1383,14 @@
       "reference": "1.4.10",
       "title": "Reflow",
       "kind": "criterion",
-      "status": "gap",
+      "status": "pass",
       "level": "AA",
       "applicability": "applicable",
-      "implementation": "DEMO-289 evaluated 1.4.10 Reflow across the declared public scope and found a bounded failure in the /demos D1 presentation/workbench at the 320 CSS px / 400%-equivalent viewport; details and scope limits are recorded in WG-A11Y-001.",
+      "implementation": "DEMO-304 removes the D1 table-tab minimum-width reflow defect identified by DEMO-289 and records the focused 2026-09-18 reassessment in WG-A11Y-002.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "/demos D1 presentation/workbench produces root-document horizontal overflow at the 320 CSS px / 400%-equivalent viewport: approximately 334px scroll width against a 320px viewport because the two D1 table-tab controls retain 145px minimum widths. Remediation is outside DEMO-289 evaluation scope."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -1434,9 +1431,20 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-1410-reflow"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.perceivable",
+            "native": "WCAG-1.4.10"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-18-REASSESSMENT.md#wcag-1410-reflow"
+          }
         }
       ],
-      "rationale": "DEMO-289 observed a real WCAG 1.4.10 reflow failure on /demos in the D1 presentation/workbench at 320 CSS px / 400%-equivalent layout: the root document measured approximately 334px scroll width against a 320px viewport. The two D1 table-tab controls with 145px minimum widths were isolated as the cause. No site-wide reflow failure is asserted, and remediation is outside DEMO-289 evaluation scope."
+      "rationale": "DEMO-304 removes the 145 CSS-pixel minimum width from the two D1 table-tab controls while keeping both controls and their content available. The 320 CSS-pixel site accessibility matrix is the regression boundary for the root-document overflow that DEMO-289 recorded; the focused WG-A11Y-002 reassessment records the corrected bounded result without making a WCAG conformance claim."
     },
     {
       "id": "WCAG-1.4.11",

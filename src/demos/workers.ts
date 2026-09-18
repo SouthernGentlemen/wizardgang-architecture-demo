@@ -1,7 +1,7 @@
 import type { DemoDefinition, Env } from '../types';
 import { sourceUrl } from '../lib/github';
 import { routeUrl } from '../routing/application-routes';
-import { pageContent, referenceDetails, type PageContent } from '../ui/page';
+import { pageContent, referenceDetails, routeSourceReference, type PageContent } from '../ui/page';
 
 const demo: DemoDefinition = {
   id: 'workers',
@@ -18,7 +18,7 @@ export function workersContent(env: Env): PageContent {
   const workersUrl = `${routeUrl('demos.index')}#workers`;
   return pageContent(env, demo.title, `
   <section class="page-header lab-page-header"><h1>Cloudflare Workers</h1><p class="lede">Change a request and let the live Worker explain its routing, caching, and origin-work decision.</p><div class="page-tools">${referenceDetails([
-    { label: 'Route source', href: sourceUrl(env, 'src/demos/workers.ts') },
+    routeSourceReference(env, 'src/demos/workers.ts'),
     { label: 'Runtime policy', href: sourceUrl(env, 'src/api/runtime.ts') },
     { label: 'Worker entry point', href: sourceUrl(env, 'src/index.ts') },
   ])}</div></section>

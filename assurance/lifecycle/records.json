@@ -136,6 +136,13 @@
       "reviewedAt": "2026-09-18T08:22:31Z",
       "reviewer": "controlled-repository-self-assessment",
       "basis": "DEMO-300 performs a focused owner/operator reassessment of ISO/IEC 27001:2022 A.8.25 and A.8.32 after verified GitHub branch, tag, and merge-setting enforcement. It preserves every evidence relationship, keeps both controls Partial pending a later effectiveness review, approves disclosure of the exact resulting public compliance source revision, and makes no internal-audit, certification, or conformance claim."
+    },
+    {
+      "id": "review-demo304-wcag-remediation",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-18T14:48:00Z",
+      "reviewer": "controlled-repository-accessibility-evaluation",
+      "basis": "DEMO-304 performs a focused WCAG 2.2 reassessment of 1.4.10, 2.4.4, and 2.4.9 after the D1 320 CSS-pixel reflow correction and destination-specific repeated-link accessible names. It preserves every evidence relationship, approves disclosure of the exact resulting public WCAG partition source revisions, and makes no WCAG conformance or certification claim."
     }
   ],
   "sourceApprovals": [
@@ -522,6 +529,18 @@
       "resource": "compliance.iso-27001",
       "revision": "15515624bac0bd565d457fddf482861b552896cb",
       "reviewRef": "review-demo300-repository-protection"
+    },
+    {
+      "id": "source-compliance-wcag-2-2-perceivable-6efbb538fd44",
+      "resource": "compliance.wcag-2.2.perceivable",
+      "revision": "6efbb538fd44f22c6a91a8539d5a05908c9068cc",
+      "reviewRef": "review-demo304-wcag-remediation"
+    },
+    {
+      "id": "source-compliance-wcag-2-2-operable-2a5954e592d6",
+      "resource": "compliance.wcag-2.2.operable",
+      "revision": "2a5954e592d69901b0763a9de23449c03e6ade89",
+      "reviewRef": "review-demo304-wcag-remediation"
     }
   ],
   "records": [

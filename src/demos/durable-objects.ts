@@ -1,7 +1,7 @@
 import type { DemoDefinition, Env } from '../types';
 import { sourceUrl } from '../lib/github';
 import { routeUrl } from '../routing/application-routes';
-import { pageContent, referenceDetails, type PageContent } from '../ui/page';
+import { pageContent, referenceDetails, routeSourceReference, type PageContent } from '../ui/page';
 
 const demo: DemoDefinition = {
   id: 'durable-objects',
@@ -18,7 +18,7 @@ export function durableObjectsContent(env: Env): PageContent {
   const durableUrl = `${routeUrl('demos.index')}#durable-objects`;
   return pageContent(env, demo.title, `
   <section class="page-header lab-page-header"><h1>Durable Objects</h1><p class="lede">Compare one increment with a burst of concurrent Worker requests coordinated through one state owner.</p><div class="page-tools">${referenceDetails([
-    { label: 'Route source', href: sourceUrl(env, 'src/demos/durable-objects.ts') },
+    routeSourceReference(env, 'src/demos/durable-objects.ts'),
     { label: 'Durable Object API', href: sourceUrl(env, 'src/api/durable.ts') },
     { label: 'Coordinator class', href: sourceUrl(env, 'src/durable/demo-coordinator.ts') },
     { label: 'Binding configuration', href: sourceUrl(env, 'wrangler.jsonc') },

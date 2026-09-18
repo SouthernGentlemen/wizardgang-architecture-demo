@@ -47,6 +47,8 @@ The canonical public route registry and canonical WCAG registry are the audit in
 - **Understandable:** intentionally broken accessibility examples remain accessible static annotations, help and authentication guidance stay consistent, and GraphQL has a plain-language first-party query workflow.
 - **Robust:** the public surface uses first-party GraphQL interaction rather than embedded GraphiQL, native labels/status regions remain exposed, `/graphql` stays machine-only for browser HTML requests, and generated code-sample tabs retain explicit names/roles/relationships.
 
+DEMO-304 removes the D1 table-tab minimum-width reflow defect at 320 CSS pixels and gives repeated assurance evidence/documentation links plus demo route-source links destination-specific accessible names in all six supported locales. This remains bounded engineering evidence; human browser, environment, and assistive-technology procedures stay separate where the verification matrix marks them pending.
+
 No criterion is promoted to conforming because of these engineering controls. Applicability and any N/A rationale remain owned by the canonical criterion records.
 
 ## Automated evidence

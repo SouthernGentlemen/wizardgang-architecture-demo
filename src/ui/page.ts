@@ -110,7 +110,7 @@ function shell(env: Env, content: PageContent): Response {
     ? registeredRouteMetadata().find((route) => route.id === content.routeId)?.source.module
     : undefined;
   const routeSourceLink = routeSourceModule
-    ? ` · <a href="${escapeHtml(sourceUrl(env, routeSourceModule))}">${escapeHtml(localization.t('shell.route_source', 'Route source'))}</a>`
+    ? ` · <a href="${escapeHtml(sourceUrl(env, routeSourceModule))}">${escapeHtml(localization.t('shell.route_source', 'Route source'))}<span class="sr-only">: ${escapeHtml(routeSourceModule)}</span></a>`
     : '';
   const canonicalHref = new URL(content.canonicalPath ?? routeUrl(ROOT_ROUTE_ID), 'https://demo.wizardgang.ai').toString();
   const lang = content.lang ?? localization.lang;
@@ -246,12 +246,21 @@ function demoRoute(demo: DemoDefinition): string {
 export interface ReferenceLink {
   label: string;
   href: string;
+  accessibleSuffix?: string;
+}
+
+export function routeSourceReference(env: Env, module: string): ReferenceLink {
+  return {
+    label: 'Route source',
+    href: sourceUrl(env, module),
+    accessibleSuffix: module,
+  };
 }
 
 /** Keep provenance available without making it compete with the page's primary task. */
 export function referenceDetails(links: ReferenceLink[], label = 'References'): string {
   if (!links.length) return '';
-  return `<details class="reference-details"><summary>${escapeHtml(label)}</summary><div class="reference-links">${links.map((link) => `<a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a>`).join('')}</div></details>`;
+  return `<details class="reference-details"><summary>${escapeHtml(label)}</summary><div class="reference-links">${links.map((link) => `<a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}${link.accessibleSuffix ? `<span class="sr-only">: ${escapeHtml(link.accessibleSuffix)}</span>` : ''}</a>`).join('')}</div></details>`;
 }
 
 export function demoContent(env: Env, demo: DemoDefinition, _all: DemoDefinition[] = [], extra = ''): PageContent {

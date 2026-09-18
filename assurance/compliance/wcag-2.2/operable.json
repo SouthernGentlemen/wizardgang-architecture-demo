@@ -867,7 +867,7 @@
       "status": "pass",
       "level": "A",
       "applicability": "applicable",
-      "implementation": "2.4.4 Link Purpose (In Context) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
+      "implementation": "DEMO-304 re-evaluates 2.4.4 after making repeated assurance and demo route-source links destination-specific by accessible name; the focused result is recorded in WG-A11Y-002.",
       "validation": {
         "automated": "partial",
         "manual": "required"
@@ -923,9 +923,20 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-244-link-purpose-in-context"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.4.4"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-18-REASSESSMENT.md#wcag-244-link-purpose-in-context"
+          }
         }
       ],
-      "rationale": "DEMO-289 evaluated 2.4.4 Link Purpose (In Context) across all canonical public HTML pages and every configured audit state in English and Arabic; the Chromium/axe gate, criterion-relevant scripted checks, and applicable manual content review found no observed failure for the criterion in that bounded scope."
+      "rationale": "DEMO-304 preserves the visible link text and surrounding context while adding destination-specific accessible names to repeated assurance evidence/documentation actions and the repeated demo/shell Route source links. The focused WG-A11Y-002 reassessment therefore keeps 2.4.4 Pass for the bounded public scope; this criterion result is not a framework-level conformance claim."
     },
     {
       "id": "WCAG-2.4.5",
@@ -1171,17 +1182,14 @@
       "reference": "2.4.9",
       "title": "Link Purpose (Link Only)",
       "kind": "criterion",
-      "status": "partial",
+      "status": "pass",
       "level": "AAA",
       "applicability": "applicable",
-      "implementation": "2.4.9 Link Purpose (Link Only) was evaluated in DEMO-289; criterion-specific method, scope, result, and limitations are recorded in WG-A11Y-001.",
+      "implementation": "DEMO-304 gives repeated assurance evidence/documentation links and repeated demo Route source links destination-specific accessible names in all six supported locales; the focused 2026-09-18 reassessment is recorded in WG-A11Y-002.",
       "validation": {
         "automated": "none",
         "manual": "required"
       },
-      "gaps": [
-        "Complete the remaining criterion-specific AAA/manual coverage identified in the DEMO-289 evaluation report."
-      ],
       "owner": "Repository maintainer",
       "freshnessRules": [
         "release-bound",
@@ -1211,9 +1219,20 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-249-link-purpose-link-only"
           }
+        },
+        {
+          "relation": "documentation",
+          "from": {
+            "source": "github.structured-records.compliance.wcag-2.2.operable",
+            "native": "WCAG-2.4.9"
+          },
+          "to": {
+            "source": "github.repository-markdown",
+            "native": "docs/governance/assessments/WCAG-2.2-2026-09-18-REASSESSMENT.md#wcag-249-link-purpose-link-only"
+          }
         }
       ],
-      "rationale": "DEMO-289 reviewed the current implementation and public content for 2.4.9 Link Purpose (Link Only); meaningful support is present, but the full AAA condition was not established for every page/state and localized workflow, so the result is Partial."
+      "rationale": "DEMO-304 makes each repeated assurance Open location and Open evidence record link identify its evidence title, each Open documentation link identify its documentation reference, and each repeated Route source link identify its module. The base action phrases come from the existing six-locale presentation catalog, so the destination-specific accessible names are localized without changing destinations or hiding visible labels. WG-A11Y-002 records this bounded Pass result and makes no WCAG conformance claim."
     },
     {
       "id": "WCAG-2.4.10",
