@@ -60,7 +60,9 @@ The browser and public logs never receive access tokens, refresh tokens, client 
 
 ## Environment configuration and cutover
 
-Set identity secrets/provider credentials with Cloudflare secrets or local `.dev.vars`; never commit real values. Required variables are documented in `.dev.vars.example` and validated by the implementation. `IDENTITY_AUDIT_HMAC_SECRET` is a separate Worker secret used for domain-separated identity audit identifiers and visitor sandbox namespaces and must be at least 32 UTF-8 bytes.
+Set identity secrets/provider credentials with Cloudflare secrets or local `.dev.vars`; never commit real values. Required variables are documented in `.dev.vars.example` and validated by the implementation. `IDENTITY_SESSION_SECRET` protects browser flow material, application sessions, and short-lived demo access tokens; `IDENTITY_AUDIT_HMAC_SECRET` is a separate Worker secret used for domain-separated identity audit identifiers and visitor sandbox namespaces. Both identity secrets must be at least 32 UTF-8 bytes.
+
+Identity protocol endpoints fail closed with a disclosure-safe JSON `503` response when either identity secret is not configured. Sign-out still expires the browser cookie and, when the session secret remains available, revokes the persisted session even if the audit identifier cannot be derived; that destroy audit event is omitted rather than emitting a subject-derived fallback. `/api/operations/health` exposes only the public-safe identity readiness value `ready` or `not-configured`; it does not identify the failing prerequisite.
 
 External provider registrations must use canonical callback, SAML entity/consumer, metadata, and webhook URLs from the generated route contract for the released origin. A code change does not modify external provider configuration and does not deploy or release the application. Removed identity browser/protocol URLs remain ordinary unknown paths rather than compatibility aliases.
 

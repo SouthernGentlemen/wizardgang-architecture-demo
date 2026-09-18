@@ -111,6 +111,7 @@ function environment(offline = false): Env {
     DEMO_DB: new AcceptanceD1(offline),
     DEMO_SESSION_SECRET: 'test-demo-session-secret-with-at-least-32-characters',
     IDENTITY_SESSION_SECRET: 'test-identity-session-secret-with-at-least-32-characters',
+    IDENTITY_AUDIT_HMAC_SECRET: 'a'.repeat(32),
     GITHUB_REPO_URL: repositoryUrl,
     GITHUB_BRANCH: 'main',
     DEPLOYED_VERSION: 'v0.21.0-test',

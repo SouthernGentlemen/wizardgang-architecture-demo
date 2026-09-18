@@ -558,7 +558,7 @@
       "mode": "gated"
     },
     "cache": {
-      "mode": "private"
+      "mode": "response"
     },
     "crawler": {
       "crawling": "controlled",
@@ -739,8 +739,7 @@
       "mode": "gated"
     },
     "cache": {
-      "mode": "public",
-      "maxAgeSeconds": 300
+      "mode": "response"
     },
     "crawler": {
       "crawling": "controlled",
@@ -830,7 +829,7 @@
       "mode": "gated"
     },
     "cache": {
-      "mode": "private"
+      "mode": "response"
     },
     "crawler": {
       "crawling": "controlled",

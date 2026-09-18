@@ -19,6 +19,8 @@ const environment: Env = {
   DEMO_DB: { prepare: (sql: string) => new InterfaceStatement(sql) },
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
+  IDENTITY_SESSION_SECRET: 's'.repeat(32),
+  IDENTITY_AUDIT_HMAC_SECRET: 'a'.repeat(32),
 };
 
 const pages = [
