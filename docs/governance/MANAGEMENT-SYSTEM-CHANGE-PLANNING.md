@@ -186,9 +186,9 @@ The following changes require explicit AIMS review before the prior AI risk or i
 
 At minimum, the review must consider:
 
-- `docs/governance/registers/AI-RISK-REGISTER.md`;
+- `assurance/risks/risks.json`;
 - `docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md` or a replacement assessment for the changed capability;
-- `docs/governance/soa/ISO-42001-SOA.md`;
+- `assurance/compliance/iso-42001-2023.json`;
 - `docs/governance/AI-POLICY.md`;
 - intended use and foreseeable misuse;
 - affected parties;
@@ -285,11 +285,11 @@ Primary related evidence includes:
 - `docs/RELEASE-MANAGEMENT.md`;
 - `docs/governance/SCOPE.md`;
 - `docs/governance/RISK-MANAGEMENT.md`;
-- `docs/governance/registers/SECURITY-RISK-REGISTER.md`;
-- `docs/governance/registers/AI-RISK-REGISTER.md`;
-- `docs/governance/registers/OBJECTIVES.md`;
-- `docs/governance/soa/ISO-27001-SOA.md`;
-- `docs/governance/soa/ISO-42001-SOA.md`;
+- `assurance/risks/risks.json`;
+- `assurance/risks/risks.json`;
+- `assurance/objectives/objectives.json`;
+- `assurance/compliance/iso-27001-2022.json`;
+- `assurance/compliance/iso-42001-2023.json`;
 - `docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md`;
 - and repository pull-request, validation, release, and deployment evidence.
 

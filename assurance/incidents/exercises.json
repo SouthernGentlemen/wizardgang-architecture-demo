@@ -1,6 +1,5 @@
 {
   "schemaVersion": 1,
-  "sourceRegister": "docs/governance/registers/INCIDENT-REGISTER.md",
   "qualification": "Exercises are simulated readiness activities, not historical incidents. Planned exercises are not completion evidence.",
   "records": [
     {

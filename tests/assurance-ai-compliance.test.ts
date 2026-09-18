@@ -1,4 +1,3 @@
-import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import registry from '../assurance/registry.json';
 import complianceData from '../assurance/compliance/iso-42001-2023.json';
@@ -44,11 +43,9 @@ describe('ISO/IEC 42001:2023 canonical public compliance records', () => {
     for (const record of complianceData.records) expect(record.id).toBe(`ISO42001-${record.reference}`);
   });
 
-  it('derives the current SoA posture and generated summary from canonical records', () => {
+  it('derives the current SoA posture directly from canonical records', () => {
     const counts = postureCounts(complianceData.records);
-    const summary = readFileSync('docs/governance/soa/ISO-42001-SOA.md', 'utf8');
     expect(Object.values(counts).reduce((sum, count) => sum + count, 0)).toBe(annex.length);
-    expect(summary).toContain(`| ${annex.length} | ${counts.pass} | ${counts.partial} | ${counts.gap} | ${counts['not-applicable']} |`);
     expect(JSON.stringify(complianceData)).not.toContain('notApplicable');
     expect(complianceData.sourceSoa).toMatchObject({
       id: 'WG-SOA-002', governanceDocumentReference: 'WG-SOA-002', status: 'approved',

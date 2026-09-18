@@ -513,12 +513,11 @@ Primary supporting material includes:
 
 - `docs/governance/ROLES-RESPONSIBILITIES.md`;
 - `docs/governance/RISK-MANAGEMENT.md`;
-- `docs/governance/registers/SECURITY-RISK-REGISTER.md`;
-- `docs/governance/registers/AI-RISK-REGISTER.md`;
-- `docs/governance/soa/ISO-27001-SOA.md`;
-- `docs/governance/soa/ISO-42001-SOA.md`;
+- `assurance/risks/risks.json`;
+- `assurance/compliance/iso-27001-2022.json`;
+- `assurance/compliance/iso-42001-2023.json`;
 - `docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md`;
-- `docs/governance/registers/OBJECTIVES.md`;
+- `assurance/objectives/objectives.json`;
 - `docs/governance/MONITORING-MEASUREMENT-EVALUATION.md`;
 - `docs/governance/OPERATIONAL-PLANNING-CONTROL.md`;
 - `docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md`;

@@ -53,7 +53,7 @@ The management system uses the following asset categories:
 - **AI/MCP assets** — MCP endpoint, tool definitions, evaluation evidence, public AI-accessible data boundary, Codex and Claude integration families.
 - **Administrative endpoints/devices** — devices or sessions capable of repository, provider, release, secret, or administrative access.
 
-The authoritative baseline is maintained in `docs/governance/registers/ASSET-ACCESS-REGISTER.md`.
+The authoritative baseline is maintained in `assurance/governance/asset-inventory.json`.
 
 ## 4. Asset Ownership
 
@@ -439,11 +439,11 @@ These items remain Partial/Planned/Gap until actual review evidence exists.
 
 Primary evidence includes:
 
-- `docs/governance/registers/ASSET-ACCESS-REGISTER.md`;
+- `assurance/governance/asset-inventory.json`;
 - `docs/governance/ROLES-RESPONSIBILITIES.md`;
-- `docs/governance/registers/SUPPLIER-REGISTER.md`;
+- `assurance/governance/suppliers.json`;
 - `docs/governance/DATA-GOVERNANCE.md`;
-- `docs/governance/registers/DATA-REGISTER.md`;
+- `assurance/governance/data-inventory.json`;
 - `docs/governance/VULNERABILITY-THREAT-SECURITY-MAINTENANCE.md`;
 - `docs/governance/INCIDENT-MANAGEMENT.md`;
 - `docs/governance/RISK-MANAGEMENT.md`;
@@ -455,7 +455,7 @@ Primary evidence includes:
 
 ## 21. Alignment
 
-**Controls:** ISO27001-A.5.10, ISO27001-A.5.15, ISO27001-A.5.16, ISO27001-A.5.18, ISO27001-A.8.2, ISO27001-A.8.3, ISO27001-A.8.4, ISO27001-A.8.18
+**Controls:** ISO27001-A.5.10, ISO27001-A.5.15, ISO27001-A.5.16, ISO27001-A.5.18, ISO27001-A.8.2, ISO27001-A.8.3, ISO27001-A.8.4, ISO27001-A.8.18, ISO27001-A.5.9, ISO42001-A.4.2
 
 This procedure principally strengthens evidence for:
 

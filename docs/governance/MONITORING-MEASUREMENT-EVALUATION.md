@@ -224,7 +224,7 @@ The following conditions normally require prompt escalation to the relevant owne
 
 ## 10. Relationship to Objectives
 
-`docs/governance/registers/OBJECTIVES.md` defines the management-system objectives and targets.
+`assurance/objectives/objectives.json` defines the management-system objectives and targets.
 
 This measurement framework is the operating mechanism used to determine whether those objectives are:
 
@@ -421,15 +421,15 @@ Management review decides whether the management system remains suitable, adequa
 
 Primary supporting material includes:
 
-- `docs/governance/registers/OBJECTIVES.md`;
+- `assurance/objectives/objectives.json`;
 - `docs/governance/RISK-MANAGEMENT.md`;
-- `docs/governance/registers/SECURITY-RISK-REGISTER.md`;
-- `docs/governance/registers/AI-RISK-REGISTER.md`;
+- `assurance/risks/risks.json`;
+- `assurance/risks/risks.json`;
 - `docs/governance/OPERATIONAL-PLANNING-CONTROL.md`;
 - `docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md`;
 - `docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md`;
-- `docs/governance/soa/ISO-27001-SOA.md`;
-- `docs/governance/soa/ISO-42001-SOA.md`;
+- `assurance/compliance/iso-27001-2022.json`;
+- `assurance/compliance/iso-42001-2023.json`;
 - `docs/OPERATIONS.md`;
 - `docs/EVIDENCE.md`;
 - `docs/ACCESSIBILITY.md`;
@@ -441,7 +441,7 @@ Primary supporting material includes:
 
 ## 20. Alignment
 
-**Controls:** ISO27001-9.1, ISO27001-A.8.16
+**Controls:** ISO27001-9.1, ISO27001-A.8.16, ISO27001-6.2, ISO42001-6.2
 
 This document supports:
 

@@ -66,7 +66,7 @@ afterEach(() => {
 });
 
 describe('canonical assurance posture derivation', () => {
-  it('lets a valid assessment update flow through validation and generated SoA summary without validator constants', () => {
+  it('lets a valid assessment update flow through canonical structured validation without validator constants', () => {
     const root = createFixtureRoot();
     const dataPath = 'assurance/compliance/iso-27001-2022.json';
     const data = readJson(root, dataPath);
@@ -77,14 +77,11 @@ describe('canonical assurance posture derivation', () => {
     writeJson(root, dataPath, data);
 
     expectPassed(run(root, 'scripts/validate-iso27001-compliance.mjs'));
-    expectPassed(run(root, 'scripts/generate-assurance-summaries.mjs'));
-
     const after = postureCounts(data);
     expect(after.pass).toBe(before.pass + 1);
     expect(after.partial).toBe(before.partial - 1);
     const total = Object.values(after).reduce((sum, count) => sum + count, 0);
-    const summary = readFileSync(join(root, 'docs/governance/soa/ISO-27001-SOA.md'), 'utf8');
-    expect(summary).toContain(`| ${total} | ${after.pass} | ${after.partial} | ${after.gap} | ${after['not-applicable']} |`);
+    expect(total).toBe(data.records.filter((record: any) => record.kind === 'control').length);
   });
 
   it('still rejects unsupported assessment statuses', () => {

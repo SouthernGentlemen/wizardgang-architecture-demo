@@ -49,7 +49,7 @@ Potential obligations may originate from:
 - customer/client requirements if the demo is later used in a commercial engagement;
 - and incident-specific notification or preservation requirements.
 
-The authoritative lightweight register is `docs/governance/registers/OBLIGATIONS-REGISTER.md`.
+The authoritative lightweight register is `assurance/governance/obligations.json`.
 
 ## 4. Applicability States
 
