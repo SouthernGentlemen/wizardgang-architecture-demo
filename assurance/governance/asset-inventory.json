@@ -210,10 +210,10 @@
       "view": "asset-inventory",
       "order": 14,
       "fields": {
-        "assetClass": "Application API write credentials",
+        "assetClass": "Application API write authorization",
         "category": "Security",
         "primaryOwner": "Security / Technical Owner",
-        "principalAccessExposure": "Managed bearer / identity-derived bounded write access",
+        "principalAccessExposure": "Identity-derived bounded visitor write access",
         "status": "Partial"
       },
       "relationships": []

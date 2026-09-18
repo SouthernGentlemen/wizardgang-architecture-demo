@@ -177,9 +177,9 @@ Administrative credentials must not be exposed to browsers beyond the intended s
 
 ### 7.7 Application API write access
 
-Protected write paths use managed operator bearer credentials or bounded identity-derived authorization where implemented.
+Protected application write paths use bounded identity-derived authorization where implemented. The short-lived visitor token remains scoped to its server-derived visitor namespace.
 
-A write credential does not imply repository, provider, deployment, or AI authority.
+Application write authorization does not imply repository, provider, deployment, administrative, or AI authority.
 
 ### 7.8 Identity-provider access
 
@@ -265,7 +265,7 @@ The review should cover, as applicable:
 - Cloudflare account and API-token privileges;
 - deployment credentials;
 - application admin access;
-- operator API credentials;
+- identity-derived application write authorization;
 - webhook signing secrets and related administrative ownership;
 - identity-provider administrative credentials where active;
 - session/signing secret ownership and rotation need;
@@ -412,6 +412,7 @@ Material exceptions follow the risk-acceptance rules in `docs/governance/RISK-MA
 
 Current strengths include:
 
+- retired operator API bearer access revoked from the production Worker on 2026-09-18 after a names-only provider preflight confirmed it was the sole undeclared Worker secret;
 - defined roles and decision authorities;
 - public source with controlled change/release history;
 - managed secrets outside source;
