@@ -129,6 +129,13 @@
       "reviewedAt": "2026-09-17T12:00:00Z",
       "reviewer": "controlled-repository-accessibility-evaluation",
       "basis": "DEMO-289 evaluates all 86 WCAG 2.2 A/AA/AAA criteria across every canonical public HTML page and configured state in English and Arabic, records only executed manual procedures, preserves every evidence relationship, and makes no WCAG conformance or certification claim."
+    },
+    {
+      "id": "review-demo300-repository-protection",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-18T08:22:31Z",
+      "reviewer": "controlled-repository-self-assessment",
+      "basis": "DEMO-300 performs a focused owner/operator reassessment of ISO/IEC 27001:2022 A.8.25 and A.8.32 after verified GitHub branch, tag, and merge-setting enforcement. It preserves every evidence relationship, keeps both controls Partial pending a later effectiveness review, approves disclosure of the exact resulting public compliance source revision, and makes no internal-audit, certification, or conformance claim."
     }
   ],
   "sourceApprovals": [
@@ -509,6 +516,12 @@
       "resource": "compliance.wcag-2.2.robust",
       "revision": "39db0388c98f7c8cc123fc5281aeccd02c1aa22b",
       "reviewRef": "review-demo289-wcag-evaluation"
+    },
+    {
+      "id": "source-iso27001-15515624bac0",
+      "resource": "compliance.iso-27001",
+      "revision": "15515624bac0bd565d457fddf482861b552896cb",
+      "reviewRef": "review-demo300-repository-protection"
     }
   ],
   "records": [

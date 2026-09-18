@@ -200,7 +200,7 @@
         "configurationSurface": "GitHub repository permissions/protections",
         "authoritySource": "GitHub provider state",
         "environment": "GitHub",
-        "verification": "rulesets query/classic protection evidence incomplete",
+        "verification": "active main/tag rulesets and merge settings queried 2026-09-18; effectiveness review pending",
         "status": "Partial"
       },
       "relationships": []
