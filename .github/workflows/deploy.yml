@@ -69,8 +69,8 @@ jobs:
         env:
           IDENTITY_BASELINE_FILE: ${{ runner.temp }}/identity-before.json
         run: |
-          node - <<'NODE'
-          const fs = require('node:fs');
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
 
           const headers = {
             accept: 'application/json',
@@ -139,8 +139,8 @@ jobs:
           EXPECTED_SHA: ${{ steps.release.outputs.sha }}
           IDENTITY_BASELINE_FILE: ${{ runner.temp }}/identity-before.json
         run: |
-          node - <<'NODE'
-          const fs = require('node:fs');
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
           const expectedVersion = process.env.EXPECTED_VERSION;
           const expectedSha = process.env.EXPECTED_SHA;
           const baseline = JSON.parse(fs.readFileSync(process.env.IDENTITY_BASELINE_FILE, 'utf8'));
