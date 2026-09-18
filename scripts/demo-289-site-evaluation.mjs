@@ -22,7 +22,10 @@ const port = Number(process.env.DEMO289_AUDIT_PORT || 8791);
 const debugPort = Number(process.env.DEMO289_DEBUG_PORT || 9224);
 const origin = `http://127.0.0.1:${port}`;
 const demosPath = manifest.find((route) => route.id === 'demos.index')?.route;
+const assurancePath = manifest.find((route) => route.id === 'assurance.index')?.route;
+const assuranceRecordPaneTimeoutMs = 5_000;
 if (!demosPath) throw new Error('DEMO-289 could not resolve demos.index from the route manifest.');
+if (!assurancePath) throw new Error('DEMO-289 could not resolve assurance.index from the route manifest.');
 
 function elapsedMs(started) {
   return Math.round(Number(process.hrtime.bigint() - started) / 1e6);
@@ -51,6 +54,44 @@ async function navigateForAudit(cdp, pathname, locale, phase) {
     await sleep(50);
   }
   throw new Error(`DEMO-289 ${phase} ${pathname} ${locale}: timed out waiting for ${expectedDemo} workbench presentation.`);
+}
+
+function assuranceReviewState(pathname) {
+  const url = new URL(pathname, origin);
+  if (url.pathname !== assurancePath) return null;
+  let recordId = '';
+  if (url.hash) {
+    try {
+      recordId = decodeURIComponent(url.hash.slice(1));
+    } catch {
+      recordId = url.hash.slice(1);
+    }
+  }
+  return {
+    page: url.pathname,
+    state: url.hash || '(default)',
+    recordId,
+  };
+}
+
+async function waitForAssuranceRecordPane(cdp, pathname, locale) {
+  const state = assuranceReviewState(pathname);
+  if (!state) return null;
+  const started = Date.now();
+  while (Date.now() - started < assuranceRecordPaneTimeoutMs) {
+    const result = await evaluate(cdp, `(()=>{
+      const expectedId=${JSON.stringify(state.recordId)};
+      const panes=[...document.querySelectorAll('[data-assurance-record]')];
+      const pane=expectedId ? panes.find((candidate)=>candidate.dataset.assuranceRecord===expectedId) : panes[0];
+      const heading=pane?.querySelector('.assurance-record-heading h2');
+      const inspector=pane?.querySelector('.assurance-inspector');
+      const headingText=(heading?.textContent||'').trim().replace(/\\s+/g,' ').slice(0,120);
+      return {ready:!!pane&&!!headingText&&!!inspector,headingText,recordId:pane?.dataset.assuranceRecord||''};
+    })()`, `DEMO-289 content review readiness ${pathname} ${locale}`);
+    if (result.ready) return result;
+    await sleep(50);
+  }
+  throw new Error(`DEMO-289 content review timed out after ${assuranceRecordPaneTimeoutMs}ms waiting for the assurance record pane: page=${state.page} state=${state.state} locale=${locale}${state.recordId ? ` record=${state.recordId}` : ''}.`);
 }
 
 async function dispatchTab(cdp, shift = false) {
@@ -200,7 +241,7 @@ async function runFocusAndTrap(cdp, label, findings) {
   if (before.order === after.order && unique.size > 1) recordFinding(findings, 'reverse keyboard traversal', label, { before:before.id, after:after.id, order:after.order }, false);
 }
 
-async function contentSnapshot(cdp, label, locale) {
+async function contentSnapshot(cdp, label, locale, expectedAssuranceHeading = null) {
   const snapshot = await evaluate(cdp, `(()=>{
     const headings=[...document.querySelectorAll('h1,h2,h3,h4,h5,h6')].map((h)=>({level:Number(h.tagName.slice(1)),text:(h.textContent||'').trim().replace(/\\s+/g,' ').slice(0,120)}));
     const links=[...document.querySelectorAll('a[href]')].map((a)=>({text:(a.textContent||'').trim().replace(/\\s+/g,' ').slice(0,80),href:a.getAttribute('href')}));
@@ -214,6 +255,10 @@ async function contentSnapshot(cdp, label, locale) {
     return {headings,linkCount:links.length,vague,ambiguous,explicitLang,abbreviations,englishWords:words.length,avgSentenceWords:Number((words.length/sentences).toFixed(1))};
   })()`);
   console.log(`DEMO289 content-review ${label} ${locale}: ${JSON.stringify(snapshot)}`);
+  if (expectedAssuranceHeading && !snapshot.headings.some((heading) => heading.text === expectedAssuranceHeading)) {
+    const state = assuranceReviewState(label);
+    throw new Error(`DEMO-289 content review heading inventory is missing the selected assurance record heading "${expectedAssuranceHeading}": page=${state?.page ?? label} state=${state?.state ?? '(unknown)'} locale=${locale}.`);
+  }
   return snapshot;
 }
 
@@ -259,7 +304,10 @@ async function main() {
           return true;
         });
         if (!initialNavigation.ok) continue;
-        await captureStep(findings,'content snapshot',`${pathname} ${locale}`,()=>contentSnapshot(cdp,pathname,locale));
+        await captureStep(findings,'content snapshot',`${pathname} ${locale}`,async()=>{
+          const assurancePane=await waitForAssuranceRecordPane(cdp,pathname,locale);
+          return contentSnapshot(cdp,pathname,locale,assurancePane?.headingText ?? null);
+        });
         const targets=await captureStep(findings,'contrast/target harness',`${pathname} ${locale}`,()=>runContrastAndTargets(cdp,`${pathname} ${locale}`,findings));
         if (targets.ok) enhancedTargetSummary.push({pathname,locale,below44:targets.value.below44,total:targets.value.total});
         await captureStep(findings,'keyboard/focus harness',`${pathname} ${locale}`,()=>runFocusAndTrap(cdp,`${pathname} ${locale}`,findings));
