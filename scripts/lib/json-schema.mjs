@@ -210,6 +210,11 @@ function validateNode(value, schema, context, instancePath = '$', schemaPath = '
     if (Object.hasOwn(schema, 'items')) {
       value.forEach((item, index) => errors.push(...validateNode(item, schema.items, context, `${instancePath}[${index}]`, `${schemaPath}/items`)));
     }
+    if (Object.hasOwn(schema, 'contains')) {
+      const matches = value.filter((item, index) => validateNode(item, schema.contains, context, `${instancePath}[${index}]`, `${schemaPath}/contains`).length === 0).length;
+      const minimum = schema.minContains ?? 1;
+      if (matches < minimum) push(`must contain at least ${minimum} item${minimum === 1 ? '' : 's'} matching contains; matched ${matches}`, 'contains');
+    }
   }
 
   if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
@@ -262,12 +267,12 @@ function validateNode(value, schema, context, instancePath = '$', schemaPath = '
 }
 
 const annotationKeywords = new Set(['$schema', '$id', 'title', 'description', '$comment', 'default', 'examples']);
-const directSchemaKeywords = new Set(['items', 'additionalProperties', 'not', 'if', 'then', 'else']);
+const directSchemaKeywords = new Set(['items', 'contains', 'additionalProperties', 'not', 'if', 'then', 'else']);
 const arraySchemaKeywords = new Set(['allOf', 'anyOf', 'oneOf']);
 const scalarKeywords = new Set([
   '$ref', 'type', 'const', 'enum', 'required', 'pattern', 'format', 'minLength', 'maxLength',
   'minimum', 'maximum', 'exclusiveMinimum', 'exclusiveMaximum', 'multipleOf', 'minItems', 'maxItems',
-  'uniqueItems', 'dependentRequired', 'minProperties', 'maxProperties',
+  'minContains', 'uniqueItems', 'dependentRequired', 'minProperties', 'maxProperties',
 ]);
 
 function assertSupportedNode(schema, schemaPath, pointer = '#') {

@@ -30,6 +30,7 @@
           "validation",
           "owner",
           "freshnessRules",
+          "rationale",
           "relationships"
         ],
         "properties": {
@@ -124,7 +125,63 @@
             "type": "string",
             "minLength": 10
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "enum": [
+                    "partial",
+                    "gap"
+                  ]
+                }
+              },
+              "required": [
+                "status"
+              ]
+            },
+            "then": {
+              "required": [
+                "gaps"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "enum": [
+                    "pass",
+                    "partial",
+                    "not-applicable"
+                  ]
+                }
+              },
+              "required": [
+                "status"
+              ]
+            },
+            "then": {
+              "properties": {
+                "relationships": {
+                  "contains": {
+                    "type": "object",
+                    "properties": {
+                      "relation": {
+                        "const": "documentation"
+                      }
+                    },
+                    "required": [
+                      "relation"
+                    ]
+                  },
+                  "minContains": 1
+                }
+              }
+            }
+          }
+        ]
       }
     }
   }

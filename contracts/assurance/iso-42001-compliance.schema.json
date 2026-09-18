@@ -80,6 +80,7 @@
           "section",
           "status",
           "applicability",
+          "rationale",
           "relationships"
         ],
         "properties": {
@@ -152,6 +153,86 @@
               "properties": {
                 "applicability": {
                   "const": "not-applicable"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "enum": [
+                    "partial",
+                    "gap"
+                  ]
+                }
+              },
+              "required": [
+                "status"
+              ]
+            },
+            "then": {
+              "required": [
+                "gaps"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "enum": [
+                    "pass",
+                    "partial",
+                    "not-applicable"
+                  ]
+                }
+              },
+              "required": [
+                "status"
+              ]
+            },
+            "then": {
+              "properties": {
+                "relationships": {
+                  "contains": {
+                    "type": "object",
+                    "properties": {
+                      "relation": {
+                        "const": "documentation"
+                      }
+                    },
+                    "required": [
+                      "relation"
+                    ]
+                  },
+                  "minContains": 1
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "clause"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "properties": {
+                "status": {
+                  "enum": [
+                    "pass",
+                    "partial",
+                    "gap"
+                  ]
+                },
+                "applicability": {
+                  "const": "applicable"
                 }
               }
             }
