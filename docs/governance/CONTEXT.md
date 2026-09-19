@@ -284,7 +284,7 @@ Primary evidence supporting this context includes:
 - `docs/CHANGE-MANAGEMENT.md`;
 - `docs/RELEASE-MANAGEMENT.md`;
 - `docs/RELEASE.md`;
-- `docs/EVIDENCE.md`;
+- `docs/ASSURANCE.md`;
 - Git history and pull requests;
 - GitHub Actions validation evidence;
 - GitHub Releases and annotated tags;
