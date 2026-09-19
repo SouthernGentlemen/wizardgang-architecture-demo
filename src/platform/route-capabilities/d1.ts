@@ -14,7 +14,7 @@ const tests = [
   'tests/router.test.ts',
 ] as const;
 
-const docs = ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'] as const;
+const docs = ['docs/ROUTE-REGISTRY.md'] as const;
 
 export const d1LaboratoryCapability = definePlatformLaboratoryCapability({
   id: 'platform.d1',
