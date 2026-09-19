@@ -5,7 +5,6 @@
 **Status:** Approved
 **Owner:** Operations Owner / Management-System Owner  
 **Approval:** Controlled pull request and merge  
-**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually, after a material data/storage/runtime/supplier change, after a failed recovery test, and after an incident that invokes recovery
 
 ## 1. Purpose
@@ -377,7 +376,7 @@ Procedure approval must not automatically change a Gap/Partial control to Met.
 - `assurance/objectives/objectives.json`
 - `assurance/governance/suppliers.json`
 - `docs/governance/INCIDENT-MANAGEMENT.md`
-- `docs/governance/NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md`
+- `docs/governance/GOVERNANCE.md`
 - `docs/RELEASE.md`
 - `docs/RELEASE-MANAGEMENT.md`
 - `docs/OPERATIONS.md`
