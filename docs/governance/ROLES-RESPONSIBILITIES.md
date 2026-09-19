@@ -393,7 +393,7 @@ Evidence supporting this responsibility model includes:
 - `docs/CHANGE-MANAGEMENT.md`;
 - `docs/RELEASE-MANAGEMENT.md`;
 - `docs/OPERATIONS.md`;
-- `docs/EVIDENCE.md`;
+- `docs/ASSURANCE.md`;
 - pull requests and controlled commits;
 - release and deployment records;
 - risk and impact-assessment records once established;

@@ -18,7 +18,7 @@ The ordinary browser experience is intentionally small:
 
 `/admin` is a protected operational page and `/offline` is the recovery page. The former human `/operations` page is retired and returns the ordinary 404. Operational machine APIs, scheduled availability collection, 365-day retention, bounded logs, provider observations, and protected controls remain independent contracts.
 
-The server-rendered application hierarchy is declared once in the route registry. Navigation, sitemap membership, canonical links, page metadata, and generated route documentation are projections of those declarations. Do not maintain a second route list in this README. The current inventories are generated in [`docs/ROUTES.md`](docs/ROUTES.md) and [`docs/route-manifest.json`](docs/route-manifest.json); the permanent browser contract is [`docs/FRONTEND-ROUTES.md`](docs/FRONTEND-ROUTES.md).
+The server-rendered application hierarchy is declared once in the route registry. Navigation, sitemap membership, canonical links, page metadata, and the generated route manifest are projections of those declarations. Do not maintain a second route list in this README. The human routing/browser contract is [`docs/ROUTE-REGISTRY.md`](docs/ROUTE-REGISTRY.md), and the generated machine inventory is [`docs/route-manifest.json`](docs/route-manifest.json).
 
 ## Demonstrated architecture
 
@@ -48,7 +48,7 @@ Core invariants:
 
 `/assurance` is a single workbench for the published ISO/IEC 27001, ISO/IEC 42001, and WCAG 2.2 assessment records. Framework tabs and section selection expose derived section/framework posture, while stable record fragments such as `/assurance#ISO27001-A.5.19` select one focused assessment.
 
-The focused pane presents the assessment, recorded gaps, assessment date, Markdown references, and linked evidence without projecting risk, incident, register, or other management-system inventories into public HTML. The presentation fragment at `GET /api/assurance/{record}` serves one record pane for workbench activation; exhaustive structured records remain available through the governed reporting contracts. See [`docs/ASSURANCE.md`](docs/ASSURANCE.md) and [`docs/ASSURANCE-API.md`](docs/ASSURANCE-API.md).
+The focused pane presents the assessment, recorded gaps, assessment date, Markdown references, and linked evidence without projecting risk, incident, register, or other management-system inventories into public HTML. The presentation fragment at `GET /api/assurance/{record}` serves one record pane for workbench activation; exhaustive structured records remain available through the governed reporting contracts. See [`docs/ASSURANCE.md`](docs/ASSURANCE.md) and [`docs/REPORTING.md`](docs/REPORTING.md).
 
 ## Operations and administration
 
@@ -91,11 +91,11 @@ Commit pattern: `[DEMO-NNN] [TYPE] Imperative description`.
 ## Start here
 
 - [`docs/ARCHITECTURE-STANDARD.md`](docs/ARCHITECTURE-STANDARD.md) — governing architecture.
-- [`docs/FRONTEND-ROUTES.md`](docs/FRONTEND-ROUTES.md) — browser information architecture and retirement rules.
 - [`docs/ASSURANCE.md`](docs/ASSURANCE.md) — canonical assurance model and publication boundary.
 - [`docs/OPERATIONS.md`](docs/OPERATIONS.md) — operational machine contracts, retention, admin, and recovery behavior.
 - [`docs/IDENTITY.md`](docs/IDENTITY.md) — identity and authorization model.
 - [`docs/REPORTING.md`](docs/REPORTING.md) — canonical reporting architecture.
 - [`docs/CHANGE-MANAGEMENT.md`](docs/CHANGE-MANAGEMENT.md) — controlled change identity and history.
 - [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md) — reproducible releases, deployment, and rollback.
-- [`docs/ROUTES.md`](docs/ROUTES.md) — generated route-to-source projection.
+- [`docs/ROUTE-REGISTRY.md`](docs/ROUTE-REGISTRY.md) — human routing and browser information architecture.
+- [`docs/route-manifest.json`](docs/route-manifest.json) — generated machine route inventory.

@@ -29,7 +29,7 @@ export const workersLaboratoryCapability = definePlatformLaboratoryCapability({
       documentation: {
         title: 'Worker edge-policy laboratory API',
         description: 'Applies a stateless edge cache and routing policy in the Worker and records audit evidence separately.',
-        docs: ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'],
+        docs: ['docs/ROUTE-REGISTRY.md'],
       },
       source: {
         module: 'src/platform/route-capabilities/workers.ts',

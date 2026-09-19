@@ -18,7 +18,7 @@ export const demosRouteCapability = defineInterfaceIdentityCapability('demos.sur
     description: 'One task-oriented destination for the interactive architecture demonstrations.',
     sourceModule: 'src/demos/demos-page.ts',
     sourceExport: 'demosContent',
-    docs: ['docs/FRONTEND-ROUTES.md', 'docs/ROUTES.md'],
+    docs: ['docs/ROUTE-REGISTRY.md'],
     tests: ['tests/demos-consolidation.test.ts', 'tests/router.test.ts', 'tests/interface.test.ts'],
     page: {
       parent: 'interfaces.frontend.index',

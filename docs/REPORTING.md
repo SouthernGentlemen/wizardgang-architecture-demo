@@ -1,84 +1,126 @@
 # Reporting architecture
 
-Reporting is a shared application capability. The reporting registry describes source ownership and disclosure; the reporting service owns query normalization, pagination, presentation inputs, exports, and provider integration; the canonical HTTP boundary is `/api/reporting`.
+Reporting is the shared query, pagination, disclosure, export, and provider-integration layer for structured assurance and provider-backed records. The reporting registry describes source ownership; the reporting service owns normalized access; the canonical HTTP family is `/api/reporting`.
 
 ## Canonical HTTP contract
 
 | Route | Methods | Meaning |
 |---|---|---|
 | `/api/reporting` | `GET`, `OPTIONS` | Discover reporting collections visible to the caller. |
-| `/api/reporting/{collection}` | `GET`, `OPTIONS` | Query one collection with declared filters, signed cursors, and export behavior. |
-| `/api/reporting/{collection}/{id}` | `GET`, `PATCH`, `OPTIONS` | Read one record or perform an authorized update where the source is writable. |
+| `/api/reporting/{collection}` | `GET`, `OPTIONS` | Query one collection with declared filters, signed pagination, and export behavior. |
+| `/api/reporting/{collection}/{recordId}` | `GET`, `PATCH`, `OPTIONS` | Read one exact record or perform an authorized provider-backed update where mutation is supported. |
 
-There is one active reporting URL family. Retired assurance- and Git-specific API paths are not aliases and are not redirected.
+The application route registry owns paths, methods, authentication, authorization declarations, same-origin policy, offline behavior, cache/crawler policy, and source ownership. Reporting code does not maintain a second route inventory.
 
-## Layers
+## Registry and source ownership
 
-### Registry
+`src/reporting/registry.ts` binds each reporting collection to its source, visibility, supported filters, provider requirements, and optional assurance resource.
 
-`src/reporting/registry.ts` is the reporting ownership contract. It binds a reporting domain to a source, optional assurance resource, visibility, supported filters, and provider requirements. HTTP paths are not duplicated there; the application route registry owns URL topology.
+Structured assurance collections project repository-governed records from `assurance/**`. Canonical identity, lifecycle, publication state, schemas, normalized relationships, and disclosure remain assurance-owned.
 
-### Query service
+Provider-backed collections enter through adapters that normalize provider-native data into the reporting contract. Provider access does not transfer source ownership to the repository and does not make private provider data public.
 
-`src/reporting/service.ts` is the common query boundary used by APIs and server-rendered consumers. It provides disclosure-safe collection inventory, normalized structured/provider queries, exact lookup, filter validation, signed pagination, exports, source-specific update integration, and presentation metadata. Consumers should call this service instead of importing datasets or provider clients directly.
+## Collection discovery and queries
 
-### Disclosure
+`GET /api/reporting` returns the disclosure-safe collection inventory available to the current principal.
 
-`src/reporting/service.ts` applies the caller principal and source visibility before data crosses a presentation or HTTP boundary. Private data must never become visible merely because a collection or provider can technically return it.
+`src/reporting/service.ts` is the common query boundary for APIs and server-rendered consumers. It owns collection discovery, query normalization, filter validation, pagination, exact record lookup, disclosure, exports, provider integration, provider-backed updates, and presentation metadata.
 
-### Pagination
+Collection filters are declared by reporting/source metadata. Unknown or unsupported filters are rejected rather than silently ignored. Provider-specific selectors are normalized by the reporting service so handlers and browser consumers do not define parallel query semantics.
 
-`src/reporting/pagination.ts` owns the cursor contract. Cursors are signed and bound to normalized query state. See `docs/REPORTING-CURSORS.md`.
+## Exact record reads and provider-backed updates
 
-### Presentation
+`GET /api/reporting/{collection}/{recordId}` returns one disclosure-safe record when the record exists and is visible to the caller. A non-disclosable record is not exposed through the public response.
 
-`src/reporting/presentation.ts` normalizes query results for browser consumers that need the shared model. `/assurance` consumes focused disclosure-safe reporting data for its four verification checks. Operational reporting remains available through machine/reporting contracts and compact homepage proof; the retired human `/operations` route is not a reporting presentation surface.
-
-## Structured assurance collections
-
-Registry-backed assurance records are exposed through reporting collections when resource metadata allows reporting. Canonical identity, lifecycle, publication state, schema validation, relationships, and disclosure remain owned by the assurance model. Examples include evidence, compliance, risks, incidents, advisories, claims, objectives, and governance records. The reporting API projects those records; it does not create a second source of truth.
-
-## Provider-backed collections
-
-Provider-backed sources, including GitHub reporting, enter through the same collection and record routes. Provider adapters normalize native records into the reporting contract and apply source-specific query requirements. Private provider fields remain private even when a provider collection is discoverable.
-
-## Authorized record updates
-
-Writable provider records use:
+Writable provider sources use:
 
 ```text
-PATCH /api/reporting/{collection}/{id}
+PATCH /api/reporting/{collection}/{recordId}
 ```
 
-Mutation requires `reporting:write`, explicit source support, runtime payload validation, and revision checks when applicable. Repository-governed structured assurance sources remain read-only through reporting.
+Mutation requires `reporting:write`, explicit source support, runtime payload validation, and provider revision checks where the provider exposes a revision. Stale writes fail rather than silently overwriting newer provider state.
 
-## Filters and cursors
+Repository-governed structured assurance sources remain read-only through reporting.
 
-Filter vocabulary is source metadata, not route-specific code. Unsupported filters fail explicitly. Collection queries accept bounded `limit` and the common opaque `cursor`; provider continuation state never becomes a second public cursor.
+## Pagination and signed cursors
+
+`src/reporting/pagination.ts` owns one public pagination and cursor contract for structured and provider-backed sources.
+
+Pagination fields are:
+
+- `limit`: accepted page size, from 1 through 100;
+- `returned`: records returned in the current result;
+- `total`: records observed by the bounded query represented by the result;
+- `nextCursor`: the only public continuation field, either one opaque cursor or `null`;
+- `completeness`: `complete` or `partial`;
+- `partialReason`: `null` for complete results, otherwise a supported partial-result reason.
+
+A complete result cannot carry a continuation cursor or partial reason. A partial result carries an explicit reason.
+
+The current signed cursor version is 1 and uses the `rpc1` envelope. The authenticated encrypted payload binds continuation state to the reporting schema version, collection, source, normalized filters, ordered sort fields/directions, continuation position, and any provider continuation state.
+
+Filters are normalized before cursor binding. Set-like values are sorted/deduplicated, strings are trimmed, and numeric values must be finite. Sort ordering remains sequence-sensitive.
+
+Provider continuation data is encapsulated inside the common encrypted cursor. Raw provider page numbers, GraphQL cursors, REST tokens, or other continuation strings are never exposed as a second public cursor.
+
+Cursor validation does not authenticate or authorize the caller. Reporting authorization and source disclosure checks still run independently.
+
+Cursor errors use the shared vocabulary:
+
+| Error | Meaning |
+|---|---|
+| `reporting_cursor_malformed` | Structurally invalid, corrupted, tampered, wrongly encrypted, or undecodable cursor. |
+| `reporting_cursor_mismatch` | Valid cursor bound to a different collection, source, normalized filter set, or ordering. |
+| `reporting_cursor_stale` | Cursor issued for a different reporting schema version. |
+| `reporting_cursor_unknown` | Unsupported cursor codec version. |
+
+Provider export safety bounds remain partial results. When a provider bound is reached, `completeness` is `partial`, `partialReason` is `provider-export-bound`, `total` reflects records actually observed, and `nextCursor` is present only when safe continuation is supported.
 
 ## Exports
 
-`export=1` uses the same normalized query and disclosure boundary as JSON reads. Exporting never broadens disclosure or bypasses filters/cursor validation.
+`export=1` uses the same normalized query, filters, cursor validation, disclosure, and schema boundary as an ordinary collection read. Export never broadens access or introduces a second reporting envelope.
 
-## Authorization
+For assurance-backed collections, `contracts/assurance/reporting.schema.json` is the canonical reporting result contract.
 
-- readable public reporting uses the ordinary read principal;
-- private disclosure requires `reporting:private`;
+## Authorization and disclosure
+
+Reporting authorization remains distinct from source publication/disclosure:
+
+- ordinary readable public reporting uses the normal read principal;
+- private reporting disclosure requires `reporting:private`;
 - mutation requires `reporting:write`;
-- source-specific authorization remains enforced after the common policy decision.
+- source-specific permissions remain enforced after the shared reporting decision.
 
-Authorization is independent from publication/disclosure. Provider access does not make a private record public.
+The reporting service applies disclosure before serialization. Provider-backed and structured collections cannot leak private membership, credentials, private fields, draft provider data, or internal-only metadata merely because a source can return them.
 
 ## HTTP response policy
 
-Reporting responses own their cache policy because it depends on source and principal. Public structured responses may use public caching/ETags; authenticated or private responses are private and `no-store`; CORS, OPTIONS, conditional requests, and provider cache policy remain source-aware.
+Reporting responses own their cache behavior because source and principal determine disclosure.
 
-## Runtime validation and OpenAPI
+Public structured responses may use public caching and ETags. Public provider-backed responses use the provider reporting cache policy. Authenticated or private responses are private and `no-store`.
 
-Successful reporting responses are checked against the applicable canonical reporting JSON Schema before serialization. Principal contract files include `contracts/assurance/reporting.schema.json`, `contracts/assurance/registry.schema.json`, `src/reporting/contracts.ts`, `src/reporting/service.ts`, `src/reporting/schema-validation.ts`, `src/api/reporting.ts`, and `src/api/reporting-response.ts`.
+CORS and `OPTIONS` handling are part of the reporting HTTP boundary. Conditional request behavior remains source-aware. The central router does not replace response-owned reporting headers with a generic route cache policy.
 
-The active OpenAPI 3.1 document is served from `/api/openapi.json`. Documented operations declare `x-route-id`, and contract tests verify that each referenced route owns the documented method/path.
+## Runtime schema validation and OpenAPI
 
-## Consumer guidance
+Structured reporting results are serialized through the canonical assurance/reporting contract and runtime schema validation. Provider-backed payloads are normalized and boundary-validated before crossing the HTTP boundary.
 
-New reporting consumers should reuse the reporting registry/service, the shared presentation model when needed, and `/api/reporting` for HTTP access while preserving disclosure, cursor, export, schema, and cache behavior. A compatible reporting source should not require a new top-level API family or central-router change.
+Principal implementation/contract sources include:
+
+- `contracts/assurance/reporting.schema.json`;
+- `contracts/assurance/registry.schema.json`;
+- `src/reporting/contracts.ts`;
+- `src/reporting/registry.ts`;
+- `src/reporting/service.ts`;
+- `src/reporting/schema-validation.ts`;
+- `src/reporting/pagination.ts`;
+- `src/api/reporting.ts`;
+- `src/api/reporting-response.ts`.
+
+The active OpenAPI 3.1 contract is `contracts/openapi/openapi.json` and is served at `/api/openapi.json`. Reporting operations reference canonical reporting schemas and declare application route IDs. `npm run validate:contracts` verifies method/path ownership and rejects duplicate or weaker embedded reporting schemas.
+
+## Validation and provider revisions
+
+Reporting tests cover disclosure-safe discovery, filter validation, deterministic structured pagination, cursor query binding, cursor error semantics, encrypted provider continuation, exact reads, export equivalence, mutation authorization, provider revision conflicts, response schema validation, cache policy, ETags, CORS, and `OPTIONS`.
+
+New consumers reuse the reporting registry/service and common cursor contract rather than adding a parallel API family or provider-specific public pagination shape.
