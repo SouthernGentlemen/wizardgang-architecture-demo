@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "wcag-2-2-public-registry",
   "visibility": "public",
-  "scope": "DEMO-289 evaluated every canonical public HTML page and every state in config/site-audit-states.json in English and Arabic; criterion statuses are bounded self-evaluation results, not a WCAG conformance claim.",
+  "scope": "The current public assessment scope covers every canonical public HTML page and every state in config/site-audit-states.json in English and Arabic; criterion statuses are bounded self-evaluation results, not a WCAG conformance claim.",
   "statusDefinitions": {
     "pass": "Self-evaluated as satisfied for the documented current scope with implementation, governing documentation, and current evidence; no framework-level conformance is asserted.",
     "partial": "Meaningful implementation or evidence exists, but criterion-specific scope, manual evaluation, operating evidence, freshness, or another material part remains incomplete.",
@@ -11,7 +11,7 @@
   },
   "validationDefinitions": {
     "automated": "partial means bounded axe-core evidence only; none means no criterion-specific automated accessibility determination is registered.",
-    "manual": "required identifies criteria that still need criterion-appropriate human or real assistive-technology verification; DEMO-289 records only manual procedures actually executed and leaves real screen-reader testing unclaimed."
+    "manual": "required identifies criteria that still need criterion-appropriate human or real assistive-technology verification; the structured verification record marks only procedures actually executed as completed and leaves unperformed assistive-technology testing unclaimed."
   },
   "sources": {
     "normative": "https://www.w3.org/TR/WCAG22/",
