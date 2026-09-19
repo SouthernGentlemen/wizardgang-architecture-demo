@@ -51,7 +51,7 @@ The controlled Git lifecycle reuses the admin boundary for start and merge/relea
 
 Crawler access combines dynamic `/robots.txt` policy with request gating for `OAI-SearchBot` and `ChatGPT-User`; robots rules alone are insufficient for user-triggered visits. `GPTBot` remains blocked so search/fetch access is separate from model-training access. No authorization decision relies on a crawler user agent.
 
-REST writes accept short-lived tokens derived from validated identity sessions. Those tokens are limited to a server-derived visitor namespace; there is no separate operator bearer credential for application writes. Public REST, GraphQL, and MCP reads share the explicit `demo:read` boundary, and authenticated GraphQL mutations cross the same normalized-principal policy. Webhook receivers verify signatures over the exact request body and reject replayed delivery IDs.
+No broad operator bearer credential is accepted by the application. REST writes accept only short-lived tokens derived from validated identity sessions, and those tokens are limited to a server-derived visitor namespace. Public REST, GraphQL, and MCP reads share the explicit `demo:read` boundary, and authenticated GraphQL mutations cross the same normalized-principal policy. Webhook receivers verify signatures over the exact request body and reject replayed delivery IDs.
 
 ## Public logging
 
