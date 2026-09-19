@@ -465,4 +465,4 @@ This procedure principally strengthens evidence for:
 - related supplier, configuration, logging, incident, and asset controls;
 - and ISO/IEC 42001 resource, data, supplier, AI-authority, and operational-governance requirements relevant to the current MCP boundary.
 
-**Current posture after approval:** Asset classes, owners, acceptable-use rules, access classes, and the review process are defined. A first formal consolidated access review and stronger endpoint/provider enforcement evidence remain operating work; certification is not claimed.
+**Current posture:** Asset classes, owners, acceptable-use rules, access classes, and the review process are defined. A first formal consolidated access review and stronger endpoint/provider enforcement evidence remain operating work; certification is not claimed.
