@@ -5,7 +5,6 @@
 **Status:** Approved
 **Owner:** Management-System Owner  
 **Approval:** Controlled pull request and merge  
-**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually and after material jurisdiction, service, supplier, data, user population, contract, license, public-claim, incident, or AI/MCP change
 
 ## 1. Purpose
