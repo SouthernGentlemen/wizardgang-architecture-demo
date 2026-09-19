@@ -1,5 +1,5 @@
 import { spawnSync, type SpawnSyncReturns } from 'node:child_process';
-import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -31,8 +31,8 @@ function writeJson(root: string, relativePath: string, value: unknown): void {
   writeFileSync(join(root, relativePath), `${JSON.stringify(value, null, 2)}\n`);
 }
 
-function run(root: string, script: string, args: string[] = []): SpawnSyncReturns<string> {
-  return spawnSync(process.execPath, [script, ...args], {
+function run(root: string, script: string): SpawnSyncReturns<string> {
+  return spawnSync(process.execPath, [script], {
     cwd: root,
     encoding: 'utf8',
     env: { ...process.env, ASSURANCE_VALIDATION_NOW: validationNow },
@@ -73,50 +73,42 @@ describe('canonical governance objectives', () => {
     expect([...objectiveReviewRefs]).toEqual(['review-objectives-pr56']);
   });
 
-  it('rejects generated objective-table drift and regenerates from canonical JSON', () => {
-    const fixtureRoot = createFixture();
-    const target = join(fixtureRoot, 'docs/governance/registers/OBJECTIVES.md');
-    const current = readFileSync(target, 'utf8');
-    writeFileSync(target, current.replace('| SEC-OBJ-005 | Incident readiness |', '| SEC-OBJ-005 | Drifted incident readiness |'));
-
-    const stale = run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs', ['--check']);
-    expect(stale.status).not.toBe(0);
-    expect(output(stale)).toContain('generated assurance presentation is stale or was edited independently');
-
-    const generated = run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs');
-    expect(generated.status, output(generated)).toBe(0);
-    expect(readFileSync(target, 'utf8')).toContain('| SEC-OBJ-005 | Incident readiness |');
-    expect(run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs', ['--check']).status).toBe(0);
+  it('keeps the stable objective presentation identity bound to structured objectives only', () => {
+    const presentation = readJson(repositoryRoot, 'assurance/presentation/documents.json');
+    const document = presentation.documents.find((entry: any) => entry.id === 'WG-OBJ-001');
+    expect(document).toBeDefined();
+    expect(document.sourceDatasets).toEqual(['objectives']);
+    expect(document).not.toHaveProperty('governanceDocumentReference');
+    expect(document).not.toHaveProperty('approval');
+    expect(existsSync(join(repositoryRoot, 'docs/governance/registers/OBJECTIVES.md'))).toBe(false);
+    expect(existsSync(join(repositoryRoot, 'scripts/generate-assurance-summaries.mjs'))).toBe(false);
   });
 
-  it('projects canonical objective changes into the generated table without changing narrative policy', () => {
+  it('accepts canonical objective content changes without a Markdown projection step', () => {
     const fixtureRoot = createFixture();
-    const target = join(fixtureRoot, 'docs/governance/registers/OBJECTIVES.md');
-    const before = readFileSync(target, 'utf8');
-    const narrative = before.slice(before.indexOf('## 4. Measurement Notes'));
     const objectives = readJson(fixtureRoot, 'assurance/objectives/objectives.json');
     const objective = objectives.records.find((record: { id: string }) => record.id === 'SEC-OBJ-005');
     expect(objective).toBeDefined();
     objective.reviewCadence = 'Fixture-only cadence';
     writeJson(fixtureRoot, 'assurance/objectives/objectives.json', objectives);
 
-    const generated = run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs');
-    expect(generated.status, output(generated)).toBe(0);
-    const after = readFileSync(target, 'utf8');
-    expect(after).toContain('| Fixture-only cadence | Planned |');
-    expect(after.slice(after.indexOf('## 4. Measurement Notes'))).toBe(narrative);
-  });
-
-  it('does not use Markdown objective rows as relationship authority', () => {
-    const fixtureRoot = createFixture();
-    const target = join(fixtureRoot, 'docs/governance/registers/OBJECTIVES.md');
-    const current = readFileSync(target, 'utf8');
-    writeFileSync(target, current.replace('| SEC-OBJ-005 | Incident readiness |', '| SEC-OBJ-999 | Incident readiness |'));
-
     const integrity = run(fixtureRoot, 'scripts/validate-assurance-integrity.mjs');
     expect(integrity.status, output(integrity)).toBe(0);
-    const summaries = run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs', ['--check']);
-    expect(summaries.status).not.toBe(0);
+    expect(readJson(fixtureRoot, 'assurance/objectives/objectives.json').records
+      .find((record: { id: string }) => record.id === 'SEC-OBJ-005').reviewCadence).toBe('Fixture-only cadence');
+  });
+
+  it('uses structured objective IDs as relationship authority', () => {
+    const fixtureRoot = createFixture();
+    const objectives = readJson(fixtureRoot, 'assurance/objectives/objectives.json');
+    const objective = objectives.records.find((record: { id: string }) => record.id === 'SEC-OBJ-005');
+    expect(objective).toBeDefined();
+    objective.id = 'SEC-OBJ-999';
+    writeJson(fixtureRoot, 'assurance/objectives/objectives.json', objectives);
+
+    const integrity = run(fixtureRoot, 'scripts/validate-assurance-integrity.mjs');
+    expect(integrity.status).not.toBe(0);
+    expect(output(integrity)).toContain('SEC-OBJ-005');
 
     const validator = readFileSync(join(fixtureRoot, 'scripts/validate-assurance-integrity.mjs'), 'utf8');
     expect(validator).not.toContain('objectiveDocument');

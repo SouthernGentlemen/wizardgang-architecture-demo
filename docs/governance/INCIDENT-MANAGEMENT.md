@@ -371,7 +371,7 @@ A period with zero incidents does not prove readiness or control effectiveness. 
 
 The authoritative incident and exercise index is:
 
-`docs/governance/registers/INCIDENT-REGISTER.md`
+`assurance/incidents/incidents.json`
 
 Permanent identifiers use:
 
@@ -388,15 +388,15 @@ Primary supporting records include:
 - `docs/OPERATIONS.md`;
 - `docs/governance/ROLES-RESPONSIBILITIES.md`;
 - `docs/governance/RISK-MANAGEMENT.md`;
-- `docs/governance/registers/SECURITY-RISK-REGISTER.md`;
-- `docs/governance/registers/AI-RISK-REGISTER.md`;
+- `assurance/risks/risks.json`;
+- `assurance/risks/risks.json`;
 - `docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md`;
 - `docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md`;
-- `docs/governance/registers/SUPPLIER-REGISTER.md`;
+- `assurance/governance/suppliers.json`;
 - `docs/governance/MONITORING-MEASUREMENT-EVALUATION.md`;
 - `docs/governance/MANAGEMENT-REVIEW.md`;
 - `docs/governance/NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md`;
-- `docs/governance/registers/OBJECTIVES.md`;
+- `assurance/objectives/objectives.json`;
 - application/audit logs;
 - release/deployment evidence;
 - and controlled `DEMO-###` history.

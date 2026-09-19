@@ -19,7 +19,7 @@ It answers five questions:
 4. **Where should a public reviewer inspect that evidence?**
 5. **What remains incomplete and requires actual recurring evidence rather than another policy document?**
 
-This index does not replace the structured assurance registry, its generated ISO SoA summaries, risk registers, technical evidence, or actual management-system activities. It connects them.
+This index does not replace the structured assurance registry, its structured register/SoA identities, technical evidence, or actual management-system activities. It connects them.
 
 The repository is engineered toward WCAG 2.2, ISO/IEC 27001:2022, and ISO/IEC 42001:2023 as **aligned — uncertified** references. Nothing in this index represents certification.
 
@@ -39,7 +39,7 @@ The management system uses one authority per concern and treats lower layers as 
 |---|---|---|
 | **1. Executable source and contracts** | source declarations, configuration, migrations, schemas, interface contracts | Defines executable behavior and machine interfaces |
 | **2. Structured assurance records** | `assurance/**` and registered schemas | Defines current structured assurance state, rationale, lifecycle, and relationships |
-| **3. Generated artifacts** | generated manifests, summaries, registers, bindings, and machine-readable outputs | Deterministic projection of authoritative inputs; never independently hand-maintained |
+| **3. Generated artifacts** | generated manifests, bindings, and other machine-readable outputs | Deterministic projection of authoritative inputs; never independently hand-maintained |
 | **4. Human current-state architecture / policy** | architecture, security, change, release, governance, and operating procedures | Explains present intent, boundaries, responsibilities, and controls without duplicating machine-owned state |
 | **5. Operating evidence** | runtime observations, assessments, reviews, audit/accessibility records, logs, incidents, exercises, deployment records | Proves operation or evaluation for a stated time/scope |
 | **6. Historical repository/delivery state** | Git, annotated tags, GitHub Releases, workflow runs/artifacts, pull requests, commits | Reconstructs superseded source/docs, historical releases, and historical CI/deployment execution |
@@ -55,7 +55,7 @@ The current identity model is:
 3. `docs/governance/REFERENCE-REGISTRY.json` inventories those identifiers only and is not an authority for assurance/control state;
 4. `assurance/compliance/iso-27001-2022.json` and `assurance/compliance/iso-42001-2023.json` are authoritative for individual ISO applicability, status, rationale, title, and evidence links;
 5. the structured WCAG registry and partitions are authoritative for WCAG criteria state;
-6. generated SoAs/registers are projections of their structured inputs and cannot independently change state.
+6. register and SoA views are derived from structured inputs and cannot independently change state; no separate committed Markdown projections are maintained.
 
 Reference namespaces are separated by record type: `WG-GOV-*`, `WG-POL-*`, `WG-REG-*`, `WG-OBJ-*`, `WG-SOA-*`, `WG-AIA-*`, and `WG-A11Y-*`.
 
@@ -105,27 +105,27 @@ CI validates reference uniqueness, registry/header agreement, governed-file exis
 | `assessments/MCP-AI-IMPACT-ASSESSMENT.md` | Current read-only public MCP impact assessment | Authoritative only for the assessed current capability; material AI changes require reassessment |
 | `assessments/ISO-27001-2026-09-17-SELF-ASSESSMENT.md` | Dated owner/operator ISO/IEC 27001 reassessment | Self-Assessment under WG-GOV-018 §4.2; explicitly not an internal audit or certification claim |
 | `assessments/ISO-42001-2026-09-17-SELF-ASSESSMENT.md` | Dated owner/operator ISO/IEC 42001 reassessment | Self-Assessment under WG-GOV-018 §4.2; explicitly not an internal audit or certification claim |
-| `soa/ISO-27001-SOA.md` | Generated ISO/IEC 27001:2022 Annex A summary | Generated presentation only; canonical applicability/rationale/status is `assurance/compliance/iso-27001-2022.json` |
-| `soa/ISO-42001-SOA.md` | Generated ISO/IEC 42001:2023 Annex A summary | Generated presentation only; canonical applicability/rationale/status is `assurance/compliance/iso-42001-2023.json` |
+| `assurance/compliance/iso-27001-2022.json` | WG-SOA-001 structured ISO/IEC 27001:2022 identity | Canonical structured applicability, rationale, status, and control relationships |
+| `assurance/compliance/iso-42001-2023.json` | WG-SOA-002 structured ISO/IEC 42001:2023 identity | Canonical structured applicability, rationale, status, and control relationships |
 
 ### 6.2 Registers
 
-| Register | Records |
-|---|---|
-| `SECURITY-RISK-REGISTER.md` | Formal information-security risks, treatment and residual posture |
-| `AI-RISK-REGISTER.md` | AI/MCP risks and treatment posture |
-| `OBJECTIVES.md` | Security, AI and governance objectives/targets |
-| `SUPPLIER-REGISTER.md` | GitHub, Cloudflare, Codex, Claude, identity-provider and dependency supplier state |
-| `INCIDENT-REGISTER.md` | Actual incidents when they occur and planned incident exercise `EX-001` |
-| `RECOVERY-TEST-REGISTER.md` | Technical recovery/restore exercises including planned `RT-001` |
-| `COMPETENCE-AWARENESS-REGISTER.md` | Role competence evidence and planned awareness cycle |
-| `DATA-REGISTER.md` | Material data surfaces, classification, retention/deletion and MCP data exposure |
-| `SECURITY-MAINTENANCE-REGISTER.md` | Dependency audit, threat review, vulnerability/security maintenance evidence |
-| `ASSET-ACCESS-REGISTER.md` | Material assets, access classes and planned access review |
-| `OBLIGATIONS-REGISTER.md` | Applicable, conditional, voluntary and needs-determination obligations |
-| `CONFIGURATION-REGISTER.md` | Material source/provider/runtime/configuration items |
-| `CRYPTOGRAPHY-SECRETS-REGISTER.md` | Material cryptographic and authentication-information surfaces |
-| `SECURITY-TESTING-REGISTER.md` | Security engineering/test mechanisms and explicit testing gaps |
+| Identity | Structured authority | Records |
+|---|---|---|
+| WG-REG-001 | `assurance/risks/risks.json` | Formal information-security risks, treatment and residual posture |
+| WG-REG-002 | `assurance/risks/risks.json` | AI/MCP risks and treatment posture |
+| WG-OBJ-001 | `assurance/objectives/objectives.json` | Security, AI and governance objectives/targets |
+| WG-REG-003 | `assurance/governance/suppliers.json` | GitHub, Cloudflare, Codex, Claude, identity-provider and dependency supplier state |
+| WG-REG-004 | `assurance/incidents/incidents.json` | Actual incidents when they occur; planned exercises are structured separately in `assurance/incidents/exercises.json` |
+| WG-REG-005 | `assurance/governance/recovery-tests.json` | Technical recovery/restore exercises including planned `RT-001` |
+| WG-REG-006 | `assurance/governance/competence.json` | Role competence evidence and planned awareness cycle |
+| WG-REG-007 | `assurance/governance/data-inventory.json` | Material data surfaces, classification, retention/deletion and MCP data exposure |
+| WG-REG-008 | `assurance/governance/security-maintenance.json` | Dependency audit, threat review, vulnerability/security maintenance evidence |
+| WG-REG-009 | `assurance/governance/asset-inventory.json` | Material assets, access classes and planned access review |
+| WG-REG-010 | `assurance/governance/obligations.json` | Applicable, conditional, voluntary and needs-determination obligations |
+| WG-REG-011 | `assurance/governance/configuration.json` | Material source/provider/runtime/configuration items |
+| WG-REG-012 | `assurance/governance/cryptography-secrets.json` | Material cryptographic and authentication-information surfaces |
+| WG-REG-013 | `assurance/governance/security-testing.json` | Security engineering/test mechanisms and explicit testing gaps |
 
 A register status is an evidence posture, not a certification score.
 
@@ -143,7 +143,7 @@ The management clauses remain distinct from Annex A controls.
 | **5.2 Policy** | `INFORMATION-SECURITY-POLICY.md` | risk/objectives/operating evidence |
 | **5.3 Roles** | `ROLES-RESPONSIBILITIES.md` | competence and access registers |
 | **6.1 Risks/opportunities and treatment** | `RISK-MANAGEMENT.md`, `OPERATIONAL-RISK-AND-AI-REASSESSMENT.md` | security-risk register, ISO27001 SoA |
-| **6.2 Objectives** | `registers/OBJECTIVES.md` | monitoring/measurement results |
+| **6.2 Objectives** | `assurance/objectives/objectives.json` | monitoring/measurement results |
 | **6.3 Change planning** | `MANAGEMENT-SYSTEM-CHANGE-PLANNING.md` | DEMO history, risk/SoA updates |
 | **7.1 Resources** | `MANAGEMENT-SYSTEM-SUPPORT.md` | management review/resource decisions |
 | **7.2 Competence** | `COMPETENCE-AWARENESS-COMMUNICATION.md` | competence-awareness register |
@@ -161,7 +161,7 @@ The management clauses remain distinct from Annex A controls.
 
 ### ISO 27001 Annex A
 
-Per-control applicability, status, N/A rationale, title, and evidence links are governed by `assurance/compliance/iso-27001-2022.json`; `soa/ISO-27001-SOA.md` is generated from that source.
+Per-control applicability, status, N/A rationale, title, and evidence links are governed by `assurance/compliance/iso-27001-2022.json`; WG-SOA-001 is the presentation identity for that structured source.
 
 The principal evidence-owner map by Annex A theme is:
 
@@ -186,7 +186,7 @@ No thematic mapping above overrides an individual canonical structured complianc
 | **5.2 AI policy** | `AI-POLICY.md` | AI risk, impact, supplier and evaluation evidence |
 | **5.3 Roles** | `ROLES-RESPONSIBILITIES.md` | AI owner, supplier owner, security/data/access roles |
 | **6.1 Risks/opportunities** | `RISK-MANAGEMENT.md`, `OPERATIONAL-RISK-AND-AI-REASSESSMENT.md` | AI-risk register, impact assessment, ISO42001 SoA |
-| **6.2 Objectives** | `registers/OBJECTIVES.md` | AI objective evidence/history |
+| **6.2 Objectives** | `assurance/objectives/objectives.json` | AI objective evidence/history |
 | **6.3 Change planning** | `MANAGEMENT-SYSTEM-CHANGE-PLANNING.md` | AI material-change triggers |
 | **7.1 Resources** | `MANAGEMENT-SYSTEM-SUPPORT.md` | competence, supplier, resource decisions |
 | **7.2 Competence** | `COMPETENCE-AWARENESS-COMMUNICATION.md` | AI/MCP competence rows |
@@ -204,7 +204,7 @@ No thematic mapping above overrides an individual canonical structured complianc
 
 ### ISO 42001 Annex A
 
-Per-control applicability, status, N/A rationale, title, and evidence links are governed by `assurance/compliance/iso-42001-2023.json`; `soa/ISO-42001-SOA.md` is generated from that source.
+Per-control applicability, status, N/A rationale, title, and evidence links are governed by `assurance/compliance/iso-42001-2023.json`; WG-SOA-002 is the presentation identity for that structured source.
 
 | Annex A family | Principal evidence owners |
 |---|---|
@@ -301,7 +301,7 @@ The structured framework registry exposed through `GET /api/reporting/compliance
 Rules:
 
 - canonical statuses and rationales are stored only in structured assurance data;
-- generated ISO SoA Markdown summaries must exactly match the structured source;
+- structured SoA presentation identities and source datasets must resolve consistently through the presentation catalog;
 - N/A requires rationale and scope-change review;
 - counts represent evidence posture, never certification score, and are derived rather than stored;
 - evidence links trace to stable assurance evidence IDs;
@@ -310,7 +310,7 @@ Rules:
 - stale time-bound evidence is rejected by validation;
 - CI validates identifiers, status vocabulary, N/A rationale, evidence-link integrity, generated-summary agreement, and disclosure safety.
 
-The generated SoA Markdown files preserve their WG-SOA identities and approval provenance, but they are not independent status/rationale authorities.
+The structured SoA views files preserve their WG-SOA identities and approval provenance, but they are not independent status/rationale authorities.
 
 ## 13. Assessment Rubric
 
@@ -323,7 +323,7 @@ The public compliance assessment vocabulary is shared across ISO/IEC 27001, ISO/
 
 A requirement that implies recurring activity remains at most **Partial** until the repository has an actual operating record for that activity. Policy prose or schema support alone is not proof that a recurring process operated.
 
-Compliance records remain authoritative for status, rationale, gaps, applicability, and evidence relationships. Governing Markdown supplies human-readable control documentation and reciprocal traceability through an **Alignment** section containing a `Controls:` line. Documentation links identify a repository-relative Markdown file path plus GitHub heading anchor and resolve against the deployed commit. Validation of that documentation contract reads headings and `Controls:` lines only; it never derives or changes compliance status from prose. Statements of Applicability and assessment/evaluation reports are exempt from the reciprocal `Controls:` requirement.
+Compliance records remain authoritative for status, rationale, gaps, applicability, and evidence relationships. Governing Markdown supplies human-readable control documentation and reciprocal traceability through an **Alignment** section containing a `Controls:` line. Documentation links identify a repository-relative Markdown file path plus GitHub heading anchor and resolve against the deployed commit. Validation of that documentation contract reads headings and `Controls:` lines only; it never derives or changes compliance status from prose. Structured SoA state is not a `documentation` relationship target. Dated assessment/evaluation reports are exempt from the reciprocal `Controls:` requirement.
 
 Supporting registers may use additional workflow statuses such as Planned, Active, Restricted, Watch, At risk, Failed, or Passed with limitations. These are not automatically interchangeable with compliance statuses.
 
@@ -359,7 +359,7 @@ The documentation baseline deliberately leaves real activities incomplete until 
 - awareness cycle `AW-001` through `AW-007`;
 - first consolidated privileged/provider access review;
 - initial supplier reviews where scheduled by the supplier/competence records;
-- expanded AI/MCP evaluation and objective evidence where scheduled by `OBJECTIVES.md`.
+- expanded AI/MCP evaluation and objective evidence where scheduled by `assurance/objectives/objectives.json`.
 
 These remain Planned/Partial until dated evidence exists.
 
@@ -431,7 +431,7 @@ This index intentionally preserves the following known gaps for cleanup or opera
 
 1. Canonical governance/register metadata references are unique and CI-validated; future drift is treated as a validation failure.
 2. The exhaustive structured WCAG/ISO compliance registry is present and generated/presentation drift is CI-validated, but many rows remain operating-evidence constrained rather than independently demonstrated.
-3. ISO SoA Markdown is generated from canonical structured compliance data; future status/rationale changes must be made in that structured source and pass generation checks.
+3. SoA presentation identities resolve directly to canonical structured compliance data; future status/rationale changes must be made only in that structured source and pass assurance validation.
 4. Repository rulesets require pull requests, the `validate` and `change-id` checks, merge-commit-only integration, protected `v*` tags, and automatic merged-branch deletion. Effectiveness over an operating interval and automated drift detection are not yet demonstrated, and the intentional zero-review requirement for the single-maintainer model is not independent review evidence.
 5. No completed formal internal audit is claimed.
 6. No completed management review is claimed.

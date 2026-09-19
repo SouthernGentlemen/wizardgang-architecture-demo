@@ -481,7 +481,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/registers/OBJECTIVES.md#3-initial-objectives"
+            "native": "docs/governance/MONITORING-MEASUREMENT-EVALUATION.md#10-relationship-to-objectives"
           }
         }
       ],
@@ -1628,7 +1628,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/registers/ASSET-ACCESS-REGISTER.md#3-asset-inventory-summary"
+            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#3-asset-categories"
           }
         }
       ],
@@ -4008,7 +4008,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/registers/CONFIGURATION-REGISTER.md#9-github-configuration"
+            "native": "docs/governance/CONFIGURATION-BASELINE-DRIFT.md#9-github-configuration-baseline"
           }
         }
       ],
@@ -4844,7 +4844,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/registers/CONFIGURATION-REGISTER.md#9-github-configuration"
+            "native": "docs/governance/CONFIGURATION-BASELINE-DRIFT.md#9-github-configuration-baseline"
           }
         },
         {

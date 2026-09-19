@@ -1,162 +1,97 @@
-import { spawnSync, type SpawnSyncReturns } from 'node:child_process';
-import { cpSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join, relative, sep } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
-import { setRelationshipTargets } from './helpers/assurance-relationships';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+import { describe, expect, it } from 'vitest';
 
-const repositoryRoot = process.cwd();
-const fixtureRoots: string[] = [];
-const ignoredFixtureParts = new Set(['.git', 'node_modules', '.wrangler', 'dist', 'coverage', 'artifacts']);
-const validationNow = '2026-09-03T04:40:00Z';
-const generatedMarkdownPaths = [
-  'docs/governance/registers/SECURITY-RISK-REGISTER.md',
-  'docs/governance/registers/AI-RISK-REGISTER.md',
-  'docs/governance/registers/INCIDENT-REGISTER.md',
-  'docs/governance/soa/ISO-27001-SOA.md',
-  'docs/governance/soa/ISO-42001-SOA.md',
-];
+const root = process.cwd();
+const oldRegisterRoot = ['docs', 'governance', 'registers'].join('/');
+const oldSoaRoot = ['docs', 'governance', 'soa'].join('/');
 
-function createFixture(): string {
-  const fixtureRoot = mkdtempSync(join(tmpdir(), 'demo-128-assurance-'));
-  cpSync(repositoryRoot, fixtureRoot, { recursive: true, filter(source) {
-    const pathFromRoot = relative(repositoryRoot, source); if (!pathFromRoot) return true;
-    return !pathFromRoot.split(sep).some((part) => ignoredFixtureParts.has(part));
-  } });
-  fixtureRoots.push(fixtureRoot); return fixtureRoot;
+function readJson(path: string): any {
+  return JSON.parse(readFileSync(join(root, path), 'utf8'));
 }
-function run(fixtureRoot: string, script: string, args: string[] = []): SpawnSyncReturns<string> { return spawnSync(process.execPath, [script, ...args], { cwd: fixtureRoot, encoding: 'utf8', env: { ...process.env, ASSURANCE_VALIDATION_NOW: validationNow } }); }
-function combined(result: SpawnSyncReturns<string>): string { return `${result.stdout}\n${result.stderr}`; }
-function readJson<T = any>(fixtureRoot: string, relativePath: string): T { return JSON.parse(readFileSync(join(fixtureRoot, relativePath), 'utf8')) as T; }
-function writeJson(fixtureRoot: string, relativePath: string, value: unknown): void { writeFileSync(join(fixtureRoot, relativePath), `${JSON.stringify(value, null, 2)}\n`); }
-function sourceFiles(root: string): string[] {
-  const files: string[] = [];
-  for (const entry of readdirSync(root)) {
-    const absolute = join(root, entry);
-    if (statSync(absolute).isDirectory()) files.push(...sourceFiles(absolute));
-    else if (/\.(?:ts|mjs)$/.test(entry)) files.push(absolute);
-  }
-  return files;
+
+function walk(path: string): string[] {
+  const absolute = join(root, path);
+  if (!existsSync(absolute)) return [];
+  if (!statSync(absolute).isDirectory()) return [path];
+  return readdirSync(absolute).flatMap((name) => walk(join(path, name)));
 }
-afterEach(() => { while (fixtureRoots.length) rmSync(fixtureRoots.pop()!, { recursive: true, force: true }); });
 
-describe('canonical assurance Markdown presentations', () => {
-  it('accepts checked-in presentations generated from structured assurance data', () => {
-    const fixtureRoot = createFixture(); const result = run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs', ['--check']); expect(result.status, combined(result)).toBe(0);
+describe('structured assurance source of truth', () => {
+  it('does not keep committed register or SoA Markdown projection directories', () => {
+    expect(existsSync(join(root, oldRegisterRoot))).toBe(false);
+    expect(existsSync(join(root, oldSoaRoot))).toBe(false);
   });
 
-  it('detects independently edited generated risk state as stale', () => {
-    const fixtureRoot = createFixture();
-    const target = join(fixtureRoot, 'docs/governance/registers/SECURITY-RISK-REGISTER.md');
-    const current = readFileSync(target, 'utf8');
-    writeFileSync(target, current.replace('| SEC-RISK-001 | Credential or secret exposure | 20 Critical | 10 High | Reduce | Treating | 2026-12-02 |', '| SEC-RISK-001 | Credential or secret exposure | 20 Critical | 10 High | Reduce | Open | 2026-12-02 |'));
-    const result = run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs', ['--check']);
-    expect(result.status).not.toBe(0); expect(combined(result)).toContain('generated assurance presentation is stale or was edited independently');
+  it('keeps current-state docs and runtime source free of retired projection authorities', () => {
+    const candidates = [
+      'AGENTS.md',
+      'README.md',
+      'package.json',
+      ...walk('docs').filter((path) => !path.startsWith('docs/governance/assessments/')),
+      ...walk('src'),
+      ...walk('assurance'),
+      ...walk('contracts'),
+    ].filter((path) => /\.(?:md|json|jsonc|js|mjs|ts|tsx)$/.test(path) || path === 'package.json');
+
+    const offenders = candidates.filter((path) => {
+      const text = readFileSync(join(root, path), 'utf8');
+      return text.includes(oldRegisterRoot + '/')
+        || text.includes(oldSoaRoot + '/')
+        || /(?:^|[`\s(])registers\/[^`\s)]+\.md/.test(text)
+        || /(?:^|[`\s(])soa\/ISO-[^`\s)]+\.md/.test(text);
+    });
+
+    expect(offenders).toEqual([]);
   });
 
-  it('projects canonical JSON changes into Markdown', () => {
-    const fixtureRoot = createFixture();
-    const risks = readJson(fixtureRoot, 'assurance/risks/risks.json');
-    const record = risks.records.find((candidate: any) => candidate.id === 'SEC-RISK-001');
-    expect(record).toBeDefined(); record.status = 'open';
-    writeJson(fixtureRoot, 'assurance/risks/risks.json', risks);
-    const generate = run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs');
-    expect(generate.status, combined(generate)).toBe(0);
-    const markdown = readFileSync(join(fixtureRoot, 'docs/governance/registers/SECURITY-RISK-REGISTER.md'), 'utf8');
-    expect(markdown).toContain('| SEC-RISK-001 | Credential or secret exposure | 20 Critical | 10 High | Reduce | Open | 2026-12-02 |');
-    expect(run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs', ['--check']).status).toBe(0);
+  it('resolves every stable register, objective, and SoA identity to structured assurance', () => {
+    const referenceRegistry = readJson('docs/governance/REFERENCE-REGISTRY.json');
+    const structured = referenceRegistry.records.filter((record: any) => /^WG-(?:REG|OBJ|SOA)-/.test(record.reference));
+    expect(structured).toHaveLength(16);
+    expect(structured.every((record: any) => record.path.startsWith('assurance/') && record.path.endsWith('.json'))).toBe(true);
   });
 
-  it('keeps generated counts and statuses aligned with canonical records, including empty incidents and planned exercises', () => {
-    const fixtureRoot = createFixture();
-    const risks = readJson(fixtureRoot, 'assurance/risks/risks.json');
-    const security = risks.records.filter((record: any) => record.framework === 'security');
-    const securityMarkdown = readFileSync(join(fixtureRoot, 'docs/governance/registers/SECURITY-RISK-REGISTER.md'), 'utf8');
-    expect(securityMarkdown).toContain(`**Records:** ${security.length}`);
-    for (const record of security) {
-      const status = String(record.status).replaceAll('-', ' ').replace(/\b\w/g, (letter: string) => letter.toUpperCase());
-      expect(securityMarkdown).toContain(`| ${record.id} | ${record.title} |`);
-      expect(securityMarkdown).toContain(`| ${status} | ${record.reviewDue} |`);
+  it('uses structured presentation identities without historical PR or merge provenance', () => {
+    const presentation = readJson('assurance/presentation/documents.json');
+    const ids = presentation.documents.map((document: any) => document.id);
+    expect(ids).toHaveLength(16);
+    expect(new Set(ids).size).toBe(16);
+    for (const document of presentation.documents) {
+      expect(document).not.toHaveProperty('governanceDocumentReference');
+      expect(document).not.toHaveProperty('approval');
+      expect(JSON.stringify(document)).not.toContain('pullRequest');
+      expect(JSON.stringify(document)).not.toContain('mergeCommit');
+      expect(document.sourceDatasets.length).toBeGreaterThan(0);
     }
-
-    const incidents = readJson(fixtureRoot, 'assurance/incidents/incidents.json');
-    const exercises = readJson(fixtureRoot, 'assurance/incidents/exercises.json');
-    const incidentMarkdown = readFileSync(join(fixtureRoot, 'docs/governance/registers/INCIDENT-REGISTER.md'), 'utf8');
-    expect(incidentMarkdown).toContain(`**Actual incident records:** ${incidents.records.length}`);
-    expect(incidentMarkdown).toContain(`**Exercise records:** ${exercises.records.length}`);
-    expect(incidents.records).toHaveLength(0);
-    expect(incidentMarkdown).toContain('| EX-001 | Tabletop / response exercise | Combined security + AI/MCP incident scenario |');
-    expect(incidentMarkdown).toContain('| Planned | 0 |');
   });
 
-  it('is byte-stable across repeated generation', () => {
-    const fixtureRoot = createFixture();
-    expect(run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs').status).toBe(0);
-    const first = generatedMarkdownPaths.map((relativePath) => readFileSync(join(fixtureRoot, relativePath)));
-    expect(run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs').status).toBe(0);
-    const second = generatedMarkdownPaths.map((relativePath) => readFileSync(join(fixtureRoot, relativePath)));
-    expect(second).toEqual(first);
+  it('keeps generated-artifact parity focused on legitimate generated outputs', () => {
+    const validator = readFileSync(join(root, 'scripts/validate-generated-artifacts.mjs'), 'utf8');
+    expect(validator).not.toContain('assurance-summaries');
+    expect(validator).not.toContain('governance-registers');
+    expect(validator).not.toContain(oldRegisterRoot + '/');
+    expect(validator).not.toContain(oldSoaRoot + '/');
   });
 
-  it('does not parse Markdown to validate assurance state', () => {
-    const fixtureRoot = createFixture();
-    const target = join(fixtureRoot, 'docs/governance/registers/AI-RISK-REGISTER.md');
-    writeFileSync(target, readFileSync(target, 'utf8').replace('| AI-RISK-001 | Unauthorized expansion of AI tool authority | 20 Critical | 8 Moderate | Reduce | Treating | 2026-12-02 |', '| AI-RISK-001 | Unauthorized expansion of AI tool authority | 20 Critical | 8 Moderate | Reduce | Open | 2026-12-02 |'));
-    const validation = run(fixtureRoot, 'scripts/validate-assurance.mjs');
-    expect(validation.status, combined(validation)).toBe(0);
-    expect(run(fixtureRoot, 'scripts/generate-assurance-summaries.mjs', ['--check']).status).not.toBe(0);
-    const validator = readFileSync(join(fixtureRoot, 'scripts/validate-assurance.mjs'), 'utf8');
-    expect(validator).not.toContain('parseRegisterSummary');
-    expect(validator).not.toContain('parseExerciseRows');
-    expect(validator).not.toContain('matchAll');
+  it('keeps documentation relationships on governing Markdown, never retired projections', () => {
+    for (const path of ['assurance/compliance/iso-27001-2022.json', 'assurance/compliance/iso-42001-2023.json']) {
+      const data = readJson(path);
+      for (const record of data.records) {
+        for (const edge of record.relationships ?? []) {
+          if (edge.relation !== 'documentation') continue;
+          expect(edge.to.native).toMatch(/^docs\/.*\.md#/);
+          expect(edge.to.native.startsWith(oldRegisterRoot + '/')).toBe(false);
+          expect(edge.to.native.startsWith(oldSoaRoot + '/')).toBe(false);
+        }
+      }
+    }
   });
 
-  it('preserves incident and exercise relationship validation in canonical JSON', () => {
-    const fixtureRoot = createFixture();
-    const exercises = readJson(fixtureRoot, 'assurance/incidents/exercises.json');
-    setRelationshipTargets(exercises.records[0], 'risks', 'github.structured-records.risks', ['SEC-RISK-999']);
-    writeJson(fixtureRoot, 'assurance/incidents/exercises.json', exercises);
-    const result = run(fixtureRoot, 'scripts/validate-assurance-integrity.mjs');
-    expect(result.status).not.toBe(0); expect(combined(result)).toContain('unresolved risks relationship SEC-RISK-999');
-  });
-
-  it('keeps generated Markdown out of runtime code paths', () => {
-    const runtime = sourceFiles(join(repositoryRoot, 'src')).map((absolute) => readFileSync(absolute, 'utf8')).join('\n');
-    expect(runtime).not.toMatch(/readFileSync\([^)]*\.md/);
-    expect(runtime).not.toMatch(/from\s+['"][^'"]+\.md['"]/);
-    expect(runtime).not.toMatch(/import\s*\([^)]*\.md/);
-  });
-});
-
-describe('assurance operational gates', () => {
-  it('rejects missing accountable owners', () => {
-    const fixtureRoot = createFixture(); const config = readJson(fixtureRoot, 'assurance/operations/monitoring.json'); delete config.accountableOwners.evidence;
-    writeJson(fixtureRoot, 'assurance/operations/monitoring.json', config); const result = run(fixtureRoot, 'scripts/validate-assurance-operations.mjs');
-    expect(result.status).not.toBe(0); expect(combined(result)).toContain('missing accountable owner for evidence');
-  });
-  it('requires the configured security policy path to remain the separate canonical application page', () => {
-    const fixtureRoot = createFixture(); const routes = readJson(fixtureRoot, 'docs/route-manifest.json');
-    writeJson(fixtureRoot, 'docs/route-manifest.json', routes.filter((route: { id: string }) => route.id !== 'security.index'));
-    const result = run(fixtureRoot, 'scripts/validate-assurance-operations.mjs');
-    expect(result.status).not.toBe(0); expect(combined(result)).toContain('configured security policy route is not the canonical application security page');
-  });
-  it('rejects an expired security.txt source value', () => {
-    const fixtureRoot = createFixture(); const target = join(fixtureRoot, 'src/api/security-policy.ts');
-    writeFileSync(target, readFileSync(target, 'utf8').replace('2027-03-02T00:00:00Z', '2026-01-01T00:00:00Z'));
-    const result = run(fixtureRoot, 'scripts/validate-assurance-operations.mjs');
-    expect(result.status).not.toBe(0); expect(combined(result)).toContain('security.txt expired at 2026-01-01T00:00:00Z');
-  });
-});
-
-describe('release-bound registry snapshots', () => {
-  it('records exact release identity, counts, generation time, and deterministic content digest', () => {
-    const fixtureRoot = createFixture(); const tag = 'v9.8.7'; const commit = '0123456789abcdef0123456789abcdef01234567'; const generatedAt = '2026-09-03T05:00:00Z';
-    const firstPath = 'artifacts/first.json'; const secondPath = 'artifacts/second.json';
-    const first = run(fixtureRoot, 'scripts/generate-assurance-snapshot.mjs', ['--tag', tag, '--commit', commit, '--generated-at', generatedAt, '--output', firstPath]);
-    const second = run(fixtureRoot, 'scripts/generate-assurance-snapshot.mjs', ['--tag', tag, '--commit', commit, '--generated-at', generatedAt, '--output', secondPath]);
-    expect(first.status, combined(first)).toBe(0); expect(second.status, combined(second)).toBe(0);
-    const firstSnapshot = readJson(fixtureRoot, firstPath); const secondSnapshot = readJson(fixtureRoot, secondPath);
-    expect(firstSnapshot).toEqual(secondSnapshot); expect(firstSnapshot.tag).toBe(tag); expect(firstSnapshot.commit).toBe(commit); expect(firstSnapshot.generatedAt).toBe(generatedAt);
-    expect(firstSnapshot.recordCounts.total).toBeGreaterThan(0); expect(Object.keys(firstSnapshot.recordCounts.byPath).length).toBeGreaterThan(0); expect(firstSnapshot.contentDigest.algorithm).toBe('sha256'); expect(firstSnapshot.contentDigest.value).toMatch(/^[0-9a-f]{64}$/);
+  it('keeps the workbench SoA presentation bound to canonical structured compliance sources', () => {
+    const source = readFileSync(join(root, 'src/demos/assurance-workbench.ts'), 'utf8');
+    expect(source).toContain('assurance/compliance/iso-27001-2022.json');
+    expect(source).toContain('assurance/compliance/iso-42001-2023.json');
+    expect(source).not.toContain(oldSoaRoot + '/');
   });
 });

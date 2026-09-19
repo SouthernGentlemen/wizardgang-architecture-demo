@@ -11,7 +11,7 @@ const monitorWorkflow = read('.github/workflows/assurance-monitor.yml');
 const monitorValidator = read('scripts/validate-assurance-operations.mjs');
 const releaseManagement = read('docs/RELEASE-MANAGEMENT.md');
 const deployments = read('docs/history/DEPLOYMENTS.md');
-const configurationRegister = read('docs/governance/registers/CONFIGURATION-REGISTER.md');
+const repositorySettingsValidator = read('scripts/validate-github-repository-settings.mjs');
 
 function deploymentRecords(markdown) {
   const headings = [...markdown.matchAll(/^## (DEP-DEMO-\d+)\s*$/gm)];
@@ -74,8 +74,8 @@ describe('DEMO-305 release operations acceptance', () => {
     });
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain('Validated committed GitHub repository-settings baseline');
-    expect(configurationRegister).toContain('config/github-repository-settings.json');
-    expect(configurationRegister).toContain('npm run validate:repository-settings -- --live');
+    expect(repositorySettingsValidator).toContain('config/github-repository-settings.json');
+    expect(repositorySettingsValidator).toContain("process.argv.includes('--live')");
   });
 
   it('fails the content review when a selected assurance record pane never renders', async () => {

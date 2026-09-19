@@ -83,8 +83,7 @@ function controlsInAlignment(markdown) {
 
 function isDatedRecord(relativePath) {
   const normalized = relativePath.replaceAll('\\', '/');
-  return normalized.includes('/soa/')
-    || normalized.includes('/assessments/')
+  return normalized.includes('/assessments/')
     || /(?:^|\/)[^/]*(?:ASSESSMENT|EVALUATION|REPORT)[^/]*\.md$/i.test(normalized);
 }
 
@@ -125,6 +124,10 @@ for (const entry of complianceEntries) {
     const parsed = parseAssuranceDocumentationReference(edge?.to?.native);
     if (!parsed) {
       errors.push(`${record.id}: invalid documentation reference ${String(edge?.to?.native)}`);
+      continue;
+    }
+    if (parsed.repositoryPath.startsWith('docs/governance/registers/') || parsed.repositoryPath.startsWith('docs/governance/soa/')) {
+      errors.push(`${record.id}: documentation relationship targets retired register/SoA Markdown: ${parsed.repositoryPath}`);
       continue;
     }
     if (!markdownSet.has(parsed.repositoryPath)) {

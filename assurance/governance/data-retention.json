@@ -1,12 +1,10 @@
 {
   "schemaVersion": 1,
   "source": "governance.records",
-  "qualification": "Canonical reportable register facts projected into Markdown; narrative policy, rationale, templates, and professional judgment remain authored in the presentation document.",
+  "qualification": "Canonical structured register facts. Human-readable views are derived from this structured state and the applicable governing procedures; no committed Markdown register is an independent authority.",
   "views": [
     {
       "id": "data-retention-worklist",
-      "document": "docs/governance/registers/DATA-REGISTER.md",
-      "section": "23. Initial Retention / Deletion Worklist",
       "columns": [
         {
           "key": "workItem",

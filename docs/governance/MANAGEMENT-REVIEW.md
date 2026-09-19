@@ -133,7 +133,7 @@ Material changes use the controlled Git process.
 
 ### 4.5 Objectives and measurements
 
-Management reviews the security, AI, and governance objectives in `docs/governance/registers/OBJECTIVES.md` and the supporting measurements defined in `docs/governance/MONITORING-MEASUREMENT-EVALUATION.md`.
+Management reviews the security, AI, and governance objectives in `assurance/objectives/objectives.json` and the supporting measurements defined in `docs/governance/MONITORING-MEASUREMENT-EVALUATION.md`.
 
 For each objective, the review should determine:
 
@@ -162,7 +162,7 @@ Management reviews:
 
 Primary evidence includes:
 
-- `docs/governance/registers/SECURITY-RISK-REGISTER.md`;
+- `assurance/risks/risks.json`;
 - `docs/governance/RISK-MANAGEMENT.md`;
 - `docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md`;
 - and linked implementation/effectiveness evidence.
@@ -184,7 +184,7 @@ Management reviews:
 
 Primary evidence includes:
 
-- `docs/governance/registers/AI-RISK-REGISTER.md`;
+- `assurance/risks/risks.json`;
 - `docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md`;
 - AI/MCP evaluation evidence;
 - and controlled AI-related changes.
@@ -202,7 +202,7 @@ Management considers whether:
 - risk treatment or scope changes require SoA updates;
 - and public assurance statements still match the actual control posture.
 
-Primary evidence includes both Statements of Applicability under `docs/governance/soa/`.
+Primary evidence includes the structured Statements of Applicability in `assurance/compliance/iso-27001-2022.json` and `assurance/compliance/iso-42001-2023.json`.
 
 SoA review does not convert Partial or Gap controls to Met without evidence.
 
@@ -482,13 +482,13 @@ Primary supporting evidence includes:
 - `docs/governance/SCOPE.md`;
 - `docs/governance/INFORMATION-SECURITY-POLICY.md`;
 - `docs/governance/AI-POLICY.md`;
-- `docs/governance/registers/OBJECTIVES.md`;
+- `assurance/objectives/objectives.json`;
 - `docs/governance/RISK-MANAGEMENT.md`;
-- `docs/governance/registers/SECURITY-RISK-REGISTER.md`;
-- `docs/governance/registers/AI-RISK-REGISTER.md`;
+- `assurance/risks/risks.json`;
+- `assurance/risks/risks.json`;
 - `docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md`;
-- `docs/governance/soa/ISO-27001-SOA.md`;
-- `docs/governance/soa/ISO-42001-SOA.md`;
+- `assurance/compliance/iso-27001-2022.json`;
+- `assurance/compliance/iso-42001-2023.json`;
 - `docs/governance/MONITORING-MEASUREMENT-EVALUATION.md`;
 - `docs/governance/INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md`;
 - `docs/governance/OPERATIONAL-PLANNING-CONTROL.md`;
