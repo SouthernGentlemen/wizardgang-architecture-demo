@@ -324,4 +324,4 @@ Evidence supporting this policy includes, as applicable:
 
 This policy supports **ISO/IEC 42001:2023 §5.2 — AI policy**.
 
-**Current posture after approval:** AI-management direction and commitments are formally defined and controlled; certification is not claimed.
+**Current posture:** AI-management direction and commitments are formally defined and controlled; certification is not claimed.
