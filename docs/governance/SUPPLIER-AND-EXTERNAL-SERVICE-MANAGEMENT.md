@@ -5,7 +5,6 @@
 **Status:** Approved
 **Owner:** WizardGang  
 **Approval:** Controlled pull request and merge  
-**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually and after a material supplier, service, identity, dependency, AI/MCP, data, architecture, or contractual change
 
 ## 1. Purpose
@@ -254,15 +253,15 @@ Formal recurring supplier-review evidence is not considered complete merely beca
 ## 15. Supporting Records
 
 - `assurance/governance/suppliers.json`
-- `docs/governance/INTERESTED-PARTIES.md`
+- `docs/governance/GOVERNANCE.md`
 - `docs/governance/RISK-MANAGEMENT.md`
 - `assurance/risks/risks.json`
 - `assurance/risks/risks.json`
 - `docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md`
 - `assurance/compliance/iso-27001-2022.json`
 - `assurance/compliance/iso-42001-2023.json`
-- `docs/governance/OPERATIONAL-PLANNING-CONTROL.md`
-- `docs/governance/MONITORING-MEASUREMENT-EVALUATION.md`
+- `docs/governance/GOVERNANCE.md`
+- `docs/governance/ASSURANCE-AND-AUDIT.md`
 - `SECURITY.md`
 - `docs/OPERATIONS.md`
 - `docs/IDENTITY.md`
