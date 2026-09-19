@@ -51,7 +51,7 @@ function htmlRoute(capability: AssuranceRouteCapability): AssuranceApplicationRo
     documentation: {
       title: html.page?.label ?? capability.routeId,
       description: html.page?.summary ?? `Canonical assurance presentation route ${capability.routeId}.`,
-      docs: ['docs/ASSURANCE-REGISTRY.md', 'docs/REPORTING.md', 'docs/ROUTES.md'],
+      docs: ['docs/ASSURANCE.md', 'docs/REPORTING.md', 'docs/ROUTE-REGISTRY.md'],
     },
     source: routeSource(html.source),
     ...(html.page ? { page: html.page } : {}),
@@ -75,7 +75,7 @@ function apiRoute(api: AssuranceApiRouteHandlerRegistration): AssuranceApplicati
     documentation: {
       title: api.title,
       description: api.description,
-      docs: ['docs/FRONTEND-ROUTES.md', 'docs/EVIDENCE.md', 'docs/ROUTES.md'],
+      docs: ['docs/ASSURANCE.md', 'docs/ROUTE-REGISTRY.md'],
     },
     source: routeSource(api.source),
   };
