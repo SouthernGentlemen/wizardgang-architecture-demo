@@ -552,21 +552,9 @@ This procedure should be read with:
 - `src/lib/admin-auth.ts`;
 - `src/api/webhooks.ts`.
 
-## 23. Approval and Evidence
+## 23. Control and Evidence
 
-Approval metadata:
-
-```text
-Owner: WizardGang
-Status: Proposed until PR approval/merge
-Version: 1.0
-Effective: on controlled merge
-Review due: within 12 months or sooner after a material cryptographic/credential event
-Approved via: PR #56
-Approval commit: established by final approved merge state
-```
-
-The approval event establishes this procedure. Actual secret reviews, rotations, revocations, certificate rollovers, compromise responses, and recovery events require their own attributable evidence.
+This procedure is controlled through the normal repository change process. Secret reviews, rotations, revocations, certificate rollovers, compromise responses, and recovery events require their own attributable evidence; document approval does not substitute for operating evidence.
 
 ## Alignment
 
