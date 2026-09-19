@@ -29,7 +29,7 @@ function read(path) {
 
 function currentStateFiles() {
   const files = ['README.md', 'AGENTS.md'];
-  const walk = (directory: string) => {
+  const walk = (directory) => {
     for (const entry of readdirSync(join(root, directory), { withFileTypes: true })) {
       const path = join(directory, entry.name);
       if (entry.isDirectory()) {
@@ -75,7 +75,7 @@ describe('DEMO-314 architecture documentation consolidation', () => {
     for (const path of currentStateFiles()) {
       const text = read(path);
       for (const retired of retiredNames) {
-        if (text.includes(retired)) offenders.push(\`\${path} -> \${retired}\`);
+        if (text.includes(retired)) offenders.push(`${path} -> ${retired}`);
       }
     }
     expect(offenders).toEqual([]);
