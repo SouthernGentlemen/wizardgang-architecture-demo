@@ -157,6 +157,13 @@
       "reviewedAt": "2026-09-19T03:10:00Z",
       "reviewer": "controlled-repository-review",
       "basis": "DEMO-316 consolidates management-system governance documentation and remaps the ISO/IEC 27001 and ISO/IEC 42001 documentation relationships to current semantic headings. Exact duplicate documentation edges created when multiple retired paths converged on one heading are removed. No compliance status, applicability decision, rationale, gap, evidence relationship, or assurance conclusion is reassessed or upgraded; this review approves disclosure of only the exact resulting public compliance source revisions."
+    },
+    {
+      "id": "review-demo317-security-operations-governance",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-19T12:47:00Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-317 consolidates current security and operational governance and remaps the ISO/IEC 27001 and ISO/IEC 42001 documentation relationships to the resulting domain authorities. Retired credential history and one-time transition narrative are removed from current inventories and prose while the current negative authorization invariant is retained. No compliance status, applicability decision, rationale, gap, evidence relationship, runtime security behavior, or assurance conclusion is reassessed or upgraded; this review approves disclosure of only the exact resulting public compliance source revisions."
     }
   ],
   "sourceApprovals": [
@@ -591,6 +598,18 @@
       "resource": "compliance.iso-42001",
       "revision": "ef2599a68f9a38869afcbe30f77ee0c31be00284",
       "reviewRef": "review-demo316-governance-consolidation"
+    },
+    {
+      "id": "source-iso27001-2c80f84ce45d",
+      "resource": "compliance.iso-27001",
+      "revision": "2c80f84ce45d202d4e42da3f2f5a33e58bc3b8ba",
+      "reviewRef": "review-demo317-security-operations-governance"
+    },
+    {
+      "id": "source-iso42001-8f6e63ab6dce",
+      "resource": "compliance.iso-42001",
+      "revision": "8f6e63ab6dcec65de332eb5a2520680b13038c1f",
+      "reviewRef": "review-demo317-security-operations-governance"
     }
   ],
   "records": [

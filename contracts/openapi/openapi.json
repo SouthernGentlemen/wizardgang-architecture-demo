@@ -1234,7 +1234,7 @@
       "BearerToken": {
         "type": "http",
         "scheme": "bearer",
-        "description": "A ten-minute demo token issued after provider sign-in. Its demo:write permission is restricted to the caller's server-derived visitor sandbox. A managed operator credential is also accepted but never exposed by the public explorer."
+        "description": "A ten-minute demo token issued after provider sign-in. Its demo:write permission is restricted to the caller's server-derived visitor sandbox. No broad operator bearer credential is accepted by the application."
       }
     },
     "headers": {

@@ -87,7 +87,7 @@
       "fields": {
         "area": "Vulnerability triage and remediation timing",
         "currentState": "**Planned**",
-        "evidenceBasis": "DEMO-096 defines Critical/High/Medium/Low response targets and exception/risk-acceptance rules.",
+        "evidenceBasis": "docs/governance/SECURITY-GOVERNANCE.md defines Critical/High/Medium/Low response targets and exception/risk-acceptance rules.",
         "currentGapNextAction": "Produce actual finding records when applicable; do not invent a clean historical SLA record.",
         "owner": "Information Security Owner",
         "reviewTarget": "Event-driven; monthly review"
@@ -101,7 +101,7 @@
       "fields": {
         "area": "Post-remediation effectiveness verification",
         "currentState": "**Planned**",
-        "evidenceBasis": "DEMO-096 requires focused testing, CI, release/deployment identity, and residual-risk review before closure.",
+        "evidenceBasis": "docs/governance/SECURITY-GOVERNANCE.md requires focused testing, CI, release/deployment identity, and residual-risk review before closure.",
         "currentGapNextAction": "First applicable vulnerability remediation must retain verification evidence.",
         "owner": "Change Owner / Security Owner",
         "reviewTarget": "Event-driven"
@@ -157,7 +157,7 @@
       "fields": {
         "area": "Broader credible threat-intelligence review",
         "currentState": "**Planned**",
-        "evidenceBasis": "DEMO-096 permits relevant CERT/CSIRT, upstream, provider, and credible security-research sources.",
+        "evidenceBasis": "docs/governance/SECURITY-GOVERNANCE.md recognizes relevant CERT/CSIRT, upstream, provider, and credible security-research sources.",
         "currentGapNextAction": "Record only sources relevant to the actual stack/exposure; first dated review due 2026-12-02.",
         "owner": "Information Security Owner",
         "reviewTarget": "Monthly/event-driven"
@@ -185,7 +185,7 @@
       "fields": {
         "area": "Authority-contact decision framework",
         "currentState": "**Partial**",
-        "evidenceBasis": "Incident process and DEMO-096 define when law enforcement, regulator, CERT/CSIRT, provider, contractual, or other authority contact may need consideration.",
+        "evidenceBasis": "The incident process and docs/governance/SECURITY-GOVERNANCE.md define when law enforcement, regulator, CERT/CSIRT, provider, contractual, or other authority contact may need consideration.",
         "currentGapNextAction": "No fictional universal list; actual SEV-1/SEV-2 incidents must record the notification/contact decision and specialist review where needed.",
         "owner": "Management-System Owner / Incident Owner",
         "reviewTarget": "Event-driven; annual process review"
@@ -241,7 +241,7 @@
       "fields": {
         "area": "Security-maintenance metrics",
         "currentState": "**Planned**",
-        "evidenceBasis": "DEMO-096 defines overdue High/Critical findings, open-age, treatment coverage, threat-review freshness, and remediation timing as useful measures.",
+        "evidenceBasis": "docs/governance/SECURITY-GOVERNANCE.md defines overdue High/Critical findings, open-age, treatment coverage, threat-review freshness, and remediation timing as useful measures.",
         "currentGapNextAction": "No accumulated operating history yet; summarize after first review cycle and feed management review.",
         "owner": "Evidence / Security Owner",
         "reviewTarget": "Quarterly/management review"

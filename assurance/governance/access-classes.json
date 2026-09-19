@@ -156,10 +156,10 @@
       "view": "access-classes",
       "order": 10,
       "fields": {
-        "accessClass": "Retired operator API bearer access",
-        "assetBoundary": "none — production credential revoked 2026-09-18",
-        "minimumIntendedAuthority": "None; no application authenticator accepts the retired credential",
-        "publicRecordPosture": "DEMO_API_TOKEN revocation recorded by name/date only; no value retained",
+        "accessClass": "Broad operator bearer credential",
+        "assetBoundary": "Application authorization boundary",
+        "minimumIntendedAuthority": "None; no broad operator bearer credential is accepted by the application",
+        "publicRecordPosture": "Negative security invariant; bearer writes are identity-derived and visitor-namespace bounded",
         "reviewState": "Met"
       },
       "relationships": []
