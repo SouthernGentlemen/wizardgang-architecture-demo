@@ -227,8 +227,8 @@
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
-      "module": "src/ui/page.ts",
-      "exportName": "renderIndex",
+      "module": "src/ui/home.ts",
+      "exportName": "renderHome",
       "tests": [
         "tests/interface-identity-routing.test.ts",
         "tests/router.test.ts",

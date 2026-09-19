@@ -1,4 +1,4 @@
-import type { DemoDefinition, Env } from '../types';
+import type { Env } from '../types';
 import { routeUrl } from '../routing/application-routes';
 import {
   primaryNavigation,
@@ -22,7 +22,6 @@ import { withSecurityHeaders } from '../lib/http';
 const SITE_NAME = 'WizardGang Architecture Demo';
 const DEFAULT_DESCRIPTION = 'A live Cloudflare architecture lab with stable task routes and demonstration fragments, executable behavior, and direct links to the public code behind it.';
 const ROOT_ROUTE_ID = 'interfaces.frontend.index';
-const OPERATIONS_ROUTE_ID = 'operations.index';
 
 /** Acid square with an offset violet square — the same mark as the wordmark. */
 const FAVICON = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#08080b"/><rect x="5" y="15" width="12" height="12" fill="#d9ff43"/><rect x="15" y="5" width="12" height="12" fill="#a489ff"/></svg>')}`;
@@ -194,55 +193,6 @@ export function pageResponse(
   return renderPage(env, pageContent(env, title, body, options));
 }
 
-export function renderIndex(env: Env): Response {
-  const localization = localizationForEnv(env);
-  const homeRoute = routeUrl(ROOT_ROUTE_ID);
-  const actions = [
-    {
-      routeId: 'demos.index',
-      label: localization.t('home.run_it', 'Run it'),
-      summary: localization.t('home.run_summary', 'Execute the interactive architecture demonstrations.'),
-    },
-    {
-      routeId: 'assurance.index',
-      label: localization.t('home.verify_it', 'Verify it'),
-      summary: localization.t('home.verify_summary', 'Inspect assurance, evidence, governance, and compliance records.'),
-    },
-    {
-      routeId: 'operations.index',
-      label: localization.t('home.observe_it', 'Observe it'),
-      summary: localization.t('home.observe_summary', 'Review runtime status, availability, activity, usage, and deployment evidence.'),
-    },
-  ] as const;
-  const body = `
-<section class="page-header home-header">
-  <h1>${escapeHtml(localization.t('nav.interfaces.frontend.index', 'Architecture'))} <span>${escapeHtml(localization.t('home.inspectable', 'you can inspect.'))}</span></h1>
-  <div class="home-intro"><p class="lede home-lede">A live Cloudflare architecture lab demonstrating edge compute, persistent storage, APIs, identity, MCP, accessibility, operations, and assurance against the deployed system.</p><p>${escapeHtml(localization.t('home.choose_action', 'Choose what you want to do.'))}</p></div>
-</section>
-<section class="architecture-strip" aria-label="Architecture at a glance">
-  <article><strong>Client</strong><span>Browser · MCP · Webhooks</span></article><i aria-hidden="true">→</i>
-  <article><strong>Worker</strong><span>Routing · policy · APIs</span></article><i aria-hidden="true">→</i>
-  <article><strong>Services &amp; Data</strong><span>D1 · R2 · Durable Objects · Identity</span></article><i aria-hidden="true">→</i>
-  <article><strong>Operational Evidence</strong><span>Logs · health · assurance</span></article>
-</section>
-<section class="grid home-actions" aria-label="${escapeHtml(localization.t('home.primary_actions', 'Primary actions'))}">
-  ${actions.map((action) => `<a class="card" href="${escapeHtml(localization.href(routeUrl(action.routeId)))}">
-    <h2>${escapeHtml(action.label)}</h2>
-    <p>${escapeHtml(action.summary)}</p>
-  </a>`).join('')}
-</section>`;
-  return pageResponse(env, localization.t('nav.interfaces.frontend.index', 'Architecture'), body, {
-    routeId: ROOT_ROUTE_ID,
-    canonicalPath: homeRoute,
-    description: localization.t('meta.default_description', DEFAULT_DESCRIPTION),
-  });
-}
-
-function demoRoute(demo: DemoDefinition): string {
-  if (!demo.route) throw new Error(`Demo '${demo.id}' requires a registered route before rendering.`);
-  return demo.route;
-}
-
 export interface ReferenceLink {
   label: string;
   href: string;
@@ -261,84 +211,4 @@ export function routeSourceReference(env: Env, module: string): ReferenceLink {
 export function referenceDetails(links: ReferenceLink[], label = 'References'): string {
   if (!links.length) return '';
   return `<details class="reference-details"><summary>${escapeHtml(label)}</summary><div class="reference-links">${links.map((link) => `<a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}${link.accessibleSuffix ? `<span class="sr-only">: ${escapeHtml(link.accessibleSuffix)}</span>` : ''}</a>`).join('')}</div></details>`;
-}
-
-export function demoContent(env: Env, demo: DemoDefinition, _all: DemoDefinition[] = [], extra = ''): PageContent {
-  const route = demoRoute(demo);
-  const isPlatformDemo = demo.group === 'Platform';
-  const actions = demo.actions ?? (demo.action ? [{
-    ...demo.action,
-    description: demo.action.description ?? demo.interfaces?.find((item) => item.path === demo.action?.path)?.description,
-  }] : []);
-  const runPanelItems = extra && !demo.actions ? '' : actions.map((action, index) => {
-    const headingId = `${action.id ?? `run-${index + 1}`}-heading`;
-    return `<section class="action-card"${action.id ? ` id="${escapeHtml(action.id)}"` : ''} aria-labelledby="${escapeHtml(headingId)}">
-  <h2 id="${escapeHtml(headingId)}">${escapeHtml(action.title ?? 'Run it')}</h2>
-  ${action.description ? `<p>${escapeHtml(action.description)}</p>` : ''}
-  <div class="request-line"><span class="http-method http-${action.method.toLowerCase()}">${escapeHtml(action.method)}</span><code>${escapeHtml(action.path)}</code></div>
-  ${action.body === undefined || isPlatformDemo ? '' : `<details class="request-example"><summary>Request body</summary><pre>${escapeHtml(JSON.stringify(action.body, null, 2))}</pre></details>`}
-  <button class="button-primary" type="button" data-run-demo="${index}">${escapeHtml(action.label)}</button>
-  <pre class="action-output" aria-live="polite" data-demo-output="${index}" hidden></pre>
-</section>`;
-  }).join('');
-  const runPanels = runPanelItems ? `<div class="action-grid">${runPanelItems}</div>` : '';
-  const sectionItems = (demo.sections ?? []).map((section) => `<article class="info-card" id="${escapeHtml(section.id)}" aria-labelledby="${escapeHtml(section.id)}-heading">
-  <h2 id="${escapeHtml(section.id)}-heading">${escapeHtml(section.title)}</h2>
-  <p>${escapeHtml(section.description)}</p>
-  ${section.points?.length ? `<ul>${section.points.map((point) => `<li>${escapeHtml(point)}</li>`).join('')}</ul>` : ''}
-</article>`).join('');
-  const sections = sectionItems ? `<div class="info-grid">${sectionItems}</div>` : '';
-  const references: ReferenceLink[] = [
-    ...(demo.supportingSources ?? []).map((source) => ({ label: source.label, href: sourceUrl(env, source.path) })),
-    ...(demo.repositoryLinks ?? []).map((link) => ({ label: link.label, href: `${repoUrl(env)}${link.path}` })),
-  ];
-  const referenceTools = isPlatformDemo ? '' : referenceDetails(references);
-  const pageTools = referenceTools ? `<div class="page-tools">${referenceTools}</div>` : '';
-  const body = `
-<section class="page-header">
-  <h1>${escapeHtml(demo.title)}</h1>
-  <p class="lede">${escapeHtml(demo.summary)}</p>
-  ${demo.notice ? `<p class="subtle">${escapeHtml(demo.notice)}</p>` : ''}
-  ${pageTools}
-</section>
-${sections}
-${extra}
-${runPanels}
-${isPlatformDemo ? '' : `<details class="implementation-notes"><summary id="proves-heading">Implementation notes</summary><ul>${demo.proves.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></details>`}
-<script>
-(() => {
-  const actions = ${JSON.stringify(actions)};
-  document.querySelectorAll('[data-run-demo]').forEach((button) => button.addEventListener('click', async () => {
-    const index = Number(button.dataset.runDemo);
-    const action = actions[index];
-    const output = document.querySelector('[data-demo-output="' + index + '"]');
-    if (!action || !output) return;
-    output.hidden = false;
-    output.textContent = 'Running…';
-    try {
-      const response = await fetch(action.path, {
-        method: action.method,
-        ...(action.body === undefined ? {} : { headers: { 'content-type': 'application/json' }, body: JSON.stringify(action.body) })
-      });
-      const contentType = response.headers.get('content-type') || '';
-      const result = contentType.includes('application/json') ? await response.json() : await response.text();
-      output.textContent = response.status + ' ' + response.statusText + '\\n\\n' + (typeof result === 'string' ? result : JSON.stringify(result, null, 2));
-    } catch (error) {
-      output.textContent = String(error);
-    }
-  }));
-})();
-</script>`;
-  return pageContent(env, demo.title, body, { canonicalPath: route, description: demo.summary });
-}
-
-export function renderNotFound(env: Env): Response {
-  const localization = localizationForEnv(env);
-  return pageResponse(env, 'Not found', `
-<section>
-  <p class="eyebrow">404 / unknown route</p>
-  <h1>That route does not exist.</h1>
-  <p class="lede">Every published route is registered in the route map and backed by a source module.</p>
-  <div class="meta"><a href="${escapeHtml(localization.href(routeUrl(ROOT_ROUTE_ID)))}">Home</a><a href="${escapeHtml(localization.href(routeUrl('demos.index')))}">Browse demos</a><a href="${escapeHtml(localization.href(routeUrl(OPERATIONS_ROUTE_ID)))}">Operations</a></div>
-</section>`, { status: 404, noindex: true });
 }

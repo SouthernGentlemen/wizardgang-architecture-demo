@@ -27,12 +27,7 @@ describe('DEMO-277 site footer contract', () => {
   });
 
   it('removes Route source from demo page tools while preserving shell route provenance', () => {
-    const demoContentSource = pageSource.slice(
-      pageSource.indexOf('export function demoContent'),
-      pageSource.indexOf('export function renderNotFound'),
-    );
-    expect(demoContentSource).not.toContain('demo.sourcePath');
-    expect(demoContentSource).not.toContain('>Route source</a>');
+    expect(pageSource).not.toContain('demo.sourcePath');
     expect(pageSource).toContain("registeredRouteMetadata().find((route) => route.id === content.routeId)?.source.module");
     expect(pageSource).toContain("localization.t('shell.route_source', 'Route source')");
   });

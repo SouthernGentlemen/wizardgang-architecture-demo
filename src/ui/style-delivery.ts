@@ -72,7 +72,6 @@ const sharedResponsiveStyles = `
 const demoResponsiveStyles = `
 @media (max-width: 900px) {
   .identity-provider-grid { grid-template-columns: 1fr; }
-  .mcp-activity-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .graphql-control-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {
@@ -115,14 +114,6 @@ const demoResponsiveStyles = `
   .identity-provider-actions .button { justify-content: center; width: 100%; }
   .identity-authenticated-state { justify-items: start; }
   .identity-authenticated-state strong { text-align: left; }
-  .mcp-endpoint { grid-template-columns: 1fr; }
-  .mcp-endpoint > span { padding-left: 0; }
-  .mcp-command { grid-template-columns: 1fr; }
-  .mcp-command button { justify-content: center; }
-  .mcp-tool-grid, .mcp-evidence-grid, .mcp-activity-grid { grid-template-columns: 1fr; }
-  .mcp-tool-card > p { min-height: 0; }
-  .mcp-activity-state { align-items: flex-start; flex-wrap: wrap; }
-  .mcp-activity-state > span:last-child { flex: 1 0 100%; margin-left: 1.2rem; }
 }
 `;
 
