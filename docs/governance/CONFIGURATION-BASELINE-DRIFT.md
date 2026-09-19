@@ -476,4 +476,4 @@ This procedure primarily strengthens the evidence posture for:
 - recovery configuration assurance;
 - ISO/IEC 42001 AI-resource, supplier, data, authority, and change controls.
 
-**Current posture after approval:** configuration governance is defined and substantial repository desired state is version-controlled. Full provider-side drift assurance remains Partial until recurring reconciliation evidence or automation is implemented. Certification is not claimed.
+**Current posture:** configuration governance is defined and substantial repository desired state is version-controlled. Full provider-side drift assurance remains Partial until recurring reconciliation evidence or automation is implemented. Certification is not claimed.
