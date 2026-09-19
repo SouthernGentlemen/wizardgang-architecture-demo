@@ -25,7 +25,7 @@ GitHub does not supply an ID token in this flow. After code exchange, the Worker
 
 ## Registered identity contract
 
-Route declarations separate `/demos#identity` presentation from OAuth/OIDC, SAML, session, logout, authorization, and metadata protocol actions. External provider configuration must target canonical protocol routes from the generated route artifacts; retired identity browser paths are ordinary unknown routes and are not aliases.
+Route declarations separate `/demos#identity` presentation from OAuth/OIDC, SAML, session, logout, authorization, and metadata protocol actions. External provider configuration must target canonical protocol routes from the generated route artifacts; unregistered identity browser paths are ordinary unknown routes and are not aliases.
 
 The public presentation explains configuration and trust boundaries without returning verifier, state, nonce, token, assertion, or credential values.
 
@@ -64,7 +64,7 @@ Set identity secrets/provider credentials with Cloudflare secrets or local `.dev
 
 Identity protocol endpoints fail closed with a disclosure-safe JSON `503` response when either identity secret is not configured. Sign-out still expires the browser cookie and, when the session secret remains available, revokes the persisted session even if the audit identifier cannot be derived; that destroy audit event is omitted rather than emitting a subject-derived fallback. `/api/operations/health` exposes only the public-safe identity readiness value `ready` or `not-configured`; it does not identify the failing prerequisite.
 
-External provider registrations must use canonical callback, SAML entity/consumer, metadata, and webhook URLs from the generated route contract for the released origin. A code change does not modify external provider configuration and does not deploy or release the application. Removed identity browser/protocol URLs remain ordinary unknown paths rather than compatibility aliases.
+External provider registrations must use canonical callback, SAML entity/consumer, metadata, and webhook URLs from the generated route contract for the released origin. A code change does not modify external provider configuration and does not deploy or release the application. Unregistered identity browser/protocol URLs are ordinary unknown paths rather than compatibility aliases.
 
 
 ## Audit evidence

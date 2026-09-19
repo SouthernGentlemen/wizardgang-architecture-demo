@@ -55,13 +55,13 @@ No broad operator bearer credential is accepted by the application. REST writes 
 
 ## Public logging
 
-`/api/operations/logs` is a bounded public-safe diagnostic machine surface. There is no public human log explorer after retirement of `/operations`. Do not store or return passwords, authorization headers, cookies, bearer tokens, API keys, secrets, payment data, private account identifiers, or unreviewed request bodies. Structured detail is defensively redacted and size-bounded before it reaches `application_logs`. Identity log records never expose their structured detail through the public log projection.
+`/api/operations/logs` is a bounded public-safe diagnostic machine surface. There is no public human log explorer. Do not store or return passwords, authorization headers, cookies, bearer tokens, API keys, secrets, payment data, private account identifiers, or unreviewed request bodies. Structured detail is defensively redacted and size-bounded before it reaches `application_logs`. Identity log records never expose their structured detail through the public log projection.
 
 Keep operational logs distinct from the `demo_events` audit/evidence stream: logs explain runtime behavior; audit events preserve meaningful control/change evidence.
 
 ## Offline behavior
 
-Intentional offline state is not a reason to expose debugging details. Gated browser demo routes use the registered recovery experience; gated API-like/write calls receive safe JSON `503` responses. Routes explicitly declared available while offline, including recovery, security/support, administration, crawler controls, and applicable operational machine endpoints, remain governed by their route declarations. The retired human `/operations` pathname is not restored as an offline status page.
+Intentional offline state is not a reason to expose debugging details. Gated browser demo routes use the registered recovery experience; gated API-like/write calls receive safe JSON `503` responses. Routes explicitly declared available while offline, including recovery, security/support, administration, crawler controls, and applicable operational machine endpoints, remain governed by their route declarations. `/operations` remains an ordinary unknown route while the application is offline.
 
 ## Vulnerability reporting
 

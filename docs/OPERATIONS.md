@@ -1,6 +1,6 @@
 # Operations
 
-The ordinary human-facing `/operations` page is retired. It is not redirected, aliased, or replaced; requests fall through to the application's standard 404 response, including requests with query parameters.
+There is no human-facing `/operations` page. The pathname is not redirected or aliased; requests fall through to the application's standard 404 response, including requests with query parameters.
 
 ## Visitor-facing proof
 
@@ -10,7 +10,7 @@ The homepage carries intentionally small public operational proof:
 - measured scheduled-availability summary and monitoring qualification;
 - running semantic version and source/commit identity.
 
-Do not rebuild the retired dashboard on the homepage. Detailed logs, raw health payloads, observation tables, usage/cost dashboards, synthetic billing controls, resource-pressure internals, and deployment-internals views are not ordinary public HTML destinations.
+Do not add a public operations dashboard to the homepage. Detailed logs, raw health payloads, observation tables, usage/cost dashboards, synthetic billing controls, resource-pressure internals, and deployment-internals views are not ordinary public HTML destinations.
 
 ## Preserved operational contracts
 

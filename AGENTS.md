@@ -79,7 +79,7 @@ Preserve these invariants:
 - `/demos` is one focused workbench, not a catalog page: one demo is selected/mounted at a time, D1 is the default, the released demo fragments remain stable deep links, category/demo controls are navigation, and an `All demos` mode or giant trailing inventory must not be introduced.
 - Preserve the released demo set and capabilities while changing their presentation; hiding inactive demos from the page body is not permission to remove their underlying behavior or machine contracts.
 - Keep verbose schemas, raw protocol payloads, logs, source detail, and assurance/control evidence subordinate to the executable demo task through bounded inspector/advanced surfaces when practical.
-- The retired human `/operations` pathname remains an ordinary 404. Preserve operational machine APIs, scheduled collection, retention, bounded logs, protected controls, and the compact homepage operational proof without recreating a public operations dashboard.
+- `/operations` is an ordinary 404. Preserve operational machine APIs, scheduled collection, retention, bounded logs, protected controls, and the compact homepage operational proof without creating a public operations dashboard.
 - Keep public routes stable once released unless a controlled change explicitly retires a route without compatibility aliases.
 - Keep one architecture concern per demo module.
 - Treat route declarations as the runtime route source of truth; `docs/route-manifest.json` is the generated machine projection and `docs/ROUTE-REGISTRY.md` is the human architecture contract, not a parallel route inventory.

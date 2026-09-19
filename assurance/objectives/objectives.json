@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "governanceDocumentReference": "WG-OBJ-001",
-  "qualification": "Canonical structured objective definitions and historical initial state. Current achievement must be demonstrated by later operating records and is not inferred from document approval.",
+  "qualification": "Canonical structured objective definitions and baseline target/state. Current achievement must be demonstrated by operating records and is not inferred from document approval.",
   "records": [
     {
       "id": "SEC-OBJ-001",
@@ -14,8 +14,8 @@
         "Git tags/releases",
         "deploy workflow",
         "/api/operations/version",
-        "docs/RELEASE.md",
-        "docs/EVIDENCE.md"
+        "docs/RELEASE-MANAGEMENT.md",
+        "assurance/evidence/evidence.json"
       ],
       "reviewCadence": "Each release + quarterly",
       "initialState": {
@@ -34,7 +34,7 @@
         "SECURITY.md",
         "CI/security checks",
         "public log behavior",
-        "incident/corrective-action records"
+        "assurance/incidents/incidents.json"
       ],
       "reviewCadence": "Continuous + quarterly",
       "initialState": {
@@ -50,9 +50,9 @@
       "initialTarget": "100% of High/Critical recorded security risks.",
       "owner": "Management-system owner",
       "evidenceSources": [
-        "SECURITY-RISK-REGISTER.md",
-        "issues/DEMO changes",
-        "review records"
+        "assurance/risks/risks.json",
+        "controlled pull requests and commits",
+        "management review records"
       ],
       "reviewCadence": "Monthly + management review",
       "initialState": {
@@ -68,9 +68,9 @@
       "initialTarget": "Procedure documented and at least one evidenced recovery test by 2026-12-02.",
       "owner": "Operations owner",
       "evidenceSources": [
-        "release/rollback evidence",
-        "Cloudflare/D1/R2 recovery documentation",
-        "test record"
+        "docs/RELEASE-MANAGEMENT.md",
+        "docs/governance/INCIDENT-AND-CONTINUITY.md",
+        "assurance/governance/recovery-tests.json"
       ],
       "reviewCadence": "Quarterly",
       "initialState": {
@@ -86,10 +86,10 @@
       "initialTarget": "100% of material incidents after process adoption; incident procedure established by 2026-12-02.",
       "owner": "Security owner",
       "evidenceSources": [
-        "incident register/process",
-        "logs",
+        "assurance/incidents/incidents.json",
+        "application logs",
         "audit events",
-        "corrective actions"
+        "corrective-action records"
       ],
       "reviewCadence": "After each incident + quarterly",
       "initialState": {
@@ -105,10 +105,10 @@
       "initialTarget": "100% of identified critical suppliers reviewed at least annually and after material supplier change.",
       "owner": "Management-system owner",
       "evidenceSources": [
-        "interested-parties register",
-        "supplier register when established",
-        "risk registers",
-        "SoA"
+        "docs/governance/GOVERNANCE.md",
+        "assurance/governance/suppliers.json",
+        "assurance/risks/risks.json",
+        "assurance/compliance/iso-27001-2022.json"
       ],
       "reviewCadence": "Quarterly progress + annual review",
       "initialState": {
@@ -125,8 +125,8 @@
       "owner": "AI capability owner",
       "evidenceSources": [
         "src/api/mcp.ts",
-        "MCP tool inventory/evaluation",
-        "AI risk register"
+        "contracts/mcp/tools.json",
+        "assurance/risks/risks.json"
       ],
       "reviewCadence": "Each MCP change + quarterly",
       "initialState": {
@@ -142,10 +142,10 @@
       "initialTarget": "100% of material AI authority, data, provider, intended-use, or oversight changes.",
       "owner": "Management-system owner / AI owner",
       "evidenceSources": [
-        "DEMO-### history",
-        "AI risk register",
-        "impact assessments",
-        "PR evidence"
+        "controlled Git/GitHub change history",
+        "assurance/risks/risks.json",
+        "docs/governance/AI-IMPACT-ASSESSMENT.md",
+        "pull-request evidence"
       ],
       "reviewCadence": "Each material AI change",
       "initialState": {
@@ -179,9 +179,9 @@
       "initialTarget": "100% of public AI-accessible data surfaces documented; no known sensitive field exposed through public MCP.",
       "owner": "AI capability owner / data owner",
       "evidenceSources": [
-        "MCP contract/source",
-        "data-governance record when established",
-        "impact assessment",
+        "contracts/mcp/tools.json",
+        "docs/governance/DATA-AND-PRIVACY.md",
+        "docs/governance/AI-IMPACT-ASSESSMENT.md",
         "tests"
       ],
       "reviewCadence": "Quarterly + schema/data changes",
@@ -198,8 +198,8 @@
       "initialTarget": "100% of High/Critical recorded AI risks.",
       "owner": "Management-system owner",
       "evidenceSources": [
-        "AI-RISK-REGISTER.md",
-        "impact assessments",
+        "assurance/risks/risks.json",
+        "docs/governance/AI-IMPACT-ASSESSMENT.md",
         "controlled changes"
       ],
       "reviewCadence": "Monthly + management review",
@@ -217,7 +217,7 @@
       "owner": "Management-system owner",
       "evidenceSources": [
         "governance metadata",
-        "PR/review history",
+        "pull-request/review history",
         "management review"
       ],
       "reviewCadence": "Monthly + quarterly",
