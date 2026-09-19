@@ -307,10 +307,6 @@ Policy changes use the normal controlled Git process.
 Evidence supporting this policy includes, as applicable:
 
 - `docs/governance/GOVERNANCE.md`;
-- `docs/governance/GOVERNANCE.md`;
-- `docs/governance/GOVERNANCE.md`;
-- `docs/governance/GOVERNANCE.md`;
-- `docs/governance/GOVERNANCE.md`;
 - `SECURITY.md`;
 - MCP contracts and implementation source;
 - AI/MCP evaluation evidence;
