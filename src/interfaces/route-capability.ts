@@ -70,7 +70,7 @@ export function interfaceIdentityRoute(input: InterfaceIdentityRouteInput): Inte
     documentation: {
       title: input.title,
       description: input.description,
-      docs: input.docs ?? ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'],
+      docs: input.docs ?? ['docs/ROUTE-REGISTRY.md'],
     },
     source: {
       module: input.sourceModule,

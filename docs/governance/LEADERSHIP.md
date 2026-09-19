@@ -274,7 +274,7 @@ This leadership model is supported by existing repository and operational contro
 - `docs/RELEASE.md`;
 - `SECURITY.md`;
 - `docs/OPERATIONS.md`;
-- `docs/EVIDENCE.md`;
+- `docs/ASSURANCE.md`;
 - GitHub Actions validation;
 - GitHub Releases and annotated tags;
 - deployment verification;

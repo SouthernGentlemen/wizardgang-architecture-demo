@@ -80,35 +80,3 @@ export function serializeRouteManifest(
 ): string {
   return `${JSON.stringify(buildRouteManifest(declarations), null, 2)}\n`;
 }
-
-function cell(value: string): string {
-  return value.replaceAll('|', '\\|').replaceAll('\n', ' ');
-}
-
-function methodCell(methods: readonly string[]): string {
-  return methods.map((method) => `\`${method}\``).join(', ');
-}
-
-function routeCell(pattern: string): string {
-  return `\`${publishedPattern(pattern)}\``;
-}
-
-function documentationTable(
-  declarations: readonly ApplicationRouteDeclaration[],
-  predicate: (route: ApplicationRouteDeclaration) => boolean,
-): string {
-  const rows = declarations
-    .filter(predicate)
-    .sort((left, right) => left.pattern.localeCompare(right.pattern) || left.id.localeCompare(right.id))
-    .map((route) => `| \`${cell(route.id)}\` | ${routeCell(route.pattern)} | ${methodCell(route.methods)} | ${route.kind} | ${route.visibility} | ${route.offline.mode} | ${route.crawler.indexing} | ${cell(route.documentation.title)} | \`${cell(route.source.module)}\` |`)
-    .join('\n');
-  return `| Route ID | Route | Methods | Kind | Visibility | Offline | Indexing | Purpose | Source |\n|---|---|---|---|---|---|---|---|---|\n${rows}`;
-}
-
-export function buildRoutesDocumentation(
-  declarations: readonly ApplicationRouteDeclaration[],
-): string {
-  const navigable = documentationTable(declarations, (route) => Boolean(route.page && route.page.navigation !== 'none'));
-  const service = documentationTable(declarations, (route) => !route.page || route.page.navigation === 'none');
-  return `# Route-to-source map\n\nThis file is generated from the active declarative application registry. Route IDs, URL patterns, methods, policy metadata, documentation, and source ownership must be changed in route declarations rather than edited here.\n\n## Registered public navigation\n\n${navigable}\n\n## Registered service, protocol, asset, and private routes\n\n${service}\n\n## Generation\n\n- Runtime registry: \`src/routing/application-routes.ts\`\n- Route contract: \`src/routing/registry.ts\`\n- Artifact projection: \`src/routing/artifacts.ts\`\n- Regenerate: \`npm run generate:routes\`\n- Validate: \`npm run validate:routes\`\n\nUnknown paths are not inferred from prefixes or aliases; they use the normal 404 response.\n`;
-}

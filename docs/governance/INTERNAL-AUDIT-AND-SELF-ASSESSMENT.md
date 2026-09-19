@@ -523,7 +523,7 @@ Primary supporting material includes:
 - `docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md`;
 - `docs/CHANGE-MANAGEMENT.md`;
 - `docs/RELEASE-MANAGEMENT.md`;
-- `docs/EVIDENCE.md`;
+- `docs/ASSURANCE.md`;
 - `SECURITY.md`;
 - and retained repository/runtime evidence.
 

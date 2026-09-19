@@ -9,7 +9,6 @@ const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 for (const requiredFile of [
   'docs/ARCHITECTURE-STANDARD.md',
   'docs/OPERATIONS.md',
-  'docs/ROUTES.md',
   'docs/ROUTE-REGISTRY.md',
   'docs/route-manifest.json',
   'src/router.ts',

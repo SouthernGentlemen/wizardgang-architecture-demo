@@ -19,8 +19,8 @@ Concern-specific rules follow that hierarchy:
 
 - application route declarations are authoritative for runtime routes and route policy;
 - contracts are authoritative for executable interface definitions;
-- `docs/ROUTES.md` and `docs/route-manifest.json` are generated projections of route declarations;
-- `docs/FRONTEND-ROUTES.md` is the human current-state browser information-architecture contract;
+- `docs/route-manifest.json` is the generated machine projection of route declarations;
+- `docs/ROUTE-REGISTRY.md` is the human current-state routing and browser information-architecture contract;
 - `assurance/registry.json` and its registered schemas inventory the structured assurance authorities under `assurance/**`;
 - `docs/CHANGE-MANAGEMENT.md` governs the current controlled-change process; Git/GitHub retain the historical change record;
 - `docs/RELEASE-MANAGEMENT.md` governs the current release/deployment process; annotated tags and GitHub Releases retain historical release identity.
@@ -66,7 +66,7 @@ The repository-local equivalent is `npm run validate:ci`. It records complete re
 ## Cloud development contract
 
 - Keep the full development and delivery loop reproducible from a clean cloud checkout using only the repository, its terminal commands, and authenticated service CLIs. Do not rely on local-only files, desktop UI state, or an existing working directory.
-- After changing route declarations or route artifact generation, run `npm run generate:routes` and commit both `docs/ROUTES.md` and `docs/route-manifest.json` before validation.
+- After changing route declarations or route artifact generation, run `npm run generate:routes` and commit `docs/route-manifest.json` before validation.
 - Keep CI failure output bounded and actionable for cloud clients: emit the failing file, line when available, and remediation command. Never print an entire generated artifact or a single-line Base64 payload into job logs.
 
 ## Architecture invariants
@@ -82,7 +82,7 @@ Preserve these invariants:
 - The retired human `/operations` pathname remains an ordinary 404. Preserve operational machine APIs, scheduled collection, retention, bounded logs, protected controls, and the compact homepage operational proof without recreating a public operations dashboard.
 - Keep public routes stable once released unless a controlled change explicitly retires a route without compatibility aliases.
 - Keep one architecture concern per demo module.
-- Treat route declarations as the runtime route source of truth; generated route documentation and manifests are projections, not parallel inventories.
+- Treat route declarations as the runtime route source of truth; `docs/route-manifest.json` is the generated machine projection and `docs/ROUTE-REGISTRY.md` is the human architecture contract, not a parallel route inventory.
 - Keep registry-declared operations, security, administration, and offline-recovery capabilities available according to each declaration's offline policy; do not protect them with a hardcoded pathname inventory.
 - Never let ordinary demo behavior execute behind the intentional offline gate.
 - API/non-HTML/write requests receive `503` JSON while offline; browser HTML demo navigation may redirect to the registered offline recovery page.

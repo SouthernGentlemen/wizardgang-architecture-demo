@@ -2,14 +2,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { applicationRouteRegistry, type ApplicationRouteDeclaration } from '../src/routing/application-routes';
-import { buildRoutesDocumentation, serializeRouteManifest } from '../src/routing/artifacts';
+import { serializeRouteManifest } from '../src/routing/artifacts';
 
 const root = process.cwd();
 const manifestPath = path.join(root, 'docs', 'route-manifest.json');
-const routesPath = path.join(root, 'docs', 'ROUTES.md');
 const declarations = applicationRouteRegistry.declarations as readonly ApplicationRouteDeclaration[];
 const expectedManifest = serializeRouteManifest(declarations);
-const expectedRoutes = buildRoutesDocumentation(declarations);
 const write = process.env.ROUTE_ARTIFACTS_WRITE === '1';
 
 function reconcile(filePath: string, expected: string, label: string): string {
@@ -33,9 +31,5 @@ function reconcile(filePath: string, expected: string, label: string): string {
 describe('registry-generated route artifacts', () => {
   it('keeps the route manifest identical to active declarations', () => {
     expect(reconcile(manifestPath, expectedManifest, 'MANIFEST')).toBe(expectedManifest);
-  });
-
-  it('keeps route documentation tables identical to active declarations', () => {
-    expect(reconcile(routesPath, expectedRoutes, 'ROUTES')).toBe(expectedRoutes);
   });
 });

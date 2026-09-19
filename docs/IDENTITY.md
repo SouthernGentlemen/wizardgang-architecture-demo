@@ -8,7 +8,7 @@ provider authentication -> protocol validation -> normalized identity -> applica
 
 Authentication establishes who a visitor is. Authorization is a separate application decision about what that authenticated identity may do.
 
-The browser demonstration is presentation only. OAuth/OIDC, SAML, session, logout, authorization, metadata, and callback routes remain independently declared machine/protocol contracts. Their current paths, methods, policies, and source ownership are generated in [`docs/ROUTES.md`](ROUTES.md) and described by OpenAPI where applicable.
+The browser demonstration is presentation only. OAuth/OIDC, SAML, session, logout, authorization, metadata, and callback routes remain independently declared machine/protocol contracts. Their current paths, methods, policies, and source ownership are projected in [`docs/route-manifest.json`](route-manifest.json), with human routing architecture in [`docs/ROUTE-REGISTRY.md`](ROUTE-REGISTRY.md), and described by OpenAPI where applicable.
 
 ## Provider model
 

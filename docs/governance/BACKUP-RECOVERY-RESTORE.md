@@ -381,7 +381,7 @@ Procedure approval must not automatically change a Gap/Partial control to Met.
 - `docs/RELEASE.md`
 - `docs/RELEASE-MANAGEMENT.md`
 - `docs/OPERATIONS.md`
-- `docs/EVIDENCE.md`
+- `docs/ASSURANCE.md`
 - `SECURITY.md`
 - migrations and deployment workflows
 
