@@ -4,7 +4,7 @@ This repository is a public architecture demonstration, not a generic applicatio
 
 ## Repository authority
 
-Repository documentation describes the current system. Superseded source and document states are recovered from Git and GitHub rather than narrated in permanent architecture or policy prose. Implementation plans and roadmaps may coordinate active work, but they are temporary and must be retired when the work no longer needs them.
+Repository documentation describes the current system. Superseded source and document states are recovered from Git and GitHub rather than narrated in permanent architecture or policy prose. Implementation plans and roadmaps may coordinate active work, but they are temporary and must be retired when the work no longer needs them. An active root `IMPLEMENTATION_PLAN.md` is the only Markdown outside `docs/history/` that may name the change IDs it reserves, and the release that completes its sequence retires it.
 
 Use repository authorities in this order. A lower layer may explain, project, or evidence a higher layer; it must not silently redefine it.
 
