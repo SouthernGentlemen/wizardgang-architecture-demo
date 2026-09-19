@@ -5,7 +5,6 @@
 **Status:** Approved
 **Owner:** Management-System Owner / Incident and Corrective-Action Owner  
 **Approval:** Controlled pull request and merge  
-**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually, after every material incident or exercise, and after material scope, supplier, architecture, security, data, or AI/MCP change
 
 ## 1. Purpose
@@ -292,7 +291,7 @@ The review records:
 
 ## 16. Corrective Action and Risk Reassessment
 
-An incident feeds `NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md` when recurrence prevention or systemic improvement is required.
+An incident feeds `GOVERNANCE.md` when recurrence prevention or systemic improvement is required.
 
 Incidents must trigger reassessment when they invalidate assumptions in:
 
@@ -386,16 +385,16 @@ Primary supporting records include:
 
 - `SECURITY.md`;
 - `docs/OPERATIONS.md`;
-- `docs/governance/ROLES-RESPONSIBILITIES.md`;
+- `docs/governance/GOVERNANCE.md`;
 - `docs/governance/RISK-MANAGEMENT.md`;
 - `assurance/risks/risks.json`;
 - `assurance/risks/risks.json`;
 - `docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md`;
 - `docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md`;
 - `assurance/governance/suppliers.json`;
-- `docs/governance/MONITORING-MEASUREMENT-EVALUATION.md`;
-- `docs/governance/MANAGEMENT-REVIEW.md`;
-- `docs/governance/NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md`;
+- `docs/governance/ASSURANCE-AND-AUDIT.md`;
+- `docs/governance/GOVERNANCE.md`;
+- `docs/governance/GOVERNANCE.md`;
 - `assurance/objectives/objectives.json`;
 - application/audit logs;
 - release/deployment evidence;
