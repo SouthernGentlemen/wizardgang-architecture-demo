@@ -406,4 +406,4 @@ Primary supporting records include:
 
 This process supports the security-event/incident lifecycle, evidence preservation, learning, AI incident/concern handling, supplier-incident handling, corrective action, and continual-improvement requirements applicable to the current scoped ISO/IEC 27001:2022 ISMS and ISO/IEC 42001:2023 AIMS.
 
-**Current posture after approval:** Incident process, severity model, record requirements, communication decision rules, AI/supplier interfaces, closure criteria, and annual exercise requirement are defined. Actual incident and exercise effectiveness remains operating evidence; certification is not claimed.
+**Current posture:** Incident process, severity model, record requirements, communication decision rules, AI/supplier interfaces, closure criteria, and annual exercise requirement are defined. Actual incident and exercise effectiveness remains operating evidence; certification is not claimed.
