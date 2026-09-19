@@ -1,9 +1,9 @@
 # WizardGang Systems Architecture
 
-**Reference:** WG-ARCH-001  
-**Version:** 1.0  
-**Issued:** 2026-08-31  
-**Status:** Published  
+**Reference:** WG-ARCH-001<br>
+**Version:** 1.1<br>
+**Issued:** 2026-09-19<br>
+**Status:** Published<br>
 **Owner:** WizardGang — wizardgang.ai
 
 This Markdown copy is the repository-native architecture reference for the public demo project. It preserves the scope and terminology of WG-ARCH-001 while keeping this package text-only.
@@ -21,6 +21,8 @@ The standard supports modern authentication, API integration, accessibility, int
 ## 01 — Core technology stack
 
 **Primary language:** TypeScript.
+
+**Presentation model:** React/TSX rendered on the server or at build time, progressively enhanced by first-party TypeScript. See §27 for the repository baseline.
 
 **Cloud platform:** Cloudflare Workers, Durable Objects, D1, R2, DNS, CDN / Edge Network, security and traffic controls.
 
@@ -297,3 +299,59 @@ GitHub records how the system changed. Cloudflare records how it was deployed an
 The standard architecture is TypeScript + Cloudflare Edge + Workers, with D1 for relational data, R2 for objects, Durable Objects for coordinated state, REST/OpenAPI/GraphQL/Webhooks for modern integration, OAuth/SSO/SAML for identity, MCP for controlled AI integration, i18n/WCAG for interface readiness, and Git/GitHub/Actions/Releases for auditable delivery and governance.
 
 The result is a deliberately small architecture that can support simple applications while retaining a clear path toward larger integrations, stateful workloads, enterprise identity, governed AI capabilities, auditable releases, operations visibility, and scalable production deployment.
+
+## 27 — Repository baseline
+
+**Applicability.** The baseline applies to every WizardGang product repository, meaning any repository that deploys a production surface or publishes releases. Laboratory repositories that never deploy production adopt only the toolchain and command rules. Repositories without executable source are out of scope.
+
+**Toolchain.**
+
+- Node.js 26: the exact version in `.node-version`, and `engines.node` `26.x`.
+- npm 11: the exact version in `packageManager`, and `engines.npm` `11.x`. `.npmrc` sets `engine-strict=true`, and dependency install scripts run only when `allowScripts` approves them.
+- `"type": "module"` and a committed `package-lock.json`. CI installs with `npm ci`.
+- TypeScript 7 in `strict` mode; `npm run typecheck` checks every TypeScript program in the repository. Tooling does not depend on the TypeScript compiler API.
+- Cloudflare Workers through Wrangler 4, configured in `wrangler.jsonc`. Files that browsers download are served from Workers Static Assets, not bundled into Worker code.
+- Vite 8 builds browser modules and stylesheets into content-hashed files.
+- Vitest 5 runs tests that need TypeScript, TSX, or a DOM; `node:test` is acceptable for plain Node scripts.
+
+**Presentation.**
+
+- HTML documents render from React 19 components, on the server or at build time, and are complete and usable without JavaScript.
+- Browser behavior is first-party TypeScript that progressively enhances that HTML, without client hydration or a client-side router. A repository that needs a client application, such as a game, a canvas, or an offline reader, records that boundary in its architecture document.
+- The Content Security Policy does not allow `'unsafe-inline'`. HTML carries no inline event-handler attributes, and any inline script or style is allowed only by hash or nonce. Raw HTML insertion is confined to one audited component.
+- Stylesheets are CSS files processed by Vite, not strings. Tailwind CSS 4 may be used through Vite.
+
+**Commands.** `package.json` defines:
+
+- `dev`: local development only; it never deploys or selects a production environment;
+- `build`: the production build, without deploying;
+- `typecheck` and `test`;
+- `check`: every repository validation that needs no provider credentials; CI runs it on every pull request and on `main`.
+
+Deployment commands run only in the tag-driven release workflow; local use is limited to dry runs.
+
+**Repository contents.**
+
+- The root holds `README.md`, `AGENTS.md`, `CONTRIBUTING.md`, `SECURITY.md`, `LICENSE`, `.gitignore`, `.node-version`, `.npmrc`, `package.json`, `package-lock.json`, and `tsconfig.json`, plus `wrangler.jsonc` in a Workers project.
+- `.github/workflows/ci.yml` runs `check`; a repository that releases also has `release.yml`.
+- There is no `CHANGELOG.md` or per-version Markdown archive; annotated tags and GitHub Releases are the release history.
+
+**Change control.**
+
+- Each repository declares one change-ID prefix.
+- Commit and pull-request titles use `[PREFIX-###] [TYPE] Imperative summary` with exactly one type from the §16 list, which is the complete vocabulary. CI validates pull-request titles, and `npm run check` validates that IDs are sequential.
+- Branches are named `prefix-###-imperative-summary`.
+- Commit bodies carry the controlled record that the repository's change-management document defines.
+
+**GitHub settings.**
+
+- `main` is the default branch.
+- A `main` ruleset requires a pull request and the CI status checks, and blocks force pushes and deletion.
+- A `v*` tag ruleset blocks updates and deletion.
+- Only merge commits are allowed, and head branches are deleted on merge.
+- The expected settings are committed, for example in `config/github-repository-settings.json`, and a documented command verifies them.
+
+**Release.**
+
+- Releases are annotated semantic-version tags, each with one GitHub Release, and `package.json` carries the tagged version.
+- Production deploys only from a release tag, through a workflow with a protected environment.
