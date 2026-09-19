@@ -5,7 +5,6 @@
 **Status:** Approved
 **Owner:** Information Security Owner / Technical System Owner  
 **Approval:** Controlled pull request and merge  
-**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually and after a material authentication, cryptographic, identity-provider, Cloudflare/GitHub, webhook, AI/MCP, incident, or credential change
 
 ## 1. Purpose
@@ -512,7 +511,7 @@ The current baseline deliberately retains these gaps/limitations:
 
 A missing record is an evidence gap, not permission to infer success.
 
-## 21. Initial Secret/Cryptography Review
+## 21. Secret and Cryptography Review
 
 The first consolidated review should verify, without publishing secret values:
 
@@ -553,21 +552,9 @@ This procedure should be read with:
 - `src/lib/admin-auth.ts`;
 - `src/api/webhooks.ts`.
 
-## 23. Approval and Evidence
+## 23. Control and Evidence
 
-Approval metadata:
-
-```text
-Owner: WizardGang
-Status: Proposed until PR approval/merge
-Version: 1.0
-Effective: on controlled merge
-Review due: within 12 months or sooner after a material cryptographic/credential event
-Approved via: PR #56
-Approval commit: established by final approved merge state
-```
-
-The approval event establishes this procedure. Actual secret reviews, rotations, revocations, certificate rollovers, compromise responses, and recovery events require their own attributable evidence.
+This procedure is controlled through the normal repository change process. Secret reviews, rotations, revocations, certificate rollovers, compromise responses, and recovery events require their own attributable evidence; document approval does not substitute for operating evidence.
 
 ## Alignment
 

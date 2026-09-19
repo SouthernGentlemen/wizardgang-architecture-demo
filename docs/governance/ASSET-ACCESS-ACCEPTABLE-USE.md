@@ -5,7 +5,6 @@
 **Status:** Approved
 **Owner:** Management-System Owner / Information Security Owner  
 **Approval:** Controlled pull request and merge  
-**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** Asset inventory at least annually and after material architecture/supplier changes; privileged and provider access at least quarterly and after material personnel, credential, incident, or authority changes
 
 ## 1. Purpose
@@ -57,7 +56,7 @@ The authoritative baseline is maintained in `assurance/governance/asset-inventor
 
 ## 4. Asset Ownership
 
-Functional ownership follows `docs/governance/ROLES-RESPONSIBILITIES.md`.
+Functional ownership follows `docs/governance/GOVERNANCE.md`.
 
 Default ownership is:
 
@@ -440,7 +439,7 @@ These items remain Partial/Planned/Gap until actual review evidence exists.
 Primary evidence includes:
 
 - `assurance/governance/asset-inventory.json`;
-- `docs/governance/ROLES-RESPONSIBILITIES.md`;
+- `docs/governance/GOVERNANCE.md`;
 - `assurance/governance/suppliers.json`;
 - `docs/governance/DATA-GOVERNANCE.md`;
 - `assurance/governance/data-inventory.json`;
@@ -466,4 +465,4 @@ This procedure principally strengthens evidence for:
 - related supplier, configuration, logging, incident, and asset controls;
 - and ISO/IEC 42001 resource, data, supplier, AI-authority, and operational-governance requirements relevant to the current MCP boundary.
 
-**Current posture after approval:** Asset classes, owners, acceptable-use rules, access classes, and the review process are defined. A first formal consolidated access review and stronger endpoint/provider enforcement evidence remain operating work; certification is not claimed.
+**Current posture:** Asset classes, owners, acceptable-use rules, access classes, and the review process are defined. A first formal consolidated access review and stronger endpoint/provider enforcement evidence remain operating work; certification is not claimed.

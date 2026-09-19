@@ -5,7 +5,6 @@
 **Status:** Approved
 **Owner:** Management-System Owner / Data Owner  
 **Approval:** Controlled pull request and merge  
-**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually and after material schema, storage, logging, supplier, identity, AI/MCP, retention, recovery, or public-data changes
 
 ## 1. Purpose
@@ -81,7 +80,7 @@ The **Data Owner** for a specific data surface is responsible for:
 - reviewing schema or supplier changes;
 - and escalating uncertainty or material data risk.
 
-Functional ownership follows `docs/governance/ROLES-RESPONSIBILITIES.md`.
+Functional ownership follows `docs/governance/GOVERNANCE.md`.
 
 ## 5. Authoritative Data Inventory
 
@@ -393,7 +392,7 @@ The following changes require explicit data-governance review:
 - new AI/MCP provider beyond Codex/Claude;
 - or an incident showing the current classification/exposure assumption is wrong.
 
-Material changes use the existing `DEMO-###` process and `docs/governance/MANAGEMENT-SYSTEM-CHANGE-PLANNING.md`.
+Material changes use the existing `DEMO-###` process and `docs/governance/GOVERNANCE.md`.
 
 ## 18. Data Incidents and Concerns
 
@@ -471,4 +470,4 @@ Supporting evidence includes:
 
 This procedure supports applicable ISO/IEC 27001:2022 and ISO/IEC 42001:2023 requirements for information/data classification, appropriate handling, access restriction, logging/evidence, retention/deletion, supplier data boundaries, backup/recovery, AI data governance, transparency, impact reassessment, and controlled change.
 
-**Current posture after approval:** Data classes, ownership, major stores, public/AI exposure boundaries, retention principles, and deletion expectations are defined. Operational cleanup, deletion testing, backup/restore evidence, and full AI provenance/freshness coverage remain partial until demonstrated. Certification is not claimed.
+**Current posture:** Data classes, ownership, major stores, public/AI exposure boundaries, retention principles, and deletion expectations are defined. Operational cleanup, deletion testing, backup/restore evidence, and full AI provenance/freshness coverage remain partial until demonstrated. Certification is not claimed.

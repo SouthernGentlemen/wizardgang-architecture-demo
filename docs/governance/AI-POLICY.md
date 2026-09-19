@@ -5,7 +5,6 @@
 **Status:** Approved
 **Owner:** WizardGang  
 **Approval:** Controlled pull request and merge  
-**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually and after material changes to AI scope, intended use, capabilities, data, suppliers, risk, incidents, or applicable requirements
 
 ## 1. Purpose
@@ -18,7 +17,7 @@ This policy supports engineering alignment with ISO/IEC 42001. It does not repre
 
 ## 2. Scope
 
-This policy applies to the AI management system defined in `docs/governance/SCOPE.md`, including AI-related capabilities that WizardGang designs, configures, exposes, integrates, evaluates, or operates as part of the demo.
+This policy applies to the AI management system defined in `docs/governance/GOVERNANCE.md`, including AI-related capabilities that WizardGang designs, configures, exposes, integrates, evaluates, or operates as part of the demo.
 
 Current in-scope AI behavior includes the controlled Model Context Protocol boundary and any related agent-facing interfaces, tools, authorization rules, data access, logging, evaluation, fallback behavior, and operational controls.
 
@@ -307,11 +306,7 @@ Policy changes use the normal controlled Git process.
 
 Evidence supporting this policy includes, as applicable:
 
-- `docs/governance/CONTEXT.md`;
-- `docs/governance/INTERESTED-PARTIES.md`;
-- `docs/governance/SCOPE.md`;
-- `docs/governance/MANAGEMENT-SYSTEM.md`;
-- `docs/governance/LEADERSHIP.md`;
+- `docs/governance/GOVERNANCE.md`;
 - `SECURITY.md`;
 - MCP contracts and implementation source;
 - AI/MCP evaluation evidence;
@@ -329,4 +324,4 @@ Evidence supporting this policy includes, as applicable:
 
 This policy supports **ISO/IEC 42001:2023 §5.2 — AI policy**.
 
-**Current posture after approval:** AI-management direction and commitments are formally defined and controlled; certification is not claimed.
+**Current posture:** AI-management direction and commitments are formally defined and controlled; certification is not claimed.

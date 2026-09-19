@@ -1,138 +1,66 @@
-# Risk Management Methodology
+# Risk Management and Operational Reassessment
 
-**Reference:** WG-GOV-007  
-**Applies to:** ISO/IEC 27001:2022 §6.1.1–§6.1.3 · ISO/IEC 42001:2023 §6.1.1–§6.1.4  
+**Reference:** WG-GOV-007
+**Applies to:** ISO/IEC 27001:2022 §6.1 and §8.2–§8.3 · ISO/IEC 42001:2023 §6.1 and §8.2–§8.4
 **Status:** Approved
-**Owner:** WizardGang  
-**Approval:** Controlled pull request and merge  
-**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
-**Review:** At least annually and after material changes to scope, architecture, suppliers, identity, data handling, security posture, or AI capability
+**Owner:** WizardGang
+**Approval:** Controlled pull request and merge
+**Review:** At least annually and after material changes to scope, context, architecture, suppliers, identity, data handling, security posture, incidents, or AI capability
 
 ## 1. Purpose
 
-This document defines the repeatable risk-management methodology used by the WizardGang Architecture Demo information security management system (ISMS) and AI management system (AIMS).
+This document defines the repeatable risk methodology for the WizardGang Architecture Demo and the operating process for reassessing information-security risk, AI risk, AI impact, treatment, residual risk, and control applicability.
 
-It establishes how risks and opportunities are identified, analyzed, evaluated, treated, accepted, reviewed, and evidenced.
+Management-system risk is distinct from the Low/Medium/High implementation-risk label attached to an individual controlled change. Change risk estimates delivery risk; management-system risk evaluates conditions that can affect security, AI behavior or impacts, interested parties, obligations, or management-system objectives.
 
-This methodology is separate from the repository's Low / Medium / High **change-risk** classification. Change risk estimates the implementation risk of a controlled change. Management-system risk evaluates conditions that could affect information security, AI-system behavior, interested parties, or management-system objectives.
+The canonical risk records are maintained under `assurance/risks/`. This document defines the method, not a duplicate risk register.
 
-This record supports engineering alignment with ISO/IEC 27001 and ISO/IEC 42001. It does not represent certification.
-
-## 2. Scope
-
-This methodology applies to risks within the approved management-system scope defined in `docs/governance/SCOPE.md`.
-
-It includes, where relevant:
-
-- public application behavior;
-- GitHub source control and delivery;
-- Cloudflare runtime and platform configuration;
-- D1, R2, Durable Objects, and related application state;
-- authentication and authorization;
-- secrets and credentials;
-- REST, GraphQL, webhook, identity, and MCP boundaries;
-- logging and audit evidence;
-- availability and graceful degradation;
-- accessibility-related operational risk where it affects stated objectives;
-- suppliers and external dependencies;
-- open-source dependencies;
-- AI/MCP capabilities;
-- AI data, inputs, outputs, permissions, intended use, and foreseeable misuse;
-- and management-system processes themselves.
-
-Out-of-scope systems are not automatically risk-free. Dependencies crossing the scope boundary are evaluated when they can affect the in-scope system.
-
-## 3. Risk Principles
+## 2. Risk principles
 
 Risk management follows these principles:
 
-1. **Evidence over assumption.** Risk decisions should use observable system behavior, architecture, incidents, tests, supplier information, and documented requirements where available.
-2. **Explicit ownership.** Every recorded risk has an accountable owner.
-3. **Consistent scoring.** Likelihood and impact use the same defined scales across comparable risks.
-4. **Residual risk matters.** Treatment does not make a risk disappear; residual risk is evaluated after controls are considered.
-5. **Acceptance is a decision.** Accepted risk must be explicit and attributable to an authorized person.
-6. **Controls follow risk.** Controls are selected because they address identified risks, requirements, or obligations—not merely because a standard lists them.
-7. **AI impacts are not reduced to cybersecurity.** AI risks may involve people, misuse, incorrect behavior, transparency, human oversight, data quality, or other impacts even where confidentiality, integrity, and availability are unaffected.
-8. **Reassessment follows change.** Material changes can invalidate prior risk decisions.
-9. **No false precision.** Numerical scores support prioritization; they are not proof of safety or compliance.
+1. **Evidence over assumption.** Use architecture, incidents, tests, supplier information, operational observations, requirements, and other credible evidence where available.
+2. **Explicit ownership.** Every durable risk has an accountable owner.
+3. **Consistent evaluation.** Comparable risks use the same likelihood and impact method.
+4. **Residual risk is explicit.** Existing controls do not erase the underlying exposure.
+5. **Acceptance is a decision.** Accepted residual risk requires identified authority and rationale.
+6. **Controls follow risk and requirements.** A standard listing alone is not the reason for a control.
+7. **AI impacts extend beyond cybersecurity.** Human impact, misuse, incorrect behavior, transparency, data quality, and oversight may matter even when confidentiality, integrity, and availability are unaffected.
+8. **Reassessment follows material change or evidence.**
+9. **Scores support prioritization; they are not proof of safety or conformity.**
 
-## 4. Risk Sources
+## 3. Risk record and ownership
 
-Risks and opportunities may be identified from:
+A durable risk record contains enough information to reconstruct the decision without relying on memory. At minimum it identifies:
 
-- organizational context;
-- interested-party requirements;
-- management-system scope;
-- architecture reviews;
-- threat modeling;
-- security testing;
-- dependency and vulnerability findings;
-- incidents and near misses;
-- operational logs and health observations;
-- failed CI or release checks;
-- accessibility findings;
-- supplier changes or outages;
-- identity-provider changes;
-- legal, regulatory, contractual, or standards changes;
-- internal audit or self-assessment findings;
-- management review;
-- AI evaluations;
-- AI impact assessments;
-- changes to model, provider, tool, permission, data, prompt, workflow, or intended use;
-- user feedback;
-- and controlled change proposals.
+- permanent risk ID and framework/domain;
+- title, description, source, affected asset/process or party;
+- credible cause or threat and consequence;
+- existing controls;
+- likelihood and impact;
+- inherent and residual rating where practical;
+- selected treatment and treatment actions;
+- related controls, obligations, objectives, incidents, suppliers, or assessments as applicable;
+- owner and acceptance authority;
+- lifecycle status;
+- review due/last-reviewed information;
+- supporting evidence and material notes.
 
-## 5. Risk Record
+AI risks may additionally identify intended use, affected parties, provider/model dependency, data inputs/outputs, tool or permission boundary, foreseeable misuse, human oversight, and impact-assessment relationships.
 
-Each risk record must contain enough information to understand the decision without relying on undocumented memory.
+## 4. Likelihood and impact
 
-Minimum fields are:
-
-- `id` — permanent identifier;
-- `framework` — Security, AI, or Shared;
-- `title` — concise risk name;
-- `description` — event or condition being evaluated;
-- `source` — why the risk was identified;
-- `affectedAssetOrProcess` — affected system, data, process, person, or objective;
-- `threatOrCause` — credible cause or initiating condition;
-- `consequence` — credible impact if the event occurs;
-- `existingControls` — controls already operating;
-- `likelihood` — 1 through 5;
-- `impact` — 1 through 5;
-- `inherentRisk` — risk before considering existing controls;
-- `residualLikelihood` — likelihood after existing or planned controls;
-- `residualImpact` — impact after existing or planned controls;
-- `residualRisk` — resulting residual rating;
-- `treatment` — Avoid, Reduce, Transfer/Share, or Accept;
-- `treatmentActions` — required actions where applicable;
-- `controlReferences` — applicable policy, technical, ISO, or other control references;
-- `owner` — accountable risk owner;
-- `acceptanceAuthority` — person authorized to accept the residual risk;
-- `status` — Open, Treating, Accepted, Closed, or Superseded;
-- `reviewDue` — next planned review;
-- `lastReviewed` — last completed review date;
-- `evidence` — supporting repository, test, issue, release, log, assessment, or supplier evidence;
-- and `notes` — contextual information not captured elsewhere.
-
-AI risks may include additional fields defined in Section 12.
-
-## 6. Likelihood Scale
-
-Likelihood estimates the realistic probability or frequency of the risk event within the defined operating context.
+Likelihood uses a five-point scale:
 
 | Score | Rating | Guidance |
 |---|---|---|
-| 1 | Rare | Not expected under normal operation; would require exceptional conditions |
-| 2 | Unlikely | Credible but not expected; limited exposure or strong preventive controls |
-| 3 | Possible | Could occur during ordinary operation or through a plausible failure path |
-| 4 | Likely | Expected to occur periodically or exposure is substantial |
-| 5 | Almost certain | Expected frequently, already recurring, or conditions strongly favor occurrence |
+| 1 | Rare | Not expected in normal operation; exceptional conditions required |
+| 2 | Unlikely | Credible but not expected; limited exposure or strong prevention |
+| 3 | Possible | Plausible during ordinary operation or through a credible failure path |
+| 4 | Likely | Expected periodically or exposure is substantial |
+| 5 | Almost certain | Expected frequently, recurring, or conditions strongly favor occurrence |
 
-Likelihood must consider actual exposure, not only theoretical possibility.
-
-## 7. Impact Scale
-
-Impact evaluates the plausible consequence to the in-scope system, management-system objectives, interested parties, or AI-affected persons.
+Impact also uses a five-point scale:
 
 | Score | Rating | Guidance |
 |---|---|---|
@@ -142,354 +70,139 @@ Impact evaluates the plausible consequence to the in-scope system, management-sy
 | 4 | Major | Significant compromise, outage, harmful AI behavior, data exposure, or management-system failure |
 | 5 | Severe | Catastrophic or sustained impact, serious harm, major breach, systemic loss of control, or unacceptable external consequence |
 
-Impact evaluation should consider, as applicable:
+Impact considers the dimensions relevant to the risk, including confidentiality, integrity, availability, authorization, auditability, legal/contractual duties, supplier dependency, accessibility commitments, trust, recoverability, human oversight, AI misuse, affected parties, and data quality/provenance.
 
-- confidentiality;
-- integrity;
-- availability;
-- authentication and authorization;
-- auditability;
-- legal or contractual obligation;
-- supplier dependency;
-- accessibility commitments;
-- reputation and trust;
-- human oversight;
-- AI misuse or unintended use;
-- affected individuals or groups;
-- data quality and provenance;
-- and recoverability.
+The default score is `likelihood × impact`:
 
-## 8. Risk Score and Rating
-
-The default quantitative score is:
-
-`risk score = likelihood × impact`
-
-The following bands are used for prioritization:
-
-| Score | Rating | Default expectation |
+| Score | Rating | Default treatment expectation |
 |---|---|---|
-| 1–4 | Low | May be accepted by the risk owner if rationale is documented |
+| 1–4 | Low | May be accepted by the risk owner with rationale |
 | 5–9 | Moderate | Review treatment options; acceptance requires explicit rationale |
-| 10–16 | High | Treatment normally required; acceptance requires management-system owner approval |
-| 17–25 | Critical | Do not knowingly introduce or continue without explicit management decision, documented rationale, and urgent treatment or avoidance |
+| 10–16 | High | Treatment normally required; acceptance requires Management-System Owner approval |
+| 17–25 | Critical | Do not knowingly introduce or continue without explicit management decision and urgent treatment or avoidance rationale |
 
-A numerical score may be overridden upward when qualitative consequences justify stronger treatment. Any override must be documented.
+A rating may be raised when qualitative consequences justify stronger treatment. Any override is documented.
 
-## 9. Inherent and Residual Risk
+## 5. Inherent and residual risk
 
-Each material risk should be evaluated twice where practical:
+Material risks are evaluated before controls and after controls when practical:
 
-1. **Inherent risk** — expected exposure before considering controls.
-2. **Residual risk** — remaining exposure after considering existing and planned controls.
+- **inherent risk** describes the exposure before considering existing controls;
+- **residual risk** describes the remaining exposure after considering operating and planned controls.
 
-This distinction makes control effectiveness visible and prevents existing controls from hiding the seriousness of the underlying risk.
+If an inherent score cannot be estimated credibly, the record states the limitation rather than manufacturing precision.
 
-If reliable inherent scoring is not practical, the record may state why and focus on current/residual risk.
+## 6. Risk treatment and acceptance
 
-## 10. Risk Treatment
+Treatment choices are:
 
-One or more of the following treatment approaches may be selected:
-
-### Avoid
-
-Remove the activity, feature, permission, integration, data use, supplier dependency, or other source of risk.
-
-### Reduce
-
-Apply controls that lower likelihood, impact, or both.
-
-Examples include:
-
-- stronger authorization;
-- narrower permissions;
-- input validation;
-- rate limiting;
-- logging;
-- monitoring;
-- secure configuration;
-- dependency updates;
-- architectural isolation;
-- fallback behavior;
-- human approval;
-- additional testing;
-- accessibility remediation;
-- AI tool restrictions;
-- or data minimization.
-
-### Transfer or Share
-
-Allocate part of the risk through a supplier, contractual arrangement, service provider, insurance mechanism, or shared operational responsibility.
-
-Transfer does not remove WizardGang's responsibility to understand residual risk within its control.
-
-### Accept
-
-Retain the residual risk because further treatment is not justified, feasible, proportionate, or necessary within the approved scope.
-
-Acceptance must include rationale and an authorized acceptance decision.
-
-## 11. Risk Acceptance
+- **Avoid** — remove the activity, feature, data use, permission, integration, supplier dependency, or other source of risk.
+- **Reduce** — apply controls that lower likelihood, impact, or both.
+- **Transfer/Share** — allocate part of the risk through a supplier, contractual arrangement, service provider, or other shared responsibility without treating WizardGang's residual responsibility as eliminated.
+- **Accept** — retain residual risk because further treatment is not justified, feasible, proportionate, or necessary for the approved scope.
 
 Default acceptance authority is:
 
-- **Low:** designated risk owner;
-- **Moderate:** risk owner with documented rationale;
-- **High:** management-system owner;
-- **Critical:** management-system owner with explicit written decision and treatment/avoidance rationale.
-
-A risk may not be marked accepted merely because no treatment has yet occurred.
-
-Acceptance records should include:
-
-- date;
-- accepting authority;
-- residual score/rating;
-- rationale;
-- review due date;
-- and any conditions that would trigger reconsideration.
-
-## 12. AI-Specific Risk and Impact Considerations
-
-AI risks are recorded in the AI risk register but use the same core scoring method unless another method is explicitly documented for a specific assessment.
-
-AI risk identification must consider, where relevant:
-
-- intended use;
-- foreseeable misuse;
-- unauthorized or excessive tool use;
-- permission escalation;
-- incorrect or misleading output;
-- harmful automation;
-- insufficient human oversight;
-- data leakage;
-- sensitive or inappropriate input data;
-- poor data quality or provenance;
-- model/provider dependency;
-- unavailability or degraded provider behavior;
-- prompt or instruction manipulation;
-- unexpected model behavior;
-- output handling by downstream systems;
-- auditability and traceability;
-- limitations communicated to users;
-- affected persons and groups;
-- accessibility impacts;
-- and changes in system capability over time.
-
-AI risk records may additionally include:
-
-- `aiSystemOrCapability`;
-- `intendedUse`;
-- `foreseeableMisuse`;
-- `affectedParties`;
-- `humanOversight`;
-- `dataInputs`;
-- `outputsAndActions`;
-- `modelOrProvider`;
-- `evaluationEvidence`;
-- `impactAssessmentReference`;
-- and `knownLimitations`.
-
-## 13. AI Impact Assessment Interface
-
-AI impact assessment is a related but distinct activity.
+- Low — designated Risk Owner;
+- Moderate — Risk Owner with documented rationale;
+- High — Management-System Owner;
+- Critical — Management-System Owner with explicit written decision and treatment/avoidance rationale.
 
-Risk assessment asks what uncertain events or conditions could affect objectives and how they should be treated.
+Risk acceptance does not change a compliance or assurance conclusion by itself.
 
-AI impact assessment evaluates how the AI system or capability may affect individuals, groups, users, operators, or other interested parties across its intended use and foreseeable misuse.
+## 7. AI-specific risk and impact
 
-An AI impact assessment must therefore not be replaced by a cybersecurity risk register alone.
+AI risk analysis considers, as applicable:
 
-When an AI capability is introduced or materially changed, the risk process determines whether a new or updated AI impact assessment is required.
+- intended and foreseeable use;
+- affected users or other parties;
+- tool and permission boundaries;
+- input/output data, quality, provenance, retention, and disclosure;
+- hallucination or incorrect output where application behavior can depend on it;
+- automation bias and inadequate human oversight;
+- malicious or out-of-scope invocation;
+- prompt/tool manipulation and authorization bypass;
+- provider/model dependency;
+- transparency and user responsibility;
+- accessibility and human usability;
+- graceful degradation and fallback;
+- security and privacy impacts;
+- change in authority, autonomy, provider, or data scope.
 
-At minimum, an impact assessment should examine:
+The AI impact assessment is a related operating record. It does not replace the risk register and the risk register does not replace impact assessment where impact-specific review is required.
 
-- system purpose and intended use;
-- system boundaries;
-- affected parties;
-- data and inputs;
-- outputs and actions;
-- human oversight;
-- misuse scenarios;
-- known limitations;
-- potential positive and negative impacts;
-- control measures;
-- residual impacts;
-- and approval/review decisions.
+## 8. Control selection and Statements of Applicability
 
-## 14. Opportunities
+Applicable controls are selected because they address identified risks, obligations, interested-party requirements, management-system needs, or other justified control objectives.
 
-Clause 6 planning includes opportunities as well as risks.
+The structured ISO/IEC 27001 and ISO/IEC 42001 compliance records are authoritative for applicability, rationale, implementation/evidence status, gaps, and documentation/evidence relationships. A not-applicable decision requires a rationale; provider ownership alone does not remove WizardGang's configuration, integration, oversight, or supplier responsibilities.
 
-Opportunities may include:
+When a risk, treatment, scope, or requirement changes the control basis, the relevant structured compliance record is reassessed.
 
-- automating a manual control;
-- improving evidence retention;
-- reducing supplier dependency;
-- improving accessibility;
-- strengthening observability;
-- simplifying architecture;
-- narrowing permissions;
-- improving AI evaluation coverage;
-- improving user transparency;
-- or reducing operational cost without weakening controls.
+## 9. Operational reassessment
 
-Opportunities may be tracked through objectives, roadmap issues, or controlled `DEMO-###` changes rather than the risk register when that provides clearer ownership.
+Risk assessment is not a one-time planning artifact. During operation, a reassessment determines whether the existing risk description, score, controls, treatment, owner, acceptance, evidence, and review date still reflect actual conditions.
 
-## 15. Review Triggers
+Information-security reassessment considers changes in threat exposure, vulnerabilities, identities, permissions, secrets, configuration, data, dependencies, provider behavior, incidents, recovery assumptions, and operational evidence.
 
-Risks must be reviewed at least annually and when relevant changes occur.
+AI reassessment additionally considers intended use, affected parties, model/provider, tools, permissions, autonomy, data, prompts/workflows, human oversight, misuse paths, evaluation results, incidents, and impact assumptions.
 
-Event-driven review triggers include:
+## 10. Reassessment triggers
 
-- new or materially changed functionality;
-- authentication or authorization changes;
-- new data categories;
-- new persistence or data flows;
-- security incidents or near misses;
-- new vulnerabilities;
-- major dependency updates;
-- new suppliers or material supplier changes;
-- hosting or architecture changes;
-- changes to public exposure;
-- changes to recovery or availability assumptions;
-- significant accessibility findings;
-- new AI providers or models;
-- new AI tools or permissions;
-- changes to AI intended use;
-- new AI data sources;
-- AI evaluation failures;
-- material changes to interested-party requirements;
-- and audit or management-review findings.
+Reassessment is required when material evidence or change can invalidate a prior decision. Triggers include:
 
-## 16. Relationship to Controlled Changes
+- management-system scope, context, interested-party, obligation, or architecture change;
+- new or materially changed supplier, identity provider, dependency, runtime service, or data flow;
+- vulnerability, incident, near miss, abuse path, audit finding, failed control, or material monitoring trend;
+- missed objective or stale evidence relevant to the risk;
+- new AI provider, model family, tool, permission, write/destructive/privileged authority, data source, affected party, intended use, autonomous behavior, or reduced human oversight;
+- material accessibility or user-safety issue;
+- change in applicable standard, law, contract, or public commitment;
+- periodic review due date.
 
-A `DEMO-###` change may trigger a management-system risk review, but the change's Low / Medium / High engineering-risk classification remains separate.
+## 11. Treatment planning and implementation
 
-Examples:
+A treatment plan identifies the selected response, actions, owner, priority, target or review date, related controls, required evidence, and any dependency or acceptance condition.
 
-- a documentation-only change may be **Low change risk** while documenting a **Critical security risk**;
-- a schema migration may be **High change risk** while reducing an existing **High information-security risk**;
-- an AI permission expansion may be **High change risk** and also create a new **High AI risk**.
+Technical treatments are implemented through the controlled engineering/release process. Operational treatments use the relevant operating procedure. Supplier, policy, data, access, continuity, audit, or competence treatments update their authoritative records rather than being hidden in code changes.
 
-Where a change materially affects a recorded risk, the associated pull request or commit should reference the risk ID.
+A treatment is not complete because a task was merged. Completion requires the intended control to exist and the evidence required by the treatment to be available.
 
-## 17. Risk Register Structure
+## 12. Treatment verification and closure
 
-The management system will maintain separate but interoperable registers:
+After treatment:
 
-- `assurance/risks/risks.json`;
-- `assurance/risks/risks.json`.
+1. verify the intended control or operating change;
+2. recalculate residual likelihood/impact where meaningful;
+3. review whether residual risk is within the authorized acceptance boundary;
+4. update related controls, objectives, suppliers, incidents, assessments, or obligations where required;
+5. retain evidence;
+6. assign the next review or close/supersede the risk according to the structured lifecycle.
 
-A shared risk may appear in both registers only when the distinction adds useful accountability. Otherwise, one authoritative record should reference both frameworks.
+A risk may remain open after implementation when operating evidence, effectiveness verification, supplier action, or a management decision is still outstanding.
 
-Risk IDs should be permanent and sequential within their register, for example:
+## 13. AI impact reassessment
 
-- `SEC-RISK-001`;
-- `AI-RISK-001`.
+AI impact reassessment is required when a change can materially alter intended use, affected parties, authority, autonomy, data, provider/model dependency, transparency, human oversight, misuse potential, or other impact assumptions.
 
-Closed or superseded risks retain their identifiers and history.
+The reassessment records the changed condition, affected impact/risk assumptions, evidence, resulting treatment or control changes, and whether the existing AI impact assessment remains adequate.
 
-## 18. Control Selection and Statement of Applicability
+The current public MCP boundary remains read-only. Any expansion into write, destructive, privileged, deployment, private-data, autonomous, third-provider, or reduced-oversight behavior requires explicit supplier, risk, impact, Statement-of-Applicability, data, and testing review before the expanded behavior is treated as approved.
 
-Risk treatment informs control selection.
+## 14. Incident, supplier, and change interfaces
 
-For ISO/IEC 27001, applicable controls and exclusions are recorded in the ISO 27001 Statement of Applicability.
+Incidents and near misses trigger reassessment when they reveal a new risk, changed likelihood/impact, ineffective treatment, or invalid assumption.
 
-For ISO/IEC 42001, applicable AI controls and exclusions are recorded in the ISO 42001 Statement of Applicability or equivalent applicability record.
+Supplier changes or failures trigger reassessment when they affect service criticality, data, access, location, obligations, availability, security, AI behavior, exit strategy, or shared responsibility.
 
-A control may be applicable because of:
+Controlled changes trigger reassessment according to `docs/governance/GOVERNANCE.md` when they materially affect management-system assumptions.
 
-- identified risk;
-- interested-party requirement;
-- legal or contractual obligation;
-- management policy;
-- operational need;
-- or another justified requirement.
+## 15. Evidence and review
 
-A control is not excluded simply because a current technical implementation does not yet exist.
+Risk evidence may include architecture, structured records, tests, CI results, incidents, provider information, operational observations, audit findings, AI evaluations, impact assessments, supplier reviews, releases, and controlled change records.
 
-Exclusions must contain rationale and must be revisited when scope or risk changes.
+Review the methodology at least annually and when management-system scope, risk vocabulary, scoring, acceptance authority, AI impact practice, or structured risk contracts materially change.
 
-## 19. Treatment Tracking
+## Alignment
 
-Treatment actions should be tracked through the repository's normal work-management and change process.
-
-Where implementation is required, the risk record should reference:
-
-- issue or work item;
-- `DEMO-###` change ID;
-- branch or pull request;
-- validation evidence;
-- release;
-- deployment evidence;
-- and verification of effectiveness where applicable.
-
-Treatment is not complete until the required action has occurred and residual risk has been reconsidered.
-
-## 20. Risk Review and Closure
-
-A risk may be closed when:
-
-- the risk source has been removed;
-- treatment reduced exposure to a level that no longer requires active tracking;
-- the affected asset or process left scope;
-- or the risk was superseded by a more accurate record.
-
-Closure must include rationale and evidence.
-
-Closed risks remain retained as management-system history.
-
-## 21. Evidence
-
-Risk-management evidence may include:
-
-- risk registers;
-- AI impact assessments;
-- Statements of Applicability;
-- pull requests and reviews;
-- security tests;
-- AI evaluations;
-- CI evidence;
-- vulnerability findings;
-- dependency audit results;
-- architecture records;
-- incident records;
-- supplier information;
-- logs and operational observations;
-- release and deployment records;
-- management-review decisions;
-- and corrective-action records.
-
-## 22. Initial Deliverables
-
-Adoption of this methodology creates the following follow-on management-system work:
-
-1. establish the initial information-security risk register;
-2. establish the initial AI risk register;
-3. perform the initial risk assessments;
-4. define treatment decisions;
-5. establish the ISO/IEC 27001 Statement of Applicability;
-6. establish the ISO/IEC 42001 applicability record / Statement of Applicability;
-7. perform an AI impact assessment for the in-scope MCP/AI capability;
-8. connect treatment actions to controlled repository work;
-9. record residual-risk acceptance;
-10. periodically review risk status and effectiveness.
-
-Until those activities occur, this methodology demonstrates that the process is defined but does not by itself demonstrate that all Clause 6 risk activities have been completed.
-
-## 23. Alignment
-
-**Controls:** ISO27001-6.1, ISO27001-6.1.1, ISO27001-6.1.2, ISO27001-6.1.3, ISO42001-6.1.1, ISO42001-6.1.2
-
-This methodology supports:
-
-- ISO/IEC 27001:2022 §6.1.1 — actions addressing risks and opportunities;
-- ISO/IEC 27001:2022 §6.1.2 — information security risk assessment;
-- ISO/IEC 27001:2022 §6.1.3 — information security risk treatment;
-- ISO/IEC 42001:2023 §6.1.1 — actions addressing risks and opportunities;
-- ISO/IEC 42001:2023 §6.1.2 — AI risk assessment;
-- ISO/IEC 42001:2023 §6.1.3 — AI risk treatment;
-- ISO/IEC 42001:2023 §6.1.4 — AI system impact assessment planning and integration.
-
-**Current posture after approval:** Risk methodology defined and controlled. Initial risk registers, treatment decisions, Statements of Applicability, and completed AI impact assessment remain separate required evidence.
+This document provides the risk, treatment, acceptance, and operational-reassessment method for the in-scope ISO/IEC 27001 and ISO/IEC 42001 requirements. Exact risk records and compliance conclusions remain in structured assurance data.

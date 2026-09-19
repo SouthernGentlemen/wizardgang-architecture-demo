@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "description": "Registered management-system document and register identities for the WizardGang Architecture Demo. Registration does not make a document authoritative for assurance or implementation state.",
+  "description": "Registered current management-system document and structured-record identities for the WizardGang Architecture Demo. Registration provides stable identity only; current assurance state remains in authoritative structured sources.",
   "records": [
     {
       "reference": "WG-A11Y-001",
@@ -16,63 +16,15 @@
     },
     {
       "reference": "WG-GOV-001",
-      "path": "docs/governance/CONTEXT.md"
-    },
-    {
-      "reference": "WG-GOV-002",
-      "path": "docs/governance/INTERESTED-PARTIES.md"
-    },
-    {
-      "reference": "WG-GOV-003",
-      "path": "docs/governance/SCOPE.md"
-    },
-    {
-      "reference": "WG-GOV-004",
-      "path": "docs/governance/MANAGEMENT-SYSTEM.md"
-    },
-    {
-      "reference": "WG-GOV-005",
-      "path": "docs/governance/LEADERSHIP.md"
-    },
-    {
-      "reference": "WG-GOV-006",
-      "path": "docs/governance/ROLES-RESPONSIBILITIES.md"
+      "path": "docs/governance/GOVERNANCE.md"
     },
     {
       "reference": "WG-GOV-007",
       "path": "docs/governance/RISK-MANAGEMENT.md"
     },
     {
-      "reference": "WG-GOV-008",
-      "path": "docs/governance/MANAGEMENT-SYSTEM-CHANGE-PLANNING.md"
-    },
-    {
-      "reference": "WG-GOV-009",
-      "path": "docs/governance/MANAGEMENT-SYSTEM-SUPPORT.md"
-    },
-    {
-      "reference": "WG-GOV-010",
-      "path": "docs/governance/OPERATIONAL-PLANNING-CONTROL.md"
-    },
-    {
-      "reference": "WG-GOV-011",
-      "path": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md"
-    },
-    {
       "reference": "WG-GOV-012",
-      "path": "docs/governance/MONITORING-MEASUREMENT-EVALUATION.md"
-    },
-    {
-      "reference": "WG-GOV-013",
-      "path": "docs/governance/INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md"
-    },
-    {
-      "reference": "WG-GOV-014",
-      "path": "docs/governance/MANAGEMENT-REVIEW.md"
-    },
-    {
-      "reference": "WG-GOV-015",
-      "path": "docs/governance/NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md"
+      "path": "docs/governance/ASSURANCE-AND-AUDIT.md"
     },
     {
       "reference": "WG-GOV-016",
@@ -85,10 +37,6 @@
     {
       "reference": "WG-GOV-018",
       "path": "docs/governance/BACKUP-RECOVERY-RESTORE.md"
-    },
-    {
-      "reference": "WG-GOV-019",
-      "path": "docs/governance/COMPETENCE-AWARENESS-COMMUNICATION.md"
     },
     {
       "reference": "WG-GOV-020",
@@ -121,10 +69,6 @@
     {
       "reference": "WG-GOV-027",
       "path": "docs/governance/CONTINUITY-RESILIENCE.md"
-    },
-    {
-      "reference": "WG-GOV-028",
-      "path": "docs/governance/CONTROL-AND-DOCUMENT-INDEX.md"
     },
     {
       "reference": "WG-OBJ-001",
