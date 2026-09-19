@@ -7,22 +7,42 @@ const registryPath = path.join(governanceRoot, 'REFERENCE-REGISTRY.json');
 const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
 const presentation = JSON.parse(fs.readFileSync(path.join(root, 'assurance/presentation/documents.json'), 'utf8'));
 const assuranceRegistry = JSON.parse(fs.readFileSync(path.join(root, 'assurance/registry.json'), 'utf8'));
-function flattenResources(resources = []) { return resources.flatMap((resource) => [resource, ...flattenResources(resource.resources ?? [])]); }
+
+function flattenResources(resources = []) {
+  return resources.flatMap((resource) => [resource, ...flattenResources(resource.resources ?? [])]);
+}
+
 const resourcePathById = new Map(flattenResources(assuranceRegistry.datasets ?? []).map((resource) => [resource.id, resource.path]));
 const presentationById = new Map((presentation.documents ?? []).map((document) => [document.id, document]));
 const errors = [];
 const references = new Map();
 const referencePattern = /^WG-(?:GOV|POL|REG|OBJ|SOA|AIA|A11Y)-\d{3}$/;
-const currentStateAuthorityDocuments = [
-  'AGENTS.md',
-  'README.md',
-  'CONTRIBUTING.md',
-  'SECURITY.md',
-  'docs/ARCHITECTURE-STANDARD.md',
-  'docs/CHANGE-MANAGEMENT.md',
-  'docs/RELEASE-MANAGEMENT.md',
+
+const canonicalManagementDocuments = [
+  'docs/governance/GOVERNANCE.md',
+  'docs/governance/RISK-MANAGEMENT.md',
+  'docs/governance/ASSURANCE-AND-AUDIT.md',
+];
+
+const retiredFragmentedDocuments = [
+  'docs/governance/CONTEXT.md',
+  'docs/governance/INTERESTED-PARTIES.md',
+  'docs/governance/SCOPE.md',
+  'docs/governance/MANAGEMENT-SYSTEM.md',
+  'docs/governance/LEADERSHIP.md',
+  'docs/governance/ROLES-RESPONSIBILITIES.md',
+  'docs/governance/MANAGEMENT-SYSTEM-CHANGE-PLANNING.md',
+  'docs/governance/MANAGEMENT-SYSTEM-SUPPORT.md',
+  'docs/governance/COMPETENCE-AWARENESS-COMMUNICATION.md',
+  'docs/governance/OPERATIONAL-PLANNING-CONTROL.md',
+  'docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md',
+  'docs/governance/MONITORING-MEASUREMENT-EVALUATION.md',
+  'docs/governance/INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md',
+  'docs/governance/MANAGEMENT-REVIEW.md',
+  'docs/governance/NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md',
   'docs/governance/CONTROL-AND-DOCUMENT-INDEX.md',
 ];
+
 const historicalNarrativePatterns = [
   { label: 'concrete DEMO change ID', pattern: /\bDEMO-\d{3,}\b/g },
   { label: 'historical pull-request number', pattern: /\b(?:PR|pull request)\s*#\d+\b/gi },
@@ -87,33 +107,29 @@ for (const absolute of walk(governanceRoot).filter((file) => file.endsWith('.md'
   liveReferences.set(match[1], relative);
 }
 
-const indexPath = path.join(governanceRoot, 'CONTROL-AND-DOCUMENT-INDEX.md');
-const indexText = fs.readFileSync(indexPath, 'utf8');
-const codeTokens = [...indexText.matchAll(/`([^`]+)`/g)].map((match) => match[1]);
-
-function resolveIndexToken(token) {
-  if (token.includes('*') || token.includes('→') || token.includes(' ') || token.startsWith('/')) return null;
-  const candidates = [];
-  if (/^(?:assurance|docs|scripts|src|tests|migrations|contracts|\.github)\//.test(token)) candidates.push(path.join(root, token));
-  else if (/^(?:registers|soa|assessments)\//.test(token)) candidates.push(path.join(governanceRoot, token));
-  else if (/\.md$/.test(token)) {
-    candidates.push(path.join(governanceRoot, token));
-    candidates.push(path.join(governanceRoot, 'registers', token));
-    candidates.push(path.join(governanceRoot, 'assessments', token));
-    candidates.push(path.join(governanceRoot, 'soa', token));
-    candidates.push(path.join(root, 'docs', token));
-    candidates.push(path.join(root, token));
-  } else if (['SECURITY.md','README.md','CONTRIBUTING.md','AGENTS.md','LICENSE','package.json','wrangler.jsonc'].includes(token)) {
-    candidates.push(path.join(root, token));
-  } else return null;
-  return candidates;
+for (const relativePath of canonicalManagementDocuments) {
+  if (!fs.existsSync(path.join(root, relativePath))) errors.push(`${relativePath}: canonical consolidated governance document does not exist`);
+}
+for (const relativePath of retiredFragmentedDocuments) {
+  if (fs.existsSync(path.join(root, relativePath))) errors.push(`${relativePath}: retired fragmented governance document still exists`);
+  if (registeredPaths.has(relativePath)) errors.push(`${relativePath}: retired fragmented governance document remains in REFERENCE-REGISTRY.json`);
 }
 
-for (const token of codeTokens) {
-  const candidates = resolveIndexToken(token);
-  if (!candidates) continue;
-  if (!candidates.some((candidate) => fs.existsSync(candidate))) errors.push(`CONTROL-AND-DOCUMENT-INDEX.md: unresolved local path token ${token}`);
-}
+const topLevelGovernanceMarkdown = fs.readdirSync(governanceRoot, { withFileTypes: true })
+  .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
+  .map((entry) => `docs/governance/${entry.name}`)
+  .sort();
+
+const currentStateAuthorityDocuments = [
+  'AGENTS.md',
+  'README.md',
+  'CONTRIBUTING.md',
+  'SECURITY.md',
+  'docs/ARCHITECTURE-STANDARD.md',
+  'docs/CHANGE-MANAGEMENT.md',
+  'docs/RELEASE-MANAGEMENT.md',
+  ...topLevelGovernanceMarkdown,
+];
 
 for (const relativePath of currentStateAuthorityDocuments) {
   const absolute = path.join(root, relativePath);
@@ -125,7 +141,13 @@ for (const relativePath of currentStateAuthorityDocuments) {
   for (const { label, pattern } of historicalNarrativePatterns) {
     pattern.lastIndex = 0;
     const match = pattern.exec(text);
-    if (match) errors.push(`${relativePath}: permanent current-state documentation contains ${label} "${match[0]}"; keep historical identity in Git/GitHub or validator/test exception data`);
+    if (match) errors.push(`${relativePath}: permanent current-state documentation contains ${label} "${match[0]}"; keep historical identity in Git/GitHub or dated evidence`);
+  }
+  for (const retiredPath of retiredFragmentedDocuments) {
+    const name = retiredPath.split('/').at(-1);
+    if (text.includes(retiredPath) || text.includes(name)) {
+      errors.push(`${relativePath}: references retired governance document ${name}`);
+    }
   }
 }
 
@@ -135,4 +157,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`Governance metadata validation passed: ${registry.records.length} registered identities; ${liveReferences.size} live Markdown Reference headers; structured register/SoA identities, identity-only registry, current-state authority docs, and index paths validated.`);
+console.log(`Governance metadata validation passed: ${registry.records.length} registered identities; ${liveReferences.size} live Markdown Reference headers; ${topLevelGovernanceMarkdown.length} top-level current-state governance documents; fragmented clause documents and manual control index retired.`);
