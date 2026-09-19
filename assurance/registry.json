@@ -748,7 +748,7 @@
         "id": "iso-27001",
         "label": "ISO/IEC 27001:2022",
         "edition": "2022",
-        "qualification": "Public alignment and engineering-evidence mapping only; independent certification or formal conformance is not claimed.",
+        "qualification": "Public alignment and engineering-evidence mapping only; the baseline includes ISO/IEC 27001:2022/Amd 1:2024 climate action changes. Independent certification or formal conformance is not claimed.",
         "assessmentDate": "2026-09-17"
       }
     },
