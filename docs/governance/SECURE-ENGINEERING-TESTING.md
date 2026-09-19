@@ -5,7 +5,6 @@
 **Status:** Approved
 **Owner:** Technical System Owner / Information Security Owner  
 **Approval:** Controlled pull request and merge  
-**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually and after material architecture, identity, persistence, deployment, cryptography, AI/MCP, supplier, or security-testing changes
 
 ## 1. Purpose

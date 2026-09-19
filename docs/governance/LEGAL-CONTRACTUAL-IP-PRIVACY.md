@@ -5,7 +5,6 @@
 **Status:** Approved
 **Owner:** Management-System Owner  
 **Approval:** Controlled pull request and merge  
-**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually and after material jurisdiction, service, supplier, data, user population, contract, license, public-claim, incident, or AI/MCP change
 
 ## 1. Purpose
@@ -299,4 +298,4 @@ This procedure principally supports:
 - ISO/IEC 42001:2023 external obligations, data, supplier, transparency, incident, impact, and management-system compliance requirements;
 - the repository's `aligned — uncertified` assurance model.
 
-**Current posture after approval:** obligation identification and review are formally defined; specific jurisdictional compliance remains evidence- and trigger-dependent and is not broadly claimed.
+**Current posture:** obligation identification and review are formally defined; specific jurisdictional compliance remains evidence- and trigger-dependent and is not broadly claimed.
