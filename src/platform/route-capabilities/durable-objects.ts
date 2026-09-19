@@ -29,7 +29,7 @@ export const durableObjectsLaboratoryCapability = definePlatformLaboratoryCapabi
       documentation: {
         title: 'Durable Object counter laboratory API',
         description: 'Reads or increments the public counter coordinated and persisted by a Durable Object.',
-        docs: ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'],
+        docs: ['docs/ROUTE-REGISTRY.md'],
       },
       source: {
         module: 'src/platform/route-capabilities/durable-objects.ts',
