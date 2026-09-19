@@ -268,3 +268,29 @@ Each record ties one production deployment to one annotated release tag. A deplo
 **Rollback:** Deploy v0.23.0.
 
 **Note:** Annotated tag v0.24.0 was created at 2026-09-17 21:40:54 −04:00. Release run 35296310582 ran from 2026-09-18 01:40:57 UTC through 01:45:53 UTC; its reproduce job ran 01:40:59–01:43:18 UTC and its deploy job ran 01:43:23–01:45:52 UTC.
+
+---
+
+## DEP-DEMO-010
+
+**Product:** WizardGang Architecture Demo
+
+**Release:** v0.26.0
+
+**Commit:** `3ef667ad93565b6fe3cd6422f6accec95e5ff343`
+
+**Environment:** production
+
+**Date:** 2026-09-19
+
+**URL:** https://demo.wizardgang.ai
+
+**Changes:** DEMO-311 through DEMO-320
+
+**Validation:** PASS — Release workflow 35467032804 completed successfully for annotated tag v0.26.0. The reproduce job (105961153048) succeeded, published GitHub Release 392203448, and retained artifact `assurance-registry-v0.26.0` (10590969932). The authenticated pre-tag and deployment Worker secret-name checks each confirmed all 15 required names were provisioned. The deploy job (105961488554) captured a ready identity baseline with GitHub, Google, and Microsoft configured after one bounded retry of a Cloudflare-managed challenge, found no pending D1 migrations, deployed Worker Version ID `ef140317-dd23-49cb-8034-9387520c732b`, and verified version 0.26.0 at commit `3ef667ad93565b6fe3cd6422f6accec95e5ff343` with the Worker operational, identity ready, and all baseline providers still configured.
+
+**Previous:** v0.25.2
+
+**Rollback:** Deploy v0.25.2.
+
+**Note:** The annotated tag was created at 2026-09-19 20:19:26 UTC. Release reproduction completed at 20:21:48 UTC, and the production deployment completed at 20:24:21 UTC. Independent public verification after the workflow returned HTTP 200 for version, health, and identity-session checks with the same release identity and provider set.
