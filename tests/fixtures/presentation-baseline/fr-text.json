@@ -1,0 +1,5127 @@
+{
+  "page:assurance.index": {
+    "headings": [
+      {
+        "level": 1,
+        "text": "Assurance"
+      },
+      {
+        "level": 2,
+        "text": "Enregistrements"
+      },
+      {
+        "level": 2,
+        "text": "A.5.1 · Security policy governance"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Aller au contenu principal"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Accueil de la démo d’architecture WizardGang"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Navigation principale"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Démonstrations"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Assurance"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Thème"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "EnglishEspañolFrançaisDeutsch日本語العربية Appliquer"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Langue"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Appliquer"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "ISO/IEC 27 001:2 022"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "ISO/IEC 42 001:2 023"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "WCAG 2,2"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "SectionClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Posture de la section Pass0 Partiel35 Gap1 N/A1 Posture du référentiel Pass0 Partiel97 Gap6 N/A24 Enregistrements37 A.5.1 Security policy governance Partiel A.5.2 Assigned security accountabilities Partiel A.5.3 Separation of conflicting duties Partiel A.5.4 Leadership security responsibilities Partiel A.5.5 Authority contact readiness Partiel A.5.6 Security community contacts Partiel A.5.7 Threat information handling Partiel A.5.8 Security in managed projects Partiel A.5.9 Asset and information inventory Partiel A.5.10 Acceptable use expectations Partiel A.5.11 Return of issued assets N/A A.5.12 Information classification model Partiel A.5.13 Classification labels and handling Partiel A.5.14 Protected information transfer Partiel A.5.15 Access governance Partiel A.5.16 Identity lifecycle management Partiel A.5.17 Authentication secret management Partiel A.5.18 Access provisioning and review Partiel A.5.19 Supplier security governance Partiel A.5.20 Security terms for suppliers Partiel A.5.21 ICT supply-chain security Partiel A.5.22 Supplier service review and change Partiel A.5.23 Cloud service security governance Partiel A.5.24 Incident response preparation Partiel A.5.25 Security event triage Partiel A.5.26 Incident response execution Partiel A.5.27 Learning from incidents Partiel A.5.28 Preserving investigative evidence Partiel A.5.29 Secure operation during disruption Partiel A.5.30 Technology continuity readiness Partiel A.5.31 Legal and contractual obligations Partiel A.5.32 Intellectual property safeguards Partiel A.5.33 Protected business records Partiel A.5.34 Privacy and personal-data safeguards Partiel A.5.35 Independent security review Gap A.5.36 Compliance with security rules Partiel A.5.37 Documented operating procedures Partiel"
+      },
+      {
+        "element": "aside",
+        "role": "complementary",
+        "name": "SectionClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Posture de la section Pass0 Partiel35 Gap1 N/A1 Posture du référentiel Pass0 Partiel97 Gap6 N/A24"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Section"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.1 Security policy governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.2 Assigned security accountabilities Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.3 Separation of conflicting duties Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.4 Leadership security responsibilities Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.5 Authority contact readiness Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.6 Security community contacts Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.7 Threat information handling Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.8 Security in managed projects Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.9 Asset and information inventory Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.10 Acceptable use expectations Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.11 Return of issued assets N/A"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.12 Information classification model Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.13 Classification labels and handling Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.14 Protected information transfer Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.15 Access governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.16 Identity lifecycle management Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.17 Authentication secret management Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.18 Access provisioning and review Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.19 Supplier security governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.20 Security terms for suppliers Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.21 ICT supply-chain security Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.22 Supplier service review and change Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.23 Cloud service security governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.24 Incident response preparation Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.25 Security event triage Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.26 Incident response execution Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.27 Learning from incidents Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.28 Preserving investigative evidence Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.29 Secure operation during disruption Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.30 Technology continuity readiness Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.31 Legal and contractual obligations Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.32 Intellectual property safeguards Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.33 Protected business records Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.34 Privacy and personal-data safeguards Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.35 Independent security review Gap"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.36 Compliance with security rules Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.37 Documented operating procedures Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la source de l’exigence"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’évaluation"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Documentation"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Preuves"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Documentation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la documentation: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Preuves"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’emplacement: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la preuve: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Déclaration d’applicabilité ISO/IEC 27 001"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Déclaration d’applicabilité ISO/IEC 42 001"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "WCAG 2,2 accessibility documentation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sécurité"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Signaler un problème"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source de la route: src/demos/assurance-workbench.ts"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "v0.26.0-presentation-test"
+      }
+    ],
+    "labels": [
+      {
+        "name": "lang",
+        "label": null
+      },
+      {
+        "name": null,
+        "label": "Section"
+      }
+    ]
+  },
+  "page:security.index": {
+    "headings": [
+      {
+        "level": 1,
+        "text": "Sécurité"
+      },
+      {
+        "level": 2,
+        "text": "Signaler une vulnérabilité"
+      },
+      {
+        "level": 3,
+        "text": "Que signaler"
+      },
+      {
+        "level": 3,
+        "text": "Ce qui se passe ensuite"
+      },
+      {
+        "level": 3,
+        "text": "Non-security concerns"
+      },
+      {
+        "level": 2,
+        "text": "Processus de divulgation"
+      },
+      {
+        "level": 2,
+        "text": "Avis publiés"
+      },
+      {
+        "level": 3,
+        "text": "No published advisories are established"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Aller au contenu principal"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Accueil de la démo d’architecture WizardGang"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Navigation principale"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Démonstrations"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Assurance"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Thème"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "EnglishEspañolFrançaisDeutsch日本語العربية Appliquer"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Langue"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Appliquer"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Security sections"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Report"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Process"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Advisories"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir un signalement de sécurité privé"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Published advisory JSON"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Security page implementation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Security policy source"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Machine-readable security.txt"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Published repository advisories"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Advisory dataset"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Advisory schema"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Canonical assurance service"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Canonical reporting API"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Publication policy"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Choose a public issue form →"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sécurité"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Signaler un problème"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source de la route: src/demos/security-page.ts"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "v0.26.0-presentation-test"
+      }
+    ],
+    "labels": [
+      {
+        "name": "lang",
+        "label": null
+      }
+    ]
+  },
+  "page:interfaces.frontend.index": {
+    "headings": [
+      {
+        "level": 1,
+        "text": "Architecture que vous pouvez inspecter."
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Aller au contenu principal"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Accueil de la démo d’architecture WizardGang"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Navigation principale"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Démonstrations"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Assurance"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Thème"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "EnglishEspañolFrançaisDeutsch日本語العربية Appliquer"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Langue"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Appliquer"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Explore demos"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "View assurance"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "v0.26.0-presentation-test"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Security boundary"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sécurité"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Signaler un problème"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source de la route: src/ui/home.ts"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "v0.26.0-presentation-test"
+      }
+    ],
+    "labels": [
+      {
+        "name": "lang",
+        "label": null
+      }
+    ]
+  },
+  "page:demos.index": {
+    "headings": [
+      {
+        "level": 1,
+        "text": "Architecture Demos"
+      },
+      {
+        "level": 2,
+        "text": "D1"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Aller au contenu principal"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Accueil de la démo d’architecture WizardGang"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Navigation principale"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Démonstrations"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Assurance"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Thème"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "EnglishEspañolFrançaisDeutsch日本語العربية Appliquer"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Langue"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Appliquer"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "Data"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "APIs"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "Integrations"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "Identité"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "AI"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "Plateforme"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "Quality"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Data demos"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "D1"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "R2"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "APIs demos"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "REST"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "GraphQL"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Platform demos"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Périphérie"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Workers"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Durable Objects"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Quality demos"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Accessibilité"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Internationalisation"
+      },
+      {
+        "element": "aside",
+        "role": "complementary",
+        "name": "D1 inspector"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Guide"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Request"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Preuves"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Guide"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Reset demo"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Voir la source"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sécurité"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Signaler un problème"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source de la route: src/demos/demos-page.ts"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "v0.26.0-presentation-test"
+      }
+    ],
+    "labels": [
+      {
+        "name": "lang",
+        "label": null
+      }
+    ]
+  },
+  "audit:assurance-security-record": {
+    "headings": [
+      {
+        "level": 1,
+        "text": "Assurance"
+      },
+      {
+        "level": 2,
+        "text": "Enregistrements"
+      },
+      {
+        "level": 2,
+        "text": "A.5.1 · Security policy governance"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Aller au contenu principal"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Accueil de la démo d’architecture WizardGang"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Navigation principale"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Démonstrations"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Assurance"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Thème"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "EnglishEspañolFrançaisDeutsch日本語العربية Appliquer"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Langue"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Appliquer"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "ISO/IEC 27 001:2 022"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "ISO/IEC 42 001:2 023"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "WCAG 2,2"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "SectionClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Posture de la section Pass0 Partiel35 Gap1 N/A1 Posture du référentiel Pass0 Partiel97 Gap6 N/A24 Enregistrements37 A.5.1 Security policy governance Partiel A.5.2 Assigned security accountabilities Partiel A.5.3 Separation of conflicting duties Partiel A.5.4 Leadership security responsibilities Partiel A.5.5 Authority contact readiness Partiel A.5.6 Security community contacts Partiel A.5.7 Threat information handling Partiel A.5.8 Security in managed projects Partiel A.5.9 Asset and information inventory Partiel A.5.10 Acceptable use expectations Partiel A.5.11 Return of issued assets N/A A.5.12 Information classification model Partiel A.5.13 Classification labels and handling Partiel A.5.14 Protected information transfer Partiel A.5.15 Access governance Partiel A.5.16 Identity lifecycle management Partiel A.5.17 Authentication secret management Partiel A.5.18 Access provisioning and review Partiel A.5.19 Supplier security governance Partiel A.5.20 Security terms for suppliers Partiel A.5.21 ICT supply-chain security Partiel A.5.22 Supplier service review and change Partiel A.5.23 Cloud service security governance Partiel A.5.24 Incident response preparation Partiel A.5.25 Security event triage Partiel A.5.26 Incident response execution Partiel A.5.27 Learning from incidents Partiel A.5.28 Preserving investigative evidence Partiel A.5.29 Secure operation during disruption Partiel A.5.30 Technology continuity readiness Partiel A.5.31 Legal and contractual obligations Partiel A.5.32 Intellectual property safeguards Partiel A.5.33 Protected business records Partiel A.5.34 Privacy and personal-data safeguards Partiel A.5.35 Independent security review Gap A.5.36 Compliance with security rules Partiel A.5.37 Documented operating procedures Partiel"
+      },
+      {
+        "element": "aside",
+        "role": "complementary",
+        "name": "SectionClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Posture de la section Pass0 Partiel35 Gap1 N/A1 Posture du référentiel Pass0 Partiel97 Gap6 N/A24"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Section"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.1 Security policy governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.2 Assigned security accountabilities Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.3 Separation of conflicting duties Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.4 Leadership security responsibilities Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.5 Authority contact readiness Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.6 Security community contacts Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.7 Threat information handling Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.8 Security in managed projects Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.9 Asset and information inventory Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.10 Acceptable use expectations Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.11 Return of issued assets N/A"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.12 Information classification model Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.13 Classification labels and handling Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.14 Protected information transfer Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.15 Access governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.16 Identity lifecycle management Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.17 Authentication secret management Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.18 Access provisioning and review Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.19 Supplier security governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.20 Security terms for suppliers Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.21 ICT supply-chain security Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.22 Supplier service review and change Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.23 Cloud service security governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.24 Incident response preparation Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.25 Security event triage Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.26 Incident response execution Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.27 Learning from incidents Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.28 Preserving investigative evidence Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.29 Secure operation during disruption Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.30 Technology continuity readiness Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.31 Legal and contractual obligations Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.32 Intellectual property safeguards Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.33 Protected business records Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.34 Privacy and personal-data safeguards Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.35 Independent security review Gap"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.36 Compliance with security rules Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.37 Documented operating procedures Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la source de l’exigence"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’évaluation"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Documentation"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Preuves"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Documentation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la documentation: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Preuves"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’emplacement: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la preuve: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Déclaration d’applicabilité ISO/IEC 27 001"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Déclaration d’applicabilité ISO/IEC 42 001"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "WCAG 2,2 accessibility documentation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sécurité"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Signaler un problème"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source de la route: src/demos/assurance-workbench.ts"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "v0.26.0-presentation-test"
+      }
+    ],
+    "labels": [
+      {
+        "name": "lang",
+        "label": null
+      },
+      {
+        "name": null,
+        "label": "Section"
+      }
+    ]
+  },
+  "audit:assurance-evidence-record": {
+    "headings": [
+      {
+        "level": 1,
+        "text": "Assurance"
+      },
+      {
+        "level": 2,
+        "text": "Enregistrements"
+      },
+      {
+        "level": 2,
+        "text": "A.5.1 · Security policy governance"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Aller au contenu principal"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Accueil de la démo d’architecture WizardGang"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Navigation principale"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Démonstrations"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Assurance"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Thème"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "EnglishEspañolFrançaisDeutsch日本語العربية Appliquer"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Langue"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Appliquer"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "ISO/IEC 27 001:2 022"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "ISO/IEC 42 001:2 023"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "WCAG 2,2"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "SectionClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Posture de la section Pass0 Partiel35 Gap1 N/A1 Posture du référentiel Pass0 Partiel97 Gap6 N/A24 Enregistrements37 A.5.1 Security policy governance Partiel A.5.2 Assigned security accountabilities Partiel A.5.3 Separation of conflicting duties Partiel A.5.4 Leadership security responsibilities Partiel A.5.5 Authority contact readiness Partiel A.5.6 Security community contacts Partiel A.5.7 Threat information handling Partiel A.5.8 Security in managed projects Partiel A.5.9 Asset and information inventory Partiel A.5.10 Acceptable use expectations Partiel A.5.11 Return of issued assets N/A A.5.12 Information classification model Partiel A.5.13 Classification labels and handling Partiel A.5.14 Protected information transfer Partiel A.5.15 Access governance Partiel A.5.16 Identity lifecycle management Partiel A.5.17 Authentication secret management Partiel A.5.18 Access provisioning and review Partiel A.5.19 Supplier security governance Partiel A.5.20 Security terms for suppliers Partiel A.5.21 ICT supply-chain security Partiel A.5.22 Supplier service review and change Partiel A.5.23 Cloud service security governance Partiel A.5.24 Incident response preparation Partiel A.5.25 Security event triage Partiel A.5.26 Incident response execution Partiel A.5.27 Learning from incidents Partiel A.5.28 Preserving investigative evidence Partiel A.5.29 Secure operation during disruption Partiel A.5.30 Technology continuity readiness Partiel A.5.31 Legal and contractual obligations Partiel A.5.32 Intellectual property safeguards Partiel A.5.33 Protected business records Partiel A.5.34 Privacy and personal-data safeguards Partiel A.5.35 Independent security review Gap A.5.36 Compliance with security rules Partiel A.5.37 Documented operating procedures Partiel"
+      },
+      {
+        "element": "aside",
+        "role": "complementary",
+        "name": "SectionClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Posture de la section Pass0 Partiel35 Gap1 N/A1 Posture du référentiel Pass0 Partiel97 Gap6 N/A24"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Section"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.1 Security policy governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.2 Assigned security accountabilities Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.3 Separation of conflicting duties Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.4 Leadership security responsibilities Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.5 Authority contact readiness Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.6 Security community contacts Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.7 Threat information handling Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.8 Security in managed projects Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.9 Asset and information inventory Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.10 Acceptable use expectations Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.11 Return of issued assets N/A"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.12 Information classification model Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.13 Classification labels and handling Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.14 Protected information transfer Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.15 Access governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.16 Identity lifecycle management Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.17 Authentication secret management Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.18 Access provisioning and review Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.19 Supplier security governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.20 Security terms for suppliers Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.21 ICT supply-chain security Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.22 Supplier service review and change Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.23 Cloud service security governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.24 Incident response preparation Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.25 Security event triage Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.26 Incident response execution Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.27 Learning from incidents Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.28 Preserving investigative evidence Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.29 Secure operation during disruption Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.30 Technology continuity readiness Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.31 Legal and contractual obligations Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.32 Intellectual property safeguards Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.33 Protected business records Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.34 Privacy and personal-data safeguards Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.35 Independent security review Gap"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.36 Compliance with security rules Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.37 Documented operating procedures Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la source de l’exigence"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’évaluation"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Documentation"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Preuves"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Documentation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la documentation: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Preuves"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’emplacement: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la preuve: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Déclaration d’applicabilité ISO/IEC 27 001"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Déclaration d’applicabilité ISO/IEC 42 001"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "WCAG 2,2 accessibility documentation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sécurité"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Signaler un problème"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source de la route: src/demos/assurance-workbench.ts"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "v0.26.0-presentation-test"
+      }
+    ],
+    "labels": [
+      {
+        "name": "lang",
+        "label": null
+      },
+      {
+        "name": null,
+        "label": "Section"
+      }
+    ]
+  },
+  "audit:assurance-accessibility-record": {
+    "headings": [
+      {
+        "level": 1,
+        "text": "Assurance"
+      },
+      {
+        "level": 2,
+        "text": "Enregistrements"
+      },
+      {
+        "level": 2,
+        "text": "A.5.1 · Security policy governance"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Aller au contenu principal"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Accueil de la démo d’architecture WizardGang"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Navigation principale"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Démonstrations"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Assurance"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Thème"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "EnglishEspañolFrançaisDeutsch日本語العربية Appliquer"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Langue"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Appliquer"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "ISO/IEC 27 001:2 022"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "ISO/IEC 42 001:2 023"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "WCAG 2,2"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "SectionClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Posture de la section Pass0 Partiel35 Gap1 N/A1 Posture du référentiel Pass0 Partiel97 Gap6 N/A24 Enregistrements37 A.5.1 Security policy governance Partiel A.5.2 Assigned security accountabilities Partiel A.5.3 Separation of conflicting duties Partiel A.5.4 Leadership security responsibilities Partiel A.5.5 Authority contact readiness Partiel A.5.6 Security community contacts Partiel A.5.7 Threat information handling Partiel A.5.8 Security in managed projects Partiel A.5.9 Asset and information inventory Partiel A.5.10 Acceptable use expectations Partiel A.5.11 Return of issued assets N/A A.5.12 Information classification model Partiel A.5.13 Classification labels and handling Partiel A.5.14 Protected information transfer Partiel A.5.15 Access governance Partiel A.5.16 Identity lifecycle management Partiel A.5.17 Authentication secret management Partiel A.5.18 Access provisioning and review Partiel A.5.19 Supplier security governance Partiel A.5.20 Security terms for suppliers Partiel A.5.21 ICT supply-chain security Partiel A.5.22 Supplier service review and change Partiel A.5.23 Cloud service security governance Partiel A.5.24 Incident response preparation Partiel A.5.25 Security event triage Partiel A.5.26 Incident response execution Partiel A.5.27 Learning from incidents Partiel A.5.28 Preserving investigative evidence Partiel A.5.29 Secure operation during disruption Partiel A.5.30 Technology continuity readiness Partiel A.5.31 Legal and contractual obligations Partiel A.5.32 Intellectual property safeguards Partiel A.5.33 Protected business records Partiel A.5.34 Privacy and personal-data safeguards Partiel A.5.35 Independent security review Gap A.5.36 Compliance with security rules Partiel A.5.37 Documented operating procedures Partiel"
+      },
+      {
+        "element": "aside",
+        "role": "complementary",
+        "name": "SectionClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Posture de la section Pass0 Partiel35 Gap1 N/A1 Posture du référentiel Pass0 Partiel97 Gap6 N/A24"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Section"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.1 Security policy governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.2 Assigned security accountabilities Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.3 Separation of conflicting duties Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.4 Leadership security responsibilities Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.5 Authority contact readiness Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.6 Security community contacts Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.7 Threat information handling Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.8 Security in managed projects Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.9 Asset and information inventory Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.10 Acceptable use expectations Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.11 Return of issued assets N/A"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.12 Information classification model Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.13 Classification labels and handling Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.14 Protected information transfer Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.15 Access governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.16 Identity lifecycle management Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.17 Authentication secret management Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.18 Access provisioning and review Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.19 Supplier security governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.20 Security terms for suppliers Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.21 ICT supply-chain security Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.22 Supplier service review and change Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.23 Cloud service security governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.24 Incident response preparation Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.25 Security event triage Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.26 Incident response execution Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.27 Learning from incidents Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.28 Preserving investigative evidence Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.29 Secure operation during disruption Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.30 Technology continuity readiness Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.31 Legal and contractual obligations Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.32 Intellectual property safeguards Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.33 Protected business records Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.34 Privacy and personal-data safeguards Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.35 Independent security review Gap"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.36 Compliance with security rules Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.37 Documented operating procedures Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la source de l’exigence"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’évaluation"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Documentation"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Preuves"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Documentation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la documentation: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Preuves"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’emplacement: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la preuve: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Déclaration d’applicabilité ISO/IEC 27 001"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Déclaration d’applicabilité ISO/IEC 42 001"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "WCAG 2,2 accessibility documentation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sécurité"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Signaler un problème"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source de la route: src/demos/assurance-workbench.ts"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "v0.26.0-presentation-test"
+      }
+    ],
+    "labels": [
+      {
+        "name": "lang",
+        "label": null
+      },
+      {
+        "name": null,
+        "label": "Section"
+      }
+    ]
+  },
+  "audit:assurance-rtl-record": {
+    "headings": [
+      {
+        "level": 1,
+        "text": "Assurance"
+      },
+      {
+        "level": 2,
+        "text": "Enregistrements"
+      },
+      {
+        "level": 2,
+        "text": "A.5.1 · Security policy governance"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Aller au contenu principal"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Accueil de la démo d’architecture WizardGang"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Navigation principale"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Démonstrations"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Assurance"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Thème"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "EnglishEspañolFrançaisDeutsch日本語العربية Appliquer"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Langue"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Appliquer"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "ISO/IEC 27 001:2 022"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "ISO/IEC 42 001:2 023"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "WCAG 2,2"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "SectionClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Posture de la section Pass0 Partiel35 Gap1 N/A1 Posture du référentiel Pass0 Partiel97 Gap6 N/A24 Enregistrements37 A.5.1 Security policy governance Partiel A.5.2 Assigned security accountabilities Partiel A.5.3 Separation of conflicting duties Partiel A.5.4 Leadership security responsibilities Partiel A.5.5 Authority contact readiness Partiel A.5.6 Security community contacts Partiel A.5.7 Threat information handling Partiel A.5.8 Security in managed projects Partiel A.5.9 Asset and information inventory Partiel A.5.10 Acceptable use expectations Partiel A.5.11 Return of issued assets N/A A.5.12 Information classification model Partiel A.5.13 Classification labels and handling Partiel A.5.14 Protected information transfer Partiel A.5.15 Access governance Partiel A.5.16 Identity lifecycle management Partiel A.5.17 Authentication secret management Partiel A.5.18 Access provisioning and review Partiel A.5.19 Supplier security governance Partiel A.5.20 Security terms for suppliers Partiel A.5.21 ICT supply-chain security Partiel A.5.22 Supplier service review and change Partiel A.5.23 Cloud service security governance Partiel A.5.24 Incident response preparation Partiel A.5.25 Security event triage Partiel A.5.26 Incident response execution Partiel A.5.27 Learning from incidents Partiel A.5.28 Preserving investigative evidence Partiel A.5.29 Secure operation during disruption Partiel A.5.30 Technology continuity readiness Partiel A.5.31 Legal and contractual obligations Partiel A.5.32 Intellectual property safeguards Partiel A.5.33 Protected business records Partiel A.5.34 Privacy and personal-data safeguards Partiel A.5.35 Independent security review Gap A.5.36 Compliance with security rules Partiel A.5.37 Documented operating procedures Partiel"
+      },
+      {
+        "element": "aside",
+        "role": "complementary",
+        "name": "SectionClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Posture de la section Pass0 Partiel35 Gap1 N/A1 Posture du référentiel Pass0 Partiel97 Gap6 N/A24"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Section"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.1 Security policy governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.2 Assigned security accountabilities Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.3 Separation of conflicting duties Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.4 Leadership security responsibilities Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.5 Authority contact readiness Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.6 Security community contacts Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.7 Threat information handling Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.8 Security in managed projects Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.9 Asset and information inventory Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.10 Acceptable use expectations Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.11 Return of issued assets N/A"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.12 Information classification model Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.13 Classification labels and handling Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.14 Protected information transfer Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.15 Access governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.16 Identity lifecycle management Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.17 Authentication secret management Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.18 Access provisioning and review Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.19 Supplier security governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.20 Security terms for suppliers Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.21 ICT supply-chain security Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.22 Supplier service review and change Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.23 Cloud service security governance Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.24 Incident response preparation Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.25 Security event triage Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.26 Incident response execution Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.27 Learning from incidents Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.28 Preserving investigative evidence Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.29 Secure operation during disruption Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.30 Technology continuity readiness Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.31 Legal and contractual obligations Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.32 Intellectual property safeguards Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.33 Protected business records Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.34 Privacy and personal-data safeguards Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.35 Independent security review Gap"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.36 Compliance with security rules Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "A.5.37 Documented operating procedures Partiel"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la source de l’exigence"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’évaluation"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Documentation"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Preuves"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Documentation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la documentation: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Preuves"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’emplacement: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la preuve: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Déclaration d’applicabilité ISO/IEC 27 001"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Déclaration d’applicabilité ISO/IEC 42 001"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "WCAG 2,2 accessibility documentation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sécurité"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Signaler un problème"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source de la route: src/demos/assurance-workbench.ts"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "v0.26.0-presentation-test"
+      }
+    ],
+    "labels": [
+      {
+        "name": "lang",
+        "label": null
+      },
+      {
+        "name": null,
+        "label": "Section"
+      }
+    ]
+  },
+  "audit:accessibility-lab": {
+    "headings": [
+      {
+        "level": 1,
+        "text": "Architecture Demos"
+      },
+      {
+        "level": 2,
+        "text": "D1"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Aller au contenu principal"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Accueil de la démo d’architecture WizardGang"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Navigation principale"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Démonstrations"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Assurance"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Thème"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "EnglishEspañolFrançaisDeutsch日本語العربية Appliquer"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Langue"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Appliquer"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "Data"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "APIs"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "Integrations"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "Identité"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "AI"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "Plateforme"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "Quality"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Data demos"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "D1"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "R2"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "APIs demos"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "REST"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "GraphQL"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Platform demos"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Périphérie"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Workers"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Durable Objects"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Quality demos"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Accessibilité"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Internationalisation"
+      },
+      {
+        "element": "aside",
+        "role": "complementary",
+        "name": "D1 inspector"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Guide"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Request"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Preuves"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Guide"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Reset demo"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Voir la source"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sécurité"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Signaler un problème"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source de la route: src/demos/demos-page.ts"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "v0.26.0-presentation-test"
+      }
+    ],
+    "labels": [
+      {
+        "name": "lang",
+        "label": null
+      }
+    ]
+  },
+  "audit:openapi-console": {
+    "headings": [
+      {
+        "level": 1,
+        "text": "Architecture Demos"
+      },
+      {
+        "level": 2,
+        "text": "D1"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Aller au contenu principal"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Accueil de la démo d’architecture WizardGang"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Navigation principale"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Démonstrations"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Assurance"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Thème"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "EnglishEspañolFrançaisDeutsch日本語العربية Appliquer"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Langue"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Appliquer"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "Data"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "APIs"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "Integrations"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "Identité"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "AI"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "Plateforme"
+      },
+      {
+        "element": "a",
+        "role": "tab",
+        "name": "Quality"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Data demos"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "D1"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "R2"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "APIs demos"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "REST"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "GraphQL"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Platform demos"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Périphérie"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Workers"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Durable Objects"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Quality demos"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Accessibilité"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Internationalisation"
+      },
+      {
+        "element": "aside",
+        "role": "complementary",
+        "name": "D1 inspector"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Guide"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Request"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Preuves"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Guide"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Reset demo"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Voir la source"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sécurité"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Signaler un problème"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source de la route: src/demos/demos-page.ts"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "v0.26.0-presentation-test"
+      }
+    ],
+    "labels": [
+      {
+        "name": "lang",
+        "label": null
+      }
+    ]
+  },
+  "audit:homepage-availability-proof": {
+    "headings": [
+      {
+        "level": 1,
+        "text": "Architecture que vous pouvez inspecter."
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Aller au contenu principal"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Accueil de la démo d’architecture WizardGang"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Navigation principale"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Démonstrations"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Assurance"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Thème"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "EnglishEspañolFrançaisDeutsch日本語العربية Appliquer"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Langue"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Appliquer"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Explore demos"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "View assurance"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "v0.26.0-presentation-test"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Security boundary"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sécurité"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Signaler un problème"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source de la route: src/ui/home.ts"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "v0.26.0-presentation-test"
+      }
+    ],
+    "labels": [
+      {
+        "name": "lang",
+        "label": null
+      }
+    ]
+  },
+  "page:operations.admin": {
+    "headings": [
+      {
+        "level": 1,
+        "text": "Demo Admin"
+      },
+      {
+        "level": 2,
+        "text": "Public demo state"
+      },
+      {
+        "level": 2,
+        "text": "ChatGPT web access"
+      },
+      {
+        "level": 2,
+        "text": "Offline invariants"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Aller au contenu principal"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Accueil de la démo d’architecture WizardGang"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Navigation principale"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Démonstrations"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Assurance"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Thème"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "EnglishEspañolFrançaisDeutsch日本語العربية Appliquer"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Langue"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Appliquer"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Admin UI source"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Control logic"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Crawler control"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Offline gate"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "D1 control schema"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Crawler schema"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Operations design"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "Public message Displayed on the offline page. Maximum 500 characters. Do not place secrets or internal incident details here. Available. Public offline previewDemo temporarily offlineAvailable. Take demo online Take demo offline"
+      },
+      {
+        "element": "textarea",
+        "role": null,
+        "name": "Public message"
+      },
+      {
+        "element": "aside",
+        "role": "complementary",
+        "name": "Public offline previewDemo temporarily offlineAvailable."
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Take demo online"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Take demo offline"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Inspect /robots.txt"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "OpenAI crawler documentation"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "Enable ChatGPT access Disable ChatGPT access"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Enable ChatGPT access"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Disable ChatGPT access"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sécurité"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Signaler un problème"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source de la route: src/ui/admin.ts"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "v0.26.0-presentation-test"
+      }
+    ],
+    "labels": [
+      {
+        "name": "lang",
+        "label": null
+      },
+      {
+        "name": "control",
+        "label": null
+      },
+      {
+        "name": "message",
+        "label": "Public message"
+      },
+      {
+        "name": "control",
+        "label": null
+      }
+    ]
+  },
+  "page:operations.offline": {
+    "headings": [
+      {
+        "level": 1,
+        "text": "La démonstration fonctionne."
+      },
+      {
+        "level": 2,
+        "text": "Still available"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Aller au contenu principal"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Accueil de la démo d’architecture WizardGang"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Navigation principale"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Démonstrations"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Assurance"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Thème"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "EnglishEspañolFrançaisDeutsch日本語العربية Appliquer"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Langue"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Appliquer"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Continue to /"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "View system health"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sécurité"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Public source"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Health JSON"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Version JSON"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Operations docs ↗"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sécurité"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Signaler un problème"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source de la route: src/ui/admin.ts"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "v0.26.0-presentation-test"
+      }
+    ],
+    "labels": [
+      {
+        "name": "lang",
+        "label": null
+      }
+    ]
+  },
+  "page:ordinary-404": {
+    "headings": [
+      {
+        "level": 1,
+        "text": "Cette route n’existe pas."
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Aller au contenu principal"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Accueil de la démo d’architecture WizardGang"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Navigation principale"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Démonstrations"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Assurance"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Thème"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "EnglishEspañolFrançaisDeutsch日本語العربية Appliquer"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Langue"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Appliquer"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Home"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Browse demos"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sécurité"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Signaler un problème"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "v0.26.0-presentation-test"
+      }
+    ],
+    "labels": [
+      {
+        "name": "lang",
+        "label": null
+      }
+    ]
+  },
+  "demo:d1": {
+    "headings": [
+      {
+        "level": 2,
+        "text": "Base de données Cloudflare D1"
+      },
+      {
+        "level": 3,
+        "text": "Users"
+      },
+      {
+        "level": 3,
+        "text": "Tasks"
+      },
+      {
+        "level": 3,
+        "text": "SQL Inspector"
+      },
+      {
+        "level": 3,
+        "text": "Your isolated D1 sandbox"
+      },
+      {
+        "level": 3,
+        "text": "Delete row?"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Users — / 10"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Tasks — / 25"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Users — / 10"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "+ Add user"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "Add userMaximum 10 users Name Email RoleAdminMemberViewer Create userAnnuler"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Name"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Email"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Role"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Create user"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Annuler"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Tasks — / 25"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "+ Add task"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "Add taskMaximum 25 tasks Task title AssigneeUnassigned ÉtatTo doIn progressDone Create taskAnnuler"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Task title"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Assignee"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "État"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Create task"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Annuler"
+      },
+      {
+        "element": "aside",
+        "role": "complementary",
+        "name": "Live database evidenceSQL Inspector En attente Choose a tableNo query yet Statement Select a table or modify a row to inspect its parameterized SQL. Response JSONNo response yet."
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Reset sample data"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Annuler"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Continuer"
+      }
+    ],
+    "labels": [
+      {
+        "name": "id",
+        "label": null
+      },
+      {
+        "name": "name",
+        "label": "Name"
+      },
+      {
+        "name": "email",
+        "label": "Email"
+      },
+      {
+        "name": "role",
+        "label": "Role"
+      },
+      {
+        "name": "id",
+        "label": null
+      },
+      {
+        "name": "title",
+        "label": "Task title"
+      },
+      {
+        "name": "assigneeId",
+        "label": "Assignee"
+      },
+      {
+        "name": "status",
+        "label": "État"
+      }
+    ]
+  },
+  "demo:r2": {
+    "headings": [
+      {
+        "level": 2,
+        "text": "Stockage Cloudflare R2"
+      },
+      {
+        "level": 3,
+        "text": "Your R2 sandbox"
+      },
+      {
+        "level": 4,
+        "text": "Files"
+      },
+      {
+        "level": 3,
+        "text": "Latest operation"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "form",
+        "role": null,
+        "name": "Drop a file here or Browse files 5 MiB maximum Téléverser le fichier Select one file to begin."
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "↑ Drop a file here or Browse files 5 MiB maximum"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Clear selected file"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Téléverser le fichier"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Refresh files"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Réinitialiser le bac à sable"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Confirm reset"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Annuler"
+      },
+      {
+        "element": "aside",
+        "role": "complementary",
+        "name": "Live requestLatest operationEn attente Method— État— Round trip— Choose an action to inspect the live result. View response JSONNo request yet."
+      }
+    ],
+    "labels": [
+      {
+        "name": "file",
+        "label": "↑ Drop a file here or Browse files 5 MiB maximum"
+      }
+    ]
+  },
+  "demo:rest": {
+    "headings": [
+      {
+        "level": 2,
+        "text": "API REST"
+      },
+      {
+        "level": 3,
+        "text": "Choose one request"
+      },
+      {
+        "level": 3,
+        "text": "List records"
+      },
+      {
+        "level": 4,
+        "text": "Request"
+      },
+      {
+        "level": 4,
+        "text": "Response"
+      },
+      {
+        "level": 4,
+        "text": "Contract"
+      },
+      {
+        "level": 5,
+        "text": "Parameters"
+      },
+      {
+        "level": 5,
+        "text": "Declared responses"
+      },
+      {
+        "level": 5,
+        "text": "Referenced schemas"
+      },
+      {
+        "level": 5,
+        "text": "Record"
+      },
+      {
+        "level": 4,
+        "text": "Deeper evidence"
+      },
+      {
+        "level": 3,
+        "text": "Create a record"
+      },
+      {
+        "level": 4,
+        "text": "Request"
+      },
+      {
+        "level": 4,
+        "text": "Response"
+      },
+      {
+        "level": 4,
+        "text": "Contract"
+      },
+      {
+        "level": 5,
+        "text": "Parameters"
+      },
+      {
+        "level": 5,
+        "text": "Declared responses"
+      },
+      {
+        "level": 5,
+        "text": "Referenced schemas"
+      },
+      {
+        "level": 5,
+        "text": "RecordInput"
+      },
+      {
+        "level": 5,
+        "text": "Record"
+      },
+      {
+        "level": 5,
+        "text": "Error"
+      },
+      {
+        "level": 4,
+        "text": "Deeper evidence"
+      },
+      {
+        "level": 3,
+        "text": "Read a record"
+      },
+      {
+        "level": 4,
+        "text": "Request"
+      },
+      {
+        "level": 4,
+        "text": "Response"
+      },
+      {
+        "level": 4,
+        "text": "Contract"
+      },
+      {
+        "level": 5,
+        "text": "Parameters"
+      },
+      {
+        "level": 5,
+        "text": "Declared responses"
+      },
+      {
+        "level": 5,
+        "text": "Referenced schemas"
+      },
+      {
+        "level": 5,
+        "text": "Record"
+      },
+      {
+        "level": 5,
+        "text": "Error"
+      },
+      {
+        "level": 4,
+        "text": "Deeper evidence"
+      },
+      {
+        "level": 3,
+        "text": "Replace a record"
+      },
+      {
+        "level": 4,
+        "text": "Request"
+      },
+      {
+        "level": 4,
+        "text": "Response"
+      },
+      {
+        "level": 4,
+        "text": "Contract"
+      },
+      {
+        "level": 5,
+        "text": "Parameters"
+      },
+      {
+        "level": 5,
+        "text": "Declared responses"
+      },
+      {
+        "level": 5,
+        "text": "Referenced schemas"
+      },
+      {
+        "level": 5,
+        "text": "RecordReplacement"
+      },
+      {
+        "level": 5,
+        "text": "Record"
+      },
+      {
+        "level": 5,
+        "text": "Error"
+      },
+      {
+        "level": 4,
+        "text": "Deeper evidence"
+      },
+      {
+        "level": 3,
+        "text": "Update a record"
+      },
+      {
+        "level": 4,
+        "text": "Request"
+      },
+      {
+        "level": 4,
+        "text": "Response"
+      },
+      {
+        "level": 4,
+        "text": "Contract"
+      },
+      {
+        "level": 5,
+        "text": "Parameters"
+      },
+      {
+        "level": 5,
+        "text": "Declared responses"
+      },
+      {
+        "level": 5,
+        "text": "Referenced schemas"
+      },
+      {
+        "level": 5,
+        "text": "RecordPatch"
+      },
+      {
+        "level": 5,
+        "text": "Record"
+      },
+      {
+        "level": 5,
+        "text": "Error"
+      },
+      {
+        "level": 4,
+        "text": "Deeper evidence"
+      },
+      {
+        "level": 3,
+        "text": "Delete a record"
+      },
+      {
+        "level": 4,
+        "text": "Request"
+      },
+      {
+        "level": 4,
+        "text": "Response"
+      },
+      {
+        "level": 4,
+        "text": "Contract"
+      },
+      {
+        "level": 5,
+        "text": "Parameters"
+      },
+      {
+        "level": 5,
+        "text": "Declared responses"
+      },
+      {
+        "level": 5,
+        "text": "Referenced schemas"
+      },
+      {
+        "level": 4,
+        "text": "Deeper evidence"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "aside",
+        "role": "complementary",
+        "name": "REST API boundary"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Copier"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "GET/api/labs/rest-demo-recordsList records"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "POST/api/labs/rest-demo-recordsCreate a record"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "GET/api/labs/rest-demo-records/{id}Read a record"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "PUT/api/labs/rest-demo-records/{id}Replace a record"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "PATCH/api/labs/rest-demo-records/{id}Update a record"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "DELETE/api/labs/rest-demo-records/{id}Delete a record"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Open full OpenAPI JSON"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Download JSON"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "This operation has no request inputs. Execute GET"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Execute GET"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "curl"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "JavaScript"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Python"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Copy selected code sample"
+      },
+      {
+        "element": "pre",
+        "role": "tabpanel",
+        "name": "curl"
+      },
+      {
+        "element": "pre",
+        "role": "tabpanel",
+        "name": "JavaScript"
+      },
+      {
+        "element": "pre",
+        "role": "tabpanel",
+        "name": "Python"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "Request body application/json · RecordInput{ \"key\": \"hello\", \"value\": { \"message\": \"Hello from a Worker\" } } Execute POST"
+      },
+      {
+        "element": "textarea",
+        "role": null,
+        "name": "Request body application/json · RecordInput"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Execute POST"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "curl"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "JavaScript"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Python"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Copy selected code sample"
+      },
+      {
+        "element": "pre",
+        "role": "tabpanel",
+        "name": "curl"
+      },
+      {
+        "element": "pre",
+        "role": "tabpanel",
+        "name": "JavaScript"
+      },
+      {
+        "element": "pre",
+        "role": "tabpanel",
+        "name": "Python"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "id path · required · string Execute GET"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "id path · required · string"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Execute GET"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "curl"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "JavaScript"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Python"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Copy selected code sample"
+      },
+      {
+        "element": "pre",
+        "role": "tabpanel",
+        "name": "curl"
+      },
+      {
+        "element": "pre",
+        "role": "tabpanel",
+        "name": "JavaScript"
+      },
+      {
+        "element": "pre",
+        "role": "tabpanel",
+        "name": "Python"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "id path · required · stringRequest body application/json · RecordReplacement{ \"value\": { \"message\": \"Replaced by a Worker\" } } Execute PUT"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "id path · required · string"
+      },
+      {
+        "element": "textarea",
+        "role": null,
+        "name": "Request body application/json · RecordReplacement"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Execute PUT"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "curl"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "JavaScript"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Python"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Copy selected code sample"
+      },
+      {
+        "element": "pre",
+        "role": "tabpanel",
+        "name": "curl"
+      },
+      {
+        "element": "pre",
+        "role": "tabpanel",
+        "name": "JavaScript"
+      },
+      {
+        "element": "pre",
+        "role": "tabpanel",
+        "name": "Python"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "id path · required · stringRequest body application/json · RecordPatch{ \"value\": { \"message\": \"Patched by a Worker\", \"priority\": \"high\" } } Execute PATCH"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "id path · required · string"
+      },
+      {
+        "element": "textarea",
+        "role": null,
+        "name": "Request body application/json · RecordPatch"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Execute PATCH"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "curl"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "JavaScript"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Python"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Copy selected code sample"
+      },
+      {
+        "element": "pre",
+        "role": "tabpanel",
+        "name": "curl"
+      },
+      {
+        "element": "pre",
+        "role": "tabpanel",
+        "name": "JavaScript"
+      },
+      {
+        "element": "pre",
+        "role": "tabpanel",
+        "name": "Python"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "id path · required · string Execute DELETE"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "id path · required · string"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Execute DELETE"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "curl"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "JavaScript"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Python"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Copy selected code sample"
+      },
+      {
+        "element": "pre",
+        "role": "tabpanel",
+        "name": "curl"
+      },
+      {
+        "element": "pre",
+        "role": "tabpanel",
+        "name": "JavaScript"
+      },
+      {
+        "element": "pre",
+        "role": "tabpanel",
+        "name": "Python"
+      }
+    ],
+    "labels": [
+      {
+        "name": "lang",
+        "label": null
+      },
+      {
+        "name": null,
+        "label": "Request body application/json · RecordInput"
+      },
+      {
+        "name": "lang",
+        "label": null
+      },
+      {
+        "name": null,
+        "label": "id path · required · string"
+      },
+      {
+        "name": null,
+        "label": "id path · required · string"
+      },
+      {
+        "name": null,
+        "label": "Request body application/json · RecordReplacement"
+      },
+      {
+        "name": null,
+        "label": "id path · required · string"
+      },
+      {
+        "name": null,
+        "label": "Request body application/json · RecordPatch"
+      },
+      {
+        "name": null,
+        "label": "id path · required · string"
+      }
+    ]
+  },
+  "demo:graphql": {
+    "headings": [
+      {
+        "level": 2,
+        "text": "API GraphQL"
+      },
+      {
+        "level": 3,
+        "text": "Exemples fonctionnels"
+      },
+      {
+        "level": 4,
+        "text": "List users"
+      },
+      {
+        "level": 4,
+        "text": "Read one user"
+      },
+      {
+        "level": 4,
+        "text": "Query"
+      },
+      {
+        "level": 4,
+        "text": "User"
+      },
+      {
+        "level": 4,
+        "text": "Mutation"
+      },
+      {
+        "level": 3,
+        "text": "Accessible query runner"
+      },
+      {
+        "level": 4,
+        "text": "Response"
+      },
+      {
+        "level": 3,
+        "text": "Execution controls"
+      },
+      {
+        "level": 3,
+        "text": "GraphQL ↔ D1 Users"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "button",
+        "role": null,
+        "name": "Run example"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Run example"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sign in for mutation access"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "GraphQL query query Users { users { id name email role } } Use standard GraphQL query syntax. This public runner does not require a pointer or an embedded third-party editor. Run query"
+      },
+      {
+        "element": "textarea",
+        "role": null,
+        "name": "GraphQL query"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Run query"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Open D1 view →"
+      }
+    ],
+    "labels": [
+      {
+        "name": "query",
+        "label": "GraphQL query"
+      }
+    ]
+  },
+  "demo:webhooks": {
+    "headings": [
+      {
+        "level": 2,
+        "text": "Webhooks signés"
+      },
+      {
+        "level": 3,
+        "text": "Connected receiver"
+      },
+      {
+        "level": 3,
+        "text": "Simulate a signed release webhook"
+      },
+      {
+        "level": 3,
+        "text": "Livraisons vérifiées"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "SouthernGentlemen/wizardgang-architecture-demo"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Simulate signed release webhook"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Reset my synthetic events"
+      }
+    ],
+    "labels": []
+  },
+  "demo:identity": {
+    "headings": [
+      {
+        "level": 2,
+        "text": "Authentication & SSO"
+      },
+      {
+        "level": 3,
+        "text": "Choose a trust relationship"
+      },
+      {
+        "level": 4,
+        "text": "Microsoft Entra ID"
+      },
+      {
+        "level": 3,
+        "text": "Une frontière d’identité unique"
+      },
+      {
+        "level": 4,
+        "text": "Google"
+      },
+      {
+        "level": 4,
+        "text": "GitHub"
+      },
+      {
+        "level": 3,
+        "text": "Identité"
+      },
+      {
+        "level": 4,
+        "text": "Validated provider payload"
+      },
+      {
+        "level": 4,
+        "text": "Normalized identity"
+      },
+      {
+        "level": 4,
+        "text": "What can this identity do?"
+      },
+      {
+        "level": 4,
+        "text": "Protocol"
+      },
+      {
+        "level": 3,
+        "text": "Microsoft Entra ID / SAML 2,0"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "View source ↗"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sign in with Microsoft"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Use SAML 2,0 instead →"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sign in with Google"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sign in with GitHub"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Se déconnecter"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Provider payload"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Normalized identity"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Authorization"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Protocol"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Provider payload"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Normalized identity"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Authorization"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Evaluate demo:read"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Evaluate demo:write"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Protocol"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Try SAML authentication"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "View SP metadata ↗"
+      }
+    ],
+    "labels": []
+  },
+  "demo:mcp": {
+    "headings": [
+      {
+        "level": 2,
+        "text": "Model Context Protocol"
+      },
+      {
+        "level": 3,
+        "text": "Outils disponibles"
+      },
+      {
+        "level": 4,
+        "text": "ping"
+      },
+      {
+        "level": 4,
+        "text": "list_demo_records"
+      },
+      {
+        "level": 3,
+        "text": "Run ping"
+      },
+      {
+        "level": 3,
+        "text": "Connect a client"
+      },
+      {
+        "level": 4,
+        "text": "Claude Code"
+      },
+      {
+        "level": 4,
+        "text": "Codex CLI"
+      },
+      {
+        "level": 4,
+        "text": "MCP Inspector"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "button",
+        "role": null,
+        "name": "Run ping"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Copy endpoint"
+      }
+    ],
+    "labels": []
+  },
+  "demo:edge": {
+    "headings": [
+      {
+        "level": 2,
+        "text": "Périphérie Cloudflare"
+      },
+      {
+        "level": 3,
+        "text": "Request → Cloudflare edge → Worker"
+      },
+      {
+        "level": 4,
+        "text": "Request supplied"
+      },
+      {
+        "level": 4,
+        "text": "Cloudflare supplied"
+      },
+      {
+        "level": 4,
+        "text": "Privacy boundary"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source de la route: src/demos/edge.ts"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Runtime API"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Cloudflare configuration"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Inspecter cette requête périphérique"
+      }
+    ],
+    "labels": []
+  },
+  "demo:workers": {
+    "headings": [
+      {
+        "level": 2,
+        "text": "Cloudflare Workers"
+      },
+      {
+        "level": 3,
+        "text": "Compose a request"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source de la route: src/demos/workers.ts"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Runtime policy"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Worker entry point"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "MethodGETPOST ResourceStatic assetDynamic route Cookie present Authorization present Appliquer la politique de requête périphérique"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Method"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Resource"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Cookie present"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Authorization present"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Appliquer la politique de requête périphérique"
+      }
+    ],
+    "labels": [
+      {
+        "name": "method",
+        "label": "Method"
+      },
+      {
+        "name": "resource",
+        "label": "Resource"
+      },
+      {
+        "name": "cookie",
+        "label": "Cookie present"
+      },
+      {
+        "name": "authorization",
+        "label": "Authorization present"
+      }
+    ]
+  },
+  "demo:durable-objects": {
+    "headings": [
+      {
+        "level": 2,
+        "text": "Durable Objects"
+      },
+      {
+        "level": 3,
+        "text": "Many requests, one state owner"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source de la route: src/demos/durable-objects.ts"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Durable Object API"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Coordinator class"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Binding configuration"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Increment once"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Send 10 concurrent increments"
+      }
+    ],
+    "labels": []
+  },
+  "demo:accessibility": {
+    "headings": [
+      {
+        "level": 2,
+        "text": "L’accessibilité est un comportement."
+      },
+      {
+        "level": 3,
+        "text": "Operate the working interaction"
+      },
+      {
+        "level": 3,
+        "text": "Automated check of accessible behavior"
+      },
+      {
+        "level": 3,
+        "text": "Failure analysis"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Source de la route: src/demos/accessibility-page.ts"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Lab source"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Global shell source"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Manual verification matrix"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Interface tests"
+      }
+    ],
+    "labels": []
+  },
+  "demo:i18n": {
+    "headings": [
+      {
+        "level": 2,
+        "text": "Internationalisation de l’interface"
+      },
+      {
+        "level": 3,
+        "text": "Contrôles d’internationalisation"
+      },
+      {
+        "level": 3,
+        "text": "Livrez un service périphérique fiable"
+      },
+      {
+        "level": 3,
+        "text": "Valeur résolue"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Global runtime source"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Voir le code de la page"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Voir la ressource linguistique"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Locale configuration"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "Nombre d’éléments Appliquer"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Nombre d’éléments"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Appliquer"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Vérifier la version"
+      },
+      {
+        "element": "aside",
+        "role": "complementary",
+        "name": "Inspecteur du contexte global Valeur résolue localefr defaulten fallbacken directionltr plural categoryother Inspect a valueTitleItemsNumberDateCurrencyAction { \"items_other\": \"{count} éléments d’architecture\" } Voir la ressource linguistique"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Title"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Items"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Number"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Date"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Currency"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Action"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Voir la ressource linguistique"
+      }
+    ],
+    "labels": [
+      {
+        "name": "lang",
+        "label": null
+      },
+      {
+        "name": "count",
+        "label": "Nombre d’éléments"
+      }
+    ]
+  },
+  "assurance:ISO27001-A.5.19": {
+    "headings": [
+      {
+        "level": 2,
+        "text": "A.5.19 · Supplier security governance"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la source de l’exigence"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’évaluation"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Documentation"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Preuves"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Documentation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la documentation: docs/governance/ENGINEERING-CONTROLS.md#4-supplier-classification"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Preuves"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’emplacement: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la preuve: Security boundary and secret handling"
+      }
+    ],
+    "labels": []
+  },
+  "assurance:ISO42001-A.9.4": {
+    "headings": [
+      {
+        "level": 2,
+        "text": "A.9.4 · Prevent unintended AI use and authority"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la source de l’exigence"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’évaluation"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Documentation"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Preuves"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Documentation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la documentation: docs/governance/ENGINEERING-CONTROLS.md#85-mcpai-integration-testing"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la documentation: docs/governance/AI-GOVERNANCE.md#32-explicit-system-boundaries"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Preuves"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’emplacement: Shared authorization implementation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la preuve: Shared authorization implementation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’emplacement: MCP boundary implementation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la preuve: MCP boundary implementation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’emplacement: MCP client interoperability and negative tests"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la preuve: MCP client interoperability and negative tests"
+      }
+    ],
+    "labels": []
+  },
+  "assurance:WCAG-2.4.7": {
+    "headings": [
+      {
+        "level": 2,
+        "text": "2.4.7 · Focus Visible"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "WCAG 2.2 assessed 2026-09-17 — open accessibility documentation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la source de l’exigence"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’évaluation"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Documentation"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Preuves"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Documentation"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la documentation: docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Preuves"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’emplacement: Accessibility verification protocol"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la preuve: Accessibility verification protocol"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’emplacement: Accessibility demonstration page"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la preuve: Accessibility demonstration page"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir l’emplacement: Accessibility interface tests"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Ouvrir la preuve: Accessibility interface tests"
+      }
+    ],
+    "labels": []
+  }
+}
