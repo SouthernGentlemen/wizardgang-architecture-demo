@@ -94,6 +94,10 @@ for (const entry of complianceEntries) {
       errors.push(`${record.id}: documentation relationship targets retired register/SoA Markdown: ${parsed.repositoryPath}`);
       continue;
     }
+    if (parsed.repositoryPath.startsWith('docs/governance/assessments/')) {
+      errors.push(`${record.id}: documentation relationship targets retired historical assessment Markdown: ${parsed.repositoryPath}`);
+      continue;
+    }
     if (!markdownSet.has(parsed.repositoryPath)) {
       errors.push(`${record.id}: documentation file is not a tracked Markdown file: ${parsed.repositoryPath}`);
       continue;

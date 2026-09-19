@@ -63,7 +63,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-311-language-of-page"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -120,7 +120,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-312-language-of-parts"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -169,7 +169,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-313-unusual-words"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -218,7 +218,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-314-abbreviations"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -267,7 +267,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-315-reading-level"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -316,7 +316,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-316-pronunciation"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -373,7 +373,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-321-on-focus"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -430,7 +430,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-322-on-input"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -487,7 +487,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-323-consistent-navigation"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -544,7 +544,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-324-consistent-identification"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -590,7 +590,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-325-change-on-request"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -658,7 +658,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-326-consistent-help"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -718,7 +718,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-331-error-identification"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -786,7 +786,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-332-labels-or-instructions"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -846,7 +846,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-333-error-suggestion"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -895,7 +895,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-334-error-prevention-legal-financial-data"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -944,7 +944,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-335-help"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -993,7 +993,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-336-error-prevention-all"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1061,7 +1061,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-337-redundant-entry"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1132,7 +1132,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-338-accessible-authentication-minimum"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1203,7 +1203,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-339-accessible-authentication-enhanced"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],

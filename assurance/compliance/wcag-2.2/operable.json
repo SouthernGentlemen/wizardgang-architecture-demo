@@ -63,7 +63,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-211-keyboard"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -120,7 +120,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-212-no-keyboard-trap"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -166,7 +166,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-213-keyboard-no-exception"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -215,7 +215,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-214-character-key-shortcuts"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -272,7 +272,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-221-timing-adjustable"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -321,7 +321,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-222-pause-stop-hide"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -367,7 +367,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-223-no-timing"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -413,7 +413,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-224-interruptions"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -459,7 +459,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-225-re-authenticating"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -505,7 +505,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-226-timeouts"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -554,7 +554,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-231-three-flashes-or-below-threshold"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -603,7 +603,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-232-three-flashes"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -649,7 +649,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-233-animation-from-interactions"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -717,7 +717,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-241-bypass-blocks"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -785,7 +785,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-242-page-titled"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -853,7 +853,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-243-focus-order"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -921,18 +921,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-244-link-purpose-in-context"
-          }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.wcag-2.2.operable",
-            "native": "WCAG-2.4.4"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-18-REASSESSMENT.md#wcag-244-link-purpose-in-context"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -989,7 +978,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-245-multiple-ways"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1057,7 +1046,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-246-headings-and-labels"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1125,7 +1114,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-247-focus-visible"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1171,7 +1160,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-248-location"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1217,18 +1206,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-249-link-purpose-link-only"
-          }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.wcag-2.2.operable",
-            "native": "WCAG-2.4.9"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-18-REASSESSMENT.md#wcag-249-link-purpose-link-only"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1274,7 +1252,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-2410-section-headings"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1342,7 +1320,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-2411-focus-not-obscured-minimum"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1388,7 +1366,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-2412-focus-not-obscured-enhanced"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1456,7 +1434,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-2413-focus-appearance"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1505,7 +1483,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-251-pointer-gestures"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1562,7 +1540,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-252-pointer-cancellation"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1630,7 +1608,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-253-label-in-name"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1679,7 +1657,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-254-motion-actuation"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1728,7 +1706,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-255-target-size-enhanced"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1774,7 +1752,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-256-concurrent-input-mechanisms"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1842,7 +1820,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-257-dragging-movements"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],
@@ -1910,7 +1888,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md#wcag-258-target-size-minimum"
+            "native": "docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary"
           }
         }
       ],

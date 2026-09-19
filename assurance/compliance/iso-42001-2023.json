@@ -508,7 +508,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#1-purpose"
+            "native": "docs/governance/AI-IMPACT-ASSESSMENT.md#1-purpose"
           }
         },
         {
@@ -523,7 +523,7 @@
           }
         }
       ],
-      "rationale": "The current read-only MCP capability has a dated impact assessment covering intended use, affected parties, foreseeable misuse, positive/adverse impacts, oversight, data and reassessment triggers. Several treatment directions remain open and no subsequent triggered reassessment has yet operated.",
+      "rationale": "The current read-only MCP capability has the current impact assessment covering intended use, affected parties, foreseeable misuse, positive/adverse impacts, oversight, data and reassessment triggers. Several treatment directions remain open and no subsequent triggered reassessment has yet operated.",
       "gaps": [
         "Close or explicitly continue the assessment's open treatment directions and retain the next triggered/scheduled impact reassessment when due."
       ]
@@ -1048,7 +1048,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#1-purpose"
+            "native": "docs/governance/AI-IMPACT-ASSESSMENT.md#1-purpose"
           }
         },
         {
@@ -1063,7 +1063,7 @@
           }
         }
       ],
-      "rationale": "A dated impact assessment exists for the current read-only MCP capability and defines reassessment triggers. Open treatment directions and the next operating reassessment remain incomplete.",
+      "rationale": "The current impact assessment exists for the current read-only MCP capability and defines reassessment triggers. Open treatment directions and the next operating reassessment remain incomplete.",
       "gaps": [
         "Address or explicitly continue the impact-assessment treatment directions and retain the next triggered/scheduled reassessment."
       ]
@@ -1858,11 +1858,11 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#1-purpose"
+            "native": "docs/governance/AI-IMPACT-ASSESSMENT.md#1-purpose"
           }
         }
       ],
-      "rationale": "The current MCP capability has a dated impact assessment with scope, intended use, affected parties, data, outputs, oversight, misuse and impact analysis. The reassessment cycle and open treatment directions remain incomplete.",
+      "rationale": "The current MCP capability has the current impact assessment with scope, intended use, affected parties, data, outputs, oversight, misuse and impact analysis. The reassessment cycle and open treatment directions remain incomplete.",
       "gaps": [
         "Retain the next triggered/scheduled impact assessment review and track open treatment directions to an explicit conclusion."
       ]
@@ -1895,7 +1895,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#11-negative-and-adverse-impact-assessment"
+            "native": "docs/governance/AI-IMPACT-ASSESSMENT.md#11-negative-and-adverse-impact-assessment"
           }
         }
       ],
@@ -1943,7 +1943,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#5-intended-users-and-affected-parties"
+            "native": "docs/governance/AI-IMPACT-ASSESSMENT.md#5-intended-users-and-affected-parties"
           }
         }
       ],
@@ -2002,7 +2002,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#8-human-oversight"
+            "native": "docs/governance/AI-IMPACT-ASSESSMENT.md#8-human-oversight"
           }
         }
       ],
@@ -2672,7 +2672,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#4-intended-use"
+            "native": "docs/governance/AI-IMPACT-ASSESSMENT.md#4-intended-use"
           }
         },
         {
@@ -2827,7 +2827,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#3-what-wizardgang-controls"
+            "native": "docs/governance/AI-IMPACT-ASSESSMENT.md#3-what-wizardgang-controls"
           }
         },
         {
@@ -2897,7 +2897,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#4-intended-use"
+            "native": "docs/governance/AI-IMPACT-ASSESSMENT.md#4-intended-use"
           }
         }
       ],
@@ -3159,7 +3159,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md#4-intended-use"
+            "native": "docs/governance/AI-IMPACT-ASSESSMENT.md#4-intended-use"
           }
         }
       ],
