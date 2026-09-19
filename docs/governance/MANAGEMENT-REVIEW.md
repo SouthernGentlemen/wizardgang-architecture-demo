@@ -494,7 +494,7 @@ Primary supporting evidence includes:
 - `docs/governance/OPERATIONAL-PLANNING-CONTROL.md`;
 - `docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md`;
 - `docs/OPERATIONS.md`;
-- `docs/EVIDENCE.md`;
+- `docs/ASSURANCE.md`;
 - Git history, PRs, releases, workflow evidence, deployment evidence, logs, audit events, health observations, and other retained operating records.
 
 ## 13. Alignment
