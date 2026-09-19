@@ -37,6 +37,8 @@ After every task that changes repository files, finish the delivery loop before 
 4. Push the isolated branch and open a pull request. Do not push ordinary changes directly to `main`.
 5. Confirm the worktree is clean before reporting completion.
 
+When a requested controlled change is gated on `main` containing the immediately preceding change ID, inspect an open predecessor pull request before stopping. If that pull request has exactly the preceding controlled ID, targets `main`, is cleanly mergeable, and has passing required checks, merge it, update `main`, rerun the history gate, and continue. Stop and report instead if any of those conditions is not satisfied; this standing instruction does not authorize merging unrelated or non-predecessor work.
+
 Production is deployed only from an annotated semantic-version release tag, never from an arbitrary branch commit. See `docs/CHANGE-MANAGEMENT.md` and `docs/RELEASE-MANAGEMENT.md`.
 
 If a required check, push, pull request, release, deployment, or live verification cannot be completed, report the exact blocker and leave all recoverable work intact.
