@@ -14,6 +14,12 @@ Use an isolated branch named for its controlled change, such as `demo-NNN-impera
 
 Temporary implementation plans may coordinate active stacked or multi-step work, but they are not permanent architecture or policy. Remove them when they stop governing active work.
 
+## Toolchain and dependency installation
+
+Use Node.js 26.7.0 from `.node-version` and npm 11.19.0 from `packageManager`. The supported engine ranges are Node.js `26.x` and npm `11.x`, and `.npmrc` keeps `engine-strict=true` so unsupported toolchains fail before installation.
+
+Dependency install scripts are denied unless the root `package.json` `allowScripts` policy approves the reviewed package and version. Before changing dependencies, run `npm install-scripts ls`, review each reported lifecycle script, and add only build-required approvals pinned to the installed version. Remove stale approvals with `npm install-scripts prune` after dependency removal or upgrade. Commit the policy and lockfile together so local `npm ci` and CI execute the same reviewed scripts.
+
 ## Architecture and runtime changes
 
 Each architecture demo change must:
