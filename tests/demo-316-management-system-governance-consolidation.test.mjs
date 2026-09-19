@@ -34,6 +34,45 @@ function read(path) {
   return readFileSync(join(root, path), 'utf8');
 }
 
+
+function plainHeadingText(value) {
+  return value
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/<[^>]*>/g, '')
+    .replace(/[`*_~]/g, '')
+    .trim();
+}
+
+function githubSlug(value) {
+  return plainHeadingText(value)
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s-]/gu, '')
+    .trim()
+    .replace(/\s+/g, '-');
+}
+
+function headingAnchors(markdown) {
+  const anchors = new Set();
+  const counts = new Map();
+  for (const line of markdown.split(/\r?\n/)) {
+    const match = line.match(/^ {0,3}(#{1,6})\s+(.+?)\s*#*\s*$/);
+    if (!match) continue;
+    const base = githubSlug(match[2]);
+    if (!base) continue;
+    const duplicate = counts.get(base) ?? 0;
+    counts.set(base, duplicate + 1);
+    anchors.add(duplicate === 0 ? base : `${base}-${duplicate}`);
+  }
+  return anchors;
+}
+
+const headingCache = new Map();
+
+function anchors(path) {
+  if (!headingCache.has(path)) headingCache.set(path, headingAnchors(read(path)));
+  return headingCache.get(path);
+}
+
 describe('DEMO-316 management-system governance consolidation', () => {
   it('collapses fragmented clause documents to a much smaller current-state governance set', () => {
     for (const path of canonical) expect(existsSync(join(root, path)), path).toBe(true);
@@ -60,18 +99,33 @@ describe('DEMO-316 management-system governance consolidation', () => {
   });
 
   it('keeps structured compliance documentation relationships on current headings without changing their state authority', () => {
+    let documentationRelationships = 0;
+
     for (const path of ['assurance/compliance/iso-27001-2022.json', 'assurance/compliance/iso-42001-2023.json']) {
       const framework = JSON.parse(read(path));
       for (const record of framework.records) {
         expect(record).toHaveProperty('status');
         expect(record).toHaveProperty('rationale');
+
         for (const relationship of record.relationships ?? []) {
           if (relationship.relation !== 'documentation') continue;
+          documentationRelationships += 1;
+
           const native = relationship.to?.native ?? '';
           for (const retiredPath of retired) expect(native, `${record.id}: ${native}`).not.toContain(retiredPath);
+
+          const separator = native.indexOf('#');
+          expect(separator, `${record.id}: ${native}`).toBeGreaterThan(0);
+
+          const documentPath = native.slice(0, separator);
+          const fragment = native.slice(separator + 1);
+          expect(existsSync(join(root, documentPath)), `${record.id}: ${native}`).toBe(true);
+          expect(anchors(documentPath).has(fragment), `${record.id}: ${native}`).toBe(true);
         }
       }
     }
+
+    expect(documentationRelationships).toBeGreaterThan(0);
   });
 
   it('removes historical implementation narration from top-level governance authorities', () => {
