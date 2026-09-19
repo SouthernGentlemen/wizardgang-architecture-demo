@@ -30,9 +30,9 @@
     "title": "Assurance",
     "description": "Inspect framework assessment records, posture, evidence, and documentation in one workbench.",
     "docs": [
-      "docs/ASSURANCE-REGISTRY.md",
+      "docs/ASSURANCE.md",
       "docs/REPORTING.md",
-      "docs/ROUTES.md"
+      "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
       "module": "src/demos/assurance-workbench.ts",
@@ -83,9 +83,8 @@
     "title": "Assurance record presentation fragment",
     "description": "Returns one focused assessment record pane for activation inside the assurance workbench.",
     "docs": [
-      "docs/FRONTEND-ROUTES.md",
-      "docs/EVIDENCE.md",
-      "docs/ROUTES.md"
+      "docs/ASSURANCE.md",
+      "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
       "module": "src/demos/assurance-workbench.ts",
@@ -128,8 +127,7 @@
     "title": "Architecture Demos",
     "description": "One task-oriented destination for the interactive architecture demonstrations.",
     "docs": [
-      "docs/FRONTEND-ROUTES.md",
-      "docs/ROUTES.md"
+      "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
       "module": "src/demos/demos-page.ts",
@@ -182,7 +180,6 @@
     "title": "Lazy demo presentation fragment",
     "description": "Returns one scoped demonstration presentation for activation inside the consolidated demos page.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -227,7 +224,6 @@
     "title": "Architecture demo index",
     "description": "Primary public frontend entry point assembled from registered page metadata.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -286,7 +282,6 @@
     "title": "GraphQL API",
     "description": "Machine-only GraphQL protocol endpoint with bounded execution and the shared application authorization policy.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -337,7 +332,6 @@
     "title": "Identity authorization decision",
     "description": "Same-origin session-backed demo authorization decision.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -382,7 +376,6 @@
     "title": "github authorization callback",
     "description": "OAuth callback validating state, PKCE-bound code exchange, and provider identity.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -428,7 +421,6 @@
     "title": "github authorization start",
     "description": "Authorization-code flow start with state and PKCE; OIDC providers also bind a nonce.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -473,7 +465,6 @@
     "title": "google authorization callback",
     "description": "OIDC callback validating state, nonce, PKCE, issuer, audience, signature, issued-at, and expiry.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -519,7 +510,6 @@
     "title": "google authorization start",
     "description": "Authorization-code flow start with state and PKCE; OIDC providers also bind a nonce.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -567,7 +557,6 @@
     "title": "Identity logout",
     "description": "Same-origin identity-session invalidation.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -612,7 +601,6 @@
     "title": "microsoft authorization callback",
     "description": "OIDC callback validating state, nonce, PKCE, issuer, audience, signature, issued-at, and expiry.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -658,7 +646,6 @@
     "title": "microsoft authorization start",
     "description": "Authorization-code flow start with state and PKCE; OIDC providers also bind a nonce.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -703,7 +690,6 @@
     "title": "SAML assertion consumer service",
     "description": "Cross-site IdP callback validating XML signature, issuer, audience, destination, time bounds, RelayState, and assertion replay.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -748,7 +734,6 @@
     "title": "SAML service-provider metadata",
     "description": "Public SAML service-provider metadata.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -793,7 +778,6 @@
     "title": "SAML sign-in start",
     "description": "SAML AuthnRequest creation with replay-bound flow state.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -838,7 +822,6 @@
     "title": "Identity session",
     "description": "Current disclosure-safe application identity session.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -887,7 +870,6 @@
     "title": "Identity demo access token",
     "description": "Same-origin short-lived token issuance from a validated identity session.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -934,7 +916,6 @@
     "title": "MCP streamable HTTP server",
     "description": "MCP transport endpoint retaining protocol-method validation, foreign-Origin rejection, demo:read authorization, and read-only tool policy.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -981,7 +962,6 @@
     "title": "OpenAPI JSON contract",
     "description": "General OpenAPI 3.1 machine contract, including bearer-capable authorized record operations.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -1027,7 +1007,6 @@
     "title": "REST demo OpenAPI JSON",
     "description": "Focused OpenAPI 3.0.3 browser-tutorial contract for anonymous, signed-cookie visitor records.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -1072,7 +1051,6 @@
     "title": "GitHub webhook receiver",
     "description": "GitHub-compatible receiver enforcing exact-body HMAC, repository/event allowlists, and replay protection.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -1122,7 +1100,6 @@
     "title": "Demo administration",
     "description": "Protected control surface for demo availability and ChatGPT fetch policy.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/OPERATIONS.md",
       "docs/ROUTE-REGISTRY.md"
     ],
@@ -1167,7 +1144,6 @@
     "title": "Operations budget API",
     "description": "Synthetic budget scenario control used by the operations demo.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/OPERATIONS.md",
       "docs/ROUTE-REGISTRY.md"
     ],
@@ -1212,7 +1188,6 @@
     "title": "Operations logs API",
     "description": "Sanitized application log query endpoint.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/OPERATIONS.md",
       "docs/ROUTE-REGISTRY.md"
     ],
@@ -1260,7 +1235,6 @@
     "title": "Bundled UI asset",
     "description": "Locally bundled immutable UI and social-preview assets.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/OPERATIONS.md",
       "docs/ROUTE-REGISTRY.md"
     ],
@@ -1305,7 +1279,6 @@
     "title": "Operations health",
     "description": "Machine-readable runtime and dependency health.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/OPERATIONS.md",
       "docs/ROUTE-REGISTRY.md"
     ],
@@ -1350,7 +1323,6 @@
     "title": "Offline recovery page",
     "description": "Public maintenance page shown when ordinary demo routes are intentionally offline.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/OPERATIONS.md",
       "docs/ROUTE-REGISTRY.md"
     ],
@@ -1396,7 +1368,6 @@
     "title": "Robots policy",
     "description": "Dynamic crawler policy preserving ChatGPT fetch controls and GPTBot opt-out.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/OPERATIONS.md",
       "docs/ROUTE-REGISTRY.md"
     ],
@@ -1443,7 +1414,6 @@
     "title": "Security contact",
     "description": "RFC 9116 vulnerability-reporting contact and policy metadata.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/OPERATIONS.md",
       "docs/ROUTE-REGISTRY.md"
     ],
@@ -1489,7 +1459,6 @@
     "title": "Sitemap",
     "description": "Registry-generated public sitemap.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/OPERATIONS.md",
       "docs/ROUTE-REGISTRY.md"
     ],
@@ -1534,7 +1503,6 @@
     "title": "Operations version",
     "description": "Machine-readable deployed version and source metadata.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/OPERATIONS.md",
       "docs/ROUTE-REGISTRY.md"
     ],
@@ -1579,7 +1547,6 @@
     "title": "Accessibility teaching laboratory API",
     "description": "Renders the bounded accessible or intentionally broken teaching frame used by the accessibility interface view.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -1627,7 +1594,6 @@
     "title": "Authorized REST record item machine API",
     "description": "General machine contract: reads, replaces, or deletes one D1 record through demo:read and demo:write authorization policy.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -1675,7 +1641,6 @@
     "title": "Authorized REST records machine API",
     "description": "General machine contract: lists readable D1 records or creates one through demo:read and demo:write authorization policy.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -1722,7 +1687,6 @@
     "title": "Authorized REST record sandbox reset machine API",
     "description": "General machine contract: deletes the identity-derived visitor namespace after demo:write authorization.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -1771,7 +1735,6 @@
     "title": "D1 users and tasks reset laboratory API",
     "description": "Resets the visitor-scoped D1 users and tasks sandbox to deterministic seed rows.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -1820,7 +1783,6 @@
     "title": "Anonymous REST browser tutorial item API",
     "description": "Focused browser tutorial: reads, replaces, partially updates, or deletes one cookie-isolated visitor record without bearer authentication.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -1867,7 +1829,6 @@
     "title": "Anonymous REST browser tutorial collection API",
     "description": "Focused browser tutorial: lists or creates records isolated by a signed visitor-session cookie without bearer authentication.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -1918,7 +1879,6 @@
     "title": "D1 task item laboratory API",
     "description": "Updates or deletes one visitor-scoped relational task in D1.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -1968,7 +1928,6 @@
     "title": "D1 tasks laboratory API",
     "description": "Lists and creates visitor-scoped relational tasks in D1.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -2019,7 +1978,6 @@
     "title": "D1 user item laboratory API",
     "description": "Updates or deletes one visitor-scoped relational user in D1.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -2069,7 +2027,6 @@
     "title": "D1 users laboratory API",
     "description": "Lists and creates visitor-scoped relational users in D1.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -2116,7 +2073,6 @@
     "title": "Durable Object counter laboratory API",
     "description": "Reads or increments the public counter coordinated and persisted by a Durable Object.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -2161,7 +2117,6 @@
     "title": "Edge inspection laboratory API",
     "description": "Returns the allowlisted Cloudflare request context without client identifiers.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -2210,7 +2165,6 @@
     "title": "Git delivery laboratory API",
     "description": "Public status and same-origin administrator-controlled Git delivery demonstration start.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -2260,7 +2214,6 @@
     "title": "Git release laboratory action",
     "description": "Same-origin administrator-only release action gated by exact run/PR state and successful validation.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -2309,7 +2262,6 @@
     "title": "R2 file item laboratory API",
     "description": "Streams a visible R2 object or deletes one owned by the visitor sandbox.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -2358,7 +2310,6 @@
     "title": "R2 files laboratory API",
     "description": "Lists or uploads visitor-scoped files whose bytes live in R2 and metadata lives in D1.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -2406,7 +2357,6 @@
     "title": "R2 files reset laboratory API",
     "description": "Deletes visitor-owned R2 objects and their D1 metadata rows.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -2452,7 +2402,6 @@
     "title": "Synthetic webhook event laboratory API",
     "description": "Returns sanitized verified delivery evidence scoped to the current visitor session.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -2501,7 +2450,6 @@
     "title": "Synthetic webhook reset laboratory API",
     "description": "Same-origin reset of synthetic webhook evidence for the current visitor session.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -2550,7 +2498,6 @@
     "title": "Synthetic webhook laboratory action",
     "description": "Same-origin browser action that signs and exercises the production webhook validation path.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -2595,7 +2542,6 @@
     "title": "Worker edge-policy laboratory API",
     "description": "Applies a stateless edge cache and routing policy in the Worker and records audit evidence separately.",
     "docs": [
-      "docs/ROUTES.md",
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
@@ -2643,8 +2589,7 @@
     "description": "Queries one canonical structured or provider-backed reporting collection with signed cursor pagination and export support.",
     "docs": [
       "docs/REPORTING.md",
-      "docs/ASSURANCE-API.md",
-      "docs/ROUTES.md"
+      "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
       "module": "src/api/reporting.ts",
@@ -2691,8 +2636,7 @@
     "description": "Discovers disclosure-safe canonical reporting collections and their supported filters.",
     "docs": [
       "docs/REPORTING.md",
-      "docs/ASSURANCE-API.md",
-      "docs/ROUTES.md"
+      "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
       "module": "src/api/reporting.ts",
@@ -2740,8 +2684,7 @@
     "description": "Reads one canonical reporting record or performs an authorized revision-checked update when the source supports mutation.",
     "docs": [
       "docs/REPORTING.md",
-      "docs/ASSURANCE-API.md",
-      "docs/ROUTES.md"
+      "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
       "module": "src/api/reporting.ts",
@@ -2785,9 +2728,9 @@
     "title": "Security",
     "description": "Private vulnerability reporting, coordinated disclosure, and disclosure-safe published security advisory assurance.",
     "docs": [
-      "docs/ASSURANCE-REGISTRY.md",
+      "docs/ASSURANCE.md",
       "docs/REPORTING.md",
-      "docs/ROUTES.md"
+      "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
       "module": "src/demos/security-page.ts",
