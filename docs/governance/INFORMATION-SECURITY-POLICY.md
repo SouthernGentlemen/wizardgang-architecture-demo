@@ -245,4 +245,4 @@ Evidence supporting this policy includes, as applicable:
 
 This policy supports **ISO/IEC 27001:2022 §5.2 — Information security policy**.
 
-**Current posture after approval:** Information-security direction and commitments are formally defined and controlled; certification is not claimed.
+**Current posture:** Information-security direction and commitments are formally defined and controlled; certification is not claimed.
