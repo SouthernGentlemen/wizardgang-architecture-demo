@@ -5,7 +5,6 @@
 **Status:** Approved
 **Owner:** Technical System Owner / Change and Release Authority  
 **Approval:** Controlled pull request and merge  
-**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually, after material architecture/provider/configuration changes, and when drift or unauthorized configuration is detected
 
 ## 1. Purpose
