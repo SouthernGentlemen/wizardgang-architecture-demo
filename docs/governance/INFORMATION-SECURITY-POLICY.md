@@ -5,7 +5,6 @@
 **Status:** Approved
 **Owner:** WizardGang  
 **Approval:** Controlled pull request and merge  
-**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually and after material changes to scope, risk, architecture, suppliers, incidents, or applicable requirements
 
 ## 1. Purpose
@@ -18,7 +17,7 @@ This policy supports engineering alignment with ISO/IEC 27001. It does not repre
 
 ## 2. Scope
 
-This policy applies to the information-security management system defined in `docs/governance/SCOPE.md`, including:
+This policy applies to the information-security management system defined in `docs/governance/GOVERNANCE.md`, including:
 
 - `demo.wizardgang.ai`;
 - the public source repository and controlled delivery lifecycle;
@@ -232,11 +231,11 @@ Evidence supporting this policy includes, as applicable:
 - `docs/RELEASE.md`;
 - `docs/OPERATIONS.md`;
 - `docs/ASSURANCE.md`;
-- `docs/governance/CONTEXT.md`;
-- `docs/governance/INTERESTED-PARTIES.md`;
-- `docs/governance/SCOPE.md`;
-- `docs/governance/MANAGEMENT-SYSTEM.md`;
-- `docs/governance/LEADERSHIP.md`;
+- `docs/governance/GOVERNANCE.md`;
+- `docs/governance/GOVERNANCE.md`;
+- `docs/governance/GOVERNANCE.md`;
+- `docs/governance/GOVERNANCE.md`;
+- `docs/governance/GOVERNANCE.md`;
 - Git pull requests and reviews;
 - CI validation and evidence artifacts;
 - tagged releases and deployment records;
