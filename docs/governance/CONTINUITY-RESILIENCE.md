@@ -625,8 +625,6 @@ A period with zero incidents is not by itself evidence of continuity readiness.
 
 ## 19. Current Evidence Posture
 
-As of the 2026-09-02 management-system baseline:
-
 ### Demonstrated / structurally available
 
 - intentional online/offline control exists;
@@ -694,7 +692,6 @@ Primary supporting records include:
 - `docs/governance/BACKUP-RECOVERY-RESTORE.md`
 - `assurance/incidents/incidents.json`
 - `assurance/governance/recovery-tests.json`
-- `assurance/risks/risks.json`
 - `assurance/risks/risks.json`
 - `assurance/objectives/objectives.json`
 - `docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md`
