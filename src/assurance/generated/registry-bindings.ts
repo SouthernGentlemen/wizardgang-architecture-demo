@@ -57,8 +57,8 @@ export const assuranceRuntimeSourceRevisions: Readonly<Record<string, string>> =
 {
   "advisories": "88a0999d1ceae96e02cbc7861de3ab35779f5495",
   "claims": "f5efd00c1e6a348d09ed8a122e3a45426ec0cdcd",
-  "compliance.iso-27001": "ddc8f9766ebc5e51001e7f4aa56aca2a2917c6f4",
-  "compliance.iso-42001": "117540e8f13aa387dbdddc56caf50f9a1082f8f1",
+  "compliance.iso-27001": "707531b050bd3631d28bd9a9ee954782cba8a622",
+  "compliance.iso-42001": "ef2599a68f9a38869afcbe30f77ee0c31be00284",
   "compliance.wcag-2.2": "76d9680a523cb6b98fb98b8065244ce3774cb80e",
   "compliance.wcag-2.2.operable": "2a5954e592d69901b0763a9de23449c03e6ade89",
   "compliance.wcag-2.2.perceivable": "6efbb538fd44f22c6a91a8539d5a05908c9068cc",
