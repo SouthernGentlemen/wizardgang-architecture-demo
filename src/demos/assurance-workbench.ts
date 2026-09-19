@@ -25,7 +25,7 @@ type ComplianceStatus = ComplianceRecord['status'];
 const DEFAULT_RECORD_ID = 'ISO27001-A.5.1';
 const FRAMEWORK_ORDER = ['iso-27001', 'iso-42001', 'wcag-2.2'] as const;
 const STATUS_ORDER = ['pass', 'partial', 'gap', 'not-applicable'] as const;
-const WCAG_EVALUATION_PATH = 'docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md';
+const WCAG_DOCUMENTATION_PATH = 'docs/ACCESSIBILITY.md';
 const SOA_PATHS = [
   ['ISO/IEC 27001 statement of applicability', 'assurance/compliance/iso-27001-2022.json'],
   ['ISO/IEC 42001 statement of applicability', 'assurance/compliance/iso-42001-2023.json'],
@@ -191,7 +191,7 @@ function renderRecordPane(record: ComplianceRecord, env: Env, origin: string): s
         <dl>
           <div><dt>${escapeHtml(localization.t('assurance.workbench.assessment', 'Assessment'))}</dt><dd lang="en">${escapeHtml(assessment)}</dd></div>
           <div><dt>${escapeHtml(localization.t('assurance.workbench.missing', 'What is missing'))}</dt><dd>${gaps.length ? `<ul lang="en">${gaps.map((gap) => `<li>${escapeHtml(gap)}</li>`).join('')}</ul>` : escapeHtml(localization.t('assurance.workbench.no_gaps', 'No gaps are recorded for this assessment.'))}</dd></div>
-          <div><dt>${escapeHtml(localization.t('assurance.workbench.assessed', 'Assessed'))}</dt><dd>${assessed ? (record.framework === 'wcag-2.2' ? `<a href="${escapeHtml(sourceUrl(env, WCAG_EVALUATION_PATH))}" aria-label="WCAG 2.2 assessed ${escapeHtml(assessed)} — open evaluation report"><time datetime="${escapeHtml(assessed)}" lang="en">${escapeHtml(assessed)}</time></a>` : `<time datetime="${escapeHtml(assessed)}" lang="en">${escapeHtml(assessed)}</time>`) : escapeHtml(localization.t('assurance.workbench.no_assessed_date', 'No assessment date is recorded.'))}</dd></div>
+          <div><dt>${escapeHtml(localization.t('assurance.workbench.assessed', 'Assessed'))}</dt><dd>${assessed ? (record.framework === 'wcag-2.2' ? `<a href="${escapeHtml(sourceUrl(env, WCAG_DOCUMENTATION_PATH))}" aria-label="WCAG 2.2 assessed ${escapeHtml(assessed)} — open accessibility documentation"><time datetime="${escapeHtml(assessed)}" lang="en">${escapeHtml(assessed)}</time></a>` : `<time datetime="${escapeHtml(assessed)}" lang="en">${escapeHtml(assessed)}</time>`) : escapeHtml(localization.t('assurance.workbench.no_assessed_date', 'No assessment date is recorded.'))}</dd></div>
         </dl>
         <div class="assurance-record-tools">
           <a href="${escapeHtml(requirementUrl)}">${escapeHtml(localization.t('assurance.workbench.open_requirement', 'Open requirement source'))}</a>
@@ -337,7 +337,7 @@ export async function assuranceWorkbenchContent(request: Request, env: Env): Pro
     </div>
     <p class="assurance-workbench-status" data-assurance-status role="status" aria-live="polite"></p>
     <section class="assurance-workbench-detail" data-assurance-detail aria-live="off" aria-busy="false">${renderRecordPane(initialRecord, env, new URL(request.url).origin)}</section>
-    <noscript><div class="assurance-noscript"><p>${escapeHtml(localization.t('assurance.workbench.noscript', 'JavaScript is required for interactive framework and section switching. You can still inspect the statements of applicability:'))}</p><ul>${SOA_PATHS.map(([label, path]) => `<li><a href="${escapeHtml(sourceUrl(env, path))}">${escapeHtml(localization.t(path.includes('27001') ? 'assurance.workbench.soa_27001' : 'assurance.workbench.soa_42001', label))}</a></li>`).join('')}<li><a lang="en" href="${escapeHtml(sourceUrl(env, WCAG_EVALUATION_PATH))}">WCAG 2.2 evaluation report</a></li></ul></div></noscript>
+    <noscript><div class="assurance-noscript"><p>${escapeHtml(localization.t('assurance.workbench.noscript', 'JavaScript is required for interactive framework and section switching. You can still inspect the statements of applicability:'))}</p><ul>${SOA_PATHS.map(([label, path]) => `<li><a href="${escapeHtml(sourceUrl(env, path))}">${escapeHtml(localization.t(path.includes('27001') ? 'assurance.workbench.soa_27001' : 'assurance.workbench.soa_42001', label))}</a></li>`).join('')}<li><a lang="en" href="${escapeHtml(sourceUrl(env, WCAG_DOCUMENTATION_PATH))}">WCAG 2.2 accessibility documentation</a></li></ul></div></noscript>
   </div>
   ${workbenchScript(summaries, env.DEPLOYED_SHA, {
     loading: localization.t('assurance.workbench.loading', 'Loading assessment record…'),

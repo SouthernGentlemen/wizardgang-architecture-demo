@@ -171,6 +171,13 @@
       "reviewedAt": "2026-09-19T15:55:00Z",
       "reviewer": "controlled-repository-review",
       "basis": "DEMO-318 retires dated historical assessment Markdown from the active documentation tree, retains the current AI impact assessment as a current-state governance document, and remaps compliance documentation relationships to current governing Markdown. Historical observations remain recoverable from Git/GitHub, release snapshots, workflow artifacts, and structured assurance state. No compliance status, applicability decision, evidence relationship, gap, or assurance conclusion is reassessed or upgraded; this review approves disclosure of only the exact resulting public compliance source revisions."
+    },
+    {
+      "id": "review-demo319-documentation-cleanup",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-19T16:24:30Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-319 updates objective evidence-source labels to current structured and current-documentation authorities during the final documentation cleanup. No objective metric, target, owner, lifecycle state, assurance status, or conclusion is upgraded; this review approves disclosure only for the exact resulting objectives source revision."
     }
   ],
   "sourceApprovals": [
@@ -653,6 +660,12 @@
       "resource": "compliance.wcag-2.2.robust",
       "revision": "442ab0664ae48ac17c5d47d569cab5cc953f75ea",
       "reviewRef": "review-demo318-historical-assessment-retirement"
+    },
+    {
+      "id": "source-objectives-dc764db858b8",
+      "resource": "objectives",
+      "revision": "dc764db858b8b7d5fdf85206d376f0115decf647",
+      "reviewRef": "review-demo319-documentation-cleanup"
     }
   ],
   "records": [
