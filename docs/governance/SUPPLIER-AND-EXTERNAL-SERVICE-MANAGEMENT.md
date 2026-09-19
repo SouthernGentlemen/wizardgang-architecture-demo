@@ -246,7 +246,7 @@ Provider certifications or attestations, if later relied upon, remain provider e
 
 ## 14. Current Supplier Posture
 
-The initial supplier register identifies GitHub and Cloudflare as Critical platform dependencies; OpenAI Codex and Anthropic Claude as the only approved AI/MCP connection families; identity providers as Conditional until configured; and package/dependency ecosystems as Material supporting dependencies.
+The supplier register identifies GitHub and Cloudflare as Critical platform dependencies; OpenAI Codex and Anthropic Claude as the only approved AI/MCP connection families; identity providers as Conditional until configured; and package/dependency ecosystems as Material supporting dependencies.
 
 Formal recurring supplier-review evidence is not considered complete merely because this process and register are approved. The first periodic review must produce an actual dated review record or register update based on observed evidence.
 
@@ -255,7 +255,6 @@ Formal recurring supplier-review evidence is not considered complete merely beca
 - `assurance/governance/suppliers.json`
 - `docs/governance/GOVERNANCE.md`
 - `docs/governance/RISK-MANAGEMENT.md`
-- `assurance/risks/risks.json`
 - `assurance/risks/risks.json`
 - `docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md`
 - `assurance/compliance/iso-27001-2022.json`
