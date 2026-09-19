@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import ts from 'typescript';
+import { parseSync, Visitor } from 'oxc-parser';
 import { describe, expect, it, vi } from 'vitest';
 import { accessibilityContent } from '../src/demos/accessibility-page';
 import { safeError } from '../src/lib/http';
@@ -36,22 +36,26 @@ function sourceModules(directory: string): string[] {
 
 function importedSpecifiers(filePath: string): string[] {
   const source = fs.readFileSync(filePath, 'utf8');
-  const sourceFile = ts.createSourceFile(filePath, source, ts.ScriptTarget.Latest, true);
+  const { program } = parseSync(filePath, source);
   const specifiers: string[] = [];
-  const visit = (node: ts.Node): void => {
-    if ((ts.isImportDeclaration(node) || ts.isExportDeclaration(node))
-      && node.moduleSpecifier && ts.isStringLiteral(node.moduleSpecifier)) {
-      specifiers.push(node.moduleSpecifier.text);
-    }
-    if (ts.isCallExpression(node)
-      && node.expression.kind === ts.SyntaxKind.ImportKeyword
-      && node.arguments.length === 1
-      && ts.isStringLiteral(node.arguments[0])) {
-      specifiers.push(node.arguments[0].text);
-    }
-    ts.forEachChild(node, visit);
-  };
-  visit(sourceFile);
+
+  new Visitor({
+    ImportDeclaration(node) {
+      if (typeof node.source.value === 'string') specifiers.push(node.source.value);
+    },
+    ExportNamedDeclaration(node) {
+      if (typeof node.source?.value === 'string') specifiers.push(node.source.value);
+    },
+    ExportAllDeclaration(node) {
+      if (typeof node.source.value === 'string') specifiers.push(node.source.value);
+    },
+    ImportExpression(node) {
+      if (node.source.type === 'Literal' && typeof node.source.value === 'string') {
+        specifiers.push(node.source.value);
+      }
+    },
+  }).visit(program);
+
   return specifiers;
 }
 

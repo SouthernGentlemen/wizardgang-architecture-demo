@@ -46,9 +46,9 @@ function inlineNodeBlocks(workflowPath) {
 }
 
 describe('DEMO-307 release identity-baseline module execution', () => {
-  it('keeps every release/deploy inline Node script explicitly ESM and parseable by the pinned Node 22 toolchain', () => {
+  it('keeps every release/deploy inline Node script explicitly ESM and parseable by the pinned Node 26 toolchain', () => {
     const pinnedVersion = read('.node-version').trim();
-    expect(pinnedVersion).toMatch(/^22\./);
+    expect(pinnedVersion).toMatch(/^26\./);
 
     const blocks = workflowPaths.flatMap(inlineNodeBlocks);
     expect(blocks.length).toBeGreaterThan(0);
