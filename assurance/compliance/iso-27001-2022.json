@@ -2700,17 +2700,6 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.5.11"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
-          }
         }
       ]
     },
@@ -2830,17 +2819,6 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.6.1"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
-          }
         }
       ]
     },
@@ -2863,17 +2841,6 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
-          }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.6.2"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
         },
         {
@@ -2920,17 +2887,6 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.6.4"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
-          }
         }
       ]
     },
@@ -2953,17 +2909,6 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
-          }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.6.5"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
         },
         {
@@ -3010,17 +2955,6 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.6.6"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
-          }
         }
       ]
     },
@@ -3043,17 +2977,6 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
-          }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.6.7"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
         },
         {
@@ -3100,17 +3023,6 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.7.1"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
-          }
         }
       ]
     },
@@ -3133,17 +3045,6 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
-          }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.7.2"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
         },
         {
@@ -3190,17 +3091,6 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.7.3"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
-          }
         }
       ]
     },
@@ -3223,17 +3113,6 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
-          }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.7.4"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
         },
         {
@@ -3280,17 +3159,6 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.7.5"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
-          }
         }
       ]
     },
@@ -3313,17 +3181,6 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
-          }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.7.6"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
         },
         {
@@ -3370,17 +3227,6 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.7.7"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
-          }
         }
       ]
     },
@@ -3403,17 +3249,6 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
-          }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.7.8"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
         },
         {
@@ -3460,17 +3295,6 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.7.9"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
-          }
         }
       ]
     },
@@ -3493,17 +3317,6 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
-          }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.7.10"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
         },
         {
@@ -3550,17 +3363,6 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.7.11"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
-          }
         }
       ]
     },
@@ -3583,17 +3385,6 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
-          }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.7.12"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
         },
         {
@@ -3640,17 +3431,6 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.7.13"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
-          }
         }
       ]
     },
@@ -3673,17 +3453,6 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-004"
-          }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.7.14"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
         },
         {
@@ -4895,17 +4664,6 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.8.17"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
-          }
         }
       ]
     },
@@ -4940,17 +4698,6 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.8.22"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
-          }
         }
       ]
     },
@@ -4973,17 +4720,6 @@
           "to": {
             "source": "github.structured-records.evidence",
             "native": "EVD-DOC-003"
-          }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.8.23"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
         },
         {
