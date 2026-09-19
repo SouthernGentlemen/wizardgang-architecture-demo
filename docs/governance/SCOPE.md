@@ -214,7 +214,7 @@ This scope is supported by:
 - `docs/OPERATIONS.md`;
 - `docs/CHANGE-MANAGEMENT.md`;
 - `docs/RELEASE-MANAGEMENT.md`;
-- `docs/EVIDENCE.md`.
+- `docs/ASSURANCE.md`.
 
 Future risk registers, Statements of Applicability, AI impact assessments, audit records, and management reviews must use this scope unless a newer approved revision supersedes it.
 

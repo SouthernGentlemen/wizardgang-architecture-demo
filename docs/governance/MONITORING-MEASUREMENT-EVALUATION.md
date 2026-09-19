@@ -431,7 +431,7 @@ Primary supporting material includes:
 - `assurance/compliance/iso-27001-2022.json`;
 - `assurance/compliance/iso-42001-2023.json`;
 - `docs/OPERATIONS.md`;
-- `docs/EVIDENCE.md`;
+- `docs/ASSURANCE.md`;
 - `docs/ACCESSIBILITY.md`;
 - `SECURITY.md`;
 - `.github/workflows/ci.yml`;

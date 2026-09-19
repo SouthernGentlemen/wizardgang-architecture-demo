@@ -409,7 +409,7 @@ Primary supporting material includes:
 - `docs/CHANGE-MANAGEMENT.md`;
 - `docs/RELEASE.md`;
 - `docs/RELEASE-MANAGEMENT.md`;
-- `docs/EVIDENCE.md`;
+- `docs/ASSURANCE.md`;
 - `.github/workflows/ci.yml`;
 - deployment workflows;
 - `docs/governance/RISK-MANAGEMENT.md`;

@@ -231,7 +231,7 @@ Evidence supporting this policy includes, as applicable:
 - `docs/RELEASE-MANAGEMENT.md`;
 - `docs/RELEASE.md`;
 - `docs/OPERATIONS.md`;
-- `docs/EVIDENCE.md`;
+- `docs/ASSURANCE.md`;
 - `docs/governance/CONTEXT.md`;
 - `docs/governance/INTERESTED-PARTIES.md`;
 - `docs/governance/SCOPE.md`;

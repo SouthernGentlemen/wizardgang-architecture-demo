@@ -1,48 +1,101 @@
 # Declarative route registry
 
-The application uses one declarative route registry built on the shared typed matcher. Route declarations own transport policy and browser presentation metadata; generated navigation and route documentation are projections of the same contract.
+The application route declarations are the runtime authority for browser, API, protocol, asset, and operational routes. Human routing/browser information architecture is documented here. The generated machine projection is `docs/route-manifest.json`; there is no separately generated Markdown route inventory.
 
-## Final dispatch boundary
+## Dispatch and declaration authority
 
-`src/router.ts` performs only cross-cutting request orchestration:
+`src/router.ts` performs cross-cutting request orchestration:
 
 1. normalize the pathname;
 2. match the single application registry;
-3. return the normal 404 for an unknown path;
-4. enforce declared crawler, offline, method, authentication, same-origin, indexing, and cache policies;
+3. return the ordinary `404` for an unknown path;
+4. enforce declared crawler, offline, method, authentication, authorization, same-origin, indexing, and generic cache policy;
 5. invoke the matched handler with normalized parameters; and
 6. convert unexpected failures into the shared safe error response.
 
-The router does not keep an application path switch, API-prefix inventory, HTML-path list, redirect alias list, query-view dispatch table, or route-family dispatch chain.
+The router does not maintain a pathname switch, API-prefix inventory, redirect/alias table, query-view router, or route-family dispatch chain.
 
-## Application registry
+`src/routing/application-routes.ts` composes capability registries. Each route declaration owns its stable ID, pattern, methods, kind, visibility, browser HTML policy, authentication, authorization, same-origin requirements, offline behavior, cache/crawler policy, documentation metadata, source/test provenance, and optional page metadata.
 
-`src/routing/application-routes.ts` composes the capability registries. Composition adapts handler contexts without moving ownership back into the central router.
+## Matcher behavior
 
-Cross-family duplicate IDs, duplicate patterns, and ambiguous parameter patterns are rejected by the shared matcher. Application validation additionally rejects undocumented routes, page declarations that cannot be reached with `GET`, invalid page metadata, missing page parents, cycles or multiple roots in the page hierarchy, publicly cached private routes, and indexable private routes.
+The shared matcher is deterministic:
 
-The application module also exposes route-ID URL helpers. Internal callers resolve a declaration by ID and supply normalized parameters and query state without copying the declaration's pathname.
+- trailing slashes normalize to the canonical path;
+- exact routes take precedence over parameter routes;
+- parameter values are percent-decoded and Unicode NFC-normalized;
+- declared methods are explicit and `HEAD` is not inferred from `GET`;
+- unsupported methods return `405` with the declaration's allowed methods;
+- malformed encoded parameters and unknown paths return the ordinary `404`;
+- duplicate IDs, duplicate normalized patterns, duplicate methods, invalid parameters, and ambiguous overlapping parameter patterns fail registry construction.
 
-## Registered page metadata
+No redirect or compatibility alias layer is installed. Removed paths remain ordinary unknown routes.
 
-A page declaration owns its frontend contract through the `page` block:
+## Route policy ownership
 
-- `parent` — the parent page route ID, omitted only for the single root;
-- `label` — navigation text;
-- `summary` — concise architecture-map and documentation description;
-- `order` — sibling ordering;
-- `navigation` — primary or no navigation membership;
-- `architectureMap` — whether the page participates in the homepage architecture projection.
+Generic dispatch policy belongs to route declarations: visibility, browser HTML behavior, authentication provider, authorization declaration, same-origin methods, offline availability, cache policy, crawler access/indexing, and page presentation metadata.
 
-The hierarchy is expressed in route IDs rather than inferred from pathname prefixes. Canonical pathname ownership remains on the route declaration itself.
+Protocol-specific validation remains in capability handlers. OAuth/OIDC/SAML cryptographic validation, GraphQL execution limits, webhook signature/replay checks, MCP protocol authorization, reporting disclosure, and release-readiness checks are not duplicated in the router.
 
-Those declarations are projected into primary navigation, the homepage architecture map, sitemap membership, canonical links, and generated route documentation. No projection owns or restates a pathname inventory, and route counts are derived when reported rather than fixed as assertions.
+Platform declarations retain request-limit and storage-boundary metadata. D1 owns relational state, R2 owns object bytes, Durable Objects own coordinated state, and Worker computation remains stateless.
 
-`src/routing/navigation.ts` performs the navigation and architecture projections while the shell consumes the result. Active state is matched by route ID so only the current document receives `aria-current="page"`.
+## Page metadata and browser information architecture
 
-## Generated artifacts
+A browser page route represents a distinct user task or a browser-visible security/protocol boundary, not merely a dataset, framework, implementation technology, renderer, registry partition, or reporting view.
 
-`docs/route-manifest.json` and the route tables in `docs/ROUTES.md` are generated from the active application declarations by `src/routing/artifacts.ts`.
+A page declaration owns its browser contract through the `page` block:
+
+- `parent`: parent page route ID, omitted only for the root;
+- `label`: navigation text;
+- `summary`: concise architecture description;
+- `order`: sibling ordering;
+- `navigation`: navigation membership;
+- `architectureMap`: homepage architecture-map participation.
+
+Parent relationships use route IDs rather than pathname inference.
+
+The ordinary public product remains task-oriented:
+
+- `/` — understand the project and choose a task;
+- `/demos` — execute or inspect architecture demonstrations;
+- `/assurance` — inspect framework assessment records, posture, documentation, and evidence;
+- `/security` — contextual support/security boundary rather than primary product navigation.
+
+`/admin` and `/offline` remain registered operational pages but are not ordinary product navigation.
+
+## Fragments and query state
+
+A single task page may expose multiple durable sections, demonstrations, framework views, datasets, and records without adding another page route.
+
+Fragments identify a location within the selected page. Examples include `/demos#graphql` and `/assurance#ISO27001-A.5.19`. Fragments do not create additional canonical page identities, sitemap members, or route IDs.
+
+Query parameters refine the selected task through filtering, search, sorting, pagination, localization, or other interaction state. They do not select the primary conceptual destination.
+
+The application has no client-side router. Client scripts may enhance controls, update interaction state, or focus a fragment target, but application routing remains server-side through the declarative registry.
+
+## Navigation, sitemap, and URL projection
+
+`src/routing/navigation.ts` projects route declarations into primary navigation and the homepage architecture map. Active state is matched by route ID.
+
+Sitemap membership and canonical links are derived from route declarations and page/crawler metadata. Internal callers use route-ID URL helpers from the application registry and provide normalized route parameters/query state instead of copying path strings.
+
+Browser consolidation never removes a machine/protocol contract merely because its demonstration is presented under `/demos` or `/assurance`.
+
+## Machine and protocol route families
+
+REST/JSON endpoints, OpenAPI, GraphQL, MCP, identity callbacks, webhooks, laboratory APIs, reporting APIs, operational APIs, assets, crawler controls, and other non-browser contracts retain independent declarations, methods, policies, and source ownership.
+
+Current laboratory boundaries include:
+
+- R2 visitor storage uses `/api/labs/r2-files` plus the registered item and reset operations; R2 stores bytes and D1 stores associated metadata.
+- `/api/labs/rest-demo-records` is the anonymous visitor/browser tutorial contract, isolated by signed visitor state and documented by `/api/labs/rest-demo-openapi.json`.
+- `/api/labs/rest-records` is the bearer-capable machine contract documented by `/api/openapi.json`; anonymous reads use the public namespace and identity-derived `demo:write` authorization controls mutation/namespace ownership.
+
+These families are separate contracts and are not aliases of one another.
+
+## Generated machine manifest
+
+`src/routing/artifacts.ts` builds the machine projection with `buildRouteManifest` and `serializeRouteManifest`.
 
 Run:
 
@@ -50,49 +103,18 @@ Run:
 npm run generate:routes
 ```
 
-Validation uses the same projection without writing files:
+The route generator writes only:
 
-```sh
-npm run validate:routes
+```text
+docs/route-manifest.json
 ```
 
-The generated manifest records stable ID, route pattern, methods, kind, visibility, browser HTML policy, authentication/authorization, same-origin, offline, cache, crawler/indexing, documentation, source/test provenance, and derived page metadata. Route documentation is therefore a projection of the live contract rather than a second route inventory.
+The manifest records route ID, published pattern, methods, kind, visibility, browser HTML policy, authentication, authorization, same-origin policy, offline policy, cache/crawler policy, title/description, documentation links, source/test provenance, and derived page metadata.
 
-## Matcher and collision rules
-
-The shared matcher uses these deterministic rules:
-
-- trailing slashes normalize to the canonical path;
-- exact routes take precedence over parameter routes;
-- parameter values are percent-decoded and Unicode NFC-normalized;
-- methods are explicit and `HEAD` is not inferred from `GET`;
-- unsupported methods return `405` with the declaration's allowed methods;
-- malformed encoded parameters and unknown paths return the standard `404`;
-- duplicate module IDs, route IDs, normalized patterns, duplicate methods, invalid parameters, invalid same-origin method declarations, and overlapping parameter patterns fail registry construction.
-
-No redirect or alias layer is installed by the registry. Removed routes remain ordinary unknown paths.
-
-## Policy ownership
-
-Route declarations own the policy that can be enforced generically at dispatch: visibility, browser HTML behavior, authentication provider, authorization declaration, same-origin methods, offline availability, cache policy, crawler access, indexing, and page presentation metadata.
-
-Authentication and authorization remain independent declarations. Protocol-specific validation remains in the capability handler where it belongs. OAuth/OIDC/SAML cryptographic validation, GraphQL execution limits, webhook signature/replay checks, MCP protocol authorization, and release-readiness checks are not duplicated in the router.
-
-Platform declarations retain their request-limit and storage-boundary metadata. D1 owns relational state, R2 owns object bytes, Durable Objects own coordinated state, and Worker computation remains stateless.
+`docs/route-manifest.json` is generated inventory; it is not hand-maintained. Human architecture belongs in this document, and complete route inventory belongs in the manifest rather than a duplicated Markdown table.
 
 ## Validation
 
-The route suite verifies generated artifact consistency, derived sitemap membership, navigation projection, route-ID URL generation, method handling, page-hierarchy validity, shared policy completeness, cross-family collision rejection, compatible additional-page registration, active-state semantics, unreachable/undocumented route rejection, and normal 404 behavior for removed aliases and arbitrary unknown paths.
+`npm run validate:routes` verifies manifest parity with active declarations. Application and registry tests additionally cover sitemap projection, navigation projection, route-ID URL generation, method handling, page-hierarchy validity, shared policy completeness, collision rejection, compatible page registration, active-state semantics, unreachable/undocumented route rejection, and ordinary `404` behavior for removed or arbitrary unknown paths.
 
-The current registry is the complete route contract. Route removals are deliberate and receive the ordinary 404; release and deployment remain separate controlled actions.
-
-## Public laboratory API boundaries
-
-The R2 laboratory has one public object surface: `/api/labs/r2-files` and its item/reset operations. It owns the complete visitor workflow—shared seed discovery, visitor-scoped upload, preview, download, delete, and reset—while R2 stores bytes and D1 stores metadata. The earlier fixed-object and low-level object APIs were retired because they duplicated this proof without a separate consumer or contract.
-
-The two REST record families are intentionally distinct:
-
-- `/api/labs/rest-demo-records` is the focused browser tutorial. A signed cookie isolates anonymous visitor state, its contract is `/api/labs/rest-demo-openapi.json`, and it includes PATCH so the guided page can teach method semantics.
-- `/api/labs/rest-records` is the general bearer-capable machine resource in `/api/openapi.json`. Anonymous requests can read the public namespace, while identity-derived `demo:write` authorization controls mutations and namespace ownership.
-
-Neither REST family is an alias for the other. Their route descriptions and OpenAPI documents identify the applicable state and authorization boundary so consumers can choose the correct contract.
+Route changes must update declarations first, regenerate `docs/route-manifest.json`, and pass route/contract validation without introducing duplicate route inventories.

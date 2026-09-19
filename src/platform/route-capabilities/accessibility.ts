@@ -6,7 +6,7 @@ import {
 } from '../route-capability';
 
 const tests = ['tests/platform-laboratory-routing.test.ts', 'tests/interface.test.ts', 'tests/router.test.ts'] as const;
-const docs = ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'] as const;
+const docs = ['docs/ROUTE-REGISTRY.md'] as const;
 
 export const accessibilityLaboratoryCapability = definePlatformLaboratoryCapability({
   id: 'platform.accessibility',

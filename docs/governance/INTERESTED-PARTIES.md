@@ -207,7 +207,7 @@ Supporting evidence includes:
 - `docs/OPERATIONS.md`;
 - `docs/CHANGE-MANAGEMENT.md`;
 - `docs/RELEASE-MANAGEMENT.md`;
-- `docs/EVIDENCE.md`;
+- `docs/ASSURANCE.md`;
 - GitHub repository, pull-request, Actions, tag, and release history;
 - Cloudflare deployment and operational evidence;
 - accessibility verification evidence;

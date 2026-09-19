@@ -29,7 +29,7 @@ const definitions = [
     id: 'routes',
     command: ['npm', ['run', 'generate:routes']],
     inputs: listFiles('src/routing'),
-    outputs: ['docs/ROUTES.md', 'docs/route-manifest.json'],
+    outputs: ['docs/route-manifest.json'],
   },
   {
     id: 'openapi',

@@ -9,7 +9,7 @@ export interface ReportingRouteContext {
   env: Env;
 }
 
-const REPORTING_DOCS = ['docs/REPORTING.md', 'docs/ASSURANCE-API.md', 'docs/ROUTES.md'] as const;
+const REPORTING_DOCS = ['docs/REPORTING.md', 'docs/ROUTE-REGISTRY.md'] as const;
 const REPORTING_TESTS = ['tests/reporting-api.test.ts', 'tests/removed-api-routes.test.ts', 'tests/router.test.ts'] as const;
 
 function route(
