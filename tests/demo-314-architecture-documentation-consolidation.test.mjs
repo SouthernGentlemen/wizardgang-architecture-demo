@@ -8,7 +8,7 @@ const canonicalDocs = [
   'docs/ASSURANCE.md',
   'docs/REPORTING.md',
   'docs/ROUTE-REGISTRY.md',
-] as const;
+];
 
 const retiredDocs = [
   'docs/ASSURANCE-API.md',
@@ -19,15 +19,15 @@ const retiredDocs = [
   'docs/REPORTING-CURSORS.md',
   'docs/FRONTEND-ROUTES.md',
   'docs/ROUTES.md',
-] as const;
+];
 
 const retiredNames = retiredDocs.flatMap((path) => [path, path.split('/').at(-1)!]);
 
-function read(path: string): string {
+function read(path) {
   return readFileSync(join(root, path), 'utf8');
 }
 
-function currentStateFiles(): string[] {
+function currentStateFiles() {
   const files = ['README.md', 'AGENTS.md'];
   const walk = (directory: string) => {
     for (const entry of readdirSync(join(root, directory), { withFileTypes: true })) {
@@ -46,7 +46,7 @@ function currentStateFiles(): string[] {
   };
 
   for (const directory of ['docs', 'src', 'scripts']) walk(directory);
-  return [...new Set(files)].filter((path) => !retiredDocs.includes(path as typeof retiredDocs[number]));
+  return [...new Set(files)].filter((path) => !retiredDocs.includes(path));
 }
 
 describe('DEMO-314 architecture documentation consolidation', () => {
@@ -71,7 +71,7 @@ describe('DEMO-314 architecture documentation consolidation', () => {
   });
 
   it('keeps retired filenames out of permanent current-state docs and active source metadata', () => {
-    const offenders: string[] = [];
+    const offenders = [];
     for (const path of currentStateFiles()) {
       const text = read(path);
       for (const retired of retiredNames) {
