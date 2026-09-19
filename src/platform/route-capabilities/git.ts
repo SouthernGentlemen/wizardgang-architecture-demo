@@ -2,7 +2,7 @@ import { gitDemoReleaseResponse, gitDemoStartResponse, gitDemoStatusResponse } f
 import { NO_STORAGE, definePlatformLaboratoryCapability, noRequestBody } from '../route-capability';
 
 const tests = ['tests/platform-laboratory-routing.test.ts', 'tests/git-demo.test.ts', 'tests/router.test.ts'] as const;
-const docs = ['docs/ROUTES.md', 'docs/ROUTE-REGISTRY.md'] as const;
+const docs = ['docs/ROUTE-REGISTRY.md'] as const;
 
 export const gitLaboratoryCapability = definePlatformLaboratoryCapability({
   id: 'platform.git',
