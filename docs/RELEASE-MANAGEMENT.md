@@ -14,7 +14,7 @@ npm run security:dependencies
 npm run build
 ```
 
-Release tags are annotated. Published tags are never moved or deleted during ordinary development. Historical corrections move forward under a new change ID/version unless an explicitly documented immutable-history exception already exists.
+Release tags are annotated. Published tags are never moved or deleted during ordinary development. Corrections move forward under a new change ID and version.
 
 ## Release record
 
@@ -23,7 +23,7 @@ Every `docs/releases/vX.Y.Z.md` record states the product, version, release date
 - **Release date:** the annotated tag's date in UTC — `TZ=UTC git for-each-ref --format='%(taggerdate:short-local)' refs/tags/vX.Y.Z`.
 - **Commit:** the commit the tag names — `git rev-list -n1 vX.Y.Z`.
 
-The explicit UTC timezone is required because plain `%(taggerdate:short)` formats the tagger date in the tagger's local timezone and can disagree with UTC across a date boundary. This rule applies to new release records; historical release/deployment records describe the state that existed at that tag and keep the dates they already recorded rather than being rewritten to match the current rule or presentation.
+The explicit UTC timezone is required because plain `%(taggerdate:short)` formats the tagger date in the tagger's local timezone and can disagree with UTC across a date boundary. The checked-in release record is release-scoped evidence used by the release process; after publication, the annotated tag and GitHub Release are authoritative for historical release identity. Dated deployment evidence records what actually occurred and is not rewritten to match later presentation changes.
 
 ## Flow
 
@@ -54,7 +54,7 @@ npm run provision:worker-secret -- IDENTITY_AUDIT_HMAC_SECRET
 
 The command generates high-entropy random material in-process and streams it directly to `wrangler secret put` on standard input. It does not print the generated value or place it on the command line. Use provider-specific provisioning for OAuth/client tokens, identifiers, certificates, and other provider-issued/operator-selected values.
 
-Deployment also captures the live identity-provider configuration before migrations. After the Worker deploys, verification requires DEMO-296 identity readiness not to regress from ready and requires every provider that was configured before deployment to remain configured. The first deployment that introduces the DEMO-296 health field derives the pre-deployment ready baseline from configured `/auth/session` providers when the older health payload does not yet expose that field.
+Deployment captures the live identity-provider configuration before migrations. After the Worker deploys, verification requires the current identity-readiness signal not to regress from ready and requires every provider configured before deployment to remain configured.
 
 ## Deployment record
 

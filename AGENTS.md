@@ -4,20 +4,28 @@ This repository is a public architecture demonstration, not a generic applicatio
 
 ## Repository authority
 
-Implementation plans and roadmaps are valid planning tools when a controlled change or multi-change sequence benefits from an explicit source of truth. Keep an active plan clearly scoped, keep it current while the work is active, and retire or delete it when it becomes obsolete so it does not compete with permanent contracts.
+Repository documentation describes the current system. Superseded source and document states are recovered from Git and GitHub rather than narrated in permanent architecture or policy prose. Implementation plans and roadmaps may coordinate active work, but they are temporary and must be retired when the work no longer needs them.
 
-A plan may coordinate intended work, but it does not replace runtime declarations or permanent contract documentation unless the controlled change explicitly updates those contracts.
+Use repository authorities in this order. A lower layer may explain, project, or evidence a higher layer; it must not silently redefine it.
 
-Use these authorities for their respective concerns:
+1. **Executable source and contracts** — source declarations, configuration, migrations, schemas, and interface contracts define executable behavior and machine interfaces.
+2. **Structured assurance records** — `assurance/**` is authoritative for current structured assurance state, rationale, lifecycle, and relationships.
+3. **Generated artifacts** — deterministic outputs are projections of authoritative inputs and are never independent manually maintained authorities.
+4. **Human current-state architecture and policy** — concise Markdown explains present intent, boundaries, responsibilities, and controls without duplicating machine-owned state.
+5. **Operating evidence** — runtime observations, audit records, assessments, reviews, accessibility evidence, and other dated records prove what happened for a stated scope or period.
+6. **Git and GitHub history** — Git, annotated tags, GitHub Releases, workflow runs/artifacts, pull requests, and commits are authoritative for superseded repository states, historical releases, and historical delivery execution.
+
+Concern-specific rules follow that hierarchy:
 
 - application route declarations are authoritative for runtime routes and route policy;
-- `docs/ROUTES.md` and `docs/route-manifest.json` are generated projections of those declarations;
-- `docs/FRONTEND-ROUTES.md` is the permanent browser information-architecture contract;
-- `assurance/registry.json` and its registered schemas are authoritative for canonical assurance structured data;
-- `docs/CHANGE-MANAGEMENT.md` governs controlled change identity and history;
-- `docs/RELEASE-MANAGEMENT.md` governs releases, deployment, and rollback.
+- contracts are authoritative for executable interface definitions;
+- `docs/ROUTES.md` and `docs/route-manifest.json` are generated projections of route declarations;
+- `docs/FRONTEND-ROUTES.md` is the human current-state browser information-architecture contract;
+- `assurance/registry.json` and its registered schemas inventory the structured assurance authorities under `assurance/**`;
+- `docs/CHANGE-MANAGEMENT.md` governs the current controlled-change process; Git/GitHub retain the historical change record;
+- `docs/RELEASE-MANAGEMENT.md` governs the current release/deployment process; annotated tags and GitHub Releases retain historical release identity.
 
-Historical release, deployment, and governance records remain evidence of prior states. Do not rewrite them merely to match the current presentation.
+Permanent current-state architecture and policy docs do not carry implementation-history narration such as concrete old change IDs, pull requests, merge SHAs, retired routes, former labels, staged migrations, or previous implementations. Machine-enforced immutable-history exceptions stay with the validator, test, or exception data that requires them. Dated evidence records may retain the facts they actually observed and must not be rewritten to mimic the current presentation.
 
 ## Definition of done
 
