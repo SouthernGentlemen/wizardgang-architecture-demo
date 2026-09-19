@@ -79,7 +79,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/CONTEXT.md#89-ai-related-expectations-and-risk"
+            "native": "docs/governance/GOVERNANCE.md#31-climate-change-relevance"
           }
         }
       ],
@@ -116,7 +116,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/INTERESTED-PARTIES.md#6-ai-related-requirements"
+            "native": "docs/governance/GOVERNANCE.md#41-climate-related-interested-party-requirements"
           }
         }
       ],
@@ -153,7 +153,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/SCOPE.md#8-artificial-intelligence-management-system-boundary"
+            "native": "docs/governance/GOVERNANCE.md#51-ai-management-system-boundary"
           }
         }
       ],
@@ -190,7 +190,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/MANAGEMENT-SYSTEM.md#3-management-system-model"
+            "native": "docs/governance/GOVERNANCE.md#6-management-system-model"
           }
         }
       ],
@@ -227,7 +227,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/LEADERSHIP.md#4-leadership-commitments"
+            "native": "docs/governance/GOVERNANCE.md#7-leadership-and-accountability"
           }
         }
       ],
@@ -301,7 +301,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/ROLES-RESPONSIBILITIES.md#4-responsibility-matrix"
+            "native": "docs/governance/GOVERNANCE.md#8-roles-authorities-and-independence"
           }
         }
       ],
@@ -338,7 +338,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#5-ai-risk-reassessment"
+            "native": "docs/governance/RISK-MANAGEMENT.md#9-operational-reassessment"
           }
         }
       ],
@@ -375,7 +375,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/RISK-MANAGEMENT.md#3-risk-principles"
+            "native": "docs/governance/RISK-MANAGEMENT.md#2-risk-principles"
           }
         },
         {
@@ -386,7 +386,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#5-ai-risk-reassessment"
+            "native": "docs/governance/RISK-MANAGEMENT.md#9-operational-reassessment"
           }
         }
       ],
@@ -423,7 +423,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/RISK-MANAGEMENT.md#5-risk-record"
+            "native": "docs/governance/RISK-MANAGEMENT.md#3-risk-record-and-ownership"
           }
         }
       ],
@@ -460,7 +460,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#8-treatment-planning"
+            "native": "docs/governance/RISK-MANAGEMENT.md#11-treatment-planning-and-implementation"
           }
         }
       ],
@@ -519,7 +519,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#operational-risk-assessment-treatment-and-ai-impact-reassessment"
+            "native": "docs/governance/RISK-MANAGEMENT.md#9-operational-reassessment"
           }
         }
       ],
@@ -556,7 +556,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/MONITORING-MEASUREMENT-EVALUATION.md#10-relationship-to-objectives"
+            "native": "docs/governance/ASSURANCE-AND-AUDIT.md#4-measurement-catalog-and-objectives"
           }
         }
       ],
@@ -593,7 +593,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/MANAGEMENT-SYSTEM-CHANGE-PLANNING.md#5-management-system-change-review"
+            "native": "docs/governance/GOVERNANCE.md#11-management-system-change-planning"
           }
         }
       ],
@@ -630,7 +630,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/MANAGEMENT-SYSTEM-SUPPORT.md#3-resources-clause-71"
+            "native": "docs/governance/GOVERNANCE.md#10-resources-competence-awareness-communication-and-documented-information"
           }
         }
       ],
@@ -667,7 +667,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/COMPETENCE-AWARENESS-COMMUNICATION.md#5-competence-assessment-and-gaps"
+            "native": "docs/governance/GOVERNANCE.md#10-resources-competence-awareness-communication-and-documented-information"
           }
         }
       ],
@@ -704,7 +704,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/COMPETENCE-AWARENESS-COMMUNICATION.md#7-initial-awareness-baseline"
+            "native": "docs/governance/GOVERNANCE.md#10-resources-competence-awareness-communication-and-documented-information"
           }
         }
       ],
@@ -741,7 +741,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/COMPETENCE-AWARENESS-COMMUNICATION.md#9-communication-matrix"
+            "native": "docs/governance/GOVERNANCE.md#10-resources-competence-awareness-communication-and-documented-information"
           }
         }
       ],
@@ -778,7 +778,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/MANAGEMENT-SYSTEM-SUPPORT.md#14-documented-information-clause-75"
+            "native": "docs/governance/GOVERNANCE.md#10-resources-competence-awareness-communication-and-documented-information"
           }
         }
       ],
@@ -815,7 +815,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/MANAGEMENT-SYSTEM-SUPPORT.md#14-documented-information-clause-75"
+            "native": "docs/governance/GOVERNANCE.md#10-resources-competence-awareness-communication-and-documented-information"
           }
         }
       ],
@@ -852,7 +852,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/MANAGEMENT-SYSTEM-SUPPORT.md#15-creation-and-update-clause-752"
+            "native": "docs/governance/GOVERNANCE.md#10-resources-competence-awareness-communication-and-documented-information"
           }
         }
       ],
@@ -889,7 +889,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/MANAGEMENT-SYSTEM-SUPPORT.md#18-control-of-documented-information-clause-753"
+            "native": "docs/governance/GOVERNANCE.md#10-resources-competence-awareness-communication-and-documented-information"
           }
         }
       ],
@@ -926,7 +926,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/OPERATIONAL-PLANNING-CONTROL.md#4-existing-operational-control-system"
+            "native": "docs/governance/GOVERNANCE.md#12-operational-planning-and-control"
           }
         }
       ],
@@ -963,7 +963,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#5-ai-risk-reassessment"
+            "native": "docs/governance/RISK-MANAGEMENT.md#9-operational-reassessment"
           }
         }
       ],
@@ -1000,7 +1000,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#8-treatment-planning"
+            "native": "docs/governance/RISK-MANAGEMENT.md#11-treatment-planning-and-implementation"
           }
         }
       ],
@@ -1059,7 +1059,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#operational-risk-assessment-treatment-and-ai-impact-reassessment"
+            "native": "docs/governance/RISK-MANAGEMENT.md#9-operational-reassessment"
           }
         }
       ],
@@ -1096,7 +1096,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/MONITORING-MEASUREMENT-EVALUATION.md#5-measurement-catalog"
+            "native": "docs/governance/ASSURANCE-AND-AUDIT.md#4-measurement-catalog-and-objectives"
           }
         }
       ],
@@ -1133,7 +1133,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/MANAGEMENT-REVIEW.md#3-cadence"
+            "native": "docs/governance/GOVERNANCE.md#13-management-review"
           }
         }
       ],
@@ -1170,7 +1170,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/MANAGEMENT-REVIEW.md#3-cadence"
+            "native": "docs/governance/GOVERNANCE.md#13-management-review"
           }
         }
       ],
@@ -1207,7 +1207,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/MANAGEMENT-REVIEW.md#4-review-inputs"
+            "native": "docs/governance/GOVERNANCE.md#13-management-review"
           }
         }
       ],
@@ -1244,7 +1244,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/MANAGEMENT-REVIEW.md#5-review-outputs"
+            "native": "docs/governance/GOVERNANCE.md#13-management-review"
           }
         }
       ],
@@ -1281,7 +1281,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md#19-continual-improvement-sources"
+            "native": "docs/governance/GOVERNANCE.md#14-nonconformity-corrective-action-and-continual-improvement"
           }
         }
       ],
@@ -1318,7 +1318,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md#7-response-workflow"
+            "native": "docs/governance/GOVERNANCE.md#14-nonconformity-corrective-action-and-continual-improvement"
           }
         }
       ],
@@ -1355,7 +1355,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md#43-formal-internal-audit"
+            "native": "docs/governance/ASSURANCE-AND-AUDIT.md#7-audit-and-self-assessment-program"
           }
         }
       ],
@@ -1392,7 +1392,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md#5-audit-program"
+            "native": "docs/governance/ASSURANCE-AND-AUDIT.md#7-audit-and-self-assessment-program"
           }
         }
       ],
@@ -1429,7 +1429,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/INTERNAL-AUDIT-AND-SELF-ASSESSMENT.md#14-audit-report"
+            "native": "docs/governance/ASSURANCE-AND-AUDIT.md#10-findings-reports-and-follow-up"
           }
         }
       ],
@@ -1588,7 +1588,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/ROLES-RESPONSIBILITIES.md#4-responsibility-matrix"
+            "native": "docs/governance/GOVERNANCE.md#8-roles-authorities-and-independence"
           }
         }
       ],
@@ -1625,7 +1625,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/COMPETENCE-AWARENESS-COMMUNICATION.md#competence-awareness-communication-and-ai-concern-reporting"
+            "native": "docs/governance/GOVERNANCE.md#10-resources-competence-awareness-communication-and-documented-information"
           }
         }
       ],
@@ -1821,7 +1821,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/COMPETENCE-AWARENESS-COMMUNICATION.md#5-competence-assessment-and-gaps"
+            "native": "docs/governance/GOVERNANCE.md#10-resources-competence-awareness-communication-and-documented-information"
           }
         }
       ],
@@ -1991,7 +1991,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/OPERATIONAL-RISK-AND-AI-REASSESSMENT.md#operational-risk-assessment-treatment-and-ai-impact-reassessment"
+            "native": "docs/governance/RISK-MANAGEMENT.md#9-operational-reassessment"
           }
         },
         {
@@ -2594,7 +2594,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
         }
       ]
@@ -2628,7 +2628,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/SCOPE.md#10-explicitly-out-of-scope"
+            "native": "docs/governance/GOVERNANCE.md#52-explicit-exclusions-and-applicability"
           }
         }
       ]
