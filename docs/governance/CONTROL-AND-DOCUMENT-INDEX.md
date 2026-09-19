@@ -266,7 +266,7 @@ The most important technical evidence owners are:
 | Cost/degradation | usage collector, provider observations, degradation behavior and tests |
 | Recovery | release reconstruction path, recovery procedure/register, future RT-001 evidence |
 | Accessibility | `docs/ACCESSIBILITY.md`, `/demos#accessibility`, interface tests, manual records |
-| Traceability | `docs/EVIDENCE.md`, Git/PR/CI/tag/release/deploy/runtime chain |
+| Traceability | `docs/ASSURANCE.md`, Git/PR/CI/tag/release/deploy/runtime chain |
 | Public assurance data | `assurance/registry.json`, `docs/ASSURANCE.md`, `contracts/assurance/**` |
 
 Implementation evidence can support `Met` only when the applicable requirement is actually satisfied and current enough. A source file alone cannot prove recurring effectiveness.
