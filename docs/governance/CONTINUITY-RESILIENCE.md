@@ -5,7 +5,6 @@
 **Status:** Approved
 **Owner:** Operations Owner / Management-System Owner  
 **Approval:** Controlled pull request and merge  
-**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually, after a material outage/incident/recovery exercise, and after material architecture, supplier, data, security, or AI/MCP change
 
 ## 1. Purpose
@@ -60,8 +59,8 @@ This plan relies on, but does not duplicate:
 | Security/AI risk treatment | security and AI risk registers |
 | Change/release/deployment | `CHANGE-MANAGEMENT.md`, release/deployment documents/workflows |
 | Secure verification | `SECURE-ENGINEERING-TESTING.md` |
-| Corrective action | `NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md` |
-| Management decisions | `MANAGEMENT-REVIEW.md` |
+| Corrective action | `GOVERNANCE.md` |
+| Management decisions | `GOVERNANCE.md` |
 
 A disruption may invoke several of these records at once.
 
@@ -626,8 +625,6 @@ A period with zero incidents is not by itself evidence of continuity readiness.
 
 ## 19. Current Evidence Posture
 
-As of the 2026-09-02 management-system baseline:
-
 ### Demonstrated / structurally available
 
 - intentional online/offline control exists;
@@ -695,7 +692,6 @@ Primary supporting records include:
 - `docs/governance/BACKUP-RECOVERY-RESTORE.md`
 - `assurance/incidents/incidents.json`
 - `assurance/governance/recovery-tests.json`
-- `assurance/risks/risks.json`
 - `assurance/risks/risks.json`
 - `assurance/objectives/objectives.json`
 - `docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md`

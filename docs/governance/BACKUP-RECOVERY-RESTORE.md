@@ -5,7 +5,6 @@
 **Status:** Approved
 **Owner:** Operations Owner / Management-System Owner  
 **Approval:** Controlled pull request and merge  
-**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually, after a material data/storage/runtime/supplier change, after a failed recovery test, and after an incident that invokes recovery
 
 ## 1. Purpose
@@ -134,7 +133,7 @@ Priority does not authorize unsafe shortcuts. If critical control state cannot b
 
 ## 5. Backup and Export Expectations
 
-The following are management-system expectations after approval. Planned work remains a gap until implemented and evidenced.
+The following are current management-system expectations. Planned work remains a gap until implemented and evidenced.
 
 ### 5.1 Git/source
 
@@ -359,7 +358,7 @@ Sensitive backup contents, secret values, private infrastructure identifiers, an
 
 ## 15. Current Posture
 
-After approval of this procedure:
+Under this procedure:
 
 - source/release reconstruction is **documented and supported by existing Git/release mechanics**;
 - D1 backup/export and restore assurance remains **incomplete until an actual mechanism and test are evidenced**;
@@ -377,7 +376,7 @@ Procedure approval must not automatically change a Gap/Partial control to Met.
 - `assurance/objectives/objectives.json`
 - `assurance/governance/suppliers.json`
 - `docs/governance/INCIDENT-MANAGEMENT.md`
-- `docs/governance/NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md`
+- `docs/governance/GOVERNANCE.md`
 - `docs/RELEASE.md`
 - `docs/RELEASE-MANAGEMENT.md`
 - `docs/OPERATIONS.md`
@@ -391,4 +390,4 @@ Procedure approval must not automatically change a Gap/Partial control to Met.
 
 This procedure supports the scoped ISO/IEC 27001 backup, ICT readiness, continuity, recovery, logging/evidence, supplier, and operational-control requirements and the ISO/IEC 42001 requirements affected by operational recovery of the AI/MCP boundary.
 
-**Current posture after approval:** Recovery process defined; source reconstruction path exists; D1/R2 restore effectiveness and measured recovery performance remain operating-evidence gaps. Alignment is uncertified.
+**Current posture:** Recovery process defined; source reconstruction path exists; D1/R2 restore effectiveness and measured recovery performance remain operating-evidence gaps. Alignment is uncertified.
