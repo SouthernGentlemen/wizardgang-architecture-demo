@@ -19,7 +19,7 @@ Structured assurance records under `assurance/**` remain authoritative for curre
 
 Assurance conclusions must be based on retained, attributable evidence appropriate to the question being evaluated. Missing, stale, inaccessible, or unreliable evidence is recorded as a limitation or finding rather than converted into a pass.
 
-Evidence may include source and contracts, pull requests, CI runs, tests, release/deployment records, provider observations, logs, audit events, structured assurance records, risk and incident records, accessibility evidence, AI evaluations, supplier reviews, and dated assessment records.
+Evidence may include source and contracts, pull requests, CI runs, tests, release/deployment records, provider observations, logs, audit events, structured assurance records, risk and incident records, accessibility evidence, current governing assessments, supplier reviews, release snapshots, and historical Git/GitHub records.
 
 A self-assessment is useful but is not described as an independent internal audit when the reviewer is evaluating their own work or decisions without a meaningful safeguard. Formal internal-audit conclusions require sufficient objectivity for the audited subject.
 
@@ -78,7 +78,7 @@ Evaluation methods include:
 
 Evidence quality depends on scope, freshness, provenance, repeatability, completeness, and whether the method actually evaluates the claimed behavior. One evidence type does not silently substitute for another.
 
-Dated assessments record what was evaluated at that time. Current compliance status remains in structured assurance records and is not inferred from a historical report.
+Historical assessment reports are retained through Git/GitHub history, release-bound assurance snapshots, and workflow artifacts rather than as active current-state Markdown. Current compliance status remains in structured assurance records and is not inferred from a historical report.
 
 ## 6. AI, accessibility, supplier, and operational evaluation
 
@@ -168,8 +168,8 @@ A merged commit or green test alone is not sufficient when the corrective action
 Audit plans, reports, findings, evaluations, measurements, and corrective-action evidence are retained through the authority appropriate to the record:
 
 - structured records under `assurance/**`;
-- dated assessments under `docs/governance/assessments/`;
-- Git/GitHub for controlled changes and historical execution;
+- current governing assessments that remain active, such as `docs/governance/AI-IMPACT-ASSESSMENT.md`;
+- Git/GitHub, release-bound assurance snapshots, and workflow artifacts for superseded assessments and historical execution;
 - runtime/provider evidence where the observation originates outside the repository.
 
 Reports must distinguish current structured state from dated evidence and avoid presenting counts, scores, or historical summaries as a separate manually maintained assurance authority.

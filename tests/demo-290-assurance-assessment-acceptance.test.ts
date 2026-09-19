@@ -227,18 +227,19 @@ describe('DEMO-290 assurance assessment acceptance', () => {
     }
   });
 
-  it('records complete WCAG evaluation metadata and representative Chromium/axe scope in English and Arabic', () => {
-    const report = readFileSync('docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md', 'utf8');
-    const criterionIds = [...report.matchAll(/^### WCAG ([0-9]+\.[0-9]+\.[0-9]+)\b/gm)].map((match) => match[1]);
-    expect(criterionIds).toHaveLength(86);
-    expect(new Set(criterionIds).size).toBe(86);
-    expect(report).toMatch(/^\*\*Date:\*\* \d{4}-\d{2}-\d{2}$/m);
-    expect(report).toMatch(/^\*\*Evaluator:\*\* .+$/m);
-    expect(report).toContain('## Scope');
-    expect(report).toContain('## Method');
-    expect(report).toContain('Chromium');
-    expect(report).toContain('axe-core');
-    expect(report).toContain('Locales: en, ar.');
+  it('records complete WCAG structured scope and representative browser/axe coverage in English and Arabic', () => {
+    const wcagRecords = listPublishedAssuranceRecords('compliance')
+      .filter((record) => record.id.startsWith('WCAG-'));
+    expect(wcagRecords).toHaveLength(86);
+    expect(new Set(wcagRecords.map((record) => record.id)).size).toBe(86);
+
+    const registry = JSON.parse(readFileSync('assurance/compliance/wcag-2.2.json', 'utf8')) as {
+      scope: string;
+      sources: { normative: string };
+    };
+    expect(registry.scope).toContain('every canonical public HTML page');
+    expect(registry.scope).toContain('English and Arabic');
+    expect(registry.sources.normative).toBe('https://www.w3.org/TR/WCAG22/');
 
     const audit = JSON.parse(readFileSync('config/site-audit-states.json', 'utf8')) as {
       states: Array<{ name: string; path: string }>;
@@ -250,6 +251,11 @@ describe('DEMO-290 assurance assessment acceptance', () => {
     expect(assuranceStates.some((state) => state.path.includes('ISO27001-A.5.19'))).toBe(true);
     expect(assuranceStates.some((state) => state.path.includes('WCAG-1.1.1'))).toBe(true);
     expect(assuranceStates.some((state) => state.path.includes('lang=ar'))).toBe(true);
-    for (const state of assuranceStates) expect(report).toContain(state.name + ' (' + state.path + ')');
+
+    const evaluation = readFileSync('scripts/demo-289-site-evaluation.mjs', 'utf8');
+    expect(evaluation).toContain('chromeExecutable');
+    expect(evaluation).toContain('axe-core');
+    expect(evaluation).toContain("for (const locale of ['en','ar'])");
+    expect(evaluation).toContain('auditConfig.states.map');
   });
 });

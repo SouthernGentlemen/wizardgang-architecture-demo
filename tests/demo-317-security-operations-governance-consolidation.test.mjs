@@ -64,7 +64,7 @@ describe('DEMO-317 security and operational governance consolidation', () => {
     for (const path of retired) expect(existsSync(join(root, path)), path).toBe(false);
     const topLevel = readdirSync(governanceRoot, { withFileTypes: true })
       .filter((entry) => entry.isFile() && entry.name.endsWith('.md'));
-    expect(topLevel).toHaveLength(8);
+    expect(topLevel.filter((entry) => entry.name !== 'AI-IMPACT-ASSESSMENT.md')).toHaveLength(8);
   });
 
   it('keeps one current document identity for each consolidated operational domain', () => {

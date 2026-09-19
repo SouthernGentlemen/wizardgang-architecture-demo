@@ -32,6 +32,19 @@ const canonicalOperationalDocuments = [
   'docs/governance/ENGINEERING-CONTROLS.md',
 ];
 
+const canonicalAssessmentDocuments = [
+  'docs/governance/AI-IMPACT-ASSESSMENT.md',
+];
+
+const retiredHistoricalAssessmentDocuments = [
+  'docs/governance/assessments/ISO-27001-2026-09-17-SELF-ASSESSMENT.md',
+  'docs/governance/assessments/ISO-27001-2026-09-18-REPOSITORY-PROTECTION-ADDENDUM.md',
+  'docs/governance/assessments/ISO-42001-2026-09-17-SELF-ASSESSMENT.md',
+  'docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md',
+  'docs/governance/assessments/WCAG-2.2-2026-09-17-EVALUATION.md',
+  'docs/governance/assessments/WCAG-2.2-2026-09-18-REASSESSMENT.md',
+];
+
 const retiredFragmentedDocuments = [
   'docs/governance/CONTEXT.md',
   'docs/governance/INTERESTED-PARTIES.md',
@@ -128,12 +141,16 @@ for (const absolute of walk(governanceRoot).filter((file) => file.endsWith('.md'
   liveReferences.set(match[1], relative);
 }
 
-for (const relativePath of [...canonicalManagementDocuments, ...canonicalOperationalDocuments]) {
+for (const relativePath of [...canonicalManagementDocuments, ...canonicalOperationalDocuments, ...canonicalAssessmentDocuments]) {
   if (!fs.existsSync(path.join(root, relativePath))) errors.push(`${relativePath}: canonical consolidated governance document does not exist`);
 }
 for (const relativePath of retiredFragmentedDocuments) {
   if (fs.existsSync(path.join(root, relativePath))) errors.push(`${relativePath}: retired fragmented governance document still exists`);
   if (registeredPaths.has(relativePath)) errors.push(`${relativePath}: retired fragmented governance document remains in REFERENCE-REGISTRY.json`);
+}
+for (const relativePath of retiredHistoricalAssessmentDocuments) {
+  if (fs.existsSync(path.join(root, relativePath))) errors.push(`${relativePath}: retired historical assessment Markdown still exists`);
+  if (registeredPaths.has(relativePath)) errors.push(`${relativePath}: retired historical assessment remains in REFERENCE-REGISTRY.json`);
 }
 
 const topLevelGovernanceMarkdown = fs.readdirSync(governanceRoot, { withFileTypes: true })
@@ -164,10 +181,10 @@ for (const relativePath of currentStateAuthorityDocuments) {
     const match = pattern.exec(text);
     if (match) errors.push(`${relativePath}: permanent current-state documentation contains ${label} "${match[0]}"; keep historical identity in Git/GitHub or dated evidence`);
   }
-  for (const retiredPath of retiredFragmentedDocuments) {
+  for (const retiredPath of [...retiredFragmentedDocuments, ...retiredHistoricalAssessmentDocuments]) {
     const name = retiredPath.split('/').at(-1);
     if (text.includes(retiredPath) || text.includes(name)) {
-      errors.push(`${relativePath}: references retired governance document ${name}`);
+      errors.push(`${relativePath}: references retired current-state document ${name}`);
     }
   }
 }
@@ -178,4 +195,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`Governance metadata validation passed: ${registry.records.length} registered identities; ${liveReferences.size} live Markdown Reference headers; ${topLevelGovernanceMarkdown.length} top-level current-state governance documents; fragmented management-system and operational governance documents retired.`);
+console.log(`Governance metadata validation passed: ${registry.records.length} registered identities; ${liveReferences.size} live Markdown Reference headers; ${topLevelGovernanceMarkdown.length} top-level current-state governance documents; fragmented governance and historical assessment Markdown retired.`);

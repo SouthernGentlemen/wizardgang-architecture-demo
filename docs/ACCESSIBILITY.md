@@ -12,9 +12,17 @@ Accessibility architecture, criterion state, and operating evidence have separat
 - `assurance/compliance/wcag-2.2.json` and the principle partitions under `assurance/compliance/wcag-2.2/` are authoritative for the current structured WCAG criterion inventory, status, rationale, validation requirements, evidence relationships, gaps, ownership, and freshness.
 - `docs/accessibility-manual-verification.json` records the current manual, source/content, environment, and assistive-technology procedures that have actually been executed or remain pending.
 - Executable tests and audit scripts produce bounded automated evidence.
-- Dated accessibility assessments are operating evidence for their stated scope and date. They do not redefine current criterion state.
+- Historical accessibility evaluations are retained through Git/GitHub history, release-bound assurance snapshots, and workflow artifacts rather than as active Markdown authorities. They do not redefine current criterion state.
 
 Do not copy the criterion inventory or criterion-by-criterion status into Markdown. The `/assurance` workbench and reporting APIs project the structured records without creating a second accessibility authority.
+
+## Current WCAG 2.2 assurance boundary
+
+The current accessibility standards baseline is the W3C WCAG 2.2 Recommendation republished on 12 December 2024 together with the current published WCAG 2.2 errata. W3C advises use of WCAG 2.2 for current accessibility work, but this repository does not claim Level A, AA, or AAA conformance.
+
+Structured criterion records remain the only current criterion-by-criterion authority. Their Markdown documentation relationship points to this section because this document governs the verification, evidence, and conformance boundary; criterion status, rationale, gaps, ownership, and evidence stay in `assurance/compliance/wcag-2.2/**`.
+
+Historical evaluation reports are recovered from Git/GitHub and release/workflow evidence when historical reconstruction is needed. They are not maintained as parallel current-state Markdown.
 
 ## Shared rendering architecture
 
@@ -109,7 +117,8 @@ Level AAA remains an engineering target where applicable, not a published confor
 
 Use W3C material for WCAG identity and meaning:
 
-- WCAG 2.2 Recommendation: `https://www.w3.org/TR/WCAG22/`
+- WCAG 2.2 Recommendation, current publication (12 December 2024): `https://www.w3.org/TR/WCAG22/`
+- WCAG 2.2 current errata: `https://www.w3.org/WAI/WCAG22/errata/`
 - WCAG 2 Overview and publication guidance: `https://www.w3.org/WAI/standards-guidelines/wcag/`
 - W3C machine-readable WCAG 2.2 data: `https://www.w3.org/WAI/WCAG22/wcag.json`
 - Understanding Conformance: `https://www.w3.org/WAI/WCAG22/Understanding/conformance.html`

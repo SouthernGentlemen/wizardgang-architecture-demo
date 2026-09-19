@@ -164,6 +164,13 @@
       "reviewedAt": "2026-09-19T12:47:00Z",
       "reviewer": "controlled-repository-review",
       "basis": "DEMO-317 consolidates current security and operational governance and remaps the ISO/IEC 27001 and ISO/IEC 42001 documentation relationships to the resulting domain authorities. Retired credential history and one-time transition narrative are removed from current inventories and prose while the current negative authorization invariant is retained. No compliance status, applicability decision, rationale, gap, evidence relationship, runtime security behavior, or assurance conclusion is reassessed or upgraded; this review approves disclosure of only the exact resulting public compliance source revisions."
+    },
+    {
+      "id": "review-demo318-historical-assessment-retirement",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-19T15:55:00Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-318 retires dated historical assessment Markdown from the active documentation tree, retains the current AI impact assessment as a current-state governance document, and remaps compliance documentation relationships to current governing Markdown. Historical observations remain recoverable from Git/GitHub, release snapshots, workflow artifacts, and structured assurance state. No compliance status, applicability decision, evidence relationship, gap, or assurance conclusion is reassessed or upgraded; this review approves disclosure of only the exact resulting public compliance source revisions."
     }
   ],
   "sourceApprovals": [
@@ -610,6 +617,42 @@
       "resource": "compliance.iso-42001",
       "revision": "8f6e63ab6dcec65de332eb5a2520680b13038c1f",
       "reviewRef": "review-demo317-security-operations-governance"
+    },
+    {
+      "id": "source-compliance-iso-27001-a99134584aa2",
+      "resource": "compliance.iso-27001",
+      "revision": "a99134584aa2db3d983d19480ade62417fb4cb2f",
+      "reviewRef": "review-demo318-historical-assessment-retirement"
+    },
+    {
+      "id": "source-compliance-iso-42001-29c342a2b557",
+      "resource": "compliance.iso-42001",
+      "revision": "29c342a2b5579aa8316567cd4571a29daeddafc0",
+      "reviewRef": "review-demo318-historical-assessment-retirement"
+    },
+    {
+      "id": "source-compliance-wcag-2-2-perceivable-e430184a457d",
+      "resource": "compliance.wcag-2.2.perceivable",
+      "revision": "e430184a457dfd57b2834d8575bef0eb1ca1dc4a",
+      "reviewRef": "review-demo318-historical-assessment-retirement"
+    },
+    {
+      "id": "source-compliance-wcag-2-2-operable-dff5c53acb1e",
+      "resource": "compliance.wcag-2.2.operable",
+      "revision": "dff5c53acb1e24bc5e3f1d2e2fd4b2f8d35c885f",
+      "reviewRef": "review-demo318-historical-assessment-retirement"
+    },
+    {
+      "id": "source-compliance-wcag-2-2-understandable-3bce33bd01a9",
+      "resource": "compliance.wcag-2.2.understandable",
+      "revision": "3bce33bd01a98d1a2c6523ae4b41d78be2bd7473",
+      "reviewRef": "review-demo318-historical-assessment-retirement"
+    },
+    {
+      "id": "source-compliance-wcag-2-2-robust-442ab0664ae4",
+      "resource": "compliance.wcag-2.2.robust",
+      "revision": "442ab0664ae48ac17c5d47d569cab5cc953f75ea",
+      "reviewRef": "review-demo318-historical-assessment-retirement"
     }
   ],
   "records": [

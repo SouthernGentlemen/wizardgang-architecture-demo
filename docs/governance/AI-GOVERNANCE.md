@@ -69,7 +69,7 @@ A human owner remains accountable for intended use, boundary approval, supplier 
 
 ## 6. Risk and Impact Assessment
 
-AI risk is maintained in assurance/risks/risks.json. The current AI/MCP impact assessment is documented under docs/governance/assessments/MCP-AI-IMPACT-ASSESSMENT.md.
+AI risk is maintained in assurance/risks/risks.json. The current AI/MCP impact assessment is `docs/governance/AI-IMPACT-ASSESSMENT.md`; its impact method is informed by ISO/IEC 42005:2025 while ISO/IEC 42001:2023 remains the AI management-system baseline.
 
 Impact reassessment is required when material changes affect purpose, affected parties, data, autonomy, authority, provider, tool behavior, security, human oversight, or foreseeable misuse.
 
