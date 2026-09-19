@@ -58,7 +58,7 @@ OIDC flow material is AES-GCM encrypted in a separate short-lived cookie. The SA
 
 The browser and public logs never receive access tokens, refresh tokens, client secrets, authorization codes, PKCE verifiers, private signing keys, raw application cookies, or unsanitized SAML responses.
 
-## Environment configuration and cutover
+## Environment configuration
 
 Set identity secrets/provider credentials with Cloudflare secrets or local `.dev.vars`; never commit real values. Required variables are documented in `.dev.vars.example` and validated by the implementation. `IDENTITY_SESSION_SECRET` protects browser flow material, application sessions, and short-lived demo access tokens; `IDENTITY_AUDIT_HMAC_SECRET` is a separate Worker secret used for domain-separated identity audit identifiers and visitor sandbox namespaces. Both identity secrets must be at least 32 UTF-8 bytes.
 
@@ -66,7 +66,6 @@ Identity protocol endpoints fail closed with a disclosure-safe JSON `503` respon
 
 External provider registrations must use canonical callback, SAML entity/consumer, metadata, and webhook URLs from the generated route contract for the released origin. A code change does not modify external provider configuration and does not deploy or release the application. Removed identity browser/protocol URLs remain ordinary unknown paths rather than compatibility aliases.
 
-The identity-audit hardening migration resets existing visitor sandbox rows and invalidates pre-change short-lived demo access tokens. Existing encrypted identity sessions remain valid because their encryption and lookup continue to use `IDENTITY_SESSION_SECRET`. An authenticated visitor can request a new access token to receive a fresh keyed sandbox. This is a one-time sandbox reset, not an identity-session reset.
 
 ## Audit evidence
 

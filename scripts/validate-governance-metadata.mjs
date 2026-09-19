@@ -24,6 +24,14 @@ const canonicalManagementDocuments = [
   'docs/governance/ASSURANCE-AND-AUDIT.md',
 ];
 
+const canonicalOperationalDocuments = [
+  'docs/governance/SECURITY-GOVERNANCE.md',
+  'docs/governance/AI-GOVERNANCE.md',
+  'docs/governance/DATA-AND-PRIVACY.md',
+  'docs/governance/INCIDENT-AND-CONTINUITY.md',
+  'docs/governance/ENGINEERING-CONTROLS.md',
+];
+
 const retiredFragmentedDocuments = [
   'docs/governance/CONTEXT.md',
   'docs/governance/INTERESTED-PARTIES.md',
@@ -41,6 +49,19 @@ const retiredFragmentedDocuments = [
   'docs/governance/MANAGEMENT-REVIEW.md',
   'docs/governance/NONCONFORMITY-CORRECTIVE-ACTION-CONTINUAL-IMPROVEMENT.md',
   'docs/governance/CONTROL-AND-DOCUMENT-INDEX.md',
+  'docs/governance/AI-POLICY.md',
+  'docs/governance/INFORMATION-SECURITY-POLICY.md',
+  'docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md',
+  'docs/governance/BACKUP-RECOVERY-RESTORE.md',
+  'docs/governance/CONTINUITY-RESILIENCE.md',
+  'docs/governance/CONFIGURATION-BASELINE-DRIFT.md',
+  'docs/governance/CRYPTOGRAPHY-SECRETS-KEY-MANAGEMENT.md',
+  'docs/governance/DATA-GOVERNANCE.md',
+  'docs/governance/INCIDENT-MANAGEMENT.md',
+  'docs/governance/LEGAL-CONTRACTUAL-IP-PRIVACY.md',
+  'docs/governance/SECURE-ENGINEERING-TESTING.md',
+  'docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md',
+  'docs/governance/VULNERABILITY-THREAT-SECURITY-MAINTENANCE.md',
 ];
 
 const historicalNarrativePatterns = [
@@ -107,7 +128,7 @@ for (const absolute of walk(governanceRoot).filter((file) => file.endsWith('.md'
   liveReferences.set(match[1], relative);
 }
 
-for (const relativePath of canonicalManagementDocuments) {
+for (const relativePath of [...canonicalManagementDocuments, ...canonicalOperationalDocuments]) {
   if (!fs.existsSync(path.join(root, relativePath))) errors.push(`${relativePath}: canonical consolidated governance document does not exist`);
 }
 for (const relativePath of retiredFragmentedDocuments) {
@@ -157,4 +178,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`Governance metadata validation passed: ${registry.records.length} registered identities; ${liveReferences.size} live Markdown Reference headers; ${topLevelGovernanceMarkdown.length} top-level current-state governance documents; fragmented clause documents and manual control index retired.`);
+console.log(`Governance metadata validation passed: ${registry.records.length} registered identities; ${liveReferences.size} live Markdown Reference headers; ${topLevelGovernanceMarkdown.length} top-level current-state governance documents; fragmented management-system and operational governance documents retired.`);

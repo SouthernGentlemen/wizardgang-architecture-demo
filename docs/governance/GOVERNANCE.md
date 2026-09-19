@@ -152,8 +152,8 @@ Where the same person would audit their own decisions or work, the activity is l
 
 The current policy authorities are:
 
-- `docs/governance/INFORMATION-SECURITY-POLICY.md`
-- `docs/governance/AI-POLICY.md`
+- `docs/governance/SECURITY-GOVERNANCE.md`
+- `docs/governance/AI-GOVERNANCE.md`
 
 Management-system objectives are maintained as structured records under `assurance/objectives/`. Objectives must be measurable or otherwise evaluable, have an owner and review basis, and be reconsidered when context, risk, obligations, performance, or management priorities change.
 

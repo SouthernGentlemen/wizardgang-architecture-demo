@@ -27,48 +27,16 @@
       "path": "docs/governance/ASSURANCE-AND-AUDIT.md"
     },
     {
-      "reference": "WG-GOV-016",
-      "path": "docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md"
-    },
-    {
       "reference": "WG-GOV-017",
-      "path": "docs/governance/INCIDENT-MANAGEMENT.md"
-    },
-    {
-      "reference": "WG-GOV-018",
-      "path": "docs/governance/BACKUP-RECOVERY-RESTORE.md"
+      "path": "docs/governance/INCIDENT-AND-CONTINUITY.md"
     },
     {
       "reference": "WG-GOV-020",
-      "path": "docs/governance/DATA-GOVERNANCE.md"
-    },
-    {
-      "reference": "WG-GOV-021",
-      "path": "docs/governance/VULNERABILITY-THREAT-SECURITY-MAINTENANCE.md"
-    },
-    {
-      "reference": "WG-GOV-022",
-      "path": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md"
-    },
-    {
-      "reference": "WG-GOV-023",
-      "path": "docs/governance/LEGAL-CONTRACTUAL-IP-PRIVACY.md"
-    },
-    {
-      "reference": "WG-GOV-024",
-      "path": "docs/governance/CONFIGURATION-BASELINE-DRIFT.md"
-    },
-    {
-      "reference": "WG-GOV-025",
-      "path": "docs/governance/CRYPTOGRAPHY-SECRETS-KEY-MANAGEMENT.md"
+      "path": "docs/governance/DATA-AND-PRIVACY.md"
     },
     {
       "reference": "WG-GOV-026",
-      "path": "docs/governance/SECURE-ENGINEERING-TESTING.md"
-    },
-    {
-      "reference": "WG-GOV-027",
-      "path": "docs/governance/CONTINUITY-RESILIENCE.md"
+      "path": "docs/governance/ENGINEERING-CONTROLS.md"
     },
     {
       "reference": "WG-OBJ-001",
@@ -76,11 +44,11 @@
     },
     {
       "reference": "WG-POL-001",
-      "path": "docs/governance/INFORMATION-SECURITY-POLICY.md"
+      "path": "docs/governance/SECURITY-GOVERNANCE.md"
     },
     {
       "reference": "WG-POL-002",
-      "path": "docs/governance/AI-POLICY.md"
+      "path": "docs/governance/AI-GOVERNANCE.md"
     },
     {
       "reference": "WG-REG-001",

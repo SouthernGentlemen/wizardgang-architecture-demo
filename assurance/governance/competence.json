@@ -41,7 +41,7 @@
       "fields": {
         "roleActivity": "Management-System Owner",
         "requiredCompetence": "Scope, policy, risk, objectives, SoA, controlled documented information, management review, corrective action",
-        "currentEvidence": "Controlled management-system artifacts `DEMO-070` onward demonstrate active implementation of the defined governance model",
+        "currentEvidence": "Current consolidated management-system authorities and controlled repository history evidence active implementation of the defined governance model",
         "currentStatus": "Partial",
         "requiredNextEvidence": "Complete the initial competence/self-assessment review and retain rationale for areas requiring specialist or independent support"
       },

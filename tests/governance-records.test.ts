@@ -18,7 +18,7 @@ const governanceResources = flatten(registry.datasets as RegistryResource[])
   .filter((resource) => resource.kind === 'governance-records');
 
 describe('canonical governance register records', () => {
-  it('registers 253 schema-covered records in 14 structured views', () => {
+  it('registers 252 schema-covered records in 14 structured views', () => {
     const documents = governanceResources.map((resource) => JSON.parse(readFileSync(resource.path, 'utf8')) as {
       source: string;
       qualification: string;
@@ -32,9 +32,9 @@ describe('canonical governance register records', () => {
     expect(governanceResources.every((resource) => resource.capabilities.includes('summary-source'))).toBe(true);
     expect(documents.every((document) => document.source === 'governance.records')).toBe(true);
     expect(views).toHaveLength(14);
-    expect(records).toHaveLength(253);
+    expect(records).toHaveLength(252);
     expect(new Set(views.map((view) => view.id)).size).toBe(14);
-    expect(new Set(records.map((record) => record.id)).size).toBe(253);
+    expect(new Set(records.map((record) => record.id)).size).toBe(252);
     expect(records.every((record) => views.some((view) => view.id === record.view))).toBe(true);
     expect(views.every((view) => view.columns.length >= 2)).toBe(true);
   });

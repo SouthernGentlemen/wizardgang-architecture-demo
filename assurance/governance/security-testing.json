@@ -745,7 +745,7 @@
       "fields": {
         "category": "AI/MCP boundary",
         "testControl": "MCP boundary rejects unknown methods, invalid namespaces, and prohibited write tools",
-        "currentEvidence": "`tests/mcp-client.test.ts` (DEMO-284)",
+        "currentEvidence": "tests/mcp-client.test.ts",
         "status": "Active",
         "triggerCadence": "Relevant MCP change / full tests",
         "currentLimitationNextAction": "Covers the current read-only application boundary; it is not a comprehensive AI safety, misuse, or provider-behavior evaluation"

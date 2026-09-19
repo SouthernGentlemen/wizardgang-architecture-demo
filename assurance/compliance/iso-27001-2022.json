@@ -226,7 +226,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/INFORMATION-SECURITY-POLICY.md#3-policy-commitments"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
           }
         }
       ],
@@ -1332,7 +1332,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/INFORMATION-SECURITY-POLICY.md#3-policy-commitments"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
           }
         }
       ],
@@ -1480,7 +1480,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/VULNERABILITY-THREAT-SECURITY-MAINTENANCE.md#15-contacts-with-authorities"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#15-contacts-with-authorities"
           }
         }
       ],
@@ -1517,7 +1517,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/VULNERABILITY-THREAT-SECURITY-MAINTENANCE.md#16-security-communities-and-special-interest-sources"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#16-security-communities-and-special-interest-sources"
           }
         }
       ],
@@ -1554,7 +1554,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/VULNERABILITY-THREAT-SECURITY-MAINTENANCE.md#9-threat-intelligence"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#9-threat-intelligence"
           }
         }
       ],
@@ -1591,7 +1591,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#4-risk-scaled-engineering-requirements"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#4-risk-scaled-engineering-requirements"
           }
         }
       ],
@@ -1628,7 +1628,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#3-asset-categories"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#3-asset-categories"
           }
         }
       ],
@@ -1665,7 +1665,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#5-acceptable-use"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#5-acceptable-use"
           }
         }
       ],
@@ -1702,7 +1702,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/DATA-GOVERNANCE.md#3-data-classification-model"
+            "native": "docs/governance/DATA-AND-PRIVACY.md#3-data-classification-model"
           }
         }
       ],
@@ -1739,7 +1739,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/DATA-GOVERNANCE.md#3-data-classification-model"
+            "native": "docs/governance/DATA-AND-PRIVACY.md#3-data-classification-model"
           }
         }
       ],
@@ -1776,7 +1776,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/DATA-GOVERNANCE.md#3-data-classification-model"
+            "native": "docs/governance/DATA-AND-PRIVACY.md#3-data-classification-model"
           }
         },
         {
@@ -1787,7 +1787,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/CRYPTOGRAPHY-SECRETS-KEY-MANAGEMENT.md#9-secret-distribution-and-use"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#9-secret-distribution-and-use"
           }
         }
       ],
@@ -1824,7 +1824,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#7-access-classes"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#7-access-classes"
           }
         }
       ],
@@ -1861,7 +1861,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#8-access-lifecycle"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#8-access-lifecycle"
           }
         }
       ],
@@ -1898,7 +1898,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/CRYPTOGRAPHY-SECRETS-KEY-MANAGEMENT.md#6-secret-and-authentication-information-categories"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#6-secret-and-authentication-information-categories"
           }
         }
       ],
@@ -1935,7 +1935,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#11-periodic-access-review"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#11-periodic-access-review"
           }
         }
       ],
@@ -1972,7 +1972,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md#4-supplier-classification"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#4-supplier-classification"
           }
         }
       ],
@@ -2009,7 +2009,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md#6-initial-review-and-approval"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#6-initial-review-and-approval"
           }
         }
       ],
@@ -2046,7 +2046,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md#13-evidence-and-assurance"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#13-evidence-and-assurance"
           }
         }
       ],
@@ -2083,7 +2083,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md#9-monitoring-and-periodic-review"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#9-monitoring-and-periodic-review"
           }
         }
       ],
@@ -2120,7 +2120,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md#7-configuration-and-least-privilege"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#7-configuration-and-least-privilege"
           }
         }
       ],
@@ -2157,7 +2157,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/INCIDENT-MANAGEMENT.md#2-incident-principles"
+            "native": "docs/governance/INCIDENT-AND-CONTINUITY.md#2-incident-principles"
           }
         }
       ],
@@ -2194,7 +2194,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/INCIDENT-MANAGEMENT.md#7-initial-triage"
+            "native": "docs/governance/INCIDENT-AND-CONTINUITY.md#7-initial-triage"
           }
         }
       ],
@@ -2231,7 +2231,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/INCIDENT-MANAGEMENT.md#8-containment"
+            "native": "docs/governance/INCIDENT-AND-CONTINUITY.md#8-containment"
           }
         },
         {
@@ -2242,7 +2242,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/INCIDENT-MANAGEMENT.md#14-recovery"
+            "native": "docs/governance/INCIDENT-AND-CONTINUITY.md#14-recovery"
           }
         }
       ],
@@ -2279,7 +2279,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/INCIDENT-MANAGEMENT.md#15-post-incident-review"
+            "native": "docs/governance/INCIDENT-AND-CONTINUITY.md#15-post-incident-review"
           }
         }
       ],
@@ -2316,7 +2316,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/INCIDENT-MANAGEMENT.md#9-evidence-preservation"
+            "native": "docs/governance/INCIDENT-AND-CONTINUITY.md#9-evidence-preservation"
           }
         }
       ],
@@ -2353,7 +2353,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/CONTINUITY-RESILIENCE.md#5-operating-modes"
+            "native": "docs/governance/INCIDENT-AND-CONTINUITY.md#5-operating-modes"
           }
         }
       ],
@@ -2390,7 +2390,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/CONTINUITY-RESILIENCE.md#11-alternate-operating-paths"
+            "native": "docs/governance/INCIDENT-AND-CONTINUITY.md#11-alternate-operating-paths"
           }
         },
         {
@@ -2401,7 +2401,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/BACKUP-RECOVERY-RESTORE.md#10-recovery-testing"
+            "native": "docs/governance/INCIDENT-AND-CONTINUITY.md#10-recovery-testing"
           }
         }
       ],
@@ -2438,7 +2438,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/LEGAL-CONTRACTUAL-IP-PRIVACY.md#3-obligation-sources"
+            "native": "docs/governance/DATA-AND-PRIVACY.md#3-obligation-sources"
           }
         }
       ],
@@ -2475,7 +2475,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/LEGAL-CONTRACTUAL-IP-PRIVACY.md#6-current-known-licensing-and-ip-baseline"
+            "native": "docs/governance/DATA-AND-PRIVACY.md#6-current-known-licensing-and-ip-baseline"
           }
         }
       ],
@@ -2512,7 +2512,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/LEGAL-CONTRACTUAL-IP-PRIVACY.md#12-records-retention-and-legal-hold"
+            "native": "docs/governance/DATA-AND-PRIVACY.md#12-records-retention-and-legal-hold"
           }
         }
       ],
@@ -2549,7 +2549,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/LEGAL-CONTRACTUAL-IP-PRIVACY.md#8-privacy-and-personal-information"
+            "native": "docs/governance/DATA-AND-PRIVACY.md#8-privacy-and-personal-information"
           }
         }
       ],
@@ -2768,7 +2768,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/INCIDENT-MANAGEMENT.md#6-detection-and-reporting-sources"
+            "native": "docs/governance/INCIDENT-AND-CONTINUITY.md#6-detection-and-reporting-sources"
           }
         },
         {
@@ -3496,7 +3496,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#13-privileged-access"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#13-privileged-access"
           }
         }
       ],
@@ -3533,7 +3533,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#7-access-classes"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#7-access-classes"
           }
         }
       ],
@@ -3570,7 +3570,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#14-source-code-access"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#14-source-code-access"
           }
         },
         {
@@ -3581,7 +3581,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/CONFIGURATION-BASELINE-DRIFT.md#9-github-configuration-baseline"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#9-github-configuration-baseline"
           }
         }
       ],
@@ -3692,7 +3692,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/VULNERABILITY-THREAT-SECURITY-MAINTENANCE.md#11-malware-and-development-endpoint-security"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#11-malware-and-development-endpoint-security"
           }
         }
       ],
@@ -3729,7 +3729,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/VULNERABILITY-THREAT-SECURITY-MAINTENANCE.md#4-vulnerability-intake-sources"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#4-vulnerability-intake-sources"
           }
         }
       ],
@@ -3766,7 +3766,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/CONFIGURATION-BASELINE-DRIFT.md#4-authoritative-baseline-sources"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#4-authoritative-baseline-sources"
           }
         },
         {
@@ -3777,7 +3777,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/CONFIGURATION-BASELINE-DRIFT.md#9-github-configuration-baseline"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#9-github-configuration-baseline"
           }
         }
       ],
@@ -3814,7 +3814,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/DATA-GOVERNANCE.md#16-deletion-and-expiration"
+            "native": "docs/governance/DATA-AND-PRIVACY.md#16-deletion-and-expiration"
           }
         }
       ],
@@ -3851,7 +3851,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/DATA-GOVERNANCE.md#9-operational-data-and-public-diagnostics"
+            "native": "docs/governance/DATA-AND-PRIVACY.md#9-operational-data-and-public-diagnostics"
           }
         }
       ],
@@ -3888,7 +3888,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/DATA-GOVERNANCE.md#9-operational-data-and-public-diagnostics"
+            "native": "docs/governance/DATA-AND-PRIVACY.md#9-operational-data-and-public-diagnostics"
           }
         }
       ],
@@ -3925,7 +3925,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/BACKUP-RECOVERY-RESTORE.md#5-backup-and-export-expectations"
+            "native": "docs/governance/INCIDENT-AND-CONTINUITY.md#5-backup-and-export-expectations"
           }
         }
       ],
@@ -3962,7 +3962,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/CONTINUITY-RESILIENCE.md#11-alternate-operating-paths"
+            "native": "docs/governance/INCIDENT-AND-CONTINUITY.md#11-alternate-operating-paths"
           }
         }
       ],
@@ -4036,7 +4036,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/ASSET-ACCESS-ACCEPTABLE-USE.md#13-privileged-access"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#13-privileged-access"
           }
         }
       ],
@@ -4073,7 +4073,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/CONFIGURATION-BASELINE-DRIFT.md#4-authoritative-baseline-sources"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#4-authoritative-baseline-sources"
           }
         }
       ],
@@ -4184,7 +4184,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/CRYPTOGRAPHY-SECRETS-KEY-MANAGEMENT.md#4-current-implemented-cryptographic-baseline"
+            "native": "docs/governance/SECURITY-GOVERNANCE.md#4-current-implemented-cryptographic-baseline"
           }
         }
       ],
@@ -4221,7 +4221,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#5-security-requirements-analysis"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#5-security-requirements-analysis"
           }
         }
       ],
@@ -4258,7 +4258,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#6-secure-architecture-and-design"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#6-secure-architecture-and-design"
           }
         }
       ],
@@ -4295,7 +4295,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#7-secure-coding-expectations"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#7-secure-coding-expectations"
           }
         }
       ],
@@ -4332,7 +4332,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#8-required-validation-layers"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#8-required-validation-layers"
           }
         }
       ],
@@ -4369,7 +4369,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/CONFIGURATION-BASELINE-DRIFT.md#8-environment-separation"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#8-environment-separation"
           }
         }
       ],
@@ -4406,7 +4406,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#10-test-data-and-environment-rules"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#10-test-data-and-environment-rules"
           }
         }
       ],
@@ -4443,7 +4443,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#20-current-evidence-limitations"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#20-current-evidence-limitations"
           }
         }
       ],
@@ -4554,7 +4554,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#3-existing-controlled-development-lifecycle"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#3-existing-controlled-development-lifecycle"
           }
         },
         {
@@ -4613,7 +4613,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/CONFIGURATION-BASELINE-DRIFT.md#9-github-configuration-baseline"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#9-github-configuration-baseline"
           }
         },
         {
@@ -4764,7 +4764,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/SUPPLIER-AND-EXTERNAL-SERVICE-MANAGEMENT.md#8-data-and-ai-specific-supplier-controls"
+            "native": "docs/governance/AI-GOVERNANCE.md#8-data-and-ai-specific-supplier-controls"
           }
         },
         {
@@ -4775,7 +4775,7 @@
           },
           "to": {
             "source": "github.repository-markdown",
-            "native": "docs/governance/SECURE-ENGINEERING-TESTING.md#12-ai-assisted-engineering"
+            "native": "docs/governance/ENGINEERING-CONTROLS.md#12-ai-assisted-engineering"
           }
         }
       ],
