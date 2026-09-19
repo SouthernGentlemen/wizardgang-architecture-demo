@@ -20,6 +20,20 @@ function createFixtureRoot(): string {
       return !pathFromRoot.split(sep).some((part) => ignoredFixtureParts.has(part));
     },
   });
+  const init = spawnSync('git', ['init', '--quiet'], { cwd: fixtureRoot, encoding: 'utf8' });
+  if (init.status !== 0) throw new Error(init.stderr);
+  const commit = spawnSync('git', [
+    '-c', 'user.name=Fixture',
+    '-c', 'user.email=fixture@example.invalid',
+    'commit', '--allow-empty', '--quiet', '-m', 'fixture',
+  ], { cwd: fixtureRoot, encoding: 'utf8' });
+  if (commit.status !== 0) throw new Error(commit.stderr);
+  const tag = spawnSync('git', [
+    '-c', 'user.name=Fixture',
+    '-c', 'user.email=fixture@example.invalid',
+    'tag', '-a', 'v0.14.0', '-m', 'fixture release',
+  ], { cwd: fixtureRoot, encoding: 'utf8' });
+  if (tag.status !== 0) throw new Error(tag.stderr);
   fixtureRoots.push(fixtureRoot);
   return fixtureRoot;
 }
@@ -102,12 +116,12 @@ describe('canonical advisory validation', () => {
     expectRejected(run(root, 'scripts/validate-advisories.mjs'), 'unresolved incidents relationship INC-999');
   });
 
-  it('rejects fixed releases without controlled release provenance', () => {
+  it('rejects fixed releases without annotated tag provenance', () => {
     const root = createFixtureRoot();
     const advisories = installAdvisoryFixture(root, 'valid-nonempty');
     advisories.records[0].fixedReleases = ['v9.9.9'];
     writeJson(root, 'assurance/advisories/advisories.json', advisories);
-    expectRejected(run(root, 'scripts/validate-advisories.mjs'), 'fixed release v9.9.9 has no controlled release record');
+    expectRejected(run(root, 'scripts/validate-advisories.mjs'), 'fixed release v9.9.9 is not an annotated release tag');
   });
 
   it('rejects unsafe public advisory fields through the registered schema', () => {

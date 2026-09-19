@@ -48,7 +48,7 @@ const excludedFiles = new Set([
   'tests/removed-api-routes.test.ts',
   'tests/removed-routes.test.ts',
 ]);
-const excludedDirectories = ['.git/', '.wrangler/', 'dist/', 'docs/history/', 'docs/releases/', 'node_modules/'];
+const excludedDirectories = ['.git/', '.wrangler/', 'dist/', 'docs/history/', 'node_modules/'];
 const maxReferenceFailures = 50;
 
 function repositoryTextFiles(directory = '.'): string[] {

@@ -87,7 +87,7 @@ Preserve these invariants:
 - Never let ordinary demo behavior execute behind the intentional offline gate.
 - API/non-HTML/write requests receive `503` JSON while offline; browser HTML demo navigation may redirect to the registered offline recovery page.
 - Do not commit secrets, real Cloudflare billing/account data, or admin credentials.
-- A controlled change that adds, renames, or removes a Worker secret names it in its controlled record, and the next release record lists the change as a deployment prerequisite when production provisioning is required. Production must hold every required secret from `config/worker-secrets.json` before a release tag is pushed. Record secrets by name, date, and purpose only, never by value.
+- A controlled change that adds, renames, or removes a Worker secret names the production provisioning requirement in its controlled record. Production must hold every required secret from `config/worker-secrets.json` before a release tag is pushed, and the deploy workflow must fail closed on a missing required name. Record secrets by name, date, and purpose only, never by value.
 - Do not claim WCAG, ISO/IEC 27001, or ISO/IEC 42001 certification.
 - The canonical JSON evidence records and `evidence` relationships stay as they are, and every `/assurance` requirement references the Markdown documentation that governs it. Do not set a compliance status without a rationale, and do not set any status other than `gap` without a Markdown documentation reference. Never create, backdate, or simulate an operating record to improve a status.
 - Prefer the smallest implementation that visibly proves the architecture concept.

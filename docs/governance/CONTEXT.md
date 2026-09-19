@@ -63,7 +63,7 @@ GitHub is the authoritative source for:
 - controlled changes;
 - pull requests and review;
 - automated validation;
-- release records;
+- annotated tags and GitHub Releases;
 - version tags;
 - and deployment evidence.
 

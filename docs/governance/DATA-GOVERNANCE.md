@@ -206,7 +206,7 @@ Retention should be based on troubleshooting/measurement value and storage/risk.
 
 ## 10. Audit and Evidence Data
 
-`demo_events`, release records, Git history, risk registers, SoAs, incident records, audit/self-assessment records, management review, corrective actions, and similar material are **AUDIT-EVIDENCE**.
+`demo_events`, annotated tags and GitHub Releases, Git history, risk registers, SoAs, incident records, audit/self-assessment records, management review, corrective actions, and similar material are **AUDIT-EVIDENCE**.
 
 Audit/evidence data should:
 
