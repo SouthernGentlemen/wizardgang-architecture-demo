@@ -7,11 +7,10 @@ export const demosRouteCapability = defineInterfaceIdentityCapability('demos.sur
     methods: ['GET'],
     kind: 'page',
     handler: async (request, { env }) => {
-      const [{ demosContent }, { renderNotFound, renderPage }] = await Promise.all([
+      const [{ demosContent }, { renderPage }] = await Promise.all([
         import('../../demos/demos-page'),
         import('../../ui/page'),
       ]);
-      if (new URL(request.url).searchParams.has('view')) return renderNotFound(env);
       return renderPage(env, await demosContent(request, env));
     },
     title: 'Architecture Demos',

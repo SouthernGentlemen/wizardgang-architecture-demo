@@ -12,8 +12,8 @@ export const frontendRouteCapability = defineInterfaceIdentityCapability('interf
     },
     title: 'Architecture demo index',
     description: 'Primary public frontend entry point assembled from registered page metadata.',
-    sourceModule: 'src/ui/page.ts',
-    sourceExport: 'renderIndex',
+    sourceModule: 'src/ui/home.ts',
+    sourceExport: 'renderHome',
     tests: ['tests/router.test.ts', 'tests/interface.test.ts', 'tests/application-route-registry.test.ts', 'tests/canonical-frontend-routes.test.ts'],
     page: {
       label: 'Architecture',

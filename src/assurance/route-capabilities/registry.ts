@@ -5,11 +5,10 @@ export const assuranceRegistryRouteCapability = defineAssuranceRouteCapability({
   pattern: '/assurance',
   html: {
     handler: async (request, env) => {
-      const [{ assuranceWorkbenchContent }, { renderNotFound, renderPage }] = await Promise.all([
+      const [{ assuranceWorkbenchContent }, { renderPage }] = await Promise.all([
         import('../../demos/assurance-workbench'),
         import('../../ui/page'),
       ]);
-      if (new URL(request.url).searchParams.has('view')) return renderNotFound(env);
       const content = await assuranceWorkbenchContent(request, env);
       return renderPage(env, { ...content, routeId: 'assurance.index' });
     },
