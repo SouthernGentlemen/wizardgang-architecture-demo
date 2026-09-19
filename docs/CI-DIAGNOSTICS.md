@@ -2,7 +2,7 @@
 
 The `validate` job runs `npm run validate:ci`. The command is intentionally strict: it executes the same locked install, generated-artifact parity, repository checks, migration check, Chromium/browser audit, dependency audit, build, and whitespace validation used by CI; it stops at the first non-zero command and returns that command's exit code. Command output is redacted and streamed to the ordinary Actions log line by line while the same complete redacted output is retained in the diagnostic artifact.
 
-The site-wide browser command reports the start, completion, and duration of each of its three audit scripts. DEMO-289 additionally reports bounded page/state, locale, browser-operation, media-mode, and teardown progress so a timed-out CDP operation identifies its exact matrix coordinate and phase.
+The site-wide browser command reports the start, completion, and duration of each audit script. The content-review audit also reports bounded page/state, locale, browser-operation, media-mode, and teardown progress so a timed-out CDP operation identifies its exact matrix coordinate and phase.
 
 ## Pinned Node/npm toolchain
 

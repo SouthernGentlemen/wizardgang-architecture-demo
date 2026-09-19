@@ -16,7 +16,7 @@ The ordinary browser experience is intentionally small:
 - `/assurance` — framework assessment workbench with focused record drilldown;
 - `/security` — contextual vulnerability-reporting and advisory boundary.
 
-`/admin` is a protected operational page and `/offline` is the recovery page. The former human `/operations` page is retired and returns the ordinary 404. Operational machine APIs, scheduled availability collection, 365-day retention, bounded logs, provider observations, and protected controls remain independent contracts.
+`/admin` is a protected operational page and `/offline` is the recovery page. There is no human `/operations` route; requests receive the ordinary 404. Operational machine APIs, scheduled availability collection, 365-day retention, bounded logs, provider observations, and protected controls remain independent contracts.
 
 The server-rendered application hierarchy is declared once in the route registry. Navigation, sitemap membership, canonical links, page metadata, and the generated route manifest are projections of those declarations. Do not maintain a second route list in this README. The human routing/browser contract is [`docs/ROUTE-REGISTRY.md`](docs/ROUTE-REGISTRY.md), and the generated machine inventory is [`docs/route-manifest.json`](docs/route-manifest.json).
 
@@ -90,12 +90,9 @@ Commit pattern: `[DEMO-NNN] [TYPE] Imperative description`.
 
 ## Start here
 
-- [`docs/ARCHITECTURE-STANDARD.md`](docs/ARCHITECTURE-STANDARD.md) — governing architecture.
-- [`docs/ASSURANCE.md`](docs/ASSURANCE.md) — canonical assurance model and publication boundary.
-- [`docs/OPERATIONS.md`](docs/OPERATIONS.md) — operational machine contracts, retention, admin, and recovery behavior.
-- [`docs/IDENTITY.md`](docs/IDENTITY.md) — identity and authorization model.
-- [`docs/REPORTING.md`](docs/REPORTING.md) — canonical reporting architecture.
-- [`docs/CHANGE-MANAGEMENT.md`](docs/CHANGE-MANAGEMENT.md) — controlled change identity and history.
-- [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md) — reproducible releases, deployment, and rollback.
-- [`docs/ROUTE-REGISTRY.md`](docs/ROUTE-REGISTRY.md) — human routing and browser information architecture.
-- [`docs/route-manifest.json`](docs/route-manifest.json) — generated machine route inventory.
+- [`docs/ARCHITECTURE-STANDARD.md`](docs/ARCHITECTURE-STANDARD.md) — architecture, boundaries, and engineering defaults.
+- [`docs/ROUTE-REGISTRY.md`](docs/ROUTE-REGISTRY.md) — routing contract; [`docs/route-manifest.json`](docs/route-manifest.json) is its generated machine projection.
+- [`docs/ASSURANCE.md`](docs/ASSURANCE.md) and [`docs/REPORTING.md`](docs/REPORTING.md) — structured assurance and reporting authority.
+- [`docs/OPERATIONS.md`](docs/OPERATIONS.md) and [`docs/IDENTITY.md`](docs/IDENTITY.md) — operating and authorization boundaries.
+- [`docs/governance/GOVERNANCE.md`](docs/governance/GOVERNANCE.md) — management-system entry point and links to the focused governance policies.
+- [`docs/CHANGE-MANAGEMENT.md`](docs/CHANGE-MANAGEMENT.md) and [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md) — controlled delivery, release, deployment, and rollback.
