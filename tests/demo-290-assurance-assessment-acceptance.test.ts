@@ -92,7 +92,7 @@ describe('DEMO-290 assurance assessment acceptance', () => {
       encoding: 'utf8',
     });
     expect(documentationValidation).toContain('Assurance documentation reference validation passed for 287 compliance records');
-    expect(documentationValidation).toContain('Alignment Controls: lines');
+    expect(documentationValidation).toContain('structured compliance relationships to tracked Markdown headings');
   });
 
   it('keeps the retired check UI out of the public assurance output', async () => {
