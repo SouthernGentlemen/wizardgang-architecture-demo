@@ -4556,17 +4556,6 @@
             "source": "github.repository-markdown",
             "native": "docs/governance/ENGINEERING-CONTROLS.md#3-existing-controlled-development-lifecycle"
           }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.8.25"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/ISO-27001-2026-09-18-REPOSITORY-PROTECTION-ADDENDUM.md#a825-secure-development-lifecycle"
-          }
         }
       ],
       "rationale": "The secure development lifecycle is documented and exercised through controlled changes, CI, tests, and PRs. On 2026-09-18, GitHub provider state requires pull requests and the validate/change-id checks on main, blocks deletion and force pushes, and permits only merge commits. The intentional zero-review requirement fits the single-maintainer model but is not independent review evidence, and effectiveness over an operating interval has not yet been reviewed.",
@@ -4614,17 +4603,6 @@
           "to": {
             "source": "github.repository-markdown",
             "native": "docs/governance/ENGINEERING-CONTROLS.md#9-github-configuration-baseline"
-          }
-        },
-        {
-          "relation": "documentation",
-          "from": {
-            "source": "github.structured-records.compliance.iso-27001",
-            "native": "ISO27001-A.8.32"
-          },
-          "to": {
-            "source": "github.repository-markdown",
-            "native": "docs/governance/assessments/ISO-27001-2026-09-18-REPOSITORY-PROTECTION-ADDENDUM.md#a832-controlled-technical-changes"
           }
         }
       ],
