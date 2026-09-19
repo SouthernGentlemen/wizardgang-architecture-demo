@@ -5,7 +5,6 @@
 **Status:** Approved
 **Owner:** Information Security Owner / Technical System Owner  
 **Approval:** Controlled pull request and merge  
-**Approval record:** PR #56 · merge commit `1ae105da8ab6466e334a2faf4e6c63f5885c91df`
 **Review:** At least annually and after a material authentication, cryptographic, identity-provider, Cloudflare/GitHub, webhook, AI/MCP, incident, or credential change
 
 ## 1. Purpose
@@ -512,7 +511,7 @@ The current baseline deliberately retains these gaps/limitations:
 
 A missing record is an evidence gap, not permission to infer success.
 
-## 21. Initial Secret/Cryptography Review
+## 21. Secret and Cryptography Review
 
 The first consolidated review should verify, without publishing secret values:
 
