@@ -1,68 +1,69 @@
-# Application internationalization runtime
+# Internationalization runtime
 
-Internationalization is an application capability, not a mode owned by the demonstration at `/demos#i18n`. Every ordinary server-rendered HTML request resolves a localization context before its route handler emits the shared page shell. The demonstration remains an inspection and teaching surface for that same runtime.
+Internationalization is an application runtime capability, not a mode owned by `/demos#i18n`. Every ordinary server-rendered HTML request resolves one localization context before route content is rendered. The demonstration exposes that same runtime for inspection.
 
-The canonical implementation is `src/i18n/runtime.ts`. `config/i18n.json` owns the configured default, fallback, supported-locale inventory, and RTL inventory. The synchronized resources remain under `src/i18n/locales/`.
+`src/i18n/runtime.ts` is the runtime implementation. `config/i18n.json` owns the configured default locale, fallback locale, supported-locale inventory, and RTL inventory. Core locale resources live under `src/i18n/locales/`; site presentation strings live in `src/i18n/presentation.json`.
 
 ## Locale resolution
 
-The runtime uses one deterministic precedence order:
+Requests resolve locale in this order:
 
-1. An explicit `lang` query parameter, when present.
-2. The `wg-lang` same-site preference cookie when the query parameter is absent.
-3. The configured default locale.
+1. supported explicit `lang` query parameter;
+2. `wg-lang` same-site preference cookie when the query parameter is absent;
+3. configured default locale.
 
-A supported explicit locale becomes the request locale and is persisted for later application navigation. An unsupported explicit locale safely resolves to the configured default. Selecting the default locale or supplying an invalid locale removes the unnecessary `lang` parameter while preserving unrelated query parameters and persists the resolved default preference.
+A supported explicit locale becomes the request locale and is persisted for later navigation. An unsupported explicit locale resolves safely to the configured default. Selecting the default locale or supplying an invalid locale removes the unnecessary `lang` parameter while preserving unrelated query parameters and persists the resolved default preference.
 
-The current supported inventory is English (`en`), Spanish (`es`), French (`fr`), German (`de`), Japanese (`ja`), and Arabic (`ar`). English is the configured default and fallback. Arabic is the configured RTL locale.
+The current configured locales are English (`en`), Spanish (`es`), French (`fr`), German (`de`), Japanese (`ja`), and Arabic (`ar`). English is the default and fallback. Arabic is the configured RTL locale.
 
-Canonical route identity does not include locale state. The shared shell keeps canonical links on the registered route pathname while locale-aware navigation carries non-default state for the reader. The route hierarchy is unchanged.
+Locale state does not change canonical route identity. Canonical links remain on the registered route pathname while locale-aware internal navigation carries non-default reader state.
 
-## Request and rendering boundary
+## Request-scoped rendering contract
 
-The intended request flow is:
+The application request flow is:
 
 ```text
 request
-  -> resolve application localization context
+  -> resolve localization context
   -> match registered route
-  -> provide request-scoped environment/context
+  -> provide request-scoped context
   -> render page content
-  -> render shared localized/accessibility-aware shell
+  -> render shared localized shell
 ```
 
-`src/router.ts` binds the resolved context to page requests. Shared rendering reads that context with `localizationForEnv()`. Page renderers that need human-facing translations or locale-aware formatting consume the same context rather than importing and resolving locale resources independently.
+`src/router.ts` binds the resolved context to page requests. Shared rendering reads it with `localizationForEnv()`. Page renderers consume the request-scoped context instead of independently resolving locale resources.
 
-The context provides translation lookup with configured fallback, plural-category selection, number formatting, date/time formatting, currency formatting, list formatting, `lang`, `dir`, and locale-aware internal URL propagation.
+The localization context provides translation lookup with configured fallback, plural-category selection, number formatting, date/time formatting, currency formatting, list formatting, document `lang`, document `dir`, and locale-aware internal URL propagation.
 
-## Shared shell ownership
+## Shared shell and resource ownership
 
-`src/ui/page.ts` owns shell language. Locale resources provide the skip-link text, landmark names, shell navigation labels, brand/home accessible name, main-site text, source labels, theme-control state text, and the global language selector.
+`src/ui/page.ts` consumes localized shell strings for navigation, global controls, the skip link, source labels, and the language selector. The selector is a native `select` submitted with GET, works without JavaScript, and preserves unrelated query parameters.
 
-The language selector is a native `select` in a GET form. It is available without JavaScript, preserves unrelated query parameters, and submits before the next server-rendered document is emitted. Theme switching remains keyboard operable and preserves focus on the activating button.
+The HTML document always emits the active `lang` and an explicit direction. Arabic resolves to `dir="rtl"`; the other configured locales resolve to `dir="ltr"`.
 
-The HTML document always emits the active `lang`. It also emits an explicit direction; Arabic resolves to `dir="rtl"`, while the other configured locales resolve to `dir="ltr"`.
+Direction-sensitive shared layout uses logical CSS properties. Technical identifiers remain isolated where bidi reordering would make machine-oriented content ambiguous.
 
-## RTL and accessibility relationship
+A new user-facing key must exist in every configured locale resource or every locale entry in the presentation catalog, as appropriate. Placeholders must remain identical across translations. Intentional canonical English or technical tokens use the existing narrow allowlist; broad English-text exemptions are not permitted.
 
-RTL is owned by the application localization context, not by the i18n demonstration. Shared layout uses logical CSS properties where direction matters, including navigation separation and inline spacing. `/demos#i18n` shows the resolved direction and formatting behavior, but it does not create an alternate application shell.
+## Adding a locale
 
-Likewise, accessibility is not a locale-specific or demonstration-only mode. The same shared shell is expected to remain keyboard operable, focus visible, reflow safe, reduced-motion aware, and usable in forced-colors environments for every supported locale.
+A new locale requires all of the following in the same controlled change:
 
-## Adding translation keys and locales
+1. add the locale to `config/i18n.json`;
+2. add its synchronized core resource;
+3. add it to every presentation-catalog entry;
+4. add the runtime resource mapping and localized display name;
+5. add it to `rtlLocales` only when the locale requires RTL presentation;
+6. provide any route-state fixture required for meaningful site-wide coverage.
 
-A new user-facing key must be represented in every configured locale. Core runtime keys belong in each `src/i18n/locales/<locale>.json` file; site presentation strings belong in `src/i18n/presentation.json`. Preserve placeholders exactly and keep intentional canonical English or technical tokens behind the narrow explicit allowlist used by the acceptance tests. Do not replace that allowlist with a broad English-detection exemption.
+The runtime must continue to resolve unsupported locales safely and preserve the configured fallback behavior.
 
-When adding a locale, update `config/i18n.json`, add its core resource, add it to every presentation-catalog entry, wire the resource and localized display name into `src/i18n/runtime.ts`, and declare it in `rtlLocales` only when appropriate. Then run `npm run validate:locales`, `npm run validate:site-i18n`, and the browser accessibility audit. Manual language and bidi review remains required before any evidence status that depends on human review can be strengthened.
+## Verification
 
-## Site-wide verification
+`npm run validate:locales` requires every configured locale resource to exist and expose the same non-empty key inventory as the fallback resource.
 
-Site-wide verification derives the public page inventory from the canonical route registry and exercises critical route states in every supported locale. `config/site-audit-states.json` owns only additional state fixtures; it is not a second route inventory. Fixed public routes inherit coverage automatically, while a new parameterized public surface must supply a concrete fixture and otherwise fails with `new public surface requires accessibility/i18n coverage`.
+`npm run validate:site-i18n` derives public route coverage from the canonical route registry and exercises configured route states across the supported locale inventory. Runtime and interface tests cover representative language/direction rendering, translated shell strings, query preservation, preference persistence, formatting, and RTL-safe layout behavior.
 
-The deterministic localization gate is `npm run validate:site-i18n`. CI also runs `npm run test:site-accessibility`, which uses the locally built Worker and Chromium for rendered English and Arabic/RTL coverage alongside accessibility checks. Full procedures and evidence boundaries are documented in `docs/SITE-ACCESSIBILITY-VERIFICATION.md`.
+Accessibility evidence that crosses the localization boundary is governed by `docs/ACCESSIBILITY.md`; this document does not maintain a second accessibility verification model.
 
-## Validation and limits
-
-`npm run validate:locales` requires every configured locale to exist and to expose the same non-empty key inventory as the fallback resource. Runtime and interface tests cover representative server-rendered language/direction behavior, shell translations, query preservation, persistence, and RTL-safe shared layout. `npm run validate:site-i18n` extends that to the canonical public-route inventory and configured critical states.
-
-Translations in this repository are engineering demonstration resources and are not claimed to be professionally certified. Localization infrastructure also does not establish WCAG conformance. Manual language review, bidi review, assistive-technology testing, zoom/reflow testing, and release accessibility verification remain required where applicable.
+Translations are engineering demonstration resources and are not claimed to have professional translation certification. Human language-quality or bidi review is recorded only when it is actually performed.
