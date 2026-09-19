@@ -248,7 +248,7 @@ Provider certifications or attestations, if later relied upon, remain provider e
 
 The supplier register identifies GitHub and Cloudflare as Critical platform dependencies; OpenAI Codex and Anthropic Claude as the only approved AI/MCP connection families; identity providers as Conditional until configured; and package/dependency ecosystems as Material supporting dependencies.
 
-Formal recurring supplier-review evidence is not considered complete merely because this process and register are approved. The first periodic review must produce an actual dated review record or register update based on observed evidence.
+Formal recurring supplier-review evidence is not considered complete merely because this process and register are approved. Each periodic review must produce an actual dated review record or register update based on observed evidence.
 
 ## 15. Supporting Records
 
@@ -272,4 +272,4 @@ Formal recurring supplier-review evidence is not considered complete merely beca
 
 This process supports the supplier, externally provided process, supply-chain, third-party AI, and operational-control requirements relevant to the scoped ISO/IEC 27001:2022 ISMS and ISO/IEC 42001:2023 AIMS.
 
-**Current posture after approval:** Supplier governance process defined and the approved external-service boundary identified. Actual periodic supplier reviews and supplier-specific assurance remain operating evidence; certification is not claimed.
+**Current posture:** Supplier governance process defined and the approved external-service boundary identified. Actual periodic supplier reviews and supplier-specific assurance remain operating evidence; certification is not claimed.
