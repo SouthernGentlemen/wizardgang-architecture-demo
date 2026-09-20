@@ -235,7 +235,7 @@
       "title": "Shared public page shell",
       "description": "Shared page semantics, navigation, skip-link, titles, theme controls, and structural markup used across public demo routes.",
       "locator": {
-        "repositoryPath": "src/ui/page.ts"
+        "repositoryPath": "src/ui/document.tsx"
       },
       "freshnessPolicy": "release-bound",
       "visibility": "public",

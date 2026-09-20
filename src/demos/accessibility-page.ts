@@ -43,7 +43,7 @@ export function accessibilityContent(_request: Request, env: Env): PageContent {
   <section class="page-header"><h1>Accessibility is behavior.</h1><p class="lede">Operate the accessible example, then compare each behavior with an inert failure fixture and an honest verification boundary.</p><div class="page-tools"><span class="badge">WCAG 2.2 engineering evidence — no conformance claim · AAA engineering target</span>${referenceDetails([
     routeSourceReference(env, 'src/demos/accessibility-page.ts'),
     { label: 'Lab source', href: sourceUrl(env, 'src/ui/accessibility-lab.ts') },
-    { label: 'Global shell source', href: sourceUrl(env, 'src/ui/page.ts') },
+    { label: 'Global shell source', href: sourceUrl(env, 'src/ui/document.tsx') },
     { label: 'Manual verification matrix', href: sourceUrl(env, 'docs/ACCESSIBILITY.md') },
     { label: 'Interface tests', href: sourceUrl(env, 'tests/interface.test.ts') },
   ])}</div></section>

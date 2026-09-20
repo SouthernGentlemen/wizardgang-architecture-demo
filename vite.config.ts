@@ -34,6 +34,11 @@ function browserAssets(): Plugin {
         if (matches.length !== 1) this.error(`Expected one hashed ${name} stylesheet, found: ${matches.join(', ') || 'none'}`);
         return `/${matches[0]}`;
       };
+      const browserModule = (name: string) => {
+        const matches = files.filter((file) => new RegExp(`^assets/${name}-[A-Za-z0-9_-]+\\.js$`).test(file));
+        if (matches.length !== 1) this.error(`Expected one hashed ${name} browser module, found: ${matches.join(', ') || 'none'}`);
+        return `/${matches[0]}`;
+      };
       for (const [fileName] of stableAssets) {
         if (!files.includes(fileName)) this.error(`Missing emitted browser asset ${fileName}`);
       }
@@ -43,6 +48,7 @@ function browserAssets(): Plugin {
         assets: {
           'styles.shell': stylesheet('shell'),
           'styles.demos': stylesheet('demos'),
+          'scripts.shell': browserModule('shell-browser'),
           'vendor.graphiql.script': '/assets/graphiql.js',
           'vendor.graphiql.styles': '/assets/graphiql.css',
           'vendor.monaco.editor': '/assets/editor.worker.js',
@@ -78,9 +84,11 @@ export default defineConfig({
       input: {
         shell: resolve(ROOT, 'src/styles/shell.css'),
         demos: resolve(ROOT, 'src/styles/demos.css'),
+        'shell-browser': resolve(ROOT, 'src/browser/shell.ts'),
       },
       output: {
         assetFileNames: 'assets/[name]-[hash][extname]',
+        entryFileNames: 'assets/[name]-[hash].js',
       },
     },
   },

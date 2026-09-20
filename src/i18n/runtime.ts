@@ -40,6 +40,14 @@ const LOCALIZATION_CONTEXT = Symbol.for('wizardgang.localization-context');
 type MessageMap = Readonly<Record<string, string>>;
 type TemplateValues = Readonly<Record<string, string | number>>;
 type LocalizedEnv = Env & { [LOCALIZATION_CONTEXT]?: LocalizationContext };
+const exactEnglishPresentation = new Map<string, string>(
+  Object.entries(presentation as PresentationCatalog).map(([key, entry]) => [entry.en, key]),
+);
+
+export interface LocalizedGetForm {
+  action: string;
+  fields: readonly Readonly<{ name: string; value: string }>[];
+}
 
 function isSupportedLocale(value: string | null | undefined): value is SupportedLocale {
   return Boolean(value && Object.hasOwn(localeResources, value));
@@ -87,6 +95,7 @@ export interface LocalizationContext {
   dir: 'ltr' | 'rtl';
   currentUrl: URL;
   t(key: string, fallback?: string, values?: TemplateValues): string;
+  exact(english: string): string;
   pluralCategory(count: number): Intl.LDMLPluralRule;
   plural(keyPrefix: string, count: number, values?: TemplateValues): string;
   number(value: number, options?: Intl.NumberFormatOptions): string;
@@ -94,6 +103,8 @@ export interface LocalizationContext {
   currency(value: number, currency?: string, options?: Omit<Intl.NumberFormatOptions, 'style' | 'currency'>): string;
   list(values: readonly string[], options?: Intl.ListFormatOptions): string;
   href(href: string, locale?: SupportedLocale): string;
+  getForm(action: string): LocalizedGetForm;
+  browserMessages(prefix?: string): Readonly<Record<string, string>>;
 }
 
 function createLocalization(locale: SupportedLocale, currentUrl: URL): LocalizationContext {
@@ -105,6 +116,10 @@ function createLocalization(locale: SupportedLocale, currentUrl: URL): Localizat
     dir: rtlLocales.has(locale) ? 'rtl' : 'ltr',
     currentUrl: new URL(currentUrl.toString()),
     t,
+    exact: (english: string) => {
+      const key = exactEnglishPresentation.get(english);
+      return key ? t(key, english) : english;
+    },
     pluralCategory: (count: number) => new Intl.PluralRules(locale).select(count),
     plural: (keyPrefix: string, count: number, values: TemplateValues = {}) => {
       const category = new Intl.PluralRules(locale).select(count);
@@ -121,6 +136,20 @@ function createLocalization(locale: SupportedLocale, currentUrl: URL): Localizat
       else resolved.searchParams.set(LOCALE_QUERY_PARAMETER, targetLocale);
       return `${resolved.pathname}${resolved.search}${resolved.hash}`;
     },
+    getForm: (action: string) => {
+      const resolved = internalUrl(action, currentUrl);
+      if (!resolved) return Object.freeze({ action, fields: Object.freeze([]) });
+      if (locale === defaultLocale) resolved.searchParams.delete(LOCALE_QUERY_PARAMETER);
+      else if (!resolved.searchParams.has(LOCALE_QUERY_PARAMETER)) resolved.searchParams.set(LOCALE_QUERY_PARAMETER, locale);
+      const fields = Object.freeze([...resolved.searchParams.entries()].map(([name, value]) => Object.freeze({ name, value })));
+      resolved.search = '';
+      return Object.freeze({ action: `${resolved.pathname}${resolved.hash}`, fields });
+    },
+    browserMessages: (prefix: string = 'client.') => Object.freeze(Object.fromEntries(
+      Object.entries(selected)
+        .filter(([key]) => key.startsWith(prefix))
+        .map(([key, value]) => [key, value ?? fallback[key] ?? key]),
+    )),
   };
   return Object.freeze(context);
 }

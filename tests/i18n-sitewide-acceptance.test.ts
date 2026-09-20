@@ -137,6 +137,15 @@ describe('DEMO-236 sitewide localization acceptance', () => {
       expect(context.currency(1234.56, 'USD')).toBe(new Intl.NumberFormat(locale, { style: 'currency', currency: 'USD' }).format(1234.56));
       expect(context.dateTime(date, { dateStyle: 'full', timeZone: 'UTC' })).toBe(new Intl.DateTimeFormat(locale, { dateStyle: 'full', timeZone: 'UTC' }).format(date));
       expect(context.list(['edge', 'data', 'assurance'])).toBe(new Intl.ListFormat(locale).format(['edge', 'data', 'assurance']));
+      expect(context.exact('Request failed')).toBe(presentationCatalog()['client.request_failed'][locale]);
+      expect(context.browserMessages()['client.request_failed']).toBe(presentationCatalog()['client.request_failed'][locale]);
+
+      const assuranceRoute = routeUrl('assurance.index');
+      const getForm = context.getForm(`${assuranceRoute}?framework=wcag-2.2#records`);
+      expect(getForm.action).toBe(`${assuranceRoute}#records`);
+      expect(getForm.fields).toContainEqual({ name: 'framework', value: 'wcag-2.2' });
+      if (locale === defaultLocale) expect(getForm.fields).not.toContainEqual({ name: 'lang', value: locale });
+      else expect(getForm.fields).toContainEqual({ name: 'lang', value: locale });
 
       for (const count of counts) {
         const category = new Intl.PluralRules(locale).select(count);
@@ -162,7 +171,7 @@ describe('DEMO-236 sitewide localization acceptance', () => {
     expect(presentation).toContain('<input type="hidden" name="lang" value="ja">');
     expect(presentation).toContain('Use the language control in the global header');
     expect(presentation).not.toContain('id="locale-demo"');
-    expect(html).toContain('<input type="hidden" name="count" value="7">');
+    expect(html).toContain('<input type="hidden" name="count" value="7"/>');
     expect(html + presentation).not.toContain('&amp%3B');
     expect(html + presentation).not.toContain('lang=fr&amp;lang=ja');
   });

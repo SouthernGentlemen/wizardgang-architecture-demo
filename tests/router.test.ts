@@ -267,7 +267,7 @@ describe('public route contract', () => {
     expect(index).toContain('Current service state');
     expect(index).toContain('Scheduled observations');
     expect(index).not.toContain('data-health');
-    expect(index).toContain('<meta property="og:image" content="https://demo.wizardgang.ai/assets/og.png">');
+    expect(index).toContain('<meta property="og:image" content="https://demo.wizardgang.ai/assets/og.png"/>');
     expect(index).toContain('href="/demos"');
     expect(index).toContain('href="/assurance"');
     expect(index).not.toContain(`href="${retiredOperationsHtmlPathname}"`);

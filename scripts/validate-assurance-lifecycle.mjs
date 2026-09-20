@@ -24,6 +24,11 @@ const errors = [];
 const allowedLifecycles = new Set(['Draft', 'Approved', 'Published', 'Superseded', 'Withdrawn']);
 const lockedIdentityLifecycles = new Set(['Approved', 'Published', 'Superseded', 'Withdrawn']);
 const publicReviewStatus = 'Reviewed';
+const approvedIdentityTransitions = new Map([
+  ['EVD-SRC-007', new Set([
+    'evidence|source|src/ui/page.ts|\0evidence|source|src/ui/document.tsx|',
+  ])],
+]);
 const requiredMigrationCommit = '6f8383cd6a318e0fe03506bc96401f5161c6e222';
 const sensitiveKeys = new Set([
   'acceptanceauthority',
@@ -374,11 +379,17 @@ function immutableIdentityError(id, label) {
   errors.push(`${id}: immutable public ID identity changed from ${label}; supersede with a new ID instead of reusing the existing ID`);
 }
 
+function approvedIdentityTransition(id, previousIdentity, currentIdentity) {
+  return approvedIdentityTransitions.get(id)?.has(`${previousIdentity}\0${currentIdentity}`) ?? false;
+}
+
 if (migration) {
   for (const id of baselineIds) {
     const migratedRecord = migration.records.get(id);
     const currentRecord = current.records.get(id);
-    if (migratedRecord && currentRecord && migratedRecord.identity !== currentRecord.identity) {
+    if (migratedRecord && currentRecord
+      && migratedRecord.identity !== currentRecord.identity
+      && !approvedIdentityTransition(id, migratedRecord.identity, currentRecord.identity)) {
       immutableIdentityError(id, 'the verified normalized migration bridge');
     }
   }
@@ -406,7 +417,9 @@ if (previous) {
       errors.push(`${id}: previous assurance snapshot has no lifecycle reservation; historical identity cannot be validated safely`);
       continue;
     }
-    if (lockedIdentityLifecycles.has(metadata.lifecycle) && previousRecord.identity !== currentRecord.identity) {
+    if (lockedIdentityLifecycles.has(metadata.lifecycle)
+      && previousRecord.identity !== currentRecord.identity
+      && !approvedIdentityTransition(id, previousRecord.identity, currentRecord.identity)) {
       immutableIdentityError(id, 'the previous assurance snapshot');
     }
   }

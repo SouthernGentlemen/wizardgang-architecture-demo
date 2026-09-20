@@ -1314,6 +1314,13 @@
         "attributes": {
           "data-assurance-inspector-panel": "evidence"
         }
+      },
+      {
+        "element": "script",
+        "attributes": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "scripts": [
@@ -1334,12 +1341,15 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/shell-browser-C9kDSUFQ.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "20696f0d07a7bcd3",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "stylesheets": [
@@ -1662,6 +1672,13 @@
         "attributes": {
           "data-preserve-fragment": ""
         }
+      },
+      {
+        "element": "script",
+        "attributes": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "scripts": [
@@ -1674,12 +1691,15 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/shell-browser-C9kDSUFQ.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "20696f0d07a7bcd3",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "stylesheets": [
@@ -1875,6 +1895,13 @@
         "attributes": {
           "data-preserve-fragment": ""
         }
+      },
+      {
+        "element": "script",
+        "attributes": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "scripts": [
@@ -1887,12 +1914,15 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/shell-browser-C9kDSUFQ.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "20696f0d07a7bcd3",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "stylesheets": [
@@ -2536,6 +2566,13 @@
         "attributes": {
           "data-demo-source": ""
         }
+      },
+      {
+        "element": "script",
+        "attributes": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "scripts": [
@@ -2556,12 +2593,15 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/shell-browser-C9kDSUFQ.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "20696f0d07a7bcd3",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "stylesheets": [
@@ -3896,6 +3936,13 @@
         "attributes": {
           "data-assurance-inspector-panel": "evidence"
         }
+      },
+      {
+        "element": "script",
+        "attributes": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "scripts": [
@@ -3916,12 +3963,15 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/shell-browser-C9kDSUFQ.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "20696f0d07a7bcd3",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "stylesheets": [
@@ -5249,6 +5299,13 @@
         "attributes": {
           "data-assurance-inspector-panel": "evidence"
         }
+      },
+      {
+        "element": "script",
+        "attributes": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "scripts": [
@@ -5269,12 +5326,15 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/shell-browser-C9kDSUFQ.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "20696f0d07a7bcd3",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "stylesheets": [
@@ -6602,6 +6662,13 @@
         "attributes": {
           "data-assurance-inspector-panel": "evidence"
         }
+      },
+      {
+        "element": "script",
+        "attributes": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "scripts": [
@@ -6622,12 +6689,15 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/shell-browser-C9kDSUFQ.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "20696f0d07a7bcd3",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "stylesheets": [
@@ -7955,6 +8025,13 @@
         "attributes": {
           "data-assurance-inspector-panel": "evidence"
         }
+      },
+      {
+        "element": "script",
+        "attributes": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "scripts": [
@@ -7975,12 +8052,15 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/shell-browser-C9kDSUFQ.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "20696f0d07a7bcd3",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "stylesheets": [
@@ -8624,6 +8704,13 @@
         "attributes": {
           "data-demo-source": ""
         }
+      },
+      {
+        "element": "script",
+        "attributes": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "scripts": [
@@ -8644,12 +8731,15 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/shell-browser-C9kDSUFQ.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "20696f0d07a7bcd3",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "stylesheets": [
@@ -9300,6 +9390,13 @@
         "attributes": {
           "data-demo-source": ""
         }
+      },
+      {
+        "element": "script",
+        "attributes": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "scripts": [
@@ -9320,12 +9417,15 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/shell-browser-C9kDSUFQ.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "20696f0d07a7bcd3",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "stylesheets": [
@@ -9528,6 +9628,13 @@
         "attributes": {
           "data-preserve-fragment": ""
         }
+      },
+      {
+        "element": "script",
+        "attributes": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "scripts": [
@@ -9540,12 +9647,15 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/shell-browser-C9kDSUFQ.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "20696f0d07a7bcd3",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "stylesheets": [
@@ -9847,6 +9957,13 @@
         "attributes": {
           "data-confirm-change": "OAI-SearchBot and ChatGPT-User will immediately receive 403 responses. Continue?"
         }
+      },
+      {
+        "element": "script",
+        "attributes": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "scripts": [
@@ -9867,12 +9984,15 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/shell-browser-C9kDSUFQ.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "20696f0d07a7bcd3",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "stylesheets": [
@@ -10084,6 +10204,13 @@
         "attributes": {
           "data-preserve-fragment": ""
         }
+      },
+      {
+        "element": "script",
+        "attributes": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "scripts": [
@@ -10096,12 +10223,15 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/shell-browser-C9kDSUFQ.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "20696f0d07a7bcd3",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "stylesheets": [
@@ -10272,6 +10402,13 @@
         "attributes": {
           "data-preserve-fragment": ""
         }
+      },
+      {
+        "element": "script",
+        "attributes": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "scripts": [
@@ -10284,12 +10421,15 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/shell-browser-C9kDSUFQ.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "20696f0d07a7bcd3",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-shell-browser": "",
+          "data-messages": "{\"theme\":\"السمة\"}"
+        }
       }
     ],
     "stylesheets": [
@@ -14197,7 +14337,7 @@
       },
       {
         "name": "Global shell source",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/ui/page.ts",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/ui/document.tsx",
         "target": null
       },
       {

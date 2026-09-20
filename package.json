@@ -22,7 +22,7 @@
     "build:worker": "wrangler deploy --dry-run --outdir dist/worker",
     "build": "npm run build:client && npm run build:worker",
     "lint": "node scripts/lint.mjs",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --project src/browser/tsconfig.json --noEmit",
     "test": "vitest run",
     "test:accessibility": "vitest run tests/interface.test.ts tests/wcag-aaa-remediation.test.ts",
     "test:site-accessibility": "node scripts/run-site-accessibility-audits.mjs",
@@ -61,6 +61,8 @@
   },
   "devDependencies": {
     "@modelcontextprotocol/client": "^2.0.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "happy-dom": "^20.14.5",
     "oxc-parser": "^0.150.0",
     "typescript": "^7.0.2",
@@ -77,6 +79,8 @@
     "graphql": "^16.14.2",
     "graphql-yoga": "^5.22.0",
     "jose": "^6.2.10",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "zod": "^4.5.4"
   },
   "overrides": {

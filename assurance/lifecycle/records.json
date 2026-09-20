@@ -178,6 +178,13 @@
       "reviewedAt": "2026-09-19T16:24:30Z",
       "reviewer": "controlled-repository-review",
       "basis": "DEMO-319 updates objective evidence-source labels to current structured and current-documentation authorities during the final documentation cleanup. No objective metric, target, owner, lifecycle state, assurance status, or conclusion is upgraded; this review approves disclosure only for the exact resulting objectives source revision."
+    },
+    {
+      "id": "review-demo328-react-shell",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-20T01:29:41Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-328 moves the shared public page shell from a TypeScript string template to server-rendered React and updates only EVD-SRC-007's repository locator to the new owning component. The evidence ID, title, description, freshness policy, visibility, and relationships are unchanged; this review approves disclosure only for the exact resulting public evidence source revision."
     }
   ],
   "sourceApprovals": [
@@ -444,6 +451,12 @@
       "resource": "evidence",
       "revision": "fa4f93602a7db27390ead74d48bf4046e0921db7",
       "reviewRef": "review-demo258-minimal-assurance"
+    },
+    {
+      "id": "source-evidence-ed9254e3cc25",
+      "resource": "evidence",
+      "revision": "ed9254e3cc25f50e35111efd020309c710b24dad",
+      "reviewRef": "review-demo328-react-shell"
     },
     {
       "id": "source-claims-b2ebd29e4ce1",

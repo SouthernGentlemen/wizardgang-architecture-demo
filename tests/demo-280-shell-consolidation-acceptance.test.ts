@@ -36,6 +36,7 @@ const retiredShellNavigationMarkers = [
 
 const viewportWidths = [375, 620, 760, 1024] as const;
 const navigationSource = readFileSync('src/routing/navigation.ts', 'utf8');
+const documentSource = readFileSync('src/ui/document.tsx', 'utf8');
 const shellStyles = readFileSync('src/styles/shell.css', 'utf8');
 const demoStyles = readFileSync('src/styles/demos.css', 'utf8');
 
@@ -162,6 +163,9 @@ function headerLayoutAt(width: number): HeaderLayout {
 
 describe('DEMO-280 shell consolidation acceptance', () => {
   it('keeps the consolidated shell contract on every static public page', async () => {
+    expect(documentSource).toContain('renderToStaticMarkup(<LocalizedDocument');
+    expect(documentSource).toContain('<SiteHeader repositoryUrl={repositoryUrl} currentRouteId={content.routeId} />');
+    expect(documentSource).toContain('<LegacyBody html={content.body} />');
     const securityHref = routeUrl('security.index');
 
     for (const route of publicPages) {
