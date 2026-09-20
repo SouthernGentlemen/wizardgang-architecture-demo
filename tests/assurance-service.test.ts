@@ -110,7 +110,7 @@ describe('common canonical assurance query and presentation service', () => {
     expect(apiSource).not.toContain('serializeAssuranceV1');
     expect(apiSource).not.toContain('riskLinks:');
     expect(apiSource).not.toContain('frameworkReferences:');
-    for (const path of ['src/demos/security-page.ts']) {
+    for (const path of ['src/ui/security.tsx']) {
       const source = readFileSync(path, 'utf8');
       expect(source).not.toContain('.riskLinks');
       expect(source).not.toContain('.controlLinks');

@@ -128,7 +128,7 @@ const globalOperationalRoutes = [
   operationalRoute({
     id: 'operations.admin', pattern: '/admin', methods: ['GET', 'POST'], kind: 'page', handler: adminHandler,
     title: 'Demo administration', description: 'Protected control surface for demo availability and ChatGPT fetch policy.',
-    sourceModule: 'src/ui/admin.ts', sourceExport: 'renderAdmin', visibility: 'private', crawling: 'allow', indexing: 'deny',
+    sourceModule: 'src/ui/admin.tsx', sourceExport: 'renderAdmin', visibility: 'private', crawling: 'allow', indexing: 'deny',
     authentication: { mode: 'required', provider: 'admin-basic' }, authorization: { mode: 'policy', policy: 'admin' },
     sameOrigin: { mode: 'required', methods: ['POST'] },
     page: {
@@ -143,11 +143,11 @@ const globalOperationalRoutes = [
   operationalRoute({
     id: 'operations.offline', pattern: '/offline', methods: ['GET'], kind: 'page',
     handler: async (request, { env }) => {
-      const { renderOffline } = await import('../ui/admin');
+      const { renderOffline } = await import('../ui/offline');
       return renderOffline(env, await getDemoControl(env), new URL(request.url).searchParams.get('from') || '/');
     },
     title: 'Offline recovery page', description: 'Public maintenance page shown when ordinary demo routes are intentionally offline.',
-    sourceModule: 'src/ui/admin.ts', sourceExport: 'renderOffline', indexing: 'deny',
+    sourceModule: 'src/ui/offline.tsx', sourceExport: 'renderOffline', indexing: 'deny',
     page: {
       parent: 'interfaces.frontend.index',
       label: 'Offline recovery page',

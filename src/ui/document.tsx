@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, type ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import type { Env } from '../types';
 import { routeUrl } from '../routing/application-routes';
@@ -48,6 +48,12 @@ export interface PageContent {
   routeId?: string;
 }
 
+export interface ReactPageContent extends Omit<PageContent, 'body'> {
+  body: ReactNode;
+}
+
+export type DocumentContent = PageContent | ReactPageContent;
+
 export interface PageContentOptions extends Partial<Omit<PageContent, 'title' | 'description' | 'body'>> {
   description?: string;
 }
@@ -56,7 +62,7 @@ export { DEFAULT_DESCRIPTION, ROOT_ROUTE_ID };
 
 const RequestLocalization = createContext<LocalizationContext | null>(null);
 
-function useRequestLocalization(): LocalizationContext {
+export function useRequestLocalization(): LocalizationContext {
   const localization = useContext(RequestLocalization);
   if (!localization) throw new Error('Document component rendered without request localization.');
   return localization;
@@ -66,7 +72,7 @@ function localizedRouteLabel(localization: LocalizationContext, route: Registere
   return localization.t(`nav.${route.id}`, route.page?.label ?? route.id);
 }
 
-function DocumentHead({ content }: Readonly<{ content: PageContent }>) {
+function DocumentHead({ content }: Readonly<{ content: DocumentContent }>) {
   const localization = useRequestLocalization();
   const canonicalHref = new URL(content.canonicalPath ?? routeUrl(ROOT_ROUTE_ID), 'https://demo.wizardgang.ai').toString();
   const siteName = localization.t('app.title', SITE_NAME);
@@ -164,7 +170,7 @@ function ShellBrowserModule() {
   return <script type="module" src={source} data-shell-browser="" data-messages={messages} />;
 }
 
-function LocalizedDocument({ env, content, localization }: Readonly<{ env: Env; content: PageContent; localization: LocalizationContext }>) {
+function LocalizedDocument({ env, content, localization }: Readonly<{ env: Env; content: DocumentContent; localization: LocalizationContext }>) {
   const repositoryUrl = repoUrl(env);
   return <html lang={content.lang ?? localization.lang} dir={content.dir ?? localization.dir}>
     <RequestLocalization value={localization}>
@@ -172,7 +178,9 @@ function LocalizedDocument({ env, content, localization }: Readonly<{ env: Env; 
       <body data-route-id={content.routeId}>
         <a className="skip-link" href="#main">{localization.t('shell.skip_main', 'Skip to main content')}</a>
         <SiteHeader repositoryUrl={repositoryUrl} currentRouteId={content.routeId} />
-        <LegacyBody html={content.body} />
+        {typeof content.body === 'string'
+          ? <LegacyBody html={content.body} />
+          : <main className="site-main" id="main">{content.body}</main>}
         <SiteFooter env={env} repositoryUrl={repositoryUrl} routeId={content.routeId} />
         <ShellBrowserModule />
       </body>
@@ -180,6 +188,6 @@ function LocalizedDocument({ env, content, localization }: Readonly<{ env: Env; 
   </html>;
 }
 
-export function renderDocument(env: Env, content: PageContent, localization: LocalizationContext): string {
+export function renderDocument(env: Env, content: DocumentContent, localization: LocalizationContext): string {
   return `<!doctype html>${renderToStaticMarkup(<LocalizedDocument env={env} content={content} localization={localization} />)}`;
 }

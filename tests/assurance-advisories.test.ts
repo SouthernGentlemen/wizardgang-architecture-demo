@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { reportingCollectionResponse } from '../src/api/reporting';
 import { advisoryQualification } from '../src/assurance/service';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
-import { renderSecurity } from '../src/demos/security-page';
+import { loadSecurityPageData, renderSecurity } from '../src/ui/security';
 import type { Env } from '../src/types';
 
 const env = {
@@ -47,7 +47,7 @@ describe('published security advisory assurance', () => {
 
   it('documents coordinated disclosure and renders the current canonical advisory state truthfully', async () => {
     const records = listPublishedAssuranceRecords('advisories');
-    const response = renderSecurity(env);
+    const response = renderSecurity(env, loadSecurityPageData());
     const html = await response.text();
     expect(html).toContain('id="disclosure-process"');
     expect(html).toContain('<h2 id="disclosure-process-heading">Disclosure process</h2>');

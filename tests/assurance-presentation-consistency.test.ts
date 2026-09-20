@@ -43,7 +43,7 @@ describe('assurance presentation consistency', () => {
   });
 
   it('keeps HTML presentation code off removed relationship property aliases and serializer references', () => {
-    for (const path of ['src/demos/security-page.ts']) {
+    for (const path of ['src/ui/security.tsx']) {
       const source = readFileSync(path, 'utf8');
       expect(source).not.toContain('.riskLinks');
       expect(source).not.toContain('.controlLinks');

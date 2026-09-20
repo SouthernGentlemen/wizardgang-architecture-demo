@@ -35,7 +35,9 @@ for (const requiredFile of [
   'src/lib/demo-control.ts',
   'src/lib/crawler-control.ts',
   'src/lib/logs.ts',
-  'src/ui/admin.ts',
+  'src/ui/admin.tsx',
+  'src/ui/offline.tsx',
+  'src/ui/security.tsx',
   'tests/route-registry.test.ts',
   'tests/application-route-registry.test.ts',
   'tests/route-artifacts.test.ts',
@@ -119,8 +121,10 @@ const assurancePresentationModule = read('src/assurance/presentation.ts');
 if (assurancePresentationModule.includes('export *')) failures.push('src/assurance/presentation.ts must not remain an export-only barrel');
 if (exists('src/api/assurance-v1.ts')) failures.push('removed v1 assurance serializer must not remain in the current contract');
 
-const adminUi = read('src/ui/admin.ts');
-if (!adminUi.includes("localization.t('offline.title', 'Demo temporarily offline')")) failures.push('offline UI missing required planned-maintenance recovery message');
+const adminUi = read('src/ui/admin.tsx');
+if (!adminUi.includes('data-offline-message-preview')) failures.push('admin UI missing the public offline-message preview');
+const offlineUi = read('src/ui/offline.tsx');
+if (!offlineUi.includes("localization.t('offline.title', 'Demo temporarily offline')")) failures.push('offline UI missing required planned-maintenance recovery message');
 const crawlerControl = read('src/lib/crawler-control.ts');
 for (const token of ['OAI-SearchBot', 'ChatGPT-User', 'GPTBot', 'chatgpt_crawl_access_changed']) {
   if (!crawlerControl.includes(token)) failures.push(`crawler control invariant missing: ${token}`);

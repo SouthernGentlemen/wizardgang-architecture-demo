@@ -227,7 +227,7 @@
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
-      "module": "src/ui/home.ts",
+      "module": "src/ui/home.tsx",
       "exportName": "renderHome",
       "tests": [
         "tests/interface-identity-routing.test.ts",
@@ -1104,7 +1104,7 @@
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
-      "module": "src/ui/admin.ts",
+      "module": "src/ui/admin.tsx",
       "exportName": "renderAdmin",
       "tests": [
         "tests/operational-route-registry.test.ts",
@@ -1327,7 +1327,7 @@
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
-      "module": "src/ui/admin.ts",
+      "module": "src/ui/offline.tsx",
       "exportName": "renderOffline",
       "tests": [
         "tests/operational-route-registry.test.ts",
@@ -2733,8 +2733,8 @@
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
-      "module": "src/demos/security-page.ts",
-      "exportName": "securityContent",
+      "module": "src/ui/security.tsx",
+      "exportName": "renderSecurity",
       "tests": [
         "tests/security.test.ts",
         "tests/router.test.ts"
