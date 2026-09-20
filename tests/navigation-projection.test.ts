@@ -1,10 +1,13 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import { architectureMapEntries, primaryNavigation } from '../src/routing/navigation';
 import type { Env } from '../src/types';
 import { pageContent, renderPage } from '../src/ui/page';
-import { styles } from '../src/ui/styles';
 import { retiredOperationsHtmlPathname } from './fixtures/removed-html-pathnames';
+
+const shellStyles = readFileSync('src/styles/shell.css', 'utf8');
+const demoStyles = readFileSync('src/styles/demos.css', 'utf8');
 
 const env = {
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
@@ -101,8 +104,8 @@ describe('navigation projection', () => {
   });
 
   it('keeps 44px primary navigation targets in the mobile shell', () => {
-    expect(styles).toContain('@media (max-width: 700px)');
-    expect(styles).toMatch(/\.nav a, \.nav button \{[^}]*min-height: 44px/);
-    expect(styles).toContain('.lab-grid > * { min-width: 0; }');
+    expect(shellStyles).toContain('@media (max-width: 700px)');
+    expect(shellStyles).toMatch(/\.nav a, \.nav button \{[^}]*min-height: 44px/);
+    expect(demoStyles).toContain('.lab-grid > * { min-width: 0; }');
   });
 });

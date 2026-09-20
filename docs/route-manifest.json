@@ -1232,8 +1232,8 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "Bundled UI asset",
-    "description": "Locally bundled immutable UI and social-preview assets.",
+    "title": "Static browser asset",
+    "description": "Locally built immutable browser and social-preview assets.",
     "docs": [
       "docs/OPERATIONS.md",
       "docs/ROUTE-REGISTRY.md"

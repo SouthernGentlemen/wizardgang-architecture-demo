@@ -1,10 +1,12 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { graphqlContent } from '../src/demos/graphql-console';
 import { openApiConsole } from '../src/demos/openapi-console';
 import { renderPage } from '../src/ui/page';
-import { runtimeStyles } from '../src/ui/runtime-styles';
 import { accessibilityLabResponse } from '../src/ui/accessibility-lab';
 import type { Env } from '../src/types';
+
+const shellStyles = readFileSync('src/styles/shell.css', 'utf8');
 
 const env = {
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
@@ -27,17 +29,17 @@ function contrastRatio(foreground: string, background: string): number {
 
 describe('DEMO-237 shared WCAG 2.2 AAA remediation', () => {
   it('raises the shared target, focus, motion, reflow, bidi, and contrast baseline without claiming conformance', () => {
-    expect(runtimeStyles).toContain('--violet: #a98fff');
-    expect(runtimeStyles).toContain('--cyan: #005a6d');
+    expect(shellStyles).toContain('--violet: #a98fff');
+    expect(shellStyles).toContain('--cyan: #005a6d');
     expect(contrastRatio('#a98fff', '#111116')).toBeGreaterThanOrEqual(7);
     expect(contrastRatio('#005a6d', '#fffdf7')).toBeGreaterThanOrEqual(7);
-    expect(runtimeStyles).toContain('min-block-size: 44px !important');
-    expect(runtimeStyles).toContain('outline: 3px solid var(--focus, #ffd84d)');
-    expect(runtimeStyles).toContain('max-inline-size: 80ch');
-    expect(runtimeStyles).toContain('unicode-bidi: isolate');
-    expect(runtimeStyles).toContain('@media (prefers-reduced-motion: reduce)');
-    expect(runtimeStyles).toContain('transition-duration: .01ms !important');
-    expect(runtimeStyles).toContain('@media (forced-colors: active)');
+    expect(shellStyles).toContain('min-block-size: 44px !important');
+    expect(shellStyles).toContain('outline: 3px solid var(--focus, #ffd84d)');
+    expect(shellStyles).toContain('max-inline-size: 80ch');
+    expect(shellStyles).toContain('unicode-bidi: isolate');
+    expect(shellStyles).toContain('@media (prefers-reduced-motion: reduce)');
+    expect(shellStyles).toContain('transition-duration: .01ms !important');
+    expect(shellStyles).toContain('@media (forced-colors: active)');
   });
 
   it('keeps the failure lesson accessible by rendering anti-patterns as inert text instead of live broken controls', async () => {

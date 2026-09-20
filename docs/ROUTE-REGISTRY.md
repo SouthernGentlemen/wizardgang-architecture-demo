@@ -81,6 +81,8 @@ Sitemap membership and canonical links are derived from route declarations and p
 
 Browser consolidation never removes a machine/protocol contract merely because its demonstration is presented under `/demos` or `/assurance`.
 
+The registered `/assets/:asset` route remains the policy boundary for browser files. It accepts only paths projected by `docs/asset-manifest.json`, fetches their bytes from the Worker `ASSETS` binding, and preserves immutable caching and the shared security headers. Vite owns the content-hashed stylesheet names; vendored GraphiQL, Monaco, axe-core, and social-image URLs remain stable.
+
 ## Machine and protocol route families
 
 REST/JSON endpoints, OpenAPI, GraphQL, MCP, identity callbacks, webhooks, laboratory APIs, reporting APIs, operational APIs, assets, crawler controls, and other non-browser contracts retain independent declarations, methods, policies, and source ownership.

@@ -29,6 +29,12 @@ class RouterD1 {
 function env(state: 'online' | 'offline' = 'online', crawlerState: 'enabled' | 'disabled' = 'disabled'): Env & { DEMO_DB: RouterD1 } {
   return {
     DEMO_DB: new RouterD1(state, crawlerState),
+    ASSETS: {
+      async fetch(request) {
+        const contentType = new URL(request.url).pathname.endsWith('.png') ? 'image/png' : 'application/octet-stream';
+        return new Response(request.method === 'HEAD' ? null : 'asset', { headers: { 'content-type': contentType } });
+      },
+    },
     GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
     DEMO_ADMIN_USER: 'operator',

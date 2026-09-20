@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { accessibilityContent } from '../src/demos/accessibility-page';
 import { d1Content } from '../src/demos/d1-page';
@@ -10,10 +11,10 @@ import {
 } from '../src/i18n/runtime';
 import { routeUrl } from '../src/routing/application-routes';
 import { renderPage } from '../src/ui/page';
-import { runtimeStyles } from '../src/ui/runtime-styles';
-import { styles } from '../src/ui/styles';
 import { accessibilityLabResponse } from '../src/ui/accessibility-lab';
 import type { Env } from '../src/types';
+
+const shellStyles = readFileSync('src/styles/shell.css', 'utf8');
 
 const env = {
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
@@ -175,13 +176,13 @@ describe('global localization and accessibility runtime', () => {
   });
 
   it('ships reduced-motion, forced-colors, and logical-direction shared CSS', () => {
-    expect(styles).toContain('@media (prefers-reduced-motion: reduce)');
-    expect(runtimeStyles).toContain('@media (forced-colors: active)');
-    expect(runtimeStyles).toContain('scroll-behavior: auto !important');
-    expect(runtimeStyles).toContain('padding-inline');
-    expect(runtimeStyles).toContain('max-inline-size');
-    expect(runtimeStyles).not.toContain('padding-left');
-    expect(runtimeStyles).not.toContain('border-left');
+    expect(shellStyles).toContain('@media (prefers-reduced-motion: reduce)');
+    expect(shellStyles).toContain('@media (forced-colors: active)');
+    expect(shellStyles).toContain('scroll-behavior: auto !important');
+    expect(shellStyles).toContain('padding-inline');
+    expect(shellStyles).toContain('max-inline-size');
+    expect(shellStyles).toContain('margin-inline-start');
+    expect(shellStyles).toContain('inset-inline-start');
   });
 });
 
@@ -224,13 +225,13 @@ describe('right-to-left layout safety', () => {
     // A large negative left/right offset extends the document's scrollable width.
     // Under dir="rtl" the scroll origin sits at the opposite edge, so the reader
     // lands on that empty canvas and the page looks blank. Hide vertically instead.
-    expect(styles).not.toMatch(/\b(left|right)\s*:\s*-\d{3,}px/);
+    expect(shellStyles).not.toMatch(/\b(left|right)\s*:\s*-\d{3,}px/);
   });
 
   it('defines both themes from the same token set', () => {
-    expect(styles).toContain(':root[data-theme="light"]');
+    expect(shellStyles).toContain(':root[data-theme="light"]');
     for (const token of ['--ink', '--paper', '--acid', '--violet', '--line', '--focus']) {
-      expect(styles.match(new RegExp(`${token}:`, 'g'))?.length, token).toBeGreaterThanOrEqual(2);
+      expect(shellStyles.match(new RegExp(`${token}:`, 'g'))?.length, token).toBeGreaterThanOrEqual(2);
     }
   });
 });

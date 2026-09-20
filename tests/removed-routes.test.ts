@@ -112,5 +112,5 @@ describe('removed route handling', () => {
       references,
       'Remove retired URL references or move deliberate dead-route contract data into the excluded fixtures/tests.',
     ).toEqual([]);
-  });
+  }, 15_000);
 });

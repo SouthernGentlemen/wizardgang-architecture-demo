@@ -109,6 +109,12 @@ class AcceptanceD1 {
 function environment(offline = false): Env {
   return {
     DEMO_DB: new AcceptanceD1(offline),
+    ASSETS: {
+      async fetch(request) {
+        const contentType = new URL(request.url).pathname.endsWith('.png') ? 'image/png' : 'application/octet-stream';
+        return new Response(request.method === 'HEAD' ? null : 'asset', { headers: { 'content-type': contentType } });
+      },
+    },
     DEMO_SESSION_SECRET: 'test-demo-session-secret-with-at-least-32-characters',
     IDENTITY_SESSION_SECRET: 'test-identity-session-secret-with-at-least-32-characters',
     IDENTITY_AUDIT_HMAC_SECRET: 'a'.repeat(32),

@@ -26,6 +26,12 @@ function listFiles(relativeDirectory) {
 
 const definitions = [
   {
+    id: 'assets',
+    command: ['npm', ['run', 'generate:assets']],
+    inputs: ['package-lock.json', 'vite.config.ts', ...listFiles('src/styles'), 'src/assets/og.png'],
+    outputs: ['docs/asset-manifest.json'],
+  },
+  {
     id: 'routes',
     command: ['npm', ['run', 'generate:routes']],
     inputs: listFiles('src/routing'),

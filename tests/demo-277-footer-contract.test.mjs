@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 const pageSource = readFileSync('src/ui/page.ts', 'utf8');
 const homeSource = readFileSync('src/ui/home.ts', 'utf8');
 const versionProofSource = readFileSync('src/ui/version-proof.ts', 'utf8');
-const stylesSource = readFileSync('src/ui/styles.ts', 'utf8');
+const stylesSource = readFileSync('src/styles/shell.css', 'utf8');
 
 describe('DEMO-277 site footer contract', () => {
   it('keeps Security reachable through the canonical registered route', () => {

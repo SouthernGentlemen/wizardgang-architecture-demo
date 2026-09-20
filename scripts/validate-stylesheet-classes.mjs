@@ -29,8 +29,8 @@ async function walk(dir) {
 }
 
 function isStylesheetModule(file) {
-  return path.dirname(file).startsWith(path.join(SRC_DIR, 'ui'))
-    && file.endsWith('styles.ts');
+  return path.dirname(file).startsWith(path.join(SRC_DIR, 'styles'))
+    && file.endsWith('.css');
 }
 
 function stripComments(value) {
@@ -156,19 +156,6 @@ function transformCss(css, classIsLive, findings) {
   return output;
 }
 
-function extractCssTemplate(source, file) {
-  const first = source.indexOf('`');
-  const last = source.lastIndexOf('`');
-  if (first === -1 || last <= first) {
-    throw new Error(`Unable to locate stylesheet template literal in ${path.relative(ROOT, file)}`);
-  }
-  return {
-    before: source.slice(0, first + 1),
-    css: source.slice(first + 1, last),
-    after: source.slice(last),
-  };
-}
-
 const allSourceFiles = await walk(SRC_DIR);
 const stylesheetFiles = allSourceFiles.filter(isStylesheetModule);
 const stylesheetSet = new Set(stylesheetFiles);
@@ -190,16 +177,15 @@ let changedFiles = 0;
 
 for (const file of stylesheetFiles) {
   const source = await readFile(file, 'utf8');
-  const template = extractCssTemplate(source, file);
   const findings = [];
-  const transformed = transformCss(template.css, classIsLive, findings);
+  const transformed = transformCss(source, classIsLive, findings);
   if (findings.length === 0) continue;
 
   const relative = path.relative(ROOT, file);
   allFindings.push(...findings.map((finding) => ({ ...finding, file: relative })));
 
   if (WRITE) {
-    await writeFile(file, `${template.before}${transformed}${template.after}`, 'utf8');
+    await writeFile(file, transformed, 'utf8');
     changedFiles += 1;
   }
 }

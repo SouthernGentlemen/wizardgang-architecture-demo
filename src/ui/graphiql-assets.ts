@@ -1,8 +1,3 @@
-import graphiqlScript from '../../node_modules/@graphql-yoga/graphiql/dist/yoga-graphiql.umd.js';
-import graphiqlStyles from '../../node_modules/@graphql-yoga/graphiql/dist/graphiql.css';
-import editorWorker from '../../node_modules/@graphql-yoga/graphiql/dist/monacoeditorwork/editor.worker.bundle.js';
-import jsonWorker from '../../node_modules/@graphql-yoga/graphiql/dist/monacoeditorwork/json.worker.bundle.js';
-import graphqlWorker from '../../node_modules/@graphql-yoga/graphiql/dist/monacoeditorwork/graphql.worker..bundle.js';
 import { methodNotAllowed, withSecurityHeaders } from '../lib/http';
 
 const defaultQuery = `query Users {
@@ -13,25 +8,6 @@ const defaultQuery = `query Users {
     role
   }
 }`;
-
-const assets: Record<string, { body: string; contentType: string }> = {
-  'graphiql.js': { body: graphiqlScript, contentType: 'text/javascript; charset=utf-8' },
-  'graphiql.css': { body: graphiqlStyles, contentType: 'text/css; charset=utf-8' },
-  'editor.worker.js': { body: editorWorker, contentType: 'text/javascript; charset=utf-8' },
-  'json.worker.js': { body: jsonWorker, contentType: 'text/javascript; charset=utf-8' },
-  'graphql.worker.js': { body: graphqlWorker, contentType: 'text/javascript; charset=utf-8' },
-};
-
-export function graphiqlAssetResponse(request: Request, rawName: string): Response {
-  if (request.method !== 'GET' && request.method !== 'HEAD') return methodNotAllowed(['GET', 'HEAD']);
-  const asset = assets[rawName];
-  if (!asset) return new Response('Not found.', { status: 404, headers: { 'cache-control': 'no-store' } });
-  const headers = withSecurityHeaders(new Headers({
-    'content-type': asset.contentType,
-    'cache-control': 'public, max-age=31536000, immutable',
-  }));
-  return new Response(asset.body, { headers });
-}
 
 export function localGraphiqlDocument(request: Request): string {
   if (request.method !== 'GET') throw new Error('GraphiQL document requires GET.');

@@ -8,7 +8,11 @@ const errors = [];
 function trackedFiles() {
   const result = spawnSync('git', ['ls-files'], { cwd: root, encoding: 'utf8' });
   if (result.status !== 0) throw new Error(`unable to list tracked files: ${result.stderr.trim() || result.stdout.trim()}`);
-  return result.stdout.split('\n').map((value) => value.trim()).filter(Boolean);
+  return result.stdout
+    .split('\n')
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .filter((file) => fs.existsSync(path.join(root, file)));
 }
 
 function plainHeadingText(value) {

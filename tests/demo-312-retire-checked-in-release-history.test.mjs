@@ -16,6 +16,7 @@ describe('DEMO-312 repository release-history retirement', () => {
     const stale = tracked.stdout
       .split('\n')
       .filter(Boolean)
+      .filter((file) => fs.existsSync(file))
       .filter((file) => file !== self && textExtensions.has(extname(file)))
       .filter((file) => read(file).includes('docs/releases'));
 
