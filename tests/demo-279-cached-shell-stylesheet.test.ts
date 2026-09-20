@@ -50,6 +50,7 @@ function env(): Env {
 const demosPath = routeUrl('demos.index');
 const shellAssetPath = routeUrl('operations.assets', { asset: browserAssetName('styles.shell') });
 const demosAssetPath = routeUrl('operations.assets', { asset: browserAssetName('styles.demos') });
+const shellBrowserAssetPath = routeUrl('operations.assets', { asset: browserAssetName('scripts.shell') });
 const publicPaths = [
   routeUrl('interfaces.frontend.index'),
   demosPath,
@@ -87,10 +88,11 @@ describe('DEMO-327 Workers Static Assets stylesheet delivery', () => {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`, { headers: { accept: 'text/html' } }), env());
       const html = await response.text();
       expect(response.status, path).toBe(200);
-      expect(html, path).toContain(`<link rel="stylesheet" href="${shellAssetPath}">`);
+      expect(html, path).toContain(`<link rel="stylesheet" href="${shellAssetPath}"/>`);
       expect(html, path).not.toContain('<style');
-      if (path === demosPath) expect(html).toContain(`<link rel="stylesheet" href="${demosAssetPath}">`);
-      else expect(html).not.toContain(`<link rel="stylesheet" href="${demosAssetPath}">`);
+      expect(html, path).toContain(`<script type="module" src="${shellBrowserAssetPath}"`);
+      if (path === demosPath) expect(html).toContain(`<link rel="stylesheet" href="${demosAssetPath}"/>`);
+      else expect(html).not.toContain(`<link rel="stylesheet" href="${demosAssetPath}"/>`);
     }
   });
 });

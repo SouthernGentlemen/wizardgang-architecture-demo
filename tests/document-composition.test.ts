@@ -36,7 +36,7 @@ function headings(html: string): number[] {
 }
 
 function topLevelHtmlElements(html: string): RegExpMatchArray | null {
-  return html.match(/^<html\b/gm);
+  return html.match(/<html\b/g);
 }
 
 function navigationLandmarks(html: string): string[] {
@@ -57,7 +57,7 @@ describe('document composition', () => {
       body: '<section><h1>Boundary proof</h1><h2>Detail</h2><h3>Evidence</h3></section>',
       canonicalPath: boundaryPath,
       lang: 'ar', dir: 'rtl', status: 404, cacheControl: 'no-store', noindex: true,
-      headExtra: '<meta name="boundary-proof" content="yes">',
+      headExtra: [{ name: 'boundary-proof', content: 'yes' }],
     };
     const response = renderPage(env, content);
     const html = await response.text();
@@ -67,10 +67,10 @@ describe('document composition', () => {
     expect(html.match(/<main\b/g)).toHaveLength(1);
     expect(html.match(/<h1(?:\s|>)/g)).toHaveLength(1);
     expect(html).toContain('<html lang="ar" dir="rtl">');
-    expect(html).toContain('<meta name="description" content="Child description">');
-    expect(html).toContain(`<link rel="canonical" href="https://demo.wizardgang.ai${boundaryPath}">`);
-    expect(html).toContain(`<meta property="og:url" content="https://demo.wizardgang.ai${boundaryPath}">`);
-    expect(html).toContain('<meta name="boundary-proof" content="yes">');
+    expect(html).toContain('<meta name="description" content="Child description"/>');
+    expect(html).toContain(`<link rel="canonical" href="https://demo.wizardgang.ai${boundaryPath}"/>`);
+    expect(html).toContain(`<meta property="og:url" content="https://demo.wizardgang.ai${boundaryPath}"/>`);
+    expect(html).toContain('<meta name="boundary-proof" content="yes"/>');
     expect(headings(html)).toEqual([1, 2, 3]);
   });
 
@@ -98,8 +98,8 @@ describe('document composition', () => {
       for (let index = 1; index < levels.length; index += 1) {
         expect(levels[index], `${path} heading ${index}`).toBeLessThanOrEqual(levels[index - 1] + 1);
       }
-      expect(html, path).toContain(`<link rel="canonical" href="${canonical}">`);
-      expect(html, path).toContain(`<meta property="og:url" content="${canonical}">`);
+      expect(html, path).toContain(`<link rel="canonical" href="${canonical}"/>`);
+      expect(html, path).toContain(`<meta property="og:url" content="${canonical}"/>`);
     }
   });
 });

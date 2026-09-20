@@ -37,7 +37,7 @@ The localization context provides translation lookup with configured fallback, p
 
 ## Shared shell and resource ownership
 
-`src/ui/page.ts` consumes localized shell strings for navigation, global controls, the skip link, source labels, and the language selector. The selector is a native `select` submitted with GET, works without JavaScript, and preserves unrelated query parameters.
+`src/ui/document.tsx` consumes localized shell strings for navigation, global controls, the skip link, source labels, and the language selector. The selector is a native `select` submitted with GET, works without JavaScript, and preserves unrelated query parameters.
 
 The HTML document always emits the active `lang` and an explicit direction. Arabic resolves to `dir="rtl"`; the other configured locales resolve to `dir="ltr"`.
 

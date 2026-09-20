@@ -136,7 +136,7 @@ describe('platform laboratory declarative routing', () => {
     const html = await response.text();
     expect(response.status).toBe(200);
     expect(html).toContain('<h1>Architecture Demos</h1>');
-    expect(html).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/demos">');
+    expect(html).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/demos"/>');
     expect(html).toContain('class="skip-link" href="#main"');
     expect(html.match(/<h1\b/g)).toHaveLength(1);
     expect(html.match(/data-demo-workbench(?:\s|>)/g)).toHaveLength(1);

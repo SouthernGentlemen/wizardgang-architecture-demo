@@ -76,9 +76,11 @@ function resolveSourceModule(importer: string, specifier: string): string | unde
 }
 
 function reachableSourceModules(): Set<string> {
-  const entry = path.join(srcRoot, 'index.ts');
   const reachable = new Set<string>();
-  const pending = [entry];
+  const pending = [
+    path.join(srcRoot, 'index.ts'),
+    path.join(srcRoot, 'browser', 'shell.ts'),
+  ];
   while (pending.length > 0) {
     const filePath = pending.pop();
     if (!filePath || reachable.has(filePath)) continue;

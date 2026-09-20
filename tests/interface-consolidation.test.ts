@@ -49,7 +49,7 @@ describe('canonical interface demonstrations', () => {
     const html = await response.text();
     expect(response.status).toBe(200);
     expect(response.headers.get('content-type')).toContain('text/html');
-    expect(html).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/demos">');
+    expect(html).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/demos"/>');
     expect(html).toContain('class="skip-link" href="#main"');
     expect(html).toContain('<main class="site-main" id="main">');
     expect(html.match(/<h1\b/g)).toHaveLength(1);
@@ -104,7 +104,7 @@ describe('canonical interface demonstrations', () => {
     const html = await response.text();
     expect(response.status).toBe(200);
     expect(html).toContain('<h1>Architecture Demos</h1>');
-    expect(html).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/demos">');
+    expect(html).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/demos"/>');
     for (const page of pages) expect(html, page.view).toContain(`href="#${page.view}"`);
   });
 
@@ -122,7 +122,7 @@ describe('canonical interface demonstrations', () => {
     const i18n = await (await routeRequest(new Request(`https://demo.wizardgang.ai${i18nPath}`), environment)).text();
     expect(i18n).toContain('<html lang="ar" dir="rtl">');
     expect(i18n).not.toContain('name="view"');
-    expect(i18n).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/demos">');
+    expect(i18n).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/demos"/>');
 
     const accessibility = await presentationHtml('accessibility', '?mode=broken');
     expect(accessibility).toContain('Failure analysis');

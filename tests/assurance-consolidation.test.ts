@@ -39,7 +39,7 @@ describe('minimal assurance route', () => {
     const response = await get();
     const html = await response.text();
     expect(response.status).toBe(200);
-    expect(html).toContain(`<link rel="canonical" href="https://demo.wizardgang.ai${assurancePath}">`);
+    expect(html).toContain(`<link rel="canonical" href="https://demo.wizardgang.ai${assurancePath}"/>`);
     expect((html.match(/data-assurance-framework=/g) ?? [])).toHaveLength(3);
     for (const framework of ['iso-27001', 'iso-42001', 'wcag-2.2']) expect(html).toContain(`data-assurance-framework="${framework}"`);
     expect(html).toContain('data-assurance-section');

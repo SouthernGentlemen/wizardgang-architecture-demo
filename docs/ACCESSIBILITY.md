@@ -26,7 +26,7 @@ Historical evaluation reports are recovered from Git/GitHub and release/workflow
 
 ## Shared rendering architecture
 
-`src/ui/page.ts` owns the ordinary HTML shell, `src/styles/shell.css` owns shared runtime accessibility styles, and `src/styles/demos.css` owns the scoped accessibility-lab frame rules. The shared shell and page runtime preserve these invariants:
+`src/ui/document.tsx` owns the ordinary React HTML shell, `src/styles/shell.css` owns shared runtime accessibility styles, and `src/styles/demos.css` owns the scoped accessibility-lab frame rules. The shared shell and page runtime preserve these invariants:
 
 - one primary `main` landmark with a working skip link;
 - visible keyboard focus and keyboard-operable shared controls;

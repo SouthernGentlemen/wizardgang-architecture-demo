@@ -3,6 +3,7 @@
   "assets": {
     "styles.shell": "/assets/shell-CTZBlQwr.css",
     "styles.demos": "/assets/demos-DPmliQix.css",
+    "scripts.shell": "/assets/shell-browser-C9kDSUFQ.js",
     "vendor.graphiql.script": "/assets/graphiql.js",
     "vendor.graphiql.styles": "/assets/graphiql.css",
     "vendor.monaco.editor": "/assets/editor.worker.js",

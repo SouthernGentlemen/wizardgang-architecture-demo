@@ -142,7 +142,7 @@ describe('global localization and accessibility runtime', () => {
     expect(html).toContain('aria-label="Primary navigation"');
     expect(html).toContain('class="language-selector"');
     expect(html).toContain('id="global-language" name="lang"');
-    expect(html).toContain('data-theme-toggle aria-label="Theme" aria-pressed="true">Theme</button>');
+    expect(html).toContain('data-theme-toggle="" aria-label="Theme" aria-pressed="true">Theme</button>');
     expect(html).toContain('<a href="/demos" aria-current="page">Demos</a>');
   });
 
@@ -154,8 +154,8 @@ describe('global localization and accessibility runtime', () => {
     expect(html).toContain('>العروض التوضيحية</a>');
     expect(html).toContain('انتقل إلى المحتوى الرئيسي');
     expect(html).toContain('name="filter" value="recent"');
-    expect(html).toContain('<option value="ar" selected>العربية</option>');
-    expect(html).toContain('data-theme-toggle aria-label="السمة" aria-pressed="true">السمة</button>');
+    expect(html).toContain('<option value="ar" selected="">العربية</option>');
+    expect(html).toContain('data-theme-toggle="" aria-label="السمة" aria-pressed="true">السمة</button>');
     expect(html).toContain('href="/demos?lang=ar"');
   });
 
