@@ -68,12 +68,12 @@
       {
         "element": "button",
         "role": "tab",
-        "name": "ISO/IEC 27,001:2,022"
+        "name": "ISO/IEC 27001:2022"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "ISO/IEC 42,001:2,023"
+        "name": "ISO/IEC 42001:2023"
       },
       {
         "element": "button",
@@ -328,12 +328,12 @@
       {
         "element": "a",
         "role": null,
-        "name": "ISO/IEC 27,001 適用宣言"
+        "name": "ISO/IEC 27001 適用宣言"
       },
       {
         "element": "a",
         "role": null,
-        "name": "ISO/IEC 42,001 適用宣言"
+        "name": "ISO/IEC 42001 適用宣言"
       },
       {
         "element": "a",
@@ -353,7 +353,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "ルートのソース: src/demos/assurance-workbench.ts"
+        "name": "ルートのソース: src/demos/assurance-workbench.tsx"
       },
       {
         "element": "a",
@@ -966,12 +966,12 @@
       {
         "element": "button",
         "role": "tab",
-        "name": "ISO/IEC 27,001:2,022"
+        "name": "ISO/IEC 27001:2022"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "ISO/IEC 42,001:2,023"
+        "name": "ISO/IEC 42001:2023"
       },
       {
         "element": "button",
@@ -1226,12 +1226,12 @@
       {
         "element": "a",
         "role": null,
-        "name": "ISO/IEC 27,001 適用宣言"
+        "name": "ISO/IEC 27001 適用宣言"
       },
       {
         "element": "a",
         "role": null,
-        "name": "ISO/IEC 42,001 適用宣言"
+        "name": "ISO/IEC 42001 適用宣言"
       },
       {
         "element": "a",
@@ -1251,7 +1251,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "ルートのソース: src/demos/assurance-workbench.ts"
+        "name": "ルートのソース: src/demos/assurance-workbench.tsx"
       },
       {
         "element": "a",
@@ -1339,12 +1339,12 @@
       {
         "element": "button",
         "role": "tab",
-        "name": "ISO/IEC 27,001:2,022"
+        "name": "ISO/IEC 27001:2022"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "ISO/IEC 42,001:2,023"
+        "name": "ISO/IEC 42001:2023"
       },
       {
         "element": "button",
@@ -1599,12 +1599,12 @@
       {
         "element": "a",
         "role": null,
-        "name": "ISO/IEC 27,001 適用宣言"
+        "name": "ISO/IEC 27001 適用宣言"
       },
       {
         "element": "a",
         "role": null,
-        "name": "ISO/IEC 42,001 適用宣言"
+        "name": "ISO/IEC 42001 適用宣言"
       },
       {
         "element": "a",
@@ -1624,7 +1624,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "ルートのソース: src/demos/assurance-workbench.ts"
+        "name": "ルートのソース: src/demos/assurance-workbench.tsx"
       },
       {
         "element": "a",
@@ -1712,12 +1712,12 @@
       {
         "element": "button",
         "role": "tab",
-        "name": "ISO/IEC 27,001:2,022"
+        "name": "ISO/IEC 27001:2022"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "ISO/IEC 42,001:2,023"
+        "name": "ISO/IEC 42001:2023"
       },
       {
         "element": "button",
@@ -1972,12 +1972,12 @@
       {
         "element": "a",
         "role": null,
-        "name": "ISO/IEC 27,001 適用宣言"
+        "name": "ISO/IEC 27001 適用宣言"
       },
       {
         "element": "a",
         "role": null,
-        "name": "ISO/IEC 42,001 適用宣言"
+        "name": "ISO/IEC 42001 適用宣言"
       },
       {
         "element": "a",
@@ -1997,7 +1997,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "ルートのソース: src/demos/assurance-workbench.ts"
+        "name": "ルートのソース: src/demos/assurance-workbench.tsx"
       },
       {
         "element": "a",
@@ -2085,12 +2085,12 @@
       {
         "element": "button",
         "role": "tab",
-        "name": "ISO/IEC 27,001:2,022"
+        "name": "ISO/IEC 27001:2022"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "ISO/IEC 42,001:2,023"
+        "name": "ISO/IEC 42001:2023"
       },
       {
         "element": "button",
@@ -2345,12 +2345,12 @@
       {
         "element": "a",
         "role": null,
-        "name": "ISO/IEC 27,001 適用宣言"
+        "name": "ISO/IEC 27001 適用宣言"
       },
       {
         "element": "a",
         "role": null,
-        "name": "ISO/IEC 42,001 適用宣言"
+        "name": "ISO/IEC 42001 適用宣言"
       },
       {
         "element": "a",
@@ -2370,7 +2370,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "ルートのソース: src/demos/assurance-workbench.ts"
+        "name": "ルートのソース: src/demos/assurance-workbench.tsx"
       },
       {
         "element": "a",

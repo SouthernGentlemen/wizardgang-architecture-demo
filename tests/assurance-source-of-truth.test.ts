@@ -89,7 +89,7 @@ describe('structured assurance source of truth', () => {
   });
 
   it('keeps the workbench SoA presentation bound to canonical structured compliance sources', () => {
-    const source = readFileSync(join(root, 'src/demos/assurance-workbench.ts'), 'utf8');
+    const source = readFileSync(join(root, 'src/demos/assurance-workbench.tsx'), 'utf8');
     expect(source).toContain('assurance/compliance/iso-27001-2022.json');
     expect(source).toContain('assurance/compliance/iso-42001-2023.json');
     expect(source).not.toContain(oldSoaRoot + '/');

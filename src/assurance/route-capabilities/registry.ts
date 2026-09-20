@@ -5,16 +5,12 @@ export const assuranceRegistryRouteCapability = defineAssuranceRouteCapability({
   pattern: '/assurance',
   html: {
     handler: async (request, env) => {
-      const [{ assuranceWorkbenchContent }, { renderPage }] = await Promise.all([
-        import('../../demos/assurance-workbench'),
-        import('../../ui/page'),
-      ]);
-      const content = await assuranceWorkbenchContent(request, env);
-      return renderPage(env, { ...content, routeId: 'assurance.index' });
+      const { loadAssuranceWorkbenchData, renderAssuranceWorkbench } = await import('../../demos/assurance-workbench');
+      return renderAssuranceWorkbench(env, loadAssuranceWorkbenchData(request, env));
     },
     source: {
-      module: 'src/demos/assurance-workbench.ts',
-      exportName: 'assuranceWorkbenchContent',
+      module: 'src/demos/assurance-workbench.tsx',
+      exportName: 'renderAssuranceWorkbench',
       tests: ['tests/assurance-workbench.test.ts', 'tests/assurance-workbench-accessibility.test.ts'],
     },
     page: {
@@ -35,7 +31,7 @@ export const assuranceRegistryRouteCapability = defineAssuranceRouteCapability({
       return assurancePresentationResponse(request, env, params.record ?? '');
     },
     source: {
-      module: 'src/demos/assurance-workbench.ts',
+      module: 'src/demos/assurance-workbench.tsx',
       exportName: 'assurancePresentationResponse',
       tests: ['tests/assurance-workbench.test.ts', 'tests/router.test.ts'],
     },

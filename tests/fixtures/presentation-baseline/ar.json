@@ -326,12 +326,12 @@
         "target": null
       },
       {
-        "name": "بيان قابلية تطبيق ISO/IEC 27,001",
+        "name": "بيان قابلية تطبيق ISO/IEC 27001",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
         "target": null
       },
       {
-        "name": "بيان قابلية تطبيق ISO/IEC 42,001",
+        "name": "بيان قابلية تطبيق ISO/IEC 42001",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-42001-2023.json",
         "target": null
       },
@@ -351,8 +351,8 @@
         "target": null
       },
       {
-        "name": "مصدر المسار: src/demos/assurance-workbench.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.ts",
+        "name": "مصدر المسار: src/demos/assurance-workbench.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.tsx",
         "target": null
       },
       {
@@ -373,12 +373,12 @@
         "value": null
       },
       {
-        "name": "ISO/IEC 27,001:2,022",
+        "name": "ISO/IEC 27001:2022",
         "type": "button",
         "value": null
       },
       {
-        "name": "ISO/IEC 42,001:2,023",
+        "name": "ISO/IEC 42001:2023",
         "type": "button",
         "value": null
       },
@@ -1318,6 +1318,14 @@
       {
         "element": "script",
         "attributes": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"جارٍ تحميل سجل التقييم…\",\"loaded\":\"تم تحميل سجل التقييم.\",\"failed\":\"تعذر تحميل سجل الضمان.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"جزئي\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
+      },
+      {
+        "element": "script",
+        "attributes": {
           "data-shell-browser": "",
           "data-messages": "{\"theme\":\"السمة\"}"
         }
@@ -1333,12 +1341,16 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/assurance-browser-lnHnDcys.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "aca94cab9be1ec2e",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"جارٍ تحميل سجل التقييم…\",\"loaded\":\"تم تحميل سجل التقييم.\",\"failed\":\"تعذر تحميل سجل الضمان.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"جزئي\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
       },
       {
         "src": "/assets/shell-browser-C9kDSUFQ.js",
@@ -2948,12 +2960,12 @@
         "target": null
       },
       {
-        "name": "بيان قابلية تطبيق ISO/IEC 27,001",
+        "name": "بيان قابلية تطبيق ISO/IEC 27001",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
         "target": null
       },
       {
-        "name": "بيان قابلية تطبيق ISO/IEC 42,001",
+        "name": "بيان قابلية تطبيق ISO/IEC 42001",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-42001-2023.json",
         "target": null
       },
@@ -2973,8 +2985,8 @@
         "target": null
       },
       {
-        "name": "مصدر المسار: src/demos/assurance-workbench.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.ts",
+        "name": "مصدر المسار: src/demos/assurance-workbench.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.tsx",
         "target": null
       },
       {
@@ -2995,12 +3007,12 @@
         "value": null
       },
       {
-        "name": "ISO/IEC 27,001:2,022",
+        "name": "ISO/IEC 27001:2022",
         "type": "button",
         "value": null
       },
       {
-        "name": "ISO/IEC 42,001:2,023",
+        "name": "ISO/IEC 42001:2023",
         "type": "button",
         "value": null
       },
@@ -3940,6 +3952,14 @@
       {
         "element": "script",
         "attributes": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"جارٍ تحميل سجل التقييم…\",\"loaded\":\"تم تحميل سجل التقييم.\",\"failed\":\"تعذر تحميل سجل الضمان.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"جزئي\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
+      },
+      {
+        "element": "script",
+        "attributes": {
           "data-shell-browser": "",
           "data-messages": "{\"theme\":\"السمة\"}"
         }
@@ -3955,12 +3975,16 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/assurance-browser-lnHnDcys.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "aca94cab9be1ec2e",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"جارٍ تحميل سجل التقييم…\",\"loaded\":\"تم تحميل سجل التقييم.\",\"failed\":\"تعذر تحميل سجل الضمان.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"جزئي\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
       },
       {
         "src": "/assets/shell-browser-C9kDSUFQ.js",
@@ -4311,12 +4335,12 @@
         "target": null
       },
       {
-        "name": "بيان قابلية تطبيق ISO/IEC 27,001",
+        "name": "بيان قابلية تطبيق ISO/IEC 27001",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
         "target": null
       },
       {
-        "name": "بيان قابلية تطبيق ISO/IEC 42,001",
+        "name": "بيان قابلية تطبيق ISO/IEC 42001",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-42001-2023.json",
         "target": null
       },
@@ -4336,8 +4360,8 @@
         "target": null
       },
       {
-        "name": "مصدر المسار: src/demos/assurance-workbench.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.ts",
+        "name": "مصدر المسار: src/demos/assurance-workbench.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.tsx",
         "target": null
       },
       {
@@ -4358,12 +4382,12 @@
         "value": null
       },
       {
-        "name": "ISO/IEC 27,001:2,022",
+        "name": "ISO/IEC 27001:2022",
         "type": "button",
         "value": null
       },
       {
-        "name": "ISO/IEC 42,001:2,023",
+        "name": "ISO/IEC 42001:2023",
         "type": "button",
         "value": null
       },
@@ -5303,6 +5327,14 @@
       {
         "element": "script",
         "attributes": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"جارٍ تحميل سجل التقييم…\",\"loaded\":\"تم تحميل سجل التقييم.\",\"failed\":\"تعذر تحميل سجل الضمان.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"جزئي\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
+      },
+      {
+        "element": "script",
+        "attributes": {
           "data-shell-browser": "",
           "data-messages": "{\"theme\":\"السمة\"}"
         }
@@ -5318,12 +5350,16 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/assurance-browser-lnHnDcys.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "aca94cab9be1ec2e",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"جارٍ تحميل سجل التقييم…\",\"loaded\":\"تم تحميل سجل التقييم.\",\"failed\":\"تعذر تحميل سجل الضمان.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"جزئي\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
       },
       {
         "src": "/assets/shell-browser-C9kDSUFQ.js",
@@ -5674,12 +5710,12 @@
         "target": null
       },
       {
-        "name": "بيان قابلية تطبيق ISO/IEC 27,001",
+        "name": "بيان قابلية تطبيق ISO/IEC 27001",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
         "target": null
       },
       {
-        "name": "بيان قابلية تطبيق ISO/IEC 42,001",
+        "name": "بيان قابلية تطبيق ISO/IEC 42001",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-42001-2023.json",
         "target": null
       },
@@ -5699,8 +5735,8 @@
         "target": null
       },
       {
-        "name": "مصدر المسار: src/demos/assurance-workbench.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.ts",
+        "name": "مصدر المسار: src/demos/assurance-workbench.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.tsx",
         "target": null
       },
       {
@@ -5721,12 +5757,12 @@
         "value": null
       },
       {
-        "name": "ISO/IEC 27,001:2,022",
+        "name": "ISO/IEC 27001:2022",
         "type": "button",
         "value": null
       },
       {
-        "name": "ISO/IEC 42,001:2,023",
+        "name": "ISO/IEC 42001:2023",
         "type": "button",
         "value": null
       },
@@ -6666,6 +6702,14 @@
       {
         "element": "script",
         "attributes": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"جارٍ تحميل سجل التقييم…\",\"loaded\":\"تم تحميل سجل التقييم.\",\"failed\":\"تعذر تحميل سجل الضمان.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"جزئي\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
+      },
+      {
+        "element": "script",
+        "attributes": {
           "data-shell-browser": "",
           "data-messages": "{\"theme\":\"السمة\"}"
         }
@@ -6681,12 +6725,16 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/assurance-browser-lnHnDcys.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "aca94cab9be1ec2e",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"جارٍ تحميل سجل التقييم…\",\"loaded\":\"تم تحميل سجل التقييم.\",\"failed\":\"تعذر تحميل سجل الضمان.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"جزئي\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
       },
       {
         "src": "/assets/shell-browser-C9kDSUFQ.js",
@@ -7037,12 +7085,12 @@
         "target": null
       },
       {
-        "name": "بيان قابلية تطبيق ISO/IEC 27,001",
+        "name": "بيان قابلية تطبيق ISO/IEC 27001",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
         "target": null
       },
       {
-        "name": "بيان قابلية تطبيق ISO/IEC 42,001",
+        "name": "بيان قابلية تطبيق ISO/IEC 42001",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-42001-2023.json",
         "target": null
       },
@@ -7062,8 +7110,8 @@
         "target": null
       },
       {
-        "name": "مصدر المسار: src/demos/assurance-workbench.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.ts",
+        "name": "مصدر المسار: src/demos/assurance-workbench.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.tsx",
         "target": null
       },
       {
@@ -7084,12 +7132,12 @@
         "value": null
       },
       {
-        "name": "ISO/IEC 27,001:2,022",
+        "name": "ISO/IEC 27001:2022",
         "type": "button",
         "value": null
       },
       {
-        "name": "ISO/IEC 42,001:2,023",
+        "name": "ISO/IEC 42001:2023",
         "type": "button",
         "value": null
       },
@@ -8029,6 +8077,14 @@
       {
         "element": "script",
         "attributes": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"جارٍ تحميل سجل التقييم…\",\"loaded\":\"تم تحميل سجل التقييم.\",\"failed\":\"تعذر تحميل سجل الضمان.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"جزئي\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
+      },
+      {
+        "element": "script",
+        "attributes": {
           "data-shell-browser": "",
           "data-messages": "{\"theme\":\"السمة\"}"
         }
@@ -8044,12 +8100,16 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/assurance-browser-lnHnDcys.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "aca94cab9be1ec2e",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"جارٍ تحميل سجل التقييم…\",\"loaded\":\"تم تحميل سجل التقييم.\",\"failed\":\"تعذر تحميل سجل الضمان.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"جزئي\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
       },
       {
         "src": "/assets/shell-browser-C9kDSUFQ.js",
