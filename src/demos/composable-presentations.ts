@@ -8,8 +8,6 @@ import {
 import { edgeContent } from './edge';
 import { workersContent } from './workers';
 import { durableObjectsContent } from './durable-objects';
-import { apiContent } from './api-page';
-import { graphqlContent } from './graphql-console';
 import { webhooksContent } from './webhook-console';
 import { identityContent } from './identity-page';
 import { curatedMcpContent } from './mcp-curated';
@@ -37,14 +35,6 @@ export function durableObjectsSection(env: Env, options: DemoSectionOptions = {}
   return section(durableObjectsContent(env), 'durable-objects', `${routeUrl('demos.index')}#durable-objects`, options);
 }
 
-export function restSection(env: Env, options: DemoSectionOptions = {}): DemoSection {
-  return section(apiContent(env), 'rest', `${routeUrl('demos.index')}#rest`, options);
-}
-
-export function graphqlSection(env: Env, options: DemoSectionOptions = {}): DemoSection {
-  return section(graphqlContent(env), 'graphql', `${routeUrl('demos.index')}#graphql`, options);
-}
-
 export function webhooksSection(env: Env, options: DemoSectionOptions = {}): DemoSection {
   return section(webhooksContent(env), 'webhooks', `${routeUrl('demos.index')}#webhooks`, options);
 }
@@ -67,3 +57,5 @@ export function i18nSection(request: Request, env: Env, options: DemoSectionOpti
 
 export { d1Section } from './d1-presentation';
 export { r2Section } from './r2-presentation';
+export { restSection } from './rest-presentation';
+export { graphqlSection } from './graphql-presentation';

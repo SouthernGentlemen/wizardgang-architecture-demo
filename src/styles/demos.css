@@ -92,7 +92,7 @@
 .webhook-pipeline li[data-state="pending"] { border-bottom: 2px solid var(--cyan); }
 .webhook-pipeline li[data-state="complete"] { border-bottom: 2px solid var(--acid); }
 .webhook-pipeline li[data-state="failed"] { border-bottom: 2px solid var(--danger); }
-@media(max-width:760px){.rest-guided-steps,.graphql-field-grid,.r2-upload-evidence,.mcp-success-loop{grid-template-columns:1fr}}
+@media(max-width:760px){.graphql-field-grid,.r2-upload-evidence,.mcp-success-loop{grid-template-columns:1fr}}
 .locale-app .button-primary { margin-top: 1.25rem; }
 .accessibility-frame { height: min(70vh, 680px); min-height: 520px; overflow: hidden; border: 1px solid var(--line); border-radius: 0; background: #fff; }
 .accessibility-frame iframe { width: 100%; height: 100%; border: 0; }
@@ -314,13 +314,11 @@
 .implementation-notes summary { min-height: 44px; display: flex; align-items: center; list-style: none; color: var(--muted); font: 800 .72rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
 .implementation-notes summary::-webkit-details-marker { display: none; }
 .implementation-notes ul { margin: .7rem 0 .3rem; color: var(--muted); }
-.api-heading .eyebrow { margin-bottom: .45rem; }
 .http-method { display: inline-flex; justify-content: center; min-width: 4.4rem; padding: .34rem .45rem; border: 1px solid currentColor; color: var(--cyan); font: 900 .68rem/1 var(--mono); letter-spacing: .1em; text-decoration: none; }
 .http-post { color: var(--acid); }
 .http-put, .http-patch { color: var(--violet); }
 .http-delete { color: #ff9d9d; }
 :root[data-theme="light"] .http-delete { color: #a11; }
-.contract-block > .subtle { margin-bottom: .6rem; }
 .openapi-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .85rem; }
 .openapi-inputs label { display: grid; align-content: start; gap: .35rem; }
 .openapi-inputs .openapi-body { grid-column: 1 / -1; }
@@ -328,19 +326,14 @@
 
 .api-page-header { max-width: 920px; margin-bottom: 2rem; }
 .api-page-header h1, .graphql-page-header h1, .webhook-page-header h1 { max-width: 12ch; }
-.api-base .eyebrow { margin-bottom: .35rem; }
-.api-sandbox-heading, .api-operation-heading, .api-contract-heading, .api-response-heading, .api-subheading, .graphql-workspace-heading, .webhook-section-heading { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
-.api-sandbox-heading .eyebrow, .api-operation-heading .eyebrow, .api-contract-heading .eyebrow, .api-response-heading .eyebrow, .graphql-workspace-heading .eyebrow, .webhook-section-heading .eyebrow { margin-bottom: .4rem; }
-.api-sandbox-heading h2, .api-contract-heading h2, .api-response-heading h3, .api-subheading h3, .graphql-workspace-heading h2, .webhook-section-heading h2 { margin: 0; }
-.api-endpoint-nav .eyebrow { margin-bottom: .4rem; }
-.api-request-controls .openapi-inputs { margin-bottom: 1rem; }
+.api-subheading, .graphql-workspace-heading, .webhook-section-heading { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
+.graphql-workspace-heading .eyebrow, .webhook-section-heading .eyebrow { margin-bottom: .4rem; }
+.api-subheading h3, .graphql-workspace-heading h2, .webhook-section-heading h2 { margin: 0; }
 .api-subheading { align-items: center; margin-bottom: .65rem; }
 .api-subheading button { min-height: 38px; padding: .4rem .65rem; font-size: .72rem; }
 .api-tabs { display: flex; overflow-x: auto; border: 1px solid var(--line); border-bottom: 0; }
 .api-tabs button { flex: 0 0 auto; min-height: 44px; padding: .5rem .8rem; border: 0; border-right: 1px solid var(--line); background: transparent; color: var(--muted); font: 800 .68rem/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; transform: none; }
 .api-tabs button[aria-selected="true"] { background: var(--panel-2); color: var(--paper); box-shadow: inset 0 -2px 0 var(--acid); }
-.related-interfaces .eyebrow { margin-bottom: .45rem; }
-
 .graphql-page-header, .webhook-page-header { max-width: 980px; margin-bottom: 2.5rem; }
 .graphql-workspace { margin-top: 1rem; }
 .graphql-examples { margin: 1rem 0 2.5rem; }
@@ -417,9 +410,9 @@
   .d1-table-panel { min-height: 0; }
   .d1-table-heading, .d1-editor-heading, .d1-sandbox { align-items: stretch; flex-direction: column; }
   .d1-table-heading .button-primary, .d1-sandbox > button { justify-content: center; width: 100%; }
-  .api-base, .api-token, .api-sandbox-heading, .api-operation-heading, .api-contract-heading, .api-response-heading, .graphql-workspace-heading, .graphql-shared, .webhook-section-heading { align-items: flex-start; flex-direction: column; }
-  .api-base button, .api-token button, .graphql-shared .button, .webhook-section-heading > button { justify-content: center; width: 100%; }
-  .api-response-heading p:last-child, .graphql-workspace-heading > p { text-align: left; }
+  .graphql-workspace-heading, .graphql-shared, .webhook-section-heading { align-items: flex-start; flex-direction: column; }
+  .graphql-shared .button, .webhook-section-heading > button { justify-content: center; width: 100%; }
+  .graphql-workspace-heading > p { text-align: left; }
   .graphql-control-grid { grid-template-columns: 1fr 1fr; }
   .webhook-connection { grid-template-columns: 1fr; }
   .webhook-connection dl { grid-column: auto; }
@@ -456,7 +449,6 @@
 .http-put, .http-patch { color: var(--violet); }
 .http-delete { color: #ff9d9d; }
 :root[data-theme="light"] .http-delete { color: #a11; }
-.rest-detail-block .table-wrap, .rest-schema .table-wrap { border-width: 1px 0 0; }
 .rest-code-samples { margin-top: 1.2rem; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .rest-code-samples > summary { display: flex; align-items: center; min-height: 48px; padding: 0 .2rem; list-style: none; cursor: pointer; font: 850 .75rem/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
 .rest-code-samples > summary::-webkit-details-marker { display: none; }

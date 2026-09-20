@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import assetManifest from '../docs/asset-manifest.json';
 import { graphqlResponse } from '../src/api/graphql';
 import { uiAssetResponse } from '../src/ui/assets';
 import { createDemoAccessToken, type IdentitySession } from '../src/lib/identity-session';
@@ -83,7 +84,14 @@ describe('GraphQL Yoga D1 interface', () => {
     expect(html).toContain('WizardGang GraphiQL');
     expect(html).toContain('/assets/graphiql.js');
     expect(html).toContain('/assets/graphql.worker.js');
+    expect(html).toContain(assetManifest.assets['scripts.graphiql']);
+    expect(html).toContain('data-config=');
+    expect(html).not.toMatch(/<script(?![^>]*\bsrc=)[^>]*>/);
     expect(html).not.toContain('unpkg.com');
+    const policy = response.headers.get('content-security-policy') ?? '';
+    expect(policy).toContain("style-src 'self' 'unsafe-inline'");
+    expect(policy).toContain('worker-src blob:');
+    expect(policy).not.toContain("script-src 'self' 'unsafe-inline'");
     const asset = await uiAssetResponse(new Request('https://demo.example/assets/graphiql.js'), environment, 'graphiql.js');
     expect(asset.status).toBe(200);
     expect(asset.headers.get('content-type')).toContain('text/javascript');

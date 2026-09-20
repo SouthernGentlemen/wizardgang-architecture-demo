@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { graphqlContent } from '../src/demos/graphql-console';
-import { openApiConsole } from '../src/demos/openapi-console';
+import { graphqlSection } from '../src/demos/graphql-presentation';
+import { restSection } from '../src/demos/rest-presentation';
 import { accessibilityLabResponse } from '../src/ui/accessibility-lab';
 import type { Env } from '../src/types';
 
@@ -57,27 +57,28 @@ describe('DEMO-237 shared WCAG 2.2 AAA remediation', () => {
   });
 
   it('uses a labeled first-party GraphQL runner instead of exposing the embedded editor', async () => {
-    const html = graphqlContent(env).body;
+    const html = graphqlSection(env).body;
     expect(html).toContain('Accessible query runner');
     expect(html).toContain('data-graphql-form');
-    expect(html).toContain('<label for="graphql-query">GraphQL query</label>');
-    expect(html).toContain('data-graphql-runner-status role="status" aria-live="polite"');
+    expect(html).toContain('<label for="graphql-graphql-query">GraphQL query</label>');
+    expect(html).toContain('data-graphql-runner-status="" role="status" aria-live="polite"');
     expect(html).toContain('tabindex="0">Run a query to inspect the JSON response.');
     expect(html).not.toContain('<iframe');
     expect(html).not.toContain('title="GraphiQL query editor"');
   });
 
   it('completes the OpenAPI tab pattern with relationships and keyboard behavior including RTL direction', () => {
-    const html = openApiConsole('/api/labs/rest-demo-openapi');
+    const html = restSection(env).body;
     expect(html).toContain('role="tablist"');
     expect(html).toContain('role="tab"');
-    expect(html).toContain('aria-controls="rest-demo-');
+    expect(html).toContain('aria-controls="rest-rest-demo-');
     expect(html).toContain('role="tabpanel"');
-    expect(html).toContain('aria-labelledby="rest-demo-');
-    expect(html).toContain("'ArrowLeft'");
-    expect(html).toContain("'ArrowRight'");
-    expect(html).toContain("'Home'");
-    expect(html).toContain("'End'");
-    expect(html).toContain("direction === 'rtl'");
+    expect(html).toContain('aria-labelledby="rest-rest-demo-');
+    const browser = readFileSync('src/browser/rest.ts', 'utf8');
+    expect(browser).toContain("'ArrowLeft'");
+    expect(browser).toContain("'ArrowRight'");
+    expect(browser).toContain("'Home'");
+    expect(browser).toContain("'End'");
+    expect(browser).toContain("direction === 'rtl'");
   });
 });

@@ -96,7 +96,7 @@ describe('DEMO-271 Demo Workbench MVP acceptance', () => {
   it('locks lifecycle, history, loading, error, keyboard, responsive, inspector, and REST invariants', () => {
     const registrySource = readFileSync('src/demos/demos-page.ts', 'utf8');
     const source = readFileSync('src/browser/demos.ts', 'utf8');
-    const rest = readFileSync('src/demos/openapi-console.ts', 'utf8');
+    const rest = readFileSync('src/demos/rest-presentation.tsx', 'utf8');
     const styles = readFileSync('src/styles/demos.css', 'utf8');
     for (const contract of [
       'return byId.has(id) ? id : config.defaultDemoId',

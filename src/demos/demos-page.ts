@@ -81,14 +81,14 @@ export const demonstrations: readonly ArchitectureDemo[] = [
     summary: 'Run the focused REST contract and inspect its OpenAPI description.',
     tryThis: 'Execute one REST operation and compare the result with its declared contract.',
     guide: ['Choose an operation in the live REST demo.', 'Execute it with the provided controls.', 'Use Evidence for the implementation source when you need deeper detail.'],
-    sourcePath: 'src/demos/api-page.ts', render: (_request, env, options) => restSection(env, options),
+    sourcePath: 'src/demos/rest-presentation.tsx', render: (_request, env, options) => restSection(env, options),
   },
   {
     id: 'graphql', label: 'GraphQL', selectorLabel: 'GraphQL', group: 'APIs', category: 'APIs', tier: 'primary',
     summary: 'Execute GraphQL operations against the live protocol endpoint.',
     tryThis: 'Run a query, change one field selection, and compare the returned shape.',
     guide: ['Start with the provided query.', 'Change one selected field.', 'Execute the operation and compare the response shape.'],
-    sourcePath: 'src/demos/graphql-console.ts', render: (_request, env, options) => graphqlSection(env, options),
+    sourcePath: 'src/demos/graphql-presentation.tsx', render: (_request, env, options) => graphqlSection(env, options),
   },
   {
     id: 'webhooks', label: 'Webhooks', selectorLabel: 'Webhooks', group: 'Integrations', category: 'Integrations', tier: 'primary',
