@@ -351,8 +351,8 @@
         "target": null
       },
       {
-        "name": "Route source: src/demos/assurance-workbench.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.ts",
+        "name": "Route source: src/demos/assurance-workbench.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.tsx",
         "target": null
       },
       {
@@ -1318,6 +1318,14 @@
       {
         "element": "script",
         "attributes": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"Loading assessment record…\",\"loaded\":\"Assessment record loaded.\",\"failed\":\"The assurance record could not be loaded.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"Partial\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
+      },
+      {
+        "element": "script",
+        "attributes": {
           "data-shell-browser": "",
           "data-messages": "{\"theme\":\"Theme\"}"
         }
@@ -1333,12 +1341,16 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/assurance-browser-lnHnDcys.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "b217d6c3b9141aef",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"Loading assessment record…\",\"loaded\":\"Assessment record loaded.\",\"failed\":\"The assurance record could not be loaded.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"Partial\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
       },
       {
         "src": "/assets/shell-browser-C9kDSUFQ.js",
@@ -2973,8 +2985,8 @@
         "target": null
       },
       {
-        "name": "Route source: src/demos/assurance-workbench.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.ts",
+        "name": "Route source: src/demos/assurance-workbench.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.tsx",
         "target": null
       },
       {
@@ -3940,6 +3952,14 @@
       {
         "element": "script",
         "attributes": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"Loading assessment record…\",\"loaded\":\"Assessment record loaded.\",\"failed\":\"The assurance record could not be loaded.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"Partial\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
+      },
+      {
+        "element": "script",
+        "attributes": {
           "data-shell-browser": "",
           "data-messages": "{\"theme\":\"Theme\"}"
         }
@@ -3955,12 +3975,16 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/assurance-browser-lnHnDcys.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "b217d6c3b9141aef",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"Loading assessment record…\",\"loaded\":\"Assessment record loaded.\",\"failed\":\"The assurance record could not be loaded.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"Partial\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
       },
       {
         "src": "/assets/shell-browser-C9kDSUFQ.js",
@@ -4336,8 +4360,8 @@
         "target": null
       },
       {
-        "name": "Route source: src/demos/assurance-workbench.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.ts",
+        "name": "Route source: src/demos/assurance-workbench.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.tsx",
         "target": null
       },
       {
@@ -5303,6 +5327,14 @@
       {
         "element": "script",
         "attributes": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"Loading assessment record…\",\"loaded\":\"Assessment record loaded.\",\"failed\":\"The assurance record could not be loaded.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"Partial\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
+      },
+      {
+        "element": "script",
+        "attributes": {
           "data-shell-browser": "",
           "data-messages": "{\"theme\":\"Theme\"}"
         }
@@ -5318,12 +5350,16 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/assurance-browser-lnHnDcys.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "b217d6c3b9141aef",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"Loading assessment record…\",\"loaded\":\"Assessment record loaded.\",\"failed\":\"The assurance record could not be loaded.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"Partial\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
       },
       {
         "src": "/assets/shell-browser-C9kDSUFQ.js",
@@ -5699,8 +5735,8 @@
         "target": null
       },
       {
-        "name": "Route source: src/demos/assurance-workbench.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.ts",
+        "name": "Route source: src/demos/assurance-workbench.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.tsx",
         "target": null
       },
       {
@@ -6666,6 +6702,14 @@
       {
         "element": "script",
         "attributes": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"Loading assessment record…\",\"loaded\":\"Assessment record loaded.\",\"failed\":\"The assurance record could not be loaded.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"Partial\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
+      },
+      {
+        "element": "script",
+        "attributes": {
           "data-shell-browser": "",
           "data-messages": "{\"theme\":\"Theme\"}"
         }
@@ -6681,12 +6725,16 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/assurance-browser-lnHnDcys.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "b217d6c3b9141aef",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"Loading assessment record…\",\"loaded\":\"Assessment record loaded.\",\"failed\":\"The assurance record could not be loaded.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"Partial\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
       },
       {
         "src": "/assets/shell-browser-C9kDSUFQ.js",
@@ -7062,8 +7110,8 @@
         "target": null
       },
       {
-        "name": "Route source: src/demos/assurance-workbench.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.ts",
+        "name": "Route source: src/demos/assurance-workbench.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/assurance-workbench.tsx",
         "target": null
       },
       {
@@ -8029,6 +8077,14 @@
       {
         "element": "script",
         "attributes": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"Loading assessment record…\",\"loaded\":\"Assessment record loaded.\",\"failed\":\"The assurance record could not be loaded.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"Partial\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
+      },
+      {
+        "element": "script",
+        "attributes": {
           "data-shell-browser": "",
           "data-messages": "{\"theme\":\"Theme\"}"
         }
@@ -8044,12 +8100,16 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/assurance-browser-lnHnDcys.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "b217d6c3b9141aef",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-assurance-browser": "",
+          "data-config": "<CONFIG_SHA256:3657b480f5ae6ea8>",
+          "data-messages": "{\"loading\":\"Loading assessment record…\",\"loaded\":\"Assessment record loaded.\",\"failed\":\"The assurance record could not be loaded.\",\"statusLabels\":{\"pass\":\"Pass\",\"partial\":\"Partial\",\"gap\":\"Gap\",\"not-applicable\":\"N/A\"}}"
+        }
       },
       {
         "src": "/assets/shell-browser-C9kDSUFQ.js",

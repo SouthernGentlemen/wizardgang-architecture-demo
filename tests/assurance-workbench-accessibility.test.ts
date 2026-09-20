@@ -30,8 +30,8 @@ describe('DEMO-286 accessible assurance workbench interaction', () => {
     expect((html.match(/class="assurance-framework-tab"[^>]+aria-selected="true"/g) ?? [])).toHaveLength(1);
     expect((html.match(/class="assurance-framework-tab"[^>]+tabindex="0"/g) ?? [])).toHaveLength(1);
     expect((html.match(/aria-controls="assurance-workbench-panel"/g) ?? [])).toHaveLength(3);
-    expect(html).toContain('<select data-assurance-section>');
-    expect(html).toContain('data-assurance-status role="status" aria-live="polite"');
+    expect(html).toContain('<select data-assurance-section="">');
+    expect(html).toContain('data-assurance-status="" role="status" aria-live="polite"');
     expect(html).toContain('role="tablist" aria-label="Record inspector"');
     expect(html).toContain('role="tabpanel"');
   });
@@ -45,19 +45,19 @@ describe('DEMO-286 accessible assurance workbench interaction', () => {
   });
 
   it('implements conventional keyboard, history, loading, announcements, and stale-load controls', () => {
-    const source = readFileSync('src/demos/assurance-workbench.ts', 'utf8');
-    expect(source).toContain("['ArrowLeft','ArrowRight','Home','End']");
-    expect(source).toContain("window.addEventListener('hashchange',applySelection)");
-    expect(source).toContain("window.addEventListener('popstate',applySelection)");
-    expect(source).toContain("detail.setAttribute('aria-busy','true')");
+    const source = readFileSync('src/browser/assurance.ts', 'utf8');
+    expect(source).toContain("['ArrowLeft', 'ArrowRight', 'Home', 'End']");
+    expect(source).toContain("window.addEventListener('hashchange', applySelection)");
+    expect(source).toContain("window.addEventListener('popstate', applySelection)");
+    expect(source).toContain("detail.setAttribute('aria-busy', 'true')");
     expect(source).toContain('controller.abort()');
-    expect(source).toContain('if(activeId!==id||local.signal.aborted)return');
-    expect(source).toContain('status.textContent=message');
+    expect(source).toContain('activeId !== id || local.signal.aborted');
+    expect(source).toContain('status.textContent = message');
     expect(source).not.toContain('detail.focus');
   });
 
   it('keeps record/inspector content bounded on narrow layouts and never relies on color alone for status', () => {
-    const source = readFileSync('src/demos/assurance-workbench.ts', 'utf8');
+    const source = readFileSync('src/demos/assurance-workbench.tsx', 'utf8');
     const styles = readFileSync('src/styles/shell.css', 'utf8');
     expect(styles).toContain('.assurance-workbench{min-width:0;max-width:100%');
     expect(styles).toContain('.assurance-record-pane{min-width:0}');

@@ -177,7 +177,12 @@ function normalizeVolatile(value: string | null | undefined): string {
 function dataAttributes(element: Element): Record<string, string> {
   return Object.fromEntries([...element.attributes]
     .filter((attribute) => attribute.name.startsWith('data-'))
-    .map((attribute) => [attribute.name, normalizeVolatile(attribute.value)]));
+    .map((attribute) => [
+      attribute.name,
+      attribute.name === 'data-config'
+        ? `<CONFIG_SHA256:${inlineFingerprint(attribute.value)}>`
+        : normalizeVolatile(attribute.value),
+    ]));
 }
 
 function elementText(element: Element): string {

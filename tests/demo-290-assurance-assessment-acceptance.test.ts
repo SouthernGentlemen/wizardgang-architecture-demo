@@ -52,9 +52,15 @@ function visibleText(markup: string): string {
 }
 
 function embeddedSummaries(html: string): Array<{ id: string; framework: string; section: string; status: string }> {
-  const match = html.match(/const records=(\[[\s\S]*?\]);\nconst frameworkOrder=/);
+  const match = html.match(/<script\b[^>]*\bdata-assurance-browser=""[^>]*\bdata-config="([^"]+)"/);
   if (!match) throw new Error('The assurance workbench did not publish its canonical record summaries.');
-  return JSON.parse(match[1]);
+  const serialized = match[1]
+    .replaceAll('&quot;', '"')
+    .replaceAll('&#x27;', "'")
+    .replaceAll('&lt;', '<')
+    .replaceAll('&gt;', '>')
+    .replaceAll('&amp;', '&');
+  return JSON.parse(serialized).records;
 }
 
 function countPosture(records: Array<{ status: string }>) {

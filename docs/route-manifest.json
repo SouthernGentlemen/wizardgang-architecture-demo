@@ -35,8 +35,8 @@
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
-      "module": "src/demos/assurance-workbench.ts",
-      "exportName": "assuranceWorkbenchContent",
+      "module": "src/demos/assurance-workbench.tsx",
+      "exportName": "renderAssuranceWorkbench",
       "tests": [
         "tests/assurance-workbench.test.ts",
         "tests/assurance-workbench-accessibility.test.ts"
@@ -87,7 +87,7 @@
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
-      "module": "src/demos/assurance-workbench.ts",
+      "module": "src/demos/assurance-workbench.tsx",
       "exportName": "assurancePresentationResponse",
       "tests": [
         "tests/assurance-workbench.test.ts",
