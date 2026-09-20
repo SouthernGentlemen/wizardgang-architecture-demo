@@ -1,12 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { securityContent } from '../src/demos/security-page';
+import { loadSecurityPageData, renderSecurity } from '../src/ui/security';
 import {
   applicationRouteRegistry,
   routeUrl,
   type ApplicationRouteDeclaration,
 } from '../src/routing/application-routes';
 import { primaryNavigation, sitemapPaths } from '../src/routing/navigation';
-import { renderPage } from '../src/ui/page';
 import type { Env } from '../src/types';
 import { retiredOperationsHtmlPathname } from './fixtures/removed-html-pathnames';
 
@@ -80,7 +79,7 @@ describe('public frontend shell', () => {
   });
 
   it('organizes Security around reporting, disclosure, and published advisories', async () => {
-    const html = await renderPage(env, { ...securityContent(env), routeId: 'security.index' }).text();
+    const html = await renderSecurity(env, loadSecurityPageData()).text();
     expect(html).toContain('<h2 id="report-vulnerability-heading">Report vulnerability</h2>');
     expect(html).toContain('<h2 id="disclosure-process-heading">Disclosure process</h2>');
     expect(html).toContain('<h2 id="published-advisories-heading">Published advisories</h2>');

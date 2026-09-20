@@ -49,6 +49,7 @@ function browserAssets(): Plugin {
           'styles.shell': stylesheet('shell'),
           'styles.demos': stylesheet('demos'),
           'scripts.shell': browserModule('shell-browser'),
+          'scripts.admin': browserModule('admin-browser'),
           'vendor.graphiql.script': '/assets/graphiql.js',
           'vendor.graphiql.styles': '/assets/graphiql.css',
           'vendor.monaco.editor': '/assets/editor.worker.js',
@@ -85,6 +86,7 @@ export default defineConfig({
         shell: resolve(ROOT, 'src/styles/shell.css'),
         demos: resolve(ROOT, 'src/styles/demos.css'),
         'shell-browser': resolve(ROOT, 'src/browser/shell.ts'),
+        'admin-browser': resolve(ROOT, 'src/browser/admin.ts'),
       },
       output: {
         assetFileNames: 'assets/[name]-[hash][extname]',

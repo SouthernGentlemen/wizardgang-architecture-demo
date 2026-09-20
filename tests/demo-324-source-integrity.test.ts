@@ -6,11 +6,11 @@ import { accessibilityContent } from '../src/demos/accessibility-page';
 import { safeError } from '../src/lib/http';
 import { applicationRouteRegistry } from '../src/routing/application-routes';
 import type { Env } from '../src/types';
-import { renderHome } from '../src/ui/home';
+import { loadHomePageData, renderHome } from '../src/ui/home';
 
 const root = process.cwd();
 const srcRoot = path.join(root, 'src');
-const sourceModuleImports = import.meta.glob('../src/**/*.ts');
+const sourceModuleImports = import.meta.glob('../src/**/*.{ts,tsx}');
 const toolingOnlyModules = new Set([
   'src/routing/artifacts.ts',
 ]);
@@ -80,6 +80,7 @@ function reachableSourceModules(): Set<string> {
   const pending = [
     path.join(srcRoot, 'index.ts'),
     path.join(srcRoot, 'browser', 'shell.ts'),
+    path.join(srcRoot, 'browser', 'admin.ts'),
   ];
   while (pending.length > 0) {
     const filePath = pending.pop();
@@ -137,9 +138,9 @@ describe('DEMO-324 source integrity', () => {
   });
 
   it('names the live homepage renderer in the homepage footer route source', async () => {
-    const response = await renderHome(environment);
+    const response = renderHome(environment, await loadHomePageData(environment));
     const html = await response.text();
-    expect(html).toContain('Route source<span class="sr-only">: src/ui/home.ts</span>');
+    expect(html).toContain('Route source<span class="sr-only">: src/ui/home.tsx</span>');
     expect(html).not.toContain('Route source<span class="sr-only">: src/ui/page.ts</span>');
   });
 

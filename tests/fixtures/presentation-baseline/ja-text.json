@@ -551,7 +551,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "ルートのソース: src/demos/security-page.ts"
+        "name": "ルートのソース: src/ui/security.tsx"
       },
       {
         "element": "a",
@@ -657,7 +657,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "ルートのソース: src/ui/home.ts"
+        "name": "ルートのソース: src/ui/home.tsx"
       },
       {
         "element": "a",
@@ -2930,7 +2930,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "ルートのソース: src/ui/home.ts"
+        "name": "ルートのソース: src/ui/home.tsx"
       },
       {
         "element": "a",
@@ -3113,7 +3113,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "ルートのソース: src/ui/admin.ts"
+        "name": "ルートのソース: src/ui/admin.tsx"
       },
       {
         "element": "a",
@@ -3250,7 +3250,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "ルートのソース: src/ui/admin.ts"
+        "name": "ルートのソース: src/ui/offline.tsx"
       },
       {
         "element": "a",

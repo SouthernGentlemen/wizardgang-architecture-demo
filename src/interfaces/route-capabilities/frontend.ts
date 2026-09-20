@@ -7,12 +7,12 @@ export const frontendRouteCapability = defineInterfaceIdentityCapability('interf
     methods: ['GET'],
     kind: 'page',
     handler: async (_request, { env }) => {
-      const { renderHome } = await import('../../ui/home');
-      return renderHome(env);
+      const { loadHomePageData, renderHome } = await import('../../ui/home');
+      return renderHome(env, await loadHomePageData(env));
     },
     title: 'Architecture demo index',
     description: 'Primary public frontend entry point assembled from registered page metadata.',
-    sourceModule: 'src/ui/home.ts',
+    sourceModule: 'src/ui/home.tsx',
     sourceExport: 'renderHome',
     tests: ['tests/router.test.ts', 'tests/interface.test.ts', 'tests/application-route-registry.test.ts', 'tests/canonical-frontend-routes.test.ts'],
     page: {

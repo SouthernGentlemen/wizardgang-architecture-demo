@@ -1,4 +1,5 @@
 import type { Env } from '../types';
+import type { ReactNode } from 'react';
 import { routeUrl } from '../routing/application-routes';
 import { escapeHtml } from '../lib/html';
 import { sourceUrl } from '../lib/github';
@@ -9,11 +10,13 @@ import {
   DEFAULT_DESCRIPTION,
   ROOT_ROUTE_ID,
   renderDocument,
+  type DocumentContent,
   type PageContent,
   type PageContentOptions,
+  type ReactPageContent,
 } from './document';
 
-export type { HeadMetadata, PageContent, PageContentOptions } from './document';
+export type { HeadMetadata, PageContent, PageContentOptions, ReactPageContent } from './document';
 
 export function pageContent(
   env: Env,
@@ -32,7 +35,24 @@ export function pageContent(
   };
 }
 
-function documentResponse(env: Env, content: PageContent): Response {
+export function reactPageContent(
+  env: Env,
+  title: string,
+  body: ReactNode,
+  options: PageContentOptions = {},
+): ReactPageContent {
+  const localization = localizationForEnv(env);
+  const { description = DEFAULT_DESCRIPTION, ...contentOptions } = options;
+  return {
+    title: localization.exact(title),
+    description: localization.exact(description),
+    body,
+    ...contentOptions,
+    canonicalPath: contentOptions.canonicalPath ?? routeUrl(ROOT_ROUTE_ID),
+  };
+}
+
+function documentResponse(env: Env, content: DocumentContent): Response {
   const localization = localizationForEnv(env);
   const html = renderDocument(env, content, localization);
   const headers = withSecurityHeaders(new Headers({ 'content-type': 'text/html; charset=utf-8' }));
@@ -48,6 +68,10 @@ export function renderPage(env: Env, content: PageContent): Response {
   return documentResponse(env, content);
 }
 
+export function renderReactPage(env: Env, content: ReactPageContent): Response {
+  return documentResponse(env, content);
+}
+
 export function pageResponse(
   env: Env,
   title: string,
@@ -55,6 +79,15 @@ export function pageResponse(
   options: PageContentOptions = {},
 ): Response {
   return renderPage(env, pageContent(env, title, body, options));
+}
+
+export function reactPageResponse(
+  env: Env,
+  title: string,
+  body: ReactNode,
+  options: PageContentOptions = {},
+): Response {
+  return renderReactPage(env, reactPageContent(env, title, body, options));
 }
 
 export interface ReferenceLink {

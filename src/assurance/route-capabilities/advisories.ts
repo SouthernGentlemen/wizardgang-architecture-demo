@@ -5,16 +5,13 @@ export const advisoriesRouteCapability = defineAssuranceRouteCapability({
   pattern: '/security',
   html: {
     handler: async (_request, env) => {
-      const [{ securityContent }, { renderPage }] = await Promise.all([
-        import('../../demos/security-page'),
-        import('../../ui/page'),
-      ]);
-      return renderPage(env, { ...securityContent(env), routeId: 'security.index' });
+      const { loadSecurityPageData, renderSecurity } = await import('../../ui/security');
+      return renderSecurity(env, loadSecurityPageData());
     },
     offline: 'available',
     source: {
-      module: 'src/demos/security-page.ts',
-      exportName: 'securityContent',
+      module: 'src/ui/security.tsx',
+      exportName: 'renderSecurity',
       tests: ['tests/security.test.ts', 'tests/router.test.ts'],
     },
     page: {

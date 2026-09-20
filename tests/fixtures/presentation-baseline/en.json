@@ -1530,7 +1530,7 @@
       },
       {
         "name": "Security page implementation",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/security-page.ts",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/ui/security.tsx",
         "target": null
       },
       {
@@ -1589,8 +1589,8 @@
         "target": null
       },
       {
-        "name": "Route source: src/demos/security-page.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/security-page.ts",
+        "name": "Route source: src/ui/security.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/ui/security.tsx",
         "target": null
       },
       {
@@ -1834,8 +1834,8 @@
         "target": null
       },
       {
-        "name": "Route source: src/ui/home.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/ui/home.ts",
+        "name": "Route source: src/ui/home.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/ui/home.tsx",
         "target": null
       },
       {
@@ -9567,8 +9567,8 @@
         "target": null
       },
       {
-        "name": "Route source: src/ui/home.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/ui/home.ts",
+        "name": "Route source: src/ui/home.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/ui/home.tsx",
         "target": null
       },
       {
@@ -9777,7 +9777,7 @@
       },
       {
         "name": "Admin UI source",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/ui/admin.ts",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/ui/admin.tsx",
         "target": null
       },
       {
@@ -9831,8 +9831,8 @@
         "target": null
       },
       {
-        "name": "Route source: src/ui/admin.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/ui/admin.ts",
+        "name": "Route source: src/ui/admin.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/ui/admin.tsx",
         "target": null
       },
       {
@@ -9961,6 +9961,13 @@
       {
         "element": "script",
         "attributes": {
+          "data-admin-browser": "",
+          "data-messages": "{\"emptyMessage\":\"No public message supplied.\",\"confirm\":\"Continue?\"}"
+        }
+      },
+      {
+        "element": "script",
+        "attributes": {
           "data-shell-browser": "",
           "data-messages": "{\"theme\":\"Theme\"}"
         }
@@ -9976,12 +9983,15 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/admin-browser-rVkH4YRt.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "9e1a78c1ce8c4e8e",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-admin-browser": "",
+          "data-messages": "{\"emptyMessage\":\"No public message supplied.\",\"confirm\":\"Continue?\"}"
+        }
       },
       {
         "src": "/assets/shell-browser-C9kDSUFQ.js",
@@ -10143,8 +10153,8 @@
         "target": null
       },
       {
-        "name": "Route source: src/ui/admin.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/ui/admin.ts",
+        "name": "Route source: src/ui/offline.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/ui/offline.tsx",
         "target": null
       },
       {

@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 const documentSource = readFileSync('src/ui/document.tsx', 'utf8');
-const homeSource = readFileSync('src/ui/home.ts', 'utf8');
+const homeSource = readFileSync('src/ui/home.tsx', 'utf8');
 const versionProofSource = readFileSync('src/ui/version-proof.ts', 'utf8');
 const stylesSource = readFileSync('src/styles/shell.css', 'utf8');
 
@@ -15,7 +15,7 @@ describe('DEMO-277 site footer contract', () => {
     expect(documentSource).toContain("import { versionProof } from './version-proof';");
     expect(homeSource).toContain("import { versionProof } from './version-proof';");
     expect(documentSource).toContain('const version = versionProof(env);');
-    expect(homeSource).toContain('const version = versionProof(env);');
+    expect(homeSource).toContain('return { state, availability, version: versionProof(env) };');
     expect(documentSource).not.toContain('DEPLOYED_VERSION');
     expect(documentSource).not.toContain('DEPLOYED_SHA');
     expect(homeSource).not.toContain('DEPLOYED_VERSION');
