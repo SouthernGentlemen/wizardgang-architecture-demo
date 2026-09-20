@@ -95,14 +95,14 @@ export const demonstrations: readonly ArchitectureDemo[] = [
     summary: 'Generate and inspect signed synthetic webhook delivery behavior.',
     tryThis: 'Send the synthetic delivery and inspect how its signature is validated.',
     guide: ['Use the synthetic webhook controls.', 'Send a bounded delivery.', 'Inspect the verification result shown by the live demo.'],
-    sourcePath: 'src/demos/webhook-console.ts', render: (_request, env, options) => webhooksSection(env, options),
+    sourcePath: 'src/demos/webhook-presentation.tsx', render: (_request, env, options) => webhooksSection(env, options),
   },
   {
     id: 'identity', label: 'Identity', selectorLabel: 'Identity', group: 'Identity', category: 'Identity', tier: 'primary',
     summary: 'Inspect the OAuth, OIDC, SAML, session, and authorization behavior available here.',
     tryThis: 'Choose one identity boundary and trace the controls that apply to it.',
     guide: ['Choose one identity or authorization boundary.', 'Inspect the available protocol behavior.', 'Use Evidence to open the implementation source.'],
-    sourcePath: 'src/demos/identity-page.ts', render: (_request, env, options) => identitySection(env, options),
+    sourcePath: 'src/demos/identity-presentation.tsx', render: (_request, env, options) => identitySection(env, options),
   },
   {
     id: 'mcp', label: 'MCP', selectorLabel: 'MCP', group: 'AI / MCP', category: 'AI', tier: 'primary',

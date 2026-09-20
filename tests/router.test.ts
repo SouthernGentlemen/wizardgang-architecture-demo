@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { architectureMapEntries } from '../src/routing/navigation';
 import { routeRequest } from '../src/router';
@@ -164,7 +165,9 @@ describe('public route contract', () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/api/demos/identity', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     for (const anchor of ['identity-oauth', 'identity-sso', 'identity-saml']) expect(html).toContain(`id="${anchor}"`);
-    for (const endpoint of ['/auth/microsoft', '/auth/google', '/auth/github', '/auth/saml', '/auth/session', '/auth/authorize', '/auth/saml/metadata']) expect(html).toContain(endpoint);
+    for (const endpoint of ['/auth/microsoft', '/auth/google', '/auth/github', '/auth/saml', '/auth/saml/metadata']) expect(html).toContain(endpoint);
+    const identityBrowser = readFileSync('src/browser/identity.ts', 'utf8');
+    for (const endpoint of ['/auth/session', '/auth/authorize', '/auth/logout']) expect(identityBrowser).toContain(endpoint);
     for (const view of ['Provider payload', 'Normalized identity', 'Authorization', 'Protocol']) expect(html).toContain(view);
     expect(html).not.toContain('visitor@example.test');
 

@@ -57,6 +57,8 @@ function browserAssets(): Plugin {
           'scripts.rest': browserModule('rest-browser'),
           'scripts.graphql': browserModule('graphql-browser'),
           'scripts.graphiql': browserModule('graphiql-browser'),
+          'scripts.webhooks': browserModule('webhooks-browser'),
+          'scripts.identity': browserModule('identity-browser'),
           'vendor.graphiql.script': '/assets/graphiql.js',
           'vendor.graphiql.styles': '/assets/graphiql.css',
           'vendor.monaco.editor': '/assets/editor.worker.js',
@@ -102,6 +104,8 @@ export default defineConfig({
         'rest-browser': resolve(ROOT, 'src/browser/rest.ts'),
         'graphql-browser': resolve(ROOT, 'src/browser/graphql.ts'),
         'graphiql-browser': resolve(ROOT, 'src/browser/graphiql.ts'),
+        'webhooks-browser': resolve(ROOT, 'src/browser/webhooks.ts'),
+        'identity-browser': resolve(ROOT, 'src/browser/identity.ts'),
       },
       output: {
         assetFileNames: 'assets/[name]-[hash][extname]',

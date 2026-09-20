@@ -125,9 +125,9 @@ describe('composable demo presentations', () => {
     const d1Browser = readFileSync('src/browser/d1.ts', 'utf8');
     expect(d1Browser).toContain('ArrowLeft');
     expect(d1Browser).toContain('ArrowRight');
-    const identity = sections.find((candidate) => candidate.scope === 'identity');
-    expect(identity?.body).toContain('ArrowLeft');
-    expect(identity?.body).toContain('ArrowRight');
+    const identityBrowser = readFileSync('src/browser/identity.ts', 'utf8');
+    expect(identityBrowser).toContain('ArrowLeft');
+    expect(identityBrowser).toContain('ArrowRight');
   });
 
   it('parameterizes presentation ownership while preserving machine and protocol targets', async () => {
@@ -142,7 +142,7 @@ describe('composable demo presentations', () => {
     expect(i18n.page.canonicalPath).toBe(presentationPath);
     expect(identity.body).not.toContain(`${routeUrl('demos.index')}#identity`);
     expect(i18n.body).not.toContain(`${routeUrl('demos.index')}#i18n`);
-    expect(identity.body).toContain('/auth/session');
+    expect(readFileSync('src/browser/identity.ts', 'utf8')).toContain('/auth/session');
     expect(graphql.body).toContain('/graphql');
     expect(mcp.body).toContain(MCP_SERVER_PATH);
 
@@ -153,7 +153,7 @@ describe('composable demo presentations', () => {
       [readFileSync('src/browser/d1.ts', 'utf8'), '/api/labs/d1-'],
       [readFileSync('src/browser/r2.ts', 'utf8'), '/api/labs/r2-files'],
       [restSection(env).body, '/api/labs/rest-demo-records'],
-      [webhooksSection(env).body, '/api/labs/webhook-demo'],
+      [readFileSync('src/browser/webhooks.ts', 'utf8'), '/api/labs/webhook-demo'],
       [accessibilitySection(request, env).body, '/api/labs/accessibility'],
     ] as const;
     for (const [body, endpoint] of endpointEvidence) expect(body).toContain(endpoint);
