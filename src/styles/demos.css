@@ -300,8 +300,6 @@
 .identity-inspector-panel details > summary { min-height: 44px; color: var(--muted); font: 800 .7rem/1 var(--mono); text-transform: uppercase; }
 .identity-federation { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2rem; margin: 0 0 1rem; border-left: 4px solid var(--violet); }
 .identity-federation p:not(.eyebrow) { max-width: 68ch; color: var(--muted); }
-.identity-implementation-body .reference-links { align-content: start; margin: 0; }
-
 .info-card, .action-card { padding: 1.35rem; border: 1px solid var(--line); border-radius: 0; background: linear-gradient(145deg, rgb(120 232 255 / 3%), transparent 48%), var(--panel); }
 .info-card h2, .action-card h2 { font-size: 1.3rem; }
 .info-card p, .action-card p { color: var(--muted); }

@@ -2583,7 +2583,7 @@
         "element": "script",
         "attributes": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:c54beb02101a8f48>",
+          "data-config": "<CONFIG_SHA256:5221d9cff9f5364c>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -2612,7 +2612,7 @@
         "inlineSha256": null,
         "data": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:c54beb02101a8f48>",
+          "data-config": "<CONFIG_SHA256:5221d9cff9f5364c>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -2638,7 +2638,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-CC39o58h.css",
+        "href": "/assets/demos-DszcmNlC.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -8781,7 +8781,7 @@
         "element": "script",
         "attributes": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:c54beb02101a8f48>",
+          "data-config": "<CONFIG_SHA256:5221d9cff9f5364c>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -8810,7 +8810,7 @@
         "inlineSha256": null,
         "data": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:c54beb02101a8f48>",
+          "data-config": "<CONFIG_SHA256:5221d9cff9f5364c>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -8836,7 +8836,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-CC39o58h.css",
+        "href": "/assets/demos-DszcmNlC.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -9479,7 +9479,7 @@
         "element": "script",
         "attributes": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:c54beb02101a8f48>",
+          "data-config": "<CONFIG_SHA256:5221d9cff9f5364c>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -9508,7 +9508,7 @@
         "inlineSha256": null,
         "data": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:c54beb02101a8f48>",
+          "data-config": "<CONFIG_SHA256:5221d9cff9f5364c>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -9534,7 +9534,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-CC39o58h.css",
+        "href": "/assets/demos-DszcmNlC.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -13173,7 +13173,9 @@
       {
         "element": "div",
         "attributes": {
-          "data-demo-section": "webhooks"
+          "data-demo-section": "webhooks",
+          "data-demo-browser-module": "/assets/webhooks-browser-CpVRSZGY.js",
+          "data-config": "<CONFIG_SHA256:cf3a20a492c62339>"
         }
       },
       {
@@ -13249,16 +13251,7 @@
         }
       }
     ],
-    "scripts": [
-      {
-        "src": null,
-        "type": "classic",
-        "async": false,
-        "defer": false,
-        "inlineSha256": "f2f9ce6e54b7e177",
-        "data": {}
-      }
-    ],
+    "scripts": [],
     "stylesheets": []
   },
   "demo:identity": {
@@ -13323,7 +13316,7 @@
     "headings": [
       {
         "level": 2,
-        "text": "Authentication & SSO",
+        "text": "المصادقة وSSO",
         "id": null
       },
       {
@@ -13385,7 +13378,7 @@
     "links": [
       {
         "name": "View source ↗",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/identity-page.ts",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/identity-presentation.tsx",
         "target": null
       },
       {
@@ -13453,7 +13446,9 @@
       {
         "element": "div",
         "attributes": {
-          "data-demo-section": "identity"
+          "data-demo-section": "identity",
+          "data-demo-browser-module": "/assets/identity-browser-DeWArxcc.js",
+          "data-config": "<CONFIG_SHA256:fed250044c73fd15>"
         }
       },
       {
@@ -13696,16 +13691,7 @@
         }
       }
     ],
-    "scripts": [
-      {
-        "src": null,
-        "type": "classic",
-        "async": false,
-        "defer": false,
-        "inlineSha256": "8502a1dbdf1c415c",
-        "data": {}
-      }
-    ],
+    "scripts": [],
     "stylesheets": []
   },
   "demo:mcp": {

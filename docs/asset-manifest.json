@@ -2,7 +2,7 @@
   "version": 1,
   "assets": {
     "styles.shell": "/assets/shell-CTZBlQwr.css",
-    "styles.demos": "/assets/demos-CC39o58h.css",
+    "styles.demos": "/assets/demos-DszcmNlC.css",
     "scripts.shell": "/assets/shell-browser-C9kDSUFQ.js",
     "scripts.admin": "/assets/admin-browser-rVkH4YRt.js",
     "scripts.assurance": "/assets/assurance-browser-lnHnDcys.js",
@@ -12,6 +12,8 @@
     "scripts.rest": "/assets/rest-browser-Do1nkLrS.js",
     "scripts.graphql": "/assets/graphql-browser-Dwpt-GEr.js",
     "scripts.graphiql": "/assets/graphiql-browser-DrfIfWo6.js",
+    "scripts.webhooks": "/assets/webhooks-browser-CpVRSZGY.js",
+    "scripts.identity": "/assets/identity-browser-DeWArxcc.js",
     "vendor.graphiql.script": "/assets/graphiql.js",
     "vendor.graphiql.styles": "/assets/graphiql.css",
     "vendor.monaco.editor": "/assets/editor.worker.js",
