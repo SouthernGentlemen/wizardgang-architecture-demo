@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "assets": {
+    "styles.shell": "/assets/shell-CTZBlQwr.css",
+    "styles.demos": "/assets/demos-DPmliQix.css",
+    "vendor.graphiql.script": "/assets/graphiql.js",
+    "vendor.graphiql.styles": "/assets/graphiql.css",
+    "vendor.monaco.editor": "/assets/editor.worker.js",
+    "vendor.monaco.json": "/assets/json.worker.js",
+    "vendor.monaco.graphql": "/assets/graphql.worker.js",
+    "vendor.axe": "/assets/axe.min.js",
+    "social.card": "/assets/og.png"
+  }
+}

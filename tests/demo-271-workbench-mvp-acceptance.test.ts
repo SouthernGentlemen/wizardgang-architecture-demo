@@ -96,6 +96,7 @@ describe('DEMO-271 Demo Workbench MVP acceptance', () => {
   it('locks lifecycle, history, loading, error, keyboard, responsive, inspector, and REST invariants', () => {
     const source = readFileSync('src/demos/demos-page.ts', 'utf8');
     const rest = readFileSync('src/demos/openapi-console.ts', 'utf8');
+    const styles = readFileSync('src/styles/demos.css', 'utf8');
     for (const contract of [
       "const DEFAULT_DEMO_ID = 'd1'", 'return byId.has(id) ? id : defaultDemoId',
       'if (controller) controller.abort()', "section.dispatchEvent(new CustomEvent('demo:deactivate'))",
@@ -104,10 +105,13 @@ describe('DEMO-271 Demo Workbench MVP acceptance', () => {
       "window.addEventListener('popstate', applySelection)", "renderState('Loading ' + demo.label + ' demonstration…')",
       "renderState(error instanceof Error ? error.message : 'The demonstration could not be loaded.', 'alert', true, id)",
       "retry.textContent = 'Retry demo'", "['ArrowLeft', 'ArrowRight', 'Home', 'End']",
-      "type InspectorMode = 'Guide' | 'Request' | 'Evidence'", 'grid-template-columns:minmax(0,7fr) minmax(16rem,3fr)',
+      "type InspectorMode = 'Guide' | 'Request' | 'Evidence'",
+    ]) expect(source).toContain(contract);
+    for (const contract of [
+      'grid-template-columns:minmax(0,7fr) minmax(16rem,3fr)',
       '@media(max-width:900px){.demo-workbench-layout{grid-template-columns:minmax(0,1fr)}',
       '.demo-evidence-list code{direction:ltr;unicode-bidi:isolate',
-    ]) expect(source).toContain(contract);
+    ]) expect(styles).toContain(contract);
     expect(demonstrations.filter((demo) => demo.request).map((demo) => demo.id)).toEqual(['d1']);
     expect(rest).toContain('data-rest-operation-browser');
     expect(rest).toContain('data-rest-full-openapi');

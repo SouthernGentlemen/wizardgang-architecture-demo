@@ -55,10 +55,15 @@ export interface DurableObjectNamespace {
   get(id: unknown): DurableObjectStub;
 }
 
+export interface AssetsBinding {
+  fetch(request: Request): Promise<Response>;
+}
+
 export interface Env {
   DEMO_DB: D1Database;
   DEMO_R2?: R2Bucket;
   DEMO_COORDINATOR?: DurableObjectNamespace;
+  ASSETS?: AssetsBinding;
   GITHUB_REPO_URL: string;
   GITHUB_BRANCH: string;
 

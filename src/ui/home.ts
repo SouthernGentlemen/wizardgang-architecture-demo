@@ -11,10 +11,6 @@ interface AvailabilityProof {
   detail: string;
 }
 
-const homeStyles = `<style>
-.home-actions>.button-primary{border-color:var(--acid);background:var(--acid);color:var(--button-text)}
-.home-actions>.button-primary:hover{border-color:var(--paper);background:var(--acid);color:var(--button-text)}
-</style>`;
 
 async function currentState(env: Env): Promise<string> {
   try {
@@ -86,6 +82,5 @@ export async function renderHome(env: Env): Promise<Response> {
     routeId: 'interfaces.frontend.index',
     canonicalPath: home,
     description: 'A live Cloudflare architecture laboratory with executable demonstrations and inspectable assurance evidence.',
-    headExtra: homeStyles,
   });
 }

@@ -1,5 +1,5 @@
-import axeSource from 'axe-core/axe.min.js';
 import { methodNotAllowed, withSecurityHeaders } from '../lib/http';
+import { browserAssetPath } from './asset-map';
 
 export type AccessibilityMode = 'accessible' | 'broken';
 
@@ -45,15 +45,7 @@ function annotatedFailures(): string {
 function labHtml(mode: AccessibilityMode): string {
   const broken = mode === 'broken';
   const app = broken ? annotatedFailures() : accessibleApp();
-  // Wrangler loads the locked minified asset through its Text rule; Vitest's ESM
-  // loader exposes the package object, whose `source` field contains the same text.
-  const loadedAxe = axeSource as unknown as string | { source: string };
-  const axe = (typeof loadedAxe === 'string' ? loadedAxe : loadedAxe.source).replace(/<\/script/gi, '<\\/script');
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${broken ? 'Annotated failures' : 'Accessible'} WCAG teaching frame</title><style>
-  *{box-sizing:border-box}body{margin:0;padding:1rem 1rem 5rem;background:#fff;color:#17151b;font:16px/1.5 system-ui,sans-serif}a{color:#174ea6}.skip{position:absolute;top:-80px}.skip:focus{top:.5rem}header{display:flex;justify-content:space-between;gap:1rem;padding:.8rem;border-bottom:2px solid #29262e}main{max-width:42rem;margin:1.25rem auto}.product{display:block;width:120px;height:70px;margin-bottom:1rem}form{display:grid;gap:.55rem;max-width:26rem}input,button{min-height:44px;padding:.6rem;border:2px solid #4c4653;background:#fff;color:#17151b;font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #005fcc;outline-offset:3px}li{display:flex;justify-content:space-between;gap:1rem;align-items:center;padding:.8rem;border:1px solid #777}pre{max-width:100%;overflow:auto;padding:.8rem;border:1px solid #777;background:#f6f6f6;color:#17151b;white-space:pre-wrap}footer{position:fixed;inset:auto 0 0;padding:.7rem 1rem;background:#17151b;color:#fff}.overlay{position:fixed;inset:0;display:grid;place-items:center;padding:1rem;background:rgb(0 0 0 / 65%)}.overlay[hidden]{display:none}.overlay>div{width:min(28rem,100%);padding:1.2rem;background:#fff;color:#17151b}.overlay button{margin-right:.5rem}
-  @media(max-width:320px){body{padding-inline:.5rem}li{align-items:start;flex-direction:column}}
-  @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
-  </style></head><body data-mode="${mode}">${app}<script>${axe}</script><script>
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${broken ? 'Annotated failures' : 'Accessible'} WCAG teaching frame</title><link rel="stylesheet" href="${browserAssetPath('styles.demos')}"></head><body data-mode="${mode}">${app}<script src="${browserAssetPath('vendor.axe')}"></script><script>
   (()=>{
     const mode=${JSON.stringify(mode)};
     const open=document.querySelector('[data-open]');

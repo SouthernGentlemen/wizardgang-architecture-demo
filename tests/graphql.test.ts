@@ -1,6 +1,7 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { graphqlResponse } from '../src/api/graphql';
-import { graphiqlAssetResponse } from '../src/ui/graphiql-assets';
+import { uiAssetResponse } from '../src/ui/assets';
 import { createDemoAccessToken, type IdentitySession } from '../src/lib/identity-session';
 import type { D1PreparedStatement, Env } from '../src/types';
 
@@ -68,7 +69,14 @@ async function visitorAuthorization(environment: Env): Promise<string> {
 
 describe('GraphQL Yoga D1 interface', () => {
   it('serves an embeddable GraphiQL interface', async () => {
-    const response = await graphqlResponse(new Request('https://demo.example/graphql', { headers: { accept: 'text/html' } }), env());
+    const environment = env();
+    environment.ASSETS = {
+      async fetch(request) {
+        const body = readFileSync('node_modules/@graphql-yoga/graphiql/dist/yoga-graphiql.umd.js');
+        return new Response(request.method === 'HEAD' ? null : body, { headers: { 'content-type': 'text/javascript; charset=utf-8' } });
+      },
+    };
+    const response = await graphqlResponse(new Request('https://demo.example/graphql', { headers: { accept: 'text/html' } }), environment);
     expect(response.status).toBe(200);
     expect(response.headers.get('x-frame-options')).toBe('SAMEORIGIN');
     const html = await response.text();
@@ -76,7 +84,7 @@ describe('GraphQL Yoga D1 interface', () => {
     expect(html).toContain('/assets/graphiql.js');
     expect(html).toContain('/assets/graphql.worker.js');
     expect(html).not.toContain('unpkg.com');
-    const asset = graphiqlAssetResponse(new Request('https://demo.example/assets/graphiql.js'), 'graphiql.js');
+    const asset = await uiAssetResponse(new Request('https://demo.example/assets/graphiql.js'), environment, 'graphiql.js');
     expect(asset.status).toBe(200);
     expect(asset.headers.get('content-type')).toContain('text/javascript');
     expect((await asset.text()).length).toBeGreaterThan(1_000_000);

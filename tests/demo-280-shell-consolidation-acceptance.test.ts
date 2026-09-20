@@ -3,7 +3,6 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import { primaryNavigation } from '../src/routing/navigation';
-import { criticalStyles, demoStyles, shellStyles } from '../src/ui/style-delivery';
 import type { Env } from '../src/types';
 
 const env = {
@@ -37,6 +36,8 @@ const retiredShellNavigationMarkers = [
 
 const viewportWidths = [375, 620, 760, 1024] as const;
 const navigationSource = readFileSync('src/routing/navigation.ts', 'utf8');
+const shellStyles = readFileSync('src/styles/shell.css', 'utf8');
+const demoStyles = readFileSync('src/styles/demos.css', 'utf8');
 
 function elementWithClass(html: string, tag: string, className: string): string {
   const expression = new RegExp(`<${tag}\\b[^>]*class="[^"]*\\b${className}\\b[^"]*"[^>]*>[\\s\\S]*?<\\/${tag}>`);
@@ -155,7 +156,7 @@ function applyHeaderRules(css: string, width: number, state: HeaderLayout): void
 
 function headerLayoutAt(width: number): HeaderLayout {
   const state: HeaderLayout = { display: 'block', flexDirection: 'row', flexWrap: 'nowrap' };
-  for (const css of [criticalStyles, shellStyles, demoStyles]) applyHeaderRules(css, width, state);
+  for (const css of [shellStyles, demoStyles]) applyHeaderRules(css, width, state);
   return state;
 }
 

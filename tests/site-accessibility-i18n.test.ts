@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import auditConfig from '../config/site-audit-states.json';
 import routeManifest from '../docs/route-manifest.json';
@@ -14,8 +15,9 @@ import {
   applicationRouteRegistry,
   type ApplicationRouteDeclaration,
 } from '../src/routing/application-routes';
-import { runtimeStyles } from '../src/ui/runtime-styles';
 import type { D1PreparedStatement, Env } from '../src/types';
+
+const shellStyles = readFileSync('src/styles/shell.css', 'utf8');
 
 class AuditStatement implements D1PreparedStatement {
   private values: unknown[] = [];
@@ -145,12 +147,12 @@ describe('DEMO-238 site-wide accessibility assurance', () => {
   });
 
   it('protects the shared target, motion, forced-colors, reflow, focus, and bidi contracts', () => {
-    expect(runtimeStyles).toContain('min-block-size: 44px !important');
-    expect(runtimeStyles).toContain('outline: 3px solid var(--focus, #ffd84d)');
-    expect(runtimeStyles).toContain('max-inline-size: 80ch');
-    expect(runtimeStyles).toContain('unicode-bidi: isolate');
-    expect(runtimeStyles).toContain('@media (prefers-reduced-motion: reduce)');
-    expect(runtimeStyles).toContain('@media (forced-colors: active)');
+    expect(shellStyles).toContain('min-block-size: 44px !important');
+    expect(shellStyles).toContain('outline: 3px solid var(--focus, #ffd84d)');
+    expect(shellStyles).toContain('max-inline-size: 80ch');
+    expect(shellStyles).toContain('unicode-bidi: isolate');
+    expect(shellStyles).toContain('@media (prefers-reduced-motion: reduce)');
+    expect(shellStyles).toContain('@media (forced-colors: active)');
   });
 
   it('keeps unperformed manual evidence pending and requires provenance for completed reviews', () => {

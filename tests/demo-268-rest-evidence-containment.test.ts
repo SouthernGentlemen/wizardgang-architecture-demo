@@ -93,8 +93,9 @@ describe('DEMO-268 REST evidence containment', () => {
   it('preserves the DEMO-267 persistent pane/inspector contract and removes the old REST disclosure dump', () => {
     const demosSource = readFileSync('src/demos/demos-page.ts', 'utf8');
     const apiSource = readFileSync('src/demos/api-page.ts', 'utf8');
+    const demosStyles = readFileSync('src/styles/demos.css', 'utf8');
 
-    expect(demosSource).toContain('grid-template-columns:minmax(0,7fr) minmax(16rem,3fr)');
+    expect(demosStyles).toContain('grid-template-columns:minmax(0,7fr) minmax(16rem,3fr)');
     expect(demosSource).toContain('if (controller) controller.abort()');
     expect(demosSource).toContain("section.dispatchEvent(new CustomEvent('demo:deactivate'))");
     expect(demosSource).toContain('if (htmlCache.size >= demos.length');

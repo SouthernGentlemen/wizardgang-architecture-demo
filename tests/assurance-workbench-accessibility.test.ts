@@ -58,10 +58,11 @@ describe('DEMO-286 accessible assurance workbench interaction', () => {
 
   it('keeps record/inspector content bounded on narrow layouts and never relies on color alone for status', () => {
     const source = readFileSync('src/demos/assurance-workbench.ts', 'utf8');
-    expect(source).toContain('.assurance-workbench{min-width:0;max-width:100%');
-    expect(source).toContain('.assurance-record-pane{min-width:0}');
-    expect(source).toContain('@media(max-width:900px){.assurance-workbench-layout{grid-template-columns:minmax(0,1fr)}');
-    expect(source).toContain('@media(max-width:760px){.assurance-framework-tabs{flex-wrap:wrap;overflow-x:visible}');
+    const styles = readFileSync('src/styles/shell.css', 'utf8');
+    expect(styles).toContain('.assurance-workbench{min-width:0;max-width:100%');
+    expect(styles).toContain('.assurance-record-pane{min-width:0}');
+    expect(styles).toContain('@media(max-width:900px){.assurance-workbench-layout{grid-template-columns:minmax(0,1fr)}');
+    expect(styles).toContain('@media(max-width:760px){.assurance-framework-tabs{flex-wrap:wrap;overflow-x:visible}');
     expect(source).toContain("return '✓'");
     expect(source).toContain("return '◐'");
     expect(source).toContain("return '!'");

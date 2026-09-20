@@ -65,14 +65,14 @@ describe('DEMO-270 accessible Demo Workbench interaction', () => {
   });
 
   it('keeps technical content bounded and preserves locale fragments through the shared shell', () => {
-    const demosSource = readFileSync('src/demos/demos-page.ts', 'utf8');
+    const demosStyles = readFileSync('src/styles/demos.css', 'utf8');
     const pageSource = readFileSync('src/ui/page.ts', 'utf8');
 
-    expect(demosSource).toContain('.demo-workbench{min-width:0;max-width:100%');
-    expect(demosSource).toContain('.demo-panel{min-width:0;max-width:100%');
-    expect(demosSource).toContain('.demo-evidence-list code{direction:ltr;unicode-bidi:isolate');
-    expect(demosSource).toContain('@media(max-width:900px){.demo-workbench-layout{grid-template-columns:minmax(0,1fr)}');
-    expect(demosSource).toContain('@media(max-width:760px){.demo-category-tabs{flex-wrap:wrap;overflow-x:visible');
+    expect(demosStyles).toContain('.demo-workbench{min-width:0;max-width:100%');
+    expect(demosStyles).toContain('.demo-panel{min-width:0;max-width:100%');
+    expect(demosStyles).toContain('.demo-evidence-list code{direction:ltr;unicode-bidi:isolate');
+    expect(demosStyles).toContain('@media(max-width:900px){.demo-workbench-layout{grid-template-columns:minmax(0,1fr)}');
+    expect(demosStyles).toContain('@media(max-width:760px){.demo-category-tabs{flex-wrap:wrap;overflow-x:visible');
     expect(pageSource).toContain("form.action=location.pathname+location.hash");
   });
 });

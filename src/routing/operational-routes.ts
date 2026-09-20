@@ -182,7 +182,7 @@ const globalOperationalRoutes = [
   }),
   operationalRoute({
     id: 'operations.assets', pattern: '/assets/:asset', methods: ['GET', 'HEAD'], kind: 'asset',
-    handler: (request, _context, params) => uiAssetResponse(request, params.asset || ''), title: 'Bundled UI asset', description: 'Locally bundled immutable UI and social-preview assets.',
+    handler: (request, { env }, params) => uiAssetResponse(request, env, params.asset || ''), title: 'Static browser asset', description: 'Locally built immutable browser and social-preview assets.',
     sourceModule: 'src/ui/assets.ts', sourceExport: 'uiAssetResponse',
     cache: { mode: 'public', maxAgeSeconds: 31_536_000, immutable: true },
   }),

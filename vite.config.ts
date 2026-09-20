@@ -1,0 +1,87 @@
+import { readFileSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { defineConfig, type Plugin } from 'vite';
+
+const ROOT = import.meta.dirname;
+const ASSET_MANIFEST_PATH = resolve(ROOT, 'docs/asset-manifest.json');
+
+const stableAssets = [
+  ['assets/graphiql.js', 'node_modules/@graphql-yoga/graphiql/dist/yoga-graphiql.umd.js'],
+  ['assets/graphiql.css', 'node_modules/@graphql-yoga/graphiql/dist/graphiql.css'],
+  ['assets/editor.worker.js', 'node_modules/@graphql-yoga/graphiql/dist/monacoeditorwork/editor.worker.bundle.js'],
+  ['assets/json.worker.js', 'node_modules/@graphql-yoga/graphiql/dist/monacoeditorwork/json.worker.bundle.js'],
+  ['assets/graphql.worker.js', 'node_modules/@graphql-yoga/graphiql/dist/monacoeditorwork/graphql.worker..bundle.js'],
+  ['assets/axe.min.js', 'node_modules/axe-core/axe.min.js'],
+  ['assets/og.png', 'src/assets/og.png'],
+] as const;
+
+function browserAssets(): Plugin {
+  return {
+    name: 'browser-assets',
+    buildStart() {
+      for (const [fileName, sourcePath] of stableAssets) {
+        this.emitFile({
+          type: 'asset',
+          fileName,
+          source: readFileSync(resolve(ROOT, sourcePath)),
+        });
+      }
+    },
+    generateBundle(_options, bundle) {
+      const files = Object.keys(bundle).sort();
+      const stylesheet = (name: string) => {
+        const matches = files.filter((file) => new RegExp(`^assets/${name}-[A-Za-z0-9_-]+\\.css$`).test(file));
+        if (matches.length !== 1) this.error(`Expected one hashed ${name} stylesheet, found: ${matches.join(', ') || 'none'}`);
+        return `/${matches[0]}`;
+      };
+      for (const [fileName] of stableAssets) {
+        if (!files.includes(fileName)) this.error(`Missing emitted browser asset ${fileName}`);
+      }
+
+      const manifest = {
+        version: 1,
+        assets: {
+          'styles.shell': stylesheet('shell'),
+          'styles.demos': stylesheet('demos'),
+          'vendor.graphiql.script': '/assets/graphiql.js',
+          'vendor.graphiql.styles': '/assets/graphiql.css',
+          'vendor.monaco.editor': '/assets/editor.worker.js',
+          'vendor.monaco.json': '/assets/json.worker.js',
+          'vendor.monaco.graphql': '/assets/graphql.worker.js',
+          'vendor.axe': '/assets/axe.min.js',
+          'social.card': '/assets/og.png',
+        },
+      } as const;
+      const serialized = `${JSON.stringify(manifest, null, 2)}\n`;
+      if (process.env.ASSET_MANIFEST_WRITE === '1') {
+        writeFileSync(ASSET_MANIFEST_PATH, serialized);
+        return;
+      }
+      let committed = '';
+      try {
+        committed = readFileSync(ASSET_MANIFEST_PATH, 'utf8');
+      } catch {
+        this.error('Missing docs/asset-manifest.json; run npm run generate:assets.');
+      }
+      if (committed !== serialized) this.error('docs/asset-manifest.json is stale; run npm run generate:assets.');
+    },
+  };
+}
+
+export default defineConfig({
+  plugins: [browserAssets()],
+  build: {
+    outDir: 'dist/client',
+    emptyOutDir: true,
+    manifest: true,
+    rollupOptions: {
+      input: {
+        shell: resolve(ROOT, 'src/styles/shell.css'),
+        demos: resolve(ROOT, 'src/styles/demos.css'),
+      },
+      output: {
+        assetFileNames: 'assets/[name]-[hash][extname]',
+      },
+    },
+  },
+});

@@ -31,74 +31,6 @@ const SOA_PATHS = [
   ['ISO/IEC 42001 statement of applicability', 'assurance/compliance/iso-42001-2023.json'],
 ] as const;
 
-const WORKBENCH_STYLES = `<style data-assurance-workbench-styles>
-.assurance-workbench{min-width:0;max-width:100%;display:grid;gap:1rem}
-.assurance-workbench-header{max-width:980px;margin-bottom:1.5rem}
-.assurance-workbench-header h1{margin-bottom:.8rem}
-.assurance-framework-tabs{display:flex;gap:1px;overflow-x:auto;border:1px solid var(--line);background:var(--line)}
-.assurance-framework-tab{flex:1 0 auto;justify-content:center;min-height:48px;border:0;background:var(--panel);color:var(--muted);font:800 .72rem/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;transform:none}
-.assurance-framework-tab:hover{background:var(--panel-2);color:var(--paper);transform:none}
-.assurance-framework-tab[aria-selected="true"]{background:var(--panel-2);color:var(--paper);box-shadow:inset 0 -3px 0 var(--acid)}
-.assurance-workbench-layout{display:grid;grid-template-columns:minmax(240px,.66fr) minmax(0,1.34fr);gap:1rem;align-items:start}
-.assurance-workbench-controls{display:grid;gap:1rem;position:sticky;top:1rem;min-width:0}
-.assurance-section-control{display:grid;gap:.45rem;padding:1rem;border:1px solid var(--line);background:var(--panel)}
-.assurance-section-control select{width:100%;min-width:0}
-.assurance-posture-stack{display:grid;gap:.65rem}
-.assurance-posture{padding:1rem;border:1px solid var(--line);background:var(--panel)}
-.assurance-posture>strong{display:block;margin-bottom:.7rem;font:800 .68rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase}
-.assurance-posture dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
-.assurance-posture dl>div{display:grid;gap:.2rem;padding:.65rem;background:var(--panel-2)}
-.assurance-posture dt{font-size:.61rem}
-.assurance-posture dd{margin:0;font:900 1.2rem/1 var(--mono)}
-.assurance-posture [data-status="pass"] dd{color:var(--acid)}
-.assurance-posture [data-status="partial"] dd{color:var(--violet)}
-.assurance-posture [data-status="gap"] dd{color:#ff9d9d}
-.assurance-records{min-width:0}
-.assurance-records-heading{display:flex;align-items:end;justify-content:space-between;gap:1rem;margin-bottom:.75rem}
-.assurance-records-heading h2{margin:0;font-size:1.35rem}
-.assurance-record-count{color:var(--muted);font:800 .7rem/1 var(--mono)}
-.assurance-record-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:.55rem;min-width:0}
-.assurance-record-link{display:grid;gap:.55rem;min-width:0;min-height:122px;padding:.9rem;border:1px solid var(--line);background:var(--panel);color:inherit;text-decoration:none}
-.assurance-record-link:hover,.assurance-record-link:focus-visible{background:var(--panel-2)}
-.assurance-record-link[aria-current="true"]{border-color:var(--acid);box-shadow:inset 3px 0 0 var(--acid)}
-.assurance-record-link code{overflow-wrap:anywhere;color:var(--paper);font-weight:850}
-.assurance-record-link strong{font-size:.9rem;line-height:1.25}
-.assurance-status{display:inline-flex;align-items:center;gap:.35rem;align-self:start;color:var(--muted);font:800 .66rem/1 var(--mono);text-transform:uppercase}
-.assurance-status[data-status="pass"]{color:var(--acid)}
-.assurance-status[data-status="partial"]{color:var(--violet)}
-.assurance-status[data-status="gap"]{color:#ff9d9d}
-.assurance-workbench-detail{min-width:0;min-height:27rem;margin-top:.15rem;border:1px solid var(--line);background:var(--panel)}
-.assurance-workbench-detail[aria-busy="true"]{opacity:.72}
-.assurance-record-pane{min-width:0}
-.assurance-record-heading{display:flex;align-items:start;justify-content:space-between;gap:1rem;padding:1.25rem;border-bottom:1px solid var(--line)}
-.assurance-record-heading .eyebrow{margin-bottom:.45rem}
-.assurance-record-heading h2{margin:0;font-size:clamp(1.55rem,3vw,2.25rem)}
-.assurance-record-body{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(260px,.9fr);gap:1px;background:var(--line)}
-.assurance-assessment,.assurance-inspector{min-width:0;padding:1.25rem;background:var(--panel)}
-.assurance-assessment dl{display:grid;grid-template-columns:1fr;gap:1rem}
-.assurance-assessment dl>div{display:grid;gap:.35rem}
-.assurance-assessment dd{margin:0;color:var(--muted)}
-.assurance-assessment ul{margin:.25rem 0 0;padding-left:1.1rem;color:var(--muted)}
-.assurance-record-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.2rem}
-.assurance-record-tools a{min-height:40px;display:inline-flex;align-items:center;padding:.45rem .7rem;border:1px solid var(--line);font:800 .68rem/1 var(--mono);text-decoration:none;text-transform:uppercase}
-.assurance-record-tools a:hover{border-color:var(--acid)}
-.assurance-inspector-tabs{display:flex;border:1px solid var(--line);border-bottom:0}
-.assurance-inspector-tab{flex:1 1 0;justify-content:center;min-height:44px;border:0;border-right:1px solid var(--line);background:transparent;color:var(--muted);font:800 .68rem/1 var(--mono);text-transform:uppercase;transform:none}
-.assurance-inspector-tab:last-child{border-right:0}
-.assurance-inspector-tab[aria-selected="true"]{background:var(--panel-2);color:var(--paper);box-shadow:inset 0 -2px 0 var(--acid)}
-.assurance-inspector-panel{min-width:0;min-height:15rem;padding:1rem;border:1px solid var(--line);background:var(--panel-2)}
-.assurance-reference-list,.assurance-evidence-list{display:grid;gap:.65rem;margin:0;padding:0;list-style:none}
-.assurance-reference-list li,.assurance-evidence-list li{min-width:0;padding:.8rem;border:1px solid var(--line);background:var(--panel)}
-.assurance-reference-list code,.assurance-evidence-list code{direction:ltr;unicode-bidi:isolate;overflow-wrap:anywhere}
-.assurance-evidence-list li{display:grid;gap:.35rem}
-.assurance-evidence-meta{display:flex;flex-wrap:wrap;gap:.35rem .8rem;color:var(--muted);font:750 .68rem/1.35 var(--mono)}
-.assurance-evidence-links{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:.2rem;font-size:.78rem}
-.assurance-workbench-status{min-height:1.3rem;margin:0;color:var(--muted);font:750 .72rem/1.4 var(--mono)}
-.assurance-noscript{padding:1rem;border:1px solid var(--line);background:var(--panel)}
-.assurance-noscript ul{margin:.5rem 0 0;padding-left:1.1rem}
-@media(max-width:900px){.assurance-workbench-layout{grid-template-columns:minmax(0,1fr)}.assurance-workbench-controls{position:static;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.assurance-section-control{grid-column:1/-1}.assurance-record-body{grid-template-columns:minmax(0,1fr)}}
-@media(max-width:760px){.assurance-framework-tabs{flex-wrap:wrap;overflow-x:visible}.assurance-framework-tab{flex:1 1 100%}.assurance-workbench-controls{grid-template-columns:1fr}.assurance-record-grid{grid-template-columns:1fr}.assurance-record-heading,.assurance-records-heading{align-items:flex-start;flex-direction:column}.assurance-record-tools{display:grid}.assurance-record-tools a{justify-content:center}.assurance-posture dl{grid-template-columns:1fr 1fr}}
-</style>`;
 
 interface RecordSummary {
   id: string;
@@ -349,7 +281,6 @@ export async function assuranceWorkbenchContent(request: Request, env: Env): Pro
     routeId: 'assurance.index',
     canonicalPath: routeUrl('assurance.index'),
     description: localization.t('assurance.workbench.description', 'Browse framework assessment records, posture, evidence, and documentation in one assurance workbench.'),
-    headExtra: WORKBENCH_STYLES,
   });
 }
 

@@ -239,3 +239,43 @@ jobs:
 
           console.log(`Verified ${metadata.version} (${metadata.commit}) with Worker status ${body.services.worker}, identity ${body.identity}, and provider continuity for ${previouslyConfigured.join(', ') || 'none'}.`);
           NODE
+      - name: Verify deployed static browser assets
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+
+          const manifest = JSON.parse(fs.readFileSync('docs/asset-manifest.json', 'utf8'));
+          const assets = [
+            { key: 'styles.shell', contentType: 'text/css', minimumBytes: 1_000 },
+            { key: 'vendor.graphiql.script', contentType: 'text/javascript', minimumBytes: 1_000_000 },
+          ];
+          const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+          for (const asset of assets) {
+            const path = manifest.assets?.[asset.key];
+            if (typeof path !== 'string' || !path.startsWith('/assets/')) {
+              throw new Error(`Asset manifest does not contain ${asset.key}.`);
+            }
+            const url = new URL(path, 'https://demo.wizardgang.ai');
+            let verified = false;
+            let lastFailure = 'no response';
+            for (let attempt = 1; attempt <= 12; attempt += 1) {
+              try {
+                const response = await fetch(url, { redirect: 'error' });
+                const bytes = (await response.arrayBuffer()).byteLength;
+                const cacheControl = response.headers.get('cache-control') ?? '';
+                const contentType = response.headers.get('content-type') ?? '';
+                if (response.ok && bytes >= asset.minimumBytes && contentType.includes(asset.contentType) && cacheControl.includes('immutable')) {
+                  verified = true;
+                  console.log(`Verified ${asset.key} at ${path}: ${bytes} bytes, ${contentType}, ${cacheControl}.`);
+                  break;
+                }
+                lastFailure = `HTTP ${response.status}; ${bytes} bytes; content-type=${contentType}; cache-control=${cacheControl}`;
+              } catch (error) {
+                lastFailure = error instanceof Error ? error.message : String(error);
+              }
+              if (attempt < 12) await sleep(5_000);
+            }
+            if (!verified) throw new Error(`${asset.key} did not become verifiable: ${lastFailure}`);
+          }
+          NODE

@@ -656,18 +656,6 @@
     ],
     "dataHooks": [
       {
-        "element": "style",
-        "attributes": {
-          "data-critical-shell": ""
-        }
-      },
-      {
-        "element": "style",
-        "attributes": {
-          "data-assurance-workbench-styles": ""
-        }
-      },
-      {
         "element": "body",
         "attributes": {
           "data-route-id": "assurance.index"
@@ -1357,28 +1345,10 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell.d718dd37.css",
+        "href": "/assets/shell-CTZBlQwr.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "eb4b675b86e8004f",
-        "data": {
-          "data-critical-shell": ""
-        }
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "d37d19b380ba9d28",
-        "data": {
-          "data-assurance-workbench-styles": ""
-        }
       }
     ]
   },
@@ -1676,12 +1646,6 @@
     ],
     "dataHooks": [
       {
-        "element": "style",
-        "attributes": {
-          "data-critical-shell": ""
-        }
-      },
-      {
         "element": "body",
         "attributes": {
           "data-route-id": "security.index"
@@ -1721,19 +1685,10 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell.d718dd37.css",
+        "href": "/assets/shell-CTZBlQwr.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "eb4b675b86e8004f",
-        "data": {
-          "data-critical-shell": ""
-        }
       }
     ]
   },
@@ -1904,12 +1859,6 @@
     ],
     "dataHooks": [
       {
-        "element": "style",
-        "attributes": {
-          "data-critical-shell": ""
-        }
-      },
-      {
         "element": "body",
         "attributes": {
           "data-route-id": "interfaces.frontend.index"
@@ -1949,25 +1898,9 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell.d718dd37.css",
+        "href": "/assets/shell-CTZBlQwr.css",
         "media": null,
         "inlineSha256": null,
-        "data": {}
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "eb4b675b86e8004f",
-        "data": {
-          "data-critical-shell": ""
-        }
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "642030f721c19b45",
         "data": {}
       }
     ]
@@ -2357,18 +2290,6 @@
     ],
     "dataHooks": [
       {
-        "element": "style",
-        "attributes": {
-          "data-critical-shell": ""
-        }
-      },
-      {
-        "element": "style",
-        "attributes": {
-          "data-demo-styles": ""
-        }
-      },
-      {
         "element": "body",
         "attributes": {
           "data-route-id": "demos.index"
@@ -2646,34 +2567,16 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell.d718dd37.css",
+        "href": "/assets/shell-CTZBlQwr.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
       },
       {
-        "kind": "inline",
-        "href": null,
+        "kind": "link",
+        "href": "/assets/demos-DPmliQix.css",
         "media": null,
-        "inlineSha256": "eb4b675b86e8004f",
-        "data": {
-          "data-critical-shell": ""
-        }
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "1a640961f3c00963",
-        "data": {
-          "data-demo-styles": ""
-        }
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "6052512b4f638ace",
+        "inlineSha256": null,
         "data": {}
       }
     ]
@@ -3335,18 +3238,6 @@
     ],
     "dataHooks": [
       {
-        "element": "style",
-        "attributes": {
-          "data-critical-shell": ""
-        }
-      },
-      {
-        "element": "style",
-        "attributes": {
-          "data-assurance-workbench-styles": ""
-        }
-      },
-      {
         "element": "body",
         "attributes": {
           "data-route-id": "assurance.index"
@@ -4036,28 +3927,10 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell.d718dd37.css",
+        "href": "/assets/shell-CTZBlQwr.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "eb4b675b86e8004f",
-        "data": {
-          "data-critical-shell": ""
-        }
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "d37d19b380ba9d28",
-        "data": {
-          "data-assurance-workbench-styles": ""
-        }
       }
     ]
   },
@@ -4718,18 +4591,6 @@
     ],
     "dataHooks": [
       {
-        "element": "style",
-        "attributes": {
-          "data-critical-shell": ""
-        }
-      },
-      {
-        "element": "style",
-        "attributes": {
-          "data-assurance-workbench-styles": ""
-        }
-      },
-      {
         "element": "body",
         "attributes": {
           "data-route-id": "assurance.index"
@@ -5419,28 +5280,10 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell.d718dd37.css",
+        "href": "/assets/shell-CTZBlQwr.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "eb4b675b86e8004f",
-        "data": {
-          "data-critical-shell": ""
-        }
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "d37d19b380ba9d28",
-        "data": {
-          "data-assurance-workbench-styles": ""
-        }
       }
     ]
   },
@@ -6101,18 +5944,6 @@
     ],
     "dataHooks": [
       {
-        "element": "style",
-        "attributes": {
-          "data-critical-shell": ""
-        }
-      },
-      {
-        "element": "style",
-        "attributes": {
-          "data-assurance-workbench-styles": ""
-        }
-      },
-      {
         "element": "body",
         "attributes": {
           "data-route-id": "assurance.index"
@@ -6802,28 +6633,10 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell.d718dd37.css",
+        "href": "/assets/shell-CTZBlQwr.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "eb4b675b86e8004f",
-        "data": {
-          "data-critical-shell": ""
-        }
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "d37d19b380ba9d28",
-        "data": {
-          "data-assurance-workbench-styles": ""
-        }
       }
     ]
   },
@@ -7484,18 +7297,6 @@
     ],
     "dataHooks": [
       {
-        "element": "style",
-        "attributes": {
-          "data-critical-shell": ""
-        }
-      },
-      {
-        "element": "style",
-        "attributes": {
-          "data-assurance-workbench-styles": ""
-        }
-      },
-      {
         "element": "body",
         "attributes": {
           "data-route-id": "assurance.index"
@@ -8185,28 +7986,10 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell.d718dd37.css",
+        "href": "/assets/shell-CTZBlQwr.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "eb4b675b86e8004f",
-        "data": {
-          "data-critical-shell": ""
-        }
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "d37d19b380ba9d28",
-        "data": {
-          "data-assurance-workbench-styles": ""
-        }
       }
     ]
   },
@@ -8595,18 +8378,6 @@
     ],
     "dataHooks": [
       {
-        "element": "style",
-        "attributes": {
-          "data-critical-shell": ""
-        }
-      },
-      {
-        "element": "style",
-        "attributes": {
-          "data-demo-styles": ""
-        }
-      },
-      {
         "element": "body",
         "attributes": {
           "data-route-id": "demos.index"
@@ -8884,34 +8655,16 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell.d718dd37.css",
+        "href": "/assets/shell-CTZBlQwr.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
       },
       {
-        "kind": "inline",
-        "href": null,
+        "kind": "link",
+        "href": "/assets/demos-DPmliQix.css",
         "media": null,
-        "inlineSha256": "eb4b675b86e8004f",
-        "data": {
-          "data-critical-shell": ""
-        }
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "1a640961f3c00963",
-        "data": {
-          "data-demo-styles": ""
-        }
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "6052512b4f638ace",
+        "inlineSha256": null,
         "data": {}
       }
     ]
@@ -9301,18 +9054,6 @@
     ],
     "dataHooks": [
       {
-        "element": "style",
-        "attributes": {
-          "data-critical-shell": ""
-        }
-      },
-      {
-        "element": "style",
-        "attributes": {
-          "data-demo-styles": ""
-        }
-      },
-      {
         "element": "body",
         "attributes": {
           "data-route-id": "demos.index"
@@ -9590,34 +9331,16 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell.d718dd37.css",
+        "href": "/assets/shell-CTZBlQwr.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
       },
       {
-        "kind": "inline",
-        "href": null,
+        "kind": "link",
+        "href": "/assets/demos-DPmliQix.css",
         "media": null,
-        "inlineSha256": "eb4b675b86e8004f",
-        "data": {
-          "data-critical-shell": ""
-        }
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "1a640961f3c00963",
-        "data": {
-          "data-demo-styles": ""
-        }
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "6052512b4f638ace",
+        "inlineSha256": null,
         "data": {}
       }
     ]
@@ -9789,12 +9512,6 @@
     ],
     "dataHooks": [
       {
-        "element": "style",
-        "attributes": {
-          "data-critical-shell": ""
-        }
-      },
-      {
         "element": "body",
         "attributes": {
           "data-route-id": "interfaces.frontend.index"
@@ -9834,25 +9551,9 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell.d718dd37.css",
+        "href": "/assets/shell-CTZBlQwr.css",
         "media": null,
         "inlineSha256": null,
-        "data": {}
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "eb4b675b86e8004f",
-        "data": {
-          "data-critical-shell": ""
-        }
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "642030f721c19b45",
         "data": {}
       }
     ]
@@ -10112,12 +9813,6 @@
     ],
     "dataHooks": [
       {
-        "element": "style",
-        "attributes": {
-          "data-critical-shell": ""
-        }
-      },
-      {
         "element": "body",
         "attributes": {
           "data-route-id": "operations.admin"
@@ -10183,19 +9878,10 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell.d718dd37.css",
+        "href": "/assets/shell-CTZBlQwr.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "eb4b675b86e8004f",
-        "data": {
-          "data-critical-shell": ""
-        }
       }
     ]
   },
@@ -10382,12 +10068,6 @@
     ],
     "dataHooks": [
       {
-        "element": "style",
-        "attributes": {
-          "data-critical-shell": ""
-        }
-      },
-      {
         "element": "body",
         "attributes": {
           "data-route-id": "operations.offline"
@@ -10427,19 +10107,10 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell.d718dd37.css",
+        "href": "/assets/shell-CTZBlQwr.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "eb4b675b86e8004f",
-        "data": {
-          "data-critical-shell": ""
-        }
       }
     ]
   },
@@ -10591,12 +10262,6 @@
     ],
     "dataHooks": [
       {
-        "element": "style",
-        "attributes": {
-          "data-critical-shell": ""
-        }
-      },
-      {
         "element": "button",
         "attributes": {
           "data-theme-toggle": ""
@@ -10630,19 +10295,10 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell.d718dd37.css",
+        "href": "/assets/shell-CTZBlQwr.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
-      },
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "eb4b675b86e8004f",
-        "data": {
-          "data-critical-shell": ""
-        }
       }
     ]
   },
@@ -12966,15 +12622,7 @@
         "data": {}
       }
     ],
-    "stylesheets": [
-      {
-        "kind": "inline",
-        "href": null,
-        "media": null,
-        "inlineSha256": "aebf37104105b88f",
-        "data": {}
-      }
-    ]
+    "stylesheets": []
   },
   "demo:graphql": {
     "status": 200,
