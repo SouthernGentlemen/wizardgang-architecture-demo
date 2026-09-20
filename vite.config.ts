@@ -52,6 +52,8 @@ function browserAssets(): Plugin {
           'scripts.admin': browserModule('admin-browser'),
           'scripts.assurance': browserModule('assurance-browser'),
           'scripts.demos': browserModule('demos-browser'),
+          'scripts.d1': browserModule('d1-browser'),
+          'scripts.r2': browserModule('r2-browser'),
           'vendor.graphiql.script': '/assets/graphiql.js',
           'vendor.graphiql.styles': '/assets/graphiql.css',
           'vendor.monaco.editor': '/assets/editor.worker.js',
@@ -84,6 +86,7 @@ export default defineConfig({
     emptyOutDir: true,
     manifest: true,
     rollupOptions: {
+      preserveEntrySignatures: 'strict',
       input: {
         shell: resolve(ROOT, 'src/styles/shell.css'),
         demos: resolve(ROOT, 'src/styles/demos.css'),
@@ -91,6 +94,8 @@ export default defineConfig({
         'admin-browser': resolve(ROOT, 'src/browser/admin.ts'),
         'assurance-browser': resolve(ROOT, 'src/browser/assurance.ts'),
         'demos-browser': resolve(ROOT, 'src/browser/demos.ts'),
+        'd1-browser': resolve(ROOT, 'src/browser/d1.ts'),
+        'r2-browser': resolve(ROOT, 'src/browser/r2.ts'),
       },
       output: {
         assetFileNames: 'assets/[name]-[hash][extname]',

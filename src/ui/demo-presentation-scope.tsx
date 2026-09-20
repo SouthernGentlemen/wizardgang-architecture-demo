@@ -82,21 +82,28 @@ export function useDemoPresentationScope(): DemoPresentationScopeValue {
 
 export function DemoPresentationScope({
   name,
+  idPrefix = name,
   headingLevel = 2,
   browserModule,
+  browserMessages,
+  browserLocale,
   children,
 }: Readonly<{
   name: string;
+  idPrefix?: string;
   headingLevel?: DemoHeadingLevel;
   browserModule?: string;
+  browserMessages?: Readonly<Record<string, string>>;
+  browserLocale?: string;
   children: ReactNode;
 }>) {
-  const scope = createDemoPresentationScope(name, headingLevel);
+  const scope = createDemoPresentationScope(idPrefix, headingLevel);
   return <ScopeContext value={scope}>
     <div
       className="demo-presentation-section"
-      data-demo-section={scope.name}
+      data-demo-section={name}
       data-demo-browser-module={browserModule}
+      data-config={browserMessages ? JSON.stringify({ locale: browserLocale, messages: browserMessages }) : undefined}
       style={{ display: 'contents' }}
     >{children}</div>
   </ScopeContext>;

@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { MCP_SERVER_PATH } from '../src/api/mcp';
 import {
@@ -101,8 +102,13 @@ describe('composable demo presentations', () => {
     for (const item of sections) {
       const markup = withoutScripts(item.body);
       expect(markup, item.scope).not.toMatch(/<(?:div|span)[^>]*\brole="button"/i);
-      expect(item.body, item.scope).toContain(`document.querySelector('[data-demo-section="${item.scope}"]')`);
-      expect(item.body, item.scope).toContain('const sectionDocument = new Proxy(sectionRoot');
+      if (item.body.includes('data-demo-browser-module=')) {
+        expect(item.body, item.scope).toContain('data-config=');
+        expect(item.body, item.scope).not.toContain('<script');
+      } else {
+        expect(item.body, item.scope).toContain(`document.querySelector('[data-demo-section="${item.scope}"]')`);
+        expect(item.body, item.scope).toContain('const sectionDocument = new Proxy(sectionRoot');
+      }
     }
 
     const tabSections = sections.filter((item) => /\brole="tab"/.test(withoutScripts(item.body)));
@@ -116,11 +122,12 @@ describe('composable demo presentations', () => {
       }
     }
 
-    for (const scope of ['d1', 'identity']) {
-      const item = sections.find((candidate) => candidate.scope === scope);
-      expect(item?.body, scope).toContain('ArrowLeft');
-      expect(item?.body, scope).toContain('ArrowRight');
-    }
+    const d1Browser = readFileSync('src/browser/d1.ts', 'utf8');
+    expect(d1Browser).toContain('ArrowLeft');
+    expect(d1Browser).toContain('ArrowRight');
+    const identity = sections.find((candidate) => candidate.scope === 'identity');
+    expect(identity?.body).toContain('ArrowLeft');
+    expect(identity?.body).toContain('ArrowRight');
   });
 
   it('parameterizes presentation ownership while preserving machine and protocol targets', async () => {
@@ -143,8 +150,8 @@ describe('composable demo presentations', () => {
       [edgeSection(env).body, '/api/labs/edge'],
       [workersSection(env).body, '/api/labs/workers'],
       [durableObjectsSection(env).body, '/api/labs/durable-counter'],
-      [d1Section(env).body, '/api/labs/d1-'],
-      [r2Section(env).body, '/api/labs/r2-files'],
+      [readFileSync('src/browser/d1.ts', 'utf8'), '/api/labs/d1-'],
+      [readFileSync('src/browser/r2.ts', 'utf8'), '/api/labs/r2-files'],
       [restSection(env).body, '/api/labs/rest-demo-records'],
       [webhooksSection(env).body, '/api/labs/webhook-demo'],
       [accessibilitySection(request, env).body, '/api/labs/accessibility'],

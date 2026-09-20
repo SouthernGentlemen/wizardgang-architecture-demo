@@ -64,7 +64,7 @@ describe('DEMO-327 Workers Static Assets stylesheet delivery', () => {
     expect(assetManifest.assets['styles.demos']).toMatch(/^\/assets\/demos-[A-Za-z0-9_-]+\.css$/);
     expect(shellStyles).toContain('.site-header');
     expect(shellStyles).not.toContain('.d1-page-header');
-    expect(demoStyles).toContain('.d1-page-header');
+    expect(demoStyles).not.toContain('.d1-page-header');
     expect(shellStyles).toContain('--violet: #a98fff');
     expect(shellStyles).toContain('--cyan: #005a6d');
   });

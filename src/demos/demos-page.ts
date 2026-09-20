@@ -1,6 +1,3 @@
-import { bindLocalization, resolveLocalization } from '../i18n/runtime';
-import { withSecurityHeaders } from '../lib/http';
-import { routeUrl } from '../routing/application-routes';
 import type { Env } from '../types';
 import type { DemoSection, DemoSectionOptions } from '../ui/demo-section';
 import {
@@ -18,7 +15,6 @@ import {
   workersSection,
 } from './composable-presentations';
 
-const ROUTE_ID = 'demos.index';
 export const DEFAULT_DEMO_ID = 'd1';
 
 type DemoTier = 'primary' | 'secondary';
@@ -62,7 +58,7 @@ export const demonstrations: readonly ArchitectureDemo[] = [
     summary: 'Run relational CRUD against resettable shared demo state.',
     tryThis: 'Create or edit a row, then inspect the exact SQL and response.',
     guide: ['Switch between Users and Tasks.', 'Create, edit, or delete one row.', 'Open Request to inspect the SQL and response produced by that action.'],
-    sourcePath: 'src/demos/d1-page.ts', status: ['RESETTABLE'],
+    sourcePath: 'src/demos/d1-presentation.tsx', status: ['RESETTABLE'],
     request: {
       intro: 'Mirrors the live SQL Inspector produced by the selected D1 operation.',
       fields: [
@@ -78,7 +74,7 @@ export const demonstrations: readonly ArchitectureDemo[] = [
     summary: 'Upload, inspect, and remove bounded objects in live storage.',
     tryThis: 'Upload a small object, inspect it, then remove it from the sandbox.',
     guide: ['Upload a small bounded object.', 'Inspect the object metadata and content.', 'Remove the object when you are finished.'],
-    sourcePath: 'src/demos/r2-page.ts', render: (_request, env, options) => r2Section(env, options),
+    sourcePath: 'src/demos/r2-presentation.tsx', render: (_request, env, options) => r2Section(env, options),
   },
   {
     id: 'rest', label: 'REST / OpenAPI', selectorLabel: 'REST', group: 'APIs', category: 'APIs', tier: 'primary',
@@ -172,28 +168,4 @@ export function sourceHref(env: Env, sourcePath: string): string {
   const encodedBranch = branch.split('/').map(encodeURIComponent).join('/');
   const encodedPath = sourcePath.split('/').map(encodeURIComponent).join('/');
   return `${repository}/blob/${encodedBranch}/${encodedPath}`;
-}
-
-function demoHref(id: string): string {
-  return `${routeUrl(ROUTE_ID)}#${id}`;
-}
-
-export async function demoPresentationResponse(request: Request, env: Env, demoId: string): Promise<Response> {
-  const demo = demonstrations.find((candidate) => candidate.id === demoId);
-  const headers = withSecurityHeaders(new Headers({
-    'content-type': 'text/html; charset=utf-8',
-    'cache-control': 'private, no-store',
-  }));
-  if (!demo) return new Response('<p role="alert">Unknown demonstration.</p>', { status: 404, headers });
-
-  const localizedEnv = bindLocalization(env, resolveLocalization(request));
-  const canonicalPath = routeUrl(ROUTE_ID);
-  const section = await demo.render(request, localizedEnv, {
-    scope: demo.id,
-    idPrefix: demo.id,
-    headingLevel: 2,
-    canonicalPath,
-    presentationPath: demoHref(demo.id),
-  });
-  return new Response(section.body, { headers });
 }
