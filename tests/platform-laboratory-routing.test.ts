@@ -139,7 +139,7 @@ describe('platform laboratory declarative routing', () => {
     expect(html).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/demos"/>');
     expect(html).toContain('class="skip-link" href="#main"');
     expect(html.match(/<h1\b/g)).toHaveLength(1);
-    expect(html.match(/data-demo-workbench(?:\s|>)/g)).toHaveLength(1);
+    expect(html.match(/data-demo-workbench(?:="")?(?:\s|>)/g)).toHaveLength(1);
     for (const id of platformDemoIds) {
       expect(html, id).toContain(`href="#${id}"`);
       expect(html, id).not.toContain(`data-demo-section="${id}"`);

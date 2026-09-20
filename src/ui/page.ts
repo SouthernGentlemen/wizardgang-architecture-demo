@@ -10,13 +10,16 @@ import {
   DEFAULT_DESCRIPTION,
   ROOT_ROUTE_ID,
   renderDocument,
-  type DocumentContent,
-  type PageContent,
   type PageContentOptions,
   type ReactPageContent,
 } from './document';
 
-export type { HeadMetadata, PageContent, PageContentOptions, ReactPageContent } from './document';
+export type { HeadMetadata, PageContentOptions, ReactPageContent } from './document';
+
+/** Legacy presentation payload retained until DEMO-337 migrates every demo fragment. */
+export interface PageContent extends Omit<ReactPageContent, 'body'> {
+  body: string;
+}
 
 export function pageContent(
   env: Env,
@@ -52,7 +55,7 @@ export function reactPageContent(
   };
 }
 
-function documentResponse(env: Env, content: DocumentContent): Response {
+function documentResponse(env: Env, content: ReactPageContent): Response {
   const localization = localizationForEnv(env);
   const html = renderDocument(env, content, localization);
   const headers = withSecurityHeaders(new Headers({ 'content-type': 'text/html; charset=utf-8' }));
@@ -64,21 +67,8 @@ function documentResponse(env: Env, content: DocumentContent): Response {
   return new Response(html, { status: content.status ?? 200, headers });
 }
 
-export function renderPage(env: Env, content: PageContent): Response {
-  return documentResponse(env, content);
-}
-
 export function renderReactPage(env: Env, content: ReactPageContent): Response {
   return documentResponse(env, content);
-}
-
-export function pageResponse(
-  env: Env,
-  title: string,
-  body: string,
-  options: PageContentOptions = {},
-): Response {
-  return renderPage(env, pageContent(env, title, body, options));
 }
 
 export function reactPageResponse(

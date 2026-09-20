@@ -161,7 +161,7 @@ async function waitForExpression(cdp, expression, label, attempts = 80) {
   throw new Error(`Timed out waiting for ${label}`);
 }
 
-async function assertWorkbenchState(cdp, expectedId, label, expectedHash = `#${expectedId}`) {
+async function assertWorkbenchState(cdp, expectedId, label, expectedHash = `#${expectedId}`, expectedLocale = 'en') {
   await waitForExpression(
     cdp,
     `document.querySelector('[data-demo-workbench]')?.dataset.demoId === ${JSON.stringify(expectedId)} && document.querySelector('[data-demo-workbench]')?.dataset.demoMounted === 'true'`,
@@ -187,7 +187,8 @@ async function assertWorkbenchState(cdp, expectedId, label, expectedHash = `#${e
   if (state.hash !== expectedHash) failures.push(`hash=${state.hash}`);
   if (state.id !== expectedId) failures.push(`demo=${state.id}`);
   if (state.category !== workbenchDemos[expectedId]?.[0]) failures.push(`category=${state.category}`);
-  if (state.heading !== workbenchDemos[expectedId]?.[1]) failures.push(`heading=${state.heading}`);
+  if (expectedLocale === 'en' && state.heading !== workbenchDemos[expectedId]?.[1]) failures.push(`heading=${state.heading}`);
+  if (expectedLocale !== 'en' && !state.heading) failures.push('heading is empty');
   if (state.mounted !== 1) failures.push(`mounted presentations=${state.mounted}`);
   const expectedCurrentLinks = ['webhooks', 'identity', 'mcp'].includes(expectedId) ? 0 : 1;
   if (state.currentDemoLinks !== expectedCurrentLinks) failures.push(`current demo links=${state.currentDemoLinks}`);
@@ -211,7 +212,7 @@ async function switchWorkbenchLocale(cdp, locale, expectedId) {
     return true;
   })()`);
   await loaded;
-  await assertWorkbenchState(cdp, expectedId, `${expectedId} ${locale} locale switch`);
+  await assertWorkbenchState(cdp, expectedId, `${expectedId} ${locale} locale switch`, `#${expectedId}`, locale);
   const localeState = await evaluate(cdp, `({lang:document.documentElement.lang,dir:document.documentElement.dir,hash:location.hash})`);
   if (localeState.lang !== locale || localeState.dir !== (locale === 'ar' ? 'rtl' : 'ltr') || localeState.hash !== `#${expectedId}`) {
     throw new Error(`${expectedId}: locale switch lost state (${JSON.stringify(localeState)})`);
@@ -242,6 +243,29 @@ async function workbenchInteractionAudit(cdp) {
   await navigate(cdp, `${origin}/demos?lang=en#d1`);
   await assertWorkbenchState(cdp, 'd1', 'D1 default');
   await inspectCurrentPage(cdp, 'en', 'D1 workbench');
+
+  const resetState = await evaluate(cdp, `(()=>{
+    const reset=document.querySelector('[data-demo-reset]');
+    reset?.click();
+    const dialog=document.querySelector('[data-demo-panel] [data-confirm-dialog]');
+    return {visible:reset instanceof HTMLButtonElement&&!reset.hidden,open:dialog instanceof HTMLDialogElement&&dialog.open,title:dialog?.querySelector('[data-confirm-title]')?.textContent?.trim()};
+  })()`);
+  if (!resetState.visible || !resetState.open || resetState.title !== 'Reset sample data?') {
+    throw new Error(`Workbench reset did not delegate to D1: ${JSON.stringify(resetState)}`);
+  }
+  await evaluate(cdp, `document.querySelector('[data-demo-panel] [data-confirm-cancel]')?.click();true`);
+
+  for (const mode of ['Guide', 'Request', 'Evidence']) {
+    const modeState = await evaluate(cdp, `(()=>{
+      const tab=document.querySelector('[data-demo-inspector-mode=${JSON.stringify(mode)}]');
+      tab?.click();
+      const panel=document.querySelector('[data-demo-inspector-panel]');
+      return {selected:tab?.getAttribute('aria-selected'),labelledBy:panel?.getAttribute('aria-labelledby'),text:panel?.textContent?.trim()};
+    })()`);
+    if (modeState.selected !== 'true' || modeState.labelledBy !== `demo-inspector-tab-${mode.toLowerCase()}` || !modeState.text) {
+      throw new Error(`Workbench ${mode} inspector mode failed: ${JSON.stringify(modeState)}`);
+    }
+  }
 
   await evaluate(cdp, `document.querySelector('[data-demo-category][aria-selected="true"]')?.focus()`);
   await dispatchKey(cdp, 'ArrowRight', 'ArrowRight');
@@ -299,7 +323,7 @@ async function workbenchInteractionAudit(cdp) {
   await sleep(500);
   await assertWorkbenchState(cdp, 'workers', 'late inactive response remained contained');
 
-  for (const id of ['d1', 'rest', 'workers', 'accessibility', 'i18n']) {
+  for (const id of Object.keys(workbenchDemos)) {
     await navigate(cdp, `${origin}/demos?lang=en#${id}`);
     await assertWorkbenchState(cdp, id, `${id} English direct fragment`);
     await switchWorkbenchLocale(cdp, 'ar', id);
@@ -429,7 +453,7 @@ async function main() {
         await inspectPath(cdp, pathname, locale, `${pathname} ${locale} 320px`);
         if (isWorkbench) {
           const expectedId = new URL(pathname, origin).hash.slice(1) || 'd1';
-          await assertWorkbenchState(cdp, expectedId, `${pathname} ${locale} narrow workbench`);
+          await assertWorkbenchState(cdp, expectedId, `${pathname} ${locale} narrow workbench`, `#${expectedId}`, locale);
           const reflow = await evaluate(cdp, `(()=>{
             const stage=document.querySelector('.demo-stage')?.getBoundingClientRect();
             const inspector=document.querySelector('.demo-inspector')?.getBoundingClientRect();

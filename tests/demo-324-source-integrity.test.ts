@@ -82,6 +82,7 @@ function reachableSourceModules(): Set<string> {
     path.join(srcRoot, 'browser', 'shell.ts'),
     path.join(srcRoot, 'browser', 'admin.ts'),
     path.join(srcRoot, 'browser', 'assurance.ts'),
+    path.join(srcRoot, 'browser', 'demos.ts'),
   ];
   while (pending.length > 0) {
     const filePath = pending.pop();

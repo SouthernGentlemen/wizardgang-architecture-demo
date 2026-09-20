@@ -1,8 +1,9 @@
+import { createElement } from 'react';
 import { describe, expect, it } from 'vitest';
 import { routeRequest } from '../src/router';
 import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import { primaryNavigation } from '../src/routing/navigation';
-import { renderPage, type PageContent } from '../src/ui/page';
+import { renderReactPage, type ReactPageContent } from '../src/ui/page';
 import type { D1PreparedStatement, Env } from '../src/types';
 
 class CompositionStatement implements D1PreparedStatement {
@@ -51,15 +52,18 @@ const primaryPagePaths = new Set(primaryNavigation().map((route) => route.patter
 describe('document composition', () => {
   it('builds one document and preserves page metadata through the content boundary', async () => {
     const boundaryPath = `${routeUrl('demos.index')}#edge`;
-    const content: PageContent = {
+    const content: ReactPageContent = {
       title: 'Boundary proof',
       description: 'Child description',
-      body: '<section><h1>Boundary proof</h1><h2>Detail</h2><h3>Evidence</h3></section>',
+      body: createElement('section', null,
+        createElement('h1', null, 'Boundary proof'),
+        createElement('h2', null, 'Detail'),
+        createElement('h3', null, 'Evidence')),
       canonicalPath: boundaryPath,
       lang: 'ar', dir: 'rtl', status: 404, cacheControl: 'no-store', noindex: true,
       headExtra: [{ name: 'boundary-proof', content: 'yes' }],
     };
-    const response = renderPage(env, content);
+    const response = renderReactPage(env, content);
     const html = await response.text();
     expect(response.status).toBe(404);
     expect(response.headers.get('cache-control')).toBe('no-store');

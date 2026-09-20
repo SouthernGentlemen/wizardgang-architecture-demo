@@ -1,9 +1,10 @@
 import { readFileSync } from 'node:fs';
+import { createElement } from 'react';
 import { describe, expect, it } from 'vitest';
 import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import { architectureMapEntries, primaryNavigation } from '../src/routing/navigation';
 import type { Env } from '../src/types';
-import { pageContent, renderPage } from '../src/ui/page';
+import { reactPageContent, renderReactPage } from '../src/ui/page';
 import { retiredOperationsHtmlPathname } from './fixtures/removed-html-pathnames';
 
 const shellStyles = readFileSync('src/styles/shell.css', 'utf8');
@@ -45,7 +46,8 @@ describe('navigation projection', () => {
   it('uses registered route URLs for primary navigation links', async () => {
     const registeredPageUrls = new Set(publicPages.map((route) => routeUrl(route.id)));
     for (const route of publicPages) {
-      const response = renderPage(env, pageContent(env, route.page!.label, '<section class="page-header"><h1>Projection</h1></section>', {
+      const response = renderReactPage(env, reactPageContent(env, route.page!.label, createElement('section', { className: 'page-header' },
+        createElement('h1', null, 'Projection')), {
         routeId: route.id,
         canonicalPath: routeUrl(route.id),
       }));

@@ -2169,8 +2169,8 @@
         "target": null
       },
       {
-        "name": "مصدر المسار: src/demos/demos-page.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/demos-page.ts",
+        "name": "مصدر المسار: src/demos/demos-workbench.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/demos-workbench.tsx",
         "target": null
       },
       {
@@ -2582,6 +2582,14 @@
       {
         "element": "script",
         "attributes": {
+          "data-demos-browser": "",
+          "data-config": "<CONFIG_SHA256:63e12b14e19e2be7>",
+          "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
+        }
+      },
+      {
+        "element": "script",
+        "attributes": {
           "data-shell-browser": "",
           "data-messages": "{\"theme\":\"السمة\"}"
         }
@@ -2597,12 +2605,16 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/demos-browser-JjPsBcq3.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "b7eda2ede1c61bb0",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-demos-browser": "",
+          "data-config": "<CONFIG_SHA256:63e12b14e19e2be7>",
+          "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
+        }
       },
       {
         "src": "/assets/shell-browser-C9kDSUFQ.js",
@@ -2626,7 +2638,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-DPmliQix.css",
+        "href": "/assets/demos-dkgSDIBP.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -8355,8 +8367,8 @@
         "target": null
       },
       {
-        "name": "مصدر المسار: src/demos/demos-page.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/demos-page.ts",
+        "name": "مصدر المسار: src/demos/demos-workbench.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/demos-workbench.tsx",
         "target": null
       },
       {
@@ -8768,6 +8780,14 @@
       {
         "element": "script",
         "attributes": {
+          "data-demos-browser": "",
+          "data-config": "<CONFIG_SHA256:63e12b14e19e2be7>",
+          "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
+        }
+      },
+      {
+        "element": "script",
+        "attributes": {
           "data-shell-browser": "",
           "data-messages": "{\"theme\":\"السمة\"}"
         }
@@ -8783,12 +8803,16 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/demos-browser-JjPsBcq3.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "b7eda2ede1c61bb0",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-demos-browser": "",
+          "data-config": "<CONFIG_SHA256:63e12b14e19e2be7>",
+          "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
+        }
       },
       {
         "src": "/assets/shell-browser-C9kDSUFQ.js",
@@ -8812,7 +8836,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-DPmliQix.css",
+        "href": "/assets/demos-dkgSDIBP.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -9041,8 +9065,8 @@
         "target": null
       },
       {
-        "name": "مصدر المسار: src/demos/demos-page.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/demos-page.ts",
+        "name": "مصدر المسار: src/demos/demos-workbench.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/demos-workbench.tsx",
         "target": null
       },
       {
@@ -9454,6 +9478,14 @@
       {
         "element": "script",
         "attributes": {
+          "data-demos-browser": "",
+          "data-config": "<CONFIG_SHA256:63e12b14e19e2be7>",
+          "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
+        }
+      },
+      {
+        "element": "script",
+        "attributes": {
           "data-shell-browser": "",
           "data-messages": "{\"theme\":\"السمة\"}"
         }
@@ -9469,12 +9501,16 @@
         "data": {}
       },
       {
-        "src": null,
-        "type": "classic",
+        "src": "/assets/demos-browser-JjPsBcq3.js",
+        "type": "module",
         "async": false,
         "defer": false,
-        "inlineSha256": "b7eda2ede1c61bb0",
-        "data": {}
+        "inlineSha256": null,
+        "data": {
+          "data-demos-browser": "",
+          "data-config": "<CONFIG_SHA256:63e12b14e19e2be7>",
+          "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
+        }
       },
       {
         "src": "/assets/shell-browser-C9kDSUFQ.js",
@@ -9498,7 +9534,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-DPmliQix.css",
+        "href": "/assets/demos-dkgSDIBP.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
