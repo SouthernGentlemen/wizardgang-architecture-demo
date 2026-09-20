@@ -94,19 +94,21 @@ describe('DEMO-271 Demo Workbench MVP acceptance', () => {
   });
 
   it('locks lifecycle, history, loading, error, keyboard, responsive, inspector, and REST invariants', () => {
-    const source = readFileSync('src/demos/demos-page.ts', 'utf8');
+    const registrySource = readFileSync('src/demos/demos-page.ts', 'utf8');
+    const source = readFileSync('src/browser/demos.ts', 'utf8');
     const rest = readFileSync('src/demos/openapi-console.ts', 'utf8');
     const styles = readFileSync('src/styles/demos.css', 'utf8');
     for (const contract of [
-      "const DEFAULT_DEMO_ID = 'd1'", 'return byId.has(id) ? id : defaultDemoId',
-      'if (controller) controller.abort()', "section.dispatchEvent(new CustomEvent('demo:deactivate'))",
-      'if (activeId !== id || controller.signal.aborted) return', 'if (htmlCache.size >= demos.length',
+      'return byId.has(id) ? id : config.defaultDemoId',
+      'pending.get(activeId)?.abort()', "panel.querySelector('[data-demo-section]')?.dispatchEvent(new CustomEvent('demo:deactivate'))",
+      'if (activeId !== id || controller.signal.aborted) return', 'if (htmlCache.size >= config.demos.length',
       "history.pushState(null, '', nextHash)", "window.addEventListener('hashchange', applySelection)",
-      "window.addEventListener('popstate', applySelection)", "renderState('Loading ' + demo.label + ' demonstration…')",
-      "renderState(error instanceof Error ? error.message : 'The demonstration could not be loaded.', 'alert', true, id)",
-      "retry.textContent = 'Retry demo'", "['ArrowLeft', 'ArrowRight', 'Home', 'End']",
+      "window.addEventListener('popstate', applySelection)", "renderState(messages.loading.replace('{label}', demo.label))",
+      "renderState(error instanceof Error ? error.message : messages.failed, 'alert', true, id)",
+      'retry.textContent = messages.retry', "['ArrowLeft', 'ArrowRight', 'Home', 'End']",
       "type InspectorMode = 'Guide' | 'Request' | 'Evidence'",
     ]) expect(source).toContain(contract);
+    expect(registrySource).toContain("export const DEFAULT_DEMO_ID = 'd1'");
     for (const contract of [
       'grid-template-columns:minmax(0,7fr) minmax(16rem,3fr)',
       '@media(max-width:900px){.demo-workbench-layout{grid-template-columns:minmax(0,1fr)}',

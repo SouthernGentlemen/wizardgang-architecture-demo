@@ -2,7 +2,6 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { graphqlContent } from '../src/demos/graphql-console';
 import { openApiConsole } from '../src/demos/openapi-console';
-import { renderPage } from '../src/ui/page';
 import { accessibilityLabResponse } from '../src/ui/accessibility-lab';
 import type { Env } from '../src/types';
 
@@ -58,7 +57,7 @@ describe('DEMO-237 shared WCAG 2.2 AAA remediation', () => {
   });
 
   it('uses a labeled first-party GraphQL runner instead of exposing the embedded editor', async () => {
-    const html = await renderPage(env, { ...graphqlContent(env), routeId: 'interfaces.graphql.console' }).text();
+    const html = graphqlContent(env).body;
     expect(html).toContain('Accessible query runner');
     expect(html).toContain('data-graphql-form');
     expect(html).toContain('<label for="graphql-query">GraphQL query</label>');

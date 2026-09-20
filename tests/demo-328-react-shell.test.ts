@@ -9,15 +9,14 @@ afterEach(() => {
 });
 
 describe('DEMO-328 React document shell', () => {
-  it('renders through React with one audited legacy HTML boundary and no shell inline handlers', () => {
+  it('renders every full document through React with no raw HTML boundary or shell inline handlers', () => {
     const documentSource = readFileSync('src/ui/document.tsx', 'utf8');
     const pageSource = readFileSync('src/ui/page.ts', 'utf8');
-    const legacyBodySource = readFileSync('src/ui/legacy-body.tsx', 'utf8');
 
     expect(documentSource).toContain("import { renderToStaticMarkup } from 'react-dom/server'");
     expect(documentSource).toContain('renderToStaticMarkup(<LocalizedDocument');
     expect(pageSource).toContain('renderDocument(env, content, localization)');
-    expect(legacyBodySource.match(/dangerouslySetInnerHTML/g)).toHaveLength(1);
+    expect(pageSource).not.toContain('export function renderPage(');
     expect(documentSource).not.toContain('dangerouslySetInnerHTML');
     expect(documentSource).not.toContain('onChange=');
     expect(documentSource).not.toContain('onSubmit=');

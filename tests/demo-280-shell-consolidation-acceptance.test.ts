@@ -165,7 +165,8 @@ describe('DEMO-280 shell consolidation acceptance', () => {
   it('keeps the consolidated shell contract on every static public page', async () => {
     expect(documentSource).toContain('renderToStaticMarkup(<LocalizedDocument');
     expect(documentSource).toContain('<SiteHeader repositoryUrl={repositoryUrl} currentRouteId={content.routeId} />');
-    expect(documentSource).toContain('<LegacyBody html={content.body} />');
+    expect(documentSource).toContain('<main className="site-main" id="main">{content.body}</main>');
+    expect(documentSource).not.toContain('LegacyBody');
     const securityHref = routeUrl('security.index');
 
     for (const route of publicPages) {

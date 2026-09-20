@@ -9,26 +9,40 @@ import {
   localeNormalizationRedirect,
   resolveLocalization,
 } from '../src/i18n/runtime';
+import { routeRequest } from '../src/router';
 import { routeUrl } from '../src/routing/application-routes';
-import { renderPage } from '../src/ui/page';
 import { accessibilityLabResponse } from '../src/ui/accessibility-lab';
 import type { Env } from '../src/types';
 
 const shellStyles = readFileSync('src/styles/shell.css', 'utf8');
 
 const env = {
+  DEMO_DB: {
+    prepare: () => ({
+      bind() { return this; },
+      async all() {
+        return { results: [{ state: 'online', public_message: 'Available.', updated_at: '2026-09-20T00:00:00.000Z', updated_by: 'test' }] };
+      },
+    }),
+  },
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
-} as Env;
+} as unknown as Env;
 
 function localized(url: string, headers: HeadersInit = {}): { request: Request; env: Env } {
   const request = new Request(url, { headers });
   return { request, env: bindLocalization(env, resolveLocalization(request)) };
 }
 
+async function demosShell(url: string, environment: Env = env): Promise<string> {
+  const response = await routeRequest(new Request(url, { headers: { accept: 'text/html' } }), environment);
+  expect(response.status).toBe(200);
+  return response.text();
+}
+
 describe('D1 database console', () => {
   it('leads with table navigation and progressively discloses relational CRUD controls', async () => {
-    const html = await renderPage(env, { ...d1Content(env), routeId: 'demos.index' }).text();
+    const html = d1Content(env).body;
     expect(html).not.toContain('aria-label="Breadcrumb"');
     expect(html).toContain('Cloudflare D1 Database');
     expect(html).toContain('role="tablist"');
@@ -50,7 +64,7 @@ describe('D1 database console', () => {
   });
 
   it('surfaces API failures and confirms relational and reset behavior', async () => {
-    const html = await renderPage(env, d1Content(env)).text();
+    const html = d1Content(env).body;
     expect(html).toContain("email_already_exists: 'That email already exists.'");
     expect(html).toContain("user_limit_reached: 'This sandbox has reached its 10-user limit.'");
     expect(html).toContain("task_limit_reached: 'This sandbox has reached its 25-task limit.'");
@@ -65,7 +79,7 @@ describe('D1 database console', () => {
 
 describe('R2 storage workspace', () => {
   it('leads with the sandbox workflow and progressively discloses technical evidence', async () => {
-    const html = await renderPage(env, { ...r2Content(env), routeId: 'demos.index' }).text();
+    const html = r2Content(env).body;
     expect(html).not.toContain('aria-label="Breadcrumb"');
     expect(html).toContain('Cloudflare R2 Storage');
     expect(html).toContain('Your R2 sandbox');
@@ -89,7 +103,7 @@ describe('R2 storage workspace', () => {
   });
 
   it('validates uploads and uses inline confirmation with surfaced operation errors', async () => {
-    const html = await renderPage(env, r2Content(env)).text();
+    const html = r2Content(env).body;
     expect(html).toContain("state.selectedFile.size > MAX_FILE_BYTES");
     expect(html).toContain('File exceeds the 5 MiB limit.');
     expect(html).toContain('data-confirm-delete');
@@ -103,8 +117,7 @@ describe('R2 storage workspace', () => {
 describe('internationalized interface', () => {
   it('renders Arabic from the shared application context with matching lang and RTL direction', async () => {
     const context = localized('https://demo.example/interfaces/i18n?lang=ar&count=3');
-    const response = renderPage(context.env, i18nContent(context.request, context.env));
-    const html = await response.text();
+    const html = `${await demosShell('https://demo.wizardgang.ai/demos?lang=ar&count=3', context.env)}${i18nContent(context.request, context.env).body}`;
     expect(html).toContain('<html lang="ar" dir="rtl">');
     expect(html).toContain('التدويل في الواجهة');
     expect(html).toContain('src/i18n/locales/ar.json');
@@ -121,7 +134,7 @@ describe('internationalized interface', () => {
 
   it('keeps six synchronized resources while the demonstration defers language changes to the global control', async () => {
     const context = localized('https://demo.example/interfaces/i18n?lang=ja&count=7');
-    const html = await renderPage(context.env, i18nContent(context.request, context.env)).text();
+    const html = `${await demosShell('https://demo.wizardgang.ai/demos?lang=ja&count=7', context.env)}${i18nContent(context.request, context.env).body}`;
     expect(html).toContain('<html lang="ja" dir="ltr">');
     expect(html).toContain('<input type="hidden" name="lang" value="ja">');
     expect(html).toContain('Use the language control in the global header');
@@ -135,7 +148,7 @@ describe('internationalized interface', () => {
 
 describe('global localization and accessibility runtime', () => {
   it('makes the ordinary application shell English and accessible by default', async () => {
-    const html = await renderPage(env, { ...d1Content(env), routeId: 'demos.index' }).text();
+    const html = await demosShell('https://demo.wizardgang.ai/demos');
     expect(html).toContain('<html lang="en" dir="ltr">');
     expect(html).toContain('<a class="skip-link" href="#main">Skip to main content</a>');
     expect(html).toContain('<main class="site-main" id="main">');
@@ -148,7 +161,7 @@ describe('global localization and accessibility runtime', () => {
 
   it('localizes shell-owned strings and preserves unrelated state on an ordinary RTL page', async () => {
     const context = localized('https://demo.example/demos?lang=ar&filter=recent');
-    const html = await renderPage(context.env, { ...d1Content(context.env), routeId: 'demos.index' }).text();
+    const html = await demosShell('https://demo.wizardgang.ai/demos?lang=ar&filter=recent', context.env);
     expect(html).toContain('<html lang="ar" dir="rtl">');
     expect(html).toContain('aria-label="التنقل الرئيسي"');
     expect(html).toContain('>العروض التوضيحية</a>');
@@ -188,7 +201,7 @@ describe('global localization and accessibility runtime', () => {
 
 describe('accessible interaction surface', () => {
   it('pairs one accessible interaction with inert criterion-level failure analysis', async () => {
-    const html = await renderPage(env, accessibilityContent(new Request('https://demo.example/accessibility'), env)).text();
+    const html = `${await demosShell('https://demo.wizardgang.ai/demos')}${accessibilityContent(new Request('https://demo.example/accessibility'), env).body}`;
     expect(html.match(/class="skip-link"/g)).toHaveLength(1);
     expect(html).toContain('sandbox="allow-scripts allow-forms"');
     expect(html).not.toContain('data-a11y-mode');

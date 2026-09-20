@@ -6,19 +6,21 @@ export const demosRouteCapability = defineInterfaceIdentityCapability('demos.sur
     pattern: '/demos',
     methods: ['GET'],
     kind: 'page',
-    handler: async (request, { env }) => {
-      const [{ demosContent }, { renderPage }] = await Promise.all([
-        import('../../demos/demos-page'),
-        import('../../ui/page'),
-      ]);
-      return renderPage(env, await demosContent(request, env));
+    handler: async (_request, { env }) => {
+      const { renderDemosWorkbench } = await import('../../demos/demos-workbench');
+      return renderDemosWorkbench(env);
     },
     title: 'Architecture Demos',
     description: 'One task-oriented destination for the interactive architecture demonstrations.',
-    sourceModule: 'src/demos/demos-page.ts',
-    sourceExport: 'demosContent',
+    sourceModule: 'src/demos/demos-workbench.tsx',
+    sourceExport: 'renderDemosWorkbench',
     docs: ['docs/ROUTE-REGISTRY.md'],
-    tests: ['tests/demos-consolidation.test.ts', 'tests/router.test.ts', 'tests/interface.test.ts'],
+    tests: [
+      'tests/demo-333-react-demos.test.tsx',
+      'tests/demos-consolidation.test.ts',
+      'tests/router.test.ts',
+      'tests/interface.test.ts',
+    ],
     page: {
       parent: 'interfaces.frontend.index',
       label: 'Demos',

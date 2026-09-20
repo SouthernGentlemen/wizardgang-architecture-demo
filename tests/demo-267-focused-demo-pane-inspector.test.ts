@@ -28,15 +28,15 @@ describe('DEMO-267 focused demo pane and inspector', () => {
     const html = await response.text();
 
     expect(response.status).toBe(200);
-    expect(html).toContain('data-demo-active-title>D1</h2>');
-    expect(html).toContain('data-demo-purpose>Run relational CRUD against resettable shared demo state.</p>');
-    expect(html).toContain('<strong>Try this:</strong><span data-demo-try>Create or edit a row, then inspect the exact SQL and response.</span>');
-    expect((html.match(/data-demo-inspector aria-label=/g) ?? [])).toHaveLength(1);
+    expect(html).toContain('data-demo-active-title="">D1</h2>');
+    expect(html).toContain('data-demo-purpose="">Run relational CRUD against resettable shared demo state.</p>');
+    expect(html).toContain('<strong>Try this:</strong><span data-demo-try="">Create or edit a row, then inspect the exact SQL and response.</span>');
+    expect((html.match(/data-demo-inspector="" aria-label=/g) ?? [])).toHaveLength(1);
     expect(html).toContain('data-demo-inspector-mode="Guide"');
     expect(html).toContain('data-demo-inspector-mode="Request"');
     expect(html).toContain('data-demo-inspector-mode="Evidence"');
-    expect(html).toContain('data-demo-reset hidden>Reset demo</button>');
-    expect(html).toContain('data-demo-source>View source</a>');
+    expect(html).toContain('data-demo-reset="" hidden="">Reset demo</button>');
+    expect(html).toContain('data-demo-source="">View source</a>');
     expect(html).not.toContain('<details');
     expect(html).not.toContain('All demos');
   });
@@ -61,22 +61,22 @@ describe('DEMO-267 focused demo pane and inspector', () => {
   });
 
   it('mirrors real D1 request evidence and delegates reset to the mounted demo instead of fabricating state', () => {
-    const source = readFileSync('src/demos/demos-page.ts', 'utf8');
+    const source = readFileSync('src/browser/demos.ts', 'utf8');
     expect(source).toContain('const target = panel.querySelector(field.selector)');
     expect(source).toContain("requestObserver.observe(panel, { subtree: true, childList: true, characterData: true })");
-    expect(source).toContain("const target = panel.querySelector('[data-reset]')");
-    expect(source).toContain('if (target instanceof HTMLButtonElement) target.click()');
+    expect(source).toContain("const target = panel.querySelector<HTMLButtonElement>('[data-reset]')");
+    expect(source).toContain('target?.click()');
   });
 
   it('preserves the DEMO-265 mounting, cancellation, history, and bounded-cache contract', () => {
-    const source = readFileSync('src/demos/demos-page.ts', 'utf8');
-    expect(source).toContain('if (controller) controller.abort()');
-    expect(source).toContain("section.dispatchEvent(new CustomEvent('demo:deactivate'))");
+    const source = readFileSync('src/browser/demos.ts', 'utf8');
+    expect(source).toContain('pending.get(activeId)?.abort()');
+    expect(source).toContain("panel.querySelector('[data-demo-section]')?.dispatchEvent(new CustomEvent('demo:deactivate'))");
     expect(source).toContain('if (activeId !== id || controller.signal.aborted) return');
-    expect(source).toContain('if (htmlCache.size >= demos.length');
+    expect(source).toContain('if (htmlCache.size >= config.demos.length');
     expect(source).toContain("window.addEventListener('hashchange', applySelection)");
     expect(source).toContain("window.addEventListener('popstate', applySelection)");
     expect(source).toContain("history.pushState(null, '', nextHash)");
-    expect((source.match(/const DEFAULT_DEMO_ID = 'd1'/g) ?? [])).toHaveLength(1);
+    expect(readFileSync('src/demos/demos-page.ts', 'utf8')).toContain("export const DEFAULT_DEMO_ID = 'd1'");
   });
 });

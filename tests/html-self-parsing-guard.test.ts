@@ -20,21 +20,22 @@ describe('page composition source boundary', () => {
     }
   });
 
-  it('keeps React document rendering behind renderPage', () => {
+  it('keeps full-document rendering behind the React-only page boundary', () => {
     const source = fs.readFileSync('src/ui/page.ts', 'utf8');
     const documentSource = fs.readFileSync('src/ui/document.tsx', 'utf8');
-    expect(source).toContain('export function renderPage(env: Env, content: PageContent): Response');
+    expect(source).toContain('export function renderReactPage(env: Env, content: ReactPageContent): Response');
     expect(source).toContain('renderDocument(env, content, localization)');
+    expect(source).not.toContain('export function renderPage(');
     expect(documentSource).toContain('renderToStaticMarkup(<LocalizedDocument');
     expect(documentSource).not.toContain('localizePresentation');
   });
 
-  it('confines raw HTML to the audited legacy-body component', () => {
+  it('keeps raw HTML injection out of all application source', () => {
     const uses: string[] = [];
     for (const file of sourceFiles('src')) {
       const source = fs.readFileSync(file, 'utf8');
       if (source.includes('dangerouslySetInnerHTML')) uses.push(file);
     }
-    expect(uses).toEqual(['src/ui/legacy-body.tsx']);
+    expect(uses).toEqual([]);
   });
 });

@@ -53,7 +53,7 @@ describe('canonical interface demonstrations', () => {
     expect(html).toContain('class="skip-link" href="#main"');
     expect(html).toContain('<main class="site-main" id="main">');
     expect(html.match(/<h1\b/g)).toHaveLength(1);
-    expect(html.match(/data-demo-workbench(?:\s|>)/g)).toHaveLength(1);
+    expect(html.match(/data-demo-workbench(?:="")?(?:\s|>)/g)).toHaveLength(1);
     for (const page of pages) {
       expect(html, page.view).toContain(`href="#${page.view}"`);
       expect(html, page.view).not.toContain(page.marker);

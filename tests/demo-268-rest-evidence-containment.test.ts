@@ -25,12 +25,13 @@ describe('DEMO-268 REST evidence containment', () => {
     expect(demonstrations.map((demo) => demo.id)).toEqual(releasedFragments);
     expect(demonstrations.find((demo) => demo.id === 'rest')?.id).toBe('rest');
 
-    const source = readFileSync('src/demos/demos-page.ts', 'utf8');
-    expect(source).toContain("const DEFAULT_DEMO_ID = 'd1'");
-    expect(source).toContain("history.pushState(null, '', nextHash)");
-    expect(source).toContain("window.addEventListener('hashchange', applySelection)");
-    expect(source).toContain("window.addEventListener('popstate', applySelection)");
-    expect(source).not.toContain('All demos');
+    const registrySource = readFileSync('src/demos/demos-page.ts', 'utf8');
+    const browserSource = readFileSync('src/browser/demos.ts', 'utf8');
+    expect(registrySource).toContain("export const DEFAULT_DEMO_ID = 'd1'");
+    expect(browserSource).toContain("history.pushState(null, '', nextHash)");
+    expect(browserSource).toContain("window.addEventListener('hashchange', applySelection)");
+    expect(browserSource).toContain("window.addEventListener('popstate', applySelection)");
+    expect(registrySource).not.toContain('All demos');
   });
 
   it('renders an operation-first REST task surface with only one operation visible by default', () => {
@@ -91,14 +92,14 @@ describe('DEMO-268 REST evidence containment', () => {
   });
 
   it('preserves the DEMO-267 persistent pane/inspector contract and removes the old REST disclosure dump', () => {
-    const demosSource = readFileSync('src/demos/demos-page.ts', 'utf8');
+    const demosSource = readFileSync('src/browser/demos.ts', 'utf8');
     const apiSource = readFileSync('src/demos/api-page.ts', 'utf8');
     const demosStyles = readFileSync('src/styles/demos.css', 'utf8');
 
     expect(demosStyles).toContain('grid-template-columns:minmax(0,7fr) minmax(16rem,3fr)');
-    expect(demosSource).toContain('if (controller) controller.abort()');
-    expect(demosSource).toContain("section.dispatchEvent(new CustomEvent('demo:deactivate'))");
-    expect(demosSource).toContain('if (htmlCache.size >= demos.length');
+    expect(demosSource).toContain('pending.get(activeId)?.abort()');
+    expect(demosSource).toContain("panel.querySelector('[data-demo-section]')?.dispatchEvent(new CustomEvent('demo:deactivate'))");
+    expect(demosSource).toContain('if (htmlCache.size >= config.demos.length');
     expect(demosSource).toContain("type InspectorMode = 'Guide' | 'Request' | 'Evidence'");
     expect(apiSource).not.toContain('rest-full-contract');
     expect(apiSource).not.toContain('rest-guided-flow');

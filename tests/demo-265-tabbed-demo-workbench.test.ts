@@ -71,21 +71,22 @@ describe('DEMO-265 tabbed demo workbench', () => {
   });
 
   it('defaults invalid or missing fragments to D1 and synchronizes hash and history selection', () => {
-    const source = readFileSync('src/demos/demos-page.ts', 'utf8');
-    expect(source).toContain("const DEFAULT_DEMO_ID = 'd1'");
-    expect(source).toContain('return byId.has(id) ? id : defaultDemoId');
-    expect(source).toContain("window.addEventListener('hashchange', applySelection)");
-    expect(source).toContain("window.addEventListener('popstate', applySelection)");
-    expect(source).toContain("history.pushState(null, '', nextHash)");
+    const registrySource = readFileSync('src/demos/demos-page.ts', 'utf8');
+    const browserSource = readFileSync('src/browser/demos.ts', 'utf8');
+    expect(registrySource).toContain("export const DEFAULT_DEMO_ID = 'd1'");
+    expect(browserSource).toContain('return byId.has(id) ? id : config.defaultDemoId');
+    expect(browserSource).toContain("window.addEventListener('hashchange', applySelection)");
+    expect(browserSource).toContain("window.addEventListener('popstate', applySelection)");
+    expect(browserSource).toContain("history.pushState(null, '', nextHash)");
   });
 
   it('deactivates the previous demo and aborts stale work before mounting the next presentation', () => {
-    const source = readFileSync('src/demos/demos-page.ts', 'utf8');
-    expect(source).toContain('if (controller) controller.abort()');
-    expect(source).toContain("section.dispatchEvent(new CustomEvent('demo:deactivate'))");
+    const source = readFileSync('src/browser/demos.ts', 'utf8');
+    expect(source).toContain('pending.get(activeId)?.abort()');
+    expect(source).toContain("panel.querySelector('[data-demo-section]')?.dispatchEvent(new CustomEvent('demo:deactivate'))");
     expect(source).toContain('panel.replaceChildren()');
     expect(source).toContain('if (activeId !== id || controller.signal.aborted) return');
-    expect(source).toContain('const htmlCache = new Map()');
-    expect(source).toContain('if (htmlCache.size >= demos.length');
+    expect(source).toContain('const htmlCache = new Map<string, string>()');
+    expect(source).toContain('if (htmlCache.size >= config.demos.length');
   });
 });

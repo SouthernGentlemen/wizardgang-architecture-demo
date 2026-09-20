@@ -49,15 +49,16 @@ describe('consolidated architecture demos', () => {
   });
 
   it('publishes the stable fragment-driven workbench selection contract', () => {
-    const source = readFileSync('src/demos/demos-page.ts', 'utf8');
-    for (const fragment of fragments) expect(source).toContain(`id: '${fragment}'`);
-    expect(source).toContain("const DEFAULT_DEMO_ID = 'd1'");
-    expect(source).toContain("window.addEventListener('hashchange', applySelection)");
-    expect(source).toContain("window.addEventListener('popstate', applySelection)");
-    expect(source).toContain("history.pushState(null, '', nextHash)");
-    expect(source).toContain("section.dispatchEvent(new CustomEvent('demo:deactivate'))");
-    expect(source).not.toContain('name="architecture-demo"');
-    expect(source).not.toContain('target.open = true');
+    const registrySource = readFileSync('src/demos/demos-page.ts', 'utf8');
+    const browserSource = readFileSync('src/browser/demos.ts', 'utf8');
+    for (const fragment of fragments) expect(registrySource).toContain(`id: '${fragment}'`);
+    expect(registrySource).toContain("export const DEFAULT_DEMO_ID = 'd1'");
+    expect(browserSource).toContain("window.addEventListener('hashchange', applySelection)");
+    expect(browserSource).toContain("window.addEventListener('popstate', applySelection)");
+    expect(browserSource).toContain("history.pushState(null, '', nextHash)");
+    expect(browserSource).toContain("panel.querySelector('[data-demo-section]')?.dispatchEvent(new CustomEvent('demo:deactivate'))");
+    expect(browserSource).not.toContain('name="architecture-demo"');
+    expect(browserSource).not.toContain('target.open = true');
   });
 
   it('keeps presentations out of the initial document and exposes one registered lazy workbench mount', async () => {

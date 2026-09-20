@@ -130,10 +130,11 @@
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
-      "module": "src/demos/demos-page.ts",
-      "exportName": "demosContent",
+      "module": "src/demos/demos-workbench.tsx",
+      "exportName": "renderDemosWorkbench",
       "tests": [
         "tests/interface-identity-routing.test.ts",
+        "tests/demo-333-react-demos.test.tsx",
         "tests/demos-consolidation.test.ts",
         "tests/router.test.ts",
         "tests/interface.test.ts"

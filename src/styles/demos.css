@@ -91,7 +91,7 @@
 .r2-upload-evidence li div { display: grid; gap: .25rem; min-width: 0; }
 .r2-upload-evidence small { overflow-wrap: anywhere; color: var(--muted); }
 .identity-provider-actions a[aria-disabled="true"] { pointer-events: none; opacity: .55; }
-.webhook-pipeline li[data-state="idle"] { opacity: .62; }
+.webhook-pipeline li[data-state="idle"] { opacity: .8; }
 .webhook-pipeline li[data-state="pending"] { border-bottom: 2px solid var(--cyan); }
 .webhook-pipeline li[data-state="complete"] { border-bottom: 2px solid var(--acid); }
 .webhook-pipeline li[data-state="failed"] { border-bottom: 2px solid var(--danger); }
