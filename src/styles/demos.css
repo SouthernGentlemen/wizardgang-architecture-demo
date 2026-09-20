@@ -7,8 +7,6 @@
 .lab-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .7rem; margin: 1rem 0 1.25rem; padding: 1rem; border: 1px solid var(--line); border-radius: 0; background: var(--panel-2); }
 .lab-form label { display: grid; gap: .35rem; }
 .lab-form .button-row { grid-column: 1 / -1; }
-.d1-page-header { margin-bottom: clamp(2.4rem, 5vw, 4rem); }
-.d1-page-header h1 { max-width: 13ch; }
 .d1-database-bar { display: flex; align-items: stretch; min-height: 70px; margin-bottom: 1rem; border: 1px solid var(--line); background: var(--panel); }
 .d1-database-id { display: grid; align-content: center; gap: .25rem; min-width: 180px; padding: .8rem 1.1rem; border-right: 1px solid var(--line); }
 .d1-database-id span { color: var(--muted); font: 800 .62rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
@@ -67,7 +65,6 @@
 .d1-response-details > summary::after { margin-left: auto; content: '+'; }
 .d1-response-details[open] > summary::after { content: '−'; }
 .d1-response-details pre { max-height: 14rem; margin: 0 0 1rem; font-size: .7rem; }
-.d1-implementation-body .reference-links { align-content: start; margin: 0; }
 .d1-sandbox { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin-top: 1rem; }
 .d1-sandbox .eyebrow { margin-bottom: .4rem; }
 .d1-sandbox h2 { margin-bottom: .4rem; font-size: 1.45rem; }
@@ -228,7 +225,6 @@
 .r2-response-details > summary::after { content: '+'; margin-left: auto; }
 .r2-response-details[open] > summary::after { content: '−'; }
 .r2-response-details pre { max-height: 16rem; margin: 0 0 .7rem; font-size: .72rem; }
-.r2-implementation .reference-details { border-top: 1px solid var(--line); }
 
 .identity-page-header { margin-bottom: clamp(2.2rem, 5vw, 4rem); }
 .identity-page-header h1 { max-width: 12ch; }

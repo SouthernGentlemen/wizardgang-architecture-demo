@@ -184,10 +184,11 @@
       "docs/ROUTE-REGISTRY.md"
     ],
     "source": {
-      "module": "src/demos/demos-page.ts",
+      "module": "src/demos/demo-presentations.ts",
       "exportName": "demoPresentationResponse",
       "tests": [
         "tests/interface-identity-routing.test.ts",
+        "tests/demo-334-react-data-demos.test.tsx",
         "tests/demos-consolidation.test.ts",
         "tests/router.test.ts"
       ]

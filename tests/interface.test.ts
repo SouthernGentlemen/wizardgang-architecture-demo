@@ -1,9 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { accessibilityContent } from '../src/demos/accessibility-page';
-import { d1Content } from '../src/demos/d1-page';
+import { d1Section } from '../src/demos/d1-presentation';
 import { i18nContent } from '../src/demos/i18n-page';
-import { r2Content } from '../src/demos/r2-page';
+import { r2Section } from '../src/demos/r2-presentation';
 import {
   bindLocalization,
   localeNormalizationRedirect,
@@ -42,7 +42,7 @@ async function demosShell(url: string, environment: Env = env): Promise<string> 
 
 describe('D1 database console', () => {
   it('leads with table navigation and progressively discloses relational CRUD controls', async () => {
-    const html = d1Content(env).body;
+    const html = d1Section(env).body;
     expect(html).not.toContain('aria-label="Breadcrumb"');
     expect(html).toContain('Cloudflare D1 Database');
     expect(html).toContain('role="tablist"');
@@ -64,27 +64,29 @@ describe('D1 database console', () => {
   });
 
   it('surfaces API failures and confirms relational and reset behavior', async () => {
-    const html = d1Content(env).body;
-    expect(html).toContain("email_already_exists: 'That email already exists.'");
-    expect(html).toContain("user_limit_reached: 'This sandbox has reached its 10-user limit.'");
-    expect(html).toContain("task_limit_reached: 'This sandbox has reached its 25-task limit.'");
-    expect(html).toContain("' become Unassigned.'");
+    const html = d1Section(env).body;
+    const browser = readFileSync('src/browser/d1.ts', 'utf8');
+    expect(browser).toContain("email_already_exists: message('emailAlreadyExists', 'That email already exists.')");
+    expect(browser).toContain("user_limit_reached: message('userLimitReached', 'This sandbox has reached its 10-user limit.')");
+    expect(browser).toContain("task_limit_reached: message('taskLimitReached', 'This sandbox has reached its 25-task limit.')");
+    expect(browser).toContain("message('assignedTasksWill', 'assigned tasks will become Unassigned.')");
     expect(html).toContain('data-confirm-dialog');
-    expect(html).toContain('Reset sample data?');
-    expect(html).toContain('const confirmButton = event.currentTarget;');
-    expect(html).not.toContain('event.currentTarget.disabled');
-    expect(html).not.toContain('catch (_) {}');
+    expect(browser).toContain("message('resetTitle', 'Reset sample data?')");
+    expect(browser).toContain('const confirmButton = event.currentTarget as HTMLButtonElement;');
+    expect(browser).not.toContain('event.currentTarget.disabled');
+    expect(browser).not.toContain('catch (_) {}');
   });
 });
 
 describe('R2 storage workspace', () => {
   it('leads with the sandbox workflow and progressively discloses technical evidence', async () => {
-    const html = r2Content(env).body;
+    const html = r2Section(env).body;
+    const browser = readFileSync('src/browser/r2.ts', 'utf8');
     expect(html).not.toContain('aria-label="Breadcrumb"');
     expect(html).toContain('Cloudflare R2 Storage');
     expect(html).toContain('Your R2 sandbox');
     expect(html).toContain('Drop a file here');
-    expect(html).toContain('data-upload-button disabled');
+    expect(html).toMatch(/data-upload-button=""[^>]*disabled=""/);
     expect(html).toContain('data-operation-status');
     expect(html).toContain('View response JSON');
     expect(html).not.toContain('Storage details');
@@ -94,23 +96,24 @@ describe('R2 storage workspace', () => {
     expect(html).not.toContain('How this works');
     expect(html).not.toContain('One request, two stores');
     expect(html).not.toContain('data-count');
-    expect(html).toContain('data-download-id');
-    expect(html).toContain('file-preview-text');
-    expect(html).toContain('file-preview-image');
+    expect(browser).toContain('download.dataset.downloadId = file.id');
+    expect(browser).toContain("'file-preview file-preview-text'");
+    expect(browser).toContain("'file-preview file-preview-image'");
     expect(html).not.toContain('Implementation details');
     expect(html).not.toContain('Platform / /r2');
     expect(html).not.toContain('Latest R2 operation');
   });
 
   it('validates uploads and uses inline confirmation with surfaced operation errors', async () => {
-    const html = r2Content(env).body;
-    expect(html).toContain("state.selectedFile.size > MAX_FILE_BYTES");
-    expect(html).toContain('File exceeds the 5 MiB limit.');
-    expect(html).toContain('data-confirm-delete');
+    const html = r2Section(env).body;
+    const browser = readFileSync('src/browser/r2.ts', 'utf8');
+    expect(browser).toContain('state.selectedFile.size > MAX_FILE_BYTES');
+    expect(browser).toContain('File exceeds the 5 MiB limit.');
+    expect(browser).toContain('data-confirm-delete');
     expect(html).toContain('data-confirm-reset');
-    expect(html).toContain('Upload failed — try again.');
-    expect(html).not.toContain("confirm('Delete this R2 object?')");
-    expect(html).not.toContain('catch (_) {}');
+    expect(browser).toContain('Upload failed — try again.');
+    expect(browser).not.toContain("confirm('Delete this R2 object?')");
+    expect(browser).not.toContain('catch (_) {}');
   });
 });
 

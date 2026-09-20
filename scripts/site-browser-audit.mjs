@@ -21,6 +21,7 @@ const auditConfig = JSON.parse(fs.readFileSync('config/site-audit-states.json', 
 const serverPort = Number(process.env.SITE_AUDIT_PORT || 8787);
 const debugPort = Number(process.env.SITE_AUDIT_DEBUG_PORT || 9222);
 const origin = `http://127.0.0.1:${serverPort}`;
+const localSessionSecret = 'demo-334-local-browser-audit-session-key';
 const axeTags = ['wcag2a', 'wcag2aa', 'wcag2aaa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const workbenchDemos = {
   d1: ['Data', 'D1'], r2: ['Data', 'R2'], rest: ['APIs', 'REST / OpenAPI'], graphql: ['APIs', 'GraphQL'],
@@ -227,6 +228,122 @@ async function traverseBrowserHistory(cdp, offset, expectedId, label) {
   await assertWorkbenchState(cdp, expectedId, label);
 }
 
+async function exerciseD1Workflow(cdp, locale) {
+  const label = `D1 ${locale} CRUD/reset`;
+  const name = `DEMO 334 ${locale} user`;
+  const editedName = `${name} edited`;
+  const email = `demo-334-${locale}@example.test`;
+  await navigate(cdp, `${origin}/demos?lang=${locale}#d1`);
+  await assertWorkbenchState(cdp, 'd1', label, '#d1', locale);
+  await waitForExpression(cdp, `document.querySelector('[data-count="users"]')?.textContent !== '—'`, `${label} initial users`);
+
+  await evaluate(cdp, `(()=>{
+    document.querySelector('[data-demo-reset]')?.click();
+    document.querySelector('[data-demo-panel] [data-confirm-action]')?.click();
+    return true;
+  })()`);
+  await waitForExpression(cdp, `document.querySelector('[data-count="users"]')?.textContent === '3' && !document.querySelector('[data-confirm-dialog]')?.open`, `${label} reset`);
+
+  await evaluate(cdp, `(()=>{
+    document.querySelector('[data-demo-panel] [data-add="users"]')?.click();
+    const form=document.querySelector('[data-demo-panel] [data-form="users"]');
+    form.elements.name.value=${JSON.stringify(name)};
+    form.elements.email.value=${JSON.stringify(email)};
+    form.elements.role.value='member';
+    form.requestSubmit();
+    return true;
+  })()`);
+  await waitForExpression(cdp, `(()=>[...document.querySelectorAll('[data-rows="users"] tr')].some((row)=>row.querySelector('strong')?.textContent===${JSON.stringify(name)}))()`, `${label} create`, 160);
+
+  await evaluate(cdp, `(()=>{
+    const row=[...document.querySelectorAll('[data-rows="users"] tr')].find((item)=>item.querySelector('strong')?.textContent===${JSON.stringify(name)});
+    row?.querySelector('[data-edit-user]')?.click();
+    const form=document.querySelector('[data-demo-panel] [data-form="users"]');
+    form.elements.name.value=${JSON.stringify(editedName)};
+    form.requestSubmit();
+    return true;
+  })()`);
+  await waitForExpression(cdp, `(()=>[...document.querySelectorAll('[data-rows="users"] tr')].some((row)=>row.querySelector('strong')?.textContent===${JSON.stringify(editedName)}))()`, `${label} edit`, 160);
+
+  await evaluate(cdp, `(()=>{
+    const row=[...document.querySelectorAll('[data-rows="users"] tr')].find((item)=>item.querySelector('strong')?.textContent===${JSON.stringify(editedName)});
+    row?.querySelector('[data-delete-user]')?.click();
+    document.querySelector('[data-demo-panel] [data-confirm-action]')?.click();
+    return true;
+  })()`);
+  await waitForExpression(cdp, `(()=>![...document.querySelectorAll('[data-rows="users"] tr')].some((row)=>row.querySelector('strong')?.textContent===${JSON.stringify(editedName)}))()`, `${label} delete`, 160);
+
+  await evaluate(cdp, `(()=>{
+    document.querySelector('[data-demo-reset]')?.click();
+    document.querySelector('[data-demo-panel] [data-confirm-action]')?.click();
+    return true;
+  })()`);
+  await waitForExpression(cdp, `document.querySelector('[data-count="users"]')?.textContent === '3' && !document.querySelector('[data-confirm-dialog]')?.open`, `${label} final reset`, 160);
+  const result = await evaluate(cdp, `(()=>({
+    lang:document.documentElement.lang,
+    dir:document.documentElement.dir,
+    users:document.querySelector('[data-count="users"]')?.textContent,
+    sql:document.querySelector('[data-inspector-sql]')?.textContent?.trim(),
+    response:document.querySelector('[data-state-output]')?.textContent?.trim(),
+    status:document.querySelector('[data-inspector-status]')?.textContent?.trim()
+  }))()`);
+  if (result.lang !== locale || result.dir !== (locale === 'ar' ? 'rtl' : 'ltr') || result.users !== '3' || !result.sql || !result.response || !result.status) {
+    throw new Error(`${label} did not preserve localized CRUD/reset and SQL inspector behavior: ${JSON.stringify(result)}`);
+  }
+}
+
+async function exerciseR2Workflow(cdp, locale) {
+  const label = `R2 ${locale} upload/preview/delete`;
+  const fileName = `demo-334-${locale}.txt`;
+  const fileBody = `DEMO-334 ${locale} R2 preview`;
+  await navigate(cdp, `${origin}/demos?lang=${locale}#r2`);
+  await assertWorkbenchState(cdp, 'r2', label, '#r2', locale);
+  await waitForExpression(cdp, `!document.querySelector('[data-sandbox-usage]')?.textContent?.includes('Loading')`, `${label} initial inventory`, 160);
+
+  const resetNeeded = await evaluate(cdp, `!document.querySelector('[data-r2-reset]')?.disabled`);
+  if (resetNeeded) {
+    await evaluate(cdp, `(()=>{document.querySelector('[data-r2-reset]')?.click();document.querySelector('[data-confirm-reset]')?.click();return true})()`);
+    await waitForExpression(cdp, `document.querySelector('[data-r2-reset]')?.disabled === true`, `${label} clean sandbox`, 160);
+  }
+
+  await evaluate(cdp, `(()=>{
+    const input=document.querySelector('[data-file-input]');
+    const transfer=new DataTransfer();
+    transfer.items.add(new File([${JSON.stringify(fileBody)}],${JSON.stringify(fileName)},{type:'text/plain'}));
+    input.files=transfer.files;
+    input.dispatchEvent(new Event('change',{bubbles:true}));
+    document.querySelector('[data-upload-form]')?.requestSubmit();
+    return true;
+  })()`);
+  await waitForExpression(cdp, `(()=>[...document.querySelectorAll('.file-row')].some((row)=>row.querySelector('strong')?.textContent===${JSON.stringify(fileName)}))()`, `${label} upload`, 240);
+
+  await evaluate(cdp, `(()=>{
+    const row=[...document.querySelectorAll('.file-row')].find((item)=>item.querySelector('strong')?.textContent===${JSON.stringify(fileName)});
+    row?.querySelector('[data-preview-id]')?.click();
+    return true;
+  })()`);
+  await waitForExpression(cdp, `document.querySelector('[data-preview-text]')?.textContent === ${JSON.stringify(fileBody)}`, `${label} text preview`, 160);
+
+  await evaluate(cdp, `(()=>{
+    const row=[...document.querySelectorAll('.file-row')].find((item)=>item.querySelector('strong')?.textContent===${JSON.stringify(fileName)});
+    row?.querySelector('[data-delete-id]')?.click();
+    document.querySelector('[data-confirm-delete]')?.click();
+    return true;
+  })()`);
+  await waitForExpression(cdp, `(()=>![...document.querySelectorAll('.file-row')].some((row)=>row.querySelector('strong')?.textContent===${JSON.stringify(fileName)}))()`, `${label} delete`, 240);
+  const result = await evaluate(cdp, `(()=>({
+    lang:document.documentElement.lang,
+    dir:document.documentElement.dir,
+    method:document.querySelector('[data-request-method]')?.textContent?.trim(),
+    status:document.querySelector('[data-request-status]')?.textContent?.trim(),
+    response:document.querySelector('[data-r2-output]')?.textContent?.trim(),
+    preview:document.querySelector('[data-preview-text]')?.textContent ?? null
+  }))()`);
+  if (result.lang !== locale || result.dir !== (locale === 'ar' ? 'rtl' : 'ltr') || result.method !== 'DELETE' || !result.status || !result.response || result.preview !== null) {
+    throw new Error(`${label} did not preserve localized storage and request inspector behavior: ${JSON.stringify(result)}`);
+  }
+}
+
 async function workbenchInteractionAudit(cdp) {
   await navigate(cdp, `${origin}/demos?lang=en`);
   await assertWorkbenchState(cdp, 'd1', 'missing fragment default', '');
@@ -330,6 +447,11 @@ async function workbenchInteractionAudit(cdp) {
     await inspectCurrentPage(cdp, 'ar', `${id} Arabic workbench`);
     await switchWorkbenchLocale(cdp, 'en', id);
   }
+
+  for (const locale of ['en', 'ar']) {
+    await exerciseD1Workflow(cdp, locale);
+    await exerciseR2Workflow(cdp, locale);
+  }
 }
 
 async function keyboardSmoke(cdp, pathname) {
@@ -384,7 +506,16 @@ async function main() {
   }
 
   const wranglerBin = path.resolve('node_modules', '.bin', process.platform === 'win32' ? 'wrangler.cmd' : 'wrangler');
-  const wrangler = spawn(wranglerBin, ['dev', '--local', '--ip', '127.0.0.1', '--port', String(serverPort)], {
+  const wrangler = spawn(wranglerBin, [
+    'dev',
+    '--local',
+    '--ip',
+    '127.0.0.1',
+    '--port',
+    String(serverPort),
+    '--var',
+    `DEMO_SESSION_SECRET:${localSessionSecret}`,
+  ], {
     stdio: ['ignore', 'pipe', 'pipe'],
     env: { ...process.env, NO_UPDATE_NOTIFIER: '1' },
   });
@@ -481,7 +612,7 @@ async function main() {
 
     for (const pathname of auditConfig.keyboardPaths) await keyboardSmoke(cdp, pathname);
 
-    console.log(`Site browser audit passed: ${pages.length} canonical public routes, ${browserPages} route/locale renders, ${auditConfig.states.length} explicit state fixtures, ${axeRuns} axe runs, one complete Demo Workbench interaction/history/locale audit, ${auditConfig.narrowViewportPaths.length} narrow reflow samples, and ${auditConfig.keyboardPaths.length} keyboard smoke samples.`);
+    console.log(`Site browser audit passed: ${pages.length} canonical public routes, ${browserPages} route/locale renders, ${auditConfig.states.length} explicit state fixtures, ${axeRuns} axe runs, one complete Demo Workbench interaction/history/locale audit, D1 CRUD/reset and R2 upload/preview/delete in English and Arabic, ${auditConfig.narrowViewportPaths.length} narrow reflow samples, and ${auditConfig.keyboardPaths.length} keyboard smoke samples.`);
     console.log('Automated accessibility result: no automatically detectable violation observed in the bounded Chromium/axe matrix. This is not WCAG conformance or AAA certification.');
   } catch (error) {
     if (wrangler.exitCode !== null) console.error(`wrangler exited ${wrangler.exitCode}: ${wranglerError.slice(-4000)}`);

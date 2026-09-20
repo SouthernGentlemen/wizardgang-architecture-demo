@@ -2155,7 +2155,7 @@
       },
       {
         "name": "عرض المصدر",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/main/src/demos/d1-page.ts",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/main/src/demos/d1-presentation.tsx",
         "target": "_blank"
       },
       {
@@ -2583,7 +2583,7 @@
         "element": "script",
         "attributes": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:63e12b14e19e2be7>",
+          "data-config": "<CONFIG_SHA256:dc31729e59d39378>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -2612,7 +2612,7 @@
         "inlineSha256": null,
         "data": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:63e12b14e19e2be7>",
+          "data-config": "<CONFIG_SHA256:dc31729e59d39378>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -2638,7 +2638,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-dkgSDIBP.css",
+        "href": "/assets/demos-WiVnjy_y.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -8353,7 +8353,7 @@
       },
       {
         "name": "عرض المصدر",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/main/src/demos/d1-page.ts",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/main/src/demos/d1-presentation.tsx",
         "target": "_blank"
       },
       {
@@ -8781,7 +8781,7 @@
         "element": "script",
         "attributes": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:63e12b14e19e2be7>",
+          "data-config": "<CONFIG_SHA256:dc31729e59d39378>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -8810,7 +8810,7 @@
         "inlineSha256": null,
         "data": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:63e12b14e19e2be7>",
+          "data-config": "<CONFIG_SHA256:dc31729e59d39378>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -8836,7 +8836,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-dkgSDIBP.css",
+        "href": "/assets/demos-WiVnjy_y.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -9051,7 +9051,7 @@
       },
       {
         "name": "عرض المصدر",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/main/src/demos/d1-page.ts",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/main/src/demos/d1-presentation.tsx",
         "target": "_blank"
       },
       {
@@ -9479,7 +9479,7 @@
         "element": "script",
         "attributes": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:63e12b14e19e2be7>",
+          "data-config": "<CONFIG_SHA256:dc31729e59d39378>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -9508,7 +9508,7 @@
         "inlineSha256": null,
         "data": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:63e12b14e19e2be7>",
+          "data-config": "<CONFIG_SHA256:dc31729e59d39378>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -9534,7 +9534,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-dkgSDIBP.css",
+        "href": "/assets/demos-WiVnjy_y.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -10778,7 +10778,9 @@
       {
         "element": "div",
         "attributes": {
-          "data-demo-section": "d1"
+          "data-demo-section": "d1",
+          "data-demo-browser-module": "/assets/d1-browser-skjjcjyY.js",
+          "data-config": "<CONFIG_SHA256:0a21435961a84350>"
         }
       },
       {
@@ -10974,16 +10976,7 @@
         }
       }
     ],
-    "scripts": [
-      {
-        "src": null,
-        "type": "classic",
-        "async": false,
-        "defer": false,
-        "inlineSha256": "b75e1d0d21a51c81",
-        "data": {}
-      }
-    ],
+    "scripts": [],
     "stylesheets": []
   },
   "demo:r2": {
@@ -11104,7 +11097,9 @@
       {
         "element": "div",
         "attributes": {
-          "data-demo-section": "r2"
+          "data-demo-section": "r2",
+          "data-demo-browser-module": "/assets/r2-browser-ngSIoXTG.js",
+          "data-config": "<CONFIG_SHA256:aeddedb81b2df2f5>"
         }
       },
       {
@@ -11246,16 +11241,7 @@
         }
       }
     ],
-    "scripts": [
-      {
-        "src": null,
-        "type": "classic",
-        "async": false,
-        "defer": false,
-        "inlineSha256": "917b9414f95241ed",
-        "data": {}
-      }
-    ],
+    "scripts": [],
     "stylesheets": []
   },
   "demo:rest": {
