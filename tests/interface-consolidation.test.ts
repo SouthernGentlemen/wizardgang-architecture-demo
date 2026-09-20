@@ -25,7 +25,7 @@ const environment: Env = {
 
 const pages = [
   { view: 'rest', marker: 'data-rest-operation-browser' },
-  { view: 'graphql', marker: 'srcdoc=' },
+  { view: 'graphql', marker: 'data-graphql-form' },
   { view: 'webhooks', marker: 'id="webhooks-webhooks"' },
   { view: 'identity', marker: 'id="identity-oauth"' },
   { view: 'mcp', marker: 'id="mcp-mcp-endpoint"' },

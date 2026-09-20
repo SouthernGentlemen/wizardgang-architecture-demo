@@ -6,7 +6,7 @@ import { authorize, type Principal } from '../lib/authorization';
 import { ensureDemoSession, withDemoSession, type DemoSession } from '../lib/demo-session';
 import { createDemoUser, deleteDemoUser, getDemoUser, listDemoUsers, updateDemoUser } from '../lib/demo-users';
 import { json, methodNotAllowed, withSecurityHeaders } from '../lib/http';
-import { localGraphiqlResponse } from '../ui/graphiql-assets';
+import { localGraphiqlResponse } from '../ui/graphiql-response';
 
 interface GraphQLServerContext { env: Env; request: Request; principal: Principal; session?: DemoSession }
 

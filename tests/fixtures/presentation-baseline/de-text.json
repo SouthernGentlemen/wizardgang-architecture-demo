@@ -4213,16 +4213,8 @@
     ],
     "labels": [
       {
-        "name": "lang",
-        "label": null
-      },
-      {
         "name": null,
         "label": "Request body application/json · RecordInput"
-      },
-      {
-        "name": "lang",
-        "label": null
       },
       {
         "name": null,

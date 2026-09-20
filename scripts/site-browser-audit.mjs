@@ -21,7 +21,7 @@ const auditConfig = JSON.parse(fs.readFileSync('config/site-audit-states.json', 
 const serverPort = Number(process.env.SITE_AUDIT_PORT || 8787);
 const debugPort = Number(process.env.SITE_AUDIT_DEBUG_PORT || 9222);
 const origin = `http://127.0.0.1:${serverPort}`;
-const localSessionSecret = 'demo-334-local-browser-audit-session-key';
+const localSessionSecret = 'demo-335-local-browser-audit-session-key';
 const axeTags = ['wcag2a', 'wcag2aa', 'wcag2aaa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const workbenchDemos = {
   d1: ['Data', 'D1'], r2: ['Data', 'R2'], rest: ['APIs', 'REST / OpenAPI'], graphql: ['APIs', 'GraphQL'],
@@ -344,6 +344,84 @@ async function exerciseR2Workflow(cdp, locale) {
   }
 }
 
+async function exerciseRestWorkflow(cdp, locale) {
+  const label = `REST ${locale} six-operation flow`;
+  await navigate(cdp, `${origin}/demos?lang=${locale}#rest`);
+  await assertWorkbenchState(cdp, 'rest', label, '#rest', locale);
+
+  const run = async (operationId, expectedStatus) => {
+    const selected = await evaluate(cdp, `(()=>{
+      const selector=document.querySelector('[data-rest-operation-select=${JSON.stringify(operationId)}]');
+      selector?.click();
+      const panel=document.querySelector('[data-rest-operation-panel=${JSON.stringify(operationId)}]');
+      const form=panel?.querySelector('[data-rest-form]');
+      if (!(form instanceof HTMLFormElement)) return false;
+      form.requestSubmit();
+      return true;
+    })()`);
+    if (!selected) throw new Error(`${label}: operation ${operationId} was not available`);
+    await waitForExpression(cdp, `(()=>{
+      const panel=document.querySelector('[data-rest-operation-panel=${JSON.stringify(operationId)}]');
+      const status=panel?.querySelector('[data-rest-status]')?.textContent?.trim()||'';
+      return panel?.querySelector('[data-rest-execute]')?.disabled===false && status.startsWith(${JSON.stringify(String(expectedStatus))});
+    })()`, `${label} ${operationId}`, 240);
+  };
+
+  await run('listRecords', 200);
+  await run('createRecord', 201);
+  await run('getRecord', 200);
+  await run('replaceRecord', 200);
+  await run('updateRecord', 200);
+  await run('deleteRecord', 204);
+  const result = await evaluate(cdp, `(()=>({
+    lang:document.documentElement.lang,
+    dir:document.documentElement.dir,
+    selected:document.querySelector('[data-rest-operation-select][aria-pressed="true"]')?.getAttribute('data-rest-operation-select'),
+    status:document.querySelector('[data-rest-operation-panel="deleteRecord"] [data-rest-status]')?.textContent?.trim(),
+    request:document.querySelector('[data-rest-operation-panel="deleteRecord"] [data-rest-request]')?.textContent?.trim(),
+    body:document.querySelector('[data-rest-operation-panel="deleteRecord"] [data-rest-response-body]')?.textContent?.trim()
+  }))()`);
+  if (result.lang !== locale || result.dir !== (locale === 'ar' ? 'rtl' : 'ltr') || result.selected !== 'deleteRecord' || !result.status?.startsWith('204') || !result.request?.includes('DELETE') || !result.body) {
+    throw new Error(`${label} did not preserve all operations and localized state: ${JSON.stringify(result)}`);
+  }
+}
+
+async function exerciseGraphqlWorkflow(cdp, locale) {
+  const label = `GraphQL ${locale} query flow`;
+  await navigate(cdp, `${origin}/demos?lang=${locale}#graphql`);
+  await assertWorkbenchState(cdp, 'graphql', label, '#graphql', locale);
+  for (const index of [0, 1]) {
+    await evaluate(cdp, `document.querySelector('[data-graphql-example=${JSON.stringify(String(index))}]')?.click();true`);
+    await waitForExpression(cdp, `(()=>{
+      const output=document.querySelector('[data-graphql-result=${JSON.stringify(String(index))}]');
+      const status=document.querySelector('[data-graphql-example-status=${JSON.stringify(String(index))}]')?.textContent||'';
+      return output && !output.hidden && output.textContent.includes('"data"') && status.includes('HTTP 200');
+    })()`, `${label} example ${index + 1}`, 240);
+  }
+  await evaluate(cdp, `(()=>{
+    const query=document.querySelector('[data-graphql-form] textarea[name="query"]');
+    const form=document.querySelector('[data-graphql-form]');
+    if (!(query instanceof HTMLTextAreaElement) || !(form instanceof HTMLFormElement)) return false;
+    query.value='query Names { users { name } }';
+    form.requestSubmit();
+    return true;
+  })()`);
+  await waitForExpression(cdp, `(()=>{
+    const output=document.querySelector('[data-graphql-workspace-result]')?.textContent||'';
+    const status=document.querySelector('[data-graphql-runner-status]')?.textContent||'';
+    return output.includes('"users"') && status.includes('HTTP 200');
+  })()`, `${label} editable runner`, 240);
+  const result = await evaluate(cdp, `({
+    lang:document.documentElement.lang,
+    dir:document.documentElement.dir,
+    status:document.querySelector('[data-graphql-runner-status]')?.textContent?.trim(),
+    response:document.querySelector('[data-graphql-workspace-result]')?.textContent?.trim()
+  })`);
+  if (result.lang !== locale || result.dir !== (locale === 'ar' ? 'rtl' : 'ltr') || !result.status?.includes('HTTP 200') || !result.response?.includes('"users"')) {
+    throw new Error(`${label} did not preserve query execution and localized state: ${JSON.stringify(result)}`);
+  }
+}
+
 async function workbenchInteractionAudit(cdp) {
   await navigate(cdp, `${origin}/demos?lang=en`);
   await assertWorkbenchState(cdp, 'd1', 'missing fragment default', '');
@@ -451,6 +529,8 @@ async function workbenchInteractionAudit(cdp) {
   for (const locale of ['en', 'ar']) {
     await exerciseD1Workflow(cdp, locale);
     await exerciseR2Workflow(cdp, locale);
+    await exerciseRestWorkflow(cdp, locale);
+    await exerciseGraphqlWorkflow(cdp, locale);
   }
 }
 
@@ -612,7 +692,7 @@ async function main() {
 
     for (const pathname of auditConfig.keyboardPaths) await keyboardSmoke(cdp, pathname);
 
-    console.log(`Site browser audit passed: ${pages.length} canonical public routes, ${browserPages} route/locale renders, ${auditConfig.states.length} explicit state fixtures, ${axeRuns} axe runs, one complete Demo Workbench interaction/history/locale audit, D1 CRUD/reset and R2 upload/preview/delete in English and Arabic, ${auditConfig.narrowViewportPaths.length} narrow reflow samples, and ${auditConfig.keyboardPaths.length} keyboard smoke samples.`);
+    console.log(`Site browser audit passed: ${pages.length} canonical public routes, ${browserPages} route/locale renders, ${auditConfig.states.length} explicit state fixtures, ${axeRuns} axe runs, one complete Demo Workbench interaction/history/locale audit, D1 CRUD/reset, R2 upload/preview/delete, every REST operation, and GraphQL example/custom queries in English and Arabic, ${auditConfig.narrowViewportPaths.length} narrow reflow samples, and ${auditConfig.keyboardPaths.length} keyboard smoke samples.`);
     console.log('Automated accessibility result: no automatically detectable violation observed in the bounded Chromium/axe matrix. This is not WCAG conformance or AAA certification.');
   } catch (error) {
     if (wrangler.exitCode !== null) console.error(`wrangler exited ${wrangler.exitCode}: ${wranglerError.slice(-4000)}`);

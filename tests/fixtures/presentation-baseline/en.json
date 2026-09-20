@@ -2583,7 +2583,7 @@
         "element": "script",
         "attributes": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:a3e79da030853861>",
+          "data-config": "<CONFIG_SHA256:30d3f9475311452a>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"Evidence\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -2612,7 +2612,7 @@
         "inlineSha256": null,
         "data": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:a3e79da030853861>",
+          "data-config": "<CONFIG_SHA256:30d3f9475311452a>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"Evidence\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -2638,7 +2638,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-WiVnjy_y.css",
+        "href": "/assets/demos-CC39o58h.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -8781,7 +8781,7 @@
         "element": "script",
         "attributes": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:a3e79da030853861>",
+          "data-config": "<CONFIG_SHA256:30d3f9475311452a>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"Evidence\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -8810,7 +8810,7 @@
         "inlineSha256": null,
         "data": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:a3e79da030853861>",
+          "data-config": "<CONFIG_SHA256:30d3f9475311452a>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"Evidence\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -8836,7 +8836,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-WiVnjy_y.css",
+        "href": "/assets/demos-CC39o58h.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -9479,7 +9479,7 @@
         "element": "script",
         "attributes": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:a3e79da030853861>",
+          "data-config": "<CONFIG_SHA256:30d3f9475311452a>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"Evidence\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -9508,7 +9508,7 @@
         "inlineSha256": null,
         "data": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:a3e79da030853861>",
+          "data-config": "<CONFIG_SHA256:30d3f9475311452a>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"Evidence\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -9534,7 +9534,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-WiVnjy_y.css",
+        "href": "/assets/demos-CC39o58h.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -12084,7 +12084,9 @@
       {
         "element": "div",
         "attributes": {
-          "data-demo-section": "rest"
+          "data-demo-section": "rest",
+          "data-demo-browser-module": "/assets/rest-browser-Do1nkLrS.js",
+          "data-config": "<CONFIG_SHA256:57f0141ea4f28f4e>"
         }
       },
       {
@@ -12844,16 +12846,7 @@
         }
       }
     ],
-    "scripts": [
-      {
-        "src": null,
-        "type": "classic",
-        "async": false,
-        "defer": false,
-        "inlineSha256": "ef6f458d5be4c30a",
-        "data": {}
-      }
-    ],
+    "scripts": [],
     "stylesheets": []
   },
   "demo:graphql": {
@@ -13019,7 +13012,9 @@
       {
         "element": "div",
         "attributes": {
-          "data-demo-section": "graphql"
+          "data-demo-section": "graphql",
+          "data-demo-browser-module": "/assets/graphql-browser-Dwpt-GEr.js",
+          "data-config": "<CONFIG_SHA256:634056fb559af315>"
         }
       },
       {
@@ -13083,16 +13078,7 @@
         }
       }
     ],
-    "scripts": [
-      {
-        "src": null,
-        "type": "classic",
-        "async": false,
-        "defer": false,
-        "inlineSha256": "54a7dbaebfc22a9b",
-        "data": {}
-      }
-    ],
+    "scripts": [],
     "stylesheets": []
   },
   "demo:webhooks": {

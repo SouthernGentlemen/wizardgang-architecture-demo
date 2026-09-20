@@ -1,9 +1,19 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { restDemoOpenApiDocument } from '../src/api/rest-demo-openapi';
-import { openApiConsole } from '../src/demos/openapi-console';
+import { restSection } from '../src/demos/rest-presentation';
 import { demonstrations } from '../src/demos/demos-page';
 import { applicationRouteRegistry } from '../src/routing/application-routes';
+import type { Env } from '../src/types';
+
+const env = {
+  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_BRANCH: 'main',
+} as Env;
+
+function restPresentation(): string {
+  return restSection(env).body;
+}
 
 const releasedFragments = [
   'd1',
@@ -35,7 +45,7 @@ describe('DEMO-268 REST evidence containment', () => {
   });
 
   it('renders an operation-first REST task surface with only one operation visible by default', () => {
-    const html = openApiConsole('/api/labs/rest-demo-openapi.json');
+    const html = restPresentation();
     const operationCount = 6;
 
     expect(Object.keys(restDemoOpenApiDocument.paths)).toHaveLength(2);
@@ -43,30 +53,30 @@ describe('DEMO-268 REST evidence containment', () => {
     expect(html.match(/data-rest-operation-select=/g)).toHaveLength(operationCount);
     expect(html.match(/data-rest-operation-panel=/g)).toHaveLength(operationCount);
     expect(html.match(/data-rest-operation-panel="[^"]+"[^>]* hidden/g)).toHaveLength(operationCount - 1);
-    expect(html).toContain('<h3 id="rest-demo-listRecords-request-heading">Request</h3>');
-    expect(html).toContain('<h3 id="rest-demo-listRecords-response-heading">Response</h3>');
-    expect(html).toContain('<h3 id="rest-demo-listRecords-contract-heading">Contract</h3>');
+    expect(html).toContain('id="rest-rest-demo-listRecords-request-heading">Request</h4>');
+    expect(html).toContain('id="rest-rest-demo-listRecords-response-heading">Response</h4>');
+    expect(html).toContain('id="rest-rest-demo-listRecords-contract-heading">Contract</h4>');
     expect(html).not.toContain('Full OpenAPI contract');
     expect(html).not.toContain('<div class="rest-schema-list">');
   });
 
   it('keeps the full OpenAPI document reachable only as deeper evidence', () => {
-    const html = openApiConsole('/api/labs/rest-demo-openapi.json');
+    const html = restPresentation();
     expect(html).toContain('<details class="rest-deeper-evidence">');
-    expect(html).toContain('data-rest-full-openapi>Open full OpenAPI JSON</a>');
+    expect(html).toContain('data-rest-full-openapi="">Open full OpenAPI JSON</a>');
     expect(html).toContain('href="/api/labs/rest-demo-openapi.json?download=1" download');
     expect(html).not.toContain(JSON.stringify(restDemoOpenApiDocument));
   });
 
   it('binds request, execution, response, and contract context to the selected operation', () => {
-    const html = openApiConsole('/api/labs/rest-demo-openapi.json');
+    const html = restPresentation();
     expect(html).toContain('data-rest-operation-select="listRecords"');
     expect(html).toContain('data-rest-operation-panel="listRecords"');
-    expect(html).toContain('data-rest-form data-method="GET" data-path="/api/labs/rest-demo-records"');
+    expect(html).toContain('data-rest-form="" data-method="GET" data-path="/api/labs/rest-demo-records"');
     expect(html).toContain('data-rest-operation-select="updateRecord"');
-    expect(html).toContain('data-rest-form data-method="PATCH" data-path="/api/labs/rest-demo-records/{id}"');
+    expect(html).toContain('data-rest-form="" data-method="PATCH" data-path="/api/labs/rest-demo-records/{id}"');
     expect(html).toContain('Only the OpenAPI material used by the selected operation is shown here.');
-    expect(html).toContain("panel.hidden = panel.dataset.restOperationPanel !== operationId");
+    expect(readFileSync('src/browser/rest.ts', 'utf8')).toContain('panel.hidden = panel.dataset.restOperationPanel !== operationId');
   });
 
   it('does not change REST machine routes, route inventory, or canonical OpenAPI source', () => {
@@ -93,7 +103,7 @@ describe('DEMO-268 REST evidence containment', () => {
 
   it('preserves the DEMO-267 persistent pane/inspector contract and removes the old REST disclosure dump', () => {
     const demosSource = readFileSync('src/browser/demos.ts', 'utf8');
-    const apiSource = readFileSync('src/demos/api-page.ts', 'utf8');
+    const apiSource = readFileSync('src/demos/rest-presentation.tsx', 'utf8');
     const demosStyles = readFileSync('src/styles/demos.css', 'utf8');
 
     expect(demosStyles).toContain('grid-template-columns:minmax(0,7fr) minmax(16rem,3fr)');

@@ -7,6 +7,8 @@ import {
 } from 'react';
 import type { DemoHeadingLevel } from './demo-section';
 
+type DemoLocalHeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
+
 const TOKEN = /^[A-Za-z][A-Za-z0-9_-]*$/;
 const REFERENCE_PROPERTIES = new Set([
   'htmlFor',
@@ -28,7 +30,7 @@ export interface DemoPresentationScopeValue {
   references(localIds: string): string;
   fragment(localId: string): string;
   attributes<T extends Record<string, unknown>>(attributes: T): T;
-  heading(localLevel: DemoHeadingLevel): DemoHeadingLevel;
+  heading(localLevel: DemoLocalHeadingLevel): DemoLocalHeadingLevel;
 }
 
 const ScopeContext = createContext<DemoPresentationScopeValue | null>(null);
@@ -60,8 +62,8 @@ export function createDemoPresentationScope(name: string, headingLevel: DemoHead
     if (typeof output.href === 'string' && output.href.startsWith('#')) output.href = `#${id(output.href.slice(1))}`;
     return output as T;
   };
-  const heading = (localLevel: DemoHeadingLevel): DemoHeadingLevel => (
-    Math.min(6, headingLevel + localLevel - 1) as DemoHeadingLevel
+  const heading = (localLevel: DemoLocalHeadingLevel): DemoLocalHeadingLevel => (
+    Math.min(6, headingLevel + localLevel - 1) as DemoLocalHeadingLevel
   );
   return Object.freeze({
     name: prefix,
@@ -113,7 +115,7 @@ export function DemoHeading({
   level,
   children,
   ...attributes
-}: Readonly<HTMLAttributes<HTMLHeadingElement> & { level: DemoHeadingLevel }>) {
+}: Readonly<HTMLAttributes<HTMLHeadingElement> & { level: DemoLocalHeadingLevel }>) {
   const scope = useDemoPresentationScope();
   return createElement(`h${scope.heading(level)}`, attributes, children);
 }
