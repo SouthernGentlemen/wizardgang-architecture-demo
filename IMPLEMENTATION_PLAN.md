@@ -23,16 +23,6 @@ The differences justify a common command *contract*, not identical shell bodies.
 
 ## Open tasks
 
-### DEMO-347 — [DOCS] Make exact-head CI diagnosis interface-neutral
-
-- Dependency: DEMO-346 merged on `main`.
-- Why: `AGENTS.md` mandates connector-action discovery even in a clean cloud terminal with authenticated `gh`/REST but no connector surface.
-- Scope: Require complete failing-job logs for the exact PR head through any available authenticated GitHub interface; document `gh`/REST and retained diagnostics-artifact recovery, bounded reporting, and exact permission-failure disclosure.
-- Non-goals: Do not infer failures from status summaries or weaken full-log investigation.
-- Acceptance: A terminal-only agent and a connector-equipped agent can follow one equivalent diagnosis rule without claiming inaccessible evidence.
-- Validation: Check command examples against current workflow/run shape; `npm run check`; `git diff --check`.
-- Authorities: `AGENTS.md`, `docs/CI-DIAGNOSTICS.md`, `.github/workflows/ci.yml`.
-
 ### DEMO-348 — [BUILD] Put generated-artifact parity inside `check`
 
 - Dependency: DEMO-347 merged on `main`.
