@@ -12,7 +12,9 @@ Primary types follow WG-ARCH-001 conventions: `INIT`, `FEAT`, `FIX`, `SEC`, `API
 
 Use an isolated branch named for its controlled change, such as `demo-NNN-imperative-summary`. A pull-request title follows the same controlled-title format. See [`docs/CHANGE-MANAGEMENT.md`](docs/CHANGE-MANAGEMENT.md).
 
-Temporary implementation plans may coordinate active stacked or multi-step work, but they are not permanent architecture or policy. Remove them when they stop governing active work.
+When root `IMPLEMENTATION_PLAN.md` exists, it is the current/future work queue. Reconcile it against merged `main`, take its first unblocked task unless the owner overrides priority, and remove the delivered task in the same PR. Keep remaining tasks accurate and delete the plan in the final task's PR. A `do needful` request runs the complete one-task delivery loop in `AGENTS.md`; when the queue is exhausted, the next turn researches and publishes a small wave without implementing that wave. Git/GitHub retain completed work.
+
+Author surgical tasks: one controlled ID, concern, observable outcome, narrow ownership, prerequisites, scope, non-goals, acceptance, and exact relevant validation. Split independently reviewable outcomes. Prefer roughly 5–12 researched near-term tasks per wave, then audit fresh state again rather than reserving a large sequence.
 
 ## Toolchain and dependency installation
 
@@ -64,6 +66,6 @@ npm run build
 git diff --check
 ```
 
-CI repeats the repository checks and validates controlled history and the pull-request title. When CI fails, follow the full-job-log troubleshooting sequence in [`AGENTS.md`](AGENTS.md). Never edit an applied migration; add the next numbered migration. Releases and production deployment follow [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md).
+`npm run check` is the canonical credential-free gate; CI also runs the listed additional local gates until they are composed into `check`. Live repository-setting verification (`npm run validate:repository-settings -- --live`) requires provider access and remains separate. CI validates controlled history and the pull-request title. Re-fetch exact-head checks and live settings before merging under the current merge-only ruleset; do not stop at a ready PR when it can be merged. When CI fails, follow the full-job-log troubleshooting sequence in [`AGENTS.md`](AGENTS.md). Never edit an applied migration; add the next numbered migration. Releases and production deployment follow [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md).
 
 Keep architecture and operational documentation in reviewable Markdown/text. Do not add PDF documentation unless explicitly requested.

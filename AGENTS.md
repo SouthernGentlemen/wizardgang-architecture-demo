@@ -4,7 +4,7 @@ This repository is a public architecture demonstration, not a generic applicatio
 
 ## Repository authority
 
-Repository documentation describes the current system. Superseded source and document states are recovered from Git and GitHub rather than narrated in permanent architecture or policy prose. Implementation plans and roadmaps may coordinate active work, but they are temporary and must be retired when the work no longer needs them. An active root `IMPLEMENTATION_PLAN.md` is the only Markdown outside `docs/history/` that may name the change IDs it reserves, and the release that completes its sequence retires it.
+Repository documentation describes the current system. Superseded source and document states are recovered from Git and GitHub rather than narrated in permanent architecture or policy prose. An active root `IMPLEMENTATION_PLAN.md` is the live current/future work queue, not a historical roadmap. It is the only Markdown outside `docs/history/` that may name the change IDs it reserves; delete it in the change that delivers its last task.
 
 Use repository authorities in this order. A lower layer may explain, project, or evidence a higher layer; it must not silently redefine it.
 
@@ -27,17 +27,29 @@ Concern-specific rules follow that hierarchy:
 
 Permanent current-state architecture and policy docs do not carry implementation-history narration such as concrete old change IDs, pull requests, merge SHAs, retired routes, former labels, staged migrations, or previous implementations. Machine-enforced immutable-history exceptions stay with the validator, test, or exception data that requires them. Dated evidence records may retain the facts they actually observed and must not be rewritten to mimic the current presentation.
 
+## Active plan and `do needful`
+
+`do needful` is a standing explicit instruction to complete the next authoritative repository operation. Start every such turn by fetching/re-reading `main`, this file, the active plan when present, open pull requests, and current CI. Reconcile the plan with accepted `main` before selecting work. If an already-open PR is the authoritative current controlled change, verify its exact head, required checks, currency, provider settings, and mergeability; finish and verify that change first when it is green and mergeable. Reuse its branch/PR rather than making a duplicate. Finishing that PR consumes this turn's one change: return the next-task prompt without starting another implementation.
+
+When the plan exists, remove already-merged task blocks and resolved/obsolete findings, and select the **first remaining unblocked task** by default. An owner may explicitly override priority; otherwise do not skip a blocked first task to implement a later one. Respect its dependencies and scope. Update future tasks in the same delivering change when discoveries alter their scope, dependencies, or acceptance criteria. The delivering PR removes its own task, so merged `main` never waits for a later cleanup turn. Do not retain completed tasks, merge SHAs, release notes, retrospectives, or legacy narratives in the active plan. If no future task remains, delete the plan in that final delivery.
+
+For one selected task, complete branch → implementation → validation → one controlled commit → PR → exact-head required CI → merge when current/green/authoritative/mergeable → re-fetch and verify `main`. This repository currently permits merge commits only; do not weaken rulesets or rewrite published history to force a preferred merge style. Do not stop at local completion, push, PR creation, or “ready to merge” if the authoritative change can actually be merged. Confirm live provider settings before the merge when that verification is available, and report any unavailable check honestly. Never claim a validation, provider mutation, release, deployment, PR, or merge that did not occur.
+
+Stop after the one task merges. Return a complete copy-paste next-task prompt naming the fresh `main` SHA, first open task, dependencies, branch/title, scope, validation, task retirement, exact-head CI, merge, and subsequent handoff. Do not implement the next task in the same turn. If a `do needful` turn starts with no active task, perform a fresh deep repository review and publish a small implementation wave as its own controlled planning change; stop before implementing that new wave. An exhausted plan is deleted in its last task's merge, not kept as an empty placeholder. If the first task is blocked, report its exact prerequisite and do not invent or skip work.
+
+Plan-authored tasks normally have one controlled ID, one primary concern and observable outcome, narrow ownership, explicit prerequisites, concise scope and non-goals, acceptance criteria, and relevant validation. Split independently reviewable outcomes; favor a near-term wave of roughly 5–12 surgical tasks over a long reserved sequence. A deeper roadmap may remain high level outside the active task queue. Research again from fresh state when the wave is exhausted. Planning and the first task of its new wave are separate turns.
+
 ## Definition of done
 
 After every task that changes repository files, finish the delivery loop before handing the task back:
 
 1. Account for every modified, deleted, and untracked file; preserve unrelated or user-authored work.
-2. Remove only task-created temporary artifacts, then run `npm run check`, `npm run validate:migrations`, `npm run security:dependencies`, `npm run build`, and `git diff --check`.
+2. Remove only task-created temporary artifacts, then run `npm run check`, `npm run validate:migrations`, `npm run security:dependencies`, `npm run build`, and `git diff --check`. `check` is the canonical credential-free gate; provider-authenticated verification is separate. Run focused validation relevant to the task as well.
 3. Commit each intended controlled change with one permanent `DEMO-###` ID and one primary bracketed type.
-4. Push the isolated branch and open a pull request. Do not push ordinary changes directly to `main`.
-5. Confirm the worktree is clean before reporting completion.
+4. Push the isolated branch and open a pull request. Verify required CI on its exact head and merge it when current, green, authoritative, and mergeable. Do not push ordinary changes directly to `main`.
+5. Re-fetch merged `main`, verify the delivered task is absent from the plan, and confirm the worktree is clean before reporting completion.
 
-When a requested controlled change is gated on `main` containing the immediately preceding change ID, inspect an open predecessor pull request before stopping. If that pull request has exactly the preceding controlled ID, targets `main`, is cleanly mergeable, and has passing required checks, merge it, update `main`, rerun the history gate, and continue. Stop and report instead if any of those conditions is not satisfied; this standing instruction does not authorize merging unrelated or non-predecessor work.
+When a requested controlled change is gated on an open predecessor PR, inspect it before stopping. Merge it only if it is the authoritative current change, targets `main`, has current exact-head required checks, matches live provider settings, and is cleanly mergeable; then refresh `main` and rerun the history gate. Stop and report if any condition fails. This instruction does not authorize merging unrelated work.
 
 Production is deployed only from an annotated semantic-version release tag, never from an arbitrary branch commit. See `docs/CHANGE-MANAGEMENT.md` and `docs/RELEASE-MANAGEMENT.md`.
 
