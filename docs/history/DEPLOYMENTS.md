@@ -320,3 +320,29 @@ Each record ties one production deployment to one annotated release tag. A deplo
 **Rollback:** Deploy v0.26.0.
 
 **Note:** The annotated tag was created at 2026-09-20 15:27:10 UTC and the release was published at 15:28:58 UTC. Initial deploy attempts failed closed before migration or deployment because Cloudflare Free-plan Bot Fight Mode issued managed challenges to the identified GitHub Actions clients. Manual recovery supplied the acceptance evidence against corrected Worker Version ID `3f019fc3-3502-41b9-8914-4d25a4901c6d`; Cloudflare Security Analytics then confirmed Bot Fight Mode as the challenge source, and that feature was disabled while the always-on HTTP DDoS protection and Cloudflare managed ruleset remained enabled. Release run attempt 4 completed the controlled deployment at 17:33:21 UTC and superseded the manual version with final Worker Version ID `b8be5b07-1163-44f8-89bb-762c8a43135c`. Assurance Monitor run 35513913124 subsequently passed its live reporting checks and closed tracking issue 252. For the performance comparison, the original v0.26.0 Worker version was temporarily present at zero percent and addressed only through a version-override header; production was then restored to v0.27.0 at 100 percent and rechecked for version, health, and identity continuity.
+
+---
+
+## DEP-DEMO-012
+
+**Product:** WizardGang Architecture Demo
+
+**Release:** v0.28.0
+
+**Commit:** `9cafd5600645ae5a0cb030d79c746c73491dd93f`
+
+**Environment:** production
+
+**Date:** 2026-09-21
+
+**URL:** https://demo.wizardgang.ai
+
+**Changes:** DEMO-332 through DEMO-340
+
+**Validation:** PASS — Release workflow 35627297616 completed successfully on attempt 2 for the annotated v0.28.0 tag. Its reproduce job (106426650759) used Node 26.7.0 and npm 11.19.0, reproduced the tagged state, verified the annotated release identity, retained artifact `assurance-registry-v0.28.0` (10652553612), and confirmed GitHub Release 393127756 with `registry-v0.28.0.json` at SHA-256 digest `6b7e7ce6bd131b7d4e5fad0070b863b456c71b2f74a5b194c6ead2c18141e17d`. Its deploy job (106426651021) reconfirmed all 15 required Worker secret names with no addition, captured the ready identity baseline, found no pending D1 migration, and deployed the exact tagged commit as Worker Version ID `c3cd2428-32cc-4e7e-8d82-b4d495e21be7`. The workflow verified version 0.28.0 at the full tagged commit with the Worker operational, identity ready, and Microsoft Entra ID, Google, and GitHub still configured; it also verified the content-hashed shell stylesheet and vendored GraphiQL script with `public, max-age=31536000, immutable`. Independent acceptance verification confirmed `/`, `/demos`, `/assurance`, `/security`, and `/offline` returned 200 and an ordinary unknown route returned 404 without redirection in English/LTR and Arabic/RTL. All 12 D1, R2, REST, GraphQL, Webhooks, Identity, MCP, Edge, Workers, Durable Objects, Accessibility, and Internationalization demonstrations returned their expected fragments and mounted in the browser without warnings or errors. Browser verification also passed theme switching, language/RTL/deep-link preservation, and documentation/evidence tab switching for the ISO 27001, ISO 42001, and WCAG assurance records. Ten-request Cloudflare-tail medians compared v0.27.0 with v0.28.0 server wall/CPU time in milliseconds: `/` 158/4 to 219/5, `/demos` 12/1 to 19/4, and `/assurance` 17/6 to 27/13.
+
+**Previous:** v0.27.0
+
+**Rollback:** Deploy v0.27.0.
+
+**Note:** The annotated tag was created at 2026-09-21 16:42:13 UTC and the GitHub Release was published at 16:44:29 UTC. Deploy attempt 1 created Worker Version ID `7510fc1b-37f7-420e-afd8-e25d10a07218`, but its immediate public identity check still observed v0.27.0 during edge propagation and failed closed before static-asset verification. The rerun reproduced the same immutable tag, deployed final Worker Version ID `c3cd2428-32cc-4e7e-8d82-b4d495e21be7`, and completed every deployment and post-deployment check at 16:50:15 UTC. No Worker secret or Cloudflare provider setting changed.
