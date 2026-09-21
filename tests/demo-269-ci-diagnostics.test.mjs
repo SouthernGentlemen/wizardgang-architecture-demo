@@ -5,6 +5,7 @@ import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { runDiagnosticCommands } from '../scripts/lib/ci-diagnostics.mjs';
 import { runGeneratedArtifactParity } from '../scripts/validate-generated-artifacts.mjs';
+import { migrationArguments, runCleanLocalMigrations } from '../scripts/validate-migrations.mjs';
 
 const temporaryDirectories = [];
 
@@ -109,6 +110,82 @@ describe('DEMO-269 CI diagnostics', () => {
     expect(checkCommands.filter((command) => command === 'npm run validate:generated-artifacts')).toHaveLength(1);
     expect(ciValidation).toContain("args: ['run', 'check']");
     expect(ciValidation).not.toContain("args: ['run', 'validate:generated-artifacts']");
+  });
+
+  it('owns clean-local migration proof through the canonical check command', () => {
+    const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
+    const checkCommands = packageJson.scripts.check.split('&&').map((command) => command.trim());
+    const ciValidation = fs.readFileSync(path.join(process.cwd(), 'scripts/ci-validation.mjs'), 'utf8');
+
+    expect(packageJson.scripts['validate:migrations']).toBe('node scripts/validate-migrations.mjs');
+    expect(checkCommands.filter((command) => command === 'npm run validate:migrations')).toHaveLength(1);
+    expect(ciValidation).toContain("args: ['run', 'check']");
+    expect(ciValidation).not.toContain("args: ['run', 'validate:migrations']");
+  });
+
+  it('uses fresh disposable local persistence for every D1 migration validation', () => {
+    const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'demo-349-migrations-'));
+    temporaryDirectories.push(temporaryRoot);
+    const invocations = [];
+    const run = (file, args, options) => {
+      const persistIndex = args.indexOf('--persist-to');
+      const persistenceDirectory = args[persistIndex + 1];
+      invocations.push({ file, args, options, persistenceDirectory });
+      fs.writeFileSync(path.join(persistenceDirectory, 'proof.txt'), 'isolated');
+      return { status: 0 };
+    };
+
+    expect(runCleanLocalMigrations({ temporaryRoot, run })).toBe(0);
+    expect(runCleanLocalMigrations({ temporaryRoot, run })).toBe(0);
+    expect(invocations).toHaveLength(2);
+    expect(new Set(invocations.map(({ persistenceDirectory }) => persistenceDirectory)).size).toBe(2);
+
+    for (const invocation of invocations) {
+      expect(invocation.args).toEqual(migrationArguments(invocation.persistenceDirectory));
+      expect(invocation.args).toContain('--local');
+      expect(invocation.args).not.toContain('--remote');
+      expect(invocation.options.stdio).toBe('inherit');
+      expect(fs.existsSync(invocation.persistenceDirectory)).toBe(false);
+    }
+  });
+
+  it('shares one isolated migrated D1 state only across later CI browser consumers', () => {
+    const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'demo-349-shared-migrations-'));
+    temporaryDirectories.push(temporaryRoot);
+    const persistenceDirectory = fs.mkdtempSync(path.join(temporaryRoot, 'shared-'));
+    const run = (_file, args) => {
+      expect(args).toEqual(migrationArguments(persistenceDirectory));
+      fs.writeFileSync(path.join(persistenceDirectory, 'migration-proof.txt'), 'ready');
+      return { status: 0 };
+    };
+
+    expect(runCleanLocalMigrations({ persistenceDirectory, run })).toBe(0);
+    expect(fs.readFileSync(path.join(persistenceDirectory, 'migration-proof.txt'), 'utf8')).toBe('ready');
+
+    const ciValidation = fs.readFileSync(path.join(process.cwd(), 'scripts/ci-validation.mjs'), 'utf8');
+    expect(ciValidation.match(/env: localD1Environment/g)).toHaveLength(2);
+    for (const script of ['site-browser-audit.mjs', 'demo-268-rest-browser-audit.mjs', 'demo-289-site-evaluation.mjs']) {
+      const source = fs.readFileSync(path.join(process.cwd(), 'scripts', script), 'utf8');
+      expect(source).toContain('process.env.WG_LOCAL_D1_PERSIST_TO');
+      expect(source).toContain("'--persist-to'");
+    }
+  });
+
+  it('preserves a migration failure status and still removes disposable state', () => {
+    const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'demo-349-migrations-failure-'));
+    temporaryDirectories.push(temporaryRoot);
+    let persistenceDirectory;
+
+    const status = runCleanLocalMigrations({
+      temporaryRoot,
+      run: (_file, args) => {
+        persistenceDirectory = args[args.indexOf('--persist-to') + 1];
+        return { status: 7 };
+      },
+    });
+
+    expect(status).toBe(7);
+    expect(fs.existsSync(persistenceDirectory)).toBe(false);
   });
 
 });

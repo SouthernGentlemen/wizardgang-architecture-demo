@@ -17,6 +17,7 @@ const serverPort = Number(process.env.DEMO_268_AUDIT_PORT || 8788);
 const debugPort = Number(process.env.DEMO_268_DEBUG_PORT || 9223);
 const origin = `http://127.0.0.1:${serverPort}`;
 const localSessionSecret = 'demo-268-local-browser-audit-session-key';
+const localPersistenceArgs = process.env.WG_LOCAL_D1_PERSIST_TO ? ['--persist-to', process.env.WG_LOCAL_D1_PERSIST_TO] : [];
 
 async function waitFor(cdp, expression, label, attempts = 100) {
   for (let attempt = 0; attempt < attempts; attempt += 1) {
@@ -40,7 +41,7 @@ function assert(condition, message) {
 
 async function main() {
   const wranglerBin = path.resolve('node_modules', '.bin', process.platform === 'win32' ? 'wrangler.cmd' : 'wrangler');
-  const wrangler = spawn(wranglerBin, ['dev', '--local', '--ip', '127.0.0.1', '--port', String(serverPort), '--var', `DEMO_SESSION_SECRET:${localSessionSecret}`], {
+  const wrangler = spawn(wranglerBin, ['dev', '--local', ...localPersistenceArgs, '--ip', '127.0.0.1', '--port', String(serverPort), '--var', `DEMO_SESSION_SECRET:${localSessionSecret}`], {
     stdio: ['ignore', 'pipe', 'pipe'],
     env: { ...process.env, NO_UPDATE_NOTIFIER: '1' },
   });

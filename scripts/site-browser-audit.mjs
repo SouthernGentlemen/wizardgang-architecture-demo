@@ -22,6 +22,7 @@ const serverPort = Number(process.env.SITE_AUDIT_PORT || 8787);
 const debugPort = Number(process.env.SITE_AUDIT_DEBUG_PORT || 9222);
 const origin = `http://127.0.0.1:${serverPort}`;
 const localSessionSecret = 'demo-335-local-browser-audit-session-key';
+const localPersistenceArgs = process.env.WG_LOCAL_D1_PERSIST_TO ? ['--persist-to', process.env.WG_LOCAL_D1_PERSIST_TO] : [];
 const axeTags = ['wcag2a', 'wcag2aa', 'wcag2aaa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const workbenchDemos = {
   d1: ['Data', 'D1'], r2: ['Data', 'R2'], rest: ['APIs', 'REST / OpenAPI'], graphql: ['APIs', 'GraphQL'],
@@ -638,6 +639,7 @@ async function main() {
   const wrangler = spawn(wranglerBin, [
     'dev',
     '--local',
+    ...localPersistenceArgs,
     '--ip',
     '127.0.0.1',
     '--port',
