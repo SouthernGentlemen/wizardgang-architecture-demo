@@ -19,11 +19,68 @@ Every run writes `.ci-diagnostics/` (ignored by Git):
 - `summary.md` — concise GitHub Actions step summary;
 - `generated-artifacts.json` and `generated-artifact.diff` — authoritative generator inputs/outputs, output hashes, first-pass drift, second-pass drift, idempotence, unexpected changed files, and bounded diffs.
 
-## Retrieval order
+## Exact-head failure retrieval
 
-1. Use the ordinary Actions job log first. It contains the live command headings and complete output from `validate:ci`.
-2. If a UI or connector cannot expose a large or redirected job-log body, download the `ci-diagnostics-<run_id>-<run_attempt>` artifact from the failed run and inspect `validation.log` plus the JSON report. The artifact is retained for 14 days.
-3. With GitHub CLI, use `gh run view <run-id> --log`, `gh run view <run-id> --log-failed`, or `gh run view --job <job-id> --log`. For the REST endpoint, `gh api --include --allow-escape-sequences repos/<owner>/<repo>/actions/jobs/<job-id>/logs` follows the temporary redirect safely; a `302` to an encrypted plain-text blob is normal. The run archive endpoint (`.../actions/runs/<run-id>/logs`) is a ZIP fallback.
+All interfaces below enforce the same sequence: bind the investigation to the current PR head SHA, select the workflow run and attempt for that SHA, enumerate its jobs, and retrieve complete evidence for every failing job. A status/check summary is navigation metadata, not failure diagnosis.
+
+### Connector actions
+
+When workflow-run, job-list, and job-log actions are available, fetch the run associated with the exact PR head SHA, enumerate the selected run attempt's jobs, and fetch each failing job's complete log using its numeric Actions job ID. A connector is one transport option, not a prerequisite for troubleshooting.
+
+### GitHub CLI
+
+Use the current PR to obtain the authoritative head SHA, then select CI by that commit:
+
+```sh
+HEAD_SHA="$(gh pr view <pr-number> --json headRefOid --jq .headRefOid)"
+gh run list --workflow ci.yml --event pull_request --commit "$HEAD_SHA" \
+  --json databaseId,headSha,attempt,status,conclusion
+```
+
+Choose the run whose `headSha` exactly equals `HEAD_SHA`, record its `databaseId` as `RUN_ID` and its `attempt` as `RUN_ATTEMPT`, then enumerate that attempt's jobs:
+
+```sh
+gh run view "$RUN_ID" --attempt "$RUN_ATTEMPT" --json headSha,attempt,jobs \
+  --jq '{headSha, attempt, jobs: [.jobs[] | {name, databaseId, status, conclusion}]}'
+```
+
+For every failing job, use its `databaseId` as `JOB_ID` and retrieve the complete job log:
+
+```sh
+gh run view --job "$JOB_ID" --log
+```
+
+`gh run view --log-failed` is useful for navigation but prints failed-step output rather than the complete failing job log; it is not sufficient evidence by itself.
+
+If the failed `validate` job's direct log is unavailable or unsuitable for the client, download the retained diagnostics artifact for the same run attempt:
+
+```sh
+gh run download "$RUN_ID" \
+  --name "ci-diagnostics-${RUN_ID}-${RUN_ATTEMPT}" \
+  --dir .ci-diagnostics-recovered
+```
+
+Inspect `.ci-diagnostics-recovered/validation.log` and `.ci-diagnostics-recovered/report.json`. The workflow retains this artifact for 14 days and uploads it only on failure.
+
+### REST
+
+An authenticated REST client can perform the same sequence with these endpoints:
+
+```text
+GET /repos/{owner}/{repo}/actions/workflows/ci.yml/runs?event=pull_request&head_sha={head_sha}
+GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs
+GET /repos/{owner}/{repo}/actions/jobs/{job_id}/logs
+GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts
+GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}/zip
+```
+
+The job-log endpoint returns a temporary `302` redirect to the plain-text log; the client must follow the `Location` URL before treating retrieval as successful. For the artifact fallback, select the artifact named `ci-diagnostics-<run_id>-<run_attempt>`, download its ZIP, and inspect `validation.log` plus `report.json`.
+
+For private repositories or restricted integrations, Actions read access is required for these log/artifact endpoints. If an authenticated connector, `gh`, or REST request is denied or cannot expose the complete body, preserve and report the exact error/permission limitation, try another available authenticated interface when possible, and never infer the failure from status summaries.
+
+### Reporting boundary
+
+Retrieve complete evidence for diagnosis, but report only the failing command/assertion, relevant file and line when available, and remediation needed. Do not copy an entire large job log, artifact, or encoded payload into another log or report. Continue through controlled fixes until every required check on the exact PR head is green.
 
 The repository does not enumerate the process environment. Secret-like environment values and GitHub/Bearer tokens are redacted before they are written to the diagnostic log or report. A failure remains a failure even when diagnostics or artifact upload succeeds.
 

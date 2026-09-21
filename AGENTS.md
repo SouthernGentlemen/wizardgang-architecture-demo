@@ -57,25 +57,22 @@ If a required check, push, pull request, release, deployment, or live verificati
 
 ## CI failure troubleshooting
 
-CI troubleshooting is a mandatory part of the normal delivery loop, not an optional debugging technique. When CI investigation begins:
+CI troubleshooting is a mandatory part of the normal delivery loop, not an optional debugging technique. Use any available authenticated GitHub interface—connector actions, GitHub CLI, or REST—as an equivalent transport for the same evidence standard.
 
-1. Explicitly discover and load the GitHub connector actions for workflow runs, jobs, and job logs, searching for `workflow` and/or `log` capabilities as needed.
-2. Fetch the actual workflow run associated with the current branch head or pull request; do not substitute a previous run.
-3. Enumerate the workflow run's jobs.
-4. Identify every failing job.
-5. Fetch the complete failing workflow job log body for each failure using its numeric GitHub Actions job ID.
-6. Diagnose the failure from that complete log body.
-7. Do not infer the failure solely from commit status, combined status, pull-request check summaries, step names, annotations, previous runs, or remembered failures.
-8. If the dedicated job-log action is not initially exposed, rediscover connector actions using `workflow` and/or `log` before declaring logs inaccessible.
-9. If the log action exists but access is denied, surface the exact connector or API error and identify the missing GitHub permission instead of guessing at the failure.
-10. When the log proves a concrete failing assertion or test, fix only that demonstrated regression unless later complete logs prove additional failures.
-11. Re-run or fetch CI after each controlled fix and continue until the complete required validation set is green.
-12. Do not stop merely because the first failure was repaired.
-13. Preserve the controlled-history rules throughout troubleshooting. Temporary fix commits must be squashed or rebuilt when the DEMO requires one controlled commit.
+1. Resolve the exact current pull-request head SHA before investigating CI. Do not substitute a previous commit or run.
+2. Find the workflow run for that exact head SHA and the relevant run attempt. Verify the run's recorded head SHA matches before using it as evidence.
+3. Enumerate that run attempt's jobs and identify every failing job.
+4. Retrieve the complete log body for each failing job using its numeric GitHub Actions job ID. Connector job-log actions, `gh run view --job <job-id> --log`, and the REST job-log endpoint are equivalent interfaces when they return the complete log.
+5. When direct job-log retrieval is unavailable, redirected output cannot be consumed by the client, or the `validate` log is impractically large, retrieve the same run/attempt's retained `ci-diagnostics-<run_id>-<run_attempt>` artifact and inspect `validation.log` and `report.json`. The artifact is fallback failure evidence for the `validate` job, not permission to ignore a different failing job.
+6. Diagnose the failure from that complete job evidence. Do not infer the failure solely from commit status, combined status, pull-request check summaries, failed-step summaries, step names, annotations, previous runs, or remembered failures.
+7. If one authenticated interface cannot retrieve the evidence, use another available authenticated interface or the retained artifact where applicable. If permissions or interface limits still block retrieval, report the exact connector/CLI/API error and the missing access instead of guessing.
+8. When the evidence proves a concrete failing assertion or test, fix only that demonstrated regression unless later complete evidence proves additional failures.
+9. Re-run or fetch CI after each controlled fix and continue until the complete required validation set is green. Do not stop merely because the first failure was repaired.
+10. Preserve the controlled-history rules throughout troubleshooting. Temporary fix commits must be squashed or rebuilt when the DEMO requires one controlled commit.
 
-Retrieving a complete job log for diagnosis does not permit copying unbounded output into another CI log or report; keep reported failure evidence bounded and actionable as required below.
+Retrieving complete evidence for diagnosis does not permit copying unbounded output into another CI log or report; keep reported failure evidence bounded and actionable.
 
-The repository-local equivalent is `npm run validate:ci`. It records complete redacted command output under `.ci-diagnostics/`, preserves the first authoritative exit code, and publishes the same directory as a failed-run artifact. If a client cannot expose a redirected or large job-log body, retrieve `ci-diagnostics-<run_id>-<run_attempt>` and inspect `validation.log` and `report.json`; see `docs/CI-DIAGNOSTICS.md` for `gh` and REST retrieval commands.
+The repository-local equivalent is `npm run validate:ci`. It records complete redacted command output under `.ci-diagnostics/`, preserves the first authoritative exit code, and publishes the same directory as a failed-run artifact. See `docs/CI-DIAGNOSTICS.md` for verified connector, `gh`, REST, and artifact-recovery paths.
 
 ## Cloud development contract
 
