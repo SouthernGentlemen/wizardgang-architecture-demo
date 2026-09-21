@@ -323,14 +323,18 @@ Every executable repository carries root `AGENTS.md`, `CONTRIBUTING.md`, `SECURI
 - The Content Security Policy does not allow `'unsafe-inline'`. HTML carries no inline event-handler attributes, and any inline script or style is allowed only by hash or nonce. Raw HTML insertion is confined to one audited component.
 - Stylesheets are CSS files processed by Vite, not strings. Tailwind CSS 4 may be used through Vite.
 
-**Commands.** An npm-based executable repository's `package.json` defines:
+**Command contract.** An npm-based executable repository exposes the same *meaning* for its public commands; their implementation and applicable capabilities may differ. Document the actual commands, prerequisites, side effects, and N/A boundaries in its README and CONTRIBUTING guide. Do not hide a second, broader acceptance gate behind a differently named `verify` command. A non-npm repository names a justified equivalent interface.
 
-- `dev`: local development only; it never deploys or selects a production environment;
-- `build`: the production build, without deploying;
-- `typecheck` and `test`;
-- `check`: the canonical credential-free repository validation, including relevant source, build, dependency/security, history, whitespace, and local acceptance gates; CI runs it on every pull request and on `main`. Provider-authenticated settings, deployment, and runtime checks remain separate and explicit.
+| Command | Common meaning and boundary |
+| --- | --- |
+| `npm run dev` | Start a local-only development session for this checkout. Preflight configuration, generate/build what the local runtime needs, and report its URL/readiness when a server exists. Stop only checkout-owned processes; refuse to kill an unrelated port owner or erase user output. Browser opening is optional and suppressible in headless/cloud environments. A library with no running surface declares `dev` N/A rather than starting a fictitious server. |
+| `npm run build` | Produce or validate the distributable artifact from declared inputs without publishing or deploying it. Generated outputs are reproducible projections, not a second source of truth. |
+| `npm run typecheck` | Check every applicable TypeScript program without emitting a distributable artifact; a non-TypeScript repository records N/A. |
+| `npm test` | Run the repository's deterministic automated tests. Name special suites (`test:browser`, `test:php`, visual evidence, and similar) explicitly; avoid an implicit second production build inside `test` when `check` already runs `build`, unless compiled tests genuinely require it and the reason is documented. |
+| `npm run check` | The canonical unattended, credential-free acceptance gate after locked dependency installation. Compose applicable type, test, build, generated-artifact parity, history/change, security, local acceptance, and patch-integrity checks once, with bounded diagnostics. CI runs the same command on PRs and `main`; any extra CI gate is named, justified, and locally reproducible. Do not require provider credentials, mutate live services, publish, or deploy. |
+| `npm run verify:*` / `npm run check:*` | Narrow, named subchecks or provider-aware verification, never an undocumented competing umbrella gate. State whether each requires browser tooling, network, credentials, or live provider access. `npm run validate:ci` may orchestrate installation, `check`, and the explicit extra gates with retained diagnostics. |
 
-Deployment commands run only in the tag-driven release workflow; local use is limited to dry runs.
+Local dependency-advisory queries may need registry network access even though they need no credentials; name that requirement and keep the security gate in CI. A cloud agent's lack of network or a provider credential is a reported capability blocker, not a pass. Release publication is a separate exact-annotated-tag workflow that reproduces the tagged state; a production deployment runs only from accepted immutable release state through the protected environment. An npm command called `deploy` must not make an arbitrary checkout a production source. Product-specific offline, library, browser, Worker, visual, and deployment capabilities are explicit, not exemptions from the shared command meanings or controlled process.
 
 **Repository contents.**
 
