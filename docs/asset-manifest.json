@@ -21,12 +21,12 @@
     "scripts.accessibility": "/assets/accessibility-browser-BlOYooXr.js",
     "scripts.accessibilityLab": "/assets/accessibility-lab-browser-DpgWVJWm.js",
     "scripts.i18n": "/assets/i18n-browser-D96zQT6t.js",
-    "vendor.graphiql.script": "/assets/graphiql.js",
-    "vendor.graphiql.styles": "/assets/graphiql.css",
-    "vendor.monaco.editor": "/assets/editor.worker.js",
-    "vendor.monaco.json": "/assets/json.worker.js",
-    "vendor.monaco.graphql": "/assets/graphql.worker.js",
-    "vendor.axe": "/assets/axe.min.js",
-    "social.card": "/assets/og.png"
+    "vendor.graphiql.script": "/assets/graphiql-ce76d62c27d65103.js",
+    "vendor.graphiql.styles": "/assets/graphiql-DE5vNZsy.css",
+    "vendor.monaco.editor": "/assets/editor.worker-a7e7ffcdd2a883e1.js",
+    "vendor.monaco.json": "/assets/json.worker-56ef608bc2800ff8.js",
+    "vendor.monaco.graphql": "/assets/graphql.worker-f5b5f7edafe2f2c1.js",
+    "vendor.axe": "/assets/axe.min-c24f097bd2f451d4.js",
+    "social.card": "/assets/og-fd49af2b17bb2d6c.png"
   }
 }

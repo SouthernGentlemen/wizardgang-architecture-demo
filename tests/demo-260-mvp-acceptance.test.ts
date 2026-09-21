@@ -11,6 +11,7 @@ import { runScheduledOperations } from '../src/index';
 import { collectCloudflareUsage } from '../src/lib/cloudflare-usage';
 import { recordApplicationLog } from '../src/lib/logs';
 import { routeRequest } from '../src/router';
+import { browserAssetName } from '../src/ui/asset-map';
 import {
   applicationRouteRegistry,
   routeUrl,
@@ -435,7 +436,7 @@ describe('DEMO-260 MVP acceptance contract', () => {
     expect(sitemap.status).toBe(200);
     expect(await sitemap.text()).not.toContain(retiredOperationsHtmlPathname);
 
-    const asset = await request(routeUrl('operations.assets', { asset: 'og.png' }));
+    const asset = await request(routeUrl('operations.assets', { asset: browserAssetName('social.card') }));
     expect(asset.status).toBe(200);
 
     const scheduledEnv = environment();

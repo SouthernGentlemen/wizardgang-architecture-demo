@@ -82,8 +82,8 @@ describe('GraphQL Yoga D1 interface', () => {
     expect(response.headers.get('x-frame-options')).toBe('SAMEORIGIN');
     const html = await response.text();
     expect(html).toContain('WizardGang GraphiQL');
-    expect(html).toContain('/assets/graphiql.js');
-    expect(html).toContain('/assets/graphql.worker.js');
+    expect(html).toContain(assetManifest.assets['vendor.graphiql.script']);
+    expect(html).toContain(assetManifest.assets['vendor.monaco.graphql']);
     expect(html).toContain(assetManifest.assets['scripts.graphiql']);
     expect(html).toContain('data-config=');
     expect(html).not.toMatch(/<script(?![^>]*\bsrc=)[^>]*>/);
@@ -92,7 +92,8 @@ describe('GraphQL Yoga D1 interface', () => {
     expect(policy).toContain("style-src 'self' 'unsafe-inline'");
     expect(policy).toContain('worker-src blob:');
     expect(policy).not.toContain("script-src 'self' 'unsafe-inline'");
-    const asset = await uiAssetResponse(new Request('https://demo.example/assets/graphiql.js'), environment, 'graphiql.js');
+    const vendorName = assetManifest.assets['vendor.graphiql.script'].split('/').at(-1)!;
+    const asset = await uiAssetResponse(new Request(`https://demo.example/assets/${vendorName}`), environment, vendorName);
     expect(asset.status).toBe(200);
     expect(asset.headers.get('content-type')).toContain('text/javascript');
     expect((await asset.text()).length).toBeGreaterThan(1_000_000);

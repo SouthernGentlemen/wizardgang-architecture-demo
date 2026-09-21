@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { graphqlSection } from '../src/demos/graphql-presentation';
 import { restSection } from '../src/demos/rest-presentation';
 import { accessibilityLabResponse } from '../src/ui/accessibility-lab';
+import { browserAssetPath } from '../src/ui/asset-map';
 import type { Env } from '../src/types';
 
 const shellStyles = readFileSync('src/styles/shell.css', 'utf8');
@@ -53,7 +54,7 @@ describe('DEMO-237 shared WCAG 2.2 AAA remediation', () => {
     expect(html).not.toMatch(/<input\b[^>]*\bonpaste=/i);
     expect(html).not.toContain('<div class="click-control"');
     expect(html).not.toContain('<div class="tiny-controls"');
-    expect(html).toContain('src="/assets/axe.min.js"');
+    expect(html).toContain(`src="${browserAssetPath('vendor.axe')}"`);
     expect(readFileSync('src/browser/accessibility-lab.ts', 'utf8')).toContain('axe.run(document');
   });
 

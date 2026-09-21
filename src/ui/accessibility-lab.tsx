@@ -61,5 +61,5 @@ export function accessibilityLabResponse(request: Request): Response {
     'content-security-policy': "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'self'; img-src 'self' data:; object-src 'none'; script-src 'self'; style-src 'self'",
     'x-frame-options': 'SAMEORIGIN',
   }));
-  return new Response(`<!doctype html>${renderToStaticMarkup(<AccessibilityLabDocument mode={mode} />)}`, { headers });
+  return new Response('<!doctype html>' + renderToStaticMarkup(<AccessibilityLabDocument mode={mode} />), { headers });
 }

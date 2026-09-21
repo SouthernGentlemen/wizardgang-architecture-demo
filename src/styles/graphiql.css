@@ -1,0 +1,2 @@
+/* Standalone GraphiQL stylesheet; Vite processes the dependency through src/styles/. */
+@import "../../node_modules/@graphql-yoga/graphiql/dist/graphiql.css";
