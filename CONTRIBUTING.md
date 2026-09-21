@@ -55,17 +55,26 @@ For governance records, edit the registered structured resources under `assuranc
 
 ## Validation
 
-Before opening a pull request, run:
+WG-ARCH-001 §27 defines the shared command meanings; [README.md](README.md#command-map) records this repository's current command/prerequisite map. After a locked install, `npm run check` is the canonical unattended, credential-free acceptance gate. It does not yet own every gate that CI runs, so do not describe a clean `check` as full CI parity.
+
+Before opening a pull request, run the current acceptance set:
 
 ```text
 npm ci
+npm run validate:generated-artifacts
 npm run check
 npm run validate:migrations
+npm run verify:chromium
+npm run test:site-accessibility
 npm run security:dependencies
 npm run build
 git diff --check
 ```
 
-`npm run check` is the canonical credential-free gate; CI also runs the listed additional local gates until they are composed into `check`. Live repository-setting verification (`npm run validate:repository-settings -- --live`) requires provider access and remains separate. CI validates controlled history and the pull-request title. Re-fetch exact-head checks and live settings before merging under the current merge-only ruleset; do not stop at a ready PR when it can be merged. When CI fails, follow the full-job-log troubleshooting sequence in [`AGENTS.md`](AGENTS.md). Never edit an applied migration; add the next numbered migration. Releases and production deployment follow [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md).
+Equivalently, from a clean checkout use `npm run validate:ci`: it verifies the pinned toolchain, performs `npm ci`, then runs those temporary extra gates in the same order used by `.github/workflows/ci.yml`, with retained failure diagnostics. Full reproduction therefore needs npm registry/network access, a usable Chromium runtime, and sufficient Git history/base context for PR-range whitespace checking. Registry or browser unavailability is a reported blocker, not a passing result. The D1 migration gate uses local Wrangler state only, and the build uses a Wrangler dry run; neither mutates production.
+
+Live repository-setting verification (`npm run validate:repository-settings -- --live`) is deliberately outside `check` and CI because it requires authenticated `gh` access; it reads and compares provider state without changing it. CI validates controlled history and the pull-request title. Re-fetch exact-head checks and live settings before merging under the current merge-only ruleset; do not stop at a ready PR when it can be merged. When CI fails, follow the full-job-log troubleshooting sequence in [AGENTS.md](AGENTS.md). Never edit an applied migration; add the next numbered migration.
+
+Release publication and production deployment are also separate from acceptance. The Release workflow reproduces an annotated `vMAJOR.MINOR.PATCH` tag and publishes the GitHub Release before calling the production Deploy workflow. The raw `npm run deploy` script invokes live Wrangler deployment and requires Cloudflare credentials; it is not a validation shortcut or the governed production-release path. See [release management](docs/RELEASE-MANAGEMENT.md).
 
 Keep architecture and operational documentation in reviewable Markdown/text. Do not add PDF documentation unless explicitly requested.

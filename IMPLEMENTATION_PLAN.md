@@ -23,16 +23,6 @@ The differences justify a common command *contract*, not identical shell bodies.
 
 ## Open tasks
 
-### DEMO-345 — [DOCS] Document this repository's command map at the point of use
-
-- Dependency: DEMO-344 merged on `main`.
-- Why: WG-ARCH-001 now defines shared meanings, but README/CONTRIBUTING still present a flat list of partially overlapping gates; a fresh web-terminal agent cannot tell which command owns acceptance, browser tooling, network advice, provider settings, release, or deploy.
-- Scope: Add one concise architecture-specific command table in `README.md` and align the validation paragraph in `CONTRIBUTING.md` with actual `package.json`/CI behavior, including the temporary extra gates and cloud prerequisites. Link to WG-ARCH-001 rather than duplicate its normative matrix.
-- Non-goals: Do not change npm scripts, CI, release/deploy workflows, or another repository.
-- Acceptance: Every public command named in setup/validation has a truthful purpose, prerequisites and side-effect boundary; `check` is not falsely described as already including the extra CI gates.
-- Validation: Compare text against `package.json`, `scripts/ci-validation.mjs`, and workflows; `npm run check`; `git diff --check`.
-- Authorities: `README.md`, `CONTRIBUTING.md`, `docs/ARCHITECTURE-STANDARD.md` §27.
-
 ### DEMO-346 — [DOCS] Resolve the blocked-first-task selection rule
 
 - Dependency: DEMO-345 merged on `main`.
