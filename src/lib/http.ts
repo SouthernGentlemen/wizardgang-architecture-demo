@@ -1,7 +1,8 @@
 import { escapeHtml } from './html';
+import { THEME_BOOT_SHA256 } from './theme-boot';
 
 const SECURITY_HEADERS: Record<string, string> = {
-  'content-security-policy': "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+  'content-security-policy': `default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-${THEME_BOOT_SHA256}'; style-src 'self'`,
   'cross-origin-resource-policy': 'same-origin',
   'referrer-policy': 'strict-origin-when-cross-origin',
   'x-content-type-options': 'nosniff',

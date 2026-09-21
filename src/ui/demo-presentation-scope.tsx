@@ -106,7 +106,6 @@ export function DemoPresentationScope({
       data-demo-section={name}
       data-demo-browser-module={browserModule}
       data-config={browserMessages ? JSON.stringify({ locale: browserLocale, messages: browserMessages }) : undefined}
-      style={{ display: 'contents' }}
     >{children}</div>
   </ScopeContext>;
 }

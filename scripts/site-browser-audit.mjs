@@ -673,6 +673,19 @@ async function main() {
     cdp = await CdpClient.connect(target.webSocketDebuggerUrl);
     await cdp.call('Page.enable');
     await cdp.call('Runtime.enable');
+    await cdp.call('Log.enable');
+    await cdp.call('Audits.enable');
+    const cspViolations = [];
+    cdp.on('Log.entryAdded', (_method, { entry }) => {
+      if (/content security policy|content-security-policy|violates the following directive/i.test(entry?.text ?? '')) {
+        cspViolations.push(`${entry?.url ?? 'unknown URL'}: ${entry?.text ?? 'security console entry'}`);
+      }
+    });
+    cdp.on('Audits.issueAdded', (_method, { issue }) => {
+      if (issue?.code === 'ContentSecurityPolicyIssue') {
+        cspViolations.push(`CSP browser issue: ${JSON.stringify(issue.details?.contentSecurityPolicyIssueDetails ?? {})}`);
+      }
+    });
     await cdp.call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 1000, deviceScaleFactor: 1, mobile: false });
 
     let browserPages = 0;
@@ -695,6 +708,12 @@ async function main() {
 
     await inspectPath(cdp, '/', 'en', 'home dark theme');
     axeRuns += 1;
+    await evaluate(cdp, `localStorage.setItem('wg-theme', 'light')`);
+    await inspectPath(cdp, '/', 'en', 'stored light theme');
+    if (await evaluate(cdp, `document.documentElement.dataset.theme`) !== 'light') {
+      throw new Error('Stored light theme was not restored by the blocking head script');
+    }
+    await evaluate(cdp, `localStorage.removeItem('wg-theme')`);
     await evaluate(cdp, `(async()=>{
       document.documentElement.dataset.theme='light';
       await new Promise((resolve)=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
@@ -742,7 +761,11 @@ async function main() {
 
     for (const pathname of auditConfig.keyboardPaths) await keyboardSmoke(cdp, pathname);
 
-    console.log(`Site browser audit passed: ${pages.length} canonical public routes, ${browserPages} route/locale renders, ${auditConfig.states.length} explicit state fixtures, ${axeRuns} axe runs, one complete Demo Workbench interaction/history/locale audit, D1 CRUD/reset, R2 upload/preview/delete, every REST operation, GraphQL example/custom queries, and the MCP, Edge, Workers, Durable Objects, accessibility/axe, and internationalization workflows in English and Arabic, ${auditConfig.narrowViewportPaths.length} narrow reflow samples, and ${auditConfig.keyboardPaths.length} keyboard smoke samples.`);
+    if (cspViolations.length) {
+      throw new Error(`CSP violations across audited pages/states: ${cspViolations.slice(0, 12).join('; ')}`);
+    }
+
+    console.log(`Site browser audit passed: ${pages.length} canonical public routes, ${browserPages} route/locale renders, ${auditConfig.states.length} explicit state fixtures, ${axeRuns} axe runs, no CSP violations, one complete Demo Workbench interaction/history/locale audit, D1 CRUD/reset, R2 upload/preview/delete, every REST operation, GraphQL example/custom queries, and the MCP, Edge, Workers, Durable Objects, accessibility/axe, and internationalization workflows in English and Arabic, ${auditConfig.narrowViewportPaths.length} narrow reflow samples, and ${auditConfig.keyboardPaths.length} keyboard smoke samples.`);
     console.log('Automated accessibility result: no automatically detectable violation observed in the bounded Chromium/axe matrix. This is not WCAG conformance or AAA certification.');
   } catch (error) {
     if (wrangler.exitCode !== null) console.error(`wrangler exited ${wrangler.exitCode}: ${wranglerError.slice(-4000)}`);

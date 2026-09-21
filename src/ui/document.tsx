@@ -8,6 +8,7 @@ import {
   type RegisteredRouteMetadataView,
 } from '../routing/navigation';
 import { repoUrl, sourceUrl } from '../lib/github';
+import { THEME_BOOT_SCRIPT } from '../lib/theme-boot';
 import {
   localeNames,
   localeQueryParameter,
@@ -23,9 +24,6 @@ const ROOT_ROUTE_ID = 'interfaces.frontend.index';
 
 /** Acid square with an offset violet square — the same mark as the wordmark. */
 const FAVICON = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#08080b"/><rect x="5" y="15" width="12" height="12" fill="#d9ff43"/><rect x="15" y="5" width="12" height="12" fill="#a489ff"/></svg>')}`;
-
-/** Restores the reader's stored theme before first paint so the page never flashes. */
-const THEME_BOOT = `try{var t=localStorage.getItem('wg-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}`;
 
 export interface HeadMetadata {
   name?: string;
@@ -85,6 +83,7 @@ function DocumentHead({ content }: Readonly<{ content: ReactPageContent }>) {
   return <head>
     <meta charSet="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>{THEME_BOOT_SCRIPT}</script>
     <title>{`${content.title} · ${siteName}`}</title>
     <meta name="description" content={content.description} />
     <meta name="color-scheme" content="dark light" />
@@ -105,7 +104,6 @@ function DocumentHead({ content }: Readonly<{ content: ReactPageContent }>) {
     {content.routeId === 'demos.index' ? <link rel="stylesheet" href={demosStylesheetHref} /> : null}
     {(content.headExtra ?? []).map((metadata, index) => <meta key={`${metadata.name ?? metadata.property ?? 'meta'}-${index}`} {...metadata} />)}
     <link rel="icon" href={FAVICON} />
-    <script>{THEME_BOOT}</script>
   </head>;
 }
 

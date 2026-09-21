@@ -243,6 +243,16 @@ export class CdpClient {
     return this.waitForAny([method], options).promise.then((event) => event?.params);
   }
 
+  on(method, listener) {
+    const listeners = this.listeners.get(method) ?? new Set();
+    listeners.add(listener);
+    this.listeners.set(method, listeners);
+    return () => {
+      listeners.delete(listener);
+      if (listeners.size === 0) this.listeners.delete(method);
+    };
+  }
+
   fail(error) {
     for (const pending of this.pending.values()) {
       clearTimeout(pending.timer);
