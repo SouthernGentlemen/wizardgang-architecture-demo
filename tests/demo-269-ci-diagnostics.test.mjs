@@ -101,4 +101,14 @@ describe('DEMO-269 CI diagnostics', () => {
     expect(diff).toContain('diagnostic output truncated');
     expect(diff.length).toBeLessThan(33_500);
   });
+  it('owns generated-artifact parity through the canonical check command', () => {
+    const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
+    const checkCommands = packageJson.scripts.check.split('&&').map((command) => command.trim());
+    const ciValidation = fs.readFileSync(path.join(process.cwd(), 'scripts/ci-validation.mjs'), 'utf8');
+
+    expect(checkCommands.filter((command) => command === 'npm run validate:generated-artifacts')).toHaveLength(1);
+    expect(ciValidation).toContain("args: ['run', 'check']");
+    expect(ciValidation).not.toContain("args: ['run', 'validate:generated-artifacts']");
+  });
+
 });

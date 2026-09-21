@@ -23,16 +23,6 @@ The differences justify a common command *contract*, not identical shell bodies.
 
 ## Open tasks
 
-### DEMO-348 — [BUILD] Put generated-artifact parity inside `check`
-
-- Dependency: DEMO-347 merged on `main`.
-- Why: CI runs `validate:generated-artifacts` before `check`, so the advertised acceptance command alone misses generated drift.
-- Scope: Compose the existing parity validator into `check` once; retain its first-pass/idempotence diagnostics and make the CI orchestrator avoid a second independent parity pass.
-- Non-goals: Do not redesign generators, generated files, or other gates.
-- Acceptance: Generated drift fails local `check` and exact-head CI with the same finding; clean artifacts pass without duplicate CI execution.
-- Validation: Focused generated-artifact validator test; `npm run check`; `npm run validate:ci` where its full prerequisites are available; `git diff --check`.
-- Authorities: `package.json`, `scripts/ci-validation.mjs`, `scripts/validate-generated-artifacts.mjs`.
-
 ### DEMO-349 — [BUILD] Make clean local D1 migration proof part of acceptance
 
 - Dependency: DEMO-348 merged on `main`.
