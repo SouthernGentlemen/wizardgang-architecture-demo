@@ -74,7 +74,10 @@ describe('consolidated architecture demos', () => {
     const edge = await routeRequest(new Request('https://demo.wizardgang.ai/api/demos/edge', { headers: { accept: 'text/html' } }), env);
     expect(edge.status).toBe(200);
     expect(edge.headers.get('content-type')).toContain('text/html');
-    expect(await edge.text()).toContain('/api/labs/edge');
+    const edgeHtml = await edge.text();
+    expect(edgeHtml).toContain('data-demo-browser-module="/assets/edge-browser-');
+    expect(edgeHtml).not.toContain('/api/labs/edge');
+    expect(readFileSync('src/browser/edge.ts', 'utf8')).toContain("fetch('/api/labs/edge'");
 
     const missing = await routeRequest(new Request('https://demo.wizardgang.ai/api/demos/not-a-demo', { headers: { accept: 'text/html' } }), env);
     expect(missing.status).toBe(404);

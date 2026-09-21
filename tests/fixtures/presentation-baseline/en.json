@@ -2583,7 +2583,7 @@
         "element": "script",
         "attributes": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:27b4c06c4ff156cd>",
+          "data-config": "<CONFIG_SHA256:1739e827b830e46c>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"Evidence\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -2605,14 +2605,14 @@
         "data": {}
       },
       {
-        "src": "/assets/demos-browser-JjPsBcq3.js",
+        "src": "/assets/demos-browser-DNzufQSl.js",
         "type": "module",
         "async": false,
         "defer": false,
         "inlineSha256": null,
         "data": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:27b4c06c4ff156cd>",
+          "data-config": "<CONFIG_SHA256:1739e827b830e46c>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"Evidence\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -8781,7 +8781,7 @@
         "element": "script",
         "attributes": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:27b4c06c4ff156cd>",
+          "data-config": "<CONFIG_SHA256:1739e827b830e46c>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"Evidence\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -8803,14 +8803,14 @@
         "data": {}
       },
       {
-        "src": "/assets/demos-browser-JjPsBcq3.js",
+        "src": "/assets/demos-browser-DNzufQSl.js",
         "type": "module",
         "async": false,
         "defer": false,
         "inlineSha256": null,
         "data": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:27b4c06c4ff156cd>",
+          "data-config": "<CONFIG_SHA256:1739e827b830e46c>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"Evidence\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -9479,7 +9479,7 @@
         "element": "script",
         "attributes": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:27b4c06c4ff156cd>",
+          "data-config": "<CONFIG_SHA256:1739e827b830e46c>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"Evidence\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -9501,14 +9501,14 @@
         "data": {}
       },
       {
-        "src": "/assets/demos-browser-JjPsBcq3.js",
+        "src": "/assets/demos-browser-DNzufQSl.js",
         "type": "module",
         "async": false,
         "defer": false,
         "inlineSha256": null,
         "data": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:27b4c06c4ff156cd>",
+          "data-config": "<CONFIG_SHA256:1739e827b830e46c>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"Evidence\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
         }
       },
@@ -13805,7 +13805,9 @@
       {
         "element": "div",
         "attributes": {
-          "data-demo-section": "mcp"
+          "data-demo-section": "mcp",
+          "data-demo-browser-module": "/assets/mcp-browser-CfqJPFSM.js",
+          "data-config": "<CONFIG_SHA256:5177fcd1191921e6>"
         }
       },
       {
@@ -13833,16 +13835,7 @@
         }
       }
     ],
-    "scripts": [
-      {
-        "src": null,
-        "type": "classic",
-        "async": false,
-        "defer": false,
-        "inlineSha256": "acb55c07fbebbb47",
-        "data": {}
-      }
-    ],
+    "scripts": [],
     "stylesheets": []
   },
   "demo:edge": {
@@ -13903,8 +13896,8 @@
     ],
     "links": [
       {
-        "name": "Route source: src/demos/edge.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/edge.ts",
+        "name": "Route source: src/demos/edge-presentation.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/edge-presentation.tsx",
         "target": null
       },
       {
@@ -13934,7 +13927,9 @@
       {
         "element": "div",
         "attributes": {
-          "data-demo-section": "edge"
+          "data-demo-section": "edge",
+          "data-demo-browser-module": "/assets/edge-browser-CEC0miwL.js",
+          "data-config": "<CONFIG_SHA256:e11f616d3c072c10>"
         }
       },
       {
@@ -13968,16 +13963,7 @@
         }
       }
     ],
-    "scripts": [
-      {
-        "src": null,
-        "type": "classic",
-        "async": false,
-        "defer": false,
-        "inlineSha256": "f6c040daf66b83ae",
-        "data": {}
-      }
-    ],
+    "scripts": [],
     "stylesheets": []
   },
   "demo:workers": {
@@ -14023,8 +14009,8 @@
     ],
     "links": [
       {
-        "name": "Route source: src/demos/workers.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/workers.ts",
+        "name": "Route source: src/demos/workers-presentation.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/workers-presentation.tsx",
         "target": null
       },
       {
@@ -14087,7 +14073,9 @@
       {
         "element": "div",
         "attributes": {
-          "data-demo-section": "workers"
+          "data-demo-section": "workers",
+          "data-demo-browser-module": "/assets/workers-browser-BQIfgAQC.js",
+          "data-config": "<CONFIG_SHA256:2ca1c4a7152adb8e>"
         }
       },
       {
@@ -14139,16 +14127,7 @@
         }
       }
     ],
-    "scripts": [
-      {
-        "src": null,
-        "type": "classic",
-        "async": false,
-        "defer": false,
-        "inlineSha256": "27744b24cf489b63",
-        "data": {}
-      }
-    ],
+    "scripts": [],
     "stylesheets": []
   },
   "demo:durable-objects": {
@@ -14194,8 +14173,8 @@
     ],
     "links": [
       {
-        "name": "Route source: src/demos/durable-objects.ts",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/durable-objects.ts",
+        "name": "Route source: src/demos/durable-objects-presentation.tsx",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/durable-objects-presentation.tsx",
         "target": null
       },
       {
@@ -14235,7 +14214,9 @@
       {
         "element": "div",
         "attributes": {
-          "data-demo-section": "durable-objects"
+          "data-demo-section": "durable-objects",
+          "data-demo-browser-module": "/assets/durable-objects-browser-C2tUXJvi.js",
+          "data-config": "<CONFIG_SHA256:cc17fe10399fdd46>"
         }
       },
       {
@@ -14299,16 +14280,7 @@
         }
       }
     ],
-    "scripts": [
-      {
-        "src": null,
-        "type": "classic",
-        "async": false,
-        "defer": false,
-        "inlineSha256": "8823fb35bc4f054a",
-        "data": {}
-      }
-    ],
+    "scripts": [],
     "stylesheets": []
   },
   "demo:accessibility": {
@@ -14380,7 +14352,7 @@
       },
       {
         "name": "Lab source",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/ui/accessibility-lab.ts",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/ui/accessibility-lab.tsx",
         "target": null
       },
       {
@@ -14412,7 +14384,9 @@
       {
         "element": "div",
         "attributes": {
-          "data-demo-section": "accessibility"
+          "data-demo-section": "accessibility",
+          "data-demo-browser-module": "/assets/accessibility-browser-BlOYooXr.js",
+          "data-config": "<CONFIG_SHA256:c98322f317f18fd9>"
         }
       },
       {
@@ -14464,16 +14438,7 @@
         }
       }
     ],
-    "scripts": [
-      {
-        "src": null,
-        "type": "classic",
-        "async": false,
-        "defer": false,
-        "inlineSha256": "bd04604aef0237fb",
-        "data": {}
-      }
-    ],
+    "scripts": [],
     "stylesheets": []
   },
   "demo:i18n": {
@@ -14545,7 +14510,7 @@
       },
       {
         "name": "View page source",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/i18n-page.ts",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/i18n-presentation.tsx",
         "target": null
       },
       {
@@ -14626,7 +14591,9 @@
       {
         "element": "div",
         "attributes": {
-          "data-demo-section": "i18n"
+          "data-demo-section": "i18n",
+          "data-demo-browser-module": "/assets/i18n-browser-D96zQT6t.js",
+          "data-config": "<CONFIG_SHA256:18cda523c38f2f08>"
         }
       },
       {
@@ -14726,16 +14693,7 @@
         }
       }
     ],
-    "scripts": [
-      {
-        "src": null,
-        "type": "classic",
-        "async": false,
-        "defer": false,
-        "inlineSha256": "d77b1bba0eeb36cb",
-        "data": {}
-      }
-    ],
+    "scripts": [],
     "stylesheets": []
   },
   "assurance:ISO27001-A.5.19": {

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { localizationForEnv } from '../i18n/runtime';
 import type { Env } from '../types';
-import { DEFAULT_DESCRIPTION } from './document';
+import { DEFAULT_DESCRIPTION, RequestLocalizationProvider } from './document';
 import {
   type DemoSection,
   type DemoSectionOptions,
@@ -31,14 +31,16 @@ export function createReactDemoSection(
 
   return {
     scope,
-    body: renderToStaticMarkup(<DemoPresentationScope
-      name={scope}
-      idPrefix={idPrefix}
-      headingLevel={options.headingLevel ?? 2}
-      browserModule={definition.browserModule}
-      browserMessages={definition.browserMessages}
-      browserLocale={localization.locale}
-    >{definition.children}</DemoPresentationScope>),
+    body: renderToStaticMarkup(<RequestLocalizationProvider localization={localization}>
+      <DemoPresentationScope
+        name={scope}
+        idPrefix={idPrefix}
+        headingLevel={options.headingLevel ?? 2}
+        browserModule={definition.browserModule}
+        browserMessages={definition.browserMessages}
+        browserLocale={localization.locale}
+      >{definition.children}</DemoPresentationScope>
+    </RequestLocalizationProvider>),
     page: {
       title: localization.exact(definition.title),
       description: localization.exact(DEFAULT_DESCRIPTION),

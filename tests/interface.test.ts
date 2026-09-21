@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { accessibilityContent } from '../src/demos/accessibility-page';
+import { accessibilitySection } from '../src/demos/accessibility-page';
 import { d1Section } from '../src/demos/d1-presentation';
-import { i18nContent } from '../src/demos/i18n-page';
+import { i18nSection } from '../src/demos/i18n-presentation';
 import { r2Section } from '../src/demos/r2-presentation';
 import {
   bindLocalization,
@@ -120,11 +120,11 @@ describe('R2 storage workspace', () => {
 describe('internationalized interface', () => {
   it('renders Arabic from the shared application context with matching lang and RTL direction', async () => {
     const context = localized('https://demo.example/interfaces/i18n?lang=ar&count=3');
-    const html = `${await demosShell('https://demo.wizardgang.ai/demos?lang=ar&count=3', context.env)}${i18nContent(context.request, context.env).body}`;
+    const html = `${await demosShell('https://demo.wizardgang.ai/demos?lang=ar&count=3', context.env)}${i18nSection(context.request, context.env).body}`;
     expect(html).toContain('<html lang="ar" dir="rtl">');
     expect(html).toContain('التدويل في الواجهة');
     expect(html).toContain('src/i18n/locales/ar.json');
-    expect(html).toContain('<code data-direction>rtl</code>');
+    expect(html).toContain('<code data-direction="">rtl</code>');
     expect(html).toContain('src/i18n/runtime.ts');
     expect(html).toContain('انتقل إلى المحتوى الرئيسي');
   });
@@ -137,9 +137,9 @@ describe('internationalized interface', () => {
 
   it('keeps six synchronized resources while the demonstration defers language changes to the global control', async () => {
     const context = localized('https://demo.example/interfaces/i18n?lang=ja&count=7');
-    const html = `${await demosShell('https://demo.wizardgang.ai/demos?lang=ja&count=7', context.env)}${i18nContent(context.request, context.env).body}`;
+    const html = `${await demosShell('https://demo.wizardgang.ai/demos?lang=ja&count=7', context.env)}${i18nSection(context.request, context.env).body}`;
     expect(html).toContain('<html lang="ja" dir="ltr">');
-    expect(html).toContain('<input type="hidden" name="lang" value="ja">');
+    expect(html).toContain('<input type="hidden" name="lang" value="ja"/>');
     expect(html).toContain('Use the language control in the global header');
     expect(html).not.toContain('id="locale-demo"');
     expect(html).toContain('data-inspect-target="Intl.NumberFormat.currency"');
@@ -204,7 +204,7 @@ describe('global localization and accessibility runtime', () => {
 
 describe('accessible interaction surface', () => {
   it('pairs one accessible interaction with inert criterion-level failure analysis', async () => {
-    const html = `${await demosShell('https://demo.wizardgang.ai/demos')}${accessibilityContent(new Request('https://demo.example/accessibility'), env).body}`;
+    const html = `${await demosShell('https://demo.wizardgang.ai/demos')}${accessibilitySection(new Request('https://demo.example/accessibility'), env).body}`;
     expect(html.match(/class="skip-link"/g)).toHaveLength(1);
     expect(html).toContain('sandbox="allow-scripts allow-forms"');
     expect(html).not.toContain('data-a11y-mode');
@@ -221,18 +221,25 @@ describe('accessible interaction surface', () => {
   });
 
   it('ships deterministic accessible and broken frame variants with local axe execution', async () => {
-    const accessible = await accessibilityLabResponse(new Request('https://demo.example/api/labs/accessibility?mode=accessible')).text();
+    const accessibleResponse = accessibilityLabResponse(new Request('https://demo.example/api/labs/accessibility?mode=accessible'));
+    expect(accessibleResponse.headers.get('content-security-policy')).toContain("frame-ancestors 'self'");
+    expect(accessibleResponse.headers.get('x-frame-options')).toBe('SAMEORIGIN');
+    const accessible = await accessibleResponse.text();
     expect(accessible).toContain('<html lang="en">');
     expect(accessible).toContain('<label for="email">');
     expect(accessible).toContain('role="dialog" aria-modal="true"');
-    expect(accessible).toContain("axe.run(document");
-    expect(accessible).toContain("type:'wg-accessibility-report'");
+    expect(accessible).toContain('src="/assets/axe.min.js"');
+    expect(accessible).toContain('data-accessibility-lab=""');
+    const labBrowser = readFileSync('src/browser/accessibility-lab.ts', 'utf8');
+    expect(labBrowser).toContain('axe.run(document');
+    expect(labBrowser).toContain("type: 'wg-accessibility-report'");
 
     const broken = await accessibilityLabResponse(new Request('https://demo.example/api/labs/accessibility?mode=broken')).text();
-    expect(broken).toContain('<html><head>');
-    expect(broken).toContain('onpaste="return false"');
+    expect(broken).toContain('data-fixture-signatures');
+    expect(broken).toContain('&lt;html&gt;&lt;head&gt;');
+    expect(broken).toContain('onpaste=&quot;return false&quot;');
     expect(broken).toContain('outline:none!important');
-    expect(broken).toContain('<img class="product" src=');
+    expect(broken).toContain('&lt;img class=&quot;product&quot; src=');
   });
 });
 

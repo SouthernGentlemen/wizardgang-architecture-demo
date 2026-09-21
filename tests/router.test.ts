@@ -251,7 +251,7 @@ describe('public route contract', () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/api/demos/edge', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
     expect(html).toContain('Route source');
-    expect(html).toContain('/src/demos/edge.ts');
+    expect(html).toContain('/src/demos/edge-presentation.tsx');
     expect(html).not.toContain('D1 schema');
     expect(html).not.toContain('Route map');
     expect(html).not.toContain('Live interfaces');

@@ -4596,7 +4596,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "Código de la ruta: src/demos/edge.ts"
+        "name": "Código de la ruta: src/demos/edge-presentation.tsx"
       },
       {
         "element": "a",
@@ -4631,7 +4631,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "Código de la ruta: src/demos/workers.ts"
+        "name": "Código de la ruta: src/demos/workers-presentation.tsx"
       },
       {
         "element": "a",
@@ -4708,7 +4708,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "Código de la ruta: src/demos/durable-objects.ts"
+        "name": "Código de la ruta: src/demos/durable-objects-presentation.tsx"
       },
       {
         "element": "a",

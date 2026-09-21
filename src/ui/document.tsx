@@ -58,6 +58,13 @@ export { DEFAULT_DESCRIPTION, ROOT_ROUTE_ID };
 
 const RequestLocalization = createContext<LocalizationContext | null>(null);
 
+export function RequestLocalizationProvider({
+  localization,
+  children,
+}: Readonly<{ localization: LocalizationContext; children: ReactNode }>) {
+  return <RequestLocalization value={localization}>{children}</RequestLocalization>;
+}
+
 export function useRequestLocalization(): LocalizationContext {
   const localization = useContext(RequestLocalization);
   if (!localization) throw new Error('Document component rendered without request localization.');
@@ -169,7 +176,7 @@ function ShellBrowserModule() {
 function LocalizedDocument({ env, content, localization }: Readonly<{ env: Env; content: ReactPageContent; localization: LocalizationContext }>) {
   const repositoryUrl = repoUrl(env);
   return <html lang={content.lang ?? localization.lang} dir={content.dir ?? localization.dir}>
-    <RequestLocalization value={localization}>
+    <RequestLocalizationProvider localization={localization}>
       <DocumentHead content={content} />
       <body data-route-id={content.routeId}>
         <a className="skip-link" href="#main">{localization.t('shell.skip_main', 'Skip to main content')}</a>
@@ -178,7 +185,7 @@ function LocalizedDocument({ env, content, localization }: Readonly<{ env: Env; 
         <SiteFooter env={env} repositoryUrl={repositoryUrl} routeId={content.routeId} />
         <ShellBrowserModule />
       </body>
-    </RequestLocalization>
+    </RequestLocalizationProvider>
   </html>;
 }
 

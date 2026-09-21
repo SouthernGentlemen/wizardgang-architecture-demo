@@ -50,7 +50,7 @@ describe('DEMO-270 accessible Demo Workbench interaction', () => {
 
   it('implements conventional keyboard, focus, history, loading, and stale-load controls', () => {
     const source = readFileSync('src/browser/demos.ts', 'utf8');
-    const accessibilitySource = readFileSync('src/demos/accessibility-page.ts', 'utf8');
+    const accessibilityBrowserSource = readFileSync('src/browser/accessibility.ts', 'utf8');
 
     expect(source).toContain("['ArrowLeft', 'ArrowRight', 'Home', 'End']");
     expect(source).toContain("categoryTabs.forEach((tab) => tab.addEventListener('keydown', activateCategoryFromKeyboard))");
@@ -60,8 +60,8 @@ describe('DEMO-270 accessible Demo Workbench interaction', () => {
     expect(source).toContain("panel.setAttribute('aria-busy', String(!error))");
     expect(source).toContain("renderState(error instanceof Error ? error.message : messages.failed, 'alert', true, id)");
     expect(source).toContain('if (activeId !== id || controller.signal.aborted) return');
-    expect(accessibilitySource).toContain("frame.contentWindow.location.replace('data:text/html;charset=utf-8,'+encodeURIComponent(html))");
-    expect(accessibilitySource).not.toContain('frame.srcdoc=await response.text()');
+    expect(accessibilityBrowserSource).toContain("type: 'wg-accessibility-start'");
+    expect(accessibilityBrowserSource).not.toContain('data:text/html');
   });
 
   it('keeps technical content bounded and preserves locale fragments through the shared shell', () => {

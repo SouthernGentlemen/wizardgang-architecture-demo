@@ -25,6 +25,9 @@ const allowedLifecycles = new Set(['Draft', 'Approved', 'Published', 'Superseded
 const lockedIdentityLifecycles = new Set(['Approved', 'Published', 'Superseded', 'Withdrawn']);
 const publicReviewStatus = 'Reviewed';
 const approvedIdentityTransitions = new Map([
+  ['EVD-SRC-006', new Set([
+    'evidence|source|src/ui/accessibility-lab.ts|\0evidence|source|src/ui/accessibility-lab.tsx|',
+  ])],
   ['EVD-SRC-007', new Set([
     'evidence|source|src/ui/page.ts|\0evidence|source|src/ui/document.tsx|',
   ])],

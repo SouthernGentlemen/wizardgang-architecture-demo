@@ -220,6 +220,54 @@ async function switchWorkbenchLocale(cdp, locale, expectedId) {
   }
 }
 
+async function exerciseDemo337Workflows(cdp, locale) {
+  await navigate(cdp, `${origin}/demos?lang=${locale}#mcp`);
+  await assertWorkbenchState(cdp, 'mcp', `MCP ${locale} workflow`, '#mcp', locale);
+  await evaluate(cdp, `document.querySelector('[data-demo-panel] [data-mcp-run]')?.click();true`);
+  await waitForExpression(cdp, `document.querySelector('[data-demo-panel] [data-mcp-output]')?.textContent?.includes('200')`, `MCP ${locale} ping`, 160);
+
+  await navigate(cdp, `${origin}/demos?lang=${locale}#edge`);
+  await assertWorkbenchState(cdp, 'edge', `Edge ${locale} workflow`, '#edge', locale);
+  await evaluate(cdp, `document.querySelector('[data-demo-panel] [data-edge-run]')?.click();true`);
+  await waitForExpression(cdp, `document.querySelector('[data-demo-panel] [data-edge-raw]')?.textContent?.includes('"request"')`, `Edge ${locale} inspection`);
+
+  await navigate(cdp, `${origin}/demos?lang=${locale}#workers`);
+  await assertWorkbenchState(cdp, 'workers', `Workers ${locale} workflow`, '#workers', locale);
+  await evaluate(cdp, `document.querySelector('[data-demo-panel] [data-worker-policy]')?.requestSubmit();true`);
+  await waitForExpression(cdp, `document.querySelector('[data-demo-panel] [data-worker-result]')?.hidden === false`, `Workers ${locale} policy`);
+
+  await navigate(cdp, `${origin}/demos?lang=${locale}#durable-objects`);
+  await assertWorkbenchState(cdp, 'durable-objects', `Durable Objects ${locale} workflow`, '#durable-objects', locale);
+  await waitForExpression(cdp, `!document.querySelector('[data-demo-panel] [data-durable-current]')?.textContent?.includes('Loading')`, `Durable Objects ${locale} initial counter`);
+  await evaluate(cdp, `document.querySelector('[data-demo-panel] [data-durable-run="1"]')?.click();true`);
+  await waitForExpression(cdp, `document.querySelector('[data-demo-panel] [data-durable-raw]')?.textContent?.includes('"counter"')`, `Durable Objects ${locale} increment`, 160);
+
+  await navigate(cdp, `${origin}/demos?lang=${locale}#accessibility`);
+  await assertWorkbenchState(cdp, 'accessibility', `Accessibility ${locale} workflow`, '#accessibility', locale);
+  try {
+    await waitForExpression(cdp, `document.querySelector('[data-demo-panel] [data-scan-meta]')?.textContent?.includes('ms')`, `Accessibility ${locale} axe result`, 240);
+  } catch (error) {
+    const parent = await evaluate(cdp, `({state:document.querySelector('[data-demo-panel] [data-scan-state]')?.textContent,meta:document.querySelector('[data-demo-panel] [data-scan-meta]')?.textContent,frameSrc:document.querySelector('[data-a11y-frame]')?.getAttribute('src'),frameSrcdoc:document.querySelector('[data-a11y-frame]')?.getAttribute('srcdoc')?.slice(0,80)})`);
+    const tree = await cdp.call('Page.getFrameTree');
+    const frameId = tree.frameTree.childFrames?.[0]?.frame.id;
+    if (!frameId) throw new Error(`${error instanceof Error ? error.message : String(error)}; parent=${JSON.stringify(parent)}; childFrames=0`);
+    const world = await cdp.call('Page.createIsolatedWorld', { frameId, worldName: 'accessibility-audit-diagnostics' });
+    const detail = await cdp.call('Runtime.evaluate', {
+      contextId: world.executionContextId,
+      expression: `({base:document.baseURI,ready:document.readyState,axe:typeof axe,scripts:[...document.scripts].map((script)=>({src:script.src,type:script.type})),text:document.body?.innerText?.slice(0,120)})`,
+      returnByValue: true,
+    });
+    throw new Error(`${error instanceof Error ? error.message : String(error)}; parent=${JSON.stringify(parent)}; frame=${JSON.stringify(detail.result?.value)}`);
+  }
+  const scan = await evaluate(cdp, `({state:document.querySelector('[data-demo-panel] [data-scan-state]')?.textContent?.trim(),meta:document.querySelector('[data-demo-panel] [data-scan-meta]')?.textContent?.trim()})`);
+  if (!scan.meta?.includes('ms')) throw new Error(`Accessibility ${locale} axe evidence missing duration: ${JSON.stringify(scan)}`);
+
+  await navigate(cdp, `${origin}/demos?lang=${locale}&count=3#i18n`);
+  await assertWorkbenchState(cdp, 'i18n', `Internationalization ${locale} workflow`, '#i18n', locale);
+  await evaluate(cdp, `document.querySelector('[data-demo-panel] [data-inspect-target="card.title"]')?.click();true`);
+  await waitForExpression(cdp, `document.querySelector('[data-demo-panel] [data-resource-excerpt]')?.textContent?.includes('"key": "card.title"')`, `Internationalization ${locale} inspector`);
+}
+
 async function traverseBrowserHistory(cdp, offset, expectedId, label) {
   const history = await cdp.call('Page.getNavigationHistory');
   const entry = history.entries[history.currentIndex + offset];
@@ -531,6 +579,7 @@ async function workbenchInteractionAudit(cdp) {
     await exerciseR2Workflow(cdp, locale);
     await exerciseRestWorkflow(cdp, locale);
     await exerciseGraphqlWorkflow(cdp, locale);
+    await exerciseDemo337Workflows(cdp, locale);
   }
 }
 
@@ -600,6 +649,7 @@ async function main() {
     env: { ...process.env, NO_UPDATE_NOTIFIER: '1' },
   });
   let wranglerError = '';
+  wrangler.stdout.resume();
   wrangler.stderr.on('data', (chunk) => { wranglerError += String(chunk); });
 
   let chrome;
@@ -692,7 +742,7 @@ async function main() {
 
     for (const pathname of auditConfig.keyboardPaths) await keyboardSmoke(cdp, pathname);
 
-    console.log(`Site browser audit passed: ${pages.length} canonical public routes, ${browserPages} route/locale renders, ${auditConfig.states.length} explicit state fixtures, ${axeRuns} axe runs, one complete Demo Workbench interaction/history/locale audit, D1 CRUD/reset, R2 upload/preview/delete, every REST operation, and GraphQL example/custom queries in English and Arabic, ${auditConfig.narrowViewportPaths.length} narrow reflow samples, and ${auditConfig.keyboardPaths.length} keyboard smoke samples.`);
+    console.log(`Site browser audit passed: ${pages.length} canonical public routes, ${browserPages} route/locale renders, ${auditConfig.states.length} explicit state fixtures, ${axeRuns} axe runs, one complete Demo Workbench interaction/history/locale audit, D1 CRUD/reset, R2 upload/preview/delete, every REST operation, GraphQL example/custom queries, and the MCP, Edge, Workers, Durable Objects, accessibility/axe, and internationalization workflows in English and Arabic, ${auditConfig.narrowViewportPaths.length} narrow reflow samples, and ${auditConfig.keyboardPaths.length} keyboard smoke samples.`);
     console.log('Automated accessibility result: no automatically detectable violation observed in the bounded Chromium/axe matrix. This is not WCAG conformance or AAA certification.');
   } catch (error) {
     if (wrangler.exitCode !== null) console.error(`wrangler exited ${wrangler.exitCode}: ${wranglerError.slice(-4000)}`);

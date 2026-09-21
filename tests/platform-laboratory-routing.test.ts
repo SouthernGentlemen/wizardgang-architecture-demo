@@ -1,5 +1,4 @@
 import fs from 'node:fs';
-import vm from 'node:vm';
 import { describe, expect, it } from 'vitest';
 import { platformLaboratoryCapabilities } from '../src/platform/route-capabilities';
 import {
@@ -152,9 +151,12 @@ describe('platform laboratory declarative routing', () => {
       expect(presentationHtml, id).toContain(`data-demo-section="${id}"`);
       if (['edge', 'workers', 'durable-objects'].includes(id)) expect(presentationHtml, id).toContain('Route source');
     }
-    const inlineScripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map((match) => match[1]);
-    expect(inlineScripts.length).toBeGreaterThan(0);
-    for (const script of inlineScripts) expect(() => new vm.Script(script)).not.toThrow();
+    for (const id of ['edge', 'workers', 'durable-objects']) {
+      const presentation = await routeRequest(new Request(`https://demo.wizardgang.ai/api/demos/${id}`, { headers: { accept: 'text/html' } }), onlineEnv);
+      const presentationHtml = await presentation.text();
+      expect(presentationHtml, id).toContain('data-demo-browser-module=');
+      expect(presentationHtml, id).not.toMatch(/<script(?:\s[^>]*)?>/);
+    }
     for (const removed of removedPagePaths) expect(html, removed).not.toContain(`href="${removed}"`);
   });
 

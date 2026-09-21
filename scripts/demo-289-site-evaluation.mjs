@@ -89,7 +89,7 @@ async function captureStep(findings, category, label, callback) {
 
 function baseGeometryExpression() {
   return `(()=>{
-    window.scrollTo(0,window.scrollY);
+    window.scrollTo({left:0,top:window.scrollY,behavior:'instant'});
     const viewport=window.innerWidth;
     const clientWidth=document.documentElement.clientWidth;
     const scrollWidth=document.documentElement.scrollWidth;
@@ -187,10 +187,10 @@ async function runFocusAndTrap(cdp, label, findings) {
       const exposed=hits.some((hit)=>!!hit&&(hit===el||el.contains(hit)));
       const id=el.id||el.getAttribute('href')||el.getAttribute('data-assurance-framework')||el.tagName;
       const order=[...document.querySelectorAll('*')].indexOf(el);
-      return {id,order,visible,obscured:offscreen||!exposed,offscreen,rect:{left:r.left,top:r.top,right:r.right,bottom:r.bottom},hits:hits.map((hit)=>hit?.id||hit?.getAttribute?.('href')||hit?.tagName||null)};
+      return {id,order,visible,nestedFrame:el instanceof HTMLIFrameElement,obscured:offscreen||!exposed,offscreen,rect:{left:r.left,top:r.top,right:r.right,bottom:r.bottom},hits:hits.map((hit)=>hit?.id||hit?.getAttribute?.('href')||hit?.tagName||null)};
     })()`);
     visited.push(state);
-    if (state.id !== 'body' && !state.visible) invisible += 1;
+    if (state.id !== 'body' && !state.visible && !state.nestedFrame) invisible += 1;
     if (state.obscured) obscured.push(state);
   }
   const unique = new Set(visited.filter((state)=>state.id).map((state)=>`${state.order}:${state.id}`));
@@ -200,7 +200,8 @@ async function runFocusAndTrap(cdp, label, findings) {
   const before = visited.at(-1);
   await dispatchTab(cdp, true);
   const after = await evaluate(cdp, `(()=>{const el=document.activeElement;return {id:el?.id||el?.getAttribute?.('href')||el?.tagName||'',order:el?[...document.querySelectorAll('*')].indexOf(el):-1}})()`);
-  if (before.order === after.order && unique.size > 1) recordFinding(findings, 'reverse keyboard traversal', label, { before:before.id, after:after.id, order:after.order }, false);
+  const stayedAtNestedFrameBoundary = before.nestedFrame && after.id === 'IFRAME';
+  if (before.order === after.order && unique.size > 1 && !stayedAtNestedFrameBoundary) recordFinding(findings, 'reverse keyboard traversal', label, { before:before.id, after:after.id, order:after.order }, false);
 }
 
 async function contentSnapshot(cdp, label, locale, expectedAssuranceHeading = null) {

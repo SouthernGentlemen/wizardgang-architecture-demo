@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { parseSync, Visitor } from 'oxc-parser';
 import { describe, expect, it, vi } from 'vitest';
-import { accessibilityContent } from '../src/demos/accessibility-page';
+import { accessibilitySection } from '../src/demos/accessibility-page';
 import { safeError } from '../src/lib/http';
 import { applicationRouteRegistry } from '../src/routing/application-routes';
 import type { Env } from '../src/types';
@@ -90,6 +90,13 @@ function reachableSourceModules(): Set<string> {
     path.join(srcRoot, 'browser', 'graphiql.ts'),
     path.join(srcRoot, 'browser', 'webhooks.ts'),
     path.join(srcRoot, 'browser', 'identity.ts'),
+    path.join(srcRoot, 'browser', 'mcp.ts'),
+    path.join(srcRoot, 'browser', 'edge.ts'),
+    path.join(srcRoot, 'browser', 'workers.ts'),
+    path.join(srcRoot, 'browser', 'durable-objects.ts'),
+    path.join(srcRoot, 'browser', 'accessibility.ts'),
+    path.join(srcRoot, 'browser', 'accessibility-lab.ts'),
+    path.join(srcRoot, 'browser', 'i18n.ts'),
   ];
   while (pending.length > 0) {
     const filePath = pending.pop();
@@ -154,7 +161,7 @@ describe('DEMO-324 source integrity', () => {
   });
 
   it('names the accessibility renderer in its demonstration route source', () => {
-    const content = accessibilityContent(new Request('https://demo.wizardgang.ai/demos#accessibility'), environment);
+    const content = accessibilitySection(new Request('https://demo.wizardgang.ai/demos#accessibility'), environment);
     expect(content.body).toContain('/blob/main/src/demos/accessibility-page.ts');
   });
 });
