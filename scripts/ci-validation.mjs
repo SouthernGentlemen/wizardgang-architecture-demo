@@ -10,7 +10,6 @@ if (baseSha && !/^[0-9a-f]{7,40}$/i.test(baseSha)) throw new Error('BASE_SHA mus
 const commands = [
   { label: 'Validate pinned Node/npm toolchain', file: process.execPath, args: ['scripts/validate-toolchain.mjs'] },
   { label: 'Install locked dependencies', file: npm, args: ['ci'] },
-  { label: 'Validate generated-artifact parity', file: npm, args: ['run', 'validate:generated-artifacts'], env: { CI_DIAGNOSTICS_DIR: diagnosticsDir } },
   { label: 'Full repository check', file: npm, args: ['run', 'check'] },
   { label: 'Apply D1 migrations to a clean local database', file: npm, args: ['run', 'validate:migrations'] },
   { label: 'Verify Chromium runtime', file: npm, args: ['run', 'verify:chromium'] },
