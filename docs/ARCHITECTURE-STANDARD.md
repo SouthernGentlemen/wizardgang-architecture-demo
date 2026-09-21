@@ -302,9 +302,11 @@ The result is a deliberately small architecture that can support simple applicat
 
 ## 27 — Repository baseline
 
-**Applicability.** The baseline applies to every WizardGang product repository, meaning any repository that deploys a production surface or publishes releases. Laboratory repositories that never deploy production adopt only the toolchain and command rules. Repositories without executable source are out of scope.
+**Applicability.** The development-process baseline applies to every executable WizardGang-family repository, including products, experiments, labs, offline readers, games, and data/asset libraries. Being a laboratory is not an exemption. The repository declares product capabilities and explicit N/A boundaries; a repository without a hosted surface does not invent a production deployment, and a library without a browser runtime does not invent a browser application. Repositories without executable source are outside this executable baseline but still need an intentional source-license/attribution and security-reporting model when published.
 
-**Toolchain.**
+Every executable repository carries root `AGENTS.md`, `CONTRIBUTING.md`, `SECURITY.md`, `README.md`, an explicit source-license/attribution model, a controlled change-ID namespace, branch/commit/PR discipline, CI on PRs and `main`, a credential-free `npm run check` (or an explicitly justified equivalent for a non-npm repository), settings-as-code with live verification, and immutable release semantics when releases are published. Record capability-specific N/A decisions in current architecture rather than using repository category as a blanket exemption. Production deployment controls apply only when a production environment exists.
+
+**Reference TypeScript/Cloudflare toolchain.** These are the standard choices when a repository uses this stack, not a requirement to add Cloudflare, a browser, or a particular framework to a product without that capability.
 
 - Node.js 26: the exact version in `.node-version`, and `engines.node` `26.x`.
 - npm 11: the exact version in `packageManager`, and `engines.npm` `11.x`. `.npmrc` sets `engine-strict=true`, and dependency install scripts run only when `allowScripts` approves them.
@@ -314,27 +316,28 @@ The result is a deliberately small architecture that can support simple applicat
 - Vite 8 builds browser modules and stylesheets into content-hashed files.
 - Vitest 5 runs tests that need TypeScript, TSX, or a DOM; `node:test` is acceptable for plain Node scripts.
 
-**Presentation.**
+**Browser presentation, when applicable.**
 
-- HTML documents render from React 19 components, on the server or at build time, and are complete and usable without JavaScript.
+- Ordinary HTML documents render from React 19 components, on the server or at build time, and are complete and usable without JavaScript. An interactive client application or offline reader records its necessary boundary in current architecture.
 - Browser behavior is first-party TypeScript that progressively enhances that HTML, without client hydration or a client-side router. A repository that needs a client application, such as a game, a canvas, or an offline reader, records that boundary in its architecture document.
 - The Content Security Policy does not allow `'unsafe-inline'`. HTML carries no inline event-handler attributes, and any inline script or style is allowed only by hash or nonce. Raw HTML insertion is confined to one audited component.
 - Stylesheets are CSS files processed by Vite, not strings. Tailwind CSS 4 may be used through Vite.
 
-**Commands.** `package.json` defines:
+**Commands.** An npm-based executable repository's `package.json` defines:
 
 - `dev`: local development only; it never deploys or selects a production environment;
 - `build`: the production build, without deploying;
 - `typecheck` and `test`;
-- `check`: every repository validation that needs no provider credentials; CI runs it on every pull request and on `main`.
+- `check`: the canonical credential-free repository validation, including relevant source, build, dependency/security, history, whitespace, and local acceptance gates; CI runs it on every pull request and on `main`. Provider-authenticated settings, deployment, and runtime checks remain separate and explicit.
 
 Deployment commands run only in the tag-driven release workflow; local use is limited to dry runs.
 
 **Repository contents.**
 
-- The root holds `README.md`, `AGENTS.md`, `CONTRIBUTING.md`, `SECURITY.md`, `LICENSE`, `.gitignore`, `.node-version`, `.npmrc`, `package.json`, `package-lock.json`, and `tsconfig.json`, plus `wrangler.jsonc` in a Workers project.
-- `.github/workflows/ci.yml` runs `check`; a repository that releases also has `release.yml`.
+- The root holds `README.md`, `AGENTS.md`, `CONTRIBUTING.md`, `SECURITY.md`, an explicit source-license/attribution model, and applicable toolchain/lock/configuration files. A Workers project also has `wrangler.jsonc`; a non-Workers product does not add it merely for conformity.
+- `.github/workflows/ci.yml` runs `check`; a repository that publishes releases also has a tag-driven release workflow.
 - There is no `CHANGELOG.md` or per-version Markdown archive; annotated tags and GitHub Releases are the release history.
+- An active root implementation plan, if present, is a current/future queue. It has no completed tasks, merge SHAs, release notes, or retrospectives. Its delivering PR removes its own task, and the final task deletes the plan. Git/GitHub retain completed work.
 
 **Change control.**
 
@@ -342,16 +345,18 @@ Deployment commands run only in the tag-driven release workflow; local use is li
 - Commit and pull-request titles use `[PREFIX-###] [TYPE] Imperative summary` with exactly one type from the §16 list, which is the complete vocabulary. CI validates pull-request titles, and `npm run check` validates that IDs are sequential.
 - Branches are named `prefix-###-imperative-summary`.
 - Commit bodies carry the controlled record that the repository's change-management document defines.
+- `do needful` means refresh authoritative `main`, open PRs, and exact-head CI; finish a current, green, mergeable authoritative PR first; reconcile the active plan; and deliver only its first unblocked task through branch, validation, controlled commit, PR, current-head CI, permitted merge, and verification of merged `main`. An explicit owner priority override is allowed; a blocked first task is not silently skipped. Stop after one task with a complete prompt for the next.
+- When no task remains, retire an exhausted plan and conduct a fresh deep planning/research pass to publish a small wave, stopping before implementation. Prefer roughly 5–12 near-term surgical tasks, each with one ID, concern, observable outcome, narrow ownership, prerequisites, scope, non-goals, acceptance, and exact relevant validation. Split independent outcomes; reassess after the wave instead of reserving a long roadmap.
 
 **GitHub settings.**
 
 - `main` is the default branch.
 - A `main` ruleset requires a pull request and the CI status checks, and blocks force pushes and deletion.
 - A `v*` tag ruleset blocks updates and deletion.
-- Only merge commits are allowed, and head branches are deleted on merge.
-- The expected settings are committed, for example in `config/github-repository-settings.json`, and a documented command verifies them.
+- The permitted merge method is declared per repository, not inferred from another product. This repository currently requires merge commits; a squash-only repository may instead land one controlled commit when its validator and provider policy agree. Do not weaken protections or rewrite published history merely to change the style.
+- The expected settings are committed, for example in `config/github-repository-settings.json`; pure comparison tests run credential-free, while a documented live command verifies provider state. Changes to provider settings require explicit controlled work and verification.
 
 **Release.**
 
-- Releases are annotated semantic-version tags, each with one GitHub Release, and `package.json` carries the tagged version.
-- Production deploys only from a release tag, through a workflow with a protected environment.
+- Published releases use immutable annotated semantic-version tags, each with a GitHub Release, and the tagged package version matches where applicable. Exact-tag reproduction precedes publication. Corrections move forward; tags, Releases, and accepted history are not rewritten.
+- Release identity and deployment evidence are distinct. A product with a production environment deploys only the accepted immutable release state through a protected environment and verifies the deployed identity. A local/offline product may mark hosted deployment N/A while still keeping published releases immutable.
