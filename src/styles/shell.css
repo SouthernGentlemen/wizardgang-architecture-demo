@@ -157,6 +157,9 @@ a.card:hover h3 { color: var(--acid); }
 .panel ul, .panel ol { margin: 0 0 1rem; padding-left: 1.1rem; }
 .panel li { margin-bottom: .4rem; color: var(--muted); }
 .panel li strong { color: var(--paper); }
+.admin-state-details { margin-bottom: 1.4rem; }
+.admin-message-input { width: 100%; }
+.admin-state-actions { margin-top: 1.2rem; }
 
 .button, button { display: inline-flex; align-items: center; min-height: 46px; padding: .6rem 1rem; border: 1px solid var(--line); border-radius: 0; background: var(--panel-2); color: var(--paper); cursor: pointer; font: 850 .88rem/1 inherit; font-family: inherit; text-decoration: none; transition: transform .16s, border-color .16s; }
 .button:hover, button:hover { transform: translateY(-2px); border-color: var(--muted); }

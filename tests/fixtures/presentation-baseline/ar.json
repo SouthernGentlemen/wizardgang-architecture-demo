@@ -5,7 +5,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": "ar",
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -1367,7 +1367,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-CTZBlQwr.css",
+        "href": "/assets/shell-CqvtrvJ5.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -1380,7 +1380,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": "ar",
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -1717,7 +1717,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-CTZBlQwr.css",
+        "href": "/assets/shell-CqvtrvJ5.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -1730,7 +1730,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": "ar",
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -1940,7 +1940,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-CTZBlQwr.css",
+        "href": "/assets/shell-CqvtrvJ5.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -1953,7 +1953,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": "ar",
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -2631,14 +2631,14 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-CTZBlQwr.css",
+        "href": "/assets/shell-CqvtrvJ5.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
       },
       {
         "kind": "link",
-        "href": "/assets/demos-DszcmNlC.css",
+        "href": "/assets/demos-ak_961L0.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -2651,7 +2651,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": "ar",
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -4013,7 +4013,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-CTZBlQwr.css",
+        "href": "/assets/shell-CqvtrvJ5.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -4026,7 +4026,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": "ar",
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -5388,7 +5388,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-CTZBlQwr.css",
+        "href": "/assets/shell-CqvtrvJ5.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -5401,7 +5401,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": "ar",
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -6763,7 +6763,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-CTZBlQwr.css",
+        "href": "/assets/shell-CqvtrvJ5.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -6776,7 +6776,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": "ar",
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -8138,7 +8138,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-CTZBlQwr.css",
+        "href": "/assets/shell-CqvtrvJ5.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -8151,7 +8151,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": "ar",
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -8829,14 +8829,14 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-CTZBlQwr.css",
+        "href": "/assets/shell-CqvtrvJ5.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
       },
       {
         "kind": "link",
-        "href": "/assets/demos-DszcmNlC.css",
+        "href": "/assets/demos-ak_961L0.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -8849,7 +8849,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": "ar",
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -9527,14 +9527,14 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-CTZBlQwr.css",
+        "href": "/assets/shell-CqvtrvJ5.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
       },
       {
         "kind": "link",
-        "href": "/assets/demos-DszcmNlC.css",
+        "href": "/assets/demos-ak_961L0.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -9547,7 +9547,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": "ar",
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -9757,7 +9757,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-CTZBlQwr.css",
+        "href": "/assets/shell-CqvtrvJ5.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -9770,7 +9770,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": "ar",
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "no-referrer",
         "x-content-type-options": "nosniff",
@@ -10104,7 +10104,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-CTZBlQwr.css",
+        "href": "/assets/shell-CqvtrvJ5.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -10117,7 +10117,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": "ar",
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "no-referrer",
         "x-content-type-options": "nosniff",
@@ -10343,7 +10343,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-CTZBlQwr.css",
+        "href": "/assets/shell-CqvtrvJ5.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -10356,7 +10356,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": null,
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "no-referrer",
         "x-content-type-options": "nosniff",
@@ -10541,7 +10541,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-CTZBlQwr.css",
+        "href": "/assets/shell-CqvtrvJ5.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -10554,7 +10554,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": null,
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -10985,7 +10985,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": null,
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -11250,7 +11250,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": null,
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -12855,7 +12855,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": null,
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -13087,7 +13087,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": null,
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -13260,7 +13260,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": null,
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -13700,7 +13700,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": null,
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -13844,7 +13844,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": null,
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -13972,7 +13972,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": null,
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -14136,7 +14136,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": null,
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -14289,7 +14289,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": null,
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -14447,7 +14447,7 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": null,
       "security": {
-        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
         "cross-origin-resource-policy": "same-origin",
         "referrer-policy": "strict-origin-when-cross-origin",
         "x-content-type-options": "nosniff",
@@ -14710,6 +14710,11 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": "ar",
       "security": {
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
+        "cross-origin-resource-policy": "same-origin",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
         "x-robots-tag": "noindex, nofollow"
       }
     },
@@ -14834,6 +14839,11 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": "ar",
       "security": {
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
+        "cross-origin-resource-policy": "same-origin",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
         "x-robots-tag": "noindex, nofollow"
       }
     },
@@ -14983,6 +14993,11 @@
       "contentType": "text/html; charset=utf-8",
       "contentLanguage": "ar",
       "security": {
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
+        "cross-origin-resource-policy": "same-origin",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
         "x-robots-tag": "noindex, nofollow"
       }
     },

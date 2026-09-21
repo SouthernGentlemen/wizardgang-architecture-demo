@@ -14,6 +14,7 @@ import {
 import { resolveAssuranceDocumentationReference } from '../assurance/presentation';
 import { resolveLocalization, type LocalizationContext } from '../i18n/runtime';
 import { sourceUrl } from '../lib/github';
+import { withSecurityHeaders } from '../lib/http';
 import { routeUrl } from '../routing/application-routes';
 import type { Env } from '../types';
 import { browserAssetName } from '../ui/asset-map';
@@ -386,11 +387,11 @@ export function assurancePresentationResponse(request: Request, env: Env, record
   const url = new URL(request.url);
   const revision = env.DEPLOYED_SHA?.trim();
   const cacheable = Boolean(revision && url.searchParams.get('rev') === revision);
-  const headers = new Headers({
+  const headers = withSecurityHeaders(new Headers({
     'content-type': 'text/html; charset=utf-8',
     'cache-control': cacheable ? 'public, max-age=31536000, immutable' : 'no-store',
     'content-language': localization.lang,
-  });
+  }));
   const evidence = presentedPublishedEvidenceRecords(env, url.origin);
   return new Response(renderToStaticMarkup(<AssuranceRecordPane record={record} evidence={evidence} env={env} localization={localization} />), { headers });
 }

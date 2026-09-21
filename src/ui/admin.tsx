@@ -58,7 +58,7 @@ export function AdminPage({
     {notice ? <section className="panel" role="status"><strong>{localization.exact(notice)}</strong></section> : null}
     <section className="panel">
       <h2>Public demo state</h2>
-      <dl style={{ marginBottom: '1.4rem' }}>
+      <dl className="admin-state-details">
         <dt>Current state</dt><dd><strong>{control.state}</strong></dd>
         <dt>Last changed</dt><dd>{control.updatedAt}<ChangedBy value={control.updatedBy} /></dd>
       </dl>
@@ -67,10 +67,10 @@ export function AdminPage({
         <div className="field">
           <label htmlFor="message">Public message</label>{' '}
           <p className="subtle" id="message-help">Displayed on the offline page. Maximum 500 characters. Do not place secrets or internal incident details here.</p>{' '}
-          <textarea id="message" name="message" rows={4} maxLength={500} aria-describedby="message-help" style={{ width: '100%' }} defaultValue={control.publicMessage} />{' '}
+          <textarea id="message" name="message" rows={4} maxLength={500} aria-describedby="message-help" className="admin-message-input" defaultValue={control.publicMessage} />{' '}
           <aside className="offline-message-preview"><span>Public offline preview</span><strong>{localization.exact('Demo temporarily offline')}</strong><p data-offline-message-preview="">{control.publicMessage}</p></aside>{' '}
         </div>
-        <div className="meta" style={{ marginTop: '1.2rem' }}>
+        <div className="meta admin-state-actions">
           <button className="button-primary" name="state" value="online" type="submit" disabled={!offline}>Take demo online</button>
           {' '}
           <button name="state" value="offline" type="submit" data-confirm-change="Ordinary public demos will become unavailable and visitors will see the offline message. Continue?" disabled={offline}>Take demo offline</button>
@@ -85,7 +85,7 @@ export function AdminPage({
         ? <><strong>OAI-SearchBot</strong> and <strong>ChatGPT-User</strong> can fetch public demo routes. The ordinary demo offline gate still applies.</>
         : <><strong>OAI-SearchBot</strong> and <strong>ChatGPT-User</strong> receive a server-enforced <code>403</code> response.</>}</p>
       <p className="subtle"><strong>GPTBot remains blocked</strong>, so enabling this switch does not opt the site into foundation-model training. Search systems may take about 24 hours to observe a robots policy change.</p>
-      <dl style={{ marginBottom: '1.4rem' }}>
+      <dl className="admin-state-details">
         <dt>Current state</dt><dd><strong>{crawlerControl.state}</strong></dd>
         <dt>Last changed</dt><dd>{crawlerControl.updatedAt}<ChangedBy value={crawlerControl.updatedBy} /></dd>
         <dt>Published policy</dt><dd><a href={robotsRoute}>Inspect <code>{robotsRoute}</code></a></dd>

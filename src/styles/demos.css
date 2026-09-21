@@ -531,3 +531,4 @@ body[data-mode] .overlay button { margin-right: .5rem; }
 @media (prefers-reduced-motion: reduce) {
   body[data-mode], body[data-mode] * { scroll-behavior: auto !important; transition: none !important; }
 }
+.demo-presentation-section { display: contents; }

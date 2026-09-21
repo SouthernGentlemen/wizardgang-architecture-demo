@@ -4,6 +4,10 @@ import { describe, expect, it } from 'vitest';
 import auditConfig from '../config/site-audit-states.json';
 import { demonstrations } from '../src/demos/demos-page';
 import { routeRequest } from '../src/router';
+import { safeError } from '../src/lib/http';
+import { THEME_BOOT_SCRIPT, THEME_BOOT_SHA256 } from '../src/lib/theme-boot';
+import { accessibilityLabResponse } from '../src/ui/accessibility-lab';
+import { localGraphiqlResponse } from '../src/ui/graphiql-response';
 import {
   applicationRouteRegistry,
   routeUrl,
@@ -460,4 +464,66 @@ describe('DEMO-325 presentation acceptance baseline', () => {
       );
     }, 60_000);
   }
+});
+
+describe('DEMO-338 inline-code boundary', () => {
+  it('hashes the exact pre-paint theme script and places it in the head before the body', async () => {
+    expect(createHash('sha256').update(THEME_BOOT_SCRIPT).digest('base64')).toBe(THEME_BOOT_SHA256);
+    const { response, window, document } = await renderSurface({ id: 'home', path: '/', expectedStatus: 200 }, 'en');
+    try {
+      const policy = response.headers.get('content-security-policy') ?? '';
+      expect(policy).toContain(`script-src 'self' 'sha256-${THEME_BOOT_SHA256}'`);
+      expect(policy).toContain("style-src 'self'");
+      expect(policy).not.toContain("'unsafe-inline'");
+      const script = document.head.querySelector('script:not([src])');
+      expect(script?.textContent).toBe(THEME_BOOT_SCRIPT);
+      expect(script?.hasAttribute('async')).toBe(false);
+      expect(script?.hasAttribute('defer')).toBe(false);
+      expect(script?.getAttribute('type')).toBeNull();
+      const headElements = [...document.head.children];
+      expect(headElements.indexOf(script!)).toBeLessThan(headElements.indexOf(document.head.querySelector('link[rel="stylesheet"]')!));
+    } finally {
+      await window.happyDOM.close();
+    }
+  });
+
+  it('serves no inline handlers, styles, or unhashed scripts in any audited HTML response', async () => {
+    const requests: { label: string; response: Response }[] = [];
+    for (const locale of FULL_INVENTORY_LOCALES) {
+      for (const surface of surfaces()) {
+        const path = localizedPath(surface.path, locale);
+        const headers = new Headers({ accept: 'text/html' });
+        if (surface.authorization) headers.set('authorization', surface.authorization);
+        requests.push({ label: `${surface.id} ${locale}`, response: await routeRequest(new Request(new URL(path, ORIGIN), { headers }), environment()) });
+      }
+    }
+    for (const mode of ['accessible', 'broken']) {
+      requests.push({ label: `accessibility frame ${mode}`, response: accessibilityLabResponse(new Request(`${ORIGIN}/api/labs/accessibility?mode=${mode}`)) });
+    }
+    requests.push({ label: 'GraphiQL', response: localGraphiqlResponse(new Request(`${ORIGIN}/graphql/ui`)) });
+    requests.push({ label: 'safe error', response: safeError(new Request(`${ORIGIN}/failure`, { headers: { accept: 'text/html' } }), new Error('test failure')) });
+
+    for (const { label, response } of requests) {
+      expect(response.headers.get('content-type'), label).toContain('text/html');
+      const html = await response.text();
+      const { window, document } = parseDocument(html, `${ORIGIN}/`);
+      try {
+        const policy = response.headers.get('content-security-policy') ?? '';
+        expect(policy, `${label} policy`).not.toBe('');
+        for (const element of document.querySelectorAll('*')) {
+          expect(element.hasAttribute('style'), `${label}: inline style on ${element.tagName}`).toBe(false);
+          for (const attribute of element.getAttributeNames()) {
+            expect(attribute, `${label}: event handler on ${element.tagName}`).not.toMatch(/^on[a-z]+$/i);
+          }
+        }
+        for (const script of document.querySelectorAll('script:not([src])')) {
+          const hash = createHash('sha256').update(script.textContent ?? '').digest('base64');
+          expect(policy, `${label}: unlisted inline script`).toContain(`'sha256-${hash}'`);
+        }
+        if (label !== 'GraphiQL') expect(policy, `${label}: unsafe inline policy`).not.toContain("'unsafe-inline'");
+      } finally {
+        await window.happyDOM.close();
+      }
+    }
+  }, 60_000);
 });

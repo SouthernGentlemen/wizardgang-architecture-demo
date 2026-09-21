@@ -58,7 +58,7 @@ export function accessibilityLabResponse(request: Request): Response {
   const headers = withSecurityHeaders(new Headers({
     'content-type': 'text/html; charset=utf-8',
     'cache-control': 'no-store',
-    'content-security-policy': "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'self'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+    'content-security-policy': "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'self'; img-src 'self' data:; object-src 'none'; script-src 'self'; style-src 'self'",
     'x-frame-options': 'SAMEORIGIN',
   }));
   return new Response(`<!doctype html>${renderToStaticMarkup(<AccessibilityLabDocument mode={mode} />)}`, { headers });
