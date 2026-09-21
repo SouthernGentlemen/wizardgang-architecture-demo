@@ -58,29 +58,33 @@ Availability while intentionally offline is declared per route. Gated API traffi
 
 ## Local setup
 
-1. Run `npm ci` using the committed lock file.
+1. Use the pinned Node.js 26 / npm 11 toolchain and run `npm ci` from the committed lock file.
 2. Copy `.dev.vars.example` to ignored `.dev.vars` and replace local placeholders.
-3. Run `npm run validate:migrations`.
-4. Run `npm run dev`.
+3. Run `npm run validate:migrations` to prove the migrations against local D1 state.
+4. Run `npm run dev` for the local-only development surface.
 
-Validation:
+### Command map
 
-```text
-npm run generate:routes
-npm run check
-npm run validate:migrations
-npm run security:dependencies
-npm run build
-git diff --check
-```
+WG-ARCH-001 §27 defines the shared command meanings; this table records how this repository currently implements them and the prerequisites that matter in a clean cloud checkout.
 
-CI parity and diagnostics:
+| Command | Purpose | Prerequisites and side-effect boundary |
+| --- | --- | --- |
+| `npm ci` | Install the locked dependency graph using the reviewed install-script allowlist. | Requires the pinned Node/npm versions and npm registry access; writes local dependencies only and does not require provider credentials. |
+| `npm run dev` | Generate browser assets, then run the repository's Vite/Wrangler development lifecycle. | Requires local `.dev.vars` configuration and the local Cloudflare development prerequisites; starts local processes only and does not publish or deploy. |
+| `npm run generate:routes` | Regenerate the route-manifest projection after route declarations change. | Intentionally rewrites tracked `docs/route-manifest.json`; run it only when the route authority changed, then validate the generated diff. |
+| `npm run check` | Canonical credential-free repository acceptance gate. | Runs the current source, contract, policy, security, test, type, asset, and assurance checks, but does **not yet** include every temporary CI gate listed below. It must not mutate live providers. |
+| `npm run validate:generated-artifacts` | Temporary CI gate for generated-artifact parity and idempotence. | Credential-free; a clean result leaves tracked projections unchanged. This remains separate until the planned command-convergence work composes it into `check`. |
+| `npm run validate:migrations` | Apply the D1 migration chain to local Wrangler state. | Requires Wrangler's local D1 runtime; mutates local development state only, never remote D1. |
+| `npm run verify:chromium` / `npm run test:site-accessibility` | Prove Chromium is available, then run the browser accessibility/localization audit. | Requires a usable local Chromium runtime; browser execution is local and has no provider mutation. |
+| `npm run security:dependencies` | Query npm advisories and fail on high-severity dependency findings. | Requires npm registry/network access; network failure is a blocker, not a clean audit. No provider credentials are required. |
+| `npm run build` | Build browser assets and dry-run the Worker bundle. | Writes local build outputs and invokes Wrangler only in dry-run mode; it does not publish or deploy. |
+| `npm run validate:ci` | Reproduce the current CI validation sequence with retained diagnostics. | Validates the toolchain, runs `npm ci`, generated-artifact parity, `check`, local migrations, Chromium/browser audit, dependency audit, build, and patch whitespace. It therefore needs registry access, Chromium, and Git history/base context for full PR parity, but no live-provider credentials. |
+| `npm run validate:repository-settings -- --live` | Compare GitHub repository/ruleset state with the committed settings baseline. | Requires authenticated `gh` access with repository visibility; read-only verification, not a settings mutation. |
+| `npm run deploy` | Invoke a live Wrangler deployment from the current checkout. | Requires Cloudflare credentials and mutates the live Worker; it is **not** a validation command or a substitute for the governed production release path. Production delivery is through the annotated semantic-tag Release workflow and production Deploy workflow. |
 
-```text
-npm run validate:ci
-```
+For ordinary pre-PR acceptance, run `npm run check` plus the temporary extra gates that CI still owns separately: `npm run validate:generated-artifacts`, `npm run validate:migrations`, `npm run verify:chromium`, `npm run test:site-accessibility`, `npm run security:dependencies`, `npm run build`, and `git diff --check`. From a clean checkout with the required network/browser tooling, `npm run validate:ci` is the one-command CI-parity path.
 
-This runs the strict CI sequence locally with the same Chromium requirement. It stops on the first failing command, preserves its exit code, writes complete command output and safe runtime/repository facts under `.ci-diagnostics/`, and records generated-artifact first-pass drift, second-pass drift, and idempotence. The directory is ignored by Git. GitHub Actions publishes it as a failure artifact when a client cannot expose the complete log body.
+`npm run validate:ci` stops on the first failing command, preserves its exit code, writes complete command output and safe runtime/repository facts under `.ci-diagnostics/`, and records generated-artifact first-pass drift, second-pass drift, and idempotence. The directory is ignored by Git. GitHub Actions publishes it as a failure artifact when a client cannot expose the complete log body. Live repository-setting verification remains separate because it needs authenticated GitHub access.
 
 ## Delivery
 
