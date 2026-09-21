@@ -23,16 +23,6 @@ The differences justify a common command *contract*, not identical shell bodies.
 
 ## Open tasks
 
-### DEMO-346 — [DOCS] Resolve the blocked-first-task selection rule
-
-- Dependency: DEMO-345 merged on `main`.
-- Why: Current text says both “first remaining unblocked task” and “do not skip a blocked first task”; those yield different next operations.
-- Scope: Make first-open selection, blocked-head reporting, and explicit owner override consistent in `AGENTS.md`, `CONTRIBUTING.md`, change management, and WG-ARCH-001. Keep authoritative green-PR completion before new selection.
-- Non-goals: Do not implement a later task or change provider policy.
-- Acceptance: A fresh agent given one blocked first task selects no later task without owner override, and all process authorities agree.
-- Validation: Focused process-policy tests if touched; `npm run check`; `git diff --check`.
-- Authorities: `AGENTS.md`, `CONTRIBUTING.md`, `docs/CHANGE-MANAGEMENT.md`, WG-ARCH-001.
-
 ### DEMO-347 — [DOCS] Make exact-head CI diagnosis interface-neutral
 
 - Dependency: DEMO-346 merged on `main`.

@@ -61,7 +61,7 @@ The repository validates sequential IDs and controlled titles on every full chec
 
 ## Active work and completion
 
-The root `IMPLEMENTATION_PLAN.md`, when present, contains only current/future tasks. Reconcile it against authoritative `main` and open PRs, choose its first unblocked task unless the owner explicitly overrides priority, and retire that task in its delivering PR. Keep later tasks accurate and delete an exhausted plan. A planning/research pass may create a new short wave, but does not implement the new wave in that same turn.
+The root `IMPLEMENTATION_PLAN.md`, when present, contains only current/future tasks. Reconcile it against authoritative `main` and open PRs, then select the first task in the active plan by default. If that first task is blocked, report its exact prerequisite and stop; do not select a later task unless the owner explicitly overrides priority. Retire the delivered task in its delivering PR. Keep later tasks accurate and delete an exhausted plan. A planning/research pass may create a new short wave, but does not implement the new wave in that same turn.
 
 `do needful` authorizes the complete one-change loop defined in `AGENTS.md`: refresh authority; if an already-green/current authoritative PR exists, finish it as this turn's change; otherwise select and deliver one task through exact-head CI, merge, and verification of merged `main`. Do not start the subsequent task in that turn. If no task remains at the start of a later turn, that turn performs a fresh planning/research pass. Provider operations and validation are reported only when actually performed.
 
