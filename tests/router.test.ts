@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { architectureMapEntries } from '../src/routing/navigation';
 import { routeRequest } from '../src/router';
+import { browserAssetName, browserAssetPath } from '../src/ui/asset-map';
 import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import type { D1PreparedStatement, Env } from '../src/types';
 import { removedRouterFallbackPathnames } from './fixtures/removed-api-pathnames';
@@ -73,7 +74,7 @@ describe('public route contract', () => {
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/offline'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/health'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/version'), environment)).status).toBe(200);
-    const socialCard = await routeRequest(new Request('https://demo.wizardgang.ai/assets/og.png'), environment);
+    const socialCard = await routeRequest(new Request(`https://demo.wizardgang.ai${browserAssetPath('social.card')}`), environment);
     expect(socialCard.status).toBe(200);
     expect(socialCard.headers.get('content-type')).toBe('image/png');
     expect(socialCard.headers.get('cache-control')).toContain('immutable');
@@ -270,7 +271,7 @@ describe('public route contract', () => {
     expect(index).toContain('Current service state');
     expect(index).toContain('Scheduled observations');
     expect(index).not.toContain('data-health');
-    expect(index).toContain('<meta property="og:image" content="https://demo.wizardgang.ai/assets/og.png"/>');
+    expect(index).toContain(`<meta property="og:image" content="https://demo.wizardgang.ai${browserAssetPath('social.card')}"/>`);
     expect(index).toContain('href="/demos"');
     expect(index).toContain('href="/assurance"');
     expect(index).not.toContain(`href="${retiredOperationsHtmlPathname}"`);
@@ -364,7 +365,7 @@ describe('offline routing matrix', () => {
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/logs'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/version'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/health'), environment)).status).toBe(503);
-    expect((await routeRequest(new Request('https://demo.wizardgang.ai/assets/og.png'), environment)).status).toBe(200);
+    expect((await routeRequest(new Request(`https://demo.wizardgang.ai/assets/${browserAssetName('social.card')}`), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/admin', { headers: { authorization: basic } }), environment)).status).toBe(200);
   });
 

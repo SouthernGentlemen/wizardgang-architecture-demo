@@ -12,6 +12,7 @@ import {
 import { routeRequest } from '../src/router';
 import { routeUrl } from '../src/routing/application-routes';
 import { accessibilityLabResponse } from '../src/ui/accessibility-lab';
+import { browserAssetPath } from '../src/ui/asset-map';
 import type { Env } from '../src/types';
 
 const shellStyles = readFileSync('src/styles/shell.css', 'utf8');
@@ -228,7 +229,7 @@ describe('accessible interaction surface', () => {
     expect(accessible).toContain('<html lang="en">');
     expect(accessible).toContain('<label for="email">');
     expect(accessible).toContain('role="dialog" aria-modal="true"');
-    expect(accessible).toContain('src="/assets/axe.min.js"');
+    expect(accessible).toContain(`src="${browserAssetPath('vendor.axe')}"`);
     expect(accessible).toContain('data-accessibility-lab=""');
     const labBrowser = readFileSync('src/browser/accessibility-lab.ts', 'utf8');
     expect(labBrowser).toContain('axe.run(document');

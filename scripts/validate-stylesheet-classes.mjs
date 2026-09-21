@@ -29,8 +29,7 @@ async function walk(dir) {
 }
 
 function isStylesheetModule(file) {
-  return path.dirname(file).startsWith(path.join(SRC_DIR, 'styles'))
-    && file.endsWith('.css');
+  return file.endsWith('.css') && path.relative(path.join(SRC_DIR, 'styles'), file).startsWith('..') === false;
 }
 
 function stripComments(value) {
@@ -157,11 +156,16 @@ function transformCss(css, classIsLive, findings) {
 }
 
 const allSourceFiles = await walk(SRC_DIR);
+const misplacedStylesheets = allSourceFiles.filter((file) => file.endsWith('.css') && !isStylesheetModule(file));
+if (misplacedStylesheets.length) {
+  throw new Error(`Stylesheets must live under src/styles/: ${misplacedStylesheets.map((file) => path.relative(ROOT, file)).join(', ')}`);
+}
 const stylesheetFiles = allSourceFiles.filter(isStylesheetModule);
 const stylesheetSet = new Set(stylesheetFiles);
 const sourceCorpus = (await Promise.all(
   allSourceFiles
-    .filter((file) => !stylesheetSet.has(file))
+    // React className literals live in TSX; browser behavior can also assign classes in TS.
+    .filter((file) => !stylesheetSet.has(file) && /\.tsx?$/.test(file))
     .map((file) => readFile(file, 'utf8').catch(() => '')),
 )).join('\n');
 

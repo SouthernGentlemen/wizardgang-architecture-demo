@@ -15,7 +15,7 @@ import {
   supportedLocales,
   type LocalizationContext,
 } from '../i18n/runtime';
-import { browserAssetName } from './asset-map';
+import { browserAssetName, browserAssetPath } from './asset-map';
 import { versionProof } from './version-proof';
 
 const SITE_NAME = 'WizardGang Architecture Demo';
@@ -80,6 +80,7 @@ function DocumentHead({ content }: Readonly<{ content: ReactPageContent }>) {
   const ogImageAlt = localization.t('meta.og_image_alt', 'WizardGang Architecture — Architecture you can inspect.');
   const shellStylesheetHref = routeUrl('operations.assets', { asset: browserAssetName('styles.shell') });
   const demosStylesheetHref = routeUrl('operations.assets', { asset: browserAssetName('styles.demos') });
+  const socialCardHref = `https://demo.wizardgang.ai${browserAssetPath('social.card')}`;
   return <head>
     <meta charSet="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -93,12 +94,12 @@ function DocumentHead({ content }: Readonly<{ content: ReactPageContent }>) {
     <meta property="og:title" content={content.title} />
     <meta property="og:description" content={content.description} />
     <meta property="og:url" content={canonicalHref} />
-    <meta property="og:image" content="https://demo.wizardgang.ai/assets/og.png" />
+    <meta property="og:image" content={socialCardHref} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={ogImageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="https://demo.wizardgang.ai/assets/og.png" />
+    <meta name="twitter:image" content={socialCardHref} />
     <link rel="canonical" href={canonicalHref} />
     <link rel="stylesheet" href={shellStylesheetHref} />
     {content.routeId === 'demos.index' ? <link rel="stylesheet" href={demosStylesheetHref} /> : null}
@@ -188,5 +189,5 @@ function LocalizedDocument({ env, content, localization }: Readonly<{ env: Env; 
 }
 
 export function renderDocument(env: Env, content: ReactPageContent, localization: LocalizationContext): string {
-  return `<!doctype html>${renderToStaticMarkup(<LocalizedDocument env={env} content={content} localization={localization} />)}`;
+  return '<!doctype html>' + renderToStaticMarkup(<LocalizedDocument env={env} content={content} localization={localization} />);
 }

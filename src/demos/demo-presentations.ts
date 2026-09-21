@@ -1,4 +1,6 @@
 import { bindLocalization, resolveLocalization } from '../i18n/runtime';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { withSecurityHeaders } from '../lib/http';
 import { routeUrl } from '../routing/application-routes';
 import type { Env } from '../types';
@@ -14,7 +16,7 @@ export async function demoPresentationResponse(request: Request, env: Env, demoI
     'content-type': 'text/html; charset=utf-8',
     'cache-control': 'private, no-store',
   }));
-  if (!demo) return new Response('<p role="alert">Unknown demonstration.</p>', { status: 404, headers });
+  if (!demo) return new Response(renderToStaticMarkup(createElement('p', { role: 'alert' }, 'Unknown demonstration.')), { status: 404, headers });
 
   const localizedEnv = bindLocalization(env, resolveLocalization(request));
   const canonicalPath = routeUrl('demos.index');

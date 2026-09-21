@@ -57,5 +57,5 @@ function GraphiqlDocument({ request }: Readonly<{ request: Request }>) {
 
 export function localGraphiqlDocument(request: Request): string {
   if (request.method !== 'GET') throw new Error('GraphiQL document requires GET.');
-  return `<!doctype html>${renderToStaticMarkup(<GraphiqlDocument request={request} />)}`;
+  return '<!doctype html>' + renderToStaticMarkup(<GraphiqlDocument request={request} />);
 }

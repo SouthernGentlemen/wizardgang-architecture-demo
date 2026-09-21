@@ -80,12 +80,12 @@ describe('DEMO-335 React REST and GraphQL demonstrations', () => {
   it('renders GraphiQL from React and delegates setup to its hashed browser module', () => {
     const html = localGraphiqlDocument(new Request('https://demo.wizardgang.ai/graphql', { headers: { accept: 'text/html' } }));
     expect(html).toContain('<!doctype html><html lang="en">');
-    expect(html).toContain('/assets/graphiql.css');
-    expect(html).toContain('/assets/graphiql.js');
+    expect(html).toContain(assetManifest.assets['vendor.graphiql.styles']);
+    expect(html).toContain(assetManifest.assets['vendor.graphiql.script']);
     expect(html).toContain(assetManifest.assets['scripts.graphiql']);
-    expect(html).toContain('/assets/editor.worker.js');
-    expect(html).toContain('/assets/json.worker.js');
-    expect(html).toContain('/assets/graphql.worker.js');
+    expect(html).toContain(assetManifest.assets['vendor.monaco.editor']);
+    expect(html).toContain(assetManifest.assets['vendor.monaco.json']);
+    expect(html).toContain(assetManifest.assets['vendor.monaco.graphql']);
     expect(html).not.toMatch(/<script(?![^>]*\bsrc=)[^>]*>/);
     const setup = readFileSync('src/browser/graphiql.ts', 'utf8');
     expect(setup).toContain('MonacoEnvironment');
