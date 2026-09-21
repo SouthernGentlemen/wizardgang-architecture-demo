@@ -75,6 +75,9 @@ The repository-local equivalent is `npm run validate:ci`. It records complete re
 
 Preserve these invariants:
 
+- Render HTML presentations from server-side React components, except the dependency-free safe error page. Keep pages usable without JavaScript; first-party browser modules progressively enhance them without hydration or a client-side router. Confine raw HTML insertion to an audited component.
+- Keep the site-wide Content Security Policy free of `'unsafe-inline'`. HTML has no inline event handlers, and any necessary inline script or style is explicitly hash- or nonce-authorized; preserve standalone route policies where their browser dependencies require them.
+- Serve browser-downloaded modules, stylesheets, and vendored files from Workers Static Assets through the `ASSETS` binding, not the Worker bundle. Build first-party browser assets with Vite into content-hashed, immutable files, and author stylesheets as CSS under `src/styles/`.
 - Keep the ordinary public browser surface task-oriented and minimal: `/`, `/demos`, and `/assurance`; keep `/security` as a contextual support/security boundary; keep `/admin` protected and `/offline` as recovery.
 - The shared shell stays minimal: the header is one non-wrapping row of brand, primary navigation, and utilities at every width; the footer carries the `/security` reachability link the frontend contract requires; navigation projections derive from route declarations without a hardcoded route allowlist; and breadcrumbs, secondary navigation, and related-destination navigation are not reintroduced.
 - Do not leave a retired surface's stylesheet rules behind. A controlled change that removes markup removes the rules that styled it in the same change.

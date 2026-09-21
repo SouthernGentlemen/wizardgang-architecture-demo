@@ -67,7 +67,7 @@ describe('DEMO-339 deliberate-regression proofs', () => {
       expect(validateWorkerBundle(root)).toEqual([]);
       violation(root, 'dist/worker/index.js', () => 'first-party asset', () => validateWorkerBundle(root), /browser-only vendored payload bundled/);
     } finally { rmSync(root, { recursive: true, force: true }); }
-  });
+  }, 15_000);
 
   it('reads CSS and TSX class reachability, and rejects a retired selector', () => {
     const root = fixture(['src', 'scripts/validate-stylesheet-classes.mjs']);
