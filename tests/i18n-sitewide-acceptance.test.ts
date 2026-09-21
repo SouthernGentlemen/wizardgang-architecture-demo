@@ -6,7 +6,7 @@ import {
   supportedLocales,
   type SupportedLocale,
 } from '../src/i18n/runtime';
-import { localizePresentation, presentationCatalog } from '../src/i18n/presentation';
+import presentation from '../src/i18n/presentation.json';
 import { routeRequest } from '../src/router';
 import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import type { D1PreparedStatement, Env } from '../src/types';
@@ -85,6 +85,7 @@ const UNTRANSLATED_PRESENTATION_ALLOWLIST = new Set([
 ]);
 
 const direction = (locale: SupportedLocale) => locale === 'ar' ? 'rtl' : 'ltr';
+const presentationCatalog = presentation as Readonly<Record<string, Readonly<Record<SupportedLocale, string>>>>;
 
 describe('DEMO-236 sitewide localization acceptance', () => {
   it('renders every registry-derived public page in every supported locale', async () => {
@@ -119,7 +120,7 @@ describe('DEMO-236 sitewide localization acceptance', () => {
       for (const key of expectedKeys) expect(resource[key]?.trim(), `${locale}.${key}`).toBeTruthy();
     }
 
-    for (const [key, entry] of Object.entries(presentationCatalog())) {
+    for (const [key, entry] of Object.entries(presentationCatalog)) {
       const intentionallyUntranslated = supportedLocales.every((locale) => entry[locale] === entry[defaultLocale]);
       if (intentionallyUntranslated) {
         expect(UNTRANSLATED_PRESENTATION_ALLOWLIST.has(key), `unallowlisted untranslated token: ${key}`).toBe(true);
@@ -137,8 +138,8 @@ describe('DEMO-236 sitewide localization acceptance', () => {
       expect(context.currency(1234.56, 'USD')).toBe(new Intl.NumberFormat(locale, { style: 'currency', currency: 'USD' }).format(1234.56));
       expect(context.dateTime(date, { dateStyle: 'full', timeZone: 'UTC' })).toBe(new Intl.DateTimeFormat(locale, { dateStyle: 'full', timeZone: 'UTC' }).format(date));
       expect(context.list(['edge', 'data', 'assurance'])).toBe(new Intl.ListFormat(locale).format(['edge', 'data', 'assurance']));
-      expect(context.exact('Request failed')).toBe(presentationCatalog()['client.request_failed'][locale]);
-      expect(context.browserMessages()['client.request_failed']).toBe(presentationCatalog()['client.request_failed'][locale]);
+      expect(context.exact('Request failed')).toBe(presentationCatalog['client.request_failed'][locale]);
+      expect(context.browserMessages()['client.request_failed']).toBe(presentationCatalog['client.request_failed'][locale]);
 
       const assuranceRoute = routeUrl('assurance.index');
       const getForm = context.getForm(`${assuranceRoute}?framework=wcag-2.2#records`);
@@ -168,7 +169,7 @@ describe('DEMO-236 sitewide localization acceptance', () => {
     expect(presentationResponse.status).toBe(200);
     const presentation = await presentationResponse.text();
 
-    expect(presentation).toContain('<input type="hidden" name="lang" value="ja">');
+    expect(presentation).toContain('<input type="hidden" name="lang" value="ja"/>');
     expect(presentation).toContain('Use the language control in the global header');
     expect(presentation).not.toContain('id="locale-demo"');
     expect(html).toContain('<input type="hidden" name="count" value="7"/>');
@@ -176,31 +177,15 @@ describe('DEMO-236 sitewide localization acceptance', () => {
     expect(html + presentation).not.toContain('lang=fr&amp;lang=ja');
   });
 
-  it('localizes accessible attributes and client-side feedback from the same catalog', () => {
-    const catalog = presentationCatalog();
-    const source = `<button aria-label="${catalog['client.request_failed'].en}">${catalog['client.request_failed'].en}</button><script>const failed=${JSON.stringify(catalog['client.request_failed'].en)};const waiting='${catalog['client.waiting_response'].en}';</script>`;
-
+  it('localizes render-time strings and inert browser messages from the same catalog', () => {
     for (const locale of supportedLocales.filter((candidate) => candidate !== defaultLocale)) {
-      const localized = localizePresentation('Request failed', 'Waiting for response…', source, localization(locale));
-      expect(localized.title, locale).toBe(catalog['client.request_failed'][locale]);
-      expect(localized.description, locale).toBe(catalog['client.waiting_response'][locale]);
-      expect(localized.body, locale).toContain(`aria-label="${catalog['client.request_failed'][locale]}"`);
-      expect(localized.body, locale).toContain(`>${catalog['client.request_failed'][locale]}</button>`);
-      expect(localized.body, locale).toContain(JSON.stringify(catalog['client.request_failed'][locale]));
-      expect(localized.body, locale).toContain(catalog['client.waiting_response'][locale]);
-    }
-  });
-
-  it('keeps canonical, technical, and machine-source content invariant while localizing human navigation', () => {
-    const canonical = 'SEC-RISK-001 · open · $1,234.56';
-    const body = `<p>Status <bdi data-canonical-source lang="en" dir="ltr">${canonical}</bdi></p><code>${canonical}</code><a href="/api/assurance/records?status=open&amp;limit=5">Machine source</a><a href="${routeUrl('assurance.index', {}, { riskStatus: 'open' })}#risks">Human route</a>`;
-
-    for (const locale of supportedLocales.filter((candidate) => candidate !== defaultLocale)) {
-      const localized = localizePresentation('Risk Assurance', 'Risk posture you can inspect.', body, localization(locale));
-      expect(localized.body, locale).toContain(`<bdi data-canonical-source lang="en" dir="ltr">${canonical}</bdi>`);
-      expect(localized.body, locale).toContain(`<code>${canonical}</code>`);
-      expect(localized.body, locale).toContain('href="/api/assurance/records?status=open&amp;limit=5"');
-      expect(localized.body, locale).toContain(`href="/assurance?riskStatus=open&amp;lang=${locale}#risks"`);
+      const context = localization(locale);
+      expect(context.exact('Request failed')).toBe(presentationCatalog['client.request_failed'][locale]);
+      expect(context.exact('Waiting for response…')).toBe(presentationCatalog['client.waiting_response'][locale]);
+      expect(context.browserMessages()).toMatchObject({
+        'client.request_failed': presentationCatalog['client.request_failed'][locale],
+        'client.waiting_response': presentationCatalog['client.waiting_response'][locale],
+      });
     }
   });
 });

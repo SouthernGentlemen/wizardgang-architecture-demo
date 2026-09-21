@@ -4596,7 +4596,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "ルートのソース: src/demos/edge.ts"
+        "name": "ルートのソース: src/demos/edge-presentation.tsx"
       },
       {
         "element": "a",
@@ -4631,7 +4631,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "ルートのソース: src/demos/workers.ts"
+        "name": "ルートのソース: src/demos/workers-presentation.tsx"
       },
       {
         "element": "a",
@@ -4708,7 +4708,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "ルートのソース: src/demos/durable-objects.ts"
+        "name": "ルートのソース: src/demos/durable-objects-presentation.tsx"
       },
       {
         "element": "a",

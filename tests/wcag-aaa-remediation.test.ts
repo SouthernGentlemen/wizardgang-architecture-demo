@@ -53,7 +53,8 @@ describe('DEMO-237 shared WCAG 2.2 AAA remediation', () => {
     expect(html).not.toMatch(/<input\b[^>]*\bonpaste=/i);
     expect(html).not.toContain('<div class="click-control"');
     expect(html).not.toContain('<div class="tiny-controls"');
-    expect(html).toContain("axe.run(document");
+    expect(html).toContain('src="/assets/axe.min.js"');
+    expect(readFileSync('src/browser/accessibility-lab.ts', 'utf8')).toContain('axe.run(document');
   });
 
   it('uses a labeled first-party GraphQL runner instead of exposing the embedded editor', async () => {

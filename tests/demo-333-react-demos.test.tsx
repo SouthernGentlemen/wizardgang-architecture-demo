@@ -70,7 +70,7 @@ describe('DEMO-333 React demos workbench', () => {
     expect(workbenchSource).not.toContain('escapeHtml');
   });
 
-  it('mounts declared presentation modules and limits script re-execution to legacy fragments', async () => {
+  it('mounts declared presentation modules and rejects undeclared legacy fragments', async () => {
     const window = new Window();
     vi.stubGlobal('document', window.document);
 
@@ -87,17 +87,9 @@ describe('DEMO-333 React demos workbench', () => {
     expect(migrated.querySelector('script')).toBe(migratedScript);
 
     const legacy = window.document.createElement('div');
-    const legacyScript = window.document.createElement('script');
-    legacyScript.dataset.proof = 'legacy';
-    legacyScript.textContent = 'window.legacyExecuted = true';
-    legacy.append(legacyScript);
     const legacyLoader = vi.fn();
-    await mountDemoPresentation(legacy, legacyLoader);
-    const replacement = legacy.querySelector('script');
+    await expect(mountDemoPresentation(legacy, legacyLoader)).rejects.toThrow('does not declare a browser module');
     expect(legacyLoader).not.toHaveBeenCalled();
-    expect(replacement).not.toBe(legacyScript);
-    expect(replacement?.dataset.proof).toBe('legacy');
-    expect(replacement?.textContent).toBe(legacyScript.textContent);
   });
 
   it('prefixes React presentation IDs and references while shifting headings', () => {
@@ -125,13 +117,14 @@ describe('DEMO-333 React demos workbench', () => {
     expect(html).toContain('href="#proof-field"');
   });
 
-  it('removes the full-page raw HTML boundary while retaining legacy fragment construction until DEMO-337', () => {
+  it('removes every raw HTML presentation boundary', () => {
     const documentSource = readFileSync('src/ui/document.tsx', 'utf8');
     const pageSource = readFileSync('src/ui/page.ts', 'utf8');
     expect(documentSource).toContain('<main className="site-main" id="main">{content.body}</main>');
     expect(documentSource).not.toContain('LegacyBody');
     expect(documentSource).not.toContain('dangerouslySetInnerHTML');
     expect(pageSource).not.toContain('export function renderPage(');
-    expect(pageSource).toContain('Legacy presentation payload retained until DEMO-337');
+    expect(pageSource).not.toContain('interface PageContent extends');
+    expect(pageSource).not.toContain('function pageContent(');
   });
 });

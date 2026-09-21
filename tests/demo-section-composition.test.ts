@@ -147,14 +147,14 @@ describe('composable demo presentations', () => {
     expect(mcp.body).toContain(MCP_SERVER_PATH);
 
     const endpointEvidence = [
-      [edgeSection(env).body, '/api/labs/edge'],
-      [workersSection(env).body, '/api/labs/workers'],
-      [durableObjectsSection(env).body, '/api/labs/durable-counter'],
+      [readFileSync('src/browser/edge.ts', 'utf8'), '/api/labs/edge'],
+      [readFileSync('src/browser/workers.ts', 'utf8'), '/api/labs/workers'],
+      [readFileSync('src/browser/durable-objects.ts', 'utf8'), '/api/labs/durable-counter'],
       [readFileSync('src/browser/d1.ts', 'utf8'), '/api/labs/d1-'],
       [readFileSync('src/browser/r2.ts', 'utf8'), '/api/labs/r2-files'],
       [restSection(env).body, '/api/labs/rest-demo-records'],
       [readFileSync('src/browser/webhooks.ts', 'utf8'), '/api/labs/webhook-demo'],
-      [accessibilitySection(request, env).body, '/api/labs/accessibility'],
+      [readFileSync('src/demos/accessibility-presentation.tsx', 'utf8'), "routeUrl('platform.accessibility.lab')"],
     ] as const;
     for (const [body, endpoint] of endpointEvidence) expect(body).toContain(endpoint);
   });

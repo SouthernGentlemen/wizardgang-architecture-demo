@@ -109,28 +109,28 @@ export const demonstrations: readonly ArchitectureDemo[] = [
     summary: 'Inspect the endpoint, available tools, and one executable read-only MCP call.',
     tryThis: 'Run the read-only MCP call and inspect the bounded result.',
     guide: ['Inspect the advertised MCP tools.', 'Run the provided read-only call.', 'Compare the returned result with the visible tool contract.'],
-    sourcePath: 'src/demos/mcp-curated.ts', render: (request, env, options) => mcpSection(request, env, options),
+    sourcePath: 'src/demos/mcp-presentation.tsx', render: (request, env, options) => mcpSection(request, env, options),
   },
   {
     id: 'edge', label: 'Edge', selectorLabel: 'Edge', group: 'Runtime architecture', category: 'Platform', tier: 'secondary',
     summary: 'Inspect the public DNS, TLS, CDN, routing, and request boundary.',
     tryThis: 'Trace one request from the public edge boundary into the application.',
     guide: ['Start at the public edge boundary.', 'Follow DNS, TLS, CDN, and routing evidence.', 'Use Evidence for the source implementation.'],
-    sourcePath: 'src/demos/edge.ts', render: (_request, env, options) => edgeSection(env, options),
+    sourcePath: 'src/demos/edge-presentation.tsx', render: (_request, env, options) => edgeSection(env, options),
   },
   {
     id: 'workers', label: 'Workers', selectorLabel: 'Workers', group: 'Runtime architecture', category: 'Platform', tier: 'secondary',
     summary: 'Exercise stateless edge compute and request policy behavior.',
     tryThis: 'Run the Worker interaction and inspect the request-policy result.',
     guide: ['Run the available Worker interaction.', 'Inspect the response and request-policy behavior.', 'Use Evidence for the implementation source.'],
-    sourcePath: 'src/demos/workers.ts', render: (_request, env, options) => workersSection(env, options),
+    sourcePath: 'src/demos/workers-presentation.tsx', render: (_request, env, options) => workersSection(env, options),
   },
   {
     id: 'durable-objects', label: 'Durable Objects', selectorLabel: 'Durable Objects', group: 'Runtime architecture', category: 'Platform', tier: 'secondary',
     summary: 'Coordinate stateful requests against one shared object.',
     tryThis: 'Change the shared state and confirm the coordinated object owns the result.',
     guide: ['Use the shared-state controls.', 'Change the coordinated state.', 'Inspect the result returned by the live object.'],
-    sourcePath: 'src/demos/durable-objects.ts', render: (_request, env, options) => durableObjectsSection(env, options),
+    sourcePath: 'src/demos/durable-objects-presentation.tsx', render: (_request, env, options) => durableObjectsSection(env, options),
   },
   {
     id: 'accessibility', label: 'Accessibility', selectorLabel: 'Accessibility', group: 'Quality', category: 'Quality', tier: 'secondary',
@@ -144,7 +144,7 @@ export const demonstrations: readonly ArchitectureDemo[] = [
     summary: 'Exercise locale, formatting, pluralization, and RTL behavior.',
     tryThis: 'Change the locale and compare formatting, pluralization, and direction.',
     guide: ['Change the locale in the live demo.', 'Compare formatting and pluralization.', 'Inspect right-to-left behavior where available.'],
-    sourcePath: 'src/demos/i18n-page.ts', render: (request, env, options) => i18nSection(request, env, options),
+    sourcePath: 'src/demos/i18n-presentation.tsx', render: (request, env, options) => i18nSection(request, env, options),
   },
 ] as const;
 

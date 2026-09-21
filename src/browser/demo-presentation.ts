@@ -8,15 +8,6 @@ export type DemoPresentationModuleLoader = (
   moduleName: string,
 ) => Promise<Partial<DemoPresentationBrowserModule>>;
 
-function executeLegacyScripts(root: ParentNode): void {
-  root.querySelectorAll('script').forEach((script) => {
-    const replacement = document.createElement('script');
-    for (const attribute of script.attributes) replacement.setAttribute(attribute.name, attribute.value);
-    replacement.textContent = script.textContent;
-    script.replaceWith(replacement);
-  });
-}
-
 async function loadDemoPresentationModule(moduleName: string): Promise<Partial<DemoPresentationBrowserModule>> {
   return import(/* @vite-ignore */ moduleName) as Promise<Partial<DemoPresentationBrowserModule>>;
 }
@@ -26,10 +17,7 @@ export async function mountDemoPresentation(
   loadModule: DemoPresentationModuleLoader = loadDemoPresentationModule,
 ): Promise<void> {
   const moduleName = root.dataset.demoBrowserModule;
-  if (!moduleName) {
-    executeLegacyScripts(root);
-    return;
-  }
+  if (!moduleName) throw new Error('Demo presentation does not declare a browser module.');
   const presentation = await loadModule(moduleName);
   if (typeof presentation.mount !== 'function') {
     throw new Error(`Demo browser module ${moduleName} does not export mount().`);

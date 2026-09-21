@@ -185,6 +185,13 @@
       "reviewedAt": "2026-09-20T01:29:41Z",
       "reviewer": "controlled-repository-review",
       "basis": "DEMO-328 moves the shared public page shell from a TypeScript string template to server-rendered React and updates only EVD-SRC-007's repository locator to the new owning component. The evidence ID, title, description, freshness policy, visibility, and relationships are unchanged; this review approves disclosure only for the exact resulting public evidence source revision."
+    },
+    {
+      "id": "review-demo337-react-quality-presentations",
+      "status": "Reviewed",
+      "reviewedAt": "2026-09-21T01:53:52Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-337 moves the isolated accessibility lab document from a TypeScript string builder to server-rendered React and updates only EVD-SRC-006's repository locator to the new owning TSX module. The evidence ID, title, description, freshness policy, visibility, and relationships are unchanged; this review approves disclosure only for the exact resulting public evidence source revision."
     }
   ],
   "sourceApprovals": [
@@ -457,6 +464,12 @@
       "resource": "evidence",
       "revision": "ed9254e3cc25f50e35111efd020309c710b24dad",
       "reviewRef": "review-demo328-react-shell"
+    },
+    {
+      "id": "source-evidence-eebf90ff8115",
+      "resource": "evidence",
+      "revision": "eebf90ff8115293c3080a65996c457544688d654",
+      "reviewRef": "review-demo337-react-quality-presentations"
     },
     {
       "id": "source-claims-b2ebd29e4ce1",

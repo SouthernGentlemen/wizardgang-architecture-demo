@@ -223,7 +223,7 @@
       "title": "Isolated accessibility lab implementation",
       "description": "Sandboxed accessible/broken fixtures and locally bundled axe-core execution used for partial automated evidence.",
       "locator": {
-        "repositoryPath": "src/ui/accessibility-lab.ts"
+        "repositoryPath": "src/ui/accessibility-lab.tsx"
       },
       "freshnessPolicy": "release-bound",
       "visibility": "public",
