@@ -15,8 +15,6 @@ const commands = [
   { label: 'Validate pinned Node/npm toolchain', file: process.execPath, args: ['scripts/validate-toolchain.mjs'] },
   { label: 'Install locked dependencies', file: npm, args: ['ci'] },
   { label: 'Full repository check', file: npm, args: ['run', 'check'], env: localD1Environment },
-  { label: 'Verify Chromium runtime', file: npm, args: ['run', 'verify:chromium'] },
-  { label: 'Site-wide browser accessibility and localization audit', file: npm, args: ['run', 'test:site-accessibility'], env: localD1Environment },
   { label: 'Audit dependencies', file: npm, args: ['run', 'security:dependencies'] },
   { label: 'Validate Worker build', file: npm, args: ['run', 'build'] },
   { label: 'Validate patch whitespace', file: 'git', args: baseSha ? ['diff', '--check', `${baseSha}...HEAD`] : ['diff', '--check'] },

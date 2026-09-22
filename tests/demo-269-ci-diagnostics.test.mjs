@@ -123,6 +123,21 @@ describe('DEMO-269 CI diagnostics', () => {
     expect(ciValidation).not.toContain("args: ['run', 'validate:migrations']");
   });
 
+  it('owns the Chromium-backed accessibility/localization audit through the canonical check command', () => {
+    const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
+    const checkCommands = packageJson.scripts.check.split('&&').map((command) => command.trim());
+    const siteAuditCommands = packageJson.scripts['test:site-accessibility'].split('&&').map((command) => command.trim());
+    const ciValidation = fs.readFileSync(path.join(process.cwd(), 'scripts/ci-validation.mjs'), 'utf8');
+
+    expect(checkCommands.filter((command) => command === 'npm run test:site-accessibility')).toHaveLength(1);
+    expect(siteAuditCommands.filter((command) => command === 'npm run verify:chromium')).toHaveLength(1);
+    expect(siteAuditCommands).toContain('node scripts/run-site-accessibility-audits.mjs');
+    expect(checkCommands.indexOf('npm run validate:migrations')).toBeLessThan(checkCommands.indexOf('npm run test:site-accessibility'));
+    expect(ciValidation).toContain("args: ['run', 'check']");
+    expect(ciValidation).not.toContain("args: ['run', 'verify:chromium']");
+    expect(ciValidation).not.toContain("args: ['run', 'test:site-accessibility']");
+  });
+
   it('uses fresh disposable local persistence for every D1 migration validation', () => {
     const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'demo-349-migrations-'));
     temporaryDirectories.push(temporaryRoot);
@@ -163,7 +178,8 @@ describe('DEMO-269 CI diagnostics', () => {
     expect(fs.readFileSync(path.join(persistenceDirectory, 'migration-proof.txt'), 'utf8')).toBe('ready');
 
     const ciValidation = fs.readFileSync(path.join(process.cwd(), 'scripts/ci-validation.mjs'), 'utf8');
-    expect(ciValidation.match(/env: localD1Environment/g)).toHaveLength(2);
+    expect(ciValidation.match(/env: localD1Environment/g)).toHaveLength(1);
+    expect(ciValidation).toContain("{ label: 'Full repository check', file: npm, args: ['run', 'check'], env: localD1Environment }");
     for (const script of ['site-browser-audit.mjs', 'demo-268-rest-browser-audit.mjs', 'demo-289-site-evaluation.mjs']) {
       const source = fs.readFileSync(path.join(process.cwd(), 'scripts', script), 'utf8');
       expect(source).toContain('process.env.WG_LOCAL_D1_PERSIST_TO');
