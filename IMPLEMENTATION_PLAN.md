@@ -23,16 +23,6 @@ The differences justify a common command *contract*, not identical shell bodies.
 
 ## Open tasks
 
-### DEMO-350 — [TEST] Include the browser accessibility/localization audit in acceptance
-
-- Dependency: DEMO-349 merged on `main`.
-- Why: The Chromium-backed site audit is a separate CI gate, while the similarly named Vitest suites already inside `check` do not execute that browser audit.
-- Scope: Compose the existing `test:site-accessibility` once in `check`, retain an explicit Chromium preflight/error, and remove duplicate CI execution. Keep its a11y and i18n coverage intact.
-- Non-goals: Do not change product UI, lower WCAG/i18n assertions, or silently skip when Chromium is missing.
-- Acceptance: The same browser failure appears under local `check` and CI; missing browser tooling is an explicit prerequisite failure, not a pass.
-- Validation: `npm run verify:chromium`; `npm run test:site-accessibility`; `npm run check`; `git diff --check`.
-- Authorities: `package.json`, `scripts/ci-validation.mjs`, `scripts/run-site-accessibility-audits.mjs`.
-
 ### DEMO-351 — [BUILD] Include the Worker dry-run build in acceptance
 
 - Dependency: DEMO-350 merged on `main`.
