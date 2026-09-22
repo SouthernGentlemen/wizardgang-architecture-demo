@@ -138,6 +138,28 @@ describe('DEMO-269 CI diagnostics', () => {
     expect(ciValidation).not.toContain("args: ['run', 'test:site-accessibility']");
   });
 
+  it('owns the production Worker dry-run build through the canonical check command', () => {
+    const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
+    const checkCommands = packageJson.scripts.check.split('&&').map((command) => command.trim());
+    const buildCommands = packageJson.scripts.build.split('&&').map((command) => command.trim());
+    const workerBuildCommands = packageJson.scripts['build:worker'].split('&&').map((command) => command.trim());
+    const ciValidation = fs.readFileSync(path.join(process.cwd(), 'scripts/ci-validation.mjs'), 'utf8');
+
+    expect(checkCommands.filter((command) => command === 'npm run build')).toHaveLength(1);
+    expect(checkCommands).not.toContain('npm run validate:assets');
+    expect(checkCommands.indexOf('npm run build')).toBeLessThan(checkCommands.indexOf('npm run test:site-accessibility'));
+    expect(buildCommands.filter((command) => command === 'npm run build:client')).toHaveLength(1);
+    expect(buildCommands.filter((command) => command === 'npm run build:worker')).toHaveLength(1);
+    expect(packageJson.scripts['build:client']).toBe('npm run generate:assets');
+    expect(packageJson.scripts['generate:assets']).toBe('ASSET_MANIFEST_WRITE=1 vite build');
+    expect(workerBuildCommands).toContain('wrangler deploy --dry-run --outdir dist/worker');
+    expect(workerBuildCommands).toContain('npm run validate:worker-bundle');
+    expect(ciValidation).toContain("args: ['run', 'check']");
+    expect(ciValidation).not.toContain("args: ['run', 'build']");
+    expect(ciValidation).toContain("args: ['run', 'security:dependencies']");
+    expect(ciValidation).toContain("label: 'Validate patch whitespace'");
+  });
+
   it('uses fresh disposable local persistence for every D1 migration validation', () => {
     const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'demo-349-migrations-'));
     temporaryDirectories.push(temporaryRoot);

@@ -16,7 +16,6 @@ const commands = [
   { label: 'Install locked dependencies', file: npm, args: ['ci'] },
   { label: 'Full repository check', file: npm, args: ['run', 'check'], env: localD1Environment },
   { label: 'Audit dependencies', file: npm, args: ['run', 'security:dependencies'] },
-  { label: 'Validate Worker build', file: npm, args: ['run', 'build'] },
   { label: 'Validate patch whitespace', file: 'git', args: baseSha ? ['diff', '--check', `${baseSha}...HEAD`] : ['diff', '--check'] },
 ];
 
