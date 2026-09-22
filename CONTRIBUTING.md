@@ -70,8 +70,11 @@ npm run verify:chromium
 npm run test:site-accessibility
 npm run security:dependency-advisories
 npm run build
+BASE_SHA=<pr-base-sha> npm run validate:patch-whitespace
 git diff --check
 ```
+
+`npm run validate:patch-whitespace` is the canonical committed-patch whitespace gate. With explicit `BASE_SHA`, it validates `BASE_SHA...HEAD`, matching the pull-request range semantics used by CI. For an open PR, reproduce the authoritative base with `BASE_SHA="$(gh pr view --json baseRefOid --jq .baseRefOid)" npm run validate:patch-whitespace`. Before a PR exists, fetch the target branch and supply its current commit explicitly, for example `git fetch origin main && BASE_SHA="$(git rev-parse origin/main)" npm run validate:patch-whitespace`. If the base SHA or sufficient history is unavailable, the command fails with bounded reproduction guidance instead of silently substituting an unstaged check. A bare `git diff --check` remains useful as an additional working-tree sanity check, but it does not prove the committed PR range.
 
 Equivalently, from a clean checkout use `npm run validate:ci`: it verifies the pinned toolchain, performs `npm ci`, then runs those temporary extra gates in the same order used by `.github/workflows/ci.yml`, with retained failure diagnostics. Full reproduction therefore needs npm registry/network access, a usable Chromium runtime, and sufficient Git history/base context for PR-range whitespace checking. Registry or browser unavailability is a reported blocker, not a passing result. The D1 migration gate uses local Wrangler state only, and the build uses a Wrangler dry run; neither mutates production.
 
