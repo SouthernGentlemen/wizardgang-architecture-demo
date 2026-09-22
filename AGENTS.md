@@ -44,7 +44,7 @@ Plan-authored tasks normally have one controlled ID, one primary concern and obs
 After every task that changes repository files, finish the delivery loop before handing the task back:
 
 1. Account for every modified, deleted, and untracked file; preserve unrelated or user-authored work.
-2. Remove only task-created temporary artifacts, then run `npm run check`, `npm run validate:migrations`, `npm run security:dependencies`, `npm run build`, and `git diff --check`. `check` is the canonical credential-free gate; provider-authenticated verification is separate. Run focused validation relevant to the task as well.
+2. Remove only task-created temporary artifacts, then run `npm run check`, `npm run validate:migrations`, `npm run security:dependency-advisories`, `npm run build`, and the canonical committed-patch whitespace command with explicit base context (`BASE_SHA=<pr-base-sha> npm run validate:patch-whitespace`). Run `git diff --check` only as an additional working-tree sanity check; without base context it does not prove the committed PR range. `check` is the canonical credential-free gate; provider-authenticated verification is separate. Run focused validation relevant to the task as well.
 3. Commit each intended controlled change with one permanent `DEMO-###` ID and one primary bracketed type.
 4. Push the isolated branch and open a pull request. Verify required CI on its exact head and merge it when current, green, authoritative, and mergeable. Do not push ordinary changes directly to `main`.
 5. Re-fetch merged `main`, verify the delivered task is absent from the plan, and confirm the worktree is clean before reporting completion.

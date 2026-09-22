@@ -4,6 +4,16 @@ The `validate` job runs `npm run validate:ci`. The command is intentionally stri
 
 The site-wide browser command reports the start, completion, and duration of each audit script. The content-review audit also reports bounded page/state, locale, browser-operation, media-mode, and teardown progress so a timed-out CDP operation identifies its exact matrix coordinate and phase.
 
+## Committed patch-integrity gate
+
+`npm run validate:patch-whitespace` is the single owner of committed-patch whitespace validation. `validate:ci` invokes it exactly once after the network-dependent dependency-advisory gate. In GitHub Actions, `BASE_SHA` comes from `github.event.pull_request.base.sha` for pull-request runs and `github.event.before` for pushes to `main`.
+
+With usable base context, the helper runs `git diff --check BASE_SHA...HEAD`. Git's three-dot form evaluates the patch from the merge base of `BASE_SHA` and `HEAD` through `HEAD`, so whitespace introduced by committed branch changes is checked even when the working tree is clean.
+
+The helper does not guess an authoritative PR base. If `BASE_SHA` is missing, malformed, absent from local history, or cannot produce a merge base with `HEAD`, it fails and prints the exact reproduction path: resolve the open PR's base with `gh pr view --json baseRefOid`, or fetch the target branch and supply its current commit explicitly before the PR exists. A bare `git diff --check` is only an additional working-tree sanity check; it is not evidence that the committed PR range is clean.
+
+The diagnostics wrapper captures the helper's ordinary stdout/stderr and preserves its non-zero exit code, including the original `git diff --check` failure output for trailing whitespace.
+
 ## Dependency advisory gate
 
 `npm run security:dependency-advisories` is the single network-dependent advisory query used locally and by `validate:ci`. It runs `npm audit --audit-level=high` after `check`; it is intentionally not part of credential-free `check`.

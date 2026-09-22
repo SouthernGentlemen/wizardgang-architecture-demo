@@ -1,4 +1,4 @@
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -157,7 +157,7 @@ describe('DEMO-269 CI diagnostics', () => {
     expect(ciValidation).toContain("args: ['run', 'check']");
     expect(ciValidation).not.toContain("args: ['run', 'build']");
     expect(ciValidation).toContain("args: ['run', 'security:dependency-advisories']");
-    expect(ciValidation).toContain("label: 'Validate patch whitespace'");
+    expect(ciValidation).toContain("args: ['run', 'validate:patch-whitespace']");
   });
 
   it('keeps dependency advisories as one named network-dependent gate outside check', () => {
@@ -174,8 +174,56 @@ describe('DEMO-269 CI diagnostics', () => {
       ciValidation.indexOf("args: ['run', 'security:dependency-advisories']"),
     );
     expect(ciValidation.indexOf("args: ['run', 'security:dependency-advisories']")).toBeLessThan(
-      ciValidation.indexOf("label: 'Validate patch whitespace'"),
+      ciValidation.indexOf("args: ['run', 'validate:patch-whitespace']"),
     );
+  });
+
+  it('owns committed patch whitespace through one explicit base-aware command', () => {
+    const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
+    const checkCommands = packageJson.scripts.check.split('&&').map((command) => command.trim());
+    const ciValidation = fs.readFileSync(path.join(process.cwd(), 'scripts/ci-validation.mjs'), 'utf8');
+
+    expect(packageJson.scripts['validate:patch-whitespace']).toBe('node scripts/validate-patch-whitespace.mjs');
+    expect(checkCommands).not.toContain('npm run validate:patch-whitespace');
+    expect(ciValidation.match(/args: \['run', 'validate:patch-whitespace'\]/g)).toHaveLength(1);
+    expect(ciValidation).not.toContain("['diff', '--check'");
+    expect(ciValidation.indexOf("args: ['run', 'security:dependency-advisories']")).toBeLessThan(
+      ciValidation.indexOf("args: ['run', 'validate:patch-whitespace']"),
+    );
+  });
+
+  it('checks the committed base range and fails truthfully without usable base context', () => {
+    const cwd = temporaryGitRepository();
+    const script = path.join(process.cwd(), 'scripts', 'validate-patch-whitespace.mjs');
+    const baseSha = execFileSync('git', ['rev-parse', 'HEAD'], { cwd, encoding: 'utf8' }).trim();
+    const runPatchCheck = (base, includeBase = true) => {
+      const environment = { ...process.env };
+      if (includeBase) environment.BASE_SHA = base;
+      else delete environment.BASE_SHA;
+      return spawnSync(process.execPath, [script], { cwd, env: environment, encoding: 'utf8' });
+    };
+
+    fs.writeFileSync(path.join(cwd, 'tracked.txt'), 'clean committed change\n');
+    execFileSync('git', ['add', 'tracked.txt'], { cwd });
+    execFileSync('git', ['commit', '-qm', 'clean change'], { cwd });
+    expect(runPatchCheck(baseSha).status).toBe(0);
+
+    fs.writeFileSync(path.join(cwd, 'tracked.txt'), 'committed trailing whitespace   \n');
+    execFileSync('git', ['add', 'tracked.txt'], { cwd });
+    execFileSync('git', ['commit', '-qm', 'bad whitespace'], { cwd });
+    const whitespaceFailure = runPatchCheck(baseSha);
+    expect(whitespaceFailure.status).not.toBe(0);
+    expect(whitespaceFailure.stdout).toContain('trailing whitespace');
+
+    const missingBase = runPatchCheck(undefined, false);
+    expect(missingBase.status).toBe(2);
+    expect(missingBase.stderr).toContain('requires BASE_SHA');
+    expect(missingBase.stderr).toContain('does not prove the committed PR range');
+
+    const missingHistory = runPatchCheck('0000000000000000000000000000000000000000');
+    expect(missingHistory.status).toBe(2);
+    expect(missingHistory.stderr).toContain('cannot find BASE_SHA');
+    expect(missingHistory.stderr).toContain('Fetch the PR base/history');
   });
 
   it('uses fresh disposable local persistence for every D1 migration validation', () => {

@@ -23,16 +23,6 @@ The differences justify a common command *contract*, not identical shell bodies.
 
 ## Open tasks
 
-### DEMO-353 — [TEST] Give patch whitespace one explicit PR-range owner
-
-- Dependency: DEMO-352 merged on `main`.
-- Why: CI uses a base-SHA-dependent `git diff --check`, while `check` has no equivalent and local instructions use the unstaged diff, which can miss a committed PR patch.
-- Scope: Add a narrow local/CI patch-integrity helper that checks the actual PR range when base context exists and reports the correct local fallback; invoke it once from the acceptance flow.
-- Non-goals: Do not rewrite history or impose a squash merge.
-- Acceptance: Trailing whitespace in the committed PR range fails exact-head CI and the reproducible local command; clean commits pass.
-- Validation: Focused helper tests; `npm run check` with appropriate base context; `git diff --check`.
-- Authorities: `scripts/ci-validation.mjs`, `package.json`, `.github/workflows/ci.yml`.
-
 ### DEMO-354 — [TEST] Assert `check` and CI gate ownership without prose snapshots
 
 - Dependency: DEMO-353 merged on `main`.

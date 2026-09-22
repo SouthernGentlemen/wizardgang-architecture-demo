@@ -6,8 +6,6 @@ import { runDiagnosticCommands } from './lib/ci-diagnostics.mjs';
 
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const diagnosticsDir = process.env.CI_DIAGNOSTICS_DIR || '.ci-diagnostics';
-const baseSha = process.env.BASE_SHA;
-if (baseSha && !/^[0-9a-f]{7,40}$/i.test(baseSha)) throw new Error('BASE_SHA must be a Git commit SHA.');
 const localD1PersistenceDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'wizardgang-ci-d1-'));
 const localD1Environment = { WG_LOCAL_D1_PERSIST_TO: localD1PersistenceDirectory };
 
@@ -16,7 +14,7 @@ const commands = [
   { label: 'Install locked dependencies', file: npm, args: ['ci'] },
   { label: 'Full repository check', file: npm, args: ['run', 'check'], env: localD1Environment },
   { label: 'Query dependency advisories (network required)', file: npm, args: ['run', 'security:dependency-advisories'] },
-  { label: 'Validate patch whitespace', file: 'git', args: baseSha ? ['diff', '--check', `${baseSha}...HEAD`] : ['diff', '--check'] },
+  { label: 'Validate committed patch whitespace', file: npm, args: ['run', 'validate:patch-whitespace'] },
 ];
 
 let report;
