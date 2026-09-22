@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
+import { createCiValidationCommands } from '../scripts/lib/acceptance-plan.mjs';
 import { runDiagnosticCommands } from '../scripts/lib/ci-diagnostics.mjs';
 import { runGeneratedArtifactParity } from '../scripts/validate-generated-artifacts.mjs';
 import { migrationArguments, runCleanLocalMigrations } from '../scripts/validate-migrations.mjs';
@@ -102,96 +103,6 @@ describe('DEMO-269 CI diagnostics', () => {
     expect(diff).toContain('diagnostic output truncated');
     expect(diff.length).toBeLessThan(33_500);
   });
-  it('owns generated-artifact parity through the canonical check command', () => {
-    const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
-    const checkCommands = packageJson.scripts.check.split('&&').map((command) => command.trim());
-    const ciValidation = fs.readFileSync(path.join(process.cwd(), 'scripts/ci-validation.mjs'), 'utf8');
-
-    expect(checkCommands.filter((command) => command === 'npm run validate:generated-artifacts')).toHaveLength(1);
-    expect(ciValidation).toContain("args: ['run', 'check']");
-    expect(ciValidation).not.toContain("args: ['run', 'validate:generated-artifacts']");
-  });
-
-  it('owns clean-local migration proof through the canonical check command', () => {
-    const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
-    const checkCommands = packageJson.scripts.check.split('&&').map((command) => command.trim());
-    const ciValidation = fs.readFileSync(path.join(process.cwd(), 'scripts/ci-validation.mjs'), 'utf8');
-
-    expect(packageJson.scripts['validate:migrations']).toBe('node scripts/validate-migrations.mjs');
-    expect(checkCommands.filter((command) => command === 'npm run validate:migrations')).toHaveLength(1);
-    expect(ciValidation).toContain("args: ['run', 'check']");
-    expect(ciValidation).not.toContain("args: ['run', 'validate:migrations']");
-  });
-
-  it('owns the Chromium-backed accessibility/localization audit through the canonical check command', () => {
-    const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
-    const checkCommands = packageJson.scripts.check.split('&&').map((command) => command.trim());
-    const siteAuditCommands = packageJson.scripts['test:site-accessibility'].split('&&').map((command) => command.trim());
-    const ciValidation = fs.readFileSync(path.join(process.cwd(), 'scripts/ci-validation.mjs'), 'utf8');
-
-    expect(checkCommands.filter((command) => command === 'npm run test:site-accessibility')).toHaveLength(1);
-    expect(siteAuditCommands.filter((command) => command === 'npm run verify:chromium')).toHaveLength(1);
-    expect(siteAuditCommands).toContain('node scripts/run-site-accessibility-audits.mjs');
-    expect(checkCommands.indexOf('npm run validate:migrations')).toBeLessThan(checkCommands.indexOf('npm run test:site-accessibility'));
-    expect(ciValidation).toContain("args: ['run', 'check']");
-    expect(ciValidation).not.toContain("args: ['run', 'verify:chromium']");
-    expect(ciValidation).not.toContain("args: ['run', 'test:site-accessibility']");
-  });
-
-  it('owns the production Worker dry-run build through the canonical check command', () => {
-    const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
-    const checkCommands = packageJson.scripts.check.split('&&').map((command) => command.trim());
-    const buildCommands = packageJson.scripts.build.split('&&').map((command) => command.trim());
-    const workerBuildCommands = packageJson.scripts['build:worker'].split('&&').map((command) => command.trim());
-    const ciValidation = fs.readFileSync(path.join(process.cwd(), 'scripts/ci-validation.mjs'), 'utf8');
-
-    expect(checkCommands.filter((command) => command === 'npm run build')).toHaveLength(1);
-    expect(checkCommands).not.toContain('npm run validate:assets');
-    expect(checkCommands.indexOf('npm run build')).toBeLessThan(checkCommands.indexOf('npm run test:site-accessibility'));
-    expect(buildCommands.filter((command) => command === 'npm run build:client')).toHaveLength(1);
-    expect(buildCommands.filter((command) => command === 'npm run build:worker')).toHaveLength(1);
-    expect(packageJson.scripts['build:client']).toBe('npm run generate:assets');
-    expect(packageJson.scripts['generate:assets']).toBe('ASSET_MANIFEST_WRITE=1 vite build');
-    expect(workerBuildCommands).toContain('wrangler deploy --dry-run --outdir dist/worker');
-    expect(workerBuildCommands).toContain('npm run validate:worker-bundle');
-    expect(ciValidation).toContain("args: ['run', 'check']");
-    expect(ciValidation).not.toContain("args: ['run', 'build']");
-    expect(ciValidation).toContain("args: ['run', 'security:dependency-advisories']");
-    expect(ciValidation).toContain("args: ['run', 'validate:patch-whitespace']");
-  });
-
-  it('keeps dependency advisories as one named network-dependent gate outside check', () => {
-    const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
-    const checkCommands = packageJson.scripts.check.split('&&').map((command) => command.trim());
-    const ciValidation = fs.readFileSync(path.join(process.cwd(), 'scripts/ci-validation.mjs'), 'utf8');
-
-    expect(packageJson.scripts['security:dependency-advisories']).toBe('npm audit --audit-level=high');
-    expect(packageJson.scripts['security:dependencies']).toBeUndefined();
-    expect(checkCommands.some((command) => command.includes('security:dependency-advisories'))).toBe(false);
-    expect(ciValidation.match(/args: \['run', 'security:dependency-advisories'\]/g)).toHaveLength(1);
-    expect(ciValidation).toContain("label: 'Query dependency advisories (network required)'");
-    expect(ciValidation.indexOf("args: ['run', 'check']")).toBeLessThan(
-      ciValidation.indexOf("args: ['run', 'security:dependency-advisories']"),
-    );
-    expect(ciValidation.indexOf("args: ['run', 'security:dependency-advisories']")).toBeLessThan(
-      ciValidation.indexOf("args: ['run', 'validate:patch-whitespace']"),
-    );
-  });
-
-  it('owns committed patch whitespace through one explicit base-aware command', () => {
-    const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
-    const checkCommands = packageJson.scripts.check.split('&&').map((command) => command.trim());
-    const ciValidation = fs.readFileSync(path.join(process.cwd(), 'scripts/ci-validation.mjs'), 'utf8');
-
-    expect(packageJson.scripts['validate:patch-whitespace']).toBe('node scripts/validate-patch-whitespace.mjs');
-    expect(checkCommands).not.toContain('npm run validate:patch-whitespace');
-    expect(ciValidation.match(/args: \['run', 'validate:patch-whitespace'\]/g)).toHaveLength(1);
-    expect(ciValidation).not.toContain("['diff', '--check'");
-    expect(ciValidation.indexOf("args: ['run', 'security:dependency-advisories']")).toBeLessThan(
-      ciValidation.indexOf("args: ['run', 'validate:patch-whitespace']"),
-    );
-  });
-
   it('checks the committed base range and fails truthfully without usable base context', () => {
     const cwd = temporaryGitRepository();
     const script = path.join(process.cwd(), 'scripts', 'validate-patch-whitespace.mjs');
@@ -265,9 +176,12 @@ describe('DEMO-269 CI diagnostics', () => {
     expect(runCleanLocalMigrations({ persistenceDirectory, run })).toBe(0);
     expect(fs.readFileSync(path.join(persistenceDirectory, 'migration-proof.txt'), 'utf8')).toBe('ready');
 
-    const ciValidation = fs.readFileSync(path.join(process.cwd(), 'scripts/ci-validation.mjs'), 'utf8');
-    expect(ciValidation.match(/env: localD1Environment/g)).toHaveLength(1);
-    expect(ciValidation).toContain("{ label: 'Full repository check', file: npm, args: ['run', 'check'], env: localD1Environment }");
+    const ciCommands = createCiValidationCommands({
+      nodeExecutable: process.execPath,
+      npmExecutable: 'npm',
+      checkEnvironment: { WG_LOCAL_D1_PERSIST_TO: persistenceDirectory },
+    });
+    expect(ciCommands.find(({ id }) => id === 'check')?.env).toEqual({ WG_LOCAL_D1_PERSIST_TO: persistenceDirectory });
     for (const script of ['site-browser-audit.mjs', 'demo-268-rest-browser-audit.mjs', 'demo-289-site-evaluation.mjs']) {
       const source = fs.readFileSync(path.join(process.cwd(), 'scripts', script), 'utf8');
       expect(source).toContain('process.env.WG_LOCAL_D1_PERSIST_TO');

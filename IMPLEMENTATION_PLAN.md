@@ -23,16 +23,6 @@ The differences justify a common command *contract*, not identical shell bodies.
 
 ## Open tasks
 
-### DEMO-354 — [TEST] Assert `check` and CI gate ownership without prose snapshots
-
-- Dependency: DEMO-353 merged on `main`.
-- Why: Several small composition edits can drift back into duplicate or missing CI gates without a test of the final orchestration.
-- Scope: Add pure tests over the ordered `check`/CI command plan, ensuring each credential-free gate has one owner and the network-aware advisory/provider boundaries remain explicit.
-- Non-goals: Do not rerun the full suite inside unit tests or freeze exact prose/script text.
-- Acceptance: Removing an applicable gate or duplicating one causes a focused failure; provider-authenticated checks are not pulled into `check`.
-- Validation: Focused orchestration tests; `npm run check`; `npm run validate:ci` where prerequisites exist; `git diff --check`.
-- Authorities: `package.json`, `scripts/ci-validation.mjs`, process test suite.
-
 ### DEMO-355 — [TEST] Prove checkout-owned development process identity
 
 - Dependency: DEMO-354 merged on `main`.

@@ -86,7 +86,7 @@ describe('DEMO-339 deliberate-regression proofs', () => {
   });
 
   it('rejects toolchain, command, root-file, and workflow baseline violations', () => {
-    const root = fixture(['README.md', 'AGENTS.md', 'CONTRIBUTING.md', 'SECURITY.md', 'LICENSE', '.gitignore', '.node-version', '.npmrc', 'package.json', 'package-lock.json', 'tsconfig.json', 'wrangler.jsonc', 'vite.config.ts', '.github/workflows/ci.yml', '.github/workflows/release.yml', 'scripts/ci-validation.mjs']);
+    const root = fixture(['README.md', 'AGENTS.md', 'CONTRIBUTING.md', 'SECURITY.md', 'LICENSE', '.gitignore', '.node-version', '.npmrc', 'package.json', 'package-lock.json', 'tsconfig.json', 'wrangler.jsonc', 'vite.config.ts', '.github/workflows/ci.yml', '.github/workflows/release.yml', 'scripts/ci-validation.mjs', 'scripts/lib/acceptance-plan.mjs', 'scripts/lib/ci-diagnostics.mjs']);
     try {
       const validate = () => validateRepositoryBaseline(root);
       expect(validate()).toEqual([]);
@@ -95,7 +95,7 @@ describe('DEMO-339 deliberate-regression proofs', () => {
       violation(root, 'tsconfig.json', (value) => value.replace('"strict": true', '"strict": false'), validate, /TypeScript strict mode/);
       violation(root, 'package.json', (value) => value.replace('npm run validate:repository-baseline && ', ''), validate, /check must invoke validate:repository-baseline/);
       violation(root, '.github/workflows/ci.yml', (value) => value.replace('pull_request:', 'workflow_dispatch:'), validate, /CI must run on pull requests/);
-      violation(root, 'scripts/ci-validation.mjs', (value) => value.replace("args: ['ci']", "args: ['install']"), validate, /CI must install with npm ci/);
+      violation(root, 'scripts/lib/acceptance-plan.mjs', (value) => value.replace("args: ['ci']", "args: ['install']"), validate, /CI must install with npm ci/);
       violation(root, '.github/workflows/release.yml', (value) => value.replace("tags: ['v*']", "tags: ['other*']"), validate, /release workflow must reproduce tagged releases/);
       const file = path.join(root, 'LICENSE');
       const original = readFileSync(file);
