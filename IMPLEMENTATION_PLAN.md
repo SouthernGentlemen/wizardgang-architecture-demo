@@ -23,16 +23,6 @@ The differences justify a common command *contract*, not identical shell bodies.
 
 ## Open tasks
 
-### DEMO-349 — [BUILD] Make clean local D1 migration proof part of acceptance
-
-- Dependency: DEMO-348 merged on `main`.
-- Why: `validate:migrations` is an extra CI gate, while `check` alone does not prove the current migration chain can apply to an empty local database.
-- Scope: Make the existing migration check use disposable local state and invoke it exactly once from `check`; remove its duplicate standalone CI invocation.
-- Non-goals: Do not edit accepted migrations, touch remote D1, or reset user-owned local data.
-- Acceptance: The migration chain applies to an empty isolated local database under `check`; failures identify the migration; no remote/provider mutation occurs.
-- Validation: Focused migration command test; `npm run validate:migrations`; `npm run check`; `git diff --check`.
-- Authorities: `package.json`, `scripts/ci-validation.mjs`, `wrangler.jsonc`, migration directory.
-
 ### DEMO-350 — [TEST] Include the browser accessibility/localization audit in acceptance
 
 - Dependency: DEMO-349 merged on `main`.

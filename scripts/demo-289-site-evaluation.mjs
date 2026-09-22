@@ -22,6 +22,7 @@ const auditConfig = JSON.parse(fs.readFileSync('config/site-audit-states.json', 
 const port = Number(process.env.DEMO289_AUDIT_PORT || 8791);
 const debugPort = Number(process.env.DEMO289_DEBUG_PORT || 9224);
 const origin = `http://127.0.0.1:${port}`;
+const localPersistenceArgs = process.env.WG_LOCAL_D1_PERSIST_TO ? ['--persist-to', process.env.WG_LOCAL_D1_PERSIST_TO] : [];
 const demosPath = manifest.find((route) => route.id === 'demos.index')?.route;
 const assurancePath = manifest.find((route) => route.id === 'assurance.index')?.route;
 if (!demosPath) throw new Error('DEMO-289 could not resolve demos.index from the route manifest.');
@@ -237,7 +238,7 @@ async function main() {
   console.log(`DEMO-289 evaluation start: ${scope.length} unique page/state paths, ${pages.length} canonical public pages, ${auditConfig.states.length} configured states, English and Arabic.`);
 
   const wranglerStarted = process.hrtime.bigint();
-  const wrangler = spawn(path.resolve('node_modules', '.bin', process.platform === 'win32' ? 'wrangler.cmd' : 'wrangler'), ['dev','--local','--ip','127.0.0.1','--port',String(port)], { stdio: ['ignore','pipe','pipe'], env: { ...process.env, NO_UPDATE_NOTIFIER: '1' } });
+  const wrangler = spawn(path.resolve('node_modules', '.bin', process.platform === 'win32' ? 'wrangler.cmd' : 'wrangler'), ['dev','--local',...localPersistenceArgs,'--ip','127.0.0.1','--port',String(port)], { stdio: ['ignore','pipe','pipe'], env: { ...process.env, NO_UPDATE_NOTIFIER: '1' } });
   let wranglerError='';wrangler.stderr.on('data',(chunk)=>{wranglerError+=String(chunk)});
   let chrome; let cdp;
   const profile=fs.mkdtempSync(path.join(os.tmpdir(),'wg-demo289-'));
