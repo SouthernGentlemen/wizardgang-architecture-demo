@@ -23,25 +23,15 @@ The differences justify a common command *contract*, not identical shell bodies.
 
 ## Open tasks
 
-### DEMO-355 — [TEST] Prove checkout-owned development process identity
-
-- Dependency: DEMO-354 merged on `main`.
-- Why: The current `scripts/dev.mjs` signals direct npm children; before broader cleanup, it needs a testable way to distinguish this checkout's descendants from unrelated processes.
-- Scope: Extract a pure checkout/process-identity decision and add focused tests for owned child, stale PID, and foreign process cases. Do not change live teardown behavior yet.
-- Non-goals: Do not kill processes, reset user outputs, auto-open a browser, change ports, or touch production.
-- Acceptance: A later cleanup can consume one tested, fail-closed ownership decision; foreign and stale identities are rejected.
-- Validation: Focused dev-identity tests; `npm run check`; `git diff --check`.
-- Authorities: `scripts/dev.mjs`, dev-lifecycle tests, WG-ARCH-001 §27.
-
 ### DEMO-356 — [FIX] Stop checkout-owned development process trees
 
 - Dependency: DEMO-355 merged on `main`.
 - Why: Direct-child signaling can leave Vite/Wrangler descendants alive; the tested ownership decision from DEMO-355 gives cleanup a safe boundary.
-- Scope: Use the owned-process decision to stop only this checkout's watcher/Worker process trees on interrupt, termination, and startup failure; add focused cleanup tests. Preserve current startup/port behavior.
+- Scope: Collect a stored target identity and fresh target-to-coordinator process lineage, then use the DEMO-355 owned-process decision immediately before signaling each target so only this checkout's watcher/Worker process trees stop on interrupt, termination, and startup failure; add focused cleanup tests. Preserve current startup/port behavior.
 - Non-goals: Do not kill foreign port owners, reset user output, open a browser, deploy, or change production configuration. Delete this plan in the delivering PR unless a fresh owner-approved future wave replaces it.
-- Acceptance: The owned process tree exits with `dev`; unproven/foreign processes are never signaled; startup failure leaves no owned descendant.
+- Acceptance: A process is signaled only when its current PID/start token still matches the stored target and its fresh parent lineage terminates at the expected coordinator PID/start token rooted in this canonical checkout; the owned process tree exits with `dev`; stale, incomplete, contradictory, and foreign evidence is never signaled; startup failure leaves no owned descendant.
 - Validation: Focused cleanup tests; manual `npm run dev` start/stop with local prerequisites; `npm run check`; `git diff --check`.
-- Authorities: `scripts/dev.mjs`, `package.json`, `README.md`, WG-ARCH-001 §27.
+- Authorities: `scripts/dev.mjs`, `scripts/lib/dev-process-identity.mjs`, `package.json`, `README.md`, WG-ARCH-001 §27.
 
 ## Validated forward findings for the next fresh wave
 
