@@ -23,16 +23,6 @@ The differences justify a common command *contract*, not identical shell bodies.
 
 ## Open tasks
 
-### DEMO-351 — [BUILD] Include the Worker dry-run build in acceptance
-
-- Dependency: DEMO-350 merged on `main`.
-- Why: `check` validates Vite assets but not the Worker dry-run bundle; CI separately invokes `build` and catches Worker-bundle failures later.
-- Scope: Run the existing production `build` path exactly once within `check`, removing redundant asset/build invocations from the CI orchestration without changing output semantics.
-- Non-goals: Do not perform a live Wrangler deploy, change asset ownership, or rebuild unrelated runtime code.
-- Acceptance: Worker-bundle failure makes `check` fail; successful `check` leaves reproducible client/Worker artifacts and CI has no second build pass.
-- Validation: `npm run build`; `npm run check`; `git diff --check`.
-- Authorities: `package.json`, `scripts/ci-validation.mjs`, Vite/Wrangler configuration.
-
 ### DEMO-352 — [BUILD] Name the network-dependent dependency-advisory gate
 
 - Dependency: DEMO-351 merged on `main`.
