@@ -51,8 +51,17 @@ export function validateRepositoryBaseline(root = DEFAULT_ROOT) {
   const ci = read('.github/workflows/ci.yml');
   if (!/pull_request:/.test(ci) || !/branches:\s*\[main\]/.test(ci)) failures.push('CI must run on pull requests and main');
   if (!/node-version-file:\s*\.node-version/.test(ci)) failures.push('CI must use the pinned Node version');
-  // A wrapper is fine if its script proves that it runs npm ci and npm run check.
-  const ciCommand = /npm run validate:ci/.test(ci) ? read('scripts/ci-validation.mjs') : ci;
+  // A wrapper is fine if its local module graph proves that it runs npm ci and npm run check.
+  const readLocalModuleGraph = (entry, seen = new Set()) => {
+    if (seen.has(entry)) return '';
+    seen.add(entry);
+    const source = read(entry);
+    const directory = path.posix.dirname(entry);
+    const imports = [...source.matchAll(/\bfrom\s+['"]((?:\.\.?\/)[^'"]+)['"]/g)]
+      .map(([, specifier]) => path.posix.normalize(path.posix.join(directory, specifier)));
+    return [source, ...imports.map((specifier) => readLocalModuleGraph(specifier, seen))].join('\n');
+  };
+  const ciCommand = /npm run validate:ci/.test(ci) ? readLocalModuleGraph('scripts/ci-validation.mjs') : ci;
   if (!/npm\s+ci|args:\s*\['ci'\]/.test(ciCommand) || !/npm run check|\['run', 'check'\]/.test(ciCommand)) failures.push('CI must install with npm ci and run check');
   const release = read('.github/workflows/release.yml');
   if (!/tags:\s*\['v\*'\]/.test(release) || !/npm ci/.test(release) || !/npm run check/.test(release)) failures.push('release workflow must reproduce tagged releases with npm ci and check');
