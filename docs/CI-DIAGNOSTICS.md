@@ -4,6 +4,12 @@ The `validate` job runs `npm run validate:ci`. The command is intentionally stri
 
 The site-wide browser command reports the start, completion, and duration of each audit script. The content-review audit also reports bounded page/state, locale, browser-operation, media-mode, and teardown progress so a timed-out CDP operation identifies its exact matrix coordinate and phase.
 
+## Dependency advisory gate
+
+`npm run security:dependency-advisories` is the single network-dependent advisory query used locally and by `validate:ci`. It runs `npm audit --audit-level=high` after `check`; it is intentionally not part of credential-free `check`.
+
+The audit requires npm registry/network access. A high/critical advisory finding is a failing result. A registry, DNS, TLS, timeout, or other transport/query error is also fatal, but it means the advisory result is **unknown/unavailable**, not clean. The diagnostics wrapper preserves the exact non-zero exit code and complete redacted npm stdout/stderr in `.ci-diagnostics/validation.log`, so investigation must use that retained output to distinguish an advisory finding from an unavailable query.
+
 ## Pinned Node/npm toolchain
 
 The supported toolchain is Node 22 with npm 10. The exact workflow/runtime selection is recorded in `.node-version` and `packageManager`; `engines` records the supported majors, and `.npmrc` enables `engine-strict` so an unsupported Node or npm major cannot proceed with `npm ci`.

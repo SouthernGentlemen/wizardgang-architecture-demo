@@ -23,16 +23,6 @@ The differences justify a common command *contract*, not identical shell bodies.
 
 ## Open tasks
 
-### DEMO-352 — [BUILD] Name the network-dependent dependency-advisory gate
-
-- Dependency: DEMO-351 merged on `main`.
-- Why: `npm audit` currently runs outside `check`; cloud agent network may be unavailable even after `npm ci`, and a failed query must not be mistaken for a clean dependency result.
-- Scope: Keep the high-severity advisory query as one explicit CI/local command with a documented network prerequisite and clear failure distinction between advisories and transport unavailability; keep lockfile/install-script safety in credential-free `check`.
-- Non-goals: Do not silently omit the CI audit, require provider credentials, change dependency versions, or claim a no-network audit passed.
-- Acceptance: CI still fails on high-severity advisories; a web-terminal agent can reproduce the gate when registry access exists and reports an exact blocker otherwise.
-- Validation: Focused advisory-command tests; `npm run security:dependencies` when network is available; `npm run check`; `git diff --check`.
-- Authorities: `package.json`, `.npmrc`, `scripts/ci-validation.mjs`, `CONTRIBUTING.md`.
-
 ### DEMO-353 — [TEST] Give patch whitespace one explicit PR-range owner
 
 - Dependency: DEMO-352 merged on `main`.

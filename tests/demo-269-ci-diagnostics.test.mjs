@@ -156,8 +156,26 @@ describe('DEMO-269 CI diagnostics', () => {
     expect(workerBuildCommands).toContain('npm run validate:worker-bundle');
     expect(ciValidation).toContain("args: ['run', 'check']");
     expect(ciValidation).not.toContain("args: ['run', 'build']");
-    expect(ciValidation).toContain("args: ['run', 'security:dependencies']");
+    expect(ciValidation).toContain("args: ['run', 'security:dependency-advisories']");
     expect(ciValidation).toContain("label: 'Validate patch whitespace'");
+  });
+
+  it('keeps dependency advisories as one named network-dependent gate outside check', () => {
+    const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
+    const checkCommands = packageJson.scripts.check.split('&&').map((command) => command.trim());
+    const ciValidation = fs.readFileSync(path.join(process.cwd(), 'scripts/ci-validation.mjs'), 'utf8');
+
+    expect(packageJson.scripts['security:dependency-advisories']).toBe('npm audit --audit-level=high');
+    expect(packageJson.scripts['security:dependencies']).toBeUndefined();
+    expect(checkCommands.some((command) => command.includes('security:dependency-advisories'))).toBe(false);
+    expect(ciValidation.match(/args: \['run', 'security:dependency-advisories'\]/g)).toHaveLength(1);
+    expect(ciValidation).toContain("label: 'Query dependency advisories (network required)'");
+    expect(ciValidation.indexOf("args: ['run', 'check']")).toBeLessThan(
+      ciValidation.indexOf("args: ['run', 'security:dependency-advisories']"),
+    );
+    expect(ciValidation.indexOf("args: ['run', 'security:dependency-advisories']")).toBeLessThan(
+      ciValidation.indexOf("label: 'Validate patch whitespace'"),
+    );
   });
 
   it('uses fresh disposable local persistence for every D1 migration validation', () => {

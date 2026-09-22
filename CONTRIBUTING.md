@@ -57,6 +57,8 @@ For governance records, edit the registered structured resources under `assuranc
 
 WG-ARCH-001 §27 defines the shared command meanings; [README.md](README.md#command-map) records this repository's current command/prerequisite map. After a locked install, `npm run check` is the canonical unattended, credential-free acceptance gate. It does not yet own every gate that CI runs, so do not describe a clean `check` as full CI parity.
 
+`npm run security:dependency-advisories` is the one network-dependent dependency-advisory gate. It runs `npm audit --audit-level=high`, requires npm registry/network access, and is intentionally outside credential-free `check`. A high/critical advisory finding fails the gate. If npm cannot complete the registry/advisory query, the result is unknown/unavailable rather than clean; local reproduction must report that blocker, and CI fails the same gate until the query completes.
+
 Before opening a pull request, run the current acceptance set:
 
 ```text
@@ -66,7 +68,7 @@ npm run check
 npm run validate:migrations
 npm run verify:chromium
 npm run test:site-accessibility
-npm run security:dependencies
+npm run security:dependency-advisories
 npm run build
 git diff --check
 ```
