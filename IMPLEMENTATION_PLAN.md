@@ -1,47 +1,157 @@
 # Active implementation plan
 
-This is the current/future command-and-process convergence queue for the architecture repository, the upstream WizardGang process authority. Start from freshly fetched `main`, `AGENTS.md`, this plan, open PRs, exact-head CI, and live settings. Complete only the first open task per `do needful` turn unless the owner explicitly changes priority. A blocked first task is reported, not bypassed. Its delivering PR removes its own block and updates future blocks; the last delivery deletes this file. Git/GitHub retain completed work. Do not implement work from the later-finding inventory merely because it is visible here: research and sequence the next wave from fresh state after this one.
+This is the architecture demo's current/future process-convergence queue under WG-ARCH-001 §27. The repository is the upstream reference implementation for the shared WizardGang delivery model, so this wave closes the remaining gaps before downstream repositories treat it as common authority.
 
-The shared command meanings are in WG-ARCH-001 §27. This wave makes the architecture repository honor that contract before other repositories inherit it. Keep credential-free acceptance, provider-aware verification, release publication, and production deployment separate. A short web turn is the sizing target; exact-head CI, review, and provider latency are external to implementation size, not reasons to omit them. If a task expands across independent outcomes, narrow or split its future block before implementing it.
+Start every `do needful` turn from freshly fetched `main`, `AGENTS.md`, this plan, open PRs, exact-head CI, repository settings, rulesets, tags, GitHub Releases and production deployment state. Finish an authoritative open PR for the first task instead of duplicating it. Deliver exactly one queued task per controlled change, remove that task in the same delivery, and delete this file in the final delivery.
 
-## Current cross-repository command comparison
+Keep credential-free repository acceptance, network-dependent dependency advisories, live provider verification, release publication and production deployment as separate boundaries. Preserve the architecture demo's application/runtime/assurance contracts unless a task explicitly names them. Published history, annotated tags and GitHub Releases are immutable evidence and are never rewritten.
 
-These are observed current behaviors to guide adoption, not permission to overwrite product-specific capabilities. Re-read current `main` before changing any repository.
+Current observed process facts that motivate this wave:
 
-| Repository | `dev` | `test` / `build` | Acceptance and release boundary |
-| --- | --- | --- | --- |
-| Architecture demo | Generate assets, then Vite watch plus Wrangler; child-only termination | Vitest; client generation plus Worker dry-run build | `check` omits several gates still run by `validate:ci`; release/tag flow is strong, but raw `deploy` remains exposed. |
-| SharkTank | Raw `wrangler dev` | Vitest/PHP self-test; Vite build | Broad `check` includes PHP, local HTTP, audit, history, provenance, whitespace; tag release has provider-version confirmation. |
-| Hexframe | Build and Wrangler with required local env | Vitest; Vite/version stamp | `check` includes release-boundary/content guards; tag-only protected deploy and provider-version confirmation. |
-| YarReader | Vite offline viewer | `test` builds before Node/browser tests; `check` builds again | Strong public-history safety and offline release boundary; duplicate build in `check`/CI. |
-| WizardGang | Managed checkout-owned reset, port protection, readiness, browser option, signal cleanup | Several named Node suites; custom build | `check` omits named dev/browser/a11y suites; no current CI or controlled repository baseline. |
-| SVGLab | Managed local teardown/reset/build/start/readiness/browser | Vitest builds first; Vite build | `verify`, not `check`, owns rig, generated-artifact, footprint, cruft, local-only, Blender checks; no current CI/change baseline. |
-| FightLab / Mix Up | Managed local lifecycle with pinned Boneyard input | Vitest; Vite build | `verify`, not `check`, owns pin/type/test/build; separate visual CI; no current full process baseline. |
-| Boneyard | No running surface | Vitest; deterministic asset bundle build | `verify`, not `check`, owns generated outputs, footprint/cruft, type/test; no current CI/change baseline. |
-
-The differences justify a common command *contract*, not identical shell bodies. `KeyLab` was not accessible under either known owner during this review; do not invent its package behavior. The architecture tasks below do not mutate downstream repositories.
+- repository toolchain authority is Node 26.7.0 with npm 11.19.0 and must be reconciled with the current shared baseline rather than treated as permanently canonical;
+- the live provider is merge-commit-only even though downstream normalization is converging on single-commit squash delivery;
+- required status checks exist, but the provider/settings comparison does not yet prove strict/current-head behavior;
+- exact-head CI validates the PR title but does not yet bind branch name, head controlled commit identity and one-controlled-commit range together;
+- the portable repository-baseline validator still mixes universal process requirements with this reference stack's TypeScript/React/Vite/Vitest/Wrangler capabilities;
+- the release workflow calls `npm run security:dependencies` while the current package command is `security:dependency-advisories`;
+- raw `npm run deploy` still exposes arbitrary-checkout Wrangler deployment;
+- manual deployment accepts a `ref` and proves an exact tag at HEAD, but does not yet bind the requested ref, package version and existing GitHub Release into one immutable deployment identity;
+- current-tree secret scanning is narrower than the strongest public-history safety boundary already used by sibling repositories.
 
 ## Open tasks
 
-### DEMO-356 — [FIX] Stop checkout-owned development process trees
+### DEMO-357 — [FIX] Stop checkout-owned development process trees
 
-- Dependency: DEMO-355 merged on `main`.
-- Why: Direct-child signaling can leave Vite/Wrangler descendants alive; the tested ownership decision from DEMO-355 gives cleanup a safe boundary.
-- Scope: Collect a stored target identity and fresh target-to-coordinator process lineage, then use the DEMO-355 owned-process decision immediately before signaling each target so only this checkout's watcher/Worker process trees stop on interrupt, termination, and startup failure; add focused cleanup tests. Preserve current startup/port behavior.
-- Non-goals: Do not kill foreign port owners, reset user output, open a browser, deploy, or change production configuration. Delete this plan in the delivering PR unless a fresh owner-approved future wave replaces it.
-- Acceptance: A process is signaled only when its current PID/start token still matches the stored target and its fresh parent lineage terminates at the expected coordinator PID/start token rooted in this canonical checkout; the owned process tree exits with `dev`; stale, incomplete, contradictory, and foreign evidence is never signaled; startup failure leaves no owned descendant.
-- Validation: Focused cleanup tests; manual `npm run dev` start/stop with local prerequisites; `npm run check`; `git diff --check`.
-- Authorities: `scripts/dev.mjs`, `scripts/lib/dev-process-identity.mjs`, `package.json`, `README.md`, WG-ARCH-001 §27.
+- Dependency: DEMO-356 planning refresh merged.
+- Why: Direct-child signaling can leave Vite/Wrangler descendants alive; DEMO-355 established the ownership decision needed to stop only this checkout's processes safely.
+- Scope: Collect stored target identity plus fresh target-to-coordinator lineage, then apply the existing owned-process decision immediately before signaling each target on interrupt, termination and startup failure. Add focused cleanup cases.
+- Preserve: Existing startup semantics, port ownership rules and foreign-process safety.
+- Non-goals: No foreign port-owner termination, output reset, browser launch, deployment or production change.
+- Acceptance: Only process trees rooted in the current canonical checkout coordinator are signaled; stale/incomplete/foreign evidence is never signaled; startup failure leaves no owned descendant.
+- Validation: Focused lifecycle tests; manual `npm run dev` start/stop where prerequisites exist; `npm run check`; base-aware patch whitespace.
+- Authorities: `scripts/dev.mjs`, `scripts/lib/dev-process-identity.mjs`, WG-ARCH-001 §27.
 
-## Validated forward findings for the next fresh wave
+### DEMO-358 — [BUILD] Finish the shared local-development entry point
 
-These remain open candidates, not extra assignments or reserved IDs. Reconfirm them against then-current source/provider state; promote only justified, surgical outcomes. This inventory preserves the earlier process review without carrying completed React history.
+- Dependency: DEMO-357 merged.
+- Why: Process ownership is strong, but the upstream reference should also demonstrate bounded readiness reporting and an optional headless-safe browser-open path through the same checkout-owned `npm run dev` lifecycle.
+- Scope: Add bounded readiness/URL reporting and optional browser opening without changing default cloud/headless behavior. Reuse current lifecycle ownership rather than adding a second runner.
+- Non-goals: No production deployment, port stealing, desktop-only dependency or product-route change.
+- Acceptance: `npm run dev` remains safe in headless/cloud use, reports a deterministic ready URL, optional browser opening fails harmlessly when unavailable, and shutdown still owns the whole process tree.
+- Validation: Focused lifecycle cases; real start/readiness/stop smoke where available; `npm run check`; patch whitespace.
+- Authorities: `scripts/dev.mjs`, README/current dev docs, WG-ARCH-001 §27.
 
-- **Process enforcement:** the plan validator checks accepted IDs and field shape but not contiguous next IDs; process-conformance tests do not yet guard one-task handoff, same-delivery retirement, blocked-head behavior, or truthful provider actions. Split queue-sequence enforcement from behavior assertions.
-- **Universal versus reference baseline:** `scripts/validate-repository-baseline.mjs` claims to be copyable yet requires this repo's Node 26/npm 11, root `LICENSE`, TypeScript/React/Vite/Vitest, Wrangler, browser assets, and release workflow. Define a capability declaration, then split universal-process validation, non-Worker fixtures, and reference-stack checks into separate changes. `LICENSE.md` with explicit attribution can satisfy a product's license model.
-- **Controlled PR identity:** exact-head CI currently validates only PR title; it does not bind branch, head commit ID/type, or one controlled commit in the PR range. Keep merge-commit provider policy until a separate deliberate provider/validator decision. The live Git demonstration can allocate a queued ID because it reads history but not the active plan.
-- **Provider protections:** the live architecture `main` ruleset has non-strict required status checks, unlike the three comparison repositories, and the settings-as-code projection does not compare that field. Pure settings comparison tests are missing. The live `production` environment has no protection rules or deployment-branch policy. Treat these as provider-control work, not documentation-only changes; verify any admin/provider constraint explicitly.
-- **Deployment boundary:** manual `deploy.yml` accepts a ref, then finds an exact tag at HEAD without proving the selected ref equals a `vMAJOR.MINOR.PATCH` annotated tag and matching package version; raw `npm run deploy` exposes a live Wrangler deployment from an arbitrary checkout. Preserve intentional tag-based recovery while binding the requested immutable identity and protected environment. Do not weaken the release workflow's exact-tag reproduction, GitHub Release authority, secret preflight, identity continuity, or post-deploy version/asset checks. Consider Hexframe's event/input/tag proof and provider-version confirmation as separate reviewable improvements.
-- **Security and product-specific gates:** current-tree secret scanning is narrower than YarReader's public-history safety gate. Reassess secret/blob/path scanning without duplicating architecture assurance controls. CSP, accessibility, localization, Worker/static-assets, and fail-closed persistence are currently intentional guarded architecture, not automatic defect tasks; create a task only for a demonstrated gap. Reassess repository cruft and duplicated validators from current source rather than inheriting an old finding.
-- **Local lifecycle finish:** after owned-process cleanup is proven, add a separate bounded readiness/URL report and optional headless-safe browser open to architecture `dev`; do not combine it with process ownership or port-reclamation changes. WizardGang and SVGLab provide useful patterns, not a wholesale transplant.
-- **Downstream adoption after upstream stabilization:** WizardGang lacks a controlled CI/policy baseline; SVGLab, FightLab, and Boneyard use `verify` as their real gate and lack pieces of the universal process; YarReader duplicates build execution; SharkTank and Hexframe have strong but differing command and release checks. Write separate repository-specific waves after this architecture contract is proven. Private-repository ruleset APIs currently report a plan/tier restriction for the lab repositories; that is a provider blocker, not a lab exemption. `KeyLab` remains unverified until its repository is identified or made accessible.
+### DEMO-359 — [BUILD] Align Node and npm with the shared baseline
+
+- Dependency: DEMO-358 merged.
+- Why: The architecture demo currently pins Node 26.7.0 and npm 11.19.0; the shared organization baseline must be a current common authority rather than a historical reference-repo pin.
+- Scope: Re-fetch the current shared Node/npm baseline and update `.node-version`, exact `packageManager`, engine policy, npm policy, lockfile metadata, CI/release/deploy setup and current documentation together.
+- Non-goals: No unrelated dependency-upgrade wave, release or deployment.
+- Acceptance: Local acceptance, PR/main CI, release reproduction and deployment all resolve the same exact shared Node/npm pair and toolchain drift fails clearly.
+- Validation: Toolchain-focused tests; `npm ci`; `npm run check`; exact-head CI; patch whitespace.
+- Authorities: current organization baseline, `.node-version`, `package.json`, `.npmrc`, workflows.
+
+### DEMO-360 — [REFACTOR] Split universal process checks from reference-stack checks
+
+- Dependency: DEMO-359 merged.
+- Why: `validate-repository-baseline` is presented as portable but currently requires this repository's Worker/React/Vite/Vitest/browser/release capabilities.
+- Scope: Introduce an explicit repository capability declaration, extract the truly universal process contract, add non-Worker/non-React fixtures, and keep reference-stack validation as a separate layer.
+- Non-goals: No weakening of this repository's own TypeScript/React/Vite/Vitest/Wrangler controls and no downstream repository mutation.
+- Acceptance: A minimal non-Worker repository can satisfy the universal process fixture without pretending to own reference-stack capabilities, while this repo still passes the stronger reference profile.
+- Validation: Baseline fixture suite; `npm run check`; patch whitespace.
+- Authorities: `scripts/validate-repository-baseline.mjs`, WG-ARCH-001 §27.
+
+### DEMO-361 — [TEST] Bind controlled PR identity and queue sequence
+
+- Dependency: DEMO-360 merged.
+- Why: Exact-head CI currently validates PR title but not the complete branch/head/range identity, and active-plan validation does not yet enforce the next controlled ID strongly enough for the common process.
+- Scope: Add deterministic rules/tests binding branch `demo-NNN-...`, PR title, exact head controlled commit ID/type, one controlled commit in the PR range, first-open-task/next-ID selection, same-delivery task retirement and blocked-head behavior.
+- Preserve: Pre-controlled legacy history and published merge history; no history rewrite.
+- Non-goals: No provider merge-policy mutation yet.
+- Acceptance: Duplicate/out-of-sequence IDs, branch/title/head mismatch, multiple controlled commits, retained delivered task blocks and skipped blocked-head selection fail focused validation.
+- Validation: Disposable Git/plan fixtures; `npm run check`; exact-head CI; patch whitespace.
+- Authorities: `AGENTS.md`, history/plan validators, CI change-id boundary.
+
+### DEMO-362 — [BUILD] Standardize the GitHub settings CLI and desired policy
+
+- Dependency: DEMO-361 merged.
+- Why: The architecture repo has settings-as-code but not the shared test / read-only verify / explicit apply CLI contract, and its committed policy still encodes merge-commit-only delivery.
+- Scope: Expose `test:github-settings`, `verify:github-settings` and `apply:github-settings`. Update desired policy to the organization standard: squash-only single-commit delivery, merged-branch deletion, branch updates where supported, strict/current-head required status checks, protected `main`, immutable `v*` tags and a protected production deployment boundary. Add pure comparison cases for material rule parameters.
+- Non-goals: No live provider mutation in this task.
+- Acceptance: Pure tests are credential-free; verify is read-only; apply is explicit/idempotent; committed expectations detect drift in merge modes, status-check strictness, rule conditions and production protections.
+- Validation: Settings/CLI fixtures; `npm run check`; patch whitespace.
+- Authorities: `config/github-repository-settings.json`, provider scripts/tests, shared settings contract.
+
+### DEMO-363 — [OPS] Apply and verify the shared live provider policy
+
+- Dependency: DEMO-362 merged.
+- Why: The reference repository cannot remain on a different merge/provider model while downstream repositories adopt the common standard.
+- Scope: Re-fetch live provider state, apply the committed policy through the explicit apply path, then verify squash-only merging, protected `main`, strict required `validate`/controlled-identity checks, merged-branch cleanup, branch updates where supported, immutable `v*` tags and production-environment restrictions.
+- Non-goals: No visibility change, tag creation, GitHub Release publication or production deployment.
+- Acceptance: Live provider state matches committed expectations. Any unavailable provider capability remains an explicit blocker rather than a claimed success.
+- Validation: Provider reads before/after; `npm run verify:github-settings`; `npm run check`; exact-head and merged-main CI.
+- Authorities: live GitHub provider state and committed settings authority.
+
+### DEMO-364 — [FIX] Repair exact release reproduction command ownership
+
+- Dependency: DEMO-363 merged.
+- Why: The current release workflow calls `npm run security:dependencies`, while the repository's canonical network advisory command is `security:dependency-advisories`.
+- Scope: Repair the release reproduction path to invoke the current named advisory gate exactly once, preserve credential-free `check`, keep annotated semantic tag/package/commit identity checks and retain GitHub Release publication before deployment.
+- Non-goals: No version bump, tag creation, GitHub Release publication or deployment in this task.
+- Acceptance: Release workflow contract tests prove the tagged reproduction command set is executable from current `package.json` and no stale command name remains.
+- Validation: Release workflow tests; `npm run check`; explicit network advisory command; exact-head CI; patch whitespace.
+- Authorities: `.github/workflows/release.yml`, `package.json`, `docs/RELEASE-MANAGEMENT.md`.
+
+### DEMO-365 — [BUILD] Bind every production deploy to one published immutable release
+
+- Dependency: DEMO-364 merged.
+- Why: Manual deployment accepts an arbitrary input ref and raw `npm run deploy` can publish an arbitrary checkout.
+- Scope: Remove or fail-close the raw arbitrary-checkout production command; require deploy input to be exact `vMAJOR.MINOR.PATCH`; prove requested ref equals the annotated tag at HEAD; require package version match; require the corresponding GitHub Release already exists and identifies the same tag/commit before any production mutation. Preserve release-triggered deployment and intentional published-tag recovery.
+- Non-goals: No alternate hosting provider, tag rewrite, release publication or production deployment during implementation.
+- Acceptance: Branch/SHA/lightweight/unpublished/mismatched-tag inputs cannot deploy; a previously published immutable release can still be intentionally redeployed.
+- Validation: Deploy-boundary fixtures/workflow tests; Wrangler dry run; `npm run check`; exact-head CI; patch whitespace.
+- Authorities: `.github/workflows/deploy.yml`, release identity scripts, `docs/RELEASE-MANAGEMENT.md`.
+
+### DEMO-366 — [TEST] Prove release-to-deployment identity and provider version
+
+- Dependency: DEMO-365 merged.
+- Why: The reference process should prove both public application identity and the provider-side deployed version/traffic state for the exact published release.
+- Scope: Add focused regression tests for release -> publication -> deploy ordering, exact requested tag/package/commit continuity and provider deployment-version confirmation. Preserve existing public version/health/identity/browser-asset verification.
+- Non-goals: No release solely to satisfy this test task.
+- Acceptance: Deployment cannot bypass publication, cannot substitute another tag/commit, and verification fails when Cloudflare provider version/traffic evidence does not match the deployment result.
+- Validation: Focused workflow/process tests; `npm run check`; provider evidence on the next real deployment.
+- Authorities: release/deploy workflows, Cloudflare deployment evidence, public operations identity endpoints.
+
+### DEMO-367 — [SEC] Extend secret safety across public Git history
+
+- Dependency: DEMO-366 merged.
+- Why: Current-tree secret scanning is narrower than the public-history safety boundary already proven in sibling repositories.
+- Scope: Add bounded public-history blob/path scanning for secret-like material while preserving current worker-secret names and assurance controls. Keep known-safe fixtures explicit and narrow.
+- Non-goals: No secret rotation unless fresh evidence finds an exposed credential; no scanning of unrelated external repositories.
+- Acceptance: A secret-like value committed anywhere in reachable public history is detected by focused fixtures without dumping sensitive content into logs.
+- Validation: Security fixtures; `npm run check`; exact-head CI; patch whitespace.
+- Authorities: current security validator, Git object/history semantics, public repository boundary.
+
+### DEMO-368 — [DOCS] Complete reference-process parity acceptance
+
+- Dependency: DEMO-367 merged.
+- Why: The upstream process authority should finish with one fresh proof that all shared semantics now agree.
+- Scope: Re-audit shared Node/npm, safe `dev`, universal/reference baseline split, controlled history/PR identity, canonical `check`, network advisory gate, patch integrity, exact-head/main CI, squash-only provider policy, settings CLI, branch cleanup, immutable tags, exact release reproduction, GitHub Release authority, release-only production deployment, Cloudflare provider/public identity verification and public-history secret safety. Reconcile current-state docs only and delete `IMPLEMENTATION_PLAN.md` when all applicable evidence is green.
+- Non-goals: No product feature, version bump, tag creation, release publication or production deployment solely for the audit.
+- Acceptance: Fresh repository/provider evidence shows the architecture demo is a coherent common process reference with no remaining active implementation queue.
+- Validation: `npm ci`; `npm run check`; `npm run security:dependency-advisories`; provider verification; release/deploy evidence; exact-head/main CI; patch whitespace.
+- Authorities: current repository state, live GitHub/Cloudflare state and WG-ARCH-001 §27.
+
+## Target process
+
+Controlled delivery after convergence:
+
+`branch -> one controlled DEMO commit -> PR -> npm ci -> npm run check -> network advisory + committed-patch CI gates -> exact-head CI -> squash merge -> merged-main CI -> automatic branch cleanup`
+
+Release/deployment:
+
+`reviewed main -> version change -> annotated vX.Y.Z -> reproduce exact tag -> GitHub Release -> deploy exact published tag -> verify Cloudflare version/traffic + public release/commit identity`
+
+## Recheck after this wave
+
+After DEMO-368, perform a fresh cross-repository comparison before reserving more IDs. Downstream repositories may implement the universal process with capability-specific N/A boundaries; they must not copy reference-stack requirements they do not own.
