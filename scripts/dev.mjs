@@ -6,18 +6,35 @@ import {
   observeDevelopmentProcesses,
   stopCheckoutOwnedDevelopmentProcesses,
 } from './lib/dev-process-cleanup.mjs';
+import {
+  DEVELOPMENT_HOST,
+  DEVELOPMENT_PORT,
+  openDevelopmentBrowser,
+  resolveDevelopmentOptions,
+  waitForDevelopmentReady,
+} from './lib/dev-readiness.mjs';
 
 const checkoutRoot = realpathSync(process.cwd());
 const ownerIdentity = observeDevelopmentProcesses().find(({ pid }) => pid === process.pid);
 if (!ownerIdentity?.startToken) throw new Error('Cannot establish development coordinator process identity.');
 const owner = { ...ownerIdentity, cwd: checkoutRoot };
+const development = resolveDevelopmentOptions();
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const children = [
   spawn(npm, ['exec', '--', 'vite', 'build', '--watch'], {
     env: { ...process.env, ASSET_MANIFEST_WRITE: '1' },
     stdio: 'inherit',
   }),
-  spawn(npm, ['exec', '--', 'wrangler', 'dev'], { stdio: 'inherit' }),
+  spawn(npm, [
+    'exec',
+    '--',
+    'wrangler',
+    'dev',
+    '--ip',
+    DEVELOPMENT_HOST,
+    '--port',
+    String(DEVELOPMENT_PORT),
+  ], { stdio: 'inherit' }),
 ];
 
 async function registerRoot(child) {
@@ -83,3 +100,24 @@ for (const child of children) {
     void stop();
   });
 }
+
+async function reportReadiness() {
+  try {
+    const readyUrl = await waitForDevelopmentReady({
+      url: development.url,
+      isCancelled: () => stopping,
+    });
+    if (!readyUrl) return;
+    console.log(`Development ready: ${readyUrl}`);
+    if (development.openBrowser && !(await openDevelopmentBrowser(readyUrl))) {
+      console.warn(`Browser opening unavailable; continue at ${readyUrl}`);
+    }
+  } catch (error) {
+    if (stopping) return;
+    console.error(error instanceof Error ? error.message : error);
+    process.exitCode = 1;
+    await stop();
+  }
+}
+
+void reportReadiness();
