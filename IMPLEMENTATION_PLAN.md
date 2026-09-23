@@ -20,20 +20,9 @@ Current observed process facts that motivate this wave:
 
 ## Open tasks
 
-### DEMO-357 — [FIX] Stop checkout-owned development process trees
-
-- Dependency: DEMO-356 planning refresh merged.
-- Why: Direct-child signaling can leave Vite/Wrangler descendants alive; DEMO-355 established the ownership decision needed to stop only this checkout's processes safely.
-- Scope: Collect stored target identity plus fresh target-to-coordinator lineage, then apply the existing owned-process decision immediately before signaling each target on interrupt, termination and startup failure. Add focused cleanup cases.
-- Preserve: Existing startup semantics, port ownership rules and foreign-process safety.
-- Non-goals: No foreign port-owner termination, output reset, browser launch, deployment or production change.
-- Acceptance: Only process trees rooted in the current canonical checkout coordinator are signaled; stale/incomplete/foreign evidence is never signaled; startup failure leaves no owned descendant.
-- Validation: Focused lifecycle tests; manual `npm run dev` start/stop where prerequisites exist; `npm run check`; base-aware patch whitespace.
-- Authorities: `scripts/dev.mjs`, `scripts/lib/dev-process-identity.mjs`, WG-ARCH-001 §27.
-
 ### DEMO-358 — [BUILD] Finish the shared local-development entry point
 
-- Dependency: DEMO-357 merged.
+- Dependency: DEMO-357 planning normalization merged.
 - Why: Process ownership is strong, but the upstream reference should also demonstrate bounded readiness reporting and an optional headless-safe browser-open path through the same checkout-owned `npm run dev` lifecycle.
 - Scope: Add bounded readiness/URL reporting and optional browser opening without changing default cloud/headless behavior. Reuse current lifecycle ownership rather than adding a second runner.
 - Non-goals: No production deployment, port stealing, desktop-only dependency or product-route change.
@@ -86,7 +75,7 @@ Current observed process facts that motivate this wave:
 
 - Dependency: DEMO-362 merged.
 - Why: The reference repository cannot remain on a different merge/provider model while downstream repositories adopt the common standard.
-- Scope: Re-fetch live provider state, apply the committed policy through the explicit apply path, then verify squash-only merging, protected `main`, strict required `validate`/controlled-identity checks, merged-branch cleanup, branch updates where supported, immutable `v*` tags and production-environment restrictions.
+- Scope: Re-fetch live provider state, apply the committed policy through the explicit apply path, then verify squash-only merging, protected `main`, strict required `validate`/controlled-identity checks, merged-branch cleanup, branch updates where supported, immutable `v*` tags and production-environment restrictions. Remove stale merged/superseded `demo-*` branches only after proving they contain no unique deliverable work.
 - Non-goals: No visibility change, tag creation, GitHub Release publication or production deployment.
 - Acceptance: Live provider state matches committed expectations. Any unavailable provider capability remains an explicit blocker rather than a claimed success.
 - Validation: Provider reads before/after; `npm run verify:github-settings`; `npm run check`; exact-head and merged-main CI.
