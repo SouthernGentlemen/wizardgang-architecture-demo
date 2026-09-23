@@ -18,16 +18,6 @@ Current observed process facts that motivate this wave:
 
 ## Open tasks
 
-### DEMO-358 — [BUILD] Finish the shared local-development entry point
-
-- Dependency: DEMO-357 planning normalization merged.
-- Why: Process ownership is strong, but the upstream reference should also demonstrate bounded readiness reporting and an optional headless-safe browser-open path through the same checkout-owned `npm run dev` lifecycle.
-- Scope: Add bounded readiness/URL reporting and optional browser opening without changing default cloud/headless behavior. Reuse current lifecycle ownership rather than adding a second runner.
-- Non-goals: No production deployment, port stealing, desktop-only dependency or product-route change.
-- Acceptance: `npm run dev` remains safe in headless/cloud use, reports a deterministic ready URL, optional browser opening fails harmlessly when unavailable, and shutdown still owns the whole process tree.
-- Validation: Focused lifecycle cases; real start/readiness/stop smoke where available; `npm run check`; patch whitespace.
-- Authorities: `scripts/dev.mjs`, README/current dev docs, WG-ARCH-001 §27.
-
 ### DEMO-359 — [BUILD] Align Node and npm with the shared baseline
 
 - Dependency: DEMO-358 merged.
