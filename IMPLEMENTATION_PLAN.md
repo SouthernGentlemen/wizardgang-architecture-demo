@@ -9,8 +9,6 @@ Keep credential-free repository acceptance, network-dependent dependency advisor
 Current observed process facts that motivate this wave:
 
 - repository toolchain authority is Node 26.7.0 with npm 11.19.0 and must be reconciled with the current shared baseline rather than treated as permanently canonical;
-- the live provider is merge-commit-only even though downstream normalization is converging on single-commit squash delivery;
-- required status checks exist, but the provider/settings comparison does not yet prove strict/current-head behavior;
 - exact-head CI validates the PR title but does not yet bind branch name, head controlled commit identity and one-controlled-commit range together;
 - the portable repository-baseline validator still mixes universal process requirements with this reference stack's TypeScript/React/Vite/Vitest/Wrangler capabilities;
 - the release workflow calls `npm run security:dependencies` while the current package command is `security:dependency-advisories`;
@@ -61,29 +59,9 @@ Current observed process facts that motivate this wave:
 - Validation: Disposable Git/plan fixtures; `npm run check`; exact-head CI; patch whitespace.
 - Authorities: `AGENTS.md`, history/plan validators, CI change-id boundary.
 
-### DEMO-362 — [BUILD] Standardize the GitHub settings CLI and desired policy
-
-- Dependency: DEMO-361 merged.
-- Why: The architecture repo has settings-as-code but not the shared test / read-only verify / explicit apply CLI contract, and its committed policy still encodes merge-commit-only delivery.
-- Scope: Expose `test:github-settings`, `verify:github-settings` and `apply:github-settings`. Update desired policy to the organization standard: squash-only single-commit delivery, merged-branch deletion, branch updates where supported, strict/current-head required status checks, protected `main`, immutable `v*` tags and a protected production deployment boundary. Add pure comparison cases for material rule parameters.
-- Non-goals: No live provider mutation in this task.
-- Acceptance: Pure tests are credential-free; verify is read-only; apply is explicit/idempotent; committed expectations detect drift in merge modes, status-check strictness, rule conditions and production protections.
-- Validation: Settings/CLI fixtures; `npm run check`; patch whitespace.
-- Authorities: `config/github-repository-settings.json`, provider scripts/tests, shared settings contract.
-
-### DEMO-363 — [OPS] Apply and verify the shared live provider policy
-
-- Dependency: DEMO-362 merged.
-- Why: The reference repository cannot remain on a different merge/provider model while downstream repositories adopt the common standard.
-- Scope: Re-fetch live provider state, apply the committed policy through the explicit apply path, then verify squash-only merging, protected `main`, strict required `validate`/controlled-identity checks, merged-branch cleanup, branch updates where supported, immutable `v*` tags and production-environment restrictions. Remove stale merged/superseded `demo-*` branches only after proving they contain no unique deliverable work.
-- Non-goals: No visibility change, tag creation, GitHub Release publication or production deployment.
-- Acceptance: Live provider state matches committed expectations. Any unavailable provider capability remains an explicit blocker rather than a claimed success.
-- Validation: Provider reads before/after; `npm run verify:github-settings`; `npm run check`; exact-head and merged-main CI.
-- Authorities: live GitHub provider state and committed settings authority.
-
 ### DEMO-364 — [FIX] Repair exact release reproduction command ownership
 
-- Dependency: DEMO-363 merged.
+- Dependency: DEMO-362 merged and live GitHub settings verified.
 - Why: The current release workflow calls `npm run security:dependencies`, while the repository's canonical network advisory command is `security:dependency-advisories`.
 - Scope: Repair the release reproduction path to invoke the current named advisory gate exactly once, preserve credential-free `check`, keep annotated semantic tag/package/commit identity checks and retain GitHub Release publication before deployment.
 - Non-goals: No version bump, tag creation, GitHub Release publication or deployment in this task.
