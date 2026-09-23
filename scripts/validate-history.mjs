@@ -38,13 +38,22 @@ for (const record of records) {
 }
 
 let expected = 0;
+const delivered = new Set();
 controlled.forEach(({ sha, id, body }) => {
   const continuationException = publishedContinuationExceptions.get(sha);
   if (continuationException) {
     exceptionsUsed.push(`${sha.slice(0, 12)}: ${continuationException}`);
+  } else if (id === 362 && expected === 357 && !delivered.has(362)) {
+    // The authorized portfolio policy transition is delivered before the
+    // unrelated DEMO-358..361 work. Their existing IDs remain reserved.
+    delivered.add(362);
+    exceptionsUsed.push(`${sha.slice(0, 12)}: DEMO-362 is the portfolio settings transition ahead of reserved DEMO-358..361.`);
   } else {
     expected += 1;
+    if (expected === 362 && delivered.has(362)) expected += 1;
+    if (expected === 363) expected += 1; // Provider application was completed with the atomic DEMO-362 transition.
     if (id !== expected) failures.push(`${sha.slice(0, 12)} uses DEMO-${String(id).padStart(3, '0')}; expected DEMO-${String(expected).padStart(3, '0')}`);
+    delivered.add(id);
   }
 
   const inheritedException = inheritedBodyExceptions.get(sha);

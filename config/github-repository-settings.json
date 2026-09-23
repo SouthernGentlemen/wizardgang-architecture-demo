@@ -1,70 +1,31 @@
 {
-  "schemaVersion": 1,
   "repository": "SouthernGentlemen/wizardgang-architecture-demo",
-  "repositorySettings": {
-    "allowMergeCommit": true,
-    "allowSquashMerge": false,
-    "allowRebaseMerge": false,
-    "deleteBranchOnMerge": true
-  },
-  "rulesets": [
-    {
+  "defaultBranch": "main",
+  "mergeMethods": { "mergeCommit": false, "squash": true, "rebase": false },
+  "deleteBranchOnMerge": true,
+  "rulesets": {
+    "main": {
       "name": "Protect main",
       "target": "branch",
       "enforcement": "active",
-      "conditions": {
-        "include": [
-          "refs/heads/main"
-        ],
-        "exclude": []
-      },
+      "include": ["refs/heads/main"],
+      "exclude": [],
       "bypassActors": [],
-      "rules": [
-        {
-          "type": "deletion"
-        },
-        {
-          "type": "non_fast_forward"
-        },
-        {
-          "type": "pull_request",
-          "parameters": {
-            "requiredApprovingReviewCount": 0,
-            "allowedMergeMethods": [
-              "merge"
-            ]
-          }
-        },
-        {
-          "type": "required_status_checks",
-          "parameters": {
-            "requiredStatusChecks": [
-              "change-id",
-              "validate"
-            ]
-          }
-        }
-      ]
+      "requireBranchUpToDate": true,
+      "requireExtraApprovalForUnattributedChanges": true,
+      "requiredReviewThreadResolution": false,
+      "doNotEnforceOnCreate": false,
+      "requiredRules": ["deletion", "non_fast_forward", "pull_request", "required_status_checks"],
+      "requiredStatusChecks": ["validate", "change-id"]
     },
-    {
+    "releaseTags": {
       "name": "Protect release tags",
       "target": "tag",
       "enforcement": "active",
-      "conditions": {
-        "include": [
-          "refs/tags/v*"
-        ],
-        "exclude": []
-      },
+      "include": ["refs/tags/v*"],
+      "exclude": [],
       "bypassActors": [],
-      "rules": [
-        {
-          "type": "deletion"
-        },
-        {
-          "type": "update"
-        }
-      ]
+      "requiredRules": ["deletion", "update"]
     }
-  ]
+  }
 }

@@ -357,7 +357,7 @@ Local dependency-advisory queries may need registry network access even though t
 - `main` is the default branch.
 - A `main` ruleset requires a pull request and the CI status checks, and blocks force pushes and deletion.
 - A `v*` tag ruleset blocks updates and deletion.
-- The permitted merge method is declared per repository, not inferred from another product. This repository currently requires merge commits; a squash-only repository may instead land one controlled commit when its validator and provider policy agree. Do not weaken protections or rewrite published history merely to change the style.
+- Controlled PRs use squash-only merging, retaining one permanent controlled commit on `main`. The merge methods derive from each repository's committed settings authority. Do not weaken protections or rewrite published history.
 - The expected settings are committed, for example in `config/github-repository-settings.json`; pure comparison tests run credential-free, while a documented live command verifies provider state. Changes to provider settings require explicit controlled work and verification.
 
 **Release.**
