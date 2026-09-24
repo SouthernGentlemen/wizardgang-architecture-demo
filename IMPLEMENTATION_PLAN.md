@@ -18,19 +18,9 @@ Current observed process facts that motivate this wave:
 
 ## Open tasks
 
-### DEMO-359 — [BUILD] Align Node and npm with the shared baseline
-
-- Dependency: DEMO-358 merged.
-- Why: The architecture demo currently pins Node 26.7.0 and npm 11.19.0; the shared organization baseline must be a current common authority rather than a historical reference-repo pin.
-- Scope: Re-fetch the current shared Node/npm baseline and update `.node-version`, exact `packageManager`, engine policy, npm policy, lockfile metadata, CI/release/deploy setup and current documentation together.
-- Non-goals: No unrelated dependency-upgrade wave, release or deployment.
-- Acceptance: Local acceptance, PR/main CI, release reproduction and deployment all resolve the same exact shared Node/npm pair and toolchain drift fails clearly.
-- Validation: Toolchain-focused tests; `npm ci`; `npm run check`; exact-head CI; patch whitespace.
-- Authorities: current organization baseline, `.node-version`, `package.json`, `.npmrc`, workflows.
-
 ### DEMO-360 — [REFACTOR] Split universal process checks from reference-stack checks
 
-- Dependency: DEMO-359 merged.
+- Dependency: none; first open task.
 - Why: `validate-repository-baseline` is presented as portable but currently requires this repository's Worker/React/Vite/Vitest/browser/release capabilities.
 - Scope: Introduce an explicit repository capability declaration, extract the truly universal process contract, add non-Worker/non-React fixtures, and keep reference-stack validation as a separate layer.
 - Non-goals: No weakening of this repository's own TypeScript/React/Vite/Vitest/Wrangler controls and no downstream repository mutation.
