@@ -9,6 +9,10 @@ const inheritedBodyExceptions = new Map([
     '207fd4e146054bd3c9da236c615753df9f927610',
     'DEMO-125 was published on main with a valid controlled title but without the required structured body sections; published history is intentionally not rewritten.',
   ],
+  [
+    '80590b8c367e8d927c2861902182e79eccd41dda',
+    'DEMO-359 was squash-merged with a valid controlled title but its squash body omitted the required structured sections; merged main is preserved and the post-merge failure is recorded instead of rewriting history.',
+  ],
 ]);
 const publishedContinuationExceptions = new Map([
   [
