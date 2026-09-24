@@ -75,7 +75,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GIT_DEMO_PR_TOKEN }}
         run: |
-          active="$(gh pr list --state open --limit 100 --json number,headRefName --jq '[.[] | select(.headRefName | startswith("demo/live-v"))][0].number // empty')"
+          active="$(gh pr list --state open --limit 100 --json number,headRefName --jq '[.[] | select(.headRefName | test("^demo-[0-9]+-live-v"))][0].number // empty')"
           if [ -n "$active" ]; then
             echo "::error::Live release demonstration already active: PR #$active"
             exit 1
@@ -105,7 +105,7 @@ jobs:
             current: pkg.version,
             version,
             change_id: changeId,
-            branch: `demo/live-v${version}-${shortId}`,
+            branch: `demo-${changeId.slice(5)}-live-v${version}-${shortId}`,
           };
           fs.appendFileSync(process.env.GITHUB_OUTPUT, Object.entries(values).map(([key, value]) => `${key}=${value}\n`).join(''));
           NODE

@@ -11,24 +11,12 @@ Keep credential-free repository acceptance, network-dependent dependency advisor
 Current observed process facts that motivate this wave:
 
 - repository toolchain authority is Node 26.9.0 with npm 11.19.1 and is now aligned to the current shared baseline; exact patch drift is rejected before locked installation;
-- exact-head CI validates the PR title but does not yet bind branch name, head controlled commit identity and one-controlled-commit range together;
 - the release workflow calls `npm run security:dependencies` while the current package command is `security:dependency-advisories`;
 - raw `npm run deploy` still exposes arbitrary-checkout Wrangler deployment;
 - manual deployment accepts a `ref` and proves an exact tag at HEAD, but does not yet bind the requested ref, package version and existing GitHub Release into one immutable deployment identity;
 - current-tree secret scanning is narrower than the strongest public-history safety boundary already used by sibling repositories.
 
 ## Open tasks
-
-### DEMO-364 — [TEST] Bind controlled PR identity and queue sequence
-
-- Dependency: none; first open task.
-- Why: Exact-head CI currently validates PR title but not the complete branch/head/range identity, and active-plan validation does not yet enforce the next controlled ID strongly enough for the common process.
-- Scope: Add deterministic rules/tests binding branch `demo-NNN-...`, PR title, exact head controlled commit ID/type, one controlled commit in the PR range, first-open-task/next-ID selection, same-delivery task retirement and blocked-head behavior.
-- Preserve: Pre-controlled legacy history and published merge history; no history rewrite.
-- Non-goals: No provider merge-policy mutation yet.
-- Acceptance: Duplicate/out-of-sequence IDs, branch/title/head mismatch, multiple controlled commits, retained delivered task blocks and skipped blocked-head selection fail focused validation.
-- Validation: Disposable Git/plan fixtures; `npm run check`; exact-head CI; patch whitespace.
-- Authorities: `AGENTS.md`, history/plan validators, CI change-id boundary.
 
 ### DEMO-365 — [FIX] Repair exact release reproduction command ownership
 

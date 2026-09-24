@@ -38,12 +38,17 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - name: Validate pull-request title
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .node-version
+      - name: Validate controlled PR identity and queue sequence
         env:
-          TITLE: ${{ github.event.pull_request.title }}
-        run: |
-          pattern='^\[DEMO-[0-9]{3,}\] \[(INIT|FEAT|FIX|SEC|API|A11Y|I18N|AI|DB|OPS|TEST|DOCS|REFACTOR|PERF|BUILD|REVERT|CHORE)\] .+'
-          if ! printf '%s' "$TITLE" | grep -Eq "$pattern"; then
-            echo "::error::Title must match [DEMO-###] [TYPE] <imperative summary>"
-            exit 1
-          fi
+          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: npm run validate:pull-request-identity
