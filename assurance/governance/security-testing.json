@@ -199,7 +199,7 @@
       "fields": {
         "category": "Dependency",
         "testControl": "`npm audit --audit-level=high`",
-        "currentEvidence": "CI `security:dependencies`",
+        "currentEvidence": "CI `security:dependency-advisories`",
         "status": "Active",
         "triggerCadence": "PR / main CI",
         "currentLimitationNextAction": "Does not cover all supply-chain or lower-severity risks"
