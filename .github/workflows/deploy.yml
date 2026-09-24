@@ -221,6 +221,35 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WRANGLER_OUTPUT_FILE_PATH: ${{ runner.temp }}/wrangler-deploy.ndjson
+      - name: Verify Cloudflare deployed version and traffic
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WRANGLER_DEPLOY_OUTPUT: ${{ runner.temp }}/wrangler-deploy.ndjson
+          CLOUDFLARE_DEPLOYMENT_STATUS: ${{ runner.temp }}/cloudflare-deployment-status.json
+          EXPECTED_WORKER_NAME: wizardgang-architecture-demo
+        run: |
+          set -euo pipefail
+          verified=false
+          for attempt in $(seq 1 12); do
+            npx wrangler deployments status --name "$EXPECTED_WORKER_NAME" --json > "$CLOUDFLARE_DEPLOYMENT_STATUS"
+            if node scripts/verify-cloudflare-deployment.mjs \
+              --deploy-output "$WRANGLER_DEPLOY_OUTPUT" \
+              --deployment-status "$CLOUDFLARE_DEPLOYMENT_STATUS" \
+              --worker "$EXPECTED_WORKER_NAME"; then
+              verified=true
+              break
+            fi
+            if [[ "$attempt" -lt 12 ]]; then
+              echo "Cloudflare deployment evidence not settled on attempt $attempt/12; retrying."
+              sleep 5
+            fi
+          done
+          if [[ "$verified" != "true" ]]; then
+            echo "::error::Cloudflare deployment status did not identify the Wrangler deployment result at 100% traffic."
+            exit 1
+          fi
       - name: Verify public version, health, and identity continuity
         env:
           EXPECTED_VERSION: ${{ steps.release.outputs.version }}

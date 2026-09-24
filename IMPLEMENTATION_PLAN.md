@@ -15,16 +15,6 @@ Current observed process facts that motivate this wave:
 
 ## Open tasks
 
-### DEMO-367 — [TEST] Prove release-to-deployment identity and provider version
-
-- Dependency: DEMO-366 merged.
-- Why: The reference process should prove both public application identity and the provider-side deployed version/traffic state for the exact published release.
-- Scope: Add focused regression tests for release -> publication -> deploy ordering, exact requested tag/package/commit continuity and provider deployment-version confirmation. Preserve existing public version/health/identity/browser-asset verification.
-- Non-goals: No release solely to satisfy this test task.
-- Acceptance: Deployment cannot bypass publication, cannot substitute another tag/commit, and verification fails when Cloudflare provider version/traffic evidence does not match the deployment result.
-- Validation: Focused workflow/process tests; `npm run check`; provider evidence on the next real deployment.
-- Authorities: release/deploy workflows, Cloudflare deployment evidence, public operations identity endpoints.
-
 ### DEMO-368 — [SEC] Extend secret safety across public Git history
 
 - Dependency: DEMO-367 merged.

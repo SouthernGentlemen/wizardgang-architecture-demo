@@ -40,7 +40,8 @@ Historical release notes are read from GitHub Releases. Superseded repository st
 isolated branch -> controlled commit -> pull request -> CI -> review -> merge to main
                 -> annotated semantic tag -> reproduce exact tag
                 -> GitHub Release + assurance snapshot
-                -> deploy exact tag -> verify /api/operations/version and /api/operations/health
+                -> deploy exact tag -> verify Cloudflare Worker version / 100% traffic
+                -> verify /api/operations/version and /api/operations/health
                 -> deployment record
 ```
 
@@ -61,7 +62,8 @@ The deploy workflow then:
 - verifies required production Worker secret names before any migration;
 - captures the live identity-provider baseline before production mutation;
 - applies pending D1 migrations only after preflight checks pass;
-- deploys the exact tagged Worker source with version and commit identity;
+- deploys the exact tagged Worker source with version and commit identity while capturing Wrangler's structured deployment result;
+- requires Cloudflare's current deployment status to identify that exact Worker Version ID as the sole version receiving 100% of production traffic;
 - verifies the public version and exact commit;
 - verifies Worker health and identity readiness;
 - verifies previously configured identity providers remain configured.
