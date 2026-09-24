@@ -26,6 +26,8 @@ Route retirement does not remove the operational system. The following remain in
 - protected `/admin` and recovery `/offline` pages;
 - crawler controls, `robots.txt`, `/.well-known/security.txt`, assets, and the sitemap protocol route.
 
+Cloudflare Worker Version IDs and production traffic allocations are provider-side deployment evidence. The deployment workflow binds that evidence to Wrangler's structured deploy result before it accepts the public version, health, identity, and browser-asset checks; provider IDs are not added to the public operations API.
+
 Interactive health reads remain read-only. Identity readiness is informational and does not change the existing health status or HTTP status-code semantics. Scheduled five-minute observations are the measured availability evidence and records older than 365 days are purged by the existing collector behavior.
 
 The public log API returns only the identity log envelope needed for bounded diagnostics; structured identity detail is withheld. Identity audit-event payload detail is likewise excluded from public event projections. Subject-derived audit identifiers and visitor sandbox namespaces are not retained in application-log detail.

@@ -24,11 +24,11 @@ describe('DEMO-366 post-merge history recovery', () => {
     expect(history).toContain('boundedRecovery.id === id');
   });
 
-  it('keeps DEMO-367 as the first active queued task', () => {
+  it('keeps DEMO-366 retired without freezing its successor into recovery acceptance', () => {
     const plan = read('IMPLEMENTATION_PLAN.md');
     const headings = [...plan.matchAll(/^### (DEMO-\d{3,}) —/gm)].map((match) => match[1]);
-    expect(headings[0]).toBe('DEMO-367');
-    expect(headings).toEqual(['DEMO-367', 'DEMO-368', 'DEMO-369', 'DEMO-371']);
+    expect(headings).not.toContain('DEMO-366');
+    expect(headings.every((id) => Number(id.slice('DEMO-'.length)) > 366)).toBe(true);
     expect(plan).not.toMatch(/^### DEMO-366 —/m);
   });
 
