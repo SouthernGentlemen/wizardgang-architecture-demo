@@ -13,6 +13,10 @@ const inheritedBodyExceptions = new Map([
     '80590b8c367e8d927c2861902182e79eccd41dda',
     'DEMO-359 was squash-merged with a valid controlled title but its squash body omitted the required structured sections; merged main is preserved and the post-merge failure is recorded instead of rewriting history.',
   ],
+  [
+    '4ec192c10dfefd9d119ac223ae599b7db948524c',
+    'DEMO-366 was squash-merged with a valid controlled title but its squash body omitted Reason, Risk, and Source; merged main is preserved and post-merge CI #1370 is recorded instead of rewriting history.',
+  ],
 ]);
 const publishedContinuationExceptions = new Map([
   [
@@ -22,6 +26,16 @@ const publishedContinuationExceptions = new Map([
   [
     'e79f108224612ff48946c2905318010ad5b14a91',
     'DEMO-225 was merged after DEMO-225 through DEMO-228 had already shipped; the late-merged presentation commit retains its published identity but does not consume another sequential change ID.',
+  ],
+]);
+const boundedRecoveryContinuations = new Map([
+  [
+    '4ec192c10dfefd9d119ac223ae599b7db948524c',
+    {
+      id: 366,
+      marker: 'Post-Merge-Recovery: 4ec192c10dfefd9d119ac223ae599b7db948524c',
+      reason: 'The one direct child of the immutable malformed DEMO-366 squash commit is its bounded post-merge history-metadata recovery and does not consume DEMO-367.',
+    },
   ],
 ]);
 const controlled = [];
@@ -39,15 +53,21 @@ for (const record of records) {
     failures.push(`${sha.slice(0, 12)} has an invalid controlled title: ${subject}`);
     continue;
   }
-  controlled.push({ sha, id: Number(match[1]), body });
+  controlled.push({ sha, parents: parents.trim().split(/\s+/).filter(Boolean), id: Number(match[1]), body });
 }
 
 let expected = 0;
 const delivered = new Set();
-controlled.forEach(({ sha, id, body }) => {
+controlled.forEach(({ sha, parents, id, body }) => {
   const continuationException = publishedContinuationExceptions.get(sha);
+  const boundedRecovery = parents.length === 1 ? boundedRecoveryContinuations.get(parents[0]) : null;
+  const isBoundedRecovery = boundedRecovery
+    && boundedRecovery.id === id
+    && body.split('\n').some((line) => line.trim() === boundedRecovery.marker);
   if (continuationException) {
     exceptionsUsed.push(`${sha.slice(0, 12)}: ${continuationException}`);
+  } else if (isBoundedRecovery) {
+    exceptionsUsed.push(`${sha.slice(0, 12)}: ${boundedRecovery.reason}`);
   } else if (id === 362 && expected === 357 && !delivered.has(362)) {
     // The authorized portfolio policy transition is delivered before the
     // unrelated DEMO-358..361 work. Their existing IDs remain reserved.
