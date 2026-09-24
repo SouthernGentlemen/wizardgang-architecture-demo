@@ -12,7 +12,6 @@ Current observed process facts that motivate this wave:
 
 - repository toolchain authority is Node 26.9.0 with npm 11.19.1 and is now aligned to the current shared baseline; exact patch drift is rejected before locked installation;
 - exact-head CI validates the PR title but does not yet bind branch name, head controlled commit identity and one-controlled-commit range together;
-- the portable repository-baseline validator still mixes universal process requirements with this reference stack's TypeScript/React/Vite/Vitest/Wrangler capabilities;
 - the release workflow calls `npm run security:dependencies` while the current package command is `security:dependency-advisories`;
 - raw `npm run deploy` still exposes arbitrary-checkout Wrangler deployment;
 - manual deployment accepts a `ref` and proves an exact tag at HEAD, but does not yet bind the requested ref, package version and existing GitHub Release into one immutable deployment identity;
@@ -20,19 +19,9 @@ Current observed process facts that motivate this wave:
 
 ## Open tasks
 
-### DEMO-361 — [REFACTOR] Split universal process checks from reference-stack checks
-
-- Dependency: none; first open task.
-- Why: `validate-repository-baseline` is presented as portable but currently requires this repository's Worker/React/Vite/Vitest/browser/release capabilities.
-- Scope: Introduce an explicit repository capability declaration, extract the truly universal process contract, add non-Worker/non-React fixtures, and keep reference-stack validation as a separate layer.
-- Non-goals: No weakening of this repository's own TypeScript/React/Vite/Vitest/Wrangler controls and no downstream repository mutation.
-- Acceptance: A minimal non-Worker repository can satisfy the universal process fixture without pretending to own reference-stack capabilities, while this repo still passes the stronger reference profile.
-- Validation: Baseline fixture suite; `npm run check`; patch whitespace.
-- Authorities: `scripts/validate-repository-baseline.mjs`, WG-ARCH-001 §27.
-
 ### DEMO-364 — [TEST] Bind controlled PR identity and queue sequence
 
-- Dependency: DEMO-361 merged.
+- Dependency: none; first open task.
 - Why: Exact-head CI currently validates PR title but not the complete branch/head/range identity, and active-plan validation does not yet enforce the next controlled ID strongly enough for the common process.
 - Scope: Add deterministic rules/tests binding branch `demo-NNN-...`, PR title, exact head controlled commit ID/type, one controlled commit in the PR range, first-open-task/next-ID selection, same-delivery task retirement and blocked-head behavior.
 - Preserve: Pre-controlled legacy history and published merge history; no history rewrite.

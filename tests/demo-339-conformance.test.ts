@@ -86,7 +86,7 @@ describe('DEMO-339 deliberate-regression proofs', () => {
   });
 
   it('rejects toolchain, command, root-file, and workflow baseline violations', () => {
-    const root = fixture(['README.md', 'AGENTS.md', 'CONTRIBUTING.md', 'SECURITY.md', 'LICENSE', '.gitignore', '.node-version', '.npmrc', 'package.json', 'package-lock.json', 'tsconfig.json', 'wrangler.jsonc', 'vite.config.ts', '.github/workflows/ci.yml', '.github/workflows/release.yml', 'scripts/ci-validation.mjs', 'scripts/lib/acceptance-plan.mjs', 'scripts/lib/ci-diagnostics.mjs']);
+    const root = fixture(['README.md', 'AGENTS.md', 'CONTRIBUTING.md', 'SECURITY.md', 'LICENSE', '.gitignore', '.node-version', '.npmrc', 'package.json', 'package-lock.json', 'config/repository-capabilities.json', 'tsconfig.json', 'wrangler.jsonc', 'vite.config.ts', '.github/workflows/ci.yml', '.github/workflows/release.yml', 'scripts/ci-validation.mjs', 'scripts/lib/acceptance-plan.mjs', 'scripts/lib/ci-diagnostics.mjs']);
     try {
       const validate = () => validateRepositoryBaseline(root);
       expect(validate()).toEqual([]);
