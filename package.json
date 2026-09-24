@@ -47,6 +47,7 @@
     "validate:migrations": "node scripts/validate-migrations.mjs",
     "verify:chromium": "node scripts/verify-chromium.mjs",
     "validate:ci": "node scripts/ci-validation.mjs",
+    "validate:pull-request-identity": "node scripts/validate-pull-request-identity.mjs",
     "validate:security": "node scripts/validate-security.mjs",
     "generate:routes": "ROUTE_ARTIFACTS_WRITE=1 vitest run tests/route-artifacts.test.ts",
     "validate:routes": "vitest run tests/route-artifacts.test.ts",
