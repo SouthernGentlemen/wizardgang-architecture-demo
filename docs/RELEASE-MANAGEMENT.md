@@ -52,6 +52,11 @@ The release workflow operates on an existing annotated semantic-version tag. Dep
 
 The deploy workflow then:
 
+- accepts only an exact requested `vMAJOR.MINOR.PATCH` tag;
+- requires release-triggered runs to retain that exact tag event, while manual recovery runs must use the current `main` deploy workflow;
+- proves the requested local ref is an annotated tag whose peeled commit is checked-out `HEAD` and whose version matches `package.json`;
+- requires an already-published, non-draft GitHub Release for that exact tag;
+- resolves the live GitHub tag ref and annotated tag object and requires their commit to equal checked-out `HEAD`;
 - installs the locked dependencies and validates the reviewed tagged source;
 - verifies required production Worker secret names before any migration;
 - captures the live identity-provider baseline before production mutation;
@@ -61,7 +66,7 @@ The deploy workflow then:
 - verifies Worker health and identity readiness;
 - verifies previously configured identity providers remain configured.
 
-A manual recovery deployment may select an already existing semantic tag; it does not deploy an arbitrary branch head. Repository and Worker credentials remain managed secrets and are documented by their owning security/identity configuration rather than duplicated in release prose.
+A manual recovery deployment may select an already published immutable semantic tag from the current `main` deploy workflow; it does not deploy an arbitrary branch head, raw SHA, lightweight tag, unpublished tag, or package/tag mismatch. The repository-level `npm run deploy` command is intentionally fail-closed so an arbitrary local checkout cannot use the package command as a production publish path. Repository and Worker credentials remain managed secrets and are documented by their owning security/identity configuration rather than duplicated in release prose.
 
 ### Worker secret preflight and provisioning
 

@@ -15,7 +15,7 @@
   },
   "scripts": {
     "dev": "npm run generate:assets && node scripts/dev.mjs",
-    "deploy": "wrangler deploy",
+    "deploy": "node scripts/refuse-production-deploy.mjs",
     "generate:assets": "ASSET_MANIFEST_WRITE=1 vite build",
     "validate:assets": "vite build",
     "build:client": "npm run generate:assets",
