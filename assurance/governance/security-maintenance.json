@@ -45,7 +45,7 @@
       "fields": {
         "area": "Dependency vulnerability audit",
         "currentState": "**Active**",
-        "evidenceBasis": "CI installs locked dependencies and runs `npm audit --audit-level=high` through `npm run security:dependencies`.",
+        "evidenceBasis": "CI installs locked dependencies and runs `npm audit --audit-level=high` through `npm run security:dependency-advisories`.",
         "currentGapNextAction": "Continue on PR/main validation; applicable findings still require triage, remediation, and closure evidence.",
         "owner": "Information Security Owner",
         "reviewTarget": "Every controlled CI run; monthly review summary"

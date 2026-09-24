@@ -11,22 +11,11 @@ Keep credential-free repository acceptance, network-dependent dependency advisor
 Current observed process facts that motivate this wave:
 
 - repository toolchain authority is Node 26.9.0 with npm 11.19.1 and is now aligned to the current shared baseline; exact patch drift is rejected before locked installation;
-- the release workflow calls `npm run security:dependencies` while the current package command is `security:dependency-advisories`;
 - raw `npm run deploy` still exposes arbitrary-checkout Wrangler deployment;
 - manual deployment accepts a `ref` and proves an exact tag at HEAD, but does not yet bind the requested ref, package version and existing GitHub Release into one immutable deployment identity;
 - current-tree secret scanning is narrower than the strongest public-history safety boundary already used by sibling repositories.
 
 ## Open tasks
-
-### DEMO-365 — [FIX] Repair exact release reproduction command ownership
-
-- Dependency: DEMO-364 merged; the DEMO-362 live GitHub settings baseline remains verified.
-- Why: The current release workflow calls `npm run security:dependencies`, while the repository's canonical network advisory command is `security:dependency-advisories`.
-- Scope: Repair the release reproduction path to invoke the current named advisory gate exactly once, preserve credential-free `check`, keep annotated semantic tag/package/commit identity checks and retain GitHub Release publication before deployment.
-- Non-goals: No version bump, tag creation, GitHub Release publication or deployment in this task.
-- Acceptance: Release workflow contract tests prove the tagged reproduction command set is executable from current `package.json` and no stale command name remains.
-- Validation: Release workflow tests; `npm run check`; explicit network advisory command; exact-head CI; patch whitespace.
-- Authorities: `.github/workflows/release.yml`, `package.json`, `docs/RELEASE-MANAGEMENT.md`.
 
 ### DEMO-366 — [BUILD] Bind every production deploy to one published immutable release
 

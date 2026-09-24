@@ -27,7 +27,7 @@ jobs:
         run: |
           npm run check
           npm run validate:migrations
-          npm run security:dependencies
+          npm run security:dependency-advisories
           npm run build
       - name: Verify annotated semantic release identity
         id: release

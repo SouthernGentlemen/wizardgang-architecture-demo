@@ -10,7 +10,7 @@ A release may be published only when the exact tagged state reproduces successfu
 npm ci
 npm run check
 npm run validate:migrations
-npm run security:dependencies
+npm run security:dependency-advisories
 npm run build
 ```
 
