@@ -58,7 +58,7 @@ Availability while intentionally offline is declared per route. Gated API traffi
 
 ## Local setup
 
-1. Use the pinned Node.js 26 / npm 11 toolchain and run `npm ci` from the committed lock file.
+1. Use Node.js 26.9.0 from `.node-version` with npm 11.19.1 from `packageManager`, then run `npm ci` from the committed lock file.
 2. Copy `.dev.vars.example` to ignored `.dev.vars` and replace local placeholders.
 3. Run `npm run validate:migrations` to prove the migrations against local D1 state.
 4. Run `npm run dev` for the local-only development surface.

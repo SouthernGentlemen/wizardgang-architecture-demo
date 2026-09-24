@@ -91,7 +91,7 @@ describe('DEMO-339 deliberate-regression proofs', () => {
       const validate = () => validateRepositoryBaseline(root);
       expect(validate()).toEqual([]);
       violation(root, '.node-version', () => '24.0.0\n', validate, /pin exact Node 26/);
-      violation(root, 'package.json', (value) => value.replace('npm@11.19.0', 'npm@10.0.0'), validate, /pin exact npm 11/);
+      violation(root, 'package.json', (value) => value.replace(/"packageManager": "npm@11\.\d+\.\d+"/, '"packageManager": "npm@10.0.0"'), validate, /pin exact npm 11/);
       violation(root, 'tsconfig.json', (value) => value.replace('"strict": true', '"strict": false'), validate, /TypeScript strict mode/);
       violation(root, 'package.json', (value) => value.replace('npm run validate:repository-baseline && ', ''), validate, /check must invoke validate:repository-baseline/);
       violation(root, '.github/workflows/ci.yml', (value) => value.replace('pull_request:', 'workflow_dispatch:'), validate, /CI must run on pull requests/);

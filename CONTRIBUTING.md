@@ -18,7 +18,7 @@ Author surgical tasks: one controlled ID, concern, observable outcome, narrow ow
 
 ## Toolchain and dependency installation
 
-Use Node.js 26.7.0 from `.node-version` and npm 11.19.0 from `packageManager`. The supported engine ranges are Node.js `26.x` and npm `11.x`, and `.npmrc` keeps `engine-strict=true` so unsupported toolchains fail before installation.
+Use Node.js 26.9.0 from `.node-version` and npm 11.19.1 from `packageManager`. The supported engine ranges remain Node.js `26.x` and npm `11.x`, and `.npmrc` keeps `engine-strict=true`. The repository toolchain validator rejects any exact Node/npm drift before locked installation in CI, release, and deployment paths.
 
 Dependency install scripts are denied unless the root `package.json` `allowScripts` policy approves the reviewed package and version. Before changing dependencies, run `npm install-scripts ls`, review each reported lifecycle script, and add only build-required approvals pinned to the installed version. Remove stale approvals with `npm install-scripts prune` after dependency removal or upgrade. Commit the policy and lockfile together so local `npm ci` and CI execute the same reviewed scripts.
 

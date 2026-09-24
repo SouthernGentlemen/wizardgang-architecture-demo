@@ -19,6 +19,8 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
+      - name: Verify pinned Node/npm toolchain
+        run: node scripts/validate-toolchain.mjs
       - name: Install locked dependencies
         run: npm ci
       - name: Reproduce the tagged state

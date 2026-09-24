@@ -53,6 +53,8 @@ jobs:
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Verify pinned Node/npm toolchain
+        run: node scripts/validate-toolchain.mjs
       - name: Install locked dependencies
         run: npm ci
       - name: Validate reviewed tagged source
