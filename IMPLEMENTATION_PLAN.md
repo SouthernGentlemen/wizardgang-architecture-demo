@@ -8,7 +8,7 @@ Keep credential-free repository acceptance, network-dependent dependency advisor
 
 Current observed process facts that motivate this wave:
 
-- repository toolchain authority is Node 26.7.0 with npm 11.19.0 and must be reconciled with the current shared baseline rather than treated as permanently canonical;
+- repository toolchain authority is Node 26.9.0 with npm 11.19.1 and is now aligned to the current shared baseline; exact patch drift is rejected before locked installation;
 - exact-head CI validates the PR title but does not yet bind branch name, head controlled commit identity and one-controlled-commit range together;
 - the portable repository-baseline validator still mixes universal process requirements with this reference stack's TypeScript/React/Vite/Vitest/Wrangler capabilities;
 - the release workflow calls `npm run security:dependencies` while the current package command is `security:dependency-advisories`;
@@ -18,7 +18,7 @@ Current observed process facts that motivate this wave:
 
 ## Open tasks
 
-### DEMO-360 — [REFACTOR] Split universal process checks from reference-stack checks
+### DEMO-361 — [REFACTOR] Split universal process checks from reference-stack checks
 
 - Dependency: none; first open task.
 - Why: `validate-repository-baseline` is presented as portable but currently requires this repository's Worker/React/Vite/Vitest/browser/release capabilities.
@@ -28,9 +28,9 @@ Current observed process facts that motivate this wave:
 - Validation: Baseline fixture suite; `npm run check`; patch whitespace.
 - Authorities: `scripts/validate-repository-baseline.mjs`, WG-ARCH-001 §27.
 
-### DEMO-361 — [TEST] Bind controlled PR identity and queue sequence
+### DEMO-364 — [TEST] Bind controlled PR identity and queue sequence
 
-- Dependency: DEMO-360 merged.
+- Dependency: DEMO-361 merged.
 - Why: Exact-head CI currently validates PR title but not the complete branch/head/range identity, and active-plan validation does not yet enforce the next controlled ID strongly enough for the common process.
 - Scope: Add deterministic rules/tests binding branch `demo-NNN-...`, PR title, exact head controlled commit ID/type, one controlled commit in the PR range, first-open-task/next-ID selection, same-delivery task retirement and blocked-head behavior.
 - Preserve: Pre-controlled legacy history and published merge history; no history rewrite.
@@ -39,9 +39,9 @@ Current observed process facts that motivate this wave:
 - Validation: Disposable Git/plan fixtures; `npm run check`; exact-head CI; patch whitespace.
 - Authorities: `AGENTS.md`, history/plan validators, CI change-id boundary.
 
-### DEMO-364 — [FIX] Repair exact release reproduction command ownership
+### DEMO-365 — [FIX] Repair exact release reproduction command ownership
 
-- Dependency: DEMO-362 merged and live GitHub settings verified.
+- Dependency: DEMO-364 merged; the DEMO-362 live GitHub settings baseline remains verified.
 - Why: The current release workflow calls `npm run security:dependencies`, while the repository's canonical network advisory command is `security:dependency-advisories`.
 - Scope: Repair the release reproduction path to invoke the current named advisory gate exactly once, preserve credential-free `check`, keep annotated semantic tag/package/commit identity checks and retain GitHub Release publication before deployment.
 - Non-goals: No version bump, tag creation, GitHub Release publication or deployment in this task.
@@ -49,9 +49,9 @@ Current observed process facts that motivate this wave:
 - Validation: Release workflow tests; `npm run check`; explicit network advisory command; exact-head CI; patch whitespace.
 - Authorities: `.github/workflows/release.yml`, `package.json`, `docs/RELEASE-MANAGEMENT.md`.
 
-### DEMO-365 — [BUILD] Bind every production deploy to one published immutable release
+### DEMO-366 — [BUILD] Bind every production deploy to one published immutable release
 
-- Dependency: DEMO-364 merged.
+- Dependency: DEMO-365 merged.
 - Why: Manual deployment accepts an arbitrary input ref and raw `npm run deploy` can publish an arbitrary checkout.
 - Scope: Remove or fail-close the raw arbitrary-checkout production command; require deploy input to be exact `vMAJOR.MINOR.PATCH`; prove requested ref equals the annotated tag at HEAD; require package version match; require the corresponding GitHub Release already exists and identifies the same tag/commit before any production mutation. Preserve release-triggered deployment and intentional published-tag recovery.
 - Non-goals: No alternate hosting provider, tag rewrite, release publication or production deployment during implementation.
@@ -59,9 +59,9 @@ Current observed process facts that motivate this wave:
 - Validation: Deploy-boundary fixtures/workflow tests; Wrangler dry run; `npm run check`; exact-head CI; patch whitespace.
 - Authorities: `.github/workflows/deploy.yml`, release identity scripts, `docs/RELEASE-MANAGEMENT.md`.
 
-### DEMO-366 — [TEST] Prove release-to-deployment identity and provider version
+### DEMO-367 — [TEST] Prove release-to-deployment identity and provider version
 
-- Dependency: DEMO-365 merged.
+- Dependency: DEMO-366 merged.
 - Why: The reference process should prove both public application identity and the provider-side deployed version/traffic state for the exact published release.
 - Scope: Add focused regression tests for release -> publication -> deploy ordering, exact requested tag/package/commit continuity and provider deployment-version confirmation. Preserve existing public version/health/identity/browser-asset verification.
 - Non-goals: No release solely to satisfy this test task.
@@ -69,9 +69,9 @@ Current observed process facts that motivate this wave:
 - Validation: Focused workflow/process tests; `npm run check`; provider evidence on the next real deployment.
 - Authorities: release/deploy workflows, Cloudflare deployment evidence, public operations identity endpoints.
 
-### DEMO-367 — [SEC] Extend secret safety across public Git history
+### DEMO-368 — [SEC] Extend secret safety across public Git history
 
-- Dependency: DEMO-366 merged.
+- Dependency: DEMO-367 merged.
 - Why: Current-tree secret scanning is narrower than the public-history safety boundary already proven in sibling repositories.
 - Scope: Add bounded public-history blob/path scanning for secret-like material while preserving current worker-secret names and assurance controls. Keep known-safe fixtures explicit and narrow.
 - Non-goals: No secret rotation unless fresh evidence finds an exposed credential; no scanning of unrelated external repositories.
@@ -79,9 +79,9 @@ Current observed process facts that motivate this wave:
 - Validation: Security fixtures; `npm run check`; exact-head CI; patch whitespace.
 - Authorities: current security validator, Git object/history semantics, public repository boundary.
 
-### DEMO-368 — [DOCS] Complete reference-process parity acceptance
+### DEMO-369 — [DOCS] Complete reference-process parity acceptance
 
-- Dependency: DEMO-367 merged.
+- Dependency: DEMO-368 merged.
 - Why: The upstream process authority should finish with one fresh proof that all shared semantics now agree.
 - Scope: Re-audit shared Node/npm, safe `dev`, universal/reference baseline split, controlled history/PR identity, canonical `check`, network advisory gate, patch integrity, exact-head/main CI, squash-only provider policy, settings CLI, branch cleanup, immutable tags, exact release reproduction, GitHub Release authority, release-only production deployment, Cloudflare provider/public identity verification and public-history secret safety. Reconcile current-state docs only and delete `IMPLEMENTATION_PLAN.md` when all applicable evidence is green.
 - Non-goals: No product feature, version bump, tag creation, release publication or production deployment solely for the audit.
@@ -101,4 +101,4 @@ Release/deployment:
 
 ## Recheck after this wave
 
-After DEMO-368, perform a fresh cross-repository comparison before reserving more IDs. Downstream repositories may implement the universal process with capability-specific N/A boundaries; they must not copy reference-stack requirements they do not own.
+After DEMO-369, perform a fresh cross-repository comparison before reserving more IDs. Downstream repositories may implement the universal process with capability-specific N/A boundaries; they must not copy reference-stack requirements they do not own.
