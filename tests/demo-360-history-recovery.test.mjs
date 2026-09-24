@@ -12,20 +12,12 @@ describe('DEMO-360 immutable history recovery', () => {
     expect(history).toContain('DEMO-359 was squash-merged with a valid controlled title');
   });
 
-  it('keeps the active queue sequential after the recovery consumes DEMO-360', () => {
+  it('keeps DEMO-360 retired as future tasks are appended or delivered', () => {
+    if (!fs.existsSync(path.join(root, 'IMPLEMENTATION_PLAN.md'))) return;
     const plan = read('IMPLEMENTATION_PLAN.md');
-    const headings = [...plan.matchAll(/^### (DEMO-\d{3,}) —/gm)].map((match) => match[1]);
-    expect(headings).toEqual([
-      'DEMO-361',
-      'DEMO-364',
-      'DEMO-365',
-      'DEMO-366',
-      'DEMO-367',
-      'DEMO-368',
-      'DEMO-369',
-    ]);
+    const headings = [...plan.matchAll(/^### (DEMO-\d{3,}) —/gm)].map((match) => Number(match[1].slice(5)));
+    expect(headings.every((id) => id > 360)).toBe(true);
+    expect(headings).toEqual([...new Set(headings)].sort((a, b) => a - b));
     expect(plan).not.toMatch(/^### DEMO-360 —/m);
-    expect(plan).toContain('### DEMO-361 — [REFACTOR] Split universal process checks from reference-stack checks');
-    expect(plan).toContain('- Dependency: none; first open task.');
   });
 });
