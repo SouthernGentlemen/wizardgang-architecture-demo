@@ -1,85 +1,19 @@
 # Contributing
 
-Use small, reviewable changes. `main` is the accepted production baseline.
+Read [AGENTS.md](AGENTS.md) before changing a repository. It owns the repository's product boundaries, controlled change identity, validation details, and merge rules. Read the active implementation plan when present; its filename may be `implementation_plan.md` or `IMPLEMENTATION_PLAN.md`.
 
-Project prefix: `DEMO`.
+## Work queue and plan updates
 
-Commit pattern:
+The first open plan task is the default next implementation task unless the owner explicitly changes priority. Keep existing open tasks in place when appending future work. A separately requested portfolio plan maintenance change may append or clarify future tasks while another task or pull request is in progress. Once the shared policy is established, that maintenance change edits only the active plan file and does not claim to deliver a queued task. The last task deletes the plan only when no later task remains.
 
-`[DEMO-NNN] [TYPE] Imperative summary`
+Before editing or merging, fetch current `main` and inspect open pull requests. Record the base commit and the plan's current contents. Immediately before merging, fetch again and compare the current `main` commit, exact pull request head, and plan against that recorded base. Rebase and reconcile any concurrent plan change rather than overwriting it. Merge only the current, mergeable head after required checks pass.
 
-Primary types follow WG-ARCH-001 conventions: `INIT`, `FEAT`, `FIX`, `SEC`, `API`, `A11Y`, `I18N`, `AI`, `DB`, `OPS`, `TEST`, `DOCS`, `REFACTOR`, `PERF`, `BUILD`, `REVERT`, `CHORE`. One controlled change has one permanent ID and one primary type.
+## Toolchain and commands
 
-Use an isolated branch named for its controlled change, such as `demo-NNN-imperative-summary`. A pull-request title follows the same controlled-title format. See [`docs/CHANGE-MANAGEMENT.md`](docs/CHANGE-MANAGEMENT.md).
+Use the exact Node version in `.node-version` and npm version in `package.json`'s `packageManager`; install from the committed lockfile with `npm ci`. `npm run check` is the canonical local repository acceptance command. Run the focused checks named by the active task and `git diff --check` as well. `build`, `test`, `typecheck`, and `dev` follow the repository's `package.json` and AGENTS.md; use only capabilities that repository actually has. Network dependency advisories, live GitHub settings verification, releases, and production deployment are separate operations with repository-specific prerequisites.
 
-When root `IMPLEMENTATION_PLAN.md` exists, it is the current/future work queue. Reconcile it against merged `main`, then select the first task in the active plan by default. If that first task is blocked, report its exact prerequisite and stop; do not select a later task unless the owner explicitly overrides priority. Remove the delivered task in the same PR. Keep remaining tasks accurate and delete the plan in the final task's PR. A `do needful` request runs the complete one-task delivery loop in `AGENTS.md`; when the queue is exhausted, the next turn researches and publishes a small wave without implementing that wave. Git/GitHub retain completed work.
+Shared dependencies and versioned vendor tooling should use one supported version across public repositories when those repositories consume them. GitHub Actions workflows and common npm script names should have equivalent behavior for equivalent capabilities. A library or local-only application does not acquire a hosted deployment merely for parity.
 
-Author surgical tasks: one controlled ID, concern, observable outcome, narrow ownership, prerequisites, scope, non-goals, acceptance, and exact relevant validation. Split independently reviewable outcomes. Prefer roughly 5–12 researched near-term tasks per wave, then audit fresh state again rather than reserving a large sequence.
+## Contribution and security boundaries
 
-## Toolchain and dependency installation
-
-Use Node.js 26.9.0 from `.node-version` and npm 11.19.1 from `packageManager`. The supported engine ranges remain Node.js `26.x` and npm `11.x`, and `.npmrc` keeps `engine-strict=true`. The repository toolchain validator rejects any exact Node/npm drift before locked installation in CI, release, and deployment paths.
-
-Dependency install scripts are denied unless the root `package.json` `allowScripts` policy approves the reviewed package and version. Before changing dependencies, run `npm install-scripts ls`, review each reported lifecycle script, and add only build-required approvals pinned to the installed version. Remove stale approvals with `npm install-scripts prune` after dependency removal or upgrade. Commit the policy and lockfile together so local `npm ci` and CI execute the same reviewed scripts.
-
-## Architecture and runtime changes
-
-Each architecture demo change must:
-
-1. Preserve or deliberately change stable route behavior under the route contract.
-2. Keep the primary implementation in the owning source module.
-3. Update application route declarations and run `npm run generate:routes` when route metadata changes; `docs/route-manifest.json` is the generated machine projection.
-4. Keep executable interface contracts and source links synchronized with the implementation.
-5. Add or update tests for affected public routes, protocol behavior, authorization, and backend behavior.
-6. Use `DEMO_DB` / `demo-blob` for shared relational state unless another primitive is the feature being demonstrated.
-7. Use R2 for object storage and Durable Objects for coordinated state; do not emulate them with D1.
-8. Preserve operational machine contracts, scheduled availability/retention, protected admin/offline boundaries, and the compact homepage operational proof.
-9. Avoid secrets, private account data, credential-bearing logs, and unreviewed infrastructure metadata.
-10. Preserve accessibility and localization behavior and qualify ISO/WCAG statements as alignment evidence, not certification.
-11. Update only the current architecture, policy, or procedure documentation whose contract actually changed.
-
-## Assurance and governance editing
-
-Structured assurance data is authoritative for current status, applicability, rationale, gaps, lifecycle, evidence relationships, risks, incidents, objectives, and governed record rows. Human-readable Markdown explains current policy, process, responsibilities, and control intent; it is not a duplicate status store.
-
-For ISO/IEC 27001, ISO/IEC 42001, and WCAG 2.2 records:
-
-1. Edit assessment state in the registered canonical JSON resource under `assurance/**`. Use only `pass`, `partial`, `gap`, or `not-applicable`.
-2. Keep `rationale`, `gaps`, and evidence relationships in structured data.
-3. Use a `documentation` relationship to a tracked current Markdown heading when a record needs human-readable policy/process traceability.
-4. Maintain the reciprocal `Alignment` / `Controls:` mapping required by `npm run validate:assurance-documentation`.
-5. Refresh lifecycle source approval for each changed published structured dataset so publication remains bound to its exact Git blob revision.
-6. Run `npm run validate:assurance` after assurance changes.
-
-For governance records, edit the registered structured resources under `assurance/governance/**`, `assurance/risks/**`, `assurance/incidents/**`, `assurance/objectives/**`, and other registry-declared datasets. Use `assurance/presentation/documents.json` only for presentation metadata it actually owns. Do not recreate Markdown registers, SoAs, assessment archives, or generated summary documents as parallel sources of truth.
-
-## Validation
-
-WG-ARCH-001 §27 defines the shared command meanings; [README.md](README.md#command-map) records this repository's current command/prerequisite map. After a locked install, `npm run check` is the canonical unattended, credential-free acceptance gate. It does not yet own every gate that CI runs, so do not describe a clean `check` as full CI parity.
-
-`npm run security:dependency-advisories` is the one network-dependent dependency-advisory gate. It runs `npm audit --audit-level=high`, requires npm registry/network access, and is intentionally outside credential-free `check`. A high/critical advisory finding fails the gate. If npm cannot complete the registry/advisory query, the result is unknown/unavailable rather than clean; local reproduction must report that blocker, and CI fails the same gate until the query completes.
-
-Before opening a pull request, run the current acceptance set:
-
-```text
-npm ci
-npm run validate:generated-artifacts
-npm run check
-npm run validate:migrations
-npm run verify:chromium
-npm run test:site-accessibility
-npm run security:dependency-advisories
-npm run build
-BASE_SHA=<pr-base-sha> npm run validate:patch-whitespace
-git diff --check
-```
-
-`npm run validate:patch-whitespace` is the canonical committed-patch whitespace gate. With explicit `BASE_SHA`, it validates `BASE_SHA...HEAD`, matching the pull-request range semantics used by CI. For an open PR, reproduce the authoritative base with `BASE_SHA="$(gh pr view --json baseRefOid --jq .baseRefOid)" npm run validate:patch-whitespace`. Before a PR exists, fetch the target branch and supply its current commit explicitly, for example `git fetch origin main && BASE_SHA="$(git rev-parse origin/main)" npm run validate:patch-whitespace`. If the base SHA or sufficient history is unavailable, the command fails with bounded reproduction guidance instead of silently substituting an unstaged check. A bare `git diff --check` remains useful as an additional working-tree sanity check, but it does not prove the committed PR range.
-
-Equivalently, from a clean checkout use `npm run validate:ci`: it verifies the pinned toolchain, performs `npm ci`, then runs those temporary extra gates in the same order used by `.github/workflows/ci.yml`, with retained failure diagnostics. Full reproduction therefore needs npm registry/network access, a usable Chromium runtime, and sufficient Git history/base context for PR-range whitespace checking. Registry or browser unavailability is a reported blocker, not a passing result. The D1 migration gate uses local Wrangler state only, and the build uses a Wrangler dry run; neither mutates production.
-
-Live repository-setting verification (`npm run verify:github-settings`) is read-only and outside credential-free `check` and CI. `npm run apply:github-settings` is the explicit administration command; both use `GH_ADMIN_TOKEN` or an authorized `GH_TOKEN` only through process environment. CI validates controlled history and the pull-request title. Re-fetch exact-head checks and live settings before squashing the validated PR head. When CI fails, follow the full-job-log troubleshooting sequence in [AGENTS.md](AGENTS.md). Never edit an applied migration; add the next numbered migration.
-
-Release publication and production deployment are also separate from acceptance. The Release workflow reproduces an annotated `vMAJOR.MINOR.PATCH` tag and publishes the GitHub Release before calling the production Deploy workflow. The raw `npm run deploy` script invokes live Wrangler deployment and requires Cloudflare credentials; it is not a validation shortcut or the governed production-release path. See [release management](docs/RELEASE-MANAGEMENT.md).
-
-Keep architecture and operational documentation in reviewable Markdown/text. Do not add PDF documentation unless explicitly requested.
+Keep changes scoped to one controlled delivery unless the owner requests portfolio plan maintenance. Record validation and provider actions truthfully. Follow the repository's AGENTS.md for branch, commit, pull request, exact-head CI, and squash-merge requirements. Use [SECURITY.md](SECURITY.md) for security reports. Ownership is defined by AGENTS.md and its linked ownership policy where present.

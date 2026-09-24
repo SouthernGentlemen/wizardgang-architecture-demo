@@ -27,6 +27,7 @@ const publishedContinuationExceptions = new Map([
 const controlled = [];
 const failures = [];
 const exceptionsUsed = [];
+const earlyMaintenance = new Set();
 
 for (const record of records) {
   const [sha = '', parents = '', subject = '', body = ''] = record.split('\x1f');
@@ -52,10 +53,12 @@ controlled.forEach(({ sha, id, body }) => {
     // unrelated DEMO-358..361 work. Their existing IDs remain reserved.
     delivered.add(362);
     exceptionsUsed.push(`${sha.slice(0, 12)}: DEMO-362 is the portfolio settings transition ahead of reserved DEMO-358..361.`);
+  } else if (/^Portfolio-Plan-Maintenance: true$/m.test(body) && id > expected + 1) {
+    earlyMaintenance.add(id);
+    delivered.add(id);
   } else {
     expected += 1;
-    if (expected === 362 && delivered.has(362)) expected += 1;
-    if (expected === 363) expected += 1; // Provider application was completed with the atomic DEMO-362 transition.
+    while (earlyMaintenance.has(expected) || (expected === 362 && delivered.has(362)) || expected === 363) expected += 1;
     if (id !== expected) failures.push(`${sha.slice(0, 12)} uses DEMO-${String(id).padStart(3, '0')}; expected DEMO-${String(expected).padStart(3, '0')}`);
     delivered.add(id);
   }
