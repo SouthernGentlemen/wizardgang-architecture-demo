@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "profile": "reference-stack",
+  "capabilities": {
+    "typescript": true,
+    "react": true,
+    "vite": true,
+    "vitest": true,
+    "browser": true,
+    "cloudflareWorker": true,
+    "release": true
+  }
+}
