@@ -11,21 +11,9 @@ Keep credential-free repository acceptance, network-dependent dependency advisor
 Current observed process facts that motivate this wave:
 
 - repository toolchain authority is Node 26.9.0 with npm 11.19.1 and is now aligned to the current shared baseline; exact patch drift is rejected before locked installation;
-- raw `npm run deploy` still exposes arbitrary-checkout Wrangler deployment;
-- manual deployment accepts a `ref` and proves an exact tag at HEAD, but does not yet bind the requested ref, package version and existing GitHub Release into one immutable deployment identity;
 - current-tree secret scanning is narrower than the strongest public-history safety boundary already used by sibling repositories.
 
 ## Open tasks
-
-### DEMO-366 — [BUILD] Bind every production deploy to one published immutable release
-
-- Dependency: DEMO-365 merged.
-- Why: Manual deployment accepts an arbitrary input ref and raw `npm run deploy` can publish an arbitrary checkout.
-- Scope: Remove or fail-close the raw arbitrary-checkout production command; require deploy input to be exact `vMAJOR.MINOR.PATCH`; prove requested ref equals the annotated tag at HEAD; require package version match; require the corresponding GitHub Release already exists and identifies the same tag/commit before any production mutation. Preserve release-triggered deployment and intentional published-tag recovery.
-- Non-goals: No alternate hosting provider, tag rewrite, release publication or production deployment during implementation.
-- Acceptance: Branch/SHA/lightweight/unpublished/mismatched-tag inputs cannot deploy; a previously published immutable release can still be intentionally redeployed.
-- Validation: Deploy-boundary fixtures/workflow tests; Wrangler dry run; `npm run check`; exact-head CI; patch whitespace.
-- Authorities: `.github/workflows/deploy.yml`, release identity scripts, `docs/RELEASE-MANAGEMENT.md`.
 
 ### DEMO-367 — [TEST] Prove release-to-deployment identity and provider version
 

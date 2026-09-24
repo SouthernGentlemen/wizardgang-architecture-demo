@@ -4,13 +4,13 @@ on:
   workflow_call:
     inputs:
       ref:
-        description: Existing annotated semantic version tag to deploy
+        description: Already-published immutable semantic version tag to deploy
         required: true
         type: string
   workflow_dispatch:
     inputs:
       ref:
-        description: Existing semantic version tag to deploy (for example, v0.1.0)
+        description: Already-published immutable semantic version tag to redeploy (for example, v0.28.0)
         required: true
         type: string
 
@@ -35,24 +35,90 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
-      - name: Verify an exact semantic version tag
+      - name: Verify published immutable release identity
         id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED_RELEASE: ${{ inputs.ref }}
         shell: bash
         run: |
-          tag="$(git describe --tags --exact-match HEAD)"
-          if [[ ! "$tag" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "Deployment requires an exact semantic version tag; got: $tag" >&2
+          set -euo pipefail
+
+          tag="$REQUESTED_RELEASE"
+          if [[ ! "$tag" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "::error::Production deployment requires an exact vMAJOR.MINOR.PATCH tag; got: $tag"
             exit 1
           fi
+
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            if [[ "$GITHUB_REF" != "refs/heads/main" ]]; then
+              echo "::error::Manual recovery deployment must run the current main deploy workflow; got: $GITHUB_REF"
+              exit 1
+            fi
+          elif [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
+            if [[ "$GITHUB_REF" != "refs/tags/$tag" || "$GITHUB_REF_NAME" != "$tag" ]]; then
+              echo "::error::Release-triggered deployment must retain the exact tag event identity."
+              exit 1
+            fi
+          else
+            echo "::error::Unsupported production deployment event: $GITHUB_EVENT_NAME"
+            exit 1
+          fi
+
           tag_ref="refs/tags/$tag"
           git fetch --force --no-tags origin "$tag_ref:$tag_ref"
           if [[ "$(git cat-file -t "$tag_ref")" != "tag" ]]; then
-            echo "Deployment requires an annotated tag; got: $tag" >&2
+            echo "::error::Production deployment requires an annotated tag: $tag"
             exit 1
           fi
+
+          tag_object="$(git rev-parse "$tag_ref")"
+          tag_commit="$(git rev-parse "$tag_ref^{commit}")"
+          checkout_commit="$(git rev-parse HEAD)"
+          if [[ "$checkout_commit" != "$tag_commit" ]]; then
+            echo "::error::Requested tag $tag resolves to $tag_commit but checked-out HEAD is $checkout_commit"
+            exit 1
+          fi
+
+          package_version="$(node -p "JSON.parse(require('fs').readFileSync('package.json','utf8')).version")"
+          if [[ "v$package_version" != "$tag" ]]; then
+            echo "::error::package.json version $package_version does not match requested release $tag"
+            exit 1
+          fi
+
+          release_line="$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$tag" --jq '[.tag_name, (.draft|tostring), (.published_at // "")] | @tsv')" || {
+            echo "::error::No published GitHub Release exists for $tag"
+            exit 1
+          }
+          IFS=$'\t' read -r release_tag release_draft release_published_at <<< "$release_line"
+          if [[ "$release_tag" != "$tag" || "$release_draft" != "false" || -z "$release_published_at" ]]; then
+            echo "::error::GitHub Release for $tag is not an already-published release"
+            exit 1
+          fi
+
+          remote_ref_line="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$tag" --jq '[.ref, .object.type, .object.sha] | @tsv')" || {
+            echo "::error::GitHub tag ref does not exist for $tag"
+            exit 1
+          }
+          IFS=$'\t' read -r remote_ref remote_type remote_tag_object <<< "$remote_ref_line"
+          if [[ "$remote_ref" != "$tag_ref" || "$remote_type" != "tag" || "$remote_tag_object" != "$tag_object" ]]; then
+            echo "::error::Remote tag ref for $tag does not match the checked-out annotated tag object"
+            exit 1
+          fi
+
+          remote_tag_line="$(gh api "repos/$GITHUB_REPOSITORY/git/tags/$remote_tag_object" --jq '[.tag, .object.type, .object.sha] | @tsv')" || {
+            echo "::error::Unable to resolve annotated tag object for $tag"
+            exit 1
+          }
+          IFS=$'\t' read -r remote_tag_name remote_target_type remote_target_commit <<< "$remote_tag_line"
+          if [[ "$remote_tag_name" != "$tag" || "$remote_target_type" != "commit" || "$remote_target_commit" != "$checkout_commit" ]]; then
+            echo "::error::GitHub Release/tag/commit identity does not resolve to checked-out HEAD"
+            exit 1
+          fi
+
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
-          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "sha=$checkout_commit" >> "$GITHUB_OUTPUT"
       - name: Verify pinned Node/npm toolchain
         run: node scripts/validate-toolchain.mjs
       - name: Install locked dependencies
