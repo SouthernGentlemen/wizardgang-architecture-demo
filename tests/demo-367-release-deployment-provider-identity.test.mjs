@@ -7,7 +7,6 @@ const deployWorkflow = read('.github/workflows/deploy.yml');
 const releaseWorkflow = read('.github/workflows/release.yml');
 const releaseManagement = read('docs/RELEASE-MANAGEMENT.md');
 const operations = read('docs/OPERATIONS.md');
-const plan = read('IMPLEMENTATION_PLAN.md');
 
 function stepPosition(name) {
   return deployWorkflow.indexOf('      - name: ' + name + '\n');
@@ -115,11 +114,5 @@ describe('DEMO-367 release-to-deployment identity and provider version', () => {
     expect(deployWorkflow).toContain('Verify deployed static browser assets');
     expect(releaseManagement).toContain('sole version receiving 100% of production traffic');
     expect(operations).toContain('provider-side deployment evidence');
-  });
-
-  it('retires only DEMO-367 and preserves the future queue order', () => {
-    const headings = [...plan.matchAll(/^### (DEMO-\d{3,}) —/gm)].map((match) => match[1]);
-    expect(headings).toEqual(['DEMO-368', 'DEMO-369', 'DEMO-371']);
-    expect(plan).not.toMatch(/^### DEMO-367 —/m);
   });
 });

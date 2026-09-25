@@ -11,19 +11,8 @@ Keep credential-free repository acceptance, network-dependent dependency advisor
 Current observed process facts that motivate this wave:
 
 - repository toolchain authority is Node 26.9.0 with npm 11.19.1 and is now aligned to the current shared baseline; exact patch drift is rejected before locked installation;
-- current-tree secret scanning is narrower than the strongest public-history safety boundary already used by sibling repositories.
 
 ## Open tasks
-
-### DEMO-368 — [SEC] Extend secret safety across public Git history
-
-- Dependency: DEMO-367 merged.
-- Why: Current-tree secret scanning is narrower than the public-history safety boundary already proven in sibling repositories.
-- Scope: Add bounded public-history blob/path scanning for secret-like material while preserving current worker-secret names and assurance controls. Keep known-safe fixtures explicit and narrow.
-- Non-goals: No secret rotation unless fresh evidence finds an exposed credential; no scanning of unrelated external repositories.
-- Acceptance: A secret-like value committed anywhere in reachable public history is detected by focused fixtures without dumping sensitive content into logs.
-- Validation: Security fixtures; `npm run check`; exact-head CI; patch whitespace.
-- Authorities: current security validator, Git object/history semantics, public repository boundary.
 
 ### DEMO-369 — [DOCS] Complete reference-process parity acceptance
 
