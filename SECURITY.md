@@ -13,6 +13,8 @@ This is a public architecture demonstration. Public source is intentional; secre
 
 Use Cloudflare/GitHub managed secret stores for production and ignored `.dev.vars` for local-only placeholders.
 
+`npm run validate:security`, included in the canonical `check` gate, inspects tracked checkout files and every reachable Git revision for credential-file paths and secret-like text blobs. The history check reads each unique blob once, fails closed when a blob or the total history exceeds its bounded scan budget, and reports only object identifiers and finding categories. Exact value hashes exempt four synthetic credential values in their original test files; a different value or path is still checked. A real exposure requires private incident handling and credential rotation because deleting a file does not erase public Git history.
+
 The authoritative Worker secret-name inventory is `config/worker-secrets.json`. Cloudflare's Worker secret store also carries some provider identifiers and verification material that are not intrinsically secret; they are inventoried here because deployment verifies the managed names as one set. Values are never checked in or exposed by health, version, logs, usage, evidence, or source-link surfaces.
 
 <!-- WORKER_SECRETS_START -->
