@@ -29,9 +29,9 @@ Current observed process facts that motivate this wave:
 
 - Dependency: DEMO-368 merged.
 - Why: The upstream process authority should finish with one fresh proof that all shared semantics now agree.
-- Scope: Re-audit shared Node/npm, safe `dev`, universal/reference baseline split, controlled history/PR identity, canonical `check`, network advisory gate, patch integrity, exact-head/main CI, squash-only provider policy, settings CLI, branch cleanup, immutable tags, exact release reproduction, GitHub Release authority, release-only production deployment, Cloudflare provider/public identity verification and public-history secret safety. Reconcile current-state docs only and delete `IMPLEMENTATION_PLAN.md` when all applicable evidence is green.
+- Scope: Re-audit shared Node/npm, safe `dev`, universal/reference baseline split, controlled history/PR identity, canonical `check`, network advisory gate, patch integrity, exact-head/main CI, squash-only provider policy, settings CLI, branch cleanup, immutable tags, exact release reproduction, GitHub Release authority, release-only production deployment, Cloudflare provider/public identity verification and public-history secret safety. Reconcile current-state docs only, retire DEMO-369, and preserve DEMO-371 as the next open task.
 - Non-goals: No product feature, version bump, tag creation, release publication or production deployment solely for the audit.
-- Acceptance: Fresh repository/provider evidence shows the architecture demo is a coherent common process reference with no remaining active implementation queue.
+- Acceptance: Fresh repository/provider evidence shows the architecture demo is a coherent common process reference; the active queue retains only DEMO-371 shared normalization after this audit.
 - Validation: `npm ci`; `npm run check`; `npm run security:dependency-advisories`; provider verification; release/deploy evidence; exact-head/main CI; patch whitespace.
 - Authorities: current repository state, live GitHub/Cloudflare state and WG-ARCH-001 §27.
 
