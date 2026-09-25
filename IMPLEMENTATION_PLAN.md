@@ -8,21 +8,7 @@ Start every `do needful` turn from freshly fetched `main`, `AGENTS.md`, this pla
 
 Keep credential-free repository acceptance, network-dependent dependency advisories, live provider verification, release publication and production deployment as separate boundaries. Preserve the architecture demo's application/runtime/assurance contracts unless a task explicitly names them. Published history, annotated tags and GitHub Releases are immutable evidence and are never rewritten.
 
-Current observed process facts that motivate this wave:
-
-- repository toolchain authority is Node 26.9.0 with npm 11.19.1 and is now aligned to the current shared baseline; exact patch drift is rejected before locked installation;
-
 ## Open tasks
-
-### DEMO-369 — [DOCS] Complete reference-process parity acceptance
-
-- Dependency: DEMO-368 merged.
-- Why: The upstream process authority should finish with one fresh proof that all shared semantics now agree.
-- Scope: Re-audit shared Node/npm, safe `dev`, universal/reference baseline split, controlled history/PR identity, canonical `check`, network advisory gate, patch integrity, exact-head/main CI, squash-only provider policy, settings CLI, branch cleanup, immutable tags, exact release reproduction, GitHub Release authority, release-only production deployment, Cloudflare provider/public identity verification and public-history secret safety. Reconcile current-state docs only, retire DEMO-369, and preserve DEMO-371 as the next open task.
-- Non-goals: No product feature, version bump, tag creation, release publication or production deployment solely for the audit.
-- Acceptance: Fresh repository/provider evidence shows the architecture demo is a coherent common process reference; the active queue retains only DEMO-371 shared normalization after this audit.
-- Validation: `npm ci`; `npm run check`; `npm run security:dependency-advisories`; provider verification; release/deploy evidence; exact-head/main CI; patch whitespace.
-- Authorities: current repository state, live GitHub/Cloudflare state and WG-ARCH-001 §27.
 
 ### DEMO-371 — [OPS] Normalize shared package, workflow, and npm command contracts
 
@@ -44,6 +30,6 @@ Release/deployment:
 
 `reviewed main -> version change -> annotated vX.Y.Z -> reproduce exact tag -> GitHub Release -> deploy exact published tag -> verify Cloudflare version/traffic + public release/commit identity`
 
-## Recheck after this wave
+## Recheck before shared normalization
 
-After DEMO-369, perform a fresh cross-repository comparison before reserving more IDs. Downstream repositories may implement the universal process with capability-specific N/A boundaries; they must not copy reference-stack requirements they do not own.
+Before DEMO-371, perform a fresh cross-repository comparison. Downstream repositories may implement the universal process with capability-specific N/A boundaries; they must not copy reference-stack requirements they do not own.
