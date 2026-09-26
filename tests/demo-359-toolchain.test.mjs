@@ -12,19 +12,20 @@ const npmVersion = packageJson.packageManager.replace(/^npm@/, '');
 
 describe('DEMO-359 shared toolchain contract', () => {
   it('keeps exact authorities aligned with the supported engine policy and lock metadata', () => {
-    expect(nodeVersion).toBe('26.9.0');
-    expect(packageJson.packageManager).toBe('npm@11.19.1');
-    expect(packageJson.engines).toEqual({ node: '26.x', npm: '11.x' });
+    expect(nodeVersion).toBe('26.10.0');
+    expect(packageJson.packageManager).toBe('npm@12.1.0');
+    expect(packageJson.engines).toEqual({ node: '26.x', npm: '12.x' });
     expect(packageLock.packages?.['']?.engines).toEqual(packageJson.engines);
     expect(read('.npmrc').split(/\r?\n/)).toContain('engine-strict=true');
+    expect(read('.npmrc').split(/\r?\n/)).toContain('strict-allow-scripts=true');
   });
 
   it('rejects exact Node or npm drift even inside the supported major line', () => {
     expect(validateToolchainContract({
       packageJson,
       pinnedNodeVersion: nodeVersion,
-      actualNodeVersion: '26.9.0',
-      actualNpmVersion: '11.19.1',
+      actualNodeVersion: '26.10.0',
+      actualNpmVersion: '12.1.0',
     }).failures).toEqual([]);
 
     expect(validateToolchainContract({
@@ -33,8 +34,8 @@ describe('DEMO-359 shared toolchain contract', () => {
       actualNodeVersion: '26.8.0',
       actualNpmVersion: '11.19.0',
     }).failures).toEqual([
-      'Node 26.8.0; expected 26.9.0',
-      'npm 11.19.0; expected 11.19.1',
+      'Node 26.8.0; expected 26.10.0',
+      'npm 11.19.0; expected 12.1.0',
     ]);
   });
 
@@ -46,14 +47,25 @@ describe('DEMO-359 shared toolchain contract', () => {
     for (const workflow of [ci, release, deploy]) {
       expect(workflow).toContain('node-version-file: .node-version');
       expect(workflow).not.toMatch(/\bnode-version:\s*\d/);
+      expect(workflow).toContain('run: npm install --global npm@12.1.0');
     }
 
     expect(ci).toContain('npm run validate:ci');
+    expect(ci).toContain('ref: ${{ github.event.pull_request.head.sha || github.sha }}');
     for (const workflow of [release, deploy]) {
       const verifyIndex = workflow.indexOf('node scripts/validate-toolchain.mjs');
       const installIndex = workflow.indexOf('run: npm ci');
       expect(verifyIndex).toBeGreaterThan(-1);
       expect(installIndex).toBeGreaterThan(verifyIndex);
+    }
+  });
+
+  it('pins official workflow actions to reviewed commits', () => {
+    for (const name of fs.readdirSync(path.join(root, '.github/workflows')).filter((name) => name.endsWith('.yml'))) {
+      const workflow = read(`.github/workflows/${name}`);
+      for (const [, action] of workflow.matchAll(/uses:\s+(actions\/[^\s#]+)/g)) {
+        expect(action, `${name}: ${action}`).toMatch(/^actions\/[a-z-]+@[0-9a-f]{40}$/);
+      }
     }
   });
 });

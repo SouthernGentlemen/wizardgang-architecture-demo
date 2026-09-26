@@ -57,9 +57,10 @@ export function validateUniversalRepositoryBaseline(root = DEFAULT_ROOT) {
   loadCapabilityDeclaration(read, failures);
   const node = read('.node-version').trim();
   if (!/^26\.\d+\.\d+$/.test(node) || pkg.engines?.node !== '26.x') failures.push('pin exact Node 26 in .node-version and engines.node 26.x');
-  if (!/^npm@11\.\d+\.\d+$/.test(pkg.packageManager ?? '') || pkg.engines?.npm !== '11.x') failures.push('pin exact npm 11 in packageManager and engines.npm 11.x');
+  if (!/^npm@12\.\d+\.\d+$/.test(pkg.packageManager ?? '') || pkg.engines?.npm !== '12.x') failures.push('pin exact npm 12 in packageManager and engines.npm 12.x');
   const npmrc = read('.npmrc');
   if (!/^engine-strict=true\s*$/m.test(npmrc)) failures.push('.npmrc must set engine-strict=true');
+  if (!/^strict-allow-scripts=true\s*$/m.test(npmrc)) failures.push('.npmrc must set strict-allow-scripts=true');
   if (!pkg.allowScripts || Array.isArray(pkg.allowScripts) || typeof pkg.allowScripts !== 'object') failures.push('package.json must declare approved dependency install scripts in allowScripts');
   if (pkg.type !== 'module') failures.push('package.json must use type: module');
   if (lock.lockfileVersion < 3 || lock.packages?.['']?.version !== pkg.version) failures.push('package-lock.json must be a current npm lockfile for the package');

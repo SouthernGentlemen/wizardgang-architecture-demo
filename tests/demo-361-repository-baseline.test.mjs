@@ -31,15 +31,15 @@ function createUniversalFixture() {
     ['SECURITY.md', '# Security\n'],
     ['LICENSE', 'MIT\n'],
     ['.gitignore', 'node_modules/\n'],
-    ['.node-version', '26.9.0\n'],
-    ['.npmrc', 'engine-strict=true\n'],
+    ['.node-version', '26.10.0\n'],
+    ['.npmrc', 'engine-strict=true\nstrict-allow-scripts=true\n'],
   ]) write(root, file, content);
   write(root, 'package.json', JSON.stringify({
     name: 'universal-process-fixture',
     version: '1.0.0',
     type: 'module',
-    engines: { node: '26.x', npm: '11.x' },
-    packageManager: 'npm@11.19.1',
+    engines: { node: '26.x', npm: '12.x' },
+    packageManager: 'npm@12.1.0',
     allowScripts: {},
     scripts: {
       'validate:repository-baseline': 'node scripts/validate-repository-baseline.mjs',

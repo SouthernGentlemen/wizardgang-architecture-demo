@@ -58,7 +58,7 @@ Availability while intentionally offline is declared per route. Gated API traffi
 
 ## Local setup
 
-1. Use Node.js 26.9.0 from `.node-version` with npm 11.19.1 from `packageManager`, then run `npm ci` from the committed lock file.
+1. Use Node.js 26.10.0 from `.node-version` with npm 12.1.0 from `packageManager`, then run `npm ci` from the committed lock file.
 2. Copy `.dev.vars.example` to ignored `.dev.vars` and replace local placeholders.
 3. Run `npm run validate:migrations` to prove the migrations against local D1 state.
 4. Run `npm run dev` for the local-only development surface.
@@ -76,7 +76,7 @@ WG-ARCH-001 §27 defines the shared command meanings; this table records how thi
 | `npm run validate:generated-artifacts` | Run the generated-artifact parity and idempotence subcheck also included in `check`. | Credential-free; a clean result leaves tracked projections unchanged. |
 | `npm run validate:migrations` | Apply the D1 migration chain to local Wrangler state. | Requires Wrangler's local D1 runtime; mutates local development state only, never remote D1. |
 | `npm run verify:chromium` / `npm run test:site-accessibility` | Prove Chromium is available, then run the browser accessibility/localization audit. | Requires a usable local Chromium runtime; browser execution is local and has no provider mutation. |
-| `npm run security:dependency-advisories` | Query npm advisories and fail on high-severity dependency findings. | Requires npm registry/network access; network failure is a blocker, not a clean audit. No provider credentials are required. |
+| `npm run audit:dependencies` | Query npm advisories and fail on high-severity dependency findings; `security:dependency-advisories` remains an alias. | Requires npm registry/network access; network failure is a blocker, not a clean audit. No provider credentials are required. |
 | `npm run validate:patch-whitespace` | Validate whitespace in the committed patch range. | Requires explicit `BASE_SHA` plus sufficient local Git history; validates `BASE_SHA...HEAD` and fails with reproduction guidance rather than falling back to an unstaged-only check. |
 | `npm run build` | Build browser assets and dry-run the Worker bundle. | Writes local build outputs and invokes Wrangler only in dry-run mode; it does not publish or deploy. |
 | `npm run validate:ci` | Reproduce the current CI validation sequence with retained diagnostics. | Validates the pinned toolchain, runs `npm ci`, `check`, the network dependency audit, and committed-patch whitespace. The `check` step includes generated-artifact parity, local migrations, build, and the Chromium/browser audit. CI parity needs registry access, Chromium, and Git history/base context, but no live-provider credentials. |

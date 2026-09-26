@@ -308,13 +308,15 @@ Every executable repository carries root `AGENTS.md`, `CONTRIBUTING.md`, `SECURI
 
 **Reference TypeScript/Cloudflare toolchain.** These are the standard choices when a repository uses this stack, not a requirement to add Cloudflare, a browser, or a particular framework to a product without that capability.
 
-- Node.js 26: the exact version in `.node-version`, and `engines.node` `26.x`.
-- npm 11: the exact version in `packageManager`, and `engines.npm` `11.x`. `.npmrc` sets `engine-strict=true`, and dependency install scripts run only when `allowScripts` approves them.
+- Node.js 26.10.0 in `.node-version`, with `engines.node` `26.x`.
+- npm 12.1.0 in `packageManager`, with `engines.npm` `12.x`. `.npmrc` sets `engine-strict=true` and `strict-allow-scripts=true`; dependency install scripts run only when the exact `allowScripts` entry approves them.
 - `"type": "module"` and a committed `package-lock.json`. CI installs with `npm ci`.
 - TypeScript 7 in `strict` mode; `npm run typecheck` checks every TypeScript program in the repository. Tooling does not depend on the TypeScript compiler API.
 - Cloudflare Workers through Wrangler 4, configured in `wrangler.jsonc`. Files that browsers download are served from Workers Static Assets, not bundled into Worker code.
 - Vite 8 builds browser modules and stylesheets into content-hashed files.
 - Vitest 5 runs tests that need TypeScript, TSX, or a DOM; `node:test` is acceptable for plain Node scripts.
+
+The compatible shared direct versions are Vite 8.3.1, Vitest 5.0.2, TypeScript 7.0.2, React/React DOM 19.3.0, Wrangler 4.141.0 and Node types 26.6.3 where those packages are used. Boneyard and FightLab retain TypeScript 5.9.3 and Node types 24.13.5 for their source-consumer contract; those repositories own a coordinated upgrade proof. SharkTank retains React/React DOM 19.2.8 because its reviewed 3D and vendored peers exclude React 19.3; SharkTank owns the follow-up. Transitive lockfile versions remain pinned by each repository's tested dependency graph.
 
 **Browser presentation, when applicable.**
 
@@ -332,6 +334,9 @@ Every executable repository carries root `AGENTS.md`, `CONTRIBUTING.md`, `SECURI
 | `npm run typecheck` | Check every applicable TypeScript program without emitting a distributable artifact; a non-TypeScript repository records N/A. |
 | `npm test` | Run the repository's deterministic automated tests. Name special suites (`test:browser`, `test:php`, visual evidence, and similar) explicitly; avoid an implicit second production build inside `test` when `check` already runs `build`, unless compiled tests genuinely require it and the reason is documented. |
 | `npm run check` | The canonical unattended, credential-free acceptance gate after locked dependency installation. Compose applicable type, test, build, generated-artifact parity, history/change, security, local acceptance, and patch-integrity checks once, with bounded diagnostics. CI runs the same command on PRs and `main`; any extra CI gate is named, justified, and locally reproducible. Do not require provider credentials, mutate live services, publish, or deploy. |
+| `npm run audit:dependencies` | Separate network advisory gate. A registry error is an unavailable result, never a clean pass. |
+| `npm run verify:github-settings` | Read live repository settings and rulesets using `GH_ADMIN_TOKEN`, or `GH_TOKEN` when it has read access. This command is read-only and stays outside `check`. |
+| `npm run apply:github-settings` | Apply only the settings and rulesets in committed authority using an administration-capable runtime token, then independently re-read and verify. No environment variable may redirect the committed repository identity. |
 | `npm run verify:*` / `npm run check:*` | Narrow, named subchecks or provider-aware verification, never an undocumented competing umbrella gate. State whether each requires browser tooling, network, credentials, or live provider access. `npm run validate:ci` may orchestrate installation, `check`, and the explicit extra gates with retained diagnostics. |
 
 Local dependency-advisory queries may need registry network access even though they need no credentials; name that requirement and keep the security gate in CI. A cloud agent's lack of network or a provider credential is a reported capability blocker, not a pass. Release publication is a separate exact-annotated-tag workflow that reproduces the tagged state; a production deployment runs only from accepted immutable release state through the protected environment. An npm command called `deploy` must not make an arbitrary checkout a production source. Product-specific offline, library, browser, Worker, visual, and deployment capabilities are explicit, not exemptions from the shared command meanings or controlled process.
