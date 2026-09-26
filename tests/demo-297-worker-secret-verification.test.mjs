@@ -56,7 +56,7 @@ describe('DEMO-297 Worker secret verification', () => {
   });
 
   it('uses the machine-readable flag supported by the locked Wrangler secret-list command', () => {
-    expect(packageLock.packages['node_modules/wrangler']?.version).toBe('4.130.0');
+    expect(packageLock.packages['node_modules/wrangler']?.version).toBe('4.141.0');
     const help = spawnSync(wrangler, ['secret', 'list', '--help'], {
       encoding: 'utf8',
       env: { ...process.env, NO_UPDATE_NOTIFIER: '1' },

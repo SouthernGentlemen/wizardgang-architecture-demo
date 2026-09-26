@@ -22,17 +22,6 @@ For each task, validate with the pinned toolchain, `npm ci`, focused cases, `npm
 
 ## Open tasks
 
-### DEMO-371 — [OPS] Normalize shared package, workflow, and npm command contracts
-
-- Dependency: DEMO-369 delivered; portfolio planning policy DEMO-370 merged. Coordinate with the same normalization task in every public sibling repository.
-- Why: Shared versioned tooling, workflow behavior, and npm command meanings have drifted across the public repositories.
-- Scope: Inventory every public repository's direct and transitive shared npm packages, package manager, Node pin, lockfile, versioned vendor code, GitHub Action pins, workflow triggers/permissions/toolchain/install/check/advisory/identity/release/deploy steps, and npm scripts. Select one supported version for each shared vendor dependency or document a concrete compatibility exception. Align common scripts and YAML workflows to the same behavior for equivalent capabilities. Keep product-specific commands and explicit local-only/library/no-deploy boundaries. Reconcile AGENTS.md and the byte-identical CONTRIBUTING.md contract across the public set.
-- Demo-specific deliverables: Update WG-ARCH-001 §27's npm 11 authority to the proven Node `26.10.0`/npm `12.1.0` cohort; make the required `validate` PR job check out the exact head; pin applicable official actions to reviewed full SHAs; expose `audit:dependencies` while preserving the existing advisory alias; and review npm install-script allowlisting. Keep the existing public-history scan, architecture/assurance gates, migrations, release identity and protected deployment boundary.
-- Non-goals: Do not add unused packages, a hosted runtime to a local-only product, or production deployment merely for parity. Do not rewrite published history or unrelated product behavior.
-- Acceptance: A fresh cross-repository matrix shows the same version for every shared versioned package/vendor tool where compatible, identical CONTRIBUTING.md bytes, equivalent workflow and npm-script semantics for applicable capabilities, and recorded exceptions with technical reasons. No workflow invokes a missing script; every package lock matches its manifest.
-- Validation: Install each public repository with its pinned toolchain and `npm ci`; run `npm run check`, focused workflow/script contract tests, `git diff --check`, exact-head CI, and the separate network/provider gates where applicable. Re-fetch every target's base and this documentation commit before merging to preserve concurrent work.
-- Authorities: WG-ARCH-001 §27, current public repository manifests and lockfiles, GitHub workflow YAML, npm scripts, AGENTS.md, and shared CONTRIBUTING.md.
-
 ### DEMO-374 — [OPS] Converge common agent instructions and permanent empty plan queue
 
 - Dependency: DEMO-371 delivered; preserve every existing queued task and its order. The baseline seed remains downstream of this repository convergence.

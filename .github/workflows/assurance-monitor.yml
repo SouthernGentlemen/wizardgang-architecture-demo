@@ -14,13 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .node-version
           cache: npm
+      - name: Use committed npm version
+        run: npm install --global npm@12.1.0
       - name: Install locked dependencies
         run: npm ci
       - name: Validate assurance data and freshness
@@ -29,7 +31,7 @@ jobs:
         run: npm run monitor:assurance
       - name: Maintain assurance monitor tracking issue
         if: ${{ always() && !cancelled() }}
-        uses: actions/github-script@v8
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
           MONITOR_STATUS: ${{ job.status }}
           MONITOR_ISSUE_TITLE: Assurance Monitor failure
