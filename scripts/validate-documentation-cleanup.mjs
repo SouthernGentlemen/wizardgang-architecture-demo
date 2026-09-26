@@ -62,9 +62,8 @@ function normalizeRepositoryPath(source, target) {
 const files = trackedFiles();
 const fileSet = new Set(files);
 const markdownFiles = files.filter((file) => file.endsWith('.md'));
-// The root implementation plan is temporary coordination rather than current-state documentation,
-// so it may name the change IDs it reserves until the release that completes it retires the plan.
-const temporaryImplementationPlan = 'IMPLEMENTATION_PLAN.md';
+// The permanent root implementation plan is a current/future queue and may name reserved IDs.
+const temporaryImplementationPlan = 'implementation_plan.md';
 const currentStateMarkdown = markdownFiles.filter((file) => (
   file !== temporaryImplementationPlan
   && !file.startsWith(['docs', 'history'].join('/') + '/')

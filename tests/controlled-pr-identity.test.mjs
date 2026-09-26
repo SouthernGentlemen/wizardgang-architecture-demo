@@ -61,7 +61,7 @@ describe('controlled PR identity and queue sequence', () => {
 
   it('requires task retirement while preserving future queued IDs', () => {
     expect(validateControlledPullRequestIdentity(valid({ headPlanMarkdown: validBase }))).toContain(
-      'DEMO-364 must be retired from IMPLEMENTATION_PLAN.md in the same delivery.',
+      'DEMO-364 must be retired from implementation_plan.md in the same delivery.',
     );
     expect(validateControlledPullRequestIdentity(valid({ headPlanMarkdown: plan(task('DEMO-366')) }))).toContain(
       'Future queued tasks must remain after delivery; missing DEMO-365.',
@@ -103,5 +103,12 @@ describe('controlled PR identity and queue sequence', () => {
       basePlanMarkdown: null,
       headPlanMarkdown: plan(task('DEMO-371')),
     }))).toEqual([]);
+  });
+
+  it('requires the plan to remain tracked after the last task', () => {
+    expect(validateControlledPullRequestIdentity(valid({
+      basePlanMarkdown: plan(task('DEMO-364')),
+      headPlanMarkdown: null,
+    }))).toContain('implementation_plan.md must remain tracked after delivery.');
   });
 });

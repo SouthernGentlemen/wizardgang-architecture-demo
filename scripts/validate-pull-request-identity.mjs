@@ -30,12 +30,14 @@ try {
 
 let basePlanMarkdown = null;
 try {
-  basePlanMarkdown = execFileSync('git', ['show', `${baseSha}:IMPLEMENTATION_PLAN.md`], { cwd: root, encoding: 'utf8' });
+  basePlanMarkdown = execFileSync('git', ['show', `${baseSha}:implementation_plan.md`], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
 } catch {
-  basePlanMarkdown = null;
+  try {
+    basePlanMarkdown = execFileSync('git', ['show', `${baseSha}:IMPLEMENTATION_PLAN.md`], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+  } catch { basePlanMarkdown = null; }
 }
 
-const headPlanPath = path.join(root, 'IMPLEMENTATION_PLAN.md');
+const headPlanPath = path.join(root, 'implementation_plan.md');
 const headPlanMarkdown = existsSync(headPlanPath) ? readFileSync(headPlanPath, 'utf8') : null;
 const headSubject = runGit(['show', '-s', '--format=%s', headSha]);
 const headBody = runGit(['show', '-s', '--format=%b', headSha]);

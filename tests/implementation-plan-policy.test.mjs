@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { validateImplementationPlan } from '../scripts/validate-implementation-plan.mjs';
+import { readFileSync } from 'node:fs';
 
 const task = (id = 'DEMO-999') => `# Active implementation plan
 
@@ -17,7 +18,8 @@ const task = (id = 'DEMO-999') => `# Active implementation plan
 `;
 
 describe('active implementation plan policy', () => {
-  it('allows no plan and a structured future task', () => {
+  it('allows the shared empty queue and a structured future task', () => {
+    expect(validateImplementationPlan(readFileSync('implementation_plan.md', 'utf8'))).toEqual([]);
     expect(validateImplementationPlan(task())).toEqual([]);
   });
 
@@ -27,9 +29,9 @@ describe('active implementation plan policy', () => {
     );
   });
 
-  it('rejects an exhausted, historical, or incomplete plan', () => {
+  it('rejects an arbitrary empty, historical, or incomplete plan', () => {
     expect(validateImplementationPlan('# Active implementation plan\n')).toContain(
-      'An active implementation plan must have open tasks; delete it when exhausted.',
+      'An empty implementation plan must use the shared permanent queue template.',
     );
     expect(validateImplementationPlan(`${task()}\n## Completed tasks\n`)).toContain(
       'An active plan cannot retain completed work or historical sections.',

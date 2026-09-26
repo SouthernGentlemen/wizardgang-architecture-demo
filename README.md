@@ -94,11 +94,14 @@ For ordinary pre-PR acceptance, run `npm run check`, `npm run security:dependenc
 
 Commit pattern: `[DEMO-NNN] [TYPE] Imperative description`.
 
+[`AGENTS.md`](AGENTS.md) is the shared delivery workflow. The permanent lowercase [`implementation_plan.md`](implementation_plan.md) selects the first open task; when it is empty, the next instruction fills it through a controlled plan-only change before implementation begins. This repository requires exact-head `validate` and `change-id`, strict current-with-main protection, and one squash commit for each controlled PR. [Repository boundaries](docs/REPOSITORY-BOUNDARIES.md) retain the demo-specific architecture, cloud development, secret, assurance and operational rules.
+
 `main` is the accepted production baseline. Changes flow through isolated branches, pull requests, automated validation, review, annotated semantic tags, GitHub Releases, and exact-tag deployment. See [`docs/CHANGE-MANAGEMENT.md`](docs/CHANGE-MANAGEMENT.md) and [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md).
 
 ## Start here
 
 - [`docs/ARCHITECTURE-STANDARD.md`](docs/ARCHITECTURE-STANDARD.md) — architecture, boundaries, and engineering defaults.
+- [`docs/REPOSITORY-BOUNDARIES.md`](docs/REPOSITORY-BOUNDARIES.md) — application-specific development and architecture invariants.
 - [`docs/ROUTE-REGISTRY.md`](docs/ROUTE-REGISTRY.md) — routing contract; [`docs/route-manifest.json`](docs/route-manifest.json) is its generated machine projection.
 - [`docs/ASSURANCE.md`](docs/ASSURANCE.md) and [`docs/REPORTING.md`](docs/REPORTING.md) — structured assurance and reporting authority.
 - [`docs/OPERATIONS.md`](docs/OPERATIONS.md) and [`docs/IDENTITY.md`](docs/IDENTITY.md) — operating and authorization boundaries.
