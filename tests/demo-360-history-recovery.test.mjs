@@ -13,8 +13,8 @@ describe('DEMO-360 immutable history recovery', () => {
   });
 
   it('keeps DEMO-360 retired as future tasks are appended or delivered', () => {
-    if (!fs.existsSync(path.join(root, 'IMPLEMENTATION_PLAN.md'))) return;
-    const plan = read('IMPLEMENTATION_PLAN.md');
+    if (!fs.existsSync(path.join(root, 'implementation_plan.md'))) return;
+    const plan = read('implementation_plan.md');
     const headings = [...plan.matchAll(/^### (DEMO-\d{3,}) —/gm)].map((match) => Number(match[1].slice(5)));
     expect(headings.every((id) => id > 360)).toBe(true);
     expect(headings).toEqual([...new Set(headings)].sort((a, b) => a - b));

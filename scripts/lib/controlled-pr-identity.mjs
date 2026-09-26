@@ -134,14 +134,12 @@ export function validateControlledPullRequestIdentity({
     }
 
     if (headPlanMarkdown === null) {
-      if (baseTasks.length > 1) {
-        errors.push(`Active plan cannot be deleted while future tasks remain after ${first.id}.`);
-      }
+      errors.push('implementation_plan.md must remain tracked after delivery.');
     } else {
       const headTasks = parsePlanTasks(headPlanMarkdown);
       validatePlanOrder(headTasks, errors, 'Head plan');
       if (headTasks.some((task) => task.id === first.id)) {
-        errors.push(`${first.id} must be retired from IMPLEMENTATION_PLAN.md in the same delivery.`);
+        errors.push(`${first.id} must be retired from implementation_plan.md in the same delivery.`);
       }
       futureIdsPreserved(baseTasks, headTasks, errors);
     }

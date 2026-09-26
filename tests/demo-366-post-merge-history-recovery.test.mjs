@@ -25,7 +25,7 @@ describe('DEMO-366 post-merge history recovery', () => {
   });
 
   it('keeps DEMO-366 retired without freezing its successor into recovery acceptance', () => {
-    const plan = read('IMPLEMENTATION_PLAN.md');
+    const plan = read('implementation_plan.md');
     const headings = [...plan.matchAll(/^### (DEMO-\d{3,}) —/gm)].map((match) => match[1]);
     expect(headings).not.toContain('DEMO-366');
     expect(headings.every((id) => Number(id.slice('DEMO-'.length)) > 366)).toBe(true);

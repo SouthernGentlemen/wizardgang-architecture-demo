@@ -38,14 +38,14 @@ afterEach(() => {
 
 describe('DEMO-322 temporary implementation plan', () => {
   it('lets the root implementation plan name the change IDs it reserves', () => {
-    const result = validate(fixture({ 'IMPLEMENTATION_PLAN.md': `# Plan\n\n### ${plannedChange} — DOCS — Reserve a change\n` }));
+    const result = validate(fixture({ 'implementation_plan.md': `# Plan\n\n### ${plannedChange} — DOCS — Reserve a change\n` }));
     expect(result.stderr).toBe('');
     expect(result.status).toBe(0);
     expect(result.stdout).toContain('Documentation cleanup validation passed:');
   });
 
   it('keeps change IDs out of every other current-state Markdown file', () => {
-    const nestedPlan = ['docs', 'IMPLEMENTATION_PLAN.md'].join('/');
+    const nestedPlan = ['docs', 'implementation_plan.md'].join('/');
     const policy = ['docs', 'POLICY.md'].join('/');
     for (const path of [nestedPlan, policy, 'AGENTS.md']) {
       const result = validate(fixture({ [path]: `# Current state\n\nChanged by ${plannedChange}.\n` }));
