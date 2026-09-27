@@ -7,6 +7,7 @@ const root = 'SouthernGentlemen/wizardgang-architecture-demo';
 function assertBaseline(value) {
   if (value.repository !== root || value.defaultBranch !== 'main') throw new Error('GitHub settings authority must name this repository and main.');
   if (JSON.stringify(configuredMergeMethods(value)) !== JSON.stringify(['squash'])) throw new Error('GitHub settings authority must allow squash only.');
+  if (value.allowAutoMerge !== true) throw new Error('Per-PR auto-merge must be available.');
   if (value.deleteBranchOnMerge !== true) throw new Error('Completed branches must be deleted.');
   const policies = Object.values(value.rulesets ?? {});
   if (policies.length !== 2) throw new Error('Expected one main and one release-tag ruleset.');
@@ -15,6 +16,7 @@ function assertBaseline(value) {
     allow_merge_commit: value.mergeMethods.mergeCommit,
     allow_squash_merge: value.mergeMethods.squash,
     allow_rebase_merge: value.mergeMethods.rebase,
+    allow_auto_merge: value.allowAutoMerge,
     delete_branch_on_merge: value.deleteBranchOnMerge,
   };
   const main = value.rulesets.main;
