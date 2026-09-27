@@ -17,7 +17,7 @@
       "requiredReviewThreadResolution": false,
       "doNotEnforceOnCreate": false,
       "requiredRules": ["deletion", "non_fast_forward", "pull_request", "required_status_checks"],
-      "requiredStatusChecks": ["validate", "change-id"]
+      "requiredStatusChecks": ["validate", "change-id", "security", "secrets"]
     },
     "releaseTags": {
       "name": "Protect release tags",

@@ -71,6 +71,17 @@ test("main ruleset protects exact main and controlled PR merge policy", () => {
   assert.match(failuresFor((actual) => { rule(main(actual), "pull_request").parameters.allowed_merge_methods = ["merge"]; }), /main merge methods/);
 });
 
+test("all four exact-head status checks are required", () => {
+  const checks = ["validate", "change-id", "security", "secrets"];
+  assert.deepEqual(expected.rulesets.main.requiredStatusChecks, checks);
+  for (const missing of checks) {
+    assert.match(failuresFor((actual) => {
+      rule(main(actual), "required_status_checks").parameters.required_status_checks =
+        checks.filter((name) => name !== missing).map((context) => ({ context }));
+    }), /main required checks/);
+  }
+});
+
 test("required exact-head checks and current-main enforcement cannot weaken", () => {
   assert.match(failuresFor((actual) => { rule(main(actual), "required_status_checks").parameters.required_status_checks = [{ context: "verify" }]; }), /main required checks/);
   assert.match(failuresFor((actual) => { rule(main(actual), "required_status_checks").parameters.strict_required_status_checks_policy = false; }), /main current-with-main/);
