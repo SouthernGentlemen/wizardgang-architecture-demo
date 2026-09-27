@@ -2028,6 +2028,41 @@
         "id": "demo-workbench"
       },
       {
+        "role": "region",
+        "name": "Database tables",
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "D1 database console",
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "Users — / 10",
+        "id": "d1-d1-users-panel"
+      },
+      {
+        "role": "region",
+        "name": "Tasks — / 25",
+        "id": "d1-d1-tasks-panel"
+      },
+      {
+        "role": "complementary",
+        "name": null,
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "SQL Inspector",
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "Your isolated D1 sandbox",
+        "id": null
+      },
+      {
         "role": "complementary",
         "name": "D1 inspector",
         "id": null
@@ -2048,6 +2083,36 @@
         "level": 2,
         "text": "D1",
         "id": "demo-active-title"
+      },
+      {
+        "level": 2,
+        "text": "قاعدة بيانات Cloudflare D1",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Users",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Tasks",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "SQL Inspector",
+        "id": "d1-state-heading"
+      },
+      {
+        "level": 3,
+        "text": "Your isolated D1 sandbox",
+        "id": "d1-sandbox-heading"
+      },
+      {
+        "level": 3,
+        "text": "Delete row?",
+        "id": "d1-d1-confirm-title"
       }
     ],
     "links": [
@@ -2078,82 +2143,82 @@
       },
       {
         "name": "Data",
-        "href": "#d1",
+        "href": "?lang=ar&demo=d1#d1",
         "target": null
       },
       {
         "name": "APIs",
-        "href": "#rest",
+        "href": "?lang=ar&demo=rest#rest",
         "target": null
       },
       {
         "name": "Integrations",
-        "href": "#webhooks",
+        "href": "?lang=ar&demo=webhooks#webhooks",
         "target": null
       },
       {
         "name": "الهوية",
-        "href": "#identity",
+        "href": "?lang=ar&demo=identity#identity",
         "target": null
       },
       {
         "name": "AI",
-        "href": "#mcp",
+        "href": "?lang=ar&demo=mcp#mcp",
         "target": null
       },
       {
         "name": "المنصة",
-        "href": "#edge",
+        "href": "?lang=ar&demo=edge#edge",
         "target": null
       },
       {
         "name": "Quality",
-        "href": "#accessibility",
+        "href": "?lang=ar&demo=accessibility#accessibility",
         "target": null
       },
       {
         "name": "D1",
-        "href": "#d1",
+        "href": "?lang=ar&demo=d1#d1",
         "target": null
       },
       {
         "name": "R2",
-        "href": "#r2",
+        "href": "?lang=ar&demo=r2#r2",
         "target": null
       },
       {
         "name": "REST",
-        "href": "#rest",
+        "href": "?lang=ar&demo=rest#rest",
         "target": null
       },
       {
         "name": "GraphQL",
-        "href": "#graphql",
+        "href": "?lang=ar&demo=graphql#graphql",
         "target": null
       },
       {
         "name": "الحافة",
-        "href": "#edge",
+        "href": "?lang=ar&demo=edge#edge",
         "target": null
       },
       {
         "name": "Workers",
-        "href": "#workers",
+        "href": "?lang=ar&demo=workers#workers",
         "target": null
       },
       {
         "name": "Durable Objects",
-        "href": "#durable-objects",
+        "href": "?lang=ar&demo=durable-objects#durable-objects",
         "target": null
       },
       {
         "name": "إمكانية الوصول",
-        "href": "#accessibility",
+        "href": "?lang=ar&demo=accessibility#accessibility",
         "target": null
       },
       {
         "name": "التدويل",
-        "href": "#i18n",
+        "href": "?lang=ar&demo=i18n#i18n",
         "target": null
       },
       {
@@ -2194,6 +2259,61 @@
         "value": null
       },
       {
+        "name": "Users — / 10",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Tasks — / 25",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "+ Add user",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Create user",
+        "type": "submit",
+        "value": null
+      },
+      {
+        "name": "إلغاء",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "+ Add task",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Create task",
+        "type": "submit",
+        "value": null
+      },
+      {
+        "name": "إلغاء",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Reset sample data",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "إلغاء",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "متابعة",
+        "type": "button",
+        "value": null
+      },
+      {
         "name": "Guide",
         "type": "button",
         "value": null
@@ -2222,6 +2342,70 @@
         "accessibleName": "اللغة",
         "name": "lang",
         "value": "es"
+      },
+      {
+        "element": "input",
+        "type": "hidden",
+        "label": null,
+        "accessibleName": null,
+        "name": "id",
+        "value": null
+      },
+      {
+        "element": "input",
+        "type": null,
+        "label": "Name",
+        "accessibleName": "Name",
+        "name": "name",
+        "value": null
+      },
+      {
+        "element": "input",
+        "type": "email",
+        "label": "Email",
+        "accessibleName": "Email",
+        "name": "email",
+        "value": null
+      },
+      {
+        "element": "select",
+        "type": null,
+        "label": "Role",
+        "accessibleName": "Role",
+        "name": "role",
+        "value": "member"
+      },
+      {
+        "element": "input",
+        "type": "hidden",
+        "label": null,
+        "accessibleName": null,
+        "name": "id",
+        "value": null
+      },
+      {
+        "element": "input",
+        "type": null,
+        "label": "Task title",
+        "accessibleName": "Task title",
+        "name": "title",
+        "value": null
+      },
+      {
+        "element": "select",
+        "type": null,
+        "label": "Assignee",
+        "accessibleName": "Assignee",
+        "name": "assigneeId",
+        "value": null
+      },
+      {
+        "element": "select",
+        "type": null,
+        "label": "الحالة",
+        "accessibleName": "الحالة",
+        "name": "status",
+        "value": "todo"
       }
     ],
     "ids": [
@@ -2241,6 +2425,14 @@
       "i18n",
       "demo-workbench",
       "demo-active-title",
+      "d1-d1-users-tab",
+      "d1-d1-tasks-tab",
+      "d1-d1-users-panel",
+      "d1-d1-tasks-panel",
+      "d1-state-heading",
+      "d1-sandbox-heading",
+      "d1-d1-confirm-title",
+      "d1-d1-confirm-message",
       "demo-inspector-tab-guide",
       "demo-inspector-tab-request",
       "demo-inspector-tab-evidence",
@@ -2253,82 +2445,82 @@
         "present": true
       },
       {
-        "href": "#d1",
+        "href": "?lang=ar&demo=d1#d1",
         "fragment": "d1",
         "present": true
       },
       {
-        "href": "#rest",
+        "href": "?lang=ar&demo=rest#rest",
         "fragment": "rest",
         "present": true
       },
       {
-        "href": "#webhooks",
+        "href": "?lang=ar&demo=webhooks#webhooks",
         "fragment": "webhooks",
         "present": true
       },
       {
-        "href": "#identity",
+        "href": "?lang=ar&demo=identity#identity",
         "fragment": "identity",
         "present": true
       },
       {
-        "href": "#mcp",
+        "href": "?lang=ar&demo=mcp#mcp",
         "fragment": "mcp",
         "present": true
       },
       {
-        "href": "#edge",
+        "href": "?lang=ar&demo=edge#edge",
         "fragment": "edge",
         "present": true
       },
       {
-        "href": "#accessibility",
+        "href": "?lang=ar&demo=accessibility#accessibility",
         "fragment": "accessibility",
         "present": true
       },
       {
-        "href": "#d1",
+        "href": "?lang=ar&demo=d1#d1",
         "fragment": "d1",
         "present": true
       },
       {
-        "href": "#r2",
+        "href": "?lang=ar&demo=r2#r2",
         "fragment": "r2",
         "present": true
       },
       {
-        "href": "#rest",
+        "href": "?lang=ar&demo=rest#rest",
         "fragment": "rest",
         "present": true
       },
       {
-        "href": "#graphql",
+        "href": "?lang=ar&demo=graphql#graphql",
         "fragment": "graphql",
         "present": true
       },
       {
-        "href": "#edge",
+        "href": "?lang=ar&demo=edge#edge",
         "fragment": "edge",
         "present": true
       },
       {
-        "href": "#workers",
+        "href": "?lang=ar&demo=workers#workers",
         "fragment": "workers",
         "present": true
       },
       {
-        "href": "#durable-objects",
+        "href": "?lang=ar&demo=durable-objects#durable-objects",
         "fragment": "durable-objects",
         "present": true
       },
       {
-        "href": "#accessibility",
+        "href": "?lang=ar&demo=accessibility#accessibility",
         "fragment": "accessibility",
         "present": true
       },
       {
-        "href": "#i18n",
+        "href": "?lang=ar&demo=i18n#i18n",
         "fragment": "i18n",
         "present": true
       }
@@ -2493,12 +2685,6 @@
         }
       },
       {
-        "element": "p",
-        "attributes": {
-          "data-demo-active-context": ""
-        }
-      },
-      {
         "element": "h2#demo-active-title",
         "attributes": {
           "data-demo-active-title": ""
@@ -2517,15 +2703,215 @@
         }
       },
       {
-        "element": "span",
+        "element": "div",
         "attributes": {
-          "data-demo-try": ""
+          "data-demo-inspector-enabled": "true"
         }
       },
       {
         "element": "div",
         "attributes": {
           "data-demo-panel": ""
+        }
+      },
+      {
+        "element": "div",
+        "attributes": {
+          "data-demo-section": "d1",
+          "data-demo-browser-module": "/assets/d1-browser-skjjcjyY.js",
+          "data-config": "<CONFIG_SHA256:0a21435961a84350>"
+        }
+      },
+      {
+        "element": "button#d1-d1-users-tab",
+        "attributes": {
+          "data-table-tab": "users"
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-count": "users"
+        }
+      },
+      {
+        "element": "button#d1-d1-tasks-tab",
+        "attributes": {
+          "data-table-tab": "tasks"
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-count": "tasks"
+        }
+      },
+      {
+        "element": "p",
+        "attributes": {
+          "data-database-message": ""
+        }
+      },
+      {
+        "element": "section#d1-d1-users-panel",
+        "attributes": {
+          "data-table-panel": "users"
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-heading-count": "users"
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-add": "users"
+        }
+      },
+      {
+        "element": "form",
+        "attributes": {
+          "data-form": "users"
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-editor-title": "users"
+        }
+      },
+      {
+        "element": "p",
+        "attributes": {
+          "data-form-status": "users"
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-cancel": "users"
+        }
+      },
+      {
+        "element": "tbody",
+        "attributes": {
+          "data-rows": "users"
+        }
+      },
+      {
+        "element": "section#d1-d1-tasks-panel",
+        "attributes": {
+          "data-table-panel": "tasks"
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-heading-count": "tasks"
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-add": "tasks"
+        }
+      },
+      {
+        "element": "form",
+        "attributes": {
+          "data-form": "tasks"
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-editor-title": "tasks"
+        }
+      },
+      {
+        "element": "p",
+        "attributes": {
+          "data-form-status": "tasks"
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-cancel": "tasks"
+        }
+      },
+      {
+        "element": "tbody",
+        "attributes": {
+          "data-rows": "tasks"
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-inspector-verb": ""
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-inspector-status": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-inspector-metrics": ""
+        }
+      },
+      {
+        "element": "pre",
+        "attributes": {
+          "data-inspector-sql": ""
+        }
+      },
+      {
+        "element": "pre",
+        "attributes": {
+          "data-state-output": ""
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-reset": ""
+        }
+      },
+      {
+        "element": "dialog",
+        "attributes": {
+          "data-confirm-dialog": ""
+        }
+      },
+      {
+        "element": "h3#d1-d1-confirm-title",
+        "attributes": {
+          "data-confirm-title": ""
+        }
+      },
+      {
+        "element": "p#d1-d1-confirm-message",
+        "attributes": {
+          "data-confirm-message": ""
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-confirm-cancel": ""
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-confirm-action": ""
         }
       },
       {
@@ -2586,8 +2972,8 @@
         "element": "script",
         "attributes": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:d4417ffeacb69ec1>",
-          "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
+          "data-config": "<CONFIG_SHA256:f5a52dac5832e8d3>",
+          "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \",\"inspector\":\"Inspector\",\"inspectorModes\":\"Inspector modes\",\"demoTools\":\"Demo tools\",\"resetDemo\":\"Reset demo\",\"viewSource\":\"عرض المصدر\"}"
         }
       },
       {
@@ -2608,15 +2994,15 @@
         "data": {}
       },
       {
-        "src": "/assets/demos-browser-zMf5k2eJ.js",
+        "src": "/assets/demos-browser-CX0tFkO8.js",
         "type": "module",
         "async": false,
         "defer": false,
         "inlineSha256": null,
         "data": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:d4417ffeacb69ec1>",
-          "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
+          "data-config": "<CONFIG_SHA256:f5a52dac5832e8d3>",
+          "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \",\"inspector\":\"Inspector\",\"inspectorModes\":\"Inspector modes\",\"demoTools\":\"Demo tools\",\"resetDemo\":\"Reset demo\",\"viewSource\":\"عرض المصدر\"}"
         }
       },
       {
@@ -2641,7 +3027,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-ak_961L0.css",
+        "href": "/assets/demos-K6qayzjh.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -8238,6 +8624,41 @@
         "id": "demo-workbench"
       },
       {
+        "role": "region",
+        "name": "Database tables",
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "D1 database console",
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "Users — / 10",
+        "id": "d1-d1-users-panel"
+      },
+      {
+        "role": "region",
+        "name": "Tasks — / 25",
+        "id": "d1-d1-tasks-panel"
+      },
+      {
+        "role": "complementary",
+        "name": null,
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "SQL Inspector",
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "Your isolated D1 sandbox",
+        "id": null
+      },
+      {
         "role": "complementary",
         "name": "D1 inspector",
         "id": null
@@ -8258,6 +8679,36 @@
         "level": 2,
         "text": "D1",
         "id": "demo-active-title"
+      },
+      {
+        "level": 2,
+        "text": "قاعدة بيانات Cloudflare D1",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Users",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Tasks",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "SQL Inspector",
+        "id": "d1-state-heading"
+      },
+      {
+        "level": 3,
+        "text": "Your isolated D1 sandbox",
+        "id": "d1-sandbox-heading"
+      },
+      {
+        "level": 3,
+        "text": "Delete row?",
+        "id": "d1-d1-confirm-title"
       }
     ],
     "links": [
@@ -8288,82 +8739,82 @@
       },
       {
         "name": "Data",
-        "href": "#d1",
+        "href": "?lang=ar&demo=d1#d1",
         "target": null
       },
       {
         "name": "APIs",
-        "href": "#rest",
+        "href": "?lang=ar&demo=rest#rest",
         "target": null
       },
       {
         "name": "Integrations",
-        "href": "#webhooks",
+        "href": "?lang=ar&demo=webhooks#webhooks",
         "target": null
       },
       {
         "name": "الهوية",
-        "href": "#identity",
+        "href": "?lang=ar&demo=identity#identity",
         "target": null
       },
       {
         "name": "AI",
-        "href": "#mcp",
+        "href": "?lang=ar&demo=mcp#mcp",
         "target": null
       },
       {
         "name": "المنصة",
-        "href": "#edge",
+        "href": "?lang=ar&demo=edge#edge",
         "target": null
       },
       {
         "name": "Quality",
-        "href": "#accessibility",
+        "href": "?lang=ar&demo=accessibility#accessibility",
         "target": null
       },
       {
         "name": "D1",
-        "href": "#d1",
+        "href": "?lang=ar&demo=d1#d1",
         "target": null
       },
       {
         "name": "R2",
-        "href": "#r2",
+        "href": "?lang=ar&demo=r2#r2",
         "target": null
       },
       {
         "name": "REST",
-        "href": "#rest",
+        "href": "?lang=ar&demo=rest#rest",
         "target": null
       },
       {
         "name": "GraphQL",
-        "href": "#graphql",
+        "href": "?lang=ar&demo=graphql#graphql",
         "target": null
       },
       {
         "name": "الحافة",
-        "href": "#edge",
+        "href": "?lang=ar&demo=edge#edge",
         "target": null
       },
       {
         "name": "Workers",
-        "href": "#workers",
+        "href": "?lang=ar&demo=workers#workers",
         "target": null
       },
       {
         "name": "Durable Objects",
-        "href": "#durable-objects",
+        "href": "?lang=ar&demo=durable-objects#durable-objects",
         "target": null
       },
       {
         "name": "إمكانية الوصول",
-        "href": "#accessibility",
+        "href": "?lang=ar&demo=accessibility#accessibility",
         "target": null
       },
       {
         "name": "التدويل",
-        "href": "#i18n",
+        "href": "?lang=ar&demo=i18n#i18n",
         "target": null
       },
       {
@@ -8404,6 +8855,61 @@
         "value": null
       },
       {
+        "name": "Users — / 10",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Tasks — / 25",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "+ Add user",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Create user",
+        "type": "submit",
+        "value": null
+      },
+      {
+        "name": "إلغاء",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "+ Add task",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Create task",
+        "type": "submit",
+        "value": null
+      },
+      {
+        "name": "إلغاء",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Reset sample data",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "إلغاء",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "متابعة",
+        "type": "button",
+        "value": null
+      },
+      {
         "name": "Guide",
         "type": "button",
         "value": null
@@ -8432,6 +8938,70 @@
         "accessibleName": "اللغة",
         "name": "lang",
         "value": "es"
+      },
+      {
+        "element": "input",
+        "type": "hidden",
+        "label": null,
+        "accessibleName": null,
+        "name": "id",
+        "value": null
+      },
+      {
+        "element": "input",
+        "type": null,
+        "label": "Name",
+        "accessibleName": "Name",
+        "name": "name",
+        "value": null
+      },
+      {
+        "element": "input",
+        "type": "email",
+        "label": "Email",
+        "accessibleName": "Email",
+        "name": "email",
+        "value": null
+      },
+      {
+        "element": "select",
+        "type": null,
+        "label": "Role",
+        "accessibleName": "Role",
+        "name": "role",
+        "value": "member"
+      },
+      {
+        "element": "input",
+        "type": "hidden",
+        "label": null,
+        "accessibleName": null,
+        "name": "id",
+        "value": null
+      },
+      {
+        "element": "input",
+        "type": null,
+        "label": "Task title",
+        "accessibleName": "Task title",
+        "name": "title",
+        "value": null
+      },
+      {
+        "element": "select",
+        "type": null,
+        "label": "Assignee",
+        "accessibleName": "Assignee",
+        "name": "assigneeId",
+        "value": null
+      },
+      {
+        "element": "select",
+        "type": null,
+        "label": "الحالة",
+        "accessibleName": "الحالة",
+        "name": "status",
+        "value": "todo"
       }
     ],
     "ids": [
@@ -8451,6 +9021,14 @@
       "i18n",
       "demo-workbench",
       "demo-active-title",
+      "d1-d1-users-tab",
+      "d1-d1-tasks-tab",
+      "d1-d1-users-panel",
+      "d1-d1-tasks-panel",
+      "d1-state-heading",
+      "d1-sandbox-heading",
+      "d1-d1-confirm-title",
+      "d1-d1-confirm-message",
       "demo-inspector-tab-guide",
       "demo-inspector-tab-request",
       "demo-inspector-tab-evidence",
@@ -8463,82 +9041,82 @@
         "present": true
       },
       {
-        "href": "#d1",
+        "href": "?lang=ar&demo=d1#d1",
         "fragment": "d1",
         "present": true
       },
       {
-        "href": "#rest",
+        "href": "?lang=ar&demo=rest#rest",
         "fragment": "rest",
         "present": true
       },
       {
-        "href": "#webhooks",
+        "href": "?lang=ar&demo=webhooks#webhooks",
         "fragment": "webhooks",
         "present": true
       },
       {
-        "href": "#identity",
+        "href": "?lang=ar&demo=identity#identity",
         "fragment": "identity",
         "present": true
       },
       {
-        "href": "#mcp",
+        "href": "?lang=ar&demo=mcp#mcp",
         "fragment": "mcp",
         "present": true
       },
       {
-        "href": "#edge",
+        "href": "?lang=ar&demo=edge#edge",
         "fragment": "edge",
         "present": true
       },
       {
-        "href": "#accessibility",
+        "href": "?lang=ar&demo=accessibility#accessibility",
         "fragment": "accessibility",
         "present": true
       },
       {
-        "href": "#d1",
+        "href": "?lang=ar&demo=d1#d1",
         "fragment": "d1",
         "present": true
       },
       {
-        "href": "#r2",
+        "href": "?lang=ar&demo=r2#r2",
         "fragment": "r2",
         "present": true
       },
       {
-        "href": "#rest",
+        "href": "?lang=ar&demo=rest#rest",
         "fragment": "rest",
         "present": true
       },
       {
-        "href": "#graphql",
+        "href": "?lang=ar&demo=graphql#graphql",
         "fragment": "graphql",
         "present": true
       },
       {
-        "href": "#edge",
+        "href": "?lang=ar&demo=edge#edge",
         "fragment": "edge",
         "present": true
       },
       {
-        "href": "#workers",
+        "href": "?lang=ar&demo=workers#workers",
         "fragment": "workers",
         "present": true
       },
       {
-        "href": "#durable-objects",
+        "href": "?lang=ar&demo=durable-objects#durable-objects",
         "fragment": "durable-objects",
         "present": true
       },
       {
-        "href": "#accessibility",
+        "href": "?lang=ar&demo=accessibility#accessibility",
         "fragment": "accessibility",
         "present": true
       },
       {
-        "href": "#i18n",
+        "href": "?lang=ar&demo=i18n#i18n",
         "fragment": "i18n",
         "present": true
       }
@@ -8703,12 +9281,6 @@
         }
       },
       {
-        "element": "p",
-        "attributes": {
-          "data-demo-active-context": ""
-        }
-      },
-      {
         "element": "h2#demo-active-title",
         "attributes": {
           "data-demo-active-title": ""
@@ -8727,15 +9299,215 @@
         }
       },
       {
-        "element": "span",
+        "element": "div",
         "attributes": {
-          "data-demo-try": ""
+          "data-demo-inspector-enabled": "true"
         }
       },
       {
         "element": "div",
         "attributes": {
           "data-demo-panel": ""
+        }
+      },
+      {
+        "element": "div",
+        "attributes": {
+          "data-demo-section": "d1",
+          "data-demo-browser-module": "/assets/d1-browser-skjjcjyY.js",
+          "data-config": "<CONFIG_SHA256:0a21435961a84350>"
+        }
+      },
+      {
+        "element": "button#d1-d1-users-tab",
+        "attributes": {
+          "data-table-tab": "users"
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-count": "users"
+        }
+      },
+      {
+        "element": "button#d1-d1-tasks-tab",
+        "attributes": {
+          "data-table-tab": "tasks"
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-count": "tasks"
+        }
+      },
+      {
+        "element": "p",
+        "attributes": {
+          "data-database-message": ""
+        }
+      },
+      {
+        "element": "section#d1-d1-users-panel",
+        "attributes": {
+          "data-table-panel": "users"
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-heading-count": "users"
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-add": "users"
+        }
+      },
+      {
+        "element": "form",
+        "attributes": {
+          "data-form": "users"
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-editor-title": "users"
+        }
+      },
+      {
+        "element": "p",
+        "attributes": {
+          "data-form-status": "users"
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-cancel": "users"
+        }
+      },
+      {
+        "element": "tbody",
+        "attributes": {
+          "data-rows": "users"
+        }
+      },
+      {
+        "element": "section#d1-d1-tasks-panel",
+        "attributes": {
+          "data-table-panel": "tasks"
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-heading-count": "tasks"
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-add": "tasks"
+        }
+      },
+      {
+        "element": "form",
+        "attributes": {
+          "data-form": "tasks"
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-editor-title": "tasks"
+        }
+      },
+      {
+        "element": "p",
+        "attributes": {
+          "data-form-status": "tasks"
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-cancel": "tasks"
+        }
+      },
+      {
+        "element": "tbody",
+        "attributes": {
+          "data-rows": "tasks"
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-inspector-verb": ""
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-inspector-status": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-inspector-metrics": ""
+        }
+      },
+      {
+        "element": "pre",
+        "attributes": {
+          "data-inspector-sql": ""
+        }
+      },
+      {
+        "element": "pre",
+        "attributes": {
+          "data-state-output": ""
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-reset": ""
+        }
+      },
+      {
+        "element": "dialog",
+        "attributes": {
+          "data-confirm-dialog": ""
+        }
+      },
+      {
+        "element": "h3#d1-d1-confirm-title",
+        "attributes": {
+          "data-confirm-title": ""
+        }
+      },
+      {
+        "element": "p#d1-d1-confirm-message",
+        "attributes": {
+          "data-confirm-message": ""
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-confirm-cancel": ""
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-confirm-action": ""
         }
       },
       {
@@ -8796,8 +9568,8 @@
         "element": "script",
         "attributes": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:d4417ffeacb69ec1>",
-          "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
+          "data-config": "<CONFIG_SHA256:f5a52dac5832e8d3>",
+          "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \",\"inspector\":\"Inspector\",\"inspectorModes\":\"Inspector modes\",\"demoTools\":\"Demo tools\",\"resetDemo\":\"Reset demo\",\"viewSource\":\"عرض المصدر\"}"
         }
       },
       {
@@ -8818,15 +9590,15 @@
         "data": {}
       },
       {
-        "src": "/assets/demos-browser-zMf5k2eJ.js",
+        "src": "/assets/demos-browser-CX0tFkO8.js",
         "type": "module",
         "async": false,
         "defer": false,
         "inlineSha256": null,
         "data": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:d4417ffeacb69ec1>",
-          "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
+          "data-config": "<CONFIG_SHA256:f5a52dac5832e8d3>",
+          "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \",\"inspector\":\"Inspector\",\"inspectorModes\":\"Inspector modes\",\"demoTools\":\"Demo tools\",\"resetDemo\":\"Reset demo\",\"viewSource\":\"عرض المصدر\"}"
         }
       },
       {
@@ -8851,7 +9623,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-ak_961L0.css",
+        "href": "/assets/demos-K6qayzjh.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -8936,6 +9708,41 @@
         "id": "demo-workbench"
       },
       {
+        "role": "region",
+        "name": "Database tables",
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "D1 database console",
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "Users — / 10",
+        "id": "d1-d1-users-panel"
+      },
+      {
+        "role": "region",
+        "name": "Tasks — / 25",
+        "id": "d1-d1-tasks-panel"
+      },
+      {
+        "role": "complementary",
+        "name": null,
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "SQL Inspector",
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "Your isolated D1 sandbox",
+        "id": null
+      },
+      {
         "role": "complementary",
         "name": "D1 inspector",
         "id": null
@@ -8956,6 +9763,36 @@
         "level": 2,
         "text": "D1",
         "id": "demo-active-title"
+      },
+      {
+        "level": 2,
+        "text": "قاعدة بيانات Cloudflare D1",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Users",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Tasks",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "SQL Inspector",
+        "id": "d1-state-heading"
+      },
+      {
+        "level": 3,
+        "text": "Your isolated D1 sandbox",
+        "id": "d1-sandbox-heading"
+      },
+      {
+        "level": 3,
+        "text": "Delete row?",
+        "id": "d1-d1-confirm-title"
       }
     ],
     "links": [
@@ -8986,82 +9823,82 @@
       },
       {
         "name": "Data",
-        "href": "#d1",
+        "href": "?lang=ar&demo=d1#d1",
         "target": null
       },
       {
         "name": "APIs",
-        "href": "#rest",
+        "href": "?lang=ar&demo=rest#rest",
         "target": null
       },
       {
         "name": "Integrations",
-        "href": "#webhooks",
+        "href": "?lang=ar&demo=webhooks#webhooks",
         "target": null
       },
       {
         "name": "الهوية",
-        "href": "#identity",
+        "href": "?lang=ar&demo=identity#identity",
         "target": null
       },
       {
         "name": "AI",
-        "href": "#mcp",
+        "href": "?lang=ar&demo=mcp#mcp",
         "target": null
       },
       {
         "name": "المنصة",
-        "href": "#edge",
+        "href": "?lang=ar&demo=edge#edge",
         "target": null
       },
       {
         "name": "Quality",
-        "href": "#accessibility",
+        "href": "?lang=ar&demo=accessibility#accessibility",
         "target": null
       },
       {
         "name": "D1",
-        "href": "#d1",
+        "href": "?lang=ar&demo=d1#d1",
         "target": null
       },
       {
         "name": "R2",
-        "href": "#r2",
+        "href": "?lang=ar&demo=r2#r2",
         "target": null
       },
       {
         "name": "REST",
-        "href": "#rest",
+        "href": "?lang=ar&demo=rest#rest",
         "target": null
       },
       {
         "name": "GraphQL",
-        "href": "#graphql",
+        "href": "?lang=ar&demo=graphql#graphql",
         "target": null
       },
       {
         "name": "الحافة",
-        "href": "#edge",
+        "href": "?lang=ar&demo=edge#edge",
         "target": null
       },
       {
         "name": "Workers",
-        "href": "#workers",
+        "href": "?lang=ar&demo=workers#workers",
         "target": null
       },
       {
         "name": "Durable Objects",
-        "href": "#durable-objects",
+        "href": "?lang=ar&demo=durable-objects#durable-objects",
         "target": null
       },
       {
         "name": "إمكانية الوصول",
-        "href": "#accessibility",
+        "href": "?lang=ar&demo=accessibility#accessibility",
         "target": null
       },
       {
         "name": "التدويل",
-        "href": "#i18n",
+        "href": "?lang=ar&demo=i18n#i18n",
         "target": null
       },
       {
@@ -9102,6 +9939,61 @@
         "value": null
       },
       {
+        "name": "Users — / 10",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Tasks — / 25",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "+ Add user",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Create user",
+        "type": "submit",
+        "value": null
+      },
+      {
+        "name": "إلغاء",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "+ Add task",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Create task",
+        "type": "submit",
+        "value": null
+      },
+      {
+        "name": "إلغاء",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Reset sample data",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "إلغاء",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "متابعة",
+        "type": "button",
+        "value": null
+      },
+      {
         "name": "Guide",
         "type": "button",
         "value": null
@@ -9130,6 +10022,70 @@
         "accessibleName": "اللغة",
         "name": "lang",
         "value": "es"
+      },
+      {
+        "element": "input",
+        "type": "hidden",
+        "label": null,
+        "accessibleName": null,
+        "name": "id",
+        "value": null
+      },
+      {
+        "element": "input",
+        "type": null,
+        "label": "Name",
+        "accessibleName": "Name",
+        "name": "name",
+        "value": null
+      },
+      {
+        "element": "input",
+        "type": "email",
+        "label": "Email",
+        "accessibleName": "Email",
+        "name": "email",
+        "value": null
+      },
+      {
+        "element": "select",
+        "type": null,
+        "label": "Role",
+        "accessibleName": "Role",
+        "name": "role",
+        "value": "member"
+      },
+      {
+        "element": "input",
+        "type": "hidden",
+        "label": null,
+        "accessibleName": null,
+        "name": "id",
+        "value": null
+      },
+      {
+        "element": "input",
+        "type": null,
+        "label": "Task title",
+        "accessibleName": "Task title",
+        "name": "title",
+        "value": null
+      },
+      {
+        "element": "select",
+        "type": null,
+        "label": "Assignee",
+        "accessibleName": "Assignee",
+        "name": "assigneeId",
+        "value": null
+      },
+      {
+        "element": "select",
+        "type": null,
+        "label": "الحالة",
+        "accessibleName": "الحالة",
+        "name": "status",
+        "value": "todo"
       }
     ],
     "ids": [
@@ -9149,6 +10105,14 @@
       "i18n",
       "demo-workbench",
       "demo-active-title",
+      "d1-d1-users-tab",
+      "d1-d1-tasks-tab",
+      "d1-d1-users-panel",
+      "d1-d1-tasks-panel",
+      "d1-state-heading",
+      "d1-sandbox-heading",
+      "d1-d1-confirm-title",
+      "d1-d1-confirm-message",
       "demo-inspector-tab-guide",
       "demo-inspector-tab-request",
       "demo-inspector-tab-evidence",
@@ -9161,82 +10125,82 @@
         "present": true
       },
       {
-        "href": "#d1",
+        "href": "?lang=ar&demo=d1#d1",
         "fragment": "d1",
         "present": true
       },
       {
-        "href": "#rest",
+        "href": "?lang=ar&demo=rest#rest",
         "fragment": "rest",
         "present": true
       },
       {
-        "href": "#webhooks",
+        "href": "?lang=ar&demo=webhooks#webhooks",
         "fragment": "webhooks",
         "present": true
       },
       {
-        "href": "#identity",
+        "href": "?lang=ar&demo=identity#identity",
         "fragment": "identity",
         "present": true
       },
       {
-        "href": "#mcp",
+        "href": "?lang=ar&demo=mcp#mcp",
         "fragment": "mcp",
         "present": true
       },
       {
-        "href": "#edge",
+        "href": "?lang=ar&demo=edge#edge",
         "fragment": "edge",
         "present": true
       },
       {
-        "href": "#accessibility",
+        "href": "?lang=ar&demo=accessibility#accessibility",
         "fragment": "accessibility",
         "present": true
       },
       {
-        "href": "#d1",
+        "href": "?lang=ar&demo=d1#d1",
         "fragment": "d1",
         "present": true
       },
       {
-        "href": "#r2",
+        "href": "?lang=ar&demo=r2#r2",
         "fragment": "r2",
         "present": true
       },
       {
-        "href": "#rest",
+        "href": "?lang=ar&demo=rest#rest",
         "fragment": "rest",
         "present": true
       },
       {
-        "href": "#graphql",
+        "href": "?lang=ar&demo=graphql#graphql",
         "fragment": "graphql",
         "present": true
       },
       {
-        "href": "#edge",
+        "href": "?lang=ar&demo=edge#edge",
         "fragment": "edge",
         "present": true
       },
       {
-        "href": "#workers",
+        "href": "?lang=ar&demo=workers#workers",
         "fragment": "workers",
         "present": true
       },
       {
-        "href": "#durable-objects",
+        "href": "?lang=ar&demo=durable-objects#durable-objects",
         "fragment": "durable-objects",
         "present": true
       },
       {
-        "href": "#accessibility",
+        "href": "?lang=ar&demo=accessibility#accessibility",
         "fragment": "accessibility",
         "present": true
       },
       {
-        "href": "#i18n",
+        "href": "?lang=ar&demo=i18n#i18n",
         "fragment": "i18n",
         "present": true
       }
@@ -9401,12 +10365,6 @@
         }
       },
       {
-        "element": "p",
-        "attributes": {
-          "data-demo-active-context": ""
-        }
-      },
-      {
         "element": "h2#demo-active-title",
         "attributes": {
           "data-demo-active-title": ""
@@ -9425,15 +10383,215 @@
         }
       },
       {
-        "element": "span",
+        "element": "div",
         "attributes": {
-          "data-demo-try": ""
+          "data-demo-inspector-enabled": "true"
         }
       },
       {
         "element": "div",
         "attributes": {
           "data-demo-panel": ""
+        }
+      },
+      {
+        "element": "div",
+        "attributes": {
+          "data-demo-section": "d1",
+          "data-demo-browser-module": "/assets/d1-browser-skjjcjyY.js",
+          "data-config": "<CONFIG_SHA256:0a21435961a84350>"
+        }
+      },
+      {
+        "element": "button#d1-d1-users-tab",
+        "attributes": {
+          "data-table-tab": "users"
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-count": "users"
+        }
+      },
+      {
+        "element": "button#d1-d1-tasks-tab",
+        "attributes": {
+          "data-table-tab": "tasks"
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-count": "tasks"
+        }
+      },
+      {
+        "element": "p",
+        "attributes": {
+          "data-database-message": ""
+        }
+      },
+      {
+        "element": "section#d1-d1-users-panel",
+        "attributes": {
+          "data-table-panel": "users"
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-heading-count": "users"
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-add": "users"
+        }
+      },
+      {
+        "element": "form",
+        "attributes": {
+          "data-form": "users"
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-editor-title": "users"
+        }
+      },
+      {
+        "element": "p",
+        "attributes": {
+          "data-form-status": "users"
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-cancel": "users"
+        }
+      },
+      {
+        "element": "tbody",
+        "attributes": {
+          "data-rows": "users"
+        }
+      },
+      {
+        "element": "section#d1-d1-tasks-panel",
+        "attributes": {
+          "data-table-panel": "tasks"
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-heading-count": "tasks"
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-add": "tasks"
+        }
+      },
+      {
+        "element": "form",
+        "attributes": {
+          "data-form": "tasks"
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-editor-title": "tasks"
+        }
+      },
+      {
+        "element": "p",
+        "attributes": {
+          "data-form-status": "tasks"
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-cancel": "tasks"
+        }
+      },
+      {
+        "element": "tbody",
+        "attributes": {
+          "data-rows": "tasks"
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-inspector-verb": ""
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-inspector-status": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-inspector-metrics": ""
+        }
+      },
+      {
+        "element": "pre",
+        "attributes": {
+          "data-inspector-sql": ""
+        }
+      },
+      {
+        "element": "pre",
+        "attributes": {
+          "data-state-output": ""
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-reset": ""
+        }
+      },
+      {
+        "element": "dialog",
+        "attributes": {
+          "data-confirm-dialog": ""
+        }
+      },
+      {
+        "element": "h3#d1-d1-confirm-title",
+        "attributes": {
+          "data-confirm-title": ""
+        }
+      },
+      {
+        "element": "p#d1-d1-confirm-message",
+        "attributes": {
+          "data-confirm-message": ""
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-confirm-cancel": ""
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-confirm-action": ""
         }
       },
       {
@@ -9494,8 +10652,8 @@
         "element": "script",
         "attributes": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:d4417ffeacb69ec1>",
-          "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
+          "data-config": "<CONFIG_SHA256:f5a52dac5832e8d3>",
+          "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \",\"inspector\":\"Inspector\",\"inspectorModes\":\"Inspector modes\",\"demoTools\":\"Demo tools\",\"resetDemo\":\"Reset demo\",\"viewSource\":\"عرض المصدر\"}"
         }
       },
       {
@@ -9516,15 +10674,15 @@
         "data": {}
       },
       {
-        "src": "/assets/demos-browser-zMf5k2eJ.js",
+        "src": "/assets/demos-browser-CX0tFkO8.js",
         "type": "module",
         "async": false,
         "defer": false,
         "inlineSha256": null,
         "data": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:d4417ffeacb69ec1>",
-          "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \"}"
+          "data-config": "<CONFIG_SHA256:f5a52dac5832e8d3>",
+          "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \",\"inspector\":\"Inspector\",\"inspectorModes\":\"Inspector modes\",\"demoTools\":\"Demo tools\",\"resetDemo\":\"Reset demo\",\"viewSource\":\"عرض المصدر\"}"
         }
       },
       {
@@ -9549,7 +10707,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-ak_961L0.css",
+        "href": "/assets/demos-K6qayzjh.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -11283,13 +12441,8 @@
     },
     "landmarks": [
       {
-        "role": "complementary",
-        "name": "REST API boundary",
-        "id": null
-      },
-      {
         "role": "region",
-        "name": "Choose one request",
+        "name": "REST operations",
         "id": null
       },
       {
@@ -11314,11 +12467,6 @@
       },
       {
         "role": "region",
-        "name": "Deeper evidence",
-        "id": null
-      },
-      {
-        "role": "region",
         "name": "Create a record",
         "id": "rest-rest-demo-createRecord-panel"
       },
@@ -11335,11 +12483,6 @@
       {
         "role": "region",
         "name": "Contract",
-        "id": null
-      },
-      {
-        "role": "region",
-        "name": "Deeper evidence",
         "id": null
       },
       {
@@ -11364,11 +12507,6 @@
       },
       {
         "role": "region",
-        "name": "Deeper evidence",
-        "id": null
-      },
-      {
-        "role": "region",
         "name": "Replace a record",
         "id": "rest-rest-demo-replaceRecord-panel"
       },
@@ -11385,11 +12523,6 @@
       {
         "role": "region",
         "name": "Contract",
-        "id": null
-      },
-      {
-        "role": "region",
-        "name": "Deeper evidence",
         "id": null
       },
       {
@@ -11414,11 +12547,6 @@
       },
       {
         "role": "region",
-        "name": "Deeper evidence",
-        "id": null
-      },
-      {
-        "role": "region",
         "name": "Delete a record",
         "id": "rest-rest-demo-deleteRecord-panel"
       },
@@ -11436,11 +12564,6 @@
         "role": "region",
         "name": "Contract",
         "id": null
-      },
-      {
-        "role": "region",
-        "name": "Deeper evidence",
-        "id": null
       }
     ],
     "headings": [
@@ -11448,11 +12571,6 @@
         "level": 2,
         "text": "واجهة REST API",
         "id": null
-      },
-      {
-        "level": 3,
-        "text": "Choose one request",
-        "id": "rest-rest-operation-picker-heading"
       },
       {
         "level": 3,
@@ -11493,11 +12611,6 @@
         "level": 5,
         "text": "Record",
         "id": null
-      },
-      {
-        "level": 4,
-        "text": "Deeper evidence",
-        "id": "rest-rest-demo-listRecords-evidence-heading"
       },
       {
         "level": 3,
@@ -11550,11 +12663,6 @@
         "id": null
       },
       {
-        "level": 4,
-        "text": "Deeper evidence",
-        "id": "rest-rest-demo-createRecord-evidence-heading"
-      },
-      {
         "level": 3,
         "text": "Read a record",
         "id": "rest-rest-demo-getRecord-heading"
@@ -11598,11 +12706,6 @@
         "level": 5,
         "text": "Error",
         "id": null
-      },
-      {
-        "level": 4,
-        "text": "Deeper evidence",
-        "id": "rest-rest-demo-getRecord-evidence-heading"
       },
       {
         "level": 3,
@@ -11655,11 +12758,6 @@
         "id": null
       },
       {
-        "level": 4,
-        "text": "Deeper evidence",
-        "id": "rest-rest-demo-replaceRecord-evidence-heading"
-      },
-      {
         "level": 3,
         "text": "Update a record",
         "id": "rest-rest-demo-updateRecord-heading"
@@ -11710,11 +12808,6 @@
         "id": null
       },
       {
-        "level": 4,
-        "text": "Deeper evidence",
-        "id": "rest-rest-demo-updateRecord-evidence-heading"
-      },
-      {
         "level": 3,
         "text": "Delete a record",
         "id": "rest-rest-demo-deleteRecord-heading"
@@ -11748,11 +12841,6 @@
         "level": 5,
         "text": "Referenced schemas",
         "id": null
-      },
-      {
-        "level": 4,
-        "text": "Deeper evidence",
-        "id": "rest-rest-demo-deleteRecord-evidence-heading"
       }
     ],
     "links": [
@@ -11809,48 +12897,8 @@
         "value": null
       },
       {
-        "name": "curl",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "JavaScript",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "Python",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "Copy selected code sample",
-        "type": "button",
-        "value": null
-      },
-      {
         "name": "Execute POST",
         "type": "submit",
-        "value": null
-      },
-      {
-        "name": "curl",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "JavaScript",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "Python",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "Copy selected code sample",
-        "type": "button",
         "value": null
       },
       {
@@ -11859,48 +12907,8 @@
         "value": null
       },
       {
-        "name": "curl",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "JavaScript",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "Python",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "Copy selected code sample",
-        "type": "button",
-        "value": null
-      },
-      {
         "name": "Execute PUT",
         "type": "submit",
-        "value": null
-      },
-      {
-        "name": "curl",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "JavaScript",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "Python",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "Copy selected code sample",
-        "type": "button",
         "value": null
       },
       {
@@ -11909,48 +12917,8 @@
         "value": null
       },
       {
-        "name": "curl",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "JavaScript",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "Python",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "Copy selected code sample",
-        "type": "button",
-        "value": null
-      },
-      {
         "name": "Execute DELETE",
         "type": "submit",
-        "value": null
-      },
-      {
-        "name": "curl",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "JavaScript",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "Python",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "Copy selected code sample",
-        "type": "button",
         "value": null
       }
     ],
@@ -12013,45 +12981,23 @@
       }
     ],
     "ids": [
-      "rest-rest-operation-picker-heading",
       "rest-rest-demo-listRecords-panel",
       "rest-rest-demo-listRecords-heading",
       "rest-rest-demo-listRecords-request-heading",
       "rest-rest-demo-listRecords-response-heading",
       "rest-rest-demo-listRecords-contract-heading",
-      "rest-rest-demo-listRecords-evidence-heading",
-      "rest-rest-demo-listRecords-tab-0",
-      "rest-rest-demo-listRecords-tab-1",
-      "rest-rest-demo-listRecords-tab-2",
-      "rest-rest-demo-listRecords-code-0",
-      "rest-rest-demo-listRecords-code-1",
-      "rest-rest-demo-listRecords-code-2",
       "rest-rest-demo-createRecord-panel",
       "rest-rest-demo-createRecord-heading",
       "rest-rest-demo-createRecord-request-heading",
       "rest-rest-demo-createRecord-body",
       "rest-rest-demo-createRecord-response-heading",
       "rest-rest-demo-createRecord-contract-heading",
-      "rest-rest-demo-createRecord-evidence-heading",
-      "rest-rest-demo-createRecord-tab-0",
-      "rest-rest-demo-createRecord-tab-1",
-      "rest-rest-demo-createRecord-tab-2",
-      "rest-rest-demo-createRecord-code-0",
-      "rest-rest-demo-createRecord-code-1",
-      "rest-rest-demo-createRecord-code-2",
       "rest-rest-demo-getRecord-panel",
       "rest-rest-demo-getRecord-heading",
       "rest-rest-demo-getRecord-request-heading",
       "rest-rest-demo-getRecord-id",
       "rest-rest-demo-getRecord-response-heading",
       "rest-rest-demo-getRecord-contract-heading",
-      "rest-rest-demo-getRecord-evidence-heading",
-      "rest-rest-demo-getRecord-tab-0",
-      "rest-rest-demo-getRecord-tab-1",
-      "rest-rest-demo-getRecord-tab-2",
-      "rest-rest-demo-getRecord-code-0",
-      "rest-rest-demo-getRecord-code-1",
-      "rest-rest-demo-getRecord-code-2",
       "rest-rest-demo-replaceRecord-panel",
       "rest-rest-demo-replaceRecord-heading",
       "rest-rest-demo-replaceRecord-request-heading",
@@ -12059,13 +13005,6 @@
       "rest-rest-demo-replaceRecord-body",
       "rest-rest-demo-replaceRecord-response-heading",
       "rest-rest-demo-replaceRecord-contract-heading",
-      "rest-rest-demo-replaceRecord-evidence-heading",
-      "rest-rest-demo-replaceRecord-tab-0",
-      "rest-rest-demo-replaceRecord-tab-1",
-      "rest-rest-demo-replaceRecord-tab-2",
-      "rest-rest-demo-replaceRecord-code-0",
-      "rest-rest-demo-replaceRecord-code-1",
-      "rest-rest-demo-replaceRecord-code-2",
       "rest-rest-demo-updateRecord-panel",
       "rest-rest-demo-updateRecord-heading",
       "rest-rest-demo-updateRecord-request-heading",
@@ -12073,26 +13012,12 @@
       "rest-rest-demo-updateRecord-body",
       "rest-rest-demo-updateRecord-response-heading",
       "rest-rest-demo-updateRecord-contract-heading",
-      "rest-rest-demo-updateRecord-evidence-heading",
-      "rest-rest-demo-updateRecord-tab-0",
-      "rest-rest-demo-updateRecord-tab-1",
-      "rest-rest-demo-updateRecord-tab-2",
-      "rest-rest-demo-updateRecord-code-0",
-      "rest-rest-demo-updateRecord-code-1",
-      "rest-rest-demo-updateRecord-code-2",
       "rest-rest-demo-deleteRecord-panel",
       "rest-rest-demo-deleteRecord-heading",
       "rest-rest-demo-deleteRecord-request-heading",
       "rest-rest-demo-deleteRecord-id",
       "rest-rest-demo-deleteRecord-response-heading",
-      "rest-rest-demo-deleteRecord-contract-heading",
-      "rest-rest-demo-deleteRecord-evidence-heading",
-      "rest-rest-demo-deleteRecord-tab-0",
-      "rest-rest-demo-deleteRecord-tab-1",
-      "rest-rest-demo-deleteRecord-tab-2",
-      "rest-rest-demo-deleteRecord-code-0",
-      "rest-rest-demo-deleteRecord-code-1",
-      "rest-rest-demo-deleteRecord-code-2"
+      "rest-rest-demo-deleteRecord-contract-heading"
     ],
     "fragmentTargets": [],
     "dataHooks": [
@@ -12100,8 +13025,8 @@
         "element": "div",
         "attributes": {
           "data-demo-section": "rest",
-          "data-demo-browser-module": "/assets/rest-browser-Do1nkLrS.js",
-          "data-config": "<CONFIG_SHA256:044d4dae827cec11>"
+          "data-demo-browser-module": "/assets/rest-browser-8GOibnzE.js",
+          "data-config": "<CONFIG_SHA256:a7c0d4fd6ea7b69a>"
         }
       },
       {
@@ -12227,48 +13152,6 @@
         }
       },
       {
-        "element": "button#rest-rest-demo-listRecords-tab-0",
-        "attributes": {
-          "data-code-tab": "0"
-        }
-      },
-      {
-        "element": "button#rest-rest-demo-listRecords-tab-1",
-        "attributes": {
-          "data-code-tab": "1"
-        }
-      },
-      {
-        "element": "button#rest-rest-demo-listRecords-tab-2",
-        "attributes": {
-          "data-code-tab": "2"
-        }
-      },
-      {
-        "element": "button",
-        "attributes": {
-          "data-copy-code": ""
-        }
-      },
-      {
-        "element": "pre#rest-rest-demo-listRecords-code-0",
-        "attributes": {
-          "data-code-panel": "0"
-        }
-      },
-      {
-        "element": "pre#rest-rest-demo-listRecords-code-1",
-        "attributes": {
-          "data-code-panel": "1"
-        }
-      },
-      {
-        "element": "pre#rest-rest-demo-listRecords-code-2",
-        "attributes": {
-          "data-code-panel": "2"
-        }
-      },
-      {
         "element": "section#rest-rest-demo-createRecord-panel",
         "attributes": {
           "data-rest-operation-panel": "createRecord"
@@ -12343,48 +13226,6 @@
         }
       },
       {
-        "element": "button#rest-rest-demo-createRecord-tab-0",
-        "attributes": {
-          "data-code-tab": "0"
-        }
-      },
-      {
-        "element": "button#rest-rest-demo-createRecord-tab-1",
-        "attributes": {
-          "data-code-tab": "1"
-        }
-      },
-      {
-        "element": "button#rest-rest-demo-createRecord-tab-2",
-        "attributes": {
-          "data-code-tab": "2"
-        }
-      },
-      {
-        "element": "button",
-        "attributes": {
-          "data-copy-code": ""
-        }
-      },
-      {
-        "element": "pre#rest-rest-demo-createRecord-code-0",
-        "attributes": {
-          "data-code-panel": "0"
-        }
-      },
-      {
-        "element": "pre#rest-rest-demo-createRecord-code-1",
-        "attributes": {
-          "data-code-panel": "1"
-        }
-      },
-      {
-        "element": "pre#rest-rest-demo-createRecord-code-2",
-        "attributes": {
-          "data-code-panel": "2"
-        }
-      },
-      {
         "element": "section#rest-rest-demo-getRecord-panel",
         "attributes": {
           "data-rest-operation-panel": "getRecord"
@@ -12456,48 +13297,6 @@
         "element": "pre",
         "attributes": {
           "data-rest-response-body": ""
-        }
-      },
-      {
-        "element": "button#rest-rest-demo-getRecord-tab-0",
-        "attributes": {
-          "data-code-tab": "0"
-        }
-      },
-      {
-        "element": "button#rest-rest-demo-getRecord-tab-1",
-        "attributes": {
-          "data-code-tab": "1"
-        }
-      },
-      {
-        "element": "button#rest-rest-demo-getRecord-tab-2",
-        "attributes": {
-          "data-code-tab": "2"
-        }
-      },
-      {
-        "element": "button",
-        "attributes": {
-          "data-copy-code": ""
-        }
-      },
-      {
-        "element": "pre#rest-rest-demo-getRecord-code-0",
-        "attributes": {
-          "data-code-panel": "0"
-        }
-      },
-      {
-        "element": "pre#rest-rest-demo-getRecord-code-1",
-        "attributes": {
-          "data-code-panel": "1"
-        }
-      },
-      {
-        "element": "pre#rest-rest-demo-getRecord-code-2",
-        "attributes": {
-          "data-code-panel": "2"
         }
       },
       {
@@ -12581,48 +13380,6 @@
         }
       },
       {
-        "element": "button#rest-rest-demo-replaceRecord-tab-0",
-        "attributes": {
-          "data-code-tab": "0"
-        }
-      },
-      {
-        "element": "button#rest-rest-demo-replaceRecord-tab-1",
-        "attributes": {
-          "data-code-tab": "1"
-        }
-      },
-      {
-        "element": "button#rest-rest-demo-replaceRecord-tab-2",
-        "attributes": {
-          "data-code-tab": "2"
-        }
-      },
-      {
-        "element": "button",
-        "attributes": {
-          "data-copy-code": ""
-        }
-      },
-      {
-        "element": "pre#rest-rest-demo-replaceRecord-code-0",
-        "attributes": {
-          "data-code-panel": "0"
-        }
-      },
-      {
-        "element": "pre#rest-rest-demo-replaceRecord-code-1",
-        "attributes": {
-          "data-code-panel": "1"
-        }
-      },
-      {
-        "element": "pre#rest-rest-demo-replaceRecord-code-2",
-        "attributes": {
-          "data-code-panel": "2"
-        }
-      },
-      {
         "element": "section#rest-rest-demo-updateRecord-panel",
         "attributes": {
           "data-rest-operation-panel": "updateRecord"
@@ -12703,48 +13460,6 @@
         }
       },
       {
-        "element": "button#rest-rest-demo-updateRecord-tab-0",
-        "attributes": {
-          "data-code-tab": "0"
-        }
-      },
-      {
-        "element": "button#rest-rest-demo-updateRecord-tab-1",
-        "attributes": {
-          "data-code-tab": "1"
-        }
-      },
-      {
-        "element": "button#rest-rest-demo-updateRecord-tab-2",
-        "attributes": {
-          "data-code-tab": "2"
-        }
-      },
-      {
-        "element": "button",
-        "attributes": {
-          "data-copy-code": ""
-        }
-      },
-      {
-        "element": "pre#rest-rest-demo-updateRecord-code-0",
-        "attributes": {
-          "data-code-panel": "0"
-        }
-      },
-      {
-        "element": "pre#rest-rest-demo-updateRecord-code-1",
-        "attributes": {
-          "data-code-panel": "1"
-        }
-      },
-      {
-        "element": "pre#rest-rest-demo-updateRecord-code-2",
-        "attributes": {
-          "data-code-panel": "2"
-        }
-      },
-      {
         "element": "section#rest-rest-demo-deleteRecord-panel",
         "attributes": {
           "data-rest-operation-panel": "deleteRecord"
@@ -12816,48 +13531,6 @@
         "element": "pre",
         "attributes": {
           "data-rest-response-body": ""
-        }
-      },
-      {
-        "element": "button#rest-rest-demo-deleteRecord-tab-0",
-        "attributes": {
-          "data-code-tab": "0"
-        }
-      },
-      {
-        "element": "button#rest-rest-demo-deleteRecord-tab-1",
-        "attributes": {
-          "data-code-tab": "1"
-        }
-      },
-      {
-        "element": "button#rest-rest-demo-deleteRecord-tab-2",
-        "attributes": {
-          "data-code-tab": "2"
-        }
-      },
-      {
-        "element": "button",
-        "attributes": {
-          "data-copy-code": ""
-        }
-      },
-      {
-        "element": "pre#rest-rest-demo-deleteRecord-code-0",
-        "attributes": {
-          "data-code-panel": "0"
-        }
-      },
-      {
-        "element": "pre#rest-rest-demo-deleteRecord-code-1",
-        "attributes": {
-          "data-code-panel": "1"
-        }
-      },
-      {
-        "element": "pre#rest-rest-demo-deleteRecord-code-2",
-        "attributes": {
-          "data-code-panel": "2"
         }
       }
     ],

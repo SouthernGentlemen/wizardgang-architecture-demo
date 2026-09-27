@@ -29,9 +29,7 @@ export function createReactDemoSection(
   const presentationPath = options.presentationPath ?? definition.defaultPresentationPath;
   const canonicalPath = options.canonicalPath ?? presentationPath;
 
-  return {
-    scope,
-    body: renderToStaticMarkup(<RequestLocalizationProvider localization={localization}>
+  const element = <RequestLocalizationProvider localization={localization}>
       <DemoPresentationScope
         name={scope}
         idPrefix={idPrefix}
@@ -40,7 +38,12 @@ export function createReactDemoSection(
         browserMessages={definition.browserMessages}
         browserLocale={localization.locale}
       >{definition.children}</DemoPresentationScope>
-    </RequestLocalizationProvider>),
+    </RequestLocalizationProvider>;
+
+  return {
+    scope,
+    body: renderToStaticMarkup(element),
+    element,
     page: {
       title: localization.exact(definition.title),
       description: localization.exact(DEFAULT_DESCRIPTION),

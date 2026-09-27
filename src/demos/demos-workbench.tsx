@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, type ReactNode } from 'react';
 import type { LocalizationContext } from '../i18n/runtime';
 import { routeUrl } from '../routing/application-routes';
 import type { Env } from '../types';
@@ -11,6 +11,7 @@ import {
   demoCategories,
   demonstrations,
   demosForCategory,
+  hasDemoInspector,
   inspectorModes,
   sourceHref,
   type ArchitectureDemo,
@@ -24,7 +25,7 @@ interface BrowserDemoMetadata {
   group: string;
   label: string;
   summary: string;
-  tryThis: string;
+  hasInspector: boolean;
   guide: readonly string[];
   status: readonly string[];
   sourcePath: string;
@@ -37,6 +38,7 @@ interface BrowserDemoMetadata {
 }
 
 function localizedDemo(demo: ArchitectureDemo, env: Env, localization: LocalizationContext): BrowserDemoMetadata {
+  const hasInspector = hasDemoInspector(demo);
   return {
     id: demo.id,
     category: demo.category,
@@ -44,12 +46,12 @@ function localizedDemo(demo: ArchitectureDemo, env: Env, localization: Localizat
     group: localization.exact(demo.group),
     label: localization.exact(demo.label),
     summary: localization.exact(demo.summary),
-    tryThis: localization.exact(demo.tryThis),
-    guide: demo.guide.map((step) => localization.exact(step)),
+    hasInspector,
+    guide: hasInspector ? (demo.guide ?? []).map((step) => localization.exact(step)) : [],
     status: (demo.status ?? []).map((status) => localization.exact(status)),
-    sourcePath: demo.sourcePath,
-    sourceUrl: sourceHref(env, demo.sourcePath),
-    inspectorLabel: localization.exact(`${demo.label} inspector`),
+    sourcePath: hasInspector ? demo.sourcePath : '',
+    sourceUrl: hasInspector ? sourceHref(env, demo.sourcePath) : '',
+    inspectorLabel: hasInspector ? localization.exact(`${demo.label} inspector`) : '',
     request: demo.request ? {
       intro: localization.exact(demo.request.intro),
       fields: demo.request.fields.map((field) => ({
@@ -61,18 +63,23 @@ function localizedDemo(demo: ArchitectureDemo, env: Env, localization: Localizat
   };
 }
 
-function CategoryTabs({ localization }: Readonly<{ localization: LocalizationContext }>) {
+function demoLink(id: string, localization: LocalizationContext): string {
+  const language = localization.locale === 'en' ? '' : `lang=${encodeURIComponent(localization.locale)}&`;
+  return `?${language}demo=${encodeURIComponent(id)}#${id}`;
+}
+
+function CategoryTabs({ localization, selectedDemo }: Readonly<{ localization: LocalizationContext; selectedDemo: ArchitectureDemo }>) {
   const categoryLabel = localization.exact('Demo categories');
   return <div className="demo-category-tabs" role="tablist" aria-label={categoryLabel}>
     {demoCategories.map((category) => {
       const demos = demosForCategory(category);
       const defaultDemo = defaultDemoForCategory(category);
-      const selected = category === 'Data';
+      const selected = category === selectedDemo.category;
       return <Fragment key={category}>
         <a
           className="demo-category-tab"
           id={demos.length === 1 ? defaultDemo.id : undefined}
-          href={`#${defaultDemo.id}`}
+          href={demoLink(defaultDemo.id, localization)}
           role="tab"
           aria-controls="demo-workbench"
           aria-selected={selected}
@@ -88,7 +95,7 @@ function CategoryTabs({ localization }: Readonly<{ localization: LocalizationCon
   </div>;
 }
 
-function LocalSelectors({ localization }: Readonly<{ localization: LocalizationContext }>) {
+function LocalSelectors({ localization, selectedDemo }: Readonly<{ localization: LocalizationContext; selectedDemo: ArchitectureDemo }>) {
   return <div className="demo-selector-slot" data-demo-selector-slot="">
     {demoCategories.map((category) => {
       const demos = demosForCategory(category);
@@ -98,14 +105,14 @@ function LocalSelectors({ localization }: Readonly<{ localization: LocalizationC
         className="demo-local-selector"
         aria-label={localization.exact(`${category} demos`)}
         data-demo-selector-category={category}
-        hidden={category !== 'Data'}
+        hidden={category !== selectedDemo.category}
       >
         {demos.map((demo) => <a
           key={demo.id}
           id={demo.id}
-          href={`#${demo.id}`}
+          href={demoLink(demo.id, localization)}
           data-demo-link={demo.id}
-          aria-current={demo.id === DEFAULT_DEMO_ID ? 'location' : undefined}
+          aria-current={demo.id === selectedDemo.id ? 'location' : undefined}
         >{localization.exact(demo.selectorLabel)}</a>)}
       </nav>;
     })}
@@ -149,7 +156,7 @@ function DefaultInspector({ demo, env, localization }: Readonly<{
         tabIndex={0}
         data-demo-inspector-panel=""
       >
-        <ol className="demo-guide-list">{demo.guide.map((step) => <li key={step}>{localization.exact(step)}</li>)}</ol>
+        <ol className="demo-guide-list">{(demo.guide ?? []).map((step) => <li key={step}>{localization.exact(step)}</li>)}</ol>
       </div>
     </aside>
     <div className="demo-workbench-tools" aria-label={localization.exact('Demo tools')}>
@@ -175,50 +182,66 @@ function DemosBrowserModule({ env, localization }: Readonly<{ env: Env; localiza
     retry: localization.exact('Retry demo'),
     stableFragment: localization.exact('Stable fragment: '),
     implementation: localization.exact('Implementation: '),
+    inspector: localization.exact('Inspector'),
+    inspectorModes: localization.exact('Inspector modes'),
+    demoTools: localization.exact('Demo tools'),
+    resetDemo: localization.exact('Reset demo'),
+    viewSource: localization.exact('View source'),
   });
   return <script type="module" src={source} data-demos-browser="" data-config={config} data-messages={messages} />;
 }
 
-export function DemosWorkbenchPage({ env }: Readonly<{ env: Env }>) {
+export function DemosWorkbenchPage({ env, selectedDemo, initialPresentation }: Readonly<{
+  env: Env;
+  selectedDemo: ArchitectureDemo;
+  initialPresentation: ReactNode;
+}>) {
   const localization = useRequestLocalization();
-  const defaultDemo = demonstrations.find((demo) => demo.id === DEFAULT_DEMO_ID) ?? demonstrations[0];
-  if (!defaultDemo) throw new Error('No demonstrations registered.');
   return <>
-    <section className="page-header">
+    <section className="page-header demo-page-header">
       <h1>{localization.exact('Architecture Demos')}</h1>
       <p className="lede">{localization.exact('Choose a capability, run one focused demonstration, and inspect what happened.')}</p>
     </section>
     <section className="demo-workbench-nav" aria-label={localization.exact('Architecture demo navigation')}>
-      <CategoryTabs localization={localization} />
-      <LocalSelectors localization={localization} />
+      <CategoryTabs localization={localization} selectedDemo={selectedDemo} />
+      <LocalSelectors localization={localization} selectedDemo={selectedDemo} />
     </section>
-    <section id="demo-workbench" className="demo-workbench" data-demo-workbench="" data-demo-id={DEFAULT_DEMO_ID} aria-labelledby="demo-active-title">
+    <section id="demo-workbench" className="demo-workbench" data-demo-workbench="" data-demo-id={selectedDemo.id} aria-labelledby="demo-active-title">
       <header className="demo-active-header">
-        <p className="demo-active-context" data-demo-active-context="">{localization.exact(defaultDemo.category)} / {localization.exact(defaultDemo.group)}</p>
         <div className="demo-active-heading">
-          <h2 id="demo-active-title" data-demo-active-title="">{localization.exact(defaultDemo.label)}</h2>
-          <div className="demo-statuses" data-demo-statuses="" hidden={!defaultDemo.status?.length}>
-            {(defaultDemo.status ?? []).map((status) => <span key={status} className="demo-status-chip">{localization.exact(status)}</span>)}
+          <h2 id="demo-active-title" data-demo-active-title="">{localization.exact(selectedDemo.label)}</h2>
+          <div className="demo-statuses" data-demo-statuses="" hidden={!selectedDemo.status?.length}>
+            {(selectedDemo.status ?? []).map((status) => <span key={status} className="demo-status-chip">{localization.exact(status)}</span>)}
           </div>
         </div>
-        <p className="demo-active-purpose" data-demo-purpose="">{localization.exact(defaultDemo.summary)}</p>
-        <p className="demo-try-this"><strong>{localization.exact('Try this:')}</strong><span data-demo-try="">{localization.exact(defaultDemo.tryThis)}</span></p>
+        <p className="demo-active-purpose" data-demo-purpose="">{localization.exact(selectedDemo.summary)}</p>
       </header>
-      <div className="demo-workbench-layout">
+      <div className="demo-workbench-layout" data-demo-inspector-enabled={String(hasDemoInspector(selectedDemo))}>
         <div className="demo-stage">
-          <div className="demo-panel" data-demo-panel="" aria-busy="true">
-            <div className="demo-panel-state" role="status"><span>{localization.exact('Loading D1 demonstration…')}</span></div>
+          <div className="demo-panel" data-demo-panel="" aria-busy="false">
+            {initialPresentation}
           </div>
         </div>
-        <DefaultInspector demo={defaultDemo} env={env} localization={localization} />
+        {hasDemoInspector(selectedDemo) ? <DefaultInspector demo={selectedDemo} env={env} localization={localization} /> : null}
       </div>
     </section>
     <DemosBrowserModule env={env} localization={localization} />
   </>;
 }
 
-export function renderDemosWorkbench(env: Env): Response {
-  return reactPageResponse(env, 'Architecture Demos', <DemosWorkbenchPage env={env} />, {
+export async function renderDemosWorkbench(request: Request, env: Env): Promise<Response> {
+  const requestedId = new URL(request.url).searchParams.get('demo');
+  const selectedDemo = demonstrations.find((demo) => demo.id === requestedId)
+    ?? demonstrations.find((demo) => demo.id === DEFAULT_DEMO_ID);
+  if (!selectedDemo) throw new Error('No demonstrations registered.');
+  const section = await selectedDemo.render(request, env, {
+    scope: selectedDemo.id,
+    idPrefix: selectedDemo.id,
+    headingLevel: 2,
+    canonicalPath: routeUrl('demos.index'),
+    presentationPath: `${routeUrl('demos.index')}#${selectedDemo.id}`,
+  });
+  return reactPageResponse(env, 'Architecture Demos', <DemosWorkbenchPage env={env} selectedDemo={selectedDemo} initialPresentation={section.element} />, {
     routeId: 'demos.index',
     canonicalPath: routeUrl('demos.index'),
     description: 'Focused executable architecture demonstrations for data, APIs, integrations, identity, AI, platform runtime, and quality.',

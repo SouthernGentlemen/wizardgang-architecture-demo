@@ -85,6 +85,7 @@ function inspectionExpression(expectedLocale) {
       });
     const clippedControls = [...document.querySelectorAll('button,select,input:not([type="hidden"]),textarea,[role="button"],[role="tab"]')]
       .filter((node)=>{
+        if (node.closest('.demo-category-tabs')) return false;
         const style=getComputedStyle(node); if(style.display==='none'||style.visibility==='hidden') return false;
         for (let ancestor=node.parentElement; ancestor; ancestor=ancestor.parentElement) {
           if (ancestor instanceof HTMLDetailsElement && !ancestor.open) {
@@ -208,6 +209,8 @@ async function assertWorkbenchState(cdp, expectedId, label, expectedHash = `#${e
     const selectedCategories=[...document.querySelectorAll('[data-demo-category][aria-selected="true"]')];
     const categoryTabStops=[...document.querySelectorAll('[data-demo-category]')].filter((node)=>node.tabIndex===0);
     const visibleSections=[...document.querySelectorAll('[data-demo-panel] [data-demo-section]')].filter((node)=>!node.hidden);
+    const inspector=document.querySelector('[data-demo-inspector]');
+    const source=document.querySelector('[data-demo-source]');
     return {
       hash: location.hash,
       id: document.querySelector('[data-demo-workbench]')?.dataset.demoId,
@@ -218,6 +221,8 @@ async function assertWorkbenchState(cdp, expectedId, label, expectedHash = `#${e
       selectedCategories: selectedCategories.length,
       categoryTabStops: categoryTabStops.length,
       busy: document.querySelector('[data-demo-panel]')?.getAttribute('aria-busy'),
+      inspectorVisible: Boolean(inspector && getComputedStyle(inspector).display !== 'none'),
+      sourceVisible: Boolean(source && getComputedStyle(source).display !== 'none' && getComputedStyle(source.parentElement).display !== 'none'),
     };
   })()`);
   const failures = [];
@@ -232,6 +237,9 @@ async function assertWorkbenchState(cdp, expectedId, label, expectedHash = `#${e
   if (state.selectedCategories !== 1) failures.push(`selected categories=${state.selectedCategories}`);
   if (state.categoryTabStops !== 1) failures.push(`category tab stops=${state.categoryTabStops}`);
   if (state.busy !== 'false') failures.push(`aria-busy=${state.busy}`);
+  const inspectorExpected = ['d1', 'r2', 'workers', 'durable-objects', 'i18n'].includes(expectedId);
+  if (state.inspectorVisible !== inspectorExpected) failures.push(`inspector visible=${state.inspectorVisible}`);
+  if (state.sourceVisible !== inspectorExpected) failures.push(`View source visible=${state.sourceVisible}`);
   if (failures.length) throw new Error(`${label}: ${failures.join('; ')}`);
 }
 
@@ -619,6 +627,42 @@ async function workbenchInteractionAudit(cdp) {
   }
 }
 
+async function phoneWorkbenchAudit(cdp) {
+  await cdp.call('Emulation.setDeviceMetricsOverride', { width: 375, height: 812, deviceScaleFactor: 1, mobile: true });
+  for (const id of Object.keys(workbenchDemos)) {
+    await navigate(cdp, `${origin}/demos?lang=en#${id}`);
+    await assertWorkbenchState(cdp, id, `${id} phone first viewport`);
+    const state = await evaluate(cdp, `(()=>{
+      const tabs=document.querySelector('.demo-category-tabs');
+      const tabRects=[...tabs.querySelectorAll('[data-demo-category]')].map((tab)=>tab.getBoundingClientRect());
+      const control=[...document.querySelectorAll('[data-demo-panel] button,[data-demo-panel] input,[data-demo-panel] select,[data-demo-panel] a')]
+        .find((node)=>!node.closest('[hidden]')&&getComputedStyle(node).display!=='none'&&node.getBoundingClientRect().height>0);
+      const rect=control?.getBoundingClientRect();
+      return {tabsOneRow:tabRects.every((tab)=>Math.abs(tab.top-tabRects[0].top)<2),tabHeight:tabs.getBoundingClientRect().height,
+        firstControl:control?.outerHTML.slice(0,100),controlTop:rect?.top,controlBottom:rect?.bottom,viewport:innerHeight,
+        overflow:document.documentElement.scrollWidth>innerWidth+1};
+    })()`);
+    const defaultControlVisible = id !== 'd1' || (state.controlTop >= 0 && state.controlBottom <= state.viewport);
+    if (!state.tabsOneRow || state.tabHeight > 60 || !defaultControlVisible || state.overflow) {
+      throw new Error(`${id} 375×812 first viewport failed: ${JSON.stringify(state)}`);
+    }
+  }
+  await cdp.call('Emulation.setScriptExecutionDisabled', { value: true });
+  try {
+    for (const id of ['rest', 'graphql', 'webhooks', 'identity', 'mcp', 'edge', 'accessibility']) {
+      await navigate(cdp, `${origin}/demos?demo=${id}`);
+      const state = await evaluate(cdp, `({id:document.querySelector('[data-demo-workbench]')?.dataset.demoId,
+        section:document.querySelector('[data-demo-panel] [data-demo-section]')?.getAttribute('data-demo-section'),
+        inspector:document.querySelector('[data-demo-inspector]'),source:document.querySelector('[data-demo-source]')})`);
+      if (state.id !== id || state.section !== id || state.inspector || state.source) {
+        throw new Error(`${id} no-JavaScript workbench failed: ${JSON.stringify(state)}`);
+      }
+    }
+  } finally {
+    await cdp.call('Emulation.setScriptExecutionDisabled', { value: false });
+  }
+}
+
 async function assertAssurancePane(cdp, expectedId, label, focused) {
   await waitForExpression(cdp, `document.querySelector('[data-assurance-detail] [data-assurance-record]')?.getAttribute('data-assurance-record') === ${JSON.stringify(expectedId)} && document.querySelector('[data-assurance-detail]')?.getAttribute('aria-busy') === 'false'`, `${label} focused pane`);
   const state = await evaluate(cdp, `(()=>{
@@ -819,6 +863,7 @@ async function main() {
 
     await workbenchInteractionAudit(cdp);
     axeRuns += 6;
+    await phoneWorkbenchAudit(cdp);
     await assuranceRecordFirstAudit(cdp);
     axeRuns += 18;
 
@@ -836,8 +881,9 @@ async function main() {
             const layout=document.querySelector('.demo-workbench-layout');
             return {stageBottom:stage?.bottom,inspectorTop:inspector?.top,columns:layout ? getComputedStyle(layout).gridTemplateColumns : ''};
           })()`);
-          if (!(reflow.inspectorTop >= reflow.stageBottom - 1) || reflow.columns.trim().split(/\s+/).length !== 1) {
-            throw new Error(`${pathname} ${locale}: inspector did not stack below the live demonstration (${JSON.stringify(reflow)})`);
+          const retainedInspector = ['d1', 'r2', 'workers', 'durable-objects', 'i18n'].includes(expectedId);
+          if ((retainedInspector && !(reflow.inspectorTop >= reflow.stageBottom - 1)) || reflow.columns.trim().split(/\s+/).length !== 1) {
+            throw new Error(`${pathname} ${locale}: workbench did not use one stage column (${JSON.stringify(reflow)})`);
           }
         }
         axeRuns += 1;

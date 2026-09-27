@@ -88,7 +88,7 @@ describe('public route contract', () => {
   it('renders a focused REST client generated from the OpenAPI contract', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/api/demos/rest', { headers: { accept: 'text/html' } }), env());
     const html = await response.text();
-    for (const anchor of ['rest-rest-operation-picker-heading', 'rest-rest-demo-listRecords-panel']) expect(html).toContain(`id="${anchor}"`);
+    expect(html).toContain('id="rest-rest-demo-listRecords-panel"');
     expect(html).toContain('/api/labs/rest-demo-records');
     expect(html.match(/<form data-rest-form/g)).toHaveLength(6);
     expect(html.match(/data-rest-operation-select=/g)).toHaveLength(6);
@@ -106,9 +106,8 @@ describe('public route contract', () => {
     expect(html).not.toContain('Contract shape');
     expect(html).not.toContain('Your API sandbox');
     expect(html).not.toContain('Sign in to enable writes');
-    for (const language of ['curl', 'JavaScript', 'Python']) expect(html).toContain(language);
-    const runner = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((match) => match[1]).find((script) => script.includes("data-rest-form"));
-    expect(() => new Function(runner || '')).not.toThrow();
+    expect(html).not.toContain('Code samples for this operation');
+    expect(html).toContain('data-demo-browser-module=');
 
   });
 

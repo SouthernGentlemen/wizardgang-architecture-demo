@@ -127,16 +127,8 @@ async function main() {
     await cdp.call('Runtime.evaluate', { expression: 'history.forward()' });
     await waitForDemo(cdp, 'rest');
 
-    const inspector = await evaluate(cdp, `(()=>{
-      const guide=document.querySelector('[data-demo-inspector-mode="Guide"]');
-      guide.focus();
-      guide.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true}));
-      return {
-        selected:document.querySelector('[data-demo-inspector-mode][aria-selected="true"]')?.dataset.demoInspectorMode,
-        focused:document.activeElement?.dataset.demoInspectorMode,
-      };
-    })()`);
-    assert(inspector.selected === 'Evidence' && inspector.focused === 'Evidence', 'Inspector keyboard navigation did not remain operable.');
+    const inspector = await evaluate(cdp, `(()=>{const element=document.querySelector('[data-demo-inspector]');return element && getComputedStyle(element).display !== 'none'})()`);
+    assert(!inspector, 'REST inspector remained visible.');
 
     await cdp.call('Emulation.setDeviceMetricsOverride', { width: 320, height: 800, deviceScaleFactor: 1, mobile: true });
     const narrow = await evaluate(cdp, `(()=>{const width=window.innerWidth;const describe=(element)=>({element:element.id||element.className||element.tagName,left:Math.round(element.getBoundingClientRect().left),right:Math.round(element.getBoundingClientRect().right),scrollWidth:element.scrollWidth,clientWidth:element.clientWidth});return {scrollWidth:document.documentElement.scrollWidth,innerWidth:width,visiblePanels:[...document.querySelectorAll('[data-rest-operation-panel]')].filter((panel)=>!panel.hidden).length,overflowing:[...document.body.querySelectorAll('*')].filter((element)=>{const rect=element.getBoundingClientRect();return rect.left < -1 || rect.right > width + 1}).slice(0,8).map(describe)}})()`);
@@ -149,7 +141,7 @@ async function main() {
     const rtl = await evaluate(cdp, `({lang:document.documentElement.lang,dir:document.documentElement.dir,hash:location.hash,demo:document.querySelector('[data-demo-workbench]')?.dataset.demoId})`);
     assert(rtl.lang === 'ar' && rtl.dir === 'rtl' && rtl.hash === '#rest' && rtl.demo === 'rest', 'Arabic locale handling lost the REST fragment or RTL state.');
 
-    console.log('DEMO-268 browser audit: PASS — operation selection, GET/PATCH execution, response/contract evidence, switching/history, inspector keyboard, narrow reflow, and EN/AR #rest state verified.');
+    console.log('DEMO-268 browser audit: PASS — operation selection, GET/PATCH execution, response/contract evidence, switching/history, inspector removal, narrow reflow, and EN/AR #rest state verified.');
   } finally {
     await cdp?.close();
     await terminateProcess(chrome);

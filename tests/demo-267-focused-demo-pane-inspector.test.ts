@@ -23,21 +23,22 @@ const env = {
 } as Env;
 
 describe('DEMO-267 focused demo pane and inspector', () => {
-  it('renders one focused D1 pane with purpose, task framing, inspector, and compact tools', async () => {
+  it('renders one focused D1 pane with purpose, inspector, and compact tools', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/demos', { headers: { accept: 'text/html' } }), env);
     const html = await response.text();
 
     expect(response.status).toBe(200);
     expect(html).toContain('data-demo-active-title="">D1</h2>');
     expect(html).toContain('data-demo-purpose="">Run relational CRUD against resettable shared demo state.</p>');
-    expect(html).toContain('<strong>Try this:</strong><span data-demo-try="">Create or edit a row, then inspect the exact SQL and response.</span>');
+    expect(html).not.toContain('Try this:');
+    expect(html).not.toContain('data-demo-active-context');
     expect((html.match(/data-demo-inspector="" aria-label=/g) ?? [])).toHaveLength(1);
     expect(html).toContain('data-demo-inspector-mode="Guide"');
     expect(html).toContain('data-demo-inspector-mode="Request"');
     expect(html).toContain('data-demo-inspector-mode="Evidence"');
     expect(html).toContain('data-demo-reset="" hidden="">Reset demo</button>');
     expect(html).toContain('data-demo-source="">View source</a>');
-    expect(html.match(/<main\b[\s\S]*?<\/main>/)?.[0]).not.toContain('<details');
+    expect(html).toContain('data-demo-section="d1"');
     expect(html).not.toContain('All demos');
   });
 

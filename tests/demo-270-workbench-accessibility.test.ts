@@ -43,7 +43,7 @@ describe('DEMO-270 accessible Demo Workbench interaction', () => {
     const fragments = ['d1', 'r2', 'rest', 'graphql', 'webhooks', 'identity', 'mcp', 'edge', 'workers', 'durable-objects', 'accessibility', 'i18n'];
 
     expect(demonstrations.map((demo) => demo.id)).toEqual(fragments);
-    for (const fragment of fragments) expect(html).toContain(`href="#${fragment}"`);
+    for (const fragment of fragments) expect(html).toContain(`demo=${fragment}#${fragment}"`);
     expect(html).toContain('<nav class="demo-local-selector"');
     expect(html).not.toContain('All demos');
   });
@@ -72,7 +72,7 @@ describe('DEMO-270 accessible Demo Workbench interaction', () => {
     expect(demosStyles).toContain('.demo-panel{min-width:0;max-width:100%');
     expect(demosStyles).toContain('.demo-evidence-list code{direction:ltr;unicode-bidi:isolate');
     expect(demosStyles).toContain('@media(max-width:900px){.demo-workbench-layout{grid-template-columns:minmax(0,1fr)}');
-    expect(demosStyles).toContain('@media(max-width:760px){.demo-category-tabs{flex-wrap:wrap;overflow-x:visible');
+    expect(demosStyles).toContain('@media(max-width:760px){.demo-category-tabs{flex-wrap:nowrap;overflow-x:auto');
     expect(shellBrowserSource).toContain('form.action = `${location.pathname}${location.hash}`');
   });
 });

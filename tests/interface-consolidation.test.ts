@@ -55,7 +55,7 @@ describe('canonical interface demonstrations', () => {
     expect(html.match(/<h1\b/g)).toHaveLength(1);
     expect(html.match(/data-demo-workbench(?:="")?(?:\s|>)/g)).toHaveLength(1);
     for (const page of pages) {
-      expect(html, page.view).toContain(`href="#${page.view}"`);
+      expect(html, page.view).toContain(`demo=${page.view}#${page.view}"`);
       expect(html, page.view).not.toContain(page.marker);
       expect(await presentationHtml(page.view), page.view).toContain(page.marker);
     }
@@ -68,8 +68,8 @@ describe('canonical interface demonstrations', () => {
     expect(rest).toContain('3.0.3');
     expect(rest).toContain('PATCH');
     expect(rest).toContain('/api/labs/rest-demo-records');
-    expect(rest).toContain('Focused browser tutorial.');
-    expect(rest).toContain('/api/openapi.json');
+    expect(rest).not.toContain('Focused browser tutorial.');
+    expect(rest).toContain('/api/labs/rest-demo-openapi.json');
     expect(rest).toContain('data-rest-operation-select="listRecords"');
     expect(rest).toContain('data-rest-full-openapi');
     expect(rest).not.toContain('Two deliberate REST boundaries.');
@@ -105,7 +105,7 @@ describe('canonical interface demonstrations', () => {
     expect(response.status).toBe(200);
     expect(html).toContain('<h1>Architecture Demos</h1>');
     expect(html).toContain('<link rel="canonical" href="https://demo.wizardgang.ai/demos"/>');
-    for (const page of pages) expect(html, page.view).toContain(`href="#${page.view}"`);
+    for (const page of pages) expect(html, page.view).toContain(`demo=${page.view}#${page.view}"`);
   });
 
   it('returns ordinary 404s for every retired interfaces ?view= URL', async () => {

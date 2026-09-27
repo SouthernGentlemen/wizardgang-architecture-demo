@@ -676,6 +676,30 @@
       {
         "level": 2,
         "text": "D1"
+      },
+      {
+        "level": 2,
+        "text": "Base de datos Cloudflare D1"
+      },
+      {
+        "level": 3,
+        "text": "Users"
+      },
+      {
+        "level": 3,
+        "text": "Tasks"
+      },
+      {
+        "level": 3,
+        "text": "SQL Inspector"
+      },
+      {
+        "level": 3,
+        "text": "Your isolated D1 sandbox"
+      },
+      {
+        "level": 3,
+        "text": "Delete row?"
       }
     ],
     "accessibleNames": [
@@ -830,6 +854,116 @@
         "name": "Internacionalización"
       },
       {
+        "element": "button",
+        "role": "tab",
+        "name": "Users — / 10"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Tasks — / 25"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Users — / 10"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "+ Add user"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "Add userMaximum 10 users Name Email RoleAdminMemberViewer Create userCancelar"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Name"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Email"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Role"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Create user"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Cancelar"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Tasks — / 25"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "+ Add task"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "Add taskMaximum 25 tasks Task title AssigneeUnassigned EstadoTo doIn progressDone Create taskCancelar"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Task title"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Assignee"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Estado"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Create task"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Cancelar"
+      },
+      {
+        "element": "aside",
+        "role": "complementary",
+        "name": "Live database evidenceSQL Inspector Esperando Choose a tableNo query yet Statement Select a table or modify a row to inspect its parameterized SQL. Response JSONNo response yet."
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Reset sample data"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Cancelar"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Continuar"
+      },
+      {
         "element": "aside",
         "role": "complementary",
         "name": "D1 inspector"
@@ -889,6 +1023,38 @@
       {
         "name": "lang",
         "label": null
+      },
+      {
+        "name": "id",
+        "label": null
+      },
+      {
+        "name": "name",
+        "label": "Name"
+      },
+      {
+        "name": "email",
+        "label": "Email"
+      },
+      {
+        "name": "role",
+        "label": "Role"
+      },
+      {
+        "name": "id",
+        "label": null
+      },
+      {
+        "name": "title",
+        "label": "Task title"
+      },
+      {
+        "name": "assigneeId",
+        "label": "Assignee"
+      },
+      {
+        "name": "status",
+        "label": "Estado"
       }
     ]
   },
@@ -2373,6 +2539,30 @@
       {
         "level": 2,
         "text": "D1"
+      },
+      {
+        "level": 2,
+        "text": "Base de datos Cloudflare D1"
+      },
+      {
+        "level": 3,
+        "text": "Users"
+      },
+      {
+        "level": 3,
+        "text": "Tasks"
+      },
+      {
+        "level": 3,
+        "text": "SQL Inspector"
+      },
+      {
+        "level": 3,
+        "text": "Your isolated D1 sandbox"
+      },
+      {
+        "level": 3,
+        "text": "Delete row?"
       }
     ],
     "accessibleNames": [
@@ -2527,6 +2717,116 @@
         "name": "Internacionalización"
       },
       {
+        "element": "button",
+        "role": "tab",
+        "name": "Users — / 10"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Tasks — / 25"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Users — / 10"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "+ Add user"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "Add userMaximum 10 users Name Email RoleAdminMemberViewer Create userCancelar"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Name"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Email"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Role"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Create user"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Cancelar"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Tasks — / 25"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "+ Add task"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "Add taskMaximum 25 tasks Task title AssigneeUnassigned EstadoTo doIn progressDone Create taskCancelar"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Task title"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Assignee"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Estado"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Create task"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Cancelar"
+      },
+      {
+        "element": "aside",
+        "role": "complementary",
+        "name": "Live database evidenceSQL Inspector Esperando Choose a tableNo query yet Statement Select a table or modify a row to inspect its parameterized SQL. Response JSONNo response yet."
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Reset sample data"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Cancelar"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Continuar"
+      },
+      {
         "element": "aside",
         "role": "complementary",
         "name": "D1 inspector"
@@ -2586,6 +2886,38 @@
       {
         "name": "lang",
         "label": null
+      },
+      {
+        "name": "id",
+        "label": null
+      },
+      {
+        "name": "name",
+        "label": "Name"
+      },
+      {
+        "name": "email",
+        "label": "Email"
+      },
+      {
+        "name": "role",
+        "label": "Role"
+      },
+      {
+        "name": "id",
+        "label": null
+      },
+      {
+        "name": "title",
+        "label": "Task title"
+      },
+      {
+        "name": "assigneeId",
+        "label": "Assignee"
+      },
+      {
+        "name": "status",
+        "label": "Estado"
       }
     ]
   },
@@ -2598,6 +2930,30 @@
       {
         "level": 2,
         "text": "D1"
+      },
+      {
+        "level": 2,
+        "text": "Base de datos Cloudflare D1"
+      },
+      {
+        "level": 3,
+        "text": "Users"
+      },
+      {
+        "level": 3,
+        "text": "Tasks"
+      },
+      {
+        "level": 3,
+        "text": "SQL Inspector"
+      },
+      {
+        "level": 3,
+        "text": "Your isolated D1 sandbox"
+      },
+      {
+        "level": 3,
+        "text": "Delete row?"
       }
     ],
     "accessibleNames": [
@@ -2752,6 +3108,116 @@
         "name": "Internacionalización"
       },
       {
+        "element": "button",
+        "role": "tab",
+        "name": "Users — / 10"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Tasks — / 25"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Users — / 10"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "+ Add user"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "Add userMaximum 10 users Name Email RoleAdminMemberViewer Create userCancelar"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Name"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Email"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Role"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Create user"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Cancelar"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Tasks — / 25"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "+ Add task"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "Add taskMaximum 25 tasks Task title AssigneeUnassigned EstadoTo doIn progressDone Create taskCancelar"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Task title"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Assignee"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Estado"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Create task"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Cancelar"
+      },
+      {
+        "element": "aside",
+        "role": "complementary",
+        "name": "Live database evidenceSQL Inspector Esperando Choose a tableNo query yet Statement Select a table or modify a row to inspect its parameterized SQL. Response JSONNo response yet."
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Reset sample data"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Cancelar"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Continuar"
+      },
+      {
         "element": "aside",
         "role": "complementary",
         "name": "D1 inspector"
@@ -2811,6 +3277,38 @@
       {
         "name": "lang",
         "label": null
+      },
+      {
+        "name": "id",
+        "label": null
+      },
+      {
+        "name": "name",
+        "label": "Name"
+      },
+      {
+        "name": "email",
+        "label": "Email"
+      },
+      {
+        "name": "role",
+        "label": "Role"
+      },
+      {
+        "name": "id",
+        "label": null
+      },
+      {
+        "name": "title",
+        "label": "Task title"
+      },
+      {
+        "name": "assigneeId",
+        "label": "Assignee"
+      },
+      {
+        "name": "status",
+        "label": "Estado"
       }
     ]
   },
@@ -3586,10 +4084,6 @@
       },
       {
         "level": 3,
-        "text": "Choose one request"
-      },
-      {
-        "level": 3,
         "text": "List records"
       },
       {
@@ -3619,10 +4113,6 @@
       {
         "level": 5,
         "text": "Record"
-      },
-      {
-        "level": 4,
-        "text": "Deeper evidence"
       },
       {
         "level": 3,
@@ -3665,10 +4155,6 @@
         "text": "Error"
       },
       {
-        "level": 4,
-        "text": "Deeper evidence"
-      },
-      {
         "level": 3,
         "text": "Read a record"
       },
@@ -3703,10 +4189,6 @@
       {
         "level": 5,
         "text": "Error"
-      },
-      {
-        "level": 4,
-        "text": "Deeper evidence"
       },
       {
         "level": 3,
@@ -3749,10 +4231,6 @@
         "text": "Error"
       },
       {
-        "level": 4,
-        "text": "Deeper evidence"
-      },
-      {
         "level": 3,
         "text": "Update a record"
       },
@@ -3793,10 +4271,6 @@
         "text": "Error"
       },
       {
-        "level": 4,
-        "text": "Deeper evidence"
-      },
-      {
         "level": 3,
         "text": "Delete a record"
       },
@@ -3823,18 +4297,9 @@
       {
         "level": 5,
         "text": "Referenced schemas"
-      },
-      {
-        "level": 4,
-        "text": "Deeper evidence"
       }
     ],
     "accessibleNames": [
-      {
-        "element": "aside",
-        "role": "complementary",
-        "name": "REST API boundary"
-      },
       {
         "element": "button",
         "role": null,
@@ -3891,41 +4356,6 @@
         "name": "Execute GET"
       },
       {
-        "element": "button",
-        "role": "tab",
-        "name": "curl"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "JavaScript"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Python"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Copy selected code sample"
-      },
-      {
-        "element": "pre",
-        "role": "tabpanel",
-        "name": "curl"
-      },
-      {
-        "element": "pre",
-        "role": "tabpanel",
-        "name": "JavaScript"
-      },
-      {
-        "element": "pre",
-        "role": "tabpanel",
-        "name": "Python"
-      },
-      {
         "element": "form",
         "role": null,
         "name": "Request body application/json · RecordInput{ \"key\": \"hello\", \"value\": { \"message\": \"Hello from a Worker\" } } Execute POST"
@@ -3941,41 +4371,6 @@
         "name": "Execute POST"
       },
       {
-        "element": "button",
-        "role": "tab",
-        "name": "curl"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "JavaScript"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Python"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Copy selected code sample"
-      },
-      {
-        "element": "pre",
-        "role": "tabpanel",
-        "name": "curl"
-      },
-      {
-        "element": "pre",
-        "role": "tabpanel",
-        "name": "JavaScript"
-      },
-      {
-        "element": "pre",
-        "role": "tabpanel",
-        "name": "Python"
-      },
-      {
         "element": "form",
         "role": null,
         "name": "id path · required · string Execute GET"
@@ -3989,41 +4384,6 @@
         "element": "button",
         "role": null,
         "name": "Execute GET"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "curl"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "JavaScript"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Python"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Copy selected code sample"
-      },
-      {
-        "element": "pre",
-        "role": "tabpanel",
-        "name": "curl"
-      },
-      {
-        "element": "pre",
-        "role": "tabpanel",
-        "name": "JavaScript"
-      },
-      {
-        "element": "pre",
-        "role": "tabpanel",
-        "name": "Python"
       },
       {
         "element": "form",
@@ -4046,41 +4406,6 @@
         "name": "Execute PUT"
       },
       {
-        "element": "button",
-        "role": "tab",
-        "name": "curl"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "JavaScript"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Python"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Copy selected code sample"
-      },
-      {
-        "element": "pre",
-        "role": "tabpanel",
-        "name": "curl"
-      },
-      {
-        "element": "pre",
-        "role": "tabpanel",
-        "name": "JavaScript"
-      },
-      {
-        "element": "pre",
-        "role": "tabpanel",
-        "name": "Python"
-      },
-      {
         "element": "form",
         "role": null,
         "name": "id path · required · stringRequest body application/json · RecordPatch{ \"value\": { \"message\": \"Patched by a Worker\", \"priority\": \"high\" } } Execute PATCH"
@@ -4101,41 +4426,6 @@
         "name": "Execute PATCH"
       },
       {
-        "element": "button",
-        "role": "tab",
-        "name": "curl"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "JavaScript"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Python"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Copy selected code sample"
-      },
-      {
-        "element": "pre",
-        "role": "tabpanel",
-        "name": "curl"
-      },
-      {
-        "element": "pre",
-        "role": "tabpanel",
-        "name": "JavaScript"
-      },
-      {
-        "element": "pre",
-        "role": "tabpanel",
-        "name": "Python"
-      },
-      {
         "element": "form",
         "role": null,
         "name": "id path · required · string Execute DELETE"
@@ -4149,41 +4439,6 @@
         "element": "button",
         "role": null,
         "name": "Execute DELETE"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "curl"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "JavaScript"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Python"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Copy selected code sample"
-      },
-      {
-        "element": "pre",
-        "role": "tabpanel",
-        "name": "curl"
-      },
-      {
-        "element": "pre",
-        "role": "tabpanel",
-        "name": "JavaScript"
-      },
-      {
-        "element": "pre",
-        "role": "tabpanel",
-        "name": "Python"
       }
     ],
     "labels": [

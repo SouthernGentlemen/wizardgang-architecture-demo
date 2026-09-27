@@ -38,14 +38,6 @@ export function mount(root: HTMLElement): void {
     }, 1200);
     timeoutIds.add(id);
   };
-  const selectTabs = (buttons: HTMLButtonElement[], panels: HTMLElement[], selected: number, moveFocus = false) => {
-    buttons.forEach((button, index) => {
-      button.setAttribute('aria-selected', String(index === selected));
-      button.tabIndex = index === selected ? 0 : -1;
-    });
-    panels.forEach((panel, index) => { panel.hidden = index !== selected; });
-    if (moveFocus) buttons[selected]?.focus();
-  };
   const selectOperation = (operationId: string) => {
     all<HTMLButtonElement>('[data-rest-operation-select]').forEach((button) => {
       button.setAttribute('aria-pressed', String(button.dataset.restOperationSelect === operationId));
@@ -64,43 +56,6 @@ export function mount(root: HTMLElement): void {
       resetButtonText(button, message('copied', 'Copied'));
     });
   }, { signal: lifecycle.signal });
-  all<HTMLButtonElement>('[data-code-tab]').forEach((button) => {
-    button.addEventListener('click', () => {
-      const operation = button.closest<HTMLElement>('[data-rest-operation-panel]');
-      if (!operation) return;
-      selectTabs(all('[data-code-tab]', operation), all('[data-code-panel]', operation), Number(button.dataset.codeTab));
-    }, { signal: lifecycle.signal });
-    button.addEventListener('keydown', (event) => {
-      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
-      const operation = button.closest<HTMLElement>('[data-rest-operation-panel]');
-      if (!operation) return;
-      const buttons = all<HTMLButtonElement>('[data-code-tab]', operation);
-      const panels = all<HTMLElement>('[data-code-panel]', operation);
-      const current = buttons.indexOf(button);
-      const tablist = button.closest<HTMLElement>('[role="tablist"]');
-      const rtl = tablist ? getComputedStyle(tablist).direction === 'rtl' : false;
-      let next = current;
-      if (event.key === 'Home') next = 0;
-      else if (event.key === 'End') next = buttons.length - 1;
-      else if (event.key === 'ArrowRight') next = (current + (rtl ? -1 : 1) + buttons.length) % buttons.length;
-      else next = (current + (rtl ? 1 : -1) + buttons.length) % buttons.length;
-      event.preventDefault();
-      selectTabs(buttons, panels, next, true);
-    }, { signal: lifecycle.signal });
-  });
-  all<HTMLButtonElement>('[data-copy-code]').forEach((button) => button.addEventListener('click', () => {
-    const operation = button.closest<HTMLElement>('[data-rest-operation-panel]');
-    if (!operation) return;
-    const selected = all<HTMLElement>('[data-code-panel]', operation).find((panel) => !panel.hidden);
-    void navigator.clipboard.writeText(selected?.textContent ?? '').then(() => {
-      button.textContent = message('copied', 'Copied');
-      const id = window.setTimeout(() => {
-        timeoutIds.delete(id);
-        if (!lifecycle.signal.aborted) button.textContent = message('copySelected', 'Copy selected code sample');
-      }, 1200);
-      timeoutIds.add(id);
-    });
-  }, { signal: lifecycle.signal }));
   all<HTMLFormElement>('[data-rest-form]').forEach((form) => form.addEventListener('submit', (event) => {
     event.preventDefault();
     const panel = form.closest<HTMLElement>('[data-rest-operation-panel]');

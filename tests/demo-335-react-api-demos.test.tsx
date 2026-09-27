@@ -7,7 +7,7 @@ import { bindLocalization, resolveLocalization } from '../src/i18n/runtime';
 import { demonstrations } from '../src/demos/demos-page';
 import { GRAPHQL_EXAMPLES } from '../src/demos/graphql-examples';
 import { graphqlSection } from '../src/demos/graphql-presentation';
-import { restCodeExamples, restSection } from '../src/demos/rest-presentation';
+import { restSection } from '../src/demos/rest-presentation';
 import type { Env } from '../src/types';
 import { localGraphiqlDocument } from '../src/ui/graphiql-document';
 import { initializeGraphiql } from '../src/browser/graphiql';
@@ -45,7 +45,7 @@ describe('DEMO-335 React REST and GraphQL demonstrations', () => {
     }
   });
 
-  it('keeps all REST operations, OpenAPI links, and request examples unchanged', () => {
+  it('keeps all REST operations and OpenAPI links while removing code samples', () => {
     const html = restSection(env).body;
     const methodCount = Object.values(restDemoOpenApiDocument.paths).reduce((total, path) => total
       + ['get', 'post', 'put', 'patch', 'delete'].filter((method) => Object.hasOwn(path, method)).length, 0);
@@ -54,11 +54,9 @@ describe('DEMO-335 React REST and GraphQL demonstrations', () => {
     expect(html.match(/data-rest-form=/g)).toHaveLength(methodCount);
     expect(html).toContain('/api/labs/rest-demo-openapi.json?download=1');
     expect(html).toContain('/api/labs/rest-demo-records/{id}');
-    const source = readFileSync('src/demos/rest-presentation.tsx', 'utf8');
-    expect(source).toContain('export function restCodeExamples');
-    expect(source).toContain('JSON.stringify(example)');
-    expect(source).toContain("requests.${method.toLowerCase()}");
-    expect(typeof restCodeExamples).toBe('function');
+    expect(html).not.toContain('Code samples for this operation');
+    expect(html).not.toContain('Focused browser tutorial');
+    expect(html).not.toContain('Choose one request');
   });
 
   it('keeps both GraphQL request examples and the first-party query runner', () => {

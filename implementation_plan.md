@@ -2,16 +2,6 @@
 
 ## Open tasks
 
-### DEMO-383 — [FEAT] Declutter the demos workbench for phones
-
-- Dependency: DEMO-380 plan-only queue publication has merged.
-- Why: The owner asked to remove "Try this:" from every demo and the inspector from REST, GraphQL, Webhooks, Identity, MCP, Edge and Accessibility. On phones each inspector stacks under its demo as another 320–370px of Guide, Evidence and View source. Most demo headers repeat their category (`DATA / DATA`, `APIS / APIS`, `AI / AI / MCP`), and at 375×812 the hero plus three rows of category tabs (142px) push the first demo control down to y≈799. REST states its "Focused browser tutorial" explanation twice, with the first copy colliding with the selector border, and ends with a collapsed "Deeper evidence / Code samples for this operation" block.
-- Scope: Remove the "Try this:" line and the `tryThis` field from every demo definition, the workbench, browser enhancement and presentation catalog. Remove the category/group context line. Keep category tabs on one horizontally scrollable row at narrow widths and compact the `/demos` hero on phones. Remove the inspector, its Guide and Evidence tabs and the View source link from REST, GraphQL, Webhooks, Identity, MCP, Edge and Accessibility so their stage spans the full workbench. On REST, remove the "Focused browser tutorial…" paragraph, the "Operation selector / Choose one request" heading and intro copy, and the code-samples disclosure while keeping every operation executable. Correct demo summaries that promise evidence the demo does not show, such as Edge's DNS, TLS and CDN claim. Remove stylesheet rules left unused.
-- Non-goals: Do not remove a released demo, fragment, machine or protocol contract, reset API or the shared site footer, and do not change D1 as the default demo. The D1 sandbox card and resets belong to DEMO-384; the inspectors kept by D1, R2, Workers, Durable Objects and Internationalization belong to DEMO-385.
-- Acceptance: No "Try this" copy or `tryThis` data remains; no header repeats its category; the seven listed demos render with no inspector, Guide, Evidence or View source at every width and without JavaScript; REST shows no tutorial paragraphs, selector heading or code-samples block, and every operation still executes; at 375×812 without scrolling, category tabs occupy one row and the selected demo's first control is fully visible; all twelve released fragments still select their demo.
-- Validation: Pinned `npm ci`; updated workbench, curated-demo, REST and composition tests; presentation-catalog and stylesheet-reachability validation; browser audit; credential-free `npm run check`; dependency advisory gate; committed-range whitespace; exact-head required CI.
-- Authorities: `docs/REPOSITORY-BOUNDARIES.md` workbench rules, `src/demos/demos-page.ts`, `src/demos/demos-workbench.tsx`, `src/browser/demos.ts`, `src/demos/rest-presentation.tsx`, `src/i18n/presentation.json`, `src/styles/demos.css`, `scripts/validate-stylesheet-classes.mjs`, workbench and curated-demo tests.
-
 ### DEMO-384 — [FEAT] Give resettable demos one consistent reset control
 
 - Dependency: DEMO-383 has merged.

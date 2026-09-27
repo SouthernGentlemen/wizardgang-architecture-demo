@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { ReactPageContent } from './document';
 
 export type DemoHeadingLevel = 1 | 2 | 3;
@@ -18,5 +19,6 @@ export interface DemoSectionOptions {
 export interface DemoSection {
   readonly scope: string;
   readonly body: string;
+  readonly element: ReactNode;
   readonly page: Omit<ReactPageContent, 'body' | 'canonicalPath'> & { canonicalPath: string };
 }
