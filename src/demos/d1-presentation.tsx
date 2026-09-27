@@ -51,10 +51,6 @@ function d1BrowserMessages(localization: LocalizationContext): Readonly<Record<s
     deleteTaskTitle: exact('Delete this task?'),
     deleteUser: exact('Delete user'),
     deleteTask: exact('Delete task'),
-    resetTitle: exact('Reset sample data?'),
-    resetMessage: exact('Your changes will be replaced with three fictional users and four related tasks.'),
-    resetAction: exact('Reset data'),
-    sampleRestored: exact('Sample data restored.'),
     userDeleted: exact('User deleted.'),
     taskDeleted: exact('Task deleted.'),
     row: exact('row'),
@@ -75,7 +71,6 @@ function D1Presentation({ localization }: Readonly<{ localization: LocalizationC
   const tasksTab = scope.id('d1-tasks-tab');
   const tasksPanel = scope.id('d1-tasks-panel');
   const stateHeading = scope.id('state-heading');
-  const sandboxHeading = scope.id('sandbox-heading');
   const confirmTitle = scope.id('d1-confirm-title');
   const confirmMessage = scope.id('d1-confirm-message');
 
@@ -154,11 +149,6 @@ function D1Presentation({ localization }: Readonly<{ localization: LocalizationC
           <details className="d1-response-details"><summary>{exact('Response JSON')}</summary><pre data-state-output="">{exact('No response yet.')}</pre></details>
         </section>
       </aside>
-    </section>
-
-    <section className="panel d1-sandbox" aria-labelledby={sandboxHeading}>
-      <div><p className="eyebrow">{exact('Sandbox')}</p><DemoHeading level={2} id={sandboxHeading}>{exact('Your isolated D1 sandbox')}</DemoHeading><p className="subtle">{exact('These rows are persisted server-side in D1 and isolated to this visitor sandbox. Reset restores three fictional users and four related tasks.')}</p></div>
-      <button type="button" data-reset="">{exact('Reset sample data')}</button>
     </section>
 
     <dialog className="d1-confirm-dialog" data-confirm-dialog="" aria-labelledby={confirmTitle} aria-describedby={confirmMessage}>

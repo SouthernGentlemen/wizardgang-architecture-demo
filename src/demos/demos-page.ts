@@ -71,7 +71,7 @@ export const demonstrations: readonly ArchitectureDemo[] = [
     id: 'r2', label: 'R2', selectorLabel: 'R2', group: 'Data', category: 'Data', tier: 'primary',
     summary: 'Upload, inspect, and remove bounded objects in live storage.',
     guide: ['Upload a small bounded object.', 'Inspect the object metadata and content.', 'Remove the object when you are finished.'],
-    sourcePath: 'src/demos/r2-presentation.tsx', render: (_request, env, options) => r2Section(env, options),
+    sourcePath: 'src/demos/r2-presentation.tsx', status: ['RESETTABLE'], render: (_request, env, options) => r2Section(env, options),
   },
   {
     id: 'rest', label: 'REST / OpenAPI', selectorLabel: 'REST', group: 'APIs', category: 'APIs', tier: 'primary',
@@ -86,7 +86,7 @@ export const demonstrations: readonly ArchitectureDemo[] = [
   {
     id: 'webhooks', label: 'Webhooks', selectorLabel: 'Webhooks', group: 'Integrations', category: 'Integrations', tier: 'primary',
     summary: 'Generate and inspect signed synthetic webhook delivery behavior.',
-    sourcePath: 'src/demos/webhook-presentation.tsx', render: (_request, env, options) => webhooksSection(env, options),
+    sourcePath: 'src/demos/webhook-presentation.tsx', status: ['RESETTABLE'], render: (_request, env, options) => webhooksSection(env, options),
   },
   {
     id: 'identity', label: 'Identity', selectorLabel: 'Identity', group: 'Identity', category: 'Identity', tier: 'primary',

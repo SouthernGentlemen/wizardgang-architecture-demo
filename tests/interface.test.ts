@@ -72,7 +72,7 @@ describe('D1 database console', () => {
     expect(browser).toContain("task_limit_reached: message('taskLimitReached', 'This sandbox has reached its 25-task limit.')");
     expect(browser).toContain("message('assignedTasksWill', 'assigned tasks will become Unassigned.')");
     expect(html).toContain('data-confirm-dialog');
-    expect(browser).toContain("message('resetTitle', 'Reset sample data?')");
+    expect(browser).toContain("root.addEventListener('demo:reset-complete'");
     expect(browser).toContain('const confirmButton = event.currentTarget as HTMLButtonElement;');
     expect(browser).not.toContain('event.currentTarget.disabled');
     expect(browser).not.toContain('catch (_) {}');
@@ -111,7 +111,7 @@ describe('R2 storage workspace', () => {
     expect(browser).toContain('state.selectedFile.size > MAX_FILE_BYTES');
     expect(browser).toContain('File exceeds the 5 MiB limit.');
     expect(browser).toContain('data-confirm-delete');
-    expect(html).toContain('data-confirm-reset');
+    expect(html).not.toContain('data-confirm-reset');
     expect(browser).toContain('Upload failed — try again.');
     expect(browser).not.toContain("confirm('Delete this R2 object?')");
     expect(browser).not.toContain('catch (_) {}');

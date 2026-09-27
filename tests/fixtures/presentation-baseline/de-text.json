@@ -679,6 +679,10 @@
       },
       {
         "level": 2,
+        "text": "Reset this demo?"
+      },
+      {
+        "level": 2,
         "text": "Cloudflare-D1-Datenbank"
       },
       {
@@ -692,10 +696,6 @@
       {
         "level": 3,
         "text": "SQL Inspector"
-      },
-      {
-        "level": 3,
-        "text": "Your isolated D1 sandbox"
       },
       {
         "level": 3,
@@ -855,6 +855,21 @@
       },
       {
         "element": "button",
+        "role": null,
+        "name": "Reset demo"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Abbrechen"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Confirm reset"
+      },
+      {
+        "element": "button",
         "role": "tab",
         "name": "Users — / 10"
       },
@@ -951,11 +966,6 @@
       {
         "element": "button",
         "role": null,
-        "name": "Reset sample data"
-      },
-      {
-        "element": "button",
-        "role": null,
         "name": "Abbrechen"
       },
       {
@@ -987,11 +997,6 @@
         "element": "div",
         "role": "tabpanel",
         "name": "Guide"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Reset demo"
       },
       {
         "element": "a",
@@ -2542,6 +2547,10 @@
       },
       {
         "level": 2,
+        "text": "Reset this demo?"
+      },
+      {
+        "level": 2,
         "text": "Cloudflare-D1-Datenbank"
       },
       {
@@ -2555,10 +2564,6 @@
       {
         "level": 3,
         "text": "SQL Inspector"
-      },
-      {
-        "level": 3,
-        "text": "Your isolated D1 sandbox"
       },
       {
         "level": 3,
@@ -2718,6 +2723,21 @@
       },
       {
         "element": "button",
+        "role": null,
+        "name": "Reset demo"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Abbrechen"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Confirm reset"
+      },
+      {
+        "element": "button",
         "role": "tab",
         "name": "Users — / 10"
       },
@@ -2814,11 +2834,6 @@
       {
         "element": "button",
         "role": null,
-        "name": "Reset sample data"
-      },
-      {
-        "element": "button",
-        "role": null,
         "name": "Abbrechen"
       },
       {
@@ -2850,11 +2865,6 @@
         "element": "div",
         "role": "tabpanel",
         "name": "Guide"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Reset demo"
       },
       {
         "element": "a",
@@ -2933,6 +2943,10 @@
       },
       {
         "level": 2,
+        "text": "Reset this demo?"
+      },
+      {
+        "level": 2,
         "text": "Cloudflare-D1-Datenbank"
       },
       {
@@ -2946,10 +2960,6 @@
       {
         "level": 3,
         "text": "SQL Inspector"
-      },
-      {
-        "level": 3,
-        "text": "Your isolated D1 sandbox"
       },
       {
         "level": 3,
@@ -3109,6 +3119,21 @@
       },
       {
         "element": "button",
+        "role": null,
+        "name": "Reset demo"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Abbrechen"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Confirm reset"
+      },
+      {
+        "element": "button",
         "role": "tab",
         "name": "Users — / 10"
       },
@@ -3205,11 +3230,6 @@
       {
         "element": "button",
         "role": null,
-        "name": "Reset sample data"
-      },
-      {
-        "element": "button",
-        "role": null,
         "name": "Abbrechen"
       },
       {
@@ -3241,11 +3261,6 @@
         "element": "div",
         "role": "tabpanel",
         "name": "Guide"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Reset demo"
       },
       {
         "element": "a",
@@ -3849,10 +3864,6 @@
       },
       {
         "level": 3,
-        "text": "Your isolated D1 sandbox"
-      },
-      {
-        "level": 3,
         "text": "Delete row?"
       }
     ],
@@ -3955,11 +3966,6 @@
       {
         "element": "button",
         "role": null,
-        "name": "Reset sample data"
-      },
-      {
-        "element": "button",
-        "role": null,
         "name": "Abbrechen"
       },
       {
@@ -4047,21 +4053,6 @@
         "element": "button",
         "role": null,
         "name": "Refresh files"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Sandbox zurücksetzen"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Confirm reset"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Abbrechen"
       },
       {
         "element": "aside",
@@ -4592,11 +4583,6 @@
         "element": "button",
         "role": null,
         "name": "Simulate signed release webhook"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Reset my synthetic events"
       }
     ],
     "labels": []

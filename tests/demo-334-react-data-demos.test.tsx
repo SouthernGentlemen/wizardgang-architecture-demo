@@ -63,12 +63,12 @@ describe('DEMO-334 React D1 and R2 demonstrations', () => {
       expect(rendered.html).toContain('role="tablist"');
       expect(rendered.html).toContain('data-inspector-sql');
       expect(rendered.html).toContain('data-state-output');
-      expect(rendered.html).toContain('data-reset');
+      expect(rendered.html).not.toContain('data-reset=""');
       expect(browser).toContain("await load('users'");
       expect(browser).toContain("await load('tasks'");
       expect(browser).toContain("method: id ? 'PATCH' : 'POST'");
       expect(browser).toContain("{ method: 'DELETE' }");
-      expect(browser).toContain("request('/api/labs/d1-reset', { method: 'POST' })");
+      expect(browser).toContain("root.addEventListener('demo:reset-complete'");
       expect(browser).toContain('root.querySelectorAll');
       expect(browser).not.toContain('.innerHTML');
       expect(browser).not.toContain('document.querySelector(');
@@ -83,11 +83,11 @@ describe('DEMO-334 React D1 and R2 demonstrations', () => {
     try {
       expect(rendered.html).toContain('data-upload-form');
       expect(rendered.html).toContain('data-r2-output');
-      expect(rendered.html).toContain('data-confirm-reset');
+      expect(rendered.html).not.toContain('data-confirm-reset');
       expect(browser).toContain("call('/api/labs/r2-files', {}, 'LIST'");
       expect(browser).toContain("call('/api/labs/r2-files', { method: 'POST', body }, 'PUT'");
       expect(browser).toContain("{ method: 'DELETE' }, 'DELETE'");
-      expect(browser).toContain("call('/api/labs/r2-reset', { method: 'POST' }, 'RESET'");
+      expect(browser).toContain("root.addEventListener('demo:reset-complete'");
       expect(browser).toContain("file.contentType === 'text/plain'");
       expect(browser).toContain("file.contentType === 'image/svg+xml'");
       expect(browser).toContain('root.querySelector');

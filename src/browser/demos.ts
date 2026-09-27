@@ -41,6 +41,14 @@ interface DemosBrowserMessages {
   inspectorModes: string;
   demoTools: string;
   resetDemo: string;
+  resetQuestion: string;
+  resetD1: string;
+  resetR2: string;
+  resetWebhooks: string;
+  confirmReset: string;
+  cancel: string;
+  resetComplete: string;
+  resetFailed: string;
   viewSource: string;
 }
 
@@ -82,7 +90,12 @@ function initializeDemosWorkbench(): void {
   let inspector = document.querySelector<HTMLElement>('[data-demo-inspector]');
   let inspectorTabs = document.querySelector<HTMLElement>('[data-demo-inspector-tabs]');
   let inspectorPanel = document.querySelector<HTMLElement>('[data-demo-inspector-panel]');
-  let resetControl = document.querySelector<HTMLButtonElement>('[data-demo-reset]');
+  const resetControl = document.querySelector<HTMLButtonElement>('[data-demo-reset]');
+  const resetDialog = document.querySelector<HTMLDialogElement>('[data-demo-reset-dialog]');
+  const resetDescription = document.querySelector<HTMLElement>('[data-demo-reset-description]');
+  const resetNotice = document.querySelector<HTMLElement>('[data-demo-reset-notice]');
+  const resetConfirm = document.querySelector<HTMLButtonElement>('[data-demo-reset-confirm]');
+  const resetCancel = document.querySelector<HTMLButtonElement>('[data-demo-reset-cancel]');
   let sourceControl = document.querySelector<HTMLAnchorElement>('[data-demo-source]');
   let tools = document.querySelector<HTMLElement>('.demo-workbench-tools');
   let activeId = '';
@@ -91,7 +104,7 @@ function initializeDemosWorkbench(): void {
 
   if (!workbench || !panel || !layout) return;
 
-  if (!inspector || !inspectorTabs || !inspectorPanel || !resetControl || !sourceControl || !tools) {
+  if (!inspector || !inspectorTabs || !inspectorPanel || !sourceControl || !tools) {
     inspector = document.createElement('aside');
     inspector.className = 'demo-inspector';
     inspector.dataset.demoInspector = '';
@@ -120,17 +133,12 @@ function initializeDemosWorkbench(): void {
     tools.className = 'demo-workbench-tools';
     tools.setAttribute('aria-label', messages.demoTools);
     tools.hidden = true;
-    resetControl = document.createElement('button');
-    resetControl.type = 'button';
-    resetControl.dataset.demoReset = '';
-    resetControl.textContent = messages.resetDemo;
-    resetControl.hidden = true;
     sourceControl = document.createElement('a');
     sourceControl.dataset.demoSource = '';
     sourceControl.target = '_blank';
     sourceControl.rel = 'noreferrer';
     sourceControl.textContent = messages.viewSource;
-    tools.append(resetControl, sourceControl);
+    tools.append(sourceControl);
     layout.append(inspector, tools);
   }
 
@@ -281,9 +289,9 @@ function initializeDemosWorkbench(): void {
   };
 
   const syncTools = (demo: DemoMetadata) => {
-    if (resetControl) resetControl.hidden = !panel.querySelector('[data-reset]');
+    if (resetControl) resetControl.hidden = !['d1', 'r2', 'webhooks'].includes(demo.id);
     if (sourceControl) sourceControl.hidden = !demo.hasInspector;
-    if (tools) tools.hidden = !demo.hasInspector && (!resetControl || resetControl.hidden);
+    if (tools) tools.hidden = !demo.hasInspector;
   };
 
   const renderState = (message: string, role = 'status', error = false, retryId = '') => {
@@ -304,6 +312,8 @@ function initializeDemosWorkbench(): void {
   };
 
   const deactivate = () => {
+    if (resetDialog?.open) resetDialog.close();
+    if (resetNotice) resetNotice.hidden = true;
     requestObserver?.disconnect();
     requestObserver = null;
     if (!activeId) return;
@@ -446,9 +456,49 @@ function initializeDemosWorkbench(): void {
     }
   };
 
+  const resetEndpoints: Readonly<Record<string, string>> = {
+    d1: '/api/labs/d1-reset',
+    r2: '/api/labs/r2-reset',
+    webhooks: '/api/labs/webhook-reset',
+  };
+  const resetDescriptions: Readonly<Record<string, string>> = {
+    d1: messages.resetD1,
+    r2: messages.resetR2,
+    webhooks: messages.resetWebhooks,
+  };
+  const returnResetFocus = () => resetControl?.focus();
   resetControl?.addEventListener('click', () => {
-    const target = panel.querySelector<HTMLButtonElement>('[data-reset]');
-    target?.click();
+    if (!resetDialog || !resetDescription || !resetEndpoints[activeId]) return;
+    resetDescription.textContent = resetDescriptions[activeId];
+    if (resetNotice) resetNotice.hidden = true;
+    resetDialog.showModal();
+    resetCancel?.focus();
+  });
+  resetCancel?.addEventListener('click', () => resetDialog?.close());
+  resetDialog?.addEventListener('close', returnResetFocus);
+  resetConfirm?.addEventListener('click', () => {
+    const id = activeId;
+    const endpoint = resetEndpoints[id];
+    if (!endpoint || !resetDialog || !resetNotice || !resetConfirm) return;
+    resetConfirm.disabled = true;
+    void (async () => {
+      try {
+        const response = await fetch(endpoint, { method: 'POST', credentials: 'same-origin' });
+        if (!response.ok) throw new Error(messages.resetFailed);
+        if (activeId !== id) return;
+        panel.querySelector('[data-demo-section]')?.dispatchEvent(new CustomEvent('demo:reset-complete'));
+        resetNotice.textContent = messages.resetComplete;
+        resetNotice.setAttribute('role', 'status');
+      } catch {
+        if (activeId !== id) return;
+        resetNotice.textContent = messages.resetFailed;
+        resetNotice.setAttribute('role', 'alert');
+      } finally {
+        resetConfirm.disabled = false;
+        if (resetDialog.open) resetDialog.close();
+        if (activeId === id) resetNotice.hidden = false;
+      }
+    })();
   });
   navigationLinks.forEach((link) => link.addEventListener('click', navigate));
   categoryTabs.forEach((tab) => tab.addEventListener('keydown', activateCategoryFromKeyboard));

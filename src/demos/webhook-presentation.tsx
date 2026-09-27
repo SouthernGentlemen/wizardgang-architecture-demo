@@ -92,7 +92,6 @@ function WebhookPresentation({ env, localization }: Readonly<{ env: Env; localiz
           <DemoHeading level={2} id={deliveriesHeading}>{exact('Verified deliveries')}</DemoHeading>
           <p className="subtle" data-webhook-meta="" aria-live="polite">{exact('Loading verified deliveries…')}</p>
         </div>
-        <button type="button" data-webhook-reset="">{exact('Reset my synthetic events')}</button>
       </div>
       <div className="webhook-events" data-webhook-events="" />
     </section>
