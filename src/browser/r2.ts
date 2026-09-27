@@ -87,7 +87,6 @@ export async function mount(root: HTMLElement): Promise<void> {
   const fileInput = required<HTMLInputElement>(root, '[data-file-input]');
   const uploadButton = required<HTMLButtonElement>(root, '[data-upload-button]');
   const refreshButton = required<HTMLButtonElement>(root, '[data-refresh]');
-  const resetButton = required<HTMLButtonElement>(root, '[data-r2-reset]');
   const output = required<HTMLElement>(root, '[data-r2-output]');
   const status = required<HTMLElement>(root, '[data-operation-status]');
   const size = (bytes: number) => bytes < 1024
@@ -354,7 +353,6 @@ export async function mount(root: HTMLElement): Promise<void> {
     if (!state.files.length) filesSlot.append(element('p', message('noFiles', 'No files are visible yet.'), 'file-list-empty'));
     else for (const file of state.files) filesSlot.append(...fileRow(file));
     refreshButton.disabled = state.loading;
-    resetButton.disabled = state.loading || own.length === 0;
     updateSelection(false);
   };
   const load = async (track = true) => {
@@ -546,39 +544,13 @@ export async function mount(root: HTMLElement): Promise<void> {
       })();
       return;
     }
-    if (button.hasAttribute('data-r2-reset')) {
-      resetButton.hidden = true;
-      required<HTMLElement>(root, '[data-reset-confirm]').hidden = false;
-      required<HTMLButtonElement>(root, '[data-confirm-reset]').focus();
-      return;
-    }
-    if (button.hasAttribute('data-cancel-reset')) {
-      required<HTMLElement>(root, '[data-reset-confirm]').hidden = true;
-      resetButton.hidden = false;
-      resetButton.focus();
-      return;
-    }
-    if (button.hasAttribute('data-confirm-reset')) {
-      button.disabled = true;
-      setStatus(message('resetting', 'Resetting your sandbox…'));
-      void (async () => {
-        try {
-          await call('/api/labs/r2-reset', { method: 'POST' }, 'RESET');
-          state.previewId = null;
-          state.confirmDeleteId = null;
-          await load(false);
-          required<HTMLElement>(root, '[data-reset-confirm]').hidden = true;
-          resetButton.hidden = false;
-          button.disabled = false;
-          setStatus(message('uploadsRemoved', 'Your uploads were removed.'), 'success');
-        } catch (error) {
-          if (!lifecycle.signal.aborted) {
-            setStatus(friendlyError(errorValue(error), message('resetFailed', 'Reset failed — try again.')), 'error');
-            button.disabled = false;
-          }
-        }
-      })();
-    }
+  }, { signal: lifecycle.signal });
+
+  root.addEventListener('demo:reset-complete', () => {
+    state.previewId = null;
+    state.confirmDeleteId = null;
+    setStatus('');
+    void load(false);
   }, { signal: lifecycle.signal });
 
   try {

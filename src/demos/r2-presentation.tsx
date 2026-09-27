@@ -74,9 +74,6 @@ function r2BrowserMessages(localization: LocalizationContext): Readonly<Record<s
     deleting: exact('Deleting'),
     deleted: exact('deleted.'),
     deleteFailed: exact('Delete failed — try again.'),
-    resetting: exact('Resetting your sandbox…'),
-    uploadsRemoved: exact('Your uploads were removed.'),
-    resetFailed: exact('Reset failed — try again.'),
     sandboxReady: exact('Sandbox ready.'),
     loadFailed: exact('Unable to load files — try again.'),
     previewOf: exact('Preview of'),
@@ -130,15 +127,6 @@ function R2Presentation({ localization }: Readonly<{ localization: LocalizationC
         </div>
         <div className="file-list" data-files=""><p className="file-list-empty">{exact('Loading R2 objects…')}</p></div>
 
-        <div className="sandbox-reset">
-          <div><strong>{exact('Finished exploring?')}</strong><span>{exact('Shared demo files stay in place.')}</span></div>
-          <button className="danger-text-button" type="button" data-r2-reset="" disabled>{exact('Reset sandbox')}</button>
-          <div className="reset-confirm" data-reset-confirm="" hidden>
-            <span>{exact('Delete all of your uploads?')}</span>
-            <button className="danger-button" type="button" data-confirm-reset="">{exact('Confirm reset')}</button>
-            <button type="button" data-cancel-reset="">{exact('Cancel')}</button>
-          </div>
-        </div>
       </section>
 
       <aside className="r2-sidebar">

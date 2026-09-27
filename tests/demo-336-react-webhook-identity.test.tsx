@@ -64,7 +64,7 @@ describe('DEMO-336 React webhook and identity demonstrations', () => {
     }
   });
 
-  it('keeps webhook polling, signing simulation, reset, stage, and failure behavior root-scoped', async () => {
+  it('keeps webhook polling, signing simulation, and refresh after shared reset root-scoped', async () => {
     const window = windowWith(webhooksSection(env).body);
     const root = window.document.querySelector<HTMLElement>('[data-demo-section="webhooks"]')!;
     const events: Array<Record<string, unknown>> = [];
@@ -96,10 +96,11 @@ describe('DEMO-336 React webhook and identity demonstrations', () => {
       expect([...root.querySelectorAll<HTMLElement>('[data-webhook-stage]')].every((stage) => stage.dataset.state === 'complete')).toBe(true);
       expect(root.querySelector('.webhook-event pre')?.textContent).toContain('v0.27.0');
 
-      root.querySelector<HTMLButtonElement>('[data-webhook-reset]')?.click();
+      events.splice(0);
+      root.dispatchEvent(new window.Event('demo:reset-complete'));
       await vi.waitFor(() => expect(root.querySelector('.webhook-empty')).not.toBeNull());
       expect(fetchMock).toHaveBeenCalledWith('/api/labs/webhook-demo', expect.objectContaining({ method: 'POST' }));
-      expect(fetchMock).toHaveBeenCalledWith('/api/labs/webhook-reset', expect.objectContaining({ method: 'POST' }));
+      expect(root.querySelector('[data-webhook-reset]')).toBeNull();
       root.dispatchEvent(new window.Event('demo:deactivate'));
     } finally {
       await window.happyDOM.close();

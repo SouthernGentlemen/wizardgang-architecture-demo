@@ -331,10 +331,10 @@ async function exerciseD1Workflow(cdp, locale) {
 
   await evaluate(cdp, `(()=>{
     document.querySelector('[data-demo-reset]')?.click();
-    document.querySelector('[data-demo-panel] [data-confirm-action]')?.click();
+    document.querySelector('[data-demo-reset-confirm]')?.click();
     return true;
   })()`);
-  await waitForExpression(cdp, `document.querySelector('[data-count="users"]')?.textContent === '3' && !document.querySelector('[data-confirm-dialog]')?.open`, `${label} reset`);
+  await waitForExpression(cdp, `document.querySelector('[data-count="users"]')?.textContent === '3' && !document.querySelector('[data-demo-reset-dialog]')?.open`, `${label} reset`);
 
   await evaluate(cdp, `(()=>{
     document.querySelector('[data-demo-panel] [data-add="users"]')?.click();
@@ -367,10 +367,10 @@ async function exerciseD1Workflow(cdp, locale) {
 
   await evaluate(cdp, `(()=>{
     document.querySelector('[data-demo-reset]')?.click();
-    document.querySelector('[data-demo-panel] [data-confirm-action]')?.click();
+    document.querySelector('[data-demo-reset-confirm]')?.click();
     return true;
   })()`);
-  await waitForExpression(cdp, `document.querySelector('[data-count="users"]')?.textContent === '3' && !document.querySelector('[data-confirm-dialog]')?.open`, `${label} final reset`, 160);
+  await waitForExpression(cdp, `document.querySelector('[data-count="users"]')?.textContent === '3' && !document.querySelector('[data-demo-reset-dialog]')?.open`, `${label} final reset`, 160);
   const result = await evaluate(cdp, `(()=>({
     lang:document.documentElement.lang,
     dir:document.documentElement.dir,
@@ -392,11 +392,8 @@ async function exerciseR2Workflow(cdp, locale) {
   await assertWorkbenchState(cdp, 'r2', label, '#r2', locale);
   await waitForExpression(cdp, `!document.querySelector('[data-sandbox-usage]')?.textContent?.includes('Loading')`, `${label} initial inventory`, 160);
 
-  const resetNeeded = await evaluate(cdp, `!document.querySelector('[data-r2-reset]')?.disabled`);
-  if (resetNeeded) {
-    await evaluate(cdp, `(()=>{document.querySelector('[data-r2-reset]')?.click();document.querySelector('[data-confirm-reset]')?.click();return true})()`);
-    await waitForExpression(cdp, `document.querySelector('[data-r2-reset]')?.disabled === true`, `${label} clean sandbox`, 160);
-  }
+  await evaluate(cdp, `(()=>{document.querySelector('[data-demo-reset]')?.click();document.querySelector('[data-demo-reset-confirm]')?.click();return true})()`);
+  await waitForExpression(cdp, `document.querySelector('[data-sandbox-usage]')?.textContent?.startsWith('0 /') && !document.querySelector('[data-demo-reset-dialog]')?.open`, `${label} clean sandbox`, 160);
 
   await evaluate(cdp, `(()=>{
     const input=document.querySelector('[data-file-input]');
@@ -534,13 +531,13 @@ async function workbenchInteractionAudit(cdp) {
   const resetState = await evaluate(cdp, `(()=>{
     const reset=document.querySelector('[data-demo-reset]');
     reset?.click();
-    const dialog=document.querySelector('[data-demo-panel] [data-confirm-dialog]');
-    return {visible:reset instanceof HTMLButtonElement&&!reset.hidden,open:dialog instanceof HTMLDialogElement&&dialog.open,title:dialog?.querySelector('[data-confirm-title]')?.textContent?.trim()};
+    const dialog=document.querySelector('[data-demo-reset-dialog]');
+    return {visible:reset instanceof HTMLButtonElement&&!reset.hidden,open:dialog instanceof HTMLDialogElement&&dialog.open,title:dialog?.querySelector('h2')?.textContent?.trim()};
   })()`);
-  if (!resetState.visible || !resetState.open || resetState.title !== 'Reset sample data?') {
-    throw new Error(`Workbench reset did not delegate to D1: ${JSON.stringify(resetState)}`);
+  if (!resetState.visible || !resetState.open || resetState.title !== 'Reset this demo?') {
+    throw new Error(`Workbench reset confirmation failed: ${JSON.stringify(resetState)}`);
   }
-  await evaluate(cdp, `document.querySelector('[data-demo-panel] [data-confirm-cancel]')?.click();true`);
+  await evaluate(cdp, `document.querySelector('[data-demo-reset-cancel]')?.click();true`);
 
   for (const mode of ['Guide', 'Request', 'Evidence']) {
     const modeState = await evaluate(cdp, `(()=>{
@@ -624,6 +621,66 @@ async function workbenchInteractionAudit(cdp) {
     await exerciseRestWorkflow(cdp, locale);
     await exerciseGraphqlWorkflow(cdp, locale);
     await exerciseDemo337Workflows(cdp, locale);
+  }
+}
+
+async function sharedResetAudit(cdp, width) {
+  for (const id of ['d1', 'r2', 'webhooks']) {
+    const label = `${id} shared reset ${width}px`;
+    await navigate(cdp, `${origin}/demos?lang=en#${id}`);
+    await assertWorkbenchState(cdp, id, label);
+    const initial = await evaluate(cdp, `(()=>{
+      const controls=[...document.querySelectorAll('[data-demo-reset]')];
+      const control=controls[0];
+      const heading=document.querySelector('.demo-active-heading');
+      return {count:controls.length,label:control?.textContent?.trim(),visible:!control?.hidden,
+        inHeading:heading?.contains(control),resettable:heading?.textContent?.includes('RESETTABLE'),
+        legacy:Boolean(document.querySelector('.d1-sandbox,.sandbox-reset,[data-webhook-reset]'))};
+    })()`);
+    if (initial.count !== 1 || initial.label !== 'Reset demo' || !initial.visible || !initial.inHeading || !initial.resettable || initial.legacy) {
+      throw new Error(`${label} placement failed: ${JSON.stringify(initial)}`);
+    }
+    const opened = await evaluate(cdp, `(()=>{
+      const control=document.querySelector('[data-demo-reset]');control.click();
+      const dialog=document.querySelector('[data-demo-reset-dialog]');
+      const rect=dialog.getBoundingClientRect();
+      return {open:dialog.open,focus:document.activeElement?.hasAttribute('data-demo-reset-cancel'),
+        label:dialog.querySelector('h2')?.textContent?.trim(),description:document.querySelector('[data-demo-reset-description]')?.textContent?.trim(),
+        fits:rect.left>=0&&rect.right<=innerWidth&&document.documentElement.scrollWidth<=innerWidth+1};
+    })()`);
+    if (!opened.open || !opened.focus || opened.label !== 'Reset this demo?' || !opened.description || !opened.fits) {
+      throw new Error(`${label} dialog failed: ${JSON.stringify(opened)}`);
+    }
+    await evaluate(cdp, `document.querySelector('[data-demo-reset-cancel]').click();true`);
+    await waitForExpression(cdp, `!document.querySelector('[data-demo-reset-dialog]').open && document.activeElement===document.querySelector('[data-demo-reset]')`, `${label} cancel focus`);
+
+    if (id === 'r2') {
+      await evaluate(cdp, `(()=>{
+        const input=document.querySelector('[data-file-input]');const transfer=new DataTransfer();
+        transfer.items.add(new File(['reset proof'],'reset-proof.txt',{type:'text/plain'}));
+        input.files=transfer.files;input.dispatchEvent(new Event('change',{bubbles:true}));
+        document.querySelector('[data-upload-form]').requestSubmit();return true;
+      })()`);
+      await waitForExpression(cdp, `[...document.querySelectorAll('.file-row')].some((row)=>row.querySelector('strong')?.textContent==='reset-proof.txt')`, `${label} upload`, 240);
+    }
+    if (id === 'webhooks') {
+      await evaluate(cdp, `document.querySelector('[data-webhook-send]').click();true`);
+      await waitForExpression(cdp, `document.querySelector('.webhook-event')!==null`, `${label} synthetic event`, 160);
+    }
+    const sharedBefore = id === 'r2' ? await evaluate(cdp, `[...document.querySelectorAll('.file-row')].filter((row)=>row.querySelector('[data-owner="demo"]')).map((row)=>row.querySelector('strong')?.textContent)`) : null;
+    await evaluate(cdp, `(()=>{document.querySelector('[data-demo-reset]').click();document.querySelector('[data-demo-reset-confirm]').click();return true})()`);
+    await waitForExpression(cdp, `!document.querySelector('[data-demo-reset-dialog]').open && document.activeElement===document.querySelector('[data-demo-reset]') && !document.querySelector('[data-demo-reset-notice]').hidden`, `${label} confirm focus`);
+    const result = await evaluate(cdp, `({notice:document.querySelector('[data-demo-reset-notice]')?.textContent?.trim(),role:document.querySelector('[data-demo-reset-notice]')?.getAttribute('role')})`);
+    if (result.notice !== 'Demo reset complete.' || result.role !== 'status') throw new Error(`${label} result notice failed: ${JSON.stringify(result)}`);
+    if (id === 'd1') {
+      await waitForExpression(cdp, `document.querySelector('[data-count="users"]')?.textContent==='3' && document.querySelector('[data-count="tasks"]')?.textContent==='4'`, `${label} seed rows`, 160);
+    } else if (id === 'r2') {
+      await waitForExpression(cdp, `document.querySelector('[data-sandbox-usage]')?.textContent?.startsWith('0 /') && ![...document.querySelectorAll('.file-row')].some((row)=>row.querySelector('strong')?.textContent==='reset-proof.txt')`, `${label} visitor uploads removed`, 160);
+      const sharedAfter = await evaluate(cdp, `[...document.querySelectorAll('.file-row')].filter((row)=>row.querySelector('[data-owner="demo"]')).map((row)=>row.querySelector('strong')?.textContent)`);
+      if (JSON.stringify(sharedAfter) !== JSON.stringify(sharedBefore)) throw new Error(`${label} shared files changed: ${JSON.stringify({sharedBefore,sharedAfter})}`);
+    } else {
+      await waitForExpression(cdp, `document.querySelector('.webhook-event')===null && document.querySelector('.webhook-empty')!==null`, `${label} synthetic events cleared`, 160);
+    }
   }
 }
 
@@ -782,6 +839,8 @@ async function main() {
     String(serverPort),
     '--var',
     `DEMO_SESSION_SECRET:${localSessionSecret}`,
+    '--var',
+    'WEBHOOK_DEMO_SECRET:demo-384-local-browser-audit-webhook-secret',
   ], {
     stdio: ['ignore', 'pipe', 'pipe'],
     env: { ...process.env, NO_UPDATE_NOTIFIER: '1' },
@@ -862,8 +921,10 @@ async function main() {
     axeRuns += 1;
 
     await workbenchInteractionAudit(cdp);
+    await sharedResetAudit(cdp, 1280);
     axeRuns += 6;
     await phoneWorkbenchAudit(cdp);
+    await sharedResetAudit(cdp, 375);
     await assuranceRecordFirstAudit(cdp);
     axeRuns += 18;
 

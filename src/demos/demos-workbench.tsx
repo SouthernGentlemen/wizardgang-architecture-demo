@@ -160,7 +160,6 @@ function DefaultInspector({ demo, env, localization }: Readonly<{
       </div>
     </aside>
     <div className="demo-workbench-tools" aria-label={localization.exact('Demo tools')}>
-      <button type="button" data-demo-reset="" hidden>{localization.exact('Reset demo')}</button>
       <a href={sourceHref(env, demo.sourcePath)} target="_blank" rel="noreferrer" data-demo-source="">{localization.exact('View source')}</a>
     </div>
   </>;
@@ -186,6 +185,14 @@ function DemosBrowserModule({ env, localization }: Readonly<{ env: Env; localiza
     inspectorModes: localization.exact('Inspector modes'),
     demoTools: localization.exact('Demo tools'),
     resetDemo: localization.exact('Reset demo'),
+    resetQuestion: localization.exact('Reset this demo?'),
+    resetD1: localization.exact('Your changes will be replaced with three fictional users and four related tasks.'),
+    resetR2: localization.exact('Your uploads will be removed. Shared demo files stay in place.'),
+    resetWebhooks: localization.exact('Your synthetic webhook events will be cleared.'),
+    confirmReset: localization.exact('Confirm reset'),
+    cancel: localization.exact('Cancel'),
+    resetComplete: localization.exact('Demo reset complete.'),
+    resetFailed: localization.exact('Reset failed — try again.'),
     viewSource: localization.exact('View source'),
   });
   return <script type="module" src={source} data-demos-browser="" data-config={config} data-messages={messages} />;
@@ -213,9 +220,19 @@ export function DemosWorkbenchPage({ env, selectedDemo, initialPresentation }: R
           <div className="demo-statuses" data-demo-statuses="" hidden={!selectedDemo.status?.length}>
             {(selectedDemo.status ?? []).map((status) => <span key={status} className="demo-status-chip">{localization.exact(status)}</span>)}
           </div>
+          <button type="button" data-demo-reset="" hidden>{localization.exact('Reset demo')}</button>
         </div>
         <p className="demo-active-purpose" data-demo-purpose="">{localization.exact(selectedDemo.summary)}</p>
+        <p className="demo-reset-notice" data-demo-reset-notice="" role="status" aria-live="polite" hidden />
       </header>
+      <dialog className="demo-reset-dialog" data-demo-reset-dialog="" aria-labelledby="demo-reset-title" aria-describedby="demo-reset-description">
+        <h2 id="demo-reset-title">{localization.exact('Reset this demo?')}</h2>
+        <p id="demo-reset-description" data-demo-reset-description="" />
+        <div className="button-row">
+          <button type="button" data-demo-reset-cancel="">{localization.exact('Cancel')}</button>
+          <button className="button-primary" type="button" data-demo-reset-confirm="">{localization.exact('Confirm reset')}</button>
+        </div>
+      </dialog>
       <div className="demo-workbench-layout" data-demo-inspector-enabled={String(hasDemoInspector(selectedDemo))}>
         <div className="demo-stage">
           <div className="demo-panel" data-demo-panel="" aria-busy="false">

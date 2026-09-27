@@ -61,7 +61,6 @@ export async function mount(root: HTMLElement): Promise<void> {
   const state = required<HTMLElement>(root, '[data-webhook-state]');
   const meta = required<HTMLElement>(root, '[data-webhook-meta]');
   const sendButton = required<HTMLButtonElement>(root, '[data-webhook-send]');
-  const resetButton = required<HTMLButtonElement>(root, '[data-webhook-reset]');
   const stages = [...root.querySelectorAll<HTMLElement>('[data-webhook-stage]')];
   const number = new Intl.NumberFormat(locale);
   let lastFingerprint = '';
@@ -164,15 +163,7 @@ export async function mount(root: HTMLElement): Promise<void> {
       sendButton.disabled = false;
     }
   }, { signal: lifecycle.signal });
-  resetButton.addEventListener('click', async () => {
-    try {
-      await mutate('/api/labs/webhook-reset');
-    } catch (error) {
-      if (lifecycle.signal.aborted) return;
-      state.textContent = message('failed', 'Failed');
-      meta.textContent = errorValue(error);
-    }
-  }, { signal: lifecycle.signal });
+  root.addEventListener('demo:reset-complete', () => { void refresh(); }, { signal: lifecycle.signal });
 
   await refresh();
   if (!lifecycle.signal.aborted) {

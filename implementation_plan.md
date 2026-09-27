@@ -2,16 +2,6 @@
 
 ## Open tasks
 
-### DEMO-384 — [FEAT] Give resettable demos one consistent reset control
-
-- Dependency: DEMO-383 has merged.
-- Why: The owner wants the D1 sandbox card ("Your isolated D1 sandbox … Reset restores three fictional users and four related tasks.") removed and reset made consistent across demos. D1 offers both that card's "Reset sample data" and a workbench "Reset demo" for the same action; R2 hides a muted "Reset sandbox" in a "Finished exploring? Shared demo files stay in place." block; Webhooks uses "Reset my synthetic events".
-- Scope: Provide one shared "Reset demo" control in the active demo header beside the RESETTABLE status for D1, R2 and Webhooks, marking R2 and Webhooks RESETTABLE, with one confirmation pattern, one result notice and focus return, wired to each demo's existing reset API. Remove the D1 sandbox card, R2's "Finished exploring?" block and the Webhooks-specific reset button.
-- Non-goals: Do not change reset semantics, visitor-session isolation, seed data, shared R2 demo files or reset API routes, and do not add resets to other demos.
-- Acceptance: D1, R2 and Webhooks each show exactly one reset control with the same label, placement, confirmation and notice at every width; the D1 sandbox card and the R2 "Finished exploring?" block are gone; each reset restores its documented state (D1 seed rows, R2 visitor uploads removed with shared files kept, visitor synthetic webhook events cleared); focus returns to the control after confirm or cancel.
-- Validation: Pinned `npm ci`; D1, R2, webhook and workbench reset tests; browser audit of the confirmation; credential-free `npm run check`; dependency advisory gate; committed-range whitespace; exact-head required CI.
-- Authorities: `src/demos/demos-workbench.tsx`, `src/browser/demos.ts`, `src/demos/d1-presentation.tsx`, `src/browser/d1.ts`, `src/demos/r2-presentation.tsx`, `src/browser/r2.ts`, `src/demos/webhook-presentation.tsx`, `src/browser/webhooks.ts`, `src/api/d1-lab.ts`, `src/api/r2.ts`, `src/api/webhooks.ts`.
-
 ### DEMO-385 — [FEAT] Dock retained demo inspectors as a responsive sidecar
 
 - Dependency: DEMO-384 has merged.

@@ -61,12 +61,14 @@ describe('DEMO-267 focused demo pane and inspector', () => {
     expect(source).toContain('.demo-panel{min-width:0;max-width:100%;min-height:20rem;padding:1rem;overflow-x:auto}');
   });
 
-  it('mirrors real D1 request evidence and delegates reset to the mounted demo instead of fabricating state', () => {
+  it('mirrors real D1 request evidence and routes shared resets through existing APIs', () => {
     const source = readFileSync('src/browser/demos.ts', 'utf8');
     expect(source).toContain('const target = panel.querySelector(field.selector)');
     expect(source).toContain("requestObserver.observe(panel, { subtree: true, childList: true, characterData: true })");
-    expect(source).toContain("const target = panel.querySelector<HTMLButtonElement>('[data-reset]')");
-    expect(source).toContain('target?.click()');
+    for (const path of ['/api/labs/d1-reset', '/api/labs/r2-reset', '/api/labs/webhook-reset']) {
+      expect(source).toContain(path);
+    }
+    expect(source).toContain("dispatchEvent(new CustomEvent('demo:reset-complete'))");
   });
 
   it('preserves the DEMO-265 mounting, cancellation, history, and bounded-cache contract', () => {

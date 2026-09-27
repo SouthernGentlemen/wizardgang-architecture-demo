@@ -28,7 +28,7 @@ interface D1Payload {
 }
 
 interface PendingChange {
-  type: 'delete' | 'reset';
+  type: 'delete';
   resource?: Resource;
   id?: string;
   assigned?: number;
@@ -433,12 +433,10 @@ export async function mount(root: HTMLElement): Promise<void> {
       );
     }
   }, { signal: lifecycle.signal });
-  required<HTMLButtonElement>(root, '[data-reset]').addEventListener('click', () => openDialog(
-    { type: 'reset' },
-    message('resetTitle', 'Reset sample data?'),
-    message('resetMessage', 'Your changes will be replaced with three fictional users and four related tasks.'),
-    message('resetAction', 'Reset data'),
-  ), { signal: lifecycle.signal });
+  root.addEventListener('demo:reset-complete', () => {
+    setDatabaseMessage();
+    void loadAll();
+  }, { signal: lifecycle.signal });
   required<HTMLButtonElement>(root, '[data-confirm-cancel]').addEventListener('click', closeDialog, { signal: lifecycle.signal });
   dialog.addEventListener('cancel', () => { state.pending = null; }, { signal: lifecycle.signal });
   required<HTMLButtonElement>(root, '[data-confirm-action]').addEventListener('click', (event) => {
@@ -448,11 +446,7 @@ export async function mount(root: HTMLElement): Promise<void> {
     confirmButton.disabled = true;
     void (async () => {
       try {
-        if (pending.type === 'reset') {
-          await request('/api/labs/d1-reset', { method: 'POST' });
-          await loadAll();
-          setDatabaseMessage(message('sampleRestored', 'Sample data restored.'), 'success');
-        } else if (pending.resource && pending.id) {
+        if (pending.resource && pending.id) {
           await request(`/api/labs/d1-${pending.resource}/${encodeURIComponent(pending.id)}`, { method: 'DELETE' });
           closeForm(pending.resource);
           await loadAll();
