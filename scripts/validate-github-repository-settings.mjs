@@ -22,7 +22,7 @@ function assertBaseline(value) {
   const main = value.rulesets.main;
   const tags = value.rulesets.releaseTags;
   if (main.name !== 'Protect main' || tags.name !== 'Protect release tags' ||
-      JSON.stringify(main.requiredStatusChecks) !== JSON.stringify(['validate', 'change-id']) ||
+      JSON.stringify(main.requiredStatusChecks) !== JSON.stringify(['validate', 'change-id', 'security', 'secrets']) ||
       main.requireBranchUpToDate !== true ||
       JSON.stringify(main.bypassActors) !== '[]' || JSON.stringify(tags.bypassActors) !== '[]' ||
       JSON.stringify(tags.include) !== JSON.stringify(['refs/tags/v*'])) {
