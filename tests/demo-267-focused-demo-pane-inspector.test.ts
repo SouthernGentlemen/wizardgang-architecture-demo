@@ -37,7 +37,7 @@ describe('DEMO-267 focused demo pane and inspector', () => {
     expect(html).toContain('data-demo-inspector-mode="Evidence"');
     expect(html).toContain('data-demo-reset="" hidden="">Reset demo</button>');
     expect(html).toContain('data-demo-source="">View source</a>');
-    expect(html).not.toContain('<details');
+    expect(html.match(/<main\b[\s\S]*?<\/main>/)?.[0]).not.toContain('<details');
     expect(html).not.toContain('All demos');
   });
 

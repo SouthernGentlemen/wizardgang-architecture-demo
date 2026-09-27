@@ -119,14 +119,14 @@ function PrimaryNavigation({ currentRouteId }: Readonly<{ currentRouteId?: strin
   </nav>;
 }
 
-function LanguageSelector() {
+function LanguageSelector({ id = 'global-language' }: Readonly<{ id?: string }>) {
   const localization = useRequestLocalization();
   const parameter = localeQueryParameter();
   const preserved = [...localization.currentUrl.searchParams.entries()].filter(([name]) => name !== parameter);
   return <form className="language-selector" method="get" action={localization.currentUrl.pathname} data-preserve-fragment="">
     {preserved.map(([name, value], index) => <input key={`${name}-${index}`} type="hidden" name={name} value={value} />)}
-    <select id="global-language" name={parameter} aria-label={localization.t('shell.language', 'Language')} defaultValue={localization.locale}>
-      {supportedLocales.map((locale) => <option key={locale} value={locale}>{localeNames[locale]}</option>)}
+    <select id={id} name={parameter} aria-label={localization.t('shell.language', 'Language')} defaultValue={localization.locale}>
+      {supportedLocales.map((locale) => <option key={locale} value={locale} aria-label={localeNames[locale]}>{locale.toUpperCase()}</option>)}
     </select>
     {' '}<noscript><button type="submit">{localization.t('shell.apply_language', 'Apply')}</button></noscript>
   </form>;
@@ -142,8 +142,18 @@ function SiteHeader({ repositoryUrl, currentRouteId }: Readonly<{ repositoryUrl:
     </a>
     <PrimaryNavigation currentRouteId={currentRouteId} />
     <div className="header-utilities" aria-label="Site utilities">
-      <a href={repositoryUrl}>{localization.t('shell.source', 'Source')} <span aria-hidden="true">↗</span></a>
-      <button type="button" data-theme-toggle="" aria-label={themeLabel} aria-pressed="true">{themeLabel}</button>
+      <a href={repositoryUrl} aria-label={localization.t('shell.source', 'Source')}><span className="utility-label">{localization.t('shell.source', 'Source')}</span><span className="utility-icon" aria-hidden="true">↗</span></a>
+      <button type="button" data-theme-toggle="" aria-label={themeLabel} aria-pressed="true"><span className="utility-label">{themeLabel}</span><span className="utility-icon" aria-hidden="true">◐</span></button>
+      <noscript>
+        <details className="nojs-utilities">
+          <summary aria-label={`${localization.t('shell.source', 'Source')}, ${themeLabel}, ${localization.t('shell.language', 'Language')}`}>⋯</summary>
+          <div className="nojs-utilities-panel">
+            <a href={repositoryUrl}>{localization.t('shell.source', 'Source')} ↗</a>
+            <label className="theme-nojs"><input type="checkbox" aria-label={themeLabel} /><span aria-hidden="true">◐ {themeLabel}</span></label>
+            <LanguageSelector id="fallback-language" />
+          </div>
+        </details>
+      </noscript>
       <LanguageSelector />
     </div>
   </header>;

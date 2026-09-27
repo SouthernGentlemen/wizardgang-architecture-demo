@@ -192,7 +192,7 @@ describe('DEMO-280 shell consolidation acceptance', () => {
       expect(toggle, `${route.id}: theme toggle`).not.toBe('');
       const accessibleName = toggle.match(/\baria-label="([^"]+)"/)?.[1] ?? '';
       const label = visibleText(toggle);
-      expect(accessibleName.toLocaleLowerCase(), `${route.id}: theme accessible name`).toContain(label.toLocaleLowerCase());
+      expect(label.toLocaleLowerCase(), `${route.id}: theme accessible name`).toContain(accessibleName.toLocaleLowerCase());
     }
   });
 

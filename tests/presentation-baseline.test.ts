@@ -271,6 +271,9 @@ function parseDocument(html: string, url: string): { window: Window; document: D
     },
   });
   window.document.write(html);
+  // The browser omits this fallback from the JavaScript-enabled DOM; Happy DOM
+  // retains it, so remove it before taking the ordinary presentation inventory.
+  window.document.querySelector('.nojs-utilities')?.closest('noscript')?.remove();
   return { window, document: window.document as unknown as Document };
 }
 

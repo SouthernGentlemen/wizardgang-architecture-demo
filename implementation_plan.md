@@ -2,16 +2,6 @@
 
 ## Open tasks
 
-### DEMO-381 — [FIX] Make the shared shell legible at phone widths
-
-- Dependency: DEMO-380 plan-only queue publication has merged; start from its exact main.
-- Why: At 375px the one-row header shrinks navigation and utility labels to 9.28px and the brand to 10.24px, and the mobile rule `:where(p, li, dd, a) { overflow-wrap: anywhere; }` splits words mid-token (`WIZARDG/ANG`, `DEM/OS`, `ASSURA/NCE`, Arabic `الض/مان`). The Demos link is 36px wide and footer links are 13px tall, below the site's stated 44×44 target baseline. The existing 320px audit misses this because nothing overflows horizontally.
-- Scope: Rework the shared header so brand, primary navigation and utilities stay one non-wrapping row from 320px up in all six locales, with navigation and utility labels of at least 14px, no mid-word breaks and 44×44 targets (for example a mark-only brand at narrow widths, icon Source and Theme controls with accessible names, a short locale code, or a utilities disclosure). Replace the global mobile `overflow-wrap: anywhere` with `break-word` and keep `anywhere` only for long machine tokens such as URLs, paths, hashes and code. Give footer links a 44px hit area. Extend the Chromium site audit at 320, 375, 768 and 1280px to fail on mid-word breaks in header, tab and button labels, header text under 14px, and header or footer targets under 44×44.
-- Non-goals: Do not hide Demos or Assurance behind a menu, add breadcrumbs or secondary navigation, or change routes, locale resolution, theme persistence, or the footer's `/security` link and release/source identity.
-- Acceptance: At 320, 375, 430, 768 and 1280px in `en`, `de` and `ar`, the header is one row with no overflow, no mid-word breaks, labels of at least 14px and 44×44 controls; theme and language still work without JavaScript; ordinary words no longer break mid-token while long URLs, paths and hashes still wrap; the new audit assertions fail on the base and pass on the change.
-- Validation: Pinned `npm ci`; focused shell render tests; `npm run test:site-accessibility` with the new assertions; credential-free `npm run check`; `npm run audit:dependencies`; committed-range whitespace; exact-head required CI; manual 375px review in light, dark, `en` and `ar`.
-- Authorities: `docs/REPOSITORY-BOUNDARIES.md` shared-shell rule, `docs/ACCESSIBILITY.md`, `docs/INTERNATIONALIZATION.md`, `src/ui/document.tsx`, `src/styles/shell.css`, `src/browser/shell.ts`, `scripts/site-browser-audit.mjs`.
-
 ### DEMO-382 — [FIX] Put the focused assurance record first on every viewport
 
 - Dependency: DEMO-380 plan-only queue publication has merged.

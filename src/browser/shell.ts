@@ -20,7 +20,6 @@ function enhanceThemeToggle(): void {
   const messages = shellMessages();
   if (messages?.theme) {
     button.setAttribute('aria-label', messages.theme);
-    button.textContent = messages.theme;
   }
   const synchronize = () => {
     const isLight = root.dataset.theme === 'light';

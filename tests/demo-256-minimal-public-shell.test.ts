@@ -36,7 +36,7 @@ describe('DEMO-256 minimal public shell', () => {
     expect(nav).toContain(`href="${routeUrl('assurance.index')}"`);
     expect(nav).not.toContain('href="/operations"');
     expect(nav).not.toContain(`href="${routeUrl('security.index')}"`);
-    expect(header).toContain(`href="${repositoryUrl}">Source`);
+    expect(header).toContain(`href="${repositoryUrl}" aria-label="Source"><span class="utility-label">Source`);
   });
 
   it('uses one primary CTA, one secondary CTA, and a compact live proof strip', async () => {
