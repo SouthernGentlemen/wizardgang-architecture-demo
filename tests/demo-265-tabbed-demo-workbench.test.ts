@@ -50,7 +50,7 @@ describe('DEMO-265 tabbed demo workbench', () => {
     expect(html).toContain('data-demo-id="d1"');
     expect((html.match(/<section id="demo-workbench" class="demo-workbench" data-demo-workbench/g) ?? [])).toHaveLength(1);
     expect((html.match(/<div class="demo-panel" data-demo-panel\b/g) ?? [])).toHaveLength(1);
-    expect(html).not.toContain('<details');
+    expect(html.match(/<main\b[\s\S]*?<\/main>/)?.[0]).not.toContain('<details');
     expect(html).not.toContain('Primary demonstrations');
     expect(html).not.toContain('Supporting proof');
     for (const demo of demonstrations) expect(html).toContain(`href="#${demo.id}"`);

@@ -55,7 +55,7 @@ describe('public frontend shell', () => {
       { href: routeUrl('assurance.index'), text: 'Assurance' },
     ]);
     expect(header).toContain('<div class="header-utilities"');
-    expect(header).toContain(`href="${repositoryUrl}">Source`);
+    expect(header).toContain(`href="${repositoryUrl}" aria-label="Source"><span class="utility-label">Source`);
     expect(nav).not.toMatch(/>Architecture<|>Architecture\s*|>Operations<|>Security</);
   });
 

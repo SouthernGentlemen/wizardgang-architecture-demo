@@ -147,6 +147,41 @@ async function inspectPath(cdp, pathname, locale, label) {
   return inspectCurrentPage(cdp, locale, label);
 }
 
+async function inspectShellGeometry(cdp, label) {
+  const report = await evaluate(cdp, `(()=>{
+    const header=document.querySelector('.site-header');
+    const visible=(node)=>{const style=getComputedStyle(node);const rect=node.getBoundingClientRect();return style.display!=='none'&&style.visibility!=='hidden'&&rect.width>0&&rect.height>0};
+    const rect=(node)=>{const value=node.getBoundingClientRect();return {left:value.left,right:value.right,top:value.top,bottom:value.bottom,width:value.width,height:value.height}};
+    const targets=[...document.querySelectorAll('.site-header a,.site-header button,.site-header select,.site-footer a')].filter(visible);
+    const undersized=targets.filter((node)=>{const box=rect(node);return box.width<43.5||box.height<43.5}).map((node)=>node.outerHTML.slice(0,100));
+    const outside=targets.filter((node)=>{const box=rect(node);return box.left<-.5||box.right>innerWidth+.5}).map((node)=>node.outerHTML.slice(0,100));
+    const labels=[...document.querySelectorAll('.site-header .brand-copy strong,.site-header .nav a,.site-header .header-utilities>a,.site-header [data-theme-toggle],.site-header select')].filter(visible);
+    const smallLabels=labels.filter((node)=>parseFloat(getComputedStyle(node).fontSize)<13.9).map((node)=>node.outerHTML.slice(0,100));
+    const splitWords=[];
+    for(const element of document.querySelectorAll('.site-header a,.site-header button,[role="tab"],button')){
+      if(!visible(element))continue;
+      const walker=document.createTreeWalker(element,NodeFilter.SHOW_TEXT);
+      while(walker.nextNode()){
+        const node=walker.currentNode;
+        for(const match of node.textContent.matchAll(/[^\\s]+/gu)){
+          const range=document.createRange();range.setStart(node,match.index);range.setEnd(node,match.index+match[0].length);
+          if(range.getClientRects().length>1)splitWords.push(element.outerHTML.slice(0,100)+':'+match[0]);
+        }
+      }
+    }
+    const pieces=[header.querySelector('.brand'),header.querySelector('.nav'),header.querySelector('.header-utilities')].map(rect);
+    return {undersized,outside,smallLabels,splitWords:splitWords.slice(0,10),pieces,header:rect(header),viewport:innerWidth};
+  })()`);
+  const failures=[];
+  if(report.undersized.length)failures.push(`targets under 44x44: ${report.undersized.join(', ')}`);
+  if(report.outside.length)failures.push(`targets outside viewport: ${report.outside.join(', ')}`);
+  if(report.smallLabels.length)failures.push(`header labels under 14px: ${report.smallLabels.join(', ')}`);
+  if(report.splitWords.length)failures.push(`mid-word breaks: ${report.splitWords.join(', ')}`);
+  if(Math.max(...report.pieces.map((piece)=>piece.top))-Math.min(...report.pieces.map((piece)=>piece.top))>2)failures.push(`header is not one row: ${JSON.stringify(report.pieces)}`);
+  if(report.header.left<-.5||report.header.right>report.viewport+.5)failures.push(`header outside viewport: ${JSON.stringify(report.header)}`);
+  if(failures.length)throw new Error(`${label}: ${failures.join('; ')}`);
+}
+
 async function dispatchKey(cdp, key, code = key) {
   const virtualKeyCodes = { Tab: 9, Enter: 13, ' ': 32, Home: 36, End: 35, ArrowLeft: 37, ArrowRight: 39, ArrowDown: 40 };
   const virtualKeyCode = virtualKeyCodes[key] ?? 0;
@@ -748,6 +783,37 @@ async function main() {
         }
         axeRuns += 1;
       }
+    }
+    const demosPath = manifest.find((route) => route.id === 'demos.index')?.route;
+    if (!demosPath) throw new Error('Missing demos route for shell geometry audit.');
+    for (const width of [320, 375, 430, 768, 1280]) {
+      await cdp.call('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 768 });
+      for (const locale of width === 320 ? ['en', 'es', 'fr', 'de', 'ja', 'ar'] : ['en', 'de', 'ar']) {
+        await navigate(cdp, `${origin}${localizedPath(demosPath, locale)}`);
+        await inspectShellGeometry(cdp, `shared shell ${width}px ${locale}`);
+      }
+    }
+    await cdp.call('Emulation.setDeviceMetricsOverride', { width: 320, height: 900, deviceScaleFactor: 1, mobile: true });
+    await cdp.call('Emulation.setScriptExecutionDisabled', { value: true });
+    try {
+      await navigate(cdp, `${origin}/?lang=en`);
+      const fallback = await evaluate(cdp, `(()=>{
+        const disclosure=document.querySelector('.nojs-utilities');
+        disclosure.open=true;
+        const theme=disclosure.querySelector('.theme-nojs input');
+        theme.click();
+        const rect=disclosure.querySelector('summary').getBoundingClientRect();
+        return {theme:getComputedStyle(document.body).colorScheme,locale:Boolean(disclosure.querySelector('select[name="lang"]')),submit:Boolean(disclosure.querySelector('button[type="submit"]')),summaryWidth:rect.width,summaryHeight:rect.height,overflow:document.documentElement.scrollWidth>innerWidth+1};
+      })()`);
+      if(fallback.theme!=='light'||!fallback.locale||!fallback.submit||fallback.summaryWidth<44||fallback.summaryHeight<44||fallback.overflow){
+        throw new Error(`No-JavaScript theme/language controls failed at 320px: ${JSON.stringify(fallback)}`);
+      }
+      const loaded=cdp.once('Page.loadEventFired',{label:'no-JavaScript language switch',timeoutMs:30000});
+      await evaluate(cdp, `(()=>{const form=document.querySelector('.nojs-utilities .language-selector');form.querySelector('select').value='ar';form.requestSubmit();return true})()`);
+      await loaded;
+      if(await evaluate(cdp, `document.documentElement.lang`) !== 'ar')throw new Error('No-JavaScript language form did not switch locale.');
+    } finally {
+      await cdp.call('Emulation.setScriptExecutionDisabled', { value: false });
     }
     await cdp.call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 1000, deviceScaleFactor: 1, mobile: false });
 

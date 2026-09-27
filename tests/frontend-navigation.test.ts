@@ -31,7 +31,7 @@ describe('derived frontend navigation', () => {
     for (const label of ['Architecture', 'Platform', 'Interfaces', 'Operations', 'Security']) {
       expect(primary).not.toContain(`>${label}</a>`);
     }
-    expect(html).toContain('>Source <span aria-hidden="true">↗</span></a>');
+    expect(html).toContain('<span class="utility-label">Source</span><span class="utility-icon" aria-hidden="true">↗</span></a>');
   });
 
   it('marks Demos as the current task on /demos#d1', async () => {

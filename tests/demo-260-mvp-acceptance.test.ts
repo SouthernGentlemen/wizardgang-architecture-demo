@@ -233,7 +233,7 @@ describe('DEMO-260 MVP acceptance contract', () => {
 
     expect(header).toContain(`href="${routeUrl('demos.index')}"`);
     expect(header).toContain(`href="${routeUrl('assurance.index')}"`);
-    expect(header).toContain(`href="${repositoryUrl}">Source`);
+    expect(header).toContain(`href="${repositoryUrl}" aria-label="Source"><span class="utility-label">Source`);
     expect(header).not.toContain(`href="${routeUrl('security.index')}"`);
     expect(header).not.toContain(`href="${retiredOperationsHtmlPathname}"`);
 
@@ -369,7 +369,7 @@ describe('DEMO-260 MVP acceptance contract', () => {
 
   it('keeps Source, Security, private reporting, and advisory disclosure reachable', async () => {
     const home = await page('interfaces.frontend.index');
-    expect(home.html).toContain(`href="${repositoryUrl}">Source`);
+    expect(home.html).toContain(`href="${repositoryUrl}" aria-label="Source"><span class="utility-label">Source`);
     expect(primaryNavigation().map((route) => route.id)).not.toContain('security.index');
 
     const security = await page('security.index');
