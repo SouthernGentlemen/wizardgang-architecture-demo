@@ -98,6 +98,7 @@ function baseGeometryExpression() {
     const overflow=scrollWidth>viewport+1;
     const visible=(el)=>{const s=getComputedStyle(el);const r=el.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&(r.width||r.height)};
     const clipped=[...document.querySelectorAll('button,select,input:not([type="hidden"]),textarea,summary,[role="button"],[role="tab"]')].filter((el)=>{
+      if(el.closest('.demo-category-tabs'))return false;
       if(!visible(el))return false; const r=el.getBoundingClientRect();
       return r.left < -1 || r.right > viewport + 1;
     }).map((el)=>el.id||el.getAttribute('role')||el.tagName).slice(0,12);

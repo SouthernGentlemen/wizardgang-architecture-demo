@@ -41,7 +41,7 @@ describe('DEMO-265 tabbed demo workbench', () => {
     }
   });
 
-  it('renders navigation plus one persistent empty workbench instead of a trailing demo inventory', async () => {
+  it('renders navigation plus one server-rendered workbench instead of a trailing demo inventory', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/demos', { headers: { accept: 'text/html' } }), env);
     const html = await response.text();
     expect(response.status).toBe(200);
@@ -50,10 +50,10 @@ describe('DEMO-265 tabbed demo workbench', () => {
     expect(html).toContain('data-demo-id="d1"');
     expect((html.match(/<section id="demo-workbench" class="demo-workbench" data-demo-workbench/g) ?? [])).toHaveLength(1);
     expect((html.match(/<div class="demo-panel" data-demo-panel\b/g) ?? [])).toHaveLength(1);
-    expect(html.match(/<main\b[\s\S]*?<\/main>/)?.[0]).not.toContain('<details');
+    expect(html).toContain('data-demo-section="d1"');
     expect(html).not.toContain('Primary demonstrations');
     expect(html).not.toContain('Supporting proof');
-    for (const demo of demonstrations) expect(html).toContain(`href="#${demo.id}"`);
+    for (const demo of demonstrations) expect(html).toContain(`demo=${demo.id}#${demo.id}"`);
   });
 
   it('keeps category-local selectors only for categories with more than one demo', async () => {

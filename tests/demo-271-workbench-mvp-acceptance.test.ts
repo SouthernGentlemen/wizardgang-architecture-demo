@@ -48,16 +48,16 @@ describe('DEMO-271 Demo Workbench MVP acceptance', () => {
     }
   });
 
-  it('ships one initially empty D1 workbench with only category-local secondary navigation', async () => {
+  it('ships one server-rendered D1 workbench with only category-local secondary navigation', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/demos', { headers: { accept: 'text/html' } }), env);
     const html = await response.text();
     expect(response.status).toBe(200);
     expect((html.match(/<section id="demo-workbench"[^>]+data-demo-workbench\b/g) ?? [])).toHaveLength(1);
     expect((html.match(/<div class="demo-panel"[^>]+data-demo-panel\b/g) ?? [])).toHaveLength(1);
-    expect((html.match(/<section[^>]+data-demo-section\b/g) ?? [])).toHaveLength(0);
+    expect((html.match(/<div[^>]+data-demo-section\b/g) ?? [])).toHaveLength(1);
     expect(html).toContain('data-demo-id="d1"');
-    expect(html).toContain('Loading D1 demonstration');
-    for (const [id] of released) expect(html).toContain(`href="#${id}"`);
+    expect(html).toContain('data-demo-section="d1"');
+    for (const [id] of released) expect(html).toContain(`demo=${id}#${id}"`);
     for (const category of ['Data', 'APIs', 'Platform', 'Quality']) expect(html).toContain(`aria-label="${category} demos"`);
     for (const category of ['Integrations', 'Identity', 'AI']) expect(html).not.toContain(`aria-label="${category} demos"`);
     expect(html).not.toContain('All demos');

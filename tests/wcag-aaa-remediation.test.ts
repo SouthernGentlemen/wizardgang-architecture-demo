@@ -69,18 +69,14 @@ describe('DEMO-237 shared WCAG 2.2 AAA remediation', () => {
     expect(html).not.toContain('title="GraphiQL query editor"');
   });
 
-  it('completes the OpenAPI tab pattern with relationships and keyboard behavior including RTL direction', () => {
+  it('keeps labeled REST operation selectors and execution forms after removing code tabs', () => {
     const html = restSection(env).body;
-    expect(html).toContain('role="tablist"');
-    expect(html).toContain('role="tab"');
     expect(html).toContain('aria-controls="rest-rest-demo-');
-    expect(html).toContain('role="tabpanel"');
-    expect(html).toContain('aria-labelledby="rest-rest-demo-');
+    expect(html).toContain('data-rest-operation-select="listRecords"');
+    expect(html).toContain('data-rest-form=""');
+    expect(html).not.toContain('data-code-tab');
     const browser = readFileSync('src/browser/rest.ts', 'utf8');
-    expect(browser).toContain("'ArrowLeft'");
-    expect(browser).toContain("'ArrowRight'");
-    expect(browser).toContain("'Home'");
-    expect(browser).toContain("'End'");
-    expect(browser).toContain("direction === 'rtl'");
+    expect(browser).toContain("'[data-rest-operation-select]'");
+    expect(browser).toContain("'[data-rest-form]'");
   });
 });

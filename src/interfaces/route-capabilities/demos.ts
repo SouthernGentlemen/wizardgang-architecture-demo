@@ -6,9 +6,9 @@ export const demosRouteCapability = defineInterfaceIdentityCapability('demos.sur
     pattern: '/demos',
     methods: ['GET'],
     kind: 'page',
-    handler: async (_request, { env }) => {
+    handler: async (request, { env }) => {
       const { renderDemosWorkbench } = await import('../../demos/demos-workbench');
-      return renderDemosWorkbench(env);
+      return renderDemosWorkbench(request, env);
     },
     title: 'Architecture Demos',
     description: 'One task-oriented destination for the interactive architecture demonstrations.',

@@ -15,7 +15,7 @@ interface DemoMetadata {
   group: string;
   label: string;
   summary: string;
-  tryThis: string;
+  hasInspector: boolean;
   guide: string[];
   status: string[];
   sourcePath: string;
@@ -37,6 +37,11 @@ interface DemosBrowserMessages {
   retry: string;
   stableFragment: string;
   implementation: string;
+  inspector: string;
+  inspectorModes: string;
+  demoTools: string;
+  resetDemo: string;
+  viewSource: string;
 }
 
 function parseData<T>(value: string | undefined): T | undefined {
@@ -70,22 +75,64 @@ function initializeDemosWorkbench(): void {
   const selectorSlot = document.querySelector<HTMLElement>('[data-demo-selector-slot]');
   const workbench = document.querySelector<HTMLElement>('[data-demo-workbench]');
   const panel = document.querySelector<HTMLElement>('[data-demo-panel]');
-  const context = document.querySelector<HTMLElement>('[data-demo-active-context]');
+  const layout = document.querySelector<HTMLElement>('.demo-workbench-layout');
   const title = document.querySelector<HTMLElement>('[data-demo-active-title]');
   const purpose = document.querySelector<HTMLElement>('[data-demo-purpose]');
-  const tryThis = document.querySelector<HTMLElement>('[data-demo-try]');
   const statuses = document.querySelector<HTMLElement>('[data-demo-statuses]');
-  const inspector = document.querySelector<HTMLElement>('[data-demo-inspector]');
-  const inspectorContext = document.querySelector<HTMLElement>('[data-demo-inspector-context]');
-  const inspectorTabs = document.querySelector<HTMLElement>('[data-demo-inspector-tabs]');
-  const inspectorPanel = document.querySelector<HTMLElement>('[data-demo-inspector-panel]');
-  const resetControl = document.querySelector<HTMLButtonElement>('[data-demo-reset]');
-  const sourceControl = document.querySelector<HTMLAnchorElement>('[data-demo-source]');
+  let inspector = document.querySelector<HTMLElement>('[data-demo-inspector]');
+  let inspectorTabs = document.querySelector<HTMLElement>('[data-demo-inspector-tabs]');
+  let inspectorPanel = document.querySelector<HTMLElement>('[data-demo-inspector-panel]');
+  let resetControl = document.querySelector<HTMLButtonElement>('[data-demo-reset]');
+  let sourceControl = document.querySelector<HTMLAnchorElement>('[data-demo-source]');
+  let tools = document.querySelector<HTMLElement>('.demo-workbench-tools');
   let activeId = '';
   let inspectorMode: InspectorMode = 'Guide';
   let requestObserver: MutationObserver | null = null;
 
-  if (!workbench || !panel || !inspector || !inspectorTabs || !inspectorPanel) return;
+  if (!workbench || !panel || !layout) return;
+
+  if (!inspector || !inspectorTabs || !inspectorPanel || !resetControl || !sourceControl || !tools) {
+    inspector = document.createElement('aside');
+    inspector.className = 'demo-inspector';
+    inspector.dataset.demoInspector = '';
+    inspector.hidden = true;
+    const header = document.createElement('div');
+    header.className = 'demo-inspector-header';
+    const heading = document.createElement('strong');
+    heading.textContent = messages.inspector;
+    const context = document.createElement('span');
+    context.className = 'subtle';
+    context.dataset.demoInspectorContext = '';
+    header.append(heading, context);
+    inspectorTabs = document.createElement('div');
+    inspectorTabs.className = 'demo-inspector-tabs';
+    inspectorTabs.dataset.demoInspectorTabs = '';
+    inspectorTabs.setAttribute('role', 'tablist');
+    inspectorTabs.setAttribute('aria-label', messages.inspectorModes);
+    inspectorPanel = document.createElement('div');
+    inspectorPanel.className = 'demo-inspector-panel';
+    inspectorPanel.id = 'demo-inspector-panel';
+    inspectorPanel.dataset.demoInspectorPanel = '';
+    inspectorPanel.setAttribute('role', 'tabpanel');
+    inspectorPanel.tabIndex = 0;
+    inspector.append(header, inspectorTabs, inspectorPanel);
+    tools = document.createElement('div');
+    tools.className = 'demo-workbench-tools';
+    tools.setAttribute('aria-label', messages.demoTools);
+    tools.hidden = true;
+    resetControl = document.createElement('button');
+    resetControl.type = 'button';
+    resetControl.dataset.demoReset = '';
+    resetControl.textContent = messages.resetDemo;
+    resetControl.hidden = true;
+    sourceControl = document.createElement('a');
+    sourceControl.dataset.demoSource = '';
+    sourceControl.target = '_blank';
+    sourceControl.rel = 'noreferrer';
+    sourceControl.textContent = messages.viewSource;
+    tools.append(resetControl, sourceControl);
+    layout.append(inspector, tools);
+  }
 
   const selectedId = () => {
     let id = '';
@@ -94,7 +141,9 @@ function initializeDemosWorkbench(): void {
     } catch {
       return config.defaultDemoId;
     }
-    return byId.has(id) ? id : config.defaultDemoId;
+    if (id) return byId.has(id) ? id : config.defaultDemoId;
+    const requested = new URLSearchParams(window.location.search).get('demo');
+    return requested && byId.has(requested) ? requested : config.defaultDemoId;
   };
 
   const presentationUrl = (id: string) => {
@@ -102,6 +151,7 @@ function initializeDemosWorkbench(): void {
     const url = new URL(path, window.location.origin);
     const current = new URLSearchParams(window.location.search);
     current.delete('view');
+    current.delete('demo');
     for (const [name, value] of current) url.searchParams.append(name, value);
     return url;
   };
@@ -232,7 +282,8 @@ function initializeDemosWorkbench(): void {
 
   const syncTools = (demo: DemoMetadata) => {
     if (resetControl) resetControl.hidden = !panel.querySelector('[data-reset]');
-    if (sourceControl) sourceControl.href = demo.sourceUrl;
+    if (sourceControl) sourceControl.hidden = !demo.hasInspector;
+    if (tools) tools.hidden = !demo.hasInspector && (!resetControl || resetControl.hidden);
   };
 
   const renderState = (message: string, role = 'status', error = false, retryId = '') => {
@@ -282,19 +333,26 @@ function initializeDemosWorkbench(): void {
     });
     if (selectorSlot) selectorSlot.hidden = !hasLocalSelector;
     workbench.dataset.demoId = demo.id;
-    if (context) context.textContent = `${demo.categoryLabel} / ${demo.group}`;
     if (title) title.textContent = demo.label;
     if (purpose) purpose.textContent = demo.summary;
-    if (tryThis) tryThis.textContent = demo.tryThis;
     if (statuses) {
       statuses.replaceChildren();
       demo.status.forEach((status) => appendText(statuses, 'span', status, 'demo-status-chip'));
       statuses.hidden = demo.status.length === 0;
     }
-    inspector.setAttribute('aria-label', demo.inspectorLabel);
-    if (inspectorContext) inspectorContext.textContent = demo.categoryLabel;
-    if (sourceControl) sourceControl.href = demo.sourceUrl;
-    bindInspectorTabs(demo);
+    inspector.hidden = !demo.hasInspector;
+    layout.dataset.demoInspectorEnabled = String(demo.hasInspector);
+    if (sourceControl) {
+      sourceControl.hidden = !demo.hasInspector;
+      sourceControl.href = demo.sourceUrl;
+    }
+    if (tools) tools.hidden = !demo.hasInspector;
+    if (demo.hasInspector) {
+      inspector.setAttribute('aria-label', demo.inspectorLabel);
+      const inspectorContext = inspector.querySelector<HTMLElement>('[data-demo-inspector-context]');
+      if (inspectorContext) inspectorContext.textContent = demo.categoryLabel;
+      bindInspectorTabs(demo);
+    }
   };
 
   const cachePresentation = (id: string, html: string) => {
@@ -311,21 +369,24 @@ function initializeDemosWorkbench(): void {
     activeId = id;
     const controller = new AbortController();
     pending.set(id, controller);
-    renderState(messages.loading.replace('{label}', demo.label));
+    const serverRendered = panel.querySelector<HTMLElement>('[data-demo-section]')?.dataset.demoSection === id;
+    if (!serverRendered) renderState(messages.loading.replace('{label}', demo.label));
     try {
-      let html = htmlCache.get(id);
-      if (!html) {
-        const response = await fetch(presentationUrl(id), {
-          headers: { accept: 'text/html' },
-          credentials: 'same-origin',
-          signal: controller.signal,
-        });
-        if (!response.ok) throw new Error(messages.failed);
-        html = await response.text();
-        cachePresentation(id, html);
+      if (!serverRendered) {
+        let html = htmlCache.get(id);
+        if (!html) {
+          const response = await fetch(presentationUrl(id), {
+            headers: { accept: 'text/html' },
+            credentials: 'same-origin',
+            signal: controller.signal,
+          });
+          if (!response.ok) throw new Error(messages.failed);
+          html = await response.text();
+          cachePresentation(id, html);
+        }
+        if (activeId !== id || controller.signal.aborted) return;
+        panel.replaceChildren(parseServerFragment(html));
       }
-      if (activeId !== id || controller.signal.aborted) return;
-      panel.replaceChildren(parseServerFragment(html));
       const root = panel.querySelector<HTMLElement>('[data-demo-section]');
       if (!root) throw new Error(messages.failed);
       await mountDemoPresentation(root);

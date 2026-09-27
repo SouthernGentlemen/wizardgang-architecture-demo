@@ -140,8 +140,8 @@ describe('platform laboratory declarative routing', () => {
     expect(html.match(/<h1\b/g)).toHaveLength(1);
     expect(html.match(/data-demo-workbench(?:="")?(?:\s|>)/g)).toHaveLength(1);
     for (const id of platformDemoIds) {
-      expect(html, id).toContain(`href="#${id}"`);
-      expect(html, id).not.toContain(`data-demo-section="${id}"`);
+      expect(html, id).toContain(`demo=${id}#${id}"`);
+      if (id !== 'd1') expect(html, id).not.toContain(`data-demo-section="${id}"`);
     }
     for (const [id, heading] of [['edge', 'Cloudflare Edge'], ['workers', 'Cloudflare Workers'], ['durable-objects', 'Durable Objects'], ['d1', 'Cloudflare D1 Database'], ['r2', 'Cloudflare R2 Storage']] as const) {
       const presentation = await routeRequest(new Request(`https://demo.wizardgang.ai/api/demos/${id}`, { headers: { accept: 'text/html' } }), onlineEnv);

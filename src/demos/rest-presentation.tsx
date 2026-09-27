@@ -52,40 +52,11 @@ function operationId(operation: RestDemoOperation): string {
   return `rest-demo-${operation.operationId}`;
 }
 
-function examplePath(operation: RenderedOperation): string {
-  return operation.parameters.reduce(
-    (path, parameter) => path.replace(
-      `{${parameter.name}}`,
-      encodeURIComponent(String(parameter.example ?? parameter.schema.example ?? parameter.name)),
-    ),
-    operation.path,
-  );
-}
-
-function requestExample(operation: RestDemoOperation): unknown {
-  return firstMediaType(operation.requestBody?.content)?.[1].example;
-}
-
-export function restCodeExamples(rendered: RenderedOperation): readonly string[] {
-  const { method, operation } = rendered;
-  const url = `${spec.servers[0].url}${examplePath(rendered)}`;
-  const example = requestExample(operation);
-  const body = example === undefined ? '' : JSON.stringify(example, null, 2);
-  const curl = [
-    `curl${method === 'GET' ? '' : ` -X ${method}`} "${url}"`,
-    ...(body ? ['  -H "Content-Type: application/json"', `  --data '${JSON.stringify(example)}'`] : []),
-  ].join(' \\\n');
-  const javascript = `const response = await fetch('${url}', {\n  method: '${method}',${body ? "\n  headers: { 'Content-Type': 'application/json' }," : ''}${body ? `\n  body: JSON.stringify(${body.replaceAll('\n', '\n  ')}),` : ''}\n});\n\nconsole.log(response.status, await response.text());`;
-  const python = `import requests\n\nresponse = requests.${method.toLowerCase()}('${url}'${body ? `, json=${body.replaceAll('null', 'None').replaceAll('true', 'True').replaceAll('false', 'False')}` : ''})\nprint(response.status_code, response.text)`;
-  return [curl, javascript, python];
-}
-
 function restBrowserMessages(localization: LocalizationContext): Readonly<Record<string, string>> {
   const exact = (english: string) => localization.exact(english);
   return Object.freeze({
     copied: exact('Copied'),
     copy: exact('Copy'),
-    copySelected: exact('Copy selected code sample'),
     invalidJson: exact('Body could not be parsed as JSON.'),
     requestNotSent: exact('Request not sent'),
     sending: exact('Sending…'),
@@ -199,43 +170,6 @@ function RelevantSchemas({ rendered, localization }: Readonly<{ rendered: Render
   return <div className="rest-contract-schemas">{names.map((name) => <Schema key={name} name={name} schema={spec.components.schemas[name]} localization={localization} />)}</div>;
 }
 
-function CodeSamples({ rendered, localization }: Readonly<{ rendered: RenderedOperation; localization: LocalizationContext }>) {
-  const exact = (english: string) => localization.exact(english);
-  const scope = useDemoPresentationScope();
-  const id = operationId(rendered.operation);
-  const examples = restCodeExamples(rendered);
-  const labels = ['curl', 'JavaScript', 'Python'];
-  return <details className="rest-code-samples">
-    <summary>{exact('Code samples for this operation')}</summary>
-    <div className="rest-code-samples-body">
-      <div className="api-subheading">
-        <div className="api-tabs" role="tablist" aria-label={exact('Code sample language')}>
-          {labels.map((label, index) => <button
-            id={scope.id(`${id}-tab-${index}`)}
-            key={label}
-            type="button"
-            role="tab"
-            aria-selected={index === 0}
-            aria-controls={scope.id(`${id}-code-${index}`)}
-            data-code-tab={index}
-            tabIndex={index ? -1 : undefined}
-          >{label}</button>)}
-        </div>
-        <button type="button" data-copy-code="">{exact('Copy selected code sample')}</button>
-      </div>
-      {examples.map((example, index) => <pre
-        id={scope.id(`${id}-code-${index}`)}
-        key={labels[index]}
-        role="tabpanel"
-        aria-labelledby={scope.id(`${id}-tab-${index}`)}
-        tabIndex={0}
-        data-code-panel={index}
-        hidden={index > 0}
-      >{example}</pre>)}
-    </div>
-  </details>;
-}
-
 function OperationSelector({ rendered, index, localization }: Readonly<{ rendered: RenderedOperation; index: number; localization: LocalizationContext }>) {
   const scope = useDemoPresentationScope();
   const id = operationId(rendered.operation);
@@ -300,24 +234,15 @@ function OperationPanel({ rendered, index, localization }: Readonly<{ rendered: 
       <DemoHeading level={4}>{exact('Referenced schemas')}</DemoHeading>
       <RelevantSchemas rendered={rendered} localization={localization} />
     </section>
-    <section className="rest-task-block rest-operation-evidence" aria-labelledby={scoped('evidence-heading')}>
-      <DemoHeading level={3} id={scoped('evidence-heading')}>{exact('Deeper evidence')}</DemoHeading>
-      <CodeSamples rendered={rendered} localization={localization} />
-    </section>
   </section>;
 }
 
 function OpenApiConsole({ documentPath, localization }: Readonly<{ documentPath: string; localization: LocalizationContext }>) {
   const exact = (english: string) => localization.exact(english);
-  const scope = useDemoPresentationScope();
   const operations = operationsFromDocument();
   const server = spec.servers[0];
-  const pickerHeading = scope.id('rest-operation-picker-heading');
   return <div className="rest-operation-browser" data-rest-operation-browser="">
-    <section className="rest-operation-picker" aria-labelledby={pickerHeading}>
-      <p className="eyebrow">{exact('Operation selector')}</p>
-      <DemoHeading level={2} id={pickerHeading}>{exact('Choose one request')}</DemoHeading>
-      <p>{exact(spec.info.description)}</p>
+    <section className="rest-operation-picker" aria-label={exact('REST operations')}>
       <div className="rest-server"><div><span>{exact('Server')}</span><code>{server.url}</code></div><button type="button" data-copy-server={server.url}>{exact('Copy')}</button></div>
       <div className="rest-operation-choices">{operations.map((rendered, index) => <OperationSelector key={rendered.operation.operationId} rendered={rendered} index={index} localization={localization} />)}</div>
       <details className="rest-deeper-evidence">
@@ -340,11 +265,6 @@ export function RestPresentation({ localization }: Readonly<{ localization: Loca
       <DemoHeading level={1}>{exact('REST API')}</DemoHeading>
       <p className="lede">{exact('Choose one operation, run it, inspect the actual response, then compare that behavior with the matching OpenAPI contract.')}</p>
     </section>
-    <aside className="assurance-notice" aria-label={exact('REST API boundary')}>
-      <strong>{exact('Focused browser tutorial.')}</strong>{' '}
-      {exact('These operations use the anonymous signed-cookie visitor API at')} <code>/api/labs/rest-demo-records</code>.{' '}
-      {exact('The separate bearer-capable machine API remains documented by')} <code>/api/openapi.json</code>.
-    </aside>
     <OpenApiConsole documentPath={routeUrl('interfaces.rest.openapi.json')} localization={localization} />
   </>;
 }

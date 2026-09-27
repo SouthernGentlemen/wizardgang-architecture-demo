@@ -41,7 +41,7 @@ describe('DEMO-257 curated demos', () => {
     for (const category of ['Data', 'APIs', 'Integrations', 'Identity', 'AI', 'Platform', 'Quality']) {
       expect(html).toContain(`>${category}</strong>`);
     }
-    for (const fragment of demonstrations.map((demo) => demo.id)) expect(html).toContain(`href="#${fragment}"`);
+    for (const fragment of demonstrations.map((demo) => demo.id)) expect(html).toContain(`demo=${fragment}#${fragment}"`);
     expect((html.match(/<div class="demo-panel" data-demo-panel\b/g) ?? [])).toHaveLength(1);
     expect(html).not.toContain('Primary demonstrations');
     expect(html).not.toContain('Supporting proof');
