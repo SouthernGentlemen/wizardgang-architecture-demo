@@ -61,8 +61,11 @@ describe('DEMO-286 accessible assurance workbench interaction', () => {
     const styles = readFileSync('src/styles/shell.css', 'utf8');
     expect(styles).toContain('.assurance-workbench{min-width:0;max-width:100%');
     expect(styles).toContain('.assurance-record-pane{min-width:0}');
-    expect(styles).toContain('@media(max-width:900px){.assurance-workbench-layout{grid-template-columns:minmax(0,1fr)}');
-    expect(styles).toContain('@media(max-width:760px){.assurance-framework-tabs{flex-wrap:wrap;overflow-x:visible}');
+    expect(styles).toContain('grid-template-areas:"controls controls" "status status" "records detail"');
+    expect(styles).toContain('@media(max-width:1023px){.assurance-workbench-layout{grid-template-columns:minmax(0,1fr);grid-template-areas:"controls" "status" "detail" "records"');
+    expect(styles).toContain('.assurance-workbench-detail{grid-area:detail;position:sticky');
+    expect(source.indexOf('data-assurance-detail=""')).toBeLessThan(source.indexOf('data-assurance-record-grid=""'));
+    expect(source).toContain('data-assurance-detail-heading=""');
     expect(source).toContain("return '✓'");
     expect(source).toContain("return '◐'");
     expect(source).toContain("return '!'");

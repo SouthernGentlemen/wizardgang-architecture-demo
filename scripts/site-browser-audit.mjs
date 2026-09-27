@@ -619,6 +619,63 @@ async function workbenchInteractionAudit(cdp) {
   }
 }
 
+async function assertAssurancePane(cdp, expectedId, label, focused) {
+  await waitForExpression(cdp, `document.querySelector('[data-assurance-detail] [data-assurance-record]')?.getAttribute('data-assurance-record') === ${JSON.stringify(expectedId)} && document.querySelector('[data-assurance-detail]')?.getAttribute('aria-busy') === 'false'`, `${label} focused pane`);
+  const state = await evaluate(cdp, `(()=>{
+    const detail=document.querySelector('[data-assurance-detail]');
+    const heading=detail?.querySelector('[data-assurance-detail-heading]');
+    const current=document.querySelector('[data-assurance-record-link][aria-current="true"]');
+    const box=heading?.getBoundingClientRect();
+    return {hash:location.hash,record:detail?.querySelector('[data-assurance-record]')?.getAttribute('data-assurance-record'),current:current?.getAttribute('data-assurance-record-link'),headingTop:box?.top,headingBottom:box?.bottom,height:innerHeight,focus:document.activeElement===heading,bodyFocus:document.activeElement===document.body,listMounted:Boolean(document.querySelector('[data-assurance-record-grid]')?.isConnected),overflow:document.documentElement.scrollWidth>innerWidth+1};
+  })()`);
+  const problems=[];
+  if(state.hash!==`#${expectedId}`)problems.push(`fragment=${state.hash}`);
+  if(state.record!==expectedId||state.current!==expectedId)problems.push(`record/list=${state.record}/${state.current}`);
+  if(!(state.headingTop>=-1&&state.headingBottom<=state.height+1))problems.push(`heading outside first viewport=${state.headingTop}..${state.headingBottom}/${state.height}`);
+  if(focused&&!state.focus)problems.push('heading did not receive focus');
+  if(state.bodyFocus)problems.push('focus fell to body');
+  if(!state.listMounted)problems.push('record index unmounted');
+  if(state.overflow)problems.push('horizontal overflow');
+  if(problems.length)throw new Error(`${label}: ${problems.join('; ')}`);
+}
+
+async function assuranceRecordFirstAudit(cdp) {
+  for(const width of [375,768,1440]){
+    await cdp.call('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<768});
+    for(const locale of ['en','ar']){
+      const label=`assurance ${width}px ${locale}`;
+      await navigate(cdp,`${origin}/assurance?lang=${locale}`);
+      const defaultId=await evaluate(cdp,`document.querySelector('[data-assurance-detail] [data-assurance-record]')?.getAttribute('data-assurance-record')`);
+      const first=await evaluate(cdp,`(()=>{const r=document.querySelector('[data-assurance-detail-heading]')?.getBoundingClientRect();return {top:r?.top,bottom:r?.bottom,height:innerHeight}})()`);
+      if(!(first.top>=-1&&first.bottom<=first.height+1))throw new Error(`${label}: default heading outside first viewport ${JSON.stringify(first)}`);
+      const records=await evaluate(cdp,`JSON.parse(document.querySelector('[data-assurance-browser]').dataset.config).records`);
+      for(const framework of ['iso-27001','iso-42001','wcag-2.2']){
+        const candidates=records.filter((record)=>record.framework===framework);
+        const deep=candidates.find((record)=>record.id==='ISO27001-A.5.19')??candidates[0];
+        const alternate=candidates.find((record)=>record.section===deep.section&&record.id!==deep.id)??candidates.find((record)=>record.id!==deep.id);
+        if(!deep||!alternate)throw new Error(`${label}: missing ${framework} audit records`);
+        await navigate(cdp,`${origin}/assurance?lang=${locale}#${encodeURIComponent(deep.id)}`);
+        await assertAssurancePane(cdp,deep.id,`${label} ${framework} deep link`,true);
+        await inspectCurrentPage(cdp,locale,`${label} ${framework} deep link`);
+        const sameSection=alternate.section===deep.section;
+        await evaluate(cdp,`(()=>{const link=document.querySelector('[data-assurance-record-link=${JSON.stringify(alternate.id)}]');if(!link)return false;window.__assuranceAuditLink=link;link.focus();return true})()`);
+        await dispatchKey(cdp,'Enter','Enter');
+        await assertAssurancePane(cdp,alternate.id,`${label} ${framework} keyboard selection`,true);
+        if(sameSection&&!await evaluate(cdp,`window.__assuranceAuditLink?.isConnected`))throw new Error(`${label} ${framework}: keyboard selection replaced its mounted link`);
+      }
+      if(width===375){
+        await cdp.call('Emulation.setScriptExecutionDisabled',{value:true});
+        try{
+          await navigate(cdp,`${origin}/assurance?lang=${locale}`);
+          const fallback=await evaluate(cdp,`(()=>{const h=document.querySelector('[data-assurance-detail-heading]')?.getBoundingClientRect();return {heading:h?.bottom,viewport:innerHeight,links:document.querySelectorAll('[data-assurance-record-link]').length,source:Boolean(document.querySelector('.assurance-record-tools a')),noscript:Boolean(document.querySelector('.assurance-noscript'))}})()`);
+          if(!(fallback.heading<=fallback.viewport&&fallback.links>0&&fallback.source&&fallback.noscript))throw new Error(`${label}: no-JavaScript pane/index unavailable ${JSON.stringify(fallback)}`);
+        }finally{await cdp.call('Emulation.setScriptExecutionDisabled',{value:false});}
+      }
+      if(defaultId==='')throw new Error(`${label}: missing default record`);
+    }
+  }
+}
+
 async function keyboardSmoke(cdp, pathname) {
   await navigate(cdp, `${origin}${localizedPath(pathname, 'en')}`);
   await evaluate(cdp, `document.body.focus(); document.activeElement?.blur(); true`);
@@ -762,6 +819,8 @@ async function main() {
 
     await workbenchInteractionAudit(cdp);
     axeRuns += 6;
+    await assuranceRecordFirstAudit(cdp);
+    axeRuns += 18;
 
     for (const pathname of auditConfig.narrowViewportPaths) {
       const isWorkbench = new URL(pathname, origin).pathname === manifest.find((route) => route.id === 'demos.index')?.route;

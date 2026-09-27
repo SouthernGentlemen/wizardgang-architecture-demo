@@ -2,16 +2,6 @@
 
 ## Open tasks
 
-### DEMO-382 — [FIX] Put the focused assurance record first on every viewport
-
-- Dependency: DEMO-380 plan-only queue publication has merged.
-- Why: `/assurance` is unreadable on phones because the pertinent record is at the bottom. At 375px the page is about 6,975px tall and the focused record's assessment, gaps, references and evidence start near y=5,889, after the framework tabs, section select, two posture grids and 37 record cards; at 1440px the pane still starts near y=2,227 under a three-column card grid. Selecting a record replaces the list DOM, so keyboard focus drops to `<body>` and the updated pane stays off-screen.
-- Scope: Make `/assurance` a record-first master-detail layout. On phones, render the focused record pane directly under the framework and section controls, condense section and framework posture to one summary row, and follow the pane with the record list as a compact index. From 1024px, show a compact list beside a sticky detail pane. Selecting a record keeps the list mounted, marks the current record, brings the pane into view and moves focus to its heading with a polite announcement; deep links such as `/assurance#ISO27001-A.5.19` load with the pane in the first viewport.
-- Non-goals: Do not change assurance records, statuses, evidence relationships, stable record fragments, the `GET /api/assurance/{record}` fragment contract or reporting APIs, and do not project risk, incident, register or other management-system inventories into HTML.
-- Acceptance: At 375, 768 and 1440px the focused record heading is in the first viewport after load, after deep-link navigation and after selecting any record in each framework; focus never lands on `<body>` after activation; list, fragment and pane stay in sync; the no-JavaScript rendering remains usable; audits cover the ISO/IEC 27001, ISO/IEC 42001 and WCAG panes in `en` and `ar`.
-- Validation: Pinned `npm ci`; assurance workbench and presentation tests; browser audit with first-viewport and focus-after-activation assertions; credential-free `npm run check`; dependency advisory gate; committed-range whitespace; exact-head required CI.
-- Authorities: `docs/ASSURANCE.md`, `docs/REPORTING.md`, `docs/ROUTE-REGISTRY.md` fragment rules, `docs/ACCESSIBILITY.md`, `src/demos/assurance-workbench.tsx`, `src/browser/assurance.ts`, `src/styles/shell.css`, `scripts/site-browser-audit.mjs`.
-
 ### DEMO-383 — [FEAT] Declutter the demos workbench for phones
 
 - Dependency: DEMO-380 plan-only queue publication has merged.

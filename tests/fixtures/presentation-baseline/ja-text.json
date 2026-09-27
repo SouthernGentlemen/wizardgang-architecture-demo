@@ -7,11 +7,11 @@
       },
       {
         "level": 2,
-        "text": "記録"
+        "text": "A.5.1 · Security policy governance"
       },
       {
         "level": 2,
-        "text": "A.5.1 · Security policy governance"
+        "text": "記録"
       }
     ],
     "accessibleNames": [
@@ -83,17 +83,57 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review Gap A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的"
-      },
-      {
-        "element": "aside",
-        "role": "complementary",
-        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24"
+        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governance部分的評価The information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.不足しているものComplete AW-001 and retain attributable awareness evidence.評価日2026-09-17要件ソースを開く評価記録を開くドキュメントエビデンスdocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review Gap A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的 フレームワークとセクションを対話的に切り替えるにはJavaScriptが必要です。適用宣言は引き続き確認できます:ISO/IEC 27001 適用宣言ISO/IEC 42001 適用宣言WCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
         "role": null,
         "name": "セクション"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "要件ソースを開く"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "評価記録を開く"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "ドキュメント"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "エビデンス"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "ドキュメント"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "エビデンス"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "場所を開く: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "証拠記録を開く: Security boundary and secret handling"
       },
       {
         "element": "a",
@@ -279,51 +319,6 @@
         "element": "a",
         "role": null,
         "name": "A.5.37 Documented operating procedures 部分的"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "要件ソースを開く"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "評価記録を開く"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "ドキュメント"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "エビデンス"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "ドキュメント"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "エビデンス"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "場所を開く: Security boundary and secret handling"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "証拠記録を開く: Security boundary and secret handling"
       },
       {
         "element": "a",
@@ -905,11 +900,11 @@
       },
       {
         "level": 2,
-        "text": "記録"
+        "text": "A.5.1 · Security policy governance"
       },
       {
         "level": 2,
-        "text": "A.5.1 · Security policy governance"
+        "text": "記録"
       }
     ],
     "accessibleNames": [
@@ -981,17 +976,57 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review Gap A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的"
-      },
-      {
-        "element": "aside",
-        "role": "complementary",
-        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24"
+        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governance部分的評価The information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.不足しているものComplete AW-001 and retain attributable awareness evidence.評価日2026-09-17要件ソースを開く評価記録を開くドキュメントエビデンスdocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review Gap A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的 フレームワークとセクションを対話的に切り替えるにはJavaScriptが必要です。適用宣言は引き続き確認できます:ISO/IEC 27001 適用宣言ISO/IEC 42001 適用宣言WCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
         "role": null,
         "name": "セクション"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "要件ソースを開く"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "評価記録を開く"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "ドキュメント"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "エビデンス"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "ドキュメント"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "エビデンス"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "場所を開く: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "証拠記録を開く: Security boundary and secret handling"
       },
       {
         "element": "a",
@@ -1177,51 +1212,6 @@
         "element": "a",
         "role": null,
         "name": "A.5.37 Documented operating procedures 部分的"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "要件ソースを開く"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "評価記録を開く"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "ドキュメント"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "エビデンス"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "ドキュメント"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "エビデンス"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "場所を開く: Security boundary and secret handling"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "証拠記録を開く: Security boundary and secret handling"
       },
       {
         "element": "a",
@@ -1278,11 +1268,11 @@
       },
       {
         "level": 2,
-        "text": "記録"
+        "text": "A.5.1 · Security policy governance"
       },
       {
         "level": 2,
-        "text": "A.5.1 · Security policy governance"
+        "text": "記録"
       }
     ],
     "accessibleNames": [
@@ -1354,17 +1344,57 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review Gap A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的"
-      },
-      {
-        "element": "aside",
-        "role": "complementary",
-        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24"
+        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governance部分的評価The information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.不足しているものComplete AW-001 and retain attributable awareness evidence.評価日2026-09-17要件ソースを開く評価記録を開くドキュメントエビデンスdocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review Gap A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的 フレームワークとセクションを対話的に切り替えるにはJavaScriptが必要です。適用宣言は引き続き確認できます:ISO/IEC 27001 適用宣言ISO/IEC 42001 適用宣言WCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
         "role": null,
         "name": "セクション"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "要件ソースを開く"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "評価記録を開く"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "ドキュメント"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "エビデンス"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "ドキュメント"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "エビデンス"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "場所を開く: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "証拠記録を開く: Security boundary and secret handling"
       },
       {
         "element": "a",
@@ -1550,51 +1580,6 @@
         "element": "a",
         "role": null,
         "name": "A.5.37 Documented operating procedures 部分的"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "要件ソースを開く"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "評価記録を開く"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "ドキュメント"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "エビデンス"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "ドキュメント"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "エビデンス"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "場所を開く: Security boundary and secret handling"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "証拠記録を開く: Security boundary and secret handling"
       },
       {
         "element": "a",
@@ -1651,11 +1636,11 @@
       },
       {
         "level": 2,
-        "text": "記録"
+        "text": "A.5.1 · Security policy governance"
       },
       {
         "level": 2,
-        "text": "A.5.1 · Security policy governance"
+        "text": "記録"
       }
     ],
     "accessibleNames": [
@@ -1727,17 +1712,57 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review Gap A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的"
-      },
-      {
-        "element": "aside",
-        "role": "complementary",
-        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24"
+        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governance部分的評価The information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.不足しているものComplete AW-001 and retain attributable awareness evidence.評価日2026-09-17要件ソースを開く評価記録を開くドキュメントエビデンスdocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review Gap A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的 フレームワークとセクションを対話的に切り替えるにはJavaScriptが必要です。適用宣言は引き続き確認できます:ISO/IEC 27001 適用宣言ISO/IEC 42001 適用宣言WCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
         "role": null,
         "name": "セクション"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "要件ソースを開く"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "評価記録を開く"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "ドキュメント"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "エビデンス"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "ドキュメント"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "エビデンス"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "場所を開く: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "証拠記録を開く: Security boundary and secret handling"
       },
       {
         "element": "a",
@@ -1923,51 +1948,6 @@
         "element": "a",
         "role": null,
         "name": "A.5.37 Documented operating procedures 部分的"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "要件ソースを開く"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "評価記録を開く"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "ドキュメント"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "エビデンス"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "ドキュメント"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "エビデンス"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "場所を開く: Security boundary and secret handling"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "証拠記録を開く: Security boundary and secret handling"
       },
       {
         "element": "a",
@@ -2024,11 +2004,11 @@
       },
       {
         "level": 2,
-        "text": "記録"
+        "text": "A.5.1 · Security policy governance"
       },
       {
         "level": 2,
-        "text": "A.5.1 · Security policy governance"
+        "text": "記録"
       }
     ],
     "accessibleNames": [
@@ -2100,17 +2080,57 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review Gap A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的"
-      },
-      {
-        "element": "aside",
-        "role": "complementary",
-        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24"
+        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governance部分的評価The information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.不足しているものComplete AW-001 and retain attributable awareness evidence.評価日2026-09-17要件ソースを開く評価記録を開くドキュメントエビデンスdocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review Gap A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的 フレームワークとセクションを対話的に切り替えるにはJavaScriptが必要です。適用宣言は引き続き確認できます:ISO/IEC 27001 適用宣言ISO/IEC 42001 適用宣言WCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
         "role": null,
         "name": "セクション"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "要件ソースを開く"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "評価記録を開く"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "ドキュメント"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "エビデンス"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "ドキュメント"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "エビデンス"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "場所を開く: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "証拠記録を開く: Security boundary and secret handling"
       },
       {
         "element": "a",
@@ -2296,51 +2316,6 @@
         "element": "a",
         "role": null,
         "name": "A.5.37 Documented operating procedures 部分的"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "要件ソースを開く"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "評価記録を開く"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "ドキュメント"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "エビデンス"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "ドキュメント"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "エビデンス"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "場所を開く: Security boundary and secret handling"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "証拠記録を開く: Security boundary and secret handling"
       },
       {
         "element": "a",
