@@ -2,16 +2,6 @@
 
 ## Open tasks
 
-### DEMO-385 — [FEAT] Dock retained demo inspectors as a responsive sidecar
-
-- Dependency: DEMO-384 has merged.
-- Why: The owner wants the inspector (category label, Guide, Request and Evidence tabs, stable fragment and implementation link, as on D1) to be a sidecar. It is a side column only above 900px; at 768px D1's inspector starts about 1,340px down the page, and on phones it trails the whole demo.
-- Scope: For demos that keep an inspector (D1, R2, Workers, Durable Objects, Internationalization), render it as a sticky side column at desktop widths and, below that, as an off-canvas side panel opened from an "Inspector" toggle in the demo header, never as a trailing block. The toggle uses `aria-expanded` and `aria-controls`; the panel closes with Escape or a visible close control, returns focus and opens from the inline-end side in RTL. Keep Guide, Request (D1) and Evidence; fold View source into Evidence; do not repeat D1's in-stage SQL Inspector in Request; correct guide steps that name controls the demo lacks, since Internationalization's locale control lives in the header. Without JavaScript the inspector stays reachable as an inline disclosure.
-- Non-goals: Do not reintroduce inspectors removed by DEMO-383 or change inspector content sources, evidence links or machine contracts.
-- Acceptance: At 1280 and 1440px the inspector stays beside the demo while scrolling; at 375 and 768px it opens over the current demo without losing scroll position, closes with Escape or its close control and returns focus; Evidence lists the stable fragment and implementation link once; axe, focus-visibility and obscured-focus audits pass in `en` and `ar`.
-- Validation: Pinned `npm ci`; workbench inspector tests; browser audit for toggle, Escape, focus return and RTL; credential-free `npm run check`; dependency advisory gate; committed-range whitespace; exact-head required CI.
-- Authorities: `docs/REPOSITORY-BOUNDARIES.md` inspector rule, `docs/ACCESSIBILITY.md`, `src/demos/demos-workbench.tsx`, `src/browser/demos.ts`, `src/styles/demos.css`, `scripts/site-browser-audit.mjs`.
-
 ### DEMO-386 — [FIX] Make demo interiors usable at phone widths
 
 - Dependency: DEMO-381 has merged.

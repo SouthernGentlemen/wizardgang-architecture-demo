@@ -39,7 +39,7 @@ interface DemosBrowserMessages {
   implementation: string;
   inspector: string;
   inspectorModes: string;
-  demoTools: string;
+  closeInspector: string;
   resetDemo: string;
   resetQuestion: string;
   resetD1: string;
@@ -49,7 +49,6 @@ interface DemosBrowserMessages {
   cancel: string;
   resetComplete: string;
   resetFailed: string;
-  viewSource: string;
 }
 
 function parseData<T>(value: string | undefined): T | undefined {
@@ -90,25 +89,34 @@ function initializeDemosWorkbench(): void {
   let inspector = document.querySelector<HTMLElement>('[data-demo-inspector]');
   let inspectorTabs = document.querySelector<HTMLElement>('[data-demo-inspector-tabs]');
   let inspectorPanel = document.querySelector<HTMLElement>('[data-demo-inspector-panel]');
+  let inspectorDisclosure = document.querySelector<HTMLDetailsElement>('[data-demo-inspector-disclosure]');
+  let inspectorClose = document.querySelector<HTMLButtonElement>('[data-demo-inspector-close]');
+  const inspectorToggle = document.querySelector<HTMLButtonElement>('[data-demo-inspector-toggle]');
+  const inspectorScrim = document.querySelector<HTMLElement>('[data-demo-inspector-scrim]');
+  const narrowInspector = window.matchMedia('(max-width: 900px)');
   const resetControl = document.querySelector<HTMLButtonElement>('[data-demo-reset]');
   const resetDialog = document.querySelector<HTMLDialogElement>('[data-demo-reset-dialog]');
   const resetDescription = document.querySelector<HTMLElement>('[data-demo-reset-description]');
   const resetNotice = document.querySelector<HTMLElement>('[data-demo-reset-notice]');
   const resetConfirm = document.querySelector<HTMLButtonElement>('[data-demo-reset-confirm]');
   const resetCancel = document.querySelector<HTMLButtonElement>('[data-demo-reset-cancel]');
-  let sourceControl = document.querySelector<HTMLAnchorElement>('[data-demo-source]');
-  let tools = document.querySelector<HTMLElement>('.demo-workbench-tools');
   let activeId = '';
   let inspectorMode: InspectorMode = 'Guide';
   let requestObserver: MutationObserver | null = null;
 
   if (!workbench || !panel || !layout) return;
 
-  if (!inspector || !inspectorTabs || !inspectorPanel || !sourceControl || !tools) {
+  if (!inspector || !inspectorTabs || !inspectorPanel || !inspectorDisclosure || !inspectorClose) {
     inspector = document.createElement('aside');
+    inspector.id = 'demo-inspector';
     inspector.className = 'demo-inspector';
     inspector.dataset.demoInspector = '';
     inspector.hidden = true;
+    inspectorDisclosure = document.createElement('details');
+    inspectorDisclosure.className = 'demo-inspector-disclosure';
+    inspectorDisclosure.dataset.demoInspectorDisclosure = '';
+    const summary = document.createElement('summary');
+    summary.textContent = messages.inspector;
     const header = document.createElement('div');
     header.className = 'demo-inspector-header';
     const heading = document.createElement('strong');
@@ -116,7 +124,11 @@ function initializeDemosWorkbench(): void {
     const context = document.createElement('span');
     context.className = 'subtle';
     context.dataset.demoInspectorContext = '';
-    header.append(heading, context);
+    inspectorClose = document.createElement('button');
+    inspectorClose.type = 'button';
+    inspectorClose.dataset.demoInspectorClose = '';
+    inspectorClose.textContent = messages.closeInspector;
+    header.append(heading, context, inspectorClose);
     inspectorTabs = document.createElement('div');
     inspectorTabs.className = 'demo-inspector-tabs';
     inspectorTabs.dataset.demoInspectorTabs = '';
@@ -128,19 +140,64 @@ function initializeDemosWorkbench(): void {
     inspectorPanel.dataset.demoInspectorPanel = '';
     inspectorPanel.setAttribute('role', 'tabpanel');
     inspectorPanel.tabIndex = 0;
-    inspector.append(header, inspectorTabs, inspectorPanel);
-    tools = document.createElement('div');
-    tools.className = 'demo-workbench-tools';
-    tools.setAttribute('aria-label', messages.demoTools);
-    tools.hidden = true;
-    sourceControl = document.createElement('a');
-    sourceControl.dataset.demoSource = '';
-    sourceControl.target = '_blank';
-    sourceControl.rel = 'noreferrer';
-    sourceControl.textContent = messages.viewSource;
-    tools.append(sourceControl);
-    layout.append(inspector, tools);
+    inspectorDisclosure.append(summary, header, inspectorTabs, inspectorPanel);
+    inspector.append(inspectorDisclosure);
+    layout.append(inspector);
   }
+
+  workbench.dataset.demoEnhanced = 'true';
+  inspectorDisclosure.open = true;
+  const closeInspector = (returnFocus: boolean) => {
+    if (inspector.dataset.open !== 'true') return;
+    inspector.dataset.open = 'false';
+    inspectorToggle?.setAttribute('aria-expanded', 'false');
+    if (inspectorScrim) inspectorScrim.hidden = true;
+    inspector.inert = narrowInspector.matches;
+    if (returnFocus && inspectorToggle && !inspectorToggle.hidden) inspectorToggle.focus({ preventScroll: true });
+  };
+  const syncInspectorViewport = () => {
+    if (!narrowInspector.matches) closeInspector(false);
+    inspector.inert = narrowInspector.matches && inspector.dataset.open !== 'true';
+    if (narrowInspector.matches) {
+      inspector.setAttribute('role', 'dialog');
+      inspector.setAttribute('aria-modal', 'true');
+    } else {
+      inspector.removeAttribute('role');
+      inspector.removeAttribute('aria-modal');
+    }
+  };
+  inspectorToggle?.addEventListener('click', () => {
+    if (!narrowInspector.matches || inspector.hidden) return;
+    if (inspector.dataset.open === 'true') {
+      closeInspector(true);
+      return;
+    }
+    inspectorDisclosure.open = true;
+    inspector.inert = false;
+    inspector.dataset.open = 'true';
+    inspectorToggle.setAttribute('aria-expanded', 'true');
+    if (inspectorScrim) inspectorScrim.hidden = false;
+    requestAnimationFrame(() => inspectorClose.focus({ preventScroll: true }));
+  });
+  inspectorClose.addEventListener('click', () => closeInspector(true));
+  inspectorScrim?.addEventListener('click', () => closeInspector(true));
+  document.addEventListener('keydown', (event) => {
+    if (inspector.dataset.open !== 'true') return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeInspector(true);
+    }
+    if (event.key !== 'Tab') return;
+    const focusable = [...inspector.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], [tabindex="0"]')]
+      .filter((element) => element.getClientRects().length > 0);
+    const first = focusable[0];
+    const last = focusable.at(-1);
+    if (!first || !last) return;
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  });
+  narrowInspector.addEventListener('change', syncInspectorViewport);
+  syncInspectorViewport();
 
   const selectedId = () => {
     let id = '';
@@ -290,8 +347,6 @@ function initializeDemosWorkbench(): void {
 
   const syncTools = (demo: DemoMetadata) => {
     if (resetControl) resetControl.hidden = !['d1', 'r2', 'webhooks'].includes(demo.id);
-    if (sourceControl) sourceControl.hidden = !demo.hasInspector;
-    if (tools) tools.hidden = !demo.hasInspector;
   };
 
   const renderState = (message: string, role = 'status', error = false, retryId = '') => {
@@ -312,6 +367,7 @@ function initializeDemosWorkbench(): void {
   };
 
   const deactivate = () => {
+    closeInspector(false);
     if (resetDialog?.open) resetDialog.close();
     if (resetNotice) resetNotice.hidden = true;
     requestObserver?.disconnect();
@@ -325,6 +381,7 @@ function initializeDemosWorkbench(): void {
   };
 
   const syncNavigation = (demo: DemoMetadata) => {
+    closeInspector(false);
     navigationLinks.forEach((link) => {
       if (link.dataset.demoCategory) return;
       if (link.dataset.demoLink === demo.id) link.setAttribute('aria-current', 'location');
@@ -351,18 +408,16 @@ function initializeDemosWorkbench(): void {
       statuses.hidden = demo.status.length === 0;
     }
     inspector.hidden = !demo.hasInspector;
+    if (inspectorToggle) inspectorToggle.hidden = !demo.hasInspector;
     layout.dataset.demoInspectorEnabled = String(demo.hasInspector);
-    if (sourceControl) {
-      sourceControl.hidden = !demo.hasInspector;
-      sourceControl.href = demo.sourceUrl;
-    }
-    if (tools) tools.hidden = !demo.hasInspector;
     if (demo.hasInspector) {
+      inspectorDisclosure.open = true;
       inspector.setAttribute('aria-label', demo.inspectorLabel);
       const inspectorContext = inspector.querySelector<HTMLElement>('[data-demo-inspector-context]');
       if (inspectorContext) inspectorContext.textContent = demo.categoryLabel;
       bindInspectorTabs(demo);
     }
+    syncInspectorViewport();
   };
 
   const cachePresentation = (id: string, html: string) => {

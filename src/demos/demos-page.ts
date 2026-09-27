@@ -55,13 +55,11 @@ export const demonstrations: readonly ArchitectureDemo[] = [
   {
     id: 'd1', label: 'D1', selectorLabel: 'D1', group: 'Data', category: 'Data', tier: 'primary',
     summary: 'Run relational CRUD against resettable shared demo state.',
-    guide: ['Switch between Users and Tasks.', 'Create, edit, or delete one row.', 'Open Request to inspect the SQL and response produced by that action.'],
+    guide: ['Switch between Users and Tasks.', 'Create, edit, or delete one row.', 'Read the in-stage SQL Inspector for the statement; open Request for the latest response.'],
     sourcePath: 'src/demos/d1-presentation.tsx', status: ['RESETTABLE'],
     request: {
-      intro: 'Mirrors the live SQL Inspector produced by the selected D1 operation.',
+      intro: 'Shows the latest D1 response. The SQL statement and status are in the live SQL Inspector beside the tables.',
       fields: [
-        { label: 'Status', selector: '[data-inspector-status]', empty: 'Run a D1 operation to capture a status.' },
-        { label: 'Statement', selector: '[data-inspector-sql]', empty: 'Run a D1 operation to capture its SQL statement.' },
         { label: 'Response', selector: '[data-state-output]', empty: 'Run a D1 operation to capture its response.' },
       ],
     },
@@ -106,13 +104,13 @@ export const demonstrations: readonly ArchitectureDemo[] = [
   {
     id: 'workers', label: 'Workers', selectorLabel: 'Workers', group: 'Runtime architecture', category: 'Platform', tier: 'secondary',
     summary: 'Exercise stateless edge compute and request policy behavior.',
-    guide: ['Run the available Worker interaction.', 'Inspect the response and request-policy behavior.', 'Use Evidence for the implementation source.'],
+    guide: ['Choose a method, resource, and request properties.', 'Apply edge request policy.', 'Inspect the resulting response and policy decisions.'],
     sourcePath: 'src/demos/workers-presentation.tsx', render: (_request, env, options) => workersSection(env, options),
   },
   {
     id: 'durable-objects', label: 'Durable Objects', selectorLabel: 'Durable Objects', group: 'Runtime architecture', category: 'Platform', tier: 'secondary',
     summary: 'Coordinate stateful requests against one shared object.',
-    guide: ['Use the shared-state controls.', 'Change the coordinated state.', 'Inspect the result returned by the live object.'],
+    guide: ['Increment once or send 10 concurrent increments.', 'Compare the final count with the serialized state.', 'Inspect the result returned by the live object.'],
     sourcePath: 'src/demos/durable-objects-presentation.tsx', render: (_request, env, options) => durableObjectsSection(env, options),
   },
   {
@@ -123,7 +121,7 @@ export const demonstrations: readonly ArchitectureDemo[] = [
   {
     id: 'i18n', label: 'Internationalization', selectorLabel: 'Internationalization', group: 'Quality', category: 'Quality', tier: 'secondary',
     summary: 'Exercise locale, formatting, pluralization, and RTL behavior.',
-    guide: ['Change the locale in the live demo.', 'Compare formatting and pluralization.', 'Inspect right-to-left behavior where available.'],
+    guide: ['Change the language with the selector in the page header.', 'Change the count and compare formatting and pluralization.', 'Select Arabic in the page header to inspect right-to-left behavior.'],
     sourcePath: 'src/demos/i18n-presentation.tsx', render: (request, env, options) => i18nSection(request, env, options),
   },
 ] as const;
