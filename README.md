@@ -107,3 +107,7 @@ Commit pattern: `[DEMO-NNN] [TYPE] Imperative description`.
 - [`docs/OPERATIONS.md`](docs/OPERATIONS.md) and [`docs/IDENTITY.md`](docs/IDENTITY.md) — operating and authorization boundaries.
 - [`docs/governance/GOVERNANCE.md`](docs/governance/GOVERNANCE.md) — management-system entry point and links to the focused governance policies.
 - [`docs/CHANGE-MANAGEMENT.md`](docs/CHANGE-MANAGEMENT.md) and [`docs/RELEASE-MANAGEMENT.md`](docs/RELEASE-MANAGEMENT.md) — controlled delivery, release, deployment, and rollback.
+
+## GitHub auto-merge
+
+The committed repository settings enable per-PR auto-merge. Enabling this repository capability does not enroll a PR: an authorized contributor chooses auto-merge for that PR. GitHub then waits for required reviews and exact-head checks and uses the repository's squash-only merge policy. Run `npm run verify:github-settings` for a read-only live check; `npm run apply:github-settings` applies the committed authority and independently verifies it.
