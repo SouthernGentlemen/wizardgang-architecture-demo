@@ -47,16 +47,6 @@
         "id": "main"
       },
       {
-        "role": "complementary",
-        "name": null,
-        "id": null
-      },
-      {
-        "role": "region",
-        "name": "السجلات",
-        "id": null
-      },
-      {
         "role": "region",
         "name": "التقييم",
         "id": null
@@ -64,6 +54,11 @@
       {
         "role": "region",
         "name": "عارض السجل",
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "السجلات",
         "id": null
       },
       {
@@ -80,12 +75,12 @@
       },
       {
         "level": 2,
-        "text": "السجلات",
+        "text": "A.5.1 · Security policy governance",
         "id": null
       },
       {
         "level": 2,
-        "text": "A.5.1 · Security policy governance",
+        "text": "السجلات",
         "id": null
       }
     ],
@@ -113,6 +108,31 @@
       {
         "name": "المصدر",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo",
+        "target": null
+      },
+      {
+        "name": "فتح مصدر المتطلب",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
+        "target": null
+      },
+      {
+        "name": "فتح سجل التقييم",
+        "href": "/api/reporting/compliance/ISO27001-A.5.1",
+        "target": null
+      },
+      {
+        "name": "فتح الوثائق: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
+        "target": null
+      },
+      {
+        "name": "فتح الموقع: Security boundary and secret handling",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/SECURITY.md",
+        "target": null
+      },
+      {
+        "name": "فتح سجل الدليل: Security boundary and secret handling",
+        "href": "/api/reporting/evidence/EVD-DOC-003",
         "target": null
       },
       {
@@ -301,31 +321,6 @@
         "target": null
       },
       {
-        "name": "فتح مصدر المتطلب",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
-        "target": null
-      },
-      {
-        "name": "فتح سجل التقييم",
-        "href": "/api/reporting/compliance/ISO27001-A.5.1",
-        "target": null
-      },
-      {
-        "name": "فتح الوثائق: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
-        "target": null
-      },
-      {
-        "name": "فتح الموقع: Security boundary and secret handling",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/SECURITY.md",
-        "target": null
-      },
-      {
-        "name": "فتح سجل الدليل: Security boundary and secret handling",
-        "href": "/api/reporting/evidence/EVD-DOC-003",
-        "target": null
-      },
-      {
         "name": "بيان قابلية تطبيق ISO/IEC 27001",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
         "target": null
@@ -420,6 +415,10 @@
       "global-language",
       "main",
       "assurance-workbench-panel",
+      "assurance-docs-ISO27001-A-5-1-tab",
+      "assurance-evidence-ISO27001-A-5-1-tab",
+      "assurance-docs-ISO27001-A-5-1",
+      "assurance-evidence-ISO27001-A-5-1",
       "ISO27001-A.5.1",
       "ISO27001-A.5.2",
       "ISO27001-A.5.3",
@@ -456,11 +455,7 @@
       "ISO27001-A.5.34",
       "ISO27001-A.5.35",
       "ISO27001-A.5.36",
-      "ISO27001-A.5.37",
-      "assurance-docs-ISO27001-A-5-1-tab",
-      "assurance-evidence-ISO27001-A-5-1-tab",
-      "assurance-docs-ISO27001-A-5-1",
-      "assurance-evidence-ISO27001-A-5-1"
+      "ISO27001-A.5.37"
     ],
     "fragmentTargets": [
       {
@@ -812,6 +807,60 @@
         }
       },
       {
+        "element": "p",
+        "attributes": {
+          "data-assurance-status": ""
+        }
+      },
+      {
+        "element": "section",
+        "attributes": {
+          "data-assurance-detail": ""
+        }
+      },
+      {
+        "element": "article",
+        "attributes": {
+          "data-assurance-record": "ISO27001-A.5.1"
+        }
+      },
+      {
+        "element": "h2",
+        "attributes": {
+          "data-assurance-detail-heading": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-status": "partial"
+        }
+      },
+      {
+        "element": "button#assurance-docs-ISO27001-A-5-1-tab",
+        "attributes": {
+          "data-assurance-inspector-mode": "documentation"
+        }
+      },
+      {
+        "element": "button#assurance-evidence-ISO27001-A-5-1-tab",
+        "attributes": {
+          "data-assurance-inspector-mode": "evidence"
+        }
+      },
+      {
+        "element": "div#assurance-docs-ISO27001-A-5-1",
+        "attributes": {
+          "data-assurance-inspector-panel": "documentation"
+        }
+      },
+      {
+        "element": "div#assurance-evidence-ISO27001-A-5-1",
+        "attributes": {
+          "data-assurance-inspector-panel": "evidence"
+        }
+      },
+      {
         "element": "span",
         "attributes": {
           "data-assurance-record-count": ""
@@ -820,7 +869,9 @@
       {
         "element": "div",
         "attributes": {
-          "data-assurance-record-grid": ""
+          "data-assurance-record-grid": "",
+          "data-assurance-grid-framework": "iso-27001",
+          "data-assurance-grid-section": "Annex A · organizational"
         }
       },
       {
@@ -1268,54 +1319,6 @@
         }
       },
       {
-        "element": "p",
-        "attributes": {
-          "data-assurance-status": ""
-        }
-      },
-      {
-        "element": "section",
-        "attributes": {
-          "data-assurance-detail": ""
-        }
-      },
-      {
-        "element": "article",
-        "attributes": {
-          "data-assurance-record": "ISO27001-A.5.1"
-        }
-      },
-      {
-        "element": "span",
-        "attributes": {
-          "data-status": "partial"
-        }
-      },
-      {
-        "element": "button#assurance-docs-ISO27001-A-5-1-tab",
-        "attributes": {
-          "data-assurance-inspector-mode": "documentation"
-        }
-      },
-      {
-        "element": "button#assurance-evidence-ISO27001-A-5-1-tab",
-        "attributes": {
-          "data-assurance-inspector-mode": "evidence"
-        }
-      },
-      {
-        "element": "div#assurance-docs-ISO27001-A-5-1",
-        "attributes": {
-          "data-assurance-inspector-panel": "documentation"
-        }
-      },
-      {
-        "element": "div#assurance-evidence-ISO27001-A-5-1",
-        "attributes": {
-          "data-assurance-inspector-panel": "evidence"
-        }
-      },
-      {
         "element": "script",
         "attributes": {
           "data-assurance-browser": "",
@@ -1341,7 +1344,7 @@
         "data": {}
       },
       {
-        "src": "/assets/assurance-browser-lnHnDcys.js",
+        "src": "/assets/assurance-browser-D_JIDV-8.js",
         "type": "module",
         "async": false,
         "defer": false,
@@ -1367,7 +1370,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-DAAu9iv1.css",
+        "href": "/assets/shell-bMbz_FQ0.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -1717,7 +1720,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-DAAu9iv1.css",
+        "href": "/assets/shell-bMbz_FQ0.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -1940,7 +1943,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-DAAu9iv1.css",
+        "href": "/assets/shell-bMbz_FQ0.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -2631,7 +2634,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-DAAu9iv1.css",
+        "href": "/assets/shell-bMbz_FQ0.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -2693,16 +2696,6 @@
         "id": "main"
       },
       {
-        "role": "complementary",
-        "name": null,
-        "id": null
-      },
-      {
-        "role": "region",
-        "name": "السجلات",
-        "id": null
-      },
-      {
         "role": "region",
         "name": "التقييم",
         "id": null
@@ -2710,6 +2703,11 @@
       {
         "role": "region",
         "name": "عارض السجل",
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "السجلات",
         "id": null
       },
       {
@@ -2726,12 +2724,12 @@
       },
       {
         "level": 2,
-        "text": "السجلات",
+        "text": "A.5.1 · Security policy governance",
         "id": null
       },
       {
         "level": 2,
-        "text": "A.5.1 · Security policy governance",
+        "text": "السجلات",
         "id": null
       }
     ],
@@ -2759,6 +2757,31 @@
       {
         "name": "المصدر",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo",
+        "target": null
+      },
+      {
+        "name": "فتح مصدر المتطلب",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
+        "target": null
+      },
+      {
+        "name": "فتح سجل التقييم",
+        "href": "/api/reporting/compliance/ISO27001-A.5.1",
+        "target": null
+      },
+      {
+        "name": "فتح الوثائق: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
+        "target": null
+      },
+      {
+        "name": "فتح الموقع: Security boundary and secret handling",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/SECURITY.md",
+        "target": null
+      },
+      {
+        "name": "فتح سجل الدليل: Security boundary and secret handling",
+        "href": "/api/reporting/evidence/EVD-DOC-003",
         "target": null
       },
       {
@@ -2947,31 +2970,6 @@
         "target": null
       },
       {
-        "name": "فتح مصدر المتطلب",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
-        "target": null
-      },
-      {
-        "name": "فتح سجل التقييم",
-        "href": "/api/reporting/compliance/ISO27001-A.5.1",
-        "target": null
-      },
-      {
-        "name": "فتح الوثائق: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
-        "target": null
-      },
-      {
-        "name": "فتح الموقع: Security boundary and secret handling",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/SECURITY.md",
-        "target": null
-      },
-      {
-        "name": "فتح سجل الدليل: Security boundary and secret handling",
-        "href": "/api/reporting/evidence/EVD-DOC-003",
-        "target": null
-      },
-      {
         "name": "بيان قابلية تطبيق ISO/IEC 27001",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
         "target": null
@@ -3066,6 +3064,10 @@
       "global-language",
       "main",
       "assurance-workbench-panel",
+      "assurance-docs-ISO27001-A-5-1-tab",
+      "assurance-evidence-ISO27001-A-5-1-tab",
+      "assurance-docs-ISO27001-A-5-1",
+      "assurance-evidence-ISO27001-A-5-1",
       "ISO27001-A.5.1",
       "ISO27001-A.5.2",
       "ISO27001-A.5.3",
@@ -3102,11 +3104,7 @@
       "ISO27001-A.5.34",
       "ISO27001-A.5.35",
       "ISO27001-A.5.36",
-      "ISO27001-A.5.37",
-      "assurance-docs-ISO27001-A-5-1-tab",
-      "assurance-evidence-ISO27001-A-5-1-tab",
-      "assurance-docs-ISO27001-A-5-1",
-      "assurance-evidence-ISO27001-A-5-1"
+      "ISO27001-A.5.37"
     ],
     "fragmentTargets": [
       {
@@ -3458,6 +3456,60 @@
         }
       },
       {
+        "element": "p",
+        "attributes": {
+          "data-assurance-status": ""
+        }
+      },
+      {
+        "element": "section",
+        "attributes": {
+          "data-assurance-detail": ""
+        }
+      },
+      {
+        "element": "article",
+        "attributes": {
+          "data-assurance-record": "ISO27001-A.5.1"
+        }
+      },
+      {
+        "element": "h2",
+        "attributes": {
+          "data-assurance-detail-heading": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-status": "partial"
+        }
+      },
+      {
+        "element": "button#assurance-docs-ISO27001-A-5-1-tab",
+        "attributes": {
+          "data-assurance-inspector-mode": "documentation"
+        }
+      },
+      {
+        "element": "button#assurance-evidence-ISO27001-A-5-1-tab",
+        "attributes": {
+          "data-assurance-inspector-mode": "evidence"
+        }
+      },
+      {
+        "element": "div#assurance-docs-ISO27001-A-5-1",
+        "attributes": {
+          "data-assurance-inspector-panel": "documentation"
+        }
+      },
+      {
+        "element": "div#assurance-evidence-ISO27001-A-5-1",
+        "attributes": {
+          "data-assurance-inspector-panel": "evidence"
+        }
+      },
+      {
         "element": "span",
         "attributes": {
           "data-assurance-record-count": ""
@@ -3466,7 +3518,9 @@
       {
         "element": "div",
         "attributes": {
-          "data-assurance-record-grid": ""
+          "data-assurance-record-grid": "",
+          "data-assurance-grid-framework": "iso-27001",
+          "data-assurance-grid-section": "Annex A · organizational"
         }
       },
       {
@@ -3914,54 +3968,6 @@
         }
       },
       {
-        "element": "p",
-        "attributes": {
-          "data-assurance-status": ""
-        }
-      },
-      {
-        "element": "section",
-        "attributes": {
-          "data-assurance-detail": ""
-        }
-      },
-      {
-        "element": "article",
-        "attributes": {
-          "data-assurance-record": "ISO27001-A.5.1"
-        }
-      },
-      {
-        "element": "span",
-        "attributes": {
-          "data-status": "partial"
-        }
-      },
-      {
-        "element": "button#assurance-docs-ISO27001-A-5-1-tab",
-        "attributes": {
-          "data-assurance-inspector-mode": "documentation"
-        }
-      },
-      {
-        "element": "button#assurance-evidence-ISO27001-A-5-1-tab",
-        "attributes": {
-          "data-assurance-inspector-mode": "evidence"
-        }
-      },
-      {
-        "element": "div#assurance-docs-ISO27001-A-5-1",
-        "attributes": {
-          "data-assurance-inspector-panel": "documentation"
-        }
-      },
-      {
-        "element": "div#assurance-evidence-ISO27001-A-5-1",
-        "attributes": {
-          "data-assurance-inspector-panel": "evidence"
-        }
-      },
-      {
         "element": "script",
         "attributes": {
           "data-assurance-browser": "",
@@ -3987,7 +3993,7 @@
         "data": {}
       },
       {
-        "src": "/assets/assurance-browser-lnHnDcys.js",
+        "src": "/assets/assurance-browser-D_JIDV-8.js",
         "type": "module",
         "async": false,
         "defer": false,
@@ -4013,7 +4019,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-DAAu9iv1.css",
+        "href": "/assets/shell-bMbz_FQ0.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -4068,16 +4074,6 @@
         "id": "main"
       },
       {
-        "role": "complementary",
-        "name": null,
-        "id": null
-      },
-      {
-        "role": "region",
-        "name": "السجلات",
-        "id": null
-      },
-      {
         "role": "region",
         "name": "التقييم",
         "id": null
@@ -4085,6 +4081,11 @@
       {
         "role": "region",
         "name": "عارض السجل",
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "السجلات",
         "id": null
       },
       {
@@ -4101,12 +4102,12 @@
       },
       {
         "level": 2,
-        "text": "السجلات",
+        "text": "A.5.1 · Security policy governance",
         "id": null
       },
       {
         "level": 2,
-        "text": "A.5.1 · Security policy governance",
+        "text": "السجلات",
         "id": null
       }
     ],
@@ -4134,6 +4135,31 @@
       {
         "name": "المصدر",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo",
+        "target": null
+      },
+      {
+        "name": "فتح مصدر المتطلب",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
+        "target": null
+      },
+      {
+        "name": "فتح سجل التقييم",
+        "href": "/api/reporting/compliance/ISO27001-A.5.1",
+        "target": null
+      },
+      {
+        "name": "فتح الوثائق: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
+        "target": null
+      },
+      {
+        "name": "فتح الموقع: Security boundary and secret handling",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/SECURITY.md",
+        "target": null
+      },
+      {
+        "name": "فتح سجل الدليل: Security boundary and secret handling",
+        "href": "/api/reporting/evidence/EVD-DOC-003",
         "target": null
       },
       {
@@ -4322,31 +4348,6 @@
         "target": null
       },
       {
-        "name": "فتح مصدر المتطلب",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
-        "target": null
-      },
-      {
-        "name": "فتح سجل التقييم",
-        "href": "/api/reporting/compliance/ISO27001-A.5.1",
-        "target": null
-      },
-      {
-        "name": "فتح الوثائق: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
-        "target": null
-      },
-      {
-        "name": "فتح الموقع: Security boundary and secret handling",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/SECURITY.md",
-        "target": null
-      },
-      {
-        "name": "فتح سجل الدليل: Security boundary and secret handling",
-        "href": "/api/reporting/evidence/EVD-DOC-003",
-        "target": null
-      },
-      {
         "name": "بيان قابلية تطبيق ISO/IEC 27001",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
         "target": null
@@ -4441,6 +4442,10 @@
       "global-language",
       "main",
       "assurance-workbench-panel",
+      "assurance-docs-ISO27001-A-5-1-tab",
+      "assurance-evidence-ISO27001-A-5-1-tab",
+      "assurance-docs-ISO27001-A-5-1",
+      "assurance-evidence-ISO27001-A-5-1",
       "ISO27001-A.5.1",
       "ISO27001-A.5.2",
       "ISO27001-A.5.3",
@@ -4477,11 +4482,7 @@
       "ISO27001-A.5.34",
       "ISO27001-A.5.35",
       "ISO27001-A.5.36",
-      "ISO27001-A.5.37",
-      "assurance-docs-ISO27001-A-5-1-tab",
-      "assurance-evidence-ISO27001-A-5-1-tab",
-      "assurance-docs-ISO27001-A-5-1",
-      "assurance-evidence-ISO27001-A-5-1"
+      "ISO27001-A.5.37"
     ],
     "fragmentTargets": [
       {
@@ -4833,6 +4834,60 @@
         }
       },
       {
+        "element": "p",
+        "attributes": {
+          "data-assurance-status": ""
+        }
+      },
+      {
+        "element": "section",
+        "attributes": {
+          "data-assurance-detail": ""
+        }
+      },
+      {
+        "element": "article",
+        "attributes": {
+          "data-assurance-record": "ISO27001-A.5.1"
+        }
+      },
+      {
+        "element": "h2",
+        "attributes": {
+          "data-assurance-detail-heading": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-status": "partial"
+        }
+      },
+      {
+        "element": "button#assurance-docs-ISO27001-A-5-1-tab",
+        "attributes": {
+          "data-assurance-inspector-mode": "documentation"
+        }
+      },
+      {
+        "element": "button#assurance-evidence-ISO27001-A-5-1-tab",
+        "attributes": {
+          "data-assurance-inspector-mode": "evidence"
+        }
+      },
+      {
+        "element": "div#assurance-docs-ISO27001-A-5-1",
+        "attributes": {
+          "data-assurance-inspector-panel": "documentation"
+        }
+      },
+      {
+        "element": "div#assurance-evidence-ISO27001-A-5-1",
+        "attributes": {
+          "data-assurance-inspector-panel": "evidence"
+        }
+      },
+      {
         "element": "span",
         "attributes": {
           "data-assurance-record-count": ""
@@ -4841,7 +4896,9 @@
       {
         "element": "div",
         "attributes": {
-          "data-assurance-record-grid": ""
+          "data-assurance-record-grid": "",
+          "data-assurance-grid-framework": "iso-27001",
+          "data-assurance-grid-section": "Annex A · organizational"
         }
       },
       {
@@ -5289,54 +5346,6 @@
         }
       },
       {
-        "element": "p",
-        "attributes": {
-          "data-assurance-status": ""
-        }
-      },
-      {
-        "element": "section",
-        "attributes": {
-          "data-assurance-detail": ""
-        }
-      },
-      {
-        "element": "article",
-        "attributes": {
-          "data-assurance-record": "ISO27001-A.5.1"
-        }
-      },
-      {
-        "element": "span",
-        "attributes": {
-          "data-status": "partial"
-        }
-      },
-      {
-        "element": "button#assurance-docs-ISO27001-A-5-1-tab",
-        "attributes": {
-          "data-assurance-inspector-mode": "documentation"
-        }
-      },
-      {
-        "element": "button#assurance-evidence-ISO27001-A-5-1-tab",
-        "attributes": {
-          "data-assurance-inspector-mode": "evidence"
-        }
-      },
-      {
-        "element": "div#assurance-docs-ISO27001-A-5-1",
-        "attributes": {
-          "data-assurance-inspector-panel": "documentation"
-        }
-      },
-      {
-        "element": "div#assurance-evidence-ISO27001-A-5-1",
-        "attributes": {
-          "data-assurance-inspector-panel": "evidence"
-        }
-      },
-      {
         "element": "script",
         "attributes": {
           "data-assurance-browser": "",
@@ -5362,7 +5371,7 @@
         "data": {}
       },
       {
-        "src": "/assets/assurance-browser-lnHnDcys.js",
+        "src": "/assets/assurance-browser-D_JIDV-8.js",
         "type": "module",
         "async": false,
         "defer": false,
@@ -5388,7 +5397,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-DAAu9iv1.css",
+        "href": "/assets/shell-bMbz_FQ0.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -5443,16 +5452,6 @@
         "id": "main"
       },
       {
-        "role": "complementary",
-        "name": null,
-        "id": null
-      },
-      {
-        "role": "region",
-        "name": "السجلات",
-        "id": null
-      },
-      {
         "role": "region",
         "name": "التقييم",
         "id": null
@@ -5460,6 +5459,11 @@
       {
         "role": "region",
         "name": "عارض السجل",
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "السجلات",
         "id": null
       },
       {
@@ -5476,12 +5480,12 @@
       },
       {
         "level": 2,
-        "text": "السجلات",
+        "text": "A.5.1 · Security policy governance",
         "id": null
       },
       {
         "level": 2,
-        "text": "A.5.1 · Security policy governance",
+        "text": "السجلات",
         "id": null
       }
     ],
@@ -5509,6 +5513,31 @@
       {
         "name": "المصدر",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo",
+        "target": null
+      },
+      {
+        "name": "فتح مصدر المتطلب",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
+        "target": null
+      },
+      {
+        "name": "فتح سجل التقييم",
+        "href": "/api/reporting/compliance/ISO27001-A.5.1",
+        "target": null
+      },
+      {
+        "name": "فتح الوثائق: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
+        "target": null
+      },
+      {
+        "name": "فتح الموقع: Security boundary and secret handling",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/SECURITY.md",
+        "target": null
+      },
+      {
+        "name": "فتح سجل الدليل: Security boundary and secret handling",
+        "href": "/api/reporting/evidence/EVD-DOC-003",
         "target": null
       },
       {
@@ -5697,31 +5726,6 @@
         "target": null
       },
       {
-        "name": "فتح مصدر المتطلب",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
-        "target": null
-      },
-      {
-        "name": "فتح سجل التقييم",
-        "href": "/api/reporting/compliance/ISO27001-A.5.1",
-        "target": null
-      },
-      {
-        "name": "فتح الوثائق: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
-        "target": null
-      },
-      {
-        "name": "فتح الموقع: Security boundary and secret handling",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/SECURITY.md",
-        "target": null
-      },
-      {
-        "name": "فتح سجل الدليل: Security boundary and secret handling",
-        "href": "/api/reporting/evidence/EVD-DOC-003",
-        "target": null
-      },
-      {
         "name": "بيان قابلية تطبيق ISO/IEC 27001",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
         "target": null
@@ -5816,6 +5820,10 @@
       "global-language",
       "main",
       "assurance-workbench-panel",
+      "assurance-docs-ISO27001-A-5-1-tab",
+      "assurance-evidence-ISO27001-A-5-1-tab",
+      "assurance-docs-ISO27001-A-5-1",
+      "assurance-evidence-ISO27001-A-5-1",
       "ISO27001-A.5.1",
       "ISO27001-A.5.2",
       "ISO27001-A.5.3",
@@ -5852,11 +5860,7 @@
       "ISO27001-A.5.34",
       "ISO27001-A.5.35",
       "ISO27001-A.5.36",
-      "ISO27001-A.5.37",
-      "assurance-docs-ISO27001-A-5-1-tab",
-      "assurance-evidence-ISO27001-A-5-1-tab",
-      "assurance-docs-ISO27001-A-5-1",
-      "assurance-evidence-ISO27001-A-5-1"
+      "ISO27001-A.5.37"
     ],
     "fragmentTargets": [
       {
@@ -6208,6 +6212,60 @@
         }
       },
       {
+        "element": "p",
+        "attributes": {
+          "data-assurance-status": ""
+        }
+      },
+      {
+        "element": "section",
+        "attributes": {
+          "data-assurance-detail": ""
+        }
+      },
+      {
+        "element": "article",
+        "attributes": {
+          "data-assurance-record": "ISO27001-A.5.1"
+        }
+      },
+      {
+        "element": "h2",
+        "attributes": {
+          "data-assurance-detail-heading": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-status": "partial"
+        }
+      },
+      {
+        "element": "button#assurance-docs-ISO27001-A-5-1-tab",
+        "attributes": {
+          "data-assurance-inspector-mode": "documentation"
+        }
+      },
+      {
+        "element": "button#assurance-evidence-ISO27001-A-5-1-tab",
+        "attributes": {
+          "data-assurance-inspector-mode": "evidence"
+        }
+      },
+      {
+        "element": "div#assurance-docs-ISO27001-A-5-1",
+        "attributes": {
+          "data-assurance-inspector-panel": "documentation"
+        }
+      },
+      {
+        "element": "div#assurance-evidence-ISO27001-A-5-1",
+        "attributes": {
+          "data-assurance-inspector-panel": "evidence"
+        }
+      },
+      {
         "element": "span",
         "attributes": {
           "data-assurance-record-count": ""
@@ -6216,7 +6274,9 @@
       {
         "element": "div",
         "attributes": {
-          "data-assurance-record-grid": ""
+          "data-assurance-record-grid": "",
+          "data-assurance-grid-framework": "iso-27001",
+          "data-assurance-grid-section": "Annex A · organizational"
         }
       },
       {
@@ -6664,54 +6724,6 @@
         }
       },
       {
-        "element": "p",
-        "attributes": {
-          "data-assurance-status": ""
-        }
-      },
-      {
-        "element": "section",
-        "attributes": {
-          "data-assurance-detail": ""
-        }
-      },
-      {
-        "element": "article",
-        "attributes": {
-          "data-assurance-record": "ISO27001-A.5.1"
-        }
-      },
-      {
-        "element": "span",
-        "attributes": {
-          "data-status": "partial"
-        }
-      },
-      {
-        "element": "button#assurance-docs-ISO27001-A-5-1-tab",
-        "attributes": {
-          "data-assurance-inspector-mode": "documentation"
-        }
-      },
-      {
-        "element": "button#assurance-evidence-ISO27001-A-5-1-tab",
-        "attributes": {
-          "data-assurance-inspector-mode": "evidence"
-        }
-      },
-      {
-        "element": "div#assurance-docs-ISO27001-A-5-1",
-        "attributes": {
-          "data-assurance-inspector-panel": "documentation"
-        }
-      },
-      {
-        "element": "div#assurance-evidence-ISO27001-A-5-1",
-        "attributes": {
-          "data-assurance-inspector-panel": "evidence"
-        }
-      },
-      {
         "element": "script",
         "attributes": {
           "data-assurance-browser": "",
@@ -6737,7 +6749,7 @@
         "data": {}
       },
       {
-        "src": "/assets/assurance-browser-lnHnDcys.js",
+        "src": "/assets/assurance-browser-D_JIDV-8.js",
         "type": "module",
         "async": false,
         "defer": false,
@@ -6763,7 +6775,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-DAAu9iv1.css",
+        "href": "/assets/shell-bMbz_FQ0.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -6818,16 +6830,6 @@
         "id": "main"
       },
       {
-        "role": "complementary",
-        "name": null,
-        "id": null
-      },
-      {
-        "role": "region",
-        "name": "السجلات",
-        "id": null
-      },
-      {
         "role": "region",
         "name": "التقييم",
         "id": null
@@ -6835,6 +6837,11 @@
       {
         "role": "region",
         "name": "عارض السجل",
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "السجلات",
         "id": null
       },
       {
@@ -6851,12 +6858,12 @@
       },
       {
         "level": 2,
-        "text": "السجلات",
+        "text": "A.5.1 · Security policy governance",
         "id": null
       },
       {
         "level": 2,
-        "text": "A.5.1 · Security policy governance",
+        "text": "السجلات",
         "id": null
       }
     ],
@@ -6884,6 +6891,31 @@
       {
         "name": "المصدر",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo",
+        "target": null
+      },
+      {
+        "name": "فتح مصدر المتطلب",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
+        "target": null
+      },
+      {
+        "name": "فتح سجل التقييم",
+        "href": "/api/reporting/compliance/ISO27001-A.5.1",
+        "target": null
+      },
+      {
+        "name": "فتح الوثائق: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
+        "target": null
+      },
+      {
+        "name": "فتح الموقع: Security boundary and secret handling",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/SECURITY.md",
+        "target": null
+      },
+      {
+        "name": "فتح سجل الدليل: Security boundary and secret handling",
+        "href": "/api/reporting/evidence/EVD-DOC-003",
         "target": null
       },
       {
@@ -7072,31 +7104,6 @@
         "target": null
       },
       {
-        "name": "فتح مصدر المتطلب",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
-        "target": null
-      },
-      {
-        "name": "فتح سجل التقييم",
-        "href": "/api/reporting/compliance/ISO27001-A.5.1",
-        "target": null
-      },
-      {
-        "name": "فتح الوثائق: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments",
-        "target": null
-      },
-      {
-        "name": "فتح الموقع: Security boundary and secret handling",
-        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/SECURITY.md",
-        "target": null
-      },
-      {
-        "name": "فتح سجل الدليل: Security boundary and secret handling",
-        "href": "/api/reporting/evidence/EVD-DOC-003",
-        "target": null
-      },
-      {
         "name": "بيان قابلية تطبيق ISO/IEC 27001",
         "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/assurance/compliance/iso-27001-2022.json",
         "target": null
@@ -7191,6 +7198,10 @@
       "global-language",
       "main",
       "assurance-workbench-panel",
+      "assurance-docs-ISO27001-A-5-1-tab",
+      "assurance-evidence-ISO27001-A-5-1-tab",
+      "assurance-docs-ISO27001-A-5-1",
+      "assurance-evidence-ISO27001-A-5-1",
       "ISO27001-A.5.1",
       "ISO27001-A.5.2",
       "ISO27001-A.5.3",
@@ -7227,11 +7238,7 @@
       "ISO27001-A.5.34",
       "ISO27001-A.5.35",
       "ISO27001-A.5.36",
-      "ISO27001-A.5.37",
-      "assurance-docs-ISO27001-A-5-1-tab",
-      "assurance-evidence-ISO27001-A-5-1-tab",
-      "assurance-docs-ISO27001-A-5-1",
-      "assurance-evidence-ISO27001-A-5-1"
+      "ISO27001-A.5.37"
     ],
     "fragmentTargets": [
       {
@@ -7583,6 +7590,60 @@
         }
       },
       {
+        "element": "p",
+        "attributes": {
+          "data-assurance-status": ""
+        }
+      },
+      {
+        "element": "section",
+        "attributes": {
+          "data-assurance-detail": ""
+        }
+      },
+      {
+        "element": "article",
+        "attributes": {
+          "data-assurance-record": "ISO27001-A.5.1"
+        }
+      },
+      {
+        "element": "h2",
+        "attributes": {
+          "data-assurance-detail-heading": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-status": "partial"
+        }
+      },
+      {
+        "element": "button#assurance-docs-ISO27001-A-5-1-tab",
+        "attributes": {
+          "data-assurance-inspector-mode": "documentation"
+        }
+      },
+      {
+        "element": "button#assurance-evidence-ISO27001-A-5-1-tab",
+        "attributes": {
+          "data-assurance-inspector-mode": "evidence"
+        }
+      },
+      {
+        "element": "div#assurance-docs-ISO27001-A-5-1",
+        "attributes": {
+          "data-assurance-inspector-panel": "documentation"
+        }
+      },
+      {
+        "element": "div#assurance-evidence-ISO27001-A-5-1",
+        "attributes": {
+          "data-assurance-inspector-panel": "evidence"
+        }
+      },
+      {
         "element": "span",
         "attributes": {
           "data-assurance-record-count": ""
@@ -7591,7 +7652,9 @@
       {
         "element": "div",
         "attributes": {
-          "data-assurance-record-grid": ""
+          "data-assurance-record-grid": "",
+          "data-assurance-grid-framework": "iso-27001",
+          "data-assurance-grid-section": "Annex A · organizational"
         }
       },
       {
@@ -8039,54 +8102,6 @@
         }
       },
       {
-        "element": "p",
-        "attributes": {
-          "data-assurance-status": ""
-        }
-      },
-      {
-        "element": "section",
-        "attributes": {
-          "data-assurance-detail": ""
-        }
-      },
-      {
-        "element": "article",
-        "attributes": {
-          "data-assurance-record": "ISO27001-A.5.1"
-        }
-      },
-      {
-        "element": "span",
-        "attributes": {
-          "data-status": "partial"
-        }
-      },
-      {
-        "element": "button#assurance-docs-ISO27001-A-5-1-tab",
-        "attributes": {
-          "data-assurance-inspector-mode": "documentation"
-        }
-      },
-      {
-        "element": "button#assurance-evidence-ISO27001-A-5-1-tab",
-        "attributes": {
-          "data-assurance-inspector-mode": "evidence"
-        }
-      },
-      {
-        "element": "div#assurance-docs-ISO27001-A-5-1",
-        "attributes": {
-          "data-assurance-inspector-panel": "documentation"
-        }
-      },
-      {
-        "element": "div#assurance-evidence-ISO27001-A-5-1",
-        "attributes": {
-          "data-assurance-inspector-panel": "evidence"
-        }
-      },
-      {
         "element": "script",
         "attributes": {
           "data-assurance-browser": "",
@@ -8112,7 +8127,7 @@
         "data": {}
       },
       {
-        "src": "/assets/assurance-browser-lnHnDcys.js",
+        "src": "/assets/assurance-browser-D_JIDV-8.js",
         "type": "module",
         "async": false,
         "defer": false,
@@ -8138,7 +8153,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-DAAu9iv1.css",
+        "href": "/assets/shell-bMbz_FQ0.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -8829,7 +8844,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-DAAu9iv1.css",
+        "href": "/assets/shell-bMbz_FQ0.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -9527,7 +9542,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-DAAu9iv1.css",
+        "href": "/assets/shell-bMbz_FQ0.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -9757,7 +9772,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-DAAu9iv1.css",
+        "href": "/assets/shell-bMbz_FQ0.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -10104,7 +10119,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-DAAu9iv1.css",
+        "href": "/assets/shell-bMbz_FQ0.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -10343,7 +10358,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-DAAu9iv1.css",
+        "href": "/assets/shell-bMbz_FQ0.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -10541,7 +10556,7 @@
     "stylesheets": [
       {
         "kind": "link",
-        "href": "/assets/shell-DAAu9iv1.css",
+        "href": "/assets/shell-bMbz_FQ0.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -14800,6 +14815,12 @@
         }
       },
       {
+        "element": "h2",
+        "attributes": {
+          "data-assurance-detail-heading": ""
+        }
+      },
+      {
         "element": "span",
         "attributes": {
           "data-status": "partial"
@@ -14954,6 +14975,12 @@
         }
       },
       {
+        "element": "h2",
+        "attributes": {
+          "data-assurance-detail-heading": ""
+        }
+      },
+      {
         "element": "span",
         "attributes": {
           "data-status": "partial"
@@ -15105,6 +15132,12 @@
         "element": "article",
         "attributes": {
           "data-assurance-record": "WCAG-2.4.7"
+        }
+      },
+      {
+        "element": "h2",
+        "attributes": {
+          "data-assurance-detail-heading": ""
         }
       },
       {

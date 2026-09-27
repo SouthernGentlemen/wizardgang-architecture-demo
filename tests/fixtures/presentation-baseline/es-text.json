@@ -7,11 +7,11 @@
       },
       {
         "level": 2,
-        "text": "Registros"
+        "text": "A.5.1 · Security policy governance"
       },
       {
         "level": 2,
-        "text": "A.5.1 · Security policy governance"
+        "text": "Registros"
       }
     ],
     "accessibleNames": [
@@ -83,17 +83,57 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "SecciónClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Postura de la sección Pass0 Parcial35 Gap1 N/A1 Postura del marco Pass0 Parcial97 Gap6 N/A24 Registros37 A.5.1 Security policy governance Parcial A.5.2 Assigned security accountabilities Parcial A.5.3 Separation of conflicting duties Parcial A.5.4 Leadership security responsibilities Parcial A.5.5 Authority contact readiness Parcial A.5.6 Security community contacts Parcial A.5.7 Threat information handling Parcial A.5.8 Security in managed projects Parcial A.5.9 Asset and information inventory Parcial A.5.10 Acceptable use expectations Parcial A.5.11 Return of issued assets N/A A.5.12 Information classification model Parcial A.5.13 Classification labels and handling Parcial A.5.14 Protected information transfer Parcial A.5.15 Access governance Parcial A.5.16 Identity lifecycle management Parcial A.5.17 Authentication secret management Parcial A.5.18 Access provisioning and review Parcial A.5.19 Supplier security governance Parcial A.5.20 Security terms for suppliers Parcial A.5.21 ICT supply-chain security Parcial A.5.22 Supplier service review and change Parcial A.5.23 Cloud service security governance Parcial A.5.24 Incident response preparation Parcial A.5.25 Security event triage Parcial A.5.26 Incident response execution Parcial A.5.27 Learning from incidents Parcial A.5.28 Preserving investigative evidence Parcial A.5.29 Secure operation during disruption Parcial A.5.30 Technology continuity readiness Parcial A.5.31 Legal and contractual obligations Parcial A.5.32 Intellectual property safeguards Parcial A.5.33 Protected business records Parcial A.5.34 Privacy and personal-data safeguards Parcial A.5.35 Independent security review Gap A.5.36 Compliance with security rules Parcial A.5.37 Documented operating procedures Parcial"
-      },
-      {
-        "element": "aside",
-        "role": "complementary",
-        "name": "SecciónClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Postura de la sección Pass0 Parcial35 Gap1 N/A1 Postura del marco Pass0 Parcial97 Gap6 N/A24"
+        "name": "SecciónClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Postura de la sección Pass0 Parcial35 Gap1 N/A1 Postura del marco Pass0 Parcial97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governanceParcialEvaluaciónThe information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.Qué faltaComplete AW-001 and retain attributable awareness evidence.Evaluado2026-09-17Abrir fuente del requisitoAbrir registro de evaluaciónDocumentaciónEvidenciadocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitmentsAbrir documentación: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments Registros37 A.5.1 Security policy governance Parcial A.5.2 Assigned security accountabilities Parcial A.5.3 Separation of conflicting duties Parcial A.5.4 Leadership security responsibilities Parcial A.5.5 Authority contact readiness Parcial A.5.6 Security community contacts Parcial A.5.7 Threat information handling Parcial A.5.8 Security in managed projects Parcial A.5.9 Asset and information inventory Parcial A.5.10 Acceptable use expectations Parcial A.5.11 Return of issued assets N/A A.5.12 Information classification model Parcial A.5.13 Classification labels and handling Parcial A.5.14 Protected information transfer Parcial A.5.15 Access governance Parcial A.5.16 Identity lifecycle management Parcial A.5.17 Authentication secret management Parcial A.5.18 Access provisioning and review Parcial A.5.19 Supplier security governance Parcial A.5.20 Security terms for suppliers Parcial A.5.21 ICT supply-chain security Parcial A.5.22 Supplier service review and change Parcial A.5.23 Cloud service security governance Parcial A.5.24 Incident response preparation Parcial A.5.25 Security event triage Parcial A.5.26 Incident response execution Parcial A.5.27 Learning from incidents Parcial A.5.28 Preserving investigative evidence Parcial A.5.29 Secure operation during disruption Parcial A.5.30 Technology continuity readiness Parcial A.5.31 Legal and contractual obligations Parcial A.5.32 Intellectual property safeguards Parcial A.5.33 Protected business records Parcial A.5.34 Privacy and personal-data safeguards Parcial A.5.35 Independent security review Gap A.5.36 Compliance with security rules Parcial A.5.37 Documented operating procedures Parcial JavaScript es necesario para cambiar de marco y sección de forma interactiva. Aun puede inspeccionar las declaraciones de aplicabilidad:Declaración de aplicabilidad ISO/IEC 27001Declaración de aplicabilidad ISO/IEC 42001WCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
         "role": null,
         "name": "Sección"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir fuente del requisito"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir registro de evaluación"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Documentación"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Evidencia"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Documentación"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir documentación: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Evidencia"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir ubicación: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir registro de evidencia: Security boundary and secret handling"
       },
       {
         "element": "a",
@@ -279,51 +319,6 @@
         "element": "a",
         "role": null,
         "name": "A.5.37 Documented operating procedures Parcial"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir fuente del requisito"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir registro de evaluación"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Documentación"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Evidencia"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "Documentación"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir documentación: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "Evidencia"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir ubicación: Security boundary and secret handling"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir registro de evidencia: Security boundary and secret handling"
       },
       {
         "element": "a",
@@ -905,11 +900,11 @@
       },
       {
         "level": 2,
-        "text": "Registros"
+        "text": "A.5.1 · Security policy governance"
       },
       {
         "level": 2,
-        "text": "A.5.1 · Security policy governance"
+        "text": "Registros"
       }
     ],
     "accessibleNames": [
@@ -981,17 +976,57 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "SecciónClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Postura de la sección Pass0 Parcial35 Gap1 N/A1 Postura del marco Pass0 Parcial97 Gap6 N/A24 Registros37 A.5.1 Security policy governance Parcial A.5.2 Assigned security accountabilities Parcial A.5.3 Separation of conflicting duties Parcial A.5.4 Leadership security responsibilities Parcial A.5.5 Authority contact readiness Parcial A.5.6 Security community contacts Parcial A.5.7 Threat information handling Parcial A.5.8 Security in managed projects Parcial A.5.9 Asset and information inventory Parcial A.5.10 Acceptable use expectations Parcial A.5.11 Return of issued assets N/A A.5.12 Information classification model Parcial A.5.13 Classification labels and handling Parcial A.5.14 Protected information transfer Parcial A.5.15 Access governance Parcial A.5.16 Identity lifecycle management Parcial A.5.17 Authentication secret management Parcial A.5.18 Access provisioning and review Parcial A.5.19 Supplier security governance Parcial A.5.20 Security terms for suppliers Parcial A.5.21 ICT supply-chain security Parcial A.5.22 Supplier service review and change Parcial A.5.23 Cloud service security governance Parcial A.5.24 Incident response preparation Parcial A.5.25 Security event triage Parcial A.5.26 Incident response execution Parcial A.5.27 Learning from incidents Parcial A.5.28 Preserving investigative evidence Parcial A.5.29 Secure operation during disruption Parcial A.5.30 Technology continuity readiness Parcial A.5.31 Legal and contractual obligations Parcial A.5.32 Intellectual property safeguards Parcial A.5.33 Protected business records Parcial A.5.34 Privacy and personal-data safeguards Parcial A.5.35 Independent security review Gap A.5.36 Compliance with security rules Parcial A.5.37 Documented operating procedures Parcial"
-      },
-      {
-        "element": "aside",
-        "role": "complementary",
-        "name": "SecciónClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Postura de la sección Pass0 Parcial35 Gap1 N/A1 Postura del marco Pass0 Parcial97 Gap6 N/A24"
+        "name": "SecciónClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Postura de la sección Pass0 Parcial35 Gap1 N/A1 Postura del marco Pass0 Parcial97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governanceParcialEvaluaciónThe information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.Qué faltaComplete AW-001 and retain attributable awareness evidence.Evaluado2026-09-17Abrir fuente del requisitoAbrir registro de evaluaciónDocumentaciónEvidenciadocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitmentsAbrir documentación: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments Registros37 A.5.1 Security policy governance Parcial A.5.2 Assigned security accountabilities Parcial A.5.3 Separation of conflicting duties Parcial A.5.4 Leadership security responsibilities Parcial A.5.5 Authority contact readiness Parcial A.5.6 Security community contacts Parcial A.5.7 Threat information handling Parcial A.5.8 Security in managed projects Parcial A.5.9 Asset and information inventory Parcial A.5.10 Acceptable use expectations Parcial A.5.11 Return of issued assets N/A A.5.12 Information classification model Parcial A.5.13 Classification labels and handling Parcial A.5.14 Protected information transfer Parcial A.5.15 Access governance Parcial A.5.16 Identity lifecycle management Parcial A.5.17 Authentication secret management Parcial A.5.18 Access provisioning and review Parcial A.5.19 Supplier security governance Parcial A.5.20 Security terms for suppliers Parcial A.5.21 ICT supply-chain security Parcial A.5.22 Supplier service review and change Parcial A.5.23 Cloud service security governance Parcial A.5.24 Incident response preparation Parcial A.5.25 Security event triage Parcial A.5.26 Incident response execution Parcial A.5.27 Learning from incidents Parcial A.5.28 Preserving investigative evidence Parcial A.5.29 Secure operation during disruption Parcial A.5.30 Technology continuity readiness Parcial A.5.31 Legal and contractual obligations Parcial A.5.32 Intellectual property safeguards Parcial A.5.33 Protected business records Parcial A.5.34 Privacy and personal-data safeguards Parcial A.5.35 Independent security review Gap A.5.36 Compliance with security rules Parcial A.5.37 Documented operating procedures Parcial JavaScript es necesario para cambiar de marco y sección de forma interactiva. Aun puede inspeccionar las declaraciones de aplicabilidad:Declaración de aplicabilidad ISO/IEC 27001Declaración de aplicabilidad ISO/IEC 42001WCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
         "role": null,
         "name": "Sección"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir fuente del requisito"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir registro de evaluación"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Documentación"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Evidencia"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Documentación"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir documentación: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Evidencia"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir ubicación: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir registro de evidencia: Security boundary and secret handling"
       },
       {
         "element": "a",
@@ -1177,51 +1212,6 @@
         "element": "a",
         "role": null,
         "name": "A.5.37 Documented operating procedures Parcial"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir fuente del requisito"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir registro de evaluación"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Documentación"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Evidencia"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "Documentación"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir documentación: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "Evidencia"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir ubicación: Security boundary and secret handling"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir registro de evidencia: Security boundary and secret handling"
       },
       {
         "element": "a",
@@ -1278,11 +1268,11 @@
       },
       {
         "level": 2,
-        "text": "Registros"
+        "text": "A.5.1 · Security policy governance"
       },
       {
         "level": 2,
-        "text": "A.5.1 · Security policy governance"
+        "text": "Registros"
       }
     ],
     "accessibleNames": [
@@ -1354,17 +1344,57 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "SecciónClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Postura de la sección Pass0 Parcial35 Gap1 N/A1 Postura del marco Pass0 Parcial97 Gap6 N/A24 Registros37 A.5.1 Security policy governance Parcial A.5.2 Assigned security accountabilities Parcial A.5.3 Separation of conflicting duties Parcial A.5.4 Leadership security responsibilities Parcial A.5.5 Authority contact readiness Parcial A.5.6 Security community contacts Parcial A.5.7 Threat information handling Parcial A.5.8 Security in managed projects Parcial A.5.9 Asset and information inventory Parcial A.5.10 Acceptable use expectations Parcial A.5.11 Return of issued assets N/A A.5.12 Information classification model Parcial A.5.13 Classification labels and handling Parcial A.5.14 Protected information transfer Parcial A.5.15 Access governance Parcial A.5.16 Identity lifecycle management Parcial A.5.17 Authentication secret management Parcial A.5.18 Access provisioning and review Parcial A.5.19 Supplier security governance Parcial A.5.20 Security terms for suppliers Parcial A.5.21 ICT supply-chain security Parcial A.5.22 Supplier service review and change Parcial A.5.23 Cloud service security governance Parcial A.5.24 Incident response preparation Parcial A.5.25 Security event triage Parcial A.5.26 Incident response execution Parcial A.5.27 Learning from incidents Parcial A.5.28 Preserving investigative evidence Parcial A.5.29 Secure operation during disruption Parcial A.5.30 Technology continuity readiness Parcial A.5.31 Legal and contractual obligations Parcial A.5.32 Intellectual property safeguards Parcial A.5.33 Protected business records Parcial A.5.34 Privacy and personal-data safeguards Parcial A.5.35 Independent security review Gap A.5.36 Compliance with security rules Parcial A.5.37 Documented operating procedures Parcial"
-      },
-      {
-        "element": "aside",
-        "role": "complementary",
-        "name": "SecciónClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Postura de la sección Pass0 Parcial35 Gap1 N/A1 Postura del marco Pass0 Parcial97 Gap6 N/A24"
+        "name": "SecciónClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Postura de la sección Pass0 Parcial35 Gap1 N/A1 Postura del marco Pass0 Parcial97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governanceParcialEvaluaciónThe information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.Qué faltaComplete AW-001 and retain attributable awareness evidence.Evaluado2026-09-17Abrir fuente del requisitoAbrir registro de evaluaciónDocumentaciónEvidenciadocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitmentsAbrir documentación: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments Registros37 A.5.1 Security policy governance Parcial A.5.2 Assigned security accountabilities Parcial A.5.3 Separation of conflicting duties Parcial A.5.4 Leadership security responsibilities Parcial A.5.5 Authority contact readiness Parcial A.5.6 Security community contacts Parcial A.5.7 Threat information handling Parcial A.5.8 Security in managed projects Parcial A.5.9 Asset and information inventory Parcial A.5.10 Acceptable use expectations Parcial A.5.11 Return of issued assets N/A A.5.12 Information classification model Parcial A.5.13 Classification labels and handling Parcial A.5.14 Protected information transfer Parcial A.5.15 Access governance Parcial A.5.16 Identity lifecycle management Parcial A.5.17 Authentication secret management Parcial A.5.18 Access provisioning and review Parcial A.5.19 Supplier security governance Parcial A.5.20 Security terms for suppliers Parcial A.5.21 ICT supply-chain security Parcial A.5.22 Supplier service review and change Parcial A.5.23 Cloud service security governance Parcial A.5.24 Incident response preparation Parcial A.5.25 Security event triage Parcial A.5.26 Incident response execution Parcial A.5.27 Learning from incidents Parcial A.5.28 Preserving investigative evidence Parcial A.5.29 Secure operation during disruption Parcial A.5.30 Technology continuity readiness Parcial A.5.31 Legal and contractual obligations Parcial A.5.32 Intellectual property safeguards Parcial A.5.33 Protected business records Parcial A.5.34 Privacy and personal-data safeguards Parcial A.5.35 Independent security review Gap A.5.36 Compliance with security rules Parcial A.5.37 Documented operating procedures Parcial JavaScript es necesario para cambiar de marco y sección de forma interactiva. Aun puede inspeccionar las declaraciones de aplicabilidad:Declaración de aplicabilidad ISO/IEC 27001Declaración de aplicabilidad ISO/IEC 42001WCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
         "role": null,
         "name": "Sección"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir fuente del requisito"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir registro de evaluación"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Documentación"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Evidencia"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Documentación"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir documentación: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Evidencia"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir ubicación: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir registro de evidencia: Security boundary and secret handling"
       },
       {
         "element": "a",
@@ -1550,51 +1580,6 @@
         "element": "a",
         "role": null,
         "name": "A.5.37 Documented operating procedures Parcial"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir fuente del requisito"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir registro de evaluación"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Documentación"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Evidencia"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "Documentación"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir documentación: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "Evidencia"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir ubicación: Security boundary and secret handling"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir registro de evidencia: Security boundary and secret handling"
       },
       {
         "element": "a",
@@ -1651,11 +1636,11 @@
       },
       {
         "level": 2,
-        "text": "Registros"
+        "text": "A.5.1 · Security policy governance"
       },
       {
         "level": 2,
-        "text": "A.5.1 · Security policy governance"
+        "text": "Registros"
       }
     ],
     "accessibleNames": [
@@ -1727,17 +1712,57 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "SecciónClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Postura de la sección Pass0 Parcial35 Gap1 N/A1 Postura del marco Pass0 Parcial97 Gap6 N/A24 Registros37 A.5.1 Security policy governance Parcial A.5.2 Assigned security accountabilities Parcial A.5.3 Separation of conflicting duties Parcial A.5.4 Leadership security responsibilities Parcial A.5.5 Authority contact readiness Parcial A.5.6 Security community contacts Parcial A.5.7 Threat information handling Parcial A.5.8 Security in managed projects Parcial A.5.9 Asset and information inventory Parcial A.5.10 Acceptable use expectations Parcial A.5.11 Return of issued assets N/A A.5.12 Information classification model Parcial A.5.13 Classification labels and handling Parcial A.5.14 Protected information transfer Parcial A.5.15 Access governance Parcial A.5.16 Identity lifecycle management Parcial A.5.17 Authentication secret management Parcial A.5.18 Access provisioning and review Parcial A.5.19 Supplier security governance Parcial A.5.20 Security terms for suppliers Parcial A.5.21 ICT supply-chain security Parcial A.5.22 Supplier service review and change Parcial A.5.23 Cloud service security governance Parcial A.5.24 Incident response preparation Parcial A.5.25 Security event triage Parcial A.5.26 Incident response execution Parcial A.5.27 Learning from incidents Parcial A.5.28 Preserving investigative evidence Parcial A.5.29 Secure operation during disruption Parcial A.5.30 Technology continuity readiness Parcial A.5.31 Legal and contractual obligations Parcial A.5.32 Intellectual property safeguards Parcial A.5.33 Protected business records Parcial A.5.34 Privacy and personal-data safeguards Parcial A.5.35 Independent security review Gap A.5.36 Compliance with security rules Parcial A.5.37 Documented operating procedures Parcial"
-      },
-      {
-        "element": "aside",
-        "role": "complementary",
-        "name": "SecciónClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Postura de la sección Pass0 Parcial35 Gap1 N/A1 Postura del marco Pass0 Parcial97 Gap6 N/A24"
+        "name": "SecciónClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Postura de la sección Pass0 Parcial35 Gap1 N/A1 Postura del marco Pass0 Parcial97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governanceParcialEvaluaciónThe information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.Qué faltaComplete AW-001 and retain attributable awareness evidence.Evaluado2026-09-17Abrir fuente del requisitoAbrir registro de evaluaciónDocumentaciónEvidenciadocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitmentsAbrir documentación: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments Registros37 A.5.1 Security policy governance Parcial A.5.2 Assigned security accountabilities Parcial A.5.3 Separation of conflicting duties Parcial A.5.4 Leadership security responsibilities Parcial A.5.5 Authority contact readiness Parcial A.5.6 Security community contacts Parcial A.5.7 Threat information handling Parcial A.5.8 Security in managed projects Parcial A.5.9 Asset and information inventory Parcial A.5.10 Acceptable use expectations Parcial A.5.11 Return of issued assets N/A A.5.12 Information classification model Parcial A.5.13 Classification labels and handling Parcial A.5.14 Protected information transfer Parcial A.5.15 Access governance Parcial A.5.16 Identity lifecycle management Parcial A.5.17 Authentication secret management Parcial A.5.18 Access provisioning and review Parcial A.5.19 Supplier security governance Parcial A.5.20 Security terms for suppliers Parcial A.5.21 ICT supply-chain security Parcial A.5.22 Supplier service review and change Parcial A.5.23 Cloud service security governance Parcial A.5.24 Incident response preparation Parcial A.5.25 Security event triage Parcial A.5.26 Incident response execution Parcial A.5.27 Learning from incidents Parcial A.5.28 Preserving investigative evidence Parcial A.5.29 Secure operation during disruption Parcial A.5.30 Technology continuity readiness Parcial A.5.31 Legal and contractual obligations Parcial A.5.32 Intellectual property safeguards Parcial A.5.33 Protected business records Parcial A.5.34 Privacy and personal-data safeguards Parcial A.5.35 Independent security review Gap A.5.36 Compliance with security rules Parcial A.5.37 Documented operating procedures Parcial JavaScript es necesario para cambiar de marco y sección de forma interactiva. Aun puede inspeccionar las declaraciones de aplicabilidad:Declaración de aplicabilidad ISO/IEC 27001Declaración de aplicabilidad ISO/IEC 42001WCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
         "role": null,
         "name": "Sección"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir fuente del requisito"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir registro de evaluación"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Documentación"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Evidencia"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Documentación"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir documentación: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Evidencia"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir ubicación: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir registro de evidencia: Security boundary and secret handling"
       },
       {
         "element": "a",
@@ -1923,51 +1948,6 @@
         "element": "a",
         "role": null,
         "name": "A.5.37 Documented operating procedures Parcial"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir fuente del requisito"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir registro de evaluación"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Documentación"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Evidencia"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "Documentación"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir documentación: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "Evidencia"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir ubicación: Security boundary and secret handling"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir registro de evidencia: Security boundary and secret handling"
       },
       {
         "element": "a",
@@ -2024,11 +2004,11 @@
       },
       {
         "level": 2,
-        "text": "Registros"
+        "text": "A.5.1 · Security policy governance"
       },
       {
         "level": 2,
-        "text": "A.5.1 · Security policy governance"
+        "text": "Registros"
       }
     ],
     "accessibleNames": [
@@ -2100,17 +2080,57 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "SecciónClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Postura de la sección Pass0 Parcial35 Gap1 N/A1 Postura del marco Pass0 Parcial97 Gap6 N/A24 Registros37 A.5.1 Security policy governance Parcial A.5.2 Assigned security accountabilities Parcial A.5.3 Separation of conflicting duties Parcial A.5.4 Leadership security responsibilities Parcial A.5.5 Authority contact readiness Parcial A.5.6 Security community contacts Parcial A.5.7 Threat information handling Parcial A.5.8 Security in managed projects Parcial A.5.9 Asset and information inventory Parcial A.5.10 Acceptable use expectations Parcial A.5.11 Return of issued assets N/A A.5.12 Information classification model Parcial A.5.13 Classification labels and handling Parcial A.5.14 Protected information transfer Parcial A.5.15 Access governance Parcial A.5.16 Identity lifecycle management Parcial A.5.17 Authentication secret management Parcial A.5.18 Access provisioning and review Parcial A.5.19 Supplier security governance Parcial A.5.20 Security terms for suppliers Parcial A.5.21 ICT supply-chain security Parcial A.5.22 Supplier service review and change Parcial A.5.23 Cloud service security governance Parcial A.5.24 Incident response preparation Parcial A.5.25 Security event triage Parcial A.5.26 Incident response execution Parcial A.5.27 Learning from incidents Parcial A.5.28 Preserving investigative evidence Parcial A.5.29 Secure operation during disruption Parcial A.5.30 Technology continuity readiness Parcial A.5.31 Legal and contractual obligations Parcial A.5.32 Intellectual property safeguards Parcial A.5.33 Protected business records Parcial A.5.34 Privacy and personal-data safeguards Parcial A.5.35 Independent security review Gap A.5.36 Compliance with security rules Parcial A.5.37 Documented operating procedures Parcial"
-      },
-      {
-        "element": "aside",
-        "role": "complementary",
-        "name": "SecciónClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Postura de la sección Pass0 Parcial35 Gap1 N/A1 Postura del marco Pass0 Parcial97 Gap6 N/A24"
+        "name": "SecciónClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Postura de la sección Pass0 Parcial35 Gap1 N/A1 Postura del marco Pass0 Parcial97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governanceParcialEvaluaciónThe information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.Qué faltaComplete AW-001 and retain attributable awareness evidence.Evaluado2026-09-17Abrir fuente del requisitoAbrir registro de evaluaciónDocumentaciónEvidenciadocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitmentsAbrir documentación: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments Registros37 A.5.1 Security policy governance Parcial A.5.2 Assigned security accountabilities Parcial A.5.3 Separation of conflicting duties Parcial A.5.4 Leadership security responsibilities Parcial A.5.5 Authority contact readiness Parcial A.5.6 Security community contacts Parcial A.5.7 Threat information handling Parcial A.5.8 Security in managed projects Parcial A.5.9 Asset and information inventory Parcial A.5.10 Acceptable use expectations Parcial A.5.11 Return of issued assets N/A A.5.12 Information classification model Parcial A.5.13 Classification labels and handling Parcial A.5.14 Protected information transfer Parcial A.5.15 Access governance Parcial A.5.16 Identity lifecycle management Parcial A.5.17 Authentication secret management Parcial A.5.18 Access provisioning and review Parcial A.5.19 Supplier security governance Parcial A.5.20 Security terms for suppliers Parcial A.5.21 ICT supply-chain security Parcial A.5.22 Supplier service review and change Parcial A.5.23 Cloud service security governance Parcial A.5.24 Incident response preparation Parcial A.5.25 Security event triage Parcial A.5.26 Incident response execution Parcial A.5.27 Learning from incidents Parcial A.5.28 Preserving investigative evidence Parcial A.5.29 Secure operation during disruption Parcial A.5.30 Technology continuity readiness Parcial A.5.31 Legal and contractual obligations Parcial A.5.32 Intellectual property safeguards Parcial A.5.33 Protected business records Parcial A.5.34 Privacy and personal-data safeguards Parcial A.5.35 Independent security review Gap A.5.36 Compliance with security rules Parcial A.5.37 Documented operating procedures Parcial JavaScript es necesario para cambiar de marco y sección de forma interactiva. Aun puede inspeccionar las declaraciones de aplicabilidad:Declaración de aplicabilidad ISO/IEC 27001Declaración de aplicabilidad ISO/IEC 42001WCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
         "role": null,
         "name": "Sección"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir fuente del requisito"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir registro de evaluación"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Documentación"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Evidencia"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Documentación"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir documentación: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
+      },
+      {
+        "element": "div",
+        "role": "tabpanel",
+        "name": "Evidencia"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir ubicación: Security boundary and secret handling"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Abrir registro de evidencia: Security boundary and secret handling"
       },
       {
         "element": "a",
@@ -2296,51 +2316,6 @@
         "element": "a",
         "role": null,
         "name": "A.5.37 Documented operating procedures Parcial"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir fuente del requisito"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir registro de evaluación"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Documentación"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Evidencia"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "Documentación"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir documentación: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments"
-      },
-      {
-        "element": "div",
-        "role": "tabpanel",
-        "name": "Evidencia"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir ubicación: Security boundary and secret handling"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Abrir registro de evidencia: Security boundary and secret handling"
       },
       {
         "element": "a",

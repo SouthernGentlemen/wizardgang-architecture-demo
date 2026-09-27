@@ -156,7 +156,7 @@ export function AssuranceRecordPane({
     <header className="assurance-record-heading">
       <div>
         <p className="eyebrow" lang="en">{record.frameworkLabel} · {record.section}</p>
-        <h2><span lang="en">{record.reference} · {record.title}</span></h2>
+        <h2 tabIndex={-1} data-assurance-detail-heading=""><span lang="en">{record.reference} · {record.title}</span></h2>
       </div>
       <StatusBadge status={record.status} localization={localization} />
     </header>
@@ -232,7 +232,7 @@ function Posture({ label, records, localization }: Readonly<{
   return <section className="assurance-posture">
     <strong>{label}</strong>
     <dl>{STATUS_ORDER.map((status) => <div key={status} data-status={status}>
-      <dt><span aria-hidden="true">{statusGlyph(status)}</span> {statusLabel(status, localization)}</dt>
+      <dt><span aria-hidden="true">{statusGlyph(status)}</span> <span className="assurance-posture-status-label">{statusLabel(status, localization)}</span></dt>
       <dd data-posture-count={status}>{localization.number(counts[status])}</dd>
     </div>)}</dl>
   </section>;
@@ -309,7 +309,7 @@ export function AssuranceWorkbenchPage({ data, env }: Readonly<{ data: Assurance
         })}
       </div>
       <div className="assurance-workbench-layout" id="assurance-workbench-panel" role="tabpanel">
-        <aside className="assurance-workbench-controls">
+        <div className="assurance-workbench-controls">
           <label className="assurance-section-control">
             <span>{localization.t('assurance.workbench.section', 'Section')}</span>
             <select data-assurance-section="" defaultValue={data.initialSummary.section}>
@@ -324,7 +324,11 @@ export function AssuranceWorkbenchPage({ data, env }: Readonly<{ data: Assurance
             {' '}
             <div data-assurance-framework-posture=""><Posture label={localization.t('assurance.workbench.framework_posture', 'Framework posture')} records={data.initialFrameworkRecords} localization={localization} /></div>
           </div>
-        </aside>
+        </div>
+        <p className="assurance-workbench-status" data-assurance-status="" role="status" aria-live="polite" />
+        <section className="assurance-workbench-detail" data-assurance-detail="" aria-live="off" aria-busy="false">
+          <AssuranceRecordPane record={data.initialRecord} evidence={data.evidence} env={env} localization={localization} />
+        </section>
         {' '}
         <section className="assurance-records" aria-label={localization.t('assurance.workbench.records', 'Records')}>
           <div className="assurance-records-heading">
@@ -332,22 +336,18 @@ export function AssuranceWorkbenchPage({ data, env }: Readonly<{ data: Assurance
             <span className="assurance-record-count"><span data-assurance-record-count="">{localization.number(data.initialSectionRecords.length)}</span></span>
           </div>
           {' '}
-          <div className="assurance-record-grid" data-assurance-record-grid="" aria-label={localization.t('assurance.workbench.selected_records', 'Records in selected section')}>
+          <div className="assurance-record-grid" data-assurance-record-grid="" data-assurance-grid-framework={data.initialSummary.framework} data-assurance-grid-section={data.initialSummary.section} aria-label={localization.t('assurance.workbench.selected_records', 'Records in selected section')}>
             {data.initialSectionRecords.map((record) => <Fragment key={record.id}><RecordLink record={record} activeId={data.initialRecord.id} localization={localization} />{' '}</Fragment>)}
           </div>
         </section>
-      </div>
-      <p className="assurance-workbench-status" data-assurance-status="" role="status" aria-live="polite" />
-      <section className="assurance-workbench-detail" data-assurance-detail="" aria-live="off" aria-busy="false">
-        <AssuranceRecordPane record={data.initialRecord} evidence={data.evidence} env={env} localization={localization} />
-      </section>
-      <noscript><div className="assurance-noscript">
+        <noscript><div className="assurance-noscript">
         <p>{localization.t('assurance.workbench.noscript', 'JavaScript is required for interactive framework and section switching. You can still inspect the statements of applicability:')}</p>
         <ul>
           {SOA_PATHS.map(([key, label, path]) => <li key={path}><a href={sourceUrl(env, path)}>{localization.t(key, label)}</a></li>)}
           <li><a lang="en" href={sourceUrl(env, WCAG_DOCUMENTATION_PATH)}>WCAG 2.2 accessibility documentation</a></li>
         </ul>
-      </div></noscript>
+        </div></noscript>
+      </div>
     </div>
     <AssuranceBrowserModule records={data.summaries} initialId={data.initialRecord.id} env={env} localization={localization} />
   </>;

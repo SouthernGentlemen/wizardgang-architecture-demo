@@ -62,6 +62,8 @@ Freshness categories remain explicit: release-bound evidence changes with the de
 
 Published assessment record IDs are stable fragments within `/assurance`. `GET /api/assurance/{record}` is the focused HTML presentation-fragment boundary used to render one published assurance record pane. It is not the structured reporting API and it does not create another canonical record store.
 
+The workbench places the focused record directly after framework and section controls on narrow screens, followed by a compact record index. At desktop widths, the index sits beside a sticky record pane. Activating an index entry preserves the index, updates the stable fragment and selected marker, brings the pane into view, and focuses its heading. The server-rendered default pane and index remain readable when JavaScript is unavailable.
+
 The exhaustive structured HTTP boundary is `/api/reporting`. Reporting discovery, collection queries, exact reads, exports, provider-backed updates, cursor handling, disclosure, and response policy are defined in `docs/REPORTING.md`. Structured assurance collections remain repository-governed and read-only through reporting.
 
 `/security` remains the separate support/security presentation boundary for vulnerability reporting and published advisories.

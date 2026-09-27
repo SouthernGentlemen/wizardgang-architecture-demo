@@ -107,6 +107,7 @@ function initializeAssuranceWorkbench(): void {
 
   const cache = new Map<string, DocumentFragment>();
   let activeId = config.defaultId;
+  let renderedId = config.defaultId;
   let controller: AbortController | null = null;
 
   const frameworkRecords = (framework: string) => config.records.filter((record) => record.framework === framework);
@@ -158,7 +159,16 @@ function initializeAssuranceWorkbench(): void {
   const syncGrid = (record: RecordSummary) => {
     const records = config.records.filter((candidate) => candidate.framework === record.framework && candidate.section === record.section);
     recordCount.textContent = String(records.length);
-    grid.replaceChildren(...records.map((item) => createRecordLink(item, record.id, messages)));
+    if (grid.dataset.assuranceGridFramework !== record.framework || grid.dataset.assuranceGridSection !== record.section) {
+      grid.replaceChildren(...records.map((item) => createRecordLink(item, record.id, messages)));
+      grid.dataset.assuranceGridFramework = record.framework;
+      grid.dataset.assuranceGridSection = record.section;
+    } else {
+      for (const link of grid.querySelectorAll<HTMLElement>('[data-assurance-record-link]')) {
+        if (link.dataset.assuranceRecordLink === record.id) link.setAttribute('aria-current', 'true');
+        else link.removeAttribute('aria-current');
+      }
+    }
     renderPosture(sectionPosture, records);
     renderPosture(frameworkPosture, frameworkRecords(record.framework));
   };
@@ -167,12 +177,24 @@ function initializeAssuranceWorkbench(): void {
     syncSections(record);
     syncGrid(record);
   };
-  const load = async (id: string) => {
+  const focusPane = () => {
+    const heading = detail.querySelector<HTMLElement>('[data-assurance-detail-heading]');
+    heading?.focus({ preventScroll: true });
+    detail.scrollIntoView({ block: 'start' });
+  };
+  const load = async (id: string, focus: boolean) => {
+    if (renderedId === id && detail.querySelector('[data-assurance-detail-heading]')) {
+      detail.setAttribute('aria-busy', 'false');
+      if (focus) focusPane();
+      return;
+    }
     const cached = cache.get(id);
     if (cached) {
       detail.replaceChildren(cloneFragment(cached));
+      renderedId = id;
       detail.setAttribute('aria-busy', 'false');
       announce(messages.loaded);
+      if (focus) focusPane();
       return;
     }
     if (controller) controller.abort();
@@ -187,15 +209,23 @@ function initializeAssuranceWorkbench(): void {
       if (activeId !== id || local.signal.aborted) return;
       cache.set(id, fragment);
       detail.replaceChildren(cloneFragment(fragment));
+      renderedId = id;
       detail.setAttribute('aria-busy', 'false');
       announce(messages.loaded);
+      if (focus) focusPane();
     } catch (error) {
       if (local.signal.aborted) return;
       detail.setAttribute('aria-busy', 'false');
       renderState(error instanceof Error ? error.message : messages.failed, 'alert');
+      if (focus) {
+        const failure = detail.querySelector<HTMLElement>('[role="alert"]');
+        failure?.setAttribute('tabindex', '-1');
+        failure?.focus({ preventScroll: true });
+        detail.scrollIntoView({ block: 'start' });
+      }
     }
   };
-  const select = (id: string, historyMode: 'push' | 'replace' | 'none' = 'push') => {
+  const select = (id: string, historyMode: 'push' | 'replace' | 'none' = 'push', focus = true) => {
     const record = byId.get(id) ?? byId.get(config.defaultId) ?? config.records[0];
     if (!record) return;
     activeId = record.id;
@@ -205,7 +235,7 @@ function initializeAssuranceWorkbench(): void {
       if (historyMode === 'replace') window.history.replaceState(null, '', hash);
       else if (historyMode === 'push') window.history.pushState(null, '', hash);
     }
-    void load(record.id);
+    void load(record.id, focus);
   };
   const fragmentId = () => {
     if (!window.location.hash) return config.defaultId;
@@ -217,7 +247,8 @@ function initializeAssuranceWorkbench(): void {
   };
   const applySelection = () => {
     const requested = fragmentId();
-    select(byId.has(requested) ? requested : config.defaultId, byId.has(requested) ? 'none' : 'replace');
+    const valid = byId.has(requested);
+    select(valid ? requested : config.defaultId, valid ? 'none' : 'replace', Boolean(window.location.hash));
   };
 
   for (const tab of tabs) {
