@@ -700,6 +700,18 @@
       {
         "level": 3,
         "text": "Delete row?"
+      },
+      {
+        "level": 3,
+        "text": "Guide"
+      },
+      {
+        "level": 3,
+        "text": "Request"
+      },
+      {
+        "level": 3,
+        "text": "Nachweise"
       }
     ],
     "accessibleNames": [
@@ -861,6 +873,11 @@
       {
         "element": "button",
         "role": null,
+        "name": "Inspector"
+      },
+      {
+        "element": "button",
+        "role": null,
         "name": "Abbrechen"
       },
       {
@@ -980,6 +997,16 @@
       },
       {
         "element": "button",
+        "role": null,
+        "name": "Close inspector"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "src/demos/d1-presentation.tsx"
+      },
+      {
+        "element": "button",
         "role": "tab",
         "name": "Guide"
       },
@@ -997,11 +1024,6 @@
         "element": "div",
         "role": "tabpanel",
         "name": "Guide"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Quellcode anzeigen"
       },
       {
         "element": "a",
@@ -2568,6 +2590,18 @@
       {
         "level": 3,
         "text": "Delete row?"
+      },
+      {
+        "level": 3,
+        "text": "Guide"
+      },
+      {
+        "level": 3,
+        "text": "Request"
+      },
+      {
+        "level": 3,
+        "text": "Nachweise"
       }
     ],
     "accessibleNames": [
@@ -2729,6 +2763,11 @@
       {
         "element": "button",
         "role": null,
+        "name": "Inspector"
+      },
+      {
+        "element": "button",
+        "role": null,
         "name": "Abbrechen"
       },
       {
@@ -2848,6 +2887,16 @@
       },
       {
         "element": "button",
+        "role": null,
+        "name": "Close inspector"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "src/demos/d1-presentation.tsx"
+      },
+      {
+        "element": "button",
         "role": "tab",
         "name": "Guide"
       },
@@ -2865,11 +2914,6 @@
         "element": "div",
         "role": "tabpanel",
         "name": "Guide"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Quellcode anzeigen"
       },
       {
         "element": "a",
@@ -2964,6 +3008,18 @@
       {
         "level": 3,
         "text": "Delete row?"
+      },
+      {
+        "level": 3,
+        "text": "Guide"
+      },
+      {
+        "level": 3,
+        "text": "Request"
+      },
+      {
+        "level": 3,
+        "text": "Nachweise"
       }
     ],
     "accessibleNames": [
@@ -3125,6 +3181,11 @@
       {
         "element": "button",
         "role": null,
+        "name": "Inspector"
+      },
+      {
+        "element": "button",
+        "role": null,
         "name": "Abbrechen"
       },
       {
@@ -3244,6 +3305,16 @@
       },
       {
         "element": "button",
+        "role": null,
+        "name": "Close inspector"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "src/demos/d1-presentation.tsx"
+      },
+      {
+        "element": "button",
         "role": "tab",
         "name": "Guide"
       },
@@ -3261,11 +3332,6 @@
         "element": "div",
         "role": "tabpanel",
         "name": "Guide"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Quellcode anzeigen"
       },
       {
         "element": "a",

@@ -141,11 +141,27 @@ function DefaultInspector({ demo, env, localization }: Readonly<{
   env: Env;
   localization: LocalizationContext;
 }>) {
-  return <>
-    <aside className="demo-inspector" data-demo-inspector="" aria-label={localization.exact(`${demo.label} inspector`)}>
+  return <aside id="demo-inspector" className="demo-inspector" data-demo-inspector="" aria-label={localization.exact(`${demo.label} inspector`)}>
+    <details className="demo-inspector-disclosure" data-demo-inspector-disclosure="">
+      <summary>{localization.exact('Inspector')}</summary>
       <div className="demo-inspector-header">
         <strong>{localization.exact('Inspector')}</strong>
         <span className="subtle" data-demo-inspector-context="">{localization.exact(demo.category)}</span>
+        <button type="button" data-demo-inspector-close="">{localization.exact('Close inspector')}</button>
+      </div>
+      <div className="demo-inspector-static">
+        <h3>{localization.exact('Guide')}</h3>
+        <ol className="demo-guide-list">{(demo.guide ?? []).map((step) => <li key={step}>{localization.exact(step)}</li>)}</ol>
+        {demo.request ? <>
+          <h3>{localization.exact('Request')}</h3>
+          <p>{localization.exact(demo.request.intro)}</p>
+          <p>{localization.exact('Run a D1 operation to capture its response.')}</p>
+        </> : null}
+        <h3>{localization.exact('Evidence')}</h3>
+        <ul className="demo-evidence-list">
+          <li><strong>{localization.exact('Stable fragment: ')}</strong><code>#{demo.id}</code></li>
+          <li><strong>{localization.exact('Implementation: ')}</strong><a href={sourceHref(env, demo.sourcePath)} target="_blank" rel="noreferrer">{demo.sourcePath}</a></li>
+        </ul>
       </div>
       <InspectorTabs demo={demo} localization={localization} />
       <div
@@ -158,11 +174,8 @@ function DefaultInspector({ demo, env, localization }: Readonly<{
       >
         <ol className="demo-guide-list">{(demo.guide ?? []).map((step) => <li key={step}>{localization.exact(step)}</li>)}</ol>
       </div>
-    </aside>
-    <div className="demo-workbench-tools" aria-label={localization.exact('Demo tools')}>
-      <a href={sourceHref(env, demo.sourcePath)} target="_blank" rel="noreferrer" data-demo-source="">{localization.exact('View source')}</a>
-    </div>
-  </>;
+    </details>
+  </aside>;
 }
 
 function DemosBrowserModule({ env, localization }: Readonly<{ env: Env; localization: LocalizationContext }>) {
@@ -183,7 +196,7 @@ function DemosBrowserModule({ env, localization }: Readonly<{ env: Env; localiza
     implementation: localization.exact('Implementation: '),
     inspector: localization.exact('Inspector'),
     inspectorModes: localization.exact('Inspector modes'),
-    demoTools: localization.exact('Demo tools'),
+    closeInspector: localization.exact('Close inspector'),
     resetDemo: localization.exact('Reset demo'),
     resetQuestion: localization.exact('Reset this demo?'),
     resetD1: localization.exact('Your changes will be replaced with three fictional users and four related tasks.'),
@@ -193,7 +206,6 @@ function DemosBrowserModule({ env, localization }: Readonly<{ env: Env; localiza
     cancel: localization.exact('Cancel'),
     resetComplete: localization.exact('Demo reset complete.'),
     resetFailed: localization.exact('Reset failed — try again.'),
-    viewSource: localization.exact('View source'),
   });
   return <script type="module" src={source} data-demos-browser="" data-config={config} data-messages={messages} />;
 }
@@ -221,6 +233,7 @@ export function DemosWorkbenchPage({ env, selectedDemo, initialPresentation }: R
             {(selectedDemo.status ?? []).map((status) => <span key={status} className="demo-status-chip">{localization.exact(status)}</span>)}
           </div>
           <button type="button" data-demo-reset="" hidden>{localization.exact('Reset demo')}</button>
+          <button type="button" className="demo-inspector-toggle" data-demo-inspector-toggle="" aria-controls="demo-inspector" aria-expanded="false" hidden={!hasDemoInspector(selectedDemo)}>{localization.exact('Inspector')}</button>
         </div>
         <p className="demo-active-purpose" data-demo-purpose="">{localization.exact(selectedDemo.summary)}</p>
         <p className="demo-reset-notice" data-demo-reset-notice="" role="status" aria-live="polite" hidden />
@@ -241,6 +254,7 @@ export function DemosWorkbenchPage({ env, selectedDemo, initialPresentation }: R
         </div>
         {hasDemoInspector(selectedDemo) ? <DefaultInspector demo={selectedDemo} env={env} localization={localization} /> : null}
       </div>
+      <div className="demo-inspector-scrim" data-demo-inspector-scrim="" hidden />
     </section>
     <DemosBrowserModule env={env} localization={localization} />
   </>;

@@ -23,7 +23,7 @@ const env = {
 } as Env;
 
 describe('DEMO-267 focused demo pane and inspector', () => {
-  it('renders one focused D1 pane with purpose, inspector, and compact tools', async () => {
+  it('renders one focused D1 pane with purpose and a retained inspector', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/demos', { headers: { accept: 'text/html' } }), env);
     const html = await response.text();
 
@@ -37,7 +37,10 @@ describe('DEMO-267 focused demo pane and inspector', () => {
     expect(html).toContain('data-demo-inspector-mode="Request"');
     expect(html).toContain('data-demo-inspector-mode="Evidence"');
     expect(html).toContain('data-demo-reset="" hidden="">Reset demo</button>');
-    expect(html).toContain('data-demo-source="">View source</a>');
+    expect(html).toContain('data-demo-inspector-toggle="" aria-controls="demo-inspector" aria-expanded="false"');
+    expect(html).toContain('data-demo-inspector-disclosure=""');
+    expect(html).toContain('src/demos/d1-presentation.tsx</a>');
+    expect(html).not.toContain('data-demo-source');
     expect(html).toContain('data-demo-section="d1"');
     expect(html).not.toContain('All demos');
   });
@@ -45,20 +48,18 @@ describe('DEMO-267 focused demo pane and inspector', () => {
   it('keeps demo-specific inspector material honest and does not invent Request modes for every demo', () => {
     const d1 = demonstrations.find((demo) => demo.id === 'd1');
     const rest = demonstrations.find((demo) => demo.id === 'rest');
-    expect(d1?.request?.fields.map((field) => field.selector)).toEqual([
-      '[data-inspector-status]',
-      '[data-inspector-sql]',
-      '[data-state-output]',
-    ]);
+    expect(d1?.request?.fields.map((field) => field.selector)).toEqual(['[data-state-output]']);
     expect(rest?.request).toBeUndefined();
     expect(demonstrations.filter((demo) => demo.request).map((demo) => demo.id)).toEqual(['d1']);
   });
 
-  it('keeps the live demonstration primary and stacks the inspector below it on narrow layouts', () => {
+  it('keeps the live demonstration primary and docks the inspector off canvas on narrow layouts', () => {
     const source = readFileSync('src/styles/demos.css', 'utf8');
     expect(source).toContain('grid-template-columns:minmax(0,7fr) minmax(16rem,3fr)');
     expect(source).toContain('@media(max-width:900px){.demo-workbench-layout{grid-template-columns:minmax(0,1fr)}');
     expect(source).toContain('.demo-panel{min-width:0;max-width:100%;min-height:20rem;padding:1rem;overflow-x:auto}');
+    expect(source).toContain('.demo-inspector{position:sticky;top:1rem');
+    expect(source).toContain('.demo-workbench[data-demo-enhanced="true"] .demo-inspector{position:fixed');
   });
 
   it('mirrors real D1 request evidence and routes shared resets through existing APIs', () => {

@@ -210,7 +210,7 @@ async function assertWorkbenchState(cdp, expectedId, label, expectedHash = `#${e
     const categoryTabStops=[...document.querySelectorAll('[data-demo-category]')].filter((node)=>node.tabIndex===0);
     const visibleSections=[...document.querySelectorAll('[data-demo-panel] [data-demo-section]')].filter((node)=>!node.hidden);
     const inspector=document.querySelector('[data-demo-inspector]');
-    const source=document.querySelector('[data-demo-source]');
+    const toggle=document.querySelector('[data-demo-inspector-toggle]');
     return {
       hash: location.hash,
       id: document.querySelector('[data-demo-workbench]')?.dataset.demoId,
@@ -221,8 +221,9 @@ async function assertWorkbenchState(cdp, expectedId, label, expectedHash = `#${e
       selectedCategories: selectedCategories.length,
       categoryTabStops: categoryTabStops.length,
       busy: document.querySelector('[data-demo-panel]')?.getAttribute('aria-busy'),
-      inspectorVisible: Boolean(inspector && getComputedStyle(inspector).display !== 'none'),
-      sourceVisible: Boolean(source && getComputedStyle(source).display !== 'none' && getComputedStyle(source.parentElement).display !== 'none'),
+      inspectorVisible: Boolean(inspector && getComputedStyle(inspector).display !== 'none' && getComputedStyle(inspector).visibility !== 'hidden'),
+      inspectorPresent: Boolean(inspector && !inspector.hidden),
+      togglePresent: Boolean(toggle && !toggle.hidden),
     };
   })()`);
   const failures = [];
@@ -238,8 +239,9 @@ async function assertWorkbenchState(cdp, expectedId, label, expectedHash = `#${e
   if (state.categoryTabStops !== 1) failures.push(`category tab stops=${state.categoryTabStops}`);
   if (state.busy !== 'false') failures.push(`aria-busy=${state.busy}`);
   const inspectorExpected = ['d1', 'r2', 'workers', 'durable-objects', 'i18n'].includes(expectedId);
-  if (state.inspectorVisible !== inspectorExpected) failures.push(`inspector visible=${state.inspectorVisible}`);
-  if (state.sourceVisible !== inspectorExpected) failures.push(`View source visible=${state.sourceVisible}`);
+  if (state.inspectorPresent !== inspectorExpected) failures.push(`inspector present=${state.inspectorPresent}`);
+  if (state.togglePresent !== inspectorExpected) failures.push(`inspector toggle present=${state.togglePresent}`);
+  if (state.inspectorVisible !== (inspectorExpected && await evaluate(cdp, 'innerWidth > 900'))) failures.push(`inspector visible=${state.inspectorVisible}`);
   if (failures.length) throw new Error(`${label}: ${failures.join('; ')}`);
 }
 
@@ -706,6 +708,11 @@ async function phoneWorkbenchAudit(cdp) {
   }
   await cdp.call('Emulation.setScriptExecutionDisabled', { value: true });
   try {
+    for (const id of ['d1', 'r2', 'workers', 'durable-objects', 'i18n']) {
+      await navigate(cdp, `${origin}/demos?demo=${id}`);
+      const disclosure = await evaluate(cdp, `(()=>{const d=document.querySelector('[data-demo-inspector-disclosure]');return {summary:d?.querySelector('summary')?.textContent?.trim(),open:d?.open,inline:d&&getComputedStyle(d.closest('[data-demo-inspector]')).position}})()`);
+      if (!disclosure.summary || disclosure.open || disclosure.inline !== 'static') throw new Error(`${id} no-JavaScript inline inspector disclosure failed: ${JSON.stringify(disclosure)}`);
+    }
     for (const id of ['rest', 'graphql', 'webhooks', 'identity', 'mcp', 'edge', 'accessibility']) {
       await navigate(cdp, `${origin}/demos?demo=${id}`);
       const state = await evaluate(cdp, `({id:document.querySelector('[data-demo-workbench]')?.dataset.demoId,
@@ -717,6 +724,86 @@ async function phoneWorkbenchAudit(cdp) {
     }
   } finally {
     await cdp.call('Emulation.setScriptExecutionDisabled', { value: false });
+  }
+}
+
+async function retainedInspectorAudit(cdp) {
+  const retained = ['d1', 'r2', 'workers', 'durable-objects', 'i18n'];
+  for (const width of [375, 768, 1280, 1440]) {
+    await cdp.call('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 768 });
+    for (const locale of ['en', 'ar']) {
+      for (const id of width > 900 ? ['d1'] : retained) {
+        const label = `${id} inspector ${width}px ${locale}`;
+        await navigate(cdp, `${origin}/demos?lang=${locale}#${id}`);
+        await assertWorkbenchState(cdp, id, label, `#${id}`, locale);
+        await sleep(300);
+        const geometry = await evaluate(cdp, `(()=>{
+          const stage=document.querySelector('.demo-stage').getBoundingClientRect();
+          const inspector=document.querySelector('[data-demo-inspector]');
+          const rect=inspector.getBoundingClientRect();
+          const toggle=document.querySelector('[data-demo-inspector-toggle]');
+          return {position:getComputedStyle(inspector).position,stageEnd:stage.right,stageStart:stage.left,
+            sideStart:rect.left,sideEnd:rect.right,toggleVisible:getComputedStyle(toggle).display!=='none',
+            overflow:document.documentElement.scrollWidth>innerWidth+1};
+        })()`);
+        if (geometry.overflow) throw new Error(`${label} overflow: ${JSON.stringify(geometry)}`);
+        if (width > 900) {
+          const beside = locale === 'ar' ? geometry.sideEnd <= geometry.stageStart + 2 : geometry.sideStart >= geometry.stageEnd - 2;
+          if (geometry.position !== 'sticky' || !beside || geometry.toggleVisible) throw new Error(`${label} sticky side column failed: ${JSON.stringify(geometry)}`);
+          const sticky = await evaluate(cdp, `(()=>{
+            const stage=document.querySelector('.demo-stage');
+            const side=document.querySelector('[data-demo-inspector]');
+            const maxScroll=document.documentElement.scrollHeight-innerHeight;
+            const stageTop=stage.getBoundingClientRect().top+scrollY;
+            scrollTo({top:Math.min(maxScroll,stageTop+400),behavior:'instant'});
+            const first=side.getBoundingClientRect().top;
+            scrollTo({top:Math.min(maxScroll,stageTop+550),behavior:'instant'});
+            return {first,second:side.getBoundingClientRect().top,scroll:scrollY,maxScroll};
+          })()`);
+          if (sticky.scroll < 500 || sticky.first < 0 || Math.abs(sticky.second-sticky.first)>2) throw new Error(`${label} inspector did not remain sticky while scrolling: ${JSON.stringify(sticky)}`);
+          continue;
+        }
+        if (geometry.position !== 'fixed' || !geometry.toggleVisible) throw new Error(`${label} off-canvas setup failed: ${JSON.stringify(geometry)}`);
+        const beforeOpen = await evaluate(cdp, `(()=>{
+          const toggle=document.querySelector('[data-demo-inspector-toggle]');
+          toggle.scrollIntoView({ behavior: 'instant' });const before=scrollY;toggle.click();
+          return {before,after:scrollY};
+        })()`);
+        await sleep(250);
+        const opened = await evaluate(cdp, `(()=>{
+          const toggle=document.querySelector('[data-demo-inspector-toggle]');
+          const side=document.querySelector('[data-demo-inspector]').getBoundingClientRect();
+          return {expanded:toggle.getAttribute('aria-expanded'),controls:toggle.getAttribute('aria-controls'),
+            open:document.querySelector('[data-demo-inspector]').dataset.open,
+            focus:document.activeElement?.hasAttribute('data-demo-inspector-close'),active:document.activeElement?.outerHTML.slice(0,120),
+            inert:document.querySelector('[data-demo-inspector]').inert,detailsOpen:document.querySelector('[data-demo-inspector-disclosure]').open,
+            closeDisplay:getComputedStyle(document.querySelector('[data-demo-inspector-close]')).display,
+            scroll:scrollY,sideStart:side.left,sideEnd:side.right};
+        })()`);
+        const inlineEnd = locale === 'ar' ? opened.sideStart >= -1 : opened.sideEnd <= width + 1;
+        if (opened.expanded !== 'true' || opened.controls !== 'demo-inspector' || opened.open !== 'true' || !opened.focus || Math.abs(beforeOpen.before-beforeOpen.after)>2 || Math.abs(opened.scroll-beforeOpen.after)>2 || !inlineEnd) throw new Error(`${label} open failed: ${JSON.stringify({ ...opened, beforeOpen })}`);
+        await dispatchKey(cdp, 'Escape', 'Escape');
+        const escaped = await evaluate(cdp, `({expanded:document.querySelector('[data-demo-inspector-toggle]').getAttribute('aria-expanded'),focused:document.activeElement===document.querySelector('[data-demo-inspector-toggle]')})`);
+        if (escaped.expanded !== 'false' || !escaped.focused) throw new Error(`${label} Escape focus return failed: ${JSON.stringify(escaped)}`);
+        const closed = await evaluate(cdp, `(()=>{document.querySelector('[data-demo-inspector-toggle]').click();document.querySelector('[data-demo-inspector-close]').click();return {expanded:document.querySelector('[data-demo-inspector-toggle]').getAttribute('aria-expanded'),focused:document.activeElement===document.querySelector('[data-demo-inspector-toggle]')}})()`);
+        if (closed.expanded !== 'false' || !closed.focused) throw new Error(`${label} close focus return failed: ${JSON.stringify(closed)}`);
+        if (id === 'd1') {
+          await evaluate(cdp, `document.querySelector('[data-demo-inspector-toggle]').click();true`);
+          await sleep(250);
+          const access = await evaluate(cdp, `(async()=>{
+            ${axeSource}
+            const side=document.querySelector('[data-demo-inspector]');
+            const close=document.querySelector('[data-demo-inspector-close]');
+            const rect=close.getBoundingClientRect();
+            const result=await axe.run(side,{runOnly:{type:'tag',values:${JSON.stringify(axeTags)}},resultTypes:['violations']});
+            return {violations:result.violations.map((item)=>item.id),focus:document.activeElement===close,
+              visible:rect.left>=0&&rect.right<=innerWidth&&rect.top>=0&&rect.bottom<=innerHeight};
+          })()`);
+          if (access.violations.length || !access.focus || !access.visible) throw new Error(`${label} open panel accessibility failed: ${JSON.stringify(access)}`);
+          await dispatchKey(cdp, 'Escape', 'Escape');
+        }
+      }
+    }
   }
 }
 
@@ -924,6 +1011,7 @@ async function main() {
     await sharedResetAudit(cdp, 1280);
     axeRuns += 6;
     await phoneWorkbenchAudit(cdp);
+    await retainedInspectorAudit(cdp);
     await sharedResetAudit(cdp, 375);
     await assuranceRecordFirstAudit(cdp);
     axeRuns += 18;
@@ -937,14 +1025,13 @@ async function main() {
           const expectedId = new URL(pathname, origin).hash.slice(1) || 'd1';
           await assertWorkbenchState(cdp, expectedId, `${pathname} ${locale} narrow workbench`, `#${expectedId}`, locale);
           const reflow = await evaluate(cdp, `(()=>{
-            const stage=document.querySelector('.demo-stage')?.getBoundingClientRect();
-            const inspector=document.querySelector('.demo-inspector')?.getBoundingClientRect();
+            const inspector=document.querySelector('.demo-inspector');
             const layout=document.querySelector('.demo-workbench-layout');
-            return {stageBottom:stage?.bottom,inspectorTop:inspector?.top,columns:layout ? getComputedStyle(layout).gridTemplateColumns : ''};
+            return {inspectorPosition:inspector&&getComputedStyle(inspector).position,inspectorVisibility:inspector&&getComputedStyle(inspector).visibility,columns:layout ? getComputedStyle(layout).gridTemplateColumns : ''};
           })()`);
           const retainedInspector = ['d1', 'r2', 'workers', 'durable-objects', 'i18n'].includes(expectedId);
-          if ((retainedInspector && !(reflow.inspectorTop >= reflow.stageBottom - 1)) || reflow.columns.trim().split(/\s+/).length !== 1) {
-            throw new Error(`${pathname} ${locale}: workbench did not use one stage column (${JSON.stringify(reflow)})`);
+          if ((retainedInspector && !(reflow.inspectorPosition === 'fixed' && reflow.inspectorVisibility === 'hidden')) || reflow.columns.trim().split(/\s+/).length !== 1) {
+            throw new Error(`${pathname} ${locale}: workbench inspector did not dock off canvas (${JSON.stringify(reflow)})`);
           }
         }
         axeRuns += 1;
