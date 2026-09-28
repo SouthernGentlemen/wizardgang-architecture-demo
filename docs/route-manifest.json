@@ -556,8 +556,8 @@
       "crawling": "controlled",
       "indexing": "deny"
     },
-    "title": "Identity logout",
-    "description": "Same-origin identity-session invalidation.",
+    "title": "Identity session reset",
+    "description": "Same-origin identity-session revocation and identity-cookie expiry.",
     "docs": [
       "docs/ROUTE-REGISTRY.md"
     ],

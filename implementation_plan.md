@@ -2,16 +2,6 @@
 
 ## Open tasks
 
-### DEMO-387 — [FIX] Stop silent identity re-authentication and add a session reset
-
-- Dependency: DEMO-380 plan-only queue publication has merged.
-- Why: After the first sign-in, later sign-ins complete without interaction. The Microsoft Entra ID and Google authorize requests send no `prompt`, GitHub gets no account-selection prompt and SAML sends no `ForceAuthn`, while Sign out appears only after authentication and clears only `__Host-wg_identity`. Visitors have no way to reset identity cookies on the page.
-- Scope: Add an always-visible "Reset identity session" control to the identity demo. It sends a same-origin POST, extending `/auth/logout` or one newly registered route, that revokes any server session, expires every identity cookie the site sets (`__Host-wg_identity`, `__Host-wg_identity_flow`, `__Host-wg_saml_flow`), records an identifier-free audit event, and explains that Microsoft, Google and GitHub keep their own sessions. Request explicit interaction on every demo sign-in: `prompt=select_account` (or `prompt=login`) for Entra ID and Google, `prompt=select_account` for GitHub, and `ForceAuthn="true"` for SAML. Keep Sign out on the authenticated result.
-- Non-goals: Do not change provider credentials, secrets, scopes, PKCE, state or nonce handling, session lifetime, callback routes or authorization policy; do not try to clear third-party provider cookies or add provider-side logout.
-- Acceptance: After signing in with any configured provider, the reset (or Sign out) returns the page to the unauthenticated state, and the next sign-in shows the provider's account chooser or login instead of completing silently. The reset also succeeds when unauthenticated or with a stale flow cookie; it expires `__Host-` cookies with `Secure`, `HttpOnly`, `Path=/` and `SameSite`, refuses cross-origin POSTs, and logs no cookie, token or subject identifier.
-- Validation: Pinned `npm ci`; identity API and session tests for reset, cross-origin refusal, stale flow cookies and each provider's authorize parameters; a SAML request test for `ForceAuthn`; credential-free `npm run check`; dependency advisory gate; committed-range whitespace; exact-head required CI; owner-run sign-in round trip for each configured provider after the next release.
-- Authorities: `docs/IDENTITY.md`, `SECURITY.md`, `src/api/identity.ts`, `src/lib/identity-session.ts`, `src/interfaces/route-capabilities/identity.ts`, `src/demos/identity-presentation.tsx`, `src/browser/identity.ts`.
-
 ### DEMO-388 — [FEAT] Split Identity into OAuth 2.0, SSO and SAML demos
 
 - Dependency: DEMO-383 and DEMO-387 have merged.

@@ -215,7 +215,7 @@ export async function mount(root: HTMLElement): Promise<void> {
     }
   }, { signal: lifecycle.signal }));
 
-  required<HTMLButtonElement>(root, '[data-identity-logout]').addEventListener('click', async () => {
+  root.querySelectorAll<HTMLButtonElement>('[data-identity-reset], [data-identity-logout]').forEach((button) => button.addEventListener('click', async () => {
     try {
       const response = await fetch('/auth/logout', {
         method: 'POST',
@@ -232,5 +232,5 @@ export async function mount(root: HTMLElement): Promise<void> {
     } catch {
       if (!lifecycle.signal.aborted) showNotice(message('signoutFailed', 'The session could not be ended.'), 'error');
     }
-  }, { signal: lifecycle.signal });
+  }, { signal: lifecycle.signal }));
 }

@@ -2,7 +2,7 @@
   "version": 1,
   "assets": {
     "styles.shell": "/assets/shell-bMbz_FQ0.css",
-    "styles.demos": "/assets/demos-Dt1gD3uf.css",
+    "styles.demos": "/assets/demos-BaimYJF_.css",
     "scripts.shell": "/assets/shell-browser-C3W1tXrY.js",
     "scripts.admin": "/assets/admin-browser-rVkH4YRt.js",
     "scripts.assurance": "/assets/assurance-browser-D_JIDV-8.js",
@@ -13,7 +13,7 @@
     "scripts.graphql": "/assets/graphql-browser-Dwpt-GEr.js",
     "scripts.graphiql": "/assets/graphiql-browser-DrfIfWo6.js",
     "scripts.webhooks": "/assets/webhooks-browser-BC1LslYL.js",
-    "scripts.identity": "/assets/identity-browser-DeWArxcc.js",
+    "scripts.identity": "/assets/identity-browser-BmgInjET.js",
     "scripts.mcp": "/assets/mcp-browser-CfqJPFSM.js",
     "scripts.edge": "/assets/edge-browser-CEC0miwL.js",
     "scripts.workers": "/assets/workers-browser-BQIfgAQC.js",

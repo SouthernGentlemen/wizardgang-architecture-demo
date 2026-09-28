@@ -54,6 +54,10 @@ function IdentityPresentation({ env, localization }: Readonly<{ env: Env; locali
     </section>
 
     <p className="identity-notice" role="status" aria-live="polite" data-identity-notice="" hidden />
+    <div className="identity-reset">
+      <button type="button" data-identity-reset="">{exact('Reset identity session')}</button>
+      <p>{exact('This clears your WizardGang session and sign-in flow cookies. Microsoft, Google, and GitHub retain their own sessions.')}</p>
+    </div>
 
     <section className="identity-signin" id={id('sso')} aria-labelledby={id('identity-signin-heading')}>
       <div className="identity-section-heading">

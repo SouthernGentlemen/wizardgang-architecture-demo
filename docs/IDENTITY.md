@@ -23,6 +23,8 @@ Google Workspace is not required or claimed. The Google path does not depend on 
 
 GitHub does not supply an ID token in this flow. After code exchange, the Worker calls the authenticated GitHub user API and uses GitHub's immutable numeric ID as the durable subject. The provider access credential is discarded after identity normalization and never becomes the application session.
 
+Every demo sign-in requests explicit account selection from Microsoft Entra ID, Google, or GitHub. The SAML AuthnRequest sets `ForceAuthn="true"` to request a fresh login. The identity provider controls the final interaction and retains its own session.
+
 ## Registered identity contract
 
 Route declarations separate `/demos#identity` presentation from OAuth/OIDC, SAML, session, logout, authorization, and metadata protocol actions. External provider configuration must target canonical protocol routes from the generated route artifacts; unregistered identity browser paths are ordinary unknown routes and are not aliases.
@@ -52,7 +54,7 @@ The authorization endpoint does not accept caller-supplied authentication contex
 
 ## Application session
 
-Provider credentials are not browser sessions. After validation, the Worker creates an opaque encrypted cookie referencing an encrypted D1 session record. The cookie is `HttpOnly`, `Secure`, `SameSite=Lax`, path-bound to `/`, and short-lived. Logout revokes the D1 record and expires the cookie. Provider-token expiry can shorten the application session.
+Provider credentials are not browser sessions. After validation, the Worker creates an opaque encrypted cookie referencing an encrypted D1 session record. The cookie is `HttpOnly`, `Secure`, `SameSite=Lax`, path-bound to `/`, and short-lived. The always-visible Reset identity session control and authenticated Sign out both send a same-origin POST to `/auth/logout`. That action revokes the D1 session when present and expires the application cookie and both flow cookies, including a stale flow cookie. It does not clear identity-provider sessions or perform provider-side logout. Provider-token expiry can shorten the application session.
 
 OIDC flow material is AES-GCM encrypted in a separate short-lived cookie. The SAML flow cookie uses `SameSite=None` because Entra posts the response cross-site to the assertion consumer; it remains `HttpOnly`, `Secure`, encrypted, and bound to one-time state.
 
@@ -62,14 +64,14 @@ The browser and public logs never receive access tokens, refresh tokens, client 
 
 Set identity secrets/provider credentials with Cloudflare secrets or local `.dev.vars`; never commit real values. Required variables are documented in `.dev.vars.example` and validated by the implementation. `IDENTITY_SESSION_SECRET` protects browser flow material, application sessions, and short-lived demo access tokens; `IDENTITY_AUDIT_HMAC_SECRET` is a separate Worker secret used for domain-separated identity audit identifiers and visitor sandbox namespaces. Both identity secrets must be at least 32 UTF-8 bytes.
 
-Identity protocol endpoints fail closed with a disclosure-safe JSON `503` response when either identity secret is not configured. Sign-out still expires the browser cookie and, when the session secret remains available, revokes the persisted session even if the audit identifier cannot be derived; that destroy audit event is omitted rather than emitting a subject-derived fallback. `/api/operations/health` exposes only the public-safe identity readiness value `ready` or `not-configured`; it does not identify the failing prerequisite.
+Identity protocol endpoints fail closed with a disclosure-safe JSON `503` response when either identity secret is not configured. Session reset still expires all three browser cookies and, when the session secret remains available, revokes the persisted session even if the audit prerequisite is unavailable. `/api/operations/health` exposes only the public-safe identity readiness value `ready` or `not-configured`; it does not identify the failing prerequisite.
 
 External provider registrations must use canonical callback, SAML entity/consumer, metadata, and webhook URLs from the generated route contract for the released origin. A code change does not modify external provider configuration and does not deploy or release the application. Unregistered identity browser/protocol URLs are ordinary unknown paths rather than compatibility aliases.
 
 
 ## Audit evidence
 
-Authentication and policy transitions create sanitized events for authentication start/completion/failure, SAML validation, authorization allow/deny, and session create/destroy activity. Internal audit correlation uses a domain-separated HMAC-SHA-256 identifier under `IDENTITY_AUDIT_HMAC_SECRET`; visitor sandbox namespaces use a separate HMAC domain. Application logs omit subject-derived audit and namespace values, and public log/event projections omit identity detail. Tokens, cookies, raw assertions, and credentials are excluded.
+Authentication and policy transitions create sanitized events for authentication start/completion/failure, SAML validation, authorization allow/deny, session creation, and reset. Reset records an identifier-free event even without an active session. Internal audit correlation for other events uses a domain-separated HMAC-SHA-256 identifier under `IDENTITY_AUDIT_HMAC_SECRET`; visitor sandbox namespaces use a separate HMAC domain. Application logs omit subject-derived audit and namespace values, and public log/event projections omit identity detail. Tokens, cookies, raw assertions, and credentials are excluded.
 
 ## Alignment
 
