@@ -35,12 +35,14 @@
 .d1-editor-heading span { color: var(--muted); font: 700 .68rem/1 var(--mono); text-transform: uppercase; }
 .d1-form-status { grid-column: 1 / -1; min-height: 1.2rem; margin: 0; }
 .d1-editor .button-row { margin: 0; }
-.d1-table-panel table { min-width: 650px; }
-.d1-table-panel th:last-child, .d1-table-panel td:last-child { width: 1%; }
+.d1-table-panel table { width: 100%; min-width: 0; table-layout: fixed; }
+.d1-table-panel td { min-width: 0; overflow-wrap: anywhere; }
+.d1-table-panel td code { white-space: normal; overflow-wrap: anywhere; }
+.d1-table-panel th:last-child, .d1-table-panel td:last-child { width: 11rem; }
 .d1-table-panel td { vertical-align: middle; }
 .d1-empty-row { padding: 1.5rem; color: var(--muted); text-align: center; }
 .d1-row-actions { display: flex; justify-content: flex-end; gap: .35rem; white-space: nowrap; }
-.d1-row-actions button { min-height: 34px; padding: .35rem .55rem; background: transparent; color: var(--muted); font: 750 .7rem/1 var(--mono); text-transform: uppercase; }
+.d1-row-actions button { min-height: 44px; min-width: 44px; padding: .35rem .55rem; background: transparent; color: var(--muted); font: 750 .7rem/1 var(--mono); text-transform: uppercase; }
 .d1-row-actions button:hover { color: var(--paper); transform: none; }
 .d1-role, .d1-task-status { white-space: nowrap; }
 .d1-role[data-role="admin"], .d1-task-status[data-status="done"] { border-color: var(--acid); color: var(--acid); }
@@ -110,7 +112,7 @@
 .edge-evidence-grid dl { grid-template-columns: minmax(6rem, .8fr) 1.2fr; }
 .edge-evidence-grid ul { padding-left: 1.1rem; color: var(--muted); }
 .worker-policy-form { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.worker-policy-check { align-self: end; display: flex; align-items: center; gap: .55rem; min-height: 46px; padding: .55rem .7rem; border: 1px solid var(--line); background: var(--panel-2); color: var(--paper); }
+.lab-form label.worker-policy-check { align-self: end; display: flex; flex-direction: row; align-items: center; gap: .55rem; min-height: 46px; padding: .55rem .7rem; border: 1px solid var(--line); background: var(--panel-2); color: var(--paper); }
 .worker-policy-check input { min-height: 1rem; width: 1rem; margin: 0; }
 .worker-decision-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin: 1rem 0; border: 1px solid var(--line); background: var(--line); }
 .worker-decision-grid article { display: grid; gap: .5rem; padding: 1rem; background: var(--panel-2); }
@@ -151,6 +153,11 @@
 .r2-file-input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .drop-zone-icon { display: grid; place-items: center; width: 2.6rem; height: 2.6rem; margin-bottom: .35rem; border: 1px solid var(--line); color: var(--acid); font: 900 1.25rem/1 var(--mono); }
 .drop-zone-title { color: var(--paper); font-size: 1.12rem; }
+.drop-zone-pointer-coarse { display: none; }
+@media (pointer: coarse) {
+  .drop-zone-pointer-fine { display: none; }
+  .drop-zone-pointer-coarse { display: block; }
+}
 .browse-file { color: var(--acid); font-weight: 850; text-decoration: underline; text-underline-offset: .25em; }
 .drop-limit { margin-top: .3rem; font: 750 .67rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
 .file-selection { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .85rem; padding: .8rem .9rem; border: 1px solid var(--line); background: var(--panel-2); }
@@ -298,6 +305,8 @@
 .info-card ul { margin: .8rem 0 0; padding-left: 1.1rem; color: var(--muted); font-size: .9rem; }
 .request-line { display: flex; align-items: center; gap: .6rem; margin: 1rem 0; }
 .request-line code { overflow-wrap: anywhere; }
+.mcp-endpoint-row { display: flex; align-items: center; gap: .75rem; min-width: 0; }
+.mcp-endpoint-row code { min-width: 0; overflow-wrap: anywhere; }
 .console-write > summary::after, .implementation-notes summary::after { content: '+'; margin-left: auto; padding-left: .75rem; color: var(--muted); }
 .console-write[open] > summary::after, .implementation-notes[open] summary::after { content: '−'; }
 .implementation-notes { margin-top: 1.25rem; padding: .9rem 1.1rem; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -322,11 +331,13 @@
 .graphql-page-header, .webhook-page-header { max-width: 980px; margin-bottom: 2.5rem; }
 .graphql-workspace { margin-top: 1rem; }
 .graphql-examples { margin: 1rem 0 2.5rem; }
-.graphql-example-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: .75rem; }
-.graphql-example { padding: 1rem; border: 1px solid var(--line); background: var(--panel); }
+.graphql-example-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: .75rem; }
+.graphql-example { min-width: 0; padding: 1rem; border: 1px solid var(--line); background: var(--panel); }
 .graphql-example .section-head { margin: 0 0 .75rem; padding: 0; border: 0; align-items: center; }
 .graphql-example .section-head h3 { margin: 0; }
-.graphql-example .button { min-height: 40px; padding: .45rem .7rem; font-size: .72rem; }
+.graphql-example .button { min-height: 44px; padding: .45rem .7rem; font-size: .72rem; }
+.graphql-workspace form, .graphql-workspace textarea { width: 100%; min-width: 0; }
+.graphql-workspace textarea { box-sizing: border-box; }
 .graphql-example pre { min-height: 0; margin-top: .65rem; }
 .graphql-example pre code { color: inherit; }
 .graphql-example-result { border-color: var(--acid); }
@@ -388,13 +399,23 @@
   .identity-federation { grid-template-columns: 1fr; }
   .identity-federation .identity-provider-actions { justify-content: flex-start; }
 }
-@media (max-width: 620px) {
+@media (max-width: 639px) {
   .info-grid, .action-grid { grid-template-columns: 1fr; }
   .lab-grid { grid-template-columns: 1fr; }
   .lab-grid aside { position: static; }
   .d1-table-panel { min-height: 0; }
   .d1-table-heading, .d1-editor-heading { align-items: stretch; flex-direction: column; }
   .d1-table-heading .button-primary { justify-content: center; width: 100%; }
+  .d1-table-panel .table-wrap { overflow: visible; }
+  .d1-table-panel table, .d1-table-panel tbody { display: block; width: 100%; }
+  .d1-table-panel thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .d1-table-panel tbody tr { display: grid; gap: .65rem; margin-bottom: .75rem; padding: .85rem; border: 1px solid var(--line); background: var(--panel-2); }
+  .d1-table-panel tbody td { display: grid; gap: .2rem; width: 100%; padding: 0; border: 0; }
+  .d1-table-panel tbody td[data-label]::before { content: attr(data-label); color: var(--muted); font: 800 .68rem/1.2 var(--mono); text-transform: uppercase; }
+  .d1-table-panel tbody td:last-child { width: 100%; }
+  .d1-row-actions { justify-content: stretch; white-space: normal; }
+  .d1-row-actions button { flex: 1 1 0; }
+  .d1-empty-row { padding: .25rem; }
   .graphql-workspace-heading, .graphql-shared, .webhook-section-heading { align-items: flex-start; flex-direction: column; }
   .graphql-shared .button, .webhook-section-heading > button { justify-content: center; width: 100%; }
   .graphql-workspace-heading > p { text-align: left; }
@@ -416,6 +437,21 @@
   .identity-provider-actions .button { justify-content: center; width: 100%; }
   .identity-authenticated-state { justify-items: start; }
   .identity-authenticated-state strong { text-align: left; }
+}
+
+@media (max-width: 639px) {
+  .demo-panel :is(.section-head, .lab-heading, .graphql-workspace-heading) { align-items: flex-start; text-align: start; }
+  .demo-panel :is(.section-head, .lab-heading, .graphql-workspace-heading) :is(h2, h3, h4) { text-align: start; }
+  .demo-panel :is(.section-head, .lab-heading) { flex-direction: column; }
+  .demo-panel :is(.section-head, .lab-heading) > :is(button, .button) { justify-content: center; width: 100%; }
+  .graphql-example .section-head { align-items: flex-start; }
+  .graphql-example .section-head .button, .graphql-workspace form > button { width: 100%; }
+  .mcp-endpoint-row { align-items: stretch; flex-direction: column; }
+  .mcp-endpoint-row button { width: 100%; }
+  [data-mcp-run] { width: 100%; }
+  .durable-flow { grid-template-columns: minmax(0, 1fr); justify-items: stretch; overflow: visible; }
+  .durable-flow strong { min-width: 0; }
+  .durable-flow span { justify-self: center; transform: rotate(90deg); }
 }
 
 

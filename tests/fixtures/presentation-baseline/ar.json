@@ -2787,8 +2787,8 @@
         "element": "div",
         "attributes": {
           "data-demo-section": "d1",
-          "data-demo-browser-module": "/assets/d1-browser-dOGDwe-O.js",
-          "data-config": "<CONFIG_SHA256:501bd7ce834162fa>"
+          "data-demo-browser-module": "/assets/d1-browser-DVT3oZjJ.js",
+          "data-config": "<CONFIG_SHA256:a077d5a54e9084f4>"
         }
       },
       {
@@ -3096,7 +3096,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-CsWQdIaw.css",
+        "href": "/assets/demos-Dt1gD3uf.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -9452,8 +9452,8 @@
         "element": "div",
         "attributes": {
           "data-demo-section": "d1",
-          "data-demo-browser-module": "/assets/d1-browser-dOGDwe-O.js",
-          "data-config": "<CONFIG_SHA256:501bd7ce834162fa>"
+          "data-demo-browser-module": "/assets/d1-browser-DVT3oZjJ.js",
+          "data-config": "<CONFIG_SHA256:a077d5a54e9084f4>"
         }
       },
       {
@@ -9761,7 +9761,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-CsWQdIaw.css",
+        "href": "/assets/demos-Dt1gD3uf.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -10605,8 +10605,8 @@
         "element": "div",
         "attributes": {
           "data-demo-section": "d1",
-          "data-demo-browser-module": "/assets/d1-browser-dOGDwe-O.js",
-          "data-config": "<CONFIG_SHA256:501bd7ce834162fa>"
+          "data-demo-browser-module": "/assets/d1-browser-DVT3oZjJ.js",
+          "data-config": "<CONFIG_SHA256:a077d5a54e9084f4>"
         }
       },
       {
@@ -10914,7 +10914,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-CsWQdIaw.css",
+        "href": "/assets/demos-Dt1gD3uf.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -12143,8 +12143,8 @@
         "element": "div",
         "attributes": {
           "data-demo-section": "d1",
-          "data-demo-browser-module": "/assets/d1-browser-dOGDwe-O.js",
-          "data-config": "<CONFIG_SHA256:501bd7ce834162fa>"
+          "data-demo-browser-module": "/assets/d1-browser-DVT3oZjJ.js",
+          "data-config": "<CONFIG_SHA256:a077d5a54e9084f4>"
         }
       },
       {
@@ -12425,8 +12425,8 @@
       {
         "element": "input",
         "type": "file",
-        "label": "↑ Drop a file here or Browse files 5 MiB maximum",
-        "accessibleName": "↑ Drop a file here or Browse files 5 MiB maximum",
+        "label": "↑ Drop a file here Choose a file or Browse files 5 MiB maximum",
+        "accessibleName": "↑ Drop a file here Choose a file or Browse files 5 MiB maximum",
         "name": "file",
         "value": null
       }
@@ -14643,6 +14643,12 @@
         "element": "pre",
         "attributes": {
           "data-mcp-output": ""
+        }
+      },
+      {
+        "element": "code",
+        "attributes": {
+          "data-mcp-endpoint": ""
         }
       },
       {

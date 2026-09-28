@@ -60,6 +60,12 @@ function d1BrowserMessages(localization: LocalizationContext): Readonly<Record<s
     relatedTaskBecame: exact('related task became Unassigned.'),
     relatedTasksBecame: exact('related tasks became Unassigned.'),
     deleteTaskMessagePrefix: exact('will be removed from this visitor sandbox.'),
+    name: exact('Name'),
+    email: exact('Email'),
+    role: exact('Role'),
+    taskTitle: exact('Task'),
+    assignee: exact('Assignee'),
+    status: exact('Status'),
   });
 }
 

@@ -105,8 +105,9 @@ function R2Presentation({ localization }: Readonly<{ localization: LocalizationC
             <label className="drop-zone" data-drop-zone="">
               <input className="r2-file-input" name="file" type="file" data-file-input="" />
               <span className="drop-zone-icon" aria-hidden="true">↑</span>{' '}
-              <strong className="drop-zone-title">{exact('Drop a file here')}</strong>{' '}
-              <span>{exact('or')} <span className="browse-file">{exact('Browse files')}</span></span>{' '}
+              <strong className="drop-zone-title drop-zone-pointer-fine">{exact('Drop a file here')}</strong>{' '}
+              <strong className="drop-zone-title drop-zone-pointer-coarse">{exact('Choose a file')}</strong>{' '}
+              <span className="drop-zone-pointer-fine">{exact('or')} <span className="browse-file">{exact('Browse files')}</span></span>{' '}
               <span className="drop-limit">{exact('5 MiB maximum')}</span>
             </label>{' '}
             <div className="file-selection" data-file-selection="" hidden>

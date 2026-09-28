@@ -68,7 +68,7 @@ function McpPresentation({ endpoint, localization }: Readonly<{
 
     <section aria-labelledby={connectHeading}>
       <div className="section-head"><DemoHeading level={2} id={connectHeading}>{exact('Connect a client')}</DemoHeading><span>{exact('Copy the endpoint or one command')}</span></div>
-      <div className="link-row"><button type="button" data-copy-value={endpoint}>{exact('Copy endpoint')}</button></div>
+      <div className="mcp-endpoint-row"><code dir="ltr" data-mcp-endpoint="">{endpoint}</code><button type="button" data-copy-value={endpoint}>{exact('Copy endpoint')}</button></div>
       <p className="subtle" data-copy-status="" aria-live="polite" />
       <details className="implementation-notes">
         <summary>{exact('Advanced client setup and wire details')}</summary>
