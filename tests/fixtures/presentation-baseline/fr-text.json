@@ -4098,12 +4098,12 @@
       {
         "element": "form",
         "role": null,
-        "name": "Drop a file here or Browse files 5 MiB maximum Téléverser le fichier Select one file to begin."
+        "name": "Drop a file here Choose a file or Browse files 5 MiB maximum Téléverser le fichier Select one file to begin."
       },
       {
         "element": "input",
         "role": null,
-        "name": "↑ Drop a file here or Browse files 5 MiB maximum"
+        "name": "↑ Drop a file here Choose a file or Browse files 5 MiB maximum"
       },
       {
         "element": "button",
@@ -4129,7 +4129,7 @@
     "labels": [
       {
         "name": "file",
-        "label": "↑ Drop a file here or Browse files 5 MiB maximum"
+        "label": "↑ Drop a file here Choose a file or Browse files 5 MiB maximum"
       }
     ]
   },

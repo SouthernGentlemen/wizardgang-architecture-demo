@@ -2,16 +2,6 @@
 
 ## Open tasks
 
-### DEMO-386 — [FIX] Make demo interiors usable at phone widths
-
-- Dependency: DEMO-381 has merged.
-- Why: Demo content still assumes desktop space. At 375px D1's table hides Role, Edit and Delete behind horizontal scroll, and emails still clip at 768px; GraphQL and MCP right-align section headings; the Durable Objects flow clips ("One Du… Obj"); Edge squeezes its action into a three-line button beside the heading; R2 tells touch users to "Drop a file here"; MCP's "Connect a client" copies an endpoint it never shows; GraphQL's query box is 189px wide in a 253px card; Workers stacks checkboxes above their labels.
-- Scope: Render D1 users and tasks as stacked record cards with visible Edit and Delete below 640px and without clipping at 768px; start-align section headings at narrow widths; stack the Durable Objects flow vertically below 640px; place Edge, GraphQL and MCP primary actions full width under their headings on phones; use "Choose a file" copy for coarse pointers in R2; show the MCP endpoint beside Copy endpoint; make the GraphQL query editor full width; put Workers checkboxes inline with their labels; keep every demo action at least 44×44.
-- Non-goals: Do not change demo behavior, APIs, limits or data. REST, Identity, Accessibility and Webhooks layouts belong to their own tasks.
-- Acceptance: At 320, 375 and 768px no remaining demo has root overflow, clipped text, right-aligned headings or undersized primary actions, and D1 edit and delete work from the stacked layout; the browser audit asserts this for each affected fragment in `en` and `ar`.
-- Validation: Pinned `npm ci`; focused presentation tests; browser audit at 320, 375 and 768px; credential-free `npm run check`; dependency advisory gate; committed-range whitespace; exact-head required CI.
-- Authorities: `docs/ACCESSIBILITY.md`, `src/demos/d1-presentation.tsx`, `src/demos/r2-presentation.tsx`, `src/demos/graphql-presentation.tsx`, `src/demos/mcp-presentation.tsx`, `src/demos/edge-presentation.tsx`, `src/demos/workers-presentation.tsx`, `src/demos/durable-objects-presentation.tsx`, `src/styles/demos.css`, `scripts/site-browser-audit.mjs`.
-
 ### DEMO-387 — [FIX] Stop silent identity re-authentication and add a session reset
 
 - Dependency: DEMO-380 plan-only queue publication has merged.

@@ -727,6 +727,103 @@ async function phoneWorkbenchAudit(cdp) {
   }
 }
 
+async function exerciseD1TaskCardWorkflow(cdp, locale) {
+  const label = `D1 task cards 375px ${locale}`;
+  await navigate(cdp, `${origin}/demos?lang=${locale}#d1`);
+  await assertWorkbenchState(cdp, 'd1', label, '#d1', locale);
+  await waitForExpression(cdp, `document.querySelector('[data-count="tasks"]')?.textContent !== '—'`, `${label} loaded`);
+  const id = await evaluate(cdp, `(()=>{
+    document.querySelector('[data-table-tab="tasks"]').click();
+    const button=document.querySelector('[data-rows="tasks"] [data-edit-task]');
+    if(!button)throw new Error('No editable task card');
+    button.click();
+    const form=document.querySelector('[data-form="tasks"]');
+    const status=form.querySelector('[name="status"]');
+    status.value=status.value==='doing'?'done':'doing';
+    form.requestSubmit();
+    return button.getAttribute('data-edit-task');
+  })()`);
+  await waitForExpression(cdp, `document.querySelector('[data-form="tasks"]')?.hidden===true && document.querySelector('[data-inspector-verb]')?.textContent==='UPDATE'`, `${label} edited`, 160);
+  await evaluate(cdp, `(()=>{document.querySelector('[data-delete-task=${JSON.stringify(id)}]').click();document.querySelector('[data-confirm-action]').click();return true})()`);
+  await waitForExpression(cdp, `!document.querySelector('[data-delete-task=${JSON.stringify(id)}]') && document.querySelector('[data-inspector-verb]')?.textContent==='DELETE'`, `${label} deleted`, 160);
+  await evaluate(cdp, `(()=>{document.querySelector('[data-demo-reset]').click();document.querySelector('[data-demo-reset-confirm]').click();return true})()`);
+  await waitForExpression(cdp, `document.querySelector('[data-count="tasks"]')?.textContent !== '—' && !document.querySelector('[data-demo-reset-dialog]')?.open`, `${label} reset`, 160);
+}
+
+async function demoInteriorReflowAudit(cdp) {
+  const affected = ['d1', 'r2', 'graphql', 'mcp', 'edge', 'workers', 'durable-objects'];
+  for (const width of [320, 375, 768]) {
+    await cdp.call('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 768 });
+    await cdp.call('Emulation.setTouchEmulationEnabled', { enabled: width < 768 });
+    for (const locale of ['en', 'ar']) {
+      for (const id of affected) {
+        const label = `${id} interior ${width}px ${locale}`;
+        await navigate(cdp, `${origin}/demos?lang=${locale}#${id}`);
+        await assertWorkbenchState(cdp, id, label, `#${id}`, locale);
+        if (id === 'd1') await waitForExpression(cdp, `document.querySelector('[data-count="users"]')?.textContent !== '—'`, `${label} rows`);
+        const report = await evaluate(cdp, `(()=>{
+          const root=document.querySelector('[data-demo-panel]');
+          const rect=(selector)=>root.querySelector(selector)?.getBoundingClientRect();
+          const visible=(node)=>node&&getComputedStyle(node).display!=='none'&&node.getBoundingClientRect().width>0;
+          const actions=[...root.querySelectorAll('.button-primary,[data-copy-value],.graphql-example .button,.d1-row-actions button')].filter(visible);
+          const smallActions=actions.filter((node)=>{const r=node.getBoundingClientRect();return r.width<43.5||r.height<43.5}).map((node)=>node.outerHTML.slice(0,90));
+          const headings=[...root.querySelectorAll('.section-head,.lab-heading,.graphql-workspace-heading')].filter(visible);
+          const misalignedHeadings=headings.filter((node)=>{const h=node.querySelector('h2,h3,h4');if(!h)return false;const a=node.getBoundingClientRect(),b=h.getBoundingClientRect();return document.dir==='rtl'?a.right-b.right>3:b.left-a.left>3}).map((node)=>node.className);
+          const rows=[...root.querySelectorAll('[data-rows="users"] tr,[data-rows="tasks"] tr')].filter((row)=>visible(row)&&row.querySelector('[data-edit-user],[data-edit-task]'));
+          const clippedEmails=[...root.querySelectorAll('[data-rows="users"] td code')].filter((node)=>node.scrollWidth>node.clientWidth+1).map((node)=>node.textContent);
+          const d1Buttons=rows.flatMap((row)=>[...row.querySelectorAll('.d1-row-actions button')]).filter((node)=>{const r=node.getBoundingClientRect();return r.left<0||r.right>innerWidth||r.width<43.5||r.height<43.5}).length;
+          const flow=root.querySelector('.durable-flow');
+          const checkbox=root.querySelector('.worker-policy-check input');
+          const checkboxLabel=checkbox?.closest('label');
+          const checkboxText=checkboxLabel?.lastChild;
+          const textRange=checkboxText&&document.createRange();if(textRange)textRange.selectNodeContents(checkboxText);
+          const checkRect=checkbox?.getBoundingClientRect(),textRect=textRange?.getBoundingClientRect();
+          const editor=rect('[data-graphql-form] textarea'),form=rect('[data-graphql-form]');
+          const heading=rect('.edge-request-flow .lab-heading :is(h2,h3)'),edgeButton=rect('[data-edge-run]');
+          const endpoint=root.querySelector('[data-mcp-endpoint]');
+          return {overflow:document.documentElement.scrollWidth>innerWidth+1,smallActions,misalignedHeadings,
+            d1Cards:rows.length&&rows.every((row)=>getComputedStyle(row).display==='grid'),d1Buttons,clippedEmails,
+            flowColumns:flow?getComputedStyle(flow).gridTemplateColumns.trim().split(/\\s+/).length:null,
+            flowClipped:flow?[...flow.querySelectorAll('strong')].some((node)=>node.scrollWidth>node.clientWidth+1):false,
+            edgeActionBelow:heading&&edgeButton?edgeButton.top>=heading.bottom-1:null,
+            mcpEndpointVisible:visible(endpoint),mcpActionBelow:rect('[data-copy-value]')&&rect('[data-copy-value]').top>=root.querySelector('[data-copy-value]')?.closest('section')?.querySelector('.section-head :is(h2,h3)')?.getBoundingClientRect().bottom-1,
+            editorRatio:editor&&form?editor.width/form.width:null,
+            workerInline:checkRect&&textRect?Math.abs((checkRect.top+checkRect.bottom)/2-(textRect.top+textRect.bottom)/2)<10:null,
+            coarseCopy:root.querySelector('.drop-zone-pointer-coarse')?.textContent?.trim(),
+            coarseVisible:visible(root.querySelector('.drop-zone-pointer-coarse'))};
+        })()`);
+        const failures=[];
+        if (report.overflow) failures.push('root overflow');
+        if (report.smallActions.length) failures.push(`small actions ${report.smallActions.join(', ')}`);
+        if (width < 640 && report.misalignedHeadings.length) failures.push(`heading alignment ${report.misalignedHeadings.join(', ')}`);
+        if (id === 'd1' && (report.d1Buttons || report.clippedEmails.length || (width < 640 && !report.d1Cards))) failures.push('D1 cards, actions, or email clipping');
+        if (id === 'durable-objects' && width < 640 && (report.flowColumns !== 1 || report.flowClipped)) failures.push('Durable Objects flow');
+        if (id === 'edge' && width < 640 && !report.edgeActionBelow) failures.push('Edge action placement');
+        if (id === 'mcp' && (!report.mcpEndpointVisible || (width < 640 && !report.mcpActionBelow))) failures.push('MCP endpoint or action placement');
+        if (id === 'graphql' && (report.editorRatio < .95 || !Number.isFinite(report.editorRatio))) failures.push('GraphQL editor width');
+        if (id === 'workers' && !report.workerInline) failures.push('Workers checkbox alignment');
+        if (id === 'r2' && width < 768 && (!report.coarseVisible || report.coarseCopy !== 'Choose a file')) failures.push('R2 touch copy');
+        if (failures.length) throw new Error(`${label}: ${failures.join('; ')} (${JSON.stringify(report)})`);
+        if (id === 'd1') {
+          const tasks = await evaluate(cdp, `(()=>{
+            document.querySelector('[data-table-tab="tasks"]').click();
+            const rows=[...document.querySelectorAll('[data-rows="tasks"] tr')].filter((row)=>row.querySelector('[data-edit-task]'));
+            const actions=rows.flatMap((row)=>[...row.querySelectorAll('.d1-row-actions button')]);
+            return {cards:rows.length>0&&rows.every((row)=>getComputedStyle(row).display==='grid'),
+              clipped:actions.some((node)=>{const r=node.getBoundingClientRect();return r.left<0||r.right>innerWidth||r.width<43.5||r.height<43.5})};
+          })()`);
+          if (tasks.clipped || (width < 640 && !tasks.cards)) throw new Error(`${label}: task card actions are clipped or missing (${JSON.stringify(tasks)})`);
+        }
+      }
+      if (width === 375) {
+        await exerciseD1Workflow(cdp, locale);
+        await exerciseD1TaskCardWorkflow(cdp, locale);
+      }
+    }
+  }
+  await cdp.call('Emulation.setTouchEmulationEnabled', { enabled: false });
+}
+
 async function retainedInspectorAudit(cdp) {
   const retained = ['d1', 'r2', 'workers', 'durable-objects', 'i18n'];
   for (const width of [375, 768, 1280, 1440]) {
@@ -1011,6 +1108,7 @@ async function main() {
     await sharedResetAudit(cdp, 1280);
     axeRuns += 6;
     await phoneWorkbenchAudit(cdp);
+    await demoInteriorReflowAudit(cdp);
     await retainedInspectorAudit(cdp);
     await sharedResetAudit(cdp, 375);
     await assuranceRecordFirstAudit(cdp);

@@ -53,9 +53,10 @@ function required<T extends Element>(root: ParentNode, selector: string): T {
   return element;
 }
 
-function textCell(text: string): HTMLTableCellElement {
+function textCell(text: string, label?: string): HTMLTableCellElement {
   const cell = document.createElement('td');
   cell.textContent = text;
+  if (label) cell.dataset.label = label;
   return cell;
 }
 
@@ -197,15 +198,15 @@ export async function mount(root: HTMLElement): Promise<void> {
     }
     for (const user of state.users) {
       const row = document.createElement('tr');
-      const name = textCell('');
+      const name = textCell('', message('name', 'Name'));
       const strong = document.createElement('strong');
       strong.textContent = user.name;
       name.append(strong);
-      const email = textCell('');
+      const email = textCell('', message('email', 'Email'));
       const code = document.createElement('code');
       code.textContent = user.email;
       email.append(code);
-      const role = textCell('');
+      const role = textCell('', message('role', 'Role'));
       const badge = document.createElement('span');
       badge.className = 'badge d1-role';
       badge.dataset.role = user.role;
@@ -249,12 +250,12 @@ export async function mount(root: HTMLElement): Promise<void> {
     }
     for (const task of state.tasks) {
       const row = document.createElement('tr');
-      const title = textCell('');
+      const title = textCell('', message('taskTitle', 'Task'));
       const strong = document.createElement('strong');
       strong.textContent = task.title;
       title.append(strong);
-      const assignee = textCell(names.get(task.assigneeId ?? '') ?? message('unassigned', 'Unassigned'));
-      const status = textCell('');
+      const assignee = textCell(names.get(task.assigneeId ?? '') ?? message('unassigned', 'Unassigned'), message('assignee', 'Assignee'));
+      const status = textCell('', message('status', 'Status'));
       const badge = document.createElement('span');
       badge.className = 'badge d1-task-status';
       badge.dataset.status = task.status;
