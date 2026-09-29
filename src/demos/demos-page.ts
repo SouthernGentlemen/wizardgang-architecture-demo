@@ -87,9 +87,19 @@ export const demonstrations: readonly ArchitectureDemo[] = [
     sourcePath: 'src/demos/webhook-presentation.tsx', status: ['RESETTABLE'], render: (_request, env, options) => webhooksSection(env, options),
   },
   {
-    id: 'identity', label: 'Identity', selectorLabel: 'Identity', group: 'Identity', category: 'Identity', tier: 'primary',
-    summary: 'Inspect the OAuth, OIDC, SAML, session, and authorization behavior available here.',
-    sourcePath: 'src/demos/identity-presentation.tsx', render: (_request, env, options) => identitySection(env, options),
+    id: 'oauth', label: 'OAuth 2.0', selectorLabel: 'OAuth 2.0', group: 'Identity', category: 'Identity', tier: 'primary',
+    summary: 'Sign in with GitHub authorization code and PKCE, then inspect API identity revalidation and application authorization.',
+    sourcePath: 'src/demos/identity-presentation.tsx', render: (_request, env, options) => identitySection(env, options, 'oauth'),
+  },
+  {
+    id: 'sso', label: 'SSO', selectorLabel: 'SSO', group: 'Identity', category: 'Identity', tier: 'primary',
+    summary: 'Sign in with Microsoft Entra ID or Google OpenID Connect and inspect the validated application identity.',
+    sourcePath: 'src/demos/identity-presentation.tsx', render: (_request, env, options) => identitySection(env, options, 'sso'),
+  },
+  {
+    id: 'saml', label: 'SAML', selectorLabel: 'SAML', group: 'Identity', category: 'Identity', tier: 'primary',
+    summary: 'Inspect Entra ID SAML federation, service-provider metadata, assertion validation, and application authorization.',
+    sourcePath: 'src/demos/identity-presentation.tsx', render: (_request, env, options) => identitySection(env, options, 'saml'),
   },
   {
     id: 'mcp', label: 'MCP', selectorLabel: 'MCP', group: 'AI / MCP', category: 'AI', tier: 'primary',

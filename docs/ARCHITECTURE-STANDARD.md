@@ -316,7 +316,7 @@ Every executable repository carries the byte-identical shared root `AGENTS.md` a
 - Vite 8 builds browser modules and stylesheets into content-hashed files.
 - Vitest 5 runs tests that need TypeScript, TSX, or a DOM; `node:test` is acceptable for plain Node scripts.
 
-The compatible shared direct versions are Vite 8.3.1, Vitest 5.0.2, TypeScript 7.0.2, React/React DOM 19.3.0, Wrangler 4.141.0 and Node types 26.6.3 where those packages are used. Boneyard and FightLab retain TypeScript 5.9.3 and Node types 24.13.5 for their source-consumer contract; those repositories own a coordinated upgrade proof. SharkTank retains React/React DOM 19.2.8 because its reviewed 3D and vendored peers exclude React 19.3; SharkTank owns the follow-up. Transitive lockfile versions remain pinned by each repository's tested dependency graph.
+The compatible shared direct versions are Vite 8.3.1, Vitest 5.0.2, TypeScript 7.0.2, React/React DOM 19.3.0, Wrangler 4.141.0 and Node types 26.6.3 where those packages are used. This repository pins Wrangler 4.144.0 to resolve the undici advisory in its tested lockfile. Boneyard and FightLab retain TypeScript 5.9.3 and Node types 24.13.5 for their source-consumer contract; those repositories own a coordinated upgrade proof. SharkTank retains React/React DOM 19.2.8 because its reviewed 3D and vendored peers exclude React 19.3; SharkTank owns the follow-up. Transitive lockfile versions remain pinned by each repository's tested dependency graph.
 
 **Browser presentation, when applicable.**
 

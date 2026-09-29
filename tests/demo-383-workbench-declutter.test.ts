@@ -22,11 +22,11 @@ const env = {
   GITHUB_BRANCH: 'main',
 } as Env;
 
-const withoutInspector = ['rest', 'graphql', 'webhooks', 'identity', 'mcp', 'edge', 'accessibility'];
+const withoutInspector = ['rest', 'graphql', 'webhooks', 'oauth', 'sso', 'saml', 'mcp', 'edge', 'accessibility'];
 
 describe('DEMO-383 phone workbench', () => {
-  it('keeps the twelve released fragments and only the five retained inspectors', () => {
-    expect(demonstrations).toHaveLength(12);
+  it('keeps the fourteen released fragments and only the five retained inspectors', () => {
+    expect(demonstrations).toHaveLength(14);
     expect(demonstrations.filter(hasDemoInspector).map((demo) => demo.id)).toEqual([
       'd1', 'r2', 'workers', 'durable-objects', 'i18n',
     ]);

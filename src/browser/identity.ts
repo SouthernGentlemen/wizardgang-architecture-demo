@@ -77,8 +77,11 @@ export async function mount(root: HTMLElement): Promise<void> {
     showNotice(message('authSuccess', 'Provider authentication validated. A short-lived WizardGang session is active.'), 'success');
   }
   if (params.has('error') || params.has('authenticated')) {
-    const identityPageUrl = message('identityPageUrl', `${window.location.pathname}#identity`);
-    window.history.replaceState({}, '', `${identityPageUrl}${window.location.hash}`);
+    const clean = new URL(window.location.href);
+    clean.searchParams.delete('error');
+    clean.searchParams.delete('authenticated');
+    clean.searchParams.delete('provider');
+    window.history.replaceState({}, '', `${clean.pathname}${clean.search}${clean.hash}`);
   }
 
   const selectTab = (name: string) => {
@@ -119,6 +122,7 @@ export async function mount(root: HTMLElement): Promise<void> {
         slot.dataset.configured = String(Boolean(provider.configured));
       });
       root.querySelectorAll<HTMLAnchorElement>(`[data-provider-action="${key}"]`).forEach((action) => {
+        if (key === 'saml') action.hidden = !provider.configured;
         if (provider.configured) {
           const href = action.dataset.providerHref;
           if (href) action.href = href;
@@ -133,6 +137,10 @@ export async function mount(root: HTMLElement): Promise<void> {
 
     const session = body.session;
     const identity = session.identity;
+    const demo = root.dataset.demoSection;
+    if ((demo === 'oauth' && identity.provider !== 'github')
+      || (demo === 'sso' && identity.provider !== 'microsoft' && identity.provider !== 'google')
+      || (demo === 'saml' && identity.provider !== 'saml')) return;
     result.hidden = false;
     required<HTMLElement>(root, '[data-identity-name]').textContent = identity.displayName;
     required<HTMLElement>(root, '[data-identity-email]').textContent = identity.email || identity.username || identity.subject;

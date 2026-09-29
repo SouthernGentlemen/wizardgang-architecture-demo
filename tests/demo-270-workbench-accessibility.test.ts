@@ -40,7 +40,7 @@ describe('DEMO-270 accessible Demo Workbench interaction', () => {
   it('preserves every released fragment and uses native links for category-local selection', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/demos', { headers: { accept: 'text/html' } }), env);
     const html = await response.text();
-    const fragments = ['d1', 'r2', 'rest', 'graphql', 'webhooks', 'identity', 'mcp', 'edge', 'workers', 'durable-objects', 'accessibility', 'i18n'];
+    const fragments = ['d1', 'r2', 'rest', 'graphql', 'webhooks', 'oauth', 'sso', 'saml', 'mcp', 'edge', 'workers', 'durable-objects', 'accessibility', 'i18n'];
 
     expect(demonstrations.map((demo) => demo.id)).toEqual(fragments);
     for (const fragment of fragments) expect(html).toContain(`demo=${fragment}#${fragment}"`);

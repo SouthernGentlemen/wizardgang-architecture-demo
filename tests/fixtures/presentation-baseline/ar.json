@@ -2014,6 +2014,11 @@
       },
       {
         "role": "navigation",
+        "name": "Identity demos",
+        "id": null
+      },
+      {
+        "role": "navigation",
         "name": "Platform demos",
         "id": null
       },
@@ -2168,7 +2173,7 @@
       },
       {
         "name": "الهوية",
-        "href": "?lang=ar&demo=identity#identity",
+        "href": "?lang=ar&demo=oauth#identity",
         "target": null
       },
       {
@@ -2204,6 +2209,21 @@
       {
         "name": "GraphQL",
         "href": "?lang=ar&demo=graphql#graphql",
+        "target": null
+      },
+      {
+        "name": "OAuth 2.0",
+        "href": "?lang=ar&demo=oauth#oauth",
+        "target": null
+      },
+      {
+        "name": "SSO",
+        "href": "?lang=ar&demo=sso#sso",
+        "target": null
+      },
+      {
+        "name": "SAML",
+        "href": "?lang=ar&demo=saml#saml",
         "target": null
       },
       {
@@ -2443,6 +2463,9 @@
       "r2",
       "rest",
       "graphql",
+      "oauth",
+      "sso",
+      "saml",
       "edge",
       "workers",
       "durable-objects",
@@ -2487,7 +2510,7 @@
         "present": true
       },
       {
-        "href": "?lang=ar&demo=identity#identity",
+        "href": "?lang=ar&demo=oauth#identity",
         "fragment": "identity",
         "present": true
       },
@@ -2524,6 +2547,21 @@
       {
         "href": "?lang=ar&demo=graphql#graphql",
         "fragment": "graphql",
+        "present": true
+      },
+      {
+        "href": "?lang=ar&demo=oauth#oauth",
+        "fragment": "oauth",
+        "present": true
+      },
+      {
+        "href": "?lang=ar&demo=sso#sso",
+        "fragment": "sso",
+        "present": true
+      },
+      {
+        "href": "?lang=ar&demo=saml#saml",
+        "fragment": "saml",
         "present": true
       },
       {
@@ -2595,7 +2633,7 @@
       {
         "element": "a#identity",
         "attributes": {
-          "data-demo-link": "identity",
+          "data-demo-link": "oauth",
           "data-demo-category": "Identity"
         }
       },
@@ -2660,6 +2698,30 @@
         "element": "a#graphql",
         "attributes": {
           "data-demo-link": "graphql"
+        }
+      },
+      {
+        "element": "nav",
+        "attributes": {
+          "data-demo-selector-category": "Identity"
+        }
+      },
+      {
+        "element": "a#oauth",
+        "attributes": {
+          "data-demo-link": "oauth"
+        }
+      },
+      {
+        "element": "a#sso",
+        "attributes": {
+          "data-demo-link": "sso"
+        }
+      },
+      {
+        "element": "a#saml",
+        "attributes": {
+          "data-demo-link": "saml"
         }
       },
       {
@@ -3041,7 +3103,7 @@
         "element": "script",
         "attributes": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:a2148d86e5c81ff6>",
+          "data-config": "<CONFIG_SHA256:7e97f65cb40959e2>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \",\"inspector\":\"Inspector\",\"inspectorModes\":\"Inspector modes\",\"closeInspector\":\"Close inspector\",\"resetDemo\":\"Reset demo\",\"resetQuestion\":\"Reset this demo?\",\"resetD1\":\"Your changes will be replaced with three fictional users and four related tasks.\",\"resetR2\":\"Your uploads will be removed. Shared demo files stay in place.\",\"resetWebhooks\":\"Your synthetic webhook events will be cleared.\",\"confirmReset\":\"Confirm reset\",\"cancel\":\"إلغاء\",\"resetComplete\":\"Demo reset complete.\",\"resetFailed\":\"فشلت إعادة التعيين — حاول مرة أخرى.\"}"
         }
       },
@@ -3063,14 +3125,14 @@
         "data": {}
       },
       {
-        "src": "/assets/demos-browser-CkB8DAwv.js",
+        "src": "/assets/demos-browser-D5dK1iqg.js",
         "type": "module",
         "async": false,
         "defer": false,
         "inlineSha256": null,
         "data": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:a2148d86e5c81ff6>",
+          "data-config": "<CONFIG_SHA256:7e97f65cb40959e2>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \",\"inspector\":\"Inspector\",\"inspectorModes\":\"Inspector modes\",\"closeInspector\":\"Close inspector\",\"resetDemo\":\"Reset demo\",\"resetQuestion\":\"Reset this demo?\",\"resetD1\":\"Your changes will be replaced with three fictional users and four related tasks.\",\"resetR2\":\"Your uploads will be removed. Shared demo files stay in place.\",\"resetWebhooks\":\"Your synthetic webhook events will be cleared.\",\"confirmReset\":\"Confirm reset\",\"cancel\":\"إلغاء\",\"resetComplete\":\"Demo reset complete.\",\"resetFailed\":\"فشلت إعادة التعيين — حاول مرة أخرى.\"}"
         }
       },
@@ -3096,7 +3158,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-BaimYJF_.css",
+        "href": "/assets/demos-B3buuO21.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -8679,6 +8741,11 @@
       },
       {
         "role": "navigation",
+        "name": "Identity demos",
+        "id": null
+      },
+      {
+        "role": "navigation",
         "name": "Platform demos",
         "id": null
       },
@@ -8833,7 +8900,7 @@
       },
       {
         "name": "الهوية",
-        "href": "?lang=ar&demo=identity#identity",
+        "href": "?lang=ar&demo=oauth#identity",
         "target": null
       },
       {
@@ -8869,6 +8936,21 @@
       {
         "name": "GraphQL",
         "href": "?lang=ar&demo=graphql#graphql",
+        "target": null
+      },
+      {
+        "name": "OAuth 2.0",
+        "href": "?lang=ar&demo=oauth#oauth",
+        "target": null
+      },
+      {
+        "name": "SSO",
+        "href": "?lang=ar&demo=sso#sso",
+        "target": null
+      },
+      {
+        "name": "SAML",
+        "href": "?lang=ar&demo=saml#saml",
         "target": null
       },
       {
@@ -9108,6 +9190,9 @@
       "r2",
       "rest",
       "graphql",
+      "oauth",
+      "sso",
+      "saml",
       "edge",
       "workers",
       "durable-objects",
@@ -9152,7 +9237,7 @@
         "present": true
       },
       {
-        "href": "?lang=ar&demo=identity#identity",
+        "href": "?lang=ar&demo=oauth#identity",
         "fragment": "identity",
         "present": true
       },
@@ -9189,6 +9274,21 @@
       {
         "href": "?lang=ar&demo=graphql#graphql",
         "fragment": "graphql",
+        "present": true
+      },
+      {
+        "href": "?lang=ar&demo=oauth#oauth",
+        "fragment": "oauth",
+        "present": true
+      },
+      {
+        "href": "?lang=ar&demo=sso#sso",
+        "fragment": "sso",
+        "present": true
+      },
+      {
+        "href": "?lang=ar&demo=saml#saml",
+        "fragment": "saml",
         "present": true
       },
       {
@@ -9260,7 +9360,7 @@
       {
         "element": "a#identity",
         "attributes": {
-          "data-demo-link": "identity",
+          "data-demo-link": "oauth",
           "data-demo-category": "Identity"
         }
       },
@@ -9325,6 +9425,30 @@
         "element": "a#graphql",
         "attributes": {
           "data-demo-link": "graphql"
+        }
+      },
+      {
+        "element": "nav",
+        "attributes": {
+          "data-demo-selector-category": "Identity"
+        }
+      },
+      {
+        "element": "a#oauth",
+        "attributes": {
+          "data-demo-link": "oauth"
+        }
+      },
+      {
+        "element": "a#sso",
+        "attributes": {
+          "data-demo-link": "sso"
+        }
+      },
+      {
+        "element": "a#saml",
+        "attributes": {
+          "data-demo-link": "saml"
         }
       },
       {
@@ -9706,7 +9830,7 @@
         "element": "script",
         "attributes": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:a2148d86e5c81ff6>",
+          "data-config": "<CONFIG_SHA256:7e97f65cb40959e2>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \",\"inspector\":\"Inspector\",\"inspectorModes\":\"Inspector modes\",\"closeInspector\":\"Close inspector\",\"resetDemo\":\"Reset demo\",\"resetQuestion\":\"Reset this demo?\",\"resetD1\":\"Your changes will be replaced with three fictional users and four related tasks.\",\"resetR2\":\"Your uploads will be removed. Shared demo files stay in place.\",\"resetWebhooks\":\"Your synthetic webhook events will be cleared.\",\"confirmReset\":\"Confirm reset\",\"cancel\":\"إلغاء\",\"resetComplete\":\"Demo reset complete.\",\"resetFailed\":\"فشلت إعادة التعيين — حاول مرة أخرى.\"}"
         }
       },
@@ -9728,14 +9852,14 @@
         "data": {}
       },
       {
-        "src": "/assets/demos-browser-CkB8DAwv.js",
+        "src": "/assets/demos-browser-D5dK1iqg.js",
         "type": "module",
         "async": false,
         "defer": false,
         "inlineSha256": null,
         "data": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:a2148d86e5c81ff6>",
+          "data-config": "<CONFIG_SHA256:7e97f65cb40959e2>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \",\"inspector\":\"Inspector\",\"inspectorModes\":\"Inspector modes\",\"closeInspector\":\"Close inspector\",\"resetDemo\":\"Reset demo\",\"resetQuestion\":\"Reset this demo?\",\"resetD1\":\"Your changes will be replaced with three fictional users and four related tasks.\",\"resetR2\":\"Your uploads will be removed. Shared demo files stay in place.\",\"resetWebhooks\":\"Your synthetic webhook events will be cleared.\",\"confirmReset\":\"Confirm reset\",\"cancel\":\"إلغاء\",\"resetComplete\":\"Demo reset complete.\",\"resetFailed\":\"فشلت إعادة التعيين — حاول مرة أخرى.\"}"
         }
       },
@@ -9761,7 +9885,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-BaimYJF_.css",
+        "href": "/assets/demos-B3buuO21.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -9832,6 +9956,11 @@
       },
       {
         "role": "navigation",
+        "name": "Identity demos",
+        "id": null
+      },
+      {
+        "role": "navigation",
         "name": "Platform demos",
         "id": null
       },
@@ -9986,7 +10115,7 @@
       },
       {
         "name": "الهوية",
-        "href": "?lang=ar&demo=identity#identity",
+        "href": "?lang=ar&demo=oauth#identity",
         "target": null
       },
       {
@@ -10022,6 +10151,21 @@
       {
         "name": "GraphQL",
         "href": "?lang=ar&demo=graphql#graphql",
+        "target": null
+      },
+      {
+        "name": "OAuth 2.0",
+        "href": "?lang=ar&demo=oauth#oauth",
+        "target": null
+      },
+      {
+        "name": "SSO",
+        "href": "?lang=ar&demo=sso#sso",
+        "target": null
+      },
+      {
+        "name": "SAML",
+        "href": "?lang=ar&demo=saml#saml",
         "target": null
       },
       {
@@ -10261,6 +10405,9 @@
       "r2",
       "rest",
       "graphql",
+      "oauth",
+      "sso",
+      "saml",
       "edge",
       "workers",
       "durable-objects",
@@ -10305,7 +10452,7 @@
         "present": true
       },
       {
-        "href": "?lang=ar&demo=identity#identity",
+        "href": "?lang=ar&demo=oauth#identity",
         "fragment": "identity",
         "present": true
       },
@@ -10342,6 +10489,21 @@
       {
         "href": "?lang=ar&demo=graphql#graphql",
         "fragment": "graphql",
+        "present": true
+      },
+      {
+        "href": "?lang=ar&demo=oauth#oauth",
+        "fragment": "oauth",
+        "present": true
+      },
+      {
+        "href": "?lang=ar&demo=sso#sso",
+        "fragment": "sso",
+        "present": true
+      },
+      {
+        "href": "?lang=ar&demo=saml#saml",
+        "fragment": "saml",
         "present": true
       },
       {
@@ -10413,7 +10575,7 @@
       {
         "element": "a#identity",
         "attributes": {
-          "data-demo-link": "identity",
+          "data-demo-link": "oauth",
           "data-demo-category": "Identity"
         }
       },
@@ -10478,6 +10640,30 @@
         "element": "a#graphql",
         "attributes": {
           "data-demo-link": "graphql"
+        }
+      },
+      {
+        "element": "nav",
+        "attributes": {
+          "data-demo-selector-category": "Identity"
+        }
+      },
+      {
+        "element": "a#oauth",
+        "attributes": {
+          "data-demo-link": "oauth"
+        }
+      },
+      {
+        "element": "a#sso",
+        "attributes": {
+          "data-demo-link": "sso"
+        }
+      },
+      {
+        "element": "a#saml",
+        "attributes": {
+          "data-demo-link": "saml"
         }
       },
       {
@@ -10859,7 +11045,7 @@
         "element": "script",
         "attributes": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:a2148d86e5c81ff6>",
+          "data-config": "<CONFIG_SHA256:7e97f65cb40959e2>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \",\"inspector\":\"Inspector\",\"inspectorModes\":\"Inspector modes\",\"closeInspector\":\"Close inspector\",\"resetDemo\":\"Reset demo\",\"resetQuestion\":\"Reset this demo?\",\"resetD1\":\"Your changes will be replaced with three fictional users and four related tasks.\",\"resetR2\":\"Your uploads will be removed. Shared demo files stay in place.\",\"resetWebhooks\":\"Your synthetic webhook events will be cleared.\",\"confirmReset\":\"Confirm reset\",\"cancel\":\"إلغاء\",\"resetComplete\":\"Demo reset complete.\",\"resetFailed\":\"فشلت إعادة التعيين — حاول مرة أخرى.\"}"
         }
       },
@@ -10881,14 +11067,14 @@
         "data": {}
       },
       {
-        "src": "/assets/demos-browser-CkB8DAwv.js",
+        "src": "/assets/demos-browser-D5dK1iqg.js",
         "type": "module",
         "async": false,
         "defer": false,
         "inlineSha256": null,
         "data": {
           "data-demos-browser": "",
-          "data-config": "<CONFIG_SHA256:a2148d86e5c81ff6>",
+          "data-config": "<CONFIG_SHA256:7e97f65cb40959e2>",
           "data-messages": "{\"modes\":{\"Guide\":\"Guide\",\"Request\":\"Request\",\"Evidence\":\"الأدلة\"},\"loading\":\"Loading {label} demonstration…\",\"failed\":\"The demonstration could not be loaded.\",\"retry\":\"Retry demo\",\"stableFragment\":\"Stable fragment: \",\"implementation\":\"Implementation: \",\"inspector\":\"Inspector\",\"inspectorModes\":\"Inspector modes\",\"closeInspector\":\"Close inspector\",\"resetDemo\":\"Reset demo\",\"resetQuestion\":\"Reset this demo?\",\"resetD1\":\"Your changes will be replaced with three fictional users and four related tasks.\",\"resetR2\":\"Your uploads will be removed. Shared demo files stay in place.\",\"resetWebhooks\":\"Your synthetic webhook events will be cleared.\",\"confirmReset\":\"Confirm reset\",\"cancel\":\"إلغاء\",\"resetComplete\":\"Demo reset complete.\",\"resetFailed\":\"فشلت إعادة التعيين — حاول مرة أخرى.\"}"
         }
       },
@@ -10914,7 +11100,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-BaimYJF_.css",
+        "href": "/assets/demos-B3buuO21.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -14077,7 +14263,7 @@
     "scripts": [],
     "stylesheets": []
   },
-  "demo:identity": {
+  "demo:oauth": {
     "status": 200,
     "headers": {
       "contentType": "text/html; charset=utf-8",
@@ -14103,7 +14289,7 @@
       {
         "role": "region",
         "name": "Choose a trust relationship",
-        "id": "identity-sso"
+        "id": null
       },
       {
         "role": "region",
@@ -14113,54 +14299,34 @@
       {
         "role": "region",
         "name": "Provider payload",
-        "id": "identity-identity-provider-panel"
+        "id": "oauth-identity-provider-panel"
       },
       {
         "role": "region",
         "name": "Normalized identity",
-        "id": "identity-identity-normalized-panel"
+        "id": "oauth-identity-normalized-panel"
       },
       {
         "role": "region",
         "name": "Authorization",
-        "id": "identity-identity-authorization-panel"
+        "id": "oauth-identity-authorization-panel"
       },
       {
         "role": "region",
         "name": "Protocol",
-        "id": "identity-identity-protocol-panel"
-      },
-      {
-        "role": "region",
-        "name": "Microsoft Entra ID / SAML 2.0",
-        "id": "identity-saml"
+        "id": "oauth-identity-protocol-panel"
       }
     ],
     "headings": [
       {
         "level": 2,
-        "text": "المصادقة وSSO",
+        "text": "OAuth 2.0",
         "id": null
       },
       {
         "level": 3,
         "text": "Choose a trust relationship",
-        "id": "identity-identity-signin-heading"
-      },
-      {
-        "level": 4,
-        "text": "Microsoft Entra ID",
-        "id": null
-      },
-      {
-        "level": 3,
-        "text": "حد هوية واحد",
-        "id": null
-      },
-      {
-        "level": 4,
-        "text": "Google",
-        "id": null
+        "id": "oauth-identity-signin-heading"
       },
       {
         "level": 4,
@@ -14170,7 +14336,7 @@
       {
         "level": 3,
         "text": "الهوية",
-        "id": "identity-identity-result-heading"
+        "id": "oauth-identity-result-heading"
       },
       {
         "level": 4,
@@ -14191,11 +14357,769 @@
         "level": 4,
         "text": "Protocol",
         "id": null
+      }
+    ],
+    "links": [
+      {
+        "name": "View source ↗",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/identity-presentation.tsx",
+        "target": null
+      }
+    ],
+    "buttons": [
+      {
+        "name": "Reset identity session",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "تسجيل الخروج",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Provider payload",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Normalized identity",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Authorization",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Protocol",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Evaluate demo:read",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Evaluate demo:write",
+        "type": "button",
+        "value": null
+      }
+    ],
+    "formControls": [],
+    "ids": [
+      "oauth-identity-signin-heading",
+      "oauth-identity-result-heading",
+      "oauth-identity-provider-tab",
+      "oauth-identity-normalized-tab",
+      "oauth-identity-authorization-tab",
+      "oauth-identity-protocol-tab",
+      "oauth-identity-provider-panel",
+      "oauth-identity-normalized-panel",
+      "oauth-identity-authorization-panel",
+      "oauth-identity-protocol-panel"
+    ],
+    "fragmentTargets": [],
+    "dataHooks": [
+      {
+        "element": "div",
+        "attributes": {
+          "data-demo-section": "oauth",
+          "data-demo-browser-module": "/assets/identity-browser-BFy-QG-S.js",
+          "data-config": "<CONFIG_SHA256:4b071209105e221d>"
+        }
+      },
+      {
+        "element": "p",
+        "attributes": {
+          "data-identity-notice": ""
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-identity-reset": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-config-status": "github",
+          "data-configured": "false"
+        }
+      },
+      {
+        "element": "a",
+        "attributes": {
+          "data-provider-href": "/auth/github",
+          "data-provider-action": "github"
+        }
+      },
+      {
+        "element": "section",
+        "attributes": {
+          "data-identity-result": ""
+        }
+      },
+      {
+        "element": "h3#oauth-identity-result-heading",
+        "attributes": {
+          "data-identity-name": ""
+        }
+      },
+      {
+        "element": "p",
+        "attributes": {
+          "data-identity-email": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-identity-provider": ""
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-identity-badges": ""
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-identity-logout": ""
+        }
+      },
+      {
+        "element": "button#oauth-identity-provider-tab",
+        "attributes": {
+          "data-identity-tab": "provider"
+        }
+      },
+      {
+        "element": "button#oauth-identity-normalized-tab",
+        "attributes": {
+          "data-identity-tab": "normalized"
+        }
+      },
+      {
+        "element": "button#oauth-identity-authorization-tab",
+        "attributes": {
+          "data-identity-tab": "authorization"
+        }
+      },
+      {
+        "element": "button#oauth-identity-protocol-tab",
+        "attributes": {
+          "data-identity-tab": "protocol"
+        }
+      },
+      {
+        "element": "section#oauth-identity-provider-panel",
+        "attributes": {
+          "data-identity-panel": "provider"
+        }
+      },
+      {
+        "element": "h4",
+        "attributes": {
+          "data-payload-label": ""
+        }
+      },
+      {
+        "element": "div",
+        "attributes": {
+          "data-validation-list": ""
+        }
+      },
+      {
+        "element": "pre",
+        "attributes": {
+          "data-provider-payload": ""
+        }
+      },
+      {
+        "element": "section#oauth-identity-normalized-panel",
+        "attributes": {
+          "data-identity-panel": "normalized"
+        }
+      },
+      {
+        "element": "pre",
+        "attributes": {
+          "data-normalized-identity": ""
+        }
+      },
+      {
+        "element": "section#oauth-identity-authorization-panel",
+        "attributes": {
+          "data-identity-panel": "authorization"
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-policy-name": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-policy-context": ""
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-authorize": "demo:read"
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-authorize": "demo:write"
+        }
+      },
+      {
+        "element": "div",
+        "attributes": {
+          "data-authorization-result": ""
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-decision": ""
+        }
+      },
+      {
+        "element": "p",
+        "attributes": {
+          "data-decision-detail": ""
+        }
+      },
+      {
+        "element": "section#oauth-identity-protocol-panel",
+        "attributes": {
+          "data-identity-panel": "protocol"
+        }
+      },
+      {
+        "element": "h4",
+        "attributes": {
+          "data-protocol-name": ""
+        }
+      },
+      {
+        "element": "ol",
+        "attributes": {
+          "data-protocol-steps": ""
+        }
+      },
+      {
+        "element": "details",
+        "attributes": {
+          "data-assertion-details": ""
+        }
+      },
+      {
+        "element": "pre",
+        "attributes": {
+          "data-sanitized-assertion": ""
+        }
+      }
+    ],
+    "scripts": [],
+    "stylesheets": []
+  },
+  "demo:sso": {
+    "status": 200,
+    "headers": {
+      "contentType": "text/html; charset=utf-8",
+      "contentLanguage": null,
+      "security": {
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
+        "cross-origin-resource-policy": "same-origin",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-robots-tag": "noindex, nofollow"
+      }
+    },
+    "document": {
+      "lang": null,
+      "dir": null,
+      "title": "",
+      "description": null,
+      "canonical": null,
+      "openGraph": {}
+    },
+    "landmarks": [
+      {
+        "role": "region",
+        "name": "Choose a trust relationship",
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "الهوية",
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "Provider payload",
+        "id": "sso-identity-provider-panel"
+      },
+      {
+        "role": "region",
+        "name": "Normalized identity",
+        "id": "sso-identity-normalized-panel"
+      },
+      {
+        "role": "region",
+        "name": "Authorization",
+        "id": "sso-identity-authorization-panel"
+      },
+      {
+        "role": "region",
+        "name": "Protocol",
+        "id": "sso-identity-protocol-panel"
+      }
+    ],
+    "headings": [
+      {
+        "level": 2,
+        "text": "Single sign-on",
+        "id": null
       },
       {
         "level": 3,
+        "text": "Choose a trust relationship",
+        "id": "sso-identity-signin-heading"
+      },
+      {
+        "level": 4,
+        "text": "Microsoft Entra ID",
+        "id": null
+      },
+      {
+        "level": 4,
+        "text": "Google",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "الهوية",
+        "id": "sso-identity-result-heading"
+      },
+      {
+        "level": 4,
+        "text": "Validated provider payload",
+        "id": null
+      },
+      {
+        "level": 4,
+        "text": "Normalized identity",
+        "id": null
+      },
+      {
+        "level": 4,
+        "text": "What can this identity do?",
+        "id": null
+      },
+      {
+        "level": 4,
+        "text": "Protocol",
+        "id": null
+      }
+    ],
+    "links": [
+      {
+        "name": "View source ↗",
+        "href": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/<COMMIT_SHA>/src/demos/identity-presentation.tsx",
+        "target": null
+      }
+    ],
+    "buttons": [
+      {
+        "name": "Reset identity session",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "تسجيل الخروج",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Provider payload",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Normalized identity",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Authorization",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Protocol",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Evaluate demo:read",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Evaluate demo:write",
+        "type": "button",
+        "value": null
+      }
+    ],
+    "formControls": [],
+    "ids": [
+      "sso-identity-signin-heading",
+      "sso-identity-result-heading",
+      "sso-identity-provider-tab",
+      "sso-identity-normalized-tab",
+      "sso-identity-authorization-tab",
+      "sso-identity-protocol-tab",
+      "sso-identity-provider-panel",
+      "sso-identity-normalized-panel",
+      "sso-identity-authorization-panel",
+      "sso-identity-protocol-panel"
+    ],
+    "fragmentTargets": [],
+    "dataHooks": [
+      {
+        "element": "div",
+        "attributes": {
+          "data-demo-section": "sso",
+          "data-demo-browser-module": "/assets/identity-browser-BFy-QG-S.js",
+          "data-config": "<CONFIG_SHA256:0ec8f7a669a97307>"
+        }
+      },
+      {
+        "element": "p",
+        "attributes": {
+          "data-identity-notice": ""
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-identity-reset": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-config-status": "microsoft",
+          "data-configured": "false"
+        }
+      },
+      {
+        "element": "a",
+        "attributes": {
+          "data-provider-href": "/auth/microsoft",
+          "data-provider-action": "microsoft"
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-config-status": "google",
+          "data-configured": "false"
+        }
+      },
+      {
+        "element": "a",
+        "attributes": {
+          "data-provider-href": "/auth/google",
+          "data-provider-action": "google"
+        }
+      },
+      {
+        "element": "section",
+        "attributes": {
+          "data-identity-result": ""
+        }
+      },
+      {
+        "element": "h3#sso-identity-result-heading",
+        "attributes": {
+          "data-identity-name": ""
+        }
+      },
+      {
+        "element": "p",
+        "attributes": {
+          "data-identity-email": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-identity-provider": ""
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-identity-badges": ""
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-identity-logout": ""
+        }
+      },
+      {
+        "element": "button#sso-identity-provider-tab",
+        "attributes": {
+          "data-identity-tab": "provider"
+        }
+      },
+      {
+        "element": "button#sso-identity-normalized-tab",
+        "attributes": {
+          "data-identity-tab": "normalized"
+        }
+      },
+      {
+        "element": "button#sso-identity-authorization-tab",
+        "attributes": {
+          "data-identity-tab": "authorization"
+        }
+      },
+      {
+        "element": "button#sso-identity-protocol-tab",
+        "attributes": {
+          "data-identity-tab": "protocol"
+        }
+      },
+      {
+        "element": "section#sso-identity-provider-panel",
+        "attributes": {
+          "data-identity-panel": "provider"
+        }
+      },
+      {
+        "element": "h4",
+        "attributes": {
+          "data-payload-label": ""
+        }
+      },
+      {
+        "element": "div",
+        "attributes": {
+          "data-validation-list": ""
+        }
+      },
+      {
+        "element": "pre",
+        "attributes": {
+          "data-provider-payload": ""
+        }
+      },
+      {
+        "element": "section#sso-identity-normalized-panel",
+        "attributes": {
+          "data-identity-panel": "normalized"
+        }
+      },
+      {
+        "element": "pre",
+        "attributes": {
+          "data-normalized-identity": ""
+        }
+      },
+      {
+        "element": "section#sso-identity-authorization-panel",
+        "attributes": {
+          "data-identity-panel": "authorization"
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-policy-name": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-policy-context": ""
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-authorize": "demo:read"
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-authorize": "demo:write"
+        }
+      },
+      {
+        "element": "div",
+        "attributes": {
+          "data-authorization-result": ""
+        }
+      },
+      {
+        "element": "strong",
+        "attributes": {
+          "data-decision": ""
+        }
+      },
+      {
+        "element": "p",
+        "attributes": {
+          "data-decision-detail": ""
+        }
+      },
+      {
+        "element": "section#sso-identity-protocol-panel",
+        "attributes": {
+          "data-identity-panel": "protocol"
+        }
+      },
+      {
+        "element": "h4",
+        "attributes": {
+          "data-protocol-name": ""
+        }
+      },
+      {
+        "element": "ol",
+        "attributes": {
+          "data-protocol-steps": ""
+        }
+      },
+      {
+        "element": "details",
+        "attributes": {
+          "data-assertion-details": ""
+        }
+      },
+      {
+        "element": "pre",
+        "attributes": {
+          "data-sanitized-assertion": ""
+        }
+      }
+    ],
+    "scripts": [],
+    "stylesheets": []
+  },
+  "demo:saml": {
+    "status": 200,
+    "headers": {
+      "contentType": "text/html; charset=utf-8",
+      "contentLanguage": null,
+      "security": {
+        "content-security-policy": "default-src 'self'; base-uri 'none'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'sha256-kkEgMHJL1kWpfT75kZZ6+2UXAqAKOLs/xIRz40TozzM='; style-src 'self'",
+        "cross-origin-resource-policy": "same-origin",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-robots-tag": "noindex, nofollow"
+      }
+    },
+    "document": {
+      "lang": null,
+      "dir": null,
+      "title": "",
+      "description": null,
+      "canonical": null,
+      "openGraph": {}
+    },
+    "landmarks": [
+      {
+        "role": "region",
+        "name": "Choose a trust relationship",
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "الهوية",
+        "id": null
+      },
+      {
+        "role": "region",
+        "name": "Provider payload",
+        "id": "saml-identity-provider-panel"
+      },
+      {
+        "role": "region",
+        "name": "Normalized identity",
+        "id": "saml-identity-normalized-panel"
+      },
+      {
+        "role": "region",
+        "name": "Authorization",
+        "id": "saml-identity-authorization-panel"
+      },
+      {
+        "role": "region",
+        "name": "Protocol",
+        "id": "saml-identity-protocol-panel"
+      }
+    ],
+    "headings": [
+      {
+        "level": 2,
+        "text": "SAML 2.0",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Choose a trust relationship",
+        "id": "saml-identity-signin-heading"
+      },
+      {
+        "level": 4,
         "text": "Microsoft Entra ID / SAML 2.0",
-        "id": "identity-identity-federation-heading"
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "الهوية",
+        "id": "saml-identity-result-heading"
+      },
+      {
+        "level": 4,
+        "text": "Validated provider payload",
+        "id": null
+      },
+      {
+        "level": 4,
+        "text": "Normalized identity",
+        "id": null
+      },
+      {
+        "level": 4,
+        "text": "What can this identity do?",
+        "id": null
+      },
+      {
+        "level": 4,
+        "text": "Protocol",
+        "id": null
       }
     ],
     "links": [
@@ -14254,29 +15178,25 @@
     ],
     "formControls": [],
     "ids": [
-      "identity-sso",
-      "identity-identity-signin-heading",
-      "identity-oauth",
-      "identity-identity-result-heading",
-      "identity-identity-provider-tab",
-      "identity-identity-normalized-tab",
-      "identity-identity-authorization-tab",
-      "identity-identity-protocol-tab",
-      "identity-identity-provider-panel",
-      "identity-identity-normalized-panel",
-      "identity-identity-authorization-panel",
-      "identity-identity-protocol-panel",
-      "identity-saml",
-      "identity-identity-federation-heading"
+      "saml-identity-signin-heading",
+      "saml-identity-result-heading",
+      "saml-identity-provider-tab",
+      "saml-identity-normalized-tab",
+      "saml-identity-authorization-tab",
+      "saml-identity-protocol-tab",
+      "saml-identity-provider-panel",
+      "saml-identity-normalized-panel",
+      "saml-identity-authorization-panel",
+      "saml-identity-protocol-panel"
     ],
     "fragmentTargets": [],
     "dataHooks": [
       {
         "element": "div",
         "attributes": {
-          "data-demo-section": "identity",
-          "data-demo-browser-module": "/assets/identity-browser-BmgInjET.js",
-          "data-config": "<CONFIG_SHA256:fed250044c73fd15>"
+          "data-demo-section": "saml",
+          "data-demo-browser-module": "/assets/identity-browser-BFy-QG-S.js",
+          "data-config": "<CONFIG_SHA256:90943a76cd56a3c4>"
         }
       },
       {
@@ -14294,14 +15214,8 @@
       {
         "element": "span",
         "attributes": {
-          "data-config-status": "microsoft"
-        }
-      },
-      {
-        "element": "a",
-        "attributes": {
-          "data-provider-href": "/auth/microsoft",
-          "data-provider-action": "microsoft"
+          "data-config-status": "saml",
+          "data-configured": "false"
         }
       },
       {
@@ -14312,39 +15226,13 @@
         }
       },
       {
-        "element": "span",
-        "attributes": {
-          "data-config-status": "google"
-        }
-      },
-      {
-        "element": "a",
-        "attributes": {
-          "data-provider-href": "/auth/google",
-          "data-provider-action": "google"
-        }
-      },
-      {
-        "element": "span",
-        "attributes": {
-          "data-config-status": "github"
-        }
-      },
-      {
-        "element": "a",
-        "attributes": {
-          "data-provider-href": "/auth/github",
-          "data-provider-action": "github"
-        }
-      },
-      {
         "element": "section",
         "attributes": {
           "data-identity-result": ""
         }
       },
       {
-        "element": "h3#identity-identity-result-heading",
+        "element": "h3#saml-identity-result-heading",
         "attributes": {
           "data-identity-name": ""
         }
@@ -14374,31 +15262,31 @@
         }
       },
       {
-        "element": "button#identity-identity-provider-tab",
+        "element": "button#saml-identity-provider-tab",
         "attributes": {
           "data-identity-tab": "provider"
         }
       },
       {
-        "element": "button#identity-identity-normalized-tab",
+        "element": "button#saml-identity-normalized-tab",
         "attributes": {
           "data-identity-tab": "normalized"
         }
       },
       {
-        "element": "button#identity-identity-authorization-tab",
+        "element": "button#saml-identity-authorization-tab",
         "attributes": {
           "data-identity-tab": "authorization"
         }
       },
       {
-        "element": "button#identity-identity-protocol-tab",
+        "element": "button#saml-identity-protocol-tab",
         "attributes": {
           "data-identity-tab": "protocol"
         }
       },
       {
-        "element": "section#identity-identity-provider-panel",
+        "element": "section#saml-identity-provider-panel",
         "attributes": {
           "data-identity-panel": "provider"
         }
@@ -14422,7 +15310,7 @@
         }
       },
       {
-        "element": "section#identity-identity-normalized-panel",
+        "element": "section#saml-identity-normalized-panel",
         "attributes": {
           "data-identity-panel": "normalized"
         }
@@ -14434,7 +15322,7 @@
         }
       },
       {
-        "element": "section#identity-identity-authorization-panel",
+        "element": "section#saml-identity-authorization-panel",
         "attributes": {
           "data-identity-panel": "authorization"
         }
@@ -14482,7 +15370,7 @@
         }
       },
       {
-        "element": "section#identity-identity-protocol-panel",
+        "element": "section#saml-identity-protocol-panel",
         "attributes": {
           "data-identity-panel": "protocol"
         }
@@ -14509,19 +15397,6 @@
         "element": "pre",
         "attributes": {
           "data-sanitized-assertion": ""
-        }
-      },
-      {
-        "element": "span",
-        "attributes": {
-          "data-config-status": "saml"
-        }
-      },
-      {
-        "element": "a",
-        "attributes": {
-          "data-provider-href": "/auth/saml",
-          "data-provider-action": "saml"
         }
       }
     ],

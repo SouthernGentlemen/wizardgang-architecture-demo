@@ -26,7 +26,7 @@ The supported toolchain is Node 26.10.0 with npm 12.1.0. The exact workflow/runt
 
 `validate:ci` checks the exact pinned Node/npm versions before the locked install. It prints the expected and current versions on every run and fails on a mismatch before dependency installation begins.
 
-npm 12 uses the reviewed `allowScripts` list in `package.json` for `workerd@1.20260925.1` and Wrangler's nested `esbuild@0.28.1`; the macOS-only optional `fsevents@2.3.3` script is denied. A future toolchain or dependency change must review that list with the lockfile before accepting a new install script.
+npm 12 uses the reviewed `allowScripts` list in `package.json` for `workerd@1.20260926.1` and Wrangler's nested `esbuild@0.28.1`; the macOS-only optional `fsevents@2.3.3` script is denied. A future toolchain or dependency change must review that list with the lockfile before accepting a new install script.
 
 Every run writes `.ci-diagnostics/` (ignored by Git):
 

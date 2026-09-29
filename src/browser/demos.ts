@@ -206,9 +206,10 @@ function initializeDemosWorkbench(): void {
     } catch {
       return config.defaultDemoId;
     }
+    if (id === 'identity') return 'oauth';
     if (id) return byId.has(id) ? id : config.defaultDemoId;
     const requested = new URLSearchParams(window.location.search).get('demo');
-    return requested && byId.has(requested) ? requested : config.defaultDemoId;
+    return requested === 'identity' ? 'oauth' : requested && byId.has(requested) ? requested : config.defaultDemoId;
   };
 
   const presentationUrl = (id: string) => {

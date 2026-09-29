@@ -8,6 +8,7 @@ const inventory = JSON.parse(fs.readFileSync('config/worker-secrets.json', 'utf8
 const deploy = fs.readFileSync('.github/workflows/deploy.yml', 'utf8');
 const provisioner = fs.readFileSync('scripts/provision-worker-secret.mjs', 'utf8');
 const packageLock = JSON.parse(fs.readFileSync('package-lock.json', 'utf8'));
+const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 const wrangler = path.resolve('node_modules', '.bin', process.platform === 'win32' ? 'wrangler.cmd' : 'wrangler');
 
 describe('DEMO-297 Worker secret verification', () => {
@@ -56,7 +57,7 @@ describe('DEMO-297 Worker secret verification', () => {
   });
 
   it('uses the machine-readable flag supported by the locked Wrangler secret-list command', () => {
-    expect(packageLock.packages['node_modules/wrangler']?.version).toBe('4.141.0');
+    expect(packageLock.packages['node_modules/wrangler']?.version).toBe(packageJson.devDependencies.wrangler);
     const help = spawnSync(wrangler, ['secret', 'list', '--help'], {
       encoding: 'utf8',
       env: { ...process.env, NO_UPDATE_NOTIFIER: '1' },

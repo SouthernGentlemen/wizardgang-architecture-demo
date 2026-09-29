@@ -26,7 +26,7 @@ const expectedByCategory = {
   Data: ['d1', 'r2'],
   APIs: ['rest', 'graphql'],
   Integrations: ['webhooks'],
-  Identity: ['identity'],
+  Identity: ['oauth', 'sso', 'saml'],
   AI: ['mcp'],
   Platform: ['edge', 'workers', 'durable-objects'],
   Quality: ['accessibility', 'i18n'],
@@ -59,10 +59,10 @@ describe('DEMO-265 tabbed demo workbench', () => {
   it('keeps category-local selectors only for categories with more than one demo', async () => {
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/demos', { headers: { accept: 'text/html' } }), env);
     const html = await response.text();
-    for (const category of ['Data', 'APIs', 'Platform', 'Quality']) {
+    for (const category of ['Data', 'APIs', 'Identity', 'Platform', 'Quality']) {
       expect(html).toContain(`aria-label="${category} demos"`);
     }
-    for (const category of ['Integrations', 'Identity', 'AI']) {
+    for (const category of ['Integrations', 'AI']) {
       expect(html).not.toContain(`aria-label="${category} demos"`);
     }
     expect(html).toContain('>REST</a>');

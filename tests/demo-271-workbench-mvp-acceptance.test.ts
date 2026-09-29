@@ -27,19 +27,19 @@ const env = {
 const released = [
   ['d1', 'Data', 'D1'], ['r2', 'Data', 'R2'], ['rest', 'APIs', 'REST / OpenAPI'],
   ['graphql', 'APIs', 'GraphQL'], ['webhooks', 'Integrations', 'Webhooks'],
-  ['identity', 'Identity', 'Identity'], ['mcp', 'AI', 'MCP'], ['edge', 'Platform', 'Edge'],
+  ['oauth', 'Identity', 'OAuth 2.0'], ['sso', 'Identity', 'SSO'], ['saml', 'Identity', 'SAML'], ['mcp', 'AI', 'MCP'], ['edge', 'Platform', 'Edge'],
   ['workers', 'Platform', 'Workers'], ['durable-objects', 'Platform', 'Durable Objects'],
   ['accessibility', 'Quality', 'Accessibility'], ['i18n', 'Quality', 'Internationalization'],
 ] as const;
 
 const taxonomy = {
   Data: ['d1', 'r2'], APIs: ['rest', 'graphql'], Integrations: ['webhooks'],
-  Identity: ['identity'], AI: ['mcp'], Platform: ['edge', 'workers', 'durable-objects'],
+  Identity: ['oauth', 'sso', 'saml'], AI: ['mcp'], Platform: ['edge', 'workers', 'durable-objects'],
   Quality: ['accessibility', 'i18n'],
 } as const;
 
 describe('DEMO-271 Demo Workbench MVP acceptance', () => {
-  it('locks all twelve stable fragments and the exact seven-category taxonomy', () => {
+  it('locks all fourteen stable fragments and the exact seven-category taxonomy', () => {
     expect(demonstrations.map(({ id, category, label }) => [id, category, label])).toEqual(released);
     expect(demoCategories).toEqual(Object.keys(taxonomy));
     expect(demoCategories).not.toContain('All demos');
@@ -58,8 +58,8 @@ describe('DEMO-271 Demo Workbench MVP acceptance', () => {
     expect(html).toContain('data-demo-id="d1"');
     expect(html).toContain('data-demo-section="d1"');
     for (const [id] of released) expect(html).toContain(`demo=${id}#${id}"`);
-    for (const category of ['Data', 'APIs', 'Platform', 'Quality']) expect(html).toContain(`aria-label="${category} demos"`);
-    for (const category of ['Integrations', 'Identity', 'AI']) expect(html).not.toContain(`aria-label="${category} demos"`);
+    for (const category of ['Data', 'APIs', 'Identity', 'Platform', 'Quality']) expect(html).toContain(`aria-label="${category} demos"`);
+    for (const category of ['Integrations', 'AI']) expect(html).not.toContain(`aria-label="${category} demos"`);
     expect(html).not.toContain('All demos');
     expect(html).not.toContain('Primary demonstrations');
     expect(html).not.toContain('Supporting proof');

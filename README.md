@@ -27,7 +27,7 @@ The server-rendered application hierarchy is declared once in the route registry
 - Data — D1 and R2;
 - APIs — REST/OpenAPI and GraphQL;
 - Integrations — signed webhooks;
-- Identity — OAuth/OIDC/SAML behavior;
+- Identity — separate OAuth 2.0, SSO, and SAML demos;
 - AI / MCP — MCP endpoint, tools, executable proof, and connection guidance;
 - supporting runtime proof — Edge, Workers, and Durable Objects;
 - supporting quality proof — accessibility and internationalization.

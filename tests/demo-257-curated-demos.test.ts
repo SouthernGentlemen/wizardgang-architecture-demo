@@ -28,7 +28,7 @@ describe('DEMO-257 curated demos', () => {
     expect([...new Set(primary.map((demo) => demo.group))]).toEqual([
       'Data', 'APIs', 'Integrations', 'Identity', 'AI / MCP',
     ]);
-    expect(primary.map((demo) => demo.id)).toEqual(['d1', 'r2', 'rest', 'graphql', 'webhooks', 'identity', 'mcp']);
+    expect(primary.map((demo) => demo.id)).toEqual(['d1', 'r2', 'rest', 'graphql', 'webhooks', 'oauth', 'sso', 'saml', 'mcp']);
     expect([...new Set(secondary.map((demo) => demo.group))]).toEqual(['Runtime architecture', 'Quality']);
     expect(secondary.map((demo) => demo.id)).toEqual(['edge', 'workers', 'durable-objects', 'accessibility', 'i18n']);
   });

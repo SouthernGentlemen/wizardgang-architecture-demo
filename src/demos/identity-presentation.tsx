@@ -1,3 +1,4 @@
+import { identityProviderConfiguration } from '../api/identity';
 import type { LocalizationContext } from '../i18n/runtime';
 import { localizationForEnv } from '../i18n/runtime';
 import { sourceUrl } from '../lib/github';
@@ -35,21 +36,30 @@ function identityBrowserMessages(
   });
 }
 
-function IdentityPresentation({ env, localization }: Readonly<{ env: Env; localization: LocalizationContext }>) {
+export type IdentityDemo = 'oauth' | 'sso' | 'saml';
+
+function IdentityPresentation({ env, localization, demo }: Readonly<{ env: Env; localization: LocalizationContext; demo: IdentityDemo }>) {
   const scope = useDemoPresentationScope();
   const exact = (english: string) => localization.exact(english);
   const id = (value: string) => scope.id(value);
+  const providers = identityProviderConfiguration(env);
   const tabs = [
     ['provider', 'Provider payload'],
     ['normalized', 'Normalized identity'],
     ['authorization', 'Authorization'],
     ['protocol', 'Protocol'],
   ] as const;
+  const titles = { oauth: 'OAuth 2.0', sso: 'Single sign-on', saml: 'SAML 2.0' } as const;
+  const descriptions = {
+    oauth: 'GitHub authorization code with PKCE is followed by authenticated API identity revalidation before a session is created.',
+    sso: 'Microsoft Entra ID and Google use OpenID Connect to validate sign-in before application authorization.',
+    saml: 'Entra ID federation validates a signed assertion before any identity reaches application authorization.',
+  } as const;
 
   return <>
     <section className="page-header lab-page-header identity-page-header">
-      <DemoHeading level={1}>{exact('Authentication & SSO')}</DemoHeading>
-      <p className="lede">{exact('Authenticate against real identity providers, inspect the validated identity payload, and see how provider-specific claims become one application identity.')}</p>
+      <DemoHeading level={1}>{exact(titles[demo])}</DemoHeading>
+      <p className="lede">{exact(descriptions[demo])}</p>
       <div className="page-tools"><a className="text-link" href={sourceUrl(env, 'src/demos/identity-presentation.tsx')}>{exact('View source ↗')}</a></div>
     </section>
 
@@ -59,50 +69,50 @@ function IdentityPresentation({ env, localization }: Readonly<{ env: Env; locali
       <p>{exact('This clears your WizardGang session and sign-in flow cookies. Microsoft, Google, and GitHub retain their own sessions.')}</p>
     </div>
 
-    <section className="identity-signin" id={id('sso')} aria-labelledby={id('identity-signin-heading')}>
+    <section className="identity-signin" aria-labelledby={id('identity-signin-heading')}>
       <div className="identity-section-heading">
         <div><p className="eyebrow">{exact('Sign in')}</p><DemoHeading level={2} id={id('identity-signin-heading')}>{exact('Choose a trust relationship')}</DemoHeading></div>
         <p>{exact('Credentials and protocol secrets stay on the Worker.')}</p>
       </div>
-      <p className="identity-boundary-note">{exact('Multiple identity protocols enter here. The application receives one normalized authorization identity.')}</p>
-      <article className="identity-provider identity-enterprise" id={id('oauth')}>
-        <div className="identity-provider-mark microsoft-mark" aria-hidden="true"><span /><span /><span /><span /></div>
+      {demo === 'oauth' ? <article className="identity-provider">
+        <div className="identity-provider-mark github-mark" aria-hidden="true">GH</div>
         <div className="identity-provider-copy">
-          <p className="identity-provider-kind">{exact('Enterprise SSO')}</p>
-          <DemoHeading level={3}>Microsoft Entra ID</DemoHeading>
-          <p>{exact('Modern enterprise authentication through OpenID Connect and the OAuth 2.0 authorization-code flow.')}</p>
-          <div className="identity-provider-meta"><span>OIDC</span><span>OAuth 2.0</span><span data-config-status="microsoft">{exact('Checking configuration…')}</span></div>
+          <p className="identity-provider-kind">{exact('Developer identity')}</p><DemoHeading level={3}>GitHub</DemoHeading>
+          <p>{exact('OAuth authentication with minimal profile and verified-email scopes, followed by API identity revalidation.')}</p>
+          <div className="identity-provider-meta"><span>OAuth 2.0</span><span>PKCE</span><span data-config-status="github" data-configured={String(providers.github.configured)}>{exact(providers.github.configured ? 'Available — Sign in' : 'Not configured in this environment')}</span></div>
         </div>
-        <div className="identity-provider-actions">
-          <a className="button button-primary" data-provider-href="/auth/microsoft" data-provider-action="microsoft" aria-disabled="true">{exact('Sign in with Microsoft')}</a>
-          <a className="text-link" data-provider-href="/auth/saml" data-provider-action="saml" aria-disabled="true">{exact('Use SAML 2.0 instead →')}</a>
-        </div>
-      </article>
-
-      <div className="identity-section-heading identity-secondary-heading">
-        <div><p className="eyebrow">{exact('External identity providers')}</p><DemoHeading level={2}>{exact('One identity boundary')}</DemoHeading></div>
-        <p>{exact('Common providers enter through the same normalization contract.')}</p>
-      </div>
-      <div className="identity-provider-grid">
+        <div className="identity-provider-actions"><a className="button" data-provider-href="/auth/github" data-provider-action="github" href={providers.github.configured ? '/auth/github' : undefined} aria-disabled={!providers.github.configured}>{exact('Sign in with GitHub')}</a></div>
+      </article> : null}
+      {demo === 'sso' ? <div className="identity-provider-grid">
+        <article className="identity-provider identity-enterprise">
+          <div className="identity-provider-mark microsoft-mark" aria-hidden="true"><span /><span /><span /><span /></div>
+          <div className="identity-provider-copy">
+            <p className="identity-provider-kind">{exact('Enterprise SSO')}</p><DemoHeading level={3}>Microsoft Entra ID</DemoHeading>
+            <p>{exact('Modern enterprise authentication through OpenID Connect and the OAuth 2.0 authorization-code flow.')}</p>
+            <div className="identity-provider-meta"><span>OIDC</span><span data-config-status="microsoft" data-configured={String(providers.microsoft.configured)}>{exact(providers.microsoft.configured ? 'Available — Sign in' : 'Not configured in this environment')}</span></div>
+          </div>
+          <div className="identity-provider-actions"><a className="button button-primary" data-provider-href="/auth/microsoft" data-provider-action="microsoft" href={providers.microsoft.configured ? '/auth/microsoft' : undefined} aria-disabled={!providers.microsoft.configured}>{exact('Sign in with Microsoft')}</a></div>
+        </article>
         <article className="identity-provider">
           <div className="identity-provider-mark google-mark" aria-hidden="true">G</div>
           <div className="identity-provider-copy">
             <p className="identity-provider-kind">{exact('OpenID Connect')}</p><DemoHeading level={3}>Google</DemoHeading>
             <p>{exact('Standard Google-account authentication with no Workspace or organizational-domain assumption.')}</p>
-            <div className="identity-provider-meta"><span>OIDC</span><span data-config-status="google">{exact('Checking configuration…')}</span></div>
+            <div className="identity-provider-meta"><span>OIDC</span><span data-config-status="google" data-configured={String(providers.google.configured)}>{exact(providers.google.configured ? 'Available — Sign in' : 'Not configured in this environment')}</span></div>
           </div>
-          <div className="identity-provider-actions"><a className="button" data-provider-href="/auth/google" data-provider-action="google" aria-disabled="true">{exact('Sign in with Google')}</a></div>
+          <div className="identity-provider-actions"><a className="button" data-provider-href="/auth/google" data-provider-action="google" href={providers.google.configured ? '/auth/google' : undefined} aria-disabled={!providers.google.configured}>{exact('Sign in with Google')}</a></div>
         </article>
-        <article className="identity-provider">
-          <div className="identity-provider-mark github-mark" aria-hidden="true">GH</div>
-          <div className="identity-provider-copy">
-            <p className="identity-provider-kind">{exact('Developer identity')}</p><DemoHeading level={3}>GitHub</DemoHeading>
-            <p>{exact('OAuth authentication with minimal profile and verified-email scopes, followed by API identity revalidation.')}</p>
-            <div className="identity-provider-meta"><span>OAuth 2.0</span><span data-config-status="github">{exact('Checking configuration…')}</span></div>
-          </div>
-          <div className="identity-provider-actions"><a className="button" data-provider-href="/auth/github" data-provider-action="github" aria-disabled="true">{exact('Sign in with GitHub')}</a></div>
-        </article>
-      </div>
+      </div> : null}
+      {demo === 'saml' ? <article className="identity-provider identity-federation">
+        <div className="identity-provider-copy">
+          <p className="identity-provider-kind">{exact('Enterprise federation')}</p>
+          <DemoHeading level={3}>Microsoft Entra ID / SAML 2.0</DemoHeading>
+          <p>{exact('An Entra enterprise application and signing certificate must be configured before SAML sign-in is available.')}</p>
+          <p>{exact('The Worker checks the signed assertion, audience, time bounds, and replay before creating a session.')}</p>
+          <div className="identity-provider-meta"><span>{exact('Signed assertion')}</span><span>{exact('Audience')}</span><span>{exact('Time bounds')}</span><span>{exact('Replay protection')}</span><span data-config-status="saml" data-configured={String(providers.saml.configured)}>{exact(providers.saml.configured ? 'Available — Sign in' : 'Not configured in this environment')}</span></div>
+        </div>
+        <div className="identity-provider-actions"><a className="button" data-provider-href="/auth/saml" data-provider-action="saml" href={providers.saml.configured ? '/auth/saml' : undefined} hidden={!providers.saml.configured}>{exact('Sign in with SAML')}</a><a className="text-link" href="/auth/saml/metadata">{exact('View SP metadata ↗')}</a></div>
+      </article> : null}
     </section>
 
     <section className="identity-result" aria-labelledby={id('identity-result-heading')} data-identity-result="" hidden>
@@ -145,28 +155,19 @@ function IdentityPresentation({ env, localization }: Readonly<{ env: Env; locali
       </section>
     </section>
 
-    <section className="panel identity-federation" id={id('saml')} aria-labelledby={id('identity-federation-heading')}>
-      <div>
-        <p className="eyebrow">{exact('Enterprise federation')}</p>
-        <DemoHeading level={2} id={id('identity-federation-heading')}>Microsoft Entra ID / SAML 2.0</DemoHeading>
-        <p>{exact('Authenticate through an Entra enterprise application. The Worker validates the signed assertion before any claim reaches application policy.')}</p>
-        <div className="identity-provider-meta"><span>{exact('Signed assertion')}</span><span>{exact('Audience')}</span><span>{exact('Time bounds')}</span><span>{exact('Replay protection')}</span><span data-config-status="saml">{exact('Checking configuration…')}</span></div>
-      </div>
-      <div className="identity-provider-actions"><a className="button" data-provider-href="/auth/saml" data-provider-action="saml" aria-disabled="true">{exact('Try SAML authentication')}</a><a className="text-link" href="/auth/saml/metadata">{exact('View SP metadata ↗')}</a></div>
-    </section>
   </>;
 }
 
-export function identitySection(env: Env, options: DemoSectionOptions = {}): DemoSection {
+export function identitySection(env: Env, options: DemoSectionOptions = {}, demo: IdentityDemo = 'oauth'): DemoSection {
   const localization = localizationForEnv(env);
-  const presentationPath = `${routeUrl('demos.index')}#identity`;
+  const presentationPath = `${routeUrl('demos.index')}#${demo}`;
   const browserPresentationPath = options.presentationPath ?? presentationPath;
   return createReactDemoSection(env, {
-    key: 'identity',
-    title: 'Authentication & SSO',
+    key: demo,
+    title: demo === 'oauth' ? 'OAuth 2.0' : demo === 'sso' ? 'SSO' : 'SAML',
     defaultPresentationPath: presentationPath,
     browserModule: routeUrl('operations.assets', { asset: browserAssetName('scripts.identity') }),
     browserMessages: identityBrowserMessages(localization, browserPresentationPath),
-    children: <IdentityPresentation env={env} localization={localization} />,
+    children: <IdentityPresentation env={env} localization={localization} demo={demo} />,
   }, options);
 }

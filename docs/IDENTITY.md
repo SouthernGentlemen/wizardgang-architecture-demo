@@ -1,6 +1,6 @@
 # Identity architecture
 
-The identity demonstration at `/demos#identity` presents one boundary:
+The Identity category has three focused demonstrations: `/demos#oauth` for GitHub OAuth 2.0, `/demos#sso` for Microsoft Entra ID and Google OpenID Connect, and `/demos#saml` for Entra ID SAML 2.0. The released `/demos#identity` fragment selects OAuth 2.0, the category's first demonstration. Each presents the same boundary:
 
 ```text
 provider authentication -> protocol validation -> normalized identity -> application authorization -> WizardGang session
@@ -27,9 +27,9 @@ Every demo sign-in requests explicit account selection from Microsoft Entra ID, 
 
 ## Registered identity contract
 
-Route declarations separate `/demos#identity` presentation from OAuth/OIDC, SAML, session, logout, authorization, and metadata protocol actions. External provider configuration must target canonical protocol routes from the generated route artifacts; unregistered identity browser paths are ordinary unknown routes and are not aliases.
+Route declarations separate the three Identity presentation fragments and the legacy category fragment from OAuth/OIDC, SAML, session, logout, authorization, and metadata protocol actions. External provider configuration must target canonical protocol routes from the generated route artifacts; unregistered identity browser paths are ordinary unknown routes and are not aliases. The category and selector links carry a `demo` query parameter so they select the same server-rendered presentation without JavaScript.
 
-The public presentation explains configuration and trust boundaries without returning verifier, state, nonce, token, assertion, or credential values.
+Each public presentation has its own sign-in, validated result, authorization decision, and session reset. SAML sign-in appears only when its environment-owned configuration is ready; SP metadata remains linked. The presentations explain configuration and trust boundaries without returning verifier, state, nonce, token, assertion, or credential values.
 
 ## Validation boundaries
 

@@ -116,7 +116,7 @@ function publicPageSurfaces(): Surface[] {
 }
 
 function surfaces(): Surface[] {
-  expect(demonstrations, 'released demo presentation count').toHaveLength(12);
+  expect(demonstrations, 'released demo presentation count').toHaveLength(14);
   const inventory = [
     ...publicPageSurfaces(),
     ...auditConfig.states.map((state) => ({
