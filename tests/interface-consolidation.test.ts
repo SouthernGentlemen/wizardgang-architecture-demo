@@ -27,7 +27,7 @@ const pages = [
   { view: 'rest', marker: 'data-rest-operation-browser' },
   { view: 'graphql', marker: 'data-graphql-form' },
   { view: 'webhooks', marker: 'id="webhooks-webhooks"' },
-  { view: 'identity', marker: 'id="identity-oauth"' },
+  { view: 'oauth', marker: 'data-provider-action="github"' },
   { view: 'mcp', marker: 'id="mcp-mcp-endpoint"' },
   { view: 'i18n', marker: 'data-i18n-form' },
   { view: 'accessibility', marker: 'id="accessibility-accessibility-demo"' },
@@ -89,7 +89,7 @@ describe('canonical interface demonstrations', () => {
     expect(webhooks).not.toContain('HMAC-SHA256');
     expect(webhooks).not.toContain('Event contract');
 
-    const identity = await presentationHtml('identity');
+    const identity = await presentationHtml('oauth');
     expect(identity).not.toContain('Many providers. One application identity.');
     expect(identity).not.toContain('No protocol secrets in the inspector');
 
@@ -154,14 +154,15 @@ describe('canonical interface demonstrations', () => {
     }
   });
 
-  it('lands all unconfigured identity starts and a failed callback on /demos#identity', async () => {
+  it('lands all unconfigured identity starts and a failed callback on the matching Identity demo', async () => {
     for (const [path, provider] of [['/auth/microsoft', 'microsoft'], ['/auth/google', 'google'], ['/auth/github', 'github'], ['/auth/saml', 'saml']] as const) {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`), environment);
       expect(response.status, path).toBe(303);
-      expect(response.headers.get('location'), path).toBe(`https://demo.wizardgang.ai/demos?error=provider_unconfigured&provider=${provider}#identity`);
+      const demo = provider === 'saml' ? 'saml' : provider === 'github' ? 'oauth' : 'sso';
+      expect(response.headers.get('location'), path).toBe(`https://demo.wizardgang.ai/demos?demo=${demo}&error=provider_unconfigured&provider=${provider}#${demo}`);
     }
     const callback = await routeRequest(new Request('https://demo.wizardgang.ai/auth/google/callback?error=access_denied'), environment);
     expect(callback.status).toBe(303);
-    expect(callback.headers.get('location')).toBe('https://demo.wizardgang.ai/demos?error=authentication_failed&provider=google#identity');
+    expect(callback.headers.get('location')).toBe('https://demo.wizardgang.ai/demos?demo=sso&error=authentication_failed&provider=google#sso');
   });
 });

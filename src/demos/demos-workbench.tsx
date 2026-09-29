@@ -63,9 +63,9 @@ function localizedDemo(demo: ArchitectureDemo, env: Env, localization: Localizat
   };
 }
 
-function demoLink(id: string, localization: LocalizationContext): string {
+function demoLink(id: string, localization: LocalizationContext, fragment = id): string {
   const language = localization.locale === 'en' ? '' : `lang=${encodeURIComponent(localization.locale)}&`;
-  return `?${language}demo=${encodeURIComponent(id)}#${id}`;
+  return `?${language}demo=${encodeURIComponent(id)}#${fragment}`;
 }
 
 function CategoryTabs({ localization, selectedDemo }: Readonly<{ localization: LocalizationContext; selectedDemo: ArchitectureDemo }>) {
@@ -78,8 +78,8 @@ function CategoryTabs({ localization, selectedDemo }: Readonly<{ localization: L
       return <Fragment key={category}>
         <a
           className="demo-category-tab"
-          id={demos.length === 1 ? defaultDemo.id : undefined}
-          href={demoLink(defaultDemo.id, localization)}
+          id={category === 'Identity' ? 'identity' : demos.length === 1 ? defaultDemo.id : undefined}
+          href={demoLink(defaultDemo.id, localization, category === 'Identity' ? 'identity' : defaultDemo.id)}
           role="tab"
           aria-controls="demo-workbench"
           aria-selected={selected}
@@ -262,7 +262,7 @@ export function DemosWorkbenchPage({ env, selectedDemo, initialPresentation }: R
 
 export async function renderDemosWorkbench(request: Request, env: Env): Promise<Response> {
   const requestedId = new URL(request.url).searchParams.get('demo');
-  const selectedDemo = demonstrations.find((demo) => demo.id === requestedId)
+  const selectedDemo = demonstrations.find((demo) => demo.id === (requestedId === 'identity' ? 'oauth' : requestedId))
     ?? demonstrations.find((demo) => demo.id === DEFAULT_DEMO_ID);
   if (!selectedDemo) throw new Error('No demonstrations registered.');
   const section = await selectedDemo.render(request, env, {

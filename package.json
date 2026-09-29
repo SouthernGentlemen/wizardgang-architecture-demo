@@ -11,7 +11,7 @@
   "allowScripts": {
     "esbuild@0.28.1": true,
     "fsevents@2.3.3": false,
-    "workerd@1.20260925.1": true
+    "workerd@1.20260926.1": true
   },
   "scripts": {
     "dev": "npm run generate:assets && node scripts/dev.mjs",
@@ -79,7 +79,7 @@
     "typescript": "7.0.2",
     "vite": "8.3.1",
     "vitest": "5.0.2",
-    "wrangler": "4.141.0"
+    "wrangler": "4.144.0"
   },
   "dependencies": {
     "@graphql-yoga/graphiql": "^4.5.0",

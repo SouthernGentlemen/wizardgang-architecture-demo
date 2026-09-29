@@ -87,7 +87,7 @@ async function main() {
     })()`);
     assert(initial.hash === '#rest', `REST fragment was not preserved: ${initial.hash}`);
     assert(initial.demoId === 'rest' && initial.mounted === 1, 'REST did not mount as the one active demo.');
-    assert(initial.released === 12, `Expected 12 released demos, found ${initial.released}.`);
+    assert(initial.released === 14, `Expected 14 released demos, found ${initial.released}.`);
     assert(initial.choices === 6 && initial.visiblePanels === 1, 'REST is not operation-first with one visible operation.');
     assert(initial.fullOpenApi, 'Full OpenAPI evidence link is missing.');
     assert(!initial.oldInventory && !initial.oldFullContract, 'Old demo/OpenAPI inventory resurfaced.');

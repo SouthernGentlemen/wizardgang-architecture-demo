@@ -833,6 +833,26 @@
       {
         "element": "nav",
         "role": "navigation",
+        "name": "Identity demos"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "OAuth 2.0"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "SSO"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "SAML"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
         "name": "Platform demos"
       },
       {
@@ -2723,6 +2743,26 @@
       {
         "element": "nav",
         "role": "navigation",
+        "name": "Identity demos"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "OAuth 2.0"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "SSO"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "SAML"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
         "name": "Platform demos"
       },
       {
@@ -3137,6 +3177,26 @@
         "element": "a",
         "role": null,
         "name": "GraphQL"
+      },
+      {
+        "element": "nav",
+        "role": "navigation",
+        "name": "Identity demos"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "OAuth 2.0"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "SSO"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "SAML"
       },
       {
         "element": "nav",
@@ -4653,27 +4713,15 @@
     ],
     "labels": []
   },
-  "demo:identity": {
+  "demo:oauth": {
     "headings": [
       {
         "level": 2,
-        "text": "Autenticación y SSO"
+        "text": "OAuth 2.0"
       },
       {
         "level": 3,
         "text": "Choose a trust relationship"
-      },
-      {
-        "level": 4,
-        "text": "Microsoft Entra ID"
-      },
-      {
-        "level": 3,
-        "text": "Un único límite de identidad"
-      },
-      {
-        "level": 4,
-        "text": "Google"
       },
       {
         "level": 4,
@@ -4698,10 +4746,6 @@
       {
         "level": 4,
         "text": "Protocol"
-      },
-      {
-        "level": 3,
-        "text": "Microsoft Entra ID / SAML 2.0"
       }
     ],
     "accessibleNames": [
@@ -4714,21 +4758,6 @@
         "element": "button",
         "role": null,
         "name": "Reset identity session"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Sign in with Microsoft"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Use SAML 2.0 instead →"
-      },
-      {
-        "element": "a",
-        "role": null,
-        "name": "Sign in with Google"
       },
       {
         "element": "a",
@@ -4789,16 +4818,238 @@
         "element": "section",
         "role": "tabpanel",
         "name": "Protocol"
+      }
+    ],
+    "labels": []
+  },
+  "demo:sso": {
+    "headings": [
+      {
+        "level": 2,
+        "text": "Single sign-on"
+      },
+      {
+        "level": 3,
+        "text": "Choose a trust relationship"
+      },
+      {
+        "level": 4,
+        "text": "Microsoft Entra ID"
+      },
+      {
+        "level": 4,
+        "text": "Google"
+      },
+      {
+        "level": 3,
+        "text": "Identidad"
+      },
+      {
+        "level": 4,
+        "text": "Validated provider payload"
+      },
+      {
+        "level": 4,
+        "text": "Normalized identity"
+      },
+      {
+        "level": 4,
+        "text": "What can this identity do?"
+      },
+      {
+        "level": 4,
+        "text": "Protocol"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "View source ↗"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Reset identity session"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Try SAML authentication"
+        "name": "Sign in with Microsoft"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sign in with Google"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Cerrar sesión"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Provider payload"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Normalized identity"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Authorization"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Protocol"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Provider payload"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Normalized identity"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Authorization"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Evaluate demo:read"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Evaluate demo:write"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Protocol"
+      }
+    ],
+    "labels": []
+  },
+  "demo:saml": {
+    "headings": [
+      {
+        "level": 2,
+        "text": "SAML 2.0"
+      },
+      {
+        "level": 3,
+        "text": "Choose a trust relationship"
+      },
+      {
+        "level": 4,
+        "text": "Microsoft Entra ID / SAML 2.0"
+      },
+      {
+        "level": 3,
+        "text": "Identidad"
+      },
+      {
+        "level": 4,
+        "text": "Validated provider payload"
+      },
+      {
+        "level": 4,
+        "text": "Normalized identity"
+      },
+      {
+        "level": 4,
+        "text": "What can this identity do?"
+      },
+      {
+        "level": 4,
+        "text": "Protocol"
+      }
+    ],
+    "accessibleNames": [
+      {
+        "element": "a",
+        "role": null,
+        "name": "View source ↗"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Reset identity session"
+      },
+      {
+        "element": "a",
+        "role": null,
+        "name": "Sign in with SAML"
       },
       {
         "element": "a",
         "role": null,
         "name": "View SP metadata ↗"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Cerrar sesión"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Provider payload"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Normalized identity"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Authorization"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "Protocol"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Provider payload"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Normalized identity"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Authorization"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Evaluate demo:read"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Evaluate demo:write"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "Protocol"
       }
     ],
     "labels": []

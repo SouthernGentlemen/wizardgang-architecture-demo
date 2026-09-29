@@ -161,16 +161,25 @@ describe('public route contract', () => {
     expect(webhooksHtml).toContain('Verified deliveries');
   });
 
-  it('renders the identity console with provider routes, inspector views, and stable anchors', async () => {
-    const response = await routeRequest(new Request('https://demo.wizardgang.ai/api/demos/identity', { headers: { accept: 'text/html' } }), env());
-    const html = await response.text();
-    for (const anchor of ['identity-oauth', 'identity-sso', 'identity-saml']) expect(html).toContain(`id="${anchor}"`);
-    for (const endpoint of ['/auth/microsoft', '/auth/google', '/auth/github', '/auth/saml', '/auth/saml/metadata']) expect(html).toContain(endpoint);
+  it('renders three focused identity demos with unchanged protocol routes', async () => {
+    for (const [demo, actions] of [
+      ['oauth', ['/auth/github']],
+      ['sso', ['/auth/microsoft', '/auth/google']],
+      ['saml', ['/auth/saml', '/auth/saml/metadata']],
+    ] as const) {
+      const response = await routeRequest(new Request(`https://demo.wizardgang.ai/api/demos/${demo}`, { headers: { accept: 'text/html' } }), env());
+      const html = await response.text();
+      expect(response.status).toBe(200);
+      expect(html).toContain(`data-demo-section="${demo}"`);
+      for (const endpoint of actions) expect(html).toContain(endpoint);
+      for (const other of ['/auth/microsoft', '/auth/google', '/auth/github', '/auth/saml']) {
+        if (!actions.includes(other)) expect(html).not.toContain(`data-provider-href="${other}"`);
+      }
+      for (const view of ['Provider payload', 'Normalized identity', 'Authorization', 'Protocol']) expect(html).toContain(view);
+      expect(html).not.toContain('visitor@example.test');
+    }
     const identityBrowser = readFileSync('src/browser/identity.ts', 'utf8');
     for (const endpoint of ['/auth/session', '/auth/authorize', '/auth/logout']) expect(identityBrowser).toContain(endpoint);
-    for (const view of ['Provider payload', 'Normalized identity', 'Authorization', 'Protocol']) expect(html).toContain(view);
-    expect(html).not.toContain('visitor@example.test');
-
     const metadata = await routeRequest(new Request('https://demo.wizardgang.ai/auth/saml/metadata'), env());
     expect(metadata.status).toBe(200);
     expect(metadata.headers.get('content-type')).toContain('application/samlmetadata+xml');

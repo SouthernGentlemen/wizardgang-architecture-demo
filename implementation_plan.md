@@ -2,16 +2,6 @@
 
 ## Open tasks
 
-### DEMO-388 — [FEAT] Split Identity into OAuth 2.0, SSO and SAML demos
-
-- Dependency: DEMO-383 and DEMO-387 have merged.
-- Why: The owner wants Identity split into three demos, like Data (D1, R2) and APIs (REST, GraphQL): OAuth 2.0, SSO and SAML. At 375px the single Identity page is about 3,400px of mixed Entra ID OIDC, Google, GitHub and SAML content, with a disabled "Use SAML 2.0 instead →" link and a disabled "Try SAML authentication" button. The Microsoft mark renders as an empty box because its four squares compute to 0×0.
-- Scope: Register three Identity demos with local selector chips and new stable fragments `#oauth`, `#sso` and `#saml`. OAuth 2.0 covers GitHub authorization code with PKCE and API identity revalidation; SSO covers OpenID Connect sign-in through Microsoft Entra ID and Google; SAML covers Entra ID SAML 2.0 with SP metadata and signed-assertion, audience, time-bound and replay checks, plus a clear not-configured state without dead-end controls. Keep `#identity` as a stable deep link to the category's first demo. Each demo shows its own sign-in, validated result, authorization decision and the DEMO-387 reset, with no inspector. Fix the Microsoft mark.
-- Non-goals: Do not add or configure providers, SAML certificates or secrets, change callback routes, session format or authorization policy, or change D1 as the default demo.
-- Acceptance: The Identity category shows OAuth 2.0, SSO and SAML chips; `#oauth`, `#sso`, `#saml` and `#identity` select the expected demo with and without JavaScript; each demo fits a 375px screen without other protocols' content; SAML explains its configuration state and links SP metadata without disabled dead ends; the Microsoft mark shows four colored squares; every other released fragment still resolves.
-- Validation: Pinned `npm ci`; updated curated-demo, fragment and identity presentation tests; `npm run generate:routes` if registrations change; browser audit for the new fragments in `en` and `ar`; credential-free `npm run check`; dependency advisory gate; committed-range whitespace; exact-head required CI.
-- Authorities: `docs/IDENTITY.md`, `docs/ROUTE-REGISTRY.md`, `docs/REPOSITORY-BOUNDARIES.md` released-fragment rule, `src/demos/demos-page.ts`, `src/demos/identity-presentation.tsx`, `src/browser/identity.ts`, `src/browser/demos.ts`, `src/styles/demos.css`.
-
 ### DEMO-389 — [API] Present the REST demo as a Swagger-style OpenAPI document
 
 - Dependency: DEMO-383 has merged.

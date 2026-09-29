@@ -263,7 +263,7 @@ describe('DEMO-260 MVP acceptance contract', () => {
 
   it('keeps curated demos organized and representative endpoints reachable', async () => {
     expect(demonstrations.filter((demo) => demo.tier === 'primary').map((demo) => demo.id)).toEqual([
-      'd1', 'r2', 'rest', 'graphql', 'webhooks', 'identity', 'mcp',
+      'd1', 'r2', 'rest', 'graphql', 'webhooks', 'oauth', 'sso', 'saml', 'mcp',
     ]);
     expect(demonstrations.filter((demo) => demo.tier === 'secondary').map((demo) => demo.id)).toEqual([
       'edge', 'workers', 'durable-objects', 'accessibility', 'i18n',

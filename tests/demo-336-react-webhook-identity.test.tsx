@@ -38,13 +38,13 @@ afterEach(() => vi.unstubAllGlobals());
 describe('DEMO-336 React webhook and identity demonstrations', () => {
   it('renders both presentations through React with localized inert configuration and hashed modules', () => {
     const webhook = webhooksSection(localizedEnv('ar')).body;
-    const identity = identitySection(localizedEnv('ar')).body;
+    const identity = identitySection(localizedEnv('ar'), {}, 'sso').body;
     const window = windowWith(`${webhook}${identity}`);
     try {
       const webhookRoot = window.document.querySelector<HTMLElement>('[data-demo-section="webhooks"]');
-      const identityRoot = window.document.querySelector<HTMLElement>('[data-demo-section="identity"]');
+      const identityRoot = window.document.querySelector<HTMLElement>('[data-demo-section="sso"]');
       expect(webhook).toContain('Webhooks موقّعة');
-      expect(identity).toContain('المصادقة وSSO');
+      expect(identity).toContain('Single sign-on');
       expect(webhookRoot?.dataset.demoBrowserModule).toBe(assetManifest.assets['scripts.webhooks']);
       expect(identityRoot?.dataset.demoBrowserModule).toBe(assetManifest.assets['scripts.identity']);
       expect(webhookRoot?.querySelector('script')).toBeNull();
@@ -108,8 +108,8 @@ describe('DEMO-336 React webhook and identity demonstrations', () => {
   });
 
   it('keeps provider readiness, session inspection, authorization, tabs, and sign-out behavior', async () => {
-    const window = windowWith(identitySection(env).body, 'https://demo.wizardgang.ai/demos?authenticated=google#identity');
-    const root = window.document.querySelector<HTMLElement>('[data-demo-section="identity"]')!;
+    const window = windowWith(identitySection(env, {}, 'sso').body, 'https://demo.wizardgang.ai/demos?authenticated=google#sso');
+    const root = window.document.querySelector<HTMLElement>('[data-demo-section="sso"]')!;
     const fetchMock = vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
       const path = new URL(String(input), window.location.href).pathname;
       if (path === '/auth/session') return new Response(JSON.stringify({
@@ -141,9 +141,7 @@ describe('DEMO-336 React webhook and identity demonstrations', () => {
       expect(root.querySelector('[data-identity-name]')?.textContent).toBe('Ada Lovelace');
       expect(root.querySelector('[data-provider-payload]')?.textContent).toContain('ada@example.test');
       expect(root.querySelector('[data-config-status="microsoft"]')?.getAttribute('data-configured')).toBe('true');
-      expect(root.querySelector('[data-config-status="saml"]')?.getAttribute('data-configured')).toBe('false');
       expect(root.querySelector<HTMLAnchorElement>('[data-provider-action="google"]')?.getAttribute('href')).toBe('/auth/google');
-      expect(root.querySelector<HTMLAnchorElement>('[data-provider-action="github"]')?.hasAttribute('href')).toBe(false);
 
       root.querySelector<HTMLButtonElement>('[data-identity-tab="authorization"]')?.click();
       expect(root.querySelector<HTMLElement>('[data-identity-panel="authorization"]')?.hidden).toBe(false);
@@ -162,7 +160,7 @@ describe('DEMO-336 React webhook and identity demonstrations', () => {
 
   it('keeps the not-configured state fail-closed without exposing provider actions', async () => {
     const window = windowWith(identitySection(env).body);
-    const root = window.document.querySelector<HTMLElement>('[data-demo-section="identity"]')!;
+    const root = window.document.querySelector<HTMLElement>('[data-demo-section="oauth"]')!;
     vi.stubGlobal('window', window);
     vi.stubGlobal('document', window.document);
     const fetchMock = vi.fn(async (input: string | URL | Request) => new Response(JSON.stringify(
@@ -186,7 +184,7 @@ describe('DEMO-336 React webhook and identity demonstrations', () => {
 
   it('updates source ownership and removes the replaced builders and retired stylesheet rule', () => {
     expect(demonstrations.find((demo) => demo.id === 'webhooks')?.sourcePath).toBe('src/demos/webhook-presentation.tsx');
-    expect(demonstrations.find((demo) => demo.id === 'identity')?.sourcePath).toBe('src/demos/identity-presentation.tsx');
+    expect(demonstrations.find((demo) => demo.id === 'oauth')?.sourcePath).toBe('src/demos/identity-presentation.tsx');
     expect(existsSync('src/demos/webhook-console.ts')).toBe(false);
     expect(existsSync('src/demos/identity-page.ts')).toBe(false);
     expect(readFileSync('src/styles/demos.css', 'utf8')).not.toContain('.identity-implementation-body');

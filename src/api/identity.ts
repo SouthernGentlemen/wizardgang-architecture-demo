@@ -106,7 +106,9 @@ function redirect(location: URL, cookies: string[] = []): Response {
 
 async function identityRedirect(request: Request, parameters: Record<string, string>, cookies: string[] = []): Promise<Response> {
   const { routeUrl } = await import('../routing/application-routes');
-  const location = new URL(`${routeUrl('demos.index')}#identity`, request.url);
+  const provider = parameters.provider ?? parameters.authenticated;
+  const demo = provider === 'saml' ? 'saml' : provider === 'microsoft' || provider === 'google' ? 'sso' : 'oauth';
+  const location = new URL(`${routeUrl('demos.index')}?demo=${demo}#${demo}`, request.url);
   for (const [key, value] of Object.entries(parameters)) location.searchParams.set(key, value);
   return redirect(location, cookies);
 }

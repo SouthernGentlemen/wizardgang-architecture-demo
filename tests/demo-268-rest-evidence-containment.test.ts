@@ -21,7 +21,9 @@ const releasedFragments = [
   'rest',
   'graphql',
   'webhooks',
-  'identity',
+  'oauth',
+  'sso',
+  'saml',
   'mcp',
   'edge',
   'workers',
@@ -31,7 +33,7 @@ const releasedFragments = [
 ] as const;
 
 describe('DEMO-268 REST evidence containment', () => {
-  it('keeps REST at the stable fragment and all twelve released demonstrations registered', () => {
+  it('keeps REST at the stable fragment and all fourteen released demonstrations registered', () => {
     expect(demonstrations.map((demo) => demo.id)).toEqual(releasedFragments);
     expect(demonstrations.find((demo) => demo.id === 'rest')?.id).toBe('rest');
 

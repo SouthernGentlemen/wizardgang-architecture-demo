@@ -26,7 +26,7 @@ const localPersistenceArgs = process.env.WG_LOCAL_D1_PERSIST_TO ? ['--persist-to
 const axeTags = ['wcag2a', 'wcag2aa', 'wcag2aaa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const workbenchDemos = {
   d1: ['Data', 'D1'], r2: ['Data', 'R2'], rest: ['APIs', 'REST / OpenAPI'], graphql: ['APIs', 'GraphQL'],
-  webhooks: ['Integrations', 'Webhooks'], identity: ['Identity', 'Identity'], mcp: ['AI', 'MCP'],
+  webhooks: ['Integrations', 'Webhooks'], oauth: ['Identity', 'OAuth 2.0'], sso: ['Identity', 'SSO'], saml: ['Identity', 'SAML'], mcp: ['AI', 'MCP'],
   edge: ['Platform', 'Edge'], workers: ['Platform', 'Workers'], 'durable-objects': ['Platform', 'Durable Objects'],
   accessibility: ['Quality', 'Accessibility'], i18n: ['Quality', 'Internationalization'],
 };
@@ -233,7 +233,7 @@ async function assertWorkbenchState(cdp, expectedId, label, expectedHash = `#${e
   if (expectedLocale === 'en' && state.heading !== workbenchDemos[expectedId]?.[1]) failures.push(`heading=${state.heading}`);
   if (expectedLocale !== 'en' && !state.heading) failures.push('heading is empty');
   if (state.mounted !== 1) failures.push(`mounted presentations=${state.mounted}`);
-  const expectedCurrentLinks = ['webhooks', 'identity', 'mcp'].includes(expectedId) ? 0 : 1;
+  const expectedCurrentLinks = ['webhooks', 'mcp'].includes(expectedId) ? 0 : 1;
   if (state.currentDemoLinks !== expectedCurrentLinks) failures.push(`current demo links=${state.currentDemoLinks}`);
   if (state.selectedCategories !== 1) failures.push(`selected categories=${state.selectedCategories}`);
   if (state.categoryTabStops !== 1) failures.push(`category tab stops=${state.categoryTabStops}`);
@@ -525,6 +525,8 @@ async function workbenchInteractionAudit(cdp) {
     await navigate(cdp, `${origin}/demos?lang=en#${id}`);
     await assertWorkbenchState(cdp, id, `${id} released fragment`);
   }
+  await navigate(cdp, `${origin}/demos?lang=en#identity`);
+  await assertWorkbenchState(cdp, 'oauth', 'released Identity category fragment', '#identity');
 
   await navigate(cdp, `${origin}/demos?lang=en#d1`);
   await assertWorkbenchState(cdp, 'd1', 'D1 default');
@@ -713,7 +715,7 @@ async function phoneWorkbenchAudit(cdp) {
       const disclosure = await evaluate(cdp, `(()=>{const d=document.querySelector('[data-demo-inspector-disclosure]');return {summary:d?.querySelector('summary')?.textContent?.trim(),open:d?.open,inline:d&&getComputedStyle(d.closest('[data-demo-inspector]')).position}})()`);
       if (!disclosure.summary || disclosure.open || disclosure.inline !== 'static') throw new Error(`${id} no-JavaScript inline inspector disclosure failed: ${JSON.stringify(disclosure)}`);
     }
-    for (const id of ['rest', 'graphql', 'webhooks', 'identity', 'mcp', 'edge', 'accessibility']) {
+    for (const id of ['rest', 'graphql', 'webhooks', 'oauth', 'sso', 'saml', 'mcp', 'edge', 'accessibility']) {
       await navigate(cdp, `${origin}/demos?demo=${id}`);
       const state = await evaluate(cdp, `({id:document.querySelector('[data-demo-workbench]')?.dataset.demoId,
         section:document.querySelector('[data-demo-panel] [data-demo-section]')?.getAttribute('data-demo-section'),
@@ -721,6 +723,46 @@ async function phoneWorkbenchAudit(cdp) {
       if (state.id !== id || state.section !== id || state.inspector || state.source) {
         throw new Error(`${id} no-JavaScript workbench failed: ${JSON.stringify(state)}`);
       }
+    }
+  } finally {
+    await cdp.call('Emulation.setScriptExecutionDisabled', { value: false });
+  }
+}
+
+async function identitySplitAudit(cdp) {
+  await cdp.call('Emulation.setDeviceMetricsOverride', { width: 375, height: 812, deviceScaleFactor: 1, mobile: true });
+  for (const locale of ['en', 'ar']) {
+    for (const id of ['oauth', 'sso', 'saml']) {
+      const label = `${id} Identity 375px ${locale}`;
+      await navigate(cdp, `${origin}/demos?lang=${locale}#${id}`);
+      await assertWorkbenchState(cdp, id, label, `#${id}`, locale);
+      const state = await evaluate(cdp, `(()=>{
+        const root=document.querySelector('[data-demo-panel] [data-demo-section]');
+        const chips=[...document.querySelectorAll('[data-demo-selector-category="Identity"] a')];
+        const mark=[...root.querySelectorAll('.microsoft-mark span')].map((node)=>{const rect=node.getBoundingClientRect();return {width:rect.width,height:rect.height,color:getComputedStyle(node).backgroundColor}});
+        return {overflow:document.documentElement.scrollWidth>innerWidth+1,providers:[...root.querySelectorAll('[data-provider-action]')].map((node)=>node.dataset.providerAction),
+          chips:chips.map((node)=>node.textContent?.trim()),mark,metadata:Boolean(root.querySelector('a[href="/auth/saml/metadata"]')),
+          samlConfigured:root.querySelector('[data-config-status="saml"]')?.dataset.configured,
+          samlActionVisible:!root.querySelector('[data-provider-action="saml"]')?.hidden};
+      })()`);
+      const expected = id === 'oauth' ? ['github'] : id === 'sso' ? ['microsoft', 'google'] : ['saml'];
+      if (state.overflow || JSON.stringify(state.providers) !== JSON.stringify(expected) || state.chips.length !== 3) throw new Error(`${label} split or reflow failed: ${JSON.stringify(state)}`);
+      if (id === 'sso' && (state.mark.length !== 4 || state.mark.some((square)=>square.width < 8 || square.height < 8 || square.color === 'rgba(0, 0, 0, 0)'))) throw new Error(`${label} Microsoft mark failed: ${JSON.stringify(state.mark)}`);
+      if (id === 'saml' && (!state.metadata || (state.samlConfigured === 'false' && state.samlActionVisible))) throw new Error(`${label} SAML configuration state failed: ${JSON.stringify(state)}`);
+      await inspectCurrentPage(cdp, locale, label);
+    }
+  }
+  await cdp.call('Emulation.setScriptExecutionDisabled', { value: true });
+  try {
+    for (const locale of ['en', 'ar']) {
+      for (const id of ['oauth', 'sso', 'saml']) {
+        await navigate(cdp, `${origin}/demos?lang=${locale}&demo=${id}#${id}`);
+        const state = await evaluate(cdp, `({id:document.querySelector('[data-demo-workbench]')?.dataset.demoId,section:document.querySelector('[data-demo-panel] [data-demo-section]')?.dataset.demoSection,selected:document.querySelector('[data-demo-selector-category="Identity"] [aria-current="location"]')?.getAttribute('href'),overflow:document.documentElement.scrollWidth>innerWidth+1})`);
+        if (state.id !== id || state.section !== id || !state.selected?.includes(`demo=${id}#${id}`) || state.overflow) throw new Error(`${id} no-JavaScript ${locale} fragment failed: ${JSON.stringify(state)}`);
+      }
+      await navigate(cdp, `${origin}/demos?lang=${locale}&demo=oauth#identity`);
+      const alias = await evaluate(cdp, `({id:document.querySelector('[data-demo-workbench]')?.dataset.demoId,anchor:document.querySelector('#identity')?.getAttribute('href')})`);
+      if (alias.id !== 'oauth' || !alias.anchor?.includes('demo=oauth#identity')) throw new Error(`Identity no-JavaScript alias failed: ${JSON.stringify(alias)}`);
     }
   } finally {
     await cdp.call('Emulation.setScriptExecutionDisabled', { value: false });
@@ -1108,6 +1150,7 @@ async function main() {
     await sharedResetAudit(cdp, 1280);
     axeRuns += 6;
     await phoneWorkbenchAudit(cdp);
+    await identitySplitAudit(cdp);
     await demoInteriorReflowAudit(cdp);
     await retainedInspectorAudit(cdp);
     await sharedResetAudit(cdp, 375);

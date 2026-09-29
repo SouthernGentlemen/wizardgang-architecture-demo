@@ -7,7 +7,7 @@ import { retiredDemoBrowserRoots } from './fixtures/removed-html-pathnames';
 
 const fragments = [
   'edge', 'workers', 'durable-objects', 'd1', 'r2', 'rest',
-  'graphql', 'webhooks', 'identity', 'mcp', 'accessibility', 'i18n',
+  'graphql', 'webhooks', 'oauth', 'sso', 'saml', 'mcp', 'accessibility', 'i18n',
 ] as const;
 
 class DemoStatement implements D1PreparedStatement {
