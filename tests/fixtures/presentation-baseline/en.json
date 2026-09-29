@@ -3158,7 +3158,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-B3buuO21.css",
+        "href": "/assets/demos-DgZ1YSp-.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -9885,7 +9885,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-B3buuO21.css",
+        "href": "/assets/demos-DgZ1YSp-.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -11100,7 +11100,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-B3buuO21.css",
+        "href": "/assets/demos-DgZ1YSp-.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -12773,483 +12773,278 @@
     },
     "landmarks": [
       {
-        "role": "region",
-        "name": "REST operations",
+        "role": "banner",
+        "name": null,
+        "id": null
+      },
+      {
+        "role": "navigation",
+        "name": "OpenAPI documents",
         "id": null
       },
       {
         "role": "region",
-        "name": "List records",
-        "id": "rest-rest-demo-listRecords-panel"
-      },
-      {
-        "role": "region",
-        "name": "Request",
+        "name": "Parameters",
         "id": null
       },
       {
         "role": "region",
-        "name": "Response",
+        "name": "Responses",
         "id": null
       },
       {
         "role": "region",
-        "name": "Contract",
+        "name": "Try it out",
         "id": null
       },
       {
         "role": "region",
-        "name": "Create a record",
-        "id": "rest-rest-demo-createRecord-panel"
-      },
-      {
-        "role": "region",
-        "name": "Request",
+        "name": "Parameters",
         "id": null
       },
       {
         "role": "region",
-        "name": "Response",
+        "name": "Responses",
         "id": null
       },
       {
         "role": "region",
-        "name": "Contract",
+        "name": "Try it out",
         "id": null
       },
       {
         "role": "region",
-        "name": "Read a record",
-        "id": "rest-rest-demo-getRecord-panel"
-      },
-      {
-        "role": "region",
-        "name": "Request",
+        "name": "Parameters",
         "id": null
       },
       {
         "role": "region",
-        "name": "Response",
+        "name": "Responses",
         "id": null
       },
       {
         "role": "region",
-        "name": "Contract",
+        "name": "Try it out",
         "id": null
       },
       {
         "role": "region",
-        "name": "Replace a record",
-        "id": "rest-rest-demo-replaceRecord-panel"
-      },
-      {
-        "role": "region",
-        "name": "Request",
+        "name": "Parameters",
         "id": null
       },
       {
         "role": "region",
-        "name": "Response",
+        "name": "Responses",
         "id": null
       },
       {
         "role": "region",
-        "name": "Contract",
+        "name": "Try it out",
         "id": null
       },
       {
         "role": "region",
-        "name": "Update a record",
-        "id": "rest-rest-demo-updateRecord-panel"
-      },
-      {
-        "role": "region",
-        "name": "Request",
+        "name": "Parameters",
         "id": null
       },
       {
         "role": "region",
-        "name": "Response",
+        "name": "Responses",
         "id": null
       },
       {
         "role": "region",
-        "name": "Contract",
+        "name": "Try it out",
         "id": null
       },
       {
         "role": "region",
-        "name": "Delete a record",
-        "id": "rest-rest-demo-deleteRecord-panel"
-      },
-      {
-        "role": "region",
-        "name": "Request",
+        "name": "Parameters",
         "id": null
       },
       {
         "role": "region",
-        "name": "Response",
+        "name": "Responses",
         "id": null
       },
       {
         "role": "region",
-        "name": "Contract",
+        "name": "Try it out",
         "id": null
       }
     ],
     "headings": [
       {
         "level": 2,
-        "text": "REST API",
+        "text": "WizardGang REST demo 1.0.0",
         "id": null
       },
       {
         "level": 3,
-        "text": "List records",
-        "id": "rest-rest-demo-listRecords-heading"
-      },
-      {
-        "level": 4,
-        "text": "Request",
-        "id": "rest-rest-demo-listRecords-request-heading"
-      },
-      {
-        "level": 4,
-        "text": "Response",
-        "id": "rest-rest-demo-listRecords-response-heading"
-      },
-      {
-        "level": 4,
-        "text": "Contract",
-        "id": "rest-rest-demo-listRecords-contract-heading"
-      },
-      {
-        "level": 5,
-        "text": "Parameters",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "Declared responses",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "Referenced schemas",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "Record",
+        "text": "Servers",
         "id": null
       },
       {
         "level": 3,
-        "text": "Create a record",
-        "id": "rest-rest-demo-createRecord-heading"
-      },
-      {
-        "level": 4,
-        "text": "Request",
-        "id": "rest-rest-demo-createRecord-request-heading"
-      },
-      {
-        "level": 4,
-        "text": "Response",
-        "id": "rest-rest-demo-createRecord-response-heading"
-      },
-      {
-        "level": 4,
-        "text": "Contract",
-        "id": "rest-rest-demo-createRecord-contract-heading"
-      },
-      {
-        "level": 5,
-        "text": "Parameters",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "Declared responses",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "Referenced schemas",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "RecordInput",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "Record",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "Error",
+        "text": "Security",
         "id": null
       },
       {
         "level": 3,
-        "text": "Read a record",
-        "id": "rest-rest-demo-getRecord-heading"
+        "text": "Records",
+        "id": null
       },
       {
         "level": 4,
-        "text": "Request",
-        "id": "rest-rest-demo-getRecord-request-heading"
-      },
-      {
-        "level": 4,
-        "text": "Response",
-        "id": "rest-rest-demo-getRecord-response-heading"
-      },
-      {
-        "level": 4,
-        "text": "Contract",
-        "id": "rest-rest-demo-getRecord-contract-heading"
-      },
-      {
-        "level": 5,
         "text": "Parameters",
-        "id": null
+        "id": "rest-rest-demo-listRecords-parameters-heading"
+      },
+      {
+        "level": 4,
+        "text": "Responses",
+        "id": "rest-rest-demo-listRecords-responses-heading"
+      },
+      {
+        "level": 4,
+        "text": "Try it out",
+        "id": "rest-rest-demo-listRecords-try-heading"
+      },
+      {
+        "level": 4,
+        "text": "Parameters",
+        "id": "rest-rest-demo-createRecord-parameters-heading"
       },
       {
         "level": 5,
-        "text": "Declared responses",
+        "text": "Request body",
         "id": null
       },
       {
-        "level": 5,
-        "text": "Referenced schemas",
-        "id": null
+        "level": 4,
+        "text": "Responses",
+        "id": "rest-rest-demo-createRecord-responses-heading"
+      },
+      {
+        "level": 4,
+        "text": "Try it out",
+        "id": "rest-rest-demo-createRecord-try-heading"
+      },
+      {
+        "level": 4,
+        "text": "Parameters",
+        "id": "rest-rest-demo-getRecord-parameters-heading"
+      },
+      {
+        "level": 4,
+        "text": "Responses",
+        "id": "rest-rest-demo-getRecord-responses-heading"
+      },
+      {
+        "level": 4,
+        "text": "Try it out",
+        "id": "rest-rest-demo-getRecord-try-heading"
+      },
+      {
+        "level": 4,
+        "text": "Parameters",
+        "id": "rest-rest-demo-replaceRecord-parameters-heading"
       },
       {
         "level": 5,
-        "text": "Record",
+        "text": "Request body",
         "id": null
       },
       {
+        "level": 4,
+        "text": "Responses",
+        "id": "rest-rest-demo-replaceRecord-responses-heading"
+      },
+      {
+        "level": 4,
+        "text": "Try it out",
+        "id": "rest-rest-demo-replaceRecord-try-heading"
+      },
+      {
+        "level": 4,
+        "text": "Parameters",
+        "id": "rest-rest-demo-updateRecord-parameters-heading"
+      },
+      {
         "level": 5,
-        "text": "Error",
+        "text": "Request body",
         "id": null
+      },
+      {
+        "level": 4,
+        "text": "Responses",
+        "id": "rest-rest-demo-updateRecord-responses-heading"
+      },
+      {
+        "level": 4,
+        "text": "Try it out",
+        "id": "rest-rest-demo-updateRecord-try-heading"
+      },
+      {
+        "level": 4,
+        "text": "Parameters",
+        "id": "rest-rest-demo-deleteRecord-parameters-heading"
+      },
+      {
+        "level": 4,
+        "text": "Responses",
+        "id": "rest-rest-demo-deleteRecord-responses-heading"
+      },
+      {
+        "level": 4,
+        "text": "Try it out",
+        "id": "rest-rest-demo-deleteRecord-try-heading"
       },
       {
         "level": 3,
-        "text": "Replace a record",
-        "id": "rest-rest-demo-replaceRecord-heading"
-      },
-      {
-        "level": 4,
-        "text": "Request",
-        "id": "rest-rest-demo-replaceRecord-request-heading"
-      },
-      {
-        "level": 4,
-        "text": "Response",
-        "id": "rest-rest-demo-replaceRecord-response-heading"
-      },
-      {
-        "level": 4,
-        "text": "Contract",
-        "id": "rest-rest-demo-replaceRecord-contract-heading"
-      },
-      {
-        "level": 5,
-        "text": "Parameters",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "Declared responses",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "Referenced schemas",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "RecordReplacement",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "Record",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "Error",
-        "id": null
-      },
-      {
-        "level": 3,
-        "text": "Update a record",
-        "id": "rest-rest-demo-updateRecord-heading"
-      },
-      {
-        "level": 4,
-        "text": "Request",
-        "id": "rest-rest-demo-updateRecord-request-heading"
-      },
-      {
-        "level": 4,
-        "text": "Response",
-        "id": "rest-rest-demo-updateRecord-response-heading"
-      },
-      {
-        "level": 4,
-        "text": "Contract",
-        "id": "rest-rest-demo-updateRecord-contract-heading"
-      },
-      {
-        "level": 5,
-        "text": "Parameters",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "Declared responses",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "Referenced schemas",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "RecordPatch",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "Record",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "Error",
-        "id": null
-      },
-      {
-        "level": 3,
-        "text": "Delete a record",
-        "id": "rest-rest-demo-deleteRecord-heading"
-      },
-      {
-        "level": 4,
-        "text": "Request",
-        "id": "rest-rest-demo-deleteRecord-request-heading"
-      },
-      {
-        "level": 4,
-        "text": "Response",
-        "id": "rest-rest-demo-deleteRecord-response-heading"
-      },
-      {
-        "level": 4,
-        "text": "Contract",
-        "id": "rest-rest-demo-deleteRecord-contract-heading"
-      },
-      {
-        "level": 5,
-        "text": "Parameters",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "Declared responses",
-        "id": null
-      },
-      {
-        "level": 5,
-        "text": "Referenced schemas",
+        "text": "Schemas",
         "id": null
       }
     ],
     "links": [
       {
-        "name": "Open full OpenAPI JSON",
+        "name": "Raw REST OpenAPI JSON",
         "href": "/api/labs/rest-demo-openapi.json",
         "target": null
       },
       {
-        "name": "Download JSON",
-        "href": "/api/labs/rest-demo-openapi.json?download=1",
+        "name": "Machine API OpenAPI JSON",
+        "href": "/api/openapi.json",
         "target": null
       }
     ],
     "buttons": [
       {
-        "name": "Copy",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "GET/api/labs/rest-demo-recordsList records",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "POST/api/labs/rest-demo-recordsCreate a record",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "GET/api/labs/rest-demo-records/{id}Read a record",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "PUT/api/labs/rest-demo-records/{id}Replace a record",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "PATCH/api/labs/rest-demo-records/{id}Update a record",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "DELETE/api/labs/rest-demo-records/{id}Delete a record",
-        "type": "button",
-        "value": null
-      },
-      {
-        "name": "Execute GET",
+        "name": "Execute",
         "type": "submit",
         "value": null
       },
       {
-        "name": "Execute POST",
+        "name": "Execute",
         "type": "submit",
         "value": null
       },
       {
-        "name": "Execute GET",
+        "name": "Execute",
         "type": "submit",
         "value": null
       },
       {
-        "name": "Execute PUT",
+        "name": "Execute",
         "type": "submit",
         "value": null
       },
       {
-        "name": "Execute PATCH",
+        "name": "Execute",
         "type": "submit",
         "value": null
       },
       {
-        "name": "Execute DELETE",
+        "name": "Execute",
         "type": "submit",
         "value": null
       }
@@ -13314,42 +13109,41 @@
     ],
     "ids": [
       "rest-rest-demo-listRecords-panel",
-      "rest-rest-demo-listRecords-heading",
-      "rest-rest-demo-listRecords-request-heading",
-      "rest-rest-demo-listRecords-response-heading",
-      "rest-rest-demo-listRecords-contract-heading",
+      "rest-rest-demo-listRecords-parameters-heading",
+      "rest-rest-demo-listRecords-responses-heading",
+      "rest-rest-demo-listRecords-try-heading",
       "rest-rest-demo-createRecord-panel",
-      "rest-rest-demo-createRecord-heading",
-      "rest-rest-demo-createRecord-request-heading",
+      "rest-rest-demo-createRecord-parameters-heading",
+      "rest-rest-demo-createRecord-responses-heading",
+      "rest-rest-demo-createRecord-try-heading",
       "rest-rest-demo-createRecord-body",
-      "rest-rest-demo-createRecord-response-heading",
-      "rest-rest-demo-createRecord-contract-heading",
       "rest-rest-demo-getRecord-panel",
-      "rest-rest-demo-getRecord-heading",
-      "rest-rest-demo-getRecord-request-heading",
+      "rest-rest-demo-getRecord-parameters-heading",
+      "rest-rest-demo-getRecord-responses-heading",
+      "rest-rest-demo-getRecord-try-heading",
       "rest-rest-demo-getRecord-id",
-      "rest-rest-demo-getRecord-response-heading",
-      "rest-rest-demo-getRecord-contract-heading",
       "rest-rest-demo-replaceRecord-panel",
-      "rest-rest-demo-replaceRecord-heading",
-      "rest-rest-demo-replaceRecord-request-heading",
+      "rest-rest-demo-replaceRecord-parameters-heading",
+      "rest-rest-demo-replaceRecord-responses-heading",
+      "rest-rest-demo-replaceRecord-try-heading",
       "rest-rest-demo-replaceRecord-id",
       "rest-rest-demo-replaceRecord-body",
-      "rest-rest-demo-replaceRecord-response-heading",
-      "rest-rest-demo-replaceRecord-contract-heading",
       "rest-rest-demo-updateRecord-panel",
-      "rest-rest-demo-updateRecord-heading",
-      "rest-rest-demo-updateRecord-request-heading",
+      "rest-rest-demo-updateRecord-parameters-heading",
+      "rest-rest-demo-updateRecord-responses-heading",
+      "rest-rest-demo-updateRecord-try-heading",
       "rest-rest-demo-updateRecord-id",
       "rest-rest-demo-updateRecord-body",
-      "rest-rest-demo-updateRecord-response-heading",
-      "rest-rest-demo-updateRecord-contract-heading",
       "rest-rest-demo-deleteRecord-panel",
-      "rest-rest-demo-deleteRecord-heading",
-      "rest-rest-demo-deleteRecord-request-heading",
+      "rest-rest-demo-deleteRecord-parameters-heading",
+      "rest-rest-demo-deleteRecord-responses-heading",
+      "rest-rest-demo-deleteRecord-try-heading",
       "rest-rest-demo-deleteRecord-id",
-      "rest-rest-demo-deleteRecord-response-heading",
-      "rest-rest-demo-deleteRecord-contract-heading"
+      "rest-schema-Record",
+      "rest-schema-RecordInput",
+      "rest-schema-RecordReplacement",
+      "rest-schema-RecordPatch",
+      "rest-schema-Error"
     ],
     "fragmentTargets": [],
     "dataHooks": [
@@ -13357,7 +13151,7 @@
         "element": "div",
         "attributes": {
           "data-demo-section": "rest",
-          "data-demo-browser-module": "/assets/rest-browser-8GOibnzE.js",
+          "data-demo-browser-module": "/assets/rest-browser-Cd8MNm9h.js",
           "data-config": "<CONFIG_SHA256:172df2c8181734b5>"
         }
       },
@@ -13368,57 +13162,22 @@
         }
       },
       {
-        "element": "button",
-        "attributes": {
-          "data-copy-server": "https://demo.wizardgang.ai"
-        }
-      },
-      {
-        "element": "button",
-        "attributes": {
-          "data-rest-operation-select": "listRecords"
-        }
-      },
-      {
-        "element": "button",
-        "attributes": {
-          "data-rest-operation-select": "createRecord"
-        }
-      },
-      {
-        "element": "button",
-        "attributes": {
-          "data-rest-operation-select": "getRecord"
-        }
-      },
-      {
-        "element": "button",
-        "attributes": {
-          "data-rest-operation-select": "replaceRecord"
-        }
-      },
-      {
-        "element": "button",
-        "attributes": {
-          "data-rest-operation-select": "updateRecord"
-        }
-      },
-      {
-        "element": "button",
-        "attributes": {
-          "data-rest-operation-select": "deleteRecord"
-        }
-      },
-      {
         "element": "a",
         "attributes": {
           "data-rest-full-openapi": ""
         }
       },
       {
-        "element": "section#rest-rest-demo-listRecords-panel",
+        "element": "details#rest-rest-demo-listRecords-panel",
         "attributes": {
+          "data-method": "GET",
           "data-rest-operation-panel": "listRecords"
+        }
+      },
+      {
+        "element": "summary",
+        "attributes": {
+          "data-rest-operation-select": "listRecords"
         }
       },
       {
@@ -13462,6 +13221,12 @@
       {
         "element": "pre",
         "attributes": {
+          "data-rest-curl": ""
+        }
+      },
+      {
+        "element": "pre",
+        "attributes": {
           "data-rest-request": ""
         }
       },
@@ -13469,6 +13234,12 @@
         "element": "strong",
         "attributes": {
           "data-rest-status": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-rest-duration": ""
         }
       },
       {
@@ -13484,9 +13255,16 @@
         }
       },
       {
-        "element": "section#rest-rest-demo-createRecord-panel",
+        "element": "details#rest-rest-demo-createRecord-panel",
         "attributes": {
+          "data-method": "POST",
           "data-rest-operation-panel": "createRecord"
+        }
+      },
+      {
+        "element": "summary",
+        "attributes": {
+          "data-rest-operation-select": "createRecord"
         }
       },
       {
@@ -13536,6 +13314,12 @@
       {
         "element": "pre",
         "attributes": {
+          "data-rest-curl": ""
+        }
+      },
+      {
+        "element": "pre",
+        "attributes": {
           "data-rest-request": ""
         }
       },
@@ -13543,6 +13327,12 @@
         "element": "strong",
         "attributes": {
           "data-rest-status": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-rest-duration": ""
         }
       },
       {
@@ -13558,9 +13348,16 @@
         }
       },
       {
-        "element": "section#rest-rest-demo-getRecord-panel",
+        "element": "details#rest-rest-demo-getRecord-panel",
         "attributes": {
+          "data-method": "GET",
           "data-rest-operation-panel": "getRecord"
+        }
+      },
+      {
+        "element": "summary",
+        "attributes": {
+          "data-rest-operation-select": "getRecord"
         }
       },
       {
@@ -13574,7 +13371,8 @@
       {
         "element": "input#rest-rest-demo-getRecord-id",
         "attributes": {
-          "data-rest-parameter": "id"
+          "data-rest-parameter": "id",
+          "data-rest-parameter-in": "path"
         }
       },
       {
@@ -13610,6 +13408,12 @@
       {
         "element": "pre",
         "attributes": {
+          "data-rest-curl": ""
+        }
+      },
+      {
+        "element": "pre",
+        "attributes": {
           "data-rest-request": ""
         }
       },
@@ -13617,6 +13421,12 @@
         "element": "strong",
         "attributes": {
           "data-rest-status": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-rest-duration": ""
         }
       },
       {
@@ -13632,9 +13442,16 @@
         }
       },
       {
-        "element": "section#rest-rest-demo-replaceRecord-panel",
+        "element": "details#rest-rest-demo-replaceRecord-panel",
         "attributes": {
+          "data-method": "PUT",
           "data-rest-operation-panel": "replaceRecord"
+        }
+      },
+      {
+        "element": "summary",
+        "attributes": {
+          "data-rest-operation-select": "replaceRecord"
         }
       },
       {
@@ -13648,7 +13465,8 @@
       {
         "element": "input#rest-rest-demo-replaceRecord-id",
         "attributes": {
-          "data-rest-parameter": "id"
+          "data-rest-parameter": "id",
+          "data-rest-parameter-in": "path"
         }
       },
       {
@@ -13690,6 +13508,12 @@
       {
         "element": "pre",
         "attributes": {
+          "data-rest-curl": ""
+        }
+      },
+      {
+        "element": "pre",
+        "attributes": {
           "data-rest-request": ""
         }
       },
@@ -13697,6 +13521,12 @@
         "element": "strong",
         "attributes": {
           "data-rest-status": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-rest-duration": ""
         }
       },
       {
@@ -13712,9 +13542,16 @@
         }
       },
       {
-        "element": "section#rest-rest-demo-updateRecord-panel",
+        "element": "details#rest-rest-demo-updateRecord-panel",
         "attributes": {
+          "data-method": "PATCH",
           "data-rest-operation-panel": "updateRecord"
+        }
+      },
+      {
+        "element": "summary",
+        "attributes": {
+          "data-rest-operation-select": "updateRecord"
         }
       },
       {
@@ -13728,7 +13565,8 @@
       {
         "element": "input#rest-rest-demo-updateRecord-id",
         "attributes": {
-          "data-rest-parameter": "id"
+          "data-rest-parameter": "id",
+          "data-rest-parameter-in": "path"
         }
       },
       {
@@ -13770,6 +13608,12 @@
       {
         "element": "pre",
         "attributes": {
+          "data-rest-curl": ""
+        }
+      },
+      {
+        "element": "pre",
+        "attributes": {
           "data-rest-request": ""
         }
       },
@@ -13777,6 +13621,12 @@
         "element": "strong",
         "attributes": {
           "data-rest-status": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-rest-duration": ""
         }
       },
       {
@@ -13792,9 +13642,16 @@
         }
       },
       {
-        "element": "section#rest-rest-demo-deleteRecord-panel",
+        "element": "details#rest-rest-demo-deleteRecord-panel",
         "attributes": {
+          "data-method": "DELETE",
           "data-rest-operation-panel": "deleteRecord"
+        }
+      },
+      {
+        "element": "summary",
+        "attributes": {
+          "data-rest-operation-select": "deleteRecord"
         }
       },
       {
@@ -13808,7 +13665,8 @@
       {
         "element": "input#rest-rest-demo-deleteRecord-id",
         "attributes": {
-          "data-rest-parameter": "id"
+          "data-rest-parameter": "id",
+          "data-rest-parameter-in": "path"
         }
       },
       {
@@ -13844,6 +13702,12 @@
       {
         "element": "pre",
         "attributes": {
+          "data-rest-curl": ""
+        }
+      },
+      {
+        "element": "pre",
+        "attributes": {
           "data-rest-request": ""
         }
       },
@@ -13851,6 +13715,12 @@
         "element": "strong",
         "attributes": {
           "data-rest-status": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-rest-duration": ""
         }
       },
       {

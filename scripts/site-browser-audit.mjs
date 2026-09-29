@@ -442,9 +442,8 @@ async function exerciseRestWorkflow(cdp, locale) {
 
   const run = async (operationId, expectedStatus) => {
     const selected = await evaluate(cdp, `(()=>{
-      const selector=document.querySelector('[data-rest-operation-select=${JSON.stringify(operationId)}]');
-      selector?.click();
       const panel=document.querySelector('[data-rest-operation-panel=${JSON.stringify(operationId)}]');
+      if(panel)panel.open=true;
       const form=panel?.querySelector('[data-rest-form]');
       if (!(form instanceof HTMLFormElement)) return false;
       form.requestSubmit();
@@ -467,13 +466,49 @@ async function exerciseRestWorkflow(cdp, locale) {
   const result = await evaluate(cdp, `(()=>({
     lang:document.documentElement.lang,
     dir:document.documentElement.dir,
-    selected:document.querySelector('[data-rest-operation-select][aria-pressed="true"]')?.getAttribute('data-rest-operation-select'),
+    selected:document.querySelector('[data-rest-operation-panel="deleteRecord"]')?.open,
     status:document.querySelector('[data-rest-operation-panel="deleteRecord"] [data-rest-status]')?.textContent?.trim(),
     request:document.querySelector('[data-rest-operation-panel="deleteRecord"] [data-rest-request]')?.textContent?.trim(),
-    body:document.querySelector('[data-rest-operation-panel="deleteRecord"] [data-rest-response-body]')?.textContent?.trim()
+    body:document.querySelector('[data-rest-operation-panel="deleteRecord"] [data-rest-response-body]')?.textContent?.trim(),
+    curl:document.querySelector('[data-rest-operation-panel="deleteRecord"] [data-rest-curl]')?.textContent?.trim(),
+    duration:document.querySelector('[data-rest-operation-panel="deleteRecord"] [data-rest-duration]')?.textContent?.trim()
   }))()`);
-  if (result.lang !== locale || result.dir !== (locale === 'ar' ? 'rtl' : 'ltr') || result.selected !== 'deleteRecord' || !result.status?.startsWith('204') || !result.request?.includes('DELETE') || !result.body) {
+  if (result.lang !== locale || result.dir !== (locale === 'ar' ? 'rtl' : 'ltr') || !result.selected || !result.status?.startsWith('204') || !result.request?.includes('DELETE') || !result.body || !result.curl?.includes('--cookie-jar') || !result.duration?.endsWith(' ms')) {
     throw new Error(`${label} did not preserve all operations and localized state: ${JSON.stringify(result)}`);
+  }
+}
+
+async function restDocumentReflowAudit(cdp) {
+  for (const width of [375, 768, 1440]) {
+    await cdp.call('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 768 });
+    for (const locale of ['en', 'ar']) {
+      await navigate(cdp, `${origin}/demos?lang=${locale}#rest`);
+      await assertWorkbenchState(cdp, 'rest', `REST document ${width}px ${locale}`, '#rest', locale);
+      const geometry = await evaluate(cdp, `(()=>{
+        document.querySelectorAll('.rest-operation,.rest-schema').forEach((item)=>{item.open=true});
+        const scope=document.querySelector('.rest-openapi');
+        const server=scope?.querySelector('.rest-server code');
+        const paths=[...scope.querySelectorAll('.rest-path')];
+        const schemaRows=[...scope.querySelectorAll('.rest-schema-properties>div')];
+        const viewport=innerWidth;
+        const inside=(element)=>{const r=element.getBoundingClientRect();return r.left>=-1&&r.right<=viewport+1};
+        const pathTokens=paths.flatMap((path)=>[...path.querySelectorAll('span')]).map((part)=>({
+          text:part.textContent,inside:inside(part),breaks:getComputedStyle(part).overflowWrap
+        }));
+        return {
+          overflow:document.documentElement.scrollWidth>viewport+1,
+          server:server?.textContent,
+          serverInside:server&&inside(server),
+          pathTokens,
+          schemaRowsInside:schemaRows.every(inside),
+          operationCount:paths.length,
+          schemaCount:scope.querySelectorAll('.rest-schema').length
+        };
+      })()`);
+      if (geometry.overflow || !geometry.serverInside || geometry.server !== 'https://demo.wizardgang.ai' || geometry.pathTokens.some((token) => !token.inside || token.breaks === 'anywhere') || !geometry.schemaRowsInside || geometry.operationCount !== 6 || geometry.schemaCount !== 5) {
+        throw new Error(`REST document ${width}px ${locale}: clipped URL, path, or schema: ${JSON.stringify(geometry)}`);
+      }
+    }
   }
 }
 
@@ -1150,6 +1185,7 @@ async function main() {
     await sharedResetAudit(cdp, 1280);
     axeRuns += 6;
     await phoneWorkbenchAudit(cdp);
+    await restDocumentReflowAudit(cdp);
     await identitySplitAudit(cdp);
     await demoInteriorReflowAudit(cdp);
     await retainedInspectorAudit(cdp);

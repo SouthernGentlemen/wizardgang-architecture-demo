@@ -32,7 +32,7 @@ describe('DEMO-335 React REST and GraphQL demonstrations', () => {
       window.document.body.innerHTML = `${rest}${graphql}`;
       const restRoot = window.document.querySelector<HTMLElement>('[data-demo-section="rest"]');
       const graphqlRoot = window.document.querySelector<HTMLElement>('[data-demo-section="graphql"]');
-      expect(rest).toContain('واجهة REST API');
+      expect(rest).toContain('WizardGang REST demo');
       expect(graphql).toContain('واجهة GraphQL API');
       expect(restRoot?.dataset.demoBrowserModule).toBe(assetManifest.assets['scripts.rest']);
       expect(graphqlRoot?.dataset.demoBrowserModule).toBe(assetManifest.assets['scripts.graphql']);
@@ -52,8 +52,8 @@ describe('DEMO-335 React REST and GraphQL demonstrations', () => {
     expect(methodCount).toBe(6);
     expect(html.match(/data-rest-operation-select=/g)).toHaveLength(methodCount);
     expect(html.match(/data-rest-form=/g)).toHaveLength(methodCount);
-    expect(html).toContain('/api/labs/rest-demo-openapi.json?download=1');
-    expect(html).toContain('/api/labs/rest-demo-records/{id}');
+    expect(html).toContain('href="/api/labs/rest-demo-openapi.json"');
+    expect(html).toContain('/rest-demo-records<wbr/></span><span>/{id}');
     expect(html).not.toContain('Code samples for this operation');
     expect(html).not.toContain('Focused browser tutorial');
     expect(html).not.toContain('Choose one request');

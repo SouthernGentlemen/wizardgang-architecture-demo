@@ -25,6 +25,18 @@ interface RenderedOperation {
   parameters: RestDemoParameter[];
 }
 
+function operationsFromDocument(): RenderedOperation[] {
+  return Object.entries(spec.paths).flatMap(([path, pathItem]) => HTTP_METHODS.flatMap((method) => {
+    const operation = pathItem[method];
+    return operation ? [{
+      method: method.toUpperCase() as RenderedOperation['method'],
+      path,
+      operation,
+      parameters: [...(pathItem.parameters || []), ...(operation.parameters || [])],
+    }] : [];
+  }));
+}
+
 function referenceName(schema?: RestDemoSchema): string {
   if (!schema) return '—';
   if (schema.$ref) return schema.$ref.split('/').pop() || schema.$ref;
@@ -36,20 +48,13 @@ function firstMediaType(content?: Record<string, RestDemoMediaType>): [string, R
   return content ? Object.entries(content)[0] : undefined;
 }
 
-function operationsFromDocument(): RenderedOperation[] {
-  return Object.entries(spec.paths).flatMap(([path, pathItem]) => HTTP_METHODS.flatMap((method) => {
-    const operation = pathItem[method] as RestDemoOperation | undefined;
-    return operation ? [{
-      method: method.toUpperCase() as RenderedOperation['method'],
-      path,
-      operation,
-      parameters: [...(pathItem.parameters || []), ...(operation.parameters || [])],
-    }] : [];
-  }));
+function exampleText(example: unknown): string {
+  return JSON.stringify(example, null, 2);
 }
 
-function operationId(operation: RestDemoOperation): string {
-  return `rest-demo-${operation.operationId}`;
+function Path({ value }: Readonly<{ value: string }>): ReactNode {
+  return <code className="rest-path" dir="ltr">{value.split('/').map((segment, index) =>
+    index === 0 ? segment : <span key={index}>/{segment}<wbr /></span>)}</code>;
 }
 
 function restBrowserMessages(localization: LocalizationContext): Readonly<Record<string, string>> {
@@ -67,215 +72,167 @@ function restBrowserMessages(localization: LocalizationContext): Readonly<Record
   });
 }
 
-function Parameters({ parameters, localization }: Readonly<{ parameters: RestDemoParameter[]; localization: LocalizationContext }>) {
+function Parameters({ parameters, localization }: Readonly<{ parameters: RestDemoParameter[]; localization: LocalizationContext }>): ReactNode {
   const exact = (english: string) => localization.exact(english);
   if (!parameters.length) return <p className="subtle">{exact('No parameters.')}</p>;
-  return <div className="table-wrap" tabIndex={0} aria-label={exact('Operation parameters')}>
-    <table><thead><tr><th>{exact('Parameter')}</th><th>{exact('In')}</th><th>{exact('Required')}</th><th>{exact('Type')}</th></tr></thead>
-      <tbody>{parameters.map((parameter) => <tr key={`${parameter.in}:${parameter.name}`}>
-        <td><code>{parameter.name}</code></td><td>{parameter.in}</td><td>{exact(parameter.required ? 'Yes' : 'No')}</td><td><code>{referenceName(parameter.schema)}</code></td>
-      </tr>)}</tbody>
-    </table>
-  </div>;
+  return <dl className="rest-definition-list">{parameters.map((parameter) => <div key={`${parameter.in}:${parameter.name}`}>
+    <dt><code dir="ltr">{parameter.name}</code> <span>{parameter.in} · {exact(parameter.required ? 'required' : 'optional')}</span></dt>
+    <dd><code dir="ltr">{referenceName(parameter.schema)}</code> · {exact(parameter.description)}
+      {parameter.example !== undefined ? <span className="rest-example-inline"> {exact('Example')}: <code dir="ltr">{String(parameter.example)}</code></span> : null}
+    </dd>
+  </div>)}</dl>;
 }
 
-function RequestFields({ rendered, localization }: Readonly<{ rendered: RenderedOperation; localization: LocalizationContext }>) {
+function RequestBody({ operation, localization }: Readonly<{ operation: RestDemoOperation; localization: LocalizationContext }>): ReactNode {
   const exact = (english: string) => localization.exact(english);
-  const { operation, parameters } = rendered;
-  const scope = useDemoPresentationScope();
-  const id = operationId(operation);
-  const media = firstMediaType(operation.requestBody?.content);
-  const body = media?.[1].example === undefined ? '' : JSON.stringify(media[1].example, null, 2);
-  const fields = parameters.map((parameter) => {
-    const inputId = scope.id(`${id}-${parameter.name}`);
-    return <label htmlFor={inputId} key={`${parameter.in}:${parameter.name}`}>
-      {parameter.name} <span className="parameter-meta">{parameter.in} · {exact(parameter.required ? 'required' : 'optional')} · {referenceName(parameter.schema)}</span>
-      <input
-        id={inputId}
-        data-rest-parameter={parameter.name}
-        defaultValue={String(parameter.example ?? parameter.schema.example ?? '')}
-        required={parameter.required}
-        autoComplete="off"
-      />
-    </label>;
-  });
-  const bodyField = media ? <label className="openapi-body" htmlFor={scope.id(`${id}-body`)}>
-    {exact('Request body')} <span className="parameter-meta">{media[0]} · {referenceName(media[1].schema)}</span>
-    <textarea id={scope.id(`${id}-body`)} data-rest-body="" spellCheck="false" required defaultValue={body} />
-  </label> : null;
-  return fields.length || bodyField
-    ? <div className="openapi-inputs">{fields}{bodyField}</div>
-    : <p className="subtle">{exact('This operation has no request inputs.')}</p>;
-}
-
-function responseSchema(response: RestDemoResponseDefinition): string {
-  return referenceName(firstMediaType(response.content)?.[1].schema);
-}
-
-function Responses({ operation, localization }: Readonly<{ operation: RestDemoOperation; localization: LocalizationContext }>) {
-  const exact = (english: string) => localization.exact(english);
-  return <div className="table-wrap" tabIndex={0} aria-label={exact('Declared responses')}>
-    <table><thead><tr><th>{exact('Status')}</th><th>{exact('Meaning')}</th><th>{exact('Schema')}</th></tr></thead>
-      <tbody>{Object.entries(operation.responses).map(([code, response]) => <tr key={code}>
-        <td><code>{code}</code></td><td>{exact(response.description)}</td><td><code>{responseSchema(response)}</code></td>
-      </tr>)}</tbody>
-    </table>
-  </div>;
-}
-
-function referencedSchemaNames(schema: RestDemoSchema | undefined, names = new Set<string>()): Set<string> {
-  if (!schema) return names;
-  if (schema.$ref) {
-    const name = schema.$ref.split('/').pop();
-    if (name && !names.has(name)) {
-      names.add(name);
-      referencedSchemaNames(spec.components.schemas[name], names);
-    }
-  }
-  if (schema.items) referencedSchemaNames(schema.items, names);
-  for (const property of Object.values(schema.properties || {})) referencedSchemaNames(property, names);
-  return names;
-}
-
-function relevantSchemaNames(rendered: RenderedOperation): string[] {
-  const names = new Set<string>();
-  for (const parameter of rendered.parameters) referencedSchemaNames(parameter.schema, names);
-  referencedSchemaNames(firstMediaType(rendered.operation.requestBody?.content)?.[1].schema, names);
-  for (const response of Object.values(rendered.operation.responses)) {
-    referencedSchemaNames(firstMediaType(response.content)?.[1].schema, names);
-  }
-  return [...names];
-}
-
-function Schema({ name, schema, localization }: Readonly<{ name: string; schema: RestDemoSchema; localization: LocalizationContext }>) {
-  const exact = (english: string) => localization.exact(english);
-  const required = new Set(schema.required || []);
-  const properties = Object.entries(schema.properties || {});
-  return <article className="rest-contract-schema">
-    <DemoHeading level={4}><code>{name}</code></DemoHeading>
-    <p>{exact(schema.description || (properties.length ? '' : referenceName(schema)))}</p>
-    {properties.length ? <div className="table-wrap" tabIndex={0} aria-label={exact(`${name} schema properties`)}>
-      <table><thead><tr><th>{exact('Property')}</th><th>{exact('Type')}</th><th>{exact('Required')}</th><th>{exact('Description')}</th></tr></thead>
-        <tbody>{properties.map(([property, definition]) => <tr key={property}>
-          <td><code>{property}</code></td><td><code>{referenceName(definition)}</code></td><td>{exact(required.has(property) ? 'Yes' : 'No')}</td><td>{exact(definition.description || '—')}</td>
-        </tr>)}</tbody>
-      </table>
-    </div> : null}
-  </article>;
-}
-
-function RelevantSchemas({ rendered, localization }: Readonly<{ rendered: RenderedOperation; localization: LocalizationContext }>) {
-  const names = relevantSchemaNames(rendered);
-  if (!names.length) return <p className="subtle">{localization.exact('No component schemas are referenced by this operation.')}</p>;
-  return <div className="rest-contract-schemas">{names.map((name) => <Schema key={name} name={name} schema={spec.components.schemas[name]} localization={localization} />)}</div>;
-}
-
-function OperationSelector({ rendered, index, localization }: Readonly<{ rendered: RenderedOperation; index: number; localization: LocalizationContext }>) {
-  const scope = useDemoPresentationScope();
-  const id = operationId(rendered.operation);
-  return <button
-    type="button"
-    className="rest-operation-choice"
-    data-rest-operation-select={rendered.operation.operationId}
-    aria-pressed={index === 0}
-    aria-controls={scope.id(`${id}-panel`)}
-  >
-    <span className={`http-method http-${rendered.method.toLowerCase()}`}>{rendered.method}</span>
-    <span className="rest-operation-choice-copy"><code>{rendered.path}</code><strong>{localization.exact(rendered.operation.summary)}</strong></span>
-  </button>;
-}
-
-function OperationPanel({ rendered, index, localization }: Readonly<{ rendered: RenderedOperation; index: number; localization: LocalizationContext }>) {
-  const exact = (english: string) => localization.exact(english);
-  const scope = useDemoPresentationScope();
-  const { method, path, operation, parameters } = rendered;
-  const id = operationId(operation);
-  const scoped = (suffix: string) => scope.id(`${id}-${suffix}`);
-  return <section
-    className="rest-operation-panel"
-    id={scoped('panel')}
-    data-rest-operation-panel={operation.operationId}
-    aria-labelledby={scoped('heading')}
-    hidden={index > 0}
-  >
-    <header className="rest-operation-header">
-      <p className="eyebrow">{exact('Selected operation')}</p>
-      <div className="rest-operation-title"><span className={`http-method http-${method.toLowerCase()}`}>{method}</span><code>{path}</code></div>
-      <DemoHeading level={2} id={scoped('heading')}>{exact(operation.summary)}</DemoHeading>
-      <p>{exact(operation.description)}</p>
-    </header>
-    <section className="rest-task-block" aria-labelledby={scoped('request-heading')}>
-      <DemoHeading level={3} id={scoped('request-heading')}>{exact('Request')}</DemoHeading>
-      <form data-rest-form="" data-method={method} data-path={path}>
-        <RequestFields rendered={rendered} localization={localization} />{' '}
-        <button className="button-primary" type="submit" data-rest-execute="">{exact(`Execute ${method}`)}</button>
-      </form>
-    </section>
-    <section className="rest-task-block rest-response" aria-labelledby={scoped('response-heading')}>
-      <DemoHeading level={3} id={scoped('response-heading')}>{exact('Response')}</DemoHeading>
-      <div data-rest-result="" aria-live="polite">
-        <p className="subtle" data-rest-response-empty="">{exact('Execute this operation to inspect the actual response.')}</p>
-        <dl data-rest-response-details="" hidden>
-          <dt>{exact('Request URL')}</dt><dd><code data-rest-request-url="" /></dd>
-          <dt>{exact('Request')}</dt><dd><pre data-rest-request="" /></dd>
-          <dt>{exact('Status')}</dt><dd><strong data-rest-status="" /></dd>
-          <dt>{exact('Headers')}</dt><dd><pre data-rest-response-headers="" /></dd>
-          <dt>{exact('Body')}</dt><dd><pre data-rest-response-body="" /></dd>
-        </dl>
-      </div>
-    </section>
-    <section className="rest-task-block rest-contract" aria-labelledby={scoped('contract-heading')}>
-      <DemoHeading level={3} id={scoped('contract-heading')}>{exact('Contract')}</DemoHeading>
-      <p className="subtle">{exact('Only the OpenAPI material used by the selected operation is shown here.')}</p>
-      <DemoHeading level={4}>{exact('Parameters')}</DemoHeading>
-      <Parameters parameters={parameters} localization={localization} />
-      <DemoHeading level={4}>{exact('Declared responses')}</DemoHeading>
-      <Responses operation={operation} localization={localization} />
-      <DemoHeading level={4}>{exact('Referenced schemas')}</DemoHeading>
-      <RelevantSchemas rendered={rendered} localization={localization} />
-    </section>
+  const body = operation.requestBody;
+  if (!body) return null;
+  return <section className="rest-document-block">
+    <DemoHeading level={4}>{exact('Request body')}</DemoHeading>
+    <p>{exact(body.description)} {body.required ? <strong>{exact('required')}</strong> : null}</p>
+    {Object.entries(body.content).map(([contentType, media]) => <div key={contentType}>
+      <p><code dir="ltr">{contentType}</code> · <code dir="ltr">{referenceName(media.schema)}</code></p>
+      {media.example !== undefined ? <><strong>{exact('Example')}</strong><pre dir="ltr">{exampleText(media.example)}</pre></> : null}
+    </div>)}
   </section>;
 }
 
-function OpenApiConsole({ documentPath, localization }: Readonly<{ documentPath: string; localization: LocalizationContext }>) {
+function Responses({ responses, localization }: Readonly<{ responses: Record<string, RestDemoResponseDefinition>; localization: LocalizationContext }>): ReactNode {
   const exact = (english: string) => localization.exact(english);
-  const operations = operationsFromDocument();
-  const server = spec.servers[0];
-  return <div className="rest-operation-browser" data-rest-operation-browser="">
-    <section className="rest-operation-picker" aria-label={exact('REST operations')}>
-      <div className="rest-server"><div><span>{exact('Server')}</span><code>{server.url}</code></div><button type="button" data-copy-server={server.url}>{exact('Copy')}</button></div>
-      <div className="rest-operation-choices">{operations.map((rendered, index) => <OperationSelector key={rendered.operation.operationId} rendered={rendered} index={index} localization={localization} />)}</div>
-      <details className="rest-deeper-evidence">
-        <summary>{exact('Full OpenAPI evidence')}</summary>
-        <p>{exact(`The complete OpenAPI ${spec.openapi} document remains authoritative, but it is kept out of the primary execution flow.`)}</p>
-        <div className="rest-artifacts" aria-label={exact('Full OpenAPI document actions')}>
-          <a className="button" href={documentPath} data-rest-full-openapi="">{exact('Open full OpenAPI JSON')}</a>
-          <a className="button" href={`${documentPath}?download=1`} download>{exact('Download JSON')}</a>
-        </div>
-      </details>
-    </section>
-    <div className="rest-operation-detail">{operations.map((rendered, index) => <OperationPanel key={rendered.operation.operationId} rendered={rendered} index={index} localization={localization} />)}</div>
+  return <div className="rest-declared-responses">{Object.entries(responses).map(([status, response]) => <section className="rest-declared-response" key={status}>
+    <div className="rest-response-title"><strong><code dir="ltr">{status}</code></strong><span>{exact(response.description)}</span></div>
+    {Object.entries(response.content || {}).map(([contentType, media]) => <div key={contentType}>
+      <p><code dir="ltr">{contentType}</code> · <code dir="ltr">{referenceName(media.schema)}</code></p>
+      {media.example !== undefined ? <><strong>{exact('Example')}</strong><pre dir="ltr">{exampleText(media.example)}</pre></> : null}
+    </div>)}
+  </section>)}</div>;
+}
+
+function RequestFields({ rendered, localization }: Readonly<{ rendered: RenderedOperation; localization: LocalizationContext }>): ReactNode {
+  const exact = (english: string) => localization.exact(english);
+  const scope = useDemoPresentationScope();
+  const media = firstMediaType(rendered.operation.requestBody?.content);
+  return <div className="openapi-inputs">
+    {rendered.parameters.map((parameter) => {
+      const id = scope.id(`rest-demo-${rendered.operation.operationId}-${parameter.name}`);
+      return <label htmlFor={id} key={`${parameter.in}:${parameter.name}`}>
+        {parameter.name} <span className="parameter-meta">{parameter.in} · {exact(parameter.required ? 'required' : 'optional')} · {referenceName(parameter.schema)}</span>
+        <input id={id} data-rest-parameter={parameter.name} data-rest-parameter-in={parameter.in} defaultValue={String(parameter.example ?? parameter.schema.example ?? '')} required={parameter.required} autoComplete="off" dir="ltr" />
+      </label>;
+    })}
+    {media ? <label className="openapi-body" htmlFor={scope.id(`rest-demo-${rendered.operation.operationId}-body`)}>
+      {exact('Request body')} <span className="parameter-meta">{media[0]} · {referenceName(media[1].schema)}</span>
+      <textarea id={scope.id(`rest-demo-${rendered.operation.operationId}-body`)} data-rest-body="" spellCheck="false" required={rendered.operation.requestBody?.required} defaultValue={media[1].example === undefined ? '' : exampleText(media[1].example)} dir="ltr" />
+    </label> : null}
   </div>;
+}
+
+function Operation({ rendered, localization }: Readonly<{ rendered: RenderedOperation; localization: LocalizationContext }>): ReactNode {
+  const exact = (english: string) => localization.exact(english);
+  const scope = useDemoPresentationScope();
+  const { method, path, operation, parameters } = rendered;
+  const id = (suffix: string) => scope.id(`rest-demo-${operation.operationId}-${suffix}`);
+  return <details className="rest-operation" data-method={method} data-rest-operation-panel={operation.operationId} id={id('panel')}>
+    <summary data-rest-operation-select={operation.operationId}>
+      <span className={`http-method http-${method.toLowerCase()}`}>{method}</span>
+      <Path value={path} />
+      <strong>{exact(operation.summary)}</strong>
+    </summary>
+    <div className="rest-operation-content">
+      <p>{exact(operation.description)}</p>
+      <section className="rest-document-block" aria-labelledby={id('parameters-heading')}>
+        <DemoHeading level={3} id={id('parameters-heading')}>{exact('Parameters')}</DemoHeading>
+        <Parameters parameters={parameters} localization={localization} />
+      </section>
+      <RequestBody operation={operation} localization={localization} />
+      <section className="rest-document-block" aria-labelledby={id('responses-heading')}>
+        <DemoHeading level={3} id={id('responses-heading')}>{exact('Responses')}</DemoHeading>
+        <Responses responses={operation.responses} localization={localization} />
+      </section>
+      <section className="rest-document-block rest-try" aria-labelledby={id('try-heading')}>
+        <DemoHeading level={3} id={id('try-heading')}>{exact('Try it out')}</DemoHeading>
+        <form data-rest-form="" data-method={method} data-path={path}>
+          <RequestFields rendered={rendered} localization={localization} />
+          <button className="button-primary" type="submit" data-rest-execute="">{exact('Execute')}</button>
+        </form>
+        <div data-rest-result="" aria-live="polite">
+          <p className="subtle" data-rest-response-empty="">{exact('Execute this operation to inspect the actual response.')}</p>
+          <dl className="rest-execution-evidence" data-rest-response-details="" hidden>
+            <dt>{exact('Request URL')}</dt><dd><code data-rest-request-url="" dir="ltr" /></dd>
+            <dt>{exact('Curl command')}</dt><dd><pre data-rest-curl="" dir="ltr" /></dd>
+            <dt>{exact('Request')}</dt><dd><pre data-rest-request="" dir="ltr" /></dd>
+            <dt>{exact('Status')}</dt><dd><strong data-rest-status="" dir="ltr" /></dd>
+            <dt>{exact('Duration')}</dt><dd><span data-rest-duration="" dir="ltr" /></dd>
+            <dt>{exact('Headers')}</dt><dd><pre data-rest-response-headers="" dir="ltr" /></dd>
+            <dt>{exact('Body')}</dt><dd><pre data-rest-response-body="" dir="ltr" /></dd>
+          </dl>
+        </div>
+      </section>
+    </div>
+  </details>;
+}
+
+function Schema({ name, schema, localization }: Readonly<{ name: string; schema: RestDemoSchema; localization: LocalizationContext }>): ReactNode {
+  const exact = (english: string) => localization.exact(english);
+  const required = new Set(schema.required || []);
+  return <details className="rest-schema" id={`rest-schema-${name}`}>
+    <summary><code dir="ltr">{name}</code> <span>{exact(schema.description || '')}</span></summary>
+    <dl className="rest-schema-properties">{Object.entries(schema.properties || {}).map(([property, definition]) => <div key={property}>
+      <dt><code dir="ltr">{property}</code></dt>
+      <dd><code dir="ltr">{referenceName(definition)}</code></dd>
+      <dd>{exact(required.has(property) ? 'required' : 'optional')}</dd>
+      <dd>{exact(definition.description || '—')}</dd>
+      {definition.example !== undefined ? <dd className="rest-property-example">{exact('Example')}: <code dir="ltr">{exampleText(definition.example)}</code></dd> : null}
+    </div>)}</dl>
+  </details>;
 }
 
 export function RestPresentation({ localization }: Readonly<{ localization: LocalizationContext }>): ReactNode {
   const exact = (english: string) => localization.exact(english);
-  return <>
-    <section className="page-header lab-page-header api-page-header">
-      <DemoHeading level={1}>{exact('REST API')}</DemoHeading>
-      <p className="lede">{exact('Choose one operation, run it, inspect the actual response, then compare that behavior with the matching OpenAPI contract.')}</p>
+  const operations = operationsFromDocument();
+  const documentPath = routeUrl('interfaces.rest.openapi.json');
+  return <div className="rest-openapi" data-rest-operation-browser="">
+    <header className="rest-info">
+      <p className="eyebrow">OpenAPI {spec.openapi}</p>
+      <DemoHeading level={1}>{exact(spec.info.title)} <span className="rest-version">{spec.info.version}</span></DemoHeading>
+      <p>{exact(spec.info.description)}</p>
+      <nav className="rest-artifacts" aria-label={exact('OpenAPI documents')}>
+        <a href={documentPath} data-rest-full-openapi="">{exact('Raw REST OpenAPI JSON')}</a>
+        <a href={routeUrl('interfaces.openapi.json')}>{exact('Machine API OpenAPI JSON')}</a>
+      </nav>
+    </header>
+    <section className="rest-server-security">
+      <div>
+        <DemoHeading level={2}>{exact('Servers')}</DemoHeading>
+        {spec.servers.map((server) => <p className="rest-server" key={server.url}><span>{exact(server.description)}</span><code dir="ltr">{server.url}</code></p>)}
+      </div>
+      <div>
+        <DemoHeading level={2}>{exact('Security')}</DemoHeading>
+        {Object.entries(spec.components.securitySchemes).map(([name, scheme]) => <div className="rest-security" key={name}>
+          <strong><code dir="ltr">{name}</code></strong>
+          <p><code dir="ltr">{scheme.type}</code> · {scheme.in} · <code dir="ltr">{scheme.name}</code></p>
+          <p>{exact(scheme.description)}</p>
+        </div>)}
+      </div>
     </section>
-    <OpenApiConsole documentPath={routeUrl('interfaces.rest.openapi.json')} localization={localization} />
-  </>;
+    {spec.tags.map((tag) => <section className="rest-tag" key={tag.name}>
+      <header><DemoHeading level={2}>{exact(tag.name)}</DemoHeading><p>{exact(tag.description)}</p></header>
+      <div className="rest-operations">{operations.filter(({ operation }) => operation.tags.includes(tag.name)).map((rendered) =>
+        <Operation key={rendered.operation.operationId} rendered={rendered} localization={localization} />)}</div>
+    </section>)}
+    <section className="rest-schemas">
+      <DemoHeading level={2}>{exact('Schemas')}</DemoHeading>
+      {Object.entries(spec.components.schemas).map(([name, schema]) => <Schema key={name} name={name} schema={schema} localization={localization} />)}
+    </section>
+  </div>;
 }
 
 export function restSection(env: Env, options: DemoSectionOptions = {}): DemoSection {
   const localization = localizationForEnv(env);
-  const presentationPath = `${routeUrl('demos.index')}#rest`;
   return createReactDemoSection(env, {
     key: 'rest',
     title: 'REST API',
-    defaultPresentationPath: presentationPath,
+    defaultPresentationPath: `${routeUrl('demos.index')}#rest`,
     browserModule: routeUrl('operations.assets', { asset: browserAssetName('scripts.rest') }),
     browserMessages: restBrowserMessages(localization),
     children: <RestPresentation localization={localization} />,

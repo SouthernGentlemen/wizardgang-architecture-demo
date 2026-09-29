@@ -72,14 +72,14 @@ async function main() {
     await waitForDemo(cdp, 'rest');
 
     const initial = await evaluate(cdp, `(()=>{
-      const visiblePanels=[...document.querySelectorAll('[data-rest-operation-panel]')].filter((panel)=>!panel.hidden);
+      const openPanels=[...document.querySelectorAll('[data-rest-operation-panel]')].filter((panel)=>panel.open);
       return {
         hash:location.hash,
         demoId:document.querySelector('[data-demo-workbench]')?.dataset.demoId,
         mounted:document.querySelectorAll('[data-demo-panel] [data-demo-section]').length,
         released:[...new Set([...document.querySelectorAll('[data-demo-link]')].map((link)=>link.dataset.demoLink))].filter(Boolean).length,
         choices:document.querySelectorAll('[data-rest-operation-select]').length,
-        visiblePanels:visiblePanels.length,
+        openPanels:openPanels.length,
         fullOpenApi:Boolean(document.querySelector('[data-rest-full-openapi]')),
         oldInventory:document.body.textContent.includes('All demos'),
         oldFullContract:Boolean(document.querySelector('.rest-full-contract')),
@@ -88,35 +88,34 @@ async function main() {
     assert(initial.hash === '#rest', `REST fragment was not preserved: ${initial.hash}`);
     assert(initial.demoId === 'rest' && initial.mounted === 1, 'REST did not mount as the one active demo.');
     assert(initial.released === 14, `Expected 14 released demos, found ${initial.released}.`);
-    assert(initial.choices === 6 && initial.visiblePanels === 1, 'REST is not operation-first with one visible operation.');
+    assert(initial.choices === 6 && initial.openPanels === 0, 'REST operations are not six closed document disclosures.');
     assert(initial.fullOpenApi, 'Full OpenAPI evidence link is missing.');
     assert(!initial.oldInventory && !initial.oldFullContract, 'Old demo/OpenAPI inventory resurfaced.');
 
-    await evaluate(cdp, `document.querySelector('[data-rest-operation-select="listRecords"]').click(); document.querySelector('[data-rest-operation-panel="listRecords"] [data-rest-form]').requestSubmit(); true`);
+    await evaluate(cdp, `document.querySelector('[data-rest-operation-panel="listRecords"]').open=true; document.querySelector('[data-rest-operation-panel="listRecords"] [data-rest-form]').requestSubmit(); true`);
     await waitFor(cdp, `(()=>{const s=document.querySelector('[data-rest-operation-panel="listRecords"] [data-rest-status]')?.textContent||'';return /^200\\b/.test(s)})()`, 'GET list response');
     const getResult = await evaluate(cdp, `(()=>{
       const panel=document.querySelector('[data-rest-operation-panel="listRecords"]');
       return {
         status:panel.querySelector('[data-rest-status]')?.textContent,
         body:panel.querySelector('[data-rest-response-body]')?.textContent,
-        contract:panel.querySelector('.rest-contract')?.textContent,
+        contract:panel.querySelector('.rest-declared-responses')?.textContent,
+        curl:panel.querySelector('[data-rest-curl]')?.textContent,
       };
     })()`);
     assert(/^200\b/.test(getResult.status), `GET list did not return 200: ${getResult.status}`);
-    assert(getResult.body.includes('"results"') && getResult.contract.includes('Declared responses'), 'GET response/contract evidence is incomplete.');
+    assert(getResult.body.includes('"results"') && getResult.contract.includes('200') && getResult.curl.includes('--cookie-jar'), 'GET response/contract/curl evidence is incomplete.');
 
     const auditKey = `demo268-${Date.now().toString(36)}`;
-    await evaluate(cdp, `(()=>{const panel=document.querySelector('[data-rest-operation-panel="createRecord"]');document.querySelector('[data-rest-operation-select="createRecord"]').click();panel.querySelector('[data-rest-body]').value=JSON.stringify({key:${JSON.stringify(auditKey)},value:{status:'created'}});panel.querySelector('[data-rest-form]').requestSubmit();return true})()`);
+    await evaluate(cdp, `(()=>{const panel=document.querySelector('[data-rest-operation-panel="createRecord"]');panel.open=true;panel.querySelector('[data-rest-body]').value=JSON.stringify({key:${JSON.stringify(auditKey)},value:{status:'created'}});panel.querySelector('[data-rest-form]').requestSubmit();return true})()`);
     await waitFor(cdp, `(()=>{const s=document.querySelector('[data-rest-operation-panel="createRecord"] [data-rest-status]')?.textContent||'';return /^201\\b/.test(s)})()`, 'POST create response');
-    await evaluate(cdp, `(()=>{const panel=document.querySelector('[data-rest-operation-panel="updateRecord"]');document.querySelector('[data-rest-operation-select="updateRecord"]').click();panel.querySelector('[data-rest-parameter="id"]').value=${JSON.stringify(auditKey)};panel.querySelector('[data-rest-form]').requestSubmit();return true})()`);
+    await evaluate(cdp, `(()=>{const panel=document.querySelector('[data-rest-operation-panel="updateRecord"]');panel.open=true;panel.querySelector('[data-rest-parameter="id"]').value=${JSON.stringify(auditKey)};panel.querySelector('[data-rest-form]').requestSubmit();return true})()`);
     await waitFor(cdp, `(()=>{const s=document.querySelector('[data-rest-operation-panel="updateRecord"] [data-rest-status]')?.textContent||'';return /^(200|201)\\b/.test(s)})()`, 'PATCH response');
     const patch = await evaluate(cdp, `(()=>{
-      const visible=[...document.querySelectorAll('[data-rest-operation-panel]')].filter((panel)=>!panel.hidden);
-      const panel=visible[0];
-      return { count:visible.length, operation:panel?.dataset.restOperationPanel, status:panel?.querySelector('[data-rest-status]')?.textContent, contract:panel?.querySelector('.rest-contract')?.textContent };
+      const panel=document.querySelector('[data-rest-operation-panel="updateRecord"]');
+      return { open:panel?.open, status:panel?.querySelector('[data-rest-status]')?.textContent, contract:panel?.querySelector('.rest-document-block')?.textContent };
     })()`);
-    assert(patch.count === 1 && patch.operation === 'updateRecord', 'Selecting PATCH exposed unrelated operation context.');
-    assert(/^(200|201)\b/.test(patch.status) && patch.contract.includes('RecordPatch'), 'PATCH behavior was not paired with its relevant contract.');
+    assert(patch.open && /^(200|201)\b/.test(patch.status) && patch.contract.includes('id'), 'PATCH behavior was not paired with its relevant contract.');
 
     await evaluate(cdp, `document.querySelector('[data-demo-link="graphql"]').click(); true`);
     await waitForDemo(cdp, 'graphql');
@@ -131,9 +130,9 @@ async function main() {
     assert(!inspector, 'REST inspector remained visible.');
 
     await cdp.call('Emulation.setDeviceMetricsOverride', { width: 320, height: 800, deviceScaleFactor: 1, mobile: true });
-    const narrow = await evaluate(cdp, `(()=>{const width=window.innerWidth;const describe=(element)=>({element:element.id||element.className||element.tagName,left:Math.round(element.getBoundingClientRect().left),right:Math.round(element.getBoundingClientRect().right),scrollWidth:element.scrollWidth,clientWidth:element.clientWidth});return {scrollWidth:document.documentElement.scrollWidth,innerWidth:width,visiblePanels:[...document.querySelectorAll('[data-rest-operation-panel]')].filter((panel)=>!panel.hidden).length,overflowing:[...document.body.querySelectorAll('*')].filter((element)=>{const rect=element.getBoundingClientRect();return rect.left < -1 || rect.right > width + 1}).slice(0,8).map(describe)}})()`);
+    const narrow = await evaluate(cdp, `(()=>{const width=window.innerWidth;const describe=(element)=>({element:element.id||element.className||element.tagName,left:Math.round(element.getBoundingClientRect().left),right:Math.round(element.getBoundingClientRect().right),scrollWidth:element.scrollWidth,clientWidth:element.clientWidth});return {scrollWidth:document.documentElement.scrollWidth,innerWidth:width,operations:document.querySelectorAll('[data-rest-operation-panel]').length,overflowing:[...document.body.querySelectorAll('*')].filter((element)=>{const rect=element.getBoundingClientRect();return rect.left < -1 || rect.right > width + 1}).slice(0,8).map(describe)}})()`);
     assert(narrow.scrollWidth <= narrow.innerWidth + 1, `REST caused page-level horizontal overflow: ${narrow.scrollWidth} > ${narrow.innerWidth}; ${JSON.stringify(narrow.overflowing)}`);
-    assert(narrow.visiblePanels === 1, 'Narrow layout exposed more than one operation.');
+    assert(narrow.operations === 6, 'Narrow layout lost an operation.');
     await cdp.call('Emulation.clearDeviceMetricsOverride');
 
     await navigate(cdp, `${origin}/demos?lang=ar#rest`);
@@ -141,7 +140,7 @@ async function main() {
     const rtl = await evaluate(cdp, `({lang:document.documentElement.lang,dir:document.documentElement.dir,hash:location.hash,demo:document.querySelector('[data-demo-workbench]')?.dataset.demoId})`);
     assert(rtl.lang === 'ar' && rtl.dir === 'rtl' && rtl.hash === '#rest' && rtl.demo === 'rest', 'Arabic locale handling lost the REST fragment or RTL state.');
 
-    console.log('DEMO-268 browser audit: PASS — operation selection, GET/PATCH execution, response/contract evidence, switching/history, inspector removal, narrow reflow, and EN/AR #rest state verified.');
+    console.log('REST browser audit: PASS — document disclosures, GET/PATCH execution, response/contract/curl evidence, switching/history, inspector removal, narrow reflow, and EN/AR #rest state verified.');
   } finally {
     await cdp?.close();
     await terminateProcess(chrome);

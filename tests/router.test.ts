@@ -93,13 +93,13 @@ describe('public route contract', () => {
     expect(html.match(/<form data-rest-form/g)).toHaveLength(6);
     expect(html.match(/data-rest-operation-select=/g)).toHaveLength(6);
     expect(html.match(/data-rest-operation-panel=/g)).toHaveLength(6);
-    expect(html.match(/data-rest-operation-panel="[^"]+"[^>]* hidden/g)).toHaveLength(5);
+    expect(html.match(/<details class="rest-operation"/g)).toHaveLength(6);
     expect(html).toContain('3.0.3');
-    expect(html).toContain('REST API');
+    expect(html).toContain('WizardGang REST demo');
     expect(html).toContain('RecordReplacement');
     expect(html).toContain('RecordPatch');
-    expect(html).toContain('<th>Status</th><th>Meaning</th><th>Schema</th>');
-    expect(html).toContain('/api/labs/rest-demo-openapi.json?download=1');
+    expect(html).toContain('class="rest-declared-responses"');
+    expect(html).toContain('href="/api/labs/rest-demo-openapi.json"');
     expect(html).not.toContain('200–204');
     expect(html).not.toContain('OpenAPI document</p>');
     expect(html).not.toContain('REST resources');

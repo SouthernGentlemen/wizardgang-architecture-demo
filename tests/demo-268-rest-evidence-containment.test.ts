@@ -46,7 +46,7 @@ describe('DEMO-268 REST evidence containment', () => {
     expect(registrySource).not.toContain('All demos');
   });
 
-  it('renders an operation-first REST task surface with only one operation visible by default', () => {
+  it('renders six native expandable operations with execution evidence in document order', () => {
     const html = restPresentation();
     const operationCount = 6;
 
@@ -54,31 +54,32 @@ describe('DEMO-268 REST evidence containment', () => {
     expect(html).toContain('data-rest-operation-browser');
     expect(html.match(/data-rest-operation-select=/g)).toHaveLength(operationCount);
     expect(html.match(/data-rest-operation-panel=/g)).toHaveLength(operationCount);
-    expect(html.match(/data-rest-operation-panel="[^"]+"[^>]* hidden/g)).toHaveLength(operationCount - 1);
-    expect(html).toContain('id="rest-rest-demo-listRecords-request-heading">Request</h4>');
-    expect(html).toContain('id="rest-rest-demo-listRecords-response-heading">Response</h4>');
-    expect(html).toContain('id="rest-rest-demo-listRecords-contract-heading">Contract</h4>');
+    expect(html.match(/<details class="rest-operation"/g)).toHaveLength(operationCount);
+    expect(html).toContain('id="rest-rest-demo-listRecords-responses-heading">Responses</h4>');
+    expect(html).toContain('id="rest-rest-demo-listRecords-try-heading">Try it out</h4>');
+    expect(html).toContain('data-rest-curl=""');
+    expect(html).toContain('data-rest-duration=""');
     expect(html).not.toContain('Full OpenAPI contract');
     expect(html).not.toContain('<div class="rest-schema-list">');
   });
 
-  it('keeps the full OpenAPI document reachable only as deeper evidence', () => {
+  it('links both public OpenAPI documents in the info header', () => {
     const html = restPresentation();
-    expect(html).toContain('<details class="rest-deeper-evidence">');
-    expect(html).toContain('data-rest-full-openapi="">Open full OpenAPI JSON</a>');
-    expect(html).toContain('href="/api/labs/rest-demo-openapi.json?download=1" download');
+    expect(html).toContain('data-rest-full-openapi="">Raw REST OpenAPI JSON</a>');
+    expect(html).toContain('href="/api/openapi.json">Machine API OpenAPI JSON</a>');
+    expect(html).toContain('wg_demo_session');
     expect(html).not.toContain(JSON.stringify(restDemoOpenApiDocument));
   });
 
-  it('binds request, execution, response, and contract context to the selected operation', () => {
+  it('binds editable requests and declared responses to each operation', () => {
     const html = restPresentation();
     expect(html).toContain('data-rest-operation-select="listRecords"');
     expect(html).toContain('data-rest-operation-panel="listRecords"');
     expect(html).toContain('data-rest-form="" data-method="GET" data-path="/api/labs/rest-demo-records"');
     expect(html).toContain('data-rest-operation-select="updateRecord"');
     expect(html).toContain('data-rest-form="" data-method="PATCH" data-path="/api/labs/rest-demo-records/{id}"');
-    expect(html).toContain('Only the OpenAPI material used by the selected operation is shown here.');
-    expect(readFileSync('src/browser/rest.ts', 'utf8')).toContain('panel.hidden = panel.dataset.restOperationPanel !== operationId');
+    expect(html).toContain('id="rest-schema-RecordPatch"');
+    expect(html).toContain('The record key.');
   });
 
   it('does not change REST machine routes, route inventory, or canonical OpenAPI source', () => {

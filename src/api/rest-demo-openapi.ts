@@ -60,7 +60,11 @@ export interface RestDemoOpenApiDocument {
   servers: Array<{ url: string; description: string }>;
   tags: Array<{ name: string; description: string }>;
   paths: Record<string, RestDemoPathItem>;
-  components: { schemas: Record<string, RestDemoSchema> };
+  security: Array<Record<string, string[]>>;
+  components: {
+    securitySchemes: Record<string, { type: 'apiKey'; in: 'cookie'; name: string; description: string }>;
+    schemas: Record<string, RestDemoSchema>;
+  };
 }
 
 const recordExample = {
@@ -86,10 +90,11 @@ export const restDemoOpenApiDocument: RestDemoOpenApiDocument = {
   info: {
     title: 'WizardGang REST demo',
     version: '1.0.0',
-    description: 'Focused browser tutorial: a small anonymous CRUD API isolated by a signed visitor-session cookie. The separate /api/openapi.json contract documents the bearer-capable machine API.',
+    description: 'Anonymous CRUD records isolated by a signed visitor-session cookie. The separate /api/openapi.json document describes the bearer-capable machine API.',
   },
   servers: [{ url: 'https://demo.wizardgang.ai', description: 'Live demo server' }],
-  tags: [{ name: 'Records', description: 'Cookie-isolated visitor records for the interactive browser tutorial' }],
+  tags: [{ name: 'Records', description: 'Cookie-isolated visitor records' }],
+  security: [{ visitorSession: [] }],
   paths: {
     '/api/labs/rest-demo-records': {
       get: {
@@ -203,6 +208,14 @@ export const restDemoOpenApiDocument: RestDemoOpenApiDocument = {
     },
   },
   components: {
+    securitySchemes: {
+      visitorSession: {
+        type: 'apiKey',
+        in: 'cookie',
+        name: 'wg_demo_session',
+        description: 'A signed, HttpOnly visitor-session cookie is issued on the first request and sent on later requests. Keep a cookie jar when using curl so create, read, update, and delete use the same isolated session.',
+      },
+    },
     schemas: {
       Record: {
         type: 'object',
