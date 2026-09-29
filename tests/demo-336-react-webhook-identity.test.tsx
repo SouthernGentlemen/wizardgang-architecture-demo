@@ -135,6 +135,8 @@ describe('DEMO-336 React webhook and identity demonstrations', () => {
     try {
       await mountIdentity(root);
       expect(root.querySelector('[data-identity-notice]')?.textContent).toContain('Provider authentication validated');
+      expect(root.querySelector<HTMLButtonElement>('[data-identity-reset]')?.hidden).toBe(false);
+      expect(root.querySelector('.identity-reset p')?.textContent).toContain('retain their own sessions');
       expect(root.querySelector<HTMLElement>('[data-identity-result]')?.hidden).toBe(false);
       expect(root.querySelector('[data-identity-name]')?.textContent).toBe('Ada Lovelace');
       expect(root.querySelector('[data-provider-payload]')?.textContent).toContain('ada@example.test');
@@ -163,15 +165,20 @@ describe('DEMO-336 React webhook and identity demonstrations', () => {
     const root = window.document.querySelector<HTMLElement>('[data-demo-section="identity"]')!;
     vi.stubGlobal('window', window);
     vi.stubGlobal('document', window.document);
-    vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({
-      authenticated: false,
-      providers: { microsoft: { configured: false }, saml: { configured: false }, google: { configured: false }, github: { configured: false } },
-    }))));
+    const fetchMock = vi.fn(async (input: string | URL | Request) => new Response(JSON.stringify(
+      String(input) === '/auth/logout'
+        ? { authenticated: false }
+        : { authenticated: false, providers: { microsoft: { configured: false }, saml: { configured: false }, google: { configured: false }, github: { configured: false } } },
+    )));
+    vi.stubGlobal('fetch', fetchMock);
     try {
       await mountIdentity(root);
       expect([...root.querySelectorAll<HTMLElement>('[data-config-status]')].every((slot) => slot.dataset.configured === 'false')).toBe(true);
       expect([...root.querySelectorAll<HTMLAnchorElement>('[data-provider-action]')].every((action) => !action.hasAttribute('href') && action.getAttribute('aria-disabled') === 'true')).toBe(true);
       expect(root.querySelector<HTMLElement>('[data-identity-result]')?.hidden).toBe(true);
+      expect(root.querySelector<HTMLButtonElement>('[data-identity-reset]')?.hidden).toBe(false);
+      root.querySelector<HTMLButtonElement>('[data-identity-reset]')?.click();
+      await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledWith('/auth/logout', expect.objectContaining({ method: 'POST', credentials: 'same-origin' })));
     } finally {
       await window.happyDOM.close();
     }

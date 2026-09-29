@@ -6,6 +6,8 @@ import { recordDemoEvent } from '../lib/audit';
 import { HttpError, errorResponse, json, methodNotAllowed, readJson } from '../lib/http';
 import {
   IDENTITY_SESSION_COOKIE,
+  IDENTITY_FLOW_COOKIE,
+  SAML_FLOW_COOKIE,
   clearFlowCookie,
   clearIdentityCookie,
   createDemoAccessToken,
@@ -335,25 +337,27 @@ export async function identityLogoutResponse(request: Request, env: Env): Promis
 
   const sessionConfigured = hasIdentitySecret(env);
   const auditConfigured = hasIdentityAuditSecret(env);
-  const clearCookie = clearIdentityCookie(IDENTITY_SESSION_COOKIE);
-  let session: IdentitySession | null = null;
-
+  const headers = new Headers({ 'cache-control': 'no-store' });
+  headers.append('set-cookie', clearIdentityCookie(IDENTITY_SESSION_COOKIE));
+  headers.append('set-cookie', clearIdentityCookie(IDENTITY_FLOW_COOKIE));
+  headers.append('set-cookie', clearIdentityCookie(SAML_FLOW_COOKIE, 'None'));
   if (sessionConfigured) {
-    session = await readIdentitySession(request, env);
     await revokeIdentitySession(request, env);
   }
 
-  if (session && auditConfigured) {
-    await auditIdentity(env, 'session_destroyed', session.identity.provider, {
-      subjectAuditId: await identitySubjectAuditId(env, session.identity.provider, session.identity.subject),
+  if (auditConfigured) {
+    await recordDemoEvent(env, 'identity', 'identity.session_reset', {});
+    await recordApplicationLog(env, {
+      source: 'identity', eventKey: 'identity.session_reset', message: 'Identity session reset.',
+      route: '/auth/logout', detail: {},
     });
   }
 
   if (!sessionConfigured || !auditConfigured) {
-    return identityUnavailableResponse({ 'set-cookie': clearCookie });
+    return identityUnavailableResponse(headers);
   }
 
-  return json({ authenticated: false }, { headers: { 'cache-control': 'no-store', 'set-cookie': clearCookie } });
+  return json({ authenticated: false }, { headers });
 }
 
 export async function providerStartResponse(request: Request, env: Env, provider: IdentityProvider): Promise<Response> {
@@ -369,6 +373,7 @@ export async function providerStartResponse(request: Request, env: Env, provider
     location.searchParams.set('client_id', credentials.id);
     location.searchParams.set('redirect_uri', callbackUrl(request, provider));
     location.searchParams.set('scope', 'read:user user:email');
+    location.searchParams.set('prompt', 'select_account');
     location.searchParams.set('state', flow.state);
     location.searchParams.set('code_challenge', await pkceChallenge(String(flow.verifier)));
     location.searchParams.set('code_challenge_method', 'S256');
@@ -380,6 +385,7 @@ export async function providerStartResponse(request: Request, env: Env, provider
     location.searchParams.set('redirect_uri', callbackUrl(request, provider));
     location.searchParams.set('response_type', 'code');
     location.searchParams.set('scope', 'openid profile email');
+    location.searchParams.set('prompt', 'select_account');
     location.searchParams.set('state', flow.state);
     location.searchParams.set('nonce', String(flow.nonce));
     location.searchParams.set('code_challenge', await pkceChallenge(String(flow.verifier)));
@@ -511,7 +517,7 @@ function samlClient(request: Request, env: Env): SAML {
   if (!env.SAML_IDP_CERT) throw new IdentityError('provider_not_configured');
   return new SAML({
     callbackUrl: samlCallbackUrl(request), entryPoint: samlEntryPoint(env), issuer: samlEntityId(request), audience: samlEntityId(request),
-    idpCert: samlCertificate(env.SAML_IDP_CERT), idpIssuer: samlIssuer(env), identifierFormat: null, disableRequestedAuthnContext: true,
+    idpCert: samlCertificate(env.SAML_IDP_CERT), idpIssuer: samlIssuer(env), identifierFormat: null, disableRequestedAuthnContext: true, forceAuthn: true,
     acceptedClockSkewMs: 60_000, maxAssertionAgeMs: FLOW_SECONDS * 1000, validateInResponseTo: ValidateInResponseTo.always,
     requestIdExpirationPeriodMs: FLOW_SECONDS * 1000, cacheProvider: new D1SamlCache(env), wantAssertionsSigned: true, wantAuthnResponseSigned: false,
   });

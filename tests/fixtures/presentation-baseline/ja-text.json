@@ -4711,6 +4711,11 @@
         "name": "View source ↗"
       },
       {
+        "element": "button",
+        "role": null,
+        "name": "Reset identity session"
+      },
+      {
         "element": "a",
         "role": null,
         "name": "Sign in with Microsoft"
