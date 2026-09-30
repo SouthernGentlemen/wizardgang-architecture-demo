@@ -71,12 +71,12 @@ describe('DEMO-237 shared WCAG 2.2 AAA remediation', () => {
 
   it('keeps labeled REST operation selectors and execution forms after removing code tabs', () => {
     const html = restSection(env).body;
-    expect(html).toContain('aria-controls="rest-rest-demo-');
+    expect(html).toContain('<details class="rest-operation');
     expect(html).toContain('data-rest-operation-select="listRecords"');
     expect(html).toContain('data-rest-form=""');
     expect(html).not.toContain('data-code-tab');
     const browser = readFileSync('src/browser/rest.ts', 'utf8');
-    expect(browser).toContain("'[data-rest-operation-select]'");
+    expect(browser).toContain("'[data-rest-form]'");
     expect(browser).toContain("'[data-rest-form]'");
   });
 });

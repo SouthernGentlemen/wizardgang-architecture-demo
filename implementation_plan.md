@@ -2,16 +2,6 @@
 
 ## Open tasks
 
-### DEMO-389 — [API] Present the REST demo as a Swagger-style OpenAPI document
-
-- Dependency: DEMO-383 has merged.
-- Why: The owner says the REST demo must read like a real OpenAPI/Swagger document and currently reads worse. At 1440px the 232px operation picker clips the server URL to a 50px "http…" ellipsis; on phones the chosen operation's details sit far below the list; paths and schema types break mid-token ("int/ege/r", "objec/t"), and the schema table clips its Description column. Each cookieless request to the visitor API receives a new `wg_demo_session`, so the current curl, JavaScript and Python samples cannot chain create and read calls.
-- Scope: Render the visitor contract from the document served at `/api/labs/rest-demo-openapi.json` as a first-party, server-rendered Swagger-style document: an info header with title, version, description, a raw-document link and a link to the machine `/api/openapi.json`; server and cookie security-scheme display; tag groups; and operations as full-width expandable rows with a colored method badge, full path and summary. An expanded operation shows its description, parameters, request body (example and schema), declared responses with examples, and "Try it out" → Execute with editable inputs that displays the request URL, a session-preserving curl command using a cookie jar, status, duration, headers and body. End with an expandable Schemas section. At phone widths, rows stack full width, paths wrap only at `/`, schema tables become stacked definitions and nothing clips.
-- Non-goals: Do not change REST routes, schemas, limits, visitor-session isolation or the machine API; do not vendor a third-party Swagger UI bundle or relax the no-`unsafe-inline` CSP; do not restore the inspector, tutorial copy or View source.
-- Acceptance: At 375, 768 and 1440px the REST demo reads as an OpenAPI document with grouped operations, method badges, expandable details, parameters, bodies, responses and schemas, and with no mid-token breaks, clipped columns or truncated server URL. Every operation can be tried and executed; the displayed curl reproduces the executed result in one session; tests fail when the presentation drifts from the served OpenAPI document.
-- Validation: Pinned `npm ci`; REST presentation tests against the served OpenAPI document; operation execution tests; browser audit at 375, 768 and 1440px in `en` and `ar`; credential-free `npm run check`; dependency advisory gate; committed-range whitespace; exact-head required CI.
-- Authorities: `src/api/rest-demo-openapi.ts`, `src/api/rest-demo.ts`, `src/api/openapi.ts`, `src/interfaces/route-capabilities/rest.ts`, `src/demos/rest-presentation.tsx`, `src/browser/rest.ts`, `src/styles/demos.css`, `docs/REPOSITORY-BOUNDARIES.md` CSP and asset rules.
-
 ### DEMO-390 — [A11Y] Make the accessibility demo runnable and fix its obscured focus
 
 - Dependency: DEMO-383 has merged.

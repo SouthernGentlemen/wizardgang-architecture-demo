@@ -4197,285 +4197,139 @@
     "headings": [
       {
         "level": 2,
-        "text": "API REST"
+        "text": "WizardGang REST demo 1.0.0"
       },
       {
         "level": 3,
-        "text": "List records"
+        "text": "Servers"
+      },
+      {
+        "level": 3,
+        "text": "Seguridad"
+      },
+      {
+        "level": 3,
+        "text": "Registros"
       },
       {
         "level": 4,
-        "text": "Request"
+        "text": "Parameters"
       },
       {
         "level": 4,
-        "text": "Response"
+        "text": "Responses"
       },
       {
         "level": 4,
-        "text": "Contract"
+        "text": "Probar"
       },
       {
-        "level": 5,
+        "level": 4,
         "text": "Parameters"
       },
       {
         "level": 5,
-        "text": "Declared responses"
-      },
-      {
-        "level": 5,
-        "text": "Referenced schemas"
-      },
-      {
-        "level": 5,
-        "text": "Record"
-      },
-      {
-        "level": 3,
-        "text": "Create a record"
+        "text": "Request body"
       },
       {
         "level": 4,
-        "text": "Request"
+        "text": "Responses"
       },
       {
         "level": 4,
-        "text": "Response"
+        "text": "Probar"
       },
       {
         "level": 4,
-        "text": "Contract"
+        "text": "Parameters"
       },
       {
-        "level": 5,
+        "level": 4,
+        "text": "Responses"
+      },
+      {
+        "level": 4,
+        "text": "Probar"
+      },
+      {
+        "level": 4,
         "text": "Parameters"
       },
       {
         "level": 5,
-        "text": "Declared responses"
-      },
-      {
-        "level": 5,
-        "text": "Referenced schemas"
-      },
-      {
-        "level": 5,
-        "text": "RecordInput"
-      },
-      {
-        "level": 5,
-        "text": "Record"
-      },
-      {
-        "level": 5,
-        "text": "Error"
-      },
-      {
-        "level": 3,
-        "text": "Read a record"
+        "text": "Request body"
       },
       {
         "level": 4,
-        "text": "Request"
+        "text": "Responses"
       },
       {
         "level": 4,
-        "text": "Response"
+        "text": "Probar"
       },
       {
         "level": 4,
-        "text": "Contract"
-      },
-      {
-        "level": 5,
         "text": "Parameters"
       },
       {
         "level": 5,
-        "text": "Declared responses"
-      },
-      {
-        "level": 5,
-        "text": "Referenced schemas"
-      },
-      {
-        "level": 5,
-        "text": "Record"
-      },
-      {
-        "level": 5,
-        "text": "Error"
-      },
-      {
-        "level": 3,
-        "text": "Replace a record"
+        "text": "Request body"
       },
       {
         "level": 4,
-        "text": "Request"
+        "text": "Responses"
       },
       {
         "level": 4,
-        "text": "Response"
+        "text": "Probar"
       },
       {
         "level": 4,
-        "text": "Contract"
-      },
-      {
-        "level": 5,
         "text": "Parameters"
       },
       {
-        "level": 5,
-        "text": "Declared responses"
+        "level": 4,
+        "text": "Responses"
       },
       {
-        "level": 5,
-        "text": "Referenced schemas"
-      },
-      {
-        "level": 5,
-        "text": "RecordReplacement"
-      },
-      {
-        "level": 5,
-        "text": "Record"
-      },
-      {
-        "level": 5,
-        "text": "Error"
+        "level": 4,
+        "text": "Probar"
       },
       {
         "level": 3,
-        "text": "Update a record"
-      },
-      {
-        "level": 4,
-        "text": "Request"
-      },
-      {
-        "level": 4,
-        "text": "Response"
-      },
-      {
-        "level": 4,
-        "text": "Contract"
-      },
-      {
-        "level": 5,
-        "text": "Parameters"
-      },
-      {
-        "level": 5,
-        "text": "Declared responses"
-      },
-      {
-        "level": 5,
-        "text": "Referenced schemas"
-      },
-      {
-        "level": 5,
-        "text": "RecordPatch"
-      },
-      {
-        "level": 5,
-        "text": "Record"
-      },
-      {
-        "level": 5,
-        "text": "Error"
-      },
-      {
-        "level": 3,
-        "text": "Delete a record"
-      },
-      {
-        "level": 4,
-        "text": "Request"
-      },
-      {
-        "level": 4,
-        "text": "Response"
-      },
-      {
-        "level": 4,
-        "text": "Contract"
-      },
-      {
-        "level": 5,
-        "text": "Parameters"
-      },
-      {
-        "level": 5,
-        "text": "Declared responses"
-      },
-      {
-        "level": 5,
-        "text": "Referenced schemas"
+        "text": "Schemas"
       }
     ],
     "accessibleNames": [
       {
-        "element": "button",
-        "role": null,
-        "name": "Copiar"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "GET/api/labs/rest-demo-recordsList records"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "POST/api/labs/rest-demo-recordsCreate a record"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "GET/api/labs/rest-demo-records/{id}Read a record"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "PUT/api/labs/rest-demo-records/{id}Replace a record"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "PATCH/api/labs/rest-demo-records/{id}Update a record"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "DELETE/api/labs/rest-demo-records/{id}Delete a record"
+        "element": "nav",
+        "role": "navigation",
+        "name": "OpenAPI documents"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Open full OpenAPI JSON"
+        "name": "Raw REST OpenAPI JSON"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Download JSON"
+        "name": "Machine API OpenAPI JSON"
       },
       {
         "element": "form",
         "role": null,
-        "name": "This operation has no request inputs. Execute GET"
+        "name": "Ejecutar"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Execute GET"
+        "name": "Ejecutar"
       },
       {
         "element": "form",
         "role": null,
-        "name": "Request body application/json · RecordInput{ \"key\": \"hello\", \"value\": { \"message\": \"Hello from a Worker\" } } Execute POST"
+        "name": "Request body application/json · RecordInput{ \"key\": \"hello\", \"value\": { \"message\": \"Hello from a Worker\" } }Ejecutar"
       },
       {
         "element": "textarea",
@@ -4485,12 +4339,12 @@
       {
         "element": "button",
         "role": null,
-        "name": "Execute POST"
+        "name": "Ejecutar"
       },
       {
         "element": "form",
         "role": null,
-        "name": "id path · required · string Execute GET"
+        "name": "id path · required · stringEjecutar"
       },
       {
         "element": "input",
@@ -4500,12 +4354,12 @@
       {
         "element": "button",
         "role": null,
-        "name": "Execute GET"
+        "name": "Ejecutar"
       },
       {
         "element": "form",
         "role": null,
-        "name": "id path · required · stringRequest body application/json · RecordReplacement{ \"value\": { \"message\": \"Replaced by a Worker\" } } Execute PUT"
+        "name": "id path · required · stringRequest body application/json · RecordReplacement{ \"value\": { \"message\": \"Replaced by a Worker\" } }Ejecutar"
       },
       {
         "element": "input",
@@ -4520,12 +4374,12 @@
       {
         "element": "button",
         "role": null,
-        "name": "Execute PUT"
+        "name": "Ejecutar"
       },
       {
         "element": "form",
         "role": null,
-        "name": "id path · required · stringRequest body application/json · RecordPatch{ \"value\": { \"message\": \"Patched by a Worker\", \"priority\": \"high\" } } Execute PATCH"
+        "name": "id path · required · stringRequest body application/json · RecordPatch{ \"value\": { \"message\": \"Patched by a Worker\", \"priority\": \"high\" } }Ejecutar"
       },
       {
         "element": "input",
@@ -4540,12 +4394,12 @@
       {
         "element": "button",
         "role": null,
-        "name": "Execute PATCH"
+        "name": "Ejecutar"
       },
       {
         "element": "form",
         "role": null,
-        "name": "id path · required · string Execute DELETE"
+        "name": "id path · required · stringEjecutar"
       },
       {
         "element": "input",
@@ -4555,7 +4409,7 @@
       {
         "element": "button",
         "role": null,
-        "name": "Execute DELETE"
+        "name": "Ejecutar"
       }
     ],
     "labels": [
