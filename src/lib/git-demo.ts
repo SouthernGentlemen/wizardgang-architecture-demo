@@ -197,9 +197,10 @@ function pullRequest(entry: Record<string, unknown>, identity: RepositoryIdentit
   const head = object(entry.head);
   const base = object(entry.base);
   const branch = bounded(head.ref, 180);
-  const targetVersion = branch?.match(/^demo\/live-v(\d+\.\d+\.\d+)-[a-z0-9]+$/i)?.[1] ?? null;
+  const versionParts = branch?.match(/^demo-\d{3,}-live-v(\d+)-(\d+)-(\d+)-[0-9a-f]{8}$/);
+  const targetVersion = versionParts ? `${versionParts[1]}.${versionParts[2]}.${versionParts[3]}` : null;
   const url = safeRepoUrl(entry.html_url, identity);
-  if (!number || !title || !state || !branch || !url || !branch.startsWith('demo/live-v')) return null;
+  if (!number || !title || !state || !branch || !url || !targetVersion) return null;
   return {
     number,
     title,
@@ -457,21 +458,51 @@ export async function dispatchGitDemo(
 }
 
 export async function gitDemoPreflight(env: Env, bump: VersionBump): Promise<{
+  mainSha: string;
   currentVersion: string;
   targetVersion: string;
   active: DemoPullRequest | null;
+  lastRelease: string;
+  commitsSinceRelease: Array<{ sha: string; subject: string; url: string }>;
 }> {
   const identity = repositoryIdentity(env);
   if (!identity) throw new Error('Configured GitHub repository is invalid.');
-  const [version, pulls] = await Promise.all([
-    packageVersion(identity, env, env.GITHUB_BRANCH || 'main'),
+  const mainRef = await githubRequest<Record<string, unknown>>(
+    `${identity.apiPath}/git/ref/heads/${encodeURIComponent(env.GITHUB_BRANCH || 'main')}`,
+    env,
+  );
+  const mainSha = bounded(object(object(mainRef.value).object).sha, 40);
+  if (!mainRef.ok || !mainSha || !/^[0-9a-f]{40}$/.test(mainSha)) throw new Error('Current main identity is unavailable.');
+  const [version, pulls, latest] = await Promise.all([
+    packageVersion(identity, env, mainSha),
     listDemoPullRequests(identity, env),
+    githubRequest<Record<string, unknown>>(`${identity.apiPath}/releases/latest`, env),
   ]);
-  if (!version.ok || !version.value || !pulls.ok) throw new Error('GitHub preflight evidence is unavailable.');
+  const lastRelease = bounded(object(latest.value).tag_name, 60);
+  if (!version.ok || !version.value || !pulls.ok || !latest.ok || !lastRelease || !/^v\d+\.\d+\.\d+$/.test(lastRelease)) {
+    throw new Error('GitHub preflight evidence is unavailable.');
+  }
+  const comparison = await githubRequest<Record<string, unknown>>(
+    `${identity.apiPath}/compare/${encodeURIComponent(lastRelease)}...${mainSha}`,
+    env,
+  );
+  const comparisonValue = object(comparison.value);
+  const commits = rows(comparisonValue.commits);
+  if (!comparison.ok || !['ahead', 'identical'].includes(String(comparisonValue.status))
+    || typeof comparisonValue.total_commits !== 'number' || comparisonValue.total_commits !== commits.length) {
+    throw new Error('Complete commits-since-release evidence is unavailable.');
+  }
   return {
+    mainSha,
     currentVersion: version.value,
     targetVersion: nextVersion(version.value, bump),
     active: pulls.value?.find((entry) => entry.state === 'open') ?? null,
+    lastRelease,
+    commitsSinceRelease: commits.map((entry) => ({
+      sha: bounded(entry.sha, 40) ?? '',
+      subject: bounded(object(entry.commit).message, 300)?.split('\n')[0] ?? '',
+      url: safeRepoUrl(entry.html_url, identity) ?? '',
+    })),
   };
 }
 

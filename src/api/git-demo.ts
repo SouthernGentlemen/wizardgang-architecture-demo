@@ -51,7 +51,21 @@ async function recordDispatchAudit(env: Env, input: {
 
 export async function gitDemoStatusResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'GET') return methodNotAllowed(['GET']);
-  const requestId = new URL(request.url).searchParams.get('request_id');
+  const params = new URL(request.url).searchParams;
+  const preflightBump = params.get('preflight');
+  if (preflightBump !== null) {
+    const identity = await requireAdmin(request, env);
+    if (identity instanceof Response) return identity;
+    if (preflightBump !== 'patch' && preflightBump !== 'minor' && preflightBump !== 'major') {
+      return json({ error: 'invalid_version_bump' }, { status: 400, headers: { 'cache-control': 'no-store' } });
+    }
+    try {
+      return json(await gitDemoPreflight(env, preflightBump), { headers: { 'cache-control': 'no-store' } });
+    } catch {
+      return json({ error: 'github_preflight_unavailable' }, { status: 503, headers: { 'cache-control': 'no-store' } });
+    }
+  }
+  const requestId = params.get('request_id');
   if (requestId && !REQUEST_ID_PATTERN.test(requestId)) {
     return json({ error: 'invalid_request_id' }, { status: 400, headers: { 'cache-control': 'no-store' } });
   }
@@ -111,8 +125,11 @@ export async function gitDemoStartResponse(request: Request, env: Env): Promise<
     accepted: true,
     requestId,
     bump,
+    mainSha: preflight.mainSha,
     currentVersion: preflight.currentVersion,
     targetVersion: preflight.targetVersion,
+    lastRelease: preflight.lastRelease,
+    commitsSinceRelease: preflight.commitsSinceRelease,
     statusUrl: `/api/labs/git-delivery?request_id=${encodeURIComponent(requestId)}`,
     auditRecorded,
   }, { status: 202, headers: { 'cache-control': 'no-store' } });

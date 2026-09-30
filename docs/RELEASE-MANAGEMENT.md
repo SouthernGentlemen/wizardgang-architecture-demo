@@ -2,6 +2,12 @@
 
 WizardGang Architecture Demo uses semantic versioning. Controlled change IDs identify accepted changes; annotated semantic-version tags identify immutable product states. Not every change is tagged.
 
+## Authenticated live release
+
+The live Git delivery controller is an explicit release operation. Before an operator confirms it, `GET /api/labs/git-delivery?preflight=patch` (or `minor`/`major`) returns the target version, latest published release, and every commit since that release; incomplete GitHub comparison data fails closed. The start response and workflow/PR summaries repeat that range so the operator can see all accumulated changes that the new tag would ship.
+
+Start opens one version-metadata-only controlled `[BUILD] Demonstrate vX.Y.Z release lifecycle` PR under an unused DEMO ID. Its marker, full structured body, hyphen-only branch, unchanged queue, and package/lockfile versions are checked by PR and history validation. Merge & Release requires all four exact-head CI checks, current `main`, and ordinary squash-only protection. The controller verifies the squash commit, creates an annotated tag at that commit, and hands the tag event to the existing Release and protected Deploy workflows. A completed production deployment requires a separate controlled `OPS` record in `docs/history/DEPLOYMENTS.md` with the actual post-deployment evidence. Starting or merging an ordinary implementation PR does not trigger this path.
+
 ## Release rule
 
 A release may be published only when the exact tagged state reproduces successfully:

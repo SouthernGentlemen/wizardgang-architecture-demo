@@ -70,6 +70,7 @@ export function validateControlledPullRequestIdentity({
   basePlanMarkdown = null,
   headPlanMarkdown = null,
   baseAcceptedIds = new Set(),
+  liveReleaseErrors = null,
 }) {
   const errors = [];
   const titleIdentity = parseControlledSubject(title);
@@ -100,6 +101,11 @@ export function validateControlledPullRequestIdentity({
   }
   if (headIdentity && controlledRange.length === 1 && controlledRange[0].id !== headIdentity.id) {
     errors.push(`PR range controlled commit ${controlledRange[0].id} does not match exact head ${headIdentity.id}.`);
+  }
+
+  if (liveReleaseErrors !== null) {
+    errors.push(...liveReleaseErrors);
+    return errors;
   }
 
   if (!maintenance) {

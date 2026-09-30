@@ -58,6 +58,10 @@ jobs:
           ref: main
           fetch-depth: 0
           token: ${{ secrets.GIT_DEMO_PR_TOKEN }}
+      - name: Refresh current main
+        run: |
+          git fetch origin main --tags
+          git checkout --detach origin/main
       - name: Set up Node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
@@ -77,7 +81,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GIT_DEMO_PR_TOKEN }}
         run: |
-          active="$(gh pr list --state open --limit 100 --json number,headRefName --jq '[.[] | select(.headRefName | test("^demo-[0-9]+-live-v"))][0].number // empty')"
+          active="$(gh pr list --state open --limit 1000 --json number,headRefName --jq '[.[] | select(.headRefName | test("^demo-[0-9]+-live-v[0-9]+-[0-9]+-[0-9]+-"))][0].number // empty')"
           if [ -n "$active" ]; then
             echo "::error::Live release demonstration already active: PR #$active"
             exit 1
@@ -88,29 +92,52 @@ jobs:
         env:
           BUMP: ${{ inputs.bump }}
           REQUEST_ID: ${{ inputs.request_id }}
+          GH_TOKEN: ${{ secrets.GIT_DEMO_PR_TOKEN }}
         run: |
-          node <<'NODE'
-          const { execFileSync } = require('node:child_process');
-          const fs = require('node:fs');
+          node --input-type=module <<'NODE'
+          import { execFileSync } from 'node:child_process';
+          import fs from 'node:fs';
+          import { nextLiveReleaseId } from './scripts/lib/live-release-identity.mjs';
           const bump = process.env.BUMP;
           const requestId = process.env.REQUEST_ID;
           const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
           if (!/^\d+\.\d+\.\d+$/.test(pkg.version)) throw new Error(`Invalid package version: ${pkg.version}`);
           const [major, minor, patch] = pkg.version.split('.').map(Number);
           const version = bump === 'major' ? `${major + 1}.0.0` : bump === 'minor' ? `${major}.${minor + 1}.0` : `${major}.${minor}.${patch + 1}`;
+          if (execFileSync('git', ['tag', '--list', `v${version}`], { encoding: 'utf8' }).trim()) throw new Error(`Release tag v${version} already exists.`);
           const subjects = execFileSync('git', ['log', '--format=%s'], { encoding: 'utf8' });
-          const ids = [...subjects.matchAll(/^\[DEMO-(\d+)\]/gm)].map((match) => Number(match[1]));
-          const width = Math.max(3, ...ids.map((value) => String(value).length));
-          const changeId = `DEMO-${String(Math.max(0, ...ids) + 1).padStart(width, '0')}`;
+          const open = JSON.parse(execFileSync('gh', ['pr', 'list', '--state', 'open', '--limit', '1000', '--json', 'title,headRefName'], { encoding: 'utf8' }));
+          const changeId = nextLiveReleaseId(subjects.split('\n'), fs.readFileSync('implementation_plan.md', 'utf8'), open);
           const shortId = requestId.replace(/[^a-f0-9]/gi, '').slice(0, 8).toLowerCase();
           const values = {
             current: pkg.version,
             version,
             change_id: changeId,
-            branch: `demo-${changeId.slice(5)}-live-v${version}-${shortId}`,
+            branch: `demo-${changeId.slice(5)}-live-v${version.replaceAll('.', '-')}-${shortId}`,
           };
           fs.appendFileSync(process.env.GITHUB_OUTPUT, Object.entries(values).map(([key, value]) => `${key}=${value}\n`).join(''));
           NODE
+      - name: Show release preflight before merge confirmation
+        id: preflight
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+          GH_TOKEN: ${{ secrets.GIT_DEMO_PR_TOKEN }}
+        run: |
+          last_tag="$(gh release view --json tagName --jq .tagName)"
+          if [[ ! "$last_tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || [ "$(git cat-file -t "refs/tags/$last_tag")" != tag ] || ! git merge-base --is-ancestor "$last_tag" HEAD; then
+            echo "::error::No previous semantic release tag is available"
+            exit 1
+          fi
+          echo "last_tag=$last_tag" >> "$GITHUB_OUTPUT"
+          git log --format='- %h %s' "$last_tag..HEAD" > "$RUNNER_TEMP/live-release-commits.md"
+          {
+            echo "### Proposed live release"
+            echo "- Target version: v$VERSION"
+            echo "- Previous release: $last_tag"
+            echo "- Commits since $last_tag:"
+            cat "$RUNNER_TEMP/live-release-commits.md"
+            echo "- Review the pull request and required CI before Merge & Release confirmation."
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Create semantic version change
         env:
           VERSION: ${{ steps.release.outputs.version }}
@@ -156,6 +183,8 @@ jobs:
 
           Release:
           v$VERSION
+
+          Live-Release: true
           EOF
           git push --set-upstream origin "$BRANCH"
       - name: Open controlled pull request
@@ -167,6 +196,7 @@ jobs:
           BRANCH: ${{ steps.release.outputs.branch }}
           REQUEST_ID: ${{ inputs.request_id }}
           BUMP: ${{ inputs.bump }}
+          LAST_TAG: ${{ steps.preflight.outputs.last_tag }}
         run: |
           body_file="$(mktemp)"
           {
@@ -177,6 +207,9 @@ jobs:
             echo "- Version: \`$VERSION\`"
             echo "- Previous version: \`$CURRENT_VERSION\`"
             echo "- Bump: \`$BUMP\`"
+            echo "- Previous release: \`$LAST_TAG\`"
+            echo "- Commits since $LAST_TAG:"
+            cat "$RUNNER_TEMP/live-release-commits.md"
             echo "- Branch: \`$BRANCH\`"
             echo "- Request ID: \`$REQUEST_ID\`"
             echo
@@ -249,8 +282,9 @@ jobs:
           const pr = JSON.parse(process.env.PR_JSON);
           const requestId = process.env.REQUEST_ID;
           if (pr.state !== 'OPEN' || pr.baseRefName !== 'main') throw new Error('Pull request is not an open live-demo change against main.');
-          const version = /^demo\/live-v(\d+\.\d+\.\d+)-[a-z0-9]+$/i.exec(pr.headRefName)?.[1];
-          if (!version || !/^\[DEMO-\d+\] \[BUILD\] Demonstrate v\d+\.\d+\.\d+ release lifecycle$/.test(pr.title)) throw new Error('Pull request does not match the controlled live-demo contract.');
+          const branch = /^demo-(\d{3,})-live-v(\d+)-(\d+)-(\d+)-[0-9a-f]{8}$/.exec(pr.headRefName);
+          const version = branch ? `${branch[2]}.${branch[3]}.${branch[4]}` : null;
+          if (!version || pr.title !== `[DEMO-${branch[1]}] [BUILD] Demonstrate v${version} release lifecycle`) throw new Error('Pull request does not match the controlled live-demo contract.');
           if (!pr.body.includes(`<!-- git-demo-request:${requestId} -->`)) throw new Error('Pull request request ID does not match.');
           fs.appendFileSync(process.env.GITHUB_OUTPUT, `branch=${pr.headRefName}\nsha=${pr.headRefOid}\nversion=${version}\n`);
           NODE
@@ -262,10 +296,11 @@ jobs:
           checks="$(gh pr checks "$PULL_REQUEST" --json bucket,name,workflow)"
           CHECKS_JSON="$checks" node <<'NODE'
           const checks = JSON.parse(process.env.CHECKS_JSON);
-          const ci = checks.filter((check) => check.workflow === 'CI');
-          if (ci.length < 2) throw new Error('The complete CI workflow has not reported both controlled jobs.');
-          const blocked = ci.filter((check) => !['pass', 'skipping'].includes(check.bucket));
-          if (blocked.length) throw new Error(`CI is not ready: ${blocked.map((check) => `${check.name}=${check.bucket}`).join(', ')}`);
+          const required = ['validate', 'change-id', 'security', 'secrets'];
+          for (const name of required) {
+            const check = checks.find((entry) => entry.workflow === 'CI' && entry.name === name);
+            if (!check || check.bucket !== 'pass') throw new Error(`Required CI ${name} is not successful on the exact PR head.`);
+          }
           NODE
       - name: Verify reviewed source version
         env:
@@ -276,6 +311,26 @@ jobs:
           git fetch origin "$BRANCH"
           git checkout --detach "$SHA"
           test "$(node -p "require('./package.json').version")" = "$VERSION"
+          git show -s --format=%B "$SHA" > "$RUNNER_TEMP/live-release-body.txt"
+          grep -qx 'Live-Release: true' "$RUNNER_TEMP/live-release-body.txt"
+      - name: Recheck current main and exact PR head
+        id: base
+        env:
+          GH_TOKEN: ${{ secrets.GIT_DEMO_PR_TOKEN }}
+          PULL_REQUEST: ${{ inputs.pull_request }}
+          SHA: ${{ steps.pull.outputs.sha }}
+        run: |
+          git fetch origin main
+          pr_json="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PULL_REQUEST")"
+          PR_JSON="$pr_json" node <<'NODE'
+          const pr = JSON.parse(process.env.PR_JSON);
+          const { execFileSync } = require('node:child_process');
+          const main = execFileSync('git', ['rev-parse', 'origin/main'], { encoding: 'utf8' }).trim();
+          if (pr.state !== 'open' || pr.head.sha !== process.env.SHA || pr.base.sha !== main || pr.mergeable !== true) {
+            throw new Error('Live release PR head, current main, or mergeability changed; revalidate CI on the new exact head.');
+          }
+          NODE
+          echo "sha=$(git rev-parse origin/main)" >> "$GITHUB_OUTPUT"
       - name: Merge without bypassing repository protections
         env:
           GH_TOKEN: ${{ secrets.GIT_DEMO_PR_TOKEN }}
@@ -283,11 +338,13 @@ jobs:
           SHA: ${{ steps.pull.outputs.sha }}
           VERSION: ${{ steps.pull.outputs.version }}
         run: |
+          title="$(git show -s --format=%s "$SHA")"
           gh pr merge "$PULL_REQUEST" \
-            --merge \
+            --squash \
             --delete-branch \
             --match-head-commit "$SHA" \
-            --subject "Merge live v$VERSION release demonstration"
+            --subject "$title" \
+            --body-file "$RUNNER_TEMP/live-release-body.txt"
       - name: Resolve merged main commit
         id: merge
         env:
@@ -297,7 +354,8 @@ jobs:
           for attempt in $(seq 1 12); do
             pr_json="$(gh pr view "$PULL_REQUEST" --json state,mergedAt,mergeCommit)"
             merge_sha="$(PR_JSON="$pr_json" node -p "JSON.parse(process.env.PR_JSON).mergeCommit?.oid || ''")"
-            if [ -n "$merge_sha" ]; then
+            state="$(PR_JSON="$pr_json" node -p "JSON.parse(process.env.PR_JSON).state")"
+            if [ "$state" = "MERGED" ] && [ -n "$merge_sha" ]; then
               echo "sha=$merge_sha" >> "$GITHUB_OUTPUT"
               exit 0
             fi
@@ -309,8 +367,15 @@ jobs:
         env:
           VERSION: ${{ steps.pull.outputs.version }}
           MERGE_SHA: ${{ steps.merge.outputs.sha }}
+          SHA: ${{ steps.pull.outputs.sha }}
+          BASE_SHA: ${{ steps.base.outputs.sha }}
         run: |
           git fetch origin main --tags
+          test "$(git rev-parse origin/main)" = "$MERGE_SHA"
+          test "$(git show -s --format=%s "$MERGE_SHA")" = "$(git show -s --format=%s "$SHA")"
+          test "$(git rev-parse "$MERGE_SHA^")" = "$BASE_SHA"
+          test "$(git show "$MERGE_SHA:package.json" | node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).version")" = "$VERSION"
+          git show -s --format=%B "$MERGE_SHA" | grep -qx 'Live-Release: true'
           if git rev-parse "refs/tags/v$VERSION" >/dev/null 2>&1; then
             echo "::error::Release tag v$VERSION already exists"
             exit 1

@@ -7,6 +7,7 @@ const repositoryUrl = 'https://github.com/SouthernGentlemen/wizardgang-architect
 const apiPrefix = '/repos/SouthernGentlemen/wizardgang-architecture-demo';
 const requestId = '123e4567-e89b-42d3-a456-426614174000';
 const headSha = 'a'.repeat(40);
+const mainSha = 'b'.repeat(40);
 
 class DemoStatement implements D1PreparedStatement {
   constructor(private readonly database: DemoDatabase) {}
@@ -45,18 +46,20 @@ function openPullRequest() {
     state: 'open',
     body: `Controlled demo\n- Previous version: \`0.7.0\`\n<!-- git-demo-request:${requestId} -->`,
     html_url: `${repositoryUrl}/pull/54`,
-    head: { ref: 'demo/live-v0.7.1-123e4567', sha: headSha },
+    head: { ref: 'demo-055-live-v0-7-1-123e4567', sha: headSha },
     base: { ref: 'main' },
     merge_commit_sha: null,
     merged_at: null,
   };
 }
 
-function fixtures(options: { pulls?: unknown[]; ciConclusion?: string | null } = {}) {
+function fixtures(options: { pulls?: unknown[]; ciConclusion?: string | null; compareTotal?: number } = {}) {
   const pulls = options.pulls ?? [openPullRequest()];
   const ciConclusion = options.ciConclusion === undefined ? 'success' : options.ciConclusion;
   const values = new Map<string, Response>([
     [`${apiPrefix}/contents/package.json?ref=main`, json({ content: btoa(JSON.stringify({ version: '0.7.0' })) })],
+    [`${apiPrefix}/contents/package.json?ref=${mainSha}`, json({ content: btoa(JSON.stringify({ version: '0.7.0' })) })],
+    [`${apiPrefix}/git/ref/heads/main`, json({ object: { sha: mainSha } })],
     [`${apiPrefix}/pulls?state=all&sort=updated&direction=desc&per_page=100`, json(pulls)],
     [`${apiPrefix}/actions/workflows/git-demo.yml/runs?event=workflow_dispatch&per_page=30`, json({ workflow_runs: [{
       id: 100,
@@ -78,7 +81,7 @@ function fixtures(options: { pulls?: unknown[]; ciConclusion?: string | null } =
       status: ciConclusion === null ? 'in_progress' : 'completed',
       conclusion: ciConclusion,
       event: 'pull_request',
-      head_branch: 'demo/live-v0.7.1-123e4567',
+      head_branch: 'demo-055-live-v0-7-1-123e4567',
       head_sha: headSha,
       created_at: '2026-09-01T12:01:00Z',
       updated_at: '2026-09-01T12:02:00Z',
@@ -95,6 +98,12 @@ function fixtures(options: { pulls?: unknown[]; ciConclusion?: string | null } =
       ],
     }] })],
     [`${apiPrefix}/releases/tags/v0.7.1`, json({ message: 'Not Found' }, 404)],
+    [`${apiPrefix}/releases/latest`, json({ tag_name: 'v0.7.0' })],
+    [`${apiPrefix}/compare/v0.7.0...${mainSha}`, json({ status: 'ahead', total_commits: options.compareTotal ?? 1, commits: [{
+      sha: 'c'.repeat(40),
+      commit: { message: '[DEMO-054] [FIX] Previous accepted change\n\nBody' },
+      html_url: `${repositoryUrl}/commit/${'c'.repeat(40)}`,
+    }] })],
   ]);
   return vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
     const url = new URL(String(input));
@@ -126,7 +135,7 @@ describe('live Git delivery lifecycle', () => {
       targetVersion: '0.7.1',
       pollAfterMs: 500,
       releaseReady: true,
-      pullRequest: { number: 54, branch: 'demo/live-v0.7.1-123e4567', ciReady: true },
+      pullRequest: { number: 54, branch: 'demo-055-live-v0-7-1-123e4567', ciReady: true },
       ci: { run: { name: 'CI', conclusion: 'success' } },
     });
     expect(status.ci.jobs[0].steps.map((step) => step.name)).toEqual(['Install locked dependencies', 'Typecheck']);
@@ -167,7 +176,8 @@ describe('live Git delivery lifecycle', () => {
     const response = await gitDemoStartResponse(adminRequest('/api/labs/git-delivery', { bump: 'patch' }), env);
     const payload = await response.json() as Record<string, unknown>;
     expect(response.status).toBe(202);
-    expect(payload).toMatchObject({ accepted: true, bump: 'patch', currentVersion: '0.7.0', targetVersion: '0.7.1' });
+    expect(payload).toMatchObject({ accepted: true, bump: 'patch', currentVersion: '0.7.0', targetVersion: '0.7.1', lastRelease: 'v0.7.0' });
+    expect(payload.commitsSinceRelease).toMatchObject([{ subject: '[DEMO-054] [FIX] Previous accepted change' }]);
     const dispatch = fetchMock.mock.calls.find(([input]) => String(input).endsWith('/actions/workflows/git-demo.yml/dispatches'));
     expect(dispatch).toBeTruthy();
     const init = dispatch?.[1] as RequestInit;
@@ -176,6 +186,23 @@ describe('live Git delivery lifecycle', () => {
     expect(env.DEMO_DB.binds.join(' ')).not.toContain('test-admin-password');
     expect(env.DEMO_DB.binds.join(' ')).not.toContain(basic);
     expect(env.DEMO_DB.binds.join(' ')).not.toContain('actions-write-fixture-token');
+  });
+
+  it('shows the complete target and release range to an authenticated operator before start', async () => {
+    fixtures({ pulls: [] });
+    const request = new Request('https://demo.wizardgang.ai/api/labs/git-delivery?preflight=patch', { headers: { authorization: basic } });
+    const response = await gitDemoStatusResponse(request, environment());
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({ mainSha, targetVersion: '0.7.1', lastRelease: 'v0.7.0', commitsSinceRelease: [{ sha: 'c'.repeat(40) }] });
+    const denied = await gitDemoStatusResponse(new Request(request.url), environment());
+    expect(denied.status).toBe(401);
+  });
+
+  it('fails closed when the commits-since-release comparison is incomplete', async () => {
+    fixtures({ pulls: [], compareTotal: 2 });
+    const response = await gitDemoStartResponse(adminRequest('/api/labs/git-delivery', { bump: 'patch' }), environment());
+    expect(response.status).toBe(503);
+    expect(await response.json()).toMatchObject({ error: 'github_preflight_unavailable' });
   });
 
   it('returns the active live-demo pull request instead of creating a collision', async () => {

@@ -1,4 +1,5 @@
 import { execFileSync } from 'node:child_process';
+import { LIVE_RELEASE_MARKER, validateLiveReleaseIdentity } from './lib/live-release-identity.mjs';
 
 const raw = execFileSync('git', ['log', '--reverse', '--format=%H%x1f%P%x1f%s%x1f%b%x1e'], { encoding: 'utf8' });
 const records = raw.split('\x1e').map((record) => record.trim()).filter(Boolean);
@@ -42,6 +43,7 @@ const controlled = [];
 const failures = [];
 const exceptionsUsed = [];
 const earlyMaintenance = new Set();
+const earlyLiveReleases = new Set();
 
 for (const record of records) {
   const [sha = '', parents = '', subject = '', body = ''] = record.split('\x1f');
@@ -53,14 +55,16 @@ for (const record of records) {
     failures.push(`${sha.slice(0, 12)} has an invalid controlled title: ${subject}`);
     continue;
   }
-  controlled.push({ sha, parents: parents.trim().split(/\s+/).filter(Boolean), id: Number(match[1]), body });
+  controlled.push({ sha, parents: parents.trim().split(/\s+/).filter(Boolean), id: Number(match[1]), subject, body });
 }
 
 let expected = 0;
 const delivered = new Set();
-controlled.forEach(({ sha, parents, id, body }) => {
+controlled.forEach(({ sha, parents, id, subject, body }) => {
   const continuationException = publishedContinuationExceptions.get(sha);
   const boundedRecovery = parents.length === 1 ? boundedRecoveryContinuations.get(parents[0]) : null;
+  const isLiveRelease = body.split('\n').some((line) => line.trim() === LIVE_RELEASE_MARKER)
+    || (id >= 391 && /^\[DEMO-\d+\] \[BUILD\] Demonstrate v\d+\.\d+\.\d+ release lifecycle$/.test(subject));
   const isBoundedRecovery = boundedRecovery
     && boundedRecovery.id === id
     && body.split('\n').some((line) => line.trim() === boundedRecovery.marker);
@@ -68,6 +72,28 @@ controlled.forEach(({ sha, parents, id, body }) => {
     exceptionsUsed.push(`${sha.slice(0, 12)}: ${continuationException}`);
   } else if (isBoundedRecovery) {
     exceptionsUsed.push(`${sha.slice(0, 12)}: ${boundedRecovery.reason}`);
+  } else if (isLiveRelease && parents.length === 1) {
+    const parent = parents[0];
+    const gitFile = (revision, file) => execFileSync('git', ['show', `${revision}:${file}`], { encoding: 'utf8' });
+    const liveErrors = validateLiveReleaseIdentity({
+      title: subject,
+      body,
+      changedFiles: execFileSync('git', ['diff', '--name-only', parent, sha], { encoding: 'utf8' }).trim().split('\n').filter(Boolean),
+      beforePackage: gitFile(parent, 'package.json'),
+      afterPackage: gitFile(sha, 'package.json'),
+      beforeLock: gitFile(parent, 'package-lock.json'),
+      afterLock: gitFile(sha, 'package-lock.json'),
+      basePlanMarkdown: gitFile(parent, 'implementation_plan.md'),
+      headPlanMarkdown: gitFile(sha, 'implementation_plan.md'),
+      baseAcceptedIds: new Set([...delivered].map((value) => `DEMO-${String(value).padStart(3, '0')}`)),
+    });
+    if (liveErrors.length || delivered.has(id) || id <= expected) {
+      failures.push(`${sha.slice(0, 12)} has an invalid live release: ${[...liveErrors, ...(delivered.has(id) || id <= expected ? ['DEMO ID must be unassigned.'] : [])].join(' ')}`);
+    } else {
+      if (id === expected + 1) expected = id;
+      else earlyLiveReleases.add(id);
+      delivered.add(id);
+    }
   } else if (id === 362 && expected === 357 && !delivered.has(362)) {
     // The authorized portfolio policy transition is delivered before the
     // unrelated DEMO-358..361 work. Their existing IDs remain reserved.
@@ -78,7 +104,7 @@ controlled.forEach(({ sha, parents, id, body }) => {
     delivered.add(id);
   } else {
     expected += 1;
-    while (earlyMaintenance.has(expected) || (expected === 362 && delivered.has(362)) || expected === 363) expected += 1;
+    while (earlyMaintenance.has(expected) || earlyLiveReleases.has(expected) || (expected === 362 && delivered.has(362)) || expected === 363) expected += 1;
     if (id !== expected) failures.push(`${sha.slice(0, 12)} uses DEMO-${String(id).padStart(3, '0')}; expected DEMO-${String(expected).padStart(3, '0')}`);
     delivered.add(id);
   }

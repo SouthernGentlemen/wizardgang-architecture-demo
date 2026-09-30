@@ -2,16 +2,6 @@
 
 ## Open tasks
 
-### DEMO-391 — [BUILD] Reconcile the live Git delivery workflow with controlled delivery
-
-- Dependency: DEMO-380 plan-only queue publication has merged.
-- Why: The owner wants the hotfix release trigger back. Its API (`/api/labs/git-delivery`, `/api/labs/git-release`) and `.github/workflows/git-demo.yml` still exist but can no longer succeed. The workflow merges with `gh pr merge --merge` while protected `main` allows only squash; its `demo-NNN-live-vX.Y.Z-<id>` branch fails the change-id branch pattern because of the dots; it takes the highest DEMO ID plus one, which would steal an ID reserved in this plan and fail change-id's first-open-task rule; and a live tag would ship everything accumulated on `main`.
-- Scope: Make a live patch ("hotfix") release a valid controlled change: squash-merge the exact validated head; use hyphen-only branch names; allocate the next ID that is neither queued here nor used by an open PR; add a narrow, validator-recognized live-release identity, limited to `[BUILD] Demonstrate vX.Y.Z release lifecycle` commits that change only package version metadata, accepted by `validate-pull-request-identity` and `validate-history` without loosening other rules; keep the required body sections, all four exact-head checks and no bypass; create the annotated tag and hand off to the existing Release and Deploy workflows; add a preflight that reports the target version and the commits since the last release. Document the path and its deployment-record obligation in `docs/RELEASE-MANAGEMENT.md` and `docs/CHANGE-MANAGEMENT.md`.
-- Non-goals: Do not trigger a live release, create tags or Releases, deploy production, add bypass actors, change required check names, or relax squash-only, strict current-with-main or immutable-tag rules. No UI in this task.
-- Acceptance: Pure tests prove a generated live-release PR (branch, title, body and one commit) passes change-id and history validation, while the same shape without the live-release identity or with non-version changes fails. The workflow squash-merges and never reuses a queued or open-PR ID; workflow and policy tests pass; read-only live settings verification is unchanged.
-- Validation: Pinned `npm ci`; pure workflow, PR-identity and history tests; workflow YAML validation; credential-free `npm run check`; dependency advisory gate; committed-range whitespace; exact-head required CI; read-only `npm run verify:github-settings`.
-- Authorities: `AGENTS.md`, `docs/CHANGE-MANAGEMENT.md`, `docs/RELEASE-MANAGEMENT.md`, `.github/workflows/git-demo.yml`, `.github/workflows/release.yml`, `.github/workflows/deploy.yml`, `scripts/validate-pull-request-identity.mjs`, `scripts/lib/controlled-pr-identity.mjs`, `scripts/validate-history.mjs`, `src/api/git-demo.ts`, `src/lib/git-demo.ts`, `config/github-repository-settings.json`.
-
 ### DEMO-392 — [FEAT] Restore the live CI feed and hotfix release trigger in Webhooks
 
 - Dependency: DEMO-383 and DEMO-391 have merged.
