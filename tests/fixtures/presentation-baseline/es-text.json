@@ -4546,6 +4546,14 @@
       },
       {
         "level": 3,
+        "text": "Ciclo de publicación de corrección urgente"
+      },
+      {
+        "level": 3,
+        "text": "Preparación de publicación"
+      },
+      {
+        "level": 3,
         "text": "Simulate a signed release webhook"
       },
       {
@@ -4560,12 +4568,74 @@
         "name": "SouthernGentlemen/wizardgang-architecture-demo"
       },
       {
+        "element": "form",
+        "role": null,
+        "name": "Usuario administradorContraseña de administradorDesbloquear controles de publicación"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Usuario administrador"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Contraseña de administrador"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Desbloquear controles de publicación"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Incremento de versión"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Revisar preparación de publicación"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Iniciar publicación en vivo"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Fusionar y publicar"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Revisé la versión de destino y el rango de commits"
+      },
+      {
         "element": "button",
         "role": null,
         "name": "Simulate signed release webhook"
       }
     ],
-    "labels": []
+    "labels": [
+      {
+        "name": "username",
+        "label": "Usuario administrador"
+      },
+      {
+        "name": "password",
+        "label": "Contraseña de administrador"
+      },
+      {
+        "name": null,
+        "label": "Incremento de versión"
+      },
+      {
+        "name": null,
+        "label": "Revisé la versión de destino y el rango de commits"
+      }
+    ]
   },
   "demo:oauth": {
     "headings": [

@@ -92,6 +92,9 @@ export async function gitDemoStartResponse(request: Request, env: Env): Promise<
   if (bump !== 'patch' && bump !== 'minor' && bump !== 'major') {
     return json({ error: 'invalid_version_bump', detail: 'bump must be patch, minor, or major.' }, { status: 400, headers: { 'cache-control': 'no-store' } });
   }
+  if (typeof body?.preflightFingerprint !== 'string' || !/^[0-9a-f]{64}$/.test(body.preflightFingerprint)) {
+    return json({ error: 'release_preflight_required', detail: 'Review the current release preflight before starting.' }, { status: 400, headers: { 'cache-control': 'no-store' } });
+  }
   if (!env.GITHUB_DEMO_TOKEN) return dispatchFailure({ status: 503, error: 'Git demo dispatch is not configured.' });
 
   let preflight: Awaited<ReturnType<typeof gitDemoPreflight>>;
@@ -110,6 +113,9 @@ export async function gitDemoStartResponse(request: Request, env: Env): Promise<
       requestId: preflight.active.requestId,
       pullRequest: { number: preflight.active.number, title: preflight.active.title, url: preflight.active.url },
     }, { status: 409, headers: { 'cache-control': 'no-store' } });
+  }
+  if (body.preflightFingerprint !== preflight.fingerprint) {
+    return json({ error: 'release_preflight_changed', detail: 'The target version or commit range changed. Review a fresh preflight.' }, { status: 409, headers: { 'cache-control': 'no-store' } });
   }
 
   const requestId = crypto.randomUUID();

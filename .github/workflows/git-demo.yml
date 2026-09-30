@@ -159,7 +159,7 @@ jobs:
           Increment the semantic version to $VERSION for the live release lifecycle.
 
           Reason:
-          Demonstrate the repository's real delivery lifecycle from an authenticated /git action.
+          Demonstrate the repository's real delivery lifecycle from authenticated /demos#webhooks controls.
 
           Impact:
           Package version metadata only; release notes are generated from Git/GitHub history after tagging.
@@ -202,7 +202,7 @@ jobs:
           {
             echo "## Live Git lifecycle"
             echo
-            echo "This controlled pull request was requested from the authenticated \`/git\` demonstration. It remains open so the real CI jobs and review gate can be observed before release."
+            echo "This controlled pull request was requested from authenticated \`/demos#webhooks\` controls. It remains open so the real CI jobs and review gate can be observed before release."
             echo
             echo "- Version: \`$VERSION\`"
             echo "- Previous version: \`$CURRENT_VERSION\`"

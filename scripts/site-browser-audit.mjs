@@ -1123,6 +1123,35 @@ async function keyboardSmoke(cdp, pathname) {
   }
 }
 
+async function liveWebhookReflowAudit(cdp) {
+  for (const width of [375, 1280]) {
+    await cdp.call('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 768 });
+    for (const locale of ['en', 'ar']) {
+      const label = `live Webhooks ${width}px ${locale}`;
+      await navigate(cdp, `${origin}/demos?lang=${locale}#webhooks`);
+      await assertWorkbenchState(cdp, 'webhooks', label, '#webhooks', locale);
+      const result = await evaluate(cdp, `(()=>{
+        const panel=document.querySelector('[data-live-git]');
+        const feed=panel?.querySelector('[data-live-feed]');
+        if(!panel||!feed)return {missing:true};
+        const fixture=document.createElement('article');fixture.className='webhook-live-item';
+        fixture.textContent='validate · completed · success · 2026-09-30T12:00:00Z · 2026-09-30T12:02:00Z · aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+        const nested=document.createElement('ol');nested.className='webhook-live-steps';
+        for(const value of ['Install locked dependencies','Run complete acceptance and security validation']){
+          const item=document.createElement('li');item.className='webhook-live-item';item.textContent=value+' · in_progress · 2026-09-30T12:00:00Z';nested.append(item);
+        }
+        fixture.append(nested);feed.append(fixture);
+        const panelRect=panel.getBoundingClientRect();
+        const clipped=[...panel.querySelectorAll('button,input,select,.webhook-live-item,.webhook-live-lifecycle li')].filter((item)=>{const rect=item.getBoundingClientRect();return rect.left < -1 || rect.right > innerWidth+1}).map((item)=>item.tagName);
+        return {missing:false,overflow:document.documentElement.scrollWidth>innerWidth+1,panelLeft:panelRect.left,panelRight:panelRect.right,clipped,lang:document.documentElement.lang,dir:document.documentElement.dir};
+      })()`);
+      if (result.missing || result.overflow || result.panelLeft < -1 || result.panelRight > width + 1 || result.clipped.length || result.lang !== locale || result.dir !== (locale === 'ar' ? 'rtl' : 'ltr')) {
+        throw new Error(`${label} failed: ${JSON.stringify(result)}`);
+      }
+    }
+  }
+}
+
 async function main() {
   const pages = publicPages();
   if (!pages.length) throw new Error('Expected application-wide public-page coverage, found no registered public pages');
@@ -1236,6 +1265,7 @@ async function main() {
     await demoInteriorReflowAudit(cdp);
     await retainedInspectorAudit(cdp);
     await sharedResetAudit(cdp, 375);
+    await liveWebhookReflowAudit(cdp);
     await assuranceRecordFirstAudit(cdp);
     axeRuns += 18;
 

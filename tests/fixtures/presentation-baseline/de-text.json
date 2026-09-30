@@ -4546,6 +4546,14 @@
       },
       {
         "level": 3,
+        "text": "Hotfix-Veröffentlichungsablauf"
+      },
+      {
+        "level": 3,
+        "text": "Release-Vorprüfung"
+      },
+      {
+        "level": 3,
         "text": "Simulate a signed release webhook"
       },
       {
@@ -4560,12 +4568,74 @@
         "name": "SouthernGentlemen/wizardgang-architecture-demo"
       },
       {
+        "element": "form",
+        "role": null,
+        "name": "AdministratornameAdministratorpasswortRelease-Steuerungen entsperren"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Administratorname"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Administratorpasswort"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Release-Steuerungen entsperren"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Versionsschritt"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Release-Vorprüfung prüfen"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Live-Release starten"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Zusammenführen und veröffentlichen"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Ich habe Zielversion und Commit-Bereich geprüft"
+      },
+      {
         "element": "button",
         "role": null,
         "name": "Simulate signed release webhook"
       }
     ],
-    "labels": []
+    "labels": [
+      {
+        "name": "username",
+        "label": "Administratorname"
+      },
+      {
+        "name": "password",
+        "label": "Administratorpasswort"
+      },
+      {
+        "name": null,
+        "label": "Versionsschritt"
+      },
+      {
+        "name": null,
+        "label": "Ich habe Zielversion und Commit-Bereich geprüft"
+      }
+    ]
   },
   "demo:oauth": {
     "headings": [

@@ -39,6 +39,10 @@ function webhookBrowserMessages(localization: LocalizationContext): Readonly<Rec
     verifiedDelivery: exact('verified delivery'),
     verifiedDeliveries: exact('verified deliveries'),
     pollingEvery: exact('polling every'),
+    liveUnavailable: exact('Live GitHub data is unavailable.'),
+    liveReadOnly: exact('Live feed is read-only. Sign in as a demo admin to start a release.'),
+    liveReady: exact('All required CI checks passed on this pull request.'),
+    liveWaiting: exact('Merge & Release is available after all required CI checks pass.'),
   });
 }
 
@@ -48,6 +52,7 @@ function WebhookPresentation({ env, localization }: Readonly<{ env: Env; localiz
   const connectionHeading = scope.id('webhook-connection-heading');
   const testHeading = scope.id('webhook-test-heading');
   const deliveriesHeading = scope.id('webhook-deliveries-heading');
+  const liveHeading = scope.id('webhook-live-heading');
   const repository = repositoryName(env);
   const stages = [
     'Payload received',
@@ -71,6 +76,43 @@ function WebhookPresentation({ env, localization }: Readonly<{ env: Env; localiz
         <dt>{exact('Repository')}</dt><dd><a href={env.GITHUB_REPO_URL}>{repository}</a></dd>
         <dt>{exact('Supported')}</dt><dd className="webhook-tags"><span>push</span><span>pull_request</span><span>workflow_run</span><span>release</span><span>ping</span></dd>
       </dl>
+    </section>
+    <section className="webhook-live panel" aria-labelledby={liveHeading} data-live-git="">
+      <div className="webhook-section-heading">
+        <div>
+          <p className="eyebrow">{exact('Live Git delivery')}</p>
+          <DemoHeading level={2} id={liveHeading}>{exact('Hotfix release lifecycle')}</DemoHeading>
+          <p>{exact('Follow actual GitHub checks, jobs, steps, and signed webhook deliveries. Release controls require demo admin authentication.')}</p>
+        </div>
+        <span className="badge" data-live-state="">{exact('Loading live GitHub data…')}</span>
+      </div>
+      <p className="subtle" data-live-message="" role="status" aria-live="polite">{exact('Live feed is read-only. Sign in as a demo admin to start a release.')}</p>
+      <div className="webhook-live-actions">
+        <form data-live-auth="" className="webhook-live-auth">
+          <label>{exact('Admin user')}<input name="username" autoComplete="username" required /></label>
+          <label>{exact('Admin password')}<input name="password" type="password" autoComplete="current-password" required /></label>
+          <button type="submit" className="button">{exact('Unlock release controls')}</button>
+        </form>
+        <div data-live-controls="" hidden>
+          <label>{exact('Version bump')}<select data-live-bump=""><option value="patch">{exact('Patch hotfix')}</option><option value="minor">{exact('Minor')}</option><option value="major">{exact('Major')}</option></select></label>
+          <button type="button" className="button" data-live-preflight="">{exact('Review release preflight')}</button>
+          <button type="button" className="button-primary" data-live-start="" disabled>{exact('Start live release')}</button>
+          <button type="button" className="button-primary" data-live-release="" disabled>{exact('Merge & Release')}</button>
+        </div>
+      </div>
+      <div data-live-preflight-panel="" className="webhook-live-preflight" hidden>
+        <h3>{exact('Release preflight')}</h3>
+        <p data-live-target="" />
+        <ol data-live-commits="" />
+        <label className="webhook-live-confirm"><input type="checkbox" data-live-confirm="" />{exact('I reviewed the target version and commit range')}</label>
+        <p className="subtle">{exact('Confirm only after reviewing the target version and every commit since the last published release.')}</p>
+      </div>
+      <ol className="webhook-live-lifecycle" aria-label={exact('Live release lifecycle')} data-live-lifecycle="">
+        {['Branch', 'Pull request', 'CI', 'Merge', 'Tag', 'Release', 'Deploy', 'Health'].map((label) => <li key={label} data-state="queued"><span>{exact(label)}</span><strong>{exact('Waiting')}</strong></li>)}
+      </ol>
+      <div className="webhook-live-feed" data-live-feed="" aria-label={exact('Live GitHub Actions feed')}>
+        <p data-live-empty="">{exact('Live GitHub data is unavailable.')}</p>
+      </div>
     </section>
     <section className="webhook-test panel" aria-labelledby={testHeading}>
       <div className="webhook-section-heading">

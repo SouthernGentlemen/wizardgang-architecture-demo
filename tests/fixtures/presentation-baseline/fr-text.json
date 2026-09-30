@@ -4546,6 +4546,14 @@
       },
       {
         "level": 3,
+        "text": "Cycle de publication du correctif"
+      },
+      {
+        "level": 3,
+        "text": "Prérequis de publication"
+      },
+      {
+        "level": 3,
         "text": "Simulate a signed release webhook"
       },
       {
@@ -4560,12 +4568,74 @@
         "name": "SouthernGentlemen/wizardgang-architecture-demo"
       },
       {
+        "element": "form",
+        "role": null,
+        "name": "Utilisateur administrateurMot de passe administrateurDéverrouiller les commandes de publication"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Utilisateur administrateur"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "Mot de passe administrateur"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Déverrouiller les commandes de publication"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "Incrément de version"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Examiner les prérequis de publication"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Démarrer la publication en direct"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Fusionner et publier"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "J’ai examiné la version cible et la plage des commits"
+      },
+      {
         "element": "button",
         "role": null,
         "name": "Simulate signed release webhook"
       }
     ],
-    "labels": []
+    "labels": [
+      {
+        "name": "username",
+        "label": "Utilisateur administrateur"
+      },
+      {
+        "name": "password",
+        "label": "Mot de passe administrateur"
+      },
+      {
+        "name": null,
+        "label": "Incrément de version"
+      },
+      {
+        "name": null,
+        "label": "J’ai examiné la version cible et la plage des commits"
+      }
+    ]
   },
   "demo:oauth": {
     "headings": [

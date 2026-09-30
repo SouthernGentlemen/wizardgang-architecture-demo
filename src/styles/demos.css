@@ -369,6 +369,31 @@
 .webhook-event details summary { min-height: 44px; color: var(--muted); font: 800 .68rem/1 var(--mono); letter-spacing: .07em; text-transform: uppercase; }
 .webhook-empty { display: grid; gap: .35rem; padding: 2rem; border: 1px dashed var(--line); color: var(--muted); text-align: center; }
 .webhook-empty strong { color: var(--paper); }
+.webhook-live { margin: 2rem 0; min-width: 0; }
+.webhook-live-actions, .webhook-live-auth, .webhook-live-actions [data-live-controls] { display: flex; flex-wrap: wrap; align-items: end; gap: .7rem; }
+.webhook-live-auth label, .webhook-live-actions label { display: grid; gap: .35rem; min-width: min(100%, 10rem); }
+.webhook-live-auth input, .webhook-live-actions select { width: 100%; min-height: 44px; }
+.webhook-live-actions [hidden], .webhook-live-preflight[hidden], .webhook-live-auth[hidden] { display: none; }
+.webhook-live-preflight { margin-top: 1rem; padding: 1rem; border: 1px solid var(--line); overflow-wrap: anywhere; }
+.webhook-live-preflight ol { max-height: 16rem; overflow: auto; }
+.webhook-live-confirm { display: flex; align-items: center; gap: .5rem; }
+.webhook-live-confirm input { width: 1.25rem; height: 1.25rem; }
+.webhook-live-lifecycle { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; margin: 1.4rem 0; padding: 0; list-style: none; }
+.webhook-live-lifecycle li { min-width: 0; padding: .6rem; border: 1px solid var(--line); overflow-wrap: anywhere; }
+.webhook-live-lifecycle span, .webhook-live-lifecycle strong { display: block; font-size: .75rem; }
+.webhook-live-lifecycle strong { margin-top: .35rem; text-transform: capitalize; }
+.webhook-live-lifecycle li[data-state="complete"] { border-color: var(--acid); }
+.webhook-live-lifecycle li[data-state="current"] { border-color: var(--cyan); }
+.webhook-live-lifecycle li[data-state="failed"] { border-color: var(--danger); }
+.webhook-live-feed, .webhook-live-item { min-width: 0; overflow-wrap: anywhere; }
+.webhook-live-feed { display: grid; gap: .6rem; }
+.webhook-live-checks, .webhook-live-jobs, .webhook-live-steps { display: grid; gap: .5rem; margin: .5rem 0; padding-inline-start: 1.2rem; }
+.webhook-live-item { padding: .6rem; border: 1px solid var(--line); background: var(--panel-2); }
+.webhook-live-item-heading { font-weight: 700; }
+.webhook-live-item-detail { margin: .2rem 0 0; color: var(--muted); font: .7rem/1.4 var(--mono); }
+.webhook-live-item[data-state="success"] { border-inline-start: 3px solid var(--acid); }
+.webhook-live-item[data-state="failure"] { border-inline-start: 3px solid var(--danger); }
+.webhook-live-warning { color: var(--danger); }
 .link-row, .button-row { display: flex; flex-wrap: wrap; gap: .45rem; }
 .button-row { margin-top: 1rem; }
 .operations-kpis .eyebrow, .availability-kpis .eyebrow { margin-bottom: 1.6rem; color: var(--muted); }
@@ -416,6 +441,10 @@
   .graphql-workspace-heading > p { text-align: left; }
   .graphql-control-grid { grid-template-columns: 1fr 1fr; }
   .webhook-connection { grid-template-columns: 1fr; }
+  .webhook-live-lifecycle { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .webhook-live-actions, .webhook-live-auth, .webhook-live-actions [data-live-controls] { display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; }
+  .webhook-live-actions [hidden] { display: none; }
+  .webhook-live-actions button { width: 100%; }
   .webhook-connection dl { grid-column: auto; }
   .r2-workspace-heading, .r2-files-heading, .inline-preview-heading { align-items: flex-start; flex-direction: column; }
   .sandbox-usage { text-align: left; }

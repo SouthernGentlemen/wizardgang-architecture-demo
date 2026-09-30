@@ -3158,7 +3158,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-C92WXPbD.css",
+        "href": "/assets/demos-vM-Wj52b.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -9885,7 +9885,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-C92WXPbD.css",
+        "href": "/assets/demos-vM-Wj52b.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -11100,7 +11100,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-C92WXPbD.css",
+        "href": "/assets/demos-vM-Wj52b.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -14001,6 +14001,11 @@
       },
       {
         "role": "region",
+        "name": "Hotfix release lifecycle",
+        "id": null
+      },
+      {
+        "role": "region",
         "name": "Simulate a signed release webhook",
         "id": null
       },
@@ -14023,6 +14028,16 @@
       },
       {
         "level": 3,
+        "text": "Hotfix release lifecycle",
+        "id": "webhooks-webhook-live-heading"
+      },
+      {
+        "level": 3,
+        "text": "Release preflight",
+        "id": null
+      },
+      {
+        "level": 3,
         "text": "Simulate a signed release webhook",
         "id": "webhooks-webhook-test-heading"
       },
@@ -14041,15 +14056,69 @@
     ],
     "buttons": [
       {
+        "name": "Unlock release controls",
+        "type": "submit",
+        "value": null
+      },
+      {
+        "name": "Review release preflight",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Start live release",
+        "type": "button",
+        "value": null
+      },
+      {
+        "name": "Merge & Release",
+        "type": "button",
+        "value": null
+      },
+      {
         "name": "Simulate signed release webhook",
         "type": "button",
         "value": null
       }
     ],
-    "formControls": [],
+    "formControls": [
+      {
+        "element": "input",
+        "type": null,
+        "label": "Admin user",
+        "accessibleName": "Admin user",
+        "name": "username",
+        "value": null
+      },
+      {
+        "element": "input",
+        "type": "password",
+        "label": "Admin password",
+        "accessibleName": "Admin password",
+        "name": "password",
+        "value": null
+      },
+      {
+        "element": "select",
+        "type": null,
+        "label": "Version bump",
+        "accessibleName": "Version bump",
+        "name": null,
+        "value": "patch"
+      },
+      {
+        "element": "input",
+        "type": "checkbox",
+        "label": "I reviewed the target version and commit range",
+        "accessibleName": "I reviewed the target version and commit range",
+        "name": null,
+        "value": "on"
+      }
+    ],
     "ids": [
       "webhooks-webhooks",
       "webhooks-webhook-connection-heading",
+      "webhooks-webhook-live-heading",
       "webhooks-webhook-test-heading",
       "webhooks-webhook-deliveries-heading"
     ],
@@ -14059,14 +14128,158 @@
         "element": "div",
         "attributes": {
           "data-demo-section": "webhooks",
-          "data-demo-browser-module": "/assets/webhooks-browser-BC1LslYL.js",
-          "data-config": "<CONFIG_SHA256:c4db7beeb0cec158>"
+          "data-demo-browser-module": "/assets/webhooks-browser-utHaWs8I.js",
+          "data-config": "<CONFIG_SHA256:734aad975619e1f4>"
         }
       },
       {
         "element": "span",
         "attributes": {
           "data-webhook-state": ""
+        }
+      },
+      {
+        "element": "section",
+        "attributes": {
+          "data-live-git": ""
+        }
+      },
+      {
+        "element": "span",
+        "attributes": {
+          "data-live-state": ""
+        }
+      },
+      {
+        "element": "p",
+        "attributes": {
+          "data-live-message": ""
+        }
+      },
+      {
+        "element": "form",
+        "attributes": {
+          "data-live-auth": ""
+        }
+      },
+      {
+        "element": "div",
+        "attributes": {
+          "data-live-controls": ""
+        }
+      },
+      {
+        "element": "select",
+        "attributes": {
+          "data-live-bump": ""
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-live-preflight": ""
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-live-start": ""
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-live-release": ""
+        }
+      },
+      {
+        "element": "div",
+        "attributes": {
+          "data-live-preflight-panel": ""
+        }
+      },
+      {
+        "element": "p",
+        "attributes": {
+          "data-live-target": ""
+        }
+      },
+      {
+        "element": "ol",
+        "attributes": {
+          "data-live-commits": ""
+        }
+      },
+      {
+        "element": "input",
+        "attributes": {
+          "data-live-confirm": ""
+        }
+      },
+      {
+        "element": "ol",
+        "attributes": {
+          "data-live-lifecycle": ""
+        }
+      },
+      {
+        "element": "li",
+        "attributes": {
+          "data-state": "queued"
+        }
+      },
+      {
+        "element": "li",
+        "attributes": {
+          "data-state": "queued"
+        }
+      },
+      {
+        "element": "li",
+        "attributes": {
+          "data-state": "queued"
+        }
+      },
+      {
+        "element": "li",
+        "attributes": {
+          "data-state": "queued"
+        }
+      },
+      {
+        "element": "li",
+        "attributes": {
+          "data-state": "queued"
+        }
+      },
+      {
+        "element": "li",
+        "attributes": {
+          "data-state": "queued"
+        }
+      },
+      {
+        "element": "li",
+        "attributes": {
+          "data-state": "queued"
+        }
+      },
+      {
+        "element": "li",
+        "attributes": {
+          "data-state": "queued"
+        }
+      },
+      {
+        "element": "div",
+        "attributes": {
+          "data-live-feed": ""
+        }
+      },
+      {
+        "element": "p",
+        "attributes": {
+          "data-live-empty": ""
         }
       },
       {

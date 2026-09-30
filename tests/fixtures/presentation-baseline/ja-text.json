@@ -4546,6 +4546,14 @@
       },
       {
         "level": 3,
+        "text": "ホットフィックスのリリース工程"
+      },
+      {
+        "level": 3,
+        "text": "リリース事前確認"
+      },
+      {
+        "level": 3,
         "text": "Simulate a signed release webhook"
       },
       {
@@ -4560,12 +4568,74 @@
         "name": "SouthernGentlemen/wizardgang-architecture-demo"
       },
       {
+        "element": "form",
+        "role": null,
+        "name": "管理者ユーザー管理者パスワードリリース操作を有効にする"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "管理者ユーザー"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "管理者パスワード"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "リリース操作を有効にする"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "バージョン更新"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "リリース事前確認を確認"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "ライブリリースを開始"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "マージしてリリース"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "対象バージョンとコミット範囲を確認しました"
+      },
+      {
         "element": "button",
         "role": null,
         "name": "Simulate signed release webhook"
       }
     ],
-    "labels": []
+    "labels": [
+      {
+        "name": "username",
+        "label": "管理者ユーザー"
+      },
+      {
+        "name": "password",
+        "label": "管理者パスワード"
+      },
+      {
+        "name": null,
+        "label": "バージョン更新"
+      },
+      {
+        "name": null,
+        "label": "対象バージョンとコミット範囲を確認しました"
+      }
+    ]
   },
   "demo:oauth": {
     "headings": [
