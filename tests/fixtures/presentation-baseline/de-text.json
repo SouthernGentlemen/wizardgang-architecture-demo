@@ -5142,11 +5142,159 @@
       },
       {
         "level": 3,
+        "text": "How to run"
+      },
+      {
+        "level": 3,
         "text": "Automated check of accessible behavior"
       },
       {
         "level": 3,
         "text": "Failure analysis"
+      },
+      {
+        "level": 3,
+        "text": "Working behavior"
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture"
+      },
+      {
+        "level": 3,
+        "text": "How we verify it"
+      },
+      {
+        "level": 3,
+        "text": "Working behavior"
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture"
+      },
+      {
+        "level": 3,
+        "text": "How we verify it"
+      },
+      {
+        "level": 3,
+        "text": "Working behavior"
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture"
+      },
+      {
+        "level": 3,
+        "text": "How we verify it"
+      },
+      {
+        "level": 3,
+        "text": "Working behavior"
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture"
+      },
+      {
+        "level": 3,
+        "text": "How we verify it"
+      },
+      {
+        "level": 3,
+        "text": "Working behavior"
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture"
+      },
+      {
+        "level": 3,
+        "text": "How we verify it"
+      },
+      {
+        "level": 3,
+        "text": "Working behavior"
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture"
+      },
+      {
+        "level": 3,
+        "text": "How we verify it"
+      },
+      {
+        "level": 3,
+        "text": "Working behavior"
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture"
+      },
+      {
+        "level": 3,
+        "text": "How we verify it"
+      },
+      {
+        "level": 3,
+        "text": "Working behavior"
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture"
+      },
+      {
+        "level": 3,
+        "text": "How we verify it"
+      },
+      {
+        "level": 3,
+        "text": "Working behavior"
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture"
+      },
+      {
+        "level": 3,
+        "text": "How we verify it"
+      },
+      {
+        "level": 3,
+        "text": "Working behavior"
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture"
+      },
+      {
+        "level": 3,
+        "text": "How we verify it"
+      },
+      {
+        "level": 3,
+        "text": "Working behavior"
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture"
+      },
+      {
+        "level": 3,
+        "text": "How we verify it"
+      },
+      {
+        "level": 3,
+        "text": "Working behavior"
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture"
+      },
+      {
+        "level": 3,
+        "text": "How we verify it"
       }
     ],
     "accessibleNames": [
@@ -5174,6 +5322,11 @@
         "element": "a",
         "role": null,
         "name": "Interface tests"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "Run automated check"
       }
     ],
     "labels": []

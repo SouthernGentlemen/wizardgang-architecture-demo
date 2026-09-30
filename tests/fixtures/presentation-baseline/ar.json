@@ -3158,7 +3158,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-DgZ1YSp-.css",
+        "href": "/assets/demos-C92WXPbD.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -9885,7 +9885,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-DgZ1YSp-.css",
+        "href": "/assets/demos-C92WXPbD.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -11100,7 +11100,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-DgZ1YSp-.css",
+        "href": "/assets/demos-C92WXPbD.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -15920,6 +15920,11 @@
       },
       {
         "level": 3,
+        "text": "How to run",
+        "id": null
+      },
+      {
+        "level": 3,
         "text": "Automated check of accessible behavior",
         "id": "accessibility-scan-heading"
       },
@@ -15927,6 +15932,186 @@
         "level": 3,
         "text": "Failure analysis",
         "id": "accessibility-criteria-heading"
+      },
+      {
+        "level": 3,
+        "text": "Working behavior",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "How we verify it",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Working behavior",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "How we verify it",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Working behavior",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "How we verify it",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Working behavior",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "How we verify it",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Working behavior",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "How we verify it",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Working behavior",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "How we verify it",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Working behavior",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "How we verify it",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Working behavior",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "How we verify it",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Working behavior",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "How we verify it",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Working behavior",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "How we verify it",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Working behavior",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "How we verify it",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Working behavior",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "Failure fixture",
+        "id": null
+      },
+      {
+        "level": 3,
+        "text": "How we verify it",
+        "id": null
       }
     ],
     "links": [
@@ -15956,7 +16141,13 @@
         "target": null
       }
     ],
-    "buttons": [],
+    "buttons": [
+      {
+        "name": "Run automated check",
+        "type": "button",
+        "value": null
+      }
+    ],
     "formControls": [],
     "ids": [
       "accessibility-accessibility-demo",
@@ -15970,8 +16161,14 @@
         "element": "div",
         "attributes": {
           "data-demo-section": "accessibility",
-          "data-demo-browser-module": "/assets/accessibility-browser-BlOYooXr.js",
-          "data-config": "<CONFIG_SHA256:77af5056f02c2f22>"
+          "data-demo-browser-module": "/assets/accessibility-browser-Csy8GEDs.js",
+          "data-config": "<CONFIG_SHA256:4c16f6e269d4f721>"
+        }
+      },
+      {
+        "element": "button",
+        "attributes": {
+          "data-run-a11y-scan": ""
         }
       },
       {

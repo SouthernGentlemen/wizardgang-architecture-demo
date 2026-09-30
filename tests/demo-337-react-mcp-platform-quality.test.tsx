@@ -169,7 +169,8 @@ describe('DEMO-337 React MCP, platform, and quality demonstrations', () => {
       const frame = accessibilityRoot.querySelector<HTMLIFrameElement>('[data-a11y-frame]');
       expect(frame?.getAttribute('srcdoc')).toBeNull();
       expect(frame?.getAttribute('src')).toBe('/api/labs/accessibility?mode=accessible');
-      expect(accessibilityRoot.querySelector('[data-scan-state]')?.textContent).toBe('Scanning');
+      expect(accessibilityRoot.querySelector('[data-scan-state]')?.textContent).toBe('Waiting');
+      expect(accessibilityRoot.querySelector<HTMLButtonElement>('[data-run-a11y-scan]')?.disabled).toBe(true);
 
       i18nRoot.querySelector<HTMLButtonElement>('[data-inspect-target="card.title"]')?.click();
       expect(i18nRoot.querySelector('[data-resource-excerpt]')?.textContent).toContain('Ship a dependable edge service');

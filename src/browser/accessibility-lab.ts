@@ -41,6 +41,12 @@ function initializeAccessibilityLab(): void {
     });
   }
 
+  const reportHeight = () => parent.postMessage({ type: 'wg-accessibility-size', version: 1, mode, height: Math.ceil(document.body.scrollHeight) }, '*');
+  if (parent !== window) {
+    new ResizeObserver(reportHeight).observe(document.body);
+    window.addEventListener('load', reportHeight);
+    reportHeight();
+  }
   let scanStarted = false;
   const scan = () => {
     if (scanStarted) return;
@@ -51,13 +57,11 @@ function initializeAccessibilityLab(): void {
       parent.postMessage({ type: 'wg-accessibility-report', version: 1, mode, rules, durationMs: Math.round(performance.now() - started) }, '*');
     }).catch(() => parent.postMessage({ type: 'wg-accessibility-report', version: 1, mode, rules: [], durationMs: 0, error: 'scan unavailable' }, '*'));
   };
-  if (parent === window) scan();
-  else {
-    window.addEventListener('message', (event) => {
-      if (event.source === parent && event.data?.type === 'wg-accessibility-start' && event.data?.version === 1) scan();
-    });
-    parent.postMessage({ type: 'wg-accessibility-ready', version: 1, mode }, '*');
-  }
+  window.addEventListener('message', (event) => {
+    if (event.source === parent && event.data?.type === 'wg-accessibility-start' && event.data?.version === 1) scan();
+    if (event.source === parent && event.data?.type === 'wg-accessibility-ping' && event.data?.version === 1) parent.postMessage({ type: 'wg-accessibility-ready', version: 1, mode }, '*');
+  });
+  if (parent !== window) parent.postMessage({ type: 'wg-accessibility-ready', version: 1, mode }, '*');
 }
 
 initializeAccessibilityLab();

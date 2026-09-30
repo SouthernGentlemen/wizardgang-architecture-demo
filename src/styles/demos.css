@@ -91,8 +91,11 @@
 .webhook-pipeline li[data-state="failed"] { border-bottom: 2px solid var(--danger); }
 @media(max-width:760px){.graphql-field-grid,.r2-upload-evidence,.mcp-success-loop{grid-template-columns:1fr}}
 .locale-app .button-primary { margin-top: 1.25rem; }
-.accessibility-frame { height: min(70vh, 680px); min-height: 520px; overflow: hidden; border: 1px solid var(--line); border-radius: 0; background: #fff; }
-.accessibility-frame iframe { width: 100%; height: 100%; border: 0; }
+.accessibility-frame { width: 100%; min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 0; background: #fff; }
+.accessibility-frame iframe { display: block; width: 100%; height: 520px; border: 0; }
+.accessibility-run-steps { display: grid; gap: .45rem; padding-inline-start: 1.5rem; margin: .75rem 0 1.25rem; }
+.accessibility-frame { margin-top: 1rem; }
+.criterion-cards { display: none; }
 .scan-counts { grid-template-columns: repeat(4, minmax(0, 1fr)); text-align: center; }
 .scan-counts dt { grid-row: 1; }
 .scan-counts dd { grid-row: 2; color: var(--acid); font-size: 1.8rem; font-weight: 900; }
@@ -580,6 +583,23 @@ body[data-mode] .overlay { position: fixed; inset: 0; display: grid; place-items
 body[data-mode] .overlay[hidden] { display: none; }
 body[data-mode] .overlay > div { width: min(28rem, 100%); padding: 1.2rem; background: #fff; color: #17151b; }
 body[data-mode] .overlay button { margin-right: .5rem; }
+@media (max-width: 639px) {
+  .criterion-matrix-wrap { display: none; }
+  .criterion-cards { display: grid; gap: .7rem; margin-top: 1rem; }
+  .criterion-card { min-width: 0; border: 1px solid var(--line); background: var(--panel); }
+  .criterion-card summary { display: grid; gap: .25rem; min-height: 44px; padding: .85rem; cursor: pointer; }
+  .criterion-card summary span { color: var(--acid); font: 700 .8rem/1.3 var(--mono); }
+  .criterion-card summary strong { color: var(--paper); }
+  .criterion-card > div { padding: 0 .85rem .85rem; overflow-wrap: anywhere; }
+  .criterion-card h3 { margin: .9rem 0 .25rem; font-size: .85rem; }
+  .criterion-card p { margin: 0; }
+  .criterion-card pre { max-width: 100%; padding: .7rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+}
+@media (max-width: 430px) {
+  body[data-mode] { padding-bottom: 1rem; }
+  body[data-mode] > footer { position: static; margin-top: 1rem; }
+  body[data-mode] li { align-items: start; flex-direction: column; }
+}
 @media (max-width: 320px) {
   body[data-mode] { padding-inline: .5rem; }
   body[data-mode] li { align-items: start; flex-direction: column; }

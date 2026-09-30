@@ -57,14 +57,21 @@ function AccessibilityPresentation({ env, localization }: Readonly<{ env: Env; l
     </section>
     <section className="panel" id={scope.id('accessibility-demo')} aria-labelledby={interactionHeading}>
       <div className="lab-heading"><div><p className="eyebrow">{exact('Accessible behavior')}</p><DemoHeading level={2} id={interactionHeading}>{exact('Operate the working interaction')}</DemoHeading></div><span className="badge">{exact('Safe live example')}</span></div>
-      <p>{exact('Use the keyboard, open the sign-in dialog, inspect the labeled fields, and try the non-drag task controls. Intentionally inaccessible controls are never exposed as an interactive application state.')}</p>
+      <h3>{exact('How to run')}</h3>
+      <ol className="accessibility-run-steps">
+        <li>{exact('Press Tab through the sample controls and check the visible focus indicator.')}</li>
+        <li>{exact('Open Sign in options, press Tab inside the dialog, then press Escape to return focus.')}</li>
+        <li>{exact('Reorder the task with Move up and Move down.')}</li>
+        <li>{exact('Press Run automated check to start axe and read the announced result.')}</li>
+      </ol>
+      <button type="button" data-run-a11y-scan="">{exact('Run automated check')}</button>
       <div className="accessibility-frame"><iframe title={exact('Accessible release workflow demonstration')} sandbox="allow-scripts allow-forms" src={`${routeUrl('platform.accessibility.lab')}?mode=accessible`} data-a11y-frame="" /></div>
     </section>
     <section className="panel" aria-labelledby={scanHeading}>
       <div className="lab-heading"><div><p className="eyebrow">{exact('axe-core / partial coverage')}</p><DemoHeading level={2} id={scanHeading}>{exact('Automated check of accessible behavior')}</DemoHeading></div><span className="badge" data-scan-state="">{exact('Waiting')}</span></div>
       <p>{exact('axe checks only the live accessible interaction above. The failure fixtures below are inert teaching material and are not represented as passing automated tests.')}</p>
       <dl className="scan-counts"><dt>{exact('Critical')}</dt><dd data-impact="critical">0</dd><dt>{exact('Serious')}</dt><dd data-impact="serious">0</dd><dt>{exact('Moderate')}</dt><dd data-impact="moderate">0</dd><dt>{exact('Minor')}</dt><dd data-impact="minor">0</dd></dl>
-      <p className="subtle" data-scan-meta="" aria-live="polite">{exact('Waiting for the isolated accessible frame.')}</p><ul data-scan-rules=""><li>{exact('No scan result yet.')}</li></ul>
+      <p className="subtle" data-scan-meta="" role="status" aria-live="polite">{exact('Waiting for the isolated accessible frame.')}</p><ul data-scan-rules=""><li>{exact('No scan result yet.')}</li></ul>
     </section>
     <section aria-labelledby={criteriaHeading}>
       <div className="section-head"><DemoHeading level={2} id={criteriaHeading}>{exact('Failure analysis')}</DemoHeading><span>{localization.number(12)} {exact('criteria · WCAG 2.2 + APG')}</span></div>
@@ -78,6 +85,12 @@ function AccessibilityPresentation({ env, localization }: Readonly<{ env: Env; l
             <td>{exact(behavior.verification)}</td>
           </tr>)}</tbody>
         </table>
+      </div>
+      <div className="criterion-cards" aria-label={exact('Accessibility behavior and failure analysis')}>
+        {behaviors.map((behavior) => <details key={behavior.criterion} className="criterion-card">
+          <summary><span>{behavior.criterion}</span><strong>{exact(behavior.name)}</strong></summary>
+          <div><h3>{exact('Working behavior')}</h3><p>{exact(behavior.working)}</p><h3>{exact('Failure fixture')}</h3><p>{exact(behavior.failure)}</p><pre><code>{behavior.fixture}</code></pre><h3>{exact('How we verify it')}</h3><p>{exact(behavior.verification)}</p></div>
+        </details>)}
       </div>
     </section>
   </>;
@@ -100,6 +113,8 @@ export function accessibilitySection(_request: Request, env: Env, options: DemoS
       loading: localization.exact('Loading the accessible behavior…'),
       unavailable: localization.exact('Unavailable'),
       unavailableDetail: localization.exact('The accessible behavior and automated scan are unavailable.'),
+      ready: localization.exact('Ready to run the automated check.'),
+      totalFindings: localization.exact('Automated findings:'),
     }),
     children: <AccessibilityPresentation env={env} localization={localization} />,
   }, options);

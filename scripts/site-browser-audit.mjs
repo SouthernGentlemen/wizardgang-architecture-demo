@@ -290,6 +290,10 @@ async function exerciseDemo337Workflows(cdp, locale) {
 
   await navigate(cdp, `${origin}/demos?lang=${locale}#accessibility`);
   await assertWorkbenchState(cdp, 'accessibility', `Accessibility ${locale} workflow`, '#accessibility', locale);
+  await waitForExpression(cdp, `document.querySelector('[data-demo-panel] [data-run-a11y-scan]')?.disabled === false`, `Accessibility ${locale} ready`);
+  const beforeScan = await evaluate(cdp, `({state:document.querySelector('[data-demo-panel] [data-scan-state]')?.textContent,meta:document.querySelector('[data-demo-panel] [data-scan-meta]')?.textContent})`);
+  if (beforeScan.meta?.includes('ms')) throw new Error(`Accessibility ${locale} scan started without request: ${JSON.stringify(beforeScan)}`);
+  await evaluate(cdp, `document.querySelector('[data-demo-panel] [data-run-a11y-scan]').click();true`);
   try {
     await waitForExpression(cdp, `document.querySelector('[data-demo-panel] [data-scan-meta]')?.textContent?.includes('ms')`, `Accessibility ${locale} axe result`, 240);
   } catch (error) {
@@ -320,6 +324,47 @@ async function traverseBrowserHistory(cdp, offset, expectedId, label) {
   if (!entry) throw new Error(`${label}: browser history has no entry at offset ${offset}`);
   await cdp.call('Page.navigateToHistoryEntry', { entryId: entry.id });
   await assertWorkbenchState(cdp, expectedId, label);
+}
+
+async function accessibilityGeometryAudit(cdp) {
+  for (const width of [375, 1280]) {
+    await cdp.call('Emulation.setDeviceMetricsOverride', { width, height: 812, deviceScaleFactor: 1, mobile: width < 768 });
+    await navigate(cdp, `${origin}/demos?lang=en#accessibility`);
+    await assertWorkbenchState(cdp, 'accessibility', `Accessibility ${width}px geometry`, '#accessibility', 'en');
+    await waitForExpression(cdp, `Number.parseInt(document.querySelector('[data-a11y-frame]')?.style.height || '0',10) >= 200`, `Accessibility ${width}px frame sizing`);
+    const layout = await evaluate(cdp, `(()=>{
+      const panel=document.querySelector('[data-demo-panel]');
+      const steps=panel.querySelector('.accessibility-run-steps');
+      const frame=panel.querySelector('[data-a11y-frame]');
+      const cards=panel.querySelector('.criterion-cards');
+      return {stepsBeforeFrame:Boolean(steps&&frame&&steps.compareDocumentPosition(frame)&Node.DOCUMENT_POSITION_FOLLOWING),
+        frameWidth:frame?.getBoundingClientRect().width, frameHeight:frame?.getBoundingClientRect().height,
+        cardsVisible:getComputedStyle(cards).display!=='none', cardsCollapsed:[...cards.querySelectorAll('details')].every((card)=>!card.open),
+        tableVisible:getComputedStyle(panel.querySelector('.criterion-matrix-wrap')).display!=='none'};
+    })()`);
+    if (!layout.stepsBeforeFrame || layout.frameWidth < 200 || layout.frameHeight < 400 || (width === 375 && (!layout.cardsVisible || !layout.cardsCollapsed || layout.tableVisible)) || (width === 1280 && (layout.cardsVisible || !layout.tableVisible))) {
+      throw new Error(`Accessibility ${width}px layout failed: ${JSON.stringify(layout)}`);
+    }
+    await cdp.call('Emulation.setDeviceMetricsOverride', { width: Math.round(layout.frameWidth), height: Math.round(layout.frameHeight), deviceScaleFactor: 1, mobile: width < 768 });
+    await navigate(cdp, `${origin}/api/labs/accessibility?mode=accessible`);
+    const size = await evaluate(cdp, `({scrollHeight:document.documentElement.scrollHeight,viewportHeight:innerHeight,scrollWidth:document.documentElement.scrollWidth,viewportWidth:innerWidth})`);
+    if (!size || size.scrollHeight > size.viewportHeight + 2 || size.scrollWidth > size.viewportWidth + 2) throw new Error(`Accessibility ${width}px nested scroll: ${JSON.stringify(size)}`);
+  }
+
+  for (const width of [250, 375, 430, 1280]) {
+    await cdp.call('Emulation.setDeviceMetricsOverride', { width, height: 566, deviceScaleFactor: 1, mobile: width < 768 });
+    await navigate(cdp, `${origin}/api/labs/accessibility?mode=accessible`);
+    const focus = await evaluate(cdp, `(()=>{
+      const footer=document.querySelector('footer');
+      const controls=[...document.querySelectorAll('main input, main button, main a')];
+      return controls.map((control)=>{
+        control.focus();control.scrollIntoView({block:'nearest'});
+        const rect=control.getBoundingClientRect(),foot=footer.getBoundingClientRect();
+        return {name:control.textContent?.trim()||control.id,visible:rect.top>=-1&&rect.bottom<=innerHeight+1,obscured:getComputedStyle(footer).position==='fixed'&&rect.bottom>foot.top};
+      });
+    })()`);
+    if (!focus.length || focus.some((item) => !item.visible || item.obscured)) throw new Error(`Accessibility ${width}px focus obscured: ${JSON.stringify(focus)}`);
+  }
 }
 
 async function exerciseD1Workflow(cdp, locale) {
@@ -1182,6 +1227,7 @@ async function main() {
     axeRuns += 1;
 
     await workbenchInteractionAudit(cdp);
+    await accessibilityGeometryAudit(cdp);
     await sharedResetAudit(cdp, 1280);
     axeRuns += 6;
     await phoneWorkbenchAudit(cdp);
