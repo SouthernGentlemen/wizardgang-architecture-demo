@@ -2,16 +2,6 @@
 
 ## Open tasks
 
-### DEMO-390 — [A11Y] Make the accessibility demo runnable and fix its obscured focus
-
-- Dependency: DEMO-383 has merged.
-- Why: The owner reports nobody knows how to run the accessibility demo. On phones the live example is a 250px-wide sandboxed frame with its own scrolling, axe runs automatically with no visible start, and the 12-criterion, four-column failure table stretches the page to about 5,150px. In that frame at 250×566, keyboard focus on Password and Sign in options lands under the fixed 94px footer, failing WCAG 2.4.11, which the demo claims to meet.
-- Scope: Lead with a short numbered "How to run" sequence with explicit controls: Tab through the sample, open Sign in options and press Escape, reorder a task with Move up and Move down, then press a "Run automated check" button that starts axe and announces the result. Size the teaching frame full width without nested scrolling, or render it inline; keep focused controls clear of its persistent footer at every size with scroll padding or a non-fixed footer at narrow widths; show the failure analysis as stacked, collapsed cards on phones.
-- Non-goals: Do not make failure fixtures live, claim conformance, change the axe-core version or remove manual-verification wording.
-- Acceptance: At 375px a first-time visitor sees the run steps and controls before the frame; axe runs only on request and its result is announced; no focused control in the accessible frame is obscured at 250–430px widths; the page has no nested scroll region at 375px; audits cover the frame at phone and desktop sizes.
-- Validation: Pinned `npm ci`; accessibility lab tests including focus-not-obscured geometry; browser audit; credential-free `npm run check`; dependency advisory gate; committed-range whitespace; exact-head required CI.
-- Authorities: `docs/ACCESSIBILITY.md`, `docs/accessibility-manual-verification.json`, `src/demos/accessibility-presentation.tsx`, `src/demos/accessibility-page.ts`, `src/ui/accessibility-lab.tsx`, `src/browser/accessibility-lab.ts`, `src/browser/accessibility.ts`, `scripts/site-browser-audit.mjs`.
-
 ### DEMO-391 — [BUILD] Reconcile the live Git delivery workflow with controlled delivery
 
 - Dependency: DEMO-380 plan-only queue publication has merged.

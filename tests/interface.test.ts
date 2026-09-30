@@ -208,6 +208,11 @@ describe('accessible interaction surface', () => {
     const html = `${await demosShell('https://demo.wizardgang.ai/demos')}${accessibilitySection(new Request('https://demo.example/accessibility'), env).body}`;
     expect(html.match(/class="skip-link"/g)).toHaveLength(1);
     expect(html).toContain('sandbox="allow-scripts allow-forms"');
+    expect(html.indexOf('How to run')).toBeLessThan(html.indexOf('data-a11y-frame'));
+    expect(html).toContain('data-run-a11y-scan=""');
+    expect(html).toContain('role="status" aria-live="polite"');
+    expect(html.match(/class="criterion-card"/g)).toHaveLength(12);
+    expect(html.match(/<details class="criterion-card"/g)).toHaveLength(12);
     expect(html).not.toContain('data-a11y-mode');
     expect(html).not.toContain('data-broken-warning');
     expect(html.match(/<th scope="row">/g)).toHaveLength(12);
@@ -234,6 +239,7 @@ describe('accessible interaction surface', () => {
     const labBrowser = readFileSync('src/browser/accessibility-lab.ts', 'utf8');
     expect(labBrowser).toContain('axe.run(document');
     expect(labBrowser).toContain("type: 'wg-accessibility-report'");
+    expect(labBrowser).not.toContain('if (parent === window) scan()');
 
     const broken = await accessibilityLabResponse(new Request('https://demo.example/api/labs/accessibility?mode=broken')).text();
     expect(broken).toContain('data-fixture-signatures');
