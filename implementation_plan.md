@@ -2,16 +2,6 @@
 
 ## Open tasks
 
-### DEMO-392 — [FEAT] Restore the live CI feed and hotfix release trigger in Webhooks
-
-- Dependency: DEMO-383 and DEMO-391 have merged.
-- Why: The owner wants the old 1:1 CI dump and hotfix release trigger back. The `/git` page, and later the assurance Delivery activity, offered an authenticated Run Live Git Demo with a PATCH, MINOR or MAJOR bump, a Merge & Release gate, and a GitHub Actions feed that updated every real check, job and step in place. It became unreachable in the minimal assurance renderer and was later deleted as dead code; its last implementation is `3d15515^:src/demos/assurance-delivery.ts`. Webhooks now offers only a synthetic signed release webhook with 0 verified deliveries.
-- Scope: Rebuild that experience in the Webhooks demo as server-rendered React with a first-party enhancement module and no inline script. Provide an admin-authenticated hotfix (patch) trigger with optional minor or major, the DEMO-391 preflight shown before confirmation, a Merge & Release gate enabled only after real CI passes, a lifecycle strip (branch, PR, CI, merge, tag, release, deploy, health), and a 1:1 GitHub Actions feed that renders every check, job and step with status, timing and links, updated in place. Show the resulting signed `workflow_run`, `pull_request` and `release` deliveries in the verified-delivery history. Keep the synthetic signed-release simulation and the DEMO-384 reset.
-- Non-goals: Do not expose admin or GitHub credentials beyond the same-origin admin authentication, allow concurrent live demos, bypass required checks, change webhook signature verification or add an inspector.
-- Acceptance: An admin can start a patch release, watch each real check, job and step change state in place without reloading, and merge and release only after CI succeeds; visitors without admin access see the feed read-only; unavailable GitHub data is labeled and states are never fabricated; the lifecycle and feed fit 375px without overflow and respect reduced motion.
-- Validation: Pinned `npm ci`; presentation and browser-module tests with recorded GitHub fixtures; git-delivery API tests; browser audit at 375 and 1280px in `en` and `ar`; credential-free `npm run check`; dependency advisory gate; committed-range whitespace; exact-head required CI. Any live patch release is owner-run under the documented release process.
-- Authorities: `docs/RELEASE-MANAGEMENT.md`, `SECURITY.md`, `src/api/git-demo.ts`, `src/lib/git-demo.ts`, `src/api/webhooks.ts`, `src/demos/webhook-presentation.tsx`, `src/browser/webhooks.ts`, `.github/workflows/git-demo.yml`, historical `960b814:src/demos/git-page.ts` and `3d15515^:src/demos/assurance-delivery.ts`.
-
 ### DEMO-393 — [I18N] Localize the demos workbench and isolate bidi values
 
 - Dependency: DEMO-392 has merged.

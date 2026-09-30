@@ -82,6 +82,7 @@ const UNTRANSLATED_PRESENTATION_ALLOWLIST = new Set([
   'platform.workers_title',
   'platform.do_title',
   'interfaces.mcp_title',
+  'interfaces.webhooks.live.ci', // CI is the canonical check-system acronym in every locale.
 ]);
 
 const direction = (locale: SupportedLocale) => locale === 'ar' ? 'rtl' : 'ltr';

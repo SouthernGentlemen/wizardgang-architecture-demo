@@ -34,6 +34,7 @@ interface DemoPullRequest {
 
 interface WorkflowRun {
   id: number;
+  suiteId: number | null;
   name: string;
   displayTitle: string;
   status: string;
@@ -51,14 +52,30 @@ interface WorkflowStep {
   status: string;
   conclusion: string | null;
   number: number | null;
+  startedAt: string | null;
+  completedAt: string | null;
 }
 
 interface WorkflowJob {
+  id: number | null;
   name: string;
   status: string;
   conclusion: string | null;
   url: string | null;
+  startedAt: string | null;
+  completedAt: string | null;
   steps: WorkflowStep[];
+}
+
+interface CheckRun {
+  id: number;
+  name: string;
+  status: string;
+  conclusion: string | null;
+  url: string | null;
+  startedAt: string | null;
+  completedAt: string | null;
+  suiteId: number | null;
 }
 
 interface StatusCacheEntry {
@@ -77,9 +94,9 @@ export interface GitDemoStatus {
   branch: { name: string; url: string } | null;
   commit: { sha: string; url: string } | null;
   pullRequest: ({ ciReady: boolean } & DemoPullRequest) | null;
-  controller: { start: WorkflowRun | null; release: WorkflowRun | null; jobs: WorkflowJob[] };
-  ci: { run: WorkflowRun | null; jobs: WorkflowJob[] };
-  delivery: { releaseRun: WorkflowRun | null; deployRun: WorkflowRun | null; jobs: WorkflowJob[]; releaseUrl: string | null };
+  controller: { start: WorkflowRun | null; release: WorkflowRun | null; startJobs: WorkflowJob[]; releaseJobs: WorkflowJob[] };
+  ci: { run: WorkflowRun | null; jobs: WorkflowJob[]; checks: CheckRun[]; available: boolean };
+  delivery: { releaseRun: WorkflowRun | null; deployRun: WorkflowRun | null; releaseJobs: WorkflowJob[]; deployJobs: WorkflowJob[]; releaseUrl: string | null };
   releaseReady: boolean;
   failures: string[];
   pollAfterMs: number;
@@ -226,6 +243,7 @@ function workflowRun(entry: Record<string, unknown>, identity: RepositoryIdentit
   if (!id || !name || !displayTitle || !status || !url) return null;
   return {
     id,
+    suiteId: integer(entry.check_suite_id),
     name,
     displayTitle,
     status,
@@ -248,9 +266,9 @@ function workflowJobs(value: unknown, identity: RepositoryIdentity): WorkflowJob
       const stepName = bounded(step.name, 200);
       const stepStatus = bounded(step.status, 40);
       if (!stepName || !stepStatus) return null;
-      return { name: stepName, status: stepStatus, conclusion: bounded(step.conclusion, 40), number: integer(step.number) };
+      return { name: stepName, status: stepStatus, conclusion: bounded(step.conclusion, 40), number: integer(step.number), startedAt: bounded(step.started_at, 40), completedAt: bounded(step.completed_at, 40) };
     }).filter((step): step is WorkflowStep => step !== null);
-    return { name, status, conclusion: bounded(entry.conclusion, 40), url: safeRepoUrl(entry.html_url, identity), steps };
+    return { id: integer(entry.id), name, status, conclusion: bounded(entry.conclusion, 40), url: safeRepoUrl(entry.html_url, identity), startedAt: bounded(entry.started_at, 40), completedAt: bounded(entry.completed_at, 40), steps };
   }).filter((job): job is WorkflowJob => job !== null);
 }
 
@@ -264,6 +282,7 @@ function buildStages(input: {
   requested: boolean;
   pullRequest: DemoPullRequest | null;
   ciRun: WorkflowRun | null;
+  ciReady: boolean;
   releaseController: WorkflowRun | null;
   releaseRun: WorkflowRun | null;
   deployRun: WorkflowRun | null;
@@ -274,14 +293,14 @@ function buildStages(input: {
     input.pullRequest ? 'complete' : input.requested ? 'current' : 'queued',
     input.pullRequest?.headSha ? 'complete' : 'queued',
     input.pullRequest ? 'complete' : 'queued',
-    workflowState(input.ciRun),
+    input.ciReady ? 'complete' : input.ciRun?.conclusion === 'success' ? 'current' : workflowState(input.ciRun),
     input.pullRequest?.mergedAt ? 'complete' : input.ciRun?.conclusion === 'success' ? 'current' : 'queued',
     input.pullRequest?.mergedAt ? 'complete' : input.releaseController ? workflowState(input.releaseController) : 'queued',
     input.releaseRun ? 'complete' : input.pullRequest?.mergedAt ? 'current' : 'queued',
     input.releasePublished ? 'complete' : workflowState(input.releaseRun),
-    workflowState(input.deployRun ?? input.releaseRun),
-    input.releaseRun?.conclusion === 'success' ? 'complete' : input.releaseRun ? 'current' : 'queued',
-    input.releasePublished && input.releaseRun?.conclusion === 'success' ? 'complete' : 'queued',
+    workflowState(input.deployRun),
+    input.deployRun?.conclusion === 'success' ? 'complete' : input.deployRun ? workflowState(input.deployRun) : 'queued',
+    input.releasePublished && input.deployRun?.conclusion === 'success' ? 'complete' : 'queued',
   ] as const;
   const labels = [
     ['change', 'Change'], ['branch', 'Branch'], ['commit', 'Commit'], ['pr', 'Pull request'],
@@ -316,23 +335,48 @@ async function listControllerRuns(identity: RepositoryIdentity, env: Env): Promi
   return { ok: true, value: rows(object(result.value).workflow_runs).map((entry) => workflowRun(entry, identity)).filter((entry): entry is WorkflowRun => entry !== null), status: result.status };
 }
 
-async function listRunsForSha(identity: RepositoryIdentity, env: Env, sha: string | null): Promise<WorkflowRun[]> {
-  if (!sha) return [];
+async function listRunsForSha(identity: RepositoryIdentity, env: Env, sha: string | null): Promise<{ runs: WorkflowRun[]; available: boolean }> {
+  if (!sha) return { runs: [], available: true };
   const result = await githubRequest<Record<string, unknown>>(`${identity.apiPath}/actions/runs?head_sha=${encodeURIComponent(sha)}&per_page=30`, env);
-  if (!result.ok) return [];
-  return rows(object(result.value).workflow_runs).map((entry) => workflowRun(entry, identity)).filter((entry): entry is WorkflowRun => entry !== null);
+  if (!result.ok) return { runs: [], available: false };
+  const value = object(result.value);
+  const entries = rows(value.workflow_runs);
+  return { runs: entries.map((entry) => workflowRun(entry, identity)).filter((entry): entry is WorkflowRun => entry !== null), available: typeof value.total_count === 'number' && value.total_count === entries.length };
 }
 
-async function jobsForRun(identity: RepositoryIdentity, env: Env, run: WorkflowRun | null): Promise<WorkflowJob[]> {
-  if (!run) return [];
+async function jobsForRun(identity: RepositoryIdentity, env: Env, run: WorkflowRun | null): Promise<{ jobs: WorkflowJob[]; available: boolean }> {
+  if (!run) return { jobs: [], available: true };
   const result = await githubRequest<Record<string, unknown>>(`${identity.apiPath}/actions/runs/${run.id}/jobs?filter=latest&per_page=100`, env);
-  return result.ok ? workflowJobs(result.value, identity) : [];
+  const value = object(result.value);
+  const jobs = result.ok ? workflowJobs(value, identity) : [];
+  return { jobs, available: Boolean(result.ok && typeof value.total_count === 'number' && value.total_count === jobs.length) };
 }
 
-async function releaseForTag(identity: RepositoryIdentity, env: Env, version: string | null): Promise<string | null> {
-  if (!version) return null;
+const REQUIRED_CHECKS = ['validate', 'change-id', 'security', 'secrets'] as const;
+
+async function checksForSha(identity: RepositoryIdentity, env: Env, sha: string | null): Promise<{ checks: CheckRun[]; available: boolean }> {
+  if (!sha) return { checks: [], available: true };
+  const result = await githubRequest<Record<string, unknown>>(`${identity.apiPath}/commits/${encodeURIComponent(sha)}/check-runs?per_page=100`, env);
+  if (!result.ok) return { checks: [], available: false };
+  const value = object(result.value);
+  const entries = rows(value.check_runs);
+  if (typeof value.total_count !== 'number' || value.total_count !== entries.length) return { checks: [], available: false };
+  return { available: true, checks: entries.map((entry) => ({
+    id: integer(entry.id) ?? 0,
+    name: bounded(entry.name, 200) ?? '',
+    status: bounded(entry.status, 40) ?? 'unknown',
+    conclusion: bounded(entry.conclusion, 40),
+    url: safeRepoUrl(entry.html_url, identity),
+    startedAt: bounded(entry.started_at, 40),
+    completedAt: bounded(entry.completed_at, 40),
+    suiteId: integer(object(entry.check_suite).id),
+  })) };
+}
+
+async function releaseForTag(identity: RepositoryIdentity, env: Env, version: string | null): Promise<{ url: string | null; available: boolean }> {
+  if (!version) return { url: null, available: true };
   const result = await githubRequest<Record<string, unknown>>(`${identity.apiPath}/releases/tags/${encodeURIComponent(`v${version}`)}`, env);
-  return result.ok ? safeRepoUrl(object(result.value).html_url, identity) : null;
+  return { url: result.ok ? safeRepoUrl(object(result.value).html_url, identity) : null, available: result.ok || result.status === 404 };
 }
 
 export async function collectGitDemoStatus(env: Env, requestedId: string | null = null, force = false): Promise<GitDemoStatus> {
@@ -366,23 +410,42 @@ export async function collectGitDemoStatus(env: Env, requestedId: string | null 
   const releaseController = requestId
     ? controllers.find((run) => run.displayTitle.includes(' release ') && run.displayTitle.includes(requestId)) ?? null
     : controllers.find((run) => run.displayTitle.includes(' release ') && run.status !== 'completed') ?? null;
-  const [headRuns, mergedRuns, releaseUrl] = await Promise.all([
+  const [headRunEvidence, mergedRunEvidence, releaseEvidence] = await Promise.all([
     listRunsForSha(identity, env, selectedPull?.headSha ?? null),
     listRunsForSha(identity, env, selectedPull?.mergedAt ? selectedPull.mergeSha : null),
     releaseForTag(identity, env, selectedPull?.mergedAt ? selectedPull.targetVersion : null),
   ]);
-  const ciRun = headRuns.find((run) => run.name === 'CI' && run.event === 'pull_request') ?? null;
+  if (!headRunEvidence.available) failures.push('ciRuns');
+  if (!mergedRunEvidence.available) failures.push('deliveryRuns');
+  if (!releaseEvidence.available) failures.push('release');
+  const headRuns = headRunEvidence.runs;
+  const mergedRuns = mergedRunEvidence.runs;
+  const releaseUrl = releaseEvidence.url;
+  const ciRun = headRuns.find((run) => run.name === 'CI' && run.event === 'pull_request' && run.sha === selectedPull?.headSha) ?? null;
   const deliveryRuns = [...mergedRuns].sort((left, right) => String(right.createdAt).localeCompare(String(left.createdAt)));
   const releaseRun = deliveryRuns.find((run) => run.name === 'Release') ?? null;
   const deployRun = deliveryRuns.find((run) => run.name === 'Deploy') ?? null;
-  const controllerForJobs = releaseController ?? (!selectedPull || !ciRun ? startController : null);
-  const [ciJobs, controllerJobs, releaseJobs, deployJobs] = await Promise.all([
+  const [ciJobEvidence, startJobEvidence, releaseControllerJobEvidence, releaseJobEvidence, deployJobEvidence, checkEvidence] = await Promise.all([
     jobsForRun(identity, env, ciRun),
-    jobsForRun(identity, env, controllerForJobs),
+    jobsForRun(identity, env, startController),
+    jobsForRun(identity, env, releaseController),
     jobsForRun(identity, env, releaseRun),
     jobsForRun(identity, env, deployRun),
+    checksForSha(identity, env, selectedPull?.headSha ?? null),
   ]);
-  const releaseReady = selectedPull?.state === 'open' && ciRun?.status === 'completed' && ciRun.conclusion === 'success';
+  if (!checkEvidence.available) failures.push('ciChecks');
+  for (const [key, evidence] of [['ciJobs', ciJobEvidence], ['startJobs', startJobEvidence], ['releaseControllerJobs', releaseControllerJobEvidence], ['releaseJobs', releaseJobEvidence], ['deployJobs', deployJobEvidence]] as const) {
+    if (!evidence.available) failures.push(key);
+  }
+  const currentChecks = new Map<string, CheckRun>();
+  for (const check of checkEvidence.checks) {
+    if (!check.id || check.suiteId !== ciRun?.suiteId) continue;
+    const previous = currentChecks.get(check.name);
+    if (!previous || check.id > previous.id) currentChecks.set(check.name, check);
+  }
+  const releaseReady = Boolean(selectedPull?.state === 'open' && ciRun?.status === 'completed' && ciRun.conclusion === 'success'
+    && headRunEvidence.available && ciJobEvidence.available && checkEvidence.available && ciRun.suiteId
+    && REQUIRED_CHECKS.every((name) => currentChecks.get(name)?.status === 'completed' && currentChecks.get(name)?.conclusion === 'success'));
   const releaseInProgress = Boolean(releaseController && releaseController.status !== 'completed')
     || Boolean(releaseRun && releaseRun.status !== 'completed')
     || Boolean(deployRun && deployRun.status !== 'completed');
@@ -414,9 +477,9 @@ export async function collectGitDemoStatus(env: Env, requestedId: string | null 
     branch: selectedPull ? { name: selectedPull.branch, url: `${identity.url}/tree/${encodeURIComponent(selectedPull.branch)}` } : null,
     commit: selectedPull?.headSha ? { sha: selectedPull.headSha, url: `${identity.url}/commit/${encodeURIComponent(selectedPull.headSha)}` } : null,
     pullRequest: selectedPull ? { ...selectedPull, ciReady: releaseReady } : null,
-    controller: { start: startController, release: releaseController, jobs: controllerJobs },
-    ci: { run: ciRun, jobs: ciJobs },
-    delivery: { releaseRun, deployRun, jobs: [...(releaseController ? controllerJobs : []), ...releaseJobs, ...deployJobs], releaseUrl },
+    controller: { start: startController, release: releaseController, startJobs: startJobEvidence.jobs, releaseJobs: releaseControllerJobEvidence.jobs },
+    ci: { run: ciRun, jobs: ciJobEvidence.jobs, checks: checkEvidence.checks, available: checkEvidence.available },
+    delivery: { releaseRun, deployRun, releaseJobs: releaseJobEvidence.jobs, deployJobs: deployJobEvidence.jobs, releaseUrl },
     releaseReady,
     failures,
     pollAfterMs: active ? 500 : 60_000,
@@ -424,6 +487,7 @@ export async function collectGitDemoStatus(env: Env, requestedId: string | null 
       requested: Boolean(startController || selectedPull),
       pullRequest: selectedPull,
       ciRun,
+      ciReady: releaseReady,
       releaseController,
       releaseRun,
       deployRun,
@@ -461,6 +525,7 @@ export async function gitDemoPreflight(env: Env, bump: VersionBump): Promise<{
   mainSha: string;
   currentVersion: string;
   targetVersion: string;
+  fingerprint: string;
   active: DemoPullRequest | null;
   lastRelease: string;
   commitsSinceRelease: Array<{ sha: string; subject: string; url: string }>;
@@ -492,10 +557,14 @@ export async function gitDemoPreflight(env: Env, bump: VersionBump): Promise<{
     || typeof comparisonValue.total_commits !== 'number' || comparisonValue.total_commits !== commits.length) {
     throw new Error('Complete commits-since-release evidence is unavailable.');
   }
+  const targetVersion = nextVersion(version.value, bump);
+  const preflightBytes = new TextEncoder().encode(JSON.stringify([mainSha, version.value, targetVersion, lastRelease, commits.map((entry) => entry.sha)]));
+  const fingerprint = [...new Uint8Array(await crypto.subtle.digest('SHA-256', preflightBytes))].map((byte) => byte.toString(16).padStart(2, '0')).join('');
   return {
     mainSha,
     currentVersion: version.value,
-    targetVersion: nextVersion(version.value, bump),
+    targetVersion,
+    fingerprint,
     active: pulls.value?.find((entry) => entry.state === 'open') ?? null,
     lastRelease,
     commitsSinceRelease: commits.map((entry) => ({

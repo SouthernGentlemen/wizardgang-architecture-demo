@@ -1,3 +1,5 @@
+import { mountLiveGit } from './webhooks-live';
+
 interface WebhookEvent {
   id?: unknown;
   receivedAt?: unknown;
@@ -51,6 +53,7 @@ export async function mount(root: HTMLElement): Promise<void> {
   const message = (key: string, fallback: string) => messages[key] ?? fallback;
   const document = root.ownerDocument;
   const lifecycle = new AbortController();
+  mountLiveGit(root, lifecycle.signal, messages);
   let intervalId: number | undefined;
   root.addEventListener('demo:deactivate', () => {
     lifecycle.abort();
