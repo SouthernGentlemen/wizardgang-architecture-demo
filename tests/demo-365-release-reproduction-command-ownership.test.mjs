@@ -36,6 +36,33 @@ describe('DEMO-365 exact release reproduction command ownership', () => {
     expect(commands.filter((command) => command === canonicalAdvisory)).toHaveLength(1);
   });
 
+  it('shares a fresh migrated local D1 store with browser audits and clears it before the independent migration gate', () => {
+    const reproduce = namedStep(releaseWorkflow, 'Reproduce the tagged state');
+    const ordered = [
+      'local_d1_dir="$(mktemp -d)"',
+      'trap \'rm -rf -- "$local_d1_dir"\' EXIT',
+      'export WG_LOCAL_D1_PERSIST_TO="$local_d1_dir"',
+      'npm run check',
+      'unset WG_LOCAL_D1_PERSIST_TO',
+      'npm run validate:migrations',
+    ];
+    let position = -1;
+    for (const part of ordered) {
+      const next = reproduce.indexOf(part, position + 1);
+      expect(next, `${part} must follow the preceding release reproduction step`).toBeGreaterThan(position);
+      position = next;
+    }
+    expect(releaseManagement).toContain('one fresh temporary local D1 persistence directory');
+  });
+
+  it('starts generated notes at the closest published release when an intervening tag did not publish', () => {
+    expect(releaseWorkflow).toContain('candidate="$(git describe --tags --abbrev=0 "$search_commit"');
+    expect(releaseWorkflow).toContain('repos/$GITHUB_REPOSITORY/releases/tags/$candidate');
+    expect(releaseWorkflow).toContain('previous_tag="$candidate"');
+    expect(releaseWorkflow).toContain('search_commit="$(git rev-list -n 1 "$candidate")^"');
+    expect(releaseManagement).toContain('skipping tags whose Release did not publish');
+  });
+
   it('retains locked installation, exact release identity, publication, and deploy ordering', () => {
     expect(releaseWorkflow).toContain('- name: Install locked dependencies\n        run: npm ci');
     expect(releaseWorkflow).toContain('Verify annotated semantic release identity');

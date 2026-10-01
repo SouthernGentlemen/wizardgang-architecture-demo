@@ -20,6 +20,8 @@ npm run security:dependency-advisories
 npm run build
 ```
 
+During `npm run check`, Release provides one fresh temporary local D1 persistence directory to both migration validation and browser audits. It clears that directory after reproduction. The separate migration gate still runs independently.
+
 Release tags use `vMAJOR.MINOR.PATCH`, are annotated, and must point to the exact checked-out commit whose `package.json` version matches the tag. Published tags are never moved or deleted during ordinary development. Corrections move forward under a new controlled change and version.
 
 ## Release authority and notes
@@ -31,10 +33,10 @@ The Release workflow accepts either an exact tag push or an exact-tag dispatch b
 1. verify the tag is semantic and annotated;
 2. resolve the exact tagged commit and require the checkout to match it;
 3. require the package version to match the tag;
-4. capture the annotated tag date in UTC and the preceding semantic tag when one exists;
+4. capture the annotated tag date in UTC and the closest preceding published semantic release when one exists, skipping tags whose Release did not publish;
 5. reproduce the tagged source with the required validation gates;
 6. generate and retain the release-bound assurance registry snapshot;
-7. create the GitHub Release with an identity header derived from the tag and GitHub-generated notes for the changes since the preceding tag;
+7. create the GitHub Release with an identity header derived from the tag and GitHub-generated notes for the changes since the preceding published release;
 8. attach the assurance registry snapshot to the GitHub Release, retaining an already-published release on retry;
 9. deploy only after release reproduction and publication succeed.
 
