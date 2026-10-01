@@ -25,6 +25,9 @@ const localSessionSecret = 'demo-335-local-browser-audit-session-key';
 const localPersistenceArgs = process.env.WG_LOCAL_D1_PERSIST_TO ? ['--persist-to', process.env.WG_LOCAL_D1_PERSIST_TO] : [];
 const axeTags = ['wcag2a', 'wcag2aa', 'wcag2aaa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const targetSelector = 'button,select,input:not([type="hidden"]),textarea,summary,[role="button"],[role="tab"]';
+const demosPath = manifest.find((route) => route.id === 'demos.index')?.route;
+const assurancePath = manifest.find((route) => route.id === 'assurance.index')?.route;
+if (!demosPath || !assurancePath) throw new Error('Site browser audit could not resolve demos or assurance routes.');
 const workbenchDemos = {
   d1: ['Data', 'D1'], r2: ['Data', 'R2'], rest: ['APIs', 'REST / OpenAPI'], graphql: ['APIs', 'GraphQL'],
   webhooks: ['Integrations', 'Webhooks'], oauth: ['Identity', 'OAuth 2.0'], sso: ['Identity', 'SSO'], saml: ['Identity', 'SAML'], mcp: ['AI', 'MCP'],
@@ -59,6 +62,254 @@ function localizedPath(routePathname, locale) {
   // the next nominally English case depend on execution order.
   url.searchParams.set('lang', locale);
   return `${url.pathname}${url.search}${url.hash}`;
+}
+
+function assuranceReviewState(pathname, origin, assurancePath) {
+  const url = new URL(pathname, origin);
+  if (url.pathname !== assurancePath) return null;
+
+  let recordId = '';
+  if (url.hash) {
+    try {
+      recordId = decodeURIComponent(url.hash.slice(1));
+    } catch {
+      recordId = url.hash.slice(1);
+    }
+  }
+
+  return {
+    page: url.pathname,
+    state: url.hash || '(default)',
+    recordId,
+  };
+}
+
+async function waitForAssuranceRecordPane(
+  cdp,
+  pathname,
+  locale,
+  {
+    origin,
+    assurancePath,
+    evaluatePage,
+    sleep,
+    timeoutMs = 5_000,
+    pollIntervalMs = 50,
+  },
+) {
+  const state = assuranceReviewState(pathname, origin, assurancePath);
+  if (!state) return null;
+
+  const attempts = Math.max(1, Math.ceil(timeoutMs / pollIntervalMs));
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    const result = await evaluatePage(cdp, `(()=>{
+      const expectedId=${JSON.stringify(state.recordId)};
+      const panes=[...document.querySelectorAll('[data-assurance-record]')];
+      const pane=expectedId ? panes.find((candidate)=>candidate.dataset.assuranceRecord===expectedId) : panes[0];
+      const heading=pane?.querySelector('.assurance-record-heading h2');
+      const inspector=pane?.querySelector('.assurance-inspector');
+      const headingText=(heading?.textContent||'').trim().replace(/\\s+/g,' ').slice(0,120);
+      return {ready:!!pane&&!!headingText&&!!inspector,headingText,recordId:pane?.dataset.assuranceRecord||''};
+    })()`, `DEMO-289 content review readiness ${pathname} ${locale}`);
+    if (result.ready) return result;
+    if (attempt + 1 < attempts) await sleep(pollIntervalMs);
+  }
+
+  throw new Error(
+    `DEMO-289 content review timed out after ${timeoutMs}ms waiting for the assurance record pane: page=${state.page} state=${state.state} locale=${locale}${state.recordId ? ` record=${state.recordId}` : ''}.`,
+  );
+}
+
+async function dispatchTab(cdp, shift = false) {
+  const params = { key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9, nativeVirtualKeyCode: 9, modifiers: shift ? 8 : 0 };
+  await cdp.call('Input.dispatchKeyEvent', { type: 'keyDown', ...params });
+  await cdp.call('Input.dispatchKeyEvent', { type: 'keyUp', ...params });
+}
+
+function recordFinding(findings, category, label, detail, expected = false) {
+  const finding = {
+    classification: expected ? 'expected/documented finding' : 'new/unrecorded regression',
+    category,
+    label,
+    detail,
+  };
+  findings.push(finding);
+  console.warn(`DEMO289 finding ${finding.classification}: ${JSON.stringify(finding)}`);
+}
+
+function baseGeometryExpression() {
+  return `(()=>{
+    window.scrollTo({left:0,top:window.scrollY,behavior:'instant'});
+    const viewport=window.innerWidth;
+    const clientWidth=document.documentElement.clientWidth;
+    const scrollWidth=document.documentElement.scrollWidth;
+    const bodyScrollWidth=document.body.scrollWidth;
+    const overflow=scrollWidth>viewport+1;
+    const visible=(el)=>{const s=getComputedStyle(el);const r=el.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&(r.width||r.height)};
+    const clipped=[...document.querySelectorAll('button,select,input:not([type="hidden"]),textarea,summary,[role="button"],[role="tab"]')].filter((el)=>{
+      if(el.closest('.demo-category-tabs'))return false;
+      if(!visible(el))return false; const r=el.getBoundingClientRect();
+      return r.left < -1 || r.right > viewport + 1;
+    }).map((el)=>el.id||el.getAttribute('role')||el.tagName).slice(0,12);
+    const containedByHorizontalScroller=(el)=>{for(let parent=el.parentElement;parent&&parent!==document.body;parent=parent.parentElement){const overflowX=getComputedStyle(parent).overflowX;if(['auto','scroll','hidden','clip'].includes(overflowX))return true}return false};
+    const protruding=[...document.querySelectorAll('body *')].filter((el)=>{
+      if(!visible(el)||containedByHorizontalScroller(el))return false; const r=el.getBoundingClientRect();
+      return r.left < -1 || r.right > viewport + 1;
+    }).map((el)=>{const r=el.getBoundingClientRect();return {tag:el.tagName,id:el.id||'',className:typeof el.className==='string'?el.className.slice(0,120):'',left:Math.round(r.left*10)/10,right:Math.round(r.right*10)/10,width:Math.round(r.width*10)/10}}).slice(0,20);
+    const d1Tabs=[...document.querySelectorAll('.d1-table-tabs button')].map((el)=>{const r=el.getBoundingClientRect();return {id:el.id,text:(el.textContent||'').trim().slice(0,80),minWidth:parseFloat(getComputedStyle(el).minWidth)||0,width:r.width,left:r.left,right:r.right}});
+    const scrollbarWidth=viewport-clientWidth;
+    const scrollbarAccountingOnly=overflow&&clipped.length===0&&protruding.length===0&&scrollbarWidth>0&&Math.abs((scrollWidth-viewport)-scrollbarWidth)<=1&&bodyScrollWidth===scrollWidth;
+    return {overflow,scrollbarAccountingOnly,clipped,width:viewport,clientWidth,scrollWidth,bodyScrollWidth,scrollX:window.scrollX,protruding,d1Tabs};
+  })()`;
+}
+
+function isDocumentedD1Reflow(pathname, zoom, value) {
+  const sharedBoundary = pathname === demosPath
+    && zoom === 400
+    && value?.width === 320
+    && value?.d1Tabs?.length === 2
+    && value.d1Tabs.every((tab) => Math.abs(tab.minWidth - 145) < 0.5);
+  if (!sharedBoundary) return false;
+  const linuxDocumentOverflow = value.overflow === true
+    && Math.abs((value.scrollWidth ?? 0) - 334) <= 1
+    && value.clipped.every((id) => value.d1Tabs.some((tab) => tab.id === id));
+  const macControlClipping = value.overflow === false
+    && value.scrollWidth === value.width
+    && value.clipped.length > 0
+    && value.clipped.every((id) => value.d1Tabs.some((tab) => tab.id === id));
+  return linuxDocumentOverflow || macControlClipping;
+}
+
+async function inspectGeometry(cdp, label, findings, context = {}) {
+  const value = await evaluate(cdp, baseGeometryExpression());
+  if ((value.overflow && !value.scrollbarAccountingOnly) || value.clipped.length) {
+    const expected = isDocumentedD1Reflow(context.pathname, context.zoom, value);
+    recordFinding(findings, 'reflow/clipping', label, value, expected);
+  }
+  return value;
+}
+
+async function runTextSpacing(cdp, label, findings) {
+  await cdp.call('DOM.enable');
+  await cdp.call('CSS.enable');
+  const frameTree = await cdp.call('Page.getFrameTree');
+  const frameId = frameTree?.frameTree?.frame?.id;
+  if (!frameId) throw new Error(`${label} text spacing: missing top-level frame id`);
+  const sheet = await cdp.call('CSS.createStyleSheet', { frameId });
+  const styleSheetId = sheet?.styleSheetId;
+  if (!styleSheetId) throw new Error(`${label} text spacing: could not create DevTools stylesheet`);
+  try {
+    await cdp.call('CSS.setStyleSheetText', {
+      styleSheetId,
+      text: '*{line-height:1.5!important;letter-spacing:.12em!important;word-spacing:.16em!important}p{margin-bottom:2em!important}',
+    });
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    await inspectGeometry(cdp, `${label} text spacing`, findings);
+  } finally {
+    await cdp.call('CSS.setStyleSheetText', { styleSheetId, text: '' });
+  }
+}
+
+async function runFocusAndTrap(cdp, label, findings) {
+  await evaluate(cdp, `document.body.focus();document.activeElement?.blur();true`);
+  const visited = [];
+  let invisible = 0;
+  const obscured = [];
+  for (let i = 0; i < 32; i += 1) {
+    await dispatchTab(cdp);
+    const state = await evaluate(cdp, `(()=>{
+      const el=document.activeElement;if(!el||el===document.body)return {id:'body',visible:false,obscured:false,offscreen:false};
+      let r=el.getBoundingClientRect();
+      if(r.left<0||r.right>innerWidth||r.top<0||r.bottom>innerHeight){el.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});r=el.getBoundingClientRect()}
+      const s=getComputedStyle(el);const visible=(parseFloat(s.outlineWidth||'0')>0&&s.outlineStyle!=='none')||s.boxShadow!=='none'||s.borderColor==='CanvasText';
+      const left=Math.max(r.left,0);const right=Math.min(r.right,innerWidth);const top=Math.max(r.top,0);const bottom=Math.min(r.bottom,innerHeight);
+      const offscreen=right-left<=1||bottom-top<=1;
+      const points=offscreen?[]:[[.5,.5],[.15,.15],[.85,.15],[.15,.85],[.85,.85]].map(([px,py])=>[left+(right-left)*px,top+(bottom-top)*py]);
+      const hits=points.map(([x,y])=>document.elementFromPoint(x,y));
+      const exposed=hits.some((hit)=>!!hit&&(hit===el||el.contains(hit)));
+      const id=el.id||el.getAttribute('href')||el.getAttribute('data-assurance-framework')||el.tagName;
+      const order=[...document.querySelectorAll('*')].indexOf(el);
+      return {id,order,visible,nestedFrame:el instanceof HTMLIFrameElement,obscured:offscreen||!exposed,offscreen,rect:{left:r.left,top:r.top,right:r.right,bottom:r.bottom},hits:hits.map((hit)=>hit?.id||hit?.getAttribute?.('href')||hit?.tagName||null)};
+    })()`);
+    visited.push(state);
+    if (state.id !== 'body' && !state.visible && !state.nestedFrame) invisible += 1;
+    if (state.obscured) obscured.push(state);
+  }
+  const unique = new Set(visited.filter((state)=>state.id).map((state)=>`${state.order}:${state.id}`));
+  if (unique.size < 4) recordFinding(findings, 'keyboard trap', label, { focusTargetsReached: unique.size, visited:visited.map((state)=>state.id) }, false);
+  if (invisible) recordFinding(findings, 'focus visibility', label, { stepsWithoutVisibleIndicator: invisible }, false);
+  if (obscured.length) recordFinding(findings, 'focus obscuring', label, obscured.slice(0,8), false);
+  const before = visited.at(-1);
+  await dispatchTab(cdp, true);
+  const after = await evaluate(cdp, `(()=>{const el=document.activeElement;return {id:el?.id||el?.getAttribute?.('href')||el?.tagName||'',order:el?[...document.querySelectorAll('*')].indexOf(el):-1}})()`);
+  const stayedAtNestedFrameBoundary = before.nestedFrame && after.id === 'IFRAME';
+  if (before.order === after.order && unique.size > 1 && !stayedAtNestedFrameBoundary) recordFinding(findings, 'reverse keyboard traversal', label, { before:before.id, after:after.id, order:after.order }, false);
+}
+
+async function contentSnapshot(cdp, label, locale, expectedAssuranceHeading = null) {
+  const snapshot = await evaluate(cdp, `(()=>{
+    const headings=[...document.querySelectorAll('h1,h2,h3,h4,h5,h6')].map((h)=>({level:Number(h.tagName.slice(1)),text:(h.textContent||'').trim().replace(/\\s+/g,' ').slice(0,120)}));
+    const links=[...document.querySelectorAll('a[href]')].map((a)=>({name:(a.getAttribute('aria-label')||a.textContent||'').trim().replace(/\\s+/g,' ').slice(0,160),href:a.getAttribute('href')}));
+    const vague=links.filter((l)=>/^(here|more|details|source|open|read more)$/i.test(l.name));
+    const byName=new Map();for(const link of links){const key=link.name.toLowerCase();if(!key)continue;const set=byName.get(key)||new Set();set.add(link.href);byName.set(key,set)}
+    const ambiguous=[...byName.entries()].filter(([,set])=>set.size>1).map(([name,set])=>({name,hrefs:[...set]})).slice(0,12);
+    const explicitLang=[...document.querySelectorAll('[lang]')].filter((el)=>el!==document.documentElement).length;
+    const text=(document.querySelector('main')?.innerText||'').replace(/\\s+/g,' ').trim();
+    const words=text.match(/[A-Za-z][A-Za-z'-]*/g)||[];const sentences=text.split(/[.!?]+/).filter((x)=>x.trim()).length||1;
+    const abbreviations=[...new Set((text.match(/\\b[A-Z][A-Z0-9-]{1,9}\\b/g)||[]))].slice(0,30);
+    return {headings,linkCount:links.length,vague,ambiguous,explicitLang,abbreviations,englishWords:words.length,avgSentenceWords:Number((words.length/sentences).toFixed(1))};
+  })()`);
+  console.log(`DEMO289 content-review ${label} ${locale}: ${JSON.stringify(snapshot)}`);
+  if (expectedAssuranceHeading && !snapshot.headings.some((heading) => heading.text === expectedAssuranceHeading)) {
+    const state = assuranceReviewState(label, origin, assurancePath);
+    throw new Error(`DEMO-289 content review heading inventory is missing the selected assurance record heading "${expectedAssuranceHeading}": page=${state?.page ?? label} state=${state?.state ?? '(unknown)'} locale=${locale}.`);
+  }
+  if (snapshot.ambiguous.length) {
+    const state = assuranceReviewState(label, origin, assurancePath);
+    throw new Error(`DEMO-289 content review found repeated link accessible names with different destinations: page=${state?.page ?? label} state=${state?.state ?? '(default)'} locale=${locale} ambiguous=${JSON.stringify(snapshot.ambiguous)}.`);
+  }
+  return snapshot;
+}
+
+async function runDemo289MediaChecks(cdp, pathname, findings) {
+  await cdp.call('Emulation.setEmulatedMedia',{media:'screen',features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+  const reduced=await evaluate(cdp,`({matches:matchMedia('(prefers-reduced-motion: reduce)').matches,active:document.getAnimations().filter((a)=>a.playState==='running').length})`);
+  if(!reduced.matches||reduced.active)recordFinding(findings,'reduced motion',pathname,reduced,false);
+
+  await cdp.call('Emulation.setEmulatedMedia',{media:'screen',features:[{name:'forced-colors',value:'active'}]});
+  const forced=await evaluate(cdp,`(()=>{const focusable=document.querySelector('a[href],button,select,input,summary,[tabindex]:not([tabindex="-1"])');focusable?.focus();const s=focusable?getComputedStyle(focusable):null;return {matches:matchMedia('(forced-colors: active)').matches,focusable:!!focusable,outline:s?.outlineStyle,border:s?.borderStyle}})()`);
+  if(!forced.matches||!forced.focusable)recordFinding(findings,'forced colors',pathname,forced,false);
+  await cdp.call('Emulation.setEmulatedMedia',{media:'screen',features:[]});
+}
+
+async function runMergedDemo289Checks(cdp, pathname, locale, coverage, mediaCoverage, findings) {
+  const key = `${pathname}|${locale}`;
+  if (coverage.has(key)) return;
+  coverage.add(key);
+
+  const assurancePane = await waitForAssuranceRecordPane(cdp, pathname, locale, {
+    origin,
+    assurancePath,
+    evaluatePage: evaluate,
+    sleep,
+  });
+  await contentSnapshot(cdp, pathname, locale, assurancePane?.headingText ?? null);
+  await runFocusAndTrap(cdp, `${pathname} ${locale}`, findings);
+  await runTextSpacing(cdp, `${pathname} ${locale}`, findings);
+  for (const [zoom, width] of [[200, 640], [400, 320]]) {
+    await cdp.call('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:false});
+    await inspectGeometry(cdp,`${pathname} ${locale} ${zoom}% zoom-equivalent`,findings,{pathname,locale,zoom});
+  }
+
+  await cdp.call('Emulation.setDeviceMetricsOverride',{width:1280,height:1000,deviceScaleFactor:1,mobile:false});
+  if (locale === 'en' && !mediaCoverage.has(pathname)) {
+    mediaCoverage.add(pathname);
+    try {
+      await runDemo289MediaChecks(cdp, pathname, findings);
+    } finally {
+      await cdp.call('Emulation.setEmulatedMedia',{media:'screen',features:[]});
+    }
+  }
 }
 
 function inspectionExpression(expectedLocale, checkTargetSize = false) {
@@ -1287,11 +1538,16 @@ async function main() {
     let browserPages = 0;
     let axeRuns = 0;
     const enhancedTargetSummary = [];
+    const mergedDemo289Coverage = new Set();
+    const mergedDemo289MediaCoverage = new Set();
+    const mergedDemo289Findings = [];
+    const mergedDemo289Scope = [...new Set([...pages.map(routePath), ...auditConfig.states.map((state) => state.path)])];
     for (const route of pages) {
       const pathname = routePath(route);
       for (const locale of ['en', 'ar']) {
         const report = await inspectPath(cdp, pathname, locale, `${route.id} ${locale}`, { checkTargetSize: true });
         enhancedTargetSummary.push({ pathname, locale, below44: report.targetSize.below44, total: report.targetSize.total });
+        await runMergedDemo289Checks(cdp, pathname, locale, mergedDemo289Coverage, mergedDemo289MediaCoverage, mergedDemo289Findings);
         browserPages += 1;
         axeRuns += 1;
       }
@@ -1301,6 +1557,7 @@ async function main() {
       for (const locale of ['en', 'ar']) {
         const report = await inspectPath(cdp, state.path, locale, `${state.name} ${locale}`, { checkTargetSize: true });
         enhancedTargetSummary.push({ pathname: state.path, locale, below44: report.targetSize.below44, total: report.targetSize.total });
+        await runMergedDemo289Checks(cdp, state.path, locale, mergedDemo289Coverage, mergedDemo289MediaCoverage, mergedDemo289Findings);
         axeRuns += 1;
       }
     }
@@ -1390,17 +1647,17 @@ async function main() {
     }
     await cdp.call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 1000, deviceScaleFactor: 1, mobile: false });
 
-    await cdp.call('Emulation.setEmulatedMedia', { media: 'screen', features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
-    await navigate(cdp, `${origin}/`);
-    if (!await evaluate(cdp, `matchMedia('(prefers-reduced-motion: reduce)').matches`)) throw new Error('Reduced-motion emulation did not activate');
-    await cdp.call('Emulation.setEmulatedMedia', { media: 'screen', features: [] });
-
-    await cdp.call('Emulation.setEmulatedMedia', { media: 'screen', features: [{ name: 'forced-colors', value: 'active' }] });
-    await navigate(cdp, `${origin}/`);
-    if (!await evaluate(cdp, `matchMedia('(forced-colors: active)').matches`)) throw new Error('Forced-colors emulation did not activate');
-    await cdp.call('Emulation.setEmulatedMedia', { media: 'screen', features: [] });
-
     for (const pathname of auditConfig.keyboardPaths) await keyboardSmoke(cdp, pathname);
+
+    const expectedMergedDemo289Coverage = mergedDemo289Scope.length * 2;
+    const expectedMergedDemo289MediaCoverage = mergedDemo289Scope.length;
+    if (mergedDemo289Coverage.size !== expectedMergedDemo289Coverage || mergedDemo289MediaCoverage.size !== expectedMergedDemo289MediaCoverage) {
+      throw new Error(`Merged DEMO-289 coverage incomplete: visits=${mergedDemo289Coverage.size}/${expectedMergedDemo289Coverage} media=${mergedDemo289MediaCoverage.size}/${expectedMergedDemo289MediaCoverage}`);
+    }
+    const expectedMergedDemo289Findings = mergedDemo289Findings.filter((finding)=>finding.classification==='expected/documented finding');
+    const unrecordedMergedDemo289Findings = mergedDemo289Findings.filter((finding)=>finding.classification==='new/unrecorded regression');
+    console.log(`Merged DEMO-289 coverage: ${mergedDemo289Coverage.size} English/Arabic page-state visits, ${mergedDemo289MediaCoverage.size} English media checks, findings=${JSON.stringify({expectedDocumented:expectedMergedDemo289Findings,newUnrecorded:unrecordedMergedDemo289Findings})}`);
+    if (unrecordedMergedDemo289Findings.length) throw new Error(`Merged DEMO-289 coverage found ${unrecordedMergedDemo289Findings.length} new/unrecorded browser regression(s).`);
 
     if (cspViolations.length) {
       throw new Error(`CSP violations across audited pages/states: ${cspViolations.slice(0, 12).join('; ')}`);
