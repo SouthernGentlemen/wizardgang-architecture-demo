@@ -76,6 +76,8 @@ The deploy workflow then:
 - verifies Worker health and identity readiness;
 - verifies previously configured identity providers remain configured.
 
+Tagged-source validation in the protected deploy job uses a fresh temporary local D1 persistence directory for both migration validation and browser audits during `npm run check`. The directory is removed before the production secret preflight and remote migration steps.
+
 A manual recovery deployment may select an already published immutable semantic tag from the current `main` deploy workflow; it does not deploy an arbitrary branch head, raw SHA, lightweight tag, unpublished tag, or package/tag mismatch. The repository-level `npm run deploy` command is intentionally fail-closed so an arbitrary local checkout cannot use the package command as a production publish path. Repository and Worker credentials remain managed secrets and are documented by their owning security/identity configuration rather than duplicated in release prose.
 
 ### Worker secret preflight and provisioning

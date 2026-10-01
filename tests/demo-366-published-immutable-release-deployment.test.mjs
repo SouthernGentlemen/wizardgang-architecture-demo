@@ -56,6 +56,27 @@ describe('DEMO-366 published immutable release deployment boundary', () => {
     expect(deploy).toBeGreaterThan(migrate);
   });
 
+  it('validates the exact tag with migrated local D1 state before production preflight', () => {
+    const start = stepPosition('Validate reviewed tagged source');
+    const end = stepPosition('Verify production Worker secret names');
+    expect(start).toBeGreaterThan(-1);
+    expect(end).toBeGreaterThan(start);
+    const validation = deployWorkflow.slice(start, end);
+    const ordered = [
+      'local_d1_dir="$(mktemp -d)"',
+      'trap \'rm -rf -- "$local_d1_dir"\' EXIT',
+      'export WG_LOCAL_D1_PERSIST_TO="$local_d1_dir"',
+      'npm run check',
+    ];
+    let position = -1;
+    for (const part of ordered) {
+      const next = validation.indexOf(part, position + 1);
+      expect(next, `${part} must follow the preceding tagged-source validation step`).toBeGreaterThan(position);
+      position = next;
+    }
+    expect(releaseManagement).toContain('fresh temporary local D1 persistence directory');
+  });
+
   it('preserves release-triggered deployment and main-only published-tag recovery', () => {
     expect(releaseWorkflow).toContain('uses: ./.github/workflows/deploy.yml');
     expect(releaseWorkflow).toContain('ref: ${{ github.ref_name }}');
