@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-404 — [PERF] Remove duplicate site Vitest invocations
-- Dependency: None.
-- Why: The accessibility and localization test file runs in two focused commands and again in the full suite.
-- Scope: Remove the two focused invocations from check after proving the full suite runs every assertion; keep focused commands available.
-- Non-goals: Do not drop unique assertions or change the four required exact-head CI statuses.
-- Acceptance: One run of each assertion in check; unchanged static accessibility and localization coverage.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: package.json; tests/demo-354-acceptance-ownership.test.mjs
-
 ### DEMO-405 — [PERF] Remove the extra route test invocation
 - Dependency: DEMO-404.
 - Why: Route artifacts run in generator parity and separately in check and the full suite.
