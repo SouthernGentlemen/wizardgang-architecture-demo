@@ -83,7 +83,7 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governance部分的評価The information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.不足しているものComplete AW-001 and retain attributable awareness evidence.評価日2026-09-17要件ソースを開く評価記録を開くドキュメントエビデンスdocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review Gap A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的 フレームワークとセクションを対話的に切り替えるにはJavaScriptが必要です。適用宣言は引き続き確認できます:ISO/IEC 27001 適用宣言ISO/IEC 42001 適用宣言WCAG 2.2 accessibility documentation"
+        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 適合0 部分的35 ギャップ1 N/A1 フレームワークの状態 適合0 部分的97 ギャップ6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governance部分的評価The information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.不足しているものComplete AW-001 and retain attributable awareness evidence.評価日2026-09-17要件ソースを開く評価記録を開くドキュメントエビデンスdocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review ギャップ A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的 フレームワークとセクションを対話的に切り替えるにはJavaScriptが必要です。適用宣言は引き続き確認できます:ISO/IEC 27001 適用宣言ISO/IEC 42001 適用宣言WCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
@@ -308,7 +308,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "A.5.35 Independent security review Gap"
+        "name": "A.5.35 Independent security review ギャップ"
       },
       {
         "element": "a",
@@ -671,7 +671,7 @@
     "headings": [
       {
         "level": 1,
-        "text": "Architecture Demos"
+        "text": "アーキテクチャのデモ"
       },
       {
         "level": 2,
@@ -679,7 +679,7 @@
       },
       {
         "level": 2,
-        "text": "Reset this demo?"
+        "text": "このデモをリセットしますか?"
       },
       {
         "level": 2,
@@ -687,27 +687,27 @@
       },
       {
         "level": 3,
-        "text": "Users"
+        "text": "ユーザー"
       },
       {
         "level": 3,
-        "text": "Tasks"
+        "text": "タスク"
       },
       {
         "level": 3,
-        "text": "SQL Inspector"
+        "text": "SQLインスペクター"
       },
       {
         "level": 3,
-        "text": "Delete row?"
+        "text": "行を削除しますか?"
       },
       {
         "level": 3,
-        "text": "Guide"
+        "text": "ガイド"
       },
       {
         "level": 3,
-        "text": "Request"
+        "text": "リクエスト"
       },
       {
         "level": 3,
@@ -768,17 +768,17 @@
       {
         "element": "a",
         "role": "tab",
-        "name": "Data"
+        "name": "データ"
       },
       {
         "element": "a",
         "role": "tab",
-        "name": "APIs"
+        "name": "API"
       },
       {
         "element": "a",
         "role": "tab",
-        "name": "Integrations"
+        "name": "統合"
       },
       {
         "element": "a",
@@ -798,12 +798,12 @@
       {
         "element": "a",
         "role": "tab",
-        "name": "Quality"
+        "name": "品質"
       },
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Data demos"
+        "name": "データデモ"
       },
       {
         "element": "a",
@@ -818,7 +818,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "APIs demos"
+        "name": "APIのデモ"
       },
       {
         "element": "a",
@@ -833,7 +833,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Identity demos"
+        "name": "アイデンティティのデモ"
       },
       {
         "element": "a",
@@ -853,7 +853,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Platform demos"
+        "name": "プラットフォームのデモ"
       },
       {
         "element": "a",
@@ -873,7 +873,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Quality demos"
+        "name": "高品質のデモ"
       },
       {
         "element": "a",
@@ -888,67 +888,12 @@
       {
         "element": "button",
         "role": null,
-        "name": "Reset demo"
+        "name": "リセットデモ"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Inspector"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "キャンセル"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Confirm reset"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Users — / 10"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Tasks — / 25"
-      },
-      {
-        "element": "section",
-        "role": "tabpanel",
-        "name": "Users — / 10"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "+ Add user"
-      },
-      {
-        "element": "form",
-        "role": null,
-        "name": "Add userMaximum 10 users Name Email RoleAdminMemberViewer Create userキャンセル"
-      },
-      {
-        "element": "input",
-        "role": null,
-        "name": "Name"
-      },
-      {
-        "element": "input",
-        "role": null,
-        "name": "Email"
-      },
-      {
-        "element": "select",
-        "role": null,
-        "name": "Role"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Create user"
+        "name": "検査官"
       },
       {
         "element": "button",
@@ -956,29 +901,84 @@
         "name": "キャンセル"
       },
       {
+        "element": "button",
+        "role": null,
+        "name": "リセットの確認"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "ユーザー — / 10"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "タスク — / 25"
+      },
+      {
         "element": "section",
         "role": "tabpanel",
-        "name": "Tasks — / 25"
+        "name": "ユーザー — / 10"
       },
       {
         "element": "button",
         "role": null,
-        "name": "+ Add task"
+        "name": "+ ユーザーを追加"
       },
       {
         "element": "form",
         "role": null,
-        "name": "Add taskMaximum 25 tasks Task title AssigneeUnassigned 状態To doIn progressDone Create taskキャンセル"
+        "name": "ユーザーの追加最大10ユーザー 名前 電子メール 役割管理者メンバービューア ユーザーの作成キャンセル"
       },
       {
         "element": "input",
         "role": null,
-        "name": "Task title"
+        "name": "名前"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "電子メール"
       },
       {
         "element": "select",
         "role": null,
-        "name": "Assignee"
+        "name": "役割"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "ユーザーの作成"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "キャンセル"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "タスク — / 25"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "+ タスクを追加"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "タスクの追加最大25のタスク タスクのタイトル 譲受人未割り当て 状態やること進行中完了 タスクの作成キャンセル"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "タスクのタイトル"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "譲受人"
       },
       {
         "element": "select",
@@ -988,7 +988,7 @@
       {
         "element": "button",
         "role": null,
-        "name": "Create task"
+        "name": "タスクの作成"
       },
       {
         "element": "button",
@@ -998,7 +998,7 @@
       {
         "element": "aside",
         "role": "complementary",
-        "name": "Live database evidenceSQL Inspector 待機中 Choose a tableNo query yet Statement Select a table or modify a row to inspect its parameterized SQL. Response JSONNo response yet."
+        "name": "ライブデータベースの証拠SQLインスペクター 待機中 テーブルを選択してくださいまだクエリがありません 声明 テーブルを選択するか行を変更して、パラメータ化された SQL を検査します。 応答のJSONまだ応答がありません。"
       },
       {
         "element": "button",
@@ -1013,12 +1013,12 @@
       {
         "element": "aside",
         "role": "complementary",
-        "name": "D1 inspector"
+        "name": "D1 インスペクター"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Close inspector"
+        "name": "インスペクタを閉じる"
       },
       {
         "element": "a",
@@ -1028,12 +1028,12 @@
       {
         "element": "button",
         "role": "tab",
-        "name": "Guide"
+        "name": "ガイド"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Request"
+        "name": "リクエスト"
       },
       {
         "element": "button",
@@ -1043,7 +1043,7 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "Guide"
+        "name": "ガイド"
       },
       {
         "element": "a",
@@ -1077,15 +1077,15 @@
       },
       {
         "name": "name",
-        "label": "Name"
+        "label": "名前"
       },
       {
         "name": "email",
-        "label": "Email"
+        "label": "電子メール"
       },
       {
         "name": "role",
-        "label": "Role"
+        "label": "役割"
       },
       {
         "name": "id",
@@ -1093,11 +1093,11 @@
       },
       {
         "name": "title",
-        "label": "Task title"
+        "label": "タスクのタイトル"
       },
       {
         "name": "assigneeId",
-        "label": "Assignee"
+        "label": "譲受人"
       },
       {
         "name": "status",
@@ -1189,7 +1189,7 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governance部分的評価The information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.不足しているものComplete AW-001 and retain attributable awareness evidence.評価日2026-09-17要件ソースを開く評価記録を開くドキュメントエビデンスdocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review Gap A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的 フレームワークとセクションを対話的に切り替えるにはJavaScriptが必要です。適用宣言は引き続き確認できます:ISO/IEC 27001 適用宣言ISO/IEC 42001 適用宣言WCAG 2.2 accessibility documentation"
+        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 適合0 部分的35 ギャップ1 N/A1 フレームワークの状態 適合0 部分的97 ギャップ6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governance部分的評価The information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.不足しているものComplete AW-001 and retain attributable awareness evidence.評価日2026-09-17要件ソースを開く評価記録を開くドキュメントエビデンスdocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review ギャップ A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的 フレームワークとセクションを対話的に切り替えるにはJavaScriptが必要です。適用宣言は引き続き確認できます:ISO/IEC 27001 適用宣言ISO/IEC 42001 適用宣言WCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
@@ -1414,7 +1414,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "A.5.35 Independent security review Gap"
+        "name": "A.5.35 Independent security review ギャップ"
       },
       {
         "element": "a",
@@ -1557,7 +1557,7 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governance部分的評価The information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.不足しているものComplete AW-001 and retain attributable awareness evidence.評価日2026-09-17要件ソースを開く評価記録を開くドキュメントエビデンスdocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review Gap A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的 フレームワークとセクションを対話的に切り替えるにはJavaScriptが必要です。適用宣言は引き続き確認できます:ISO/IEC 27001 適用宣言ISO/IEC 42001 適用宣言WCAG 2.2 accessibility documentation"
+        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 適合0 部分的35 ギャップ1 N/A1 フレームワークの状態 適合0 部分的97 ギャップ6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governance部分的評価The information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.不足しているものComplete AW-001 and retain attributable awareness evidence.評価日2026-09-17要件ソースを開く評価記録を開くドキュメントエビデンスdocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review ギャップ A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的 フレームワークとセクションを対話的に切り替えるにはJavaScriptが必要です。適用宣言は引き続き確認できます:ISO/IEC 27001 適用宣言ISO/IEC 42001 適用宣言WCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
@@ -1782,7 +1782,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "A.5.35 Independent security review Gap"
+        "name": "A.5.35 Independent security review ギャップ"
       },
       {
         "element": "a",
@@ -1925,7 +1925,7 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governance部分的評価The information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.不足しているものComplete AW-001 and retain attributable awareness evidence.評価日2026-09-17要件ソースを開く評価記録を開くドキュメントエビデンスdocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review Gap A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的 フレームワークとセクションを対話的に切り替えるにはJavaScriptが必要です。適用宣言は引き続き確認できます:ISO/IEC 27001 適用宣言ISO/IEC 42001 適用宣言WCAG 2.2 accessibility documentation"
+        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 適合0 部分的35 ギャップ1 N/A1 フレームワークの状態 適合0 部分的97 ギャップ6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governance部分的評価The information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.不足しているものComplete AW-001 and retain attributable awareness evidence.評価日2026-09-17要件ソースを開く評価記録を開くドキュメントエビデンスdocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review ギャップ A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的 フレームワークとセクションを対話的に切り替えるにはJavaScriptが必要です。適用宣言は引き続き確認できます:ISO/IEC 27001 適用宣言ISO/IEC 42001 適用宣言WCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
@@ -2150,7 +2150,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "A.5.35 Independent security review Gap"
+        "name": "A.5.35 Independent security review ギャップ"
       },
       {
         "element": "a",
@@ -2293,7 +2293,7 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 Pass0 部分的35 Gap1 N/A1 フレームワークの状態 Pass0 部分的97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governance部分的評価The information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.不足しているものComplete AW-001 and retain attributable awareness evidence.評価日2026-09-17要件ソースを開く評価記録を開くドキュメントエビデンスdocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review Gap A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的 フレームワークとセクションを対話的に切り替えるにはJavaScriptが必要です。適用宣言は引き続き確認できます:ISO/IEC 27001 適用宣言ISO/IEC 42001 適用宣言WCAG 2.2 accessibility documentation"
+        "name": "セクションClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 セクションの状態 適合0 部分的35 ギャップ1 N/A1 フレームワークの状態 適合0 部分的97 ギャップ6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governance部分的評価The information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.不足しているものComplete AW-001 and retain attributable awareness evidence.評価日2026-09-17要件ソースを開く評価記録を開くドキュメントエビデンスdocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments文書を開く: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments 記録37 A.5.1 Security policy governance 部分的 A.5.2 Assigned security accountabilities 部分的 A.5.3 Separation of conflicting duties 部分的 A.5.4 Leadership security responsibilities 部分的 A.5.5 Authority contact readiness 部分的 A.5.6 Security community contacts 部分的 A.5.7 Threat information handling 部分的 A.5.8 Security in managed projects 部分的 A.5.9 Asset and information inventory 部分的 A.5.10 Acceptable use expectations 部分的 A.5.11 Return of issued assets N/A A.5.12 Information classification model 部分的 A.5.13 Classification labels and handling 部分的 A.5.14 Protected information transfer 部分的 A.5.15 Access governance 部分的 A.5.16 Identity lifecycle management 部分的 A.5.17 Authentication secret management 部分的 A.5.18 Access provisioning and review 部分的 A.5.19 Supplier security governance 部分的 A.5.20 Security terms for suppliers 部分的 A.5.21 ICT supply-chain security 部分的 A.5.22 Supplier service review and change 部分的 A.5.23 Cloud service security governance 部分的 A.5.24 Incident response preparation 部分的 A.5.25 Security event triage 部分的 A.5.26 Incident response execution 部分的 A.5.27 Learning from incidents 部分的 A.5.28 Preserving investigative evidence 部分的 A.5.29 Secure operation during disruption 部分的 A.5.30 Technology continuity readiness 部分的 A.5.31 Legal and contractual obligations 部分的 A.5.32 Intellectual property safeguards 部分的 A.5.33 Protected business records 部分的 A.5.34 Privacy and personal-data safeguards 部分的 A.5.35 Independent security review ギャップ A.5.36 Compliance with security rules 部分的 A.5.37 Documented operating procedures 部分的 フレームワークとセクションを対話的に切り替えるにはJavaScriptが必要です。適用宣言は引き続き確認できます:ISO/IEC 27001 適用宣言ISO/IEC 42001 適用宣言WCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
@@ -2518,7 +2518,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "A.5.35 Independent security review Gap"
+        "name": "A.5.35 Independent security review ギャップ"
       },
       {
         "element": "a",
@@ -2581,7 +2581,7 @@
     "headings": [
       {
         "level": 1,
-        "text": "Architecture Demos"
+        "text": "アーキテクチャのデモ"
       },
       {
         "level": 2,
@@ -2589,7 +2589,7 @@
       },
       {
         "level": 2,
-        "text": "Reset this demo?"
+        "text": "このデモをリセットしますか?"
       },
       {
         "level": 2,
@@ -2597,27 +2597,27 @@
       },
       {
         "level": 3,
-        "text": "Users"
+        "text": "ユーザー"
       },
       {
         "level": 3,
-        "text": "Tasks"
+        "text": "タスク"
       },
       {
         "level": 3,
-        "text": "SQL Inspector"
+        "text": "SQLインスペクター"
       },
       {
         "level": 3,
-        "text": "Delete row?"
+        "text": "行を削除しますか?"
       },
       {
         "level": 3,
-        "text": "Guide"
+        "text": "ガイド"
       },
       {
         "level": 3,
-        "text": "Request"
+        "text": "リクエスト"
       },
       {
         "level": 3,
@@ -2678,17 +2678,17 @@
       {
         "element": "a",
         "role": "tab",
-        "name": "Data"
+        "name": "データ"
       },
       {
         "element": "a",
         "role": "tab",
-        "name": "APIs"
+        "name": "API"
       },
       {
         "element": "a",
         "role": "tab",
-        "name": "Integrations"
+        "name": "統合"
       },
       {
         "element": "a",
@@ -2708,12 +2708,12 @@
       {
         "element": "a",
         "role": "tab",
-        "name": "Quality"
+        "name": "品質"
       },
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Data demos"
+        "name": "データデモ"
       },
       {
         "element": "a",
@@ -2728,7 +2728,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "APIs demos"
+        "name": "APIのデモ"
       },
       {
         "element": "a",
@@ -2743,7 +2743,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Identity demos"
+        "name": "アイデンティティのデモ"
       },
       {
         "element": "a",
@@ -2763,7 +2763,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Platform demos"
+        "name": "プラットフォームのデモ"
       },
       {
         "element": "a",
@@ -2783,7 +2783,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Quality demos"
+        "name": "高品質のデモ"
       },
       {
         "element": "a",
@@ -2798,67 +2798,12 @@
       {
         "element": "button",
         "role": null,
-        "name": "Reset demo"
+        "name": "リセットデモ"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Inspector"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "キャンセル"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Confirm reset"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Users — / 10"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Tasks — / 25"
-      },
-      {
-        "element": "section",
-        "role": "tabpanel",
-        "name": "Users — / 10"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "+ Add user"
-      },
-      {
-        "element": "form",
-        "role": null,
-        "name": "Add userMaximum 10 users Name Email RoleAdminMemberViewer Create userキャンセル"
-      },
-      {
-        "element": "input",
-        "role": null,
-        "name": "Name"
-      },
-      {
-        "element": "input",
-        "role": null,
-        "name": "Email"
-      },
-      {
-        "element": "select",
-        "role": null,
-        "name": "Role"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Create user"
+        "name": "検査官"
       },
       {
         "element": "button",
@@ -2866,29 +2811,84 @@
         "name": "キャンセル"
       },
       {
+        "element": "button",
+        "role": null,
+        "name": "リセットの確認"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "ユーザー — / 10"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "タスク — / 25"
+      },
+      {
         "element": "section",
         "role": "tabpanel",
-        "name": "Tasks — / 25"
+        "name": "ユーザー — / 10"
       },
       {
         "element": "button",
         "role": null,
-        "name": "+ Add task"
+        "name": "+ ユーザーを追加"
       },
       {
         "element": "form",
         "role": null,
-        "name": "Add taskMaximum 25 tasks Task title AssigneeUnassigned 状態To doIn progressDone Create taskキャンセル"
+        "name": "ユーザーの追加最大10ユーザー 名前 電子メール 役割管理者メンバービューア ユーザーの作成キャンセル"
       },
       {
         "element": "input",
         "role": null,
-        "name": "Task title"
+        "name": "名前"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "電子メール"
       },
       {
         "element": "select",
         "role": null,
-        "name": "Assignee"
+        "name": "役割"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "ユーザーの作成"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "キャンセル"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "タスク — / 25"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "+ タスクを追加"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "タスクの追加最大25のタスク タスクのタイトル 譲受人未割り当て 状態やること進行中完了 タスクの作成キャンセル"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "タスクのタイトル"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "譲受人"
       },
       {
         "element": "select",
@@ -2898,7 +2898,7 @@
       {
         "element": "button",
         "role": null,
-        "name": "Create task"
+        "name": "タスクの作成"
       },
       {
         "element": "button",
@@ -2908,7 +2908,7 @@
       {
         "element": "aside",
         "role": "complementary",
-        "name": "Live database evidenceSQL Inspector 待機中 Choose a tableNo query yet Statement Select a table or modify a row to inspect its parameterized SQL. Response JSONNo response yet."
+        "name": "ライブデータベースの証拠SQLインスペクター 待機中 テーブルを選択してくださいまだクエリがありません 声明 テーブルを選択するか行を変更して、パラメータ化された SQL を検査します。 応答のJSONまだ応答がありません。"
       },
       {
         "element": "button",
@@ -2923,12 +2923,12 @@
       {
         "element": "aside",
         "role": "complementary",
-        "name": "D1 inspector"
+        "name": "D1 インスペクター"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Close inspector"
+        "name": "インスペクタを閉じる"
       },
       {
         "element": "a",
@@ -2938,12 +2938,12 @@
       {
         "element": "button",
         "role": "tab",
-        "name": "Guide"
+        "name": "ガイド"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Request"
+        "name": "リクエスト"
       },
       {
         "element": "button",
@@ -2953,7 +2953,7 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "Guide"
+        "name": "ガイド"
       },
       {
         "element": "a",
@@ -2987,15 +2987,15 @@
       },
       {
         "name": "name",
-        "label": "Name"
+        "label": "名前"
       },
       {
         "name": "email",
-        "label": "Email"
+        "label": "電子メール"
       },
       {
         "name": "role",
-        "label": "Role"
+        "label": "役割"
       },
       {
         "name": "id",
@@ -3003,11 +3003,11 @@
       },
       {
         "name": "title",
-        "label": "Task title"
+        "label": "タスクのタイトル"
       },
       {
         "name": "assigneeId",
-        "label": "Assignee"
+        "label": "譲受人"
       },
       {
         "name": "status",
@@ -3019,7 +3019,7 @@
     "headings": [
       {
         "level": 1,
-        "text": "Architecture Demos"
+        "text": "アーキテクチャのデモ"
       },
       {
         "level": 2,
@@ -3027,7 +3027,7 @@
       },
       {
         "level": 2,
-        "text": "Reset this demo?"
+        "text": "このデモをリセットしますか?"
       },
       {
         "level": 2,
@@ -3035,27 +3035,27 @@
       },
       {
         "level": 3,
-        "text": "Users"
+        "text": "ユーザー"
       },
       {
         "level": 3,
-        "text": "Tasks"
+        "text": "タスク"
       },
       {
         "level": 3,
-        "text": "SQL Inspector"
+        "text": "SQLインスペクター"
       },
       {
         "level": 3,
-        "text": "Delete row?"
+        "text": "行を削除しますか?"
       },
       {
         "level": 3,
-        "text": "Guide"
+        "text": "ガイド"
       },
       {
         "level": 3,
-        "text": "Request"
+        "text": "リクエスト"
       },
       {
         "level": 3,
@@ -3116,17 +3116,17 @@
       {
         "element": "a",
         "role": "tab",
-        "name": "Data"
+        "name": "データ"
       },
       {
         "element": "a",
         "role": "tab",
-        "name": "APIs"
+        "name": "API"
       },
       {
         "element": "a",
         "role": "tab",
-        "name": "Integrations"
+        "name": "統合"
       },
       {
         "element": "a",
@@ -3146,12 +3146,12 @@
       {
         "element": "a",
         "role": "tab",
-        "name": "Quality"
+        "name": "品質"
       },
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Data demos"
+        "name": "データデモ"
       },
       {
         "element": "a",
@@ -3166,7 +3166,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "APIs demos"
+        "name": "APIのデモ"
       },
       {
         "element": "a",
@@ -3181,7 +3181,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Identity demos"
+        "name": "アイデンティティのデモ"
       },
       {
         "element": "a",
@@ -3201,7 +3201,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Platform demos"
+        "name": "プラットフォームのデモ"
       },
       {
         "element": "a",
@@ -3221,7 +3221,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Quality demos"
+        "name": "高品質のデモ"
       },
       {
         "element": "a",
@@ -3236,67 +3236,12 @@
       {
         "element": "button",
         "role": null,
-        "name": "Reset demo"
+        "name": "リセットデモ"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Inspector"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "キャンセル"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Confirm reset"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Users — / 10"
-      },
-      {
-        "element": "button",
-        "role": "tab",
-        "name": "Tasks — / 25"
-      },
-      {
-        "element": "section",
-        "role": "tabpanel",
-        "name": "Users — / 10"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "+ Add user"
-      },
-      {
-        "element": "form",
-        "role": null,
-        "name": "Add userMaximum 10 users Name Email RoleAdminMemberViewer Create userキャンセル"
-      },
-      {
-        "element": "input",
-        "role": null,
-        "name": "Name"
-      },
-      {
-        "element": "input",
-        "role": null,
-        "name": "Email"
-      },
-      {
-        "element": "select",
-        "role": null,
-        "name": "Role"
-      },
-      {
-        "element": "button",
-        "role": null,
-        "name": "Create user"
+        "name": "検査官"
       },
       {
         "element": "button",
@@ -3304,29 +3249,84 @@
         "name": "キャンセル"
       },
       {
+        "element": "button",
+        "role": null,
+        "name": "リセットの確認"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "ユーザー — / 10"
+      },
+      {
+        "element": "button",
+        "role": "tab",
+        "name": "タスク — / 25"
+      },
+      {
         "element": "section",
         "role": "tabpanel",
-        "name": "Tasks — / 25"
+        "name": "ユーザー — / 10"
       },
       {
         "element": "button",
         "role": null,
-        "name": "+ Add task"
+        "name": "+ ユーザーを追加"
       },
       {
         "element": "form",
         "role": null,
-        "name": "Add taskMaximum 25 tasks Task title AssigneeUnassigned 状態To doIn progressDone Create taskキャンセル"
+        "name": "ユーザーの追加最大10ユーザー 名前 電子メール 役割管理者メンバービューア ユーザーの作成キャンセル"
       },
       {
         "element": "input",
         "role": null,
-        "name": "Task title"
+        "name": "名前"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "電子メール"
       },
       {
         "element": "select",
         "role": null,
-        "name": "Assignee"
+        "name": "役割"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "ユーザーの作成"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "キャンセル"
+      },
+      {
+        "element": "section",
+        "role": "tabpanel",
+        "name": "タスク — / 25"
+      },
+      {
+        "element": "button",
+        "role": null,
+        "name": "+ タスクを追加"
+      },
+      {
+        "element": "form",
+        "role": null,
+        "name": "タスクの追加最大25のタスク タスクのタイトル 譲受人未割り当て 状態やること進行中完了 タスクの作成キャンセル"
+      },
+      {
+        "element": "input",
+        "role": null,
+        "name": "タスクのタイトル"
+      },
+      {
+        "element": "select",
+        "role": null,
+        "name": "譲受人"
       },
       {
         "element": "select",
@@ -3336,7 +3336,7 @@
       {
         "element": "button",
         "role": null,
-        "name": "Create task"
+        "name": "タスクの作成"
       },
       {
         "element": "button",
@@ -3346,7 +3346,7 @@
       {
         "element": "aside",
         "role": "complementary",
-        "name": "Live database evidenceSQL Inspector 待機中 Choose a tableNo query yet Statement Select a table or modify a row to inspect its parameterized SQL. Response JSONNo response yet."
+        "name": "ライブデータベースの証拠SQLインスペクター 待機中 テーブルを選択してくださいまだクエリがありません 声明 テーブルを選択するか行を変更して、パラメータ化された SQL を検査します。 応答のJSONまだ応答がありません。"
       },
       {
         "element": "button",
@@ -3361,12 +3361,12 @@
       {
         "element": "aside",
         "role": "complementary",
-        "name": "D1 inspector"
+        "name": "D1 インスペクター"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Close inspector"
+        "name": "インスペクタを閉じる"
       },
       {
         "element": "a",
@@ -3376,12 +3376,12 @@
       {
         "element": "button",
         "role": "tab",
-        "name": "Guide"
+        "name": "ガイド"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Request"
+        "name": "リクエスト"
       },
       {
         "element": "button",
@@ -3391,7 +3391,7 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "Guide"
+        "name": "ガイド"
       },
       {
         "element": "a",
@@ -3425,15 +3425,15 @@
       },
       {
         "name": "name",
-        "label": "Name"
+        "label": "名前"
       },
       {
         "name": "email",
-        "label": "Email"
+        "label": "電子メール"
       },
       {
         "name": "role",
-        "label": "Role"
+        "label": "役割"
       },
       {
         "name": "id",
@@ -3441,11 +3441,11 @@
       },
       {
         "name": "title",
-        "label": "Task title"
+        "label": "タスクのタイトル"
       },
       {
         "name": "assigneeId",
-        "label": "Assignee"
+        "label": "譲受人"
       },
       {
         "name": "status",
@@ -3978,66 +3978,66 @@
       },
       {
         "level": 3,
-        "text": "Users"
+        "text": "ユーザー"
       },
       {
         "level": 3,
-        "text": "Tasks"
+        "text": "タスク"
       },
       {
         "level": 3,
-        "text": "SQL Inspector"
+        "text": "SQLインスペクター"
       },
       {
         "level": 3,
-        "text": "Delete row?"
+        "text": "行を削除しますか?"
       }
     ],
     "accessibleNames": [
       {
         "element": "button",
         "role": "tab",
-        "name": "Users — / 10"
+        "name": "ユーザー — / 10"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Tasks — / 25"
+        "name": "タスク — / 25"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Users — / 10"
+        "name": "ユーザー — / 10"
       },
       {
         "element": "button",
         "role": null,
-        "name": "+ Add user"
+        "name": "+ ユーザーを追加"
       },
       {
         "element": "form",
         "role": null,
-        "name": "Add userMaximum 10 users Name Email RoleAdminMemberViewer Create userキャンセル"
+        "name": "ユーザーの追加最大10ユーザー 名前 電子メール 役割管理者メンバービューア ユーザーの作成キャンセル"
       },
       {
         "element": "input",
         "role": null,
-        "name": "Name"
+        "name": "名前"
       },
       {
         "element": "input",
         "role": null,
-        "name": "Email"
+        "name": "電子メール"
       },
       {
         "element": "select",
         "role": null,
-        "name": "Role"
+        "name": "役割"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Create user"
+        "name": "ユーザーの作成"
       },
       {
         "element": "button",
@@ -4047,27 +4047,27 @@
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Tasks — / 25"
+        "name": "タスク — / 25"
       },
       {
         "element": "button",
         "role": null,
-        "name": "+ Add task"
+        "name": "+ タスクを追加"
       },
       {
         "element": "form",
         "role": null,
-        "name": "Add taskMaximum 25 tasks Task title AssigneeUnassigned 状態To doIn progressDone Create taskキャンセル"
+        "name": "タスクの追加最大25のタスク タスクのタイトル 譲受人未割り当て 状態やること進行中完了 タスクの作成キャンセル"
       },
       {
         "element": "input",
         "role": null,
-        "name": "Task title"
+        "name": "タスクのタイトル"
       },
       {
         "element": "select",
         "role": null,
-        "name": "Assignee"
+        "name": "譲受人"
       },
       {
         "element": "select",
@@ -4077,7 +4077,7 @@
       {
         "element": "button",
         "role": null,
-        "name": "Create task"
+        "name": "タスクの作成"
       },
       {
         "element": "button",
@@ -4087,7 +4087,7 @@
       {
         "element": "aside",
         "role": "complementary",
-        "name": "Live database evidenceSQL Inspector 待機中 Choose a tableNo query yet Statement Select a table or modify a row to inspect its parameterized SQL. Response JSONNo response yet."
+        "name": "ライブデータベースの証拠SQLインスペクター 待機中 テーブルを選択してくださいまだクエリがありません 声明 テーブルを選択するか行を変更して、パラメータ化された SQL を検査します。 応答のJSONまだ応答がありません。"
       },
       {
         "element": "button",
@@ -4107,15 +4107,15 @@
       },
       {
         "name": "name",
-        "label": "Name"
+        "label": "名前"
       },
       {
         "name": "email",
-        "label": "Email"
+        "label": "電子メール"
       },
       {
         "name": "role",
-        "label": "Role"
+        "label": "役割"
       },
       {
         "name": "id",
@@ -4123,11 +4123,11 @@
       },
       {
         "name": "title",
-        "label": "Task title"
+        "label": "タスクのタイトル"
       },
       {
         "name": "assigneeId",
-        "label": "Assignee"
+        "label": "譲受人"
       },
       {
         "name": "status",
@@ -4143,32 +4143,32 @@
       },
       {
         "level": 3,
-        "text": "Your R2 sandbox"
+        "text": "R2 サンドボックス"
       },
       {
         "level": 4,
-        "text": "Files"
+        "text": "ファイル"
       },
       {
         "level": 3,
-        "text": "Latest operation"
+        "text": "最新の動作"
       }
     ],
     "accessibleNames": [
       {
         "element": "form",
         "role": null,
-        "name": "Drop a file here Choose a file or Browse files 5 MiB maximum ファイルをアップロード Select one file to begin."
+        "name": "ここにファイルをドロップします ファイルを選択してください または ファイルを参照する 最大5MiB ファイルをアップロード 開始するにはファイルを 1 つ選択してください。"
       },
       {
         "element": "input",
         "role": null,
-        "name": "↑ Drop a file here Choose a file or Browse files 5 MiB maximum"
+        "name": "↑ ここにファイルをドロップします ファイルを選択してください または ファイルを参照する 最大5MiB"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Clear selected file"
+        "name": "選択したファイルをクリア"
       },
       {
         "element": "button",
@@ -4178,18 +4178,18 @@
       {
         "element": "button",
         "role": null,
-        "name": "Refresh files"
+        "name": "ファイルを更新する"
       },
       {
         "element": "aside",
         "role": "complementary",
-        "name": "Live requestLatest operation待機中 Method— 状態— Round trip— Choose an action to inspect the live result. View response JSONNo request yet."
+        "name": "ライブリクエスト最新の動作待機中 方法— 状態— 往復— ライブ結果を検査するアクションを選択します。 応答の JSON を表示するまだリクエストはありません。"
       }
     ],
     "labels": [
       {
         "name": "file",
-        "label": "↑ Drop a file here Choose a file or Browse files 5 MiB maximum"
+        "label": "↑ ここにファイルをドロップします ファイルを選択してください または ファイルを参照する 最大5MiB"
       }
     ]
   },
@@ -4197,11 +4197,11 @@
     "headings": [
       {
         "level": 2,
-        "text": "WizardGang REST demo 1.0.0"
+        "text": "WizardGang REST デモ 1.0.0"
       },
       {
         "level": 3,
-        "text": "Servers"
+        "text": "サーバー"
       },
       {
         "level": 3,
@@ -4213,11 +4213,11 @@
       },
       {
         "level": 4,
-        "text": "Parameters"
+        "text": "パラメータ"
       },
       {
         "level": 4,
-        "text": "Responses"
+        "text": "応答"
       },
       {
         "level": 4,
@@ -4225,27 +4225,15 @@
       },
       {
         "level": 4,
-        "text": "Parameters"
+        "text": "パラメータ"
       },
       {
         "level": 5,
-        "text": "Request body"
+        "text": "リクエストボディ"
       },
       {
         "level": 4,
-        "text": "Responses"
-      },
-      {
-        "level": 4,
-        "text": "試す"
-      },
-      {
-        "level": 4,
-        "text": "Parameters"
-      },
-      {
-        "level": 4,
-        "text": "Responses"
+        "text": "応答"
       },
       {
         "level": 4,
@@ -4253,15 +4241,27 @@
       },
       {
         "level": 4,
-        "text": "Parameters"
+        "text": "パラメータ"
+      },
+      {
+        "level": 4,
+        "text": "応答"
+      },
+      {
+        "level": 4,
+        "text": "試す"
+      },
+      {
+        "level": 4,
+        "text": "パラメータ"
       },
       {
         "level": 5,
-        "text": "Request body"
+        "text": "リクエストボディ"
       },
       {
         "level": 4,
-        "text": "Responses"
+        "text": "応答"
       },
       {
         "level": 4,
@@ -4269,15 +4269,15 @@
       },
       {
         "level": 4,
-        "text": "Parameters"
+        "text": "パラメータ"
       },
       {
         "level": 5,
-        "text": "Request body"
+        "text": "リクエストボディ"
       },
       {
         "level": 4,
-        "text": "Responses"
+        "text": "応答"
       },
       {
         "level": 4,
@@ -4285,11 +4285,11 @@
       },
       {
         "level": 4,
-        "text": "Parameters"
+        "text": "パラメータ"
       },
       {
         "level": 4,
-        "text": "Responses"
+        "text": "応答"
       },
       {
         "level": 4,
@@ -4297,24 +4297,24 @@
       },
       {
         "level": 3,
-        "text": "Schemas"
+        "text": "スキーマ"
       }
     ],
     "accessibleNames": [
       {
         "element": "nav",
         "role": "navigation",
-        "name": "OpenAPI documents"
+        "name": "OpenAPI ドキュメント"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Raw REST OpenAPI JSON"
+        "name": "生の REST OpenAPI JSON"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Machine API OpenAPI JSON"
+        "name": "マシン API OpenAPI JSON"
       },
       {
         "element": "form",
@@ -4329,12 +4329,12 @@
       {
         "element": "form",
         "role": null,
-        "name": "Request body application/json · RecordInput{ \"key\": \"hello\", \"value\": { \"message\": \"Hello from a Worker\" } }実行"
+        "name": "リクエストボディ application/json · RecordInput{ \"key\": \"hello\", \"value\": { \"message\": \"Hello from a Worker\" } }実行"
       },
       {
         "element": "textarea",
         "role": null,
-        "name": "Request body application/json · RecordInput"
+        "name": "リクエストボディ application/json · RecordInput"
       },
       {
         "element": "button",
@@ -4344,12 +4344,12 @@
       {
         "element": "form",
         "role": null,
-        "name": "id path · required · string実行"
+        "name": "id path · 必須 · string実行"
       },
       {
         "element": "input",
         "role": null,
-        "name": "id path · required · string"
+        "name": "id path · 必須 · string"
       },
       {
         "element": "button",
@@ -4359,17 +4359,17 @@
       {
         "element": "form",
         "role": null,
-        "name": "id path · required · stringRequest body application/json · RecordReplacement{ \"value\": { \"message\": \"Replaced by a Worker\" } }実行"
+        "name": "id path · 必須 · stringリクエストボディ application/json · RecordReplacement{ \"value\": { \"message\": \"Replaced by a Worker\" } }実行"
       },
       {
         "element": "input",
         "role": null,
-        "name": "id path · required · string"
+        "name": "id path · 必須 · string"
       },
       {
         "element": "textarea",
         "role": null,
-        "name": "Request body application/json · RecordReplacement"
+        "name": "リクエストボディ application/json · RecordReplacement"
       },
       {
         "element": "button",
@@ -4379,17 +4379,17 @@
       {
         "element": "form",
         "role": null,
-        "name": "id path · required · stringRequest body application/json · RecordPatch{ \"value\": { \"message\": \"Patched by a Worker\", \"priority\": \"high\" } }実行"
+        "name": "id path · 必須 · stringリクエストボディ application/json · RecordPatch{ \"value\": { \"message\": \"Patched by a Worker\", \"priority\": \"high\" } }実行"
       },
       {
         "element": "input",
         "role": null,
-        "name": "id path · required · string"
+        "name": "id path · 必須 · string"
       },
       {
         "element": "textarea",
         "role": null,
-        "name": "Request body application/json · RecordPatch"
+        "name": "リクエストボディ application/json · RecordPatch"
       },
       {
         "element": "button",
@@ -4399,12 +4399,12 @@
       {
         "element": "form",
         "role": null,
-        "name": "id path · required · string実行"
+        "name": "id path · 必須 · string実行"
       },
       {
         "element": "input",
         "role": null,
-        "name": "id path · required · string"
+        "name": "id path · 必須 · string"
       },
       {
         "element": "button",
@@ -4415,31 +4415,31 @@
     "labels": [
       {
         "name": null,
-        "label": "Request body application/json · RecordInput"
+        "label": "リクエストボディ application/json · RecordInput"
       },
       {
         "name": null,
-        "label": "id path · required · string"
+        "label": "id path · 必須 · string"
       },
       {
         "name": null,
-        "label": "id path · required · string"
+        "label": "id path · 必須 · string"
       },
       {
         "name": null,
-        "label": "Request body application/json · RecordReplacement"
+        "label": "リクエストボディ application/json · RecordReplacement"
       },
       {
         "name": null,
-        "label": "id path · required · string"
+        "label": "id path · 必須 · string"
       },
       {
         "name": null,
-        "label": "Request body application/json · RecordPatch"
+        "label": "リクエストボディ application/json · RecordPatch"
       },
       {
         "name": null,
-        "label": "id path · required · string"
+        "label": "id path · 必須 · string"
       }
     ]
   },
@@ -4455,82 +4455,82 @@
       },
       {
         "level": 4,
-        "text": "List users"
+        "text": "ユーザーのリストを表示する"
       },
       {
         "level": 4,
-        "text": "Read one user"
+        "text": "1人のユーザーを読む"
       },
       {
         "level": 4,
-        "text": "Query"
+        "text": "クエリ"
       },
       {
         "level": 4,
-        "text": "User"
+        "text": "ユーザー"
       },
       {
         "level": 4,
-        "text": "Mutation"
+        "text": "突然変異"
       },
       {
         "level": 3,
-        "text": "Accessible query runner"
+        "text": "アクセス可能なクエリランナー"
       },
       {
         "level": 4,
-        "text": "Response"
+        "text": "応答"
       },
       {
         "level": 3,
-        "text": "Execution controls"
+        "text": "実行制御"
       },
       {
         "level": 3,
-        "text": "GraphQL ↔ D1 Users"
+        "text": "GraphQL ↔ D1 ユーザー"
       }
     ],
     "accessibleNames": [
       {
         "element": "button",
         "role": null,
-        "name": "Run example"
+        "name": "実行例"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Run example"
+        "name": "実行例"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Sign in for mutation access"
+        "name": "ミューテーション アクセスのためにサインインする"
       },
       {
         "element": "form",
         "role": null,
-        "name": "GraphQL query query Users { users { id name email role } } Use standard GraphQL query syntax. This public runner does not require a pointer or an embedded third-party editor. Run query"
+        "name": "GraphQLクエリ query Users { users { id name email role } } 標準の GraphQL クエリ構文を使用します。このパブリック ランナーには、ポインターや組み込みのサードパーティ エディターは必要ありません。 クエリの実行"
       },
       {
         "element": "textarea",
         "role": null,
-        "name": "GraphQL query"
+        "name": "GraphQLクエリ"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Run query"
+        "name": "クエリの実行"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Open D1 view →"
+        "name": "D1 ビューを開く →"
       }
     ],
     "labels": [
       {
         "name": "query",
-        "label": "GraphQL query"
+        "label": "GraphQLクエリ"
       }
     ]
   },
@@ -4542,7 +4542,7 @@
       },
       {
         "level": 3,
-        "text": "Connected receiver"
+        "text": "接続された受信機"
       },
       {
         "level": 3,
@@ -4554,7 +4554,7 @@
       },
       {
         "level": 3,
-        "text": "Simulate a signed release webhook"
+        "text": "署名付きリリース Webhook をシミュレートする"
       },
       {
         "level": 3,
@@ -4615,7 +4615,7 @@
       {
         "element": "button",
         "role": null,
-        "name": "Simulate signed release webhook"
+        "name": "署名付きリリース Webhook をシミュレートする"
       }
     ],
     "labels": [
@@ -4645,7 +4645,7 @@
       },
       {
         "level": 3,
-        "text": "Choose a trust relationship"
+        "text": "信頼関係を選択してください"
       },
       {
         "level": 4,
@@ -4657,36 +4657,36 @@
       },
       {
         "level": 4,
-        "text": "Validated provider payload"
+        "text": "検証されたプロバイダーのペイロード"
       },
       {
         "level": 4,
-        "text": "Normalized identity"
+        "text": "正規化されたアイデンティティ"
       },
       {
         "level": 4,
-        "text": "What can this identity do?"
+        "text": "このアイデンティティで何ができるでしょうか?"
       },
       {
         "level": 4,
-        "text": "Protocol"
+        "text": "プロトコル"
       }
     ],
     "accessibleNames": [
       {
         "element": "a",
         "role": null,
-        "name": "View source ↗"
+        "name": "ソースを見る ↗"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Reset identity session"
+        "name": "ID セッションをリセットする"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Sign in with GitHub"
+        "name": "GitHub でサインインする"
       },
       {
         "element": "button",
@@ -4696,52 +4696,52 @@
       {
         "element": "button",
         "role": "tab",
-        "name": "Provider payload"
+        "name": "プロバイダーのペイロード"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Normalized identity"
+        "name": "正規化されたアイデンティティ"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Authorization"
+        "name": "認可"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Protocol"
+        "name": "プロトコル"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Provider payload"
+        "name": "プロバイダーのペイロード"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Normalized identity"
+        "name": "正規化されたアイデンティティ"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Authorization"
+        "name": "認可"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Evaluate demo:read"
+        "name": "デモを評価する: 読む"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Evaluate demo:write"
+        "name": "デモの評価:書き込み"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Protocol"
+        "name": "プロトコル"
       }
     ],
     "labels": []
@@ -4750,11 +4750,11 @@
     "headings": [
       {
         "level": 2,
-        "text": "Single sign-on"
+        "text": "シングルサインオン"
       },
       {
         "level": 3,
-        "text": "Choose a trust relationship"
+        "text": "信頼関係を選択してください"
       },
       {
         "level": 4,
@@ -4770,41 +4770,41 @@
       },
       {
         "level": 4,
-        "text": "Validated provider payload"
+        "text": "検証されたプロバイダーのペイロード"
       },
       {
         "level": 4,
-        "text": "Normalized identity"
+        "text": "正規化されたアイデンティティ"
       },
       {
         "level": 4,
-        "text": "What can this identity do?"
+        "text": "このアイデンティティで何ができるでしょうか?"
       },
       {
         "level": 4,
-        "text": "Protocol"
+        "text": "プロトコル"
       }
     ],
     "accessibleNames": [
       {
         "element": "a",
         "role": null,
-        "name": "View source ↗"
+        "name": "ソースを見る ↗"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Reset identity session"
+        "name": "ID セッションをリセットする"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Sign in with Microsoft"
+        "name": "Microsoft でサインインする"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Sign in with Google"
+        "name": "Googleでサインイン"
       },
       {
         "element": "button",
@@ -4814,52 +4814,52 @@
       {
         "element": "button",
         "role": "tab",
-        "name": "Provider payload"
+        "name": "プロバイダーのペイロード"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Normalized identity"
+        "name": "正規化されたアイデンティティ"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Authorization"
+        "name": "認可"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Protocol"
+        "name": "プロトコル"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Provider payload"
+        "name": "プロバイダーのペイロード"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Normalized identity"
+        "name": "正規化されたアイデンティティ"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Authorization"
+        "name": "認可"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Evaluate demo:read"
+        "name": "デモを評価する: 読む"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Evaluate demo:write"
+        "name": "デモの評価:書き込み"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Protocol"
+        "name": "プロトコル"
       }
     ],
     "labels": []
@@ -4872,7 +4872,7 @@
       },
       {
         "level": 3,
-        "text": "Choose a trust relationship"
+        "text": "信頼関係を選択してください"
       },
       {
         "level": 4,
@@ -4884,41 +4884,41 @@
       },
       {
         "level": 4,
-        "text": "Validated provider payload"
+        "text": "検証されたプロバイダーのペイロード"
       },
       {
         "level": 4,
-        "text": "Normalized identity"
+        "text": "正規化されたアイデンティティ"
       },
       {
         "level": 4,
-        "text": "What can this identity do?"
+        "text": "このアイデンティティで何ができるでしょうか?"
       },
       {
         "level": 4,
-        "text": "Protocol"
+        "text": "プロトコル"
       }
     ],
     "accessibleNames": [
       {
         "element": "a",
         "role": null,
-        "name": "View source ↗"
+        "name": "ソースを見る ↗"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Reset identity session"
+        "name": "ID セッションをリセットする"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Sign in with SAML"
+        "name": "SAML でサインインする"
       },
       {
         "element": "a",
         "role": null,
-        "name": "View SP metadata ↗"
+        "name": "SP メタデータの表示 ↗"
       },
       {
         "element": "button",
@@ -4928,52 +4928,52 @@
       {
         "element": "button",
         "role": "tab",
-        "name": "Provider payload"
+        "name": "プロバイダーのペイロード"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Normalized identity"
+        "name": "正規化されたアイデンティティ"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Authorization"
+        "name": "認可"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Protocol"
+        "name": "プロトコル"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Provider payload"
+        "name": "プロバイダーのペイロード"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Normalized identity"
+        "name": "正規化されたアイデンティティ"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Authorization"
+        "name": "認可"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Evaluate demo:read"
+        "name": "デモを評価する: 読む"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Evaluate demo:write"
+        "name": "デモの評価:書き込み"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Protocol"
+        "name": "プロトコル"
       }
     ],
     "labels": []
@@ -4998,11 +4998,11 @@
       },
       {
         "level": 3,
-        "text": "Run ping"
+        "text": "走る ping"
       },
       {
         "level": 3,
-        "text": "Connect a client"
+        "text": "クライアントを接続する"
       },
       {
         "level": 4,
@@ -5021,12 +5021,12 @@
       {
         "element": "button",
         "role": null,
-        "name": "Run ping"
+        "name": "pingを実行する"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Copy endpoint"
+        "name": "エンドポイントのコピー"
       }
     ],
     "labels": []
@@ -5039,19 +5039,19 @@
       },
       {
         "level": 3,
-        "text": "Request → Cloudflare edge → Worker"
+        "text": "リクエスト → Cloudflareエッジ → ワーカー"
       },
       {
         "level": 4,
-        "text": "Request supplied"
+        "text": "提供されたリクエスト"
       },
       {
         "level": 4,
-        "text": "Cloudflare supplied"
+        "text": "Cloudflareが提供"
       },
       {
         "level": 4,
-        "text": "Privacy boundary"
+        "text": "プライバシーの境界"
       }
     ],
     "accessibleNames": [
@@ -5063,12 +5063,12 @@
       {
         "element": "a",
         "role": null,
-        "name": "Runtime API"
+        "name": "ランタイムAPI"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Cloudflare configuration"
+        "name": "Cloudflareの構成"
       },
       {
         "element": "button",
@@ -5086,7 +5086,7 @@
       },
       {
         "level": 3,
-        "text": "Compose a request"
+        "text": "リクエストを作成する"
       }
     ],
     "accessibleNames": [
@@ -5098,37 +5098,37 @@
       {
         "element": "a",
         "role": null,
-        "name": "Runtime policy"
+        "name": "ランタイムポリシー"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Worker entry point"
+        "name": "ワーカーのエントリーポイント"
       },
       {
         "element": "form",
         "role": null,
-        "name": "MethodGETPOST ResourceStatic assetDynamic route Cookie present Authorization present エッジリクエストポリシーを適用"
+        "name": "方法GETPOST リソース静的資産動的ルート クッキープレゼント オーソリゼーションの存在 エッジリクエストポリシーを適用"
       },
       {
         "element": "select",
         "role": null,
-        "name": "Method"
+        "name": "方法"
       },
       {
         "element": "select",
         "role": null,
-        "name": "Resource"
+        "name": "リソース"
       },
       {
         "element": "input",
         "role": null,
-        "name": "Cookie present"
+        "name": "クッキープレゼント"
       },
       {
         "element": "input",
         "role": null,
-        "name": "Authorization present"
+        "name": "オーソリゼーションの存在"
       },
       {
         "element": "button",
@@ -5139,19 +5139,19 @@
     "labels": [
       {
         "name": "method",
-        "label": "Method"
+        "label": "方法"
       },
       {
         "name": "resource",
-        "label": "Resource"
+        "label": "リソース"
       },
       {
         "name": "cookie",
-        "label": "Cookie present"
+        "label": "クッキープレゼント"
       },
       {
         "name": "authorization",
-        "label": "Authorization present"
+        "label": "オーソリゼーションの存在"
       }
     ]
   },
@@ -5163,7 +5163,7 @@
       },
       {
         "level": 3,
-        "text": "Many requests, one state owner"
+        "text": "多くのリクエスト、1 人の州所有者"
       }
     ],
     "accessibleNames": [
@@ -5175,27 +5175,27 @@
       {
         "element": "a",
         "role": null,
-        "name": "Durable Object API"
+        "name": "永続オブジェクト API"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Coordinator class"
+        "name": "コーディネータークラス"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Binding configuration"
+        "name": "バインディング構成"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Increment once"
+        "name": "1回増加"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Send 10 concurrent increments"
+        "name": "10 個の同時増分を送信する"
       }
     ],
     "labels": []
@@ -5208,163 +5208,163 @@
       },
       {
         "level": 3,
-        "text": "Operate the working interaction"
+        "text": "作業用インタラクションを操作する"
       },
       {
         "level": 3,
-        "text": "How to run"
+        "text": "走り方"
       },
       {
         "level": 3,
-        "text": "Automated check of accessible behavior"
+        "text": "アクセシブルな動作の自動チェック"
       },
       {
         "level": 3,
-        "text": "Failure analysis"
+        "text": "故障解析"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "勤務態度"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "故障治具"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "検証方法"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "勤務態度"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "故障治具"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "検証方法"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "勤務態度"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "故障治具"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "検証方法"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "勤務態度"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "故障治具"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "検証方法"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "勤務態度"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "故障治具"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "検証方法"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "勤務態度"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "故障治具"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "検証方法"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "勤務態度"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "故障治具"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "検証方法"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "勤務態度"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "故障治具"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "検証方法"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "勤務態度"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "故障治具"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "検証方法"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "勤務態度"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "故障治具"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "検証方法"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "勤務態度"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "故障治具"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "検証方法"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "勤務態度"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "故障治具"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "検証方法"
       }
     ],
     "accessibleNames": [
@@ -5376,27 +5376,27 @@
       {
         "element": "a",
         "role": null,
-        "name": "Lab source"
+        "name": "ラボソース"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Global shell source"
+        "name": "グローバルシェルソース"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Manual verification matrix"
+        "name": "手動検証マトリックス"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Interface tests"
+        "name": "インターフェーステスト"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Run automated check"
+        "name": "自動チェックを実行する"
       }
     ],
     "labels": []
@@ -5424,7 +5424,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "Global runtime source"
+        "name": "グローバル ランタイム ソース"
       },
       {
         "element": "a",
@@ -5439,7 +5439,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "Locale configuration"
+        "name": "ロケール設定"
       },
       {
         "element": "form",
@@ -5464,37 +5464,37 @@
       {
         "element": "aside",
         "role": "complementary",
-        "name": "グローバルコンテキスト検査 解決された値 localeja defaulten fallbacken directionltr plural categoryother Inspect a valueTitleItemsNumberDateCurrencyAction { \"items_other\": \"アーキテクチャ項目 {count} 件\" } 言語リソースを見る"
+        "name": "グローバルコンテキスト検査 解決された値 localeja defaulten fallbacken directionltr plural categoryother 値を検査するタイトルアイテム番号日付通貨アクション { \"items_other\": \"アーキテクチャ項目 {count} 件\" } 言語リソースを見る"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Title"
+        "name": "タイトル"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Items"
+        "name": "アイテム"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Number"
+        "name": "番号"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Date"
+        "name": "日付"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Currency"
+        "name": "通貨"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Action"
+        "name": "アクション"
       },
       {
         "element": "a",

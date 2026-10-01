@@ -47,8 +47,8 @@ describe('D1 database console', () => {
     expect(html).not.toContain('aria-label="Breadcrumb"');
     expect(html).toContain('Cloudflare D1 Database');
     expect(html).toContain('role="tablist"');
-    expect(html).toContain('Users <span><strong data-count="users">—</strong> / 10');
-    expect(html).toContain('Tasks <span><strong data-count="tasks">—</strong> / 25');
+    expect(html).toContain('Users <bdi dir="ltr"><strong data-count="users">—</strong> / 10</bdi>');
+    expect(html).toContain('Tasks <bdi dir="ltr"><strong data-count="tasks">—</strong> / 25</bdi>');
     expect(html).toContain('data-form="users" hidden');
     expect(html).toContain('data-form="tasks" hidden');
     expect(html).toContain('SQL Inspector');
@@ -141,7 +141,7 @@ describe('internationalized interface', () => {
     const html = `${await demosShell('https://demo.wizardgang.ai/demos?lang=ja&count=7', context.env)}${i18nSection(context.request, context.env).body}`;
     expect(html).toContain('<html lang="ja" dir="ltr">');
     expect(html).toContain('<input type="hidden" name="lang" value="ja"/>');
-    expect(html).toContain('Use the language control in the global header');
+    expect(html).toContain('グローバルヘッダーの言語コントロール');
     expect(html).not.toContain('id="locale-demo"');
     expect(html).toContain('data-inspect-target="Intl.NumberFormat.currency"');
     expect(html).toContain('グローバルコンテキスト検査');

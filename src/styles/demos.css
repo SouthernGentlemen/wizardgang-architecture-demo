@@ -15,8 +15,8 @@
 .d1-table-tabs button { display: grid; grid-template-columns: auto auto; align-content: center; gap: .35rem .55rem; min-width: 0; border: 0; border-right: 1px solid var(--line); background: transparent; font-size: .86rem; }
 .d1-table-tabs button:hover { background: var(--panel-2); transform: none; }
 .d1-table-tabs button[aria-selected="true"] { background: var(--panel-2); box-shadow: inset 0 -3px 0 var(--acid); }
-.d1-table-tabs button > span { color: var(--muted); font: 700 .68rem/1 var(--mono); }
-.d1-table-tabs button > span strong { color: var(--paper); }
+.d1-table-tabs button > bdi { color: var(--muted); font: 700 .68rem/1 var(--mono); white-space: nowrap; }
+.d1-table-tabs button > bdi strong { color: var(--paper); }
 .d1-database-message { align-self: center; margin: 0 1rem 0 auto; color: var(--muted); font: 750 .74rem/1.35 var(--mono); text-align: right; }
 .d1-database-message[data-tone="success"] { color: var(--acid); }
 .d1-database-message[data-tone="error"] { color: #ff9d9d; }
@@ -128,6 +128,9 @@
 @media (max-width: 760px) {
   .edge-evidence-grid, .worker-decision-grid { grid-template-columns: 1fr; }
   .worker-policy-form { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 480px) {
+  .d1-table-tabs button { grid-template-columns: minmax(0, 1fr); justify-items: start; gap: .2rem; }
 }
 @media (max-width: 520px) { .worker-policy-form { grid-template-columns: 1fr; } }
 .button-row { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0; }

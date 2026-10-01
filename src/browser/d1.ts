@@ -127,7 +127,16 @@ export async function mount(root: HTMLElement): Promise<void> {
     inspector.verb.textContent = verb;
     inspector.verb.dataset.verb = verb.toLowerCase();
     inspector.status.textContent = `${meta.status}${meta.statusText ? ` ${meta.statusText}` : ''}`;
-    inspector.metrics.textContent = `${Number(duration).toFixed(1)} ms${rows === undefined ? '' : ` · ${rows} ${rows === 1 ? message('row', 'row') : message('rows', 'rows')}`}`;
+    const durationValue = document.createElement('bdi');
+    durationValue.dir = 'ltr';
+    durationValue.textContent = `${Number(duration).toFixed(1)} ms`;
+    inspector.metrics.replaceChildren(durationValue);
+    if (rows !== undefined) {
+      const rowCount = document.createElement('bdi');
+      rowCount.dir = 'ltr';
+      rowCount.textContent = String(rows);
+      inspector.metrics.append(' · ', rowCount, ` ${rows === 1 ? message('row', 'row') : message('rows', 'rows')}`);
+    }
     inspector.sql.textContent = formatSql(payload.statement);
     inspector.output.textContent = JSON.stringify(payload, null, 2);
   };
@@ -204,6 +213,7 @@ export async function mount(root: HTMLElement): Promise<void> {
       name.append(strong);
       const email = textCell('', message('email', 'Email'));
       const code = document.createElement('code');
+      code.dir = 'ltr';
       code.textContent = user.email;
       email.append(code);
       const role = textCell('', message('role', 'Role'));

@@ -90,10 +90,10 @@ function D1Presentation({ localization }: Readonly<{ localization: LocalizationC
       <div className="d1-database-id"><span>{exact('Database')}</span><strong>demo-blob</strong></div>
       <div className="d1-table-tabs" role="tablist" aria-label={exact('Tables in demo-blob')}>
         <button type="button" role="tab" aria-selected="true" aria-controls={usersPanel} id={usersTab} data-table-tab="users">
-          {exact('Users')} <span><strong data-count="users">—</strong> / 10</span>
+          {exact('Users')} <bdi dir="ltr"><strong data-count="users">—</strong> / 10</bdi>
         </button>
         <button type="button" role="tab" aria-selected="false" aria-controls={tasksPanel} id={tasksTab} tabIndex={-1} data-table-tab="tasks">
-          {exact('Tasks')} <span><strong data-count="tasks">—</strong> / 25</span>
+          {exact('Tasks')} <bdi dir="ltr"><strong data-count="tasks">—</strong> / 25</bdi>
         </button>
       </div>
       <p className="d1-database-message" role="status" aria-live="polite" data-database-message="" />
@@ -103,7 +103,7 @@ function D1Presentation({ localization }: Readonly<{ localization: LocalizationC
       <div className="d1-table-stage">
         <section className="panel d1-table-panel" id={usersPanel} role="tabpanel" aria-labelledby={usersTab} data-table-panel="users">
           <div className="d1-table-heading">
-            <div><p className="eyebrow">{exact('Table / demo_users')}</p><DemoHeading level={2}>{exact('Users')} <span data-heading-count="users" /></DemoHeading></div>
+            <div><p className="eyebrow">{exact('Table / demo_users')}</p><DemoHeading level={2}>{exact('Users')} <bdi dir="ltr" data-heading-count="users" /></DemoHeading></div>
             <button className="button-primary" type="button" data-add="users">{exact('+ Add user')}</button>
           </div>
           <form className="lab-form d1-editor" data-form="users" hidden>
@@ -122,7 +122,7 @@ function D1Presentation({ localization }: Readonly<{ localization: LocalizationC
 
         <section className="panel d1-table-panel" id={tasksPanel} role="tabpanel" aria-labelledby={tasksTab} data-table-panel="tasks" hidden>
           <div className="d1-table-heading">
-            <div><p className="eyebrow">{exact('Table / demo_tasks')}</p><DemoHeading level={2}>{exact('Tasks')} <span data-heading-count="tasks" /></DemoHeading></div>
+            <div><p className="eyebrow">{exact('Table / demo_tasks')}</p><DemoHeading level={2}>{exact('Tasks')} <bdi dir="ltr" data-heading-count="tasks" /></DemoHeading></div>
             <button className="button-primary" type="button" data-add="tasks">{exact('+ Add task')}</button>
           </div>
           <p className="d1-table-hint"><code>demo_tasks.assignee_id</code> → <code>demo_users.id</code></p>

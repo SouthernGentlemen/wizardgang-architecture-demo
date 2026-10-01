@@ -64,7 +64,7 @@ describe('DEMO-237 shared WCAG 2.2 AAA remediation', () => {
     expect(html).toContain('data-graphql-form');
     expect(html).toContain('<label for="graphql-graphql-query">GraphQL query</label>');
     expect(html).toContain('data-graphql-runner-status="" role="status" aria-live="polite"');
-    expect(html).toContain('tabindex="0">Run a query to inspect the JSON response.');
+    expect(html).toContain('tabindex="0" dir="ltr">Run a query to inspect the JSON response.');
     expect(html).not.toContain('<iframe');
     expect(html).not.toContain('title="GraphiQL query editor"');
   });

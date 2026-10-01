@@ -48,7 +48,7 @@ function McpPresentation({ endpoint, localization }: Readonly<{
       <p className="eyebrow">{exact('AI / MCP')}</p>
       <DemoHeading level={1}>{exact('Model Context Protocol')}</DemoHeading>
       <p className="lede">{exact('Inspect the live MCP boundary, run one representative read-only tool, then copy the endpoint into a compatible client.')}</p>
-      <div className="request-line"><span className="http-method http-post">MCP</span><code id={scope.id('mcp-endpoint')}>{endpoint}</code></div>
+      <div className="request-line"><span className="http-method http-post">MCP</span><code id={scope.id('mcp-endpoint')} dir="ltr">{endpoint}</code></div>
     </section>
 
     <section aria-labelledby={toolsHeading}>
@@ -73,12 +73,12 @@ function McpPresentation({ endpoint, localization }: Readonly<{
       <details className="implementation-notes">
         <summary>{exact('Advanced client setup and wire details')}</summary>
         <div className="info-grid">
-          <article className="info-card"><DemoHeading level={3}>Claude Code</DemoHeading><pre>{claudeCommand}</pre></article>
-          <article className="info-card"><DemoHeading level={3}>Codex CLI</DemoHeading><pre>{codexCommand}</pre></article>
-          <article className="info-card"><DemoHeading level={3}>MCP Inspector</DemoHeading><pre>{inspectorCommand}</pre></article>
+          <article className="info-card"><DemoHeading level={3}>Claude Code</DemoHeading><pre dir="ltr">{claudeCommand}</pre></article>
+          <article className="info-card"><DemoHeading level={3}>Codex CLI</DemoHeading><pre dir="ltr">{codexCommand}</pre></article>
+          <article className="info-card"><DemoHeading level={3}>MCP Inspector</DemoHeading><pre dir="ltr">{inspectorCommand}</pre></article>
         </div>
-        <details><summary>{exact('Representative request headers')}</summary><pre>{`MCP-Protocol-Version: ${MCP_PROTOCOL_VERSION}\nMcp-Method: tools/call\nMcp-Name: ping`}</pre></details>
-        <details><summary>{exact('Representative JSON-RPC request')}</summary><pre>{JSON.stringify(requestBody, null, 2)}</pre></details>
+        <details><summary>{exact('Representative request headers')}</summary><pre dir="ltr">{`MCP-Protocol-Version: ${MCP_PROTOCOL_VERSION}\nMcp-Method: tools/call\nMcp-Name: ping`}</pre></details>
+        <details><summary>{exact('Representative JSON-RPC request')}</summary><pre dir="ltr">{JSON.stringify(requestBody, null, 2)}</pre></details>
         <details><summary>{exact('Latest public demo MCP activity')}</summary><p className="subtle">{exact('Activity history remains outside the default success path so the primary walkthrough stays focused on endpoint, tools, one executable call, result, and connection guidance.')}</p></details>
         <p className="subtle">{exact('Transport: Streamable HTTP · protocol')} {MCP_PROTOCOL_VERSION} · {exact('public read-only demo authorization.')}</p>
       </details>

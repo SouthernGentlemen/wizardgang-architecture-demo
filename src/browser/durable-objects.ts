@@ -15,6 +15,13 @@ export async function mount(root: HTMLElement): Promise<void> {
   const lifecycle = new AbortController();
   root.addEventListener('demo:deactivate', () => lifecycle.abort(), { once: true });
   if (!status || !current || !raw || buttons.length === 0) return;
+  const ltr = (value: string): HTMLElement => {
+    const node = document.createElement('bdi');
+    node.dir = 'ltr';
+    node.textContent = value;
+    return node;
+  };
+  const showCurrent = (value: number) => current.replaceChildren(message('currentCount', 'Current count'), ' ', ltr(number.format(value)));
 
   const read = async () => {
     const response = await fetch('/api/labs/durable-counter', { headers: { accept: 'application/json' }, signal: lifecycle.signal });
@@ -29,7 +36,7 @@ export async function mount(root: HTMLElement): Promise<void> {
   const load = async () => {
     try {
       const count = await read();
-      current.textContent = `${message('currentCount', 'Current count')} ${number.format(count)}`;
+      showCurrent(count);
       status.textContent = message('ready', 'Ready to coordinate requests.');
     } catch (error) {
       if (lifecycle.signal.aborted) return;
@@ -61,11 +68,11 @@ export async function mount(root: HTMLElement): Promise<void> {
         set('final', number.format(final));
         set('success', `${number.format(successes.length)} / ${number.format(requested)}`);
         set('duration', `${number.format(duration)} ms`);
-        current.textContent = `${message('currentCount', 'Current count')} ${number.format(final)}`;
+        showCurrent(final);
         raw.textContent = JSON.stringify(responses.map((item) => item.status === 'fulfilled' ? item.value : { error: String(item.reason) }), null, 2);
         if (successes.length !== requested) status.textContent = message('incomplete', 'Some increments failed; the result is not presented as a complete coordination proof.');
-        else if (final === expected) status.textContent = `${number.format(requested)} ${message('complete', 'requests reached one object and produced the exact expected final count.')}`;
-        else status.textContent = `${number.format(requested)} ${message('otherActivity', 'requests succeeded. The shared public counter also changed during this run, so the final count includes other activity.')}`;
+        else if (final === expected) status.replaceChildren(ltr(number.format(requested)), ' ', message('complete', 'requests reached one object and produced the exact expected final count.'));
+        else status.replaceChildren(ltr(number.format(requested)), ' ', message('otherActivity', 'requests succeeded. The shared public counter also changed during this run, so the final count includes other activity.'));
       } catch (error) {
         if (!lifecycle.signal.aborted) status.textContent = `${message('runUnavailable', 'Coordination run unavailable.')} ${String(error)}`;
       } finally {

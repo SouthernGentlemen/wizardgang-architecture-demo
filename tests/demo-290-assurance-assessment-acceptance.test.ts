@@ -68,7 +68,7 @@ function countPosture(records: Array<{ status: string }>) {
 }
 
 function renderedPostures(html: string) {
-  return [...html.matchAll(/data-posture-count="([^"]+)">(\d+)</g)]
+  return [...html.matchAll(/data-posture-count="([^"]+)"><bdi>(\d+)<\/bdi>/g)]
     .map((match) => ({ status: match[1], count: Number(match[2]) }));
 }
 

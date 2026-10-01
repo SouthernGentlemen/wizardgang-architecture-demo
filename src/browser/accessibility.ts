@@ -99,6 +99,7 @@ export function mount(root: HTMLElement): void {
       }
     }
     state.textContent = event.data.rules.length ? message('reviewFindings', 'Review findings') : message('noFindings', 'No automated findings');
+    meta.dataset.durationMs = String(event.data.durationMs);
     meta.textContent = `${message('totalFindings', 'Automated findings:')} ${number.format(event.data.rules.length)}. ${message('scannedPrefix', 'Scanned the accessible behavior in')} ${number.format(event.data.durationMs)} ${message('scannedSuffix', 'ms. Partial automated coverage; manual verification remains required.')}`;
   }, { signal: lifecycle.signal });
 }

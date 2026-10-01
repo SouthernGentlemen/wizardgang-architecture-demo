@@ -54,12 +54,19 @@ export function mount(root: HTMLElement): void {
       output.textContent = formatted;
       const duration = `${durationFormat.format(performance.now() - started)} ms`;
       const graphQlErrors = Array.isArray(payload?.errors) ? payload.errors.length : 0;
-      const outcome = graphQlErrors
-        ? `${durationFormat.format(graphQlErrors)} ${message(graphQlErrors === 1 ? 'graphqlError' : 'graphqlErrors', graphQlErrors === 1 ? 'GraphQL error' : 'GraphQL errors')}`
-        : response.ok
-          ? message('queryComplete', 'Query complete')
-          : message('errorResponse', 'Error response');
-      status.textContent = `HTTP ${response.status} · ${duration} · ${outcome}`;
+      const outcome = response.ok
+        ? message('queryComplete', 'Query complete')
+        : message('errorResponse', 'Error response');
+      const metrics = document.createElement('bdi');
+      metrics.dir = 'ltr';
+      metrics.textContent = `HTTP ${response.status} · ${duration}`;
+      status.replaceChildren(metrics, ' · ');
+      if (graphQlErrors) {
+        const count = document.createElement('bdi');
+        count.dir = 'ltr';
+        count.textContent = durationFormat.format(graphQlErrors);
+        status.append(count, ` ${message(graphQlErrors === 1 ? 'graphqlError' : 'graphqlErrors', graphQlErrors === 1 ? 'GraphQL error' : 'GraphQL errors')}`);
+      } else status.append(outcome);
     } catch (error) {
       if (!lifecycle.signal.aborted) {
         output.textContent = String(error);

@@ -32,7 +32,7 @@ describe('DEMO-335 React REST and GraphQL demonstrations', () => {
       window.document.body.innerHTML = `${rest}${graphql}`;
       const restRoot = window.document.querySelector<HTMLElement>('[data-demo-section="rest"]');
       const graphqlRoot = window.document.querySelector<HTMLElement>('[data-demo-section="graphql"]');
-      expect(rest).toContain('WizardGang REST demo');
+      expect(rest).toContain('عرض WizardGang REST');
       expect(graphql).toContain('واجهة GraphQL API');
       expect(restRoot?.dataset.demoBrowserModule).toBe(assetManifest.assets['scripts.rest']);
       expect(graphqlRoot?.dataset.demoBrowserModule).toBe(assetManifest.assets['scripts.graphql']);

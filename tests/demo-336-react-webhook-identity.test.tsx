@@ -44,7 +44,7 @@ describe('DEMO-336 React webhook and identity demonstrations', () => {
       const webhookRoot = window.document.querySelector<HTMLElement>('[data-demo-section="webhooks"]');
       const identityRoot = window.document.querySelector<HTMLElement>('[data-demo-section="sso"]');
       expect(webhook).toContain('Webhooks موقّعة');
-      expect(identity).toContain('Single sign-on');
+      expect(identity).toContain('تسجيل الدخول الموحد');
       expect(webhookRoot?.dataset.demoBrowserModule).toBe(assetManifest.assets['scripts.webhooks']);
       expect(identityRoot?.dataset.demoBrowserModule).toBe(assetManifest.assets['scripts.identity']);
       expect(webhookRoot?.querySelector('script')).toBeNull();

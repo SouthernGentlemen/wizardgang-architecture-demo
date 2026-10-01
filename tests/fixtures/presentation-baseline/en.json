@@ -861,7 +861,7 @@
         }
       },
       {
-        "element": "span",
+        "element": "bdi",
         "attributes": {
           "data-assurance-record-count": ""
         }
@@ -1344,7 +1344,7 @@
         "data": {}
       },
       {
-        "src": "/assets/assurance-browser-D_JIDV-8.js",
+        "src": "/assets/assurance-browser-DIHh2-Dl.js",
         "type": "module",
         "async": false,
         "defer": false,
@@ -2849,7 +2849,7 @@
         "element": "div",
         "attributes": {
           "data-demo-section": "d1",
-          "data-demo-browser-module": "/assets/d1-browser-DVT3oZjJ.js",
+          "data-demo-browser-module": "/assets/d1-browser-67dExRF6.js",
           "data-config": "<CONFIG_SHA256:c086fd9ab8c129df>"
         }
       },
@@ -2890,7 +2890,7 @@
         }
       },
       {
-        "element": "span",
+        "element": "bdi",
         "attributes": {
           "data-heading-count": "users"
         }
@@ -2938,7 +2938,7 @@
         }
       },
       {
-        "element": "span",
+        "element": "bdi",
         "attributes": {
           "data-heading-count": "tasks"
         }
@@ -3158,7 +3158,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-vM-Wj52b.css",
+        "href": "/assets/demos-eXrt04gA.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -4027,7 +4027,7 @@
         }
       },
       {
-        "element": "span",
+        "element": "bdi",
         "attributes": {
           "data-assurance-record-count": ""
         }
@@ -4510,7 +4510,7 @@
         "data": {}
       },
       {
-        "src": "/assets/assurance-browser-D_JIDV-8.js",
+        "src": "/assets/assurance-browser-DIHh2-Dl.js",
         "type": "module",
         "async": false,
         "defer": false,
@@ -5405,7 +5405,7 @@
         }
       },
       {
-        "element": "span",
+        "element": "bdi",
         "attributes": {
           "data-assurance-record-count": ""
         }
@@ -5888,7 +5888,7 @@
         "data": {}
       },
       {
-        "src": "/assets/assurance-browser-D_JIDV-8.js",
+        "src": "/assets/assurance-browser-DIHh2-Dl.js",
         "type": "module",
         "async": false,
         "defer": false,
@@ -6783,7 +6783,7 @@
         }
       },
       {
-        "element": "span",
+        "element": "bdi",
         "attributes": {
           "data-assurance-record-count": ""
         }
@@ -7266,7 +7266,7 @@
         "data": {}
       },
       {
-        "src": "/assets/assurance-browser-D_JIDV-8.js",
+        "src": "/assets/assurance-browser-DIHh2-Dl.js",
         "type": "module",
         "async": false,
         "defer": false,
@@ -8161,7 +8161,7 @@
         }
       },
       {
-        "element": "span",
+        "element": "bdi",
         "attributes": {
           "data-assurance-record-count": ""
         }
@@ -8644,7 +8644,7 @@
         "data": {}
       },
       {
-        "src": "/assets/assurance-browser-D_JIDV-8.js",
+        "src": "/assets/assurance-browser-DIHh2-Dl.js",
         "type": "module",
         "async": false,
         "defer": false,
@@ -9576,7 +9576,7 @@
         "element": "div",
         "attributes": {
           "data-demo-section": "d1",
-          "data-demo-browser-module": "/assets/d1-browser-DVT3oZjJ.js",
+          "data-demo-browser-module": "/assets/d1-browser-67dExRF6.js",
           "data-config": "<CONFIG_SHA256:c086fd9ab8c129df>"
         }
       },
@@ -9617,7 +9617,7 @@
         }
       },
       {
-        "element": "span",
+        "element": "bdi",
         "attributes": {
           "data-heading-count": "users"
         }
@@ -9665,7 +9665,7 @@
         }
       },
       {
-        "element": "span",
+        "element": "bdi",
         "attributes": {
           "data-heading-count": "tasks"
         }
@@ -9885,7 +9885,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-vM-Wj52b.css",
+        "href": "/assets/demos-eXrt04gA.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -10791,7 +10791,7 @@
         "element": "div",
         "attributes": {
           "data-demo-section": "d1",
-          "data-demo-browser-module": "/assets/d1-browser-DVT3oZjJ.js",
+          "data-demo-browser-module": "/assets/d1-browser-67dExRF6.js",
           "data-config": "<CONFIG_SHA256:c086fd9ab8c129df>"
         }
       },
@@ -10832,7 +10832,7 @@
         }
       },
       {
-        "element": "span",
+        "element": "bdi",
         "attributes": {
           "data-heading-count": "users"
         }
@@ -10880,7 +10880,7 @@
         }
       },
       {
-        "element": "span",
+        "element": "bdi",
         "attributes": {
           "data-heading-count": "tasks"
         }
@@ -11100,7 +11100,7 @@
       },
       {
         "kind": "link",
-        "href": "/assets/demos-vM-Wj52b.css",
+        "href": "/assets/demos-eXrt04gA.css",
         "media": null,
         "inlineSha256": null,
         "data": {}
@@ -12329,7 +12329,7 @@
         "element": "div",
         "attributes": {
           "data-demo-section": "d1",
-          "data-demo-browser-module": "/assets/d1-browser-DVT3oZjJ.js",
+          "data-demo-browser-module": "/assets/d1-browser-67dExRF6.js",
           "data-config": "<CONFIG_SHA256:c086fd9ab8c129df>"
         }
       },
@@ -12370,7 +12370,7 @@
         }
       },
       {
-        "element": "span",
+        "element": "bdi",
         "attributes": {
           "data-heading-count": "users"
         }
@@ -12418,7 +12418,7 @@
         }
       },
       {
-        "element": "span",
+        "element": "bdi",
         "attributes": {
           "data-heading-count": "tasks"
         }
@@ -12627,7 +12627,7 @@
         "element": "div",
         "attributes": {
           "data-demo-section": "r2",
-          "data-demo-browser-module": "/assets/r2-browser-uYkNldM_.js",
+          "data-demo-browser-module": "/assets/r2-browser-CszVCouP.js",
           "data-config": "<CONFIG_SHA256:29abec8545708d68>"
         }
       },
@@ -13903,7 +13903,7 @@
         "element": "div",
         "attributes": {
           "data-demo-section": "graphql",
-          "data-demo-browser-module": "/assets/graphql-browser-Dwpt-GEr.js",
+          "data-demo-browser-module": "/assets/graphql-browser-D1jQT8Sb.js",
           "data-config": "<CONFIG_SHA256:634056fb559af315>"
         }
       },
@@ -14128,7 +14128,7 @@
         "element": "div",
         "attributes": {
           "data-demo-section": "webhooks",
-          "data-demo-browser-module": "/assets/webhooks-browser-utHaWs8I.js",
+          "data-demo-browser-module": "/assets/webhooks-browser-C-eKQIXI.js",
           "data-config": "<CONFIG_SHA256:734aad975619e1f4>"
         }
       },
@@ -16013,7 +16013,7 @@
         "element": "div",
         "attributes": {
           "data-demo-section": "durable-objects",
-          "data-demo-browser-module": "/assets/durable-objects-browser-C2tUXJvi.js",
+          "data-demo-browser-module": "/assets/durable-objects-browser-DJOaJYAz.js",
           "data-config": "<CONFIG_SHA256:cc17fe10399fdd46>"
         }
       },
@@ -16374,7 +16374,7 @@
         "element": "div",
         "attributes": {
           "data-demo-section": "accessibility",
-          "data-demo-browser-module": "/assets/accessibility-browser-Csy8GEDs.js",
+          "data-demo-browser-module": "/assets/accessibility-browser-B0fCg1CN.js",
           "data-config": "<CONFIG_SHA256:f748a0f1773687bc>"
         }
       },

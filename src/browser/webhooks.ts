@@ -124,9 +124,13 @@ export async function mount(root: HTMLElement): Promise<void> {
     const interval = typeof payload.pollingIntervalMs === 'number'
       ? number.format(payload.pollingIntervalMs)
       : String(payload.pollingIntervalMs ?? '');
-    meta.textContent = `${number.format(events.length)} ${events.length === 1
+    const count = element(document, 'bdi', number.format(events.length));
+    const duration = element(document, 'bdi', `${interval} ms`);
+    const repository = element(document, 'bdi', String(payload.repository ?? ''));
+    for (const token of [count, duration, repository]) token.dir = 'ltr';
+    meta.replaceChildren(count, ` ${events.length === 1
       ? message('verifiedDelivery', 'verified delivery')
-      : message('verifiedDeliveries', 'verified deliveries')} · ${message('pollingEvery', 'polling every')} ${interval} ms · ${String(payload.repository ?? '')}`;
+      : message('verifiedDeliveries', 'verified deliveries')} · ${message('pollingEvery', 'polling every')} `, duration, ' · ', repository);
   };
   const refresh = async () => {
     try {
