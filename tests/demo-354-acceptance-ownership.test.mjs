@@ -21,7 +21,6 @@ const ciRuns = ciCommands.map(npmRunName).filter(Boolean);
 const REQUIRED_CHECK_OWNERS = [
   ['generated-artifact parity', 'validate:generated-artifacts'],
   ['clean local migrations', 'validate:migrations'],
-  ['route validation', 'validate:routes'],
   ['production build', 'build'],
   ['scaffold validation', 'validate:scaffold'],
   ['controlled history', 'validate:history'],
@@ -102,6 +101,15 @@ describe('DEMO-354 acceptance gate ownership', () => {
     expect(packageJson.scripts['validate:site-i18n']).toBe(
       'vitest run tests/site-accessibility-i18n.test.ts -t "site-wide localization"',
     );
+  });
+
+  it('keeps route artifact coverage in generator parity and the full suite without a standalone check duplicate', () => {
+    expect(checkRuns.filter((run) => run === 'validate:generated-artifacts')).toHaveLength(1);
+    expect(checkRuns.filter((run) => run === 'test')).toHaveLength(1);
+    expect(checkRuns).not.toContain('validate:routes');
+    expect(packageJson.scripts['generate:routes']).toBe('ROUTE_ARTIFACTS_WRITE=1 vitest run tests/route-artifacts.test.ts');
+    expect(packageJson.scripts['validate:routes']).toBe('vitest run tests/route-artifacts.test.ts');
+    expect(packageJson.scripts.test).toBe('vitest run');
   });
 
   it('does not restore retired standalone asset validation to check', () => {
