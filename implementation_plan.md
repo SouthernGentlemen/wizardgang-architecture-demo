@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-406 — [PERF] Fold REST browser checks into the main audit
-- Dependency: DEMO-405.
-- Why: The separate DEMO-268 browser process repeats REST flows exercised in the main audit.
-- Scope: Move any unique REST browser assertion into the main audit, then retire the DEMO-268 script.
-- Non-goals: Do not drop unique assertions or change the four required exact-head CI statuses.
-- Acceptance: Every former REST assertion is mapped to a surviving browser assertion; one browser process is removed.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: scripts/demo-268-rest-browser-audit.mjs; scripts/site-browser-audit.mjs; scripts/run-site-accessibility-audits.mjs
-
 ### DEMO-407 — [A11Y] Fold contrast and target checks into the main audit
 - Dependency: DEMO-406.
 - Why: DEMO-289 starts another browser to inspect contrast and target geometry.

@@ -3,7 +3,6 @@ import process from 'node:process';
 
 const audits = [
   ['site-browser-audit', 'scripts/site-browser-audit.mjs'],
-  ['demo-268-rest-browser-audit', 'scripts/demo-268-rest-browser-audit.mjs'],
   ['demo-289-site-evaluation', 'scripts/demo-289-site-evaluation.mjs'],
 ];
 
