@@ -33,8 +33,6 @@ const REQUIRED_CHECK_OWNERS = [
   ['stylesheet classes', 'validate:stylesheet-classes'],
   ['lint', 'lint'],
   ['typecheck', 'typecheck'],
-  ['static accessibility assertions', 'validate:site-accessibility'],
-  ['static localization assertions', 'validate:site-i18n'],
   ['Chromium browser audit', 'test:site-accessibility'],
   ['test suite', 'test'],
   ['contracts', 'validate:contracts'],
@@ -90,6 +88,19 @@ describe('DEMO-354 acceptance gate ownership', () => {
     expect(npmRunSequence(packageJson.scripts['test:site-accessibility'])).toEqual(['verify:chromium']);
     expect(commandSequence(packageJson.scripts['test:site-accessibility'])).toContain(
       'node scripts/run-site-accessibility-audits.mjs',
+    );
+  });
+
+  it('runs static accessibility and localization once through the full Vitest suite while retaining focused commands', () => {
+    expect(checkRuns.filter((run) => run === 'test')).toHaveLength(1);
+    expect(checkRuns).not.toContain('validate:site-accessibility');
+    expect(checkRuns).not.toContain('validate:site-i18n');
+    expect(packageJson.scripts.test).toBe('vitest run');
+    expect(packageJson.scripts['validate:site-accessibility']).toBe(
+      'vitest run tests/site-accessibility-i18n.test.ts -t "site-wide accessibility"',
+    );
+    expect(packageJson.scripts['validate:site-i18n']).toBe(
+      'vitest run tests/site-accessibility-i18n.test.ts -t "site-wide localization"',
     );
   });
 
