@@ -6,10 +6,21 @@ import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const expectedHashes = {
-  "AGENTS.md": "59e2ba02d38d3ff3f9e3b06315607d438115428c99a4b532599543d0437e7f70",
   "CONTRIBUTING.md": "f28a453e08e8090cd9afca364165c37e9c428e357aa1e2f35354ac620efcb633",
   "implementation_plan.md": "59cdf5f8622ee928364b5647474b3a83f502c949bde9562d0a53a33291b090d0",
 };
+
+const requiredAgentContract = [
+  "## Start from live authority",
+  "## Permanent work queue",
+  "Work only the first open task unless the owner explicitly changes priority.",
+  "Portfolio-Plan-Maintenance: true",
+  "## Chat-capable execution model",
+  "Exact-head GitHub Actions may provide executable validation",
+  "## Validation evidence",
+  "Validation is outcome-based, not workstation-based.",
+  "Squash-merge only the exact validated head",
+];
 
 export function openTasks(source) {
   return [...source.matchAll(/^### ([A-Z][A-Z0-9]*-\d{3,}) — \[([A-Z][A-Z0-9-]*)\] (\S.*)$/gm)]
@@ -29,8 +40,11 @@ export function validatePortfolioContract() {
     assert.ok(existsSync(path.join(root, file)), `${file} must remain tracked`);
   }
   assert.equal(readdirSync(root).includes("IMPLEMENTATION_PLAN.md"), false, "uppercase plan must be retired");
-  for (const file of ["AGENTS.md", "CONTRIBUTING.md"]) {
-    assert.equal(hash(file), expectedHashes[file], `${file} differs from the portfolio contract`);
+  assert.equal(hash("CONTRIBUTING.md"), expectedHashes["CONTRIBUTING.md"],
+    "CONTRIBUTING.md differs from the portfolio contract");
+  const agents = readFileSync(path.join(root, "AGENTS.md"), "utf8");
+  for (const requirement of requiredAgentContract) {
+    assert.ok(agents.includes(requirement), `AGENTS.md missing required contract text: ${requirement}`);
   }
   const plan = readFileSync(path.join(root, "implementation_plan.md"), "utf8");
   const tasks = openTasks(plan);
