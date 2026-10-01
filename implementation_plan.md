@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-405 — [PERF] Remove the extra route test invocation
-- Dependency: DEMO-404.
-- Why: Route artifacts run in generator parity and separately in check and the full suite.
-- Scope: Eliminate one redundant route Vitest run while retaining both first-pass parity and second-pass idempotence.
-- Non-goals: Do not drop unique assertions or change the four required exact-head CI statuses.
-- Acceptance: Generated route manifest and route tests retain unique coverage; measure saved time.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: package.json; scripts/validate-generated-artifacts.mjs; tests/route-artifacts.test.ts
-
 ### DEMO-406 — [PERF] Fold REST browser checks into the main audit
 - Dependency: DEMO-405.
 - Why: The separate DEMO-268 browser process repeats REST flows exercised in the main audit.
