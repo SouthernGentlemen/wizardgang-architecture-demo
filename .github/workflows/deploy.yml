@@ -144,7 +144,12 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
       - name: Validate reviewed tagged source
-        run: npm run check
+        run: |
+          set -euo pipefail
+          local_d1_dir="$(mktemp -d)"
+          trap 'rm -rf -- "$local_d1_dir"' EXIT
+          export WG_LOCAL_D1_PERSIST_TO="$local_d1_dir"
+          npm run check
       - name: Verify production Worker secret names
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
