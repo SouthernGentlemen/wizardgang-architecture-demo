@@ -2,7 +2,7 @@
 
 The `validate` job runs `npm run validate:ci`. The command is intentionally strict: it validates the pinned toolchain, installs locked dependencies, runs `check`, queries dependency advisories, and validates committed-patch whitespace. The `check` step includes generated-artifact parity, local migrations, build, and the Chromium/browser audit. It stops at the first non-zero command and returns that command's exit code. Command output is redacted and streamed to the ordinary Actions log line by line while the same complete redacted output is retained in the diagnostic artifact.
 
-The site-wide browser command reports the start, completion, and duration of each audit script. The content-review audit also reports bounded page/state, locale, browser-operation, media-mode, and teardown progress so a timed-out CDP operation identifies its exact matrix coordinate and phase.
+The site-wide browser command reports the start, completion, and duration of the surviving main audit. Focus, content review, WCAG text spacing, 200%/400% reflow, reduced-motion, and forced-colors checks run inside that same Wrangler/Chromium process and reuse its canonical page/state visits; failures identify the affected path, locale, and audit phase.
 
 ## Committed patch-integrity gate
 
