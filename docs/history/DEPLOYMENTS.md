@@ -346,3 +346,29 @@ Each record ties one production deployment to one annotated release tag. A deplo
 **Rollback:** Deploy v0.27.0.
 
 **Note:** The annotated tag was created at 2026-09-21 16:42:13 UTC and the GitHub Release was published at 16:44:29 UTC. Deploy attempt 1 created Worker Version ID `7510fc1b-37f7-420e-afd8-e25d10a07218`, but its immediate public identity check still observed v0.27.0 during edge propagation and failed closed before static-asset verification. The rerun reproduced the same immutable tag, deployed final Worker Version ID `c3cd2428-32cc-4e7e-8d82-b4d495e21be7`, and completed every deployment and post-deployment check at 16:50:15 UTC. No Worker secret or Cloudflare provider setting changed.
+
+---
+
+## DEP-DEMO-013
+
+**Product:** WizardGang Architecture Demo
+
+**Release:** v0.29.1
+
+**Commit:** `35a10e80d32f1b19f4d1075946f2f371a57bc3e6`
+
+**Environment:** production
+
+**Date:** 2026-10-01
+
+**URL:** https://demo.wizardgang.ai
+
+**Changes:** Accepted changes in `v0.28.0..v0.29.1`, from DEMO-341 through DEMO-400. Later recovery changes DEMO-401 and DEMO-399 are outside the immutable release tag.
+
+**Validation:** PASS — Release workflow 36806843971 attempt 2 reproduced the annotated v0.29.1 tag and published the GitHub Release with `registry-v0.29.1.json`. Protected manual-recovery Deploy workflow 36844398006 attempt 2 ran from current `main` at `a97958f45f4e69ecf6a37a56be4c00343cbfc54a`, verified that published immutable tag, passed the reviewed tagged-source check and production Worker secret-name preflight, captured a ready identity baseline with GitHub, Google, and Microsoft configured, and found no pending production D1 migrations. Deploy job 110312198287 deployed the tagged commit as Worker Version ID `ae8f9553-4a8a-4702-9456-84e336cbff0d` at 100% production traffic. The workflow verified version 0.29.1 at the full tagged commit, operational Worker and ready identity, continuity of all three configured providers, and deployed static browser assets. Independent public checks returned HTTP 200 for `/api/operations/version`, `/api/operations/health`, and `/auth/session` with the same release identity, operational D1, R2, and Durable Objects, and the same configured providers.
+
+**Previous:** v0.28.0
+
+**Rollback:** Deploy v0.28.0.
+
+**Note:** GitHub Release v0.29.1 was published at 2026-10-01 02:46:45 UTC. Its original protected deploy job failed local tagged-source validation before production mutation. Manual-recovery Deploy attempt 1 failed on a browser category-key interaction timeout, again before production mutation. Attempt 2 passed every protected gate and completed deployment at 09:50:45 UTC. The intervening immutable v0.29.0 tag was not published as a GitHub Release or deployed to production.
