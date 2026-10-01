@@ -3,9 +3,24 @@ name: Release
 on:
   push:
     tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Exact annotated semantic tag cut from successful main CI
+        required: true
+        type: string
+      commit:
+        description: Exact accepted main commit identified by the tag
+        required: true
+        type: string
+      ci_run_id:
+        description: Successful exact-commit main CI run
+        required: true
+        type: string
 
 permissions:
   contents: write
+  actions: read
 
 jobs:
   reproduce:
@@ -33,10 +48,37 @@ jobs:
           npm run build
       - name: Verify annotated semantic release identity
         id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED_TAG: ${{ inputs.tag }}
+          REQUESTED_COMMIT: ${{ inputs.commit }}
+          SOURCE_CI_RUN_ID: ${{ inputs.ci_run_id }}
         shell: bash
         run: |
           if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "::error::Release tag must be semantic version vMAJOR.MINOR.PATCH; got $GITHUB_REF_NAME"
+            exit 1
+          fi
+
+          if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
+            if [[ "$GITHUB_REF" != "refs/tags/$GITHUB_REF_NAME" ]]; then
+              echo "::error::Tag-push Release lost its exact tag ref"
+              exit 1
+            fi
+          elif [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            if [[ "$REQUESTED_TAG" != "$GITHUB_REF_NAME" || "$GITHUB_REF" != "refs/tags/$REQUESTED_TAG" || ! "$REQUESTED_COMMIT" =~ ^[0-9a-f]{40}$ || ! "$SOURCE_CI_RUN_ID" =~ ^[1-9][0-9]*$ ]]; then
+              echo "::error::Exact-tag Release dispatch inputs do not match its tag ref"
+              exit 1
+            fi
+            ci_line="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_CI_RUN_ID" --jq '[.name, .event, .head_branch, .head_sha, .status, .conclusion] | @tsv')"
+            IFS=$'\t' read -r ci_name ci_event ci_branch ci_commit ci_status ci_conclusion <<< "$ci_line"
+            main_sha="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)"
+            if [[ "$ci_name" != "CI" || "$ci_event" != "push" || "$ci_branch" != "main" || "$ci_commit" != "$REQUESTED_COMMIT" || "$ci_status" != "completed" || "$ci_conclusion" != "success" || "$main_sha" != "$REQUESTED_COMMIT" ]]; then
+              echo "::error::Exact-tag Release dispatch is not bound to successful current-main CI"
+              exit 1
+            fi
+          else
+            echo "::error::Unsupported Release event: $GITHUB_EVENT_NAME"
             exit 1
           fi
 
@@ -53,6 +95,28 @@ jobs:
             echo "::error::Checked-out commit $checkout_commit does not match tagged commit $tag_commit"
             exit 1
           fi
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" && "$checkout_commit" != "$REQUESTED_COMMIT" ]]; then
+            echo "::error::Release dispatch commit does not match the annotated tag"
+            exit 1
+          fi
+
+          ci_json='null'
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            ci_json="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_CI_RUN_ID")"
+          fi
+          RELEASE_CI_JSON="$ci_json" RELEASE_MAIN_SHA="${main_sha:-}" RELEASE_CHECKOUT_COMMIT="$checkout_commit" node --input-type=module <<'NODE'
+          import { validateExactTagDispatch } from './scripts/lib/exact-tag-release.mjs';
+          validateExactTagDispatch({
+            eventName: process.env.GITHUB_EVENT_NAME,
+            ref: process.env.GITHUB_REF,
+            refName: process.env.GITHUB_REF_NAME,
+            tag: process.env.GITHUB_REF_NAME,
+            commit: process.env.REQUESTED_COMMIT,
+            checkoutCommit: process.env.RELEASE_CHECKOUT_COMMIT,
+            ciRun: JSON.parse(process.env.RELEASE_CI_JSON),
+            mainSha: process.env.RELEASE_MAIN_SHA,
+          });
+          NODE
 
           package_version="$(node -p "JSON.parse(require('fs').readFileSync('package.json','utf8')).version")"
           if [[ "v$package_version" != "$GITHUB_REF_NAME" ]]; then
@@ -106,11 +170,25 @@ jobs:
             release_args+=(--notes-start-tag "$PREVIOUS_TAG")
           fi
 
-          gh release create "${release_args[@]}"
+          published_tag="$(gh release view "$GITHUB_REF_NAME" --json isDraft,tagName,publishedAt --jq 'if .isDraft == false and .publishedAt != null then .tagName else "" end' 2>/dev/null || true)"
+          if [[ "$published_tag" == "$GITHUB_REF_NAME" ]]; then
+            if ! gh release view "$GITHUB_REF_NAME" --json assets --jq '.assets[].name' | grep -qx "registry-$GITHUB_REF_NAME.json"; then
+              gh release upload "$GITHUB_REF_NAME" "$snapshot#Assurance registry snapshot for $GITHUB_REF_NAME"
+            fi
+            echo "Published $GITHUB_REF_NAME already exists; retained its release identity."
+          else
+            if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+              echo "::error::A non-published Release already exists for $GITHUB_REF_NAME"
+              exit 1
+            fi
+            gh release create "${release_args[@]}"
+          fi
 
   deploy:
     needs: reproduce
     uses: ./.github/workflows/deploy.yml
     with:
       ref: ${{ github.ref_name }}
+      release_origin: ${{ github.event_name == 'push' && 'tag-push' || 'exact-tag-dispatch' }}
+      accepted_commit: ${{ github.sha }}
     secrets: inherit

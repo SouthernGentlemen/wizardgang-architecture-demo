@@ -363,7 +363,7 @@ jobs:
           done
           echo "::error::Pull request did not reach merged state"
           exit 1
-      - name: Create and push annotated release tag
+      - name: Hand validated main to the exact-tag cutter
         env:
           VERSION: ${{ steps.pull.outputs.version }}
           MERGE_SHA: ${{ steps.merge.outputs.sha }}
@@ -377,13 +377,8 @@ jobs:
           test "$(git show "$MERGE_SHA:package.json" | node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).version")" = "$VERSION"
           git show -s --format=%B "$MERGE_SHA" | grep -qx 'Live-Release: true'
           if git rev-parse "refs/tags/v$VERSION" >/dev/null 2>&1; then
-            echo "::error::Release tag v$VERSION already exists"
-            exit 1
+            echo "Version tag v$VERSION already exists; the main CI cutter must verify its identity."
           fi
-          git config user.name "WizardGang Live Demo"
-          git config user.email "live-demo@users.noreply.github.com"
-          git tag -a "v$VERSION" "$MERGE_SHA" -m "WizardGang Architecture Demo v$VERSION"
-          git push origin "refs/tags/v$VERSION"
       - name: Publish release summary
         env:
           VERSION: ${{ steps.pull.outputs.version }}
@@ -394,6 +389,6 @@ jobs:
             echo "### Live Git demo released"
             echo "- Pull request: #$PULL_REQUEST"
             echo "- Merge commit: $MERGE_SHA"
-            echo "- Annotated tag: v$VERSION"
-            echo "- The tag-triggered Release workflow now reproduces, deploys, verifies, and publishes the release."
+            echo "- Target tag: v$VERSION"
+            echo "- Successful CI on exact current main cuts or verifies the tag and dispatches Release."
           } >> "$GITHUB_STEP_SUMMARY"
