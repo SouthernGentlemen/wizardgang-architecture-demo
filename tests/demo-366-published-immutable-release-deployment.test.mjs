@@ -60,7 +60,8 @@ describe('DEMO-366 published immutable release deployment boundary', () => {
     expect(releaseWorkflow).toContain('uses: ./.github/workflows/deploy.yml');
     expect(releaseWorkflow).toContain('ref: ${{ github.ref_name }}');
     expect(deployWorkflow).toContain('if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]');
-    expect(deployWorkflow).toContain('"$GITHUB_REF" != "refs/heads/main"');
+    expect(deployWorkflow).toContain('"$GITHUB_REF" == "refs/heads/main" && -z "$RELEASE_ORIGIN"');
+    expect(deployWorkflow).toContain('"$GITHUB_REF" == "refs/tags/$tag" && "$RELEASE_ORIGIN" == "exact-tag-dispatch"');
     expect(deployWorkflow).toContain('elif [[ "$GITHUB_EVENT_NAME" == "push" ]]');
     expect(deployWorkflow).toContain('"$GITHUB_REF" != "refs/tags/$tag"');
     expect(releaseManagement).toContain('already published immutable semantic tag');

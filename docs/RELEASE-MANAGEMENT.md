@@ -6,7 +6,7 @@ WizardGang Architecture Demo uses semantic versioning. Controlled change IDs ide
 
 The live Git delivery controller is an explicit release operation in `/demos#webhooks`. Visitors can inspect the public read-only Actions feed; release controls use the same-origin demo-admin authentication. Before an operator confirms a start, `GET /api/labs/git-delivery?preflight=patch` (or `minor`/`major`) returns the target version, latest published release, every commit since that release, and a fingerprint of that evidence; incomplete GitHub comparison data fails closed. Start requires the matching fingerprint so a changed target or commit range must be reviewed again. The start response and workflow/PR summaries repeat that range so the operator can see all accumulated changes that the new tag would ship.
 
-Start opens one version-metadata-only controlled `[BUILD] Demonstrate vX.Y.Z release lifecycle` PR under an unused DEMO ID. Its marker, full structured body, hyphen-only branch, unchanged queue, and package/lockfile versions are checked by PR and history validation. Merge & Release requires all four exact-head CI checks, current `main`, and ordinary squash-only protection. The controller verifies the squash commit, creates an annotated tag at that commit, and hands the tag event to the existing Release and protected Deploy workflows. A completed production deployment requires a separate controlled `OPS` record in `docs/history/DEPLOYMENTS.md` with the actual post-deployment evidence. Starting or merging an ordinary implementation PR does not trigger this path.
+Start opens one version-metadata-only controlled `[BUILD] Demonstrate vX.Y.Z release lifecycle` PR under an unused DEMO ID. Its marker, full structured body, hyphen-only branch, unchanged queue, and package/lockfile versions are checked by PR and history validation. Merge & Release requires all four exact-head CI checks, current `main`, and ordinary squash-only protection. After the squash commit, successful CI on exact current `main` creates or verifies the annotated version tag and explicitly dispatches Release at that tag and accepted commit. The same cutter serves controlled version-only PRs delivered through GitHub without the live controller. A completed production deployment requires a separate controlled `OPS` record in `docs/history/DEPLOYMENTS.md` with the actual post-deployment evidence. Starting or merging an ordinary implementation PR at an already-published version does not trigger a new release.
 
 ## Release rule
 
@@ -26,7 +26,7 @@ Release tags use `vMAJOR.MINOR.PATCH`, are annotated, and must point to the exac
 
 The annotated tag and GitHub Release are the historical release authority. The repository does not maintain a parallel per-version Markdown release archive or root changelog.
 
-The tag-triggered release workflow derives release publication from Git/GitHub state:
+The Release workflow accepts either an exact tag push or an exact-tag dispatch bound to successful CI on current `main`. A workflow-token tag creation does not generate a new tag-push workflow event, so the cutter dispatches Release explicitly. Both paths derive publication from Git/GitHub state:
 
 1. verify the tag is semantic and annotated;
 2. resolve the exact tagged commit and require the checkout to match it;
@@ -35,7 +35,7 @@ The tag-triggered release workflow derives release publication from Git/GitHub s
 5. reproduce the tagged source with the required validation gates;
 6. generate and retain the release-bound assurance registry snapshot;
 7. create the GitHub Release with an identity header derived from the tag and GitHub-generated notes for the changes since the preceding tag;
-8. attach the assurance registry snapshot to the GitHub Release;
+8. attach the assurance registry snapshot to the GitHub Release, retaining an already-published release on retry;
 9. deploy only after release reproduction and publication succeed.
 
 Historical release notes are read from GitHub Releases. Superseded repository state remains reconstructable from the corresponding annotated tag and Git history.
@@ -55,7 +55,7 @@ Production identity comes from the immutable release tag and commit, not from an
 
 ## Tag-triggered deployment
 
-The release workflow operates on an existing annotated semantic-version tag. Deployment checks out that exact tag and independently verifies that it is semantic and annotated before proceeding.
+The release workflow operates on an existing annotated semantic-version tag. Deployment checks out that exact tag and independently verifies that it is semantic and annotated before proceeding. Release's exact-tag dispatch passes its accepted commit and source to the reusable Deploy workflow; manual recovery still starts from the current `main` deploy workflow and can select only an already-published immutable tag.
 
 The deploy workflow then:
 

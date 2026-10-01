@@ -57,7 +57,8 @@ describe('DEMO-367 release-to-deployment identity and provider version', () => {
     expect(deployWorkflow).toContain('"$remote_tag_object" != "$tag_object"');
     expect(deployWorkflow).toContain('"$remote_target_commit" != "$checkout_commit"');
     expect(deployWorkflow).toContain('if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]');
-    expect(deployWorkflow).toContain('"$GITHUB_REF" != "refs/heads/main"');
+    expect(deployWorkflow).toContain('"$GITHUB_REF" == "refs/heads/main" && -z "$RELEASE_ORIGIN"');
+    expect(deployWorkflow).toContain('"$ACCEPTED_COMMIT" != "$checkout_commit"');
   });
 
   it('binds provider verification to the exact Wrangler deployment result before public verification', () => {

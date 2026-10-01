@@ -1,0 +1,32 @@
+name: Exact-tag release cutter
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  actions: write
+  contents: write
+
+concurrency:
+  group: exact-tag-release-cutter
+  cancel-in-progress: false
+
+jobs:
+  cut:
+    if: github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .node-version
+      - name: Cut or verify exact annotated release tag and dispatch Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/cut-main-release.mjs
