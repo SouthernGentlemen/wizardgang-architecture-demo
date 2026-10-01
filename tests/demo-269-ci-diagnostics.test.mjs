@@ -182,7 +182,7 @@ describe('DEMO-269 CI diagnostics', () => {
       checkEnvironment: { WG_LOCAL_D1_PERSIST_TO: persistenceDirectory },
     });
     expect(ciCommands.find(({ id }) => id === 'check')?.env).toEqual({ WG_LOCAL_D1_PERSIST_TO: persistenceDirectory });
-    for (const script of ['site-browser-audit.mjs', 'demo-268-rest-browser-audit.mjs', 'demo-289-site-evaluation.mjs']) {
+    for (const script of ['site-browser-audit.mjs', 'demo-289-site-evaluation.mjs']) {
       const source = fs.readFileSync(path.join(process.cwd(), 'scripts', script), 'utf8');
       expect(source).toContain('process.env.WG_LOCAL_D1_PERSIST_TO');
       expect(source).toContain("'--persist-to'");

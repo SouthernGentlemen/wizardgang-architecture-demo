@@ -494,6 +494,21 @@ async function exerciseRestWorkflow(cdp, locale) {
   await navigate(cdp, `${origin}/demos?lang=${locale}#rest`);
   await assertWorkbenchState(cdp, 'rest', label, '#rest', locale);
 
+  const initial = await evaluate(cdp, `(()=>{
+    const openPanels=[...document.querySelectorAll('[data-rest-operation-panel]')].filter((panel)=>panel.open);
+    return {
+      released:[...new Set([...document.querySelectorAll('[data-demo-link]')].map((link)=>link.dataset.demoLink))].filter(Boolean).length,
+      choices:document.querySelectorAll('[data-rest-operation-select]').length,
+      openPanels:openPanels.length,
+      fullOpenApi:Boolean(document.querySelector('[data-rest-full-openapi]')),
+      oldInventory:document.body.textContent.includes('All demos'),
+      oldFullContract:Boolean(document.querySelector('.rest-full-contract')),
+    };
+  })()`);
+  if (initial.released !== Object.keys(workbenchDemos).length || initial.choices !== 6 || initial.openPanels !== 0 || !initial.fullOpenApi || initial.oldInventory || initial.oldFullContract) {
+    throw new Error(`${label}: REST evidence containment failed: ${JSON.stringify(initial)}`);
+  }
+
   const run = async (operationId, expectedStatus) => {
     const selected = await evaluate(cdp, `(()=>{
       const panel=document.querySelector('[data-rest-operation-panel=${JSON.stringify(operationId)}]');
@@ -512,10 +527,33 @@ async function exerciseRestWorkflow(cdp, locale) {
   };
 
   await run('listRecords', 200);
+  const listResult = await evaluate(cdp, `(()=>{
+    const panel=document.querySelector('[data-rest-operation-panel="listRecords"]');
+    return {
+      body:panel?.querySelector('[data-rest-response-body]')?.textContent||'',
+      contract:panel?.querySelector('.rest-declared-responses')?.textContent||'',
+      curl:panel?.querySelector('[data-rest-curl]')?.textContent||'',
+    };
+  })()`);
+  if (!listResult.body.includes('"results"') || !listResult.contract.includes('200') || !listResult.curl.includes('--cookie-jar')) {
+    throw new Error(`${label}: GET response/contract/curl evidence is incomplete: ${JSON.stringify(listResult)}`);
+  }
+
   await run('createRecord', 201);
   await run('getRecord', 200);
   await run('replaceRecord', 200);
   await run('updateRecord', 200);
+  const patch = await evaluate(cdp, `(()=>{
+    const panel=document.querySelector('[data-rest-operation-panel="updateRecord"]');
+    return {
+      open:panel?.open,
+      status:panel?.querySelector('[data-rest-status]')?.textContent||'',
+      contract:panel?.querySelector('.rest-document-block')?.textContent||'',
+    };
+  })()`);
+  if (!patch.open || !patch.contract.includes('id')) {
+    throw new Error(`${label}: PATCH behavior was not paired with its relevant contract: ${JSON.stringify(patch)}`);
+  }
   await run('deleteRecord', 204);
   const result = await evaluate(cdp, `(()=>({
     lang:document.documentElement.lang,
@@ -533,7 +571,7 @@ async function exerciseRestWorkflow(cdp, locale) {
 }
 
 async function restDocumentReflowAudit(cdp) {
-  for (const width of [375, 768, 1440]) {
+  for (const width of [320, 375, 768, 1440]) {
     await cdp.call('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 768 });
     for (const locale of ['en', 'ar']) {
       await navigate(cdp, `${origin}/demos?lang=${locale}#rest`);
