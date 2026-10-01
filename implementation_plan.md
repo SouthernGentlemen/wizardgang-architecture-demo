@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-407 — [A11Y] Fold contrast and target checks into the main audit
-- Dependency: DEMO-406.
-- Why: DEMO-289 starts another browser to inspect contrast and target geometry.
-- Scope: Move its unique contrast and target assertions into existing route/state visits in the main audit.
-- Non-goals: Do not reduce accessibility or localization coverage or supported public routes.
-- Acceptance: English and Arabic contrast and target results retain the same pass/fail thresholds.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: scripts/demo-289-site-evaluation.mjs; scripts/site-browser-audit.mjs
-
 ### DEMO-408 — [A11Y] Fold focus and reflow checks into the main audit
 - Dependency: DEMO-407.
 - Why: DEMO-289 also repeats focus, text spacing, reflow, and content review visits.

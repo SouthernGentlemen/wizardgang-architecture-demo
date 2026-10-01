@@ -1,6 +1,5 @@
 import { spawn } from 'node:child_process';
 import fs from 'node:fs';
-import { createRequire } from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
 import {
@@ -15,8 +14,6 @@ import {
 } from './lib/browser-audit.mjs';
 import { assuranceReviewState, waitForAssuranceRecordPane } from './lib/demo-289-content-review.mjs';
 
-const require = createRequire(import.meta.url);
-const axeSource = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
 const manifest = JSON.parse(fs.readFileSync('docs/route-manifest.json', 'utf8'));
 const auditConfig = JSON.parse(fs.readFileSync('config/site-audit-states.json', 'utf8'));
 const port = Number(process.env.DEMO289_AUDIT_PORT || 8791);
@@ -140,30 +137,6 @@ async function inspectGeometry(cdp, label, findings, context = {}) {
   return value;
 }
 
-async function runContrastAndTargets(cdp, label, findings) {
-  const result = await evaluate(cdp, `(async()=>{
-    ${axeSource}
-    const contrastStarted=performance.now();
-    const contrast=await axe.run(document,{runOnly:{type:'rule',values:['color-contrast']},resultTypes:['violations']});
-    const contrastDurationMs=Math.round(performance.now()-contrastStarted);
-    const targetStarted=performance.now();
-    const targets=[...document.querySelectorAll('button,select,input:not([type="hidden"]),textarea,summary,[role="button"],[role="tab"]')].flatMap((el)=>{
-      const s=getComputedStyle(el); const r=el.getBoundingClientRect();
-      if(s.display==='none'||s.visibility==='hidden'||r.width===0||r.height===0)return [];
-      return [{name:el.id||el.getAttribute('data-assurance-framework')||el.getAttribute('role')||el.tagName,width:r.width,height:r.height}];
-    });
-    const below24=targets.filter((t)=>t.width<24||t.height<24);
-    const below44=targets.filter((t)=>t.width<44||t.height<44);
-    const targetDurationMs=Math.round(performance.now()-targetStarted);
-    return {contrast:contrast.violations.map((v)=>({id:v.id,nodes:v.nodes.length,targets:v.nodes.slice(0,5).flatMap((n)=>n.target)})),below24,below44:below44.length,total:targets.length,contrastDurationMs,targetDurationMs};
-  })()`, `DEMO-289 axe/computed contrast and target-size calculation ${label}`);
-  console.log(`DEMO-289 timing axe/computed contrast ${label}: ${result.contrastDurationMs}ms`);
-  console.log(`DEMO-289 timing target-size calculation ${label}: ${result.targetDurationMs}ms`);
-  if (result.contrast.length) recordFinding(findings, 'computed contrast', label, result.contrast, false);
-  if (result.below24.length) recordFinding(findings, 'WCAG 2.5.8 target size', label, result.below24.slice(0,12), false);
-  return result;
-}
-
 async function runTextSpacing(cdp, label, findings) {
   await evaluate(cdp, `(()=>{const style=document.createElement('style');style.id='demo289-text-spacing';style.textContent='*{line-height:1.5!important;letter-spacing:.12em!important;word-spacing:.16em!important}p{margin-bottom:2em!important}';document.head.append(style);return true})()`);
   await new Promise((resolve) => setTimeout(resolve, 50));
@@ -243,7 +216,6 @@ async function main() {
   let wranglerError='';wrangler.stderr.on('data',(chunk)=>{wranglerError+=String(chunk)});
   let chrome; let cdp;
   const profile=fs.mkdtempSync(path.join(os.tmpdir(),'wg-demo289-'));
-  const enhancedTargetSummary=[];
   const findings=[];
   try {
     await waitForUrl(`${origin}/`);
@@ -277,8 +249,6 @@ async function main() {
           const assurancePane=await waitForAssuranceRecordPane(cdp, pathname, locale, { origin, assurancePath, evaluatePage: evaluate, sleep });
           return contentSnapshot(cdp,pathname,locale,assurancePane?.headingText ?? null);
         });
-        const targets=await captureStep(findings,'contrast/target harness',`${pathname} ${locale}`,()=>runContrastAndTargets(cdp,`${pathname} ${locale}`,findings));
-        if (targets.ok) enhancedTargetSummary.push({pathname,locale,below44:targets.value.below44,total:targets.value.total});
         await captureStep(findings,'keyboard/focus harness',`${pathname} ${locale}`,()=>runFocusAndTrap(cdp,`${pathname} ${locale}`,findings));
 
         const spacingNavigation=await captureStep(findings,'navigation',`${pathname} ${locale} text spacing`,async()=>{
@@ -322,9 +292,8 @@ async function main() {
     const expectedFindings=findings.filter((finding)=>finding.classification==='expected/documented finding');
     const unrecordedFindings=findings.filter((finding)=>finding.classification==='new/unrecorded regression');
     console.log(`DEMO-289 scripted WCAG browser evaluation completed across ${pages.length} canonical public pages and ${auditConfig.states.length} configured states, English and Arabic.`);
-    console.log(`DEMO-289 target-size review: ${JSON.stringify(enhancedTargetSummary)}`);
     console.log(`DEMO-289 finding summary: ${JSON.stringify({expectedDocumented:expectedFindings,newUnrecorded:unrecordedFindings})}`);
-    console.log('DEMO-289 methods: 320 CSS px, 200%/400% zoom-equivalent viewports, WCAG text spacing, rendered 24px target geometry with 44px enhanced-target inventory, computed axe contrast, keyboard trap/reverse traversal, focus visibility/obscuring, reduced motion, and forced colors. No screen reader was used.');
+    console.log('DEMO-289 methods: 320 CSS px, 200%/400% zoom-equivalent viewports, WCAG text spacing, keyboard trap/reverse traversal, focus visibility/obscuring, reduced motion, forced colors, and content review. Contrast and target-size checks are owned by the main site browser audit. No screen reader was used.');
     console.log(`DEMO-289 evaluation complete: ${elapsedMs(auditStarted)}ms`);
     if (unrecordedFindings.length) throw new Error(`DEMO-289 found ${unrecordedFindings.length} new/unrecorded browser regression(s) after completing the full matrix.`);
   } catch (error) {

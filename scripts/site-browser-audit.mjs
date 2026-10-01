@@ -24,6 +24,7 @@ const origin = `http://127.0.0.1:${serverPort}`;
 const localSessionSecret = 'demo-335-local-browser-audit-session-key';
 const localPersistenceArgs = process.env.WG_LOCAL_D1_PERSIST_TO ? ['--persist-to', process.env.WG_LOCAL_D1_PERSIST_TO] : [];
 const axeTags = ['wcag2a', 'wcag2aa', 'wcag2aaa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
+const targetSelector = 'button,select,input:not([type="hidden"]),textarea,summary,[role="button"],[role="tab"]';
 const workbenchDemos = {
   d1: ['Data', 'D1'], r2: ['Data', 'R2'], rest: ['APIs', 'REST / OpenAPI'], graphql: ['APIs', 'GraphQL'],
   webhooks: ['Integrations', 'Webhooks'], oauth: ['Identity', 'OAuth 2.0'], sso: ['Identity', 'SSO'], saml: ['Identity', 'SAML'], mcp: ['AI', 'MCP'],
@@ -60,10 +61,17 @@ function localizedPath(routePathname, locale) {
   return `${url.pathname}${url.search}${url.hash}`;
 }
 
-function inspectionExpression(expectedLocale) {
+function inspectionExpression(expectedLocale, checkTargetSize = false) {
+  const targetSizeExpression = checkTargetSize
+    ? `[...document.querySelectorAll(${JSON.stringify(targetSelector)})].flatMap((el)=>{const s=getComputedStyle(el);const r=el.getBoundingClientRect();if(s.display==='none'||s.visibility==='hidden'||r.width===0||r.height===0)return [];return [{name:el.id||el.getAttribute('data-assurance-framework')||el.getAttribute('role')||el.tagName,width:r.width,height:r.height}]})`
+    : '[]';
   return `(async()=>{
     ${axeSource}
     const axeResult = await axe.run(document, { runOnly: { type: 'tag', values: ${JSON.stringify(axeTags)} }, resultTypes: ['violations'] });
+    const contrastViolations = axeResult.violations.filter((violation)=>violation.id==='color-contrast');
+    const targets = ${targetSizeExpression};
+    const below24 = targets.filter((target)=>target.width<24||target.height<24);
+    const below44 = targets.filter((target)=>target.width<44||target.height<44);
     const ids = [...document.querySelectorAll('[id]')].map((node)=>node.id);
     const duplicateIds = [...new Set(ids.filter((id,index)=>ids.indexOf(id)!==index))];
     const skip = document.querySelector('.skip-link[href^="#"]');
@@ -113,7 +121,14 @@ function inspectionExpression(expectedLocale) {
       overflowingElements,
       clippedControls,
       localeSelectorNamed: Boolean(document.querySelector('#global-language[aria-label]')),
-      violations: axeResult.violations.map((violation)=>({
+      contrastViolations: contrastViolations.map((violation)=>({
+        id: violation.id,
+        impact: violation.impact,
+        nodes: violation.nodes.length,
+        targets: violation.nodes.slice(0, 5).flatMap((node)=>node.target),
+      })),
+      targetSize: { below24, below44: below44.length, total: targets.length },
+      violations: axeResult.violations.filter((violation)=>violation.id!=='color-contrast').map((violation)=>({
         id: violation.id,
         impact: violation.impact,
         nodes: violation.nodes.length,
@@ -124,8 +139,8 @@ function inspectionExpression(expectedLocale) {
   })()`;
 }
 
-async function inspectCurrentPage(cdp, expectedLocale, label) {
-  const report = await evaluate(cdp, inspectionExpression(expectedLocale));
+async function inspectCurrentPage(cdp, expectedLocale, label, { checkTargetSize = false } = {}) {
+  const report = await evaluate(cdp, inspectionExpression(expectedLocale, checkTargetSize));
   const expectedDir = expectedLocale === 'ar' ? 'rtl' : 'ltr';
   const failures = [];
   if (report.lang !== expectedLocale) failures.push(`lang=${report.lang}`);
@@ -138,14 +153,16 @@ async function inspectCurrentPage(cdp, expectedLocale, label) {
   if (!report.localeSelectorNamed) failures.push('locale selector is not named');
   if (report.ordinaryHorizontalOverflow) failures.push(`page-level horizontal overflow (${report.overflowingElements.join(', ')})`);
   if (report.clippedControls.length) failures.push(`horizontally clipped controls=${report.clippedControls.join(', ')}`);
+  if (report.targetSize.below24.length) failures.push(`WCAG 2.5.8 target size under 24px=${JSON.stringify(report.targetSize.below24.slice(0, 12))}`);
+  if (report.contrastViolations.length) failures.push(`computed contrast=${report.contrastViolations.map((item)=>`${item.id}(${item.nodes}: ${item.targets.join(', ')})`).join('; ')}`);
   if (report.violations.length) failures.push(`axe=${report.violations.map((item)=>`${item.id}(${item.nodes}: ${item.targets.join(', ')})`).join('; ')}`);
   if (failures.length) throw new Error(`${label}: ${failures.join('; ')}`);
   return report;
 }
 
-async function inspectPath(cdp, pathname, locale, label) {
+async function inspectPath(cdp, pathname, locale, label, options) {
   await navigate(cdp, `${origin}${localizedPath(pathname, locale)}`);
-  return inspectCurrentPage(cdp, locale, label);
+  return inspectCurrentPage(cdp, locale, label, options);
 }
 
 async function inspectShellGeometry(cdp, label) {
@@ -1269,10 +1286,12 @@ async function main() {
 
     let browserPages = 0;
     let axeRuns = 0;
+    const enhancedTargetSummary = [];
     for (const route of pages) {
       const pathname = routePath(route);
       for (const locale of ['en', 'ar']) {
-        await inspectPath(cdp, pathname, locale, `${route.id} ${locale}`);
+        const report = await inspectPath(cdp, pathname, locale, `${route.id} ${locale}`, { checkTargetSize: true });
+        enhancedTargetSummary.push({ pathname, locale, below44: report.targetSize.below44, total: report.targetSize.total });
         browserPages += 1;
         axeRuns += 1;
       }
@@ -1280,7 +1299,8 @@ async function main() {
 
     for (const state of auditConfig.states) {
       for (const locale of ['en', 'ar']) {
-        await inspectPath(cdp, state.path, locale, `${state.name} ${locale}`);
+        const report = await inspectPath(cdp, state.path, locale, `${state.name} ${locale}`, { checkTargetSize: true });
+        enhancedTargetSummary.push({ pathname: state.path, locale, below44: report.targetSize.below44, total: report.targetSize.total });
         axeRuns += 1;
       }
     }
@@ -1386,6 +1406,7 @@ async function main() {
       throw new Error(`CSP violations across audited pages/states: ${cspViolations.slice(0, 12).join('; ')}`);
     }
 
+    console.log(`Site browser target-size review: ${JSON.stringify(enhancedTargetSummary)}`);
     console.log(`Site browser audit passed: ${pages.length} canonical public routes, ${browserPages} route/locale renders, ${auditConfig.states.length} explicit state fixtures, ${axeRuns} axe runs, no CSP violations, one complete Demo Workbench interaction/history/locale audit, D1 CRUD/reset, R2 upload/preview/delete, every REST operation, GraphQL example/custom queries, and the MCP, Edge, Workers, Durable Objects, accessibility/axe, and internationalization workflows in English and Arabic, ${auditConfig.narrowViewportPaths.length} narrow reflow samples, and ${auditConfig.keyboardPaths.length} keyboard smoke samples.`);
     console.log('Automated accessibility result: no automatically detectable violation observed in the bounded Chromium/axe matrix. This is not WCAG conformance or AAA certification.');
   } catch (error) {
