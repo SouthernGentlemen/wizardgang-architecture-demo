@@ -258,10 +258,27 @@ describe('DEMO-290 assurance assessment acceptance', () => {
     expect(assuranceStates.some((state) => state.path.includes('WCAG-1.1.1'))).toBe(true);
     expect(assuranceStates.some((state) => state.path.includes('lang=ar'))).toBe(true);
 
+    const mainAudit = readFileSync('scripts/site-browser-audit.mjs', 'utf8');
     const evaluation = readFileSync('scripts/demo-289-site-evaluation.mjs', 'utf8');
+
+    expect(mainAudit).toContain('axe-core');
+    expect(mainAudit).toContain("violation.id==='color-contrast'");
+    expect(mainAudit).toContain('target.width<24||target.height<24');
+    expect(mainAudit).toContain('target.width<44||target.height<44');
+    expect(mainAudit).toContain('{ checkTargetSize: true }');
+    expect(mainAudit).toContain("for (const locale of ['en', 'ar'])");
+    expect(mainAudit).toContain('auditConfig.states');
+
     expect(evaluation).toContain('chromeExecutable');
-    expect(evaluation).toContain('axe-core');
     expect(evaluation).toContain("for (const locale of ['en','ar'])");
     expect(evaluation).toContain('auditConfig.states.map');
+    expect(evaluation).not.toContain('axe-core');
+    expect(evaluation).not.toContain('runContrastAndTargets');
+    expect(evaluation).not.toContain('below24');
+    expect(evaluation).toContain('contentSnapshot');
+    expect(evaluation).toContain('runFocusAndTrap');
+    expect(evaluation).toContain('runTextSpacing');
+    expect(evaluation).toContain('inspectGeometry');
+    expect(evaluation).toContain('Contrast and target-size checks are owned by the main site browser audit.');
   });
 });
