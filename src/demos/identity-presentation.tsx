@@ -117,7 +117,7 @@ function IdentityPresentation({ env, localization, demo }: Readonly<{ env: Env; 
 
     <section className="identity-result" aria-labelledby={id('identity-result-heading')} data-identity-result="" hidden>
       <div className="identity-authenticated-heading">
-        <div><p className="eyebrow">{exact('Authenticated')}</p><DemoHeading level={2} id={id('identity-result-heading')} data-identity-name="">{exact('Identity')}</DemoHeading><p data-identity-email="" /></div>
+        <div><p className="eyebrow">{exact('Authenticated')}</p><DemoHeading level={2} id={id('identity-result-heading')} data-identity-name="">{exact('Identity')}</DemoHeading><p data-identity-email="" dir="ltr" /></div>
         <div className="identity-authenticated-state"><span className="badge badge-ok" data-identity-provider="">{exact('Provider')}</span><strong data-identity-badges="">{exact('Authenticated')}</strong><button type="button" data-identity-logout="">{exact('Sign out')}</button></div>
       </div>
       <div className="identity-tabs" role="tablist" aria-label={exact('Authentication result views')}>
@@ -135,12 +135,12 @@ function IdentityPresentation({ env, localization, demo }: Readonly<{ env: Env; 
       <section className="panel identity-inspector-panel" role="tabpanel" aria-labelledby={id('identity-provider-tab')} id={id('identity-provider-panel')} data-identity-panel="provider">
         <div className="identity-inspector-heading"><div><p className="eyebrow">{exact('Received → validated')}</p><DemoHeading level={3} data-payload-label="">{exact('Validated provider payload')}</DemoHeading></div><span className="badge badge-ok">{exact('Sanitized')}</span></div>
         <div className="identity-validation-grid" data-validation-list="" />
-        <pre data-provider-payload="" />
+        <pre data-provider-payload="" dir="ltr" />
       </section>
       <section className="panel identity-inspector-panel" role="tabpanel" aria-labelledby={id('identity-normalized-tab')} id={id('identity-normalized-panel')} data-identity-panel="normalized" hidden>
         <div className="identity-inspector-heading"><div><p className="eyebrow">{exact('Application contract')}</p><DemoHeading level={3}>{exact('Normalized identity')}</DemoHeading></div><span className="badge">{exact('Provider-neutral')}</span></div>
         <p className="subtle">{exact('Only fields legitimately derived from validated provider data cross this boundary.')}</p>
-        <pre data-normalized-identity="" />
+        <pre data-normalized-identity="" dir="ltr" />
       </section>
       <section className="panel identity-inspector-panel" role="tabpanel" aria-labelledby={id('identity-authorization-tab')} id={id('identity-authorization-panel')} data-identity-panel="authorization" hidden>
         <div className="identity-inspector-heading"><div><p className="eyebrow">{exact('Application authorization')}</p><DemoHeading level={3}>{exact('What can this identity do?')}</DemoHeading></div><span className="badge">{exact('Independent policy')}</span></div>

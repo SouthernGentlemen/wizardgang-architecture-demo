@@ -62,9 +62,11 @@ function createRecordLink(record: RecordSummary, activeId: string, messages: Ass
 
   const reference = document.createElement('code');
   reference.lang = 'en';
+  reference.dir = 'ltr';
   reference.textContent = record.reference;
   const title = document.createElement('strong');
   title.lang = 'en';
+  title.dir = 'ltr';
   title.textContent = record.title;
   link.append(reference, document.createTextNode(' '), title, document.createTextNode(' '), createStatusBadge(record.status, messages));
   return link;
@@ -150,6 +152,7 @@ function initializeAssuranceWorkbench(): void {
     const options = sections(record.framework).map((section) => {
       const option = document.createElement('option');
       option.value = section;
+      option.dir = 'ltr';
       option.selected = section === record.section;
       option.textContent = `${section} · ${records.filter((candidate) => candidate.section === section).length}`;
       return option;

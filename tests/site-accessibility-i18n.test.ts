@@ -6,11 +6,15 @@ import manualMatrix from '../docs/accessibility-manual-verification.json';
 import {
   defaultLocale,
   localeResources,
+  observeExactFallbacks,
   resolveLocalization,
   supportedLocales,
   type SupportedLocale,
 } from '../src/i18n/runtime';
 import { routeRequest } from '../src/router';
+import { demonstrations } from '../src/demos/demos-page';
+import { listPublishedAssuranceRecords } from '../src/assurance/publication';
+import { routeUrl } from '../src/routing/application-routes';
 import {
   applicationRouteRegistry,
   type ApplicationRouteDeclaration,
@@ -190,6 +194,47 @@ describe('DEMO-238 site-wide accessibility assurance', () => {
 });
 
 describe('DEMO-238 site-wide localization assurance', () => {
+  it('rejects uncatalogued exact() English in demos, assurance, and released fragments', async () => {
+    const failures = new Set<string>();
+    const stop = observeExactFallbacks((english, locale) => failures.add(`${locale}: ${english}`));
+    try {
+      for (const locale of supportedLocales.filter((value) => value !== defaultLocale)) {
+        const paths = [
+          routeUrl('demos.index'),
+          routeUrl('assurance.index'),
+          ...demonstrations.map((demo) => routeUrl('demos.presentation', { demo: demo.id })),
+          ...listPublishedAssuranceRecords('compliance').map((record) => routeUrl('assurance.presentation', { record: record.id })),
+        ];
+        for (const path of paths) {
+          const url = new URL(path, 'https://demo.wizardgang.ai');
+          url.searchParams.set('lang', locale);
+          const response = await routeRequest(new Request(url, { headers: { accept: 'text/html' } }), environment());
+          expect(response.status, `${locale} ${path}`).toBe(200);
+          await response.text();
+        }
+      }
+    } finally {
+      stop();
+    }
+    if (failures.size) {
+      const values = [...failures].sort();
+      throw new Error(`${values.length} uncatalogued exact() fallbacks across non-default locales:\n${values.slice(0, 40).join('\n')}${values.length > 40 ? '\n…' : ''}`);
+    }
+  });
+
+  it('detects an injected uncatalogued exact() string', () => {
+    const failures: string[] = [];
+    const stop = observeExactFallbacks((english) => failures.push(english));
+    try {
+      resolveLocalization(new Request('https://demo.wizardgang.ai/demos?lang=ar'))
+        .exact('Injected uncatalogued English string');
+      resolveLocalization(new Request('https://demo.wizardgang.ai/demos?lang=ar'))
+        .exact('GitHub');
+    } finally {
+      stop();
+    }
+    expect(failures).toEqual(['Injected uncatalogued English string']);
+  });
   it('keeps the configured locale matrix synchronized with runtime resources', () => {
     expect(supportedLocales).toEqual(['en', 'es', 'fr', 'de', 'ja', 'ar']);
     const expectedKeys = Object.keys(localeResources[defaultLocale]).sort();

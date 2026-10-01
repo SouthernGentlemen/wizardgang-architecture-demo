@@ -59,6 +59,12 @@ function element<K extends keyof HTMLElementTagNameMap>(tagName: K, text = '', c
   return node;
 }
 
+function ltr(text: string): HTMLElement {
+  const value = element('bdi', text);
+  value.dir = 'ltr';
+  return value;
+}
+
 export async function mount(root: HTMLElement): Promise<void> {
   const config = parseConfig(root);
   const messages = config.messages ?? {};
@@ -156,7 +162,9 @@ export async function mount(root: HTMLElement): Promise<void> {
     }
     selection.hidden = false;
     required<HTMLElement>(root, '[data-selected-name]').textContent = state.selectedFile.name;
-    required<HTMLElement>(root, '[data-selected-meta]').textContent = `${typeLabel(state.selectedFile.type, state.selectedFile.name)} · ${size(state.selectedFile.size)}`;
+    required<HTMLElement>(root, '[data-selected-meta]').replaceChildren(
+      typeLabel(state.selectedFile.type, state.selectedFile.name), ' · ', ltr(size(state.selectedFile.size)),
+    );
     const validationError = selectionError();
     uploadButton.disabled = Boolean(validationError) || !state.ready || state.loading;
     if (announce) {
@@ -180,7 +188,9 @@ export async function mount(root: HTMLElement): Promise<void> {
       const item = element('li');
       const number = element('span', String(index + 1));
       const content = element('div');
-      content.append(element('strong', label), element('small', detail));
+      const detailNode = element('small');
+      detailNode.append(index < 4 ? ltr(detail) : document.createTextNode(detail));
+      content.append(element('strong', label), detailNode);
       item.append(number, content);
       evidence.append(item);
     });
@@ -194,7 +204,11 @@ export async function mount(root: HTMLElement): Promise<void> {
     required<HTMLElement>(root, '[data-request-status]').textContent = `${response.status} ${response.ok ? message('ok', 'OK') : message('error', 'ERROR')}`;
     required<HTMLElement>(root, '[data-request-duration]').textContent = `${duration.toFixed(0)} ms`;
     const count = payload.objectCount;
-    required<HTMLElement>(root, '[data-request-metrics]').textContent = `${count ?? '—'} ${count === 1 ? message('object', 'object') : message('objects', 'objects')} · ${typeof payload.bytes === 'number' ? size(payload.bytes) : '—'}`;
+    required<HTMLElement>(root, '[data-request-metrics]').replaceChildren(
+      ltr(String(count ?? '—')),
+      ` ${count === 1 ? message('object', 'object') : message('objects', 'objects')} · `,
+      ltr(typeof payload.bytes === 'number' ? size(payload.bytes) : '—'),
+    );
     output.textContent = JSON.stringify(payload, null, 2);
   };
   const call = async (path: string, options: RequestInit = {}, label = 'GET', track = true): Promise<R2Payload> => {
@@ -291,7 +305,9 @@ export async function mount(root: HTMLElement): Promise<void> {
     const ownerBadge = element('span', owner, 'ownership-badge');
     ownerBadge.dataset.owner = file.canDelete ? 'yours' : 'demo';
     nameLine.append(ownerBadge);
-    summary.append(nameLine, element('span', `${typeLabel(file.contentType, file.displayName)} · ${size(file.sizeBytes)}`, 'file-facts'));
+    const facts = element('span', '', 'file-facts');
+    facts.append(typeLabel(file.contentType, file.displayName), ' · ', ltr(size(file.sizeBytes)));
+    summary.append(nameLine, facts);
     const details = element('details', '', 'file-details');
     details.append(element('summary', message('details', 'Details')));
     const list = element('dl');
@@ -304,8 +320,11 @@ export async function mount(root: HTMLElement): Promise<void> {
     for (const [label, value, code] of entries) {
       list.append(element('dt', label));
       const description = element('dd');
-      if (code) description.append(element('code', value));
-      else description.textContent = value;
+      if (code) {
+        const token = element('code', value);
+        token.dir = 'ltr';
+        description.append(token);
+      } else description.append(ltr(value));
       list.append(description);
     }
     details.append(list);
@@ -346,7 +365,9 @@ export async function mount(root: HTMLElement): Promise<void> {
   const render = () => {
     const own = ownFiles();
     const ownBytes = own.reduce((sum, file) => sum + file.sizeBytes, 0);
-    required<HTMLElement>(root, '[data-sandbox-usage]').textContent = `${own.length} / ${MAX_OBJECTS} ${message('upload', 'uploads')} · ${size(ownBytes)} / 20 MiB`;
+    required<HTMLElement>(root, '[data-sandbox-usage]').replaceChildren(
+      ltr(`${own.length} / ${MAX_OBJECTS}`), ` ${message('upload', 'uploads')} · `, ltr(`${size(ownBytes)} / 20 MiB`),
+    );
     if (state.previewId && !state.files.some((file) => file.id === state.previewId)) state.previewId = null;
     if (state.confirmDeleteId && !state.files.some((file) => file.id === state.confirmDeleteId)) state.confirmDeleteId = null;
     filesSlot.replaceChildren();

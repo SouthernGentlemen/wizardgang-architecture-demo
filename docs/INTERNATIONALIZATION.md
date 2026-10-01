@@ -43,7 +43,7 @@ The HTML document always emits the active `lang` and an explicit direction. Arab
 
 Direction-sensitive shared layout uses logical CSS properties. Technical identifiers remain isolated where bidi reordering would make machine-oriented content ambiguous.
 
-A new user-facing key must exist in every configured locale resource or every locale entry in the presentation catalog, as appropriate. Placeholders must remain identical across translations. Intentional canonical English or technical tokens use the existing narrow allowlist; broad English-text exemptions are not permitted.
+A new user-facing key must exist in every configured locale resource or every locale entry in the presentation catalog, as appropriate. Placeholders must remain identical across translations. Intentional canonical English or technical tokens use the existing narrow allowlist; broad English-text exemptions are not permitted. `src/i18n/exact-technical-tokens.ts` lists the few canonical names and protocol tokens that may pass through `exact()` without a catalog entry.
 
 ## Adding a locale
 
@@ -62,7 +62,7 @@ The runtime must continue to resolve unsupported locales safely and preserve the
 
 `npm run validate:locales` requires every configured locale resource to exist and expose the same non-empty key inventory as the fallback resource.
 
-`npm run validate:site-i18n` derives public route coverage from the canonical route registry and exercises configured route states across the supported locale inventory. Runtime and interface tests cover representative language/direction rendering, translated shell strings, query preservation, preference persistence, formatting, and RTL-safe layout behavior.
+`npm run validate:site-i18n` derives public route coverage from the canonical route registry and exercises configured route states across the supported locale inventory. It also audits `/demos`, `/assurance`, every released demo fragment, and every published assurance record in each non-default locale; any observed `exact()` fallback outside the technical-token allowlist fails. The injected-string test proves the detector itself fails closed. Runtime and interface tests cover representative language/direction rendering, translated shell strings, query preservation, preference persistence, formatting, and RTL-safe layout behavior.
 
 Accessibility evidence that crosses the localization boundary is governed by `docs/ACCESSIBILITY.md`; this document does not maintain a second accessibility verification model.
 

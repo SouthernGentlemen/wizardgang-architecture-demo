@@ -111,7 +111,7 @@ function R2Presentation({ localization }: Readonly<{ localization: LocalizationC
               <span className="drop-limit">{exact('5 MiB maximum')}</span>
             </label>{' '}
             <div className="file-selection" data-file-selection="" hidden>
-              <div><strong data-selected-name="">{exact('No file selected')}</strong><span data-selected-meta="" /></div>
+              <div><strong data-selected-name="" dir="auto">{exact('No file selected')}</strong><span data-selected-meta="" /></div>
               <button className="icon-button" type="button" data-clear-selection="" aria-label={exact('Clear selected file')}>×</button>
             </div>
             <div className="upload-actions">
@@ -134,9 +134,9 @@ function R2Presentation({ localization }: Readonly<{ localization: LocalizationC
         <section className="panel live-request-card" aria-labelledby={requestHeading}>
           <div className="lab-heading"><div><p className="eyebrow">{exact('Live request')}</p><DemoHeading level={2} id={requestHeading}>{exact('Latest operation')}</DemoHeading></div><span className="request-state" data-live-state="">{exact('Waiting')}</span></div>{' '}
           <div className="live-request-summary">
-            <div><span>{exact('Method')}</span><strong data-request-method="">—</strong></div>{' '}
-            <div><span>{exact('Status')}</span><strong data-request-status="">—</strong></div>{' '}
-            <div><span>{exact('Round trip')}</span><strong data-request-duration="">—</strong></div>
+            <div><span>{exact('Method')}</span><strong data-request-method="" dir="ltr">—</strong></div>{' '}
+            <div><span>{exact('Status')}</span><strong data-request-status="" dir="ltr">—</strong></div>{' '}
+            <div><span>{exact('Round trip')}</span><strong data-request-duration="" dir="ltr">—</strong></div>
           </div>{' '}
           <p className="request-metrics" data-request-metrics="">{exact('Choose an action to inspect the live result.')}</p>{' '}
           <details className="r2-response-details"><summary>{exact('View response JSON')}</summary><pre data-r2-output="">{exact('No request yet.')}</pre></details>

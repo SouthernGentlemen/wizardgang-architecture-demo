@@ -39,7 +39,7 @@ describe('DEMO-267 focused demo pane and inspector', () => {
     expect(html).toContain('data-demo-reset="" hidden="">Reset demo</button>');
     expect(html).toContain('data-demo-inspector-toggle="" aria-controls="demo-inspector" aria-expanded="false"');
     expect(html).toContain('data-demo-inspector-disclosure=""');
-    expect(html).toContain('src/demos/d1-presentation.tsx</a>');
+    expect(html).toContain('<bdi dir="ltr">src/demos/d1-presentation.tsx</bdi></a>');
     expect(html).not.toContain('data-demo-source');
     expect(html).toContain('data-demo-section="d1"');
     expect(html).not.toContain('All demos');

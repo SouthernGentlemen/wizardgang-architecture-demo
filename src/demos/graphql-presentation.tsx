@@ -72,9 +72,9 @@ function GraphqlPresentation({ localization }: Readonly<{ localization: Localiza
     <details className="panel graphql-fields">
       <summary><strong>{exact('Available fields')}</strong><span>{exact('Compact schema guide')}</span></summary>
       <div className="graphql-field-grid">
-        <div><DemoHeading level={3}>{exact('Query')}</DemoHeading><code>users: [User!]!</code><code>user(id: ID!): User</code></div>
-        <div><DemoHeading level={3}>{exact('User')}</DemoHeading><code>id: ID!</code><code>name: String!</code><code>email: String!</code><code>role: String!</code></div>
-        <div><DemoHeading level={3}>{exact('Mutation')}</DemoHeading><code>createUser</code><code>updateUser</code><code>deleteUser</code><small>{exact('Authenticated session required')}</small></div>
+        <div><DemoHeading level={3}>{exact('Query')}</DemoHeading><code dir="ltr">users: [User!]!</code><code dir="ltr">user(id: ID!): User</code></div>
+        <div><DemoHeading level={3}>{exact('User')}</DemoHeading><code dir="ltr">id: ID!</code><code dir="ltr">name: String!</code><code dir="ltr">email: String!</code><code dir="ltr">role: String!</code></div>
+        <div><DemoHeading level={3}>{exact('Mutation')}</DemoHeading><code dir="ltr">createUser</code><code dir="ltr">updateUser</code><code dir="ltr">deleteUser</code><small>{exact('Authenticated session required')}</small></div>
       </div>
     </details>
     <section className="graphql-workspace panel" aria-labelledby={runnerHeading}>
@@ -101,7 +101,7 @@ function GraphqlPresentation({ localization }: Readonly<{ localization: Localiza
       <p className="subtle" id={runnerStatusId} data-graphql-runner-status="" role="status" aria-live="polite">{exact('Ready.')}</p>
       <section aria-labelledby={responseHeading}>
         <DemoHeading level={3} id={responseHeading}>{exact('Response')}</DemoHeading>
-        <pre data-graphql-workspace-result="" tabIndex={0}>{exact('Run a query to inspect the JSON response.')}</pre>
+        <pre data-graphql-workspace-result="" tabIndex={0} dir="ltr">{exact('Run a query to inspect the JSON response.')}</pre>
       </section>
     </section>
     <section className="graphql-controls" aria-labelledby={controlsHeading}>

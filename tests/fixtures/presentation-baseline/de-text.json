@@ -83,7 +83,7 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "AbschnittClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Abschnittsstatus Pass0 Teilweise35 Gap1 N/A1 Framework-Status Pass0 Teilweise97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governanceTeilweiseBewertungThe information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.Was fehltComplete AW-001 and retain attributable awareness evidence.Bewertet2026-09-17Anforderungsquelle öffnenBewertungsdatensatz öffnenDokumentationNachweisedocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitmentsDokumentation öffnen: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments Datensätze37 A.5.1 Security policy governance Teilweise A.5.2 Assigned security accountabilities Teilweise A.5.3 Separation of conflicting duties Teilweise A.5.4 Leadership security responsibilities Teilweise A.5.5 Authority contact readiness Teilweise A.5.6 Security community contacts Teilweise A.5.7 Threat information handling Teilweise A.5.8 Security in managed projects Teilweise A.5.9 Asset and information inventory Teilweise A.5.10 Acceptable use expectations Teilweise A.5.11 Return of issued assets N/A A.5.12 Information classification model Teilweise A.5.13 Classification labels and handling Teilweise A.5.14 Protected information transfer Teilweise A.5.15 Access governance Teilweise A.5.16 Identity lifecycle management Teilweise A.5.17 Authentication secret management Teilweise A.5.18 Access provisioning and review Teilweise A.5.19 Supplier security governance Teilweise A.5.20 Security terms for suppliers Teilweise A.5.21 ICT supply-chain security Teilweise A.5.22 Supplier service review and change Teilweise A.5.23 Cloud service security governance Teilweise A.5.24 Incident response preparation Teilweise A.5.25 Security event triage Teilweise A.5.26 Incident response execution Teilweise A.5.27 Learning from incidents Teilweise A.5.28 Preserving investigative evidence Teilweise A.5.29 Secure operation during disruption Teilweise A.5.30 Technology continuity readiness Teilweise A.5.31 Legal and contractual obligations Teilweise A.5.32 Intellectual property safeguards Teilweise A.5.33 Protected business records Teilweise A.5.34 Privacy and personal-data safeguards Teilweise A.5.35 Independent security review Gap A.5.36 Compliance with security rules Teilweise A.5.37 Documented operating procedures Teilweise JavaScript ist für den interaktiven Wechsel von Framework und Abschnitt erforderlich. Die Anwendbarkeitserklärungen können weiterhin geprüft werden:ISO/IEC 27001 AnwendbarkeitserklärungISO/IEC 42001 AnwendbarkeitserklärungWCAG 2.2 accessibility documentation"
+        "name": "AbschnittClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Abschnittsstatus Bestanden0 Teilweise35 Lücke1 N/A1 Framework-Status Bestanden0 Teilweise97 Lücke6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governanceTeilweiseBewertungThe information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.Was fehltComplete AW-001 and retain attributable awareness evidence.Bewertet2026-09-17Anforderungsquelle öffnenBewertungsdatensatz öffnenDokumentationNachweisedocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitmentsDokumentation öffnen: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments Datensätze37 A.5.1 Security policy governance Teilweise A.5.2 Assigned security accountabilities Teilweise A.5.3 Separation of conflicting duties Teilweise A.5.4 Leadership security responsibilities Teilweise A.5.5 Authority contact readiness Teilweise A.5.6 Security community contacts Teilweise A.5.7 Threat information handling Teilweise A.5.8 Security in managed projects Teilweise A.5.9 Asset and information inventory Teilweise A.5.10 Acceptable use expectations Teilweise A.5.11 Return of issued assets N/A A.5.12 Information classification model Teilweise A.5.13 Classification labels and handling Teilweise A.5.14 Protected information transfer Teilweise A.5.15 Access governance Teilweise A.5.16 Identity lifecycle management Teilweise A.5.17 Authentication secret management Teilweise A.5.18 Access provisioning and review Teilweise A.5.19 Supplier security governance Teilweise A.5.20 Security terms for suppliers Teilweise A.5.21 ICT supply-chain security Teilweise A.5.22 Supplier service review and change Teilweise A.5.23 Cloud service security governance Teilweise A.5.24 Incident response preparation Teilweise A.5.25 Security event triage Teilweise A.5.26 Incident response execution Teilweise A.5.27 Learning from incidents Teilweise A.5.28 Preserving investigative evidence Teilweise A.5.29 Secure operation during disruption Teilweise A.5.30 Technology continuity readiness Teilweise A.5.31 Legal and contractual obligations Teilweise A.5.32 Intellectual property safeguards Teilweise A.5.33 Protected business records Teilweise A.5.34 Privacy and personal-data safeguards Teilweise A.5.35 Independent security review Lücke A.5.36 Compliance with security rules Teilweise A.5.37 Documented operating procedures Teilweise JavaScript ist für den interaktiven Wechsel von Framework und Abschnitt erforderlich. Die Anwendbarkeitserklärungen können weiterhin geprüft werden:ISO/IEC 27001 AnwendbarkeitserklärungISO/IEC 42001 AnwendbarkeitserklärungWCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
@@ -308,7 +308,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "A.5.35 Independent security review Gap"
+        "name": "A.5.35 Independent security review Lücke"
       },
       {
         "element": "a",
@@ -671,7 +671,7 @@
     "headings": [
       {
         "level": 1,
-        "text": "Architecture Demos"
+        "text": "Architekturdemos"
       },
       {
         "level": 2,
@@ -679,7 +679,7 @@
       },
       {
         "level": 2,
-        "text": "Reset this demo?"
+        "text": "Diese Demo zurücksetzen?"
       },
       {
         "level": 2,
@@ -687,27 +687,27 @@
       },
       {
         "level": 3,
-        "text": "Users"
+        "text": "Benutzer"
       },
       {
         "level": 3,
-        "text": "Tasks"
+        "text": "Aufgaben"
       },
       {
         "level": 3,
-        "text": "SQL Inspector"
+        "text": "SQL-Inspektor"
       },
       {
         "level": 3,
-        "text": "Delete row?"
+        "text": "Zeile löschen?"
       },
       {
         "level": 3,
-        "text": "Guide"
+        "text": "Leitfaden"
       },
       {
         "level": 3,
-        "text": "Request"
+        "text": "Anfrage"
       },
       {
         "level": 3,
@@ -768,7 +768,7 @@
       {
         "element": "a",
         "role": "tab",
-        "name": "Data"
+        "name": "Daten"
       },
       {
         "element": "a",
@@ -778,7 +778,7 @@
       {
         "element": "a",
         "role": "tab",
-        "name": "Integrations"
+        "name": "Integrationen"
       },
       {
         "element": "a",
@@ -788,7 +788,7 @@
       {
         "element": "a",
         "role": "tab",
-        "name": "AI"
+        "name": "KI"
       },
       {
         "element": "a",
@@ -798,12 +798,12 @@
       {
         "element": "a",
         "role": "tab",
-        "name": "Quality"
+        "name": "Qualität"
       },
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Data demos"
+        "name": "Datendemos"
       },
       {
         "element": "a",
@@ -818,7 +818,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "APIs demos"
+        "name": "APIs-Demos"
       },
       {
         "element": "a",
@@ -833,7 +833,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Identity demos"
+        "name": "Identitätsdemos"
       },
       {
         "element": "a",
@@ -853,7 +853,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Platform demos"
+        "name": "Plattformdemos"
       },
       {
         "element": "a",
@@ -873,7 +873,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Quality demos"
+        "name": "Hochwertige Demos"
       },
       {
         "element": "a",
@@ -888,12 +888,12 @@
       {
         "element": "button",
         "role": null,
-        "name": "Reset demo"
+        "name": "Demo zurücksetzen"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Inspector"
+        "name": "Inspektor"
       },
       {
         "element": "button",
@@ -903,32 +903,32 @@
       {
         "element": "button",
         "role": null,
-        "name": "Confirm reset"
+        "name": "Bestätigen Sie das Zurücksetzen"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Users — / 10"
+        "name": "Benutzer — / 10"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Tasks — / 25"
+        "name": "Aufgaben — / 25"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Users — / 10"
+        "name": "Benutzer — / 10"
       },
       {
         "element": "button",
         "role": null,
-        "name": "+ Add user"
+        "name": "+ Benutzer hinzufügen"
       },
       {
         "element": "form",
         "role": null,
-        "name": "Add userMaximum 10 users Name Email RoleAdminMemberViewer Create userAbbrechen"
+        "name": "Benutzer hinzufügenMaximal 10 Benutzer Name E-Mail RolleAdminMitgliedZuschauer Benutzer anlegenAbbrechen"
       },
       {
         "element": "input",
@@ -938,17 +938,17 @@
       {
         "element": "input",
         "role": null,
-        "name": "Email"
+        "name": "E-Mail"
       },
       {
         "element": "select",
         "role": null,
-        "name": "Role"
+        "name": "Rolle"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Create user"
+        "name": "Benutzer anlegen"
       },
       {
         "element": "button",
@@ -958,27 +958,27 @@
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Tasks — / 25"
+        "name": "Aufgaben — / 25"
       },
       {
         "element": "button",
         "role": null,
-        "name": "+ Add task"
+        "name": "+ Aufgabe hinzufügen"
       },
       {
         "element": "form",
         "role": null,
-        "name": "Add taskMaximum 25 tasks Task title AssigneeUnassigned StatusTo doIn progressDone Create taskAbbrechen"
+        "name": "Aufgabe hinzufügenMaximal 25 Aufgaben Aufgabentitel BevollmächtigterNicht zugewiesen StatusZu tunIn BearbeitungFertig Aufgabe erstellenAbbrechen"
       },
       {
         "element": "input",
         "role": null,
-        "name": "Task title"
+        "name": "Aufgabentitel"
       },
       {
         "element": "select",
         "role": null,
-        "name": "Assignee"
+        "name": "Bevollmächtigter"
       },
       {
         "element": "select",
@@ -988,7 +988,7 @@
       {
         "element": "button",
         "role": null,
-        "name": "Create task"
+        "name": "Aufgabe erstellen"
       },
       {
         "element": "button",
@@ -998,7 +998,7 @@
       {
         "element": "aside",
         "role": "complementary",
-        "name": "Live database evidenceSQL Inspector Warten Choose a tableNo query yet Statement Select a table or modify a row to inspect its parameterized SQL. Response JSONNo response yet."
+        "name": "Live-DatenbankbeweiseSQL-Inspektor Warten Wählen Sie einen TischNoch keine Anfrage Aussage Wählen Sie eine Tabelle aus oder ändern Sie eine Zeile, um deren parametrisierte SQL zu überprüfen. Antwort JSONNoch keine Antwort."
       },
       {
         "element": "button",
@@ -1013,12 +1013,12 @@
       {
         "element": "aside",
         "role": "complementary",
-        "name": "D1 inspector"
+        "name": "D1-Inspektor"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Close inspector"
+        "name": "Enger Inspektor"
       },
       {
         "element": "a",
@@ -1028,12 +1028,12 @@
       {
         "element": "button",
         "role": "tab",
-        "name": "Guide"
+        "name": "Leitfaden"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Request"
+        "name": "Anfrage"
       },
       {
         "element": "button",
@@ -1043,7 +1043,7 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "Guide"
+        "name": "Leitfaden"
       },
       {
         "element": "a",
@@ -1081,11 +1081,11 @@
       },
       {
         "name": "email",
-        "label": "Email"
+        "label": "E-Mail"
       },
       {
         "name": "role",
-        "label": "Role"
+        "label": "Rolle"
       },
       {
         "name": "id",
@@ -1093,11 +1093,11 @@
       },
       {
         "name": "title",
-        "label": "Task title"
+        "label": "Aufgabentitel"
       },
       {
         "name": "assigneeId",
-        "label": "Assignee"
+        "label": "Bevollmächtigter"
       },
       {
         "name": "status",
@@ -1189,7 +1189,7 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "AbschnittClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Abschnittsstatus Pass0 Teilweise35 Gap1 N/A1 Framework-Status Pass0 Teilweise97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governanceTeilweiseBewertungThe information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.Was fehltComplete AW-001 and retain attributable awareness evidence.Bewertet2026-09-17Anforderungsquelle öffnenBewertungsdatensatz öffnenDokumentationNachweisedocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitmentsDokumentation öffnen: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments Datensätze37 A.5.1 Security policy governance Teilweise A.5.2 Assigned security accountabilities Teilweise A.5.3 Separation of conflicting duties Teilweise A.5.4 Leadership security responsibilities Teilweise A.5.5 Authority contact readiness Teilweise A.5.6 Security community contacts Teilweise A.5.7 Threat information handling Teilweise A.5.8 Security in managed projects Teilweise A.5.9 Asset and information inventory Teilweise A.5.10 Acceptable use expectations Teilweise A.5.11 Return of issued assets N/A A.5.12 Information classification model Teilweise A.5.13 Classification labels and handling Teilweise A.5.14 Protected information transfer Teilweise A.5.15 Access governance Teilweise A.5.16 Identity lifecycle management Teilweise A.5.17 Authentication secret management Teilweise A.5.18 Access provisioning and review Teilweise A.5.19 Supplier security governance Teilweise A.5.20 Security terms for suppliers Teilweise A.5.21 ICT supply-chain security Teilweise A.5.22 Supplier service review and change Teilweise A.5.23 Cloud service security governance Teilweise A.5.24 Incident response preparation Teilweise A.5.25 Security event triage Teilweise A.5.26 Incident response execution Teilweise A.5.27 Learning from incidents Teilweise A.5.28 Preserving investigative evidence Teilweise A.5.29 Secure operation during disruption Teilweise A.5.30 Technology continuity readiness Teilweise A.5.31 Legal and contractual obligations Teilweise A.5.32 Intellectual property safeguards Teilweise A.5.33 Protected business records Teilweise A.5.34 Privacy and personal-data safeguards Teilweise A.5.35 Independent security review Gap A.5.36 Compliance with security rules Teilweise A.5.37 Documented operating procedures Teilweise JavaScript ist für den interaktiven Wechsel von Framework und Abschnitt erforderlich. Die Anwendbarkeitserklärungen können weiterhin geprüft werden:ISO/IEC 27001 AnwendbarkeitserklärungISO/IEC 42001 AnwendbarkeitserklärungWCAG 2.2 accessibility documentation"
+        "name": "AbschnittClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Abschnittsstatus Bestanden0 Teilweise35 Lücke1 N/A1 Framework-Status Bestanden0 Teilweise97 Lücke6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governanceTeilweiseBewertungThe information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.Was fehltComplete AW-001 and retain attributable awareness evidence.Bewertet2026-09-17Anforderungsquelle öffnenBewertungsdatensatz öffnenDokumentationNachweisedocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitmentsDokumentation öffnen: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments Datensätze37 A.5.1 Security policy governance Teilweise A.5.2 Assigned security accountabilities Teilweise A.5.3 Separation of conflicting duties Teilweise A.5.4 Leadership security responsibilities Teilweise A.5.5 Authority contact readiness Teilweise A.5.6 Security community contacts Teilweise A.5.7 Threat information handling Teilweise A.5.8 Security in managed projects Teilweise A.5.9 Asset and information inventory Teilweise A.5.10 Acceptable use expectations Teilweise A.5.11 Return of issued assets N/A A.5.12 Information classification model Teilweise A.5.13 Classification labels and handling Teilweise A.5.14 Protected information transfer Teilweise A.5.15 Access governance Teilweise A.5.16 Identity lifecycle management Teilweise A.5.17 Authentication secret management Teilweise A.5.18 Access provisioning and review Teilweise A.5.19 Supplier security governance Teilweise A.5.20 Security terms for suppliers Teilweise A.5.21 ICT supply-chain security Teilweise A.5.22 Supplier service review and change Teilweise A.5.23 Cloud service security governance Teilweise A.5.24 Incident response preparation Teilweise A.5.25 Security event triage Teilweise A.5.26 Incident response execution Teilweise A.5.27 Learning from incidents Teilweise A.5.28 Preserving investigative evidence Teilweise A.5.29 Secure operation during disruption Teilweise A.5.30 Technology continuity readiness Teilweise A.5.31 Legal and contractual obligations Teilweise A.5.32 Intellectual property safeguards Teilweise A.5.33 Protected business records Teilweise A.5.34 Privacy and personal-data safeguards Teilweise A.5.35 Independent security review Lücke A.5.36 Compliance with security rules Teilweise A.5.37 Documented operating procedures Teilweise JavaScript ist für den interaktiven Wechsel von Framework und Abschnitt erforderlich. Die Anwendbarkeitserklärungen können weiterhin geprüft werden:ISO/IEC 27001 AnwendbarkeitserklärungISO/IEC 42001 AnwendbarkeitserklärungWCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
@@ -1414,7 +1414,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "A.5.35 Independent security review Gap"
+        "name": "A.5.35 Independent security review Lücke"
       },
       {
         "element": "a",
@@ -1557,7 +1557,7 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "AbschnittClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Abschnittsstatus Pass0 Teilweise35 Gap1 N/A1 Framework-Status Pass0 Teilweise97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governanceTeilweiseBewertungThe information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.Was fehltComplete AW-001 and retain attributable awareness evidence.Bewertet2026-09-17Anforderungsquelle öffnenBewertungsdatensatz öffnenDokumentationNachweisedocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitmentsDokumentation öffnen: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments Datensätze37 A.5.1 Security policy governance Teilweise A.5.2 Assigned security accountabilities Teilweise A.5.3 Separation of conflicting duties Teilweise A.5.4 Leadership security responsibilities Teilweise A.5.5 Authority contact readiness Teilweise A.5.6 Security community contacts Teilweise A.5.7 Threat information handling Teilweise A.5.8 Security in managed projects Teilweise A.5.9 Asset and information inventory Teilweise A.5.10 Acceptable use expectations Teilweise A.5.11 Return of issued assets N/A A.5.12 Information classification model Teilweise A.5.13 Classification labels and handling Teilweise A.5.14 Protected information transfer Teilweise A.5.15 Access governance Teilweise A.5.16 Identity lifecycle management Teilweise A.5.17 Authentication secret management Teilweise A.5.18 Access provisioning and review Teilweise A.5.19 Supplier security governance Teilweise A.5.20 Security terms for suppliers Teilweise A.5.21 ICT supply-chain security Teilweise A.5.22 Supplier service review and change Teilweise A.5.23 Cloud service security governance Teilweise A.5.24 Incident response preparation Teilweise A.5.25 Security event triage Teilweise A.5.26 Incident response execution Teilweise A.5.27 Learning from incidents Teilweise A.5.28 Preserving investigative evidence Teilweise A.5.29 Secure operation during disruption Teilweise A.5.30 Technology continuity readiness Teilweise A.5.31 Legal and contractual obligations Teilweise A.5.32 Intellectual property safeguards Teilweise A.5.33 Protected business records Teilweise A.5.34 Privacy and personal-data safeguards Teilweise A.5.35 Independent security review Gap A.5.36 Compliance with security rules Teilweise A.5.37 Documented operating procedures Teilweise JavaScript ist für den interaktiven Wechsel von Framework und Abschnitt erforderlich. Die Anwendbarkeitserklärungen können weiterhin geprüft werden:ISO/IEC 27001 AnwendbarkeitserklärungISO/IEC 42001 AnwendbarkeitserklärungWCAG 2.2 accessibility documentation"
+        "name": "AbschnittClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Abschnittsstatus Bestanden0 Teilweise35 Lücke1 N/A1 Framework-Status Bestanden0 Teilweise97 Lücke6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governanceTeilweiseBewertungThe information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.Was fehltComplete AW-001 and retain attributable awareness evidence.Bewertet2026-09-17Anforderungsquelle öffnenBewertungsdatensatz öffnenDokumentationNachweisedocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitmentsDokumentation öffnen: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments Datensätze37 A.5.1 Security policy governance Teilweise A.5.2 Assigned security accountabilities Teilweise A.5.3 Separation of conflicting duties Teilweise A.5.4 Leadership security responsibilities Teilweise A.5.5 Authority contact readiness Teilweise A.5.6 Security community contacts Teilweise A.5.7 Threat information handling Teilweise A.5.8 Security in managed projects Teilweise A.5.9 Asset and information inventory Teilweise A.5.10 Acceptable use expectations Teilweise A.5.11 Return of issued assets N/A A.5.12 Information classification model Teilweise A.5.13 Classification labels and handling Teilweise A.5.14 Protected information transfer Teilweise A.5.15 Access governance Teilweise A.5.16 Identity lifecycle management Teilweise A.5.17 Authentication secret management Teilweise A.5.18 Access provisioning and review Teilweise A.5.19 Supplier security governance Teilweise A.5.20 Security terms for suppliers Teilweise A.5.21 ICT supply-chain security Teilweise A.5.22 Supplier service review and change Teilweise A.5.23 Cloud service security governance Teilweise A.5.24 Incident response preparation Teilweise A.5.25 Security event triage Teilweise A.5.26 Incident response execution Teilweise A.5.27 Learning from incidents Teilweise A.5.28 Preserving investigative evidence Teilweise A.5.29 Secure operation during disruption Teilweise A.5.30 Technology continuity readiness Teilweise A.5.31 Legal and contractual obligations Teilweise A.5.32 Intellectual property safeguards Teilweise A.5.33 Protected business records Teilweise A.5.34 Privacy and personal-data safeguards Teilweise A.5.35 Independent security review Lücke A.5.36 Compliance with security rules Teilweise A.5.37 Documented operating procedures Teilweise JavaScript ist für den interaktiven Wechsel von Framework und Abschnitt erforderlich. Die Anwendbarkeitserklärungen können weiterhin geprüft werden:ISO/IEC 27001 AnwendbarkeitserklärungISO/IEC 42001 AnwendbarkeitserklärungWCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
@@ -1782,7 +1782,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "A.5.35 Independent security review Gap"
+        "name": "A.5.35 Independent security review Lücke"
       },
       {
         "element": "a",
@@ -1925,7 +1925,7 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "AbschnittClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Abschnittsstatus Pass0 Teilweise35 Gap1 N/A1 Framework-Status Pass0 Teilweise97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governanceTeilweiseBewertungThe information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.Was fehltComplete AW-001 and retain attributable awareness evidence.Bewertet2026-09-17Anforderungsquelle öffnenBewertungsdatensatz öffnenDokumentationNachweisedocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitmentsDokumentation öffnen: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments Datensätze37 A.5.1 Security policy governance Teilweise A.5.2 Assigned security accountabilities Teilweise A.5.3 Separation of conflicting duties Teilweise A.5.4 Leadership security responsibilities Teilweise A.5.5 Authority contact readiness Teilweise A.5.6 Security community contacts Teilweise A.5.7 Threat information handling Teilweise A.5.8 Security in managed projects Teilweise A.5.9 Asset and information inventory Teilweise A.5.10 Acceptable use expectations Teilweise A.5.11 Return of issued assets N/A A.5.12 Information classification model Teilweise A.5.13 Classification labels and handling Teilweise A.5.14 Protected information transfer Teilweise A.5.15 Access governance Teilweise A.5.16 Identity lifecycle management Teilweise A.5.17 Authentication secret management Teilweise A.5.18 Access provisioning and review Teilweise A.5.19 Supplier security governance Teilweise A.5.20 Security terms for suppliers Teilweise A.5.21 ICT supply-chain security Teilweise A.5.22 Supplier service review and change Teilweise A.5.23 Cloud service security governance Teilweise A.5.24 Incident response preparation Teilweise A.5.25 Security event triage Teilweise A.5.26 Incident response execution Teilweise A.5.27 Learning from incidents Teilweise A.5.28 Preserving investigative evidence Teilweise A.5.29 Secure operation during disruption Teilweise A.5.30 Technology continuity readiness Teilweise A.5.31 Legal and contractual obligations Teilweise A.5.32 Intellectual property safeguards Teilweise A.5.33 Protected business records Teilweise A.5.34 Privacy and personal-data safeguards Teilweise A.5.35 Independent security review Gap A.5.36 Compliance with security rules Teilweise A.5.37 Documented operating procedures Teilweise JavaScript ist für den interaktiven Wechsel von Framework und Abschnitt erforderlich. Die Anwendbarkeitserklärungen können weiterhin geprüft werden:ISO/IEC 27001 AnwendbarkeitserklärungISO/IEC 42001 AnwendbarkeitserklärungWCAG 2.2 accessibility documentation"
+        "name": "AbschnittClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Abschnittsstatus Bestanden0 Teilweise35 Lücke1 N/A1 Framework-Status Bestanden0 Teilweise97 Lücke6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governanceTeilweiseBewertungThe information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.Was fehltComplete AW-001 and retain attributable awareness evidence.Bewertet2026-09-17Anforderungsquelle öffnenBewertungsdatensatz öffnenDokumentationNachweisedocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitmentsDokumentation öffnen: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments Datensätze37 A.5.1 Security policy governance Teilweise A.5.2 Assigned security accountabilities Teilweise A.5.3 Separation of conflicting duties Teilweise A.5.4 Leadership security responsibilities Teilweise A.5.5 Authority contact readiness Teilweise A.5.6 Security community contacts Teilweise A.5.7 Threat information handling Teilweise A.5.8 Security in managed projects Teilweise A.5.9 Asset and information inventory Teilweise A.5.10 Acceptable use expectations Teilweise A.5.11 Return of issued assets N/A A.5.12 Information classification model Teilweise A.5.13 Classification labels and handling Teilweise A.5.14 Protected information transfer Teilweise A.5.15 Access governance Teilweise A.5.16 Identity lifecycle management Teilweise A.5.17 Authentication secret management Teilweise A.5.18 Access provisioning and review Teilweise A.5.19 Supplier security governance Teilweise A.5.20 Security terms for suppliers Teilweise A.5.21 ICT supply-chain security Teilweise A.5.22 Supplier service review and change Teilweise A.5.23 Cloud service security governance Teilweise A.5.24 Incident response preparation Teilweise A.5.25 Security event triage Teilweise A.5.26 Incident response execution Teilweise A.5.27 Learning from incidents Teilweise A.5.28 Preserving investigative evidence Teilweise A.5.29 Secure operation during disruption Teilweise A.5.30 Technology continuity readiness Teilweise A.5.31 Legal and contractual obligations Teilweise A.5.32 Intellectual property safeguards Teilweise A.5.33 Protected business records Teilweise A.5.34 Privacy and personal-data safeguards Teilweise A.5.35 Independent security review Lücke A.5.36 Compliance with security rules Teilweise A.5.37 Documented operating procedures Teilweise JavaScript ist für den interaktiven Wechsel von Framework und Abschnitt erforderlich. Die Anwendbarkeitserklärungen können weiterhin geprüft werden:ISO/IEC 27001 AnwendbarkeitserklärungISO/IEC 42001 AnwendbarkeitserklärungWCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
@@ -2150,7 +2150,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "A.5.35 Independent security review Gap"
+        "name": "A.5.35 Independent security review Lücke"
       },
       {
         "element": "a",
@@ -2293,7 +2293,7 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "AbschnittClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Abschnittsstatus Pass0 Teilweise35 Gap1 N/A1 Framework-Status Pass0 Teilweise97 Gap6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governanceTeilweiseBewertungThe information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.Was fehltComplete AW-001 and retain attributable awareness evidence.Bewertet2026-09-17Anforderungsquelle öffnenBewertungsdatensatz öffnenDokumentationNachweisedocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitmentsDokumentation öffnen: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments Datensätze37 A.5.1 Security policy governance Teilweise A.5.2 Assigned security accountabilities Teilweise A.5.3 Separation of conflicting duties Teilweise A.5.4 Leadership security responsibilities Teilweise A.5.5 Authority contact readiness Teilweise A.5.6 Security community contacts Teilweise A.5.7 Threat information handling Teilweise A.5.8 Security in managed projects Teilweise A.5.9 Asset and information inventory Teilweise A.5.10 Acceptable use expectations Teilweise A.5.11 Return of issued assets N/A A.5.12 Information classification model Teilweise A.5.13 Classification labels and handling Teilweise A.5.14 Protected information transfer Teilweise A.5.15 Access governance Teilweise A.5.16 Identity lifecycle management Teilweise A.5.17 Authentication secret management Teilweise A.5.18 Access provisioning and review Teilweise A.5.19 Supplier security governance Teilweise A.5.20 Security terms for suppliers Teilweise A.5.21 ICT supply-chain security Teilweise A.5.22 Supplier service review and change Teilweise A.5.23 Cloud service security governance Teilweise A.5.24 Incident response preparation Teilweise A.5.25 Security event triage Teilweise A.5.26 Incident response execution Teilweise A.5.27 Learning from incidents Teilweise A.5.28 Preserving investigative evidence Teilweise A.5.29 Secure operation during disruption Teilweise A.5.30 Technology continuity readiness Teilweise A.5.31 Legal and contractual obligations Teilweise A.5.32 Intellectual property safeguards Teilweise A.5.33 Protected business records Teilweise A.5.34 Privacy and personal-data safeguards Teilweise A.5.35 Independent security review Gap A.5.36 Compliance with security rules Teilweise A.5.37 Documented operating procedures Teilweise JavaScript ist für den interaktiven Wechsel von Framework und Abschnitt erforderlich. Die Anwendbarkeitserklärungen können weiterhin geprüft werden:ISO/IEC 27001 AnwendbarkeitserklärungISO/IEC 42001 AnwendbarkeitserklärungWCAG 2.2 accessibility documentation"
+        "name": "AbschnittClauses 4–10 · 34Annex A · organizational · 37Annex A · people · 8Annex A · physical · 14Annex A · technological · 34 Abschnittsstatus Bestanden0 Teilweise35 Lücke1 N/A1 Framework-Status Bestanden0 Teilweise97 Lücke6 N/A24ISO/IEC 27001:2022 · Annex A · organizationalA.5.1 · Security policy governanceTeilweiseBewertungThe information-security policy is approved, controlled, and connected to objectives/risk processes. AW-001, the planned dated security-policy awareness evidence, is not yet complete.Was fehltComplete AW-001 and retain attributable awareness evidence.Bewertet2026-09-17Anforderungsquelle öffnenBewertungsdatensatz öffnenDokumentationNachweisedocs/governance/SECURITY-GOVERNANCE.md#3-policy-commitmentsDokumentation öffnen: docs/governance/SECURITY-GOVERNANCE.md#3-policy-commitments Datensätze37 A.5.1 Security policy governance Teilweise A.5.2 Assigned security accountabilities Teilweise A.5.3 Separation of conflicting duties Teilweise A.5.4 Leadership security responsibilities Teilweise A.5.5 Authority contact readiness Teilweise A.5.6 Security community contacts Teilweise A.5.7 Threat information handling Teilweise A.5.8 Security in managed projects Teilweise A.5.9 Asset and information inventory Teilweise A.5.10 Acceptable use expectations Teilweise A.5.11 Return of issued assets N/A A.5.12 Information classification model Teilweise A.5.13 Classification labels and handling Teilweise A.5.14 Protected information transfer Teilweise A.5.15 Access governance Teilweise A.5.16 Identity lifecycle management Teilweise A.5.17 Authentication secret management Teilweise A.5.18 Access provisioning and review Teilweise A.5.19 Supplier security governance Teilweise A.5.20 Security terms for suppliers Teilweise A.5.21 ICT supply-chain security Teilweise A.5.22 Supplier service review and change Teilweise A.5.23 Cloud service security governance Teilweise A.5.24 Incident response preparation Teilweise A.5.25 Security event triage Teilweise A.5.26 Incident response execution Teilweise A.5.27 Learning from incidents Teilweise A.5.28 Preserving investigative evidence Teilweise A.5.29 Secure operation during disruption Teilweise A.5.30 Technology continuity readiness Teilweise A.5.31 Legal and contractual obligations Teilweise A.5.32 Intellectual property safeguards Teilweise A.5.33 Protected business records Teilweise A.5.34 Privacy and personal-data safeguards Teilweise A.5.35 Independent security review Lücke A.5.36 Compliance with security rules Teilweise A.5.37 Documented operating procedures Teilweise JavaScript ist für den interaktiven Wechsel von Framework und Abschnitt erforderlich. Die Anwendbarkeitserklärungen können weiterhin geprüft werden:ISO/IEC 27001 AnwendbarkeitserklärungISO/IEC 42001 AnwendbarkeitserklärungWCAG 2.2 accessibility documentation"
       },
       {
         "element": "select",
@@ -2518,7 +2518,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "A.5.35 Independent security review Gap"
+        "name": "A.5.35 Independent security review Lücke"
       },
       {
         "element": "a",
@@ -2581,7 +2581,7 @@
     "headings": [
       {
         "level": 1,
-        "text": "Architecture Demos"
+        "text": "Architekturdemos"
       },
       {
         "level": 2,
@@ -2589,7 +2589,7 @@
       },
       {
         "level": 2,
-        "text": "Reset this demo?"
+        "text": "Diese Demo zurücksetzen?"
       },
       {
         "level": 2,
@@ -2597,27 +2597,27 @@
       },
       {
         "level": 3,
-        "text": "Users"
+        "text": "Benutzer"
       },
       {
         "level": 3,
-        "text": "Tasks"
+        "text": "Aufgaben"
       },
       {
         "level": 3,
-        "text": "SQL Inspector"
+        "text": "SQL-Inspektor"
       },
       {
         "level": 3,
-        "text": "Delete row?"
+        "text": "Zeile löschen?"
       },
       {
         "level": 3,
-        "text": "Guide"
+        "text": "Leitfaden"
       },
       {
         "level": 3,
-        "text": "Request"
+        "text": "Anfrage"
       },
       {
         "level": 3,
@@ -2678,7 +2678,7 @@
       {
         "element": "a",
         "role": "tab",
-        "name": "Data"
+        "name": "Daten"
       },
       {
         "element": "a",
@@ -2688,7 +2688,7 @@
       {
         "element": "a",
         "role": "tab",
-        "name": "Integrations"
+        "name": "Integrationen"
       },
       {
         "element": "a",
@@ -2698,7 +2698,7 @@
       {
         "element": "a",
         "role": "tab",
-        "name": "AI"
+        "name": "KI"
       },
       {
         "element": "a",
@@ -2708,12 +2708,12 @@
       {
         "element": "a",
         "role": "tab",
-        "name": "Quality"
+        "name": "Qualität"
       },
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Data demos"
+        "name": "Datendemos"
       },
       {
         "element": "a",
@@ -2728,7 +2728,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "APIs demos"
+        "name": "APIs-Demos"
       },
       {
         "element": "a",
@@ -2743,7 +2743,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Identity demos"
+        "name": "Identitätsdemos"
       },
       {
         "element": "a",
@@ -2763,7 +2763,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Platform demos"
+        "name": "Plattformdemos"
       },
       {
         "element": "a",
@@ -2783,7 +2783,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Quality demos"
+        "name": "Hochwertige Demos"
       },
       {
         "element": "a",
@@ -2798,12 +2798,12 @@
       {
         "element": "button",
         "role": null,
-        "name": "Reset demo"
+        "name": "Demo zurücksetzen"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Inspector"
+        "name": "Inspektor"
       },
       {
         "element": "button",
@@ -2813,32 +2813,32 @@
       {
         "element": "button",
         "role": null,
-        "name": "Confirm reset"
+        "name": "Bestätigen Sie das Zurücksetzen"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Users — / 10"
+        "name": "Benutzer — / 10"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Tasks — / 25"
+        "name": "Aufgaben — / 25"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Users — / 10"
+        "name": "Benutzer — / 10"
       },
       {
         "element": "button",
         "role": null,
-        "name": "+ Add user"
+        "name": "+ Benutzer hinzufügen"
       },
       {
         "element": "form",
         "role": null,
-        "name": "Add userMaximum 10 users Name Email RoleAdminMemberViewer Create userAbbrechen"
+        "name": "Benutzer hinzufügenMaximal 10 Benutzer Name E-Mail RolleAdminMitgliedZuschauer Benutzer anlegenAbbrechen"
       },
       {
         "element": "input",
@@ -2848,17 +2848,17 @@
       {
         "element": "input",
         "role": null,
-        "name": "Email"
+        "name": "E-Mail"
       },
       {
         "element": "select",
         "role": null,
-        "name": "Role"
+        "name": "Rolle"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Create user"
+        "name": "Benutzer anlegen"
       },
       {
         "element": "button",
@@ -2868,27 +2868,27 @@
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Tasks — / 25"
+        "name": "Aufgaben — / 25"
       },
       {
         "element": "button",
         "role": null,
-        "name": "+ Add task"
+        "name": "+ Aufgabe hinzufügen"
       },
       {
         "element": "form",
         "role": null,
-        "name": "Add taskMaximum 25 tasks Task title AssigneeUnassigned StatusTo doIn progressDone Create taskAbbrechen"
+        "name": "Aufgabe hinzufügenMaximal 25 Aufgaben Aufgabentitel BevollmächtigterNicht zugewiesen StatusZu tunIn BearbeitungFertig Aufgabe erstellenAbbrechen"
       },
       {
         "element": "input",
         "role": null,
-        "name": "Task title"
+        "name": "Aufgabentitel"
       },
       {
         "element": "select",
         "role": null,
-        "name": "Assignee"
+        "name": "Bevollmächtigter"
       },
       {
         "element": "select",
@@ -2898,7 +2898,7 @@
       {
         "element": "button",
         "role": null,
-        "name": "Create task"
+        "name": "Aufgabe erstellen"
       },
       {
         "element": "button",
@@ -2908,7 +2908,7 @@
       {
         "element": "aside",
         "role": "complementary",
-        "name": "Live database evidenceSQL Inspector Warten Choose a tableNo query yet Statement Select a table or modify a row to inspect its parameterized SQL. Response JSONNo response yet."
+        "name": "Live-DatenbankbeweiseSQL-Inspektor Warten Wählen Sie einen TischNoch keine Anfrage Aussage Wählen Sie eine Tabelle aus oder ändern Sie eine Zeile, um deren parametrisierte SQL zu überprüfen. Antwort JSONNoch keine Antwort."
       },
       {
         "element": "button",
@@ -2923,12 +2923,12 @@
       {
         "element": "aside",
         "role": "complementary",
-        "name": "D1 inspector"
+        "name": "D1-Inspektor"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Close inspector"
+        "name": "Enger Inspektor"
       },
       {
         "element": "a",
@@ -2938,12 +2938,12 @@
       {
         "element": "button",
         "role": "tab",
-        "name": "Guide"
+        "name": "Leitfaden"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Request"
+        "name": "Anfrage"
       },
       {
         "element": "button",
@@ -2953,7 +2953,7 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "Guide"
+        "name": "Leitfaden"
       },
       {
         "element": "a",
@@ -2991,11 +2991,11 @@
       },
       {
         "name": "email",
-        "label": "Email"
+        "label": "E-Mail"
       },
       {
         "name": "role",
-        "label": "Role"
+        "label": "Rolle"
       },
       {
         "name": "id",
@@ -3003,11 +3003,11 @@
       },
       {
         "name": "title",
-        "label": "Task title"
+        "label": "Aufgabentitel"
       },
       {
         "name": "assigneeId",
-        "label": "Assignee"
+        "label": "Bevollmächtigter"
       },
       {
         "name": "status",
@@ -3019,7 +3019,7 @@
     "headings": [
       {
         "level": 1,
-        "text": "Architecture Demos"
+        "text": "Architekturdemos"
       },
       {
         "level": 2,
@@ -3027,7 +3027,7 @@
       },
       {
         "level": 2,
-        "text": "Reset this demo?"
+        "text": "Diese Demo zurücksetzen?"
       },
       {
         "level": 2,
@@ -3035,27 +3035,27 @@
       },
       {
         "level": 3,
-        "text": "Users"
+        "text": "Benutzer"
       },
       {
         "level": 3,
-        "text": "Tasks"
+        "text": "Aufgaben"
       },
       {
         "level": 3,
-        "text": "SQL Inspector"
+        "text": "SQL-Inspektor"
       },
       {
         "level": 3,
-        "text": "Delete row?"
+        "text": "Zeile löschen?"
       },
       {
         "level": 3,
-        "text": "Guide"
+        "text": "Leitfaden"
       },
       {
         "level": 3,
-        "text": "Request"
+        "text": "Anfrage"
       },
       {
         "level": 3,
@@ -3116,7 +3116,7 @@
       {
         "element": "a",
         "role": "tab",
-        "name": "Data"
+        "name": "Daten"
       },
       {
         "element": "a",
@@ -3126,7 +3126,7 @@
       {
         "element": "a",
         "role": "tab",
-        "name": "Integrations"
+        "name": "Integrationen"
       },
       {
         "element": "a",
@@ -3136,7 +3136,7 @@
       {
         "element": "a",
         "role": "tab",
-        "name": "AI"
+        "name": "KI"
       },
       {
         "element": "a",
@@ -3146,12 +3146,12 @@
       {
         "element": "a",
         "role": "tab",
-        "name": "Quality"
+        "name": "Qualität"
       },
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Data demos"
+        "name": "Datendemos"
       },
       {
         "element": "a",
@@ -3166,7 +3166,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "APIs demos"
+        "name": "APIs-Demos"
       },
       {
         "element": "a",
@@ -3181,7 +3181,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Identity demos"
+        "name": "Identitätsdemos"
       },
       {
         "element": "a",
@@ -3201,7 +3201,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Platform demos"
+        "name": "Plattformdemos"
       },
       {
         "element": "a",
@@ -3221,7 +3221,7 @@
       {
         "element": "nav",
         "role": "navigation",
-        "name": "Quality demos"
+        "name": "Hochwertige Demos"
       },
       {
         "element": "a",
@@ -3236,12 +3236,12 @@
       {
         "element": "button",
         "role": null,
-        "name": "Reset demo"
+        "name": "Demo zurücksetzen"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Inspector"
+        "name": "Inspektor"
       },
       {
         "element": "button",
@@ -3251,32 +3251,32 @@
       {
         "element": "button",
         "role": null,
-        "name": "Confirm reset"
+        "name": "Bestätigen Sie das Zurücksetzen"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Users — / 10"
+        "name": "Benutzer — / 10"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Tasks — / 25"
+        "name": "Aufgaben — / 25"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Users — / 10"
+        "name": "Benutzer — / 10"
       },
       {
         "element": "button",
         "role": null,
-        "name": "+ Add user"
+        "name": "+ Benutzer hinzufügen"
       },
       {
         "element": "form",
         "role": null,
-        "name": "Add userMaximum 10 users Name Email RoleAdminMemberViewer Create userAbbrechen"
+        "name": "Benutzer hinzufügenMaximal 10 Benutzer Name E-Mail RolleAdminMitgliedZuschauer Benutzer anlegenAbbrechen"
       },
       {
         "element": "input",
@@ -3286,17 +3286,17 @@
       {
         "element": "input",
         "role": null,
-        "name": "Email"
+        "name": "E-Mail"
       },
       {
         "element": "select",
         "role": null,
-        "name": "Role"
+        "name": "Rolle"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Create user"
+        "name": "Benutzer anlegen"
       },
       {
         "element": "button",
@@ -3306,27 +3306,27 @@
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Tasks — / 25"
+        "name": "Aufgaben — / 25"
       },
       {
         "element": "button",
         "role": null,
-        "name": "+ Add task"
+        "name": "+ Aufgabe hinzufügen"
       },
       {
         "element": "form",
         "role": null,
-        "name": "Add taskMaximum 25 tasks Task title AssigneeUnassigned StatusTo doIn progressDone Create taskAbbrechen"
+        "name": "Aufgabe hinzufügenMaximal 25 Aufgaben Aufgabentitel BevollmächtigterNicht zugewiesen StatusZu tunIn BearbeitungFertig Aufgabe erstellenAbbrechen"
       },
       {
         "element": "input",
         "role": null,
-        "name": "Task title"
+        "name": "Aufgabentitel"
       },
       {
         "element": "select",
         "role": null,
-        "name": "Assignee"
+        "name": "Bevollmächtigter"
       },
       {
         "element": "select",
@@ -3336,7 +3336,7 @@
       {
         "element": "button",
         "role": null,
-        "name": "Create task"
+        "name": "Aufgabe erstellen"
       },
       {
         "element": "button",
@@ -3346,7 +3346,7 @@
       {
         "element": "aside",
         "role": "complementary",
-        "name": "Live database evidenceSQL Inspector Warten Choose a tableNo query yet Statement Select a table or modify a row to inspect its parameterized SQL. Response JSONNo response yet."
+        "name": "Live-DatenbankbeweiseSQL-Inspektor Warten Wählen Sie einen TischNoch keine Anfrage Aussage Wählen Sie eine Tabelle aus oder ändern Sie eine Zeile, um deren parametrisierte SQL zu überprüfen. Antwort JSONNoch keine Antwort."
       },
       {
         "element": "button",
@@ -3361,12 +3361,12 @@
       {
         "element": "aside",
         "role": "complementary",
-        "name": "D1 inspector"
+        "name": "D1-Inspektor"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Close inspector"
+        "name": "Enger Inspektor"
       },
       {
         "element": "a",
@@ -3376,12 +3376,12 @@
       {
         "element": "button",
         "role": "tab",
-        "name": "Guide"
+        "name": "Leitfaden"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Request"
+        "name": "Anfrage"
       },
       {
         "element": "button",
@@ -3391,7 +3391,7 @@
       {
         "element": "div",
         "role": "tabpanel",
-        "name": "Guide"
+        "name": "Leitfaden"
       },
       {
         "element": "a",
@@ -3429,11 +3429,11 @@
       },
       {
         "name": "email",
-        "label": "Email"
+        "label": "E-Mail"
       },
       {
         "name": "role",
-        "label": "Role"
+        "label": "Rolle"
       },
       {
         "name": "id",
@@ -3441,11 +3441,11 @@
       },
       {
         "name": "title",
-        "label": "Task title"
+        "label": "Aufgabentitel"
       },
       {
         "name": "assigneeId",
-        "label": "Assignee"
+        "label": "Bevollmächtigter"
       },
       {
         "name": "status",
@@ -3978,46 +3978,46 @@
       },
       {
         "level": 3,
-        "text": "Users"
+        "text": "Benutzer"
       },
       {
         "level": 3,
-        "text": "Tasks"
+        "text": "Aufgaben"
       },
       {
         "level": 3,
-        "text": "SQL Inspector"
+        "text": "SQL-Inspektor"
       },
       {
         "level": 3,
-        "text": "Delete row?"
+        "text": "Zeile löschen?"
       }
     ],
     "accessibleNames": [
       {
         "element": "button",
         "role": "tab",
-        "name": "Users — / 10"
+        "name": "Benutzer — / 10"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Tasks — / 25"
+        "name": "Aufgaben — / 25"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Users — / 10"
+        "name": "Benutzer — / 10"
       },
       {
         "element": "button",
         "role": null,
-        "name": "+ Add user"
+        "name": "+ Benutzer hinzufügen"
       },
       {
         "element": "form",
         "role": null,
-        "name": "Add userMaximum 10 users Name Email RoleAdminMemberViewer Create userAbbrechen"
+        "name": "Benutzer hinzufügenMaximal 10 Benutzer Name E-Mail RolleAdminMitgliedZuschauer Benutzer anlegenAbbrechen"
       },
       {
         "element": "input",
@@ -4027,17 +4027,17 @@
       {
         "element": "input",
         "role": null,
-        "name": "Email"
+        "name": "E-Mail"
       },
       {
         "element": "select",
         "role": null,
-        "name": "Role"
+        "name": "Rolle"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Create user"
+        "name": "Benutzer anlegen"
       },
       {
         "element": "button",
@@ -4047,27 +4047,27 @@
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Tasks — / 25"
+        "name": "Aufgaben — / 25"
       },
       {
         "element": "button",
         "role": null,
-        "name": "+ Add task"
+        "name": "+ Aufgabe hinzufügen"
       },
       {
         "element": "form",
         "role": null,
-        "name": "Add taskMaximum 25 tasks Task title AssigneeUnassigned StatusTo doIn progressDone Create taskAbbrechen"
+        "name": "Aufgabe hinzufügenMaximal 25 Aufgaben Aufgabentitel BevollmächtigterNicht zugewiesen StatusZu tunIn BearbeitungFertig Aufgabe erstellenAbbrechen"
       },
       {
         "element": "input",
         "role": null,
-        "name": "Task title"
+        "name": "Aufgabentitel"
       },
       {
         "element": "select",
         "role": null,
-        "name": "Assignee"
+        "name": "Bevollmächtigter"
       },
       {
         "element": "select",
@@ -4077,7 +4077,7 @@
       {
         "element": "button",
         "role": null,
-        "name": "Create task"
+        "name": "Aufgabe erstellen"
       },
       {
         "element": "button",
@@ -4087,7 +4087,7 @@
       {
         "element": "aside",
         "role": "complementary",
-        "name": "Live database evidenceSQL Inspector Warten Choose a tableNo query yet Statement Select a table or modify a row to inspect its parameterized SQL. Response JSONNo response yet."
+        "name": "Live-DatenbankbeweiseSQL-Inspektor Warten Wählen Sie einen TischNoch keine Anfrage Aussage Wählen Sie eine Tabelle aus oder ändern Sie eine Zeile, um deren parametrisierte SQL zu überprüfen. Antwort JSONNoch keine Antwort."
       },
       {
         "element": "button",
@@ -4111,11 +4111,11 @@
       },
       {
         "name": "email",
-        "label": "Email"
+        "label": "E-Mail"
       },
       {
         "name": "role",
-        "label": "Role"
+        "label": "Rolle"
       },
       {
         "name": "id",
@@ -4123,11 +4123,11 @@
       },
       {
         "name": "title",
-        "label": "Task title"
+        "label": "Aufgabentitel"
       },
       {
         "name": "assigneeId",
-        "label": "Assignee"
+        "label": "Bevollmächtigter"
       },
       {
         "name": "status",
@@ -4143,32 +4143,32 @@
       },
       {
         "level": 3,
-        "text": "Your R2 sandbox"
+        "text": "Ihre R2-Sandbox"
       },
       {
         "level": 4,
-        "text": "Files"
+        "text": "Dateien"
       },
       {
         "level": 3,
-        "text": "Latest operation"
+        "text": "Letzte Operation"
       }
     ],
     "accessibleNames": [
       {
         "element": "form",
         "role": null,
-        "name": "Drop a file here Choose a file or Browse files 5 MiB maximum Datei hochladen Select one file to begin."
+        "name": "Legen Sie hier eine Datei ab Wählen Sie eine Datei oder Durchsuchen Sie Dateien Maximal 5 MiB Datei hochladen Wählen Sie zunächst eine Datei aus."
       },
       {
         "element": "input",
         "role": null,
-        "name": "↑ Drop a file here Choose a file or Browse files 5 MiB maximum"
+        "name": "↑ Legen Sie hier eine Datei ab Wählen Sie eine Datei oder Durchsuchen Sie Dateien Maximal 5 MiB"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Clear selected file"
+        "name": "Ausgewählte Datei löschen"
       },
       {
         "element": "button",
@@ -4178,18 +4178,18 @@
       {
         "element": "button",
         "role": null,
-        "name": "Refresh files"
+        "name": "Dateien aktualisieren"
       },
       {
         "element": "aside",
         "role": "complementary",
-        "name": "Live requestLatest operationWarten Method— Status— Round trip— Choose an action to inspect the live result. View response JSONNo request yet."
+        "name": "Live-AnfrageLetzte OperationWarten Methode— Status— Hin- und Rückfahrt— Wählen Sie eine Aktion aus, um das Live-Ergebnis zu überprüfen. Antwort-JSON anzeigenNoch keine Anfrage."
       }
     ],
     "labels": [
       {
         "name": "file",
-        "label": "↑ Drop a file here Choose a file or Browse files 5 MiB maximum"
+        "label": "↑ Legen Sie hier eine Datei ab Wählen Sie eine Datei oder Durchsuchen Sie Dateien Maximal 5 MiB"
       }
     ]
   },
@@ -4197,11 +4197,11 @@
     "headings": [
       {
         "level": 2,
-        "text": "WizardGang REST demo 1.0.0"
+        "text": "WizardGang REST-Demo 1.0.0"
       },
       {
         "level": 3,
-        "text": "Servers"
+        "text": "Server"
       },
       {
         "level": 3,
@@ -4213,11 +4213,11 @@
       },
       {
         "level": 4,
-        "text": "Parameters"
+        "text": "Parameter"
       },
       {
         "level": 4,
-        "text": "Responses"
+        "text": "Antworten"
       },
       {
         "level": 4,
@@ -4225,27 +4225,15 @@
       },
       {
         "level": 4,
-        "text": "Parameters"
+        "text": "Parameter"
       },
       {
         "level": 5,
-        "text": "Request body"
+        "text": "Anforderungstext"
       },
       {
         "level": 4,
-        "text": "Responses"
-      },
-      {
-        "level": 4,
-        "text": "Ausprobieren"
-      },
-      {
-        "level": 4,
-        "text": "Parameters"
-      },
-      {
-        "level": 4,
-        "text": "Responses"
+        "text": "Antworten"
       },
       {
         "level": 4,
@@ -4253,15 +4241,27 @@
       },
       {
         "level": 4,
-        "text": "Parameters"
+        "text": "Parameter"
+      },
+      {
+        "level": 4,
+        "text": "Antworten"
+      },
+      {
+        "level": 4,
+        "text": "Ausprobieren"
+      },
+      {
+        "level": 4,
+        "text": "Parameter"
       },
       {
         "level": 5,
-        "text": "Request body"
+        "text": "Anforderungstext"
       },
       {
         "level": 4,
-        "text": "Responses"
+        "text": "Antworten"
       },
       {
         "level": 4,
@@ -4269,15 +4269,15 @@
       },
       {
         "level": 4,
-        "text": "Parameters"
+        "text": "Parameter"
       },
       {
         "level": 5,
-        "text": "Request body"
+        "text": "Anforderungstext"
       },
       {
         "level": 4,
-        "text": "Responses"
+        "text": "Antworten"
       },
       {
         "level": 4,
@@ -4285,11 +4285,11 @@
       },
       {
         "level": 4,
-        "text": "Parameters"
+        "text": "Parameter"
       },
       {
         "level": 4,
-        "text": "Responses"
+        "text": "Antworten"
       },
       {
         "level": 4,
@@ -4297,24 +4297,24 @@
       },
       {
         "level": 3,
-        "text": "Schemas"
+        "text": "Schemata"
       }
     ],
     "accessibleNames": [
       {
         "element": "nav",
         "role": "navigation",
-        "name": "OpenAPI documents"
+        "name": "OpenAPI-Dokumente"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Raw REST OpenAPI JSON"
+        "name": "Unformatiertes REST-OpenAPI-JSON"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Machine API OpenAPI JSON"
+        "name": "Maschinen-API OpenAPI JSON"
       },
       {
         "element": "form",
@@ -4329,12 +4329,12 @@
       {
         "element": "form",
         "role": null,
-        "name": "Request body application/json · RecordInput{ \"key\": \"hello\", \"value\": { \"message\": \"Hello from a Worker\" } }Ausführen"
+        "name": "Anforderungstext application/json · RecordInput{ \"key\": \"hello\", \"value\": { \"message\": \"Hello from a Worker\" } }Ausführen"
       },
       {
         "element": "textarea",
         "role": null,
-        "name": "Request body application/json · RecordInput"
+        "name": "Anforderungstext application/json · RecordInput"
       },
       {
         "element": "button",
@@ -4344,12 +4344,12 @@
       {
         "element": "form",
         "role": null,
-        "name": "id path · required · stringAusführen"
+        "name": "id path · erforderlich · stringAusführen"
       },
       {
         "element": "input",
         "role": null,
-        "name": "id path · required · string"
+        "name": "id path · erforderlich · string"
       },
       {
         "element": "button",
@@ -4359,17 +4359,17 @@
       {
         "element": "form",
         "role": null,
-        "name": "id path · required · stringRequest body application/json · RecordReplacement{ \"value\": { \"message\": \"Replaced by a Worker\" } }Ausführen"
+        "name": "id path · erforderlich · stringAnforderungstext application/json · RecordReplacement{ \"value\": { \"message\": \"Replaced by a Worker\" } }Ausführen"
       },
       {
         "element": "input",
         "role": null,
-        "name": "id path · required · string"
+        "name": "id path · erforderlich · string"
       },
       {
         "element": "textarea",
         "role": null,
-        "name": "Request body application/json · RecordReplacement"
+        "name": "Anforderungstext application/json · RecordReplacement"
       },
       {
         "element": "button",
@@ -4379,17 +4379,17 @@
       {
         "element": "form",
         "role": null,
-        "name": "id path · required · stringRequest body application/json · RecordPatch{ \"value\": { \"message\": \"Patched by a Worker\", \"priority\": \"high\" } }Ausführen"
+        "name": "id path · erforderlich · stringAnforderungstext application/json · RecordPatch{ \"value\": { \"message\": \"Patched by a Worker\", \"priority\": \"high\" } }Ausführen"
       },
       {
         "element": "input",
         "role": null,
-        "name": "id path · required · string"
+        "name": "id path · erforderlich · string"
       },
       {
         "element": "textarea",
         "role": null,
-        "name": "Request body application/json · RecordPatch"
+        "name": "Anforderungstext application/json · RecordPatch"
       },
       {
         "element": "button",
@@ -4399,12 +4399,12 @@
       {
         "element": "form",
         "role": null,
-        "name": "id path · required · stringAusführen"
+        "name": "id path · erforderlich · stringAusführen"
       },
       {
         "element": "input",
         "role": null,
-        "name": "id path · required · string"
+        "name": "id path · erforderlich · string"
       },
       {
         "element": "button",
@@ -4415,31 +4415,31 @@
     "labels": [
       {
         "name": null,
-        "label": "Request body application/json · RecordInput"
+        "label": "Anforderungstext application/json · RecordInput"
       },
       {
         "name": null,
-        "label": "id path · required · string"
+        "label": "id path · erforderlich · string"
       },
       {
         "name": null,
-        "label": "id path · required · string"
+        "label": "id path · erforderlich · string"
       },
       {
         "name": null,
-        "label": "Request body application/json · RecordReplacement"
+        "label": "Anforderungstext application/json · RecordReplacement"
       },
       {
         "name": null,
-        "label": "id path · required · string"
+        "label": "id path · erforderlich · string"
       },
       {
         "name": null,
-        "label": "Request body application/json · RecordPatch"
+        "label": "Anforderungstext application/json · RecordPatch"
       },
       {
         "name": null,
-        "label": "id path · required · string"
+        "label": "id path · erforderlich · string"
       }
     ]
   },
@@ -4455,19 +4455,19 @@
       },
       {
         "level": 4,
-        "text": "List users"
+        "text": "Benutzer auflisten"
       },
       {
         "level": 4,
-        "text": "Read one user"
+        "text": "Lesen Sie einen Benutzer"
       },
       {
         "level": 4,
-        "text": "Query"
+        "text": "Abfrage"
       },
       {
         "level": 4,
-        "text": "User"
+        "text": "Benutzer"
       },
       {
         "level": 4,
@@ -4475,62 +4475,62 @@
       },
       {
         "level": 3,
-        "text": "Accessible query runner"
+        "text": "Zugänglicher Abfrage-Runner"
       },
       {
         "level": 4,
-        "text": "Response"
+        "text": "Antwort"
       },
       {
         "level": 3,
-        "text": "Execution controls"
+        "text": "Ausführungskontrollen"
       },
       {
         "level": 3,
-        "text": "GraphQL ↔ D1 Users"
+        "text": "GraphQL ↔ D1-Benutzer"
       }
     ],
     "accessibleNames": [
       {
         "element": "button",
         "role": null,
-        "name": "Run example"
+        "name": "Beispiel ausführen"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Run example"
+        "name": "Beispiel ausführen"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Sign in for mutation access"
+        "name": "Melden Sie sich für den Mutationszugriff an"
       },
       {
         "element": "form",
         "role": null,
-        "name": "GraphQL query query Users { users { id name email role } } Use standard GraphQL query syntax. This public runner does not require a pointer or an embedded third-party editor. Run query"
+        "name": "GraphQL-Abfrage query Users { users { id name email role } } Verwenden Sie die Standard-GraphQL-Abfragesyntax. Für diesen öffentlichen Läufer ist weder ein Zeiger noch ein eingebetteter Drittanbieter-Editor erforderlich. Abfrage ausführen"
       },
       {
         "element": "textarea",
         "role": null,
-        "name": "GraphQL query"
+        "name": "GraphQL-Abfrage"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Run query"
+        "name": "Abfrage ausführen"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Open D1 view →"
+        "name": "Öffnen Sie die D1-Ansicht →"
       }
     ],
     "labels": [
       {
         "name": "query",
-        "label": "GraphQL query"
+        "label": "GraphQL-Abfrage"
       }
     ]
   },
@@ -4542,7 +4542,7 @@
       },
       {
         "level": 3,
-        "text": "Connected receiver"
+        "text": "Angeschlossener Empfänger"
       },
       {
         "level": 3,
@@ -4554,7 +4554,7 @@
       },
       {
         "level": 3,
-        "text": "Simulate a signed release webhook"
+        "text": "Simulieren Sie einen signierten Release-Webhook"
       },
       {
         "level": 3,
@@ -4615,7 +4615,7 @@
       {
         "element": "button",
         "role": null,
-        "name": "Simulate signed release webhook"
+        "name": "Simulieren Sie den signierten Release-Webhook"
       }
     ],
     "labels": [
@@ -4645,7 +4645,7 @@
       },
       {
         "level": 3,
-        "text": "Choose a trust relationship"
+        "text": "Wählen Sie eine Vertrauensbeziehung"
       },
       {
         "level": 4,
@@ -4657,36 +4657,36 @@
       },
       {
         "level": 4,
-        "text": "Validated provider payload"
+        "text": "Validierte Anbieternutzlast"
       },
       {
         "level": 4,
-        "text": "Normalized identity"
+        "text": "Normalisierte Identität"
       },
       {
         "level": 4,
-        "text": "What can this identity do?"
+        "text": "Was kann diese Identität bewirken?"
       },
       {
         "level": 4,
-        "text": "Protocol"
+        "text": "Protokoll"
       }
     ],
     "accessibleNames": [
       {
         "element": "a",
         "role": null,
-        "name": "View source ↗"
+        "name": "Quelle ansehen ↗"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Reset identity session"
+        "name": "Identitätssitzung zurücksetzen"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Sign in with GitHub"
+        "name": "Melden Sie sich mit GitHub an"
       },
       {
         "element": "button",
@@ -4696,52 +4696,52 @@
       {
         "element": "button",
         "role": "tab",
-        "name": "Provider payload"
+        "name": "Nutzlast des Anbieters"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Normalized identity"
+        "name": "Normalisierte Identität"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Authorization"
+        "name": "Autorisierung"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Protocol"
+        "name": "Protokoll"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Provider payload"
+        "name": "Nutzlast des Anbieters"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Normalized identity"
+        "name": "Normalisierte Identität"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Authorization"
+        "name": "Autorisierung"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Evaluate demo:read"
+        "name": "Demo auswerten: lesen"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Evaluate demo:write"
+        "name": "Demo:write auswerten"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Protocol"
+        "name": "Protokoll"
       }
     ],
     "labels": []
@@ -4750,11 +4750,11 @@
     "headings": [
       {
         "level": 2,
-        "text": "Single sign-on"
+        "text": "Einmaliges Anmelden"
       },
       {
         "level": 3,
-        "text": "Choose a trust relationship"
+        "text": "Wählen Sie eine Vertrauensbeziehung"
       },
       {
         "level": 4,
@@ -4770,41 +4770,41 @@
       },
       {
         "level": 4,
-        "text": "Validated provider payload"
+        "text": "Validierte Anbieternutzlast"
       },
       {
         "level": 4,
-        "text": "Normalized identity"
+        "text": "Normalisierte Identität"
       },
       {
         "level": 4,
-        "text": "What can this identity do?"
+        "text": "Was kann diese Identität bewirken?"
       },
       {
         "level": 4,
-        "text": "Protocol"
+        "text": "Protokoll"
       }
     ],
     "accessibleNames": [
       {
         "element": "a",
         "role": null,
-        "name": "View source ↗"
+        "name": "Quelle ansehen ↗"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Reset identity session"
+        "name": "Identitätssitzung zurücksetzen"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Sign in with Microsoft"
+        "name": "Melden Sie sich bei Microsoft an"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Sign in with Google"
+        "name": "Melden Sie sich mit Google an"
       },
       {
         "element": "button",
@@ -4814,52 +4814,52 @@
       {
         "element": "button",
         "role": "tab",
-        "name": "Provider payload"
+        "name": "Nutzlast des Anbieters"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Normalized identity"
+        "name": "Normalisierte Identität"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Authorization"
+        "name": "Autorisierung"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Protocol"
+        "name": "Protokoll"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Provider payload"
+        "name": "Nutzlast des Anbieters"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Normalized identity"
+        "name": "Normalisierte Identität"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Authorization"
+        "name": "Autorisierung"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Evaluate demo:read"
+        "name": "Demo auswerten: lesen"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Evaluate demo:write"
+        "name": "Demo:write auswerten"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Protocol"
+        "name": "Protokoll"
       }
     ],
     "labels": []
@@ -4872,7 +4872,7 @@
       },
       {
         "level": 3,
-        "text": "Choose a trust relationship"
+        "text": "Wählen Sie eine Vertrauensbeziehung"
       },
       {
         "level": 4,
@@ -4884,41 +4884,41 @@
       },
       {
         "level": 4,
-        "text": "Validated provider payload"
+        "text": "Validierte Anbieternutzlast"
       },
       {
         "level": 4,
-        "text": "Normalized identity"
+        "text": "Normalisierte Identität"
       },
       {
         "level": 4,
-        "text": "What can this identity do?"
+        "text": "Was kann diese Identität bewirken?"
       },
       {
         "level": 4,
-        "text": "Protocol"
+        "text": "Protokoll"
       }
     ],
     "accessibleNames": [
       {
         "element": "a",
         "role": null,
-        "name": "View source ↗"
+        "name": "Quelle ansehen ↗"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Reset identity session"
+        "name": "Identitätssitzung zurücksetzen"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Sign in with SAML"
+        "name": "Melden Sie sich mit SAML an"
       },
       {
         "element": "a",
         "role": null,
-        "name": "View SP metadata ↗"
+        "name": "SP-Metadaten anzeigen ↗"
       },
       {
         "element": "button",
@@ -4928,52 +4928,52 @@
       {
         "element": "button",
         "role": "tab",
-        "name": "Provider payload"
+        "name": "Nutzlast des Anbieters"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Normalized identity"
+        "name": "Normalisierte Identität"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Authorization"
+        "name": "Autorisierung"
       },
       {
         "element": "button",
         "role": "tab",
-        "name": "Protocol"
+        "name": "Protokoll"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Provider payload"
+        "name": "Nutzlast des Anbieters"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Normalized identity"
+        "name": "Normalisierte Identität"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Authorization"
+        "name": "Autorisierung"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Evaluate demo:read"
+        "name": "Demo auswerten: lesen"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Evaluate demo:write"
+        "name": "Demo:write auswerten"
       },
       {
         "element": "section",
         "role": "tabpanel",
-        "name": "Protocol"
+        "name": "Protokoll"
       }
     ],
     "labels": []
@@ -4998,11 +4998,11 @@
       },
       {
         "level": 3,
-        "text": "Run ping"
+        "text": "Lauf ping"
       },
       {
         "level": 3,
-        "text": "Connect a client"
+        "text": "Verbinden Sie einen Client"
       },
       {
         "level": 4,
@@ -5021,12 +5021,12 @@
       {
         "element": "button",
         "role": null,
-        "name": "Run ping"
+        "name": "Führen Sie Ping aus"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Copy endpoint"
+        "name": "Endpunkt kopieren"
       }
     ],
     "labels": []
@@ -5039,19 +5039,19 @@
       },
       {
         "level": 3,
-        "text": "Request → Cloudflare edge → Worker"
+        "text": "Anfrage → Cloudflare Edge → Worker"
       },
       {
         "level": 4,
-        "text": "Request supplied"
+        "text": "Anfrage geliefert"
       },
       {
         "level": 4,
-        "text": "Cloudflare supplied"
+        "text": "Cloudflare geliefert"
       },
       {
         "level": 4,
-        "text": "Privacy boundary"
+        "text": "Datenschutzgrenze"
       }
     ],
     "accessibleNames": [
@@ -5063,12 +5063,12 @@
       {
         "element": "a",
         "role": null,
-        "name": "Runtime API"
+        "name": "Laufzeit-API"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Cloudflare configuration"
+        "name": "Cloudflare-Konfiguration"
       },
       {
         "element": "button",
@@ -5086,7 +5086,7 @@
       },
       {
         "level": 3,
-        "text": "Compose a request"
+        "text": "Verfassen Sie eine Anfrage"
       }
     ],
     "accessibleNames": [
@@ -5098,37 +5098,37 @@
       {
         "element": "a",
         "role": null,
-        "name": "Runtime policy"
+        "name": "Laufzeitrichtlinie"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Worker entry point"
+        "name": "Einstiegspunkt für Arbeiter"
       },
       {
         "element": "form",
         "role": null,
-        "name": "MethodGETPOST ResourceStatic assetDynamic route Cookie present Authorization present Edge-Anfragerichtlinie anwenden"
+        "name": "MethodeGETPOST RessourceStatisches AssetDynamische Route Keks vorhanden Berechtigung vorhanden Edge-Anfragerichtlinie anwenden"
       },
       {
         "element": "select",
         "role": null,
-        "name": "Method"
+        "name": "Methode"
       },
       {
         "element": "select",
         "role": null,
-        "name": "Resource"
+        "name": "Ressource"
       },
       {
         "element": "input",
         "role": null,
-        "name": "Cookie present"
+        "name": "Keks vorhanden"
       },
       {
         "element": "input",
         "role": null,
-        "name": "Authorization present"
+        "name": "Berechtigung vorhanden"
       },
       {
         "element": "button",
@@ -5139,19 +5139,19 @@
     "labels": [
       {
         "name": "method",
-        "label": "Method"
+        "label": "Methode"
       },
       {
         "name": "resource",
-        "label": "Resource"
+        "label": "Ressource"
       },
       {
         "name": "cookie",
-        "label": "Cookie present"
+        "label": "Keks vorhanden"
       },
       {
         "name": "authorization",
-        "label": "Authorization present"
+        "label": "Berechtigung vorhanden"
       }
     ]
   },
@@ -5163,7 +5163,7 @@
       },
       {
         "level": 3,
-        "text": "Many requests, one state owner"
+        "text": "Viele Anfragen, ein Staatseigentümer"
       }
     ],
     "accessibleNames": [
@@ -5175,27 +5175,27 @@
       {
         "element": "a",
         "role": null,
-        "name": "Durable Object API"
+        "name": "Langlebige Objekt-API"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Coordinator class"
+        "name": "Koordinatorklasse"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Binding configuration"
+        "name": "Bindungskonfiguration"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Increment once"
+        "name": "Einmal erhöhen"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Send 10 concurrent increments"
+        "name": "Senden Sie 10 gleichzeitige Inkremente"
       }
     ],
     "labels": []
@@ -5208,163 +5208,163 @@
       },
       {
         "level": 3,
-        "text": "Operate the working interaction"
+        "text": "Betreiben Sie die Arbeitsinteraktion"
       },
       {
         "level": 3,
-        "text": "How to run"
+        "text": "Wie man läuft"
       },
       {
         "level": 3,
-        "text": "Automated check of accessible behavior"
+        "text": "Automatisierte Überprüfung des zugänglichen Verhaltens"
       },
       {
         "level": 3,
-        "text": "Failure analysis"
+        "text": "Fehleranalyse"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "Arbeitsverhalten"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "Fehlervorrichtung"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "Wie wir es überprüfen"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "Arbeitsverhalten"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "Fehlervorrichtung"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "Wie wir es überprüfen"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "Arbeitsverhalten"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "Fehlervorrichtung"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "Wie wir es überprüfen"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "Arbeitsverhalten"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "Fehlervorrichtung"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "Wie wir es überprüfen"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "Arbeitsverhalten"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "Fehlervorrichtung"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "Wie wir es überprüfen"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "Arbeitsverhalten"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "Fehlervorrichtung"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "Wie wir es überprüfen"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "Arbeitsverhalten"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "Fehlervorrichtung"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "Wie wir es überprüfen"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "Arbeitsverhalten"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "Fehlervorrichtung"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "Wie wir es überprüfen"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "Arbeitsverhalten"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "Fehlervorrichtung"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "Wie wir es überprüfen"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "Arbeitsverhalten"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "Fehlervorrichtung"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "Wie wir es überprüfen"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "Arbeitsverhalten"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "Fehlervorrichtung"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "Wie wir es überprüfen"
       },
       {
         "level": 3,
-        "text": "Working behavior"
+        "text": "Arbeitsverhalten"
       },
       {
         "level": 3,
-        "text": "Failure fixture"
+        "text": "Fehlervorrichtung"
       },
       {
         "level": 3,
-        "text": "How we verify it"
+        "text": "Wie wir es überprüfen"
       }
     ],
     "accessibleNames": [
@@ -5376,27 +5376,27 @@
       {
         "element": "a",
         "role": null,
-        "name": "Lab source"
+        "name": "Laborquelle"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Global shell source"
+        "name": "Globale Shell-Quelle"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Manual verification matrix"
+        "name": "Manuelle Verifizierungsmatrix"
       },
       {
         "element": "a",
         "role": null,
-        "name": "Interface tests"
+        "name": "Schnittstellentests"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Run automated check"
+        "name": "Führen Sie eine automatische Prüfung durch"
       }
     ],
     "labels": []
@@ -5424,7 +5424,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "Global runtime source"
+        "name": "Globale Laufzeitquelle"
       },
       {
         "element": "a",
@@ -5439,7 +5439,7 @@
       {
         "element": "a",
         "role": null,
-        "name": "Locale configuration"
+        "name": "Gebietsschemakonfiguration"
       },
       {
         "element": "form",
@@ -5464,37 +5464,37 @@
       {
         "element": "aside",
         "role": "complementary",
-        "name": "Globaler Kontextinspektor Aufgelöster Wert localede defaulten fallbacken directionltr plural categoryother Inspect a valueTitleItemsNumberDateCurrencyAction { \"items_other\": \"{count} Architekturelemente\" } Sprachressource anzeigen"
+        "name": "Globaler Kontextinspektor Aufgelöster Wert localede defaulten fallbacken directionltr plural categoryother Überprüfen Sie einen WertTitelArtikelNummerDatumWährungAktion { \"items_other\": \"{count} Architekturelemente\" } Sprachressource anzeigen"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Title"
+        "name": "Titel"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Items"
+        "name": "Artikel"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Number"
+        "name": "Nummer"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Date"
+        "name": "Datum"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Currency"
+        "name": "Währung"
       },
       {
         "element": "button",
         "role": null,
-        "name": "Action"
+        "name": "Aktion"
       },
       {
         "element": "a",

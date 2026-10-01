@@ -291,11 +291,11 @@ async function exerciseDemo337Workflows(cdp, locale) {
   await navigate(cdp, `${origin}/demos?lang=${locale}#accessibility`);
   await assertWorkbenchState(cdp, 'accessibility', `Accessibility ${locale} workflow`, '#accessibility', locale);
   await waitForExpression(cdp, `document.querySelector('[data-demo-panel] [data-run-a11y-scan]')?.disabled === false`, `Accessibility ${locale} ready`);
-  const beforeScan = await evaluate(cdp, `({state:document.querySelector('[data-demo-panel] [data-scan-state]')?.textContent,meta:document.querySelector('[data-demo-panel] [data-scan-meta]')?.textContent})`);
-  if (beforeScan.meta?.includes('ms')) throw new Error(`Accessibility ${locale} scan started without request: ${JSON.stringify(beforeScan)}`);
+  const beforeScan = await evaluate(cdp, `({state:document.querySelector('[data-demo-panel] [data-scan-state]')?.textContent,duration:document.querySelector('[data-demo-panel] [data-scan-meta]')?.dataset.durationMs})`);
+  if (beforeScan.duration) throw new Error(`Accessibility ${locale} scan started without request: ${JSON.stringify(beforeScan)}`);
   await evaluate(cdp, `document.querySelector('[data-demo-panel] [data-run-a11y-scan]').click();true`);
   try {
-    await waitForExpression(cdp, `document.querySelector('[data-demo-panel] [data-scan-meta]')?.textContent?.includes('ms')`, `Accessibility ${locale} axe result`, 240);
+    await waitForExpression(cdp, `Number(document.querySelector('[data-demo-panel] [data-scan-meta]')?.dataset.durationMs) > 0`, `Accessibility ${locale} axe result`, 240);
   } catch (error) {
     const parent = await evaluate(cdp, `({state:document.querySelector('[data-demo-panel] [data-scan-state]')?.textContent,meta:document.querySelector('[data-demo-panel] [data-scan-meta]')?.textContent,frameSrc:document.querySelector('[data-a11y-frame]')?.getAttribute('src'),frameSrcdoc:document.querySelector('[data-a11y-frame]')?.getAttribute('srcdoc')?.slice(0,80)})`);
     const tree = await cdp.call('Page.getFrameTree');
@@ -309,8 +309,8 @@ async function exerciseDemo337Workflows(cdp, locale) {
     });
     throw new Error(`${error instanceof Error ? error.message : String(error)}; parent=${JSON.stringify(parent)}; frame=${JSON.stringify(detail.result?.value)}`);
   }
-  const scan = await evaluate(cdp, `({state:document.querySelector('[data-demo-panel] [data-scan-state]')?.textContent?.trim(),meta:document.querySelector('[data-demo-panel] [data-scan-meta]')?.textContent?.trim()})`);
-  if (!scan.meta?.includes('ms')) throw new Error(`Accessibility ${locale} axe evidence missing duration: ${JSON.stringify(scan)}`);
+  const scan = await evaluate(cdp, `({state:document.querySelector('[data-demo-panel] [data-scan-state]')?.textContent?.trim(),duration:document.querySelector('[data-demo-panel] [data-scan-meta]')?.dataset.durationMs})`);
+  if (!(Number(scan.duration) > 0)) throw new Error(`Accessibility ${locale} axe evidence missing duration: ${JSON.stringify(scan)}`);
 
   await navigate(cdp, `${origin}/demos?lang=${locale}&count=3#i18n`);
   await assertWorkbenchState(cdp, 'i18n', `Internationalization ${locale} workflow`, '#i18n', locale);
@@ -422,12 +422,17 @@ async function exerciseD1Workflow(cdp, locale) {
     lang:document.documentElement.lang,
     dir:document.documentElement.dir,
     users:document.querySelector('[data-count="users"]')?.textContent,
+    userRatio:[...document.querySelectorAll('[data-count="users"]')].map((node)=>({value:node.parentElement?.textContent?.trim(),tag:node.parentElement?.tagName,dir:node.parentElement?.dir})),
+    headingRatio:(()=>{const node=document.querySelector('[data-heading-count="users"]');return {value:node?.textContent?.trim(),tag:node?.tagName,dir:node?.dir}})(),
     sql:document.querySelector('[data-inspector-sql]')?.textContent?.trim(),
     response:document.querySelector('[data-state-output]')?.textContent?.trim(),
     status:document.querySelector('[data-inspector-status]')?.textContent?.trim()
   }))()`);
   if (result.lang !== locale || result.dir !== (locale === 'ar' ? 'rtl' : 'ltr') || result.users !== '3' || !result.sql || !result.response || !result.status) {
     throw new Error(`${label} did not preserve localized CRUD/reset and SQL inspector behavior: ${JSON.stringify(result)}`);
+  }
+  if (locale === 'ar' && (result.userRatio.some((ratio)=>ratio.tag !== 'BDI' || ratio.dir !== 'ltr' || ratio.value !== '3 / 10') || result.headingRatio.tag !== 'BDI' || result.headingRatio.dir !== 'ltr' || result.headingRatio.value !== '3 / 10')) {
+    throw new Error(`${label} reordered a D1 ratio in RTL: ${JSON.stringify(result)}`);
   }
 }
 
@@ -470,6 +475,7 @@ async function exerciseR2Workflow(cdp, locale) {
   const result = await evaluate(cdp, `(()=>({
     lang:document.documentElement.lang,
     dir:document.documentElement.dir,
+    usage:[...document.querySelectorAll('[data-sandbox-usage] bdi')].map((node)=>({value:node.textContent?.trim(),dir:node.dir})),
     method:document.querySelector('[data-request-method]')?.textContent?.trim(),
     status:document.querySelector('[data-request-status]')?.textContent?.trim(),
     response:document.querySelector('[data-r2-output]')?.textContent?.trim(),
@@ -477,6 +483,9 @@ async function exerciseR2Workflow(cdp, locale) {
   }))()`);
   if (result.lang !== locale || result.dir !== (locale === 'ar' ? 'rtl' : 'ltr') || result.method !== 'DELETE' || !result.status || !result.response || result.preview !== null) {
     throw new Error(`${label} did not preserve localized storage and request inspector behavior: ${JSON.stringify(result)}`);
+  }
+  if (locale === 'ar' && (result.usage.length !== 2 || result.usage[0].value !== '0 / 10' || result.usage[0].dir !== 'ltr' || result.usage[1].dir !== 'ltr')) {
+    throw new Error(`${label} reordered R2 usage in RTL: ${JSON.stringify(result)}`);
   }
 }
 
@@ -924,7 +933,7 @@ async function demoInteriorReflowAudit(cdp) {
         if (id === 'mcp' && (!report.mcpEndpointVisible || (width < 640 && !report.mcpActionBelow))) failures.push('MCP endpoint or action placement');
         if (id === 'graphql' && (report.editorRatio < .95 || !Number.isFinite(report.editorRatio))) failures.push('GraphQL editor width');
         if (id === 'workers' && !report.workerInline) failures.push('Workers checkbox alignment');
-        if (id === 'r2' && width < 768 && (!report.coarseVisible || report.coarseCopy !== 'Choose a file')) failures.push('R2 touch copy');
+        if (id === 'r2' && width < 768 && (!report.coarseVisible || !report.coarseCopy || (locale === 'ar' && !/[\u0600-\u06ff]/.test(report.coarseCopy)))) failures.push('R2 touch copy');
         if (failures.length) throw new Error(`${label}: ${failures.join('; ')} (${JSON.stringify(report)})`);
         if (id === 'd1') {
           const tasks = await evaluate(cdp, `(()=>{

@@ -29,7 +29,7 @@ if (!fs.existsSync(presentationPath)) failures.push(`missing presentation resour
 else {
   const presentation = JSON.parse(fs.readFileSync(presentationPath, 'utf8'));
   const expectedLocales = [...config.supportedLocales].sort();
-  const allowedNamespaces = new Set(['common', 'nav', 'home', 'platform', 'interfaces', 'operations', 'assurance', 'security', 'errors', 'client', 'reporting', 'summary', 'meta']);
+  const allowedNamespaces = new Set(['common', 'nav', 'home', 'platform', 'interfaces', 'operations', 'assurance', 'security', 'errors', 'client', 'reporting', 'summary', 'meta', 'demos']);
   for (const [key, translations] of Object.entries(presentation)) {
     const namespace = key.split('.')[0];
     if (!allowedNamespaces.has(namespace)) failures.push(`presentation key has unsupported namespace: ${key}`);
@@ -42,6 +42,12 @@ else {
     for (const locale of expectedLocales) {
       const value = translations[locale];
       if (typeof value !== 'string' || !value.trim()) failures.push(`presentation.${key}.${locale} must be a non-empty string`);
+      else if (typeof translations.en === 'string') {
+        const placeholders = (text) => [...text.matchAll(/\{[a-zA-Z0-9_.-]+\}/g)].map(([token]) => token).sort();
+        if (JSON.stringify(placeholders(value)) !== JSON.stringify(placeholders(translations.en))) {
+          failures.push(`presentation.${key}.${locale} placeholders differ from English`);
+        }
+      }
     }
   }
 }

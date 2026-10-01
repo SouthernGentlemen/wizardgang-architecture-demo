@@ -159,8 +159,8 @@ function DefaultInspector({ demo, env, localization }: Readonly<{
         </> : null}
         <h3>{localization.exact('Evidence')}</h3>
         <ul className="demo-evidence-list">
-          <li><strong>{localization.exact('Stable fragment: ')}</strong><code>#{demo.id}</code></li>
-          <li><strong>{localization.exact('Implementation: ')}</strong><a href={sourceHref(env, demo.sourcePath)} target="_blank" rel="noreferrer">{demo.sourcePath}</a></li>
+          <li><strong>{localization.exact('Stable fragment: ')}</strong><code dir="ltr">#{demo.id}</code></li>
+          <li><strong>{localization.exact('Implementation: ')}</strong><a href={sourceHref(env, demo.sourcePath)} target="_blank" rel="noreferrer"><bdi dir="ltr">{demo.sourcePath}</bdi></a></li>
         </ul>
       </div>
       <InspectorTabs demo={demo} localization={localization} />

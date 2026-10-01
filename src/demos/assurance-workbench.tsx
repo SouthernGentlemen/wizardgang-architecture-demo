@@ -92,7 +92,7 @@ function DocumentationReferences({ record, env, localization }: Readonly<{
     {references.map((reference) => {
       const resolved = resolveAssuranceDocumentationReference(reference, env);
       return <li key={reference}>
-        <code lang="en">{reference}</code>
+        <code lang="en" dir="ltr">{reference}</code>
         <div><a href={resolved.url}>{linkLabel}<span className="sr-only">: {reference}</span></a></div>
       </li>;
     })}
@@ -117,7 +117,7 @@ function EvidenceReferences({ record, evidence, localization }: Readonly<{
       const recordUrl = assuranceRecordUrlsById(item.id).api;
       const locationUrl = item.resolved.url;
       return <li key={item.id}>
-        <strong lang="en">{item.title}</strong>
+        <strong lang="en" dir="ltr">{item.title}</strong>
         <div className="assurance-evidence-meta">
           <span lang="en">{item.kind}</span>
           <span>{localization.t('assurance.workbench.freshness', 'Freshness')}: {item.freshness.policy}</span>
@@ -155,8 +155,8 @@ export function AssuranceRecordPane({
   return <article className="assurance-record-pane" data-assurance-record={record.id}>
     <header className="assurance-record-heading">
       <div>
-        <p className="eyebrow" lang="en">{record.frameworkLabel} · {record.section}</p>
-        <h2 tabIndex={-1} data-assurance-detail-heading=""><span lang="en">{record.reference} · {record.title}</span></h2>
+        <p className="eyebrow" lang="en" dir="ltr">{record.frameworkLabel} · {record.section}</p>
+        <h2 tabIndex={-1} data-assurance-detail-heading=""><span lang="en" dir="ltr">{record.reference} · {record.title}</span></h2>
       </div>
       <StatusBadge status={record.status} localization={localization} />
     </header>
@@ -233,7 +233,7 @@ function Posture({ label, records, localization }: Readonly<{
     <strong>{label}</strong>
     <dl>{STATUS_ORDER.map((status) => <div key={status} data-status={status}>
       <dt><span aria-hidden="true">{statusGlyph(status)}</span> <span className="assurance-posture-status-label">{statusLabel(status, localization)}</span></dt>
-      <dd data-posture-count={status}>{localization.number(counts[status])}</dd>
+      <dd data-posture-count={status}><bdi>{localization.number(counts[status])}</bdi></dd>
     </div>)}</dl>
   </section>;
 }
@@ -250,9 +250,9 @@ function RecordLink({ record, activeId, localization }: Readonly<{
     data-assurance-record-link={record.id}
     aria-current={record.id === activeId ? 'true' : undefined}
   >
-    <code lang="en">{record.reference}</code>
+    <code lang="en" dir="ltr">{record.reference}</code>
     {' '}
-    <strong lang="en">{record.title}</strong>
+    <strong lang="en" dir="ltr">{record.title}</strong>
     {' '}
     <StatusBadge status={record.status} localization={localization} />
   </a>;
@@ -305,7 +305,7 @@ export function AssuranceWorkbenchPage({ data, env }: Readonly<{ data: Assurance
             aria-selected={selected}
             tabIndex={selected ? 0 : -1}
             data-assurance-framework={frameworkId}
-          ><span lang="en">{framework.label}</span></button>;
+          ><span lang="en" dir="ltr">{framework.label}</span></button>;
         })}
       </div>
       <div className="assurance-workbench-layout" id="assurance-workbench-panel" role="tabpanel">
@@ -313,7 +313,7 @@ export function AssuranceWorkbenchPage({ data, env }: Readonly<{ data: Assurance
           <label className="assurance-section-control">
             <span>{localization.t('assurance.workbench.section', 'Section')}</span>
             <select data-assurance-section="" defaultValue={data.initialSummary.section}>
-              {sectionOptions.map((section) => <option key={section} value={section}>
+              {sectionOptions.map((section) => <option key={section} value={section} dir="ltr">
                 {section} · {localization.number(data.initialFrameworkRecords.filter((record) => record.section === section).length)}
               </option>)}
             </select>
@@ -333,7 +333,7 @@ export function AssuranceWorkbenchPage({ data, env }: Readonly<{ data: Assurance
         <section className="assurance-records" aria-label={localization.t('assurance.workbench.records', 'Records')}>
           <div className="assurance-records-heading">
             <h2>{localization.t('assurance.workbench.records', 'Records')}</h2>
-            <span className="assurance-record-count"><span data-assurance-record-count="">{localization.number(data.initialSectionRecords.length)}</span></span>
+            <span className="assurance-record-count"><bdi data-assurance-record-count="">{localization.number(data.initialSectionRecords.length)}</bdi></span>
           </div>
           {' '}
           <div className="assurance-record-grid" data-assurance-record-grid="" data-assurance-grid-framework={data.initialSummary.framework} data-assurance-grid-section={data.initialSummary.section} aria-label={localization.t('assurance.workbench.selected_records', 'Records in selected section')}>

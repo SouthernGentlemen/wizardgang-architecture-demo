@@ -171,7 +171,7 @@ describe('DEMO-236 sitewide localization acceptance', () => {
     const presentation = await presentationResponse.text();
 
     expect(presentation).toContain('<input type="hidden" name="lang" value="ja"/>');
-    expect(presentation).toContain('Use the language control in the global header');
+    expect(presentation).toContain('グローバルヘッダーの言語コントロール');
     expect(presentation).not.toContain('id="locale-demo"');
     expect(html).toContain('<input type="hidden" name="count" value="7"/>');
     expect(html + presentation).not.toContain('&amp%3B');

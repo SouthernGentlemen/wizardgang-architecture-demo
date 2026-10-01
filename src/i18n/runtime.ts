@@ -7,6 +7,7 @@ import enCore from './locales/en.json';
 import esCore from './locales/es.json';
 import frCore from './locales/fr.json';
 import jaCore from './locales/ja.json';
+import { exactTechnicalTokens } from './exact-technical-tokens';
 
 type ResourceLocale = 'en' | 'es' | 'fr' | 'de' | 'ja' | 'ar';
 type PresentationEntry = Readonly<Record<ResourceLocale, string>>;
@@ -43,6 +44,14 @@ type LocalizedEnv = Env & { [LOCALIZATION_CONTEXT]?: LocalizationContext };
 const exactEnglishPresentation = new Map<string, string>(
   Object.entries(presentation as PresentationCatalog).map(([key, entry]) => [entry.en, key]),
 );
+let exactFallbackObserver: ((english: string, locale: SupportedLocale) => void) | undefined;
+
+/** Scoped validation hook; normal requests retain the documented English fallback. */
+export function observeExactFallbacks(observer: (english: string, locale: SupportedLocale) => void): () => void {
+  const previous = exactFallbackObserver;
+  exactFallbackObserver = observer;
+  return () => { exactFallbackObserver = previous; };
+}
 
 export interface LocalizedGetForm {
   action: string;
@@ -110,6 +119,7 @@ export interface LocalizationContext {
 function createLocalization(locale: SupportedLocale, currentUrl: URL): LocalizationContext {
   const selected = localeResources[locale] as MessageMap;
   const fallback = localeResources[fallbackLocale] as MessageMap;
+  const alreadyLocalized = new Set(Object.values(selected));
   const t: LocalizationContext['t'] = (key, fallbackText = key, values = {}) => template(selected[key] ?? fallback[key] ?? fallbackText, values);
   const context: LocalizationContext = {
     locale, defaultLocale, fallbackLocale, lang: locale,
@@ -118,7 +128,11 @@ function createLocalization(locale: SupportedLocale, currentUrl: URL): Localizat
     t,
     exact: (english: string) => {
       const key = exactEnglishPresentation.get(english);
-      return key ? t(key, english) : english;
+      if (key) return t(key, english);
+      if (exactTechnicalTokens.has(english)) return english;
+      if (alreadyLocalized.has(english)) return english;
+      if (locale !== defaultLocale) exactFallbackObserver?.(english, locale);
+      return english;
     },
     pluralCategory: (count: number) => new Intl.PluralRules(locale).select(count),
     plural: (keyPrefix: string, count: number, values: TemplateValues = {}) => {
