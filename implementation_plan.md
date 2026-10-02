@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-417 — [TEST] Remove duplicate documentation validator tests
-- Dependency: DEMO-416.
-- Why: DEMO-319 reruns a validator already owned by check.
-- Scope: Keep unique policy assertions and remove redundant subprocess execution and script-text checks.
-- Non-goals: Do not remove unique behavioral, security, or release regression coverage.
-- Acceptance: Documentation cleanup remains in check and unique failures remain detectable.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: tests/demo-319-documentation-cleanup-acceptance.test.mjs; scripts/validate-documentation-cleanup.mjs
-
 ### DEMO-418 — [DOCS] Trim duplicated setup and CI prose
 - Dependency: DEMO-417.
 - Why: README and CI diagnostics repeat command details available from package scripts.
