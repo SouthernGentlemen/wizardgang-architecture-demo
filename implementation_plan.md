@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-422 — [REFACTOR] Prune unused route and reporting symbols
-- Dependency: DEMO-421.
-- Why: File-level reachability cannot establish whether exports and branches remain used.
-- Scope: Trace route and reporting consumers and delete only proven unused symbols or branches in those modules.
-- Non-goals: Do not change public functionality, contracts, or provider boundaries.
-- Acceptance: Routing, reporting, and protocol contracts remain equivalent with a recorded reachability rationale.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: src/routing/; src/reporting/; src/router.ts
-
 ### DEMO-423 — [REFACTOR] Port observation and risk helpers to TypeScript
 - Dependency: DEMO-422.
 - Why: Two authored JavaScript assurance helpers rely on companion declarations.

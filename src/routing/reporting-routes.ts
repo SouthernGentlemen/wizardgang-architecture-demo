@@ -87,5 +87,6 @@ const reportingRoutes = [
   }),
 ] as const;
 
-export const reportingRouteModule = defineRouteModule('reporting', reportingRoutes);
-export const reportingRouteRegistry = createRouteRegistry([reportingRouteModule]);
+export const reportingRouteRegistry = createRouteRegistry([
+  defineRouteModule('reporting', reportingRoutes),
+]);

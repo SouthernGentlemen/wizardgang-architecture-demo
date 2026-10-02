@@ -204,5 +204,6 @@ const globalOperationalRoutes = [
   }),
 ] as const;
 
-export const operationalRouteModule = defineRouteModule('operations', globalOperationalRoutes);
-export const operationalRouteRegistry = createRouteRegistry([operationalRouteModule]);
+export const operationalRouteRegistry = createRouteRegistry([
+  defineRouteModule('operations', globalOperationalRoutes),
+]);
