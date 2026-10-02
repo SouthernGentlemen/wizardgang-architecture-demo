@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-421 — [REFACTOR] Prune unused browser assets and direct dependencies
-- Dependency: DEMO-420.
-- Why: Vendored assets and browser entries are emitted even when their consumers may have changed.
-- Scope: Trace Vite asset-map consumers and remove only unused emitted assets or direct dependencies.
-- Non-goals: Do not change public functionality, contracts, or provider boundaries.
-- Acceptance: Generated asset manifest, browser routes, and build remain equivalent after each removal.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: vite.config.ts; src/ui/asset-map.ts; package.json
-
 ### DEMO-422 — [REFACTOR] Prune unused route and reporting symbols
 - Dependency: DEMO-421.
 - Why: File-level reachability cannot establish whether exports and branches remain used.
