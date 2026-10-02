@@ -162,6 +162,15 @@ if (fileSet.has(accessibilityPath)) {
   ]) {
     if (!accessibility.includes(reference)) errors.push(`${accessibilityPath}: missing current accessibility authority reference ${reference}`);
   }
+  for (const currentBaseline of [
+    '## Current WCAG 2.2 assurance boundary',
+    '12 December 2024',
+    'https://www.w3.org/WAI/WCAG22/errata/',
+    'assurance/compliance/wcag-2.2/**',
+  ]) {
+    if (!accessibility.includes(currentBaseline)) errors.push(`${accessibilityPath}: missing current WCAG documentation baseline ${currentBaseline}`);
+  }
+  if (accessibility.includes('Dated accessibility assessments')) errors.push(`${accessibilityPath}: must not revive retired dated assessment narration`);
   for (const duplicatedInventory of ['Registry status vocabulary', '| Criterion | Status |']) {
     if (accessibility.includes(duplicatedInventory)) errors.push(`${accessibilityPath}: duplicates structured WCAG criterion state in Markdown`);
   }

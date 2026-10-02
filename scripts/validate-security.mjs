@@ -4,12 +4,24 @@ import { isForbiddenSecretPath, scanPublicHistory, secretKinds } from './lib/pub
 
 const tracked = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' }).split('\0').filter(Boolean);
 const failures = [];
+const retiredBroadCredential = ['DEMO', 'API', 'TOKEN'].join('_');
 
 for (const file of tracked) {
   if (isForbiddenSecretPath(file)) failures.push(`${file}: forbidden secret-file path`);
   let text;
   try { text = fs.readFileSync(file, 'utf8'); } catch { continue; }
   for (const kind of secretKinds(text, [file])) failures.push(`${file}: possible ${kind}`);
+  if (text.includes(retiredBroadCredential)) failures.push(`${file}: retired broad operator credential name is not allowed`);
+}
+
+const broadCredentialBoundary = 'no broad operator bearer credential is accepted by the application';
+for (const file of [
+  'assurance/governance/access-classes.json',
+  'docs/governance/SECURITY-GOVERNANCE.md',
+  'contracts/openapi/openapi.json',
+]) {
+  const text = fs.readFileSync(file, 'utf8').toLowerCase();
+  if (!text.includes(broadCredentialBoundary)) failures.push(`${file}: missing the current broad-credential negative invariant`);
 }
 
 const history = scanPublicHistory(process.cwd());
