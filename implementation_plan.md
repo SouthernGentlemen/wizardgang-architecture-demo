@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-412 — [TEST] Replace German and Japanese text snapshots
-- Dependency: DEMO-411.
-- Why: The remaining text snapshots are large compared with their unique checks.
-- Scope: Replace de and ja snapshots with focused text and fallback assertions.
-- Non-goals: Do not remove unique behavioral, security, or release regression coverage.
-- Acceptance: All six locales retain deterministic checks; remaining text snapshots are removed.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: tests/presentation-baseline.test.ts; tests/fixtures/presentation-baseline/de-text.json; tests/fixtures/presentation-baseline/ja-text.json
-
 ### DEMO-414 — [CHORE] Remove the uncalled one-time codemod
 - Dependency: DEMO-412.
 - Why: The historical DEMO-174 rewrite script has no tracked caller.
