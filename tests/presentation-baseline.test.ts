@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { existsSync } from 'node:fs';
 import { Window } from 'happy-dom';
 import { describe, expect, it } from 'vitest';
 import auditConfig from '../config/site-audit-states.json';
@@ -29,9 +30,89 @@ const SECURITY_HEADERS = [
   'x-frame-options',
   'x-robots-tag',
 ] as const;
-const FULL_INVENTORY_LOCALES = ['en', 'ar'] as const;
+const FULL_SNAPSHOT_LOCALES = ['ar'] as const;
+const PRESENTATION_SECURITY_LOCALES = ['en', 'ar'] as const;
 const TEXT_INVENTORY_LOCALES = ['es', 'fr', 'de', 'ja'] as const;
 const ASSURANCE_RECORDS = ['ISO27001-A.5.19', 'ISO42001-A.9.4', 'WCAG-2.4.7'] as const;
+
+const EXPECTED_ENGLISH_SURFACE_IDS = [
+  'page:assurance.index',
+  'page:security.index',
+  'page:interfaces.frontend.index',
+  'page:demos.index',
+  'audit:assurance-security-record',
+  'audit:assurance-evidence-record',
+  'audit:assurance-accessibility-record',
+  'audit:assurance-rtl-record',
+  'audit:accessibility-lab',
+  'audit:openapi-console',
+  'audit:homepage-availability-proof',
+  'page:operations.admin',
+  'page:operations.offline',
+  'page:ordinary-404',
+  'demo:d1',
+  'demo:r2',
+  'demo:rest',
+  'demo:graphql',
+  'demo:webhooks',
+  'demo:oauth',
+  'demo:sso',
+  'demo:saml',
+  'demo:mcp',
+  'demo:edge',
+  'demo:workers',
+  'demo:durable-objects',
+  'demo:accessibility',
+  'demo:i18n',
+  'assurance:ISO27001-A.5.19',
+  'assurance:ISO42001-A.9.4',
+  'assurance:WCAG-2.4.7',
+] as const;
+
+const ENGLISH_DOCUMENT_CONTRACT = {
+  'page:assurance.index': ['assurance.index', 'Assurance · WizardGang Architecture Demo', 'Assurance', 'https://demo.wizardgang.ai/assurance'],
+  'page:security.index': ['security.index', 'Security · WizardGang Architecture Demo', 'Security', 'https://demo.wizardgang.ai/security'],
+  'page:interfaces.frontend.index': ['interfaces.frontend.index', 'Architecture · WizardGang Architecture Demo', 'Architecture you can inspect.', 'https://demo.wizardgang.ai/'],
+  'page:demos.index': ['demos.index', 'Architecture Demos · WizardGang Architecture Demo', 'Architecture Demos', 'https://demo.wizardgang.ai/demos'],
+  'audit:assurance-security-record': ['assurance.index', 'Assurance · WizardGang Architecture Demo', 'Assurance', 'https://demo.wizardgang.ai/assurance'],
+  'audit:assurance-evidence-record': ['assurance.index', 'Assurance · WizardGang Architecture Demo', 'Assurance', 'https://demo.wizardgang.ai/assurance'],
+  'audit:assurance-accessibility-record': ['assurance.index', 'Assurance · WizardGang Architecture Demo', 'Assurance', 'https://demo.wizardgang.ai/assurance'],
+  'audit:assurance-rtl-record': ['assurance.index', 'Assurance · WizardGang Architecture Demo', 'Assurance', 'https://demo.wizardgang.ai/assurance'],
+  'audit:accessibility-lab': ['demos.index', 'Architecture Demos · WizardGang Architecture Demo', 'Architecture Demos', 'https://demo.wizardgang.ai/demos'],
+  'audit:openapi-console': ['demos.index', 'Architecture Demos · WizardGang Architecture Demo', 'Architecture Demos', 'https://demo.wizardgang.ai/demos'],
+  'audit:homepage-availability-proof': ['interfaces.frontend.index', 'Architecture · WizardGang Architecture Demo', 'Architecture you can inspect.', 'https://demo.wizardgang.ai/'],
+  'page:operations.admin': ['operations.admin', 'Demo Admin · WizardGang Architecture Demo', 'Demo Admin', 'https://demo.wizardgang.ai/admin'],
+  'page:operations.offline': ['operations.offline', 'Demo online · WizardGang Architecture Demo', 'The demo is running.', 'https://demo.wizardgang.ai/offline'],
+  'page:ordinary-404': [null, 'Not found · WizardGang Architecture Demo', 'That route does not exist.', 'https://demo.wizardgang.ai/'],
+} as const;
+
+const ENGLISH_FRAGMENT_CONTRACT = {
+  'demo:d1': ['data-demo-section', 'd1', 'Cloudflare D1 Database'],
+  'demo:r2': ['data-demo-section', 'r2', 'Cloudflare R2 Storage'],
+  'demo:rest': ['data-demo-section', 'rest', 'WizardGang REST demo 1.0.0'],
+  'demo:graphql': ['data-demo-section', 'graphql', 'GraphQL API'],
+  'demo:webhooks': ['data-demo-section', 'webhooks', 'Signed Webhooks'],
+  'demo:oauth': ['data-demo-section', 'oauth', 'OAuth 2.0'],
+  'demo:sso': ['data-demo-section', 'sso', 'Single sign-on'],
+  'demo:saml': ['data-demo-section', 'saml', 'SAML 2.0'],
+  'demo:mcp': ['data-demo-section', 'mcp', 'Model Context Protocol'],
+  'demo:edge': ['data-demo-section', 'edge', 'Cloudflare Edge'],
+  'demo:workers': ['data-demo-section', 'workers', 'Cloudflare Workers'],
+  'demo:durable-objects': ['data-demo-section', 'durable-objects', 'Durable Objects'],
+  'demo:accessibility': ['data-demo-section', 'accessibility', 'Accessibility is behavior.'],
+  'demo:i18n': ['data-demo-section', 'i18n', 'Internationalization in the interface'],
+  'assurance:ISO27001-A.5.19': ['data-assurance-record', 'ISO27001-A.5.19', 'A.5.19 · Supplier security governance'],
+  'assurance:ISO42001-A.9.4': ['data-assurance-record', 'ISO42001-A.9.4', 'A.9.4 · Prevent unintended AI use and authority'],
+  'assurance:WCAG-2.4.7': ['data-assurance-record', 'WCAG-2.4.7', '2.4.7 · Focus Visible'],
+} as const;
+
+const NOINDEX_ENGLISH_SURFACES = new Set([
+  'page:operations.admin',
+  'page:operations.offline',
+  'page:ordinary-404',
+  ...Object.keys(ENGLISH_FRAGMENT_CONTRACT),
+]);
+
 
 class BaselineStatement implements D1PreparedStatement {
   private values: unknown[] = [];
@@ -430,6 +511,69 @@ async function localeInventory(locale: string, mode: 'full' | 'text') {
  * update requires its presentation difference and reason in the controlled record.
  */
 describe('DEMO-325 presentation acceptance baseline', () => {
+  it('keeps the English presentation contract compact and deterministic', async () => {
+    expect(existsSync(new URL('./fixtures/presentation-baseline/en.json', import.meta.url))).toBe(false);
+
+    const englishSurfaces = surfaces();
+    expect(englishSurfaces.map((surface) => surface.id)).toEqual(EXPECTED_ENGLISH_SURFACE_IDS);
+
+    for (const surface of englishSurfaces) {
+      const { response, window, document } = await renderSurface(surface, 'en');
+      try {
+        expect(response.headers.get('content-type'), surface.id).toContain('text/html');
+
+        const csp = response.headers.get('content-security-policy') ?? '';
+        expect(csp, surface.id).toContain("default-src 'self'");
+        expect(csp, surface.id).toContain("base-uri 'none'");
+        expect(csp, surface.id).toContain("frame-ancestors 'none'");
+        expect(csp, surface.id).toContain("object-src 'none'");
+        expect(csp, surface.id).toContain("style-src 'self'");
+        expect(csp, surface.id).not.toContain("'unsafe-inline'");
+        expect(response.headers.get('cross-origin-resource-policy'), surface.id).toBe('same-origin');
+        expect(response.headers.get('referrer-policy'), surface.id).toBe('strict-origin-when-cross-origin');
+        expect(response.headers.get('x-content-type-options'), surface.id).toBe('nosniff');
+        expect(response.headers.get('x-frame-options'), surface.id).toBe('DENY');
+        expect(response.headers.get('x-robots-tag'), surface.id).toBe(
+          NOINDEX_ENGLISH_SURFACES.has(surface.id) ? 'noindex, nofollow' : null,
+        );
+
+        const documentContract = ENGLISH_DOCUMENT_CONTRACT[surface.id as keyof typeof ENGLISH_DOCUMENT_CONTRACT];
+        if (documentContract) {
+          const [routeId, title, heading, canonical] = documentContract;
+          expect(response.headers.get('content-language'), surface.id).toBe(
+            surface.id === 'page:ordinary-404' ? null : 'en',
+          );
+          expect(document.documentElement.getAttribute('lang'), surface.id).toBe('en');
+          expect(document.documentElement.getAttribute('dir'), surface.id).toBe('ltr');
+          expect(document.title, surface.id).toBe(title);
+          expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href'), surface.id).toBe(canonical);
+          expect(accessibleName(document.querySelector('h1')!, document), surface.id).toBe(heading);
+          expect(document.querySelector('main#main'), surface.id).not.toBeNull();
+          expect(document.querySelector('nav[aria-label="Primary navigation"]'), surface.id).not.toBeNull();
+          expect(document.querySelector('a.skip-link[href="#main"]')?.textContent, surface.id).toContain('Skip to main content');
+          expect([...document.querySelectorAll('a[href]')].some((link) => (
+            accessibleName(link, document) === 'Source'
+            && link.getAttribute('href') === 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo'
+          )), surface.id).toBe(true);
+          if (routeId) expect(document.body.getAttribute('data-route-id'), surface.id).toBe(routeId);
+        } else {
+          const fragmentContract = ENGLISH_FRAGMENT_CONTRACT[surface.id as keyof typeof ENGLISH_FRAGMENT_CONTRACT];
+          expect(fragmentContract, surface.id + ' compact contract').toBeDefined();
+          const [attribute, value, marker] = fragmentContract!;
+          expect(response.headers.get('content-language'), surface.id).toBe(
+            surface.id.startsWith('assurance:') ? 'en' : null,
+          );
+          expect(document.querySelector('[' + attribute + '="' + value + '"]'), surface.id).not.toBeNull();
+          expect(normalizeWhitespace(document.body.textContent), surface.id).toContain(marker);
+          expect(document.title, surface.id).toBe('');
+          expect(document.querySelector('link[rel="canonical"]'), surface.id).toBeNull();
+        }
+      } finally {
+        await window.happyDOM.close();
+      }
+    }
+  }, 60_000);
+
   it('normalizes every volatile presentation value class', () => {
     expect(normalizeVolatile([
       '2026-09-18T12:34:56.000Z',
@@ -450,7 +594,7 @@ describe('DEMO-325 presentation acceptance baseline', () => {
     ].join(' | '));
   });
 
-  for (const locale of FULL_INVENTORY_LOCALES) {
+  for (const locale of FULL_SNAPSHOT_LOCALES) {
     it(`records every HTML surface semantic inventory in ${locale}`, async () => {
       const inventory = await localeInventory(locale, 'full');
       await expect(`${JSON.stringify(inventory, null, 2)}\n`).toMatchFileSnapshot(
@@ -492,7 +636,7 @@ describe('DEMO-338 inline-code boundary', () => {
 
   it('serves no inline handlers, styles, or unhashed scripts in any audited HTML response', async () => {
     const requests: { label: string; response: Response }[] = [];
-    for (const locale of FULL_INVENTORY_LOCALES) {
+    for (const locale of PRESENTATION_SECURITY_LOCALES) {
       for (const surface of surfaces()) {
         const path = localizedPath(surface.path, locale);
         const headers = new Headers({ accept: 'text/html' });
