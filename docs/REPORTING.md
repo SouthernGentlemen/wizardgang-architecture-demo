@@ -4,17 +4,11 @@ Reporting is the shared query, pagination, disclosure, export, and provider-inte
 
 ## Canonical HTTP contract
 
-| Route | Methods | Meaning |
-|---|---|---|
-| `/api/reporting` | `GET`, `OPTIONS` | Discover reporting collections visible to the caller. |
-| `/api/reporting/{collection}` | `GET`, `OPTIONS` | Query one collection with declared filters, signed pagination, and export behavior. |
-| `/api/reporting/{collection}/{recordId}` | `GET`, `PATCH`, `OPTIONS` | Read one exact record or perform an authorized provider-backed update where mutation is supported. |
-
-The application route registry owns paths, methods, authentication, authorization declarations, same-origin policy, offline behavior, cache/crawler policy, and source ownership. Reporting code does not maintain a second route inventory.
+`/api/reporting` is the canonical reporting family. The application route registry and active OpenAPI contract own exact paths, methods, authentication, authorization, same-origin policy, offline behavior, cache/crawler policy, and source ownership; reporting documentation does not maintain a second route inventory.
 
 ## Registry and source ownership
 
-`src/reporting/registry.ts` binds each reporting collection to its source, visibility, supported filters, provider requirements, and optional assurance resource.
+`src/reporting/registry.ts` binds each reporting collection to its authoritative source metadata and capabilities; the exact registry shape remains contract-owned.
 
 Structured assurance collections project repository-governed records from `assurance/**`. Canonical identity, lifecycle, publication state, schemas, normalized relationships, and disclosure remain assurance-owned.
 
@@ -24,7 +18,7 @@ Provider-backed collections enter through adapters that normalize provider-nativ
 
 `GET /api/reporting` returns the disclosure-safe collection inventory available to the current principal.
 
-`src/reporting/service.ts` is the common query boundary for APIs and server-rendered consumers. It owns collection discovery, query normalization, filter validation, pagination, exact record lookup, disclosure, exports, provider integration, provider-backed updates, and presentation metadata.
+`src/reporting/service.ts` is the common query boundary for APIs and server-rendered consumers. It interprets declared collection metadata and applies normalized access, disclosure, pagination, exports, provider integration, and supported updates.
 
 Collection filters are declared by reporting/source metadata. Unknown or unsupported filters are rejected rather than silently ignored. Provider-specific selectors are normalized by the reporting service so handlers and browser consumers do not define parallel query semantics.
 
@@ -32,13 +26,7 @@ Collection filters are declared by reporting/source metadata. Unknown or unsuppo
 
 `GET /api/reporting/{collection}/{recordId}` returns one disclosure-safe record when the record exists and is visible to the caller. A non-disclosable record is not exposed through the public response.
 
-Writable provider sources use:
-
-```text
-PATCH /api/reporting/{collection}/{recordId}
-```
-
-Mutation requires `reporting:write`, explicit source support, runtime payload validation, and provider revision checks where the provider exposes a revision. Stale writes fail rather than silently overwriting newer provider state.
+Provider-backed mutation is available only where the current route and source contracts declare it. Mutation requires `reporting:write`, explicit source support, runtime payload validation, and provider revision checks where the provider exposes a revision. Stale writes fail rather than silently overwriting newer provider state.
 
 Repository-governed structured assurance sources remain read-only through reporting.
 
@@ -46,35 +34,13 @@ Repository-governed structured assurance sources remain read-only through report
 
 `src/reporting/pagination.ts` owns one public pagination and cursor contract for structured and provider-backed sources.
 
-Pagination fields are:
-
-- `limit`: accepted page size, from 1 through 100;
-- `returned`: records returned in the current result;
-- `total`: records observed by the bounded query represented by the result;
-- `nextCursor`: the only public continuation field, either one opaque cursor or `null`;
-- `completeness`: `complete` or `partial`;
-- `partialReason`: `null` for complete results, otherwise a supported partial-result reason.
-
-A complete result cannot carry a continuation cursor or partial reason. A partial result carries an explicit reason.
-
-The current signed cursor version is 1 and uses the `rpc1` envelope. The authenticated encrypted payload binds continuation state to the reporting schema version, collection, source, normalized filters, ordered sort fields/directions, continuation position, and any provider continuation state.
-
-Filters are normalized before cursor binding. Set-like values are sorted/deduplicated, strings are trimmed, and numeric values must be finite. Sort ordering remains sequence-sensitive.
+The reporting contract and `src/reporting/pagination.ts` own the exact pagination fields, cursor codec/version, normalization rules, and wire-level validity constraints. Consumers treat continuation cursors as opaque, query-bound continuation state rather than source-native paging data.
 
 Provider continuation data is encapsulated inside the common encrypted cursor. Raw provider page numbers, GraphQL cursors, REST tokens, or other continuation strings are never exposed as a second public cursor.
 
 Cursor validation does not authenticate or authorize the caller. Reporting authorization and source disclosure checks still run independently.
 
-Cursor errors use the shared vocabulary:
-
-| Error | Meaning |
-|---|---|
-| `reporting_cursor_malformed` | Structurally invalid, corrupted, tampered, wrongly encrypted, or undecodable cursor. |
-| `reporting_cursor_mismatch` | Valid cursor bound to a different collection, source, normalized filter set, or ordering. |
-| `reporting_cursor_stale` | Cursor issued for a different reporting schema version. |
-| `reporting_cursor_unknown` | Unsupported cursor codec version. |
-
-Provider export safety bounds remain partial results. When a provider bound is reached, `completeness` is `partial`, `partialReason` is `provider-export-bound`, `total` reflects records actually observed, and `nextCursor` is present only when safe continuation is supported.
+Cursor error codes and partial-result fields remain contract-owned. Provider export safety bounds are surfaced as partial results, with continuation exposed only when the shared reporting layer can do so safely.
 
 ## Exports
 
@@ -121,6 +87,6 @@ The active OpenAPI 3.1 contract is `contracts/openapi/openapi.json` and is serve
 
 ## Validation and provider revisions
 
-Reporting tests cover disclosure-safe discovery, filter validation, deterministic structured pagination, cursor query binding, cursor error semantics, encrypted provider continuation, exact reads, export equivalence, mutation authorization, provider revision conflicts, response schema validation, cache policy, ETags, CORS, and `OPTIONS`.
+Reporting tests cover the discovery, disclosure, pagination, export, mutation, revision, schema, cache, CORS, and response-policy boundaries described above.
 
 New consumers reuse the reporting registry/service and common cursor contract rather than adding a parallel API family or provider-specific public pagination shape.

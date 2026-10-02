@@ -4,19 +4,19 @@ The `assurance/**` tree owns current structured assurance state. It is the canon
 
 ## Registry and schemas
 
-`assurance/registry.json` is the authoritative inventory for assurance resources. Registered resources declare stable identities, paths, schemas, roles, visibility, capabilities, query/filter metadata, reporting participation, and lifecycle/runtime participation. Logical families may include multiple resources or partitions without introducing another registry.
+`assurance/registry.json` is the authoritative inventory for assurance resources. It defines which resources participate in assurance, reporting, lifecycle, and runtime behavior; exact registry fields remain schema-owned. Logical families may include multiple resources or partitions without introducing another registry.
 
-Schemas under `contracts/assurance/**` define the structural boundary for registered assurance data. Registry validation rejects duplicate identities and paths, missing files or schemas, unregistered canonical assurance JSON, unsupported or unresolved schema references, and schema-invalid records.
+Schemas under `contracts/assurance/**` define the structural boundary for registered assurance data. Validation keeps registry entries, schemas, files, and canonical assurance JSON aligned.
 
 Node tooling discovers controlled resources through `scripts/lib/assurance-registry.mjs`. Worker code uses the generated registry binding rather than dynamic filesystem discovery. `scripts/generate-assurance-runtime-binding.mjs` emits `src/assurance/generated/registry-bindings.ts` and the lifecycle baseline membership artifact from registry-declared runtime resources, and validation requires those generated artifacts to match current structured sources and reachable schema dependencies.
 
 ## Runtime binding and canonical record discovery
 
-`src/assurance/model.ts` binds registry-declared runtime record resources into shared indexes. `src/assurance/service.ts` owns canonical record discovery, listing, exact-ID lookup, stable anchors, URL resolution, counts, filters, and relationship traversal.
+`src/assurance/model.ts` binds registry-declared runtime record resources into shared indexes. `src/assurance/service.ts` owns canonical record access and relationship traversal.
 
 Every runtime resource that declares the `records` capability participates in canonical record discovery. Runtime discoverability does not create a browser route or HTTP endpoint by itself.
 
-Canonical relationship-bearing records store one normalized `relationships` edge array. Shared services derive reverse relationships instead of duplicating them in source JSON. Canonical IDs are globally unique across registered runtime record families.
+Relationship shape and identity constraints remain contract-owned. Shared services derive reverse relationships instead of duplicating them in source JSON.
 
 Framework-specific normalization remains domain-owned before records enter the shared indexes. Compliance records retain normalized framework identity, reference/section ordering, and source metadata while using the common record and relationship services.
 
@@ -24,7 +24,7 @@ Framework-specific normalization remains domain-owned before records enter the s
 
 `assurance/lifecycle/records.json` is the lifecycle control plane for stable assurance IDs. It is registry-owned control-plane data, not another record collection. Exactly one registered resource owns the lifecycle capability, and publication/runtime validation resolve that owner through the registry.
 
-Lifecycle values are `Draft`, `Approved`, `Published`, `Superseded`, and `Withdrawn`. Stable IDs are not recycled. Supersession and withdrawal require explicit metadata, and retained tombstones prevent retired identities from reappearing as current records.
+Lifecycle states and transition metadata are defined by the lifecycle contract. Stable IDs are not recycled, and retained tombstones prevent retired identities from reappearing as current records.
 
 Source approval is revision-bound. When a canonical structured source changes, its Git blob identity changes; publication validation requires the exact reviewed source revision before revised content is published. Baseline lifecycle inheritance is allowed only for identities proven to exist in the immutable baseline membership artifact. Unknown current IDs without explicit lifecycle metadata fail closed.
 
@@ -46,13 +46,7 @@ Evidence records keep canonical locators and relationships, not branch-relative 
 
 Freshness policy, lifecycle state, and deployment provenance are separate concepts. `src/assurance/observation-window.js` is the shared authority for stored observation-window evaluation in runtime presentation and Node validation.
 
-A stored observation window is the half-open interval `[observedAt, validUntil)`:
-
-- before `observedAt`: `not-yet-observed`;
-- at or after `observedAt` and before `validUntil`: `current`;
-- at or after `validUntil`: `expired`.
-
-When either boundary is present, both must be valid date-times and `validUntil` must be strictly later than `observedAt`. Missing windows are preserved for evidence whose freshness policy requires live observation rather than a stored validity interval.
+The evidence schema and observation-window implementation own the exact stored-window fields, validity rules, and evaluation states. Missing stored windows remain valid for evidence whose freshness policy requires live observation instead.
 
 Freshness categories remain explicit: release-bound evidence changes with the deployed release/revision, event-driven evidence changes when its controlled event is published, and observation-bound evidence is current only for its validated observation period.
 
@@ -70,6 +64,6 @@ The exhaustive structured HTTP boundary is `/api/reporting`. Reporting discovery
 
 ## Validation responsibilities
 
-`npm run validate:assurance` and the broader `npm run check` suite enforce registry completeness, schema validation, generated runtime binding parity, lifecycle ownership, exact source-revision approval, immutable identity, canonical-ID uniqueness, referential integrity, normalized relationships, publication/disclosure rules, risk derivation, filter contracts, documentation relationships, evidence freshness, observation windows, provenance handling, presentation metadata, runtime discovery, and assurance operational controls.
+`npm run validate:assurance` and the broader `npm run check` suite enforce the current registry, schema, lifecycle, publication, disclosure, integrity, provenance, documentation-reference, and operational boundaries described above.
 
-`npm run validate:contracts` verifies the reporting/OpenAPI contract relationship. `npm run validate:generated-artifacts` verifies generated assurance/runtime artifacts remain current. Tests exercise canonical discovery, exact-ID lookup, relationships, publication decisions, freshness boundaries, provider/reporting projections, and the assurance presentation fragment without creating another source of truth.
+`npm run validate:contracts` verifies the reporting/OpenAPI contract relationship. `npm run validate:generated-artifacts` verifies generated assurance/runtime artifacts remain current. Tests exercise those boundaries without creating another source of truth.
