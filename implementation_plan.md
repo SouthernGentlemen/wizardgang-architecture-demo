@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-415 — [TEST] Retire superseded architecture documentation tests
-- Dependency: DEMO-414.
-- Why: DEMO-314 and DEMO-315 tests encode completed documentation consolidation.
-- Scope: Compare their assertions with current documentation validators and keep only unique current rules.
-- Non-goals: Do not remove unique behavioral, security, or release regression coverage.
-- Acceptance: No historical filename assertion remains solely to recount the migration.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: tests/demo-314-architecture-documentation-consolidation.test.mjs; tests/demo-315-accessibility-documentation-consolidation.test.mjs; scripts/validate-documentation-cleanup.mjs
-
 ### DEMO-416 — [TEST] Retire superseded governance documentation tests
 - Dependency: DEMO-415.
 - Why: DEMO-316 through DEMO-318 test completed file consolidation.

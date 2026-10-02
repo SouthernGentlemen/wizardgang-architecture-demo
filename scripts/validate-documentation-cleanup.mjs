@@ -140,6 +140,76 @@ function anchors(relativePath) {
   return anchorCache.get(relativePath);
 }
 
+
+const routeRegistryPath = [docsRoot, 'ROUTE-REGISTRY.md'].join('/');
+if (fileSet.has(routeRegistryPath)) {
+  const routeRegistry = read(routeRegistryPath);
+  if (
+    routeRegistry.includes('| Route ID | Route | Methods |')
+    || /^\|\s*`[^|]+`\s*\|\s*`\/(?:[^|]*)`\s*\|/m.test(routeRegistry)
+  ) {
+    errors.push(`${routeRegistryPath}: complete route inventory belongs in docs/route-manifest.json, not Markdown`);
+  }
+}
+
+const accessibilityPath = [docsRoot, 'ACCESSIBILITY.md'].join('/');
+if (fileSet.has(accessibilityPath)) {
+  const accessibility = read(accessibilityPath);
+  for (const reference of [
+    'assurance/compliance/wcag-2.2.json',
+    'assurance/compliance/wcag-2.2/',
+    'docs/accessibility-manual-verification.json',
+  ]) {
+    if (!accessibility.includes(reference)) errors.push(`${accessibilityPath}: missing current accessibility authority reference ${reference}`);
+  }
+  for (const duplicatedInventory of ['Registry status vocabulary', '| Criterion | Status |']) {
+    if (accessibility.includes(duplicatedInventory)) errors.push(`${accessibilityPath}: duplicates structured WCAG criterion state in Markdown`);
+  }
+  const normalizedAccessibility = accessibility.toLowerCase();
+  for (const boundary of [
+    'automated repository and browser evidence',
+    'source and content review',
+    'human visual and manual browser review',
+    'assistive-technology and environment-specific testing',
+    'conformance boundary',
+  ]) {
+    if (!normalizedAccessibility.includes(boundary)) errors.push(`${accessibilityPath}: missing verification boundary ${boundary}`);
+  }
+  if (!normalizedAccessibility.includes('does not claim wcag 2.2 level a, aa, or aaa conformance or certification')) {
+    errors.push(`${accessibilityPath}: must preserve the non-conformance boundary`);
+  }
+}
+
+const internationalizationPath = [docsRoot, 'INTERNATIONALIZATION.md'].join('/');
+if (fileSet.has(internationalizationPath)) {
+  const internationalization = read(internationalizationPath);
+  for (const currentContract of [
+    'docs/ACCESSIBILITY.md',
+    'npm run validate:locales',
+    'npm run validate:site-i18n',
+  ]) {
+    if (!internationalization.includes(currentContract)) errors.push(`${internationalizationPath}: missing current runtime contract ${currentContract}`);
+  }
+  for (const accessibilityDetail of [
+    'axe-core',
+    'forced-colors',
+    'screen-reader',
+    'npm run test:site-accessibility',
+  ]) {
+    if (internationalization.includes(accessibilityDetail)) errors.push(`${internationalizationPath}: duplicates accessibility verification detail ${accessibilityDetail}`);
+  }
+}
+
+const currentStructuredDocumentationAuthorities = [
+  ['assurance', 'compliance', 'wcag-2.2.json'].join('/'),
+];
+for (const source of currentStructuredDocumentationAuthorities) {
+  if (!fileSet.has(source)) continue;
+  const text = fs.readFileSync(path.join(root, source), 'utf8');
+  const match = text.match(/\bDEMO-\d{3,}\b/);
+  if (match) errors.push(`${source}: current structured authority contains concrete change narration ${match[0]}`);
+}
+
 const markdownLinkPattern = /!?(?:\[[^\]]*\])\(([^)\s]+)(?:\s+["'][^"']*["'])?\)/g;
 for (const source of markdownFiles) {
   const text = read(source);
@@ -176,7 +246,7 @@ const intentionalNegativeReferenceFiles = new Set([
 ]);
 function isIntentionalNegativeReferenceFile(file) {
   return intentionalNegativeReferenceFiles.has(file)
-    || /^tests\/demo-(?:311|312|313|314|315|316|317|318|319)-/.test(file);
+    || /^tests\/demo-(?:311|312|313|316|317|318|319)-/.test(file);
 }
 
 const markdownPathPattern = /(?:docs\/[A-Za-z0-9_./-]+\.md|README\.md|AGENTS\.md|CONTRIBUTING\.md|SECURITY\.md)(?:#[a-z0-9][a-z0-9._-]*)?/gi;
