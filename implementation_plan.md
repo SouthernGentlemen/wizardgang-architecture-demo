@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-419 — [DOCS] Trim duplicated assurance and reporting prose
-- Dependency: DEMO-418.
-- Why: Assurance and reporting docs repeat structured contract and registry details.
-- Scope: Remove prose that merely restates canonical schemas or records; preserve boundaries and reader guidance.
-- Non-goals: Do not remove current authority, linked controls, or required operating records.
-- Acceptance: Compliance documentation references and public contract explanations still resolve.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: docs/ASSURANCE.md; docs/REPORTING.md; contracts/assurance/
-
 ### DEMO-420 — [DOCS] Audit assurance evidence locators for unused records
 - Dependency: DEMO-419.
 - Why: Evidence data may contain locators no current public record or contract uses.
