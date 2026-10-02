@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
 import { resolveAssuranceDocumentationReference } from '../src/assurance/presentation';
@@ -259,7 +259,7 @@ describe('DEMO-290 assurance assessment acceptance', () => {
     expect(assuranceStates.some((state) => state.path.includes('lang=ar'))).toBe(true);
 
     const mainAudit = readFileSync('scripts/site-browser-audit.mjs', 'utf8');
-    const evaluation = readFileSync('scripts/demo-289-site-evaluation.mjs', 'utf8');
+    const runner = readFileSync('scripts/run-site-accessibility-audits.mjs', 'utf8');
 
     expect(mainAudit).toContain('axe-core');
     expect(mainAudit).toContain("violation.id==='color-contrast'");
@@ -269,16 +269,35 @@ describe('DEMO-290 assurance assessment acceptance', () => {
     expect(mainAudit).toContain("for (const locale of ['en', 'ar'])");
     expect(mainAudit).toContain('auditConfig.states');
 
-    expect(evaluation).toContain('chromeExecutable');
-    expect(evaluation).toContain("for (const locale of ['en','ar'])");
-    expect(evaluation).toContain('auditConfig.states.map');
-    expect(evaluation).not.toContain('axe-core');
-    expect(evaluation).not.toContain('runContrastAndTargets');
-    expect(evaluation).not.toContain('below24');
-    expect(evaluation).toContain('contentSnapshot');
-    expect(evaluation).toContain('runFocusAndTrap');
-    expect(evaluation).toContain('runTextSpacing');
-    expect(evaluation).toContain('inspectGeometry');
-    expect(evaluation).toContain('Contrast and target-size checks are owned by the main site browser audit.');
+    expect(mainAudit).toContain('contentSnapshot');
+    expect(mainAudit).toContain('content review heading inventory');
+    expect(mainAudit).toContain('repeated link accessible names with different destinations');
+    expect(mainAudit).toContain('waitForAssuranceRecordPane');
+    expect(mainAudit).toContain('runFocusAndTrap');
+    expect(mainAudit).toContain('for (let i = 0; i < 32; i += 1)');
+    expect(mainAudit).toContain('keyboard trap');
+    expect(mainAudit).toContain('reverse keyboard traversal');
+    expect(mainAudit).toContain('focus visibility');
+    expect(mainAudit).toContain('focus obscuring');
+    expect(mainAudit).toContain("CSS.createStyleSheet");
+    expect(mainAudit).toContain("CSS.setStyleSheetText");
+    expect(mainAudit).toContain("line-height:1.5!important;letter-spacing:.12em!important;word-spacing:.16em!important");
+    expect(mainAudit).not.toContain("Page.setBypassCSP");
+    expect(mainAudit).toContain('[[200, 640], [400, 320]]');
+    expect(mainAudit).toContain('isDocumentedD1Reflow');
+    expect(mainAudit).toContain('Math.abs((value.scrollWidth ?? 0) - 334) <= 1');
+    expect(mainAudit).toContain('prefers-reduced-motion');
+    expect(mainAudit).toContain('document.getAnimations().filter');
+    expect(mainAudit).toContain('forced-colors');
+    expect(mainAudit).toContain('mergedDemo289Coverage');
+    expect(mainAudit).toContain('mergedDemo289MediaCoverage');
+
+    expect(runner).toContain("['site-browser-audit', 'scripts/site-browser-audit.mjs']");
+    expect(runner).not.toContain('demo-289-site-evaluation');
+    expect(existsSync('scripts/demo-289-site-evaluation.mjs')).toBe(false);
+    expect(existsSync('scripts/lib/demo-289-content-review.mjs')).toBe(true);
+    expect(mainAudit).toContain("from './lib/demo-289-content-review.mjs'");
+    expect(mainAudit).toContain('assuranceReviewState');
+    expect(mainAudit).toContain('waitForAssuranceRecordPane');
   });
 });

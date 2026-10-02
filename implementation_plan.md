@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-408 — [A11Y] Fold focus and reflow checks into the main audit
-- Dependency: DEMO-407.
-- Why: DEMO-289 also repeats focus, text spacing, reflow, and content review visits.
-- Scope: Move its remaining unique assertions into the main audit and retire the second audit and runner entries.
-- Non-goals: Do not reduce accessibility or localization coverage or supported public routes.
-- Acceptance: Coverage matrix includes every former DEMO-289 check; browser time improves against 117 seconds.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: scripts/demo-289-site-evaluation.mjs; scripts/lib/demo-289-content-review.mjs; scripts/site-browser-audit.mjs; scripts/run-site-accessibility-audits.mjs
-
 ### DEMO-409 — [TEST] Replace the English presentation snapshot
 - Dependency: DEMO-408.
 - Why: The English full inventory is over 17,000 lines.
