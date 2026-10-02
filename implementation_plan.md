@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-416 — [TEST] Retire superseded governance documentation tests
-- Dependency: DEMO-415.
-- Why: DEMO-316 through DEMO-318 test completed file consolidation.
-- Scope: Move any unique current reference rule to the owning validator and remove duplicate historical assertions.
-- Non-goals: Do not remove unique behavioral, security, or release regression coverage.
-- Acceptance: Current governance reference and retired-path policy still fail on regression.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: tests/demo-316-management-system-governance-consolidation.test.mjs; tests/demo-317-security-operations-governance-consolidation.test.mjs; tests/demo-318-retire-historical-assessment-markdown.test.mjs
-
 ### DEMO-417 — [TEST] Remove duplicate documentation validator tests
 - Dependency: DEMO-416.
 - Why: DEMO-319 reruns a validator already owned by check.

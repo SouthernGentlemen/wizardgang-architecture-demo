@@ -36,6 +36,18 @@ const canonicalAssessmentDocuments = [
   'docs/governance/AI-IMPACT-ASSESSMENT.md',
 ];
 
+const canonicalReferencePaths = new Map([
+  ['WG-GOV-001', 'docs/governance/GOVERNANCE.md'],
+  ['WG-GOV-007', 'docs/governance/RISK-MANAGEMENT.md'],
+  ['WG-GOV-012', 'docs/governance/ASSURANCE-AND-AUDIT.md'],
+  ['WG-POL-001', 'docs/governance/SECURITY-GOVERNANCE.md'],
+  ['WG-POL-002', 'docs/governance/AI-GOVERNANCE.md'],
+  ['WG-GOV-020', 'docs/governance/DATA-AND-PRIVACY.md'],
+  ['WG-GOV-017', 'docs/governance/INCIDENT-AND-CONTINUITY.md'],
+  ['WG-GOV-026', 'docs/governance/ENGINEERING-CONTROLS.md'],
+  ['WG-AIA-001', 'docs/governance/AI-IMPACT-ASSESSMENT.md'],
+]);
+
 const retiredHistoricalAssessmentDocuments = [
   'docs/governance/assessments/ISO-27001-2026-09-17-SELF-ASSESSMENT.md',
   'docs/governance/assessments/ISO-27001-2026-09-18-REPOSITORY-PROTECTION-ADDENDUM.md',
@@ -129,6 +141,13 @@ for (const record of registry.records ?? []) {
   errors.push(`${record.path}: registered identity must resolve to governance Markdown or a structured assurance JSON authority`);
 }
 
+for (const [reference, expectedPath] of canonicalReferencePaths) {
+  const actualPath = references.get(reference);
+  if (actualPath !== expectedPath) {
+    errors.push(`${reference}: canonical governance identity must resolve to ${expectedPath}; found ${actualPath ?? 'missing'}`);
+  }
+}
+
 const registeredPaths = new Set((registry.records ?? []).map((record) => record.path));
 const liveReferences = new Map();
 for (const absolute of walk(governanceRoot).filter((file) => file.endsWith('.md'))) {
@@ -143,6 +162,63 @@ for (const absolute of walk(governanceRoot).filter((file) => file.endsWith('.md'
 
 for (const relativePath of [...canonicalManagementDocuments, ...canonicalOperationalDocuments, ...canonicalAssessmentDocuments]) {
   if (!fs.existsSync(path.join(root, relativePath))) errors.push(`${relativePath}: canonical consolidated governance document does not exist`);
+}
+
+for (const relativePath of canonicalManagementDocuments) {
+  const text = fs.readFileSync(path.join(root, relativePath), 'utf8');
+  if (/^\s*(?:[-*]\s*)?(?:\*\*)?Controls:/mi.test(text)) {
+    errors.push(`${relativePath}: manual Controls mapping duplicates structured assurance relationships`);
+  }
+}
+
+const governanceText = fs.readFileSync(path.join(root, 'docs/governance/GOVERNANCE.md'), 'utf8');
+for (const required of [
+  'ISO/IEC 27001:2022/Amd 1:2024',
+  'https://www.iso.org/standard/88435.html',
+  'does **not** claim ISO/IEC 27001 or ISO/IEC 42001 certification',
+]) {
+  if (!governanceText.includes(required)) errors.push(`docs/governance/GOVERNANCE.md: missing current governance baseline ${required}`);
+}
+const iso27001Resource = flattenResources(assuranceRegistry.datasets ?? []).find((resource) => resource.id === 'compliance.iso-27001');
+if (!String(iso27001Resource?.framework?.qualification ?? '').includes('ISO/IEC 27001:2022/Amd 1:2024')) {
+  errors.push('assurance/registry.json: ISO 27001 qualification must retain the Amendment 1:2024 climate baseline');
+}
+
+const engineeringText = fs.readFileSync(path.join(root, 'docs/governance/ENGINEERING-CONTROLS.md'), 'utf8');
+for (const required of [
+  'docs/CHANGE-MANAGEMENT.md is the sole detailed authority',
+  'docs/RELEASE-MANAGEMENT.md is the sole detailed authority',
+]) {
+  if (!engineeringText.includes(required)) errors.push(`docs/governance/ENGINEERING-CONTROLS.md: missing authority boundary ${required}`);
+}
+
+for (const file of fs.readdirSync(path.join(root, 'assurance/governance')).filter((name) => name.endsWith('.json'))) {
+  const relativePath = `assurance/governance/${file}`;
+  const text = fs.readFileSync(path.join(root, relativePath), 'utf8');
+  const match = text.match(/\bDEMO-\d{3,}\b/);
+  if (match) errors.push(`${relativePath}: current governance record contains concrete change narration ${match[0]}`);
+}
+
+const impactAssessmentText = fs.readFileSync(path.join(root, 'docs/governance/AI-IMPACT-ASSESSMENT.md'), 'utf8');
+for (const required of [
+  '**Status:** Approved current-state assessment',
+  '## 1. Purpose',
+  '## 3. What WizardGang Controls',
+  '## 4. Intended Use',
+  '## 5. Intended Users and Affected Parties',
+  '## 8. Human Oversight',
+  '## 10. Treatment State',
+  '## 11. Negative and Adverse Impact Assessment',
+  '## 13. Mandatory Reassessment Triggers',
+  'ISO/IEC 42001:2023',
+  'ISO/IEC 42005:2025',
+  'ISO/IEC 27001:2022 with Amendment 1:2024',
+  'Model Context Protocol specification',
+]) {
+  if (!impactAssessmentText.includes(required)) errors.push(`docs/governance/AI-IMPACT-ASSESSMENT.md: missing current assessment invariant ${required}`);
+}
+if (!/^\*\*Review due:\*\*\s+\d{4}-\d{2}-\d{2}\b/m.test(impactAssessmentText)) {
+  errors.push('docs/governance/AI-IMPACT-ASSESSMENT.md: current assessment must declare an ISO review-due date');
 }
 for (const relativePath of retiredFragmentedDocuments) {
   if (fs.existsSync(path.join(root, relativePath))) errors.push(`${relativePath}: retired fragmented governance document still exists`);

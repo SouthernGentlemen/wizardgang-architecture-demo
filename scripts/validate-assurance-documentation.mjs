@@ -74,11 +74,20 @@ function anchors(relativePath) {
   return anchorsCache.get(relativePath);
 }
 
+const currentAiAssessmentPrefix = 'docs/governance/AI-IMPACT-ASSESSMENT.md#';
+const currentWcagBoundary = 'docs/ACCESSIBILITY.md#current-wcag-22-assurance-boundary';
 let documentationReferences = 0;
+let aiAssessmentReferences = 0;
 for (const entry of complianceEntries) {
   const record = entry.record;
   if (!record || typeof record.id !== 'string') continue;
   const edges = assuranceRelationshipsForRelation(record.relationships, 'documentation');
+  if (record.id.startsWith('ISO42001-') && edges.some((edge) => String(edge?.to?.native ?? '').startsWith(currentAiAssessmentPrefix))) {
+    aiAssessmentReferences += 1;
+  }
+  if (record.id.startsWith('WCAG-') && !edges.some((edge) => edge?.to?.native === currentWcagBoundary)) {
+    errors.push(`${record.id}: WCAG documentation relationship must retain the current accessibility assurance boundary`);
+  }
   for (const edge of edges) {
     documentationReferences += 1;
     if (edge?.to?.source !== ASSURANCE_DOCUMENTATION_SOURCE) {
@@ -106,6 +115,10 @@ for (const entry of complianceEntries) {
       errors.push(`${record.id}: documentation anchor #${parsed.anchor} does not match a heading in ${parsed.repositoryPath}`);
     }
   }
+}
+
+if (aiAssessmentReferences === 0) {
+  errors.push('ISO 42001 documentation relationships must retain the current AI impact assessment authority');
 }
 
 if (errors.length > 0) {
