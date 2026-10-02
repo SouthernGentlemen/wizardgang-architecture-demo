@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-409 — [TEST] Replace the English presentation snapshot
-- Dependency: DEMO-408.
-- Why: The English full inventory is over 17,000 lines.
-- Scope: Replace only the English full snapshot with compact route, text, semantic, and security assertions.
-- Non-goals: Do not remove unique behavioral, security, or release regression coverage.
-- Acceptance: English routes and critical content remain checked; en.json is removed.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: tests/presentation-baseline.test.ts; tests/fixtures/presentation-baseline/en.json
-
 ### DEMO-410 — [TEST] Replace the Arabic presentation snapshot
 - Dependency: DEMO-409.
 - Why: The Arabic full inventory is over 17,000 lines.
