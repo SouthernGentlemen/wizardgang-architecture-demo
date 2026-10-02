@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-411 — [TEST] Replace Spanish and French text snapshots
-- Dependency: DEMO-410.
-- Why: Two text inventories duplicate broad localization checks.
-- Scope: Replace es and fr snapshots with focused text and fallback assertions.
-- Non-goals: Do not remove unique behavioral, security, or release regression coverage.
-- Acceptance: Both locales remain in the full public-surface inventory; their snapshots are removed.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: tests/presentation-baseline.test.ts; tests/fixtures/presentation-baseline/es-text.json; tests/fixtures/presentation-baseline/fr-text.json
-
 ### DEMO-412 — [TEST] Replace German and Japanese text snapshots
 - Dependency: DEMO-411.
 - Why: The remaining text snapshots are large compared with their unique checks.
