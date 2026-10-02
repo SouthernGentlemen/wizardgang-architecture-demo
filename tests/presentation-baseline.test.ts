@@ -30,7 +30,6 @@ const SECURITY_HEADERS = [
   'x-frame-options',
   'x-robots-tag',
 ] as const;
-const FULL_SNAPSHOT_LOCALES = ['ar'] as const;
 const PRESENTATION_SECURITY_LOCALES = ['en', 'ar'] as const;
 const TEXT_INVENTORY_LOCALES = ['es', 'fr', 'de', 'ja'] as const;
 const ASSURANCE_RECORDS = ['ISO27001-A.5.19', 'ISO42001-A.9.4', 'WCAG-2.4.7'] as const;
@@ -105,6 +104,90 @@ const ENGLISH_FRAGMENT_CONTRACT = {
   'assurance:ISO42001-A.9.4': ['data-assurance-record', 'ISO42001-A.9.4', 'A.9.4 · Prevent unintended AI use and authority'],
   'assurance:WCAG-2.4.7': ['data-assurance-record', 'WCAG-2.4.7', '2.4.7 · Focus Visible'],
 } as const;
+
+const EXPECTED_ARABIC_SURFACE_IDS = [
+  "page:assurance.index",
+  "page:security.index",
+  "page:interfaces.frontend.index",
+  "page:demos.index",
+  "audit:assurance-security-record",
+  "audit:assurance-evidence-record",
+  "audit:assurance-accessibility-record",
+  "audit:assurance-rtl-record",
+  "audit:accessibility-lab",
+  "audit:openapi-console",
+  "audit:homepage-availability-proof",
+  "page:operations.admin",
+  "page:operations.offline",
+  "page:ordinary-404",
+  "demo:d1",
+  "demo:r2",
+  "demo:rest",
+  "demo:graphql",
+  "demo:webhooks",
+  "demo:oauth",
+  "demo:sso",
+  "demo:saml",
+  "demo:mcp",
+  "demo:edge",
+  "demo:workers",
+  "demo:durable-objects",
+  "demo:accessibility",
+  "demo:i18n",
+  "assurance:ISO27001-A.5.19",
+  "assurance:ISO42001-A.9.4",
+  "assurance:WCAG-2.4.7",
+] as const;
+
+const ARABIC_DOCUMENT_CONTRACT = {
+  "page:assurance.index": ["assurance.index", "الضمان · عرض بنية WizardGang", "الضمان", "https://demo.wizardgang.ai/assurance"],
+  "page:security.index": ["security.index", "الأمان · عرض بنية WizardGang", "الأمان", "https://demo.wizardgang.ai/security"],
+  "page:interfaces.frontend.index": ["interfaces.frontend.index", "البنية · عرض بنية WizardGang", "البنية يمكنك فحصها.", "https://demo.wizardgang.ai/"],
+  "page:demos.index": ["demos.index", "العروض التوضيحية للهندسة المعمارية · عرض بنية WizardGang", "العروض التوضيحية للهندسة المعمارية", "https://demo.wizardgang.ai/demos"],
+  "audit:assurance-security-record": ["assurance.index", "الضمان · عرض بنية WizardGang", "الضمان", "https://demo.wizardgang.ai/assurance"],
+  "audit:assurance-evidence-record": ["assurance.index", "الضمان · عرض بنية WizardGang", "الضمان", "https://demo.wizardgang.ai/assurance"],
+  "audit:assurance-accessibility-record": ["assurance.index", "الضمان · عرض بنية WizardGang", "الضمان", "https://demo.wizardgang.ai/assurance"],
+  "audit:assurance-rtl-record": ["assurance.index", "الضمان · عرض بنية WizardGang", "الضمان", "https://demo.wizardgang.ai/assurance"],
+  "audit:accessibility-lab": ["demos.index", "العروض التوضيحية للهندسة المعمارية · عرض بنية WizardGang", "العروض التوضيحية للهندسة المعمارية", "https://demo.wizardgang.ai/demos"],
+  "audit:openapi-console": ["demos.index", "العروض التوضيحية للهندسة المعمارية · عرض بنية WizardGang", "العروض التوضيحية للهندسة المعمارية", "https://demo.wizardgang.ai/demos"],
+  "audit:homepage-availability-proof": ["interfaces.frontend.index", "البنية · عرض بنية WizardGang", "البنية يمكنك فحصها.", "https://demo.wizardgang.ai/"],
+  "page:operations.admin": ["operations.admin", "Demo Admin · عرض بنية WizardGang", "Demo Admin", "https://demo.wizardgang.ai/admin"],
+  "page:operations.offline": ["operations.offline", "Demo online · عرض بنية WizardGang", "العرض يعمل.", "https://demo.wizardgang.ai/offline"],
+  "page:ordinary-404": [null, "غير موجود · عرض بنية WizardGang", "هذا المسار غير موجود.", "https://demo.wizardgang.ai/"],
+} as const;
+
+const ARABIC_FRAGMENT_CONTRACT = {
+  "demo:d1": ["data-demo-section", "d1", "قاعدة بيانات Cloudflare D1"],
+  "demo:r2": ["data-demo-section", "r2", "تخزين Cloudflare R2"],
+  "demo:rest": ["data-demo-section", "rest", "عرض WizardGang REST 1.0.0"],
+  "demo:graphql": ["data-demo-section", "graphql", "واجهة GraphQL API"],
+  "demo:webhooks": ["data-demo-section", "webhooks", "Webhooks موقّعة"],
+  "demo:oauth": ["data-demo-section", "oauth", "OAuth 2.0"],
+  "demo:sso": ["data-demo-section", "sso", "تسجيل الدخول الموحد"],
+  "demo:saml": ["data-demo-section", "saml", "SAML 2.0"],
+  "demo:mcp": ["data-demo-section", "mcp", "Model Context Protocol"],
+  "demo:edge": ["data-demo-section", "edge", "حافة Cloudflare"],
+  "demo:workers": ["data-demo-section", "workers", "Cloudflare Workers"],
+  "demo:durable-objects": ["data-demo-section", "durable-objects", "Durable Objects"],
+  "demo:accessibility": ["data-demo-section", "accessibility", "إمكانية الوصول سلوك."],
+  "demo:i18n": ["data-demo-section", "i18n", "التدويل في الواجهة"],
+  "assurance:ISO27001-A.5.19": ["data-assurance-record", "ISO27001-A.5.19", "A.5.19 · Supplier security governance"],
+  "assurance:ISO42001-A.9.4": ["data-assurance-record", "ISO42001-A.9.4", "A.9.4 · Prevent unintended AI use and authority"],
+  "assurance:WCAG-2.4.7": ["data-assurance-record", "WCAG-2.4.7", "2.4.7 · Focus Visible"],
+} as const;
+
+const NOINDEX_ARABIC_SURFACES = new Set([
+  'page:operations.admin',
+  'page:operations.offline',
+  'page:ordinary-404',
+  ...Object.keys(ARABIC_FRAGMENT_CONTRACT),
+]);
+
+const NO_REFERRER_ARABIC_SURFACES = new Set([
+  'page:operations.admin',
+  'page:operations.offline',
+  'page:ordinary-404',
+]);
 
 const NOINDEX_ENGLISH_SURFACES = new Set([
   'page:operations.admin',
@@ -582,6 +665,84 @@ describe('DEMO-325 presentation acceptance baseline', () => {
     }
   }, 60_000);
 
+  it('keeps the Arabic presentation contract compact, RTL-aware, and deterministic', async () => {
+    expect(existsSync(new URL('./fixtures/presentation-baseline/ar.json', import.meta.url))).toBe(false);
+
+    const arabicSurfaces = surfaces();
+    expect(arabicSurfaces.map((surface) => surface.id)).toEqual(EXPECTED_ARABIC_SURFACE_IDS);
+
+    for (const surface of arabicSurfaces) {
+      const { response, window, document } = await renderSurface(surface, 'ar');
+      try {
+        expect(response.headers.get('content-type'), surface.id).toContain('text/html');
+
+        const csp = response.headers.get('content-security-policy') ?? '';
+        expect(csp, surface.id).toContain("default-src 'self'");
+        expect(csp, surface.id).toContain("base-uri 'none'");
+        expect(csp, surface.id).toContain("frame-ancestors 'none'");
+        expect(csp, surface.id).toContain("object-src 'none'");
+        expect(csp, surface.id).toContain("style-src 'self'");
+        expect(csp, surface.id).not.toContain("'unsafe-inline'");
+        expect(response.headers.get('cross-origin-resource-policy'), surface.id).toBe('same-origin');
+        expect(response.headers.get('referrer-policy'), surface.id).toBe(
+          NO_REFERRER_ARABIC_SURFACES.has(surface.id) ? 'no-referrer' : 'strict-origin-when-cross-origin',
+        );
+        expect(response.headers.get('x-content-type-options'), surface.id).toBe('nosniff');
+        expect(response.headers.get('x-frame-options'), surface.id).toBe('DENY');
+        expect(response.headers.get('x-robots-tag'), surface.id).toBe(
+          NOINDEX_ARABIC_SURFACES.has(surface.id) ? 'noindex, nofollow' : null,
+        );
+
+        const documentContract = ARABIC_DOCUMENT_CONTRACT[surface.id as keyof typeof ARABIC_DOCUMENT_CONTRACT];
+        if (documentContract) {
+          const [routeId, title, heading, canonical] = documentContract;
+          expect(response.headers.get('content-language'), surface.id).toBe(
+            surface.id === 'page:ordinary-404' ? null : 'ar',
+          );
+          expect(document.documentElement.getAttribute('lang'), surface.id).toBe('ar');
+          expect(document.documentElement.getAttribute('dir'), surface.id).toBe('rtl');
+          expect(document.title, surface.id).toBe(title);
+          expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href'), surface.id).toBe(canonical);
+          expect(accessibleName(document.querySelector('h1')!, document), surface.id).toBe(heading);
+          expect(document.querySelector('main#main'), surface.id).not.toBeNull();
+          expect(document.querySelector('nav[aria-label="التنقل الرئيسي"]'), surface.id).not.toBeNull();
+          expect(document.querySelector('a.skip-link[href="#main"]')?.textContent, surface.id).toContain('انتقل إلى المحتوى الرئيسي');
+          expect(document.querySelector('select[name="lang"][aria-label="اللغة"] option[value="ar"][selected]'), surface.id).not.toBeNull();
+          expect(document.querySelector('button[data-theme-toggle][aria-label="السمة"]'), surface.id).not.toBeNull();
+          expect([...document.querySelectorAll('a[href]')].some((link) => (
+            accessibleName(link, document) === 'المصدر'
+            && link.getAttribute('href') === 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo'
+          )), surface.id).toBe(true);
+          expect(document.title, surface.id).toContain('WizardGang');
+          if (routeId) expect(document.body.getAttribute('data-route-id'), surface.id).toBe(routeId);
+        } else {
+          const fragmentContract = ARABIC_FRAGMENT_CONTRACT[surface.id as keyof typeof ARABIC_FRAGMENT_CONTRACT];
+          expect(fragmentContract, surface.id + ' compact contract').toBeDefined();
+          const [attribute, value, marker] = fragmentContract!;
+          expect(response.headers.get('content-language'), surface.id).toBe(
+            surface.id.startsWith('assurance:') ? 'ar' : null,
+          );
+          expect(document.querySelector('[' + attribute + '="' + value + '"]'), surface.id).not.toBeNull();
+          expect(normalizeWhitespace(document.body.textContent), surface.id).toContain(marker);
+          expect(normalizeWhitespace(document.body.textContent), surface.id).toMatch(/[\u0600-\u06ff]/);
+          expect(document.title, surface.id).toBe('');
+          expect(document.querySelector('link[rel="canonical"]'), surface.id).toBeNull();
+
+          if (surface.id.startsWith('assurance:')) {
+            const buttonNames = [...document.querySelectorAll('button')].map((button) => accessibleName(button, document));
+            expect(buttonNames, surface.id).toContain('التوثيق');
+            expect(buttonNames, surface.id).toContain('الأدلة');
+          }
+          if (surface.id === 'demo:i18n') {
+            expect(document.querySelector('input[type="hidden"][name="lang"][value="ar"]'), surface.id).not.toBeNull();
+          }
+        }
+      } finally {
+        await window.happyDOM.close();
+      }
+    }
+  }, 60_000);
+
   it('normalizes every volatile presentation value class', () => {
     expect(normalizeVolatile([
       '2026-09-18T12:34:56.000Z',
@@ -601,15 +762,6 @@ describe('DEMO-325 presentation acceptance baseline', () => {
       'row id <ROW_ID>',
     ].join(' | '));
   });
-
-  for (const locale of FULL_SNAPSHOT_LOCALES) {
-    it(`records every HTML surface semantic inventory in ${locale}`, async () => {
-      const inventory = await localeInventory(locale, 'full');
-      await expect(`${JSON.stringify(inventory, null, 2)}\n`).toMatchFileSnapshot(
-        `./fixtures/presentation-baseline/${locale}.json`,
-      );
-    }, 60_000);
-  }
 
   for (const locale of TEXT_INVENTORY_LOCALES) {
     it(`records every HTML surface translated text inventory in ${locale}`, async () => {
