@@ -31,7 +31,8 @@ const SECURITY_HEADERS = [
   'x-robots-tag',
 ] as const;
 const PRESENTATION_SECURITY_LOCALES = ['en', 'ar'] as const;
-const TEXT_INVENTORY_LOCALES = ['es', 'fr', 'de', 'ja'] as const;
+const ROMANCE_TEXT_LOCALES = ['es', 'fr'] as const;
+const TEXT_SNAPSHOT_LOCALES = ['de', 'ja'] as const;
 const ASSURANCE_RECORDS = ['ISO27001-A.5.19', 'ISO42001-A.9.4', 'WCAG-2.4.7'] as const;
 
 const EXPECTED_ENGLISH_SURFACE_IDS = [
@@ -174,6 +175,173 @@ const ARABIC_FRAGMENT_CONTRACT = {
   "assurance:ISO27001-A.5.19": ["data-assurance-record", "ISO27001-A.5.19", "A.5.19 · Supplier security governance"],
   "assurance:ISO42001-A.9.4": ["data-assurance-record", "ISO42001-A.9.4", "A.9.4 · Prevent unintended AI use and authority"],
   "assurance:WCAG-2.4.7": ["data-assurance-record", "WCAG-2.4.7", "2.4.7 · Focus Visible"],
+} as const;
+
+
+const ROMANCE_TEXT_CONTRACT = {
+  "es": {
+    "name": "Spanish",
+    "shell": {
+      "skip": "Saltar al contenido principal",
+      "navigation": "Navegación principal",
+      "demos": "Demostraciones",
+      "assurance": "Aseguramiento",
+      "source": "Fuente",
+      "theme": "Tema",
+      "language": "Idioma",
+      "apply": "Aplicar"
+    },
+    "assuranceTabs": [
+      "Documentación",
+      "Evidencia"
+    ],
+    "markers": {
+      "page:assurance.index": "Aseguramiento",
+      "page:security.index": "Seguridad",
+      "page:interfaces.frontend.index": "Arquitectura que puedes inspeccionar.",
+      "page:demos.index": "Demostraciones de arquitectura",
+      "audit:assurance-security-record": "Aseguramiento",
+      "audit:assurance-evidence-record": "Aseguramiento",
+      "audit:assurance-accessibility-record": "Aseguramiento",
+      "audit:assurance-rtl-record": "Aseguramiento",
+      "audit:accessibility-lab": "Demostraciones de arquitectura",
+      "audit:openapi-console": "Demostraciones de arquitectura",
+      "audit:homepage-availability-proof": "Arquitectura que puedes inspeccionar.",
+      "page:operations.admin": "Demo Admin",
+      "page:operations.offline": "La demostración está en funcionamiento.",
+      "page:ordinary-404": "Esa ruta no existe.",
+      "demo:d1": "Base de datos Cloudflare D1",
+      "demo:r2": "Almacenamiento Cloudflare R2",
+      "demo:rest": "Demostración REST de WizardGang 1.0.0",
+      "demo:graphql": "API GraphQL",
+      "demo:webhooks": "Webhooks firmados",
+      "demo:oauth": "OAuth 2.0",
+      "demo:sso": "Inicio de sesión único",
+      "demo:saml": "SAML 2.0",
+      "demo:mcp": "Protocolo de Contexto de Modelo",
+      "demo:edge": "Perímetro de Cloudflare",
+      "demo:workers": "Cloudflare Workers",
+      "demo:durable-objects": "Durable Objects",
+      "demo:accessibility": "La accesibilidad es comportamiento.",
+      "demo:i18n": "Internacionalización en la interfaz",
+      "assurance:ISO27001-A.5.19": "A.5.19 · Supplier security governance",
+      "assurance:ISO42001-A.9.4": "A.9.4 · Prevent unintended AI use and authority",
+      "assurance:WCAG-2.4.7": "2.4.7 · Focus Visible"
+    }
+  },
+  "fr": {
+    "name": "French",
+    "shell": {
+      "skip": "Aller au contenu principal",
+      "navigation": "Navigation principale",
+      "demos": "Démonstrations",
+      "assurance": "Assurance",
+      "source": "Source",
+      "theme": "Thème",
+      "language": "Langue",
+      "apply": "Appliquer"
+    },
+    "assuranceTabs": [
+      "Documentation",
+      "Preuves"
+    ],
+    "markers": {
+      "page:assurance.index": "Assurance",
+      "page:security.index": "Sécurité",
+      "page:interfaces.frontend.index": "Architecture que vous pouvez inspecter.",
+      "page:demos.index": "Démonstrations d'architecture",
+      "audit:assurance-security-record": "Assurance",
+      "audit:assurance-evidence-record": "Assurance",
+      "audit:assurance-accessibility-record": "Assurance",
+      "audit:assurance-rtl-record": "Assurance",
+      "audit:accessibility-lab": "Démonstrations d'architecture",
+      "audit:openapi-console": "Démonstrations d'architecture",
+      "audit:homepage-availability-proof": "Architecture que vous pouvez inspecter.",
+      "page:operations.admin": "Demo Admin",
+      "page:operations.offline": "La démonstration fonctionne.",
+      "page:ordinary-404": "Cette route n’existe pas.",
+      "demo:d1": "Base de données Cloudflare D1",
+      "demo:r2": "Stockage Cloudflare R2",
+      "demo:rest": "Démo WizardGang REST 1.0.0",
+      "demo:graphql": "API GraphQL",
+      "demo:webhooks": "Webhooks signés",
+      "demo:oauth": "OAuth 2.0",
+      "demo:sso": "Authentification unique",
+      "demo:saml": "SAML 2.0",
+      "demo:mcp": "Model Context Protocol",
+      "demo:edge": "Périphérie Cloudflare",
+      "demo:workers": "Cloudflare Workers",
+      "demo:durable-objects": "Durable Objects",
+      "demo:accessibility": "L’accessibilité est un comportement.",
+      "demo:i18n": "Internationalisation de l’interface",
+      "assurance:ISO27001-A.5.19": "A.5.19 · Supplier security governance",
+      "assurance:ISO42001-A.9.4": "A.9.4 · Prevent unintended AI use and authority",
+      "assurance:WCAG-2.4.7": "2.4.7 · Focus Visible"
+    }
+  }
+} as const;
+
+const ROMANCE_FALLBACK_MARKERS = {
+  "page:security.index": [
+    "Security sections",
+    "Canonical assurance service",
+    "Publication policy"
+  ],
+  "page:interfaces.frontend.index": [
+    "Explore demos",
+    "View assurance",
+    "Security boundary"
+  ],
+  "page:operations.admin": [
+    "Demo Admin",
+    "Public demo state",
+    "ChatGPT web access",
+    "OpenAI crawler documentation",
+    "Enable ChatGPT access",
+    "Disable ChatGPT access"
+  ],
+  "page:operations.offline": [
+    "Still available",
+    "Continue to /",
+    "View system health",
+    "Public source",
+    "Health JSON",
+    "Version JSON",
+    "Operations docs ↗"
+  ],
+  "page:ordinary-404": [
+    "Home",
+    "Browse demos"
+  ],
+  "demo:rest": [
+    "OpenAPI",
+    "RecordInput",
+    "Hello from a Worker"
+  ],
+  "demo:oauth": [
+    "OAuth 2.0"
+  ],
+  "demo:saml": [
+    "SAML 2.0"
+  ],
+  "demo:workers": [
+    "Cloudflare Workers"
+  ],
+  "demo:durable-objects": [
+    "Durable Objects"
+  ],
+  "assurance:ISO27001-A.5.19": [
+    "A.5.19 · Supplier security governance",
+    "Security boundary and secret handling"
+  ],
+  "assurance:ISO42001-A.9.4": [
+    "A.9.4 · Prevent unintended AI use and authority",
+    "MCP boundary implementation"
+  ],
+  "assurance:WCAG-2.4.7": [
+    "2.4.7 · Focus Visible",
+    "Accessibility verification protocol"
+  ]
 } as const;
 
 const NOINDEX_ARABIC_SURFACES = new Set([
@@ -763,7 +931,75 @@ describe('DEMO-325 presentation acceptance baseline', () => {
     ].join(' | '));
   });
 
-  for (const locale of TEXT_INVENTORY_LOCALES) {
+  for (const locale of ROMANCE_TEXT_LOCALES) {
+    it(`keeps the ${ROMANCE_TEXT_CONTRACT[locale].name} text and fallback contract compact and deterministic`, async () => {
+      expect(existsSync(new URL(`./fixtures/presentation-baseline/${locale}-text.json`, import.meta.url))).toBe(false);
+
+      const contract = ROMANCE_TEXT_CONTRACT[locale];
+      const localeSurfaces = surfaces();
+      expect(localeSurfaces.map((surface) => surface.id), `${locale} public presentation inventory`).toEqual(EXPECTED_ENGLISH_SURFACE_IDS);
+      expect(Object.keys(contract.markers), `${locale} compact text marker inventory`).toEqual(EXPECTED_ENGLISH_SURFACE_IDS);
+
+      for (const surface of localeSurfaces) {
+        const { response, window, document } = await renderSurface(surface, locale);
+        try {
+          const bodyText = normalizeWhitespace(document.body.textContent);
+          const marker = contract.markers[surface.id as keyof typeof contract.markers];
+          expect(marker, `${surface.id} ${locale} marker`).toBeTruthy();
+          expect(bodyText, `${surface.id} ${locale} translated marker`).toContain(marker);
+
+          const documentContract = ENGLISH_DOCUMENT_CONTRACT[surface.id as keyof typeof ENGLISH_DOCUMENT_CONTRACT];
+          if (documentContract) {
+            const [routeId] = documentContract;
+            expect(response.headers.get('content-language'), `${surface.id} ${locale}`).toBe(
+              surface.id === 'page:ordinary-404' ? null : locale,
+            );
+            expect(document.documentElement.getAttribute('lang'), surface.id).toBe(locale);
+            expect(document.documentElement.getAttribute('dir'), surface.id).toBe('ltr');
+            expect(document.querySelector(`nav[aria-label="${contract.shell.navigation}"]`), surface.id).not.toBeNull();
+            expect(document.querySelector('a.skip-link[href="#main"]')?.textContent, surface.id).toContain(contract.shell.skip);
+            expect(document.querySelector(`select[name="lang"][aria-label="${contract.shell.language}"] option[value="${locale}"][selected]`), surface.id).not.toBeNull();
+            expect(document.querySelector(`button[data-theme-toggle][aria-label="${contract.shell.theme}"]`), surface.id).not.toBeNull();
+
+            const linkNames = [...document.querySelectorAll('a[href]')].map((link) => accessibleName(link, document));
+            expect(linkNames, `${surface.id} ${locale} demos nav`).toContain(contract.shell.demos);
+            expect(linkNames, `${surface.id} ${locale} assurance nav`).toContain(contract.shell.assurance);
+            expect(linkNames, `${surface.id} ${locale} source nav`).toContain(contract.shell.source);
+            if (routeId) expect(document.body.getAttribute('data-route-id'), surface.id).toBe(routeId);
+          } else if (surface.id.startsWith('demo:')) {
+            const demoId = surface.id.slice('demo:'.length);
+            expect(response.headers.get('content-language'), surface.id).toBeNull();
+            expect(document.querySelector(`[data-demo-section="${demoId}"]`), surface.id).not.toBeNull();
+            if (surface.id === 'demo:i18n') {
+              expect(document.querySelector(`input[type="hidden"][name="lang"][value="${locale}"]`), surface.id).not.toBeNull();
+            }
+          } else {
+            const recordId = surface.id.slice('assurance:'.length);
+            expect(response.headers.get('content-language'), surface.id).toBe(locale);
+            expect(document.querySelector(`[data-assurance-record="${recordId}"]`), surface.id).not.toBeNull();
+            const buttonNames = [...document.querySelectorAll('button')].map((button) => accessibleName(button, document));
+            for (const tab of contract.assuranceTabs) expect(buttonNames, `${surface.id} ${locale}`).toContain(tab);
+          }
+
+          const fallbackMarkers = (ROMANCE_FALLBACK_MARKERS as Readonly<Record<string, readonly string[]>>)[surface.id] ?? [];
+          const textEvidence = textInventory(document);
+          const presentationText = normalizeWhitespace([
+            bodyText,
+            ...textEvidence.headings.map((heading) => heading.text),
+            ...textEvidence.accessibleNames.map((entry) => entry.name),
+            ...textEvidence.labels.map((entry) => entry.label ?? ''),
+          ].join(' '));
+          for (const fallback of fallbackMarkers) {
+            expect(presentationText, `${surface.id} ${locale} intentional fallback: ${fallback}`).toContain(fallback);
+          }
+        } finally {
+          await window.happyDOM.close();
+        }
+      }
+    }, 60_000);
+  }
+
+  for (const locale of TEXT_SNAPSHOT_LOCALES) {
     it(`records every HTML surface translated text inventory in ${locale}`, async () => {
       const inventory = await localeInventory(locale, 'text');
       await expect(`${JSON.stringify(inventory, null, 2)}\n`).toMatchFileSnapshot(
