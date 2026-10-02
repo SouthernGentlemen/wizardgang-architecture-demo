@@ -88,6 +88,9 @@ describe('DEMO-354 acceptance gate ownership', () => {
     expect(commandSequence(packageJson.scripts['test:site-accessibility'])).toContain(
       'node scripts/run-site-accessibility-audits.mjs',
     );
+    const runner = fs.readFileSync(path.join(process.cwd(), 'scripts', 'run-site-accessibility-audits.mjs'), 'utf8');
+    expect(runner.match(/scripts\/site-browser-audit\.mjs/g) ?? []).toHaveLength(1);
+    expect(runner).not.toContain('demo-289-site-evaluation');
   });
 
   it('runs static accessibility and localization once through the full Vitest suite while retaining focused commands', () => {
