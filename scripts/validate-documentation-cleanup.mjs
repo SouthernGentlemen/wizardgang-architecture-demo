@@ -140,6 +140,24 @@ function anchors(relativePath) {
   return anchorCache.get(relativePath);
 }
 
+const isReferenceRepository = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).name === 'wizardgang-architecture-demo';
+if (isReferenceRepository) {
+  const readmePath = 'README.md';
+  const readme = read(readmePath);
+  for (const required of [
+    '## Start here',
+    [governanceRoot, 'GOVERNANCE.md'].join('/'),
+  ]) {
+    if (!readme.includes(required)) errors.push(`${readmePath}: missing current documentation entry point ${required}`);
+  }
+  for (const retiredReference of [
+    ...retiredArchitectureMarkdown,
+    ...removedDirectoryPrefixes,
+  ]) {
+    if (readme.includes(retiredReference)) errors.push(`${readmePath}: references retired documentation ${retiredReference}`);
+  }
+}
+
 
 const routeRegistryPath = [docsRoot, 'ROUTE-REGISTRY.md'].join('/');
 if (fileSet.has(routeRegistryPath)) {
