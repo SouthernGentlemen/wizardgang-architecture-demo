@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-414 — [CHORE] Remove the uncalled one-time codemod
-- Dependency: DEMO-412.
-- Why: The historical DEMO-174 rewrite script has no tracked caller.
-- Scope: Delete only the uncalled codemod and any stale references to it.
-- Non-goals: Do not disturb current tooling or published history.
-- Acceptance: No command, test, workflow, or document still invokes the deleted file.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: scripts/demo-174-codemod.mjs
-
 ### DEMO-415 — [TEST] Retire superseded architecture documentation tests
 - Dependency: DEMO-414.
 - Why: DEMO-314 and DEMO-315 tests encode completed documentation consolidation.
