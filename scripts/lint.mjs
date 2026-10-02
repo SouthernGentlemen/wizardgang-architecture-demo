@@ -6,6 +6,8 @@ const failures = [];
 const maxReportedFailures = 100;
 const extensions = new Set(['.ts', '.mjs', '.json', '.jsonc', '.md', '.yml', '.yaml', '.graphql', '.sql', '.xml']);
 const urlLiteralExtensions = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']);
+const retiredOneTimeCodemodPath = /^scripts\/demo-\d+-codemod\.mjs$/;
+const retiredOneTimeCodemodReference = /demo-\d+-codemod\.mjs/;
 
 function allowsCanonicalPageLiteral(file) {
   const normalized = file.replaceAll('\\', '/');
@@ -21,6 +23,9 @@ function walk(directory) {
     if (entry.isDirectory()) walk(full);
     else if (extensions.has(path.extname(entry.name)) || urlLiteralExtensions.has(path.extname(entry.name))) {
       const text = fs.readFileSync(full, 'utf8');
+      const relative = full.replaceAll('\\', '/').replace(/^\.\//, '');
+      if (retiredOneTimeCodemodPath.test(relative)) failures.push(`${full} retired one-time codemod must stay absent`);
+      if (retiredOneTimeCodemodReference.test(text)) failures.push(`${full} references a retired one-time codemod`);
       text.split(/\r?\n/).forEach((line, index) => {
         if (path.extname(entry.name) !== '.md' && /[ \t]+$/.test(line)) failures.push(`${full}:${index + 1} trailing whitespace`);
         if (line.includes('\t')) failures.push(`${full}:${index + 1} tab character`);
