@@ -31,8 +31,7 @@ const SECURITY_HEADERS = [
   'x-robots-tag',
 ] as const;
 const PRESENTATION_SECURITY_LOCALES = ['en', 'ar'] as const;
-const ROMANCE_TEXT_LOCALES = ['es', 'fr'] as const;
-const TEXT_SNAPSHOT_LOCALES = ['de', 'ja'] as const;
+const COMPACT_TEXT_LOCALES = ['es', 'fr', 'de', 'ja'] as const;
 const ASSURANCE_RECORDS = ['ISO27001-A.5.19', 'ISO42001-A.9.4', 'WCAG-2.4.7'] as const;
 
 const EXPECTED_ENGLISH_SURFACE_IDS = [
@@ -178,7 +177,7 @@ const ARABIC_FRAGMENT_CONTRACT = {
 } as const;
 
 
-const ROMANCE_TEXT_CONTRACT = {
+const COMPACT_TEXT_CONTRACT = {
   "es": {
     "name": "Spanish",
     "shell": {
@@ -278,10 +277,110 @@ const ROMANCE_TEXT_CONTRACT = {
       "assurance:ISO42001-A.9.4": "A.9.4 · Prevent unintended AI use and authority",
       "assurance:WCAG-2.4.7": "2.4.7 · Focus Visible"
     }
+  },
+  "de": {
+    "name": "German",
+    "shell": {
+      "skip": "Zum Hauptinhalt springen",
+      "navigation": "Hauptnavigation",
+      "demos": "Demos",
+      "assurance": "Assurance",
+      "source": "Quellcode",
+      "theme": "Design",
+      "language": "Sprache",
+      "apply": "Anwenden"
+    },
+    "assuranceTabs": [
+      "Dokumentation",
+      "Nachweise"
+    ],
+    "markers": {
+      "page:assurance.index": "Assurance",
+      "page:security.index": "Sicherheit",
+      "page:interfaces.frontend.index": "Architektur zum Nachvollziehen.",
+      "page:demos.index": "Architekturdemos",
+      "audit:assurance-security-record": "Assurance",
+      "audit:assurance-evidence-record": "Assurance",
+      "audit:assurance-accessibility-record": "Assurance",
+      "audit:assurance-rtl-record": "Assurance",
+      "audit:accessibility-lab": "Architekturdemos",
+      "audit:openapi-console": "Architekturdemos",
+      "audit:homepage-availability-proof": "Architektur zum Nachvollziehen.",
+      "page:operations.admin": "Demo Admin",
+      "page:operations.offline": "Die Demo läuft.",
+      "page:ordinary-404": "Diese Route existiert nicht.",
+      "demo:d1": "Cloudflare-D1-Datenbank",
+      "demo:r2": "Cloudflare-R2-Speicher",
+      "demo:rest": "WizardGang REST-Demo 1.0.0",
+      "demo:graphql": "GraphQL-API",
+      "demo:webhooks": "Signierte Webhooks",
+      "demo:oauth": "OAuth 2.0",
+      "demo:sso": "Einmaliges Anmelden",
+      "demo:saml": "SAML 2.0",
+      "demo:mcp": "Model Context Protocol",
+      "demo:edge": "Cloudflare Edge",
+      "demo:workers": "Cloudflare Workers",
+      "demo:durable-objects": "Durable Objects",
+      "demo:accessibility": "Barrierefreiheit ist Verhalten.",
+      "demo:i18n": "Internationalisierung der Oberfläche",
+      "assurance:ISO27001-A.5.19": "A.5.19 · Supplier security governance",
+      "assurance:ISO42001-A.9.4": "A.9.4 · Prevent unintended AI use and authority",
+      "assurance:WCAG-2.4.7": "2.4.7 · Focus Visible"
+    }
+  },
+  "ja": {
+    "name": "Japanese",
+    "shell": {
+      "skip": "メインコンテンツへ移動",
+      "navigation": "メインナビゲーション",
+      "demos": "デモ",
+      "assurance": "保証",
+      "source": "ソース",
+      "theme": "テーマ",
+      "language": "言語",
+      "apply": "適用"
+    },
+    "assuranceTabs": [
+      "ドキュメント",
+      "エビデンス"
+    ],
+    "markers": {
+      "page:assurance.index": "保証",
+      "page:security.index": "セキュリティ",
+      "page:interfaces.frontend.index": "アーキテクチャ を検証できます。",
+      "page:demos.index": "アーキテクチャのデモ",
+      "audit:assurance-security-record": "保証",
+      "audit:assurance-evidence-record": "保証",
+      "audit:assurance-accessibility-record": "保証",
+      "audit:assurance-rtl-record": "保証",
+      "audit:accessibility-lab": "アーキテクチャのデモ",
+      "audit:openapi-console": "アーキテクチャのデモ",
+      "audit:homepage-availability-proof": "アーキテクチャ を検証できます。",
+      "page:operations.admin": "Demo Admin",
+      "page:operations.offline": "デモは稼働中です。",
+      "page:ordinary-404": "そのルートは存在しません。",
+      "demo:d1": "Cloudflare D1 データベース",
+      "demo:r2": "Cloudflare R2 ストレージ",
+      "demo:rest": "WizardGang REST デモ 1.0.0",
+      "demo:graphql": "GraphQL API",
+      "demo:webhooks": "署名付き Webhook",
+      "demo:oauth": "OAuth 2.0",
+      "demo:sso": "シングルサインオン",
+      "demo:saml": "SAML 2.0",
+      "demo:mcp": "Model Context Protocol",
+      "demo:edge": "Cloudflare Edge",
+      "demo:workers": "Cloudflare Workers",
+      "demo:durable-objects": "Durable Objects",
+      "demo:accessibility": "アクセシビリティは動作です。",
+      "demo:i18n": "インターフェースの国際化",
+      "assurance:ISO27001-A.5.19": "A.5.19 · Supplier security governance",
+      "assurance:ISO42001-A.9.4": "A.9.4 · Prevent unintended AI use and authority",
+      "assurance:WCAG-2.4.7": "2.4.7 · Focus Visible"
+    }
   }
 } as const;
 
-const ROMANCE_FALLBACK_MARKERS = {
+const COMPACT_TEXT_FALLBACK_MARKERS = {
   "page:security.index": [
     "Security sections",
     "Canonical assurance service",
@@ -931,11 +1030,11 @@ describe('DEMO-325 presentation acceptance baseline', () => {
     ].join(' | '));
   });
 
-  for (const locale of ROMANCE_TEXT_LOCALES) {
-    it(`keeps the ${ROMANCE_TEXT_CONTRACT[locale].name} text and fallback contract compact and deterministic`, async () => {
+  for (const locale of COMPACT_TEXT_LOCALES) {
+    it(`keeps the ${COMPACT_TEXT_CONTRACT[locale].name} text and fallback contract compact and deterministic`, async () => {
       expect(existsSync(new URL(`./fixtures/presentation-baseline/${locale}-text.json`, import.meta.url))).toBe(false);
 
-      const contract = ROMANCE_TEXT_CONTRACT[locale];
+      const contract = COMPACT_TEXT_CONTRACT[locale];
       const localeSurfaces = surfaces();
       expect(localeSurfaces.map((surface) => surface.id), `${locale} public presentation inventory`).toEqual(EXPECTED_ENGLISH_SURFACE_IDS);
       expect(Object.keys(contract.markers), `${locale} compact text marker inventory`).toEqual(EXPECTED_ENGLISH_SURFACE_IDS);
@@ -981,7 +1080,7 @@ describe('DEMO-325 presentation acceptance baseline', () => {
             for (const tab of contract.assuranceTabs) expect(buttonNames, `${surface.id} ${locale}`).toContain(tab);
           }
 
-          const fallbackMarkers = (ROMANCE_FALLBACK_MARKERS as Readonly<Record<string, readonly string[]>>)[surface.id] ?? [];
+          const fallbackMarkers = (COMPACT_TEXT_FALLBACK_MARKERS as Readonly<Record<string, readonly string[]>>)[surface.id] ?? [];
           const textEvidence = textInventory(document);
           const presentationText = normalizeWhitespace([
             bodyText,
@@ -999,14 +1098,6 @@ describe('DEMO-325 presentation acceptance baseline', () => {
     }, 60_000);
   }
 
-  for (const locale of TEXT_SNAPSHOT_LOCALES) {
-    it(`records every HTML surface translated text inventory in ${locale}`, async () => {
-      const inventory = await localeInventory(locale, 'text');
-      await expect(`${JSON.stringify(inventory, null, 2)}\n`).toMatchFileSnapshot(
-        `./fixtures/presentation-baseline/${locale}-text.json`,
-      );
-    }, 60_000);
-  }
 });
 
 describe('DEMO-338 inline-code boundary', () => {
