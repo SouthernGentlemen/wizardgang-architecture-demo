@@ -1,12 +1,12 @@
 # CI diagnostics and complete failure evidence
 
-The `validate` job runs `npm run validate:ci`. The command is intentionally strict: it validates the pinned toolchain, installs locked dependencies, runs `check`, queries dependency advisories, and validates committed-patch whitespace. The `check` step includes generated-artifact parity, local migrations, build, and the Chromium/browser audit. It stops at the first non-zero command and returns that command's exit code. Command output is redacted and streamed to the ordinary Actions log line by line while the same complete redacted output is retained in the diagnostic artifact.
+The [`validate` job](../.github/workflows/ci.yml) runs `npm run validate:ci`. [`package.json`](../package.json) owns exact script composition, while [the acceptance plan](../scripts/lib/acceptance-plan.mjs) owns the ordered executable CI steps. The diagnostics wrapper stops at the first non-zero command, preserves that exit code, streams redacted output to the ordinary Actions log, and retains the same complete redacted output in the failure artifact.
 
 The site-wide browser command reports the start, completion, and duration of the surviving main audit. Focus, content review, WCAG text spacing, 200%/400% reflow, reduced-motion, and forced-colors checks run inside that same Wrangler/Chromium process and reuse its canonical page/state visits; failures identify the affected path, locale, and audit phase.
 
 ## Committed patch-integrity gate
 
-`npm run validate:patch-whitespace` is the single owner of committed-patch whitespace validation. `validate:ci` invokes it exactly once after the network-dependent dependency-advisory gate. In GitHub Actions, `BASE_SHA` comes from `github.event.pull_request.base.sha` for pull-request runs and `github.event.before` for pushes to `main`.
+`npm run validate:patch-whitespace` checks the committed change range; its exact command wiring lives in [`package.json`](../package.json). GitHub Actions supplies `BASE_SHA` from the pull-request base or the previous `main` push commit.
 
 With usable base context, the helper runs `git diff --check BASE_SHA...HEAD`. Git's three-dot form evaluates the patch from the merge base of `BASE_SHA` and `HEAD` through `HEAD`, so whitespace introduced by committed branch changes is checked even when the working tree is clean.
 
@@ -16,17 +16,13 @@ The diagnostics wrapper captures the helper's ordinary stdout/stderr and preserv
 
 ## Dependency advisory gate
 
-`npm run security:dependency-advisories` is the single network-dependent advisory query used locally and by `validate:ci`. It runs `npm audit --audit-level=high` after `check`; it is intentionally not part of credential-free `check`.
+`npm run security:dependency-advisories` is the network-dependent advisory gate used by CI and pre-PR validation; [`package.json`](../package.json) owns its exact query. It remains separate from credential-free `npm run check`.
 
 The audit requires npm registry/network access. A high/critical advisory finding is a failing result. A registry, DNS, TLS, timeout, or other transport/query error is also fatal, but it means the advisory result is **unknown/unavailable**, not clean. The diagnostics wrapper preserves the exact non-zero exit code and complete redacted npm stdout/stderr in `.ci-diagnostics/validation.log`, so investigation must use that retained output to distinguish an advisory finding from an unavailable query.
 
 ## Pinned Node/npm toolchain
 
-The supported toolchain is Node 26.10.0 with npm 12.1.0. The exact workflow/runtime selection is recorded in `.node-version` and `packageManager`; `engines` records the supported majors, and `.npmrc` enables `engine-strict` and `strict-allow-scripts` before `npm ci`.
-
-`validate:ci` checks the exact pinned Node/npm versions before the locked install. It prints the expected and current versions on every run and fails on a mismatch before dependency installation begins.
-
-npm 12 uses the reviewed `allowScripts` list in `package.json` for `workerd@1.20260926.1` and Wrangler's nested `esbuild@0.28.1`; the macOS-only optional `fsevents@2.3.3` script is denied. A future toolchain or dependency change must review that list with the lockfile before accepting a new install script.
+Exact Node/npm pins live in [`.node-version`](../.node-version) and [`package.json`](../package.json); `.npmrc` and the package `allowScripts` policy own install-script restrictions. `validate:ci` checks the pins before the locked install and reports a mismatch before dependency installation begins. Any toolchain or dependency change must review those authorities with the lockfile.
 
 Every run writes `.ci-diagnostics/` (ignored by Git):
 

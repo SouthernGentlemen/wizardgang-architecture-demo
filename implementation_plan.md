@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-418 — [DOCS] Trim duplicated setup and CI prose
-- Dependency: DEMO-417.
-- Why: README and CI diagnostics repeat command details available from package scripts.
-- Scope: Shorten repeated explanations in README and CI diagnostics while retaining run and failure-recovery instructions.
-- Non-goals: Do not remove current authority, linked controls, or required operating records.
-- Acceptance: All documented commands, prerequisites, and diagnostic links remain usable.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: README.md; docs/CI-DIAGNOSTICS.md
-
 ### DEMO-419 — [DOCS] Trim duplicated assurance and reporting prose
 - Dependency: DEMO-418.
 - Why: Assurance and reporting docs repeat structured contract and registry details.
