@@ -17,7 +17,7 @@ import {
   collectJsonSchemaDependencies,
   resolveJsonSchemaProperty,
 } from './lib/json-schema.mjs';
-import { RISK_RATING_VALUES } from '../src/assurance/risk-rating.js';
+import { RISK_RATING_VALUES } from '../src/assurance/risk-rating.ts';
 
 export const RUNTIME_BINDING_PATH = 'src/assurance/generated/registry-bindings.ts';
 export const LIFECYCLE_BASELINE_MEMBERSHIP_PATH = 'src/assurance/generated/lifecycle-baseline-membership.json';

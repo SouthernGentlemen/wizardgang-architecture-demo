@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { evaluateAssuranceObservationWindow } from '../src/assurance/observation-window.js';
+import { evaluateAssuranceObservationWindow } from '../src/assurance/observation-window';
 import {
   assuranceLifecycleBaselineEligible,
   assuranceLifecyclePresentation,

@@ -1,4 +1,22 @@
-function instant(value) {
+export type AssuranceObservationWindowStateName = 'not-yet-observed' | 'current' | 'expired' | 'invalid-window';
+export type AssuranceObservationWindowInvalidReason =
+  | 'incomplete-window'
+  | 'invalid-observed-at'
+  | 'invalid-valid-until'
+  | 'non-positive-window'
+  | 'invalid-clock';
+export type AssuranceObservationClock = Date | string | number;
+
+export interface AssuranceObservationWindowInput {
+  observedAt?: unknown;
+  validUntil?: unknown;
+}
+
+export type AssuranceObservationWindowEvaluation =
+  | { state: Exclude<AssuranceObservationWindowStateName, 'invalid-window'> }
+  | { state: 'invalid-window'; reason: AssuranceObservationWindowInvalidReason };
+
+function instant(value: unknown): number {
   if (value instanceof Date) return value.getTime();
   if (typeof value === 'string' || typeof value === 'number') return new Date(value).getTime();
   return Number.NaN;
@@ -11,7 +29,10 @@ function instant(value) {
  * current at observedAt and expires exactly at validUntil. Records that declare
  * neither boundary do not have a stored observation window and return null.
  */
-export function evaluateAssuranceObservationWindow(record, clock = new Date()) {
+export function evaluateAssuranceObservationWindow(
+  record: AssuranceObservationWindowInput | null | undefined,
+  clock: AssuranceObservationClock = new Date(),
+): AssuranceObservationWindowEvaluation | null {
   const observedAt = record?.observedAt;
   const validUntil = record?.validUntil;
   const hasObservedAt = observedAt !== undefined;
