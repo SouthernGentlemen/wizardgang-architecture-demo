@@ -105,7 +105,7 @@ describe('DEMO-269 CI diagnostics', () => {
   });
   it('checks the committed base range and fails truthfully without usable base context', () => {
     const cwd = temporaryGitRepository();
-    const script = path.join(process.cwd(), 'scripts', 'validate-patch-whitespace.mjs');
+    const script = path.join(process.cwd(), 'scripts', 'validate-patch-whitespace.ts');
     const baseSha = execFileSync('git', ['rev-parse', 'HEAD'], { cwd, encoding: 'utf8' }).trim();
     const runPatchCheck = (base, includeBase = true) => {
       const environment = { ...process.env };

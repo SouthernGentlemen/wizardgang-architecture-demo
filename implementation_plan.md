@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-429 — [BUILD] Port plan and change-identity tools
-- Dependency: DEMO-428.
-- Why: Queue and controlled-history validation must survive script conversion.
-- Scope: Convert portfolio, implementation-plan, PR identity, history, and whitespace validators in one bounded identity group.
-- Non-goals: Do not change required CI names, credential boundaries, release identity, or deployment protection.
-- Acceptance: Exact-head change-id and history policy remain unchanged.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: scripts/check-portfolio-contract.mjs; scripts/validate-implementation-plan.mjs; scripts/validate-pull-request-identity.mjs; scripts/validate-history.mjs; scripts/validate-patch-whitespace.mjs; scripts/lib/controlled-pr-identity.mjs
-
 ### DEMO-430 — [BUILD] Port GitHub settings tools
 - Dependency: DEMO-429.
 - Why: Settings-as-code tooling needs the same read/write boundary after conversion.

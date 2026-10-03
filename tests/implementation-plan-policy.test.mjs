@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { validateImplementationPlan } from '../scripts/validate-implementation-plan.mjs';
+import { validateImplementationPlan } from '../scripts/validate-implementation-plan.ts';
 import { readFileSync } from 'node:fs';
 
 const task = (id = 'DEMO-999') => `# Active implementation plan
@@ -14,7 +14,7 @@ const task = (id = 'DEMO-999') => `# Active implementation plan
 - Non-goals: Do not change production.
 - Acceptance: The test detects drift.
 - Validation: npm run check.
-- Authorities: scripts/validate-implementation-plan.mjs.
+- Authorities: scripts/validate-implementation-plan.ts.
 `;
 
 describe('active implementation plan policy', () => {

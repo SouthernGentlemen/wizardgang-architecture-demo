@@ -10,14 +10,14 @@ const malformedMerge = '68968b6d0419cf3de6abc410b9a0a264097fe136';
 
 describe('DEMO-422 post-merge history recovery', () => {
   it('records only the immutable malformed DEMO-422 squash commit as a body exception', () => {
-    const history = read('scripts/validate-history.mjs');
+    const history = read('scripts/validate-history.ts');
     expect(history).toContain(`'${malformedMerge}'`);
     expect(history).toContain('DEMO-422 was squash-merged with a valid controlled title');
     expect(history).toContain('post-merge CI #1504');
   });
 
   it('bounds the same-task recovery to the one direct child of the exact malformed merge', () => {
-    const history = read('scripts/validate-history.mjs');
+    const history = read('scripts/validate-history.ts');
     expect(history).toContain(`marker: 'Post-Merge-Recovery: ${malformedMerge}'`);
     expect(history).toContain('id: 422');
     expect(history).toContain('does not consume DEMO-423');
@@ -32,7 +32,7 @@ describe('DEMO-422 post-merge history recovery', () => {
   });
 
   it('accepts immutable history through the bounded DEMO-422 recovery', () => {
-    const result = spawnSync(process.execPath, ['scripts/validate-history.mjs'], {
+    const result = spawnSync(process.execPath, ['scripts/validate-history.ts'], {
       cwd: root,
       encoding: 'utf8',
       env: process.env,

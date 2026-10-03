@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { validateControlledPullRequestIdentity } from '../scripts/lib/controlled-pr-identity.mjs';
+import { validateControlledPullRequestIdentity } from '../scripts/lib/controlled-pr-identity.ts';
 
 const task = (id, type = 'TEST', dependency = 'none; first open task.') => `### ${id} — [${type}] Validate ${id}\n\n- Dependency: ${dependency}\n- Why: A deterministic process gap exists.\n- Scope: Validate the controlled PR boundary.\n- Non-goals: No provider mutation.\n- Acceptance: Invalid identity fails.\n- Validation: npm run check.\n- Authorities: AGENTS.md.\n`;
 const plan = (...tasks) => `# Active implementation plan\n\n## Open tasks\n\n${tasks.join('\n')}`;

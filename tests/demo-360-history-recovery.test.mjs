@@ -7,7 +7,7 @@ const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 
 describe('DEMO-360 immutable history recovery', () => {
   it('records the merged DEMO-359 metadata exception without rewriting main', () => {
-    const history = read('scripts/validate-history.mjs');
+    const history = read('scripts/validate-history.ts');
     expect(history).toContain("'80590b8c367e8d927c2861902182e79eccd41dda'");
     expect(history).toContain('DEMO-359 was squash-merged with a valid controlled title');
   });

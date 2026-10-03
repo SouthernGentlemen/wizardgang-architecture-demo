@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import {
   acceptedControlledIds,
   validateControlledPullRequestIdentity,
-} from './lib/controlled-pr-identity.mjs';
+} from './lib/controlled-pr-identity.ts';
 import { LIVE_RELEASE_MARKER, validateLiveReleaseIdentity } from './lib/live-release-identity.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');

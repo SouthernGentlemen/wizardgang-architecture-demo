@@ -74,7 +74,7 @@ describe('DEMO-354 acceptance gate ownership', () => {
     expect(ciRuns).not.toContain('deploy');
     expect(ciRuns).not.toContain('provision:worker-secret');
     expect(packageJson.scripts['security:dependency-advisories']).toBe('npm audit --audit-level=high');
-    expect(packageJson.scripts['validate:patch-whitespace']).toBe('node scripts/validate-patch-whitespace.mjs');
+    expect(packageJson.scripts['validate:patch-whitespace']).toBe('node scripts/validate-patch-whitespace.ts');
   });
 
   it('keeps build and browser ownership nested under their check gates', () => {

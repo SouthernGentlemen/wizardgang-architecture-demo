@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { afterEach, describe, expect, it } from 'vitest';
 
-const script = new URL('../scripts/validate-history.mjs', import.meta.url).pathname;
+const script = new URL('../scripts/validate-history.ts', import.meta.url).pathname;
 const directories = [];
 const body = (release = 'Unreleased', marker = '') => `Change:\nChange.\n\nReason:\nReason.\n\nImpact:\nMetadata.\n\nRisk:\nLow\n\nControls:\n- Review.\n\nValidation:\n- Pure test.\n\nEvidence:\n- package.json.\n\nSource:\ndirect.\n\nRelease:\n${release}\n${marker}`;
 function git(cwd, ...args) {

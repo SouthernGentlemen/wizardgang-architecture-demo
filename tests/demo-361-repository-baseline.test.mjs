@@ -43,7 +43,7 @@ function createUniversalFixture() {
     allowScripts: {},
     scripts: {
       'validate:repository-baseline': 'node scripts/validate-repository-baseline.mjs',
-      'validate:history': 'node scripts/validate-history.mjs',
+      'validate:history': 'node scripts/validate-history.ts',
       check: 'npm run validate:repository-baseline && npm run validate:history',
     },
   }, null, 2) + '\n');
