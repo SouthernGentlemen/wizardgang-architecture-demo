@@ -82,7 +82,7 @@ export function validateUniversalRepositoryBaseline(root = DEFAULT_ROOT) {
       .map(([, specifier]) => path.posix.normalize(path.posix.join(directory, specifier)));
     return [source, ...imports.map((specifier) => readLocalModuleGraph(specifier, seen))].join('\n');
   };
-  const ciCommand = /npm run validate:ci/.test(ci) ? readLocalModuleGraph('scripts/ci-validation.mjs') : ci;
+  const ciCommand = /npm run validate:ci/.test(ci) ? readLocalModuleGraph('scripts/ci-validation.ts') : ci;
   if (!/npm\s+ci|args:\s*\['ci'\]/.test(ciCommand) || !/npm run check|\['run', 'check'\]/.test(ciCommand)) failures.push('CI must install with npm ci and run check');
   return failures;
 }

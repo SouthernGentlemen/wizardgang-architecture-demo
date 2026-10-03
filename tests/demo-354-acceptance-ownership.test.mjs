@@ -6,7 +6,7 @@ import {
   createCiValidationCommands,
   npmRunName,
   npmRunSequence,
-} from '../scripts/lib/acceptance-plan.mjs';
+} from '../scripts/lib/acceptance-plan.ts';
 
 const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
 const checkCommands = commandSequence(packageJson.scripts.check);

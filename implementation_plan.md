@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-428 — [BUILD] Port CI diagnostics and acceptance plan tools
-- Dependency: DEMO-427.
-- Why: The CI runner and diagnostic helpers are authored MJS.
-- Scope: Convert ci-validation, acceptance-plan, and ci-diagnostics with unchanged streamed logs and exit codes.
-- Non-goals: Do not change required CI names, credential boundaries, release identity, or deployment protection.
-- Acceptance: CI still emits bounded failure artifacts and uses shared local D1 state.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: scripts/ci-validation.mjs; scripts/lib/acceptance-plan.mjs; scripts/lib/ci-diagnostics.mjs
-
 ### DEMO-429 — [BUILD] Port plan and change-identity tools
 - Dependency: DEMO-428.
 - Why: Queue and controlled-history validation must survive script conversion.
