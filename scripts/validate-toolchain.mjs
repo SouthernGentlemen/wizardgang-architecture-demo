@@ -8,6 +8,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
 const pinnedNodeVersion = fs.readFileSync(path.join(root, '.node-version'), 'utf8').trim();
 const packageManager = packageJson.packageManager || '';
+export const TYPESCRIPT_EXECUTION_SCRIPT = 'node scripts/validate-typescript-execution.ts --self-check';
 
 function exactVersion(version, label) {
   if (!/^\d+\.\d+\.\d+$/.test(version || '')) {
@@ -55,8 +56,23 @@ export function validateToolchainContract({
   if (actualNpmVersion !== exactNpm) {
     failures.push(`npm ${actualNpmVersion}; expected ${exactNpm}`);
   }
+  if (manifest.type !== 'module') {
+    failures.push(`package type (${manifest.type || 'unset'}); expected module for native TypeScript ESM execution`);
+  }
+  if (manifest.scripts?.['validate:typescript-execution'] !== TYPESCRIPT_EXECUTION_SCRIPT) {
+    failures.push(`validate:typescript-execution must be exactly "${TYPESCRIPT_EXECUTION_SCRIPT}"`);
+  }
+  const checkCommands = (manifest.scripts?.check || '').split('&&').map((command) => command.trim());
+  if (!checkCommands.includes('npm run validate:typescript-execution')) {
+    failures.push('check must include npm run validate:typescript-execution');
+  }
 
-  return { failures, pinnedNodeVersion: exactNode, pinnedNpmVersion: exactNpm };
+  return {
+    failures,
+    pinnedNodeVersion: exactNode,
+    pinnedNpmVersion: exactNpm,
+    typescriptExecutionScript: TYPESCRIPT_EXECUTION_SCRIPT,
+  };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
@@ -72,6 +88,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
 
   console.log(`Pinned toolchain: Node ${result.pinnedNodeVersion}, npm ${result.pinnedNpmVersion}.`);
   console.log(`Current toolchain: Node ${actualNodeVersion}, npm ${actualNpmVersion}.`);
+  console.log(`TypeScript execution: ${result.typescriptExecutionScript}.`);
 
   if (result.failures.length) {
     for (const failure of result.failures) console.error(`Toolchain mismatch: ${failure}.`);

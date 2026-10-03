@@ -6,6 +6,13 @@
 - After changing route declarations or route artifact generation, run `npm run generate:routes` and commit `docs/route-manifest.json` before validation.
 - Keep CI failure output bounded and actionable for cloud clients: emit the failing file, line when available, and remediation command. Never print an entire generated artifact or a single-line Base64 payload into job logs.
 
+## Node tool TypeScript execution contract
+
+- Authored TypeScript Node tools execute directly with the repository-pinned Node runtime as `node path/to/tool.ts`. Do not add a second runner, transpile-to-JavaScript step, or committed compiled JavaScript authority for these tools.
+- Node's built-in TypeScript support strips erasable syntax at runtime and does not read `tsconfig.json`. Keep runtime imports ESM-compatible, use explicit `.ts` extensions for relative TypeScript imports, and use `import type` for type-only imports. The existing `tsc --noEmit` checks remain the separate static type-checking authority for their configured source scope.
+- `npm run validate:typescript-execution` is the representative direct-run smoke check. The canonical `npm run check` executes it, while focused execution-path coverage proves ESM TypeScript imports, CLI argument forwarding, zero/non-zero exit behavior, and useful `.ts` stack traces.
+- The execution path is intentionally dependency-free: the exact Node `26.10.0` pin and npm `12.1.0` package-manager pin are the runner authority. A future task may port a bounded tool family onto this path, but must not introduce a competing runner without a new controlled decision.
+
 ## Architecture invariants
 
 Preserve these invariants:
