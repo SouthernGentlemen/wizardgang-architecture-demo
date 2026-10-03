@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import { planExactTagRelease } from './lib/exact-tag-release.mjs';
+import { planExactTagRelease } from './lib/exact-tag-release.ts';
 
 const repository = 'SouthernGentlemen/wizardgang-architecture-demo';
 const token = process.env.GH_TOKEN;

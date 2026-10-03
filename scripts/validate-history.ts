@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { LIVE_RELEASE_MARKER, validateLiveReleaseIdentity } from './lib/live-release-identity.mjs';
+import { LIVE_RELEASE_MARKER, validateLiveReleaseIdentity } from './lib/live-release-identity.ts';
 
 const raw = execFileSync('git', ['log', '--reverse', '--format=%H%x1f%P%x1f%s%x1f%b%x1e'], { encoding: 'utf8' });
 const records = raw.split('\x1e').map((record) => record.trim()).filter(Boolean);

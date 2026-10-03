@@ -6,7 +6,7 @@ import {
   acceptedControlledIds,
   validateControlledPullRequestIdentity,
 } from './lib/controlled-pr-identity.ts';
-import { LIVE_RELEASE_MARKER, validateLiveReleaseIdentity } from './lib/live-release-identity.mjs';
+import { LIVE_RELEASE_MARKER, validateLiveReleaseIdentity } from './lib/live-release-identity.ts';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const requiredEnvironment = ['PR_BRANCH', 'PR_TITLE', 'BASE_SHA', 'HEAD_SHA'];

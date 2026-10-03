@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { verifyCloudflareDeployment } from '../scripts/verify-cloudflare-deployment.mjs';
+import { verifyCloudflareDeployment } from '../scripts/verify-cloudflare-deployment.ts';
 
 const read = (file) => fs.readFileSync(file, 'utf8');
 const deployWorkflow = read('.github/workflows/deploy.yml');
@@ -71,7 +71,7 @@ describe('DEMO-367 release-to-deployment identity and provider version', () => {
     expect(publicIdentity).toBeGreaterThan(provider);
     expect(deployWorkflow).toContain('WRANGLER_OUTPUT_FILE_PATH: ${{ runner.temp }}/wrangler-deploy.ndjson');
     expect(deployWorkflow).toContain('npx wrangler deployments status --name "$EXPECTED_WORKER_NAME" --json');
-    expect(deployWorkflow).toContain('node scripts/verify-cloudflare-deployment.mjs');
+    expect(deployWorkflow).toContain('node scripts/verify-cloudflare-deployment.ts');
   });
 
   it('accepts only the deployment result as the sole provider version at 100 percent traffic', () => {

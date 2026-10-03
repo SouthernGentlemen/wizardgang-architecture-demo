@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-431 — [BUILD] Port release and deployment tools
-- Dependency: DEMO-430.
-- Why: Release identity helpers and deployment preflight remain authored MJS.
-- Scope: Convert cutter, release identity helpers, secret provisioning, deploy refusal, and Cloudflare verification.
-- Non-goals: Do not change required CI names, credential boundaries, release identity, or deployment protection.
-- Acceptance: Annotated-tag and exact-deploy gates remain unchanged; no release or deployment occurs for this task.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: scripts/cut-main-release.mjs; scripts/lib/exact-tag-release.mjs; scripts/lib/live-release-identity.mjs; scripts/provision-worker-secret.mjs; scripts/refuse-production-deploy.mjs; scripts/verify-cloudflare-deployment.mjs
-
 ### DEMO-432 — [BUILD] Port assurance registry tooling
 - Dependency: DEMO-431.
 - Why: Registry and relationship validators share one schema-loading boundary.

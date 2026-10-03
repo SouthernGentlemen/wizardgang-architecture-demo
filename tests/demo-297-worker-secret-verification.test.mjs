@@ -6,7 +6,7 @@ import { spawnSync } from 'node:child_process';
 
 const inventory = JSON.parse(fs.readFileSync('config/worker-secrets.json', 'utf8'));
 const deploy = fs.readFileSync('.github/workflows/deploy.yml', 'utf8');
-const provisioner = fs.readFileSync('scripts/provision-worker-secret.mjs', 'utf8');
+const provisioner = fs.readFileSync('scripts/provision-worker-secret.ts', 'utf8');
 const packageLock = JSON.parse(fs.readFileSync('package-lock.json', 'utf8'));
 const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 const wrangler = path.resolve('node_modules', '.bin', process.platform === 'win32' ? 'wrangler.cmd' : 'wrangler');
