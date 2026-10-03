@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { describe, expect, it } from 'vitest';
 import { validateControlledPullRequestIdentity } from '../scripts/lib/controlled-pr-identity.ts';
-import { nextLiveReleaseId, validateLiveReleaseIdentity } from '../scripts/lib/live-release-identity.mjs';
+import { nextLiveReleaseId, validateLiveReleaseIdentity } from '../scripts/lib/live-release-identity.ts';
 
 const task = (id) => `### ${id} — [BUILD] Queued change\n\n- Dependency: none.\n`;
 const plan = `# Implementation plan\n\n## Open tasks\n\n${task('DEMO-391')}\n${task('DEMO-392')}\n${task('DEMO-395')}`;

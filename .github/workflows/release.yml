@@ -109,7 +109,7 @@ jobs:
             ci_json="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_CI_RUN_ID")"
           fi
           RELEASE_CI_JSON="$ci_json" RELEASE_MAIN_SHA="${main_sha:-}" RELEASE_CHECKOUT_COMMIT="$checkout_commit" node --input-type=module <<'NODE'
-          import { validateExactTagDispatch } from './scripts/lib/exact-tag-release.mjs';
+          import { validateExactTagDispatch } from './scripts/lib/exact-tag-release.ts';
           validateExactTagDispatch({
             eventName: process.env.GITHUB_EVENT_NAME,
             ref: process.env.GITHUB_REF,

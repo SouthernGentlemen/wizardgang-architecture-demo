@@ -97,7 +97,7 @@ jobs:
           node --input-type=module <<'NODE'
           import { execFileSync } from 'node:child_process';
           import fs from 'node:fs';
-          import { nextLiveReleaseId } from './scripts/lib/live-release-identity.mjs';
+          import { nextLiveReleaseId } from './scripts/lib/live-release-identity.ts';
           const bump = process.env.BUMP;
           const requestId = process.env.REQUEST_ID;
           const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));

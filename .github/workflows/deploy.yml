@@ -259,7 +259,7 @@ jobs:
           verified=false
           for attempt in $(seq 1 12); do
             npx wrangler deployments status --name "$EXPECTED_WORKER_NAME" --json > "$CLOUDFLARE_DEPLOYMENT_STATUS"
-            if node scripts/verify-cloudflare-deployment.mjs \
+            if node scripts/verify-cloudflare-deployment.ts \
               --deploy-output "$WRANGLER_DEPLOY_OUTPUT" \
               --deployment-status "$CLOUDFLARE_DEPLOYMENT_STATUS" \
               --worker "$EXPECTED_WORKER_NAME"; then

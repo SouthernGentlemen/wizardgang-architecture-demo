@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { planExactTagRelease, validateDeployTrigger, validateExactTagDispatch } from '../scripts/lib/exact-tag-release.mjs';
+import { planExactTagRelease, validateDeployTrigger, validateExactTagDispatch } from '../scripts/lib/exact-tag-release.ts';
 
 const commit = 'a'.repeat(40);
 const previous = 'b'.repeat(40);
@@ -51,7 +51,7 @@ describe('DEMO-395 release and deployment identities', () => {
     const release = readFileSync('.github/workflows/release.yml', 'utf8');
     const deploy = readFileSync('.github/workflows/deploy.yml', 'utf8');
     const live = readFileSync('.github/workflows/git-demo.yml', 'utf8');
-    expect(cutter).toContain('node scripts/cut-main-release.mjs');
+    expect(cutter).toContain('node scripts/cut-main-release.ts');
     expect(cutter).toContain("github.event.workflow_run.conclusion == 'success'");
     expect(release).toContain('ci_run_id:');
     expect(release).toContain('exact-tag-dispatch');

@@ -16,10 +16,10 @@ function stepPosition(name) {
 
 describe('DEMO-366 published immutable release deployment boundary', () => {
   it('fails closed instead of exposing raw npm Wrangler production deployment', () => {
-    expect(pkg.scripts.deploy).toBe('node scripts/refuse-production-deploy.mjs');
+    expect(pkg.scripts.deploy).toBe('node scripts/refuse-production-deploy.ts');
     expect(pkg.scripts.deploy).not.toContain('wrangler');
 
-    const result = spawnSync(process.execPath, ['scripts/refuse-production-deploy.mjs'], { encoding: 'utf8' });
+    const result = spawnSync(process.execPath, ['scripts/refuse-production-deploy.ts'], { encoding: 'utf8' });
     expect(result.status).toBe(1);
     expect(result.stderr).toContain('Production deployment is release-workflow only.');
   });
