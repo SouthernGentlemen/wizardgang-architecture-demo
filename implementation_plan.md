@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-426 — [BUILD] Pin the TypeScript execution path for Node tools
-- Dependency: DEMO-425.
-- Why: Node scripts need a reliable TS runner before conversion.
-- Scope: Choose one Node 26 compatible direct TS execution approach and prove ESM imports, CLI args, exit codes, and stack traces with a small representative tool.
-- Non-goals: Do not change required CI names, credential boundaries, release identity, or deployment protection.
-- Acceptance: The runner works in local check and CI without committed compiled JS.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: package.json; .node-version; scripts/validate-toolchain.mjs; docs/REPOSITORY-BOUNDARIES.md
-
 ### DEMO-427 — [BUILD] Port generated-artifact tools to TypeScript
 - Dependency: DEMO-426.
 - Why: Five generators and parity scripts form one bounded tool family.
