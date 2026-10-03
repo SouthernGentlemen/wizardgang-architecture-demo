@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import {
   assuranceRecordEntries,
   assuranceRecordsForKind,
-} from '../src/assurance/record-discovery.js';
+} from '../src/assurance/record-discovery';
 import { rebindRelationshipSource, setRelationshipTargets } from './helpers/assurance-relationships';
 
 const repositoryRoot = process.cwd();

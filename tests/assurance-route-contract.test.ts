@@ -67,8 +67,8 @@ describe('assurance route contract', () => {
     expect(body).not.toHaveProperty('record');
   });
 
-  it('contains no dead assuranceRecordUrls export in the JavaScript route contract', () => {
-    const source = readFileSync('src/assurance/route-contract.js', 'utf8');
+  it('contains no dead assuranceRecordUrls export in the TypeScript route contract', () => {
+    const source = readFileSync('src/assurance/route-contract.ts', 'utf8');
     expect(source).not.toMatch(/export function assuranceRecordUrls/);
     expect(source).not.toContain('?view=');
   });

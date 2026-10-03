@@ -32,7 +32,7 @@ import {
 import {
   assuranceRecordFamilyRegistration,
   assuranceRecordsFromDocument,
-} from './record-discovery.js';
+} from './record-discovery';
 import { assuranceRuntimeFilterVocabularies } from './generated/registry-bindings';
 import {
   assuranceAnchor as canonicalAssuranceAnchor,
