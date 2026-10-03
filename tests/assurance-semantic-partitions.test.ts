@@ -12,7 +12,7 @@ import {
 import { tmpdir } from 'node:os';
 import { dirname, join, relative, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { gitBlobShaForFile } from '../scripts/generate-assurance-runtime-binding.mjs';
+import { gitBlobShaForFile } from '../scripts/generate-assurance-runtime-binding.ts';
 import { rebindRelationshipSource } from './helpers/assurance-relationships';
 
 const repositoryRoot = process.cwd();
@@ -177,7 +177,7 @@ describe('registry-driven assurance semantic validation', () => {
     const affected = moveRecordToPartition(fixtureRoot, 'evidence', 'EVD-DOC-003', partitionPath);
     for (const resource of affected) approveResourceRevision(fixtureRoot, resource.resourceId, resource.path);
 
-    expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.mjs'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-integrity.mjs'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance.mjs'));
@@ -302,7 +302,7 @@ describe('registry-driven assurance semantic validation', () => {
     wcagPartition.schema = relocatedWcagPartitionSchema;
     writeJson(fixtureRoot, 'assurance/registry.json', registry);
 
-    expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.mjs'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-iso27001-compliance.mjs'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-wcag-compliance.mjs'));

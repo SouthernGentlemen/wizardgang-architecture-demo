@@ -113,13 +113,13 @@ describe('assurance registry completeness and schema enforcement', () => {
   });
 
   it('keeps the generated Worker runtime import binding mechanically aligned with the registry', () => {
-    const current = run(repositoryRoot, 'scripts/generate-assurance-runtime-binding.mjs', ['--check']);
+    const current = run(repositoryRoot, 'scripts/generate-assurance-runtime-binding.ts', ['--check']);
     expect(current.status, output(current)).toBe(0);
 
     const fixtureRoot = createFixture();
     const bindingPath = join(fixtureRoot, 'src/assurance/generated/registry-bindings.ts');
     writeFileSync(bindingPath, `${readFileSync(bindingPath, 'utf8')}\n// drift\n`);
-    expectRejected(run(fixtureRoot, 'scripts/generate-assurance-runtime-binding.mjs', ['--check']), 'generated runtime import binding is stale');
+    expectRejected(run(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts', ['--check']), 'generated runtime import binding is stale');
   });
 
   it('loads relocated lifecycle control-plane data through the registry binding without counting it as assurance records', () => {
@@ -132,7 +132,7 @@ describe('assurance registry completeness and schema enforcement', () => {
     registry.lifecycle.path = movedLifecyclePath;
     writeJson(fixtureRoot, registryPath, registry);
 
-    const generation = run(fixtureRoot, 'scripts/generate-assurance-runtime-binding.mjs');
+    const generation = run(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts');
     expect(generation.status, output(generation)).toBe(0);
 
     const validation = run(fixtureRoot, 'scripts/validate-assurance-registry.mjs');
@@ -151,7 +151,7 @@ describe('assurance registry completeness and schema enforcement', () => {
     const publicationSource = readFileSync(join(fixtureRoot, 'src/assurance/publication.ts'), 'utf8');
     expect(publicationSource).not.toContain('assurance/lifecycle/records.json');
 
-    const snapshotResult = run(fixtureRoot, 'scripts/generate-assurance-snapshot.mjs', [
+    const snapshotResult = run(fixtureRoot, 'scripts/generate-assurance-snapshot.ts', [
       '--tag', 'v0.14.0',
       '--commit', '0123456789abcdef0123456789abcdef01234567',
       '--generated-at', '2026-09-04T12:00:00Z',
@@ -170,7 +170,7 @@ describe('assurance registry completeness and schema enforcement', () => {
     missingRegistry.lifecycle.capabilities = ['runtime'];
     writeJson(missingRoot, 'assurance/registry.json', missingRegistry);
     expectRejected(
-      run(missingRoot, 'scripts/generate-assurance-runtime-binding.mjs'),
+      run(missingRoot, 'scripts/generate-assurance-runtime-binding.ts'),
       'expected exactly one lifecycle capability owner; found 0',
     );
 
@@ -179,7 +179,7 @@ describe('assurance registry completeness and schema enforcement', () => {
     ambiguousRegistry.datasets[0].capabilities.push('lifecycle');
     writeJson(ambiguousRoot, 'assurance/registry.json', ambiguousRegistry);
     expectRejected(
-      run(ambiguousRoot, 'scripts/generate-assurance-runtime-binding.mjs'),
+      run(ambiguousRoot, 'scripts/generate-assurance-runtime-binding.ts'),
       'expected exactly one lifecycle capability owner; found 2',
     );
   });
@@ -193,7 +193,7 @@ describe('assurance registry completeness and schema enforcement', () => {
     monitoring.path = movedPath;
     writeJson(fixtureRoot, 'assurance/registry.json', registry);
 
-    const result = run(fixtureRoot, 'scripts/generate-assurance-snapshot.mjs', [
+    const result = run(fixtureRoot, 'scripts/generate-assurance-snapshot.ts', [
       '--tag', 'v0.14.0',
       '--commit', '0123456789abcdef0123456789abcdef01234567',
       '--generated-at', '2026-09-03T12:00:00Z',

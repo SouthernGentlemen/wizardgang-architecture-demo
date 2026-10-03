@@ -136,7 +136,7 @@ describe('registry-driven assurance record discovery', () => {
     });
     writeJson(fixtureRoot, 'assurance/registry.json', registry);
 
-    const generated = run(fixtureRoot, 'scripts/generate-assurance-runtime-binding.mjs');
+    const generated = run(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts');
     expect(generated.status, output(generated)).toBe(0);
     expect(readFileSync(join(fixtureRoot, 'src/assurance/generated/registry-bindings.ts'), 'utf8')).toContain('"findings.demo-132"');
     const validated = run(fixtureRoot, 'scripts/validate-assurance-registry.mjs');

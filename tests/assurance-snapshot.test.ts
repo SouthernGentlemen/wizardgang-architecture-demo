@@ -5,7 +5,7 @@ import { dirname, join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 
 const repositoryRoot = process.cwd();
-const generatorPath = join(repositoryRoot, 'scripts/generate-assurance-snapshot.mjs');
+const generatorPath = join(repositoryRoot, 'scripts/generate-assurance-snapshot.ts');
 const fixtureRoots: string[] = [];
 const snapshotArgs = [
   '--tag', 'v9.8.7',

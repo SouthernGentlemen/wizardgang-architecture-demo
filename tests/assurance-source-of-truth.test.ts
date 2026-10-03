@@ -67,7 +67,7 @@ describe('structured assurance source of truth', () => {
   });
 
   it('keeps generated-artifact parity focused on legitimate generated outputs', () => {
-    const validator = readFileSync(join(root, 'scripts/validate-generated-artifacts.mjs'), 'utf8');
+    const validator = readFileSync(join(root, 'scripts/validate-generated-artifacts.ts'), 'utf8');
     expect(validator).not.toContain('assurance-summaries');
     expect(validator).not.toContain('governance-registers');
     expect(validator).not.toContain(oldRegisterRoot + '/');

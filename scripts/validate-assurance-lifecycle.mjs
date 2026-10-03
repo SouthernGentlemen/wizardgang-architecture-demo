@@ -17,7 +17,7 @@ import {
   LIFECYCLE_BASELINE_MEMBERSHIP_PATH,
   LIFECYCLE_HISTORICAL_COMMIT,
   verifyLifecycleBaselineMembership,
-} from './generate-assurance-runtime-binding.mjs';
+} from './generate-assurance-runtime-binding.ts';
 
 const root = process.cwd();
 const errors = [];
