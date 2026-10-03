@@ -72,6 +72,7 @@ errors.push(...validateControlledPullRequestIdentity({
   basePlanMarkdown,
   headPlanMarkdown,
   baseAcceptedIds,
+  baseSha,
   liveReleaseErrors,
 }));
 

@@ -13,6 +13,7 @@ const valid = (overrides = {}) => ({
   basePlanMarkdown: validBase,
   headPlanMarkdown: validHead,
   baseAcceptedIds: new Set(['DEMO-363']),
+  baseSha: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
   ...overrides,
 });
 
@@ -91,6 +92,30 @@ describe('controlled PR identity and queue sequence', () => {
     expect(validateControlledPullRequestIdentity(valid({
       basePlanMarkdown: externalBlocked,
     }))).toContain('First open task DEMO-364 is blocked by unresolved dependency: External provider prerequisite is unresolved.');
+  });
+
+  it('permits only an exact-parent same-task post-merge recovery without queue mutation', () => {
+    const recoveryBase = plan(task('DEMO-423', 'REFACTOR', 'DEMO-422 merged.'));
+    const recovery = {
+      branchName: 'demo-422-post-merge-history-recovery',
+      title: '[DEMO-422] [FIX] Recover post-merge history metadata',
+      headSubject: '[DEMO-422] [FIX] Recover post-merge history metadata',
+      headBody: 'Post-Merge-Recovery: 68968b6d0419cf3de6abc410b9a0a264097fe136',
+      rangeSubjects: ['[DEMO-422] [FIX] Recover post-merge history metadata'],
+      basePlanMarkdown: recoveryBase,
+      headPlanMarkdown: recoveryBase,
+      baseAcceptedIds: new Set(['DEMO-422']),
+      baseSha: '68968b6d0419cf3de6abc410b9a0a264097fe136',
+    };
+    expect(validateControlledPullRequestIdentity(recovery)).toEqual([]);
+    expect(validateControlledPullRequestIdentity({
+      ...recovery,
+      baseSha: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+    })).toContain('Post-merge recovery marker must equal the exact PR base SHA bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.');
+    expect(validateControlledPullRequestIdentity({
+      ...recovery,
+      headPlanMarkdown: plan(task('DEMO-424', 'REFACTOR', 'DEMO-423 merged.')),
+    })).toContain('Post-merge recovery must not change implementation_plan.md or consume the next queued task.');
   });
 
   it('preserves the explicit portfolio-plan maintenance exception', () => {
