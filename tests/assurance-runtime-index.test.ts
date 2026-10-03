@@ -120,7 +120,7 @@ describe('registry-driven assurance runtime indexes', () => {
     });
     writeJson(fixtureRoot, 'assurance/registry.json', registry);
 
-    const generated = run(fixtureRoot, 'scripts/generate-assurance-runtime-binding.mjs');
+    const generated = run(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts');
     expect(generated.status, output(generated)).toBe(0);
     const validated = run(fixtureRoot, 'scripts/validate-assurance-registry.mjs');
     expect(validated.status, output(validated)).toBe(0);

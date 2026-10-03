@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { deriveRuntimeFilterVocabularies } from '../scripts/generate-assurance-runtime-binding.mjs';
+import { deriveRuntimeFilterVocabularies } from '../scripts/generate-assurance-runtime-binding.ts';
 
 describe('assurance filter vocabulary generation', () => {
   it('derives shared-route filter values from route-owner members without changing canonical registry data', () => {

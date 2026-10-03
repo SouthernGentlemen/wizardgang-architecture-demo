@@ -9,7 +9,7 @@ import {
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { deriveRuntimeSchemaDependencyDigests } from '../scripts/generate-assurance-runtime-binding.mjs';
+import { deriveRuntimeSchemaDependencyDigests } from '../scripts/generate-assurance-runtime-binding.ts';
 import { createAssuranceSchemaLoader } from '../scripts/lib/assurance-validation.mjs';
 import {
   collectJsonSchemaDependencies,

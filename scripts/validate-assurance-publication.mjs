@@ -8,7 +8,7 @@ import {
 import {
   deriveRuntimeSourceRevisions,
   verifyLifecycleBaselineMembership,
-} from './generate-assurance-runtime-binding.mjs';
+} from './generate-assurance-runtime-binding.ts';
 import {
   assurancePublicationDecision,
   disclosureReviewIsPublishable,

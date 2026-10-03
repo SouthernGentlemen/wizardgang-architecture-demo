@@ -101,7 +101,7 @@ describe('registry-driven assurance validation fixtures', () => {
     const fixtureRoot = createFixture();
     registerSyntheticReportFamily(fixtureRoot);
 
-    expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.mjs'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-integrity.mjs'));
     expect(readFileSync(join(fixtureRoot, 'src/assurance/generated/registry-bindings.ts'), 'utf8')).toContain('"report-register-v2"');
@@ -113,7 +113,7 @@ describe('registry-driven assurance validation fixtures', () => {
       setRelationshipTargets(record, 'evidence', 'github.structured-records.evidence', ['EVD-MISSING-999']);
     });
 
-    expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.mjs'));
     expectRejected(
       runScript(fixtureRoot, 'scripts/validate-assurance-integrity.mjs'),
@@ -151,7 +151,7 @@ describe('registry-driven assurance validation fixtures', () => {
     ];
     writeJson(fixtureRoot, registryPath, registry);
 
-    expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.mjs'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-iso27001-compliance.mjs'));
   });

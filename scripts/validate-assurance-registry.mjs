@@ -17,7 +17,7 @@ import {
   validateRegisteredAssuranceResource,
 } from './lib/assurance-validation.mjs';
 import { validateAssuranceRouteContract } from '../src/assurance/route-contract.ts';
-import { renderRuntimeBinding, RUNTIME_BINDING_PATH } from './generate-assurance-runtime-binding.mjs';
+import { renderRuntimeBinding, RUNTIME_BINDING_PATH } from './generate-assurance-runtime-binding.ts';
 
 const root = process.cwd();
 const errors = [];

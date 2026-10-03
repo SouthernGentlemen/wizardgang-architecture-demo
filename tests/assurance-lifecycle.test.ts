@@ -7,7 +7,7 @@ import {
   gitBlobShaForFile,
   LIFECYCLE_BASELINE_MEMBERSHIP_BLOB,
   LIFECYCLE_BASELINE_MEMBERSHIP_PATH,
-} from '../scripts/generate-assurance-runtime-binding.mjs';
+} from '../scripts/generate-assurance-runtime-binding.ts';
 
 const repositoryRoot = process.cwd();
 const repositoryGitDir = spawnSync('git', ['rev-parse', '--absolute-git-dir'], {

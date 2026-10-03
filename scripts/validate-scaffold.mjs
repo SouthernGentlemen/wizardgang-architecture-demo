@@ -109,7 +109,7 @@ for (const token of [
   if (!applicationRoutes.includes(token)) failures.push(`application registry missing invariant: ${token}`);
 }
 
-const generator = read('scripts/generate-route-manifest.mjs');
+const generator = read('scripts/generate-route-manifest.ts');
 const slash = '/';
 for (const removedToken of ['const machine =', 'requiredRoutes =', `${slash}__api${slash}`, `${slash}v1${slash}`]) {
   if (generator.includes(removedToken)) failures.push(`route generator still contains a hardcoded route inventory: ${removedToken}`);
