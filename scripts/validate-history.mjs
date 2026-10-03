@@ -18,6 +18,10 @@ const inheritedBodyExceptions = new Map([
     '4ec192c10dfefd9d119ac223ae599b7db948524c',
     'DEMO-366 was squash-merged with a valid controlled title but its squash body omitted Reason, Risk, and Source; merged main is preserved and post-merge CI #1370 is recorded instead of rewriting history.',
   ],
+  [
+    '68968b6d0419cf3de6abc410b9a0a264097fe136',
+    'DEMO-422 was squash-merged with a valid controlled title but its squash body omitted the required structured sections; merged main is preserved and post-merge CI #1504 is recorded instead of rewriting history.',
+  ],
 ]);
 const publishedContinuationExceptions = new Map([
   [
@@ -36,6 +40,14 @@ const boundedRecoveryContinuations = new Map([
       id: 366,
       marker: 'Post-Merge-Recovery: 4ec192c10dfefd9d119ac223ae599b7db948524c',
       reason: 'The one direct child of the immutable malformed DEMO-366 squash commit is its bounded post-merge history-metadata recovery and does not consume DEMO-367.',
+    },
+  ],
+  [
+    '68968b6d0419cf3de6abc410b9a0a264097fe136',
+    {
+      id: 422,
+      marker: 'Post-Merge-Recovery: 68968b6d0419cf3de6abc410b9a0a264097fe136',
+      reason: 'The one direct child of the immutable malformed DEMO-422 squash commit is its bounded post-merge history-metadata recovery and does not consume DEMO-423.',
     },
   ],
 ]);

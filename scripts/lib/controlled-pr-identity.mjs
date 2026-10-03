@@ -70,6 +70,7 @@ export function validateControlledPullRequestIdentity({
   basePlanMarkdown = null,
   headPlanMarkdown = null,
   baseAcceptedIds = new Set(),
+  baseSha = '',
   liveReleaseErrors = null,
 }) {
   const errors = [];
@@ -77,6 +78,7 @@ export function validateControlledPullRequestIdentity({
   const headIdentity = parseControlledSubject(headSubject);
   const branchMatch = branchPattern.exec(branchName || '');
   const maintenance = /^Portfolio-Plan-Maintenance:\s*true$/m.test(headBody);
+  const recoveryMatch = /^Post-Merge-Recovery:\s*([0-9a-f]{40})$/m.exec(headBody);
 
   if (!titleIdentity) errors.push('PR title must match [DEMO-###] [TYPE] <imperative summary>.');
   if (!headIdentity) errors.push('Exact head commit subject must match [DEMO-###] [TYPE] <imperative summary>.');
@@ -105,6 +107,21 @@ export function validateControlledPullRequestIdentity({
 
   if (liveReleaseErrors !== null) {
     errors.push(...liveReleaseErrors);
+    return errors;
+  }
+
+  if (recoveryMatch) {
+    if (!titleIdentity || !baseAcceptedIds.has(titleIdentity.id)) {
+      errors.push('Post-merge recovery must reuse a controlled ID already accepted on the PR base.');
+    }
+    if (!baseSha || recoveryMatch[1] !== baseSha) {
+      errors.push(`Post-merge recovery marker must equal the exact PR base SHA ${baseSha || '(missing)'}.`);
+    }
+    if (basePlanMarkdown === null || headPlanMarkdown === null) {
+      errors.push('Post-merge recovery requires the implementation plan to remain tracked.');
+    } else if (headPlanMarkdown !== basePlanMarkdown) {
+      errors.push('Post-merge recovery must not change implementation_plan.md or consume the next queued task.');
+    }
     return errors;
   }
 
