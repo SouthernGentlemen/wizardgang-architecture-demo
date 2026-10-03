@@ -6,7 +6,7 @@ import operable from '../assurance/compliance/wcag-2.2/operable.json';
 import understandable from '../assurance/compliance/wcag-2.2/understandable.json';
 import robust from '../assurance/compliance/wcag-2.2/robust.json';
 import evidenceData from '../assurance/evidence/evidence.json';
-import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
+import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.ts';
 
 const criteria = [...perceivable.criteria, ...operable.criteria, ...understandable.criteria, ...robust.criteria];
 const evidenceIds = new Set(evidenceData.records.map((record) => record.id));

@@ -27,7 +27,7 @@ import {
   type AssuranceLifecyclePresentation,
   type AssuranceLifecycleRegistry,
   type AssuranceObservedState,
-} from './publication-policy.js';
+} from './publication-policy.ts';
 import type { Env } from '../types';
 
 const lifecycleResource = requireAssuranceCapabilityResource(

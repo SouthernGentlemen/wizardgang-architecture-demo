@@ -1,4 +1,4 @@
-import { assertSupportedAssuranceResource } from './publication-policy.js';
+import { assertSupportedAssuranceResource } from './publication-policy.ts';
 
 export interface AssuranceRecordIdentityComponent {
   source: 'record' | 'resource';

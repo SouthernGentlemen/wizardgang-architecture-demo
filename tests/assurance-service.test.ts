@@ -20,7 +20,7 @@ import {
   presentedPublishedEvidenceRecords,
 } from '../src/assurance/publication';
 import type { Env } from '../src/types';
-import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
+import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.ts';
 
 const environment = {
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',

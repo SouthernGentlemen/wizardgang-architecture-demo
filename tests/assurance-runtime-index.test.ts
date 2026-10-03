@@ -12,7 +12,7 @@ import {
   listAssuranceRecords,
   reverseAssuranceRelationships,
 } from '../src/assurance/service';
-import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
+import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.ts';
 import { rebindRelationshipSource, setRelationshipTargets } from './helpers/assurance-relationships';
 
 const repositoryRoot = process.cwd();
@@ -127,7 +127,7 @@ describe('registry-driven assurance runtime indexes', () => {
 
     writeFileSync(join(fixtureRoot, 'tests/demo-143-synthetic-runtime.test.ts'), `
 import { describe, expect, it } from 'vitest';
-import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
+import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.ts';
 import {
   assuranceDatasetCount,
   assuranceDatasetForRecordId,

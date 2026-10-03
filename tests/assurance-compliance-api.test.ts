@@ -6,7 +6,7 @@ import { reportingRouteRegistry } from '../src/routing/reporting-routes';
 import { deriveComplianceCounts } from '../src/assurance/service';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import type { Env } from '../src/types';
-import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
+import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.ts';
 
 const environment = {
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',

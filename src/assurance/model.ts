@@ -13,7 +13,7 @@ import {
   assuranceIdentityKey,
   assuranceRelationshipDefinition,
   validateAssuranceRelationshipSet,
-} from './relationship-contract.js';
+} from './relationship-contract.ts';
 import { structuredReportingSource } from '../reporting/registry';
 import { deriveRiskRecord } from './risk-rating';
 import type { RiskRating as DerivedRiskRating } from './risk-rating';
