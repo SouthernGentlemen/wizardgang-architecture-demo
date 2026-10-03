@@ -11,7 +11,7 @@ const monitorWorkflow = read('.github/workflows/assurance-monitor.yml');
 const monitorValidator = read('scripts/validate-assurance-operations.mjs');
 const releaseManagement = read('docs/RELEASE-MANAGEMENT.md');
 const deployments = read('docs/history/DEPLOYMENTS.md');
-const repositorySettingsValidator = read('scripts/validate-github-repository-settings.mjs');
+const repositorySettingsValidator = read('scripts/validate-github-repository-settings.ts');
 
 function deploymentRecords(markdown) {
   const headings = [...markdown.matchAll(/^## (DEP-DEMO-\d+)\s*$/gm)];
@@ -69,7 +69,7 @@ describe('DEMO-305 release operations acceptance', () => {
   });
 
   it('checks the committed repository-settings baseline and documents a read-only live comparison', () => {
-    const result = spawnSync(process.execPath, ['scripts/validate-github-repository-settings.mjs'], {
+    const result = spawnSync(process.execPath, ['scripts/validate-github-repository-settings.ts'], {
       encoding: 'utf8',
     });
     expect(result.status, result.stderr).toBe(0);

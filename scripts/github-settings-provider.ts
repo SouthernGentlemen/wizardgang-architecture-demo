@@ -1,4 +1,4 @@
-import { compareGithubRepositorySettings, rulesetPayload } from "./github-settings-policy.mjs";
+import { compareGithubRepositorySettings, rulesetPayload } from "./github-settings-policy.ts";
 
 const API_VERSION = "2026-03-10";
 

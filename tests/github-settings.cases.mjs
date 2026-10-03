@@ -5,12 +5,12 @@ import {
   compareGithubRepositorySettings,
   configuredMergeMethods,
   rulesetPayload,
-} from "../scripts/github-settings-policy.mjs";
+} from "../scripts/github-settings-policy.ts";
 import {
   applyGithubSettings,
   fetchLiveGithubSettings,
   githubApi,
-} from "../scripts/github-settings-provider.mjs";
+} from "../scripts/github-settings-provider.ts";
 
 const expected = JSON.parse(await readFile(new URL("../config/github-repository-settings.json", import.meta.url), "utf8"));
 

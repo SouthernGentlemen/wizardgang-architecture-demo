@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
-import { compareGithubRepositorySettings } from "./github-settings-policy.mjs";
-import { adminToken, fetchLiveGithubSettings } from "./github-settings-provider.mjs";
+import { compareGithubRepositorySettings } from "./github-settings-policy.ts";
+import { adminToken, fetchLiveGithubSettings } from "./github-settings-provider.ts";
 
 const expected = JSON.parse(await readFile(new URL("../config/github-repository-settings.json", import.meta.url), "utf8"));
 try {
