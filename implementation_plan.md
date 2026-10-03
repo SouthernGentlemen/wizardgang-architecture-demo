@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-430 — [BUILD] Port GitHub settings tools
-- Dependency: DEMO-429.
-- Why: Settings-as-code tooling needs the same read/write boundary after conversion.
-- Scope: Convert policy, provider, verify, apply, and local settings validator modules.
-- Non-goals: Do not change required CI names, credential boundaries, release identity, or deployment protection.
-- Acceptance: Read-only verification and bounded apply retain independent re-read behavior.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: scripts/github-settings-policy.mjs; scripts/github-settings-provider.mjs; scripts/verify-github-settings.mjs; scripts/apply-github-settings.mjs; scripts/validate-github-repository-settings.mjs
-
 ### DEMO-431 — [BUILD] Port release and deployment tools
 - Dependency: DEMO-430.
 - Why: Release identity helpers and deployment preflight remain authored MJS.
