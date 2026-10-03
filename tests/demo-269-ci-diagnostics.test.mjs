@@ -3,8 +3,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { createCiValidationCommands } from '../scripts/lib/acceptance-plan.mjs';
-import { runDiagnosticCommands } from '../scripts/lib/ci-diagnostics.mjs';
+import { createCiValidationCommands } from '../scripts/lib/acceptance-plan.ts';
+import { runDiagnosticCommands } from '../scripts/lib/ci-diagnostics.ts';
 import { runGeneratedArtifactParity } from '../scripts/validate-generated-artifacts.ts';
 import { migrationArguments, runCleanLocalMigrations } from '../scripts/validate-migrations.mjs';
 

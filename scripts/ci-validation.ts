@@ -2,8 +2,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
-import { createCiValidationCommands } from './lib/acceptance-plan.mjs';
-import { runDiagnosticCommands } from './lib/ci-diagnostics.mjs';
+import { createCiValidationCommands } from './lib/acceptance-plan.ts';
+import { runDiagnosticCommands } from './lib/ci-diagnostics.ts';
 
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const diagnosticsDir = process.env.CI_DIAGNOSTICS_DIR || '.ci-diagnostics';

@@ -1,6 +1,6 @@
 # CI diagnostics and complete failure evidence
 
-The [`validate` job](../.github/workflows/ci.yml) runs `npm run validate:ci`. [`package.json`](../package.json) owns exact script composition, while [the acceptance plan](../scripts/lib/acceptance-plan.mjs) owns the ordered executable CI steps. The diagnostics wrapper stops at the first non-zero command, preserves that exit code, streams redacted output to the ordinary Actions log, and retains the same complete redacted output in the failure artifact.
+The [`validate` job](../.github/workflows/ci.yml) runs `npm run validate:ci`. [`package.json`](../package.json) owns exact script composition, while [the acceptance plan](../scripts/lib/acceptance-plan.ts) owns the ordered executable CI steps. The diagnostics wrapper stops at the first non-zero command, preserves that exit code, streams redacted output to the ordinary Actions log, and retains the same complete redacted output in the failure artifact.
 
 The site-wide browser command reports the start, completion, and duration of the surviving main audit. Focus, content review, WCAG text spacing, 200%/400% reflow, reduced-motion, and forced-colors checks run inside that same Wrangler/Chromium process and reuse its canonical page/state visits; failures identify the affected path, locale, and audit phase.
 

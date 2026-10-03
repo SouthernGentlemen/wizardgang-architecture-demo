@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
-import { boundedDiagnosticText } from './lib/ci-diagnostics.mjs';
+import { boundedDiagnosticText } from './lib/ci-diagnostics.ts';
 
 const root = process.cwd();
 const diagnosticsDir = process.env.CI_DIAGNOSTICS_DIR || '.ci-diagnostics';
