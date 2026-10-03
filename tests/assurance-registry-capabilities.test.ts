@@ -5,7 +5,7 @@ import {
   assuranceRecordFamilyRegistration,
   resolveAssuranceResourceOwner,
 } from '../src/assurance/record-discovery';
-import { validateAssuranceRelationshipSet } from '../src/assurance/relationship-contract.js';
+import { validateAssuranceRelationshipSet } from '../src/assurance/relationship-contract.ts';
 import {
   assuranceRoutesForDataset,
   validateAssuranceRouteContract,

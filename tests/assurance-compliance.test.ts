@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import registry from '../assurance/registry.json';
 import complianceData from '../assurance/compliance/iso-27001-2022.json';
 import evidenceData from '../assurance/evidence/evidence.json';
-import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
+import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.ts';
 
 const expectedClauseRefs = [
   '4.1', '4.2', '4.3', '4.4', '5.1', '5.2', '5.3', '6.1', '6.1.1', '6.1.2', '6.1.3', '6.2', '6.3',

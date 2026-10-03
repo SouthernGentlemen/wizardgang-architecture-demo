@@ -6,7 +6,7 @@ import {
   assuranceObservedState,
   assurancePublicationDecision,
   resolveAssuranceLifecycle,
-} from '../src/assurance/publication-policy.js';
+} from '../src/assurance/publication-policy.ts';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 
 const baselineCommit = 'c2359f00fc3bac80bfbc2e82369a86f20e522f74';

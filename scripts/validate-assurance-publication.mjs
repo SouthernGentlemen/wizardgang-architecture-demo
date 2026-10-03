@@ -13,7 +13,7 @@ import {
   assurancePublicationDecision,
   disclosureReviewIsPublishable,
   resolveAssuranceLifecycle,
-} from '../src/assurance/publication-policy.js';
+} from '../src/assurance/publication-policy.ts';
 
 const root = process.cwd();
 const errors = [];

@@ -11,7 +11,7 @@ import {
   assuranceRelationshipNames,
   assuranceRelationshipIds,
   validateAssuranceRelationshipSet,
-} from '../../src/assurance/relationship-contract.js';
+} from '../../src/assurance/relationship-contract.ts';
 
 export { assuranceRelationshipIds };
 

@@ -3,7 +3,7 @@ import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:f
 import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { assuranceObservedState } from '../src/assurance/publication-policy.js';
+import { assuranceObservedState } from '../src/assurance/publication-policy.ts';
 
 const repositoryRoot = process.cwd();
 const fixtureRoots: string[] = [];

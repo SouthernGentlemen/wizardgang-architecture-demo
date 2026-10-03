@@ -4,7 +4,7 @@ import {
   readJsonFile,
   requireRegistryResource,
 } from './lib/assurance-registry.mjs';
-import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
+import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.ts';
 
 const root = process.cwd();
 const errors = [];

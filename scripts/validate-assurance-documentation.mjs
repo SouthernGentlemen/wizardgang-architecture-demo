@@ -9,7 +9,7 @@ import {
   ASSURANCE_DOCUMENTATION_SOURCE,
   assuranceRelationshipsForRelation,
   parseAssuranceDocumentationReference,
-} from '../src/assurance/relationship-contract.js';
+} from '../src/assurance/relationship-contract.ts';
 
 const root = process.cwd();
 const errors = [];

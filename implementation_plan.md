@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-425 — [REFACTOR] Port relationship and publication policies to TypeScript
-- Dependency: DEMO-424.
-- Why: The remaining assurance policies split JavaScript implementation from types.
-- Scope: Convert these two modules to typed TS and remove declaration companions.
-- Non-goals: Do not change public functionality, contracts, or provider boundaries.
-- Acceptance: Assurance publication and relationship validation pass with no authored JS under src.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: src/assurance/relationship-contract.js; src/assurance/relationship-contract.d.ts; src/assurance/publication-policy.js; src/assurance/publication-policy.d.ts
-
 ### DEMO-426 — [BUILD] Pin the TypeScript execution path for Node tools
 - Dependency: DEMO-425.
 - Why: Node scripts need a reliable TS runner before conversion.

@@ -1,6 +1,6 @@
 import governanceReferenceData from '../../docs/governance/REFERENCE-REGISTRY.json';
 import { repoUrl, sourceUrl } from '../lib/github';
-import { parseAssuranceDocumentationReference } from './relationship-contract.js';
+import { parseAssuranceDocumentationReference } from './relationship-contract.ts';
 import type { Env } from '../types';
 import { evidenceUsedBy } from './service';
 import type { EvidenceRecord, FreshnessPolicy } from './model';
