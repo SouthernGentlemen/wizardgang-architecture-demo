@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { describe, expect, it } from 'vitest';
-import { validateControlledPullRequestIdentity } from '../scripts/lib/controlled-pr-identity.mjs';
+import { validateControlledPullRequestIdentity } from '../scripts/lib/controlled-pr-identity.ts';
 import { nextLiveReleaseId, validateLiveReleaseIdentity } from '../scripts/lib/live-release-identity.mjs';
 
 const task = (id) => `### ${id} — [BUILD] Queued change\n\n- Dependency: none.\n`;

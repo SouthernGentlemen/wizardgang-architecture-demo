@@ -1,4 +1,4 @@
-import { parseControlledSubject, parsePlanTasks } from './controlled-pr-identity.mjs';
+import { parseControlledSubject, parsePlanTasks } from './controlled-pr-identity.ts';
 
 export const LIVE_RELEASE_MARKER = 'Live-Release: true';
 export const LIVE_RELEASE_FILES = ['package-lock.json', 'package.json'];
