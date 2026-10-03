@@ -23,10 +23,11 @@ describe('DEMO-422 post-merge history recovery', () => {
     expect(history).toContain('does not consume DEMO-423');
   });
 
-  it('keeps DEMO-422 retired and DEMO-423 first in the queue', () => {
+  it('keeps DEMO-422 retired as later implementation work advances the queue', () => {
     const plan = read('implementation_plan.md');
     const headings = [...plan.matchAll(/^### (DEMO-\d{3,}) —/gm)].map((match) => match[1]);
-    expect(headings[0]).toBe('DEMO-423');
+    expect(headings.length).toBeGreaterThan(0);
+    expect(Number(headings[0].slice('DEMO-'.length))).toBeGreaterThan(422);
     expect(headings).not.toContain('DEMO-422');
   });
 

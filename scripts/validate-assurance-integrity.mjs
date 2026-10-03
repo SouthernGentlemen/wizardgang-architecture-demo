@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { evaluateAssuranceObservationWindow } from '../src/assurance/observation-window.js';
+import { evaluateAssuranceObservationWindow } from '../src/assurance/observation-window.ts';
 import {
   assuranceRecordResources,
   assuranceRecordsFromDocument,

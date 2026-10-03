@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import canonicalRisks from '../assurance/risks/risks.json';
 import { listAssuranceRecords } from '../src/assurance/service';
-import { deriveRiskRating, deriveRiskRecord } from '../src/assurance/risk-rating.js';
+import { deriveRiskRating, deriveRiskRecord } from '../src/assurance/risk-rating';
 
 describe('canonical risk rating derivation', () => {
   it('maps every controlled threshold boundary to the expected rating', () => {

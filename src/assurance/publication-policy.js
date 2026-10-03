@@ -1,6 +1,6 @@
-import { evaluateAssuranceObservationWindow } from './observation-window.js';
+import { evaluateAssuranceObservationWindow } from './observation-window.ts';
 
-export { evaluateAssuranceObservationWindow } from './observation-window.js';
+export { evaluateAssuranceObservationWindow } from './observation-window.ts';
 
 export const ASSURANCE_LIFECYCLE_STATES = Object.freeze([
   'Draft',

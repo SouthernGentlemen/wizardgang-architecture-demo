@@ -1,4 +1,4 @@
-import type { AssuranceObservationClock, AssuranceObservationWindowStateName } from './observation-window.js';
+import type { AssuranceObservationClock, AssuranceObservationWindowStateName } from './observation-window';
 
 export type {
   AssuranceObservationClock,
@@ -6,8 +6,8 @@ export type {
   AssuranceObservationWindowInput,
   AssuranceObservationWindowInvalidReason,
   AssuranceObservationWindowStateName,
-} from './observation-window.js';
-export { evaluateAssuranceObservationWindow } from './observation-window.js';
+} from './observation-window';
+export { evaluateAssuranceObservationWindow } from './observation-window';
 
 export type AssuranceLifecycle = 'Draft' | 'Approved' | 'Published' | 'Superseded' | 'Withdrawn';
 export type AssuranceLifecycleSource = 'baseline' | 'explicit' | 'retired';

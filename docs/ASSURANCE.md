@@ -44,7 +44,7 @@ Stable presentation identities for governance registers, objectives, and Stateme
 
 Evidence records keep canonical locators and relationships, not branch-relative presentation URLs. Repository locators are resolved against the exact deployed commit identified by deployment provenance. When the deployed revision is unavailable, presentation reports that provenance as unavailable rather than substituting a branch such as `main`.
 
-Freshness policy, lifecycle state, and deployment provenance are separate concepts. `src/assurance/observation-window.js` is the shared authority for stored observation-window evaluation in runtime presentation and Node validation.
+Freshness policy, lifecycle state, and deployment provenance are separate concepts. `src/assurance/observation-window.ts` is the shared authority for stored observation-window evaluation in runtime presentation and Node validation.
 
 The evidence schema and observation-window implementation own the exact stored-window fields, validity rules, and evaluation states. Missing stored windows remain valid for evidence whose freshness policy requires live observation instead.
 

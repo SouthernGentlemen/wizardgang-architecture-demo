@@ -15,8 +15,8 @@ import {
   validateAssuranceRelationshipSet,
 } from './relationship-contract.js';
 import { structuredReportingSource } from '../reporting/registry';
-import { deriveRiskRecord } from './risk-rating.js';
-import type { RiskRating as DerivedRiskRating } from './risk-rating.js';
+import { deriveRiskRecord } from './risk-rating';
+import type { RiskRating as DerivedRiskRating } from './risk-rating';
 
 export type EvidenceKind = 'source' | 'test' | 'workflow' | 'governance-record' | 'release' | 'live-route' | 'observation';
 export type FreshnessPolicy = 'release-bound' | 'event-driven' | 'observation-bound';
