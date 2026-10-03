@@ -10,7 +10,7 @@ import type {
 } from '../assurance/route-capability';
 import {
   validateAssuranceRouteContract as contractValidateRouteContract,
-} from '../assurance/route-contract.js';
+} from '../assurance/route-contract';
 import {
   createRouteRegistry,
   defineRouteModule,

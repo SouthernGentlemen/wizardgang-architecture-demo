@@ -9,7 +9,7 @@ import {
   assuranceRouteOwnerResource as contractRouteOwnerResource,
   assuranceRoutesForDataset as contractRoutesForDataset,
   validateAssuranceRouteHandlerSupport as contractValidateRouteHandlerSupport,
-} from './route-contract.js';
+} from './route-contract';
 import { reportingOwnership } from '../reporting/registry';
 import { routeUrl } from '../routing/application-routes';
 import type { RouteQuery } from '../routing/route-url';

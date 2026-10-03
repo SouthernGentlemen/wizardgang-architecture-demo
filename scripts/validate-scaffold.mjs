@@ -28,7 +28,7 @@ for (const requiredFile of [
   'src/interfaces/route-capability.ts',
   'src/interfaces/route-capabilities/index.ts',
   'src/assurance/model.ts',
-  'src/assurance/route-contract.js',
+  'src/assurance/route-contract.ts',
   'src/assurance/service.ts',
   'src/assurance/publication.ts',
   'src/assurance/presentation.ts',

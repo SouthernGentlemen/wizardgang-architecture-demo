@@ -7,7 +7,7 @@ import {
   assuranceRecordEntries,
   flattenAssuranceResources as flattenRegistryResources,
   primaryAssuranceDatasetResource,
-} from './record-discovery.js';
+} from './record-discovery';
 import {
   ASSURANCE_DOCUMENTATION_SOURCE,
   assuranceIdentityKey,

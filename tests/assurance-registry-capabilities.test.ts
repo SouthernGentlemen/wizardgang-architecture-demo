@@ -4,13 +4,13 @@ import {
   assuranceRecordEntries,
   assuranceRecordFamilyRegistration,
   resolveAssuranceResourceOwner,
-} from '../src/assurance/record-discovery.js';
+} from '../src/assurance/record-discovery';
 import { validateAssuranceRelationshipSet } from '../src/assurance/relationship-contract.js';
 import {
   assuranceRoutesForDataset,
   validateAssuranceRouteContract,
   validateAssuranceRouteHandlerSupport,
-} from '../src/assurance/route-contract.js';
+} from '../src/assurance/route-contract';
 
 function syntheticReportRegistry() {
   return {

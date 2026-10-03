@@ -16,7 +16,7 @@ import {
   primaryAssuranceDatasetResource,
   requireAssuranceCapabilityResource,
   resolveAssuranceResourceOwner,
-} from '../../src/assurance/record-discovery.js';
+} from '../../src/assurance/record-discovery.ts';
 
 export const ASSURANCE_REGISTRY_PATH = 'assurance/registry.json';
 

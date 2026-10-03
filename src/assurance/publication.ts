@@ -19,7 +19,7 @@ import {
 import {
   assuranceRecordsFromDocument,
   requireAssuranceCapabilityResource,
-} from './record-discovery.js';
+} from './record-discovery';
 import { presentEvidence, type PresentedEvidence } from './presentation';
 import {
   assuranceObservedState,

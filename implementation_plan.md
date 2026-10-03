@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-424 — [REFACTOR] Port discovery and route contracts to TypeScript
-- Dependency: DEMO-423.
-- Why: Record discovery and route contract helpers remain authored JavaScript.
-- Scope: Convert these two modules to TS with explicit types and remove declaration companions.
-- Non-goals: Do not change public functionality, contracts, or provider boundaries.
-- Acceptance: Record IDs, route contracts, and imports retain their behavior.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: src/assurance/record-discovery.js; src/assurance/record-discovery.d.ts; src/assurance/route-contract.js; src/assurance/route-contract.d.ts
-
 ### DEMO-425 — [REFACTOR] Port relationship and publication policies to TypeScript
 - Dependency: DEMO-424.
 - Why: The remaining assurance policies split JavaScript implementation from types.
