@@ -4,7 +4,7 @@ import { spawnSync } from 'node:child_process';
 import {
   loadAssuranceRecordInventory,
   loadAssuranceRegistry,
-} from './lib/assurance-registry.mjs';
+} from './lib/assurance-registry.ts';
 import {
   ASSURANCE_DOCUMENTATION_SOURCE,
   assuranceRelationshipsForRelation,

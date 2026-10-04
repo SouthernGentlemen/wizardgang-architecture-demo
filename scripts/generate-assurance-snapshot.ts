@@ -7,7 +7,7 @@ import {
   assuranceRecordsFromDocument,
   canonicalAssuranceDatasetPaths,
   loadAssuranceRegistry,
-} from './lib/assurance-registry.mjs';
+} from './lib/assurance-registry.ts';
 
 const root = process.cwd();
 const args = process.argv.slice(2);

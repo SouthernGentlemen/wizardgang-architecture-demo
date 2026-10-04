@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-432 — [BUILD] Port assurance registry tooling
-- Dependency: DEMO-431.
-- Why: Registry and relationship validators share one schema-loading boundary.
-- Scope: Convert registry, relationship, schema, and core assurance validators to TS.
-- Non-goals: Do not change required CI names, credential boundaries, release identity, or deployment protection.
-- Acceptance: Registry discovery and schema validation return equivalent results and messages.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: scripts/lib/assurance-registry.mjs; scripts/lib/assurance-relationships.mjs; scripts/lib/assurance-validation.mjs; scripts/lib/json-schema.mjs; scripts/validate-assurance-registry.mjs; scripts/validate-assurance.mjs
-
 ### DEMO-433 — [BUILD] Port assurance compliance validators
 - Dependency: DEMO-432.
 - Why: Framework validation is a separate bounded assurance family.

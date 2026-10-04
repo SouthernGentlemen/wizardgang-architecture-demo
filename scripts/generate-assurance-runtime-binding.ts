@@ -11,12 +11,12 @@ import {
   readJsonFile,
   requireAssuranceCapabilityResource,
   resolveAssuranceResourceOwner,
-} from './lib/assurance-registry.mjs';
-import { createAssuranceSchemaLoader } from './lib/assurance-validation.mjs';
+} from './lib/assurance-registry.ts';
+import { createAssuranceSchemaLoader } from './lib/assurance-validation.ts';
 import {
   collectJsonSchemaDependencies,
   resolveJsonSchemaProperty,
-} from './lib/json-schema.mjs';
+} from './lib/json-schema.ts';
 import { RISK_RATING_VALUES } from '../src/assurance/risk-rating.ts';
 
 export const RUNTIME_BINDING_PATH = 'src/assurance/generated/registry-bindings.ts';

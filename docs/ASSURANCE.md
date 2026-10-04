@@ -8,7 +8,7 @@ The `assurance/**` tree owns current structured assurance state. It is the canon
 
 Schemas under `contracts/assurance/**` define the structural boundary for registered assurance data. Validation keeps registry entries, schemas, files, and canonical assurance JSON aligned.
 
-Node tooling discovers controlled resources through `scripts/lib/assurance-registry.mjs`. Worker code uses the generated registry binding rather than dynamic filesystem discovery. `scripts/generate-assurance-runtime-binding.mjs` emits `src/assurance/generated/registry-bindings.ts` and the lifecycle baseline membership artifact from registry-declared runtime resources, and validation requires those generated artifacts to match current structured sources and reachable schema dependencies.
+Node tooling discovers controlled resources through `scripts/lib/assurance-registry.ts`. Worker code uses the generated registry binding rather than dynamic filesystem discovery. `scripts/generate-assurance-runtime-binding.mjs` emits `src/assurance/generated/registry-bindings.ts` and the lifecycle baseline membership artifact from registry-declared runtime resources, and validation requires those generated artifacts to match current structured sources and reachable schema dependencies.
 
 ## Runtime binding and canonical record discovery
 

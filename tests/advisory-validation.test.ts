@@ -85,7 +85,7 @@ describe('canonical advisory validation', () => {
     const root = createFixtureRoot();
     installAdvisoryFixture(root, 'valid-nonempty');
     expectPassed(run(root, 'scripts/generate-assurance-runtime-binding.ts'));
-    expectPassed(run(root, 'scripts/validate-assurance-registry.mjs'));
+    expectPassed(run(root, 'scripts/validate-assurance-registry.ts'));
     expectPassed(run(root, 'scripts/validate-advisories.mjs'));
     expectPassed(run(root, 'scripts/validate-assurance-integrity.mjs'));
   });

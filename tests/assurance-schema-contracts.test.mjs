@@ -10,13 +10,13 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { deriveRuntimeSchemaDependencyDigests } from '../scripts/generate-assurance-runtime-binding.ts';
-import { createAssuranceSchemaLoader } from '../scripts/lib/assurance-validation.mjs';
+import { createAssuranceSchemaLoader } from '../scripts/lib/assurance-validation.ts';
 import {
   collectJsonSchemaDependencies,
   createFileSchemaLoader,
   resolveJsonSchemaProperty,
   validateJsonSchema,
-} from '../scripts/lib/json-schema.mjs';
+} from '../scripts/lib/json-schema.ts';
 
 const root = process.cwd();
 const loadSchema = createFileSchemaLoader(root);
@@ -76,7 +76,7 @@ function validateAdvisory(value) {
 
 describe('shared assurance schema contracts', () => {
   it('validates registered datasets through repository-relative shared schema references', () => {
-    const result = spawnSync(process.execPath, ['scripts/validate-assurance-registry.mjs'], {
+    const result = spawnSync(process.execPath, ['scripts/validate-assurance-registry.ts'], {
       cwd: root,
       encoding: 'utf8',
     });

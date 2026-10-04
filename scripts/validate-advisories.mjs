@@ -5,13 +5,13 @@ import {
   loadAssuranceRegistry,
   primaryRegistryDataset,
   readJsonFile,
-} from './lib/assurance-registry.mjs';
+} from './lib/assurance-registry.ts';
 import {
   recordRelationshipIdentity,
   registeredRelationshipFamily,
   validateRelationshipSet,
-} from './lib/assurance-relationships.mjs';
-import { validateRegisteredAssuranceResource } from './lib/assurance-validation.mjs';
+} from './lib/assurance-relationships.ts';
+import { validateRegisteredAssuranceResource } from './lib/assurance-validation.ts';
 
 function hasAnnotatedReleaseTag(root, release) {
   const result = spawnSync('git', ['cat-file', '-t', `refs/tags/${release}`], {

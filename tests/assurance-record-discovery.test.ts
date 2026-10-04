@@ -139,7 +139,7 @@ describe('registry-driven assurance record discovery', () => {
     const generated = run(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts');
     expect(generated.status, output(generated)).toBe(0);
     expect(readFileSync(join(fixtureRoot, 'src/assurance/generated/registry-bindings.ts'), 'utf8')).toContain('"findings.demo-132"');
-    const validated = run(fixtureRoot, 'scripts/validate-assurance-registry.mjs');
+    const validated = run(fixtureRoot, 'scripts/validate-assurance-registry.ts');
     expect(validated.status, output(validated)).toBe(0);
   });
 
@@ -183,7 +183,7 @@ describe('registry-driven assurance record discovery', () => {
     risks.capabilities = risks.capabilities.filter((capability: string) => capability !== 'runtime');
     writeJson(fixtureRoot, 'assurance/registry.json', registry);
     expectRejected(
-      run(fixtureRoot, 'scripts/validate-assurance-registry.mjs'),
+      run(fixtureRoot, 'scripts/validate-assurance-registry.ts'),
       'risks records capability requires runtime capability for shared Worker/Node record discovery',
     );
   });

@@ -11,11 +11,11 @@ import {
   loadAssuranceRegistry,
   readJsonFile,
   requireAssuranceCapabilityResource,
-} from './lib/assurance-registry.mjs';
+} from './lib/assurance-registry.ts';
 import {
   validateAssuranceSchemaValue,
   validateRegisteredAssuranceResource,
-} from './lib/assurance-validation.mjs';
+} from './lib/assurance-validation.ts';
 import { validateAssuranceRouteContract } from '../src/assurance/route-contract.ts';
 import { renderRuntimeBinding, RUNTIME_BINDING_PATH } from './generate-assurance-runtime-binding.ts';
 

@@ -102,7 +102,7 @@ describe('registry-driven assurance validation fixtures', () => {
     registerSyntheticReportFamily(fixtureRoot);
 
     expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts'));
-    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-integrity.mjs'));
     expect(readFileSync(join(fixtureRoot, 'src/assurance/generated/registry-bindings.ts'), 'utf8')).toContain('"report-register-v2"');
   });
@@ -114,7 +114,7 @@ describe('registry-driven assurance validation fixtures', () => {
     });
 
     expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts'));
-    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.ts'));
     expectRejected(
       runScript(fixtureRoot, 'scripts/validate-assurance-integrity.mjs'),
       'unresolved evidence relationship EVD-MISSING-999',
@@ -152,7 +152,7 @@ describe('registry-driven assurance validation fixtures', () => {
     writeJson(fixtureRoot, registryPath, registry);
 
     expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts'));
-    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-iso27001-compliance.mjs'));
   });
 });

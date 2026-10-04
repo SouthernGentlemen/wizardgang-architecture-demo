@@ -3,7 +3,7 @@ import {
   loadAssuranceRegistry,
   readJsonFile,
   requireRegistryResource,
-} from './assurance-registry.mjs';
+} from './assurance-registry.ts';
 import { assuranceRelationshipIds } from '../../src/assurance/relationship-contract.ts';
 
 const ISO_POSTURE_STATUSES = ['pass', 'partial', 'gap', 'not-applicable'];

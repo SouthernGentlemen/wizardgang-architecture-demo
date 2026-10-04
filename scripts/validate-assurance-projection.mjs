@@ -4,7 +4,7 @@ import {
   ASSURANCE_REGISTRY_PATH,
   flattenAssuranceRegistry,
   loadAssuranceRegistry,
-} from './lib/assurance-registry.mjs';
+} from './lib/assurance-registry.ts';
 
 const root = process.cwd();
 const read = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), 'utf8'));
