@@ -146,7 +146,7 @@ describe('registry-driven assurance record discovery', () => {
   it('rejects duplicate IDs introduced by an additional registered risk partition', () => {
     const fixtureRoot = createFixture();
     addRiskPartition(fixtureRoot, () => {});
-    expectRejected(run(fixtureRoot, 'scripts/validate-assurance-integrity.mjs'), 'duplicate public ID SEC-RISK-001');
+    expectRejected(run(fixtureRoot, 'scripts/validate-assurance-integrity.ts'), 'duplicate public ID SEC-RISK-001');
   });
 
   it('rejects unresolved relationships introduced by an additional registered risk partition', () => {
@@ -156,7 +156,7 @@ describe('registry-driven assurance record discovery', () => {
       record.title = 'Unresolved relationship fixture';
       setRelationshipTargets(record, 'evidence', 'github.structured-records.evidence', ['EVD-SRC-999']);
     });
-    expectRejected(run(fixtureRoot, 'scripts/validate-assurance-integrity.mjs'), 'unresolved evidence relationship EVD-SRC-999');
+    expectRejected(run(fixtureRoot, 'scripts/validate-assurance-integrity.ts'), 'unresolved evidence relationship EVD-SRC-999');
   });
 
   it('requires lifecycle coverage for records introduced through an additional registered partition', () => {
@@ -171,7 +171,7 @@ describe('registry-driven assurance record discovery', () => {
       ASSURANCE_PREVIOUS_DIR: repositoryRoot,
     };
     expectRejected(
-      run(fixtureRoot, 'scripts/validate-assurance-lifecycle.mjs', [], env),
+      run(fixtureRoot, 'scripts/validate-assurance-lifecycle.ts', [], env),
       'SEC-RISK-999: new public assurance record requires explicit lifecycle and disclosure-review metadata',
     );
   });

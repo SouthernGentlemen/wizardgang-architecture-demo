@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-434 — [BUILD] Port assurance lifecycle validators
-- Dependency: DEMO-433.
-- Why: Lifecycle, advisory, publication, and operations checks form a separate policy boundary.
-- Scope: Convert lifecycle history helper and the advisory, integrity, lifecycle, publication, and operations validators.
-- Non-goals: Do not change required CI names, credential boundaries, release identity, or deployment protection.
-- Acceptance: Immutable IDs, source approvals, disclosure, and operational checks remain unchanged.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: scripts/lib/assurance-lifecycle-history.mjs; scripts/validate-advisories.mjs; scripts/validate-assurance-integrity.mjs; scripts/validate-assurance-lifecycle.mjs; scripts/validate-assurance-publication.mjs; scripts/validate-assurance-operations.mjs
-
 ### DEMO-435 — [BUILD] Port security and locale validators
 - Dependency: DEMO-434.
 - Why: Secret scanning and locale/governance checks are distinct from release tools.

@@ -138,7 +138,7 @@ describe('assurance registry completeness and schema enforcement', () => {
     const validation = run(fixtureRoot, 'scripts/validate-assurance-registry.ts');
     expect(validation.status, output(validation)).toBe(0);
 
-    const publication = run(fixtureRoot, 'scripts/validate-assurance-publication.mjs');
+    const publication = run(fixtureRoot, 'scripts/validate-assurance-publication.ts');
     expect(publication.status, output(publication)).toBe(0);
 
     const build = runNpm(fixtureRoot, ['run', 'build']);
@@ -204,7 +204,7 @@ describe('assurance registry completeness and schema enforcement', () => {
   });
 
   it('routes lifecycle and integrity validation through the shared registry discovery layer', () => {
-    for (const script of ['scripts/validate-assurance-lifecycle.mjs', 'scripts/validate-assurance-integrity.mjs']) {
+    for (const script of ['scripts/validate-assurance-lifecycle.ts', 'scripts/validate-assurance-integrity.ts']) {
       const source = readFileSync(join(repositoryRoot, script), 'utf8');
       expect(source).toContain("from './lib/assurance-registry.ts'");
       expect(source).not.toContain("'assurance/compliance/iso-42001-2023.json'");

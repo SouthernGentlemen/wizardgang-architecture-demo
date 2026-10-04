@@ -47,7 +47,7 @@ function writeJson(root: string, relativePath: string, value: unknown): void {
 }
 
 function runLifecycle(root: string): SpawnSyncReturns<string> {
-  return spawnSync(process.execPath, ['scripts/validate-assurance-lifecycle.mjs'], {
+  return spawnSync(process.execPath, ['scripts/validate-assurance-lifecycle.ts'], {
     cwd: root,
     encoding: 'utf8',
     env: {
@@ -113,7 +113,7 @@ describe('normalized assurance lifecycle history', () => {
     expect(result.status, output(result)).toBe(0);
     expect(result.stdout).toContain('frozen historical IDs verified through the normalized migration bridge');
 
-    const historySource = readFileSync('scripts/lib/assurance-lifecycle-history.mjs', 'utf8');
+    const historySource = readFileSync('scripts/lib/assurance-lifecycle-history.ts', 'utf8');
     expect(historySource).not.toContain('LEGACY_V014');
     expect(historySource).not.toContain('decodeLegacyIso');
     expect(historySource).not.toContain('collectHistoricalAssuranceSnapshot');
