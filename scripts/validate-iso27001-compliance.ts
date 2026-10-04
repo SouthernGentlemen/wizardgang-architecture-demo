@@ -1,4 +1,4 @@
-import { finishIsoValidation, validateNormalizedIso } from './lib/validate-normalized-iso.mjs';
+import { finishIsoValidation, validateNormalizedIso } from './lib/validate-normalized-iso.ts';
 
 const expectedClauseRefs = [
   '4.1', '4.2', '4.3', '4.4', '5.1', '5.2', '5.3', '6.1', '6.1.1', '6.1.2', '6.1.3', '6.2', '6.3',

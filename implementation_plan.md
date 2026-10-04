@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-433 — [BUILD] Port assurance compliance validators
-- Dependency: DEMO-432.
-- Why: Framework validation is a separate bounded assurance family.
-- Scope: Convert normalized ISO helper and ISO, WCAG, documentation, and projection validators.
-- Non-goals: Do not change required CI names, credential boundaries, release identity, or deployment protection.
-- Acceptance: All published compliance IDs, links, and statuses validate identically.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: scripts/lib/validate-normalized-iso.mjs; scripts/validate-iso27001-compliance.mjs; scripts/validate-iso42001-compliance.mjs; scripts/validate-wcag-compliance.mjs; scripts/validate-assurance-documentation.mjs; scripts/validate-assurance-projection.mjs
-
 ### DEMO-434 — [BUILD] Port assurance lifecycle validators
 - Dependency: DEMO-433.
 - Why: Lifecycle, advisory, publication, and operations checks form a separate policy boundary.

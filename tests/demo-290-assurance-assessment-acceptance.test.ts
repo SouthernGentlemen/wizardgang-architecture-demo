@@ -93,7 +93,7 @@ describe('DEMO-290 assurance assessment acceptance', () => {
       if (record.kind === 'clause') expect(record.status, record.id + ': clause applicability').not.toBe('not-applicable');
     }
 
-    const documentationValidation = execFileSync(process.execPath, ['scripts/validate-assurance-documentation.mjs'], {
+    const documentationValidation = execFileSync(process.execPath, ['scripts/validate-assurance-documentation.ts'], {
       cwd: process.cwd(),
       encoding: 'utf8',
     });

@@ -181,9 +181,9 @@ describe('registry-driven assurance semantic validation', () => {
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-integrity.mjs'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance.ts'));
-    expectPassed(runScript(fixtureRoot, 'scripts/validate-iso27001-compliance.mjs'));
-    expectPassed(runScript(fixtureRoot, 'scripts/validate-iso42001-compliance.mjs'));
-    expectPassed(runScript(fixtureRoot, 'scripts/validate-wcag-compliance.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/validate-iso27001-compliance.ts'));
+    expectPassed(runScript(fixtureRoot, 'scripts/validate-iso42001-compliance.ts'));
+    expectPassed(runScript(fixtureRoot, 'scripts/validate-wcag-compliance.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-publication.mjs'));
   });
 
@@ -304,7 +304,7 @@ describe('registry-driven assurance semantic validation', () => {
 
     expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.ts'));
-    expectPassed(runScript(fixtureRoot, 'scripts/validate-iso27001-compliance.mjs'));
-    expectPassed(runScript(fixtureRoot, 'scripts/validate-wcag-compliance.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/validate-iso27001-compliance.ts'));
+    expectPassed(runScript(fixtureRoot, 'scripts/validate-wcag-compliance.ts'));
   });
 });
