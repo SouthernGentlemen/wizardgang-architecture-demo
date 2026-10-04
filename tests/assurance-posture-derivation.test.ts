@@ -76,7 +76,7 @@ describe('canonical assurance posture derivation', () => {
     changed.status = 'pass';
     writeJson(root, dataPath, data);
 
-    expectPassed(run(root, 'scripts/validate-iso27001-compliance.mjs'));
+    expectPassed(run(root, 'scripts/validate-iso27001-compliance.ts'));
     const after = postureCounts(data);
     expect(after.pass).toBe(before.pass + 1);
     expect(after.partial).toBe(before.partial - 1);
@@ -93,7 +93,7 @@ describe('canonical assurance posture derivation', () => {
     changed.status = 'certified';
     changed.applicability = 'applicable';
     writeJson(root, dataPath, data);
-    expectRejected(run(root, 'scripts/validate-iso27001-compliance.mjs'), 'unsupported normalized status certified');
+    expectRejected(run(root, 'scripts/validate-iso27001-compliance.ts'), 'unsupported normalized status certified');
   });
 
   it('still rejects unsupported framework claims', () => {
@@ -103,7 +103,7 @@ describe('canonical assurance posture derivation', () => {
     expect(resource).toBeDefined();
     resource.framework.qualification = 'Certified and formally conformant.';
     writeJson(root, 'assurance/registry.json', registry);
-    expectRejected(run(root, 'scripts/validate-iso27001-compliance.mjs'), 'qualification must avoid certification/conformance claims');
+    expectRejected(run(root, 'scripts/validate-iso27001-compliance.ts'), 'qualification must avoid certification/conformance claims');
   });
 
   it('retains approval provenance as a required authorization control without duplicating its current values', () => {
@@ -112,6 +112,6 @@ describe('canonical assurance posture derivation', () => {
     const data = readJson(root, dataPath);
     delete data.sourceSoa.approval.mergeCommit;
     writeJson(root, dataPath, data);
-    expectRejected(run(root, 'scripts/validate-iso27001-compliance.mjs'), 'approved sourceSoa must retain pull-request and merge-commit provenance');
+    expectRejected(run(root, 'scripts/validate-iso27001-compliance.ts'), 'approved sourceSoa must retain pull-request and merge-commit provenance');
   });
 });

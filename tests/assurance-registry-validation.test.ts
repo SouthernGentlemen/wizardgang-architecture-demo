@@ -153,6 +153,6 @@ describe('registry-driven assurance validation fixtures', () => {
 
     expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.ts'));
-    expectPassed(runScript(fixtureRoot, 'scripts/validate-iso27001-compliance.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/validate-iso27001-compliance.ts'));
   });
 });
