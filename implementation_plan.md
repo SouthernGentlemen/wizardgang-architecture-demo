@@ -103,14 +103,14 @@ Each task is one bounded controlled delivery. If its listed scope proves too lar
 - Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
 - Authorities: .github/workflows/release.yml; scripts/lib/exact-tag-release.mjs; docs/RELEASE-MANAGEMENT.md
 
-### DEMO-443 — [BUILD] Move Deploy workflow logic to TypeScript
+### DEMO-443 — [BUILD] Port the interim Deploy workflow logic to TypeScript
 - Dependency: DEMO-442.
-- Why: Deploy workflow contains several inline JavaScript provider and identity checks.
-- Scope: Move only deploy.yml application logic into typed scripts while keeping preflight before mutation and post-deploy verification.
-- Non-goals: Do not change required CI names, credential boundaries, release identity, or deployment protection.
+- Why: deploy.yml still carries inline JavaScript, which DEMO-452 forbids. In DEMO-459, baseline's reusable deploy-worker.yml replaces this workflow, so this is an interim port.
+- Scope: Move only deploy.yml's inline application logic into typed scripts, unchanged in behaviour, keeping preflight before mutation and post-deploy verification. Do not port anything baseline's deploy-worker.yml and platform/deploy/verify.mjs already provide (the tag-to-package identity, 100% traffic and /version.json checks) into new demo features. DEMO-459 deletes them.
+- Non-goals: Do not change required CI names, credential boundaries, release identity, or deployment protection. Do not add deploy features.
 - Acceptance: No inline authored JavaScript remains in deploy.yml; protected deployment checks and permissions remain equivalent.
 - Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: .github/workflows/deploy.yml; scripts/verify-cloudflare-deployment.mjs; docs/RELEASE-MANAGEMENT.md
+- Authorities: .github/workflows/deploy.yml; scripts/verify-cloudflare-deployment.mjs; docs/RELEASE-MANAGEMENT.md; Wizard-Gang/baseline .github/workflows/deploy-worker.yml and platform/deploy/README.md
 
 ### DEMO-444 — [TEST] Port assurance contract tests to TypeScript
 - Dependency: DEMO-443.
@@ -192,3 +192,48 @@ Each task is one bounded controlled delivery. If its listed scope proves too lar
 - Acceptance: No authored executable .js, .mjs, or .cjs remains; guard fails on a new one; check and required CI pass.
 - Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
 - Authorities: src/; scripts/; tests/; .github/workflows/; package.json; docs/REPOSITORY-BOUNDARIES.md
+
+### DEMO-455 — [SEC] Normalize the demo's Worker secrets to the baseline registry
+- Dependency: DEMO-452; Wizard-Gang/baseline BASE-028 merged. Each merge deploys automatically, so the owner sets every new name from baseline docs/SECRETS-RUNBOOK.md before this merges, and deletes the old names after the release verifies.
+- Why: Baseline config/secrets.json is the one registry for every WizardGang secret. The demo stores public values as secrets, gives one name to three different credentials, and keeps three app keys that the platform derives from WG_SESSION_KEY.
+- Scope: Vendor baseline platform/ verbatim from a merged commit, with platform/vendor.lock.json. Rename CLOUDFLARE_API_TOKEN to CLOUDFLARE_BILLING_TOKEN, WEBHOOK_DEMO_SECRET to DEMO_WEBHOOK_SECRET, and the three OAuth client secrets to GITHUB_, GOOGLE_ and MICROSOFT_OAUTH_CLIENT_SECRET. Read GITHUB_, GOOGLE_ and MICROSOFT_OAUTH_CLIENT_ID, MICROSOFT_TENANT_ID, SAML_IDP_CERT, SAML_IDP_ISSUER and SAML_SSO_URL as wrangler vars. Replace DEMO_SESSION_SECRET, IDENTITY_SESSION_SECRET and IDENTITY_AUDIT_HMAC_SECRET with deriveKey labels demo-session, identity-session and identity-audit over a Secrets Store WG_SESSION_KEY binding. Make config/worker-secrets.json and .dev.vars.example match the registry. Register or remove the CLOUDFLARE_DO_NAMESPACE production variable, and remove the deleted preview R2 bucket from wrangler.jsonc. SAML stays supported.
+- Non-goals: No GitHub App (DEMO-456), shell adoption (DEMO-459), data move or Worker rename.
+- Acceptance: No old secret name is read; the worker-secret check matches the registry; derived keys are stable per label; identity sign-in works with the renamed values and SAML is enabled once its vars are set; existing demo sessions are signed out once.
+- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
+- Authorities: Wizard-Gang/baseline config/secrets.json, config/cloudflare.json, platform/wg-edge/ and docs/SECRETS-RUNBOOK.md; config/worker-secrets.json; src/types.ts
+
+### DEMO-456 — [SEC] Replace the demo's GitHub tokens with the wg-github-app App
+- Dependency: DEMO-455. The owner creates wg-github-app with minimum permissions from baseline docs/SECRETS-RUNBOOK.md and sets GITHUB_APP_ID and GITHUB_APP_PRIVATE_KEY (PKCS#8) on the Worker and in a git-demo environment before this merges.
+- Why: Four personal GitHub tokens (GITHUB_DEMO_TOKEN, GITHUB_READ_TOKEN, the never-set GITHUB_REPORTING_WRITE_TOKEN, and the Actions secret GIT_DEMO_PR_TOKEN) serve one integration.
+- Scope: Worker GitHub reads and writes use githubAppToken from the vendored wg-edge with per-call least permissions, and reporting issue updates are enabled through the App. git-demo.yml runs in a git-demo environment and mints an installation token from the App instead of reading GIT_DEMO_PR_TOKEN. Remove the four token names from code, config, examples and docs.
+- Non-goals: No other workflow or permission change.
+- Acceptance: The Git demo opens its pull request and reporting reads and writes succeed through the App; no personal token name remains; the old secrets are deleted after release.
+- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
+- Authorities: Wizard-Gang/baseline config/secrets.json, platform/wg-edge/README.md and docs/SECRETS-RUNBOOK.md; .github/workflows/git-demo.yml; src/lib/git-demo.ts; src/reporting/github.ts
+
+### DEMO-457 — [OPS] Move the repository to Wizard-Gang
+- Dependency: DEMO-456. A baseline task updates the demo's repository in config/cloudflare.json and config/secrets.json in the same window.
+- Why: Owner default: all four deploying repositories share the Wizard-Gang org's rulesets before the demo's Phase 4 deploy.
+- Scope: The owner transfers the repository to Wizard-Gang. Update the committed repository identity, settings-as-code, links, badges, workflow references and documentation; re-verify rulesets, environments, secrets and variables live after the transfer.
+- Non-goals: No product change.
+- Acceptance: The repository is Wizard-Gang/wizardgang-architecture-demo with identical protection, environments, secrets and variables; npm run check and the settings verifier pass against the new identity.
+- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; live settings verification; exact-head PR CI and merged-main CI.
+- Authorities: config/github-repository-settings.json; AGENTS.md; Wizard-Gang/baseline config/cloudflare.json and config/secrets.json
+
+### DEMO-458 — [DB] Move demo data to the shared records and events tables and the shared R2 bucket
+- Dependency: DEMO-457.
+- Why: Baseline owns the only schema for D1 wizardgang. The demo's own demo-blob migrations are the last reason for its separate deploy token.
+- Scope: Map the useful demo-blob data onto records and events with TTLs through the vendored wg-edge storage helpers (WG_DB, WG_R2, WG_APP demo), dropping the five-minute health history beyond its TTL. Read and write R2 objects under demo/, with uploads under demo/uploads/ (1-day lifecycle). Delete the demo's migrations directory and its d1 migrations apply step. Provide an owner-run copy step for any rows worth keeping.
+- Non-goals: No Worker rename or shell adoption.
+- Acceptance: The demo reads and writes only records, events and demo/ objects; no demo DDL remains; labs and reporting behave as before with TTLs.
+- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
+- Authorities: Wizard-Gang/baseline platform/migrations/0001_universal.sql, platform/wg-edge/README.md and config/cloudflare.json; migrations/; wrangler.jsonc
+
+### DEMO-459 — [OPS] Become the demo Worker on the shared shell and baseline deploy workflow
+- Dependency: DEMO-458.
+- Why: Phase 4 cut-over: the Worker becomes demo on baseline's shell, conforming config and single deploy path.
+- Scope: Make wrangler.jsonc conforming for demo: name and WG_APP demo, custom domain demo.wizardgang.ai, the shared compatibility settings, DemoCoordinator and the */5 cron, WG_DB by the UUID database_id from runbook step 3.2, WG_R2, and Secrets Store bindings. The entry uses createEdge, with WG_OPS_TOKEN's operator gate replacing DEMO_ADMIN_USER and DEMO_ADMIN_PASSWORD. release.yml calls Wizard-Gang/baseline deploy-worker.yml pinned to a merged commit, and deploy.yml with its scripts is deleted. Release the cut-over; DemoCoordinator holds only a counter and starts fresh.
+- Non-goals: No product feature change.
+- Acceptance: node platform/conformance/cli.mjs pin and wrangler --worker demo pass; https://demo.wizardgang.ai/version.json reports demo at the release; baseline npm run verify:cloudflare shows no demo drift. Owner follow-up from baseline runbooks: retire wizardgang-architecture-demo (R3), demo-blob and wizardgang-demo-r2 (R2), DEMO_ADMIN_* and the old runtime names; revoke wg-cloudflare-demo so the demo takes wg-cloudflare-deploy; delete the production secret CLOUDFLARE_ACCOUNT_ID.
+- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI, merged-main CI and the deploy run's traffic and /version.json evidence.
+- Authorities: Wizard-Gang/baseline config/cloudflare.json, platform/, .github/workflows/deploy-worker.yml and docs/CLOUDFLARE-RUNBOOK.md; wrangler.jsonc; .github/workflows/release.yml
