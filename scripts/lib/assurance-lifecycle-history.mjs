@@ -3,7 +3,7 @@ import {
   assuranceRecordResources,
   assuranceRecordsFromDocument,
   flattenAssuranceRegistry,
-} from './assurance-registry.mjs';
+} from './assurance-registry.ts';
 
 function message(error) {
   return error instanceof Error ? error.message : String(error);

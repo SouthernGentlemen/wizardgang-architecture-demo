@@ -4,7 +4,7 @@ import {
   flattenAssuranceRegistry,
   primaryRegistryDataset,
   readJsonFile,
-} from './assurance-registry.mjs';
+} from './assurance-registry.ts';
 import {
   assuranceIdentityKey,
   assuranceRelationshipDefinition,

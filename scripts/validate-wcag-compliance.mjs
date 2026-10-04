@@ -3,7 +3,7 @@ import {
   loadAssuranceRegistry,
   readJsonFile,
   requireRegistryResource,
-} from './lib/assurance-registry.mjs';
+} from './lib/assurance-registry.ts';
 import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.ts';
 
 const root = process.cwd();

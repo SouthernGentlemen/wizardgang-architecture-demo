@@ -122,7 +122,7 @@ describe('registry-driven assurance runtime indexes', () => {
 
     const generated = run(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts');
     expect(generated.status, output(generated)).toBe(0);
-    const validated = run(fixtureRoot, 'scripts/validate-assurance-registry.mjs');
+    const validated = run(fixtureRoot, 'scripts/validate-assurance-registry.ts');
     expect(validated.status, output(validated)).toBe(0);
 
     writeFileSync(join(fixtureRoot, 'tests/demo-143-synthetic-runtime.test.ts'), `

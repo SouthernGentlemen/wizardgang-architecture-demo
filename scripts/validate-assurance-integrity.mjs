@@ -7,12 +7,12 @@ import {
   canonicalAssuranceDatasetPaths,
   flattenAssuranceRegistry,
   loadAssuranceRegistry,
-} from './lib/assurance-registry.mjs';
+} from './lib/assurance-registry.ts';
 import {
   recordRelationshipIdentity,
   registeredRelationshipTargets,
   validateRelationshipSet,
-} from './lib/assurance-relationships.mjs';
+} from './lib/assurance-relationships.ts';
 
 const root = process.cwd();
 const nowValue = process.env.ASSURANCE_VALIDATION_NOW ?? new Date().toISOString();

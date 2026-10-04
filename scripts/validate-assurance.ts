@@ -5,7 +5,7 @@ import {
   loadAssuranceRegistry,
   primaryRegistryDataset,
   readJsonFile,
-} from './lib/assurance-registry.mjs';
+} from './lib/assurance-registry.ts';
 import { deriveRiskRecord } from '../src/assurance/risk-rating.ts';
 
 const root = process.cwd();

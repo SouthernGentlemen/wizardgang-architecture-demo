@@ -178,9 +178,9 @@ describe('registry-driven assurance semantic validation', () => {
     for (const resource of affected) approveResourceRevision(fixtureRoot, resource.resourceId, resource.path);
 
     expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts'));
-    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-integrity.mjs'));
-    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-iso27001-compliance.mjs'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-iso42001-compliance.mjs'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-wcag-compliance.mjs'));
@@ -257,7 +257,7 @@ describe('registry-driven assurance semantic validation', () => {
     const evidence = readJson(evidenceFixture, evidencePartition);
     evidence.records[0].locator.repositoryPath = 'docs/fixture-does-not-exist.md';
     writeJson(evidenceFixture, evidencePartition, evidence);
-    expectRejected(runScript(evidenceFixture, 'scripts/validate-assurance.mjs'), 'repository path does not exist');
+    expectRejected(runScript(evidenceFixture, 'scripts/validate-assurance.ts'), 'repository path does not exist');
 
     const riskFixture = createFixture();
     const riskPartition = 'assurance/risks/security-risks-partition.json';
@@ -265,12 +265,12 @@ describe('registry-driven assurance semantic validation', () => {
     const risks = readJson(riskFixture, riskPartition);
     risks.records[0].framework = 'ai';
     writeJson(riskFixture, riskPartition, risks);
-    expectRejected(runScript(riskFixture, 'scripts/validate-assurance.mjs'), 'framework must match AI-RISK prefix');
+    expectRejected(runScript(riskFixture, 'scripts/validate-assurance.ts'), 'framework must match AI-RISK prefix');
 
     risks.records[0].framework = 'security';
     risks.records[0].residual.score = 0;
     writeJson(riskFixture, riskPartition, risks);
-    expectRejected(runScript(riskFixture, 'scripts/validate-assurance.mjs'), 'risk score cannot derive a canonical rating');
+    expectRejected(runScript(riskFixture, 'scripts/validate-assurance.ts'), 'risk score cannot derive a canonical rating');
   });
 
   it('follows registry-owned ISO and WCAG data/schema paths after relocation', () => {
@@ -303,7 +303,7 @@ describe('registry-driven assurance semantic validation', () => {
     writeJson(fixtureRoot, 'assurance/registry.json', registry);
 
     expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts'));
-    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-iso27001-compliance.mjs'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-wcag-compliance.mjs'));
   });

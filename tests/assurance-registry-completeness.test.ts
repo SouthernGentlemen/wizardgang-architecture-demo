@@ -58,7 +58,7 @@ afterEach(() => {
 
 describe('assurance registry completeness and schema enforcement', () => {
   it('registers every canonical assurance JSON file and validates every registered dataset against its declared schema', () => {
-    const result = run(repositoryRoot, 'scripts/validate-assurance-registry.mjs');
+    const result = run(repositoryRoot, 'scripts/validate-assurance-registry.ts');
     expect(result.status, output(result)).toBe(0);
     expect(result.stdout).toContain('all canonical assurance JSON registered and schema-valid');
   });
@@ -68,7 +68,7 @@ describe('assurance registry completeness and schema enforcement', () => {
     const claims = readJson(fixtureRoot, 'assurance/claims/claims.json');
     claims.records[0].id = 'invalid-claim-id';
     writeJson(fixtureRoot, 'assurance/claims/claims.json', claims);
-    const result = run(fixtureRoot, 'scripts/validate-assurance-registry.mjs');
+    const result = run(fixtureRoot, 'scripts/validate-assurance-registry.ts');
     expectRejected(result, 'assurance/claims/claims.json: $.records[0].id must match pattern');
     expect(output(result)).toContain('contracts/assurance/claim.schema.json');
   });
@@ -79,7 +79,7 @@ describe('assurance registry completeness and schema enforcement', () => {
     registry.datasets[1].id = registry.datasets[0].id;
     registry.datasets[1].path = registry.datasets[0].path;
     writeJson(fixtureRoot, 'assurance/registry.json', registry);
-    const result = run(fixtureRoot, 'scripts/validate-assurance-registry.mjs');
+    const result = run(fixtureRoot, 'scripts/validate-assurance-registry.ts');
     expectRejected(result, 'duplicate dataset identity');
     expect(output(result)).toContain('duplicate registered path');
   });
@@ -90,14 +90,14 @@ describe('assurance registry completeness and schema enforcement', () => {
     const risks = registry.datasets.find((dataset: any) => dataset.kind === 'risks');
     risks.visibility = 'private';
     writeJson(fixtureRoot, 'assurance/registry.json', registry);
-    const result = run(fixtureRoot, 'scripts/validate-assurance-registry.mjs');
+    const result = run(fixtureRoot, 'scripts/validate-assurance-registry.ts');
     expectRejected(result, 'risks uses unsupported assurance visibility private');
   });
 
   it('rejects an unregistered canonical assurance dataset', () => {
     const fixtureRoot = createFixture();
     writeJson(fixtureRoot, 'assurance/unregistered-demo126.json', { schemaVersion: 1, records: [] });
-    expectRejected(run(fixtureRoot, 'scripts/validate-assurance-registry.mjs'), 'unregistered canonical assurance file assurance/unregistered-demo126.json');
+    expectRejected(run(fixtureRoot, 'scripts/validate-assurance-registry.ts'), 'unregistered canonical assurance file assurance/unregistered-demo126.json');
   });
 
   it('rejects missing registered files and schemas', () => {
@@ -107,7 +107,7 @@ describe('assurance registry completeness and schema enforcement', () => {
     unlinkSync(join(fixtureRoot, evidence.path));
     evidence.schema = 'contracts/assurance/missing-demo126.schema.json';
     writeJson(fixtureRoot, 'assurance/registry.json', registry);
-    const result = run(fixtureRoot, 'scripts/validate-assurance-registry.mjs');
+    const result = run(fixtureRoot, 'scripts/validate-assurance-registry.ts');
     expectRejected(result, 'registered dataset is missing');
     expect(output(result)).toContain('registered schema is missing');
   });
@@ -135,7 +135,7 @@ describe('assurance registry completeness and schema enforcement', () => {
     const generation = run(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts');
     expect(generation.status, output(generation)).toBe(0);
 
-    const validation = run(fixtureRoot, 'scripts/validate-assurance-registry.mjs');
+    const validation = run(fixtureRoot, 'scripts/validate-assurance-registry.ts');
     expect(validation.status, output(validation)).toBe(0);
 
     const publication = run(fixtureRoot, 'scripts/validate-assurance-publication.mjs');
@@ -206,7 +206,7 @@ describe('assurance registry completeness and schema enforcement', () => {
   it('routes lifecycle and integrity validation through the shared registry discovery layer', () => {
     for (const script of ['scripts/validate-assurance-lifecycle.mjs', 'scripts/validate-assurance-integrity.mjs']) {
       const source = readFileSync(join(repositoryRoot, script), 'utf8');
-      expect(source).toContain("from './lib/assurance-registry.mjs'");
+      expect(source).toContain("from './lib/assurance-registry.ts'");
       expect(source).not.toContain("'assurance/compliance/iso-42001-2023.json'");
       expect(source).not.toContain("'assurance/compliance/wcag-2.2/perceivable.json'");
     }

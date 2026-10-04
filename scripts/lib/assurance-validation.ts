@@ -2,8 +2,8 @@ import {
   createFileSchemaLoader,
   formatJsonSchemaErrors,
   validateJsonSchema,
-} from './json-schema.mjs';
-import { readJsonFile } from './assurance-registry.mjs';
+} from './json-schema.ts';
+import { readJsonFile } from './assurance-registry.ts';
 
 export const ASSURANCE_JSON_SCHEMA_DRAFT = 'https://json-schema.org/draft/2020-12/schema';
 
