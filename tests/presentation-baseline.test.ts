@@ -517,9 +517,7 @@ class BaselineStatement implements D1PreparedStatement {
 function environment(): Env {
   return {
     DEMO_DB: { prepare: (sql: string) => new BaselineStatement(sql) },
-    DEMO_SESSION_SECRET: 'presentation-session-secret-with-32-characters',
-    IDENTITY_SESSION_SECRET: 'presentation-identity-secret-with-32-characters',
-    IDENTITY_AUDIT_HMAC_SECRET: 'presentation-audit-secret-with-32-characters',
+    WG_SESSION_KEY: 'presentation-session-secret-with-32-characters',
     GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
     DEPLOYED_VERSION: 'v0.26.0-presentation-test',

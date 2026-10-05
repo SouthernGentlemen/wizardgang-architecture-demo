@@ -61,7 +61,8 @@ function normalizeRepositoryPath(source, target) {
 
 const files = trackedFiles();
 const fileSet = new Set(files);
-const markdownFiles = files.filter((file) => file.endsWith('.md'));
+// Vendored baseline platform/ is pinned by platform/vendor.lock.json and never edited here; its links point into baseline.
+const markdownFiles = files.filter((file) => file.endsWith('.md') && !file.startsWith('platform/'));
 // The permanent root implementation plan is a current/future queue and may name reserved IDs.
 const temporaryImplementationPlan = 'implementation_plan.md';
 const currentStateMarkdown = markdownFiles.filter((file) => (

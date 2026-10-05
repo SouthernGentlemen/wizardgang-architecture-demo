@@ -1,4 +1,4 @@
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import os from 'node:os';
@@ -13,6 +13,7 @@ import {
   waitForPageTarget,
   waitForUrl,
 } from './lib/browser-audit.mjs';
+import { parseJsonc } from '../platform/conformance/jsonc.mjs';
 import { assuranceReviewState, waitForAssuranceRecordPane } from './lib/demo-289-content-review.mjs';
 
 const require = createRequire(import.meta.url);
@@ -1424,6 +1425,15 @@ async function main() {
   }
 
   const wranglerBin = path.resolve('node_modules', '.bin', process.platform === 'win32' ? 'wrangler.cmd' : 'wrangler');
+  // Sessions derive their keys from the WG_SESSION_KEY Secrets Store binding, which local dev simulates per persistence directory.
+  const sessionKeyStore = parseJsonc(fs.readFileSync('wrangler.jsonc', 'utf8')).secrets_store_secrets
+    ?.find((entry) => entry.binding === 'WG_SESSION_KEY')?.store_id;
+  if (!sessionKeyStore) throw new Error('wrangler.jsonc does not bind WG_SESSION_KEY from the Secrets Store.');
+  const seeded = spawnSync(wranglerBin, [
+    'secrets-store', 'secret', 'create', sessionKeyStore,
+    '--name', 'WG_SESSION_KEY', '--value', localSessionSecret, '--scopes', 'workers', ...localPersistenceArgs,
+  ], { encoding: 'utf8', env: { ...process.env, NO_UPDATE_NOTIFIER: '1' } });
+  if (seeded.status !== 0) throw new Error(`Could not seed the local WG_SESSION_KEY: ${seeded.stderr.trim().split('\n').at(-1)}`);
   const wrangler = spawn(wranglerBin, [
     'dev',
     '--local',
@@ -1433,9 +1443,7 @@ async function main() {
     '--port',
     String(serverPort),
     '--var',
-    `DEMO_SESSION_SECRET:${localSessionSecret}`,
-    '--var',
-    'WEBHOOK_DEMO_SECRET:demo-384-local-browser-audit-webhook-secret',
+    'DEMO_WEBHOOK_SECRET:demo-384-local-browser-audit-webhook-secret',
   ], {
     stdio: ['ignore', 'pipe', 'pipe'],
     env: { ...process.env, NO_UPDATE_NOTIFIER: '1' },

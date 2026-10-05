@@ -124,7 +124,7 @@ function text(value: unknown): string {
 }
 
 function accountConfigured(env: Env): boolean {
-  return Boolean(env.CLOUDFLARE_ACCOUNT_ID && env.CLOUDFLARE_API_TOKEN);
+  return Boolean(env.CLOUDFLARE_ACCOUNT_ID && env.CLOUDFLARE_BILLING_TOKEN);
 }
 
 function anyResourceConfigured(env: Env): boolean {
@@ -190,7 +190,7 @@ async function graphql(env: Env, query: string, variables: Record<string, unknow
   const response = await fetch(GRAPHQL_API, {
     method: 'POST',
     headers: {
-      authorization: `Bearer ${env.CLOUDFLARE_API_TOKEN}`,
+      authorization: `Bearer ${env.CLOUDFLARE_BILLING_TOKEN}`,
       accept: 'application/json',
       'content-type': 'application/json',
     },
@@ -342,7 +342,7 @@ async function billableUsage(env: Env, start: string, end: string, observedAt: s
   const url = new URL(`${REST_API}/accounts/${encodeURIComponent(env.CLOUDFLARE_ACCOUNT_ID || '')}/billable/usage`);
   url.searchParams.set('from', start);
   url.searchParams.set('to', end);
-  const response = await fetch(url, { headers: { authorization: `Bearer ${env.CLOUDFLARE_API_TOKEN}`, accept: 'application/json' } });
+  const response = await fetch(url, { headers: { authorization: `Bearer ${env.CLOUDFLARE_BILLING_TOKEN}`, accept: 'application/json' } });
   if (!response.ok) throw httpFailure(response.status);
   let payload: Record<string, unknown>;
   try {

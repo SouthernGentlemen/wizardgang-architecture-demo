@@ -224,7 +224,7 @@ async function paginateStructured(
     },
     limit,
     cursor,
-    secret: reportingCursorSecret(env),
+    secret: await reportingCursorSecret(env),
   });
 }
 

@@ -121,7 +121,7 @@ async function authenticateRoute(
   if (route.authentication.mode === 'anonymous') return undefined;
   if (route.authentication.provider === 'admin-basic') return requireAdmin(request, env);
   if (route.authentication.provider === 'identity-session') {
-    if (identityReadiness(env) !== 'ready') {
+    if (await identityReadiness(env) !== 'ready') {
       return json({ error: 'identity_not_configured' }, {
         status: 503,
         headers: { 'cache-control': 'no-store', 'retry-after': '30' },

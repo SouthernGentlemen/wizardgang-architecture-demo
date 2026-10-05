@@ -59,7 +59,7 @@ Availability while intentionally offline is declared per route. Gated API traffi
 ## Local setup
 
 1. Use Node.js 26.10.0 from `.node-version` with npm 12.1.0 from `packageManager`, then run `npm ci` from the committed lock file.
-2. Copy `.dev.vars.example` to ignored `.dev.vars` and replace local placeholders.
+2. Copy `.dev.vars.example` to ignored `.dev.vars` and replace local placeholders, then seed the simulated local Secrets Store `WG_SESSION_KEY` as `.dev.vars.example` shows.
 3. Run `npm run validate:migrations` to prove the migrations against local D1 state.
 4. Run `npm run dev` for the local-only development surface.
 
@@ -72,6 +72,8 @@ Availability while intentionally offline is declared per route. Gated API traffi
 - Focused commands remain available when their scope is the work being changed: `npm run generate:routes` rewrites the tracked route projection, `npm run validate:generated-artifacts` checks generated parity, `npm run validate:migrations` uses local D1 state, `npm run verify:chromium` / `npm run test:site-accessibility` exercise the browser audit, and `npm run build` produces local build output with a Worker dry run.
 - Ordinary pre-PR validation is `npm run check`, `npm run security:dependency-advisories`, and `BASE_SHA=<pr-base-sha> npm run validate:patch-whitespace`. The advisory query requires registry/network access; the patch check requires the authoritative base commit and sufficient Git history. A clean checkout with those prerequisites plus Chromium can use `npm run validate:ci` as the CI-parity path.
 - `npm run verify:github-settings` is the read-only live settings check and needs an authorized GitHub token; `npm run apply:github-settings` is the explicit administration-write path. `npm run deploy` intentionally refuses production deployment from an arbitrary checkout.
+
+`platform/` is baseline's shared Worker platform (wg-edge, conformance and deploy checks), vendored verbatim and pinned by `platform/vendor.lock.json`; `npm run check:platform` verifies the pin. Never edit it; re-vendor it from a merged `Wizard-Gang/baseline` commit instead. Session, identity and audit keys come from its `deriveKey` over the Secrets Store `WG_SESSION_KEY`, and every Worker secret name follows baseline's `config/secrets.json` registry.
 
 For failure output, retained artifacts, exact-head log retrieval, and base-SHA recovery, use [CI diagnostics](docs/CI-DIAGNOSTICS.md). Required status names and controlled-delivery policy remain under [Delivery](#delivery), [AGENTS.md](AGENTS.md), and [change management](docs/CHANGE-MANAGEMENT.md).
 

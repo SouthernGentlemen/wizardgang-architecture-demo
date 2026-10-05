@@ -1,4 +1,5 @@
 import type { Env } from '../types';
+import { derivedSecret } from './derived-keys';
 import { HttpError } from './http';
 
 const COOKIE_NAME = 'wg_demo_session';
@@ -60,8 +61,8 @@ function serializedCookie(value: string): string {
 }
 
 export async function ensureDemoSession(request: Request, env: Env): Promise<DemoSession> {
-  const secret = env.DEMO_SESSION_SECRET;
-  if (!secret || secret.length < 32) throw new HttpError(503, 'demo_session_not_configured');
+  const secret = await derivedSecret(env, 'demo-session');
+  if (!secret) throw new HttpError(503, 'demo_session_not_configured');
   const now = new Date();
   const candidate = cookieValue(request);
   const verifiedId = candidate ? await verifySignedDemoSessionValue(candidate, secret) : null;

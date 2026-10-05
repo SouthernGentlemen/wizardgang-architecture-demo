@@ -14,7 +14,9 @@
   "triggers": {
     "crons": ["*/5 * * * *"]
   },
-  // Configure admin, GitHub demo, and identity-provider credentials with `wrangler secret put`; never commit values.
+  // Worker secrets (config/worker-secrets.json) are set with `wrangler secret put` from baseline docs/SECRETS-RUNBOOK.md;
+  // never commit their values. The OAuth client IDs, the Entra tenant and the SAML IdP values are public and live here.
+  // SAML_IDP_CERT, SAML_IDP_ISSUER and SAML_SSO_URL are added once the Entra wg-saml-idp app exists; SAML fails closed until then.
   "vars": {
     "GITHUB_REPO_URL": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo",
     "GITHUB_BRANCH": "main",
@@ -24,8 +26,17 @@
     "BILLING_DEMO_MONTHLY_BUDGET_USD": "10",
     "CLOUDFLARE_WORKER_NAME": "wizardgang-architecture-demo",
     "CLOUDFLARE_R2_BUCKET": "wizardgang-demo-r2",
-    "CLOUDFLARE_D1_DATABASE_ID": "4a8ba118-da0e-497b-a13c-911c407a09e3"
+    "CLOUDFLARE_D1_DATABASE_ID": "4a8ba118-da0e-497b-a13c-911c407a09e3",
+    "CLOUDFLARE_DO_NAMESPACE": "2a8431fd59b342799b74518e1bcc7b6d",
+    "GITHUB_OAUTH_CLIENT_ID": "Ov23lizi50EUG1CVLmrY",
+    "GOOGLE_OAUTH_CLIENT_ID": "681291327254-o04025q9gibvdnqcc61qui404nnmn7rn.apps.googleusercontent.com",
+    "MICROSOFT_OAUTH_CLIENT_ID": "d5706222-8cbb-4072-91a4-02715973f26d",
+    "MICROSOFT_TENANT_ID": "dc4e17d6-aa5b-46d9-8a74-4fbc4d7dd5b8"
   },
+  // The shared Secrets Store root key. wg-edge derives demo-session, identity-session and identity-audit from it.
+  "secrets_store_secrets": [
+    { "binding": "WG_SESSION_KEY", "store_id": "e63e666172544d5c8c4a656ff28ac32a", "secret_name": "WG_SESSION_KEY" }
+  ],
   "d1_databases": [
     {
       "binding": "DEMO_DB",
@@ -37,8 +48,7 @@
   "r2_buckets": [
     {
       "binding": "DEMO_R2",
-      "bucket_name": "wizardgang-demo-r2",
-      "preview_bucket_name": "wizardgang-demo-r2-preview"
+      "bucket_name": "wizardgang-demo-r2"
     }
   ],
   "durable_objects": {

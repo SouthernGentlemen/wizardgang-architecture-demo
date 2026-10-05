@@ -79,7 +79,7 @@ class LabD1 {
 function environment(database = new LabD1()): Env {
   return {
     DEMO_DB: database,
-    DEMO_SESSION_SECRET: 'test-session-secret-with-at-least-32-characters',
+    WG_SESSION_KEY: 'test-session-secret-with-at-least-32-characters',
     GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
   };

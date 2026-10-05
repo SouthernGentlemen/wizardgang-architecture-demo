@@ -91,7 +91,7 @@ async function pageSnapshot(
     context: snapshot.context,
     limit,
     cursor,
-    secret: reportingCursorSecret(env),
+    secret: await reportingCursorSecret(env),
     terminalPartialReason: snapshot.terminalPartialReason,
   });
   const result: ReportingQueryResult<GitHubReportingRecord> = {

@@ -51,9 +51,7 @@ class GraphD1 {
 function env(): Env {
   return {
     DEMO_DB: new GraphD1(),
-    DEMO_SESSION_SECRET: 'test-session-secret-with-at-least-32-characters',
-    IDENTITY_SESSION_SECRET: 'test-identity-secret-with-at-least-32-characters',
-    IDENTITY_AUDIT_HMAC_SECRET: 'test-identity-audit-secret-with-at-least-32-characters',
+    WG_SESSION_KEY: 'test-session-secret-with-at-least-32-characters',
     GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
   };

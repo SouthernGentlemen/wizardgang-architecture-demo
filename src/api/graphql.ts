@@ -3,6 +3,7 @@ import { createSchema, createYoga } from 'graphql-yoga';
 import type { Env } from '../types';
 import { requireSameOrigin } from '../lib/admin-auth';
 import { authorize, type Principal } from '../lib/authorization';
+import { hasSessionKey } from '../lib/derived-keys';
 import { ensureDemoSession, withDemoSession, type DemoSession } from '../lib/demo-session';
 import { createDemoUser, deleteDemoUser, getDemoUser, listDemoUsers, updateDemoUser } from '../lib/demo-users';
 import { json, methodNotAllowed, withSecurityHeaders } from '../lib/http';
@@ -147,7 +148,7 @@ export async function graphqlResponse(request: Request, env: Env): Promise<Respo
   const principal = await authorize(request, env, 'demo:read', { allowIdentitySession: true });
   if (principal instanceof Response) return principal;
   let session: DemoSession | undefined;
-  if (env.DEMO_SESSION_SECRET) {
+  if (hasSessionKey(env)) {
     try { session = await ensureDemoSession(request, env); }
     catch { /* Yoga returns a service-unavailable error for sandbox-backed fields. */ }
   }

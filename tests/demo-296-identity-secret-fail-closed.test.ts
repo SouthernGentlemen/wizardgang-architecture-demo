@@ -57,8 +57,7 @@ function environment(db: D1Database, overrides: Partial<Env> = {}): Env {
     DEMO_DB: db,
     GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
-    IDENTITY_SESSION_SECRET: 's'.repeat(32),
-    IDENTITY_AUDIT_HMAC_SECRET: 'a'.repeat(32),
+    WG_SESSION_KEY: 's'.repeat(32),
     ...overrides,
   };
 }
@@ -86,11 +85,12 @@ function session(): IdentitySession {
   };
 }
 
+// Both identity keys derive from the Secrets Store WG_SESSION_KEY binding, so every failure is a root failure.
 const secretFailures: Array<{ label: string; overrides: Partial<Env> }> = [
-  { label: 'session secret missing', overrides: { IDENTITY_SESSION_SECRET: undefined } },
-  { label: 'session secret too short', overrides: { IDENTITY_SESSION_SECRET: 's'.repeat(31) } },
-  { label: 'audit secret missing', overrides: { IDENTITY_AUDIT_HMAC_SECRET: undefined } },
-  { label: 'audit secret too short', overrides: { IDENTITY_AUDIT_HMAC_SECRET: 'a'.repeat(31) } },
+  { label: 'session key binding missing', overrides: { WG_SESSION_KEY: undefined } },
+  { label: 'session key empty', overrides: { WG_SESSION_KEY: '' } },
+  { label: 'session key binding empty', overrides: { WG_SESSION_KEY: { get: async () => '' } } },
+  { label: 'session key binding unreadable', overrides: { WG_SESSION_KEY: { get: async () => { throw new Error('store unavailable'); } } } },
 ];
 
 function endpointRequest(pattern: string, method: string): Request {
@@ -152,23 +152,21 @@ describe('DEMO-296 identity secret fail-closed behavior', () => {
     expect(logoutResponse.headers.get('set-cookie')).toContain('Max-Age=0');
   });
 
-  for (const auditSecret of [undefined, 'a'.repeat(31)]) {
-    it('revokes and clears sign-out when the audit prerequisite is unavailable', async () => {
-      const capture = captureDb();
-      const env = environment(capture.db, { IDENTITY_AUDIT_HMAC_SECRET: auditSecret });
-      const cookie = (await createIdentitySession(env, session())).split(';')[0];
-      const response = await routeRequest(new Request('https://demo.example/auth/logout', {
-        method: 'POST',
-        headers: { origin: 'https://demo.example', cookie, accept: 'application/json' },
-      }), env);
+  it('clears sign-out cookies without revoking or auditing when the session key is unavailable', async () => {
+    const capture = captureDb();
+    const configured = environment(capture.db);
+    const cookie = (await createIdentitySession(configured, session())).split(';')[0];
+    const response = await routeRequest(new Request('https://demo.example/auth/logout', {
+      method: 'POST',
+      headers: { origin: 'https://demo.example', cookie, accept: 'application/json' },
+    }), environment(capture.db, { WG_SESSION_KEY: undefined }));
 
-      expect(response.status).toBe(503);
-      expect(await response.json()).toEqual({ error: 'identity_not_configured' });
-      expect(response.headers.get('set-cookie')).toContain('Max-Age=0');
-      expect(capture.state.revokedSessions).toBe(1);
-      expect(capture.state.identityAuditWrites).toBe(0);
-    });
-  }
+    expect(response.status).toBe(503);
+    expect(await response.json()).toEqual({ error: 'identity_not_configured' });
+    expect(response.headers.get('set-cookie')).toContain('Max-Age=0');
+    expect(capture.state.revokedSessions).toBe(0);
+    expect(capture.state.identityAuditWrites).toBe(0);
+  });
 
   it('reports public-safe identity readiness without changing health status semantics', async () => {
     const readyCapture = captureDb();

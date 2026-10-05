@@ -3,32 +3,35 @@
 # WORKER_SECRETS_START
 DEMO_ADMIN_USER=admin
 DEMO_ADMIN_PASSWORD=replace-me-with-a-local-only-value
-WEBHOOK_DEMO_SECRET=replace-me-with-a-local-only-webhook-secret
+DEMO_WEBHOOK_SECRET=replace-me-with-a-local-only-webhook-secret
 GITHUB_WEBHOOK_SECRET=replace-me-with-a-local-only-github-webhook-secret
 GITHUB_DEMO_TOKEN=replace-me-with-a-local-only-git-demo-token
-DEMO_SESSION_SECRET=replace-me-with-at-least-32-local-only-characters
-IDENTITY_SESSION_SECRET=replace-me-with-at-least-32-local-only-characters
-IDENTITY_AUDIT_HMAC_SECRET=replace-me-with-at-least-32-local-only-characters
-MICROSOFT_CLIENT_ID=replace-me
-MICROSOFT_CLIENT_SECRET=replace-me
-MICROSOFT_TENANT_ID=replace-me
-GOOGLE_CLIENT_ID=replace-me
-GOOGLE_CLIENT_SECRET=replace-me
-GITHUB_CLIENT_ID=replace-me
-GITHUB_CLIENT_SECRET=replace-me
-SAML_IDP_CERT=replace-me-with-the-entra-signing-certificate
+GITHUB_OAUTH_CLIENT_SECRET=replace-me
+GOOGLE_OAUTH_CLIENT_SECRET=replace-me
+MICROSOFT_OAUTH_CLIENT_SECRET=replace-me
 
 # Optional managed Worker secrets.
 # GITHUB_READ_TOKEN=replace-me-with-a-local-only-read-token
 # GITHUB_REPORTING_WRITE_TOKEN=replace-me-with-a-local-only-issues-write-token
-# CLOUDFLARE_API_TOKEN=replace-me-with-analytics-read-and-optional-billing-read
+# CLOUDFLARE_BILLING_TOKEN=replace-me-with-account-analytics-read-and-billing-read
 # WORKER_SECRETS_END
+
+# Sessions and identity derive their keys from the Secrets Store binding WG_SESSION_KEY (see wrangler.jsonc), which
+# local development simulates. Seed the local store once with a local-only value of at least 32 characters:
+#   npx wrangler secrets-store secret create e63e666172544d5c8c4a656ff28ac32a --name WG_SESSION_KEY --scopes workers
+
+# Public provider configuration lives in wrangler.jsonc vars. Override it here only to test other provider clients.
+# GITHUB_OAUTH_CLIENT_ID=replace-me
+# GOOGLE_OAUTH_CLIENT_ID=replace-me
+# MICROSOFT_OAUTH_CLIENT_ID=replace-me
+# MICROSOFT_TENANT_ID=replace-me
+# SAML_IDP_CERT=replace-me-with-the-entra-signing-certificate
 
 # Optional protected GitHub reporting. Public repositories use the anonymous GitHub API by default.
 # GITHUB_REPORTING_BINDINGS=[{"repository":"SouthernGentlemen/wizardgang-architecture-demo","sources":["github.issues","github.workflow-runs"],"issueLabels":["corrective-action"]}]
 # GITHUB_REPORTING_MAX_PAGES=20
 
-# Optional SAML overrides; defaults are derived from MICROSOFT_TENANT_ID.
+# Optional SAML IdP values; without them the issuer and SSO URL default from MICROSOFT_TENANT_ID.
 # SAML_IDP_ISSUER=https://sts.windows.net/replace-me/
 # SAML_SSO_URL=https://login.microsoftonline.com/replace-me/saml2
 
@@ -37,7 +40,6 @@ SAML_IDP_CERT=replace-me-with-the-entra-signing-certificate
 # CLOUDFLARE_WORKER_NAME=wizardgang-architecture-demo
 # CLOUDFLARE_D1_DATABASE_ID=replace-me
 # CLOUDFLARE_R2_BUCKET=wizardgang-demo-r2
-# CLOUDFLARE_DO_NAMESPACE=replace-me
 
 # DEMO-186 canonical external endpoints. Provider-side settings are changed at release time, not by this file.
 # Microsoft redirect URI: <PUBLIC_ORIGIN>/auth/microsoft/callback

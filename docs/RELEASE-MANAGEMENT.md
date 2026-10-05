@@ -82,12 +82,12 @@ A manual recovery deployment may select an already published immutable semantic 
 
 ### Worker secret preflight and provisioning
 
-`config/worker-secrets.json` is the checked-in source of truth for production Worker secret names, required/optional status, consuming capability, enforced minimum length, and owner. Before production migrations, the deploy workflow runs `wrangler secret list --format json` and compares names only. A missing required name fails deployment; a provisioned name not declared by the inventory is reported for reconciliation. The preflight never reads or prints a secret value, and the Cloudflare permission it adds is only the ability to list secret names. Provider-side secret APIs do not expose values or prove entropy/length, so runtime readiness remains the strength check where the application enforces one.
+`config/worker-secrets.json` is the checked-in source of truth for production Worker secret names, required/optional status, consuming capability, enforced minimum length, and owner. Before production migrations, the deploy workflow runs `wrangler secret list --format json` and compares names only. A missing required name fails deployment; a provisioned name not declared by the inventory is reported for reconciliation. The preflight never reads or prints a secret value, and the Cloudflare permission it adds is only the ability to list secret names. A Worker cannot hold a secret and a var of the same name, so right before the Worker deploys, the workflow deletes any provisioned secret that a committed `wrangler.jsonc` var now replaces (`validate-worker-secrets.mjs --superseded`); the var carries the same public value from then on. Provider-side secret APIs do not expose values or prove entropy/length, so runtime readiness remains the strength check where the application enforces one.
 
 For application-generated random secrets, use the non-echo provisioning command instead of the interactive Wrangler prompt:
 
 ```text
-npm run provision:worker-secret -- IDENTITY_AUDIT_HMAC_SECRET
+npm run provision:worker-secret -- DEMO_WEBHOOK_SECRET
 ```
 
 The command generates high-entropy random material in-process and streams it directly to `wrangler secret put` on standard input. It does not print the generated value or place it on the command line. Use provider-specific provisioning for OAuth/client tokens, identifiers, certificates, and other provider-issued/operator-selected values.

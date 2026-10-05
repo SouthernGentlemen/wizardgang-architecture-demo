@@ -37,11 +37,10 @@ function fixture() {
     DEMO_DB: db,
     GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
-    IDENTITY_SESSION_SECRET: 's'.repeat(32),
-    IDENTITY_AUDIT_HMAC_SECRET: 'a'.repeat(32),
-    MICROSOFT_CLIENT_ID: 'microsoft-client', MICROSOFT_CLIENT_SECRET: 'microsoft-secret', MICROSOFT_TENANT_ID: 'tenant',
-    GOOGLE_CLIENT_ID: 'google-client', GOOGLE_CLIENT_SECRET: 'google-secret',
-    GITHUB_CLIENT_ID: 'github-client', GITHUB_CLIENT_SECRET: 'github-secret',
+    WG_SESSION_KEY: 's'.repeat(32),
+    MICROSOFT_OAUTH_CLIENT_ID: 'microsoft-client', MICROSOFT_OAUTH_CLIENT_SECRET: 'microsoft-secret', MICROSOFT_TENANT_ID: 'tenant',
+    GOOGLE_OAUTH_CLIENT_ID: 'google-client', GOOGLE_OAUTH_CLIENT_SECRET: 'google-secret',
+    GITHUB_OAUTH_CLIENT_ID: 'github-client', GITHUB_OAUTH_CLIENT_SECRET: 'github-secret',
     SAML_IDP_CERT: 'test-certificate',
   };
   return { env, sessions, audit };
