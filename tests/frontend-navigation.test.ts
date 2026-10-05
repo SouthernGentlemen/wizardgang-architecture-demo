@@ -1,15 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { applicationRouteRegistry } from '../src/routing/application-routes';
 import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
 const env: Env = {
-  DEMO_DB: {
-    prepare: () => ({
-      bind() { return this; },
-      async all() { return { results: [] }; },
-      async run() { return { meta: {} }; },
-    }),
-  },
+  WG_DB: new SqliteD1(),
   GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
 };

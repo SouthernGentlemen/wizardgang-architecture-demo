@@ -1,23 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { edgeInspectionResponse, workerComputeResponse } from '../src/api/runtime';
 import { DemoCoordinator } from '../src/durable/demo-coordinator';
-import type { D1PreparedStatement, Env } from '../src/types';
-
-class RuntimeStatement implements D1PreparedStatement {
-  constructor(private readonly db: RuntimeD1) {}
-  bind() { return this; }
-  async run() { return { meta: { last_row_id: this.db.nextId++ } }; }
-  async all<T>() { return { results: [] as T[] }; }
-}
-
-class RuntimeD1 {
-  nextId = 1;
-  prepare() { return new RuntimeStatement(this); }
-}
+import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
 function env(): Env {
   return {
-    DEMO_DB: new RuntimeD1(),
+    WG_DB: new SqliteD1(),
     GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
   };

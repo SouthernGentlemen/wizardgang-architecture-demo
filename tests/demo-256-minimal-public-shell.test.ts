@@ -2,18 +2,14 @@ import { describe, expect, it } from 'vitest';
 import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import { architectureMapEntries, primaryNavigation } from '../src/routing/navigation';
 import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
 const repositoryUrl = 'https://github.com/Wizard-Gang/wizardgang-architecture-demo';
+const availability = new SqliteD1();
+availability.putRecord('availability', '2026-09-01', { verified: 60, operational: 59, intentional: 1 });
+availability.putRecord('availability', '2026-09-02', { verified: 41, operational: 40, intentional: 0 });
 const env = {
-  DEMO_DB: {
-    prepare: () => ({
-      bind() { return this; },
-      async all() {
-        return { results: [{ verified: 101, operational: 99, intentional: 1 }] };
-      },
-      async run() { return { meta: {} }; },
-    }),
-  },
+  WG_DB: availability,
   GITHUB_REPO_URL: repositoryUrl,
   GITHUB_BRANCH: 'main',
   DEPLOYED_VERSION: 'v0.21.0-test',

@@ -3,58 +3,23 @@ import { healthResponse } from '../src/api/operations';
 import { createIdentitySession, type IdentitySession } from '../src/lib/identity-session';
 import { identityRouteCapability } from '../src/interfaces/route-capabilities/identity';
 import { routeRequest } from '../src/router';
-import type { D1Database, Env } from '../src/types';
+import type { Env } from '../src/types';
+import { demoDatabase, type SqliteD1 } from './helpers/wg-storage';
 
 function captureDb() {
-  const sessions = new Map<string, { payload: string; expiresAt: string; revokedAt: string | null }>();
-  const state = { revokedSessions: 0, identityAuditWrites: 0, nextId: 1 };
-
-  const db: D1Database = {
-    prepare(sql: string) {
-      let values: unknown[] = [];
-      return {
-        bind(...bound: unknown[]) { values = bound; return this; },
-        async run() {
-          if (sql.includes('INSERT INTO identity_sessions')) {
-            sessions.set(String(values[0]), { payload: String(values[1]), expiresAt: String(values[3]), revokedAt: null });
-          } else if (sql.includes('UPDATE identity_sessions')) {
-            const row = sessions.get(String(values[1]));
-            if (row && !row.revokedAt) {
-              row.revokedAt = String(values[0]);
-              state.revokedSessions += 1;
-            }
-          } else if (sql.includes('INSERT INTO demo_events') || sql.includes('INSERT INTO application_logs')) {
-            state.identityAuditWrites += 1;
-          }
-          return { meta: { last_row_id: state.nextId++, changes: 1 } };
-        },
-        async all<T>() {
-          if (sql.includes('FROM demo_control')) {
-            return { results: [{ state: 'online', public_message: 'Available.', updated_at: '2026-09-17T00:00:00.000Z', updated_by: 'test' }] as T[] };
-          }
-          if (sql.includes('FROM crawler_control')) {
-            return { results: [{ state: 'enabled', updated_at: '2026-09-17T00:00:00.000Z', updated_by: 'test' }] as T[] };
-          }
-          if (sql.trim() === 'SELECT 1') return { results: [{ 1: 1 }] as T[] };
-          if (sql.includes('FROM identity_sessions')) {
-            const row = sessions.get(String(values[0]));
-            const results = row && !row.revokedAt && row.expiresAt > String(values[1])
-              ? [{ payload_ciphertext: row.payload, expires_at: row.expiresAt }]
-              : [];
-            return { results: results as T[] };
-          }
-          return { results: [] as T[] };
-        },
-      };
+  const db = demoDatabase({ crawler: 'enabled' });
+  return {
+    db,
+    state: {
+      get revokedSessions() { return [...db.identitySessions().values()].filter((row) => row.revokedAt).length; },
+      get identityAuditWrites() { return db.auditTrail().length; },
     },
   };
-
-  return { db, state };
 }
 
-function environment(db: D1Database, overrides: Partial<Env> = {}): Env {
+function environment(db: SqliteD1, overrides: Partial<Env> = {}): Env {
   return {
-    DEMO_DB: db,
+    WG_DB: db,
     GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
     WG_SESSION_KEY: 's'.repeat(32),

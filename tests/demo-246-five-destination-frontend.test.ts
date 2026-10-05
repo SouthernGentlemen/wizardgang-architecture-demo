@@ -8,16 +8,11 @@ import {
 import { primaryNavigation, sitemapPaths } from '../src/routing/navigation';
 import type { Env } from '../src/types';
 import { retiredOperationsHtmlPathname } from './fixtures/removed-html-pathnames';
+import { SqliteD1 } from './helpers/wg-storage';
 
 const repositoryUrl = 'https://github.com/Wizard-Gang/wizardgang-architecture-demo';
 const env = {
-  DEMO_DB: {
-    prepare: () => ({
-      bind() { return this; },
-      async all() { return { results: [] }; },
-      async run() { return { meta: {} }; },
-    }),
-  },
+  WG_DB: new SqliteD1(),
   GITHUB_REPO_URL: repositoryUrl,
   GITHUB_BRANCH: 'main',
   DEPLOYED_VERSION: 'v0.test',

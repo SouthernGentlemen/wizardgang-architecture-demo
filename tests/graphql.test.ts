@@ -4,53 +4,12 @@ import assetManifest from '../docs/asset-manifest.json';
 import { graphqlResponse } from '../src/api/graphql';
 import { uiAssetResponse } from '../src/ui/assets';
 import { createDemoAccessToken, type IdentitySession } from '../src/lib/identity-session';
-import type { D1PreparedStatement, Env } from '../src/types';
-
-type Row = Record<string, unknown>;
-
-class GraphStatement implements D1PreparedStatement {
-  private values: unknown[] = [];
-  constructor(private readonly db: GraphD1, private readonly sql: string) {}
-  bind(...values: unknown[]) { this.values = values; return this; }
-  async run() {
-    if (this.sql.startsWith('INSERT INTO demo_sessions')) {
-      const [id, createdAt, expiresAt, lastSeenAt] = this.values as string[];
-      this.db.sessions.set(id, { id, created_at: createdAt, expires_at: expiresAt, last_seen_at: lastSeenAt });
-    } else if (this.sql.startsWith('INSERT INTO demo_users')) {
-      const [id, sessionId, name, email, role, createdAt, updatedAt] = this.values as string[];
-      this.db.users.set(id, { id, session_id: sessionId, name, email, role, created_at: createdAt, updated_at: updatedAt });
-    } else if (this.sql.startsWith('INSERT INTO demo_tasks')) {
-      const [id, sessionId, assigneeId, title, status, createdAt, updatedAt] = this.values as string[];
-      this.db.tasks.set(id, { id, session_id: sessionId, assignee_id: assigneeId, title, status, created_at: createdAt, updated_at: updatedAt });
-    }
-    return { meta: { last_row_id: 1, changes: 1 } };
-  }
-  async all<T>() {
-    if (this.sql.includes('FROM demo_sessions')) {
-      const row = this.db.sessions.get(String(this.values[0])); return { results: (row ? [row] : []) as T[] };
-    }
-    if (this.sql.includes('COUNT(*)') && this.sql.includes('demo_users')) {
-      const [sessionId, id] = this.values as string[];
-      return { results: [{ total: [...this.db.users.values()].filter((row) => row.session_id === sessionId && (!id || row.id === id)).length }] as T[] };
-    }
-    if (this.sql.includes('FROM demo_users')) {
-      const [sessionId, id] = this.values as string[];
-      return { results: [...this.db.users.values()].filter((row) => row.session_id === sessionId && (!id || row.id === id)) as T[] };
-    }
-    return { results: [] as T[] };
-  }
-}
-
-class GraphD1 {
-  sessions = new Map<string, Row>();
-  users = new Map<string, Row>();
-  tasks = new Map<string, Row>();
-  prepare(sql: string) { return new GraphStatement(this, sql); }
-}
+import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
 function env(): Env {
   return {
-    DEMO_DB: new GraphD1(),
+    WG_DB: new SqliteD1(),
     WG_SESSION_KEY: 'test-session-secret-with-at-least-32-characters',
     GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',

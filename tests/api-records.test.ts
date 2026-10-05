@@ -3,46 +3,12 @@ import { recordsResponse } from '../src/api/records';
 import { restDemoResponse } from '../src/api/rest-demo';
 import { authorize } from '../src/lib/authorization';
 import { createDemoAccessToken, type IdentitySession } from '../src/lib/identity-session';
-import type { D1PreparedStatement, Env } from '../src/types';
-
-class MemoryStatement implements D1PreparedStatement {
-  private values: unknown[] = [];
-  constructor(private readonly database: MemoryD1, private readonly sql: string) {}
-  bind(...values: unknown[]) { this.values = values; return this; }
-  async run() {
-    if (this.sql.includes('INSERT INTO demo_records')) {
-      const [namespace, key, value, createdAt, updatedAt] = this.values as string[];
-      this.database.records.set(`${namespace}/${key}`, { id: 1, namespace, record_key: key, value_json: value, created_at: createdAt, updated_at: updatedAt });
-    }
-    if (this.sql.startsWith('DELETE FROM demo_records') && this.values.length > 1) this.database.records.delete(`${this.values[0]}/${this.values[1]}`);
-    else if (this.sql.startsWith('DELETE FROM demo_records')) for (const record of [...this.database.records.keys()]) if (record.startsWith(`${this.values[0]}/`)) this.database.records.delete(record);
-    if (this.sql.includes('INSERT INTO demo_sessions')) this.database.sessions.add(String(this.values[0]));
-    return { meta: { last_row_id: this.database.nextId++ } };
-  }
-  async all<T>() {
-    if (this.sql.includes('FROM demo_sessions')) {
-      return { results: this.database.sessions.has(String(this.values[0])) ? [{ id: this.values[0], expires_at: new Date(Date.now() + 60_000).toISOString() }] as T[] : [] };
-    }
-    if (this.sql.includes('FROM demo_records')) {
-      const namespace = this.values[0];
-      const key = this.values[1];
-      const results = [...this.database.records.values()].filter((row) => row.namespace === namespace && (!key || row.record_key === key));
-      return { results: results as T[] };
-    }
-    return { results: [] as T[] };
-  }
-}
-
-class MemoryD1 {
-  records = new Map<string, { id: number; namespace: string; record_key: string; value_json: string; created_at: string; updated_at: string }>();
-  sessions = new Set<string>();
-  nextId = 1;
-  prepare(sql: string) { return new MemoryStatement(this, sql); }
-}
+import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
 function env(): Env {
   return {
-    DEMO_DB: new MemoryD1(),
+    WG_DB: new SqliteD1(),
     WG_SESSION_KEY: 'test-identity-secret-with-at-least-32-characters',
     GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
@@ -119,7 +85,11 @@ describe('D1 REST records', () => {
     expect(await other.json()).toMatchObject({ results: [] });
 
     const anonymous = await recordsResponse(new Request('https://demo.example/api/labs/rest-records?namespace=' + body.namespace), environment);
-    expect(await anonymous.json()).toMatchObject({ results: [], authorization: { scope: 'public' } });
+    const anonymousBody = await anonymous.json() as { results: Array<{ namespace: string; key: string }>; authorization: { scope: string } };
+    expect(anonymousBody.authorization.scope).toBe('public');
+    // Anonymous readers get only the fixed public catalogue, never a sandbox's rows.
+    expect(anonymousBody.results.length).toBeGreaterThan(0);
+    expect(anonymousBody.results.every((record) => record.namespace === 'public' && record.key !== 'example')).toBe(true);
   });
 
   it('rejects invalid identifiers and unauthenticated writes', async () => {

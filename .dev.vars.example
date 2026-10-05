@@ -39,7 +39,7 @@ MICROSOFT_OAUTH_CLIENT_SECRET=replace-me
 # CLOUDFLARE_ACCOUNT_ID=replace-me
 # CLOUDFLARE_WORKER_NAME=wizardgang-architecture-demo
 # CLOUDFLARE_D1_DATABASE_ID=replace-me
-# CLOUDFLARE_R2_BUCKET=wizardgang-demo-r2
+# CLOUDFLARE_R2_BUCKET=wizardgang
 
 # DEMO-186 canonical external endpoints. Provider-side settings are changed at release time, not by this file.
 # Microsoft redirect URI: <PUBLIC_ORIGIN>/auth/microsoft/callback

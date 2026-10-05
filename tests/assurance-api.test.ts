@@ -4,7 +4,7 @@ import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import type { Env } from '../src/types';
 
 const environment = {
-  DEMO_DB: { prepare: () => { throw new Error('D1 should not be used by assurance projection tests'); } },
+  WG_DB: { prepare: () => { throw new Error('D1 should not be used by assurance projection tests'); } },
   GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
   DEPLOYED_VERSION: 'v0.14.0',

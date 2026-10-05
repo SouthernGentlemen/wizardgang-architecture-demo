@@ -2,39 +2,15 @@ import { inflateRawSync } from 'node:zlib';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { identityLogoutResponse, identitySessionResponse, providerStartResponse, samlStartResponse } from '../src/api/identity';
 import { createIdentitySession, writeFlowCookie, type IdentitySession } from '../src/lib/identity-session';
-import type { D1Database, Env } from '../src/types';
+import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
 function fixture() {
-  const sessions = new Map<string, { payload: string; expiresAt: string; revoked: boolean }>();
-  const audit: Array<{ type: string; payload: string }> = [];
-  const db: D1Database = {
-    prepare(sql: string) {
-      let values: unknown[] = [];
-      return {
-        bind(...bound: unknown[]) { values = bound; return this; },
-        async run() {
-          if (sql.includes('INSERT INTO identity_sessions')) sessions.set(String(values[0]), { payload: String(values[1]), expiresAt: String(values[3]), revoked: false });
-          if (sql.includes('UPDATE identity_sessions')) {
-            const row = sessions.get(String(values[1]));
-            if (row) row.revoked = true;
-          }
-          if (sql.includes('INSERT INTO demo_events')) audit.push({ type: String(values[1]), payload: String(values[2]) });
-          if (sql.includes('INSERT INTO application_logs')) audit.push({ type: String(values[2]), payload: String(values[6]) });
-          return { meta: { last_row_id: audit.length + 1, changes: 1 } };
-        },
-        async all<T>() {
-          if (sql.includes('FROM identity_sessions')) {
-            const row = sessions.get(String(values[0]));
-            return { results: row && !row.revoked && row.expiresAt > String(values[1])
-              ? [{ payload_ciphertext: row.payload, expires_at: row.expiresAt }] as T[] : [] as T[] };
-          }
-          return { results: [] as T[] };
-        },
-      };
-    },
-  };
+  const db = new SqliteD1();
+  const sessions = () => [...db.identitySessions().values()].map((row) => ({ ...row, revoked: Boolean(row.revokedAt) }));
+  const audit = () => db.auditTrail();
   const env: Env = {
-    DEMO_DB: db,
+    WG_DB: db,
     GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
     WG_SESSION_KEY: 's'.repeat(32),
@@ -80,11 +56,11 @@ describe('DEMO-387 identity session reset', () => {
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({ authenticated: false });
     expiredCookies(response);
-    expect([...sessions.values()].every((row) => row.revoked)).toBe(true);
+    expect(sessions().every((row) => row.revoked)).toBe(true);
     const after = await identitySessionResponse(new Request('https://demo.example/auth/session', { headers: { cookie } }), env);
     expect(await after.json()).toMatchObject({ authenticated: false });
-    expect(audit.map((item) => item.type)).toEqual(['identity.session_reset', 'identity.session_reset']);
-    expect(JSON.stringify(audit)).not.toMatch(/private-subject|__Host-|token|subject|session_id|google-client/);
+    expect(audit().map((item) => item.type)).toEqual(['identity.session_reset', 'identity.session_reset']);
+    expect(JSON.stringify(audit())).not.toMatch(/private-subject|__Host-|token|subject|session_id|google-client/);
   });
 
   it('succeeds without a session and with a stale flow cookie', async () => {
@@ -95,8 +71,8 @@ describe('DEMO-387 identity session reset', () => {
       expect(response.status).toBe(200);
       expiredCookies(response);
     }
-    expect(audit.filter((item) => item.type === 'identity.session_reset')).toHaveLength(4);
-    expect(JSON.stringify(audit)).not.toContain('stale-state');
+    expect(audit().filter((item) => item.type === 'identity.session_reset')).toHaveLength(4);
+    expect(JSON.stringify(audit())).not.toContain('stale-state');
   });
 
   it('refuses a cross-origin POST before revocation, cookie clearing, or audit', async () => {
@@ -105,8 +81,8 @@ describe('DEMO-387 identity session reset', () => {
     const response = await identityLogoutResponse(resetRequest(cookie, 'https://other.example'), env);
     expect(response.status).toBe(403);
     expect(response.headers.getSetCookie()).toHaveLength(0);
-    expect([...sessions.values()].every((row) => !row.revoked)).toBe(true);
-    expect(audit).toHaveLength(0);
+    expect(sessions().every((row) => !row.revoked)).toBe(true);
+    expect(audit()).toHaveLength(0);
   });
 
   it.each(['microsoft', 'google', 'github'] as const)('requests account selection for %s while retaining flow bindings', async (provider) => {

@@ -54,7 +54,7 @@ function syntheticRoute(
 
 function noDatabaseEnv(): Env {
   return {
-    DEMO_DB: {
+    WG_DB: {
       prepare() {
         throw new Error('unknown paths must not consult route policy storage');
       },

@@ -10,27 +10,13 @@ import {
 import { routeRequest } from '../src/router';
 import { routeUrl } from '../src/routing/application-routes';
 import { removedPlatformLaboratoryPathnames } from './fixtures/removed-api-pathnames';
-import type { D1PreparedStatement, Env } from '../src/types';
-
-class Statement implements D1PreparedStatement {
-  constructor(private readonly sql: string) {}
-  bind() { return this; }
-  async run() { return { meta: { last_row_id: 1 } }; }
-  async all<T>() {
-    if (this.sql.includes('FROM demo_control')) {
-      return { results: [{ state: 'online', public_message: 'Available.', updated_at: '2026-09-17T00:00:00.000Z', updated_by: 'test' }] as T[] };
-    }
-    if (this.sql.includes('FROM crawler_control')) {
-      return { results: [{ state: 'disabled', updated_at: '2026-09-17T00:00:00.000Z', updated_by: 'test' }] as T[] };
-    }
-    return { results: [] as T[] };
-  }
-}
+import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
 const origin = 'https://demo.wizardgang.ai';
 const deployedSha = '0123456789abcdef0123456789abcdef01234567';
 const env = {
-  DEMO_DB: { prepare: (sql: string) => new Statement(sql) },
+  WG_DB: new SqliteD1(),
   WG_SESSION_KEY: 'test-assurance-assessment-acceptance-secret',
   GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',

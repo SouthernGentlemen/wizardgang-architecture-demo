@@ -130,7 +130,7 @@ for (const token of ['OAI-SearchBot', 'ChatGPT-User', 'GPTBot', 'chatgpt_crawl_a
   if (!crawlerControl.includes(token)) failures.push(`crawler control invariant missing: ${token}`);
 }
 const logsLib = read('src/lib/logs.ts');
-for (const token of ['application_logs', 'SENSITIVE_KEY', '[redacted]', 'recentApplicationLogs']) {
+for (const token of ['KINDS.log', 'SENSITIVE_KEY', '[redacted]', 'recentApplicationLogs']) {
   if (!logsLib.includes(token)) failures.push(`application log invariant missing: ${token}`);
 }
 

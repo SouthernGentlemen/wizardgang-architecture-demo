@@ -2,27 +2,23 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import { routeRequest } from '../src/router';
-import type { D1PreparedStatement, Env } from '../src/types';
+import type { Env } from '../src/types';
 import { retiredDemoBrowserRoots } from './fixtures/removed-html-pathnames';
+import { SqliteD1 } from './helpers/wg-storage';
 
 const fragments = [
   'edge', 'workers', 'durable-objects', 'd1', 'r2', 'rest',
   'graphql', 'webhooks', 'oauth', 'sso', 'saml', 'mcp', 'accessibility', 'i18n',
 ] as const;
 
-class DemoStatement implements D1PreparedStatement {
-  constructor(private readonly sql: string) {}
-  bind() { return this; }
-  async run() { return { meta: { last_row_id: 1 } }; }
-  async all<T>() {
-    if (this.sql.includes('FROM demo_control')) return { results: [{ state: 'online', public_message: 'Available.', updated_at: '2026-09-10T00:00:00.000Z', updated_by: 'test' }] as T[] };
-    if (this.sql.includes('FROM crawler_control')) return { results: [{ state: 'enabled', updated_at: '2026-09-10T00:00:00.000Z', updated_by: 'test' }] as T[] };
-    return { results: [] as T[] };
-  }
+function crawlerEnabledDatabase(): SqliteD1 {
+  const db = new SqliteD1();
+  db.putRecord('control', 'crawler', { state: 'enabled', updatedAt: '2026-09-10T00:00:00.000Z', updatedBy: 'test' });
+  return db;
 }
 
 const env = {
-  DEMO_DB: { prepare: (sql: string) => new DemoStatement(sql) },
+  WG_DB: crawlerEnabledDatabase(),
   GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
 } as Env;

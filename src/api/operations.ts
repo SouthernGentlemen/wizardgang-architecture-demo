@@ -3,6 +3,7 @@ import { getDemoControl } from '../lib/demo-control';
 import { recordApplicationLog, recentApplicationLogs } from '../lib/logs';
 import { json } from '../lib/http';
 import { identityReadiness } from '../lib/identity-session';
+import { COLLECTIONS, TTL_SECONDS, demoBucket, demoRecords } from '../lib/storage';
 
 type Readiness = 'operational' | 'unavailable' | 'unconfigured';
 
@@ -34,24 +35,51 @@ async function timed(check: () => Promise<unknown>): Promise<{ status: 'operatio
   }
 }
 
-export function availabilityRetentionCutoff(referenceTime = Date.now()): string {
-  return new Date(referenceTime - AVAILABILITY_RETENTION_DAYS * DAY_MS).toISOString();
+/** One scheduled five-minute observation, keyed by its scheduled slot so a scheduler retry replaces it. */
+interface HealthObservation {
+  status: 'operational' | 'degraded' | 'down';
+  responseMs: number;
+  intentionalOffline: boolean;
+  observedAt: string;
+  scheduledAt: string;
+  services: HealthSnapshot['services'];
 }
 
-export async function purgeAvailabilityHistory(env: Env, referenceTime = Date.now()): Promise<number> {
-  const result = await env.DEMO_DB.prepare(
-    `DELETE FROM service_health_checks
-     WHERE service_key = 'public-demo' AND checked_at < ?`,
-  ).bind(availabilityRetentionCutoff(referenceTime)).run();
-  return result.meta.changes ?? 0;
+/** Scheduled observation counts for one UTC day. `imported` carries counts copied from the retired demo-blob history. */
+export interface AvailabilityDay {
+  verified: number;
+  operational: number;
+  intentional: number;
+  imported?: { verified: number; operational: number; intentional: number };
+}
+
+/** Recounts a day from its retained observations and replaces that day's availability record. */
+async function recordAvailabilityDay(env: Env, day: string): Promise<void> {
+  const store = demoRecords(env);
+  const observations = (await store.list<HealthObservation>(COLLECTIONS.health, { owner: day, limit: 1000 })).map((row) => row.body);
+  const existing = (await store.get<AvailabilityDay>(COLLECTIONS.availability, day))?.body;
+  const imported = existing?.imported ?? { verified: 0, operational: 0, intentional: 0 };
+  const counted: AvailabilityDay = {
+    verified: imported.verified + observations.length,
+    operational: imported.operational + observations.filter((row) => row.status === 'operational').length,
+    intentional: imported.intentional + observations.filter((row) => row.intentionalOffline).length,
+    ...(existing?.imported ? { imported } : {}),
+  };
+  await store.put(COLLECTIONS.availability, day, counted, { ttlSeconds: TTL_SECONDS.availabilityDay });
+}
+
+/** The retained availability days (at most the 365-day TTL), oldest first. */
+export async function availabilityDays(env: Env): Promise<AvailabilityDay[]> {
+  return (await demoRecords(env).list<AvailabilityDay>(COLLECTIONS.availability, { limit: AVAILABILITY_RETENTION_DAYS + 1 })).map((row) => row.body);
 }
 
 export async function collectHealth(env: Env, persist = false, scheduledTime?: number): Promise<HealthSnapshot> {
   const checkedAt = new Date().toISOString();
   const control = await getDemoControl(env);
-  const d1 = await timed(() => env.DEMO_DB.prepare('SELECT 1').all());
-  const r2 = env.DEMO_R2
-    ? await timed(() => env.DEMO_R2!.get('__wizardgang_health_probe__'))
+  const objects = demoBucket(env);
+  const d1 = await timed(() => demoRecords(env).get(COLLECTIONS.control, 'demo'));
+  const r2 = objects
+    ? await timed(() => objects.head('__wizardgang_health_probe__'))
     : { status: 'unconfigured' as const, responseMs: 0 };
   const durableObjects = env.DEMO_COORDINATOR
     ? await timed(async () => {
@@ -76,7 +104,7 @@ export async function collectHealth(env: Env, persist = false, scheduledTime?: n
     },
     responseMs: {
       d1: d1.responseMs,
-      ...(env.DEMO_R2 ? { r2: r2.responseMs } : {}),
+      ...(objects ? { r2: r2.responseMs } : {}),
       ...(env.DEMO_COORDINATOR ? { durableObjects: durableObjects.responseMs } : {}),
     },
   };
@@ -84,27 +112,19 @@ export async function collectHealth(env: Env, persist = false, scheduledTime?: n
   if (persist && d1.status === 'operational') {
     const persistedAt = new Date(scheduledTime ?? Date.now()).toISOString();
     try {
-      // The scheduled timestamp is the availability-record identity. Remove an existing
-      // retry of the same slot before inserting so scheduler retries cannot inflate uptime.
-      await env.DEMO_DB.prepare(
-        `DELETE FROM service_health_checks WHERE service_key = ? AND checked_at = ?`,
-      ).bind('public-demo', persistedAt).run();
-      await env.DEMO_DB.prepare(
-        `INSERT INTO service_health_checks (service_key, status, response_ms, detail_json, checked_at)
-         VALUES (?, ?, ?, ?, ?)`,
-      ).bind(
-        'public-demo',
-        status === 'offline' ? 'down' : status,
-        d1.responseMs,
-        JSON.stringify({
-          intentionalOffline: control.state === 'offline',
-          observationSource: 'scheduled',
-          observedAt: checkedAt,
-          scheduledAt: persistedAt,
-          services: snapshot.services,
-        }),
-        persistedAt,
-      ).run();
+      // The scheduled timestamp is the observation's record id, so a scheduler retry of the same slot replaces it
+      // instead of inflating uptime. Observations are owned by their UTC day, which the day's recount lists.
+      const day = persistedAt.slice(0, 10);
+      const observation: HealthObservation = {
+        status: status === 'offline' ? 'down' : status,
+        responseMs: d1.responseMs,
+        intentionalOffline: control.state === 'offline',
+        observedAt: checkedAt,
+        scheduledAt: persistedAt,
+        services: snapshot.services,
+      };
+      await demoRecords(env).put(COLLECTIONS.health, persistedAt, observation, { owner: day, ttlSeconds: TTL_SECONDS.healthObservation });
+      await recordAvailabilityDay(env, day);
       await recordApplicationLog(env, {
         level: status === 'operational' ? 'info' : 'warn',
         source: 'health',

@@ -31,7 +31,7 @@ function envelope(
   return json({
     requestId: crypto.randomUUID(),
     operation,
-    resource: 'DEMO_DB / demo-blob',
+    resource: 'WG_DB / wizardgang records',
     status,
     durationMs: Number((performance.now() - startedAt).toFixed(2)),
     rowCount,
@@ -60,7 +60,7 @@ export async function d1LabResponse(request: Request, env: Env, resource: Resour
       if (request.method !== 'POST') return attach(methodNotAllowed(['POST']), session);
       const result = await resetDemoUsersAndTasks(env, session.id);
       await recordDemoEvent(env, 'd1', 'visitor_sandbox_reset', { scope: 'users_tasks' });
-      return attach(envelope('d1.reset', 200, startedAt, 'DELETE scoped rows; INSERT deterministic seed', ['sessionId'], 7, result), session);
+      return attach(envelope('d1.reset', 200, startedAt, 'records.delete each sandbox row; records.put deterministic seed', ['sessionId'], 7, result), session);
     }
 
     if (resource === 'users') {

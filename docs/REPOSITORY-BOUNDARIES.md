@@ -39,9 +39,9 @@ Preserve these invariants:
 - The canonical JSON evidence records and `evidence` relationships stay as they are, and every `/assurance` requirement references the Markdown documentation that governs it. Do not set a compliance status without a rationale, and do not set any status other than `gap` without a Markdown documentation reference. Never create, backdate, or simulate an operating record to improve a status.
 - Prefer the smallest implementation that visibly proves the architecture concept.
 - Keep all source links public and deterministic.
-- Use `DEMO_DB` / `demo-blob` for shared relational demo state and audit metadata.
+- Use the vendored wg-edge storage helpers over `WG_DB` (baseline's shared `records` and `events` tables) for demo state and audit metadata, with a TTL wherever the data is not permanent. The demo ships no DDL; baseline owns the schema.
 - Use R2 for actual objects and Durable Objects for actual coordinated state; do not fake them with D1.
 - Record safe audit evidence for meaningful control/architecture actions without logging credentials.
-- Keep `application_logs` public-safe and bounded; never persist credentials, authorization headers, cookies, tokens, secrets, payment data, private account metadata, or unreviewed request bodies.
+- Keep application log events public-safe and bounded; never persist credentials, authorization headers, cookies, tokens, secrets, payment data, private account metadata, or unreviewed request bodies.
 - Keep architecture documentation in Markdown/text. Do not add PDFs to this package unless explicitly requested later.
 - Report route counts from generated artifacts or runtime projections; never encode a fixed route count as an invariant.

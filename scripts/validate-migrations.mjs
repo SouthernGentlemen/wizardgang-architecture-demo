@@ -5,10 +5,17 @@ import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
-const DATABASE_NAME = 'demo-blob';
+// The demo ships no DDL. Its local D1 gets baseline's shared schema from the vendored, hash-pinned
+// platform/migrations/*.sql (applied in order), the same schema production's `wizardgang` database carries.
+const DATABASE_NAME = 'wizardgang';
+const SCHEMA_DIRECTORY = path.join('platform', 'migrations');
 
-export function migrationArguments(persistenceDirectory) {
-  return ['d1', 'migrations', 'apply', DATABASE_NAME, '--local', '--persist-to', persistenceDirectory];
+export function schemaFiles(directory = SCHEMA_DIRECTORY) {
+  return fs.readdirSync(directory).filter((name) => /^\d{4}_[a-z0-9_]+\.sql$/.test(name)).sort().map((name) => path.join(directory, name));
+}
+
+export function migrationArguments(persistenceDirectory, file = schemaFiles()[0]) {
+  return ['d1', 'execute', DATABASE_NAME, '--local', '--persist-to', persistenceDirectory, '--file', file];
 }
 
 export function runCleanLocalMigrations({
@@ -31,14 +38,17 @@ export function runCleanLocalMigrations({
 
   try {
     const executable = process.platform === 'win32' ? 'wrangler.cmd' : 'wrangler';
-    const result = run(executable, migrationArguments(resolvedPersistenceDirectory), {
-      cwd: process.cwd(),
-      env: process.env,
-      stdio: 'inherit',
-    });
+    for (const file of schemaFiles()) {
+      const result = run(executable, migrationArguments(resolvedPersistenceDirectory, file), {
+        cwd: process.cwd(),
+        env: process.env,
+        stdio: 'inherit',
+      });
 
-    if (result.error) throw result.error;
-    return result.status ?? 1;
+      if (result.error) throw result.error;
+      if (result.status !== 0) return result.status ?? 1;
+    }
+    return 0;
   } finally {
     if (ownsPersistenceDirectory) remove(resolvedPersistenceDirectory, { recursive: true, force: true });
   }

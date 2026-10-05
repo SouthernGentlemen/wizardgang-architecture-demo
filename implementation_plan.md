@@ -4,17 +4,8 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-458 — [DB] Move demo data to the shared records and events tables and the shared R2 bucket
-- Dependency: None.
-- Why: Baseline owns the only schema for D1 wizardgang. The demo's own demo-blob migrations are the last reason for its separate deploy token.
-- Scope: Map the useful demo-blob data onto records and events with TTLs through the vendored wg-edge storage helpers (WG_DB, WG_R2, WG_APP demo), dropping the five-minute health history beyond its TTL. Read and write R2 objects under demo/, with uploads under demo/uploads/ (1-day lifecycle). Delete the demo's migrations directory and its d1 migrations apply step. Provide an owner-run copy step for any rows worth keeping.
-- Non-goals: No Worker rename or shell adoption.
-- Acceptance: The demo reads and writes only records, events and demo/ objects; no demo DDL remains; labs and reporting behave as before with TTLs.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: Wizard-Gang/baseline platform/migrations/0001_universal.sql, platform/wg-edge/README.md and config/cloudflare.json; migrations/; wrangler.jsonc
-
 ### DEMO-459 — [OPS] Become the demo Worker on the shared shell and baseline deploy workflow
-- Dependency: DEMO-458.
+- Dependency: None.
 - Why: Phase 4 cut-over: the Worker becomes demo on baseline's shell, conforming config and single deploy path.
 - Scope: Make wrangler.jsonc conforming for demo: name and WG_APP demo, custom domain demo.wizardgang.ai, the shared compatibility settings, DemoCoordinator and the */5 cron, WG_DB by the UUID database_id from runbook step 3.2, WG_R2, and Secrets Store bindings. The entry uses createEdge, with WG_OPS_TOKEN's operator gate replacing DEMO_ADMIN_USER and DEMO_ADMIN_PASSWORD. release.yml calls Wizard-Gang/baseline deploy-worker.yml pinned to the same baseline commit as platform/ (BASE-030 or later) with secrets: inherit, which GitHub allows only within one organization, so it relies on DEMO-457's move to Wizard-Gang. deploy.yml with its scripts is deleted. demo.wizardgang.ai is a Worker custom domain on wizardgang-architecture-demo, which wrangler in CI moves without a prompt; a hand-made DNS record on the host would block it, so confirm there is none or the owner deletes it immediately before the deploy. The deploy token must hold Secrets Store Edit (baseline runbook step 3.6). Release the cut-over; DemoCoordinator holds only a counter and starts fresh.
 - Non-goals: No product feature change.

@@ -14,7 +14,8 @@ import {
   routeUrl,
   type ApplicationRouteDeclaration,
 } from '../src/routing/application-routes';
-import type { D1PreparedStatement, Env } from '../src/types';
+import type { Env } from '../src/types';
+import { demoDatabase } from './helpers/wg-storage';
 
 const ORIGIN = 'https://demo.wizardgang.ai';
 const TEST_SHA = '0123456789abcdef0123456789abcdef01234567';
@@ -470,53 +471,9 @@ const NO_REFERRER_ENGLISH_SURFACES = new Set([
 ]);
 
 
-class BaselineStatement implements D1PreparedStatement {
-  private values: unknown[] = [];
-
-  constructor(private readonly sql: string) {}
-
-  bind(...values: unknown[]) {
-    this.values = values;
-    return this;
-  }
-
-  async run() {
-    return { meta: { last_row_id: 731, changes: this.values.length ? 1 : 0 } };
-  }
-
-  async all<T>() {
-    if (this.sql.includes('FROM demo_control')) {
-      return {
-        results: [{
-          state: 'online',
-          public_message: 'Available.',
-          updated_at: '2026-09-18T12:34:56.000Z',
-          updated_by: 'presentation-test',
-        }] as T[],
-      };
-    }
-    if (this.sql.includes('FROM crawler_control')) {
-      return {
-        results: [{
-          state: 'enabled',
-          updated_at: '2026-09-18T12:34:56.000Z',
-          updated_by: 'presentation-test',
-        }] as T[],
-      };
-    }
-    if (this.sql.includes('COUNT(*) AS verified') && this.sql.includes('FROM service_health_checks')) {
-      return {
-        results: [{ verified: 101, operational: 99, intentional: 1 }] as T[],
-      };
-    }
-    if (this.sql.trim() === 'SELECT 1') return { results: [{ value: 1 }] as T[] };
-    return { results: [] as T[] };
-  }
-}
-
 function environment(): Env {
   return {
-    DEMO_DB: { prepare: (sql: string) => new BaselineStatement(sql) },
+    WG_DB: demoDatabase({ crawler: 'enabled', availability: { verified: 101, operational: 99, intentional: 1 } }),
     WG_SESSION_KEY: 'presentation-session-secret-with-32-characters',
     GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',

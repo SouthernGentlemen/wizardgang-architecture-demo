@@ -6,24 +6,17 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import assetManifest from '../docs/asset-manifest.json';
 import { mountDemoPresentation } from '../src/browser/demo-presentation';
 import { routeRequest } from '../src/router';
-import type { D1PreparedStatement, Env } from '../src/types';
+import type { Env } from '../src/types';
 import {
   DemoHeading,
   DemoPresentationScope,
   createDemoPresentationScope,
   useDemoPresentationScope,
 } from '../src/ui/demo-presentation-scope';
-
-class Statement implements D1PreparedStatement {
-  bind() { return this; }
-  async run() { return { meta: { last_row_id: 1 } }; }
-  async all<T>() {
-    return { results: [{ state: 'online', public_message: 'Available.', updated_at: '2026-09-20T00:00:00.000Z', updated_by: 'test' }] as T[] };
-  }
-}
+import { SqliteD1 } from './helpers/wg-storage';
 
 const env = {
-  DEMO_DB: { prepare: () => new Statement() },
+  WG_DB: new SqliteD1(),
   GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
 } as Env;

@@ -1,6 +1,7 @@
 import type { Env } from '../types';
 import { recordDemoEvent } from './audit';
 import { recordApplicationLog } from './logs';
+import { COLLECTIONS, demoRecords } from './storage';
 
 export interface DemoControl {
   state: 'online' | 'offline';
@@ -8,6 +9,14 @@ export interface DemoControl {
   updatedAt: string;
   updatedBy: string | null;
 }
+
+// The state before any operator change: the demo is online. Only an unreadable record fails closed.
+const INITIAL_CONTROL: DemoControl = {
+  state: 'online',
+  publicMessage: 'The architecture demo is available.',
+  updatedAt: new Date(0).toISOString(),
+  updatedBy: null
+};
 
 const DEFAULT_CONTROL: DemoControl = {
   state: 'offline',
@@ -18,17 +27,11 @@ const DEFAULT_CONTROL: DemoControl = {
 
 export async function getDemoControl(env: Env): Promise<DemoControl> {
   try {
-    const result = await env.DEMO_DB.prepare(
-      'SELECT state, public_message, updated_at, updated_by FROM demo_control WHERE id = 1'
-    ).all<{ state: 'online' | 'offline'; public_message: string; updated_at: string; updated_by: string | null }>();
-    const row = result.results[0];
-    if (!row) return DEFAULT_CONTROL;
-    return {
-      state: row.state,
-      publicMessage: row.public_message,
-      updatedAt: row.updated_at,
-      updatedBy: row.updated_by
-    };
+    const record = await demoRecords(env).get<DemoControl>(COLLECTIONS.control, 'demo');
+    const control = record?.body;
+    if (!control) return INITIAL_CONTROL;
+    if (control.state !== 'online' && control.state !== 'offline') return DEFAULT_CONTROL;
+    return control;
   } catch {
     // Fail closed: a D1 outage must not accidentally bypass an intentional offline state.
     return DEFAULT_CONTROL;
@@ -42,15 +45,8 @@ export async function setDemoControl(
   updatedBy: string
 ): Promise<DemoControl> {
   const updatedAt = new Date().toISOString();
-  await env.DEMO_DB.prepare(`
-    INSERT INTO demo_control (id, state, public_message, updated_at, updated_by)
-    VALUES (1, ?, ?, ?, ?)
-    ON CONFLICT(id) DO UPDATE SET
-      state = excluded.state,
-      public_message = excluded.public_message,
-      updated_at = excluded.updated_at,
-      updated_by = excluded.updated_by
-  `).bind(state, publicMessage, updatedAt, updatedBy).run();
+  const control: DemoControl = { state, publicMessage, updatedAt, updatedBy };
+  await demoRecords(env).put(COLLECTIONS.control, 'demo', control);
 
   await recordDemoEvent(env, 'admin', 'demo_state_changed', {
     state,
@@ -68,5 +64,5 @@ export async function setDemoControl(
     detail: { state, publicMessage, updatedBy, updatedAt }
   });
 
-  return { state, publicMessage, updatedAt, updatedBy };
+  return control;
 }

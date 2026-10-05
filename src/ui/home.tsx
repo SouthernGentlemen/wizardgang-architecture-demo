@@ -1,4 +1,4 @@
-import { AVAILABILITY_RETENTION_DAYS, collectHealth } from '../api/operations';
+import { AVAILABILITY_RETENTION_DAYS, availabilityDays, collectHealth } from '../api/operations';
 import { routeUrl } from '../routing/application-routes';
 import type { Env } from '../types';
 import { useRequestLocalization } from './document';
@@ -27,20 +27,15 @@ async function currentState(env: Env): Promise<string> {
 }
 
 async function measuredAvailability(env: Env): Promise<AvailabilityProof> {
-  const cutoff = new Date(Date.now() - AVAILABILITY_RETENTION_DAYS * 86_400_000).toISOString();
-  const scheduledMarker = '%"observationSource":"scheduled"%';
   try {
-    const result = await env.DEMO_DB.prepare(`SELECT COUNT(*) AS verified,
-      SUM(CASE WHEN status='operational' THEN 1 ELSE 0 END) AS operational,
-      SUM(CASE WHEN COALESCE(detail_json,'') LIKE '%"intentionalOffline":true%' THEN 1 ELSE 0 END) AS intentional
-      FROM service_health_checks
-      WHERE service_key='public-demo' AND checked_at>=? AND COALESCE(detail_json,'') LIKE ?`)
-      .bind(cutoff, scheduledMarker).all<{ verified: number; operational: number; intentional: number }>();
-    const row = result.results[0];
-    const verified = Number(row?.verified ?? 0);
-    const intentional = Number(row?.intentional ?? 0);
+    // One record per UTC day; the 365-day TTL is the retention window.
+    const days = await availabilityDays(env);
+    const { verified, operational, intentional } = days.reduce((total, day) => ({
+      verified: total.verified + day.verified,
+      operational: total.operational + day.operational,
+      intentional: total.intentional + day.intentional,
+    }), { verified: 0, operational: 0, intentional: 0 });
     const measured = Math.max(0, verified - intentional);
-    const operational = Number(row?.operational ?? 0);
     if (!measured) return { label: 'Awaiting data', measured: 0 };
     return { label: 'measured', measured, ratio: operational / measured };
   } catch {

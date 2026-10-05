@@ -2,7 +2,8 @@ import { readFileSync } from 'node:fs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { queryGitHubReporting } from '../src/reporting/github';
 import type { Principal } from '../src/lib/authorization';
-import type { D1Database, Env } from '../src/types';
+import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
 const repository = 'Wizard-Gang/wizardgang-architecture-demo';
 const repositoryApi = `/repos/${repository}`;
@@ -12,19 +13,10 @@ const fixture = JSON.parse(readFileSync('tests/fixtures/github-reporting.json', 
 };
 const principal: Principal = { subject: 'public', authentication: 'anonymous', permissions: ['demo:read'] };
 
-function memoryDb(): D1Database {
-  return {
-    prepare: () => ({
-      bind() { return this; },
-      async run() { return { meta: { changes: 0 } }; },
-      async all<T>() { return { results: [] as T[] }; },
-    }),
-  };
-}
 
 function env(overrides: Partial<Env> = {}): Env {
   return {
-    DEMO_DB: memoryDb(),
+    WG_DB: new SqliteD1(),
     GITHUB_REPO_URL: `https://github.com/${repository}`,
     GITHUB_BRANCH: 'main',
     ...overrides,

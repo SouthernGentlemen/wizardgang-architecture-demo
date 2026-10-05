@@ -2,6 +2,7 @@ import type { Env } from '../types';
 import { recordDemoEvent } from './audit';
 import { json, withSecurityHeaders } from './http';
 import { recordApplicationLog } from './logs';
+import { COLLECTIONS, demoRecords } from './storage';
 
 export type CrawlerAccessState = 'enabled' | 'disabled';
 export type OpenAIAgent = 'OAI-SearchBot' | 'ChatGPT-User' | 'GPTBot';
@@ -20,14 +21,11 @@ const DEFAULT_CONTROL: CrawlerControl = {
 
 export async function getCrawlerControl(env: Env): Promise<CrawlerControl> {
   try {
-    const result = await env.DEMO_DB.prepare(
-      'SELECT state, updated_at, updated_by FROM crawler_control WHERE id = 1',
-    ).all<{ state: CrawlerAccessState; updated_at: string; updated_by: string | null }>();
-    const row = result.results[0];
-    if (!row || (row.state !== 'enabled' && row.state !== 'disabled')) return DEFAULT_CONTROL;
-    return { state: row.state, updatedAt: row.updated_at, updatedBy: row.updated_by };
+    const control = (await demoRecords(env).get<CrawlerControl>(COLLECTIONS.control, 'crawler'))?.body;
+    if (!control || (control.state !== 'enabled' && control.state !== 'disabled')) return DEFAULT_CONTROL;
+    return control;
   } catch {
-    // Fail closed: a missing migration or D1 outage must not expose the site to a crawler.
+    // Fail closed: a missing record or D1 outage must not expose the site to a crawler.
     return DEFAULT_CONTROL;
   }
 }
@@ -38,14 +36,8 @@ export async function setCrawlerControl(
   updatedBy: string,
 ): Promise<CrawlerControl> {
   const updatedAt = new Date().toISOString();
-  await env.DEMO_DB.prepare(`
-    INSERT INTO crawler_control (id, state, updated_at, updated_by)
-    VALUES (1, ?, ?, ?)
-    ON CONFLICT(id) DO UPDATE SET
-      state = excluded.state,
-      updated_at = excluded.updated_at,
-      updated_by = excluded.updated_by
-  `).bind(state, updatedAt, updatedBy).run();
+  const control: CrawlerControl = { state, updatedAt, updatedBy };
+  await demoRecords(env).put(COLLECTIONS.control, 'crawler', control);
 
   await recordDemoEvent(env, 'admin', 'chatgpt_crawl_access_changed', {
     state,
@@ -62,7 +54,7 @@ export async function setCrawlerControl(
     detail: { state, actor: 'authenticated-admin', updatedAt },
   });
 
-  return { state, updatedAt, updatedBy };
+  return control;
 }
 
 export function identifyOpenAIAgent(userAgent: string | null): OpenAIAgent | null {

@@ -16,17 +16,12 @@ import {
   workersSection,
 } from '../src/demos/composable-presentations';
 import { routeUrl } from '../src/routing/application-routes';
-import type { D1PreparedStatement, Env } from '../src/types';
+import type { Env } from '../src/types';
 import type { DemoSection } from '../src/ui/demo-section';
-
-class CompositionStatement implements D1PreparedStatement {
-  bind() { return this; }
-  async run() { return { meta: { last_row_id: 1 } }; }
-  async all<T>() { return { results: [] as T[] }; }
-}
+import { demoDatabase } from './helpers/wg-storage';
 
 const env: Env = {
-  DEMO_DB: { prepare: () => new CompositionStatement() },
+  WG_DB: demoDatabase(),
   WG_SESSION_KEY: 'test-composition-cursor-secret-that-is-long-enough',
   GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',

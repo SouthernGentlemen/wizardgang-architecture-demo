@@ -184,7 +184,7 @@
       "order": 11,
       "fields": {
         "category": "Database",
-        "testControl": "Apply D1 migrations to clean local database",
+        "testControl": "Apply the vendored baseline schema to a clean local D1",
         "currentEvidence": "CI `validate:migrations`",
         "status": "Active",
         "triggerCadence": "PR / main CI",

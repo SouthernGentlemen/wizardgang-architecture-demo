@@ -1,26 +1,6 @@
-export interface D1RunResultMeta {
-  last_row_id?: number;
-  changes?: number;
-}
+import type { D1Like, R2Like } from '#wg-edge';
 
-export interface D1RunResult {
-  meta: D1RunResultMeta;
-}
-
-export interface D1AllResult<T = Record<string, unknown>> {
-  results: T[];
-}
-
-export interface D1PreparedStatement {
-  bind(...values: unknown[]): D1PreparedStatement;
-  run(): Promise<D1RunResult>;
-  all<T = Record<string, unknown>>(): Promise<D1AllResult<T>>;
-}
-
-export interface D1Database {
-  prepare(query: string): D1PreparedStatement;
-}
-
+/** The body of an R2 object as the demo reads it back through the shared bucket. */
 export interface R2ObjectBody {
   text(): Promise<string>;
   arrayBuffer?(): Promise<ArrayBuffer>;
@@ -29,12 +9,6 @@ export interface R2ObjectBody {
   etag?: string;
   uploaded?: Date;
   httpMetadata?: { contentType?: string };
-}
-
-export interface R2Bucket {
-  put(key: string, value: string | ArrayBuffer | ReadableStream<Uint8Array>, options?: { httpMetadata?: { contentType?: string } }): Promise<unknown>;
-  get(key: string): Promise<R2ObjectBody | null>;
-  delete(key: string): Promise<void>;
 }
 
 export interface DurableObjectStorage {
@@ -64,8 +38,9 @@ export interface AssetsBinding {
 }
 
 export interface Env {
-  DEMO_DB: D1Database;
-  DEMO_R2?: R2Bucket;
+  // Baseline's shared `wizardgang` D1 (records and events) and R2 bucket; the demo reaches both through lib/storage.ts.
+  WG_DB: D1Like;
+  WG_R2?: R2Like;
   DEMO_COORDINATOR?: DurableObjectNamespace;
   ASSETS?: AssetsBinding;
   GITHUB_REPO_URL: string;

@@ -51,7 +51,7 @@ No broad operator bearer credential is accepted by the application. REST writes 
 
 `/api/operations/logs` is a bounded public-safe diagnostic machine surface. There is no public human log explorer. Do not store or return passwords, authorization headers, cookies, bearer tokens, API keys, secrets, payment data, private account identifiers, or unreviewed request bodies. Structured detail is defensively redacted and size-bounded before it reaches `application_logs`. Identity log records never expose their structured detail through the public log projection.
 
-Keep operational logs distinct from the `demo_events` audit/evidence stream: logs explain runtime behavior; audit events preserve meaningful control/change evidence.
+Keep operational logs (`log` events) distinct from the `audit` event stream: logs explain runtime behavior; audit events preserve meaningful control/change evidence.
 
 ## Offline behavior
 

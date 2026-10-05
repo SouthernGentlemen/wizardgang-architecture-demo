@@ -4,28 +4,11 @@ import { routeRequest } from '../src/router';
 import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
 import { primaryNavigation } from '../src/routing/navigation';
 import { renderReactPage, type ReactPageContent } from '../src/ui/page';
-import type { D1PreparedStatement, Env } from '../src/types';
-
-class CompositionStatement implements D1PreparedStatement {
-  constructor(private readonly sql: string) {}
-  bind() { return this; }
-  async run() { return { meta: { last_row_id: 1 } }; }
-  async all<T>() {
-    if (this.sql.includes('FROM demo_control')) {
-      return { results: [{ state: 'online', public_message: 'Available.', updated_at: '2026-09-07T12:00:00.000Z', updated_by: 'test' }] as T[] };
-    }
-    if (this.sql.includes('FROM crawler_control')) {
-      return { results: [{ state: 'disabled', updated_at: '2026-09-07T12:00:00.000Z', updated_by: 'test' }] as T[] };
-    }
-    if (this.sql.includes('FROM service_health_checks')) {
-      return { results: [{ id: 1, service_key: 'public-demo', status: 'operational', response_ms: 5, detail_json: '{"intentionalOffline":false}', checked_at: '2026-09-07T11:00:00.000Z' }] as T[] };
-    }
-    return { results: [] as T[] };
-  }
-}
+import type { Env } from '../src/types';
+import { demoDatabase } from './helpers/wg-storage';
 
 const env: Env = {
-  DEMO_DB: { prepare: (sql: string) => new CompositionStatement(sql) },
+  WG_DB: demoDatabase(),
   WG_SESSION_KEY: 'test-composition-cursor-secret-that-is-long-enough',
   GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
