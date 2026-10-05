@@ -179,12 +179,12 @@ describe('registry-driven assurance semantic validation', () => {
 
     expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.ts'));
-    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-integrity.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-integrity.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-iso27001-compliance.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-iso42001-compliance.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-wcag-compliance.ts'));
-    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-publication.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-publication.ts'));
   });
 
   it('fails publication closed for an ungoverned partition record, then accepts explicit reviewed lifecycle metadata', () => {
@@ -202,7 +202,7 @@ describe('registry-driven assurance semantic validation', () => {
     for (const resource of affected) approveResourceRevision(fixtureRoot, resource.resourceId, resource.path);
 
     expectRejected(
-      runScript(fixtureRoot, 'scripts/validate-assurance-publication.mjs'),
+      runScript(fixtureRoot, 'scripts/validate-assurance-publication.ts'),
       'EVD-NEW-148: public assurance record is not publishable (missing-lifecycle)',
     );
 
@@ -214,7 +214,7 @@ describe('registry-driven assurance semantic validation', () => {
     });
     writeJson(fixtureRoot, 'assurance/lifecycle/records.json', lifecycle);
 
-    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-publication.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-publication.ts'));
   });
 
   it('applies the same fail-closed publication rule to a newly registered record family', () => {
@@ -245,7 +245,7 @@ describe('registry-driven assurance semantic validation', () => {
     approveResourceRevision(fixtureRoot, 'fixture-publication-family', familyPath);
 
     expectRejected(
-      runScript(fixtureRoot, 'scripts/validate-assurance-publication.mjs'),
+      runScript(fixtureRoot, 'scripts/validate-assurance-publication.ts'),
       'FIXTURE-NEW-148: public assurance record is not publishable (missing-lifecycle)',
     );
   });

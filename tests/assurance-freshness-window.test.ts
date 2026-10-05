@@ -30,7 +30,7 @@ function writeEvidence(fixtureRoot: string, evidence: unknown): void {
 }
 
 function runIntegrity(fixtureRoot: string, clock = validationNow): SpawnSyncReturns<string> {
-  return spawnSync(process.execPath, ['scripts/validate-assurance-integrity.mjs'], {
+  return spawnSync(process.execPath, ['scripts/validate-assurance-integrity.ts'], {
     cwd: fixtureRoot,
     encoding: 'utf8',
     env: { ...process.env, ASSURANCE_VALIDATION_NOW: clock },

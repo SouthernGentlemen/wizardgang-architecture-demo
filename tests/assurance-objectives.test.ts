@@ -92,7 +92,7 @@ describe('canonical governance objectives', () => {
     objective.reviewCadence = 'Fixture-only cadence';
     writeJson(fixtureRoot, 'assurance/objectives/objectives.json', objectives);
 
-    const integrity = run(fixtureRoot, 'scripts/validate-assurance-integrity.mjs');
+    const integrity = run(fixtureRoot, 'scripts/validate-assurance-integrity.ts');
     expect(integrity.status, output(integrity)).toBe(0);
     expect(readJson(fixtureRoot, 'assurance/objectives/objectives.json').records
       .find((record: { id: string }) => record.id === 'SEC-OBJ-005').reviewCadence).toBe('Fixture-only cadence');
@@ -106,11 +106,11 @@ describe('canonical governance objectives', () => {
     objective.id = 'SEC-OBJ-999';
     writeJson(fixtureRoot, 'assurance/objectives/objectives.json', objectives);
 
-    const integrity = run(fixtureRoot, 'scripts/validate-assurance-integrity.mjs');
+    const integrity = run(fixtureRoot, 'scripts/validate-assurance-integrity.ts');
     expect(integrity.status).not.toBe(0);
     expect(output(integrity)).toContain('SEC-OBJ-005');
 
-    const validator = readFileSync(join(fixtureRoot, 'scripts/validate-assurance-integrity.mjs'), 'utf8');
+    const validator = readFileSync(join(fixtureRoot, 'scripts/validate-assurance-integrity.ts'), 'utf8');
     expect(validator).not.toContain('objectiveDocument');
     expect(validator).not.toContain('matchAll(/\\|\\s*([A-Z]+-OBJ-');
   });

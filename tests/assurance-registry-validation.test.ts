@@ -103,7 +103,7 @@ describe('registry-driven assurance validation fixtures', () => {
 
     expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.ts'));
-    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-integrity.mjs'));
+    expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-integrity.ts'));
     expect(readFileSync(join(fixtureRoot, 'src/assurance/generated/registry-bindings.ts'), 'utf8')).toContain('"report-register-v2"');
   });
 
@@ -116,7 +116,7 @@ describe('registry-driven assurance validation fixtures', () => {
     expectPassed(runScript(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts'));
     expectPassed(runScript(fixtureRoot, 'scripts/validate-assurance-registry.ts'));
     expectRejected(
-      runScript(fixtureRoot, 'scripts/validate-assurance-integrity.mjs'),
+      runScript(fixtureRoot, 'scripts/validate-assurance-integrity.ts'),
       'unresolved evidence relationship EVD-MISSING-999',
     );
   });

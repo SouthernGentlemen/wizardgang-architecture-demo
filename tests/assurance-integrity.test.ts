@@ -8,7 +8,7 @@ const env = { GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-
 
 describe('assurance integrity current-contract invariants', () => {
   it('passes the repository cross-dataset integrity validator on the checked-in canonical sources', () => {
-    const result = spawnSync(process.execPath, ['scripts/validate-assurance-integrity.mjs'], {
+    const result = spawnSync(process.execPath, ['scripts/validate-assurance-integrity.ts'], {
       cwd: process.cwd(),
       encoding: 'utf8',
     });

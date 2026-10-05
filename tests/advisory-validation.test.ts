@@ -78,7 +78,7 @@ describe('canonical advisory validation', () => {
   it('accepts an explicit empty-state fixture without making emptiness a canonical invariant', () => {
     const root = createFixtureRoot();
     installAdvisoryFixture(root, 'empty');
-    expectPassed(run(root, 'scripts/validate-advisories.mjs'));
+    expectPassed(run(root, 'scripts/validate-advisories.ts'));
   });
 
   it('accepts a nonempty canonical-shape advisory fixture through schema, semantic, and integrity validation', () => {
@@ -86,8 +86,8 @@ describe('canonical advisory validation', () => {
     installAdvisoryFixture(root, 'valid-nonempty');
     expectPassed(run(root, 'scripts/generate-assurance-runtime-binding.ts'));
     expectPassed(run(root, 'scripts/validate-assurance-registry.ts'));
-    expectPassed(run(root, 'scripts/validate-advisories.mjs'));
-    expectPassed(run(root, 'scripts/validate-assurance-integrity.mjs'));
+    expectPassed(run(root, 'scripts/validate-advisories.ts'));
+    expectPassed(run(root, 'scripts/validate-assurance-integrity.ts'));
   });
 
   it('rejects unresolved canonical evidence relationships', () => {
@@ -100,7 +100,7 @@ describe('canonical advisory validation', () => {
       ['EVD-FAKE-999'],
     );
     writeJson(root, 'assurance/advisories/advisories.json', advisories);
-    expectRejected(run(root, 'scripts/validate-advisories.mjs'), 'unresolved evidence relationship EVD-FAKE-999');
+    expectRejected(run(root, 'scripts/validate-advisories.ts'), 'unresolved evidence relationship EVD-FAKE-999');
   });
 
   it('rejects incident relationships that do not resolve to established incident records', () => {
@@ -113,7 +113,7 @@ describe('canonical advisory validation', () => {
       ['INC-999'],
     );
     writeJson(root, 'assurance/advisories/advisories.json', advisories);
-    expectRejected(run(root, 'scripts/validate-advisories.mjs'), 'unresolved incidents relationship INC-999');
+    expectRejected(run(root, 'scripts/validate-advisories.ts'), 'unresolved incidents relationship INC-999');
   });
 
   it('rejects fixed releases without annotated tag provenance', () => {
@@ -121,7 +121,7 @@ describe('canonical advisory validation', () => {
     const advisories = installAdvisoryFixture(root, 'valid-nonempty');
     advisories.records[0].fixedReleases = ['v9.9.9'];
     writeJson(root, 'assurance/advisories/advisories.json', advisories);
-    expectRejected(run(root, 'scripts/validate-advisories.mjs'), 'fixed release v9.9.9 is not an annotated release tag');
+    expectRejected(run(root, 'scripts/validate-advisories.ts'), 'fixed release v9.9.9 is not an annotated release tag');
   });
 
   it('rejects unsafe public advisory fields through the registered schema', () => {
@@ -129,7 +129,7 @@ describe('canonical advisory validation', () => {
     const advisories = installAdvisoryFixture(root, 'valid-nonempty');
     advisories.records[0].reporterIdentity = 'fixture-only';
     writeJson(root, 'assurance/advisories/advisories.json', advisories);
-    expectRejected(run(root, 'scripts/validate-advisories.mjs'), 'additional property reporterIdentity is not allowed');
+    expectRejected(run(root, 'scripts/validate-advisories.ts'), 'additional property reporterIdentity is not allowed');
   });
 
   it('rejects the retired incidentLinks and evidence advisory contract', () => {
@@ -142,7 +142,7 @@ describe('canonical advisory validation', () => {
       .map((relationship: any) => relationship.to.native);
     delete record.relationships;
     writeJson(root, 'assurance/advisories/advisories.json', advisories);
-    const result = run(root, 'scripts/validate-advisories.mjs');
+    const result = run(root, 'scripts/validate-advisories.ts');
     expectRejected(result, 'additional property incidentLinks is not allowed');
     expect(`${result.stdout}\n${result.stderr}`).toContain('must contain required property relationships');
   });

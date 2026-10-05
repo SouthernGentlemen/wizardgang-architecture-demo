@@ -10,7 +10,7 @@ import {
 import {
   collectRegistryAssuranceSnapshot,
   readSnapshotLifecycle,
-} from './lib/assurance-lifecycle-history.mjs';
+} from './lib/assurance-lifecycle-history.ts';
 import {
   gitBlobShaForFile,
   LIFECYCLE_BASELINE_MEMBERSHIP_BLOB,

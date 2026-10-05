@@ -8,7 +8,7 @@ import { routeUrl } from '../src/routing/application-routes';
 const read = (file) => fs.readFileSync(file, 'utf8');
 const releaseWorkflow = read('.github/workflows/release.yml');
 const monitorWorkflow = read('.github/workflows/assurance-monitor.yml');
-const monitorValidator = read('scripts/validate-assurance-operations.mjs');
+const monitorValidator = read('scripts/validate-assurance-operations.ts');
 const releaseManagement = read('docs/RELEASE-MANAGEMENT.md');
 const deployments = read('docs/history/DEPLOYMENTS.md');
 const repositorySettingsValidator = read('scripts/validate-github-repository-settings.ts');
