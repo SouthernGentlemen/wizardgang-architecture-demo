@@ -5,14 +5,12 @@ DEMO_ADMIN_USER=admin
 DEMO_ADMIN_PASSWORD=replace-me-with-a-local-only-value
 DEMO_WEBHOOK_SECRET=replace-me-with-a-local-only-webhook-secret
 GITHUB_WEBHOOK_SECRET=replace-me-with-a-local-only-github-webhook-secret
-GITHUB_DEMO_TOKEN=replace-me-with-a-local-only-git-demo-token
+GITHUB_APP_PRIVATE_KEY=replace-me-with-a-local-only-pkcs8-key
 GITHUB_OAUTH_CLIENT_SECRET=replace-me
 GOOGLE_OAUTH_CLIENT_SECRET=replace-me
 MICROSOFT_OAUTH_CLIENT_SECRET=replace-me
 
 # Optional managed Worker secrets.
-# GITHUB_READ_TOKEN=replace-me-with-a-local-only-read-token
-# GITHUB_REPORTING_WRITE_TOKEN=replace-me-with-a-local-only-issues-write-token
 # CLOUDFLARE_BILLING_TOKEN=replace-me-with-account-analytics-read-and-billing-read
 # WORKER_SECRETS_END
 
@@ -25,6 +23,8 @@ MICROSOFT_OAUTH_CLIENT_SECRET=replace-me
 # GOOGLE_OAUTH_CLIENT_ID=replace-me
 # MICROSOFT_OAUTH_CLIENT_ID=replace-me
 # MICROSOFT_TENANT_ID=replace-me
+# GITHUB_APP_ID=replace-me
+# GITHUB_APP_INSTALLATION_ID=replace-me
 # SAML_IDP_CERT=replace-me-with-the-entra-signing-certificate
 
 # Optional protected GitHub reporting. Public repositories use the anonymous GitHub API by default.

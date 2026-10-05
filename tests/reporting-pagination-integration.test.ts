@@ -9,6 +9,7 @@ import {
 } from '../src/reporting/github-query';
 import { paginateReportingRecords } from '../src/reporting/query';
 import type { Env } from '../src/types';
+import { appTokenResponse, githubAppEnv } from './helpers/github-app';
 
 const repository = 'SouthernGentlemen/wizardgang-architecture-demo';
 const repositoryApi = `/repos/${repository}`;
@@ -167,7 +168,9 @@ describe('DEMO-177 reporting pagination integration', () => {
       updated_at: '2026-09-04T17:59:00Z',
       html_url: `https://github.com/${repository}/security/advisories/GHSA-ffff-eeee-dddd`,
     };
-    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
+      const exchange = appTokenResponse(input, init);
+      if (exchange) return exchange;
       fetchCount += 1;
       const url = new URL(String(input));
       if (url.pathname === repositoryApi) return json(fixture.repository);
@@ -177,7 +180,7 @@ describe('DEMO-177 reporting pagination integration', () => {
       return json({ message: 'unexpected fixture request' }, 500);
     });
 
-    const env = environment({ GITHUB_READ_TOKEN: 'protected-read' });
+    const env = environment(githubAppEnv);
     const first = await queryGitHubReportingPage(env, operatorPrincipal, {
       sourceIds: ['github.repository-security-advisories'],
       limit: 1,

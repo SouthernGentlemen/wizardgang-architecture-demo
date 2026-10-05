@@ -2,6 +2,7 @@ import type { Env } from '../types';
 import { recordDemoEvent } from '../lib/audit';
 import { requireAdmin, requireSameOrigin } from '../lib/admin-auth';
 import { collectGitDemoStatus, dispatchGitDemo, gitDemoPreflight, type VersionBump } from '../lib/git-demo';
+import { githubAppConfigured } from '../lib/github-app';
 import { json, methodNotAllowed } from '../lib/http';
 import { recordApplicationLog } from '../lib/logs';
 
@@ -95,7 +96,7 @@ export async function gitDemoStartResponse(request: Request, env: Env): Promise<
   if (typeof body?.preflightFingerprint !== 'string' || !/^[0-9a-f]{64}$/.test(body.preflightFingerprint)) {
     return json({ error: 'release_preflight_required', detail: 'Review the current release preflight before starting.' }, { status: 400, headers: { 'cache-control': 'no-store' } });
   }
-  if (!env.GITHUB_DEMO_TOKEN) return dispatchFailure({ status: 503, error: 'Git demo dispatch is not configured.' });
+  if (!githubAppConfigured(env)) return dispatchFailure({ status: 503, error: 'Git demo dispatch is not configured.' });
 
   let preflight: Awaited<ReturnType<typeof gitDemoPreflight>>;
   try {
@@ -153,7 +154,7 @@ export async function gitDemoReleaseResponse(request: Request, env: Env): Promis
   if (!Number.isSafeInteger(pullRequest) || Number(pullRequest) < 1 || typeof requestId !== 'string' || !REQUEST_ID_PATTERN.test(requestId)) {
     return json({ error: 'invalid_release_request', detail: 'A valid demo pull request and request ID are required.' }, { status: 400, headers: { 'cache-control': 'no-store' } });
   }
-  if (!env.GITHUB_DEMO_TOKEN) return dispatchFailure({ status: 503, error: 'Git demo dispatch is not configured.' });
+  if (!githubAppConfigured(env)) return dispatchFailure({ status: 503, error: 'Git demo dispatch is not configured.' });
 
   let status: Awaited<ReturnType<typeof collectGitDemoStatus>>;
   try {

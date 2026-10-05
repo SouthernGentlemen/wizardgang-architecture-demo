@@ -1,4 +1,6 @@
 import type { Principal } from '../lib/authorization';
+import { GitHubAppError, githubAppConfigured, githubAppTokenFor } from '../lib/github-app';
+import type { GitHubAppPermissions } from '../lib/github-app';
 import type { Env } from '../types';
 import type {
   ReportingAvailability,
@@ -16,6 +18,12 @@ const MAX_PAGE_LIMIT = 100;
 const MAX_EXPORT_PAGES = 50;
 const ISSUE_WRITE_FIELDS = new Set(['title', 'body', 'state', 'labels', 'assignees', 'milestone']);
 const UPDATE_REQUEST_FIELDS = new Set(['source', 'repository', 'operation', 'nativeId', 'revision', 'fields']);
+// The least wg-github-app permission each credentialed call needs; Metadata read comes with every installation token.
+const METADATA_READ: GitHubAppPermissions = { metadata: 'read' };
+const CONTENTS_READ: GitHubAppPermissions = { contents: 'read' };
+const ACTIONS_READ: GitHubAppPermissions = { actions: 'read' };
+const ISSUES_WRITE: GitHubAppPermissions = { issues: 'write' };
+const TOKEN_UNAVAILABLE = 'github_app_token_unavailable';
 type JsonObject = Record<string, unknown>;
 export interface GitHubReportingBinding {
   repository: string;
@@ -90,7 +98,8 @@ interface RepositoryContext {
   private: boolean;
   defaultBranch: string;
   maxPages: number;
-  readToken?: string;
+  // Set when a protected source or a private repository needs the GitHub App; public reads stay anonymous.
+  appEnv?: Env;
 }
 
 function asObject(value: unknown): JsonObject | null {
@@ -262,6 +271,28 @@ function classifyFailure(response: Response): { availability: ReportingAvailabil
   return { availability: 'unavailable', detail: 'github_provider_unavailable' };
 }
 
+async function appToken(env: Env, permissions: GitHubAppPermissions): Promise<string | undefined> {
+  try {
+    return (await githubAppTokenFor(env, permissions)) ?? undefined;
+  } catch (error) {
+    if (error instanceof GitHubAppError) {
+      throw new GitHubReportingError(503, TOKEN_UNAVAILABLE, 'A GitHub App installation token could not be issued.');
+    }
+    throw error;
+  }
+}
+
+// undefined is an anonymous public read; null means the App could not issue a token with these permissions.
+async function readToken(context: RepositoryContext, permissions: GitHubAppPermissions): Promise<string | undefined | null> {
+  if (!context.appEnv) return undefined;
+  try {
+    return (await githubAppTokenFor(context.appEnv, permissions)) ?? undefined;
+  } catch (error) {
+    if (error instanceof GitHubAppError) return null;
+    throw error;
+  }
+}
+
 async function githubJson(url: string, token?: string, init: RequestInit = {}): Promise<{ response: Response; value: unknown }> {
   try {
     const response = await fetch(url, { ...init, headers: githubHeaders(token, init.headers) });
@@ -288,8 +319,8 @@ async function repositoryContext(
     if (!repository) throw new GitHubReportingError(503, 'github_provider_invalid_response');
     if (needsProtectedSource) {
       requirePrivate(principal);
-      if (!env.GITHUB_READ_TOKEN) {
-        throw new GitHubReportingError(503, 'github_read_credential_missing', 'Protected GitHub reporting requires GITHUB_READ_TOKEN.');
+      if (!githubAppConfigured(env)) {
+        throw new GitHubReportingError(503, 'github_read_credential_missing', 'Protected GitHub reporting requires the GitHub App.');
       }
     }
     return {
@@ -298,7 +329,7 @@ async function repositoryContext(
       private: false,
       defaultBranch: text(repository.default_branch) || binding.branch || env.GITHUB_BRANCH || 'main',
       maxPages: configuredMaxPages(env),
-      ...(needsProtectedSource && env.GITHUB_READ_TOKEN ? { readToken: env.GITHUB_READ_TOKEN } : {}),
+      ...(needsProtectedSource ? { appEnv: env } : {}),
     };
   }
 
@@ -307,10 +338,10 @@ async function repositoryContext(
     throw new GitHubReportingError(failure.availability === 'rate-limited' ? 429 : 503, failure.detail);
   }
   requirePrivate(principal);
-  if (!env.GITHUB_READ_TOKEN) {
-    throw new GitHubReportingError(503, 'github_read_credential_missing', 'Private repository reporting requires GITHUB_READ_TOKEN.');
+  if (!githubAppConfigured(env)) {
+    throw new GitHubReportingError(503, 'github_read_credential_missing', 'Private repository reporting requires the GitHub App.');
   }
-  const protectedProbe = await githubJson(endpoint, env.GITHUB_READ_TOKEN);
+  const protectedProbe = await githubJson(endpoint, await appToken(env, METADATA_READ));
   if (!protectedProbe.response.ok) {
     const failure = classifyFailure(protectedProbe.response);
     throw new GitHubReportingError(failure.availability === 'rate-limited' ? 429 : 503, failure.detail);
@@ -323,7 +354,7 @@ async function repositoryContext(
     private: repository.private === true,
     defaultBranch: text(repository.default_branch) || binding.branch || env.GITHUB_BRANCH || 'main',
     maxPages: configuredMaxPages(env),
-    readToken: env.GITHUB_READ_TOKEN,
+    appEnv: env,
   };
 }
 
@@ -360,6 +391,7 @@ function collection(value: unknown, key?: string): { items: JsonObject[]; totalC
 async function fetchPaged(
   context: RepositoryContext,
   path: string,
+  permissions: GitHubAppPermissions,
   key?: string,
 ): Promise<PageResult> {
   const items: JsonObject[] = [];
@@ -371,7 +403,9 @@ async function fetchPaged(
     const url = new URL(`${GITHUB_API_ROOT}/repos/${context.binding.repository}${path}`);
     url.searchParams.set('per_page', String(pageLimit));
     url.searchParams.set('page', String(page));
-    const { response, value } = await githubJson(url.toString(), context.readToken);
+    const token = await readToken(context, permissions);
+    if (token === null) return { items, availability: 'unavailable', complete: false, nextCursor: null, detail: TOKEN_UNAVAILABLE };
+    const { response, value } = await githubJson(url.toString(), token);
     if (!response.ok) {
       const failure = classifyFailure(response);
       return { items, availability: failure.availability, complete: false, nextCursor: null, detail: failure.detail };
@@ -392,8 +426,10 @@ async function fetchPaged(
   }
 }
 
-async function fetchSingle(context: RepositoryContext, path: string): Promise<PageResult> {
-  const { response, value } = await githubJson(`${GITHUB_API_ROOT}/repos/${context.binding.repository}${path}`, context.readToken);
+async function fetchSingle(context: RepositoryContext, path: string, permissions: GitHubAppPermissions): Promise<PageResult> {
+  const token = await readToken(context, permissions);
+  if (token === null) return { items: [], availability: 'unavailable', complete: false, nextCursor: null, detail: TOKEN_UNAVAILABLE };
+  const { response, value } = await githubJson(`${GITHUB_API_ROOT}/repos/${context.binding.repository}${path}`, token);
   if (!response.ok) {
     const failure = classifyFailure(response);
     return { items: [], availability: failure.availability, complete: false, nextCursor: null, detail: failure.detail };
@@ -519,24 +555,27 @@ function mapRecord(
   };
 }
 
-function sourceDescriptor(sourceId: string, context: RepositoryContext): { path: string; key?: string; single?: boolean } {
+function sourceDescriptor(
+  sourceId: string,
+  context: RepositoryContext,
+): { path: string; permissions: GitHubAppPermissions; key?: string; single?: boolean } {
   const branch = encodeURIComponent(effectiveBranch(context));
   const labels = context.binding.issueLabels?.length ? `&labels=${encodeURIComponent(context.binding.issueLabels.join(','))}` : '';
   switch (sourceId) {
-    case 'github.repositories': return { path: '', single: true };
-    case 'github.branches': return { path: '/branches' };
-    case 'github.commits': return { path: `/commits?sha=${branch}` };
-    case 'github.issues': return { path: `/issues?state=all&sort=updated&direction=desc${labels}` };
-    case 'github.pull-requests': return { path: '/pulls?state=all&sort=updated&direction=desc' };
-    case 'github.workflow-runs': return { path: '/actions/runs', key: 'workflow_runs' };
-    case 'github.workflow-artifacts': return { path: '/actions/artifacts', key: 'artifacts' };
-    case 'github.tags': return { path: '/tags' };
-    case 'github.releases': return { path: '/releases' };
-    case 'github.branch-protection': return { path: `/branches/${branch}/protection`, single: true };
-    case 'github.code-scanning-alerts': return { path: '/code-scanning/alerts' };
-    case 'github.secret-scanning-alerts': return { path: '/secret-scanning/alerts' };
-    case 'github.dependabot-alerts': return { path: '/dependabot/alerts' };
-    case 'github.repository-security-advisories': return { path: '/security-advisories' };
+    case 'github.repositories': return { path: '', permissions: METADATA_READ, single: true };
+    case 'github.branches': return { path: '/branches', permissions: CONTENTS_READ };
+    case 'github.commits': return { path: `/commits?sha=${branch}`, permissions: CONTENTS_READ };
+    case 'github.issues': return { path: `/issues?state=all&sort=updated&direction=desc${labels}`, permissions: { issues: 'read' } };
+    case 'github.pull-requests': return { path: '/pulls?state=all&sort=updated&direction=desc', permissions: { pull_requests: 'read' } };
+    case 'github.workflow-runs': return { path: '/actions/runs', permissions: ACTIONS_READ, key: 'workflow_runs' };
+    case 'github.workflow-artifacts': return { path: '/actions/artifacts', permissions: ACTIONS_READ, key: 'artifacts' };
+    case 'github.tags': return { path: '/tags', permissions: CONTENTS_READ };
+    case 'github.releases': return { path: '/releases', permissions: CONTENTS_READ };
+    case 'github.branch-protection': return { path: `/branches/${branch}/protection`, permissions: { administration: 'read' }, single: true };
+    case 'github.code-scanning-alerts': return { path: '/code-scanning/alerts', permissions: { security_events: 'read' } };
+    case 'github.secret-scanning-alerts': return { path: '/secret-scanning/alerts', permissions: { secret_scanning_alerts: 'read' } };
+    case 'github.dependabot-alerts': return { path: '/dependabot/alerts', permissions: { vulnerability_alerts: 'read' } };
+    case 'github.repository-security-advisories': return { path: '/security-advisories', permissions: { repository_advisories: 'read' } };
     default: throw new GitHubReportingError(400, 'github_reporting_source_unsupported', sourceId);
   }
 }
@@ -544,7 +583,7 @@ function sourceDescriptor(sourceId: string, context: RepositoryContext): { path:
 async function workflowAttempts(
   context: RepositoryContext,
 ): Promise<PageResult> {
-  const runs = await fetchPaged(context, '/actions/runs', 'workflow_runs');
+  const runs = await fetchPaged(context, '/actions/runs', ACTIONS_READ, 'workflow_runs');
   if (runs.items.length === 0) return runs;
 
   const attempts: JsonObject[] = [];
@@ -560,7 +599,7 @@ async function workflowAttempts(
         attempts.push({ ...run, run_attempt: attempt });
         continue;
       }
-      const previous = await fetchSingle(context, `/actions/runs/${encodeURIComponent(runId)}/attempts/${attempt}`);
+      const previous = await fetchSingle(context, `/actions/runs/${encodeURIComponent(runId)}/attempts/${attempt}`, ACTIONS_READ);
       if (previous.items[0]) attempts.push(previous.items[0]);
       if (previous.availability !== 'available') {
         availability = previous.availability;
@@ -577,11 +616,11 @@ async function branchProtectionPage(
   source: ReportingSource,
 ): Promise<{ page: PageResult; revisionOverride?: readonly string[] }> {
   const descriptor = sourceDescriptor(source.id, context);
-  const page = await fetchSingle(context, descriptor.path);
+  const page = await fetchSingle(context, descriptor.path, descriptor.permissions);
   if (page.items.length === 0) return { page };
 
   const branch = effectiveBranch(context);
-  const branchState = await fetchSingle(context, `/branches/${encodeURIComponent(branch)}`);
+  const branchState = await fetchSingle(context, `/branches/${encodeURIComponent(branch)}`, CONTENTS_READ);
   const branchCommitSha = branchState.items[0]
     ? text(nested(branchState.items[0], 'commit', 'sha'))
     : null;
@@ -615,8 +654,8 @@ async function fetchSource(
   } else {
     const descriptor = sourceDescriptor(source.id, context);
     page = descriptor.single
-      ? await fetchSingle(context, descriptor.path)
-      : await fetchPaged(context, descriptor.path, descriptor.key);
+      ? await fetchSingle(context, descriptor.path, descriptor.permissions)
+      : await fetchPaged(context, descriptor.path, descriptor.permissions, descriptor.key);
   }
 
   const records: GitHubReportingRecord[] = [];
@@ -798,14 +837,15 @@ export async function updateGitHubReporting(
     throw new GitHubReportingError(400, 'github_update_not_supported', source.id);
   }
   if (source.id !== 'github.issues') throw new GitHubReportingError(400, 'github_update_not_supported', source.id);
-  if (!env.GITHUB_REPORTING_WRITE_TOKEN) {
-    throw new GitHubReportingError(503, 'github_write_credential_missing', 'Native GitHub source writes require GITHUB_REPORTING_WRITE_TOKEN.');
+  if (!githubAppConfigured(env)) {
+    throw new GitHubReportingError(503, 'github_write_credential_missing', 'Native GitHub source writes require the GitHub App.');
   }
 
   const number = issueNumber(input.nativeId);
   const fields = validateIssueFields(input.fields);
   const endpoint = `${GITHUB_API_ROOT}/repos/${binding.repository}/issues/${number}`;
-  const current = await githubJson(endpoint, env.GITHUB_REPORTING_WRITE_TOKEN);
+  const token = await appToken(env, ISSUES_WRITE);
+  const current = await githubJson(endpoint, token);
   if (!current.response.ok) {
     const failure = classifyFailure(current.response);
     throw new GitHubReportingError(
@@ -820,7 +860,7 @@ export async function updateGitHubReporting(
     throw new GitHubReportingError(409, 'github_revision_conflict', 'The native GitHub object changed after the supplied revision.');
   }
 
-  const updated = await githubJson(endpoint, env.GITHUB_REPORTING_WRITE_TOKEN, {
+  const updated = await githubJson(endpoint, token, {
     method: 'PATCH',
     body: JSON.stringify(fields),
     headers: { 'content-type': 'application/json' },
