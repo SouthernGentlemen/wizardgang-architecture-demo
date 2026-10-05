@@ -3,7 +3,7 @@
 Public, executable companion to **WG-ARCH-001 — WizardGang Systems Architecture**.
 
 Target site: `https://demo.wizardgang.ai`  
-Public repository: `SouthernGentlemen/wizardgang-architecture-demo`
+Public repository: `Wizard-Gang/wizardgang-architecture-demo`
 
 The canonical architecture standard is [`docs/ARCHITECTURE-STANDARD.md`](docs/ARCHITECTURE-STANDARD.md). This repository intentionally keeps architecture and operational documentation in reviewable Markdown/text rather than PDFs.
 

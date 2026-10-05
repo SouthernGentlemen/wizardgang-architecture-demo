@@ -27,7 +27,7 @@ class OperationalStatement implements D1PreparedStatement {
 const password = 'local-admin-password-that-must-not-render';
 const environment = {
   DEMO_DB: { prepare: (sql: string) => new OperationalStatement(sql) },
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
   DEMO_ADMIN_USER: 'operator',
   DEMO_ADMIN_PASSWORD: password,

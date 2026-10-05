@@ -11,7 +11,7 @@ const live = process.argv.includes('--live');
 const nowValue = process.env.ASSURANCE_VALIDATION_NOW ?? new Date().toISOString();
 const validationNow = Date.parse(nowValue);
 const errors = [];
-const liveUserAgent = 'Mozilla/5.0 (compatible; WizardGangAssuranceMonitor/1.0; +https://github.com/SouthernGentlemen/wizardgang-architecture-demo)';
+const liveUserAgent = 'Mozilla/5.0 (compatible; WizardGangAssuranceMonitor/1.0; +https://github.com/Wizard-Gang/wizardgang-architecture-demo)';
 const read = (relative) => fs.readFileSync(path.join(root, relative), 'utf8');
 const readJson = (relative) => JSON.parse(read(relative));
 

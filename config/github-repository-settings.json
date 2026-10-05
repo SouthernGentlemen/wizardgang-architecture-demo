@@ -1,5 +1,5 @@
 {
-  "repository": "SouthernGentlemen/wizardgang-architecture-demo",
+  "repository": "Wizard-Gang/wizardgang-architecture-demo",
   "defaultBranch": "main",
   "mergeMethods": { "mergeCommit": false, "squash": true, "rebase": false },
   "allowAutoMerge": true,

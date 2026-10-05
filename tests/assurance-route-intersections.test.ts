@@ -5,7 +5,7 @@ import { matchRoute } from '../src/routing/registry';
 import type { Env } from '../src/types';
 
 const env = {
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
   DEMO_DB: {
     prepare: () => ({

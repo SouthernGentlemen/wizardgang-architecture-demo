@@ -27,7 +27,7 @@ class CompositionStatement implements D1PreparedStatement {
 const env: Env = {
   DEMO_DB: { prepare: (sql: string) => new CompositionStatement(sql) },
   WG_SESSION_KEY: 'test-composition-cursor-secret-that-is-long-enough',
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
   BILLING_DEMO_MONTHLY_BUDGET_USD: '10',
 };

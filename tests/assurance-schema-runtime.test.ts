@@ -4,7 +4,7 @@ import { reportingCollectionResponse } from '../src/api/reporting';
 import { assuranceFilterValues, filterAssuranceRecords, listAssuranceRecords } from '../src/assurance/service';
 import type { Env } from '../src/types';
 
-const env = { GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' } as Env;
+const env = { GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' } as Env;
 
 describe('runtime schema-derived assurance behavior', () => {
   it('uses registered schema vocabulary for stored risk filters', () => {

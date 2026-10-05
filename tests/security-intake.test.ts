@@ -6,7 +6,7 @@ import { routeUrl } from '../src/routing/application-routes';
 import type { Env } from '../src/types';
 
 const env = {
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
   DEMO_DB: {
     prepare(sql: string) {
@@ -29,7 +29,7 @@ describe('security.txt', () => {
     const body = await response.text();
     expect(response.status).toBe(200);
     expect(response.headers.get('content-type')).toBe('text/plain; charset=utf-8');
-    expect(body).toContain('Contact: https://github.com/SouthernGentlemen/wizardgang-architecture-demo/security/advisories/new');
+    expect(body).toContain('Contact: https://github.com/Wizard-Gang/wizardgang-architecture-demo/security/advisories/new');
     expect(body).toContain('Policy: https://demo.wizardgang.ai/security');
     expect(body).toContain('Canonical: https://demo.wizardgang.ai/.well-known/security.txt');
     expect(body).toContain(`Expires: ${SECURITY_TXT_EXPIRES}`);

@@ -37,7 +37,7 @@ function env(state: 'online' | 'offline' = 'online', crawlerState: 'enabled' | '
         return new Response(request.method === 'HEAD' ? null : 'asset', { headers: { 'content-type': contentType } });
       },
     },
-    GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+    GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
     DEMO_ADMIN_USER: 'operator',
     DEMO_ADMIN_PASSWORD: 'test-admin-password',
@@ -57,7 +57,7 @@ describe('public route contract', () => {
       const response = await routeRequest(new Request(`https://demo.wizardgang.ai${surface.pattern}`, { headers: { accept: 'text/html' } }), environment);
       expect(response.status, surface.pattern).toBe(200);
       const html = await response.text();
-      expect(html, surface.pattern).toContain(`https://github.com/SouthernGentlemen/wizardgang-architecture-demo/blob/main/${declaration?.source.module}`);
+      expect(html, surface.pattern).toContain(`https://github.com/Wizard-Gang/wizardgang-architecture-demo/blob/main/${declaration?.source.module}`);
     }
   });
 
@@ -288,7 +288,7 @@ describe('public route contract', () => {
     expect(index).not.toContain('>Docs</a>');
     expect(index).not.toContain('>GitHub <span');
     expect(index).not.toContain('WG-ARCH-001');
-    expect(index).toContain('<a href="https://github.com/SouthernGentlemen/wizardgang-architecture-demo/issues/new?template=bug.yml">Report an issue</a>');
+    expect(index).toContain('<a href="https://github.com/Wizard-Gang/wizardgang-architecture-demo/issues/new?template=bug.yml">Report an issue</a>');
 
     const retiredOperations = await routeRequest(new Request(`https://demo.wizardgang.ai${retiredOperationsHtmlPathname}`, { headers: { accept: 'text/html' } }), environment);
     expect(retiredOperations.status).toBe(404);

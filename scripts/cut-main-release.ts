@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import { planExactTagRelease } from './lib/exact-tag-release.ts';
 
-const repository = 'SouthernGentlemen/wizardgang-architecture-demo';
+const repository = 'Wizard-Gang/wizardgang-architecture-demo';
 const token = process.env.GH_TOKEN;
 const event = process.env.GITHUB_EVENT_PATH ? JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8')) : null;
 if (process.env.GITHUB_REPOSITORY !== repository || !token || !event?.workflow_run?.id) {

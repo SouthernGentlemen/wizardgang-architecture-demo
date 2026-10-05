@@ -4,17 +4,8 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-457 — [OPS] Move the repository to Wizard-Gang
-- Dependency: None. A baseline task updates the demo's repository in config/cloudflare.json and config/secrets.json in the same window. The private wg-github-app, owned by SouthernGentlemen, installs only on its owner's account, so the owner transfers the App to Wizard-Gang (or recreates it there with the same permissions) and installs it on the moved repository only before the Git demo and reporting can act as it again.
-- Why: Owner default: all four deploying repositories share the Wizard-Gang org's rulesets before the demo's Phase 4 deploy.
-- Scope: The owner transfers the repository to Wizard-Gang. Update the committed repository identity, settings-as-code, links, badges, workflow references and documentation, and the GITHUB_APP_INSTALLATION_ID var (and GITHUB_APP_ID, the Worker GITHUB_APP_PRIVATE_KEY and the git-demo APP_ID and APP_PRIVATE_KEY if the App is recreated); re-verify rulesets, environments, secrets and variables live after the transfer.
-- Non-goals: No product change.
-- Acceptance: The repository is Wizard-Gang/wizardgang-architecture-demo with identical protection, environments, secrets and variables; npm run check and the settings verifier pass against the new identity.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; live settings verification; exact-head PR CI and merged-main CI.
-- Authorities: config/github-repository-settings.json; AGENTS.md; Wizard-Gang/baseline config/cloudflare.json and config/secrets.json
-
 ### DEMO-458 — [DB] Move demo data to the shared records and events tables and the shared R2 bucket
-- Dependency: DEMO-457.
+- Dependency: None.
 - Why: Baseline owns the only schema for D1 wizardgang. The demo's own demo-blob migrations are the last reason for its separate deploy token.
 - Scope: Map the useful demo-blob data onto records and events with TTLs through the vendored wg-edge storage helpers (WG_DB, WG_R2, WG_APP demo), dropping the five-minute health history beyond its TTL. Read and write R2 objects under demo/, with uploads under demo/uploads/ (1-day lifecycle). Delete the demo's migrations directory and its d1 migrations apply step. Provide an owner-run copy step for any rows worth keeping.
 - Non-goals: No Worker rename or shell adoption.

@@ -7,7 +7,7 @@ import {
 } from '../src/assurance/service';
 import type { Env } from '../src/types';
 
-const env = { GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' } as Env;
+const env = { GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' } as Env;
 
 describe('registry-driven assurance services', () => {
   it('discovers runtime record families directly from runtime record capabilities', () => {

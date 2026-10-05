@@ -36,7 +36,7 @@ function memoryDb(): D1Database {
 function env(overrides: Partial<Env> = {}): Env {
   return {
     DEMO_DB: memoryDb(),
-    GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+    GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
     WG_SESSION_KEY: 's'.repeat(32),
     ...overrides,

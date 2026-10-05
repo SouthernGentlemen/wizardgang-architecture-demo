@@ -17,7 +17,7 @@ class InterfaceStatement implements D1PreparedStatement {
 
 const environment: Env = {
   DEMO_DB: { prepare: (sql: string) => new InterfaceStatement(sql) },
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
   WG_SESSION_KEY: 's'.repeat(32),
 };

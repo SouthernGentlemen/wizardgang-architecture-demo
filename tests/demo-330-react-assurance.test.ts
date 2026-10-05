@@ -20,7 +20,7 @@ class AssuranceStatement implements D1PreparedStatement {
 const deployedSha = '0123456789abcdef0123456789abcdef01234567';
 const environment = {
   DEMO_DB: { prepare: (sql: string) => new AssuranceStatement(sql) },
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
   DEPLOYED_SHA: deployedSha,
 } as Env;

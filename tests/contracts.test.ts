@@ -6,7 +6,7 @@ import type { Env } from '../src/types';
 import { retiredApiReferencePrefixes } from './fixtures/removed-api-pathnames';
 
 const env = {
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
   DEMO_DB: {
     prepare: () => ({

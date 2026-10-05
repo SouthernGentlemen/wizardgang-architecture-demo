@@ -8,7 +8,7 @@ import { removedHtml404Pathnames, removedHtmlPathnames, retiredOperationsHtmlPat
 
 const environment: Env = {
   DEMO_DB: { prepare() { throw new Error('retired HTML paths must not consult application storage'); } },
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo', GITHUB_BRANCH: 'main',
 };
 
 describe('canonical frontend route contract', () => {

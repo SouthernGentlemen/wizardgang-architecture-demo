@@ -21,7 +21,7 @@ const environment: Env = {
       throw new Error('source-integrity rendering must not depend on application storage');
     },
   },
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
 };
 

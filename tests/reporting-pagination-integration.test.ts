@@ -11,7 +11,7 @@ import { paginateReportingRecords } from '../src/reporting/query';
 import type { Env } from '../src/types';
 import { appTokenResponse, githubAppEnv } from './helpers/github-app';
 
-const repository = 'SouthernGentlemen/wizardgang-architecture-demo';
+const repository = 'Wizard-Gang/wizardgang-architecture-demo';
 const repositoryApi = `/repos/${repository}`;
 const fixture = JSON.parse(readFileSync('tests/fixtures/github-reporting.json', 'utf8')) as {
   repository: Record<string, unknown>;

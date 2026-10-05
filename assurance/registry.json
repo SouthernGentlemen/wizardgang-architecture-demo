@@ -14,7 +14,7 @@
       "id": "github.structured-records",
       "provider": "github",
       "authority": "structured-record",
-      "repository": "SouthernGentlemen/wizardgang-architecture-demo",
+      "repository": "Wizard-Gang/wizardgang-architecture-demo",
       "resourceRoot": "assurance/",
       "nativeIdentity": [
         "repository",

@@ -59,7 +59,7 @@ function noDatabaseEnv(): Env {
         throw new Error('unknown paths must not consult route policy storage');
       },
     },
-    GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+    GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
   };
 }

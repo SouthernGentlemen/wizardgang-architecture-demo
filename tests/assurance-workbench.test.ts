@@ -18,7 +18,7 @@ const deployedSha = '0123456789abcdef0123456789abcdef01234567';
 const env = {
   DEMO_DB: { prepare: (sql: string) => new Statement(sql) },
   WG_SESSION_KEY: 'test-assurance-workbench-secret-that-is-long-enough',
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
   DEPLOYED_SHA: deployedSha,
   DEPLOYED_VERSION: 'v0.23.0-test',

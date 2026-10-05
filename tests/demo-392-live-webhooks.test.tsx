@@ -4,7 +4,7 @@ import { mount as mountWebhooks } from '../src/browser/webhooks';
 import { webhooksSection } from '../src/demos/webhook-presentation';
 import type { Env } from '../src/types';
 
-const repository = 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo';
+const repository = 'https://github.com/Wizard-Gang/wizardgang-architecture-demo';
 const requestId = '123e4567-e89b-42d3-a456-426614174000';
 const sha = 'a'.repeat(40);
 const base = { GITHUB_REPO_URL: repository, GITHUB_BRANCH: 'main' } as Env;
@@ -33,7 +33,7 @@ describe('DEMO-392 live Webhooks presentation', () => {
     let conclusion: string | null = null;
     const fetchMock = vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
       const url = new URL(String(input), window.location.href);
-      if (url.pathname === '/api/labs/webhook-events') return new Response(JSON.stringify({ events: [], pollingIntervalMs: 2000, repository: 'SouthernGentlemen/wizardgang-architecture-demo' }));
+      if (url.pathname === '/api/labs/webhook-events') return new Response(JSON.stringify({ events: [], pollingIntervalMs: 2000, repository: 'Wizard-Gang/wizardgang-architecture-demo' }));
       if (url.searchParams.has('preflight')) {
         if (!new Headers(init?.headers).get('authorization')) return new Response(null, { status: 401 });
         return new Response(JSON.stringify({ mainSha: sha, currentVersion: '0.28.0', targetVersion: '0.28.1', lastRelease: 'v0.28.0', active: null, commitsSinceRelease: [{ sha, subject: '[DEMO-391] Reconcile release', url: `${repository}/commit/${sha}` }] }));

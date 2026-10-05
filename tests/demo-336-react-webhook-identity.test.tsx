@@ -11,7 +11,7 @@ import { bindLocalization, resolveLocalization } from '../src/i18n/runtime';
 import type { Env } from '../src/types';
 
 const env = {
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
 } as Env;
 
@@ -71,7 +71,7 @@ describe('DEMO-336 React webhook and identity demonstrations', () => {
     const fetchMock = vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
       const path = new URL(String(input), window.location.href).pathname;
       if (path === '/api/labs/webhook-demo' && init?.method === 'POST') {
-        events.push({ id: 1, receivedAt: '2026-09-20T12:00:00.000Z', eventType: 'release', provider: 'demo', action: 'published', actor: 'release-bot', repository: 'SouthernGentlemen/wizardgang-architecture-demo', summary: { tag: 'v0.27.0' } });
+        events.push({ id: 1, receivedAt: '2026-09-20T12:00:00.000Z', eventType: 'release', provider: 'demo', action: 'published', actor: 'release-bot', repository: 'Wizard-Gang/wizardgang-architecture-demo', summary: { tag: 'v0.27.0' } });
         return new Response(JSON.stringify({ accepted: true }), { status: 202 });
       }
       if (path === '/api/labs/webhook-reset' && init?.method === 'POST') {
@@ -79,7 +79,7 @@ describe('DEMO-336 React webhook and identity demonstrations', () => {
         return new Response(JSON.stringify({ reset: true }));
       }
       if (path === '/api/labs/webhook-events') {
-        return new Response(JSON.stringify({ events, pollingIntervalMs: 2000, repository: 'SouthernGentlemen/wizardgang-architecture-demo' }));
+        return new Response(JSON.stringify({ events, pollingIntervalMs: 2000, repository: 'Wizard-Gang/wizardgang-architecture-demo' }));
       }
       return new Response(null, { status: 404 });
     });

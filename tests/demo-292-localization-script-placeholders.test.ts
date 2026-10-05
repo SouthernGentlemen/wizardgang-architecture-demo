@@ -50,7 +50,7 @@ class PlaceholderD1 {
 function environment(): Env {
   return {
     DEMO_DB: new PlaceholderD1(),
-    GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+    GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
     BILLING_DEMO_MONTHLY_BUDGET_USD: '10',
   };

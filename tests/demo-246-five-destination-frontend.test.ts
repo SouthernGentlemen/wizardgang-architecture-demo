@@ -9,7 +9,7 @@ import { primaryNavigation, sitemapPaths } from '../src/routing/navigation';
 import type { Env } from '../src/types';
 import { retiredOperationsHtmlPathname } from './fixtures/removed-html-pathnames';
 
-const repositoryUrl = 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo';
+const repositoryUrl = 'https://github.com/Wizard-Gang/wizardgang-architecture-demo';
 const env = {
   DEMO_DB: {
     prepare: () => ({

@@ -46,7 +46,7 @@ class OperationsD1 {
 }
 
 function env(): Env {
-  return { DEMO_DB: new OperationsD1(), GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main', BILLING_DEMO_MONTHLY_BUDGET_USD: '10' };
+  return { DEMO_DB: new OperationsD1(), GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo', GITHUB_BRANCH: 'main', BILLING_DEMO_MONTHLY_BUDGET_USD: '10' };
 }
 
 function cloudflareEnv(account = 'account-tag', worker = 'worker-name'): Env {

@@ -18,7 +18,7 @@
   // never commit their values. The OAuth client IDs, the Entra tenant and the SAML IdP values are public and live here.
   // SAML_IDP_CERT, SAML_IDP_ISSUER and SAML_SSO_URL are added once the Entra wg-saml-idp app exists; SAML fails closed until then.
   "vars": {
-    "GITHUB_REPO_URL": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo",
+    "GITHUB_REPO_URL": "https://github.com/Wizard-Gang/wizardgang-architecture-demo",
     "GITHUB_BRANCH": "main",
     "DEPLOYED_VERSION": "development",
     "DEPLOYMENT_ENVIRONMENT": "production",
@@ -29,7 +29,7 @@
     "CLOUDFLARE_D1_DATABASE_ID": "4a8ba118-da0e-497b-a13c-911c407a09e3",
     "CLOUDFLARE_DO_NAMESPACE": "2a8431fd59b342799b74518e1bcc7b6d",
     "GITHUB_APP_ID": "5200141",
-    "GITHUB_APP_INSTALLATION_ID": "168217185",
+    "GITHUB_APP_INSTALLATION_ID": "168238365",
     "GITHUB_OAUTH_CLIENT_ID": "Ov23lizi50EUG1CVLmrY",
     "GOOGLE_OAUTH_CLIENT_ID": "681291327254-o04025q9gibvdnqcc61qui404nnmn7rn.apps.googleusercontent.com",
     "MICROSOFT_OAUTH_CLIENT_ID": "d5706222-8cbb-4072-91a4-02715973f26d",

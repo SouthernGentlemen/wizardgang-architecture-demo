@@ -7,7 +7,7 @@ import type { Env } from '../src/types';
 
 const origin = 'https://demo.wizardgang.ai';
 const env = {
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
 } as Env;
 

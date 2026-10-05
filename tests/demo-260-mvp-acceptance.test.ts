@@ -27,7 +27,7 @@ import {
   retiredOperationsHtmlPathname,
 } from './fixtures/removed-html-pathnames';
 
-const repositoryUrl = 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo';
+const repositoryUrl = 'https://github.com/Wizard-Gang/wizardgang-architecture-demo';
 
 interface ExecutedStatement {
   sql: string;

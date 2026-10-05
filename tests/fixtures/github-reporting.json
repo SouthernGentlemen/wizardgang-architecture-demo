@@ -1,12 +1,12 @@
 {
   "repository": {
     "id": 123456,
-    "full_name": "SouthernGentlemen/wizardgang-architecture-demo",
+    "full_name": "Wizard-Gang/wizardgang-architecture-demo",
     "private": false,
     "default_branch": "main",
     "updated_at": "2026-09-04T19:20:00Z",
     "pushed_at": "2026-09-04T19:24:19Z",
-    "html_url": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo"
+    "html_url": "https://github.com/Wizard-Gang/wizardgang-architecture-demo"
   },
   "issues": [
     {
@@ -16,7 +16,7 @@
       "state": "open",
       "created_at": "2026-09-04T18:00:00Z",
       "updated_at": "2026-09-04T19:00:00Z",
-      "html_url": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/issues/158"
+      "html_url": "https://github.com/Wizard-Gang/wizardgang-architecture-demo/issues/158"
     },
     {
       "id": 9002,
@@ -26,7 +26,7 @@
       "created_at": "2026-09-03T18:00:00Z",
       "updated_at": "2026-09-04T18:30:00Z",
       "closed_at": "2026-09-04T18:30:00Z",
-      "html_url": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/issues/157"
+      "html_url": "https://github.com/Wizard-Gang/wizardgang-architecture-demo/issues/157"
     }
   ],
   "workflowRun": {
@@ -37,7 +37,7 @@
     "run_attempt": 2,
     "created_at": "2026-09-04T18:40:00Z",
     "updated_at": "2026-09-04T18:50:00Z",
-    "html_url": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/actions/runs/7001"
+    "html_url": "https://github.com/Wizard-Gang/wizardgang-architecture-demo/actions/runs/7001"
   },
   "expiredArtifact": {
     "id": 8001,
@@ -46,7 +46,7 @@
     "created_at": "2026-08-01T12:00:00Z",
     "updated_at": "2026-08-01T12:10:00Z",
     "expires_at": "2026-09-01T12:00:00Z",
-    "archive_download_url": "https://api.github.com/repos/SouthernGentlemen/wizardgang-architecture-demo/actions/artifacts/8001/zip",
+    "archive_download_url": "https://api.github.com/repos/Wizard-Gang/wizardgang-architecture-demo/actions/artifacts/8001/zip",
     "workflow_run": { "id": 7001 }
   },
   "securityAdvisory": {
@@ -54,6 +54,6 @@
     "state": "draft",
     "created_at": "2026-09-04T17:00:00Z",
     "updated_at": "2026-09-04T18:00:00Z",
-    "html_url": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/security/advisories/GHSA-abcd-1234-5678"
+    "html_url": "https://github.com/Wizard-Gang/wizardgang-architecture-demo/security/advisories/GHSA-abcd-1234-5678"
   }
 }

@@ -5,7 +5,7 @@ import type { Env } from '../src/types';
 
 const environment = {
   DEMO_DB: { prepare: () => { throw new Error('D1 should not be used by assurance projection tests'); } },
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
   DEPLOYED_VERSION: 'v0.14.0',
   DEPLOYED_SHA: '0123456789abcdef0123456789abcdef01234567',

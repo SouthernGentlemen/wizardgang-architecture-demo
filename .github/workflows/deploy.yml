@@ -167,7 +167,7 @@ jobs:
 
           const headers = {
             accept: 'application/json',
-            'user-agent': 'Mozilla/5.0 (compatible; WizardGangDeploymentVerifier/1.0; +https://github.com/SouthernGentlemen/wizardgang-architecture-demo)'
+            'user-agent': 'Mozilla/5.0 (compatible; WizardGangDeploymentVerifier/1.0; +https://github.com/Wizard-Gang/wizardgang-architecture-demo)'
           };
 
           async function fetchJson(url, acceptedStatuses) {
@@ -242,7 +242,7 @@ jobs:
       - name: Deploy tagged Worker source
         run: >-
           npx wrangler deploy
-          --var GITHUB_REPO_URL:https://github.com/SouthernGentlemen/wizardgang-architecture-demo
+          --var GITHUB_REPO_URL:https://github.com/Wizard-Gang/wizardgang-architecture-demo
           --var GITHUB_BRANCH:main
           --var DEPLOYED_VERSION:${{ steps.release.outputs.version }}
           --var DEPLOYED_SHA:${{ steps.release.outputs.sha }}
@@ -300,7 +300,7 @@ jobs:
           const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
           const headers = {
             accept: 'application/json',
-            'user-agent': 'Mozilla/5.0 (compatible; WizardGangDeploymentVerifier/1.0; +https://github.com/SouthernGentlemen/wizardgang-architecture-demo)'
+            'user-agent': 'Mozilla/5.0 (compatible; WizardGangDeploymentVerifier/1.0; +https://github.com/Wizard-Gang/wizardgang-architecture-demo)'
           };
 
           async function fetchJsonWithRetry(url, acceptedStatuses) {

@@ -3,7 +3,7 @@ import { compareGithubRepositorySettings, configuredMergeMethods, rulesetPayload
 import { adminToken, fetchLiveGithubSettings } from './github-settings-provider.ts';
 
 const baseline = JSON.parse(await readFile(new URL('../config/github-repository-settings.json', import.meta.url), 'utf8'));
-const root = 'SouthernGentlemen/wizardgang-architecture-demo';
+const root = 'Wizard-Gang/wizardgang-architecture-demo';
 function assertBaseline(value) {
   if (value.repository !== root || value.defaultBranch !== 'main') throw new Error('GitHub settings authority must name this repository and main.');
   if (JSON.stringify(configuredMergeMethods(value)) !== JSON.stringify(['squash'])) throw new Error('GitHub settings authority must allow squash only.');
