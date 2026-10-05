@@ -67,7 +67,7 @@ export async function collectHealth(env: Env, persist = false, scheduledTime?: n
     status,
     checkedAt,
     demo: { state: control.state, message: control.publicMessage },
-    identity: identityReadiness(env),
+    identity: await identityReadiness(env),
     services: {
       worker: 'operational',
       d1: d1.status,

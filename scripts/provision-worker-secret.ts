@@ -10,11 +10,8 @@ const inventory = JSON.parse(fs.readFileSync(path.join(root, 'config', 'worker-s
 const name = process.argv[2];
 const generatedNames = new Set([
   'DEMO_ADMIN_PASSWORD',
-  'WEBHOOK_DEMO_SECRET',
+  'DEMO_WEBHOOK_SECRET',
   'GITHUB_WEBHOOK_SECRET',
-  'DEMO_SESSION_SECRET',
-  'IDENTITY_SESSION_SECRET',
-  'IDENTITY_AUDIT_HMAC_SECRET',
 ]);
 
 if (!name || process.argv.length !== 3) {

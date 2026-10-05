@@ -12,8 +12,7 @@ import {
   clearIdentityCookie,
   createDemoAccessToken,
   createIdentitySession,
-  hasIdentityAuditSecret,
-  hasIdentitySecret,
+  identityConfigured,
   identitySubjectAuditId,
   identityReadiness,
   randomValue,
@@ -66,10 +65,10 @@ function nonEmpty(value: string | undefined): boolean {
 }
 
 export function identityProviderConfiguration(env: Env): Record<string, ProviderConfiguration> {
-  const session = identityReadiness(env) === 'ready';
+  const session = identityConfigured(env);
   return {
     microsoft: {
-      configured: session && nonEmpty(env.MICROSOFT_CLIENT_ID) && nonEmpty(env.MICROSOFT_CLIENT_SECRET) && nonEmpty(env.MICROSOFT_TENANT_ID),
+      configured: session && nonEmpty(env.MICROSOFT_OAUTH_CLIENT_ID) && nonEmpty(env.MICROSOFT_OAUTH_CLIENT_SECRET) && nonEmpty(env.MICROSOFT_TENANT_ID),
       label: 'Microsoft Entra ID', protocol: 'OpenID Connect / OAuth 2.0', startPath: '/auth/microsoft',
     },
     saml: {
@@ -77,11 +76,11 @@ export function identityProviderConfiguration(env: Env): Record<string, Provider
       label: 'Microsoft Entra ID', protocol: 'SAML 2.0', startPath: '/auth/saml',
     },
     google: {
-      configured: session && nonEmpty(env.GOOGLE_CLIENT_ID) && nonEmpty(env.GOOGLE_CLIENT_SECRET),
+      configured: session && nonEmpty(env.GOOGLE_OAUTH_CLIENT_ID) && nonEmpty(env.GOOGLE_OAUTH_CLIENT_SECRET),
       label: 'Google', protocol: 'OpenID Connect', startPath: '/auth/google',
     },
     github: {
-      configured: session && nonEmpty(env.GITHUB_CLIENT_ID) && nonEmpty(env.GITHUB_CLIENT_SECRET),
+      configured: session && nonEmpty(env.GITHUB_OAUTH_CLIENT_ID) && nonEmpty(env.GITHUB_OAUTH_CLIENT_SECRET),
       label: 'GitHub', protocol: 'OAuth 2.0', startPath: '/auth/github',
     },
   };
@@ -94,8 +93,8 @@ function identityUnavailableResponse(headers: HeadersInit = {}): Response {
   return json({ error: 'identity_not_configured' }, { status: 503, headers: responseHeaders });
 }
 
-function requireIdentityReadiness(env: Env): Response | null {
-  return identityReadiness(env) === 'ready' ? null : identityUnavailableResponse();
+async function requireIdentityReadiness(env: Env): Promise<Response | null> {
+  return await identityReadiness(env) === 'ready' ? null : identityUnavailableResponse();
 }
 
 function redirect(location: URL, cookies: string[] = []): Response {
@@ -172,10 +171,10 @@ async function oidcMetadata(provider: 'microsoft' | 'google', env: Env): Promise
 
 function clientCredentials(provider: IdentityProvider, env: Env): { id: string; secret: string } {
   const pair = provider === 'microsoft'
-    ? [env.MICROSOFT_CLIENT_ID, env.MICROSOFT_CLIENT_SECRET]
+    ? [env.MICROSOFT_OAUTH_CLIENT_ID, env.MICROSOFT_OAUTH_CLIENT_SECRET]
     : provider === 'google'
-      ? [env.GOOGLE_CLIENT_ID, env.GOOGLE_CLIENT_SECRET]
-      : [env.GITHUB_CLIENT_ID, env.GITHUB_CLIENT_SECRET];
+      ? [env.GOOGLE_OAUTH_CLIENT_ID, env.GOOGLE_OAUTH_CLIENT_SECRET]
+      : [env.GITHUB_OAUTH_CLIENT_ID, env.GITHUB_OAUTH_CLIENT_SECRET];
   if (!pair[0] || !pair[1]) throw new IdentityError('provider_not_configured');
   return { id: pair[0], secret: pair[1] };
 }
@@ -284,7 +283,7 @@ async function auditFailure(env: Env, provider: IdentityProvider | 'saml', reaso
 
 export async function authorizationDecisionResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'POST') return methodNotAllowed(['POST']);
-  const unavailable = requireIdentityReadiness(env);
+  const unavailable = await requireIdentityReadiness(env);
   if (unavailable) return unavailable;
   try {
     const session = await readIdentitySession(request, env);
@@ -305,7 +304,7 @@ export async function authorizationDecisionResponse(request: Request, env: Env):
 
 export async function demoAccessTokenResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'POST') return methodNotAllowed(['POST']);
-  const unavailable = requireIdentityReadiness(env);
+  const unavailable = await requireIdentityReadiness(env);
   if (unavailable) return unavailable;
   try {
     if (request.headers.get('origin') !== new URL(request.url).origin) throw new HttpError(403, 'same_origin_required');
@@ -326,7 +325,7 @@ export async function demoAccessTokenResponse(request: Request, env: Env): Promi
 
 export async function identitySessionResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'GET') return methodNotAllowed(['GET']);
-  const unavailable = requireIdentityReadiness(env);
+  const unavailable = await requireIdentityReadiness(env);
   if (unavailable) return unavailable;
   const session = await readIdentitySession(request, env);
   return json({ authenticated: Boolean(session), providers: identityProviderConfiguration(env), ...(session ? { session } : {}) }, { headers: { 'cache-control': 'no-store' } });
@@ -337,34 +336,26 @@ export async function identityLogoutResponse(request: Request, env: Env): Promis
   const origin = request.headers.get('origin');
   if (!origin || origin !== new URL(request.url).origin) return json({ error: 'same_origin_required' }, { status: 403, headers: { 'cache-control': 'no-store' } });
 
-  const sessionConfigured = hasIdentitySecret(env);
-  const auditConfigured = hasIdentityAuditSecret(env);
+  // Both identity keys derive from WG_SESSION_KEY, so they are available together or not at all.
+  const ready = await identityReadiness(env) === 'ready';
   const headers = new Headers({ 'cache-control': 'no-store' });
   headers.append('set-cookie', clearIdentityCookie(IDENTITY_SESSION_COOKIE));
   headers.append('set-cookie', clearIdentityCookie(IDENTITY_FLOW_COOKIE));
   headers.append('set-cookie', clearIdentityCookie(SAML_FLOW_COOKIE, 'None'));
-  if (sessionConfigured) {
-    await revokeIdentitySession(request, env);
-  }
+  if (!ready) return identityUnavailableResponse(headers);
 
-  if (auditConfigured) {
-    await recordDemoEvent(env, 'identity', 'identity.session_reset', {});
-    await recordApplicationLog(env, {
-      source: 'identity', eventKey: 'identity.session_reset', message: 'Identity session reset.',
-      route: '/auth/logout', detail: {},
-    });
-  }
-
-  if (!sessionConfigured || !auditConfigured) {
-    return identityUnavailableResponse(headers);
-  }
-
+  await revokeIdentitySession(request, env);
+  await recordDemoEvent(env, 'identity', 'identity.session_reset', {});
+  await recordApplicationLog(env, {
+    source: 'identity', eventKey: 'identity.session_reset', message: 'Identity session reset.',
+    route: '/auth/logout', detail: {},
+  });
   return json({ authenticated: false }, { headers });
 }
 
 export async function providerStartResponse(request: Request, env: Env, provider: IdentityProvider): Promise<Response> {
   if (request.method !== 'GET') return methodNotAllowed(['GET']);
-  const unavailable = requireIdentityReadiness(env);
+  const unavailable = await requireIdentityReadiness(env);
   if (unavailable) return unavailable;
   if (!identityProviderConfiguration(env)[provider].configured) return identityRedirect(request, { error: 'provider_unconfigured', provider });
   const flow: IdentityFlow = { provider, state: randomValue(), verifier: randomValue(), startedAt: Date.now(), ...(OIDC_PROVIDERS.has(provider) ? { nonce: randomValue() } : {}) };
@@ -459,7 +450,7 @@ async function exchangeGithubCode(request: Request, env: Env, code: string, flow
 
 export async function providerCallbackResponse(request: Request, env: Env, provider: IdentityProvider): Promise<Response> {
   if (request.method !== 'GET') return methodNotAllowed(['GET']);
-  const unavailable = requireIdentityReadiness(env);
+  const unavailable = await requireIdentityReadiness(env);
   if (unavailable) return unavailable;
   const url = new URL(request.url);
   const flow = await readFlowCookie(request, env, provider);
@@ -610,7 +601,7 @@ function samlSession(profile: Profile, assertion: ReturnType<typeof parseAsserti
 
 export async function samlStartResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'GET') return methodNotAllowed(['GET']);
-  const unavailable = requireIdentityReadiness(env);
+  const unavailable = await requireIdentityReadiness(env);
   if (unavailable) return unavailable;
   if (!identityProviderConfiguration(env).saml.configured) return identityRedirect(request, { error: 'provider_unconfigured', provider: 'saml' });
   const flow: IdentityFlow = { provider: 'saml', state: randomValue(), startedAt: Date.now() };
@@ -621,7 +612,7 @@ export async function samlStartResponse(request: Request, env: Env): Promise<Res
 
 export async function samlCallbackResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'POST') return methodNotAllowed(['POST']);
-  const unavailable = requireIdentityReadiness(env);
+  const unavailable = await requireIdentityReadiness(env);
   if (unavailable) return unavailable;
   const clear = clearFlowCookie('saml');
   try {
@@ -654,9 +645,9 @@ export async function samlCallbackResponse(request: Request, env: Env): Promise<
   }
 }
 
-export function samlMetadataResponse(request: Request, env: Env): Response {
+export async function samlMetadataResponse(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'GET') return methodNotAllowed(['GET']);
-  const unavailable = requireIdentityReadiness(env);
+  const unavailable = await requireIdentityReadiness(env);
   if (unavailable) return unavailable;
   const entityId = samlEntityId(request);
   const callback = samlCallbackUrl(request);

@@ -38,8 +38,7 @@ function env(overrides: Partial<Env> = {}): Env {
     DEMO_DB: memoryDb(),
     GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
-    IDENTITY_SESSION_SECRET: 's'.repeat(32),
-    IDENTITY_AUDIT_HMAC_SECRET: 'identity-audit-test-secret-that-is-at-least-thirty-two-characters',
+    WG_SESSION_KEY: 's'.repeat(32),
     ...overrides,
   };
 }
@@ -71,7 +70,7 @@ describe('identity protocol boundaries', () => {
   });
 
   it('evaluates the normalized session role and assurance without accepting a caller-supplied identity', async () => {
-    const environment = env({ IDENTITY_SESSION_SECRET: 'a-test-secret-that-is-at-least-thirty-two-characters' });
+    const environment = env({ WG_SESSION_KEY: 'a-test-secret-that-is-at-least-thirty-two-characters' });
     const setCookie = await createIdentitySession(environment, authenticatedSession());
     const cookie = setCookie.split(';')[0];
     const decide = (action: string) => authorizationDecisionResponse(new Request('https://demo.example/auth/authorize', {
@@ -85,7 +84,7 @@ describe('identity protocol boundaries', () => {
   });
 
   it('issues a ten-minute token with a server-derived visitor sandbox', async () => {
-    const environment = env({ IDENTITY_SESSION_SECRET: 'a-test-secret-that-is-at-least-thirty-two-characters' });
+    const environment = env({ WG_SESSION_KEY: 'a-test-secret-that-is-at-least-thirty-two-characters' });
     const cookie = (await createIdentitySession(environment, authenticatedSession())).split(';')[0];
     const response = await demoAccessTokenResponse(new Request('https://demo.example/auth/token', {
       method: 'POST', headers: { cookie, origin: 'https://demo.example' },
@@ -99,7 +98,7 @@ describe('identity protocol boundaries', () => {
   });
 
   it('requires the application origin for authenticated authorization requests', async () => {
-    const environment = env({ IDENTITY_SESSION_SECRET: 'a-test-secret-that-is-at-least-thirty-two-characters' });
+    const environment = env({ WG_SESSION_KEY: 'a-test-secret-that-is-at-least-thirty-two-characters' });
     const cookie = (await createIdentitySession(environment, authenticatedSession())).split(';')[0];
     const request = (origin?: string) => authorizationDecisionResponse(new Request('https://demo.example/auth/authorize', {
       method: 'POST',
@@ -111,7 +110,7 @@ describe('identity protocol boundaries', () => {
   });
 
   it('fails closed on a tampered application-session cookie', async () => {
-    const environment = env({ IDENTITY_SESSION_SECRET: 'a-test-secret-that-is-at-least-thirty-two-characters' });
+    const environment = env({ WG_SESSION_KEY: 'a-test-secret-that-is-at-least-thirty-two-characters' });
     const setCookie = await createIdentitySession(environment, authenticatedSession());
     const cookie = `${setCookie.split(';')[0]}tampered`;
     const response = await identitySessionResponse(new Request('https://demo.example/auth/session', { headers: { cookie } }), environment);
@@ -120,8 +119,8 @@ describe('identity protocol boundaries', () => {
 
   it('reports provider configuration without exposing configured values', () => {
     const configuration = identityProviderConfiguration(env({
-      IDENTITY_SESSION_SECRET: 'a-test-secret-that-is-at-least-thirty-two-characters',
-      MICROSOFT_CLIENT_ID: 'client-id', MICROSOFT_CLIENT_SECRET: 'client-secret', MICROSOFT_TENANT_ID: 'tenant-id',
+      WG_SESSION_KEY: 'a-test-secret-that-is-at-least-thirty-two-characters',
+      MICROSOFT_OAUTH_CLIENT_ID: 'client-id', MICROSOFT_OAUTH_CLIENT_SECRET: 'client-secret', MICROSOFT_TENANT_ID: 'tenant-id',
     }));
     expect(configuration.microsoft.configured).toBe(true);
     expect(configuration.saml.configured).toBe(false);
@@ -136,8 +135,8 @@ describe('identity protocol boundaries', () => {
 
   it('validates a Google ID token against discovery and JWKS before creating the application session', async () => {
     const environment = env({
-      IDENTITY_SESSION_SECRET: 'a-test-secret-that-is-at-least-thirty-two-characters',
-      GOOGLE_CLIENT_ID: 'google-client-id', GOOGLE_CLIENT_SECRET: 'google-client-secret',
+      WG_SESSION_KEY: 'a-test-secret-that-is-at-least-thirty-two-characters',
+      GOOGLE_OAUTH_CLIENT_ID: 'google-client-id', GOOGLE_OAUTH_CLIENT_SECRET: 'google-client-secret',
     });
     const flow = { provider: 'google' as const, state: 'browser-state', nonce: 'oidc-nonce', verifier: 'pkce-verifier', startedAt: Date.now() };
     const flowCookie = (await writeFlowCookie(environment, flow)).split(';')[0];
@@ -173,8 +172,8 @@ describe('identity protocol boundaries', () => {
 
   it('uses the immutable GitHub numeric ID and discards the OAuth access credential', async () => {
     const environment = env({
-      IDENTITY_SESSION_SECRET: 'a-test-secret-that-is-at-least-thirty-two-characters',
-      GITHUB_CLIENT_ID: 'github-client-id', GITHUB_CLIENT_SECRET: 'github-client-secret',
+      WG_SESSION_KEY: 'a-test-secret-that-is-at-least-thirty-two-characters',
+      GITHUB_OAUTH_CLIENT_ID: 'github-client-id', GITHUB_OAUTH_CLIENT_SECRET: 'github-client-secret',
     });
     const flow = { provider: 'github' as const, state: 'github-state', verifier: 'github-pkce-verifier', startedAt: Date.now() };
     const flowCookie = (await writeFlowCookie(environment, flow)).split(';')[0];
@@ -195,7 +194,7 @@ describe('identity protocol boundaries', () => {
   });
 
   it('serves origin-specific Entra SAML metadata', async () => {
-    const metadata = samlMetadataResponse(new Request('https://demo.example/auth/saml/metadata'), env());
+    const metadata = await samlMetadataResponse(new Request('https://demo.example/auth/saml/metadata'), env());
     const xml = await metadata.text();
     expect(metadata.headers.get('content-type')).toContain('samlmetadata+xml');
     expect(xml).toContain('https://demo.example/auth/saml/acs');

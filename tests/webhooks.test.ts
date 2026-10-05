@@ -64,8 +64,8 @@ class WebhookD1 {
 function environment(): Env & { DEMO_DB: WebhookD1 } {
   return {
     DEMO_DB: new WebhookD1(),
-    DEMO_SESSION_SECRET: 'test-session-secret-that-is-at-least-32-characters',
-    WEBHOOK_DEMO_SECRET: 'test-demo-webhook-secret',
+    WG_SESSION_KEY: 'test-session-secret-that-is-at-least-32-characters',
+    DEMO_WEBHOOK_SECRET: 'test-demo-webhook-secret',
     GITHUB_WEBHOOK_SECRET: 'test-github-webhook-secret',
     GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',

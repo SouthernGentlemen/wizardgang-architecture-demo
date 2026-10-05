@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
+import { DESIRED } from '../platform/conformance/desired.mjs';
+import { parseJsonc } from '../platform/conformance/jsonc.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const inventory = JSON.parse(fs.readFileSync(path.join(root, 'config', 'worker-secrets.json'), 'utf8'));
@@ -73,9 +75,40 @@ sameNames(
   inventoryNames,
 );
 
+// Baseline config/secrets.json is the one secret registry; the vendored platform/ mirrors the demo's Worker secrets.
+// Each name below differs from it on purpose until the queued task that closes the gap, and never otherwise.
+const REGISTRY_TRANSITIONS = Object.freeze({
+  registryOnly: Object.freeze({ GITHUB_APP_PRIVATE_KEY: 'DEMO-456 adopts the GitHub App' }),
+  demoOnly: Object.freeze({
+    DEMO_ADMIN_USER: 'DEMO-459 moves /admin to the wg-edge operator gate',
+    DEMO_ADMIN_PASSWORD: 'DEMO-459 moves /admin to the wg-edge operator gate',
+    GITHUB_READ_TOKEN: 'DEMO-456 replaces it with the GitHub App',
+    GITHUB_REPORTING_WRITE_TOKEN: 'DEMO-456 replaces it with the GitHub App',
+    GITHUB_DEMO_TOKEN: 'DEMO-456 replaces it with the GitHub App',
+  }),
+});
+const registryNames = [...DESIRED.workers.demo.secrets];
+sameNames(
+  'Baseline secret registry demo Worker secrets (vendored platform/)',
+  [...inventoryNames.filter((name) => !Object.hasOwn(REGISTRY_TRANSITIONS.demoOnly, name)), ...Object.keys(REGISTRY_TRANSITIONS.registryOnly)],
+  registryNames,
+);
+for (const name of Object.keys(REGISTRY_TRANSITIONS.demoOnly)) {
+  if (registryNames.includes(name)) fail(`${name} is now a registry name; drop its transition.`);
+}
+
+// A Worker cannot hold a secret and a var of the same name, and a registry secret must never be committed as a var.
+const wrangler = parseJsonc(fs.readFileSync(path.join(root, 'wrangler.jsonc'), 'utf8'));
+const committedVars = Object.keys(wrangler.vars ?? {});
+for (const name of committedVars) {
+  if (inventoryNames.includes(name) || registryNames.includes(name) || DESIRED.secretsStoreSecrets.includes(name)) {
+    fail(`wrangler.jsonc var ${name} is a secret name; set it with wrangler secret put or bind it from the Secrets Store.`);
+  }
+}
+
 const args = process.argv.slice(2);
 if (!args.length) {
-  if (!process.exitCode) process.stdout.write(`Validated ${inventoryNames.length} Worker secret names across inventory, Env, .dev.vars.example, and SECURITY.md.\n`);
+  if (!process.exitCode) process.stdout.write(`Validated ${inventoryNames.length} Worker secret names across inventory, Env, .dev.vars.example, and SECURITY.md, aligned with the baseline secret registry.\n`);
 } else if (args[0] === '--provisioned' && args[1] && args.length === 2) {
   const raw = JSON.parse(fs.readFileSync(path.resolve(args[1]), 'utf8'));
   if (!Array.isArray(raw)) throw new Error('wrangler secret list --format json output must be an array.');
@@ -92,6 +125,13 @@ if (!args.length) {
   } else if (!process.exitCode) {
     process.stdout.write(`Worker secret preflight passed: ${required.length} required names are provisioned.\n`);
   }
+} else if (args[0] === '--superseded' && args[1] && args.length === 2) {
+  // Provisioned Worker secrets that a committed var now replaces. The deploy deletes them right before it ships the var,
+  // because a Worker cannot hold a secret and a var of the same name.
+  const raw = JSON.parse(fs.readFileSync(path.resolve(args[1]), 'utf8'));
+  if (!Array.isArray(raw)) throw new Error('wrangler secret list --format json output must be an array.');
+  const provisioned = sorted(raw.map((entry) => typeof entry === 'string' ? entry : entry?.name).filter((name) => typeof name === 'string'));
+  for (const name of provisioned.filter((candidate) => committedVars.includes(candidate))) process.stdout.write(`${name}\n`);
 } else {
-  throw new Error('Usage: node scripts/validate-worker-secrets.mjs [--provisioned <wrangler-secret-list.json>]');
+  throw new Error('Usage: node scripts/validate-worker-secrets.mjs [--provisioned|--superseded <wrangler-secret-list.json>]');
 }

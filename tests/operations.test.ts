@@ -50,7 +50,7 @@ function env(): Env {
 }
 
 function cloudflareEnv(account = 'account-tag', worker = 'worker-name'): Env {
-  return { ...env(), CLOUDFLARE_ACCOUNT_ID: account, CLOUDFLARE_API_TOKEN: 'read-only-token', CLOUDFLARE_WORKER_NAME: worker, CLOUDFLARE_D1_DATABASE_ID: 'database-id', CLOUDFLARE_R2_BUCKET: 'bucket-name', CLOUDFLARE_DO_NAMESPACE: 'namespace-id' };
+  return { ...env(), CLOUDFLARE_ACCOUNT_ID: account, CLOUDFLARE_BILLING_TOKEN: 'read-only-token', CLOUDFLARE_WORKER_NAME: worker, CLOUDFLARE_D1_DATABASE_ID: 'database-id', CLOUDFLARE_R2_BUCKET: 'bucket-name', CLOUDFLARE_DO_NAMESPACE: 'namespace-id' };
 }
 
 function providerAccount(query: string, zero = false): Record<string, unknown> {

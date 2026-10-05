@@ -1,3 +1,4 @@
+import { derivedSecret } from '../lib/derived-keys';
 import type { Env } from '../types';
 import type { ReportingPagination, ReportingPaginationPartialReason } from './contracts';
 import {
@@ -34,12 +35,12 @@ export interface ReportingExportResult<T> {
   pagination: ReportingPagination;
 }
 
-export function reportingCursorSecret(env?: Pick<Env, 'DEMO_SESSION_SECRET'>): string | Uint8Array {
-  const configured = env?.DEMO_SESSION_SECRET?.trim();
+export async function reportingCursorSecret(env?: Pick<Env, 'WG_SESSION_KEY'>): Promise<string | Uint8Array> {
+  const configured = env ? await derivedSecret(env, 'demo-session') : null;
   if (configured) return configured;
 
-  // Direct/local test helpers may omit Worker secrets. Deployed environments are expected
-  // to provide DEMO_SESSION_SECRET (documented in .dev.vars.example) so cursors resume
+  // Direct/local test helpers may omit the session key. Deployed environments bind
+  // WG_SESSION_KEY (documented in .dev.vars.example) so cursors resume
   // across Worker isolates rather than relying on this isolate-local fallback. Generate the
   // fallback lazily because Cloudflare Workers forbids random generation during module startup.
   ephemeralTestCursorSecret ??= crypto.getRandomValues(new Uint8Array(32));

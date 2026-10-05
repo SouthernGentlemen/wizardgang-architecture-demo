@@ -17,7 +17,7 @@ class Statement implements D1PreparedStatement {
 const deployedSha = '0123456789abcdef0123456789abcdef01234567';
 const env = {
   DEMO_DB: { prepare: (sql: string) => new Statement(sql) },
-  DEMO_SESSION_SECRET: 'test-assurance-workbench-secret-that-is-long-enough',
+  WG_SESSION_KEY: 'test-assurance-workbench-secret-that-is-long-enough',
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
   DEPLOYED_SHA: deployedSha,

@@ -3,6 +3,12 @@
   "version": "0.29.1",
   "private": false,
   "type": "module",
+  "imports": {
+    "#wg-edge": {
+      "types": "./platform/wg-edge/index.d.ts",
+      "default": "./platform/wg-edge/index.mjs"
+    }
+  },
   "engines": {
     "node": "26.x",
     "npm": "12.x"
@@ -59,10 +65,11 @@
     "validate:patch-whitespace": "node scripts/validate-patch-whitespace.ts",
     "security:dependency-advisories": "npm audit --audit-level=high",
     "audit:dependencies": "npm run security:dependency-advisories",
-    "check": "npm run validate:typescript-execution && npm run test:plan-queue && npm run validate:generated-artifacts && npm run validate:migrations && npm run build && npm run validate:scaffold && npm run validate:history && npm run validate:implementation-plan && npm run validate:worker-secrets && npm run validate:repository-settings && npm run test:github-settings && npm run validate:repository-baseline && npm run validate:react-presentation && npm run validate:stylesheet-classes && npm run lint && npm run typecheck && npm run test:site-accessibility && npm run test && npm run validate:contracts && npm run validate:locales && npm run validate:security && npm run validate:governance && npm run validate:documentation && npm run validate:assurance",
+    "check": "npm run validate:typescript-execution && npm run check:platform && npm run test:plan-queue && npm run validate:generated-artifacts && npm run validate:migrations && npm run build && npm run validate:scaffold && npm run validate:history && npm run validate:implementation-plan && npm run validate:worker-secrets && npm run validate:repository-settings && npm run test:github-settings && npm run validate:repository-baseline && npm run validate:react-presentation && npm run validate:stylesheet-classes && npm run lint && npm run typecheck && npm run test:site-accessibility && npm run test && npm run validate:contracts && npm run validate:locales && npm run validate:security && npm run validate:governance && npm run validate:documentation && npm run validate:assurance",
     "validate:scaffold": "node scripts/validate-scaffold.mjs",
     "validate:assurance-documentation": "node scripts/validate-assurance-documentation.ts",
     "validate:worker-secrets": "node scripts/validate-worker-secrets.mjs",
+    "check:platform": "node platform/conformance/cli.mjs pin",
     "validate:repository-settings": "node scripts/validate-github-repository-settings.ts",
     "test:plan-queue": "node scripts/check-portfolio-contract.ts",
     "test:github-settings": "node --test tests/github-settings.cases.mjs",

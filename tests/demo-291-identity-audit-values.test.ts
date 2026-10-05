@@ -80,13 +80,13 @@ function captureDb() {
   return { db, events, logs };
 }
 
-function environment(db: D1Database, auditSecret = 'identity-audit-test-secret-that-is-at-least-thirty-two-characters'): Env {
+// The identity-audit key derives from WG_SESSION_KEY, so a different root stands in for a different audit key.
+function environment(db: D1Database, sessionKey = 'identity-audit-test-secret-that-is-at-least-thirty-two-characters'): Env {
   return {
     DEMO_DB: db,
     GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
-    IDENTITY_SESSION_SECRET: 'identity-session-test-secret-that-is-at-least-thirty-two-characters',
-    IDENTITY_AUDIT_HMAC_SECRET: auditSecret,
+    WG_SESSION_KEY: sessionKey,
   };
 }
 
@@ -188,18 +188,17 @@ describe('DEMO-291 identity audit value hardening', () => {
     expect(String(tokenLog?.detail_json)).not.toContain(String(tokenPayload.subjectAuditId));
   });
 
-  it('keeps existing encrypted identity sessions valid when the audit secret changes', async () => {
+  it('keeps identity sessions valid under the same root and signs them out once WG_SESSION_KEY rotates', async () => {
     const capture = captureDb();
     const original = environment(capture.db, 'original-identity-audit-secret-at-least-thirty-two-characters');
     const cookie = (await createIdentitySession(original, session())).split(';')[0];
     const rotated = environment(capture.db, 'replacement-identity-audit-secret-at-least-thirty-two-chars');
+    const read = (env: Env) => identitySessionResponse(new Request('https://demo.example/auth/session', { headers: { cookie } }), env);
 
-    const response = await identitySessionResponse(new Request('https://demo.example/auth/session', {
-      headers: { cookie },
-    }), rotated);
-    expect(await response.json()).toMatchObject({
+    expect(await (await read(environment(capture.db, 'original-identity-audit-secret-at-least-thirty-two-characters'))).json()).toMatchObject({
       authenticated: true,
       session: { identity: { provider: 'microsoft', subject: 'stable-subject' } },
     });
+    expect(await (await read(rotated)).json()).toMatchObject({ authenticated: false });
   });
 });

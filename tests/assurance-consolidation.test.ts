@@ -19,7 +19,7 @@ class AssuranceStatement implements D1PreparedStatement {
 
 const environment: Env = {
   DEMO_DB: { prepare: (sql: string) => new AssuranceStatement(sql) },
-  DEMO_SESSION_SECRET: 'test-assurance-cursor-secret-that-is-long-enough',
+  WG_SESSION_KEY: 'test-assurance-cursor-secret-that-is-long-enough',
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
 };

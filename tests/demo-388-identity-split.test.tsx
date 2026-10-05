@@ -68,7 +68,7 @@ describe('DEMO-388 focused Identity demos', () => {
     expect(unconfigured).toContain('href="/auth/saml/metadata"');
     expect(unconfigured).toContain('data-provider-action="saml" hidden=""');
     const ready = identitySection({ ...env,
-      IDENTITY_SESSION_SECRET: 's'.repeat(32), IDENTITY_AUDIT_HMAC_SECRET: 'a'.repeat(32),
+      WG_SESSION_KEY: 's'.repeat(32),
       MICROSOFT_TENANT_ID: 'tenant', SAML_IDP_CERT: 'certificate',
     }, {}, 'saml').body;
     expect(ready).toContain('data-provider-action="saml" href="/auth/saml"');

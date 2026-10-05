@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-455 — [SEC] Normalize the demo's Worker secrets to the baseline registry
-- Dependency: DEMO-434; Wizard-Gang/baseline BASE-030 merged. The owner moved the platform move ahead of the remaining TypeScript port on 2026-10-05. Each merge deploys automatically, so the owner sets every new name from baseline docs/SECRETS-RUNBOOK.md before this merges, and deletes the old names after the release verifies.
-- Why: Baseline config/secrets.json is the one registry for every WizardGang secret. The demo stores public values as secrets, gives one name to three different credentials, and keeps three app keys that the platform derives from WG_SESSION_KEY.
-- Scope: Vendor baseline platform/ verbatim from merged commit 67b4b86847e0d635a3f6fe4c21618a25d5bc71a0 (BASE-030) or later, with platform/vendor.lock.json. Rename CLOUDFLARE_API_TOKEN to CLOUDFLARE_BILLING_TOKEN, WEBHOOK_DEMO_SECRET to DEMO_WEBHOOK_SECRET, and the three OAuth client secrets to GITHUB_, GOOGLE_ and MICROSOFT_OAUTH_CLIENT_SECRET. Read GITHUB_, GOOGLE_ and MICROSOFT_OAUTH_CLIENT_ID, MICROSOFT_TENANT_ID, SAML_IDP_CERT, SAML_IDP_ISSUER and SAML_SSO_URL as wrangler vars. Replace DEMO_SESSION_SECRET, IDENTITY_SESSION_SECRET and IDENTITY_AUDIT_HMAC_SECRET with deriveKey labels demo-session, identity-session and identity-audit over a Secrets Store WG_SESSION_KEY binding. Make config/worker-secrets.json and .dev.vars.example match the registry. Register or remove the CLOUDFLARE_DO_NAMESPACE production variable, and remove the deleted preview R2 bucket from wrangler.jsonc. SAML stays supported.
-- Non-goals: No GitHub App (DEMO-456), shell adoption (DEMO-459), data move or Worker rename.
-- Acceptance: No old secret name is read; the worker-secret check matches the registry; derived keys are stable per label; identity sign-in works with the renamed values and SAML is enabled once its vars are set; existing demo sessions are signed out once.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: Wizard-Gang/baseline config/secrets.json, config/cloudflare.json, platform/wg-edge/ and docs/SECRETS-RUNBOOK.md; config/worker-secrets.json; src/types.ts
-
 ### DEMO-456 — [SEC] Replace the demo's GitHub tokens with the wg-github-app App
 - Dependency: DEMO-455. The owner creates wg-github-app with minimum permissions from baseline docs/SECRETS-RUNBOOK.md and sets GITHUB_APP_ID and GITHUB_APP_PRIVATE_KEY (PKCS#8) on the Worker and in a git-demo environment before this merges.
 - Why: Four personal GitHub tokens (GITHUB_DEMO_TOKEN, GITHUB_READ_TOKEN, the never-set GITHUB_REPORTING_WRITE_TOKEN, and the Actions secret GIT_DEMO_PR_TOKEN) serve one integration.

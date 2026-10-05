@@ -39,7 +39,7 @@ function environment(overrides: Partial<Env> = {}): Env {
   return {
     GITHUB_REPO_URL: `https://github.com/${repository}`,
     GITHUB_BRANCH: 'main',
-    DEMO_SESSION_SECRET: 'DEMO-177-integration-cursor-secret',
+    WG_SESSION_KEY: 'DEMO-177-integration-cursor-secret',
     ...overrides,
   } as Env;
 }

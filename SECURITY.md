@@ -15,33 +15,27 @@ Use Cloudflare/GitHub managed secret stores for production and ignored `.dev.var
 
 `npm run validate:security`, included in the canonical `check` gate, inspects tracked checkout files and every reachable Git revision for credential-file paths and secret-like text blobs. The history check reads each unique blob once, fails closed when a blob or the total history exceeds its bounded scan budget, and reports only object identifiers and finding categories. Exact value hashes exempt four synthetic credential values in their original test files; a different value or path is still checked. A real exposure requires private incident handling and credential rotation because deleting a file does not erase public Git history.
 
-The authoritative Worker secret-name inventory is `config/worker-secrets.json`. Cloudflare's Worker secret store also carries some provider identifiers and verification material that are not intrinsically secret; they are inventoried here because deployment verifies the managed names as one set. Values are never checked in or exposed by health, version, logs, usage, evidence, or source-link surfaces.
+The authoritative Worker secret-name inventory is `config/worker-secrets.json`. It follows the baseline registry (`Wizard-Gang/baseline` `config/secrets.json`), which names every WizardGang secret, its one home and its consumers; baseline `docs/SECRETS-RUNBOOK.md` mints, sets, rotates and revokes each one. Values are never checked in or exposed by health, version, logs, usage, evidence, or source-link surfaces.
 
 <!-- WORKER_SECRETS_START -->
-- `DEMO_ADMIN_USER`;
-- `DEMO_ADMIN_PASSWORD`;
-- `WEBHOOK_DEMO_SECRET`;
+- `DEMO_ADMIN_USER` (until the shared operator gate replaces it);
+- `DEMO_ADMIN_PASSWORD` (until the shared operator gate replaces it);
+- `DEMO_WEBHOOK_SECRET`;
 - `GITHUB_WEBHOOK_SECRET`;
-- `GITHUB_READ_TOKEN` (optional);
-- `GITHUB_REPORTING_WRITE_TOKEN` (optional);
-- `GITHUB_DEMO_TOKEN`;
-- `DEMO_SESSION_SECRET`;
-- `IDENTITY_SESSION_SECRET`;
-- `IDENTITY_AUDIT_HMAC_SECRET`;
-- `MICROSOFT_CLIENT_ID`;
-- `MICROSOFT_CLIENT_SECRET`;
-- `MICROSOFT_TENANT_ID`;
-- `GOOGLE_CLIENT_ID`;
-- `GOOGLE_CLIENT_SECRET`;
-- `GITHUB_CLIENT_ID`;
-- `GITHUB_CLIENT_SECRET`;
-- `SAML_IDP_CERT` (optional);
-- `CLOUDFLARE_API_TOKEN` (optional);
+- `GITHUB_READ_TOKEN` (optional, until the GitHub App replaces it);
+- `GITHUB_REPORTING_WRITE_TOKEN` (optional, until the GitHub App replaces it);
+- `GITHUB_DEMO_TOKEN` (until the GitHub App replaces it);
+- `GITHUB_OAUTH_CLIENT_SECRET`;
+- `GOOGLE_OAUTH_CLIENT_SECRET`;
+- `MICROSOFT_OAUTH_CLIENT_SECRET`;
+- `CLOUDFLARE_BILLING_TOKEN` (optional);
 <!-- WORKER_SECRETS_END -->
 
-`IDENTITY_SESSION_SECRET` and `IDENTITY_AUDIT_HMAC_SECRET` each require at least 32 UTF-8 bytes. `DEMO_SESSION_SECRET` requires at least 32 characters. Other entries are currently enforced only as non-empty when their capability is used; provider-issued formats and strength requirements remain authoritative for provider credentials.
+Public provider configuration is a Wrangler var, not a secret: `GITHUB_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_ID`, `MICROSOFT_OAUTH_CLIENT_ID`, `MICROSOFT_TENANT_ID`, and, once the SAML IdP exists, `SAML_IDP_CERT`, `SAML_IDP_ISSUER` and `SAML_SSO_URL`.
 
-Cloudflare usage collection uses a dedicated minimum-permission token with Analytics Read and, only when needed, Billing Read. Public projections exclude account/resource identifiers, account names, invoice/subscription identifiers, tokens, payment data, and raw upstream error text.
+The demo holds no signing secret of its own. Visitor demo sessions and reporting cursors (`demo-session`), identity sessions, flows and access tokens (`identity-session`), and identity audit identifiers (`identity-audit`) use 32-byte keys that the vendored wg-edge `deriveKey` derives with HKDF-SHA256 from the shared Secrets Store `WG_SESSION_KEY` binding. Without that binding each feature fails closed. Rotating `WG_SESSION_KEY` signs every demo and identity session out at once.
+
+Cloudflare usage collection uses the dedicated minimum-permission `CLOUDFLARE_BILLING_TOKEN` (`wg-cloudflare-billing`) with Account Analytics Read and Billing Read. Public projections exclude account/resource identifiers, account names, invoice/subscription identifiers, tokens, payment data, and raw upstream error text.
 
 ## Demo administration
 

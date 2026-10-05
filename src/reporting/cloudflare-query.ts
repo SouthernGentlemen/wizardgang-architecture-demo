@@ -36,7 +36,7 @@ async function pageFromResult(
     },
     limit,
     cursor,
-    secret: reportingCursorSecret(env),
+    secret: await reportingCursorSecret(env),
     terminalPartialReason: terminalPartial(snapshot),
   });
   return {

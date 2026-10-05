@@ -30,7 +30,7 @@ function environment(): Env {
       };
     },
   };
-  return { DEMO_DB: db, GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main', IDENTITY_SESSION_SECRET: 's'.repeat(32), IDENTITY_AUDIT_HMAC_SECRET: 'a'.repeat(32) };
+  return { DEMO_DB: db, GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main', WG_SESSION_KEY: 's'.repeat(32) };
 }
 
 function session(): IdentitySession {

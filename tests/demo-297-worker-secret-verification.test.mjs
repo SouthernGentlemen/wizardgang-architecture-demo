@@ -12,7 +12,7 @@ const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 const wrangler = path.resolve('node_modules', '.bin', process.platform === 'win32' ? 'wrangler.cmd' : 'wrangler');
 
 describe('DEMO-297 Worker secret verification', () => {
-  it('keeps a value-free, unique inventory with the identity minimums required', () => {
+  it('keeps a value-free, unique inventory that requires the registry names and holds no derived key', () => {
     const names = inventory.secrets.map((entry) => entry.name);
     expect(new Set(names).size).toBe(names.length);
     for (const entry of inventory.secrets) {
@@ -22,9 +22,12 @@ describe('DEMO-297 Worker secret verification', () => {
       expect(typeof entry.owner).toBe('string');
       expect(typeof entry.capability).toBe('string');
     }
-    for (const name of ['IDENTITY_SESSION_SECRET', 'IDENTITY_AUDIT_HMAC_SECRET']) {
-      const entry = inventory.secrets.find((candidate) => candidate.name === name);
-      expect(entry).toMatchObject({ required: true, minimumLength: 32 });
+    for (const name of ['DEMO_WEBHOOK_SECRET', 'GITHUB_OAUTH_CLIENT_SECRET', 'GOOGLE_OAUTH_CLIENT_SECRET', 'MICROSOFT_OAUTH_CLIENT_SECRET']) {
+      expect(inventory.secrets.find((candidate) => candidate.name === name)).toMatchObject({ required: true });
+    }
+    // Session, identity and audit keys are derived from the Secrets Store WG_SESSION_KEY, never Worker secrets.
+    for (const name of ['DEMO_SESSION_SECRET', 'IDENTITY_SESSION_SECRET', 'IDENTITY_AUDIT_HMAC_SECRET', 'WG_SESSION_KEY']) {
+      expect(names).not.toContain(name);
     }
   });
 

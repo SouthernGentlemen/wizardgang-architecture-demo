@@ -157,7 +157,7 @@ export async function webhookDemoResponse(request: Request, env: Env): Promise<R
     if (request.method !== 'POST') return methodNotAllowed(['POST']);
     const originFailure = requireSameOrigin(request);
     if (originFailure) return originFailure;
-    if (!env.WEBHOOK_DEMO_SECRET) return json({ error: 'webhook_demo_not_configured' }, { status: 503 });
+    if (!env.DEMO_WEBHOOK_SECRET) return json({ error: 'webhook_demo_not_configured' }, { status: 503 });
     session = await ensureDemoSession(request, env);
     const deliveryId = `visitor-${crypto.randomUUID()}`;
     const repository = configuredRepository(env);
@@ -173,9 +173,9 @@ export async function webhookDemoResponse(request: Request, env: Env): Promise<R
         'content-type': 'application/json',
         'x-github-delivery': deliveryId,
         'x-github-event': 'release',
-        'x-hub-signature-256': `sha256=${await hmac(env.WEBHOOK_DEMO_SECRET, payload)}`,
+        'x-hub-signature-256': `sha256=${await hmac(env.DEMO_WEBHOOK_SECRET, payload)}`,
       },
-    }), env, { provider: 'demo', secret: env.WEBHOOK_DEMO_SECRET, sessionId: session.id });
+    }), env, { provider: 'demo', secret: env.DEMO_WEBHOOK_SECRET, sessionId: session.id });
     return attach(response, session);
   } catch (error) {
     return attach(errorResponse(error), session);

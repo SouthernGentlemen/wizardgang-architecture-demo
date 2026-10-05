@@ -1,4 +1,5 @@
 import type { Env } from '../types';
+import { derivedSecret, hasSessionKey } from './derived-keys';
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -98,17 +99,12 @@ export async function sha256(value: string): Promise<string> {
   return hex(new Uint8Array(await crypto.subtle.digest('SHA-256', encoder.encode(value))));
 }
 
-function identityAuditSecret(env: Env): string | null {
-  const secret = env.IDENTITY_AUDIT_HMAC_SECRET?.trim();
-  return secret && encoder.encode(secret).byteLength >= 32 ? secret : null;
-}
-
-export function hasIdentityAuditSecret(env: Env): boolean {
-  return identityAuditSecret(env) !== null;
+function identityAuditSecret(env: Env): Promise<string | null> {
+  return derivedSecret(env, 'identity-audit');
 }
 
 async function identityHmac(env: Env, purpose: string, provider: IdentityProvider, subject: string): Promise<string> {
-  const secret = identityAuditSecret(env);
+  const secret = await identityAuditSecret(env);
   if (!secret) throw new Error('identity_audit_not_configured');
   const key = await crypto.subtle.importKey(
     'raw',
@@ -134,17 +130,18 @@ async function keyFor(secret: string, purpose: string): Promise<CryptoKey> {
   return crypto.subtle.importKey('raw', digest, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
 }
 
-function identitySecret(env: Env): string | null {
-  const secret = env.IDENTITY_SESSION_SECRET?.trim();
-  return secret && encoder.encode(secret).byteLength >= 32 ? secret : null;
+function identitySecret(env: Env): Promise<string | null> {
+  return derivedSecret(env, 'identity-session');
 }
 
-export function hasIdentitySecret(env: Env): boolean {
-  return identitySecret(env) !== null;
+/** Whether the WG_SESSION_KEY binding is configured at all, for synchronous provider presentation. */
+export function identityConfigured(env: Env): boolean {
+  return hasSessionKey(env);
 }
 
-export function identityReadiness(env: Env): 'ready' | 'not-configured' {
-  return hasIdentitySecret(env) && hasIdentityAuditSecret(env) ? 'ready' : 'not-configured';
+/** Ready only when both identity keys actually derive, so an unbound, empty or unreadable root fails closed. */
+export async function identityReadiness(env: Env): Promise<'ready' | 'not-configured'> {
+  return await identitySecret(env) && await identityAuditSecret(env) ? 'ready' : 'not-configured';
 }
 
 async function seal(value: unknown, secret: string, purpose: string): Promise<string> {
@@ -194,7 +191,7 @@ export function clearIdentityCookie(name = IDENTITY_SESSION_COOKIE, sameSite: 'L
 }
 
 export async function writeFlowCookie(env: Env, flow: IdentityFlow): Promise<string> {
-  const secret = identitySecret(env);
+  const secret = await identitySecret(env);
   if (!secret) throw new Error('identity_not_configured');
   const name = flow.provider === 'saml' ? SAML_FLOW_COOKIE : IDENTITY_FLOW_COOKIE;
   const sameSite = flow.provider === 'saml' ? 'None' : 'Lax';
@@ -202,7 +199,7 @@ export async function writeFlowCookie(env: Env, flow: IdentityFlow): Promise<str
 }
 
 export async function readFlowCookie(request: Request, env: Env, provider: IdentityFlow['provider']): Promise<IdentityFlow | null> {
-  const secret = identitySecret(env);
+  const secret = await identitySecret(env);
   if (!secret) return null;
   const name = provider === 'saml' ? SAML_FLOW_COOKIE : IDENTITY_FLOW_COOKIE;
   const encoded = cookieValue(request, name);
@@ -219,7 +216,7 @@ export function clearFlowCookie(provider: IdentityFlow['provider']): string {
 }
 
 export async function createIdentitySession(env: Env, session: IdentitySession): Promise<string> {
-  const secret = identitySecret(env);
+  const secret = await identitySecret(env);
   if (!secret) throw new Error('identity_not_configured');
   const id = randomValue();
   const now = new Date();
@@ -252,7 +249,7 @@ export async function createIdentitySession(env: Env, session: IdentitySession):
 }
 
 export async function readIdentitySession(request: Request, env: Env): Promise<IdentitySession | null> {
-  const secret = identitySecret(env);
+  const secret = await identitySecret(env);
   const encoded = cookieValue(request, IDENTITY_SESSION_COOKIE);
   if (!secret || !encoded) return null;
   const reference = await unseal<SessionReference>(encoded, secret, 'identity-session-reference');
@@ -271,7 +268,7 @@ export async function readIdentitySession(request: Request, env: Env): Promise<I
 }
 
 export async function createDemoAccessToken(env: Env, session: IdentitySession): Promise<{ token: string; claims: DemoAccessToken }> {
-  const secret = identitySecret(env);
+  const secret = await identitySecret(env);
   if (!secret) throw new Error('identity_not_configured');
   const now = Date.now();
   const sessionExpiry = Date.parse(session.expiresAt);
@@ -290,7 +287,7 @@ export async function createDemoAccessToken(env: Env, session: IdentitySession):
 }
 
 export async function readDemoAccessToken(env: Env, token: string): Promise<DemoAccessToken | null> {
-  const secret = identitySecret(env);
+  const secret = await identitySecret(env);
   if (!secret || !token.startsWith('v1.')) return null;
   const claims = await unseal<DemoAccessToken>(token, secret, 'demo-access-token-v2');
   const issuedAt = Date.parse(claims?.issuedAt ?? '');
@@ -313,7 +310,7 @@ export async function readDemoAccessToken(env: Env, token: string): Promise<Demo
 }
 
 export async function revokeIdentitySession(request: Request, env: Env): Promise<void> {
-  const secret = identitySecret(env);
+  const secret = await identitySecret(env);
   const encoded = cookieValue(request, IDENTITY_SESSION_COOKIE);
   if (!secret || !encoded) return;
   const reference = await unseal<SessionReference>(encoded, secret, 'identity-session-reference');

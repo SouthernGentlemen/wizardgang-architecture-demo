@@ -55,6 +55,10 @@ export interface DurableObjectNamespace {
   get(id: unknown): DurableObjectStub;
 }
 
+export interface SecretsStoreSecret {
+  get(): Promise<string>;
+}
+
 export interface AssetsBinding {
   fetch(request: Request): Promise<Response>;
 }
@@ -70,29 +74,29 @@ export interface Env {
   // WORKER_SECRETS_START
   DEMO_ADMIN_USER?: string;
   DEMO_ADMIN_PASSWORD?: string;
-  WEBHOOK_DEMO_SECRET?: string;
+  DEMO_WEBHOOK_SECRET?: string;
   GITHUB_WEBHOOK_SECRET?: string;
   GITHUB_READ_TOKEN?: string;
   GITHUB_REPORTING_WRITE_TOKEN?: string;
   GITHUB_DEMO_TOKEN?: string;
-  DEMO_SESSION_SECRET?: string;
-  IDENTITY_SESSION_SECRET?: string;
-  IDENTITY_AUDIT_HMAC_SECRET?: string;
-  MICROSOFT_CLIENT_ID?: string;
-  MICROSOFT_CLIENT_SECRET?: string;
-  MICROSOFT_TENANT_ID?: string;
-  GOOGLE_CLIENT_ID?: string;
-  GOOGLE_CLIENT_SECRET?: string;
-  GITHUB_CLIENT_ID?: string;
-  GITHUB_CLIENT_SECRET?: string;
-  SAML_IDP_CERT?: string;
-  CLOUDFLARE_API_TOKEN?: string;
+  GITHUB_OAUTH_CLIENT_SECRET?: string;
+  GOOGLE_OAUTH_CLIENT_SECRET?: string;
+  MICROSOFT_OAUTH_CLIENT_SECRET?: string;
+  CLOUDFLARE_BILLING_TOKEN?: string;
   // WORKER_SECRETS_END
 
-  GITHUB_REPORTING_BINDINGS?: string;
-  GITHUB_REPORTING_MAX_PAGES?: string;
+  // Secrets Store binding; wg-edge derives demo-session, identity-session and identity-audit from it.
+  WG_SESSION_KEY?: SecretsStoreSecret | string;
+
+  GITHUB_OAUTH_CLIENT_ID?: string;
+  GOOGLE_OAUTH_CLIENT_ID?: string;
+  MICROSOFT_OAUTH_CLIENT_ID?: string;
+  MICROSOFT_TENANT_ID?: string;
+  SAML_IDP_CERT?: string;
   SAML_IDP_ISSUER?: string;
   SAML_SSO_URL?: string;
+  GITHUB_REPORTING_BINDINGS?: string;
+  GITHUB_REPORTING_MAX_PAGES?: string;
   DEPLOYED_VERSION?: string;
   DEPLOYED_SHA?: string;
   DEPLOYMENT_ENVIRONMENT?: string;

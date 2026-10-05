@@ -31,7 +31,7 @@ const origin = 'https://demo.wizardgang.ai';
 const deployedSha = '0123456789abcdef0123456789abcdef01234567';
 const env = {
   DEMO_DB: { prepare: (sql: string) => new Statement(sql) },
-  DEMO_SESSION_SECRET: 'test-assurance-assessment-acceptance-secret',
+  WG_SESSION_KEY: 'test-assurance-assessment-acceptance-secret',
   GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
   DEPLOYED_SHA: deployedSha,
