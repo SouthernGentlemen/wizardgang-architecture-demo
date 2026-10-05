@@ -5,7 +5,7 @@ import type { Env } from '../src/types';
 
 function env(overrides: Partial<Env> = {}): Env {
   return {
-    GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+    GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
     ...overrides,
   } as Env;
@@ -14,7 +14,7 @@ function env(overrides: Partial<Env> = {}): Env {
 describe('assurance evidence presentation', () => {
   it('resolves canonical repository evidence at the exact deployed SHA, never the configured branch', () => {
     const deployedSha = 'fedcba9876543210fedcba9876543210fedcba98';
-    const repository = 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo';
+    const repository = 'https://github.com/Wizard-Gang/wizardgang-architecture-demo';
     const origin = 'https://demo.example';
     const records = listPublishedAssuranceRecords('evidence');
     const repositoryRecords = records.filter((record) => Boolean(record.locator.repositoryPath));

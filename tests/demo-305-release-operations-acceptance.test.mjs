@@ -59,7 +59,7 @@ describe('DEMO-305 release operations acceptance', () => {
 
   it('keeps the restored monitor identified and externally visible on failure', () => {
     expect(monitorValidator).toContain('WizardGangAssuranceMonitor/1.0');
-    expect(monitorValidator).toContain('+https://github.com/SouthernGentlemen/wizardgang-architecture-demo');
+    expect(monitorValidator).toContain('+https://github.com/Wizard-Gang/wizardgang-architecture-demo');
     expect(monitorWorkflow).toMatch(/issues:\s*write/);
     expect(monitorWorkflow).toContain('Maintain assurance monitor tracking issue');
     expect(monitorWorkflow).toContain("if (status === 'success')");

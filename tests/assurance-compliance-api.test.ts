@@ -9,7 +9,7 @@ import type { Env } from '../src/types';
 import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.ts';
 
 const environment = {
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
   DEPLOYED_SHA: '0123456789abcdef0123456789abcdef01234567',
 } as unknown as Env;

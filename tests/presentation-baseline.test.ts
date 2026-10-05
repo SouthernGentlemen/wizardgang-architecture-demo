@@ -518,7 +518,7 @@ function environment(): Env {
   return {
     DEMO_DB: { prepare: (sql: string) => new BaselineStatement(sql) },
     WG_SESSION_KEY: 'presentation-session-secret-with-32-characters',
-    GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+    GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
     DEPLOYED_VERSION: 'v0.26.0-presentation-test',
     DEPLOYED_SHA: TEST_SHA,
@@ -909,7 +909,7 @@ describe('DEMO-325 presentation acceptance baseline', () => {
           expect(document.querySelector('a.skip-link[href="#main"]')?.textContent, surface.id).toContain('Skip to main content');
           expect([...document.querySelectorAll('a[href]')].some((link) => (
             accessibleName(link, document) === 'Source'
-            && link.getAttribute('href') === 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo'
+            && link.getAttribute('href') === 'https://github.com/Wizard-Gang/wizardgang-architecture-demo'
           )), surface.id).toBe(true);
           if (routeId) expect(document.body.getAttribute('data-route-id'), surface.id).toBe(routeId);
         } else {
@@ -976,7 +976,7 @@ describe('DEMO-325 presentation acceptance baseline', () => {
           expect(document.querySelector('button[data-theme-toggle][aria-label="السمة"]'), surface.id).not.toBeNull();
           expect([...document.querySelectorAll('a[href]')].some((link) => (
             accessibleName(link, document) === 'المصدر'
-            && link.getAttribute('href') === 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo'
+            && link.getAttribute('href') === 'https://github.com/Wizard-Gang/wizardgang-architecture-demo'
           )), surface.id).toBe(true);
           expect(document.title, surface.id).toContain('WizardGang');
           if (routeId) expect(document.body.getAttribute('data-route-id'), surface.id).toBe(routeId);

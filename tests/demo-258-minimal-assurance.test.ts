@@ -13,7 +13,7 @@ class Statement implements D1PreparedStatement {
     return { results: [] as T[] };
   }
 }
-const env = { DEMO_DB: { prepare: (sql: string) => new Statement(sql) }, GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main', DEPLOYED_SHA: '0123456789abcdef0123456789abcdef01234567' } as Env;
+const env = { DEMO_DB: { prepare: (sql: string) => new Statement(sql) }, GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo', GITHUB_BRANCH: 'main', DEPLOYED_SHA: '0123456789abcdef0123456789abcdef01234567' } as Env;
 async function page(path = routeUrl('assurance.index')) { const response = await routeRequest(new Request(`https://demo.wizardgang.ai${path}`, { headers: { accept: 'text/html' } }), env); return { response, html: await response.text() }; }
 
 describe('DEMO-258 assurance consolidation boundary', () => {

@@ -72,7 +72,7 @@ function env(): Env {
   return {
     DEMO_DB: new R2D1(), DEMO_R2: new MemoryR2(),
     WG_SESSION_KEY: 'test-session-secret-with-at-least-32-characters',
-    GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main',
+    GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo', GITHUB_BRANCH: 'main',
   };
 }
 

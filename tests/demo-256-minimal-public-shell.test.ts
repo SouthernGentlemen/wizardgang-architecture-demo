@@ -3,7 +3,7 @@ import { applicationRouteRegistry, routeUrl } from '../src/routing/application-r
 import { architectureMapEntries, primaryNavigation } from '../src/routing/navigation';
 import type { Env } from '../src/types';
 
-const repositoryUrl = 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo';
+const repositoryUrl = 'https://github.com/Wizard-Gang/wizardgang-architecture-demo';
 const env = {
   DEMO_DB: {
     prepare: () => ({

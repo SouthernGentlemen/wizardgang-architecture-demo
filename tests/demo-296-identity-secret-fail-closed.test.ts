@@ -55,7 +55,7 @@ function captureDb() {
 function environment(db: D1Database, overrides: Partial<Env> = {}): Env {
   return {
     DEMO_DB: db,
-    GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+    GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
     WG_SESSION_KEY: 's'.repeat(32),
     ...overrides,

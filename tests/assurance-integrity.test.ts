@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { reportingCollectionResponse } from '../src/api/reporting';
 import type { Env } from '../src/types';
 
-const env = { GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' } as Env;
+const env = { GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' } as Env;
 
 describe('assurance integrity current-contract invariants', () => {
   it('passes the repository cross-dataset integrity validator on the checked-in canonical sources', () => {

@@ -4,7 +4,7 @@ import { queryGitHubReporting } from '../src/reporting/github';
 import type { Principal } from '../src/lib/authorization';
 import type { D1Database, Env } from '../src/types';
 
-const repository = 'SouthernGentlemen/wizardgang-architecture-demo';
+const repository = 'Wizard-Gang/wizardgang-architecture-demo';
 const repositoryApi = `/repos/${repository}`;
 const fixture = JSON.parse(readFileSync('tests/fixtures/github-reporting.json', 'utf8')) as {
   repository: Record<string, unknown>;

@@ -30,7 +30,7 @@ function node<K extends keyof HTMLElementTagNameMap>(document: Document, tag: K,
 }
 
 function setLink(container: HTMLElement, label: string, url: string | null | undefined): void {
-  const safe = url && /^https:\/\/github\.com\/SouthernGentlemen\/wizardgang-architecture-demo(?:\/|$)/.test(url) ? url : null;
+  const safe = url && /^https:\/\/github\.com\/Wizard-Gang\/wizardgang-architecture-demo(?:\/|$)/.test(url) ? url : null;
   const current = container.firstElementChild;
   if (safe) {
     const link = current?.tagName === 'A' ? current as HTMLAnchorElement : node(container.ownerDocument, 'a');

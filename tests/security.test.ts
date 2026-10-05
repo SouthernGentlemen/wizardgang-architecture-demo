@@ -6,7 +6,7 @@ import { json, readJson } from '../src/lib/http';
 import type { Env } from '../src/types';
 
 const baseEnv = {
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
   DEMO_ADMIN_USER: 'operator',
   DEMO_ADMIN_PASSWORD: 'correct horse battery staple',

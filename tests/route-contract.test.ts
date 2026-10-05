@@ -21,7 +21,7 @@ class ContractStatement implements D1PreparedStatement {
 
 const environment: Env = {
   DEMO_DB: { prepare: (sql: string) => new ContractStatement(sql) },
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
   DEMO_ADMIN_USER: 'operator',
   DEMO_ADMIN_PASSWORD: 'test-admin-password',

@@ -13,7 +13,7 @@ import { localGraphiqlDocument } from '../src/ui/graphiql-document';
 import { initializeGraphiql } from '../src/browser/graphiql';
 
 const env = {
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
 } as Env;
 

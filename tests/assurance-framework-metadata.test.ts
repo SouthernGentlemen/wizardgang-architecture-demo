@@ -5,7 +5,7 @@ import { assuranceComplianceFrameworks, assuranceRegistryResources } from '../sr
 import { listAssuranceRecords } from '../src/assurance/service';
 import type { Env } from '../src/types';
 
-const env = { GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' } as Env;
+const env = { GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' } as Env;
 
 describe('canonical compliance framework metadata', () => {
   it('derives framework presentation metadata from registered framework resources', () => {

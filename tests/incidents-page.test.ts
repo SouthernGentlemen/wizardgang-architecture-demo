@@ -17,7 +17,7 @@ class IncidentStatement implements D1PreparedStatement {
 const env: Env = {
   DEMO_DB: { prepare: (sql: string) => new IncidentStatement(sql) },
   WG_SESSION_KEY: 'test-incidents-page-cursor-secret-that-is-long-enough',
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
 };
 

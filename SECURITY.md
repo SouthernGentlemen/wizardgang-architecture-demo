@@ -59,7 +59,7 @@ Intentional offline state is not a reason to expose debugging details. Gated bro
 
 ## Vulnerability reporting
 
-Do not open a public issue for a suspected vulnerability, active security incident, credential exposure, exploit detail, or sensitive infrastructure concern. Use the repository's [private vulnerability reporting](https://github.com/SouthernGentlemen/wizardgang-architecture-demo/security/advisories/new) mechanism.
+Do not open a public issue for a suspected vulnerability, active security incident, credential exposure, exploit detail, or sensitive infrastructure concern. Use the repository's [private vulnerability reporting](https://github.com/Wizard-Gang/wizardgang-architecture-demo/security/advisories/new) mechanism.
 
 The public disclosure policy and reporting boundary are available at `https://demo.wizardgang.ai/security`. Machine-readable contact information is available at `https://demo.wizardgang.ai/.well-known/security.txt`.
 

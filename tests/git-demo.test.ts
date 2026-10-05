@@ -6,8 +6,8 @@ import { clearGitHubAppTokensForTest } from '../src/lib/github-app';
 import { appToken, appTokenResponse, githubAppEnv, mintedPermissions } from './helpers/github-app';
 import type { D1PreparedStatement, Env } from '../src/types';
 
-const repositoryUrl = 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo';
-const apiPrefix = '/repos/SouthernGentlemen/wizardgang-architecture-demo';
+const repositoryUrl = 'https://github.com/Wizard-Gang/wizardgang-architecture-demo';
+const apiPrefix = '/repos/Wizard-Gang/wizardgang-architecture-demo';
 const requestId = '123e4567-e89b-42d3-a456-426614174000';
 const headSha = 'a'.repeat(40);
 const mainSha = 'b'.repeat(40);

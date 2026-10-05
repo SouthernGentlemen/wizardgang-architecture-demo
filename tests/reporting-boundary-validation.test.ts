@@ -10,7 +10,7 @@ import type { D1Database, Env } from '../src/types';
 import { clearGitHubAppTokensForTest } from '../src/lib/github-app';
 import { appToken, appTokenResponse, githubAppEnv, mintedPermissions } from './helpers/github-app';
 
-const repository = 'SouthernGentlemen/wizardgang-architecture-demo';
+const repository = 'Wizard-Gang/wizardgang-architecture-demo';
 const repositoryApi = `/repos/${repository}`;
 const operator: Principal = {
   subject: 'operator',

@@ -19,8 +19,8 @@
   "securityReporting": {
     "policyRoute": "/security",
     "securityTxtRoute": "/.well-known/security.txt",
-    "privateReportingUrl": "https://github.com/SouthernGentlemen/wizardgang-architecture-demo/security/advisories/new",
-    "privateReportingApi": "https://api.github.com/repos/SouthernGentlemen/wizardgang-architecture-demo/private-vulnerability-reporting",
+    "privateReportingUrl": "https://github.com/Wizard-Gang/wizardgang-architecture-demo/security/advisories/new",
+    "privateReportingApi": "https://api.github.com/repos/Wizard-Gang/wizardgang-architecture-demo/private-vulnerability-reporting",
     "expirySource": "src/api/security-policy.ts"
   }
 }

@@ -17,7 +17,7 @@ const context: ReportingCursorContext = {
   collection: 'github-native',
   source: 'github.issues',
   filters: {
-    repository: ' SouthernGentlemen/wizardgang-architecture-demo ',
+    repository: ' Wizard-Gang/wizardgang-architecture-demo ',
     labels: ['security', 'corrective-action', 'security'],
     open: true,
   },
@@ -125,7 +125,7 @@ describe('opaque reporting cursor codec', () => {
       filters: {
         open: true,
         labels: ['corrective-action', 'security'],
-        repository: 'SouthernGentlemen/wizardgang-architecture-demo',
+        repository: 'Wizard-Gang/wizardgang-architecture-demo',
       },
       ordering: [
         { field: 'updatedAt', direction: 'desc' },

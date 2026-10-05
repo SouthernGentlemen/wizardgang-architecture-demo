@@ -30,7 +30,7 @@ class AvailabilityD1 {
   ];
   prepare(sql: string) { return new AvailabilityStatement(this, sql); }
 }
-function env(): Env { return { DEMO_DB: new AvailabilityD1(), GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' }; }
+function env(): Env { return { DEMO_DB: new AvailabilityD1(), GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' }; }
 
 describe('availability history integrity', () => {
   it('keeps interactive health reads read-only', async () => {

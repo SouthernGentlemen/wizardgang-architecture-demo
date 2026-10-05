@@ -13,7 +13,7 @@ import { reportingRouteRegistry } from '../src/routing/reporting-routes';
 import { matchRoute } from '../src/routing/registry';
 import type { Env } from '../src/types';
 
-const env = { GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' } as Env;
+const env = { GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' } as Env;
 
 describe('assurance route contract', () => {
   it('keeps assurance metadata route-ID-only while deriving canonical browser and reporting URLs', () => {

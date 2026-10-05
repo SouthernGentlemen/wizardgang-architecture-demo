@@ -35,7 +35,7 @@ class InterfaceD1 {
 
 const onlineEnv = {
   DEMO_DB: new InterfaceD1(),
-  GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+  GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
 } as unknown as Env;
 

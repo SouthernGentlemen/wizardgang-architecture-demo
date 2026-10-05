@@ -7,7 +7,7 @@ import { retiredOperationsHtmlPathname } from './fixtures/removed-html-pathnames
 
 function environment(offline = false): Env {
   return {
-    GITHUB_REPO_URL: 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo',
+    GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
     DEPLOYED_VERSION: 'v0.21.0-test',
     DEPLOYED_SHA: 'abcdef0123456789',

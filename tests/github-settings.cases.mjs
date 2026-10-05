@@ -139,10 +139,10 @@ test("verification is read-only and apply independently re-reads", async () => {
 });
 
 test("missing token and read/write permission failures are distinct", async () => {
-  await assert.rejects(githubApi("/repos/SouthernGentlemen/wizardgang-architecture-demo"), { code: "GITHUB_AUTH_REQUIRED" });
+  await assert.rejects(githubApi("/repos/Wizard-Gang/wizardgang-architecture-demo"), { code: "GITHUB_AUTH_REQUIRED" });
   const denied = async () => new Response(JSON.stringify({ message: "denied" }), { status: 403 });
-  await assert.rejects(githubApi("/repos/SouthernGentlemen/wizardgang-architecture-demo", { token: "fixture", fetchImpl: denied }),
+  await assert.rejects(githubApi("/repos/Wizard-Gang/wizardgang-architecture-demo", { token: "fixture", fetchImpl: denied }),
     { code: "GITHUB_ADMIN_READ_DENIED" });
-  await assert.rejects(githubApi("/repos/SouthernGentlemen/wizardgang-architecture-demo", { token: "fixture", method: "PATCH", fetchImpl: denied }),
+  await assert.rejects(githubApi("/repos/Wizard-Gang/wizardgang-architecture-demo", { token: "fixture", method: "PATCH", fetchImpl: denied }),
     { code: "GITHUB_ADMIN_WRITE_DENIED" });
 });
