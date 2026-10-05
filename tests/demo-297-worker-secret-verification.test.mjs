@@ -31,17 +31,19 @@ describe('DEMO-297 Worker secret verification', () => {
     }
   });
 
-  it('runs name preflight before migrations and preserves pre/post identity continuity', () => {
+  it('runs name preflight before any production mutation and preserves pre/post identity continuity', () => {
     const preflight = deploy.indexOf('name: Verify production Worker secret names');
     const baseline = deploy.indexOf('name: Capture pre-deployment identity baseline');
-    const migrations = deploy.indexOf('name: Apply production D1 migrations');
+    const retire = deploy.indexOf('name: Retire Worker secrets that committed vars supersede');
     const workerDeploy = deploy.indexOf('name: Deploy tagged Worker source');
     const verify = deploy.indexOf('name: Verify public version, health, and identity continuity');
 
     expect(preflight).toBeGreaterThan(-1);
     expect(baseline).toBeGreaterThan(preflight);
-    expect(migrations).toBeGreaterThan(baseline);
-    expect(workerDeploy).toBeGreaterThan(migrations);
+    expect(retire).toBeGreaterThan(baseline);
+    expect(workerDeploy).toBeGreaterThan(retire);
+    // Baseline owns the shared D1 schema; the demo deploy applies no migrations.
+    expect(deploy).not.toContain('d1 migrations apply');
     expect(verify).toBeGreaterThan(workerDeploy);
     expect(deploy).toContain('wrangler secret list --format json');
     expect(deploy).toContain('validate-worker-secrets.mjs --provisioned');

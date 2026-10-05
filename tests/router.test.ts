@@ -4,33 +4,17 @@ import { architectureMapEntries } from '../src/routing/navigation';
 import { routeRequest } from '../src/router';
 import { browserAssetName, browserAssetPath } from '../src/ui/asset-map';
 import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
-import type { D1PreparedStatement, Env } from '../src/types';
+import type { Env } from '../src/types';
 import { removedRouterFallbackPathnames } from './fixtures/removed-api-pathnames';
 import { retiredOperationsHtmlPathname } from './fixtures/removed-html-pathnames';
+import { SqliteD1 } from './helpers/wg-storage';
 
-class RouterStatement implements D1PreparedStatement {
-  private values: unknown[] = [];
-  constructor(private readonly db: RouterD1, private readonly sql: string) { db.queries.push(sql); }
-  bind(...values: unknown[]) { this.values = values; this.db.binds.push(...values); return this; }
-  async run() { return { meta: { last_row_id: this.db.nextId++ } }; }
-  async all<T>() {
-    if (this.sql.includes('FROM demo_control')) return { results: [{ state: this.db.state, public_message: this.db.state === 'online' ? 'Available.' : 'Planned maintenance.', updated_at: '2026-08-31T00:00:00.000Z', updated_by: 'test' }] as T[] };
-    if (this.sql.includes('FROM crawler_control')) return { results: [{ state: this.db.crawlerState, updated_at: '2026-09-01T12:00:00.000Z', updated_by: 'test' }] as T[] };
-    return { results: [] as T[] };
-  }
-}
-
-class RouterD1 {
-  nextId = 1;
-  queries: string[] = [];
-  binds: unknown[] = [];
-  constructor(public state: 'online' | 'offline' = 'online', public crawlerState: 'enabled' | 'disabled' = 'disabled') {}
-  prepare(sql: string) { return new RouterStatement(this, sql); }
-}
-
-function env(state: 'online' | 'offline' = 'online', crawlerState: 'enabled' | 'disabled' = 'disabled'): Env & { DEMO_DB: RouterD1 } {
+function env(state: 'online' | 'offline' = 'online', crawlerState: 'enabled' | 'disabled' = 'disabled'): Env & { WG_DB: SqliteD1 } {
+  const db = new SqliteD1();
+  db.putRecord('control', 'demo', { state, publicMessage: state === 'online' ? 'Available.' : 'Planned maintenance.', updatedAt: '2026-08-31T00:00:00.000Z', updatedBy: 'test' });
+  db.putRecord('control', 'crawler', { state: crawlerState, updatedAt: '2026-09-01T12:00:00.000Z', updatedBy: 'test' });
   return {
-    DEMO_DB: new RouterD1(state, crawlerState),
+    WG_DB: db,
     ASSETS: {
       async fetch(request) {
         const contentType = new URL(request.url).pathname.endsWith('.png') ? 'image/png' : 'application/octet-stream';
@@ -352,7 +336,9 @@ describe('offline routing matrix', () => {
     const html = await routeRequest(new Request('https://demo.wizardgang.ai/demos', { headers: { accept: 'text/html' } }), environment);
     expect(html.status).toBe(302);
     expect(html.headers.get('location')).toContain('/offline?from=%2Fdemos');
-    expect(environment.DEMO_DB.queries.every((query) => query.includes('demo_control'))).toBe(true);
+    // Only the demo control record is read before the offline gate answers.
+    expect(environment.WG_DB.queries.every((query) => query.startsWith('SELECT') && query.includes('FROM records'))).toBe(true);
+    expect(environment.WG_DB.binds.every((values) => values[1] === 'control' && values[2] === 'demo')).toBe(true);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/demos#mcp', { headers: { accept: 'text/html' } }), environment)).status).toBe(302);
     const mcp = await routeRequest(new Request('https://demo.wizardgang.ai/mcp', { headers: { accept: 'application/json' } }), environment);
     expect(mcp.status).toBe(503);
@@ -384,11 +370,11 @@ describe('offline routing matrix', () => {
       body: new URLSearchParams({ state: 'offline', message: 'Planned public demonstration window.' }),
     }), environment);
     expect(response.status).toBe(303);
-    expect(environment.DEMO_DB.queries.some((query) => query.includes('INSERT INTO demo_control'))).toBe(true);
-    expect(environment.DEMO_DB.queries.some((query) => query.includes('INSERT INTO demo_events'))).toBe(true);
-    expect(environment.DEMO_DB.queries.some((query) => query.includes('INSERT INTO application_logs'))).toBe(true);
-    expect(environment.DEMO_DB.binds.join(' ')).not.toContain('test-admin-password');
-    expect(environment.DEMO_DB.binds.join(' ')).not.toContain(basic);
+    expect(environment.WG_DB.records<{ state: string }>('control').get('demo')?.body.state).toBe('offline');
+    expect(environment.WG_DB.events<{ eventType: string }>('audit').map((event) => event.body.eventType)).toContain('demo_state_changed');
+    expect(environment.WG_DB.events('log').length).toBeGreaterThan(0);
+    expect(environment.WG_DB.dump()).not.toContain('test-admin-password');
+    expect(environment.WG_DB.dump()).not.toContain(basic);
   });
 
   it('persists and audits the authenticated ChatGPT access switch', async () => {
@@ -399,7 +385,7 @@ describe('offline routing matrix', () => {
       body: new URLSearchParams({ control: 'chatgpt-crawl', state: 'enabled' }),
     }), unauthenticatedEnvironment);
     expect(denied.status).toBe(401);
-    expect(unauthenticatedEnvironment.DEMO_DB.queries.some((query) => query.includes('INSERT INTO crawler_control'))).toBe(false);
+    expect(unauthenticatedEnvironment.WG_DB.records<{ state: string }>('control').get('crawler')?.body.state).toBe('disabled');
 
     const environment = env();
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/admin', {
@@ -410,10 +396,9 @@ describe('offline routing matrix', () => {
     expect(response.status).toBe(303);
     expect(response.headers.get('location')).toContain('changed=chatgpt-crawl-enabled');
     expect(response.headers.get('location')).toContain('#chatgpt-crawl');
-    expect(environment.DEMO_DB.queries.some((query) => query.includes('INSERT INTO crawler_control'))).toBe(true);
-    expect(environment.DEMO_DB.queries.some((query) => query.includes('INSERT INTO demo_events'))).toBe(true);
-    expect(environment.DEMO_DB.queries.some((query) => query.includes('INSERT INTO application_logs'))).toBe(true);
-    expect(environment.DEMO_DB.binds).toContain('chatgpt_crawl_access_changed');
-    expect(environment.DEMO_DB.binds.join(' ')).not.toContain('test-admin-password');
+    expect(environment.WG_DB.records<{ state: string }>('control').get('crawler')?.body.state).toBe('enabled');
+    expect(environment.WG_DB.events<{ eventType: string }>('audit').map((event) => event.body.eventType)).toContain('chatgpt_crawl_access_changed');
+    expect(environment.WG_DB.events<{ event_key: string }>('log').map((event) => event.body.event_key)).toContain('chatgpt_crawl_access_changed');
+    expect(environment.WG_DB.dump()).not.toContain('test-admin-password');
   });
 });

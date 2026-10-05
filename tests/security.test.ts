@@ -63,7 +63,7 @@ describe('safe HTTP and control defaults', () => {
   it('fails closed when the D1 control state cannot be read', async () => {
     const unavailableEnv = {
       ...baseEnv,
-      DEMO_DB: {
+      WG_DB: {
         prepare() {
           return { bind: () => { throw new Error('unused'); }, run: async () => { throw new Error('unavailable'); }, all: async () => { throw new Error('unavailable'); } };
         },

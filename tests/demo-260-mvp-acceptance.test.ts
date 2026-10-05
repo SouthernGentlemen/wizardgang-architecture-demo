@@ -1,10 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import auditConfig from '../config/site-audit-states.json';
 import routeManifest from '../docs/route-manifest.json';
-import {
-  AVAILABILITY_RETENTION_DAYS,
-  availabilityRetentionCutoff,
-} from '../src/api/operations';
+import { AVAILABILITY_RETENTION_DAYS } from '../src/api/operations';
 import { listPublishedAssuranceRecords } from '../src/assurance/publication';
 import { demonstrations } from '../src/demos/demos-page';
 import { runScheduledOperations } from '../src/index';
@@ -21,7 +18,8 @@ import {
   primaryNavigation,
   sitemapPaths,
 } from '../src/routing/navigation';
-import type { D1PreparedStatement, Env } from '../src/types';
+import type { Env } from '../src/types';
+import { demoDatabase, type SqliteD1 } from './helpers/wg-storage';
 import {
   removedHtml404Pathnames,
   retiredOperationsHtmlPathname,
@@ -29,87 +27,14 @@ import {
 
 const repositoryUrl = 'https://github.com/Wizard-Gang/wizardgang-architecture-demo';
 
-interface ExecutedStatement {
-  sql: string;
-  values: unknown[];
-}
-
-class AcceptanceStatement implements D1PreparedStatement {
-  private values: unknown[] = [];
-
-  constructor(
-    private readonly db: AcceptanceD1,
-    private readonly sql: string,
-  ) {}
-
-  bind(...values: unknown[]) {
-    this.values = values;
-    return this;
-  }
-
-  async run() {
-    this.db.executed.push({ sql: this.sql, values: [...this.values] });
-    return { meta: { last_row_id: 1, changes: 1 } };
-  }
-
-  async all<T>() {
-    if (this.sql.includes('FROM demo_control')) {
-      return {
-        results: [{
-          state: this.db.offline ? 'offline' : 'online',
-          public_message: this.db.offline ? 'Acceptance maintenance window' : 'Available.',
-          updated_at: '2026-09-15T00:00:00.000Z',
-          updated_by: 'test',
-        }] as T[],
-      };
-    }
-    if (this.sql.includes('FROM crawler_control')) {
-      return {
-        results: [{
-          state: 'enabled',
-          updated_at: '2026-09-15T00:00:00.000Z',
-          updated_by: 'test',
-        }] as T[],
-      };
-    }
-    if (this.sql.trim() === 'SELECT 1') {
-      return { results: [{ 1: 1 }] as T[] };
-    }
-    if (this.sql.includes('FROM service_health_checks')) {
-      return {
-        results: [{
-          stored: 101,
-          verified: 101,
-          legacy: 0,
-          operational: 99,
-          intentional: 1,
-          unexpected: 1,
-          first_checked_at: '2026-09-14T15:40:00.000Z',
-          last_checked_at: '2026-09-15T00:00:00.000Z',
-          monitoring_started_at: '2026-09-14T15:40:00.000Z',
-        }] as T[],
-      };
-    }
-    if (this.sql.includes('FROM application_logs') || this.sql.includes('FROM usage_snapshots')) {
-      return { results: [] as T[] };
-    }
-    return { results: [] as T[] };
-  }
-}
-
-class AcceptanceD1 {
-  readonly executed: ExecutedStatement[] = [];
-
-  constructor(readonly offline = false) {}
-
-  prepare(sql: string) {
-    return new AcceptanceStatement(this, sql);
-  }
-}
-
 function environment(offline = false): Env {
   return {
-    DEMO_DB: new AcceptanceD1(offline),
+    WG_DB: demoDatabase({
+      demo: offline ? 'offline' : 'online',
+      message: offline ? 'Acceptance maintenance window' : 'Available.',
+      crawler: 'enabled',
+      availability: { verified: 101, operational: 99, intentional: 1 },
+    }),
     ASSETS: {
       async fetch(request) {
         const contentType = new URL(request.url).pathname.endsWith('.png') ? 'image/png' : 'application/octet-stream';
@@ -438,35 +363,30 @@ describe('DEMO-260 MVP acceptance contract', () => {
     expect(asset.status).toBe(200);
 
     const scheduledEnv = environment();
-    const database = scheduledEnv.DEMO_DB as unknown as AcceptanceD1;
+    const database = scheduledEnv.WG_DB as SqliteD1;
     const scheduledTime = Date.parse('2026-09-15T00:00:00.000Z');
     await runScheduledOperations(scheduledEnv, scheduledTime);
     expect(AVAILABILITY_RETENTION_DAYS).toBe(365);
-    expect(availabilityRetentionCutoff(scheduledTime)).toBe('2025-09-15T00:00:00.000Z');
-    expect(database.executed.some(({ sql }) => sql.includes('INSERT INTO service_health_checks'))).toBe(true);
-    expect(database.executed.some(({ sql, values }) => (
-      sql.includes('DELETE FROM service_health_checks')
-      && sql.includes('checked_at < ?')
-      && values[0] === availabilityRetentionCutoff(scheduledTime)
-    ))).toBe(true);
+    expect([...database.records('health').keys()]).toEqual(['2026-09-15T00:00:00.000Z']);
+    expect(database.records('availability').get('2026-09-15')?.body).toEqual({ verified: 1, operational: 1, intentional: 0 });
 
     const usage = await collectCloudflareUsage(environment(), false);
     expect(usage.status).toBe('unavailable');
     expect(Object.values(usage.products).every((product) => product.availability === 'unavailable')).toBe(true);
 
     const logEnv = environment();
-    const logDb = logEnv.DEMO_DB as unknown as AcceptanceD1;
+    const logDb = logEnv.WG_DB as SqliteD1;
     await recordApplicationLog(logEnv, {
       source: 'acceptance',
       eventKey: 'redaction',
       message: 'MVP acceptance log',
       detail: { token: 'secret-token-value', safe: 'visible' },
     });
-    const logInsert = logDb.executed.find(({ sql }) => sql.includes('INSERT INTO application_logs'));
+    const [logInsert] = logDb.applicationLogRows();
     expect(logInsert).toBeDefined();
-    expect(String(logInsert?.values[6])).toContain('"token":"[redacted]"');
-    expect(String(logInsert?.values[6])).toContain('"safe":"visible"');
-    expect(String(logInsert?.values[6])).not.toContain('secret-token-value');
+    expect(String(logInsert?.detail_json)).toContain('"token":"[redacted]"');
+    expect(String(logInsert?.detail_json)).toContain('"safe":"visible"');
+    expect(String(logInsert?.detail_json)).not.toContain('secret-token-value');
   });
 
   it('preserves hidden offline/admin boundaries and declared offline behavior', async () => {

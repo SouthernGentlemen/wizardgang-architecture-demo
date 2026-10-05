@@ -9,81 +9,22 @@ import {
   sha256,
   type IdentitySession,
 } from '../src/lib/identity-session';
-import type { ApplicationLogRow } from '../src/lib/logs';
-import type { D1Database, Env } from '../src/types';
-
-interface EventRow {
-  id: number;
-  demo_id: string;
-  event_type: string;
-  payload_json: string | null;
-  created_at: string;
-}
+import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
 function captureDb() {
-  let nextId = 1;
-  const sessions = new Map<string, { payload: string; expiresAt: string; revokedAt: string | null }>();
-  const events: EventRow[] = [];
-  const logs: ApplicationLogRow[] = [];
-
-  const db: D1Database = {
-    prepare(sql: string) {
-      let values: unknown[] = [];
-      return {
-        bind(...bound: unknown[]) { values = bound; return this; },
-        async run() {
-          const id = nextId++;
-          if (sql.includes('INSERT INTO identity_sessions')) {
-            sessions.set(String(values[0]), { payload: String(values[1]), expiresAt: String(values[3]), revokedAt: null });
-          } else if (sql.includes('UPDATE identity_sessions')) {
-            const row = sessions.get(String(values[1]));
-            if (row) row.revokedAt = String(values[0]);
-          } else if (sql.includes('INSERT INTO demo_events')) {
-            events.unshift({
-              id,
-              demo_id: String(values[0]),
-              event_type: String(values[1]),
-              payload_json: values[2] === null ? null : String(values[2]),
-              created_at: String(values[3]),
-            });
-          } else if (sql.includes('INSERT INTO application_logs')) {
-            logs.unshift({
-              id,
-              level: values[0] as ApplicationLogRow['level'],
-              source: String(values[1]),
-              event_key: String(values[2]),
-              message: String(values[3]),
-              route: values[4] === null ? null : String(values[4]),
-              request_id: values[5] === null ? null : String(values[5]),
-              detail_json: values[6] === null ? null : String(values[6]),
-              created_at: String(values[7]),
-            });
-          }
-          return { meta: { last_row_id: id, changes: 1 } };
-        },
-        async all<T>() {
-          if (sql.includes('FROM identity_sessions')) {
-            const row = sessions.get(String(values[0]));
-            const result = row && !row.revokedAt && row.expiresAt > String(values[1])
-              ? [{ payload_ciphertext: row.payload, expires_at: row.expiresAt }]
-              : [];
-            return { results: result as T[] };
-          }
-          if (sql.includes('FROM application_logs')) return { results: logs as T[] };
-          if (sql.includes('FROM demo_events')) return { results: events as T[] };
-          return { results: [] as T[] };
-        },
-      };
-    },
+  const db = new SqliteD1();
+  return {
+    db,
+    get events() { return db.demoEventRows(); },
+    get logs() { return db.applicationLogRows(); },
   };
-
-  return { db, events, logs };
 }
 
 // The identity-audit key derives from WG_SESSION_KEY, so a different root stands in for a different audit key.
-function environment(db: D1Database, sessionKey = 'identity-audit-test-secret-that-is-at-least-thirty-two-characters'): Env {
+function environment(db: SqliteD1, sessionKey = 'identity-audit-test-secret-that-is-at-least-thirty-two-characters'): Env {
   return {
-    DEMO_DB: db,
+    WG_DB: db,
     GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
     WG_SESSION_KEY: sessionKey,

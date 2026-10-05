@@ -9,20 +9,10 @@ import type { AssuranceRouteCapability } from '../src/assurance/route-capability
 import { createAssuranceRouteRegistry } from '../src/routing/assurance-routes';
 import { matchRoute } from '../src/routing/registry';
 import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
 const env = {
-  DEMO_DB: {
-    prepare: () => ({
-      all: async () => ({
-        results: [{
-          state: 'online',
-          public_message: 'Demo online.',
-          updated_at: '2026-09-05T00:00:00.000Z',
-          updated_by: 'test',
-        }],
-      }),
-    }),
-  },
+  WG_DB: new SqliteD1(),
 } as unknown as Env;
 
 function syntheticResource(

@@ -12,29 +12,11 @@ import {
 import { routeUrl } from '../src/routing/application-routes';
 import { matchRoute } from '../src/routing/registry';
 import { routeRequest } from '../src/router';
-import type { D1PreparedStatement, Env } from '../src/types';
-
-class InterfaceStatement implements D1PreparedStatement {
-  constructor(private readonly sql: string) {}
-  bind() { return this; }
-  async run() { return { meta: { last_row_id: 1 } }; }
-  async all<T>() {
-    if (this.sql.includes('FROM demo_control')) {
-      return { results: [{ state: 'online', public_message: 'Available.', updated_at: '2026-09-05T00:00:00.000Z', updated_by: 'test' }] as T[] };
-    }
-    if (this.sql.includes('FROM crawler_control')) {
-      return { results: [{ state: 'enabled', updated_at: '2026-09-05T00:00:00.000Z', updated_by: 'test' }] as T[] };
-    }
-    return { results: [] as T[] };
-  }
-}
-
-class InterfaceD1 {
-  prepare(sql: string) { return new InterfaceStatement(sql); }
-}
+import type { Env } from '../src/types';
+import { demoDatabase } from './helpers/wg-storage';
 
 const onlineEnv = {
-  DEMO_DB: new InterfaceD1(),
+  WG_DB: demoDatabase({ crawler: 'enabled' }),
   GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
 } as unknown as Env;

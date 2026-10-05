@@ -6,7 +6,8 @@ import {
 } from '../src/reporting/github';
 import { reportingJsonResponse } from '../src/api/reporting-response';
 import type { Principal } from '../src/lib/authorization';
-import type { D1Database, Env } from '../src/types';
+import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 import { clearGitHubAppTokensForTest } from '../src/lib/github-app';
 import { appToken, appTokenResponse, githubAppEnv, mintedPermissions } from './helpers/github-app';
 
@@ -20,19 +21,10 @@ const operator: Principal = {
 };
 const visitor: Principal = { subject: 'public', authentication: 'anonymous', permissions: ['demo:read'] };
 
-function memoryDb(): D1Database {
-  return {
-    prepare: () => ({
-      bind() { return this; },
-      async run() { return { meta: { changes: 0 } }; },
-      async all<T>() { return { results: [] as T[] }; },
-    }),
-  };
-}
 
 function environment(overrides: Partial<Env> = {}): Env {
   return {
-    DEMO_DB: memoryDb(),
+    WG_DB: new SqliteD1(),
     GITHUB_REPO_URL: `https://github.com/${repository}`,
     GITHUB_BRANCH: 'main',
     ...githubAppEnv,

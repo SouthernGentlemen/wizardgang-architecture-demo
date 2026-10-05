@@ -25,8 +25,8 @@
     "DEPLOYMENT_CI_STATUS": "not-verified",
     "BILLING_DEMO_MONTHLY_BUDGET_USD": "10",
     "CLOUDFLARE_WORKER_NAME": "wizardgang-architecture-demo",
-    "CLOUDFLARE_R2_BUCKET": "wizardgang-demo-r2",
-    "CLOUDFLARE_D1_DATABASE_ID": "4a8ba118-da0e-497b-a13c-911c407a09e3",
+    "CLOUDFLARE_R2_BUCKET": "wizardgang",
+    "CLOUDFLARE_D1_DATABASE_ID": "95524076-8432-4d4a-b3ab-1a11ede73d4f",
     "CLOUDFLARE_DO_NAMESPACE": "2a8431fd59b342799b74518e1bcc7b6d",
     "GITHUB_APP_ID": "5200141",
     "GITHUB_APP_INSTALLATION_ID": "168238365",
@@ -39,18 +39,20 @@
   "secrets_store_secrets": [
     { "binding": "WG_SESSION_KEY", "store_id": "e63e666172544d5c8c4a656ff28ac32a", "secret_name": "WG_SESSION_KEY" }
   ],
+  // Baseline's shared D1 and R2. The demo reads and writes only its own records/events rows (app 'demo') and objects
+  // under demo/; baseline owns the schema (platform/migrations), so there is no migrations_dir. wrangler 4.147 cannot
+  // bind a D1 by name with provisioning off, so the UUID is committed.
   "d1_databases": [
     {
-      "binding": "DEMO_DB",
-      "database_name": "demo-blob",
-      "database_id": "4a8ba118-da0e-497b-a13c-911c407a09e3",
-      "migrations_dir": "migrations"
+      "binding": "WG_DB",
+      "database_name": "wizardgang",
+      "database_id": "95524076-8432-4d4a-b3ab-1a11ede73d4f"
     }
   ],
   "r2_buckets": [
     {
-      "binding": "DEMO_R2",
-      "bucket_name": "wizardgang-demo-r2"
+      "binding": "WG_R2",
+      "bucket_name": "wizardgang"
     }
   ],
   "durable_objects": {

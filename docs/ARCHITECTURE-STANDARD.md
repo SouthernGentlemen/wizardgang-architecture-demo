@@ -160,7 +160,7 @@ Representative structure:
 ├── tests/
 ├── docs/
 ├── scripts/
-├── migrations/
+├── platform/
 ├── .github/workflows/
 ├── wrangler.jsonc
 ├── package.json

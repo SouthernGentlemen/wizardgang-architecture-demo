@@ -4,6 +4,7 @@ import { requireSameOrigin } from '../lib/admin-auth';
 import { ensureDemoSession, withDemoSession, type DemoSession } from '../lib/demo-session';
 import { HttpError, errorResponse, json, methodNotAllowed } from '../lib/http';
 import { recordApplicationLog } from '../lib/logs';
+import { COLLECTIONS, TTL_SECONDS, demoRecords } from '../lib/storage';
 
 const encoder = new TextEncoder();
 const GITHUB_EVENTS = new Set(['ping', 'push', 'pull_request', 'workflow_run', 'release']);
@@ -24,17 +25,21 @@ interface GitHubPayload {
   zen?: unknown;
 }
 
-interface WebhookEventRow {
-  id: number;
+// One verified delivery in the shared records table, keyed by its delivery ID so a replay is refused. GitHub
+// deliveries are owned by 'github'; lab deliveries by the visitor's sandbox session and expire with it.
+interface WebhookDelivery {
   provider: 'demo' | 'github';
-  delivery_id: string;
-  event_type: string;
+  deliveryId: string;
+  eventType: string;
   action: string | null;
   repository: string | null;
   actor: string | null;
-  summary_json: string;
-  received_at: string;
+  summary: unknown;
+  payloadSha256: string;
+  receivedAt: string;
 }
+
+const GITHUB_OWNER = 'github';
 
 function text(value: unknown, maximum = 160): string | null {
   return typeof value === 'string' && value.trim() ? value.trim().slice(0, maximum) : null;
@@ -123,18 +128,15 @@ async function acceptGitHubShape(request: Request, env: Env, options: { provider
   const receivedAt = new Date().toISOString();
   const digest = await sha256(payloadText);
   const { action, actor, summary } = summaryFor(eventType, payload);
-  const safeSummary = JSON.stringify(summary);
-  try {
-    const result = await env.DEMO_DB.prepare(
-      'INSERT INTO webhook_events (session_id, provider, delivery_id, event_type, action, repository, actor, summary_json, payload_sha256, signature_valid, received_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)',
-    ).bind(options.sessionId ?? null, options.provider, deliveryId, eventType, action, repository, actor, safeSummary, digest, receivedAt).run();
-    const event = await recordDemoEvent(env, 'webhooks', `${options.provider}_webhook_received`, { provider: options.provider, eventType, deliveryId, repository, payloadSha256: digest });
-    await recordApplicationLog(env, { source: 'webhooks', eventKey: `${options.provider}_webhook_received`, message: `Verified ${options.provider} webhook ${deliveryId} was accepted.`, route: options.provider === 'github' ? '/webhooks/github' : '/api/labs/webhook-demo', detail: { eventType, deliveryId, repository, eventId: event.id } });
-    return json({ accepted: true, id: result.meta?.last_row_id, provider: options.provider, deliveryId, eventType, action, repository, actor, summary, receivedAt, payloadSha256: digest, auditEventId: event.id }, { status: 202, headers: { 'cache-control': 'no-store' } });
-  } catch (error) {
-    if (String(error).toLowerCase().includes('unique')) return json({ error: 'duplicate_delivery', deliveryId }, { status: 409 });
-    throw error;
-  }
+  const deliveries = demoRecords(env);
+  if (await deliveries.get(COLLECTIONS.webhookDeliveries, deliveryId)) return json({ error: 'duplicate_delivery', deliveryId }, { status: 409 });
+  const delivery: WebhookDelivery = { provider: options.provider, deliveryId, eventType, action, repository, actor, summary, payloadSha256: digest, receivedAt };
+  await deliveries.put(COLLECTIONS.webhookDeliveries, deliveryId, delivery, options.provider === 'github'
+    ? { owner: GITHUB_OWNER, ttlSeconds: TTL_SECONDS.githubDelivery }
+    : { owner: options.sessionId ?? GITHUB_OWNER, ttlSeconds: TTL_SECONDS.sandbox });
+  const event = await recordDemoEvent(env, 'webhooks', `${options.provider}_webhook_received`, { provider: options.provider, eventType, deliveryId, repository, payloadSha256: digest });
+  await recordApplicationLog(env, { source: 'webhooks', eventKey: `${options.provider}_webhook_received`, message: `Verified ${options.provider} webhook ${deliveryId} was accepted.`, route: options.provider === 'github' ? '/webhooks/github' : '/api/labs/webhook-demo', detail: { eventType, deliveryId, repository, eventId: event.id } });
+  return json({ accepted: true, provider: options.provider, deliveryId, eventType, action, repository, actor, summary, receivedAt, payloadSha256: digest, auditEventId: event.id }, { status: 202, headers: { 'cache-control': 'no-store' } });
 }
 
 export async function githubWebhookResponse(request: Request, env: Env): Promise<Response> {
@@ -182,10 +184,13 @@ export async function webhookDemoResponse(request: Request, env: Env): Promise<R
   }
 }
 
-function visibleEvent(row: WebhookEventRow): Record<string, unknown> {
-  let summary: unknown = {};
-  try { summary = JSON.parse(row.summary_json); } catch { summary = {}; }
-  return { id: row.id, provider: row.provider, deliveryId: row.delivery_id, eventType: row.event_type, action: row.action, repository: row.repository, actor: row.actor, summary, receivedAt: row.received_at };
+function visibleEvent(delivery: WebhookDelivery): Record<string, unknown> {
+  const { provider, deliveryId, eventType, action, repository, actor, summary, receivedAt } = delivery;
+  return { provider, deliveryId, eventType, action, repository, actor, summary, receivedAt };
+}
+
+async function deliveriesOwnedBy(env: Env, owner: string): Promise<WebhookDelivery[]> {
+  return (await demoRecords(env).list<WebhookDelivery>(COLLECTIONS.webhookDeliveries, { owner, limit: 1000 })).map((row) => row.body);
 }
 
 export async function webhookEventsResponse(request: Request, env: Env): Promise<Response> {
@@ -194,10 +199,11 @@ export async function webhookEventsResponse(request: Request, env: Env): Promise
     if (request.method !== 'GET') return methodNotAllowed(['GET']);
     session = await ensureDemoSession(request, env);
     const repository = configuredRepository(env);
-    const result = await env.DEMO_DB.prepare(
-      "SELECT id, provider, delivery_id, event_type, action, repository, actor, summary_json, received_at FROM webhook_events WHERE session_id = ? OR (provider = 'github' AND repository = ?) ORDER BY received_at DESC LIMIT 25",
-    ).bind(session.id, repository).all<WebhookEventRow>();
-    return attach(json({ events: result.results.map(visibleEvent), pollingIntervalMs: 2000, repository }, { headers: { 'cache-control': 'no-store' } }), session);
+    const [own, github] = await Promise.all([deliveriesOwnedBy(env, session.id), deliveriesOwnedBy(env, GITHUB_OWNER)]);
+    const events = [...own, ...github.filter((delivery) => delivery.repository === repository)]
+      .sort((left, right) => right.receivedAt.localeCompare(left.receivedAt))
+      .slice(0, 25);
+    return attach(json({ events: events.map(visibleEvent), pollingIntervalMs: 2000, repository }, { headers: { 'cache-control': 'no-store' } }), session);
   } catch (error) {
     return attach(errorResponse(error), session);
   }
@@ -210,7 +216,9 @@ export async function webhookResetResponse(request: Request, env: Env): Promise<
     const originFailure = requireSameOrigin(request);
     if (originFailure) return originFailure;
     session = await ensureDemoSession(request, env);
-    await env.DEMO_DB.prepare("DELETE FROM webhook_events WHERE session_id = ? AND provider = 'demo'").bind(session.id).run();
+    for (const delivery of await deliveriesOwnedBy(env, session.id)) {
+      if (delivery.provider === 'demo') await demoRecords(env).delete(COLLECTIONS.webhookDeliveries, delivery.deliveryId);
+    }
     await recordDemoEvent(env, 'webhooks', 'visitor_webhooks_reset', { scope: 'session_demo_events' });
     return attach(json({ reset: true }, { headers: { 'cache-control': 'no-store' } }), session);
   } catch (error) {

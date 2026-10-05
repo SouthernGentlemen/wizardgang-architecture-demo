@@ -31,6 +31,7 @@ import {
 } from '../lib/identity-session';
 import { principalFromIdentitySession } from '../lib/authorization';
 import { recordApplicationLog } from '../lib/logs';
+import { COLLECTIONS, demoRecords, secondsUntil } from '../lib/storage';
 
 const encoder = new TextEncoder();
 const OIDC_PROVIDERS = new Set<IdentityProvider>(['microsoft', 'google']);
@@ -473,22 +474,21 @@ export async function providerCallbackResponse(request: Request, env: Env, provi
   }
 }
 
+// SAML AuthnRequest correlation for the node-saml validator. Each request record expires after the flow window.
 class D1SamlCache implements CacheProvider {
   constructor(private readonly env: Env) {}
   async saveAsync(key: string, value: string): Promise<CacheItem | null> {
     const createdAt = Date.now();
-    await this.env.DEMO_DB.prepare(`DELETE FROM identity_saml_requests WHERE created_at <= ?`).bind(new Date(createdAt - FLOW_SECONDS * 1000).toISOString()).run();
-    await this.env.DEMO_DB.prepare(`INSERT INTO identity_saml_requests (request_id, request_value, created_at) VALUES (?, ?, ?)`).bind(key, value, new Date(createdAt).toISOString()).run();
+    await demoRecords(this.env).put(COLLECTIONS.samlRequests, await sha256(key), { value }, { ttlSeconds: FLOW_SECONDS });
     return { value, createdAt };
   }
   async getAsync(key: string): Promise<string | null> {
-    const result = await this.env.DEMO_DB.prepare(`SELECT request_value FROM identity_saml_requests WHERE request_id = ? LIMIT 1`).bind(key).all<{ request_value: string }>();
-    return result.results[0]?.request_value ?? null;
+    return (await demoRecords(this.env).get<{ value: string }>(COLLECTIONS.samlRequests, await sha256(key)))?.body.value ?? null;
   }
   async removeAsync(key: string | null): Promise<string | null> {
     if (!key) return null;
     const value = await this.getAsync(key);
-    await this.env.DEMO_DB.prepare(`DELETE FROM identity_saml_requests WHERE request_id = ?`).bind(key).run();
+    await demoRecords(this.env).delete(COLLECTIONS.samlRequests, await sha256(key));
     return value;
   }
 }
@@ -630,8 +630,10 @@ export async function samlCallbackResponse(request: Request, env: Env): Promise<
     const assertion = parseAssertion(result.profile, samlCallbackUrl(request));
     if (!await equalValue(assertion.audience, samlEntityId(request))) throw new IdentityError('invalid_saml_audience');
     const session = samlSession(result.profile, assertion, request, env);
-    await env.DEMO_DB.prepare(`DELETE FROM identity_saml_assertions WHERE expires_at <= ?`).bind(new Date().toISOString()).run();
-    await env.DEMO_DB.prepare(`INSERT INTO identity_saml_assertions (assertion_id_sha256, expires_at, validated_at) VALUES (?, ?, ?)`).bind(await sha256(assertion.id), session.expiresAt, new Date().toISOString()).run();
+    // Replay protection: an assertion ID is accepted once while its session could still be live.
+    const assertionKey = await sha256(assertion.id);
+    if (await demoRecords(env).get(COLLECTIONS.samlAssertions, assertionKey)) throw new IdentityError('saml_assertion_replayed');
+    await demoRecords(env).put(COLLECTIONS.samlAssertions, assertionKey, { validatedAt: new Date().toISOString() }, { ttlSeconds: secondsUntil(session.expiresAt) });
     const sessionCookie = await createIdentitySession(env, session);
     const subjectAuditId = await identitySubjectAuditId(env, 'microsoft', session.identity.subject);
     await auditIdentity(env, 'saml_assertion_validated', 'saml', { subjectAuditId });

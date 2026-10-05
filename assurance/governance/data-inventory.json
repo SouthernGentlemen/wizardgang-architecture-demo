@@ -43,11 +43,11 @@
       "view": "data-inventory",
       "order": 1,
       "fields": {
-        "storeSurface": "`demo_records`",
+        "storeSurface": "`records` collection `demo-records` (public catalogue served from code; sandbox rows owned by their namespace)",
         "classification": "PUBLIC / PUBLIC-DEMO",
         "publicExposure": "Yes, through approved app/API surfaces",
         "mcpExposure": "**Yes — approved bounded source**",
-        "retentionDeletionPosture": "Persistent until controlled update/delete; provenance/freshness improvement pending",
+        "retentionDeletionPosture": "Public catalogue is fixed in code; sandbox rows expire after 1 day (session) or 30 days (identity sandbox); provenance/freshness improvement pending",
         "status": "Partial"
       },
       "relationships": []
@@ -57,11 +57,11 @@
       "view": "data-inventory",
       "order": 2,
       "fields": {
-        "storeSurface": "`demo_events`",
+        "storeSurface": "`events` kind `audit`",
         "classification": "AUDIT-EVIDENCE",
         "publicExposure": "Selected sanitized evidence only; identity event detail is withheld from public projections",
         "mcpExposure": "No",
-        "retentionDeletionPosture": "Evidence-oriented retention; no blanket pruning rule yet",
+        "retentionDeletionPosture": "30-day TTL per event; the scheduled sweeper deletes expired rows",
         "status": "Partial"
       },
       "relationships": []
@@ -71,11 +71,11 @@
       "view": "data-inventory",
       "order": 3,
       "fields": {
-        "storeSurface": "`application_logs`",
+        "storeSurface": "`events` kind `log`",
         "classification": "OPERATIONAL / public-safe after sanitization",
         "publicExposure": "Yes, bounded sanitized API; identity event detail is withheld",
         "mcpExposure": "No",
-        "retentionDeletionPosture": "Operational retention; explicit pruning baseline pending",
+        "retentionDeletionPosture": "7-day TTL per event; the scheduled sweeper deletes expired rows",
         "status": "Partial"
       },
       "relationships": []
@@ -85,11 +85,11 @@
       "view": "data-inventory",
       "order": 4,
       "fields": {
-        "storeSurface": "`service_health_checks`",
+        "storeSurface": "`records` collections `health` (five-minute observations) and `availability` (daily counts)",
         "classification": "OPERATIONAL",
         "publicExposure": "Yes, aggregate/bounded uptime views",
         "mcpExposure": "No",
-        "retentionDeletionPosture": "Rolling operational history; pruning baseline pending",
+        "retentionDeletionPosture": "Observations expire after 2 days; daily availability counts expire after 365 days",
         "status": "Partial"
       },
       "relationships": []
@@ -99,11 +99,11 @@
       "view": "data-inventory",
       "order": 5,
       "fields": {
-        "storeSurface": "`usage_snapshots`",
+        "storeSurface": "`records` collection `usage` (latest synthetic snapshot)",
         "classification": "OPERATIONAL / PUBLIC-DEMO",
         "publicExposure": "Yes, synthetic degradation evidence",
         "mcpExposure": "No",
-        "retentionDeletionPosture": "Rolling demo evidence; no universal retention duration defined",
+        "retentionDeletionPosture": "One record replaced per scenario; 30-day TTL",
         "status": "Partial"
       },
       "relationships": []
@@ -127,11 +127,11 @@
       "view": "data-inventory",
       "order": 7,
       "fields": {
-        "storeSurface": "`demo_sessions`",
+        "storeSurface": "`records` collection `demo-sessions`",
         "classification": "VISITOR-SCOPED",
         "publicExposure": "No global public exposure",
         "mcpExposure": "No",
-        "retentionDeletionPosture": "`expires_at` exists; cleanup effectiveness requires verification",
+        "retentionDeletionPosture": "Expires with the 24-hour session cookie; the scheduled sweeper deletes expired rows",
         "status": "Partial"
       },
       "relationships": []
@@ -141,11 +141,11 @@
       "view": "data-inventory",
       "order": 8,
       "fields": {
-        "storeSurface": "`demo_users`",
+        "storeSurface": "`records` collection `lab-users`",
         "classification": "VISITOR-SCOPED / potentially identifying",
         "publicExposure": "Session-scoped only",
         "mcpExposure": "No",
-        "retentionDeletionPosture": "Session-linked; cascade design exists; actual expiry cleanup verification pending",
+        "retentionDeletionPosture": "Owned by the sandbox session; 1-day TTL",
         "status": "Partial"
       },
       "relationships": []
@@ -155,11 +155,11 @@
       "view": "data-inventory",
       "order": 9,
       "fields": {
-        "storeSurface": "`demo_tasks`",
+        "storeSurface": "`records` collection `lab-tasks`",
         "classification": "VISITOR-SCOPED",
         "publicExposure": "Session-scoped only",
         "mcpExposure": "No",
-        "retentionDeletionPosture": "Session-linked; cascade design exists; actual expiry cleanup verification pending",
+        "retentionDeletionPosture": "Owned by the sandbox session; 1-day TTL",
         "status": "Partial"
       },
       "relationships": []
@@ -169,11 +169,11 @@
       "view": "data-inventory",
       "order": 10,
       "fields": {
-        "storeSurface": "`demo_state`",
+        "storeSurface": "None (retired `demo_state` table; lab state is `lab-users`/`lab-tasks`)",
         "classification": "VISITOR-SCOPED",
         "publicExposure": "Session-scoped only",
         "mcpExposure": "No",
-        "retentionDeletionPosture": "Session-linked; cascade design exists; actual expiry cleanup verification pending",
+        "retentionDeletionPosture": "No store remains",
         "status": "Partial"
       },
       "relationships": []
@@ -183,11 +183,11 @@
       "view": "data-inventory",
       "order": 11,
       "fields": {
-        "storeSurface": "`webhook_events`",
+        "storeSurface": "`records` collection `webhook-deliveries`",
         "classification": "OPERATIONAL / AUDIT-EVIDENCE",
         "publicExposure": "Only bounded/sanitized summaries where surfaced",
         "mcpExposure": "No",
-        "retentionDeletionPosture": "Replay/evidence value; explicit retention/pruning baseline pending",
+        "retentionDeletionPosture": "Delivery ID keys refuse replays; lab deliveries expire after 1 day, GitHub deliveries after 30 days",
         "status": "Partial"
       },
       "relationships": []
@@ -197,11 +197,11 @@
       "view": "data-inventory",
       "order": 12,
       "fields": {
-        "storeSurface": "`webhook_receipts`",
+        "storeSurface": "None (retired `webhook_receipts` table; replay refusal uses `webhook-deliveries`)",
         "classification": "AUDIT-EVIDENCE / security replay metadata",
         "publicExposure": "Not intended for public raw exposure",
         "mcpExposure": "No",
-        "retentionDeletionPosture": "Retain as needed for replay/evidence; pruning baseline pending",
+        "retentionDeletionPosture": "No store remains",
         "status": "Partial"
       },
       "relationships": []
@@ -211,11 +211,11 @@
       "view": "data-inventory",
       "order": 13,
       "fields": {
-        "storeSurface": "`identity_sessions`",
+        "storeSurface": "`records` collection `identity-sessions`",
         "classification": "AUTH-SECURITY / encrypted payload",
         "publicExposure": "No",
         "mcpExposure": "No",
-        "retentionDeletionPosture": "Expiry/revocation fields exist; cleanup/enforcement evidence pending",
+        "retentionDeletionPosture": "Expires with the identity session; revocation is a field on the record until then",
         "status": "Partial"
       },
       "relationships": []
@@ -225,11 +225,11 @@
       "view": "data-inventory",
       "order": 14,
       "fields": {
-        "storeSurface": "`identity_saml_requests`",
+        "storeSurface": "`records` collection `saml-requests`",
         "classification": "AUTH-SECURITY / replay state",
         "publicExposure": "No",
         "mcpExposure": "No",
-        "retentionDeletionPosture": "Short-lived by purpose; cleanup enforcement evidence pending",
+        "retentionDeletionPosture": "Expires after the 10-minute flow window",
         "status": "Partial"
       },
       "relationships": []
@@ -239,11 +239,11 @@
       "view": "data-inventory",
       "order": 15,
       "fields": {
-        "storeSurface": "`identity_saml_assertions`",
+        "storeSurface": "`records` collection `saml-assertions`",
         "classification": "AUTH-SECURITY / replay state",
         "publicExposure": "No",
         "mcpExposure": "No",
-        "retentionDeletionPosture": "Expiry exists; cleanup enforcement evidence pending",
+        "retentionDeletionPosture": "Expires with the session the assertion created",
         "status": "Partial"
       },
       "relationships": []
@@ -253,11 +253,11 @@
       "view": "data-inventory",
       "order": 16,
       "fields": {
-        "storeSurface": "R2 objects + `r2_object_metadata`",
+        "storeSurface": "R2 objects under `demo/` in the shared bucket + `records` collection `r2-objects`",
         "classification": "Varies by object set; PUBLIC-DEMO / VISITOR-SCOPED / CONFIDENTIAL possible",
         "publicExposure": "Only when explicitly routed",
         "mcpExposure": "No by default",
-        "retentionDeletionPosture": "Object expiry/backup/deletion depends on set; restore/deletion evidence incomplete",
+        "retentionDeletionPosture": "Uploads expire after 1 day (bucket lifecycle `demo/uploads/` and record TTL); shared seeds are recreated on demand; restore evidence incomplete",
         "status": "Partial"
       },
       "relationships": []

@@ -4,23 +4,12 @@ import { securityTxtResponse, SECURITY_TXT_EXPIRES } from '../src/api/security-p
 import { routeRequest } from '../src/router';
 import { routeUrl } from '../src/routing/application-routes';
 import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
 const env = {
   GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
-  DEMO_DB: {
-    prepare(sql: string) {
-      return {
-        bind() { return this; },
-        async run() { return { meta: {} }; },
-        async all() {
-          if (sql.includes('FROM demo_control')) return { results: [{ state: 'online', public_message: 'Available.', updated_at: '2026-09-02T00:00:00Z', updated_by: 'test' }] };
-          if (sql.includes('FROM crawler_control')) return { results: [{ state: 'disabled', updated_at: '2026-09-02T00:00:00Z', updated_by: 'test' }] };
-          return { results: [] };
-        },
-      };
-    },
-  },
+  WG_DB: new SqliteD1(),
 } as Env;
 
 describe('security.txt', () => {

@@ -36,8 +36,8 @@ Browser presentation and machine/protocol contracts remain separate. REST, OpenA
 
 Core invariants:
 
-- shared relational state uses `DEMO_DB` / `demo-blob`;
-- R2 stores object bytes while D1 stores metadata/references;
+- shared state uses baseline's `wizardgang` D1 `records`/`events` tables through `WG_DB`, with per-row TTLs and no demo-owned DDL;
+- R2 stores object bytes under `demo/` in the shared `wizardgang` bucket (`WG_R2`) while D1 records store metadata/references;
 - Durable Objects own coordinated state and D1 stores audit evidence where applicable;
 - Workers mediate application state and integrations;
 - public REST, GraphQL, and MCP reads share an explicit authorization boundary;
@@ -60,7 +60,7 @@ Availability while intentionally offline is declared per route. Gated API traffi
 
 1. Use Node.js 26.10.0 from `.node-version` with npm 12.1.0 from `packageManager`, then run `npm ci` from the committed lock file.
 2. Copy `.dev.vars.example` to ignored `.dev.vars` and replace local placeholders, then seed the simulated local Secrets Store `WG_SESSION_KEY` as `.dev.vars.example` shows.
-3. Run `npm run validate:migrations` to prove the migrations against local D1 state.
+3. Run `npm run validate:migrations` to apply baseline's vendored shared schema to a clean local D1.
 4. Run `npm run dev` for the local-only development surface.
 
 ### Validation and command authority
@@ -69,7 +69,7 @@ Availability while intentionally offline is declared per route. Gated API traffi
 
 - `npm run dev` starts the local-only Vite/Wrangler surface after asset generation. It requires ignored local `.dev.vars` configuration; use `npm run dev -- --open` only when a desktop browser is available.
 - `npm run check` is the canonical credential-free acceptance gate. It exercises the repository's generated-artifact, migration, build, browser, source, contract, security, governance, and assurance checks without mutating live providers.
-- Focused commands remain available when their scope is the work being changed: `npm run generate:routes` rewrites the tracked route projection, `npm run validate:generated-artifacts` checks generated parity, `npm run validate:migrations` uses local D1 state, `npm run verify:chromium` / `npm run test:site-accessibility` exercise the browser audit, and `npm run build` produces local build output with a Worker dry run.
+- Focused commands remain available when their scope is the work being changed: `npm run generate:routes` rewrites the tracked route projection, `npm run validate:generated-artifacts` checks generated parity, `npm run validate:migrations` applies the vendored shared schema to local D1 state, `npm run verify:chromium` / `npm run test:site-accessibility` exercise the browser audit, and `npm run build` produces local build output with a Worker dry run.
 - Ordinary pre-PR validation is `npm run check`, `npm run security:dependency-advisories`, and `BASE_SHA=<pr-base-sha> npm run validate:patch-whitespace`. The advisory query requires registry/network access; the patch check requires the authoritative base commit and sufficient Git history. A clean checkout with those prerequisites plus Chromium can use `npm run validate:ci` as the CI-parity path.
 - `npm run verify:github-settings` is the read-only live settings check and needs an authorized GitHub token; `npm run apply:github-settings` is the explicit administration-write path. `npm run deploy` intentionally refuses production deployment from an arbitrary checkout.
 

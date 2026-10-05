@@ -1,9 +1,9 @@
 import type { Env } from '../types';
+import { COLLECTIONS, TTL_SECONDS, demoRecords } from './storage';
 
 export type BudgetState = 'normal' | 'warning' | 'degraded';
 
 export interface UsageSnapshot {
-  id: number;
   service_key: string;
   metric_key: string;
   quantity: number;
@@ -18,17 +18,19 @@ export function budgetState(cost: number, budget: number): BudgetState {
   return percent >= 90 ? 'degraded' : percent >= 70 ? 'warning' : 'normal';
 }
 
-export async function recentUsage(env: Env, limit = 20): Promise<UsageSnapshot[]> {
-  const safeLimit = Math.max(1, Math.min(limit, 100));
-  const result = await env.DEMO_DB.prepare(
-    `SELECT id, service_key, metric_key, quantity, unit, estimated_cost_usd, budget_limit_usd, captured_at
-     FROM usage_snapshots WHERE service_key = 'architecture-demo' ORDER BY id DESC LIMIT ?`,
-  ).bind(safeLimit).all<UsageSnapshot>();
-  return result.results;
+const USAGE_ID = 'architecture-demo';
+
+/** The latest synthetic usage snapshot, one record that each billing scenario replaces. */
+export async function latestUsage(env: Env): Promise<UsageSnapshot | null> {
+  return (await demoRecords(env).get<UsageSnapshot>(COLLECTIONS.usage, USAGE_ID))?.body ?? null;
+}
+
+export async function saveUsage(env: Env, snapshot: UsageSnapshot): Promise<void> {
+  await demoRecords(env).put(COLLECTIONS.usage, USAGE_ID, snapshot, { ttlSeconds: TTL_SECONDS.usage });
 }
 
 export async function currentBudgetState(env: Env): Promise<{ state: BudgetState; snapshot: UsageSnapshot | null; percent: number }> {
-  const snapshot = (await recentUsage(env, 1))[0] ?? null;
+  const snapshot = await latestUsage(env);
   if (!snapshot) return { state: 'normal', snapshot: null, percent: 0 };
   const budget = snapshot.budget_limit_usd ?? Number(env.BILLING_DEMO_MONTHLY_BUDGET_USD || '10');
   return { state: budgetState(snapshot.estimated_cost_usd, budget), snapshot, percent: budget > 0 ? (snapshot.estimated_cost_usd / budget) * 100 : 100 };

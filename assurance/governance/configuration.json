@@ -273,10 +273,10 @@
       "view": "configuration-summary",
       "order": 19,
       "fields": {
-        "configurationSurface": "D1 schema/migrations",
-        "authoritySource": "`migrations/**`",
+        "configurationSurface": "D1 schema",
+        "authoritySource": "Baseline `platform/migrations/**` (vendored, hash-pinned)",
         "environment": "Local/Production",
-        "verification": "clean local migration validation + tagged production apply",
+        "verification": "clean local schema application of the vendored baseline migrations; production schema owned and applied by baseline",
         "status": "Met"
       },
       "relationships": []

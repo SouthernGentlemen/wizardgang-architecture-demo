@@ -49,11 +49,12 @@ describe('DEMO-366 published immutable release deployment boundary', () => {
 
   it('keeps every production mutation downstream of published-release verification', () => {
     const verify = stepPosition('Verify published immutable release identity');
-    const migrate = stepPosition('Apply production D1 migrations');
+    const retire = stepPosition('Retire Worker secrets that committed vars supersede');
     const deploy = stepPosition('Deploy tagged Worker source');
     expect(verify).toBeGreaterThan(-1);
-    expect(migrate).toBeGreaterThan(verify);
-    expect(deploy).toBeGreaterThan(migrate);
+    expect(retire).toBeGreaterThan(verify);
+    expect(deploy).toBeGreaterThan(retire);
+    expect(deployWorkflow).not.toContain('d1 migrations apply');
   });
 
   it('validates the exact tag with migrated local D1 state before production preflight', () => {

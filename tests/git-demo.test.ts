@@ -4,7 +4,8 @@ import { gitDemoReleaseResponse, gitDemoStartResponse, gitDemoStatusResponse } f
 import { clearGitDemoCacheForTest, collectGitDemoStatus } from '../src/lib/git-demo';
 import { clearGitHubAppTokensForTest } from '../src/lib/github-app';
 import { appToken, appTokenResponse, githubAppEnv, mintedPermissions } from './helpers/github-app';
-import type { D1PreparedStatement, Env } from '../src/types';
+import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
 const repositoryUrl = 'https://github.com/Wizard-Gang/wizardgang-architecture-demo';
 const apiPrefix = '/repos/Wizard-Gang/wizardgang-architecture-demo';
@@ -16,21 +17,9 @@ function fingerprint(bump: 'patch' | 'minor' | 'major'): string {
   return createHash('sha256').update(JSON.stringify([mainSha, '0.7.0', target, 'v0.7.0', ['c'.repeat(40)]])).digest('hex');
 }
 
-class DemoStatement implements D1PreparedStatement {
-  constructor(private readonly database: DemoDatabase) {}
-  bind(...values: unknown[]) { this.database.binds.push(...values); return this; }
-  async run() { return { meta: { last_row_id: 1 } }; }
-  async all<T>() { return { results: [] as T[] }; }
-}
-
-class DemoDatabase {
-  binds: unknown[] = [];
-  prepare() { return new DemoStatement(this); }
-}
-
-function environment(): Env & { DEMO_DB: DemoDatabase } {
+function environment(): Env & { WG_DB: SqliteD1 } {
   return {
-    DEMO_DB: new DemoDatabase(),
+    WG_DB: new SqliteD1(),
     GITHUB_REPO_URL: repositoryUrl,
     GITHUB_BRANCH: 'main',
     ...githubAppEnv,
@@ -218,10 +207,10 @@ describe('live Git delivery lifecycle', () => {
     const init = dispatch?.[1] as RequestInit;
     expect(new Headers(init.headers).get('authorization')).toBe(`Bearer ${appToken({ actions: 'write' })}`);
     expect(JSON.parse(String(init.body))).toMatchObject({ ref: 'main', inputs: { operation: 'start', bump: 'patch', pull_request: '' } });
-    expect(env.DEMO_DB.binds.join(' ')).not.toContain('test-admin-password');
-    expect(env.DEMO_DB.binds.join(' ')).not.toContain(basic);
-    expect(env.DEMO_DB.binds.join(' ')).not.toContain(appToken({ actions: 'write' }));
-    expect(env.DEMO_DB.binds.join(' ')).not.toContain('PRIVATE KEY');
+    expect(env.WG_DB.dump()).not.toContain('test-admin-password');
+    expect(env.WG_DB.dump()).not.toContain(basic);
+    expect(env.WG_DB.dump()).not.toContain(appToken({ actions: 'write' }));
+    expect(env.WG_DB.dump()).not.toContain('PRIVATE KEY');
   });
 
   it('reads GitHub with an installation token holding only the permission each call needs', async () => {

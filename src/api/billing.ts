@@ -1,6 +1,6 @@
 import type { Env } from '../types';
 import { recordDemoEvent } from '../lib/audit';
-import { budgetState } from '../lib/billing';
+import { budgetState, saveUsage } from '../lib/billing';
 import { HttpError, errorResponse, json, methodNotAllowed, readJson } from '../lib/http';
 import { recordApplicationLog } from '../lib/logs';
 
@@ -17,10 +17,10 @@ export async function billingScenarioResponse(request: Request, env: Env): Promi
     const cost = Number((budget * ratio).toFixed(4));
     const quantity = Math.round(ratio * 100_000);
     const capturedAt = new Date().toISOString();
-    await env.DEMO_DB.prepare(
-      `INSERT INTO usage_snapshots (service_key, metric_key, quantity, unit, estimated_cost_usd, budget_limit_usd, captured_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-    ).bind('architecture-demo', 'synthetic-worker-requests', quantity, 'requests', cost, budget, capturedAt).run();
+    await saveUsage(env, {
+      service_key: 'architecture-demo', metric_key: 'synthetic-worker-requests', quantity, unit: 'requests',
+      estimated_cost_usd: cost, budget_limit_usd: budget, captured_at: capturedAt,
+    });
     const state = budgetState(cost, budget);
     const event = await recordDemoEvent(env, 'billing', 'synthetic_budget_changed', { scenario, state, percent: ratio * 100 });
     await recordApplicationLog(env, { level: state === 'degraded' ? 'warn' : 'info', source: 'billing', eventKey: 'synthetic_budget_changed', message: `Synthetic budget state changed to ${state}.`, route: '/api/operations/budget', detail: { scenario, state, percent: ratio * 100, eventId: event.id } });

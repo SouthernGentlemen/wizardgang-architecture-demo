@@ -4,18 +4,8 @@ import assetManifest from '../docs/asset-manifest.json';
 import { routeRequest } from '../src/router';
 import { routeUrl } from '../src/routing/application-routes';
 import { browserAssetName } from '../src/ui/asset-map';
-import type { AssetsBinding, D1PreparedStatement, Env } from '../src/types';
-
-class PerfStatement implements D1PreparedStatement {
-  constructor(private readonly sql: string) {}
-  bind() { return this; }
-  async run() { return { meta: {} }; }
-  async all<T>() {
-    if (this.sql.includes('FROM demo_control')) return { results: [{ state: 'online', public_message: 'Available.', updated_at: '2026-09-16T00:00:00.000Z', updated_by: 'test' }] as T[] };
-    if (this.sql.includes('FROM crawler_control')) return { results: [{ state: 'disabled', updated_at: '2026-09-16T00:00:00.000Z', updated_by: 'test' }] as T[] };
-    return { results: [] as T[] };
-  }
-}
+import type { AssetsBinding, Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
 const shellStyles = readFileSync('src/styles/shell.css', 'utf8');
 const demoStyles = readFileSync('src/styles/demos.css', 'utf8');
@@ -37,7 +27,7 @@ const staticAssets: AssetsBinding = {
 
 function env(): Env {
   return {
-    DEMO_DB: { prepare: (sql: string) => new PerfStatement(sql) },
+    WG_DB: new SqliteD1(),
     ASSETS: staticAssets,
     GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',

@@ -4,6 +4,7 @@ import { applicationRouteRegistry, routeUrl } from '../src/routing/application-r
 import { architectureMapEntries, primaryNavigation } from '../src/routing/navigation';
 import type { Env } from '../src/types';
 import { retiredOperationsHtmlPathname } from './fixtures/removed-html-pathnames';
+import { demoDatabase } from './helpers/wg-storage';
 
 function environment(offline = false): Env {
   return {
@@ -13,15 +14,7 @@ function environment(offline = false): Env {
     DEPLOYED_SHA: 'abcdef0123456789',
     DEMO_ADMIN_USER: 'operator',
     DEMO_ADMIN_PASSWORD: 'test-admin-password',
-    DEMO_DB: { prepare(sql: string) { return {
-      bind() { return this; }, async run() { return { meta: { last_row_id: 1 } }; },
-      async all<T>() {
-        if (sql.includes('FROM demo_control')) return { results: [{ state: offline ? 'offline' : 'online', public_message: 'Acceptance fixture', updated_at: '2026-09-08T00:00:00Z', updated_by: 'test' }] as T[] };
-        if (sql.includes('FROM crawler_control')) return { results: [{ state: 'enabled', updated_at: '2026-09-08T00:00:00Z', updated_by: 'test' }] as T[] };
-        if (sql.trim() === 'SELECT 1') return { results: [{ 1: 1 }] as T[] };
-        return { results: [] as T[] };
-      },
-    }; } },
+    WG_DB: demoDatabase({ demo: offline ? 'offline' : 'online', message: 'Acceptance fixture', crawler: 'enabled' }),
   } as Env;
 }
 

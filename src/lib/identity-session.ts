@@ -1,5 +1,6 @@
 import type { Env } from '../types';
 import { derivedSecret, hasSessionKey } from './derived-keys';
+import { COLLECTIONS, demoRecords, secondsUntil } from './storage';
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -15,6 +16,13 @@ export type IdentityProvider = 'microsoft' | 'google' | 'github';
 export type IdentityProtocol = 'oidc' | 'oauth2' | 'saml2';
 export type IdentityAssurance = 'mfa' | 'provider-authenticated';
 export type ApplicationRole = 'operator' | 'viewer';
+
+/** One identity session in the shared records table, keyed by the SHA-256 of the cookie's session id. */
+interface StoredIdentitySession {
+  payload: string;
+  expiresAt: string;
+  revokedAt: string | null;
+}
 
 export interface NormalizedIdentity {
   provider: IdentityProvider;
@@ -223,26 +231,15 @@ export async function createIdentitySession(env: Env, session: IdentitySession):
   const requestedExpiry = Date.parse(session.expiresAt);
   const maximumExpiry = now.getTime() + SESSION_SECONDS * 1000;
   const expiresAt = new Date(Number.isFinite(requestedExpiry) ? Math.min(requestedExpiry, maximumExpiry) : maximumExpiry);
-  await env.DEMO_DB.prepare(
-    `DELETE FROM identity_sessions
-     WHERE expires_at <= ? OR (revoked_at IS NOT NULL AND revoked_at <= ?)`,
-  ).bind(now.toISOString(), new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString()).run();
   const persisted: IdentitySession = {
     ...session,
     identity: { ...session.identity, expiresAt: expiresAt.toISOString() },
     issuedAt: now.toISOString(),
     expiresAt: expiresAt.toISOString(),
   };
-  await env.DEMO_DB.prepare(
-    `INSERT INTO identity_sessions
-      (session_id_sha256, payload_ciphertext, created_at, expires_at, revoked_at)
-     VALUES (?, ?, ?, ?, NULL)`,
-  ).bind(
-    await sha256(id),
-    await seal(persisted, secret, 'identity-session-payload'),
-    persisted.issuedAt,
-    persisted.expiresAt,
-  ).run();
+  const stored: StoredIdentitySession = { payload: await seal(persisted, secret, 'identity-session-payload'), expiresAt: persisted.expiresAt, revokedAt: null };
+  // The record expires with the session; the sweeper removes it and any revoked record at that time.
+  await demoRecords(env).put(COLLECTIONS.identitySessions, await sha256(id), stored, { ttlSeconds: secondsUntil(expiresAt.getTime(), now.getTime()) });
   const reference: SessionReference = { id, expiresAt: expiresAt.getTime() };
   const maxAge = Math.max(0, Math.floor((expiresAt.getTime() - now.getTime()) / 1000));
   return cookie(IDENTITY_SESSION_COOKIE, await seal(reference, secret, 'identity-session-reference'), maxAge, 'Lax');
@@ -254,15 +251,9 @@ export async function readIdentitySession(request: Request, env: Env): Promise<I
   if (!secret || !encoded) return null;
   const reference = await unseal<SessionReference>(encoded, secret, 'identity-session-reference');
   if (!reference?.id || !Number.isFinite(reference.expiresAt) || reference.expiresAt <= Date.now()) return null;
-  const result = await env.DEMO_DB.prepare(
-    `SELECT payload_ciphertext, expires_at
-     FROM identity_sessions
-     WHERE session_id_sha256 = ? AND revoked_at IS NULL AND expires_at > ?
-     LIMIT 1`,
-  ).bind(await sha256(reference.id), new Date().toISOString()).all<{ payload_ciphertext: string; expires_at: string }>();
-  const row = result.results[0];
-  if (!row) return null;
-  const session = await unseal<IdentitySession>(row.payload_ciphertext, secret, 'identity-session-payload');
+  const row = (await demoRecords(env).get<StoredIdentitySession>(COLLECTIONS.identitySessions, await sha256(reference.id)))?.body;
+  if (!row || row.revokedAt || Date.parse(row.expiresAt) <= Date.now()) return null;
+  const session = await unseal<IdentitySession>(row.payload, secret, 'identity-session-payload');
   if (!session || Date.parse(session.expiresAt) <= Date.now()) return null;
   return session;
 }
@@ -315,7 +306,9 @@ export async function revokeIdentitySession(request: Request, env: Env): Promise
   if (!secret || !encoded) return;
   const reference = await unseal<SessionReference>(encoded, secret, 'identity-session-reference');
   if (!reference?.id) return;
-  await env.DEMO_DB.prepare(
-    `UPDATE identity_sessions SET revoked_at = ? WHERE session_id_sha256 = ? AND revoked_at IS NULL`,
-  ).bind(new Date().toISOString(), await sha256(reference.id)).run();
+  const store = demoRecords(env);
+  const id = await sha256(reference.id);
+  const row = (await store.get<StoredIdentitySession>(COLLECTIONS.identitySessions, id))?.body;
+  if (!row || row.revokedAt) return;
+  await store.put(COLLECTIONS.identitySessions, id, { ...row, revokedAt: new Date().toISOString() }, { ttlSeconds: secondsUntil(row.expiresAt) });
 }

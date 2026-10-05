@@ -12,16 +12,10 @@ import type { Principal } from '../lib/authorization';
 import { authorize } from '../lib/authorization';
 import { json } from '../lib/http';
 import { recordApplicationLog } from '../lib/logs';
+import { listDemoRecords } from '../lib/demo-records';
 
 export const MCP_SERVER_PATH = '/mcp';
 export const MCP_PROTOCOL_VERSION = '2026-07-28';
-
-interface RecordRow {
-  id: number;
-  namespace: string;
-  record_key: string;
-  value_json: string;
-}
 
 interface ClientEvidence {
   clientName: string;
@@ -44,7 +38,6 @@ const PingOutput = z.object({
 });
 
 const DemoRecord = z.object({
-  id: z.number().int(),
   namespace: z.string(),
   key: z.string(),
   valueJson: z.string(),
@@ -179,15 +172,12 @@ function createWizardGangMcpServer(env: Env, principal: Principal, evidence: Cli
     },
     async ({ namespace }, ctx) => {
       const startedAt = Date.now();
-      const rows = await env.DEMO_DB.prepare(
-        'SELECT id, namespace, record_key, value_json FROM demo_records WHERE namespace = ? ORDER BY record_key LIMIT 100',
-      ).bind(namespace).all<RecordRow>();
+      const rows = await listDemoRecords(env, namespace);
       const output = {
-        results: rows.results.map((row) => ({
-          id: row.id,
+        results: rows.map((row) => ({
           namespace: row.namespace,
-          key: row.record_key,
-          valueJson: row.value_json,
+          key: row.key,
+          valueJson: JSON.stringify(row.value ?? null),
         })),
       };
       await recordToolCall(env, principal, evidence, ctx, 'list_demo_records', startedAt, {

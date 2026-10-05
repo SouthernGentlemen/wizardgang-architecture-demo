@@ -7,7 +7,7 @@ import type { Env } from '../src/types';
 import { removedHtml404Pathnames, removedHtmlPathnames, retiredOperationsHtmlPathname } from './fixtures/removed-html-pathnames';
 
 const environment: Env = {
-  DEMO_DB: { prepare() { throw new Error('retired HTML paths must not consult application storage'); } },
+  WG_DB: { prepare() { throw new Error('retired HTML paths must not consult application storage'); } },
   GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo', GITHUB_BRANCH: 'main',
 };
 

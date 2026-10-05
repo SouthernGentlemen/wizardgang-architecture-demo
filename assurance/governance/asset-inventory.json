@@ -130,7 +130,7 @@
       "view": "asset-inventory",
       "order": 8,
       "fields": {
-        "assetClass": "D1 databases",
+        "assetClass": "D1 database (shared `wizardgang` records/events)",
         "category": "Runtime / data",
         "primaryOwner": "Data / Technical Owner",
         "principalAccessExposure": "Application-controlled; provider admin privileged",
@@ -143,7 +143,7 @@
       "view": "asset-inventory",
       "order": 9,
       "fields": {
-        "assetClass": "R2 bucket/object sets",
+        "assetClass": "R2 objects (`demo/` in the shared `wizardgang` bucket)",
         "category": "Runtime / data",
         "primaryOwner": "Data / Technical Owner",
         "principalAccessExposure": "Explicit app routes only; provider admin privileged",
@@ -247,7 +247,7 @@
       "view": "asset-inventory",
       "order": 17,
       "fields": {
-        "assetClass": "Public demo records (`demo_records`)",
+        "assetClass": "Public demo records (`demo-records` collection)",
         "category": "Data",
         "primaryOwner": "Data / AI Capability Owner",
         "principalAccessExposure": "Approved public/API/MCP read boundary",

@@ -2,35 +2,11 @@ import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
 import { recordsResponse } from '../src/api/records';
 import { createDemoAccessToken, type IdentitySession } from '../src/lib/identity-session';
-import type { D1Database, Env } from '../src/types';
+import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
 function environment(): Env {
-  const rows: Array<{ id: number; namespace: string; record_key: string; value_json: string; created_at: string; updated_at: string }> = [];
-  let nextId = 1;
-  const db: D1Database = {
-    prepare(sql: string) {
-      let values: unknown[] = [];
-      return {
-        bind(...bound: unknown[]) { values = bound; return this; },
-        async run() {
-          if (sql.includes('INSERT INTO demo_records')) {
-            const row = { id: nextId++, namespace: String(values[0]), record_key: String(values[1]), value_json: String(values[2]), created_at: String(values[3]), updated_at: String(values[4]) };
-            const existing = rows.find((candidate) => candidate.namespace === row.namespace && candidate.record_key === row.record_key);
-            if (existing) Object.assign(existing, row, { id: existing.id, created_at: existing.created_at });
-            else rows.push(row);
-            return { meta: { last_row_id: row.id, changes: 1 } };
-          }
-          return { meta: { last_row_id: nextId++, changes: 1 } };
-        },
-        async all<T>() {
-          if (sql.includes('FROM demo_records WHERE namespace = ? AND record_key = ?')) return { results: rows.filter((row) => row.namespace === String(values[0]) && row.record_key === String(values[1])) as T[] };
-          if (sql.includes('FROM demo_records WHERE namespace = ? ORDER BY')) return { results: rows.filter((row) => row.namespace === String(values[0])) as T[] };
-          return { results: [] as T[] };
-        },
-      };
-    },
-  };
-  return { DEMO_DB: db, GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo', GITHUB_BRANCH: 'main', WG_SESSION_KEY: 's'.repeat(32) };
+  return { WG_DB: new SqliteD1(), GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo', GITHUB_BRANCH: 'main', WG_SESSION_KEY: 's'.repeat(32) };
 }
 
 function session(): IdentitySession {

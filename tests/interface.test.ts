@@ -14,18 +14,12 @@ import { routeUrl } from '../src/routing/application-routes';
 import { accessibilityLabResponse } from '../src/ui/accessibility-lab';
 import { browserAssetPath } from '../src/ui/asset-map';
 import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
 const shellStyles = readFileSync('src/styles/shell.css', 'utf8');
 
 const env = {
-  DEMO_DB: {
-    prepare: () => ({
-      bind() { return this; },
-      async all() {
-        return { results: [{ state: 'online', public_message: 'Available.', updated_at: '2026-09-20T00:00:00.000Z', updated_by: 'test' }] };
-      },
-    }),
-  },
+  WG_DB: new SqliteD1(),
   GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
 } as unknown as Env;
@@ -56,7 +50,7 @@ describe('D1 database console', () => {
     expect(html).not.toContain('Query these users with GraphQL');
     expect(html).not.toContain('Parameters');
     expect(html).not.toContain('sessionId');
-    expect(html).not.toContain('DEMO_DB');
+    expect(html).not.toContain('WG_DB');
     expect(html).not.toContain('d1-inspector-footer');
     expect(html).not.toContain('Implementation details');
     expect(html).not.toContain('Platform / /d1');
@@ -91,7 +85,7 @@ describe('R2 storage workspace', () => {
     expect(html).toContain('data-operation-status');
     expect(html).toContain('View response JSON');
     expect(html).not.toContain('Storage details');
-    expect(html).not.toContain('DEMO_R2');
+    expect(html).not.toContain('WG_R2');
     expect(html).not.toContain('wizardgang-demo-r2');
     expect(html).not.toContain('2 visible');
     expect(html).not.toContain('How this works');

@@ -3,30 +3,12 @@ import { Window } from 'happy-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import assetManifest from '../docs/asset-manifest.json';
 import { routeRequest } from '../src/router';
-import type { D1PreparedStatement, Env } from '../src/types';
-
-class OperationalStatement implements D1PreparedStatement {
-  constructor(private readonly sql: string) {}
-  bind() { return this; }
-  async run() { return { meta: { last_row_id: 1, changes: 1 } }; }
-  async all<T>() {
-    if (this.sql.includes('FROM demo_control')) {
-      return { results: [{ state: 'online', public_message: 'Available.', updated_at: '2026-09-19T12:00:00.000Z', updated_by: 'operator' }] as T[] };
-    }
-    if (this.sql.includes('FROM crawler_control')) {
-      return { results: [{ state: 'enabled', updated_at: '2026-09-19T12:00:00.000Z', updated_by: 'operator' }] as T[] };
-    }
-    if (this.sql.includes('COUNT(*) AS verified')) {
-      return { results: [{ verified: 11, operational: 10, intentional: 1 }] as T[] };
-    }
-    if (this.sql.trim() === 'SELECT 1') return { results: [{ value: 1 }] as T[] };
-    return { results: [] as T[] };
-  }
-}
+import type { Env } from '../src/types';
+import { demoDatabase } from './helpers/wg-storage';
 
 const password = 'local-admin-password-that-must-not-render';
 const environment = {
-  DEMO_DB: { prepare: (sql: string) => new OperationalStatement(sql) },
+  WG_DB: demoDatabase({ crawler: 'enabled', availability: { verified: 11, operational: 10, intentional: 1 } }),
   GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
   DEMO_ADMIN_USER: 'operator',

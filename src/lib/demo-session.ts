@@ -1,14 +1,15 @@
 import type { Env } from '../types';
 import { derivedSecret } from './derived-keys';
 import { HttpError } from './http';
+import { COLLECTIONS, demoRecords } from './storage';
 
 const COOKIE_NAME = 'wg_demo_session';
 const MAX_AGE_SECONDS = 24 * 60 * 60;
 const encoder = new TextEncoder();
 
-interface SessionRow {
-  id: string;
-  expires_at: string;
+interface SessionBody {
+  createdAt: string;
+  expiresAt: string;
 }
 
 export interface DemoSession {
@@ -67,24 +68,18 @@ export async function ensureDemoSession(request: Request, env: Env): Promise<Dem
   const candidate = cookieValue(request);
   const verifiedId = candidate ? await verifySignedDemoSessionValue(candidate, secret) : null;
 
+  const sessions = demoRecords(env);
   if (verifiedId) {
-    const result = await env.DEMO_DB.prepare(
-      'SELECT id, expires_at FROM demo_sessions WHERE id = ? LIMIT 1',
-    ).bind(verifiedId).all<SessionRow>();
-    const row = result.results[0];
-    if (row && Date.parse(row.expires_at) > now.getTime()) {
-      await env.DEMO_DB.prepare('UPDATE demo_sessions SET last_seen_at = ? WHERE id = ?')
-        .bind(now.toISOString(), verifiedId).run();
-      return { id: verifiedId };
-    }
+    // The record expires with the cookie, so a live record is a live session.
+    const record = await sessions.get<SessionBody>(COLLECTIONS.demoSessions, verifiedId);
+    if (record && Date.parse(record.body.expiresAt) > now.getTime()) return { id: verifiedId };
   }
 
   const id = crypto.randomUUID();
   const createdAt = now.toISOString();
   const expiresAt = new Date(now.getTime() + MAX_AGE_SECONDS * 1000).toISOString();
-  await env.DEMO_DB.prepare(
-    'INSERT INTO demo_sessions (id, created_at, expires_at, last_seen_at) VALUES (?, ?, ?, ?)',
-  ).bind(id, createdAt, expiresAt, createdAt).run();
+  const body: SessionBody = { createdAt, expiresAt };
+  await sessions.put(COLLECTIONS.demoSessions, id, body, { ttlSeconds: MAX_AGE_SECONDS });
   return { id, setCookie: serializedCookie(await createSignedDemoSessionValue(id, secret)) };
 }
 

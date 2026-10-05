@@ -16,8 +16,8 @@ export interface LaboratoryRequestLimits {
 export type LaboratoryStorageBoundary =
   | { kind: 'none'; description: string }
   | { kind: 'stateless-compute'; description: string }
-  | { kind: 'd1'; binding: 'DEMO_DB'; description: string }
-  | { kind: 'r2'; binding: 'DEMO_R2'; metadataBinding?: 'DEMO_DB'; description: string }
+  | { kind: 'd1'; binding: 'WG_DB'; description: string }
+  | { kind: 'r2'; binding: 'WG_R2'; metadataBinding?: 'WG_DB'; description: string }
   | { kind: 'durable-object'; binding: 'DEMO_COORDINATOR'; description: string };
 
 export type LaboratoryRequestSchemas = Readonly<Partial<Record<RouteMethod, string>>>;
@@ -84,15 +84,15 @@ export const STATELESS_COMPUTE_STORAGE: LaboratoryStorageBoundary = {
 
 export const D1_RELATIONAL_STORAGE: LaboratoryStorageBoundary = {
   kind: 'd1',
-  binding: 'DEMO_DB',
-  description: 'D1 owns the laboratory relational state.',
+  binding: 'WG_DB',
+  description: 'The shared D1 records table owns the laboratory state, scoped to the visitor sandbox with a TTL.',
 };
 
 export const R2_OBJECT_STORAGE: LaboratoryStorageBoundary = {
   kind: 'r2',
-  binding: 'DEMO_R2',
-  metadataBinding: 'DEMO_DB',
-  description: 'R2 owns object bytes; D1 stores relational metadata and audit references only.',
+  binding: 'WG_R2',
+  metadataBinding: 'WG_DB',
+  description: 'R2 owns object bytes under demo/; D1 records store metadata and audit references only.',
 };
 
 export const DURABLE_OBJECT_STORAGE: LaboratoryStorageBoundary = {

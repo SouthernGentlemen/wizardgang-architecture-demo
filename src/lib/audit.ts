@@ -1,5 +1,22 @@
 import type { Env } from '../types';
+import { KINDS, TTL_SECONDS, demoEvents, latestEvents } from './storage';
 
+interface AuditEventBody {
+  demoId: string;
+  eventType: string;
+  payload: unknown;
+  createdAt: string;
+}
+
+export interface DemoEventRow {
+  id: number;
+  demo_id: string;
+  event_type: string;
+  payload_json: string | null;
+  created_at: string;
+}
+
+/** Appends one audit event. Its id is the event time in milliseconds, which is what events.append returns. */
 export async function recordDemoEvent(
   env: Env,
   demoId: string,
@@ -7,32 +24,19 @@ export async function recordDemoEvent(
   payload: unknown = null,
 ): Promise<{ id: number; createdAt: string }> {
   const createdAt = new Date().toISOString();
-  const result = await env.DEMO_DB.prepare(
-    `INSERT INTO demo_events (demo_id, event_type, payload_json, created_at)
-     VALUES (?, ?, ?, ?)`,
-  )
-    .bind(demoId, eventType, JSON.stringify(payload), createdAt)
-    .run();
-
-  return {
-    id: Number(result.meta.last_row_id ?? 0),
-    createdAt,
-  };
+  const body: AuditEventBody = { demoId, eventType, payload, createdAt };
+  const id = await demoEvents(env).append(KINDS.audit, body, { ttlSeconds: TTL_SECONDS.auditEvent });
+  return { id, createdAt };
 }
 
-export async function recentDemoEvents(env: Env, limit = 20) {
+export async function recentDemoEvents(env: Env, limit = 20): Promise<DemoEventRow[]> {
   const safeLimit = Math.max(1, Math.min(limit, 100));
-  const result = await env.DEMO_DB.prepare(
-    `SELECT id, demo_id, event_type, payload_json, created_at
-     FROM demo_events
-     ORDER BY id DESC
-     LIMIT ?`,
-  )
-    .bind(safeLimit)
-    .all();
-
-  return result.results.map((row) => {
-    const event = row as Record<string, unknown>;
-    return event.demo_id === 'identity' ? { ...event, payload_json: null } : row;
-  });
+  const recent = await latestEvents<AuditEventBody>(env, KINDS.audit, safeLimit, TTL_SECONDS.auditEvent);
+  return recent.map(({ at, body }) => ({
+    id: at,
+    demo_id: body.demoId,
+    event_type: body.eventType,
+    payload_json: body.demoId === 'identity' ? null : JSON.stringify(body.payload ?? null),
+    created_at: body.createdAt,
+  }));
 }

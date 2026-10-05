@@ -9,55 +9,12 @@ import {
 import presentation from '../src/i18n/presentation.json';
 import { routeRequest } from '../src/router';
 import { applicationRouteRegistry, routeUrl } from '../src/routing/application-routes';
-import type { D1PreparedStatement, Env } from '../src/types';
-
-class AcceptanceStatement implements D1PreparedStatement {
-  private values: unknown[] = [];
-
-  constructor(private readonly sql: string) {}
-
-  bind(...values: unknown[]) {
-    this.values = values;
-    return this;
-  }
-
-  async run() {
-    return { meta: { last_row_id: 1, changes: this.values.length ? 1 : 0 } };
-  }
-
-  async all<T>() {
-    if (this.sql.includes('FROM demo_control')) {
-      return {
-        results: [{
-          state: 'online',
-          public_message: 'Available.',
-          updated_at: '2026-09-09T12:00:00.000Z',
-          updated_by: 'test',
-        }] as T[],
-      };
-    }
-    if (this.sql.includes('FROM crawler_control')) {
-      return {
-        results: [{
-          state: 'enabled',
-          updated_at: '2026-09-09T12:00:00.000Z',
-          updated_by: 'test',
-        }] as T[],
-      };
-    }
-    return { results: [] as T[] };
-  }
-}
-
-class AcceptanceD1 {
-  prepare(sql: string) {
-    return new AcceptanceStatement(sql);
-  }
-}
+import type { Env } from '../src/types';
+import { demoDatabase } from './helpers/wg-storage';
 
 function environment(): Env {
   return {
-    DEMO_DB: new AcceptanceD1(),
+    WG_DB: demoDatabase({ crawler: 'enabled' }),
     GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
     BILLING_DEMO_MONTHLY_BUDGET_USD: '10',

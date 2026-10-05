@@ -16,7 +16,7 @@ const toolingOnlyModules = new Set([
 ]);
 
 const environment: Env = {
-  DEMO_DB: {
+  WG_DB: {
     prepare() {
       throw new Error('source-integrity rendering must not depend on application storage');
     },

@@ -6,21 +6,11 @@ import {
 } from '../src/routing/application-routes';
 import { routeRequest } from '../src/router';
 import { sitemapPaths } from '../src/routing/navigation';
-import type { D1PreparedStatement, Env } from '../src/types';
-
-class ContractStatement implements D1PreparedStatement {
-  constructor(private readonly sql: string) {}
-  bind() { return this; }
-  async run() { return { meta: {} }; }
-  async all<T>() {
-    if (this.sql.includes('FROM demo_control')) return { results: [{ state: 'online', public_message: 'Available.', updated_at: '2026-09-02T00:00:00.000Z', updated_by: 'test' }] as T[] };
-    if (this.sql.includes('FROM crawler_control')) return { results: [{ state: 'disabled', updated_at: '2026-09-02T00:00:00.000Z', updated_by: 'test' }] as T[] };
-    return { results: [] as T[] };
-  }
-}
+import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
 const environment: Env = {
-  DEMO_DB: { prepare: (sql: string) => new ContractStatement(sql) },
+  WG_DB: new SqliteD1(),
   GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
   DEMO_ADMIN_USER: 'operator',

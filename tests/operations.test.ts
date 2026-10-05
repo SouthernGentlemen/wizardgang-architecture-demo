@@ -5,48 +5,11 @@ import { workerComputeResponse } from '../src/api/runtime';
 import { runScheduledOperations } from '../src/index';
 import { collectCloudflareUsage } from '../src/lib/cloudflare-usage';
 import { routeUrl } from '../src/routing/application-routes';
-import type { D1PreparedStatement, Env } from '../src/types';
-
-interface Usage { id: number; service_key: string; metric_key: string; quantity: number; unit: string; estimated_cost_usd: number; budget_limit_usd: number; captured_at: string }
-
-class OperationsStatement implements D1PreparedStatement {
-  private values: unknown[] = [];
-  constructor(private readonly db: OperationsD1, private readonly sql: string) {}
-  bind(...values: unknown[]) { this.values = values; return this; }
-  async run() {
-    if (this.sql.includes('INSERT INTO usage_snapshots')) this.db.usage.unshift({ id: this.db.nextId++, service_key: String(this.values[0]), metric_key: String(this.values[1]), quantity: Number(this.values[2]), unit: String(this.values[3]), estimated_cost_usd: Number(this.values[4]), budget_limit_usd: Number(this.values[5]), captured_at: String(this.values[6]) });
-    if (this.sql.includes('INSERT INTO service_health_checks')) this.db.persistedHealth += 1;
-    return { meta: { last_row_id: this.db.nextId++ } };
-  }
-  async all<T>() {
-    if (this.sql.includes('FROM demo_control')) return { results: [{ state: 'online', public_message: 'Available.', updated_at: '2026-08-31T00:00:00.000Z', updated_by: 'test' }] as T[] };
-    if (this.sql.includes('FROM crawler_control')) return { results: [{ state: 'disabled', updated_at: '2026-09-01T12:00:00.000Z', updated_by: 'test' }] as T[] };
-    if (this.sql.includes('FROM usage_snapshots')) return { results: this.db.usage.slice(0, Number(this.values.at(-1) || 20)) as T[] };
-    if (this.sql.includes('FROM application_logs')) return { results: [] as T[] };
-    if (this.sql.includes('COUNT(*) AS stored')) {
-      const verified = this.db.health.length;
-      return { results: [{ stored: verified, verified, legacy: 0, operational: this.db.health.filter((row) => row.status === 'operational').length, intentional: this.db.health.filter((row) => row.detail_json?.includes('"intentionalOffline":true')).length, unexpected: this.db.health.filter((row) => row.status !== 'operational' && !row.detail_json?.includes('"intentionalOffline":true')).length, first_checked_at: this.db.health.at(-1)?.checked_at ?? null, last_checked_at: this.db.health[0]?.checked_at ?? null, monitoring_started_at: this.db.health.at(-1)?.checked_at ?? null }] as T[] };
-    }
-    if (this.sql.includes('GROUP BY substr')) return { results: [] as T[] };
-    if (this.sql.includes('FROM service_health_checks')) return { results: this.db.health as T[] };
-    return { results: [] as T[] };
-  }
-}
-
-class OperationsD1 {
-  nextId = 10;
-  persistedHealth = 0;
-  usage: Usage[] = [];
-  health = [
-    { id: 3, service_key: 'public-demo', status: 'operational', response_ms: 4, detail_json: '{"intentionalOffline":false,"observationSource":"scheduled"}', checked_at: '2026-08-31T03:00:00.000Z' },
-    { id: 2, service_key: 'public-demo', status: 'down', response_ms: 4, detail_json: '{"intentionalOffline":true,"observationSource":"scheduled"}', checked_at: '2026-08-31T02:00:00.000Z' },
-    { id: 1, service_key: 'public-demo', status: 'degraded', response_ms: 4, detail_json: '{"intentionalOffline":false,"observationSource":"scheduled"}', checked_at: '2026-08-31T01:00:00.000Z' },
-  ];
-  prepare(sql: string) { return new OperationsStatement(this, sql); }
-}
+import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
 function env(): Env {
-  return { DEMO_DB: new OperationsD1(), GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo', GITHUB_BRANCH: 'main', BILLING_DEMO_MONTHLY_BUDGET_USD: '10' };
+  return { WG_DB: new SqliteD1(), GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo', GITHUB_BRANCH: 'main', BILLING_DEMO_MONTHLY_BUDGET_USD: '10' };
 }
 
 function cloudflareEnv(account = 'account-tag', worker = 'worker-name'): Env {
@@ -87,7 +50,7 @@ describe('operations machine behavior', () => {
   it('runs scheduled health independently and preserves the operations reporting machine contract', async () => {
     const environment = env();
     await runScheduledOperations(environment, Date.parse('2026-09-02T12:05:00.000Z'));
-    expect((environment.DEMO_DB as OperationsD1).persistedHealth).toBe(1);
+    expect((environment.WG_DB as SqliteD1).records('health').size).toBe(1);
     const response = await reportingCollectionResponse(new Request('https://demo.example/api/reporting/operations'), environment, 'operations');
     expect(response.status).toBe(200);
     expect(response.headers.get('cache-control')).toBe('public, max-age=30, s-maxage=30');

@@ -1,4 +1,5 @@
 import type { Env } from '../types';
+import { KINDS, TTL_SECONDS, demoEvents, latestEvents } from './storage';
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
@@ -53,20 +54,17 @@ export async function recordApplicationLog(env: Env, input: ApplicationLogInput)
     ? JSON.stringify({ truncated: true, preview: serializedDetail.slice(0, 3000) })
     : serializedDetail;
 
-  await env.DEMO_DB.prepare(
-    `INSERT INTO application_logs
-      (level, source, event_key, message, route, request_id, detail_json, created_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-  ).bind(
-    input.level ?? 'info',
-    safeText(input.source, 80),
-    safeText(input.eventKey, 120),
-    safeText(input.message, 500),
-    input.route ? safeText(input.route, 200) : null,
-    input.requestId ? safeText(input.requestId, 120) : null,
-    detailJson,
-    createdAt,
-  ).run();
+  const entry: Omit<ApplicationLogRow, 'id'> = {
+    level: input.level ?? 'info',
+    source: safeText(input.source, 80),
+    event_key: safeText(input.eventKey, 120),
+    message: safeText(input.message, 500),
+    route: input.route ? safeText(input.route, 200) : null,
+    request_id: input.requestId ? safeText(input.requestId, 120) : null,
+    detail_json: detailJson,
+    created_at: createdAt,
+  };
+  await demoEvents(env).append(KINDS.log, entry, { ttlSeconds: TTL_SECONDS.log });
 }
 
 export async function recentApplicationLogs(
@@ -80,29 +78,10 @@ export async function recentApplicationLogs(
   const source = options.source?.trim().slice(0, 80) || null;
   const requestId = options.requestId?.trim().slice(0, 120) || null;
 
-  const where: string[] = [];
-  const binds: unknown[] = [];
-
-  if (level) {
-    where.push('level = ?');
-    binds.push(level);
-  }
-  if (source) {
-    where.push('source = ?');
-    binds.push(source);
-  }
-  if (requestId) {
-    where.push('request_id = ?');
-    binds.push(requestId);
-  }
-
-  const sql = `SELECT id, level, source, event_key, message, route, request_id, detail_json, created_at
-    FROM application_logs
-    ${where.length ? `WHERE ${where.join(' AND ')}` : ''}
-    ORDER BY id DESC
-    LIMIT ?`;
-
-  binds.push(limit);
-  const result = await env.DEMO_DB.prepare(sql).bind(...binds).all<ApplicationLogRow>();
-  return result.results.map((row) => row.source === 'identity' ? { ...row, detail_json: null } : row);
+  const recent = await latestEvents<Omit<ApplicationLogRow, 'id'>>(env, KINDS.log, limit, TTL_SECONDS.log, (row) =>
+    (!level || row.level === level) && (!source || row.source === source) && (!requestId || row.request_id === requestId));
+  return recent.map(({ at, body }) => {
+    const row: ApplicationLogRow = { id: at, ...body };
+    return row.source === 'identity' ? { ...row, detail_json: null } : row;
+  });
 }

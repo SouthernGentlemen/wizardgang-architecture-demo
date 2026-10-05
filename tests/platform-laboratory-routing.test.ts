@@ -15,22 +15,11 @@ import {
   noncanonicalSyntheticLabPathname,
   removedPlatformLaboratoryPathnames,
 } from './fixtures/removed-api-pathnames';
+import { demoDatabase } from './helpers/wg-storage';
 
 function environment(state: 'online' | 'offline'): Env {
   return {
-    DEMO_DB: {
-      prepare: (sql: string) => ({
-        bind() { return this; },
-        all: async () => ({
-          results: sql.includes('FROM demo_control') ? [{
-            state,
-            public_message: state === 'online' ? 'Demo online.' : 'Demo maintenance.',
-            updated_at: '2026-09-05T00:00:00.000Z',
-            updated_by: 'test',
-          }] : [],
-        }),
-      }),
-    },
+    WG_DB: demoDatabase({ demo: state, message: state === 'online' ? 'Demo online.' : 'Demo maintenance.' }),
     GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
   } as unknown as Env;
@@ -92,8 +81,8 @@ describe('platform laboratory declarative routing', () => {
     expect(routes.find((route) => route.id === 'platform.d1.records')?.storage.kind).toBe('d1');
     expect(routes.find((route) => route.id === 'platform.r2.files')?.storage).toMatchObject({
       kind: 'r2',
-      binding: 'DEMO_R2',
-      metadataBinding: 'DEMO_DB',
+      binding: 'WG_R2',
+      metadataBinding: 'WG_DB',
     });
     expect(routes.find((route) => route.id === 'platform.d1.rest-demo-records')?.documentation.description).toContain('browser tutorial');
     expect(routes.find((route) => route.id === 'platform.d1.records')?.documentation.description).toContain('machine contract');

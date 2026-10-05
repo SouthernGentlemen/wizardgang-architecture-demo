@@ -1,9 +1,14 @@
-import type { Env } from '../types';
+import type { Bucket } from '#wg-edge';
+import type { Env, R2ObjectBody } from '../types';
 import { recordDemoEvent } from '../lib/audit';
 import { HttpError, errorResponse, json, methodNotAllowed, withSecurityHeaders } from '../lib/http';
 import { requireSameOrigin } from '../lib/admin-auth';
 import { ensureDemoSession, withDemoSession, type DemoSession } from '../lib/demo-session';
+import { COLLECTIONS, TTL_SECONDS, demoBucket, demoRecords } from '../lib/storage';
 
+// Object bytes live under `demo/` in the shared R2 bucket (uploads under demo/uploads/, which the bucket's lifecycle
+// expires after one day). Each object's metadata is an r2-objects record keyed by its demo-relative key: shared seeds
+// have no owner, uploads are owned by the sandbox session and expire with it.
 interface FileMetadataRow {
   object_key: string;
   content_type: string;
@@ -12,8 +17,6 @@ interface FileMetadataRow {
   session_id: string | null;
   display_name: string | null;
 }
-
-interface AggregateRow { object_count: number; total_bytes: number }
 
 const MAX_FILE_BYTES = 5 * 1024 * 1024;
 const MAX_TOTAL_BYTES = 20 * 1024 * 1024;
@@ -68,31 +71,47 @@ function presentFile(row: FileMetadataRow) {
   };
 }
 
-async function ensureSharedR2Seeds(env: Env): Promise<void> {
-  if (!env.DEMO_R2) throw new HttpError(503, 'r2_not_configured');
+function requireBucket(env: Env): Bucket {
+  const objects = demoBucket(env);
+  if (!objects) throw new HttpError(503, 'r2_not_configured');
+  return objects;
+}
+
+async function saveMetadata(env: Env, row: FileMetadataRow): Promise<void> {
+  await demoRecords(env).put(COLLECTIONS.r2Objects, row.object_key, row, row.session_id
+    ? { owner: row.session_id, ttlSeconds: TTL_SECONDS.sandbox }
+    : {});
+}
+
+async function ensureSharedR2Seeds(env: Env, objects: Bucket): Promise<FileMetadataRow[]> {
+  const rows: FileMetadataRow[] = [];
   for (const seed of sharedSeeds) {
-    const existing = await env.DEMO_R2.get(seed.key);
-    if (!existing) await env.DEMO_R2.put(seed.key, seed.body, { httpMetadata: { contentType: seed.type } });
-    const now = new Date().toISOString();
-    await env.DEMO_DB.prepare(
-      `INSERT INTO r2_object_metadata (object_key, content_type, size_bytes, updated_at, updated_by, session_id, display_name, expires_at)
-       VALUES (?, ?, ?, ?, ?, NULL, ?, NULL)
-       ON CONFLICT(object_key) DO UPDATE SET content_type = excluded.content_type, size_bytes = excluded.size_bytes, display_name = excluded.display_name`,
-    ).bind(seed.key, seed.type, new TextEncoder().encode(seed.body).byteLength, now, 'shared-seed', seed.name).run();
+    const stored = (await demoRecords(env).get<FileMetadataRow>(COLLECTIONS.r2Objects, seed.key))?.body;
+    if (stored && await objects.head(seed.key)) { rows.push(stored); continue; }
+    await objects.put(seed.key, seed.body, { httpMetadata: { contentType: seed.type } });
+    const row: FileMetadataRow = {
+      object_key: seed.key, content_type: seed.type, size_bytes: new TextEncoder().encode(seed.body).byteLength,
+      updated_at: new Date().toISOString(), session_id: null, display_name: seed.name,
+    };
+    await saveMetadata(env, row);
+    rows.push(row);
   }
+  return rows;
+}
+
+async function sessionFiles(env: Env, sessionId: string): Promise<FileMetadataRow[]> {
+  const rows = await demoRecords(env).list<FileMetadataRow>(COLLECTIONS.r2Objects, { owner: sessionId, limit: 100 });
+  return rows.map((row) => row.body).sort((left, right) => right.updated_at.localeCompare(left.updated_at));
 }
 
 async function metadataFor(env: Env, sessionId: string, key: string): Promise<FileMetadataRow | null> {
-  const result = await env.DEMO_DB.prepare(
-    `SELECT object_key, content_type, size_bytes, updated_at, session_id, display_name
-     FROM r2_object_metadata WHERE object_key = ? AND (session_id = ? OR session_id IS NULL) LIMIT 1`,
-  ).bind(key, sessionId).all<FileMetadataRow>();
-  return result.results[0] ?? null;
+  const row = (await demoRecords(env).get<FileMetadataRow>(COLLECTIONS.r2Objects, key))?.body;
+  return row && (row.session_id === sessionId || row.session_id === null) ? row : null;
 }
 
 function fileEnvelope(operation: string, status: number, startedAt: number, result: unknown, objectCount: number, bytes: number): Response {
   return json({
-    requestId: crypto.randomUUID(), operation, resource: 'DEMO_R2 / wizardgang-demo-r2', status,
+    requestId: crypto.randomUUID(), operation, resource: 'WG_R2 / wizardgang/demo', status,
     durationMs: Number((performance.now() - startedAt).toFixed(2)), objectCount, bytes, result,
   }, { status, headers: { 'cache-control': 'no-store' } });
 }
@@ -105,22 +124,17 @@ export async function r2FilesResponse(request: Request, env: Env, rawId?: string
   let session: DemoSession | undefined;
   const startedAt = performance.now();
   try {
-    if (!env.DEMO_R2) throw new HttpError(503, 'r2_not_configured');
+    const objects = requireBucket(env);
     if (request.method !== 'GET') {
       const originFailure = requireSameOrigin(request);
       if (originFailure) return originFailure;
     }
     session = await ensureDemoSession(request, env);
-    await ensureSharedR2Seeds(env);
+    const seeds = await ensureSharedR2Seeds(env, objects);
 
     if (!rawId && request.method === 'GET') {
-      const result = await env.DEMO_DB.prepare(
-        `SELECT object_key, content_type, size_bytes, updated_at, session_id, display_name
-         FROM r2_object_metadata
-         WHERE session_id = ? OR object_key LIKE 'documents/%' OR object_key LIKE 'images/%'
-         ORDER BY session_id IS NOT NULL, updated_at DESC LIMIT 25`,
-      ).bind(session.id).all<FileMetadataRow>();
-      const files = result.results.map(presentFile);
+      const shared = seeds.sort((left, right) => right.updated_at.localeCompare(left.updated_at));
+      const files = [...shared, ...await sessionFiles(env, session.id)].slice(0, 25).map(presentFile);
       return attachSession(fileEnvelope('r2.files.list', 200, startedAt, { files }, files.length, files.reduce((sum, file) => sum + file.sizeBytes, 0)), session);
     }
 
@@ -131,29 +145,21 @@ export async function r2FilesResponse(request: Request, env: Env, rawId?: string
       const file = form.get('file');
       if (!(file instanceof File) || file.size <= 0) throw new HttpError(400, 'file_required');
       if (file.size > MAX_FILE_BYTES) throw new HttpError(413, 'file_too_large');
-      const aggregate = await env.DEMO_DB.prepare(
-        'SELECT COUNT(*) AS object_count, COALESCE(SUM(size_bytes), 0) AS total_bytes FROM r2_object_metadata WHERE session_id = ?',
-      ).bind(session.id).all<AggregateRow>();
-      const usage = aggregate.results[0] ?? { object_count: 0, total_bytes: 0 };
-      if (usage.object_count >= MAX_OBJECTS) throw new HttpError(409, 'object_limit_reached');
-      if (usage.total_bytes + file.size > MAX_TOTAL_BYTES) throw new HttpError(409, 'byte_limit_reached');
+      const owned = await sessionFiles(env, session.id);
+      if (owned.length >= MAX_OBJECTS) throw new HttpError(409, 'object_limit_reached');
+      if (owned.reduce((sum, row) => sum + row.size_bytes, 0) + file.size > MAX_TOTAL_BYTES) throw new HttpError(409, 'byte_limit_reached');
       const displayName = safeName(file.name);
       const key = `uploads/${session.id}/${crypto.randomUUID()}-${safeKeyName(displayName)}`;
       const contentType = (file.type || 'application/octet-stream').toLowerCase().slice(0, 120);
       const body = await file.arrayBuffer();
-      await env.DEMO_R2.put(key, body, { httpMetadata: { contentType } });
-      const now = new Date().toISOString();
-      const expiresAt = new Date(Date.now() + 86_400_000).toISOString();
+      await objects.put(key, body, { httpMetadata: { contentType } });
+      const row: FileMetadataRow = { object_key: key, content_type: contentType, size_bytes: file.size, updated_at: new Date().toISOString(), session_id: session.id, display_name: displayName };
       try {
-        await env.DEMO_DB.prepare(
-          `INSERT INTO r2_object_metadata (object_key, content_type, size_bytes, updated_at, updated_by, session_id, display_name, expires_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        ).bind(key, contentType, file.size, now, 'visitor-sandbox', session.id, displayName, expiresAt).run();
+        await saveMetadata(env, row);
       } catch (error) {
-        await env.DEMO_R2.delete(key);
+        await objects.delete(key);
         throw error;
       }
-      const row: FileMetadataRow = { object_key: key, content_type: contentType, size_bytes: file.size, updated_at: now, session_id: session.id, display_name: displayName };
       await recordDemoEvent(env, 'r2', 'sandbox_object_stored', { displayName, contentType, sizeBytes: file.size });
       return attachSession(fileEnvelope('r2.files.put', 201, startedAt, { file: presentFile(row) }, 1, file.size), session);
     }
@@ -164,7 +170,7 @@ export async function r2FilesResponse(request: Request, env: Env, rawId?: string
     if (!metadata) throw new HttpError(404, 'file_not_found');
 
     if (request.method === 'GET') {
-      const object = await env.DEMO_R2.get(key);
+      const object = await objects.get(key) as R2ObjectBody | null;
       if (!object) throw new HttpError(404, 'file_not_found');
       const download = new URL(request.url).searchParams.get('download') === '1';
       const inline = !download && INLINE_TYPES.has(metadata.content_type);
@@ -181,8 +187,8 @@ export async function r2FilesResponse(request: Request, env: Env, rawId?: string
 
     if (request.method === 'DELETE') {
       if (metadata.session_id !== session.id || !key.startsWith(`uploads/${session.id}/`)) throw new HttpError(403, 'file_not_owned');
-      await env.DEMO_R2.delete(key);
-      await env.DEMO_DB.prepare('DELETE FROM r2_object_metadata WHERE object_key = ? AND session_id = ?').bind(key, session.id).run();
+      await objects.delete(key);
+      await demoRecords(env).delete(COLLECTIONS.r2Objects, key);
       await recordDemoEvent(env, 'r2', 'sandbox_object_deleted', { displayName: metadata.display_name, sizeBytes: metadata.size_bytes });
       return attachSession(fileEnvelope('r2.files.delete', 200, startedAt, { deleted: true, id: rawId }, 1, metadata.size_bytes), session);
     }
@@ -199,15 +205,15 @@ export async function r2FilesResetResponse(request: Request, env: Env): Promise<
     if (request.method !== 'POST') return methodNotAllowed(['POST']);
     const originFailure = requireSameOrigin(request);
     if (originFailure) return originFailure;
-    if (!env.DEMO_R2) throw new HttpError(503, 'r2_not_configured');
+    const objects = requireBucket(env);
     session = await ensureDemoSession(request, env);
-    const result = await env.DEMO_DB.prepare(
-      'SELECT object_key, content_type, size_bytes, updated_at, session_id, display_name FROM r2_object_metadata WHERE session_id = ? LIMIT 10',
-    ).bind(session.id).all<FileMetadataRow>();
-    for (const row of result.results) if (row.object_key.startsWith(`uploads/${session.id}/`)) await env.DEMO_R2.delete(row.object_key);
-    await env.DEMO_DB.prepare('DELETE FROM r2_object_metadata WHERE session_id = ?').bind(session.id).run();
-    await recordDemoEvent(env, 'r2', 'sandbox_objects_reset', { objectCount: result.results.length });
-    return attachSession(fileEnvelope('r2.files.reset', 200, startedAt, { reset: true }, result.results.length, result.results.reduce((sum, row) => sum + row.size_bytes, 0)), session);
+    const owned = await sessionFiles(env, session.id);
+    for (const row of owned) {
+      if (row.object_key.startsWith(`uploads/${session.id}/`)) await objects.delete(row.object_key);
+      await demoRecords(env).delete(COLLECTIONS.r2Objects, row.object_key);
+    }
+    await recordDemoEvent(env, 'r2', 'sandbox_objects_reset', { objectCount: owned.length });
+    return attachSession(fileEnvelope('r2.files.reset', 200, startedAt, { reset: true }, owned.length, owned.reduce((sum, row) => sum + row.size_bytes, 0)), session);
   } catch (error) {
     return attachSession(errorResponse(error), session);
   }

@@ -5,38 +5,17 @@ import {
   mcpMetaKeys,
   mcpResponse,
 } from '../src/api/mcp';
-import type { D1PreparedStatement, Env } from '../src/types';
+import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
-class McpStatement implements D1PreparedStatement {
-  private values: unknown[] = [];
+const sandbox = 'sandbox-0123456789abcdef01234567';
+const sandboxRecord = { namespace: sandbox, key: 'architecture', value: { edge: true }, createdAt: '2026-10-05T00:00:00.000Z', updatedAt: '2026-10-05T00:00:00.000Z' };
 
-  constructor(private readonly db: McpD1, private readonly sql: string) {}
-
-  bind(...values: unknown[]) {
-    this.values = values;
-    return this;
-  }
-
-  async run() {
-    if (this.sql.includes('INSERT INTO application_logs')) this.db.applicationLogBinds.push(this.values);
-    return { meta: { last_row_id: this.db.applicationLogBinds.length } };
-  }
-
-  async all<T>() {
-    if (this.sql.includes('FROM demo_records')) return { results: this.db.records as T[] };
-    return { results: [] as T[] };
-  }
-}
-
-class McpD1 {
-  records = [{ id: 7, namespace: 'public', record_key: 'architecture', value_json: '{"edge":true}' }];
-  applicationLogBinds: unknown[][] = [];
-  prepare(sql: string) { return new McpStatement(this, sql); }
-}
-
-function environment(): Env & { DEMO_DB: McpD1 } {
+function environment(): Env & { WG_DB: SqliteD1 } {
+  const db = new SqliteD1();
+  db.putRecord('demo-records', `${sandbox}/architecture`, sandboxRecord, { owner: sandbox });
   return {
-    DEMO_DB: new McpD1(),
+    WG_DB: db,
     GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
   };
@@ -81,7 +60,7 @@ function modernPingRequest(headerName = 'ping'): Request {
   return modernRequest('tools/call', { name: 'ping', arguments: {} }, headerName);
 }
 
-async function exerciseClient(client: Client, env: Env & { DEMO_DB: McpD1 }) {
+async function exerciseClient(client: Client, env: Env & { WG_DB: SqliteD1 }) {
   const transport = inProcessTransport(env);
   await client.connect(transport);
 
@@ -105,13 +84,17 @@ async function exerciseClient(client: Client, env: Env & { DEMO_DB: McpD1 }) {
     transport: 'streamable-http',
   });
 
-  const records = await client.callTool({ name: 'list_demo_records', arguments: { namespace: 'public' } });
+  const records = await client.callTool({ name: 'list_demo_records', arguments: { namespace: sandbox } });
   expect(records.structuredContent).toEqual({
-    results: [{ id: 7, namespace: 'public', key: 'architecture', valueJson: '{"edge":true}' }],
+    results: [{ namespace: sandbox, key: 'architecture', valueJson: '{"edge":true}' }],
   });
+  const catalogue = await client.callTool({ name: 'list_demo_records', arguments: { namespace: 'public' } });
+  const publicResults = (catalogue.structuredContent as { results: Array<{ namespace: string; key: string }> }).results;
+  expect(publicResults.map((record) => record.key)).toContain('runtime-d1');
+  expect(publicResults.every((record) => record.namespace === 'public')).toBe(true);
 
   await client.close();
-  return env.DEMO_DB.applicationLogBinds.map((binds) => JSON.parse(String(binds[6])) as Record<string, unknown>);
+  return env.WG_DB.events<{ detail_json: string }>('log').map((event) => JSON.parse(event.body.detail_json) as Record<string, unknown>);
 }
 
 describe('official MCP client interoperability', () => {
@@ -126,7 +109,8 @@ describe('official MCP client interoperability', () => {
     );
 
     const logs = await exerciseClient(client, env);
-    expect(logs).toHaveLength(2);
+    expect(logs).toHaveLength(3);
+    expect(logs.slice(1).map((log) => log.tool)).toEqual(['list_demo_records', 'list_demo_records']);
     expect(logs[0]).toMatchObject({
       clientName: 'integration-modern-client',
       clientVersion: '1.0.0',
@@ -180,7 +164,7 @@ describe('official MCP client interoperability', () => {
     expect(response.status).toBe(200);
     const payload = await response.json() as { error?: { code?: number } };
     expect(payload.error?.code).toBe(-32602);
-    expect(env.DEMO_DB.records).toEqual([{ id: 7, namespace: 'public', record_key: 'architecture', value_json: '{"edge":true}' }]);
+    expect([...env.WG_DB.records('demo-records').values()].map((row) => row.body)).toEqual([sandboxRecord]);
   });
 
   it('accepts a standard initialization notification without creating a compatibility route', async () => {

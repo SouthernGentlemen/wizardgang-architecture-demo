@@ -87,8 +87,8 @@ function D1Presentation({ localization }: Readonly<{ localization: LocalizationC
     </section>
 
     <section className="d1-database-bar" aria-label={exact('Database tables')}>
-      <div className="d1-database-id"><span>{exact('Database')}</span><strong>demo-blob</strong></div>
-      <div className="d1-table-tabs" role="tablist" aria-label={exact('Tables in demo-blob')}>
+      <div className="d1-database-id"><span>{exact('Database')}</span><strong>wizardgang</strong></div>
+      <div className="d1-table-tabs" role="tablist" aria-label={exact('Collections in wizardgang')}>
         <button type="button" role="tab" aria-selected="true" aria-controls={usersPanel} id={usersTab} data-table-tab="users">
           {exact('Users')} <bdi dir="ltr"><strong data-count="users">—</strong> / 10</bdi>
         </button>
@@ -103,7 +103,7 @@ function D1Presentation({ localization }: Readonly<{ localization: LocalizationC
       <div className="d1-table-stage">
         <section className="panel d1-table-panel" id={usersPanel} role="tabpanel" aria-labelledby={usersTab} data-table-panel="users">
           <div className="d1-table-heading">
-            <div><p className="eyebrow">{exact('Table / demo_users')}</p><DemoHeading level={2}>{exact('Users')} <bdi dir="ltr" data-heading-count="users" /></DemoHeading></div>
+            <div><p className="eyebrow">{exact('Collection / lab-users')}</p><DemoHeading level={2}>{exact('Users')} <bdi dir="ltr" data-heading-count="users" /></DemoHeading></div>
             <button className="button-primary" type="button" data-add="users">{exact('+ Add user')}</button>
           </div>
           <form className="lab-form d1-editor" data-form="users" hidden>
@@ -116,16 +116,16 @@ function D1Presentation({ localization }: Readonly<{ localization: LocalizationC
             <div className="button-row"><button className="button-primary" type="submit">{exact('Create user')}</button><button type="button" data-cancel="users">{exact('Cancel')}</button></div>
           </form>
           <div className="table-wrap" tabIndex={0} aria-label={exact('Users table')}>
-            <table><caption className="sr-only">{exact('Users in the demo_users table')}</caption><thead><tr><th scope="col">{exact('Name')}</th><th scope="col">{exact('Email')}</th><th scope="col">{exact('Role')}</th><th scope="col"><span className="sr-only">{exact('Actions')}</span></th></tr></thead><tbody data-rows="users"><tr><td colSpan={4}>{exact('Loading users…')}</td></tr></tbody></table>
+            <table><caption className="sr-only">{exact('Users in the lab-users collection')}</caption><thead><tr><th scope="col">{exact('Name')}</th><th scope="col">{exact('Email')}</th><th scope="col">{exact('Role')}</th><th scope="col"><span className="sr-only">{exact('Actions')}</span></th></tr></thead><tbody data-rows="users"><tr><td colSpan={4}>{exact('Loading users…')}</td></tr></tbody></table>
           </div>
         </section>
 
         <section className="panel d1-table-panel" id={tasksPanel} role="tabpanel" aria-labelledby={tasksTab} data-table-panel="tasks" hidden>
           <div className="d1-table-heading">
-            <div><p className="eyebrow">{exact('Table / demo_tasks')}</p><DemoHeading level={2}>{exact('Tasks')} <bdi dir="ltr" data-heading-count="tasks" /></DemoHeading></div>
+            <div><p className="eyebrow">{exact('Collection / lab-tasks')}</p><DemoHeading level={2}>{exact('Tasks')} <bdi dir="ltr" data-heading-count="tasks" /></DemoHeading></div>
             <button className="button-primary" type="button" data-add="tasks">{exact('+ Add task')}</button>
           </div>
-          <p className="d1-table-hint"><code>demo_tasks.assignee_id</code> → <code>demo_users.id</code></p>
+          <p className="d1-table-hint"><code>lab-tasks.assigneeId</code> → <code>lab-users.id</code></p>
           <form className="lab-form d1-editor" data-form="tasks" hidden>
             <div className="d1-editor-heading"><strong data-editor-title="tasks">{exact('Add task')}</strong><span>{exact('Maximum 25 tasks')}</span></div>{' '}
             <input type="hidden" name="id" />
@@ -136,7 +136,7 @@ function D1Presentation({ localization }: Readonly<{ localization: LocalizationC
             <div className="button-row"><button className="button-primary" type="submit">{exact('Create task')}</button><button type="button" data-cancel="tasks">{exact('Cancel')}</button></div>
           </form>
           <div className="table-wrap" tabIndex={0} aria-label={exact('Tasks table')}>
-            <table><caption className="sr-only">{exact('Tasks in the demo_tasks table')}</caption><thead><tr><th scope="col">{exact('Task')}</th><th scope="col">{exact('Assignee')}</th><th scope="col">{exact('Status')}</th><th scope="col"><span className="sr-only">{exact('Actions')}</span></th></tr></thead><tbody data-rows="tasks"><tr><td colSpan={4}>{exact('Loading tasks…')}</td></tr></tbody></table>
+            <table><caption className="sr-only">{exact('Tasks in the lab-tasks collection')}</caption><thead><tr><th scope="col">{exact('Task')}</th><th scope="col">{exact('Assignee')}</th><th scope="col">{exact('Status')}</th><th scope="col"><span className="sr-only">{exact('Actions')}</span></th></tr></thead><tbody data-rows="tasks"><tr><td colSpan={4}>{exact('Loading tasks…')}</td></tr></tbody></table>
           </div>
         </section>
       </div>

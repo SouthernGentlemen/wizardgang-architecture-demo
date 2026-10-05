@@ -2,40 +2,13 @@ import { exportJWK, generateKeyPair, SignJWT } from 'jose';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { authorizationDecisionResponse, demoAccessTokenResponse, identityProviderConfiguration, identitySessionResponse, providerCallbackResponse, providerStartResponse, samlMetadataResponse } from '../src/api/identity';
 import { createIdentitySession, writeFlowCookie, type IdentitySession } from '../src/lib/identity-session';
-import type { D1Database, Env } from '../src/types';
+import type { Env } from '../src/types';
+import { SqliteD1 } from './helpers/wg-storage';
 
-function memoryDb(): D1Database {
-  let nextId = 1;
-  const sessions = new Map<string, { payload: string; expiresAt: string; revokedAt: string | null }>();
-  return {
-    prepare(sql: string) {
-      let values: unknown[] = [];
-      return {
-        bind(...bound: unknown[]) { values = bound; return this; },
-        async run() {
-          if (sql.includes('INSERT INTO identity_sessions')) sessions.set(String(values[0]), { payload: String(values[1]), expiresAt: String(values[3]), revokedAt: null });
-          if (sql.includes('UPDATE identity_sessions')) {
-            const row = sessions.get(String(values[1]));
-            if (row) row.revokedAt = String(values[0]);
-          }
-          return { meta: { last_row_id: nextId++, changes: 1 } };
-        },
-        async all<T>() {
-          if (sql.includes('FROM identity_sessions')) {
-            const row = sessions.get(String(values[0]));
-            const results = row && !row.revokedAt && row.expiresAt > String(values[1]) ? [{ payload_ciphertext: row.payload, expires_at: row.expiresAt }] : [];
-            return { results: results as T[] };
-          }
-          return { results: [] as T[] };
-        },
-      };
-    },
-  };
-}
 
 function env(overrides: Partial<Env> = {}): Env {
   return {
-    DEMO_DB: memoryDb(),
+    WG_DB: new SqliteD1(),
     GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
     WG_SESSION_KEY: 's'.repeat(32),

@@ -62,12 +62,11 @@
             "items": {
               "type": "object",
               "properties": {
-                "id": { "type": "integer" },
                 "namespace": { "type": "string" },
                 "key": { "type": "string" },
                 "valueJson": { "type": "string" }
               },
-              "required": ["id", "namespace", "key", "valueJson"],
+              "required": ["namespace", "key", "valueJson"],
               "additionalProperties": false
             }
           }

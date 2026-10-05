@@ -1,6 +1,7 @@
 import type { Env } from './types';
 import { routeRequest } from './router';
-import { collectHealth, purgeAvailabilityHistory } from './api/operations';
+import { collectHealth } from './api/operations';
+import { sweepDemoStorage } from './lib/storage';
 export { DemoCoordinator } from './durable/demo-coordinator';
 
 interface ScheduledController {
@@ -13,7 +14,8 @@ interface ExecutionContext {
 
 export async function runScheduledOperations(env: Env, scheduledTime = Date.now()): Promise<void> {
   await collectHealth(env, true, scheduledTime);
-  await purgeAvailabilityHistory(env, scheduledTime);
+  // Expired demo records and events (sessions, sandboxes, logs, raw health observations) leave the shared tables here.
+  await sweepDemoStorage(env, scheduledTime);
 }
 
 export default {
