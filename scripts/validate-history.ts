@@ -50,6 +50,25 @@ const boundedRecoveryContinuations = new Map([
       reason: 'The one direct child of the immutable malformed DEMO-422 squash commit is its bounded post-merge history-metadata recovery and does not consume DEMO-423.',
     },
   ],
+  [
+    '52404a848a52dd012012b23b30fcd88ab9e54ed5',
+    {
+      id: 478,
+      marker: 'Post-Merge-Recovery: 52404a848a52dd012012b23b30fcd88ab9e54ed5',
+      reason: 'The one direct child of the immutable DEMO-478 live release squash commit is its bounded post-merge history-metadata recovery and does not consume DEMO-479.',
+    },
+  ],
+]);
+// A live release squash-merged with GitHub's " (#N)" pull-request suffix on its subject. Only that exact suffix is
+// stripped before the live-release title check; every other live-release rule still applies to the commit.
+const liveReleaseSquashSuffixExceptions = new Map([
+  [
+    '52404a848a52dd012012b23b30fcd88ab9e54ed5',
+    {
+      suffix: ' (#409)',
+      reason: 'DEMO-478 (v0.30.0) was squash-merged with the " (#409)" pull-request suffix on its live release title; merged main is preserved and post-merge CI 37385592520 is recorded instead of rewriting history.',
+    },
+  ],
 ]);
 // DEMO-460 moved the platform tasks ahead of the remaining TypeScript port. It renumbered the queued, never-delivered
 // DEMO-435..442 to DEMO-461..468 and DEMO-444..452 to DEMO-469..477 and dropped DEMO-443, so those IDs are never consumed.
@@ -88,8 +107,10 @@ controlled.forEach(({ sha, parents, id, subject, body }) => {
   }
   const continuationException = publishedContinuationExceptions.get(sha);
   const boundedRecovery = parents.length === 1 ? boundedRecoveryContinuations.get(parents[0]) : null;
+  const squashSuffix = liveReleaseSquashSuffixExceptions.get(sha);
+  const liveTitle = squashSuffix && subject.endsWith(squashSuffix.suffix) ? subject.slice(0, -squashSuffix.suffix.length) : subject;
   const isLiveRelease = body.split('\n').some((line) => line.trim() === LIVE_RELEASE_MARKER)
-    || (id >= 391 && /^\[DEMO-\d+\] \[BUILD\] Demonstrate v\d+\.\d+\.\d+ release lifecycle$/.test(subject));
+    || (id >= 391 && /^\[DEMO-\d+\] \[BUILD\] Demonstrate v\d+\.\d+\.\d+ release lifecycle$/.test(liveTitle));
   const isBoundedRecovery = boundedRecovery
     && boundedRecovery.id === id
     && body.split('\n').some((line) => line.trim() === boundedRecovery.marker);
@@ -100,8 +121,9 @@ controlled.forEach(({ sha, parents, id, subject, body }) => {
   } else if (isLiveRelease && parents.length === 1) {
     const parent = parents[0];
     const gitFile = (revision, file) => execFileSync('git', ['show', `${revision}:${file}`], { encoding: 'utf8' });
+    if (squashSuffix && liveTitle !== subject) exceptionsUsed.push(`${sha.slice(0, 12)}: ${squashSuffix.reason}`);
     const liveErrors = validateLiveReleaseIdentity({
-      title: subject,
+      title: liveTitle,
       body,
       changedFiles: execFileSync('git', ['diff', '--name-only', parent, sha], { encoding: 'utf8' }).trim().split('\n').filter(Boolean),
       beforePackage: gitFile(parent, 'package.json'),
