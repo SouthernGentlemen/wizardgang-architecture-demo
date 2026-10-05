@@ -78,13 +78,10 @@ sameNames(
 // Baseline config/secrets.json is the one secret registry; the vendored platform/ mirrors the demo's Worker secrets.
 // Each name below differs from it on purpose until the queued task that closes the gap, and never otherwise.
 const REGISTRY_TRANSITIONS = Object.freeze({
-  registryOnly: Object.freeze({ GITHUB_APP_PRIVATE_KEY: 'DEMO-456 adopts the GitHub App' }),
+  registryOnly: Object.freeze({}),
   demoOnly: Object.freeze({
     DEMO_ADMIN_USER: 'DEMO-459 moves /admin to the wg-edge operator gate',
     DEMO_ADMIN_PASSWORD: 'DEMO-459 moves /admin to the wg-edge operator gate',
-    GITHUB_READ_TOKEN: 'DEMO-456 replaces it with the GitHub App',
-    GITHUB_REPORTING_WRITE_TOKEN: 'DEMO-456 replaces it with the GitHub App',
-    GITHUB_DEMO_TOKEN: 'DEMO-456 replaces it with the GitHub App',
   }),
 });
 const registryNames = [...DESIRED.workers.demo.secrets];

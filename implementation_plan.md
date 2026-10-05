@@ -4,19 +4,10 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-456 — [SEC] Replace the demo's GitHub tokens with the wg-github-app App
-- Dependency: DEMO-455. The owner creates wg-github-app with minimum permissions from baseline docs/SECRETS-RUNBOOK.md and sets GITHUB_APP_ID and GITHUB_APP_PRIVATE_KEY (PKCS#8) on the Worker and in a git-demo environment before this merges.
-- Why: Four personal GitHub tokens (GITHUB_DEMO_TOKEN, GITHUB_READ_TOKEN, the never-set GITHUB_REPORTING_WRITE_TOKEN, and the Actions secret GIT_DEMO_PR_TOKEN) serve one integration.
-- Scope: Worker GitHub reads and writes use githubAppToken from the vendored wg-edge with per-call least permissions, and reporting issue updates are enabled through the App. git-demo.yml runs in a git-demo environment and mints an installation token from the App instead of reading GIT_DEMO_PR_TOKEN. Remove the four token names from code, config, examples and docs.
-- Non-goals: No other workflow or permission change.
-- Acceptance: The Git demo opens its pull request and reporting reads and writes succeed through the App; no personal token name remains; the old secrets are deleted after release.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: Wizard-Gang/baseline config/secrets.json, platform/wg-edge/README.md and docs/SECRETS-RUNBOOK.md; .github/workflows/git-demo.yml; src/lib/git-demo.ts; src/reporting/github.ts
-
 ### DEMO-457 — [OPS] Move the repository to Wizard-Gang
-- Dependency: DEMO-456. A baseline task updates the demo's repository in config/cloudflare.json and config/secrets.json in the same window.
+- Dependency: None. A baseline task updates the demo's repository in config/cloudflare.json and config/secrets.json in the same window. The private wg-github-app, owned by SouthernGentlemen, installs only on its owner's account, so the owner transfers the App to Wizard-Gang (or recreates it there with the same permissions) and installs it on the moved repository only before the Git demo and reporting can act as it again.
 - Why: Owner default: all four deploying repositories share the Wizard-Gang org's rulesets before the demo's Phase 4 deploy.
-- Scope: The owner transfers the repository to Wizard-Gang. Update the committed repository identity, settings-as-code, links, badges, workflow references and documentation; re-verify rulesets, environments, secrets and variables live after the transfer.
+- Scope: The owner transfers the repository to Wizard-Gang. Update the committed repository identity, settings-as-code, links, badges, workflow references and documentation, and the GITHUB_APP_INSTALLATION_ID var (and GITHUB_APP_ID, the Worker GITHUB_APP_PRIVATE_KEY and the git-demo APP_ID and APP_PRIVATE_KEY if the App is recreated); re-verify rulesets, environments, secrets and variables live after the transfer.
 - Non-goals: No product change.
 - Acceptance: The repository is Wizard-Gang/wizardgang-architecture-demo with identical protection, environments, secrets and variables; npm run check and the settings verifier pass against the new identity.
 - Validation: Focused affected checks; pinned npm ci; credential-free npm run check; live settings verification; exact-head PR CI and merged-main CI.

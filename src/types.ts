@@ -76,9 +76,7 @@ export interface Env {
   DEMO_ADMIN_PASSWORD?: string;
   DEMO_WEBHOOK_SECRET?: string;
   GITHUB_WEBHOOK_SECRET?: string;
-  GITHUB_READ_TOKEN?: string;
-  GITHUB_REPORTING_WRITE_TOKEN?: string;
-  GITHUB_DEMO_TOKEN?: string;
+  GITHUB_APP_PRIVATE_KEY?: string;
   GITHUB_OAUTH_CLIENT_SECRET?: string;
   GOOGLE_OAUTH_CLIENT_SECRET?: string;
   MICROSOFT_OAUTH_CLIENT_SECRET?: string;
@@ -88,6 +86,9 @@ export interface Env {
   // Secrets Store binding; wg-edge derives demo-session, identity-session and identity-audit from it.
   WG_SESSION_KEY?: SecretsStoreSecret | string;
 
+  // The public wg-github-app identity; wg-edge githubAppToken signs with GITHUB_APP_PRIVATE_KEY.
+  GITHUB_APP_ID?: string;
+  GITHUB_APP_INSTALLATION_ID?: string;
   GITHUB_OAUTH_CLIENT_ID?: string;
   GOOGLE_OAUTH_CLIENT_ID?: string;
   MICROSOFT_OAUTH_CLIENT_ID?: string;

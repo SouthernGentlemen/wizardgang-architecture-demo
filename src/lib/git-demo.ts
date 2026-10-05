@@ -1,4 +1,6 @@
 import type { Env } from '../types';
+import { GitHubAppError, githubAppConfigured, githubAppTokenFor } from './github-app';
+import type { GitHubAppPermissions } from './github-app';
 
 export type VersionBump = 'patch' | 'minor' | 'major';
 
@@ -161,7 +163,21 @@ function safeRepoUrl(value: unknown, identity: RepositoryIdentity): string | nul
   }
 }
 
-async function githubRequest<T>(path: string, env: Env, init: RequestInit = {}, write = false): Promise<GitHubResult<T>> {
+// The least wg-github-app permission each GitHub call needs; Metadata read comes with every installation token.
+const CONTENTS_READ: GitHubAppPermissions = { contents: 'read' };
+const PULL_REQUESTS_READ: GitHubAppPermissions = { pull_requests: 'read' };
+const ACTIONS_READ: GitHubAppPermissions = { actions: 'read' };
+const CHECKS_READ: GitHubAppPermissions = { checks: 'read' };
+const ACTIONS_WRITE: GitHubAppPermissions = { actions: 'write' };
+
+async function githubRequest<T>(path: string, env: Env, permissions: GitHubAppPermissions, init: RequestInit = {}): Promise<GitHubResult<T>> {
+  let token: string | null;
+  try {
+    token = await githubAppTokenFor(env, permissions);
+  } catch (error) {
+    if (error instanceof GitHubAppError) return { ok: false, status: 503, error: 'GitHub App token unavailable' };
+    throw error;
+  }
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
@@ -171,7 +187,6 @@ async function githubRequest<T>(path: string, env: Env, init: RequestInit = {}, 
       'x-github-api-version': '2022-11-28',
       ...(init.body ? { 'content-type': 'application/json' } : {}),
     };
-    const token = write ? env.GITHUB_DEMO_TOKEN : env.GITHUB_READ_TOKEN;
     if (token) headers.authorization = `Bearer ${token}`;
     const response = await fetch(`${GITHUB_API}${path}`, { ...init, headers, signal: controller.signal });
     if (!response.ok) return { ok: false, status: response.status, error: `GitHub returned HTTP ${response.status}` };
@@ -311,7 +326,7 @@ function buildStages(input: {
 }
 
 async function packageVersion(identity: RepositoryIdentity, env: Env, ref: string): Promise<GitHubResult<string>> {
-  const result = await githubRequest<Record<string, unknown>>(`${identity.apiPath}/contents/package.json?ref=${encodeURIComponent(ref)}`, env);
+  const result = await githubRequest<Record<string, unknown>>(`${identity.apiPath}/contents/package.json?ref=${encodeURIComponent(ref)}`, env, CONTENTS_READ);
   if (!result.ok) return { ok: false, status: result.status, error: result.error };
   const encoded = bounded(object(result.value).content, 20_000)?.replace(/\s/g, '');
   try {
@@ -324,20 +339,20 @@ async function packageVersion(identity: RepositoryIdentity, env: Env, ref: strin
 }
 
 async function listDemoPullRequests(identity: RepositoryIdentity, env: Env): Promise<GitHubResult<DemoPullRequest[]>> {
-  const result = await githubRequest<unknown[]>(`${identity.apiPath}/pulls?state=all&sort=updated&direction=desc&per_page=100`, env);
+  const result = await githubRequest<unknown[]>(`${identity.apiPath}/pulls?state=all&sort=updated&direction=desc&per_page=100`, env, PULL_REQUESTS_READ);
   if (!result.ok) return { ok: false, status: result.status, error: result.error };
   return { ok: true, value: rows(result.value).map((entry) => pullRequest(entry, identity)).filter((entry): entry is DemoPullRequest => entry !== null), status: result.status };
 }
 
 async function listControllerRuns(identity: RepositoryIdentity, env: Env): Promise<GitHubResult<WorkflowRun[]>> {
-  const result = await githubRequest<Record<string, unknown>>(`${identity.apiPath}/actions/workflows/${encodeURIComponent(WORKFLOW_FILE)}/runs?event=workflow_dispatch&per_page=30`, env);
+  const result = await githubRequest<Record<string, unknown>>(`${identity.apiPath}/actions/workflows/${encodeURIComponent(WORKFLOW_FILE)}/runs?event=workflow_dispatch&per_page=30`, env, ACTIONS_READ);
   if (!result.ok) return { ok: false, status: result.status, error: result.error };
   return { ok: true, value: rows(object(result.value).workflow_runs).map((entry) => workflowRun(entry, identity)).filter((entry): entry is WorkflowRun => entry !== null), status: result.status };
 }
 
 async function listRunsForSha(identity: RepositoryIdentity, env: Env, sha: string | null): Promise<{ runs: WorkflowRun[]; available: boolean }> {
   if (!sha) return { runs: [], available: true };
-  const result = await githubRequest<Record<string, unknown>>(`${identity.apiPath}/actions/runs?head_sha=${encodeURIComponent(sha)}&per_page=30`, env);
+  const result = await githubRequest<Record<string, unknown>>(`${identity.apiPath}/actions/runs?head_sha=${encodeURIComponent(sha)}&per_page=30`, env, ACTIONS_READ);
   if (!result.ok) return { runs: [], available: false };
   const value = object(result.value);
   const entries = rows(value.workflow_runs);
@@ -346,7 +361,7 @@ async function listRunsForSha(identity: RepositoryIdentity, env: Env, sha: strin
 
 async function jobsForRun(identity: RepositoryIdentity, env: Env, run: WorkflowRun | null): Promise<{ jobs: WorkflowJob[]; available: boolean }> {
   if (!run) return { jobs: [], available: true };
-  const result = await githubRequest<Record<string, unknown>>(`${identity.apiPath}/actions/runs/${run.id}/jobs?filter=latest&per_page=100`, env);
+  const result = await githubRequest<Record<string, unknown>>(`${identity.apiPath}/actions/runs/${run.id}/jobs?filter=latest&per_page=100`, env, ACTIONS_READ);
   const value = object(result.value);
   const jobs = result.ok ? workflowJobs(value, identity) : [];
   return { jobs, available: Boolean(result.ok && typeof value.total_count === 'number' && value.total_count === jobs.length) };
@@ -356,7 +371,7 @@ const REQUIRED_CHECKS = ['validate', 'change-id', 'security', 'secrets'] as cons
 
 async function checksForSha(identity: RepositoryIdentity, env: Env, sha: string | null): Promise<{ checks: CheckRun[]; available: boolean }> {
   if (!sha) return { checks: [], available: true };
-  const result = await githubRequest<Record<string, unknown>>(`${identity.apiPath}/commits/${encodeURIComponent(sha)}/check-runs?per_page=100`, env);
+  const result = await githubRequest<Record<string, unknown>>(`${identity.apiPath}/commits/${encodeURIComponent(sha)}/check-runs?per_page=100`, env, CHECKS_READ);
   if (!result.ok) return { checks: [], available: false };
   const value = object(result.value);
   const entries = rows(value.check_runs);
@@ -375,7 +390,7 @@ async function checksForSha(identity: RepositoryIdentity, env: Env, sha: string 
 
 async function releaseForTag(identity: RepositoryIdentity, env: Env, version: string | null): Promise<{ url: string | null; available: boolean }> {
   if (!version) return { url: null, available: true };
-  const result = await githubRequest<Record<string, unknown>>(`${identity.apiPath}/releases/tags/${encodeURIComponent(`v${version}`)}`, env);
+  const result = await githubRequest<Record<string, unknown>>(`${identity.apiPath}/releases/tags/${encodeURIComponent(`v${version}`)}`, env, CONTENTS_READ);
   return { url: result.ok ? safeRepoUrl(object(result.value).html_url, identity) : null, available: result.ok || result.status === 404 };
 }
 
@@ -507,15 +522,15 @@ export async function dispatchGitDemo(
 ): Promise<GitHubResult<void>> {
   const identity = repositoryIdentity(env);
   if (!identity) return { ok: false, error: 'Configured GitHub repository is invalid.' };
-  if (!env.GITHUB_DEMO_TOKEN) return { ok: false, status: 503, error: 'Git demo dispatch is not configured.' };
+  if (!githubAppConfigured(env)) return { ok: false, status: 503, error: 'Git demo dispatch is not configured.' };
   const inputs = input.operation === 'start'
     ? { operation: 'start', bump: input.bump, request_id: input.requestId, pull_request: '' }
     : { operation: 'release', bump: 'patch', request_id: input.requestId, pull_request: String(input.pullRequest) };
   const result = await githubRequest<void>(
     `${identity.apiPath}/actions/workflows/${encodeURIComponent(WORKFLOW_FILE)}/dispatches`,
     env,
+    ACTIONS_WRITE,
     { method: 'POST', body: JSON.stringify({ ref: env.GITHUB_BRANCH || 'main', inputs }) },
-    true,
   );
   if (result.ok) responseCache.clear();
   return result;
@@ -535,13 +550,14 @@ export async function gitDemoPreflight(env: Env, bump: VersionBump): Promise<{
   const mainRef = await githubRequest<Record<string, unknown>>(
     `${identity.apiPath}/git/ref/heads/${encodeURIComponent(env.GITHUB_BRANCH || 'main')}`,
     env,
+    CONTENTS_READ,
   );
   const mainSha = bounded(object(object(mainRef.value).object).sha, 40);
   if (!mainRef.ok || !mainSha || !/^[0-9a-f]{40}$/.test(mainSha)) throw new Error('Current main identity is unavailable.');
   const [version, pulls, latest] = await Promise.all([
     packageVersion(identity, env, mainSha),
     listDemoPullRequests(identity, env),
-    githubRequest<Record<string, unknown>>(`${identity.apiPath}/releases/latest`, env),
+    githubRequest<Record<string, unknown>>(`${identity.apiPath}/releases/latest`, env, CONTENTS_READ),
   ]);
   const lastRelease = bounded(object(latest.value).tag_name, 60);
   if (!version.ok || !version.value || !pulls.ok || !latest.ok || !lastRelease || !/^v\d+\.\d+\.\d+$/.test(lastRelease)) {
@@ -550,6 +566,7 @@ export async function gitDemoPreflight(env: Env, bump: VersionBump): Promise<{
   const comparison = await githubRequest<Record<string, unknown>>(
     `${identity.apiPath}/compare/${encodeURIComponent(lastRelease)}...${mainSha}`,
     env,
+    CONTENTS_READ,
   );
   const comparisonValue = object(comparison.value);
   const commits = rows(comparisonValue.commits);

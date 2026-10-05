@@ -22,16 +22,14 @@ The authoritative Worker secret-name inventory is `config/worker-secrets.json`. 
 - `DEMO_ADMIN_PASSWORD` (until the shared operator gate replaces it);
 - `DEMO_WEBHOOK_SECRET`;
 - `GITHUB_WEBHOOK_SECRET`;
-- `GITHUB_READ_TOKEN` (optional, until the GitHub App replaces it);
-- `GITHUB_REPORTING_WRITE_TOKEN` (optional, until the GitHub App replaces it);
-- `GITHUB_DEMO_TOKEN` (until the GitHub App replaces it);
+- `GITHUB_APP_PRIVATE_KEY`;
 - `GITHUB_OAUTH_CLIENT_SECRET`;
 - `GOOGLE_OAUTH_CLIENT_SECRET`;
 - `MICROSOFT_OAUTH_CLIENT_SECRET`;
 - `CLOUDFLARE_BILLING_TOKEN` (optional);
 <!-- WORKER_SECRETS_END -->
 
-Public provider configuration is a Wrangler var, not a secret: `GITHUB_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_ID`, `MICROSOFT_OAUTH_CLIENT_ID`, `MICROSOFT_TENANT_ID`, and, once the SAML IdP exists, `SAML_IDP_CERT`, `SAML_IDP_ISSUER` and `SAML_SSO_URL`.
+Public provider configuration is a Wrangler var, not a secret: `GITHUB_APP_ID`, `GITHUB_APP_INSTALLATION_ID`, `GITHUB_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_ID`, `MICROSOFT_OAUTH_CLIENT_ID`, `MICROSOFT_TENANT_ID`, and, once the SAML IdP exists, `SAML_IDP_CERT`, `SAML_IDP_ISSUER` and `SAML_SSO_URL`.
 
 The demo holds no signing secret of its own. Visitor demo sessions and reporting cursors (`demo-session`), identity sessions, flows and access tokens (`identity-session`), and identity audit identifiers (`identity-audit`) use 32-byte keys that the vendored wg-edge `deriveKey` derives with HKDF-SHA256 from the shared Secrets Store `WG_SESSION_KEY` binding. Without that binding each feature fails closed. Rotating `WG_SESSION_KEY` signs every demo and identity session out at once.
 
@@ -43,7 +41,7 @@ Cloudflare usage collection uses the dedicated minimum-permission `CLOUDFLARE_BI
 
 Admin credentials are compared through fixed-length digests, state-changing form submissions require exact same-origin requests, and control failures fail closed. For production, place Cloudflare Access in front of `/admin` where practical while retaining the application-side authentication/authorization boundary.
 
-The controlled Git lifecycle reuses the admin boundary for start and merge/release actions. The browser sends credentials only to the same-origin Worker. A separate GitHub-managed `GIT_DEMO_PR_TOKEN` gives workflow automation only the repository access required by the controlled delivery path. The public `/assurance#traceability` check presents disclosure-safe lifecycle evidence; it is not an operator control.
+The controlled Git lifecycle reuses the admin boundary for start and merge/release actions. The browser sends credentials only to the same-origin Worker. The Worker and `git-demo.yml` both act as the `wg-github-app` GitHub App, which is installed on this repository only and holds no Administration, Secrets, Environments or Workflows permission. Each Worker call mints an installation token with only the permissions that call needs through the vendored wg-edge `githubAppToken` (`GITHUB_APP_PRIVATE_KEY`); `git-demo.yml` runs in the `git-demo` environment and mints a job-scoped token from its `APP_ID` and `APP_PRIVATE_KEY`, which GitHub revokes when the job ends. No personal GitHub token remains. The public `/assurance#traceability` check presents disclosure-safe lifecycle evidence; it is not an operator control.
 
 Crawler access combines dynamic `/robots.txt` policy with request gating for `OAI-SearchBot` and `ChatGPT-User`; robots rules alone are insufficient for user-triggered visits. `GPTBot` remains blocked so search/fetch access is separate from model-training access. No authorization decision relies on a crawler user agent.
 

@@ -2,6 +2,8 @@ import { createHash } from 'node:crypto';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { gitDemoReleaseResponse, gitDemoStartResponse, gitDemoStatusResponse } from '../src/api/git-demo';
 import { clearGitDemoCacheForTest, collectGitDemoStatus } from '../src/lib/git-demo';
+import { clearGitHubAppTokensForTest } from '../src/lib/github-app';
+import { appToken, appTokenResponse, githubAppEnv, mintedPermissions } from './helpers/github-app';
 import type { D1PreparedStatement, Env } from '../src/types';
 
 const repositoryUrl = 'https://github.com/SouthernGentlemen/wizardgang-architecture-demo';
@@ -31,8 +33,7 @@ function environment(): Env & { DEMO_DB: DemoDatabase } {
     DEMO_DB: new DemoDatabase(),
     GITHUB_REPO_URL: repositoryUrl,
     GITHUB_BRANCH: 'main',
-    GITHUB_READ_TOKEN: 'read-only-fixture-token',
-    GITHUB_DEMO_TOKEN: 'actions-write-fixture-token',
+    ...githubAppEnv,
     DEMO_ADMIN_USER: 'operator',
     DEMO_ADMIN_PASSWORD: 'test-admin-password',
   };
@@ -128,6 +129,8 @@ function fixtures(options: { pulls?: unknown[]; ciConclusion?: string | null; co
   ]);
   return vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
     const url = new URL(String(input));
+    const exchange = appTokenResponse(input, init);
+    if (exchange) return exchange;
     if (url.pathname.endsWith('/dispatches') && init?.method === 'POST') return new Response(null, { status: 204 });
     return (values.get(`${url.pathname}${url.search}`) ?? json({ missing: `${url.pathname}${url.search}` }, 500)).clone();
   });
@@ -144,7 +147,15 @@ function adminRequest(path: string, body: unknown): Request {
   });
 }
 
-beforeEach(() => clearGitDemoCacheForTest());
+beforeEach(() => {
+  clearGitDemoCacheForTest();
+  clearGitHubAppTokensForTest();
+});
+
+function authorizationFor(fetchMock: ReturnType<typeof fixtures>, suffix: string): string | null {
+  const call = fetchMock.mock.calls.find(([input]) => String(input).endsWith(suffix));
+  return call ? new Headers((call[1] as RequestInit | undefined)?.headers).get('authorization') : null;
+}
 afterEach(() => vi.restoreAllMocks());
 
 describe('live Git delivery lifecycle', () => {
@@ -194,7 +205,7 @@ describe('live Git delivery lifecycle', () => {
     expect(unauthenticated.status).toBe(401);
   });
 
-  it('dispatches only the allowlisted workflow with the server-side Actions token', async () => {
+  it('dispatches only the allowlisted workflow with an Actions-write App installation token', async () => {
     const fetchMock = fixtures({ pulls: [] });
     const env = environment();
     const response = await gitDemoStartResponse(adminRequest('/api/labs/git-delivery', { bump: 'patch' }), env);
@@ -205,11 +216,35 @@ describe('live Git delivery lifecycle', () => {
     const dispatch = fetchMock.mock.calls.find(([input]) => String(input).endsWith('/actions/workflows/git-demo.yml/dispatches'));
     expect(dispatch).toBeTruthy();
     const init = dispatch?.[1] as RequestInit;
-    expect(new Headers(init.headers).get('authorization')).toBe('Bearer actions-write-fixture-token');
+    expect(new Headers(init.headers).get('authorization')).toBe(`Bearer ${appToken({ actions: 'write' })}`);
     expect(JSON.parse(String(init.body))).toMatchObject({ ref: 'main', inputs: { operation: 'start', bump: 'patch', pull_request: '' } });
     expect(env.DEMO_DB.binds.join(' ')).not.toContain('test-admin-password');
     expect(env.DEMO_DB.binds.join(' ')).not.toContain(basic);
-    expect(env.DEMO_DB.binds.join(' ')).not.toContain('actions-write-fixture-token');
+    expect(env.DEMO_DB.binds.join(' ')).not.toContain(appToken({ actions: 'write' }));
+    expect(env.DEMO_DB.binds.join(' ')).not.toContain('PRIVATE KEY');
+  });
+
+  it('reads GitHub with an installation token holding only the permission each call needs', async () => {
+    const fetchMock = fixtures();
+    const status = await collectGitDemoStatus(environment(), requestId);
+    expect(status).toBeTruthy();
+    expect(authorizationFor(fetchMock, '/pulls?state=all&sort=updated&direction=desc&per_page=100')).toBe(`Bearer ${appToken({ pull_requests: 'read' })}`);
+    expect(authorizationFor(fetchMock, '/runs?event=workflow_dispatch&per_page=30')).toBe(`Bearer ${appToken({ actions: 'read' })}`);
+    expect(authorizationFor(fetchMock, `/commits/${headSha}/check-runs?per_page=100`)).toBe(`Bearer ${appToken({ checks: 'read' })}`);
+    const minted = mintedPermissions(fetchMock.mock.calls);
+    expect(minted.length).toBeGreaterThan(0);
+    for (const permissions of minted) {
+      expect(Object.keys(permissions)).toHaveLength(1);
+      expect(Object.values(permissions)).toEqual(['read']);
+    }
+    expect(new Set(minted.map((permissions) => JSON.stringify(permissions))).size).toBe(minted.length);
+  });
+
+  it('refuses a dispatch when the GitHub App is not configured', async () => {
+    const fetchMock = fixtures({ pulls: [] });
+    const response = await gitDemoStartResponse(adminRequest('/api/labs/git-delivery', { bump: 'patch' }), { ...environment(), GITHUB_APP_PRIVATE_KEY: undefined });
+    expect(response.status).toBe(503);
+    expect(fetchMock.mock.calls.some(([input]) => String(input).endsWith('/dispatches'))).toBe(false);
   });
 
   it('shows the complete target and release range to an authenticated operator before start', async () => {
