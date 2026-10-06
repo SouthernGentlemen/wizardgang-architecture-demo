@@ -41,7 +41,7 @@ describe('DEMO-297 Worker secret verification', () => {
   });
 
   it('executes the inventory parity validator across Env, local examples, SECURITY.md and the vendored registry', () => {
-    const result = spawnSync(process.execPath, ['scripts/validate-worker-secrets.mjs'], {
+    const result = spawnSync(process.execPath, ['scripts/validate-worker-secrets.ts'], {
       encoding: 'utf8',
       env: { ...process.env, NO_UPDATE_NOTIFIER: '1' },
     });

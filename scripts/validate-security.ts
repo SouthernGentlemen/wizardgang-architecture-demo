@@ -1,14 +1,14 @@
 import fs from 'node:fs';
 import { execFileSync } from 'node:child_process';
-import { isForbiddenSecretPath, scanPublicHistory, secretKinds } from './lib/public-history-secrets.mjs';
+import { isForbiddenSecretPath, scanPublicHistory, secretKinds } from './lib/public-history-secrets.ts';
 
 const tracked = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' }).split('\0').filter(Boolean);
-const failures = [];
+const failures: string[] = [];
 const retiredBroadCredential = ['DEMO', 'API', 'TOKEN'].join('_');
 
 for (const file of tracked) {
   if (isForbiddenSecretPath(file)) failures.push(`${file}: forbidden secret-file path`);
-  let text;
+  let text: string;
   try { text = fs.readFileSync(file, 'utf8'); } catch { continue; }
   for (const kind of secretKinds(text, [file])) failures.push(`${file}: possible ${kind}`);
   if (text.includes(retiredBroadCredential)) failures.push(`${file}: retired broad operator credential name is not allowed`);

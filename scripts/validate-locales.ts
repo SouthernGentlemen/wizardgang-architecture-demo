@@ -1,8 +1,8 @@
 import fs from 'node:fs';
 
 const config = JSON.parse(fs.readFileSync('config/i18n.json', 'utf8'));
-const failures = [];
-const resources = new Map();
+const failures: string[] = [];
+const resources = new Map<string, Record<string, unknown>>();
 
 for (const locale of config.supportedLocales) {
   const path = `src/i18n/locales/${locale}.json`;
@@ -43,7 +43,7 @@ else {
       const value = translations[locale];
       if (typeof value !== 'string' || !value.trim()) failures.push(`presentation.${key}.${locale} must be a non-empty string`);
       else if (typeof translations.en === 'string') {
-        const placeholders = (text) => [...text.matchAll(/\{[a-zA-Z0-9_.-]+\}/g)].map(([token]) => token).sort();
+        const placeholders = (text: string) => [...text.matchAll(/\{[a-zA-Z0-9_.-]+\}/g)].map(([token]) => token).sort();
         if (JSON.stringify(placeholders(value)) !== JSON.stringify(placeholders(translations.en))) {
           failures.push(`presentation.${key}.${locale} placeholders differ from English`);
         }

@@ -1,11 +1,11 @@
-import { execFileSync } from 'node:child_process';
+import { execFileSync, type ExecFileSyncOptions } from 'node:child_process';
 import { createHash } from 'node:crypto';
 
 const MAX_BLOB_BYTES = 2 * 1024 * 1024;
 const MAX_HISTORY_BYTES = 128 * 1024 * 1024;
 
 const forbiddenPath = /(^|\/)(?:\.dev\.vars|\.env(?:\.[^/]*)?|id_(?:rsa|ed25519|ecdsa)|[^/]+\.(?:pem|key|p12|pfx))$/i;
-const secretPatterns = [
+const secretPatterns: Array<[string, RegExp]> = [
   ['private key material', /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/],
   ['OpenAI-style secret', /\bsk-[A-Za-z0-9_-]{24,}\b/],
   ['GitHub token', /\bgh[pousr]_[A-Za-z0-9]{30,}\b/],
@@ -15,7 +15,7 @@ const assignedCredential = /\b(api[_-]?key|access[_-]?token|auth[_-]?token|passw
 
 // Exact hashes of four public synthetic values in historical test fixtures.
 // The exception requires both the original test path and the exact value hash.
-const safeFixtureHashes = {
+const safeFixtureHashes: Record<string, Record<string, string[]>> = {
   'tests/demo-329-react-operational-pages.test.ts': {
     password: ['68378387bee9df88e22372fa0fd160952f57644a1adff23d9e427991250aa251'],
   },
@@ -30,7 +30,7 @@ const safeFixtureHashes = {
   },
 };
 
-export function secretKinds(text, paths = []) {
+export function secretKinds(text: string, paths: string[] = []): string[] {
   const kinds = secretPatterns.filter(([, pattern]) => pattern.test(text)).map(([kind]) => kind);
   for (const match of text.matchAll(assignedCredential)) {
     const key = match[1].toLowerCase();
@@ -44,22 +44,28 @@ export function secretKinds(text, paths = []) {
   return kinds;
 }
 
-export function isForbiddenSecretPath(path) {
+export function isForbiddenSecretPath(path: string): boolean {
   return forbiddenPath.test(path);
 }
 
-function git(cwd, args, options = {}) {
+function git(cwd: string, args: string[], options: ExecFileSyncOptions = {}): Buffer {
   return execFileSync('git', args, {
     cwd,
     maxBuffer: 16 * 1024 * 1024,
     ...options,
-  });
+  }) as Buffer;
 }
 
-export function scanPublicHistory(cwd) {
-  const revisions = git(cwd, ['rev-list', '--all'], { encoding: 'utf8' }).trim().split('\n').filter(Boolean);
-  const blobs = new Map();
-  const findings = new Set();
+export interface PublicHistoryScan {
+  revisions: number;
+  blobs: number;
+  findings: string[];
+}
+
+export function scanPublicHistory(cwd: string): PublicHistoryScan {
+  const revisions = git(cwd, ['rev-list', '--all']).toString('utf8').trim().split('\n').filter(Boolean);
+  const blobs = new Map<string, { size: number; paths: Set<string> }>();
+  const findings = new Set<string>();
 
   for (const revision of revisions) {
     const entries = git(cwd, ['ls-tree', '-r', '-l', '-z', revision]).toString('utf8').split('\0');
@@ -70,12 +76,12 @@ export function scanPublicHistory(cwd) {
       const [, object, sizeText, path] = match;
       if (isForbiddenSecretPath(path)) findings.add(`${revision.slice(0, 12)}: forbidden secret-file path`);
       if (!blobs.has(object)) blobs.set(object, { size: Number(sizeText), paths: new Set() });
-      blobs.get(object).paths.add(path);
+      blobs.get(object)!.paths.add(path);
     }
   }
 
   let totalBytes = 0;
-  const readable = [];
+  const readable: string[] = [];
   for (const [object, { size }] of blobs) {
     if (size > MAX_BLOB_BYTES) {
       findings.add(`${object.slice(0, 12)}: blob exceeds the bounded secret-scan size`);
@@ -100,7 +106,7 @@ export function scanPublicHistory(cwd) {
       if (end < 0) throw new Error('Git blob batch ended before its object header');
       const header = output.toString('ascii', offset, end);
       const match = /^([0-9a-f]{40,64}) blob (\d+)$/.exec(header);
-      if (!match || match[1] !== object || Number(match[2]) !== blobs.get(object).size) {
+      if (!match || match[1] !== object || Number(match[2]) !== blobs.get(object)!.size) {
         throw new Error('Git blob batch did not match the reachable tree inventory');
       }
       const size = Number(match[2]);
@@ -109,7 +115,7 @@ export function scanPublicHistory(cwd) {
         throw new Error('Git blob batch contains a truncated object');
       }
       if (!content.includes(0)) {
-        for (const kind of secretKinds(content.toString('utf8'), [...blobs.get(object).paths])) {
+        for (const kind of secretKinds(content.toString('utf8'), [...blobs.get(object)!.paths])) {
           findings.add(`${object.slice(0, 12)}: possible ${kind}`);
         }
       }

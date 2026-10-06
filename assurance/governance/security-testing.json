@@ -171,7 +171,7 @@
       "fields": {
         "category": "Secret prevention",
         "testControl": "High-confidence tracked-file secret-pattern scan",
-        "currentEvidence": "`scripts/validate-security.mjs`",
+        "currentEvidence": "`scripts/validate-security.ts`",
         "status": "Active",
         "triggerCadence": "PR / main CI",
         "currentLimitationNextAction": "Not full secret scanning/SAST; selected patterns only"

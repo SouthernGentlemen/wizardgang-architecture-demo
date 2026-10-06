@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-461 — [BUILD] Port security and locale validators
-- Dependency: DEMO-459.
-- Why: Secret scanning and locale/governance checks are distinct from release tools.
-- Scope: Convert public-history secret helper and security, worker-secret, locale, and governance validators.
-- Non-goals: Do not change required CI names, credential boundaries, release identity, or deployment protection.
-- Acceptance: History scanning, redaction, Worker inventory, and locale inventory retain behavior.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: scripts/lib/public-history-secrets.mjs; scripts/validate-security.mjs; scripts/validate-worker-secrets.mjs; scripts/validate-locales.mjs; scripts/validate-governance-metadata.mjs
-
 ### DEMO-462 — [BUILD] Port the main browser audit to TypeScript
 - Dependency: DEMO-461.
 - Why: The main browser audit is a large single executable module.
