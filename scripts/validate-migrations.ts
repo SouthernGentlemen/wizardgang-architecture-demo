@@ -1,4 +1,4 @@
-import { spawnSync } from 'node:child_process';
+import { spawnSync, type SpawnSyncOptions } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -10,11 +10,11 @@ import { fileURLToPath } from 'node:url';
 const DATABASE_NAME = 'wizardgang';
 const SCHEMA_DIRECTORY = path.join('platform', 'migrations');
 
-export function schemaFiles(directory = SCHEMA_DIRECTORY) {
+export function schemaFiles(directory: string = SCHEMA_DIRECTORY): string[] {
   return fs.readdirSync(directory).filter((name) => /^\d{4}_[a-z0-9_]+\.sql$/.test(name)).sort().map((name) => path.join(directory, name));
 }
 
-export function migrationArguments(persistenceDirectory, file = schemaFiles()[0]) {
+export function migrationArguments(persistenceDirectory: string, file: string = schemaFiles()[0]): string[] {
   return ['d1', 'execute', DATABASE_NAME, '--local', '--persist-to', persistenceDirectory, '--file', file];
 }
 
@@ -23,7 +23,12 @@ export function runCleanLocalMigrations({
   persistenceDirectory,
   run = spawnSync,
   remove = fs.rmSync,
-} = {}) {
+}: {
+  temporaryRoot?: string;
+  persistenceDirectory?: string;
+  run?: (command: string, args: string[], options: SpawnSyncOptions) => { error?: Error; status: number | null };
+  remove?: (target: string, options: { recursive: boolean; force: boolean }) => void;
+} = {}): number {
   const ownsPersistenceDirectory = !persistenceDirectory;
   const resolvedPersistenceDirectory = persistenceDirectory
     ? path.resolve(persistenceDirectory)

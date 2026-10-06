@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-465 — [BUILD] Port contract and migration validators to TypeScript
-- Dependency: DEMO-464.
-- Why: Remaining contract and migration tools are a bounded operational family.
-- Scope: Convert contracts, migrations, React presentation, repository baseline, and scaffold validators.
-- Non-goals: Do not change required CI names, credential boundaries, release identity, or deployment protection.
-- Acceptance: Local D1 migrations and dry-run build checks remain credential-free and equivalent.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: scripts/validate-contracts.mjs; scripts/validate-migrations.mjs; scripts/validate-react-presentation.mjs; scripts/validate-repository-baseline.mjs; scripts/validate-scaffold.mjs
-
 ### DEMO-466 — [BUILD] Port lint and documentation validators to TypeScript
 - Dependency: DEMO-465.
 - Why: Lint and simple source-policy validators are the remaining general tooling group.

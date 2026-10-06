@@ -16,7 +16,7 @@ const HTML_PRODUCERS = new Map([
 ]);
 const AUDITED_RAW_HTML_COMPONENT = 'src/ui/audited-raw-html.tsx';
 
-function filesUnder(root) {
+function filesUnder(root: string): string[] {
   if (!existsSync(root)) return [];
   return readdirSync(root, { withFileTypes: true }).flatMap((entry) => {
     const name = path.join(root, entry.name);
@@ -24,9 +24,9 @@ function filesUnder(root) {
   });
 }
 
-export function validateReactPresentation(root = ROOT) {
-  const failures = [];
-  const report = (file, detail) => failures.push(`${file}: ${detail}`);
+export function validateReactPresentation(root: string = ROOT): string[] {
+  const failures: string[] = [];
+  const report = (file: string, detail: string) => failures.push(`${file}: ${detail}`);
   const sourceFiles = filesUnder(path.join(root, 'src')).filter((file) => /\.[cm]?[jt]sx?$/.test(file) && !file.endsWith('.d.ts'));
   for (const absolute of sourceFiles) {
     const file = path.relative(root, absolute).replaceAll(path.sep, '/');
@@ -36,7 +36,7 @@ export function validateReactPresentation(root = ROOT) {
     const browser = file.startsWith('src/browser/');
     const htmlResponse = /['"]content-type['"]\s*:\s*['"]text\/html|headers\.set\(['"]content-type['"],\s*['"]text\/html/.test(source);
     if (htmlResponse && file !== 'src/lib/http.ts' && !HTML_PRODUCERS.has(file)) report(file, 'HTML response must come from a declared React document/fragment');
-    if (htmlResponse && HTML_PRODUCERS.has(file) && !source.includes(HTML_PRODUCERS.get(file))) report(file, 'declared HTML producer no longer calls its React renderer');
+    if (htmlResponse && HTML_PRODUCERS.has(file) && !source.includes(HTML_PRODUCERS.get(file)!)) report(file, 'declared HTML producer no longer calls its React renderer');
     if (browser && /(?:react-router|@remix-run\/router|react-dom\/client|\bcreateBrowserRouter\b|\bhydrateRoot\b|\bcreateRoot\b)/.test(source)) report(file, 'client router or React root API in browser source');
     if (file !== AUDITED_RAW_HTML_COMPONENT && source.includes('dangerouslySetInnerHTML')) report(file, 'raw HTML insertion outside the audited component');
     if (file === 'src/lib/http.ts' && !/function safeError\(/.test(source)) report(file, 'safe HTML error exception moved');
@@ -47,7 +47,7 @@ export function validateReactPresentation(root = ROOT) {
         if (file === 'src/api/identity.ts' || file === 'src/api/sitemap.ts') return;
         if (file !== 'src/lib/http.ts' && /<\s*(?:!doctype|\/?[a-z][\w-]*)(?:\s|\/?>)/i.test(literal)) report(file, 'HTML constructed with a template string');
       },
-      NewExpression(node) {
+      NewExpression(node: any) {
         if (node.callee?.name !== 'Response') return;
         const body = node.arguments?.[0];
         if (body?.type === 'Literal' && typeof body.value === 'string' && /<\s*[a-z]/i.test(body.value) && file !== 'src/lib/http.ts') report(file, 'HTML response body is a raw literal');
@@ -68,7 +68,7 @@ export function validateReactPresentation(root = ROOT) {
   const sharedPolicy = http.match(/'content-security-policy':\s*`([^`]+)`/)?.[1];
   if (!sharedPolicy || sharedPolicy.includes("'unsafe-inline'")) report('src/lib/http.ts', 'shared CSP missing or permits unsafe-inline');
   const manifest = JSON.parse(readFileSync(path.join(root, 'docs/asset-manifest.json'), 'utf8'));
-  for (const [key, asset] of Object.entries(manifest.assets)) {
+  for (const [key, asset] of Object.entries<string>(manifest.assets)) {
     if (!/^\/assets\/[a-z0-9][a-z0-9.-]*-[a-zA-Z0-9_-]{8,}\.(?:js|css|png)$/.test(asset)) report('docs/asset-manifest.json', `unhashed browser asset ${key}: ${asset}`);
     const built = path.join(root, 'dist/client', asset.slice(1));
     if (existsSync(path.join(root, 'dist/client')) && !existsSync(built)) report('dist/client', `manifest asset missing from Static Assets: ${asset}`);
@@ -94,8 +94,8 @@ export function validateReactPresentation(root = ROOT) {
   return failures;
 }
 
-export function validateWorkerBundle(root = ROOT) {
-  const failures = [];
+export function validateWorkerBundle(root: string = ROOT): string[] {
+  const failures: string[] = [];
   const workerDir = path.join(root, 'dist/worker');
   const bundles = filesUnder(workerDir).filter((file) => file.endsWith('.js'));
   if (bundles.length !== 1) return [`dist/worker: expected exactly one Worker JavaScript bundle after npm run build:worker; found ${bundles.length}`];
@@ -103,7 +103,7 @@ export function validateWorkerBundle(root = ROOT) {
   const bundleLabel = path.relative(root, bundlePath).replaceAll(path.sep, '/');
   const bundle = readFileSync(bundlePath);
   const manifest = JSON.parse(readFileSync(path.join(root, 'docs/asset-manifest.json'), 'utf8'));
-  for (const [key, asset] of Object.entries(manifest.assets)) {
+  for (const [key, asset] of Object.entries<string>(manifest.assets)) {
     if (!key.startsWith('vendor.') && key !== 'social.card') continue;
     const browserAsset = path.join(root, 'dist/client', asset.slice(1));
     if (!existsSync(browserAsset)) { failures.push(`${asset}: missing browser asset`); continue; }

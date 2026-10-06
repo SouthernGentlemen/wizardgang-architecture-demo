@@ -2,9 +2,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = process.cwd();
-const failures = [];
-const exists = (file) => fs.existsSync(path.join(root, file));
-const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
+const failures: string[] = [];
+const exists = (file: string) => fs.existsSync(path.join(root, file));
+const read = (file: string) => fs.readFileSync(path.join(root, file), 'utf8');
 
 for (const requiredFile of [
   'docs/ARCHITECTURE-STANDARD.md',
@@ -45,7 +45,7 @@ for (const requiredFile of [
   if (!exists(requiredFile)) failures.push(`missing required file: ${requiredFile}`);
 }
 
-let manifest = [];
+let manifest: any = [];
 try {
   manifest = JSON.parse(read('docs/route-manifest.json'));
 } catch (error) {
@@ -134,7 +134,7 @@ for (const token of ['KINDS.log', 'SENSITIVE_KEY', '[redacted]', 'recentApplicat
   if (!logsLib.includes(token)) failures.push(`application log invariant missing: ${token}`);
 }
 
-function walk(directory) {
+function walk(directory: string): void {
   for (const item of fs.readdirSync(directory, { withFileTypes: true })) {
     if (item.name === 'node_modules' || item.name === '.git') continue;
     const full = path.join(directory, item.name);

@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { validateRepositoryBaseline } from '../scripts/validate-repository-baseline.mjs';
+import { validateRepositoryBaseline } from '../scripts/validate-repository-baseline.ts';
 
 const roots = [];
 const capabilityNames = ['typescript', 'react', 'vite', 'vitest', 'browser', 'cloudflareWorker', 'release'];
@@ -42,7 +42,7 @@ function createUniversalFixture() {
     packageManager: 'npm@12.1.0',
     allowScripts: {},
     scripts: {
-      'validate:repository-baseline': 'node scripts/validate-repository-baseline.mjs',
+      'validate:repository-baseline': 'node scripts/validate-repository-baseline.ts',
       'validate:history': 'node scripts/validate-history.ts',
       check: 'npm run validate:repository-baseline && npm run validate:history',
     },

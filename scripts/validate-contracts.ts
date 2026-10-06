@@ -1,25 +1,25 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-const failures = [];
+const failures: string[] = [];
 const HTTP_METHODS = new Set(['get', 'post', 'put', 'patch', 'delete', 'options', 'head', 'trace']);
 const openapi = JSON.parse(fs.readFileSync('contracts/openapi/openapi.json', 'utf8'));
 const reporting = JSON.parse(fs.readFileSync('contracts/assurance/reporting.schema.json', 'utf8'));
 
-function fail(message) {
+function fail(message: string): void {
   failures.push(message);
 }
 
-function resolveLocalRef(ref, root = openapi) {
+function resolveLocalRef(ref: unknown, root: any = openapi): any {
   if (typeof ref !== 'string' || !ref.startsWith('#/')) return undefined;
-  return ref.slice(2).split('/').reduce((value, segment) => {
+  return ref.slice(2).split('/').reduce((value: any, segment) => {
     if (!value || typeof value !== 'object') return undefined;
     const key = segment.replaceAll('~1', '/').replaceAll('~0', '~');
     return value[key];
   }, root);
 }
 
-function visit(value, pointer = '#', resourceRoot = openapi) {
+function visit(value: any, pointer = '#', resourceRoot: any = openapi): void {
   if (!value || typeof value !== 'object') return;
   const currentResourceRoot = !Array.isArray(value) && typeof value.$id === 'string' ? value : resourceRoot;
   if (
@@ -103,13 +103,13 @@ if (mcp.status !== 'working' || mcp.transport?.path !== '/mcp' || mcp.protocol?.
   fail('MCP manifest does not match the live transport');
 }
 for (const name of ['ping', 'list_demo_records']) {
-  const tool = mcp.tools?.find((candidate) => candidate.name === name);
+  const tool = mcp.tools?.find((candidate: any) => candidate.name === name);
   if (!tool?.inputSchema || !tool?.outputSchema || tool.annotations?.readOnlyHint !== true) {
     fail(`MCP manifest is missing the complete ${name} contract`);
   }
 }
 const webhooks = JSON.parse(fs.readFileSync('contracts/webhooks/events.json', 'utf8'));
-if (webhooks.status !== 'working' || !webhooks.events?.some((event) => event.type === 'demo.record.changed')) {
+if (webhooks.status !== 'working' || !webhooks.events?.some((event: any) => event.type === 'demo.record.changed')) {
   fail('webhook contract does not match the live event');
 }
 
