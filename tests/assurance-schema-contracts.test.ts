@@ -12,16 +12,28 @@ import { describe, expect, it } from 'vitest';
 import { deriveRuntimeSchemaDependencyDigests } from '../scripts/generate-assurance-runtime-binding.ts';
 import { createAssuranceSchemaLoader } from '../scripts/lib/assurance-validation.ts';
 import {
-  collectJsonSchemaDependencies,
+  collectJsonSchemaDependencies as collectUntypedDependencies,
   createFileSchemaLoader,
-  resolveJsonSchemaProperty,
-  validateJsonSchema,
+  resolveJsonSchemaProperty as resolveUntypedProperty,
+  validateJsonSchema as validateUntyped,
 } from '../scripts/lib/json-schema.ts';
+
+type SchemaLoader = ReturnType<typeof createFileSchemaLoader>;
+type SchemaOptions = { schemaPath?: string; loadSchema?: SchemaLoader };
+
+const validateJsonSchema = validateUntyped as (value: unknown, schema: unknown, options?: SchemaOptions) => unknown[];
+const resolveJsonSchemaProperty = resolveUntypedProperty as (
+  schema: unknown,
+  collectionPath: string,
+  propertyPath: string,
+  options?: SchemaOptions,
+) => unknown;
+const collectJsonSchemaDependencies = collectUntypedDependencies as (schema: unknown, options?: SchemaOptions) => string[];
 
 const root = process.cwd();
 const loadSchema = createFileSchemaLoader(root);
 const loadAssuranceSchema = createAssuranceSchemaLoader(root);
-const readJson = (relative) => JSON.parse(readFileSync(relative, 'utf8'));
+const readJson = (relative: string): any => JSON.parse(readFileSync(relative, 'utf8'));
 const advisorySchemaPath = 'contracts/assurance/advisory.schema.json';
 const advisorySchema = readJson(advisorySchemaPath);
 const riskSchemaPath = 'contracts/assurance/risk.schema.json';
@@ -67,7 +79,7 @@ function advisoryFixture() {
   };
 }
 
-function validateAdvisory(value) {
+function validateAdvisory(value: unknown) {
   return validateJsonSchema(value, advisorySchema, {
     schemaPath: advisorySchemaPath,
     loadSchema,
@@ -183,8 +195,8 @@ describe('shared assurance schema contracts', () => {
     ['controls', 'ISO27001-5.1'],
   ])('rejects invalid %s target IDs before referential resolution', (family, invalidId) => {
     const fixture = advisoryFixture();
-    const relationship = fixture.records[0].relationships.find((candidate) => candidate.relation === family);
-    relationship.to.native = invalidId;
+    const relationship = fixture.records[0].relationships.find((candidate: { relation: string }) => candidate.relation === family);
+    relationship!.to.native = invalidId;
     expect(validateAdvisory(fixture).length).toBeGreaterThan(0);
   });
 

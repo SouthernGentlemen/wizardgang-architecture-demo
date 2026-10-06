@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-469 — [TEST] Port assurance contract tests to TypeScript
-- Dependency: DEMO-468.
-- Why: Two assurance test files remain MJS.
-- Scope: Convert the filter-vocabulary and schema-contract tests to TS without changing assertions.
-- Non-goals: Do not remove unique behavioral, security, or release regression coverage.
-- Acceptance: Both tests run under the standard suite; no MJS assurance test remains.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: tests/assurance-filter-vocabulary.test.mjs; tests/assurance-schema-contracts.test.mjs
-
 ### DEMO-470 — [TEST] Port architecture documentation tests to TypeScript
 - Dependency: DEMO-469.
 - Why: A small set of retained documentation tests still use MJS.
