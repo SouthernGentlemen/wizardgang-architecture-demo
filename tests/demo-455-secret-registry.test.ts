@@ -10,7 +10,7 @@ import { derivedSecret, hasSessionKey } from '../src/lib/derived-keys';
 const ROOT = 'demo-455-test-session-key-with-at-least-32-characters';
 const LABELS = ['demo-session', 'identity-session', 'identity-audit'] as const;
 const RETIRED = [
-  'CLOUDFLARE_API_TOKEN', 'WEBHOOK_DEMO_SECRET', 'DEMO_SESSION_SECRET', 'IDENTITY_SESSION_SECRET', 'IDENTITY_AUDIT_HMAC_SECRET',
+  'CLOUDFLARE_API_TOKEN', 'DEMO_ADMIN_USER', 'DEMO_ADMIN_PASSWORD', 'WEBHOOK_DEMO_SECRET', 'DEMO_SESSION_SECRET', 'IDENTITY_SESSION_SECRET', 'IDENTITY_AUDIT_HMAC_SECRET',
   'GITHUB_CLIENT_ID', 'GITHUB_CLIENT_SECRET', 'GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'MICROSOFT_CLIENT_ID', 'MICROSOFT_CLIENT_SECRET',
 ];
 
@@ -65,29 +65,14 @@ describe('DEMO-455 secret registry normalization', () => {
       r2_buckets: Array<Record<string, string>>;
     };
     expect(wrangler.secrets_store_secrets).toEqual([
+      { binding: 'WG_OPS_TOKEN', store_id: expect.stringMatching(/^[0-9a-f]{32}$/), secret_name: 'WG_OPS_TOKEN' },
       { binding: 'WG_SESSION_KEY', store_id: expect.stringMatching(/^[0-9a-f]{32}$/), secret_name: 'WG_SESSION_KEY' },
     ]);
-    for (const name of ['GITHUB_OAUTH_CLIENT_ID', 'GOOGLE_OAUTH_CLIENT_ID', 'MICROSOFT_OAUTH_CLIENT_ID', 'MICROSOFT_TENANT_ID', 'CLOUDFLARE_DO_NAMESPACE']) {
+    for (const name of ['GITHUB_OAUTH_CLIENT_ID', 'GOOGLE_OAUTH_CLIENT_ID', 'MICROSOFT_OAUTH_CLIENT_ID', 'MICROSOFT_TENANT_ID']) {
       expect(wrangler.vars[name], name).toMatch(/\S/);
     }
+    expect(wrangler.vars).not.toHaveProperty('CLOUDFLARE_DO_NAMESPACE'); // The renamed Worker starts a new coordinator namespace.
     expect(wrangler.r2_buckets.every((bucket) => !('preview_bucket_name' in bucket))).toBe(true);
-    expect(fs.readFileSync('.github/workflows/deploy.yml', 'utf8')).not.toContain('vars.CLOUDFLARE_DO_NAMESPACE');
-  });
-
-  it('retires exactly the provisioned secrets that a committed var supersedes, right before the deploy ships the var', () => {
-    const listing = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'demo-455-')), 'names.json');
-    fs.writeFileSync(listing, JSON.stringify([{ name: 'MICROSOFT_TENANT_ID' }, { name: 'DEMO_WEBHOOK_SECRET' }, { name: 'IDENTITY_SESSION_SECRET' }]));
-    const result = spawnSync(process.execPath, ['scripts/validate-worker-secrets.mjs', '--superseded', listing], { encoding: 'utf8' });
-    expect(result.status, result.stderr).toBe(0);
-    expect(result.stdout).toBe('MICROSOFT_TENANT_ID\n');
-
-    const deploy = fs.readFileSync('.github/workflows/deploy.yml', 'utf8');
-    const preflight = deploy.indexOf('name: Verify production Worker secret names');
-    const retire = deploy.indexOf('name: Retire Worker secrets that committed vars supersede');
-    const workerDeploy = deploy.indexOf('name: Deploy tagged Worker source');
-    expect(retire).toBeGreaterThan(preflight);
-    expect(workerDeploy).toBeGreaterThan(retire);
-    expect(deploy.slice(retire, workerDeploy)).toContain('validate-worker-secrets.mjs --superseded');
   });
 
   it('skips only the IDs DEMO-460 renumbered, anchored to its exact immutable commit', () => {
@@ -101,7 +86,7 @@ describe('DEMO-455 secret registry normalization', () => {
     expect(lock.source).toBe('Wizard-Gang/baseline');
     expect(lock.commit).toMatch(/^[0-9a-f]{40}$/);
     const scripts = (JSON.parse(fs.readFileSync('package.json', 'utf8')) as { scripts: Record<string, string> }).scripts;
-    expect(scripts['check:platform']).toBe('node platform/conformance/cli.mjs pin');
+    expect(scripts['check:platform']).toBe('node platform/conformance/cli.mjs pin && node platform/conformance/cli.mjs wrangler --worker demo');
     expect(scripts.check).toContain('npm run check:platform');
     // Its own documentation links into baseline, so the local documentation check leaves the pinned copy alone.
     expect(fs.readFileSync('scripts/validate-documentation-cleanup.mjs', 'utf8')).toContain("!file.startsWith('platform/')");

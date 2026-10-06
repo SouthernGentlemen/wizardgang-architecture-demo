@@ -40,7 +40,7 @@ function webhookBrowserMessages(localization: LocalizationContext): Readonly<Rec
     verifiedDeliveries: exact('verified deliveries'),
     pollingEvery: exact('polling every'),
     liveUnavailable: exact('Live GitHub data is unavailable.'),
-    liveReadOnly: exact('Live feed is read-only. Sign in as a demo admin to start a release.'),
+    liveReadOnly: exact('Live feed is read-only. Sign in with the shared operator token to start a release.'),
     liveReady: exact('All required CI checks passed on this pull request.'),
     liveWaiting: exact('Merge & Release is available after all required CI checks pass.'),
   });
@@ -82,15 +82,15 @@ function WebhookPresentation({ env, localization }: Readonly<{ env: Env; localiz
         <div>
           <p className="eyebrow">{exact('Live Git delivery')}</p>
           <DemoHeading level={2} id={liveHeading}>{exact('Hotfix release lifecycle')}</DemoHeading>
-          <p>{exact('Follow actual GitHub checks, jobs, steps, and signed webhook deliveries. Release controls require demo admin authentication.')}</p>
+          <p>{exact('Follow actual GitHub checks, jobs, steps, and signed webhook deliveries. Release controls require shared operator authentication.')}</p>
         </div>
         <span className="badge" data-live-state="">{exact('Loading live GitHub data…')}</span>
       </div>
-      <p className="subtle" data-live-message="" role="status" aria-live="polite">{exact('Live feed is read-only. Sign in as a demo admin to start a release.')}</p>
+      <p className="subtle" data-live-message="" role="status" aria-live="polite">{exact('Live feed is read-only. Sign in with the shared operator token to start a release.')}</p>
       <div className="webhook-live-actions">
         <form data-live-auth="" className="webhook-live-auth">
-          <label>{exact('Admin user')}<input name="username" autoComplete="username" required /></label>
-          <label>{exact('Admin password')}<input name="password" type="password" autoComplete="current-password" required /></label>
+          <label>{exact('Operator user')}<input name="username" autoComplete="username" defaultValue="ops" readOnly required /></label>
+          <label>{exact('Operator token')}<input name="password" type="password" autoComplete="current-password" required /></label>
           <button type="submit" className="button">{exact('Unlock release controls')}</button>
         </form>
         <div data-live-controls="" hidden>

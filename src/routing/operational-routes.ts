@@ -12,6 +12,7 @@ import { billingScenarioResponse } from '../api/billing';
 import { securityTxtResponse } from '../api/security-policy';
 import { sitemapResponse } from '../api/sitemap';
 import { uiAssetResponse } from '../ui/assets';
+import { gitDemoPreflightResponse, gitDemoReleaseResponse, gitDemoStartResponse } from '../api/git-demo';
 import {
   createRouteRegistry,
   defineRouteModule,
@@ -129,7 +130,7 @@ const globalOperationalRoutes = [
     id: 'operations.admin', pattern: '/admin', methods: ['GET', 'POST'], kind: 'page', handler: adminHandler,
     title: 'Demo administration', description: 'Protected control surface for demo availability and ChatGPT fetch policy.',
     sourceModule: 'src/ui/admin.tsx', sourceExport: 'renderAdmin', visibility: 'private', crawling: 'allow', indexing: 'deny',
-    authentication: { mode: 'required', provider: 'admin-basic' }, authorization: { mode: 'policy', policy: 'admin' },
+    authentication: { mode: 'required', provider: 'wg-ops' }, authorization: { mode: 'policy', policy: 'admin' },
     sameOrigin: { mode: 'required', methods: ['POST'] },
     page: {
       parent: 'interfaces.frontend.index',
@@ -139,6 +140,24 @@ const globalOperationalRoutes = [
       navigation: 'none',
       architectureMap: false,
     },
+  }),
+  operationalRoute({
+    id: 'operations.admin-git-delivery', pattern: '/admin/api/labs/git-delivery', methods: ['GET', 'POST'], kind: 'api',
+    handler: (request, { env }) => request.method === 'GET'
+      ? gitDemoPreflightResponse(request, env)
+      : gitDemoStartResponse(request, env),
+    title: 'Git delivery operator action', description: 'Protected release preflight and start action behind the shared operator gate.',
+    sourceModule: 'src/api/git-demo.ts', sourceExport: 'gitDemoPreflightResponse', visibility: 'private',
+    authentication: { mode: 'required', provider: 'wg-ops' }, authorization: { mode: 'policy', policy: 'admin + release controls' },
+    sameOrigin: { mode: 'required', methods: ['POST'] }, offline: 'gated', crawling: 'deny',
+  }),
+  operationalRoute({
+    id: 'operations.admin-git-release', pattern: '/admin/api/labs/git-release', methods: ['POST'], kind: 'api',
+    handler: (request, { env }) => gitDemoReleaseResponse(request, env),
+    title: 'Git release operator action', description: 'Protected merge-and-release action behind the shared operator gate.',
+    sourceModule: 'src/api/git-demo.ts', sourceExport: 'gitDemoReleaseResponse', visibility: 'private',
+    authentication: { mode: 'required', provider: 'wg-ops' }, authorization: { mode: 'policy', policy: 'admin + release-ready controls' },
+    sameOrigin: { mode: 'required', methods: ['POST'] }, offline: 'gated', crawling: 'deny',
   }),
   operationalRoute({
     id: 'operations.offline', pattern: '/offline', methods: ['GET'], kind: 'page',

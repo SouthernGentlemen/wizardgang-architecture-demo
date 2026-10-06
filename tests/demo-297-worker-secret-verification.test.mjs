@@ -1,20 +1,24 @@
 import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
-import path from 'node:path';
-import process from 'node:process';
 import { spawnSync } from 'node:child_process';
+import process from 'node:process';
 
 const inventory = JSON.parse(fs.readFileSync('config/worker-secrets.json', 'utf8'));
-const deploy = fs.readFileSync('.github/workflows/deploy.yml', 'utf8');
-const provisioner = fs.readFileSync('scripts/provision-worker-secret.ts', 'utf8');
-const packageLock = JSON.parse(fs.readFileSync('package-lock.json', 'utf8'));
-const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-const wrangler = path.resolve('node_modules', '.bin', process.platform === 'win32' ? 'wrangler.cmd' : 'wrangler');
+const release = fs.readFileSync('.github/workflows/release.yml', 'utf8');
+const wrangler = fs.readFileSync('wrangler.jsonc', 'utf8');
 
 describe('DEMO-297 Worker secret verification', () => {
-  it('keeps a value-free, unique inventory that requires the registry names and holds no derived key', () => {
-    const names = inventory.secrets.map((entry) => entry.name);
-    expect(new Set(names).size).toBe(names.length);
+  it('keeps a value-free inventory aligned to the seven baseline demo Worker secrets', () => {
+    const names = inventory.secrets.map((entry) => entry.name).sort();
+    expect(names).toEqual([
+      'CLOUDFLARE_BILLING_TOKEN',
+      'DEMO_WEBHOOK_SECRET',
+      'GITHUB_APP_PRIVATE_KEY',
+      'GITHUB_OAUTH_CLIENT_SECRET',
+      'GITHUB_WEBHOOK_SECRET',
+      'GOOGLE_OAUTH_CLIENT_SECRET',
+      'MICROSOFT_OAUTH_CLIENT_SECRET',
+    ]);
     for (const entry of inventory.secrets) {
       expect(entry).not.toHaveProperty('value');
       expect(entry).not.toHaveProperty('secret');
@@ -22,65 +26,26 @@ describe('DEMO-297 Worker secret verification', () => {
       expect(typeof entry.owner).toBe('string');
       expect(typeof entry.capability).toBe('string');
     }
-    for (const name of ['DEMO_WEBHOOK_SECRET', 'GITHUB_OAUTH_CLIENT_SECRET', 'GOOGLE_OAUTH_CLIENT_SECRET', 'MICROSOFT_OAUTH_CLIENT_SECRET']) {
-      expect(inventory.secrets.find((candidate) => candidate.name === name)).toMatchObject({ required: true });
-    }
-    // Session, identity and audit keys are derived from the Secrets Store WG_SESSION_KEY, never Worker secrets.
-    for (const name of ['DEMO_SESSION_SECRET', 'IDENTITY_SESSION_SECRET', 'IDENTITY_AUDIT_HMAC_SECRET', 'WG_SESSION_KEY']) {
-      expect(names).not.toContain(name);
+    for (const retired of ['DEMO_ADMIN_USER', 'DEMO_ADMIN_PASSWORD', 'WG_SESSION_KEY', 'WG_OPS_TOKEN']) {
+      expect(names).not.toContain(retired);
     }
   });
 
-  it('runs name preflight before any production mutation and preserves pre/post identity continuity', () => {
-    const preflight = deploy.indexOf('name: Verify production Worker secret names');
-    const baseline = deploy.indexOf('name: Capture pre-deployment identity baseline');
-    const retire = deploy.indexOf('name: Retire Worker secrets that committed vars supersede');
-    const workerDeploy = deploy.indexOf('name: Deploy tagged Worker source');
-    const verify = deploy.indexOf('name: Verify public version, health, and identity continuity');
-
-    expect(preflight).toBeGreaterThan(-1);
-    expect(baseline).toBeGreaterThan(preflight);
-    expect(retire).toBeGreaterThan(baseline);
-    expect(workerDeploy).toBeGreaterThan(retire);
-    // Baseline owns the shared D1 schema; the demo deploy applies no migrations.
-    expect(deploy).not.toContain('d1 migrations apply');
-    expect(verify).toBeGreaterThan(workerDeploy);
-    expect(deploy).toContain('wrangler secret list --format json');
-    expect(deploy).toContain('validate-worker-secrets.mjs --provisioned');
-    expect(deploy).toContain('/auth/session');
-    expect(deploy).toContain("baseline.identity === 'ready'");
-    expect(deploy).toContain('regressedProviders');
+  it('uses the shared Secrets Store bindings and the pinned baseline deployment path', () => {
+    expect(wrangler).toContain('"binding": "WG_OPS_TOKEN"');
+    expect(wrangler).toContain('"binding": "WG_SESSION_KEY"');
+    expect(release).toContain('uses: Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@67b4b86847e0d635a3f6fe4c21618a25d5bc71a0');
+    expect(release).toContain('worker: demo');
+    expect(release).toContain('secrets: inherit');
+    expect(fs.existsSync('.github/workflows/deploy.yml')).toBe(false);
   });
 
-  it('executes the inventory parity validator across Env, local examples, and SECURITY.md', () => {
+  it('executes the inventory parity validator across Env, local examples, SECURITY.md and the vendored registry', () => {
     const result = spawnSync(process.execPath, ['scripts/validate-worker-secrets.mjs'], {
       encoding: 'utf8',
       env: { ...process.env, NO_UPDATE_NOTIFIER: '1' },
     });
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain('Worker secret names across inventory, Env, .dev.vars.example, and SECURITY.md');
-  });
-
-  it('uses the machine-readable flag supported by the locked Wrangler secret-list command', () => {
-    expect(packageLock.packages['node_modules/wrangler']?.version).toBe(packageJson.devDependencies.wrangler);
-    const help = spawnSync(wrangler, ['secret', 'list', '--help'], {
-      encoding: 'utf8',
-      env: { ...process.env, NO_UPDATE_NOTIFIER: '1' },
-    });
-    const output = `${help.stdout}\n${help.stderr}`;
-    expect(help.status, output).toBe(0);
-    expect(output).toMatch(/--format\b/);
-    expect(output).not.toMatch(/--json\b/);
-
-    const command = deploy.match(/npx wrangler secret list[^\n]*/)?.[0] ?? '';
-    expect(command).toContain('--format json');
-    expect(command).not.toMatch(/--json\b/);
-  });
-
-  it('provisions generated values only through wrangler stdin', () => {
-    expect(provisioner).toContain("spawn(executable, ['wrangler', 'secret', 'put', name]");
-    expect(provisioner).toContain("child.stdin.end(value + '\\n')");
-    expect(provisioner).not.toContain('console.log(value)');
-    expect(provisioner).not.toContain('process.stdout.write(value)');
   });
 });

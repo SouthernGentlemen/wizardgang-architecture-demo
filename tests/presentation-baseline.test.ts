@@ -792,7 +792,7 @@ async function renderSurface(surface: Surface, locale: string) {
   const path = localizedPath(surface.path, locale);
   const headers = new Headers({ accept: 'text/html' });
   if (surface.authorization) headers.set('authorization', surface.authorization);
-  const response = await routeRequest(new Request(new URL(path, ORIGIN), { headers }), environment());
+  const response = await routeRequest(new Request(new URL(path, ORIGIN), { headers }), environment(), { adminAuthorized: Boolean(surface.authorization) });
   expect(response.status, `${surface.id} ${locale}`).toBe(surface.expectedStatus);
   const html = await response.text();
   const parsed = parseDocument(html, new URL(path, ORIGIN).toString());
@@ -1083,7 +1083,7 @@ describe('DEMO-338 inline-code boundary', () => {
         const path = localizedPath(surface.path, locale);
         const headers = new Headers({ accept: 'text/html' });
         if (surface.authorization) headers.set('authorization', surface.authorization);
-        requests.push({ label: `${surface.id} ${locale}`, response: await routeRequest(new Request(new URL(path, ORIGIN), { headers }), environment()) });
+        requests.push({ label: `${surface.id} ${locale}`, response: await routeRequest(new Request(new URL(path, ORIGIN), { headers }), environment(), { adminAuthorized: Boolean(surface.authorization) }) });
       }
     }
     for (const mode of ['accessible', 'broken']) {

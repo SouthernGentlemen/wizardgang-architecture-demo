@@ -75,24 +75,9 @@ sameNames(
   inventoryNames,
 );
 
-// Baseline config/secrets.json is the one secret registry; the vendored platform/ mirrors the demo's Worker secrets.
-// Each name below differs from it on purpose until the queued task that closes the gap, and never otherwise.
-const REGISTRY_TRANSITIONS = Object.freeze({
-  registryOnly: Object.freeze({}),
-  demoOnly: Object.freeze({
-    DEMO_ADMIN_USER: 'DEMO-459 moves /admin to the wg-edge operator gate',
-    DEMO_ADMIN_PASSWORD: 'DEMO-459 moves /admin to the wg-edge operator gate',
-  }),
-});
+// Baseline config/secrets.json is the one secret registry; the vendored platform/ mirrors the demo Worker secrets.
 const registryNames = [...DESIRED.workers.demo.secrets];
-sameNames(
-  'Baseline secret registry demo Worker secrets (vendored platform/)',
-  [...inventoryNames.filter((name) => !Object.hasOwn(REGISTRY_TRANSITIONS.demoOnly, name)), ...Object.keys(REGISTRY_TRANSITIONS.registryOnly)],
-  registryNames,
-);
-for (const name of Object.keys(REGISTRY_TRANSITIONS.demoOnly)) {
-  if (registryNames.includes(name)) fail(`${name} is now a registry name; drop its transition.`);
-}
+sameNames('Baseline secret registry demo Worker secrets (vendored platform/)', inventoryNames, registryNames);
 
 // A Worker cannot hold a secret and a var of the same name, and a registry secret must never be committed as a var.
 const wrangler = parseJsonc(fs.readFileSync(path.join(root, 'wrangler.jsonc'), 'utf8'));

@@ -81,6 +81,7 @@ describe('DEMO-354 acceptance gate ownership', () => {
     expect(npmRunSequence(packageJson.scripts.build)).toEqual(['build:client', 'build:worker']);
     expect(packageJson.scripts['build:client']).toBe('npm run generate:assets');
     expect(commandSequence(packageJson.scripts['build:worker'])).toEqual([
+      'node scripts/generate-worker-entry.ts',
       'wrangler deploy --dry-run --outdir dist/worker',
       'npm run validate:worker-bundle',
     ]);

@@ -5,87 +5,45 @@ import { describe, expect, it } from 'vitest';
 
 const read = (file) => fs.readFileSync(file, 'utf8');
 const pkg = JSON.parse(read('package.json'));
-const deployWorkflow = read('.github/workflows/deploy.yml');
 const releaseWorkflow = read('.github/workflows/release.yml');
 const releaseManagement = read('docs/RELEASE-MANAGEMENT.md');
-
-function stepPosition(name) {
-  const marker = `      - name: ${name}\n`;
-  return deployWorkflow.indexOf(marker);
-}
+const vendor = JSON.parse(read('platform/vendor.lock.json'));
 
 describe('DEMO-366 published immutable release deployment boundary', () => {
   it('fails closed instead of exposing raw npm Wrangler production deployment', () => {
     expect(pkg.scripts.deploy).toBe('node scripts/refuse-production-deploy.ts');
     expect(pkg.scripts.deploy).not.toContain('wrangler');
-
     const result = spawnSync(process.execPath, ['scripts/refuse-production-deploy.ts'], { encoding: 'utf8' });
     expect(result.status).toBe(1);
     expect(result.stderr).toContain('Production deployment is release-workflow only.');
   });
 
-  it('requires the requested ref to be the exact annotated semantic tag at checked-out HEAD', () => {
-    expect(deployWorkflow).toContain('REQUESTED_RELEASE: ${{ inputs.ref }}');
-    expect(deployWorkflow).toContain('^v(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$');
-    expect(deployWorkflow).toContain('git cat-file -t "$tag_ref"');
-    expect(deployWorkflow).toContain('tag_object="$(git rev-parse "$tag_ref")"');
-    expect(deployWorkflow).toContain('tag_commit="$(git rev-parse "$tag_ref^{commit}")"');
-    expect(deployWorkflow).toContain('checkout_commit="$(git rev-parse HEAD)"');
-    expect(deployWorkflow).toContain('package_version="$(node -p');
-    expect(deployWorkflow).toContain('"v$package_version" != "$tag"');
+  it('publishes the immutable GitHub Release before invoking the shared deploy workflow', () => {
+    const publish = releaseWorkflow.indexOf('Publish GitHub Release from tag and GitHub history');
+    const deploy = releaseWorkflow.indexOf('\n  deploy:\n');
+    expect(publish).toBeGreaterThan(-1);
+    expect(deploy).toBeGreaterThan(publish);
+    expect(releaseWorkflow.slice(deploy)).toContain('needs: reproduce');
   });
 
-  it('requires an already-published GitHub Release and the same remote annotated tag object and commit', () => {
-    expect(deployWorkflow).toContain('repos/$GITHUB_REPOSITORY/releases/tags/$tag');
-    expect(deployWorkflow).toContain('"$release_draft" != "false"');
-    expect(deployWorkflow).toContain('-z "$release_published_at"');
-    expect(deployWorkflow).toContain('repos/$GITHUB_REPOSITORY/git/ref/tags/$tag');
-    expect(deployWorkflow).toContain('"$remote_type" != "tag"');
-    expect(deployWorkflow).toContain('"$remote_tag_object" != "$tag_object"');
-    expect(deployWorkflow).toContain('repos/$GITHUB_REPOSITORY/git/tags/$remote_tag_object');
-    expect(deployWorkflow).toContain('"$remote_target_type" != "commit"');
-    expect(deployWorkflow).toContain('"$remote_target_commit" != "$checkout_commit"');
+  it('pins deployment to the exact vendored baseline commit and passes exact release identity', () => {
+    expect(vendor.source).toBe('Wizard-Gang/baseline');
+    expect(vendor.commit).toBe('67b4b86847e0d635a3f6fe4c21618a25d5bc71a0');
+    expect(releaseWorkflow).toContain(`uses: Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@${vendor.commit}`);
+    expect(releaseWorkflow).toContain('worker: demo');
+    expect(releaseWorkflow).toContain('tag: ${{ github.ref_name }}');
+    expect(releaseWorkflow).toContain('expected_sha: ${{ github.sha }}');
+    expect(releaseWorkflow).toContain('secrets: inherit');
+    expect(fs.existsSync('.github/workflows/deploy.yml')).toBe(false);
   });
 
-  it('keeps every production mutation downstream of published-release verification', () => {
-    const verify = stepPosition('Verify published immutable release identity');
-    const retire = stepPosition('Retire Worker secrets that committed vars supersede');
-    const deploy = stepPosition('Deploy tagged Worker source');
-    expect(verify).toBeGreaterThan(-1);
-    expect(retire).toBeGreaterThan(verify);
-    expect(deploy).toBeGreaterThan(retire);
-    expect(deployWorkflow).not.toContain('d1 migrations apply');
-  });
-
-  it('validates the exact tag with migrated local D1 state before production preflight', () => {
-    const start = stepPosition('Validate reviewed tagged source');
-    const end = stepPosition('Verify production Worker secret names');
-    expect(start).toBeGreaterThan(-1);
-    expect(end).toBeGreaterThan(start);
-    const validation = deployWorkflow.slice(start, end);
-    const ordered = [
-      'local_d1_dir="$(mktemp -d)"',
-      'trap \'rm -rf -- "$local_d1_dir"\' EXIT',
-      'export WG_LOCAL_D1_PERSIST_TO="$local_d1_dir"',
-      'npm run check',
-    ];
-    let position = -1;
-    for (const part of ordered) {
-      const next = validation.indexOf(part, position + 1);
-      expect(next, `${part} must follow the preceding tagged-source validation step`).toBeGreaterThan(position);
-      position = next;
-    }
-    expect(releaseManagement).toContain('fresh temporary local D1 persistence directory');
-  });
-
-  it('preserves release-triggered deployment and main-only published-tag recovery', () => {
-    expect(releaseWorkflow).toContain('uses: ./.github/workflows/deploy.yml');
-    expect(releaseWorkflow).toContain('ref: ${{ github.ref_name }}');
-    expect(deployWorkflow).toContain('if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]');
-    expect(deployWorkflow).toContain('"$GITHUB_REF" == "refs/heads/main" && -z "$RELEASE_ORIGIN"');
-    expect(deployWorkflow).toContain('"$GITHUB_REF" == "refs/tags/$tag" && "$RELEASE_ORIGIN" == "exact-tag-dispatch"');
-    expect(deployWorkflow).toContain('elif [[ "$GITHUB_EVENT_NAME" == "push" ]]');
-    expect(deployWorkflow).toContain('"$GITHUB_REF" != "refs/tags/$tag"');
-    expect(releaseManagement).toContain('already published immutable semantic tag');
+  it('keeps tagged-source reproduction before publication and deployment', () => {
+    const reproduce = releaseWorkflow.indexOf('Reproduce the tagged state');
+    const publish = releaseWorkflow.indexOf('Publish GitHub Release from tag and GitHub history');
+    expect(reproduce).toBeGreaterThan(-1);
+    expect(publish).toBeGreaterThan(reproduce);
+    expect(releaseWorkflow.slice(reproduce, publish)).toContain('npm run check');
+    expect(releaseWorkflow.slice(reproduce, publish)).toContain('npm run security:dependency-advisories');
+    expect(releaseManagement).toContain("baseline's `deploy-worker.yml`");
   });
 });

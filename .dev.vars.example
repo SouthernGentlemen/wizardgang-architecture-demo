@@ -1,8 +1,6 @@
 # Copy to .dev.vars for local development. Never commit real credentials.
 # Worker secret names in this block must match config/worker-secrets.json.
 # WORKER_SECRETS_START
-DEMO_ADMIN_USER=admin
-DEMO_ADMIN_PASSWORD=replace-me-with-a-local-only-value
 DEMO_WEBHOOK_SECRET=replace-me-with-a-local-only-webhook-secret
 GITHUB_WEBHOOK_SECRET=replace-me-with-a-local-only-github-webhook-secret
 GITHUB_APP_PRIVATE_KEY=replace-me-with-a-local-only-pkcs8-key
@@ -14,8 +12,9 @@ MICROSOFT_OAUTH_CLIENT_SECRET=replace-me
 # CLOUDFLARE_BILLING_TOKEN=replace-me-with-account-analytics-read-and-billing-read
 # WORKER_SECRETS_END
 
-# Sessions and identity derive their keys from the Secrets Store binding WG_SESSION_KEY (see wrangler.jsonc), which
-# local development simulates. Seed the local store once with a local-only value of at least 32 characters:
+# The shared shell gates /admin with WG_OPS_TOKEN and sessions derive keys from WG_SESSION_KEY.
+# Local development simulates both Secrets Store bindings; seed local-only values before starting Wrangler:
+#   npx wrangler secrets-store secret create e63e666172544d5c8c4a656ff28ac32a --name WG_OPS_TOKEN --scopes workers
 #   npx wrangler secrets-store secret create e63e666172544d5c8c4a656ff28ac32a --name WG_SESSION_KEY --scopes workers
 
 # Public provider configuration lives in wrangler.jsonc vars. Override it here only to test other provider clients.
@@ -37,7 +36,7 @@ MICROSOFT_OAUTH_CLIENT_SECRET=replace-me
 
 # Optional live operations telemetry identifiers. The token itself is declared above.
 # CLOUDFLARE_ACCOUNT_ID=replace-me
-# CLOUDFLARE_WORKER_NAME=wizardgang-architecture-demo
+# CLOUDFLARE_WORKER_NAME=demo
 # CLOUDFLARE_D1_DATABASE_ID=replace-me
 # CLOUDFLARE_R2_BUCKET=wizardgang
 

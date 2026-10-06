@@ -4,6 +4,7 @@ import { getDemoControl } from '../src/lib/demo-control';
 import { getCrawlerControl } from '../src/lib/crawler-control';
 import { json, readJson } from '../src/lib/http';
 import type { Env } from '../src/types';
+import { createDemoWorker } from '../src/index';
 
 const baseEnv = {
   GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
@@ -13,23 +14,22 @@ const baseEnv = {
 } as Env;
 
 describe('admin boundary', () => {
-  it('requires configured credentials and rejects an incorrect secret', async () => {
-    const missing = await requireAdmin(new Request('https://demo.wizardgang.ai/admin'), { ...baseEnv, DEMO_ADMIN_PASSWORD: undefined });
+  it('requires the shared shell credential and rejects an incorrect secret', async () => {
+    const worker = createDemoWorker({ version: '0.31.0', commit: 'a'.repeat(40) });
+    const missing = await worker.fetch(new Request('https://demo.wizardgang.ai/admin'), { ...baseEnv, WG_APP: 'demo' } as never, {} as never);
     expect(missing).toBeInstanceOf(Response);
     expect((missing as Response).status).toBe(503);
 
-    const invalid = await requireAdmin(new Request('https://demo.wizardgang.ai/admin', {
-      headers: { authorization: `Basic ${btoa('operator:wrong')}` },
-    }), baseEnv);
+    const invalid = await worker.fetch(new Request('https://demo.wizardgang.ai/admin', {
+      headers: { authorization: `Basic ${btoa('ops:wrong')}` },
+    }), { ...baseEnv, WG_APP: 'demo', WG_OPS_TOKEN: 'correct horse battery staple' } as never, {} as never);
     expect(invalid).toBeInstanceOf(Response);
     expect((invalid as Response).status).toBe(401);
   });
 
-  it('accepts exact credentials without exposing the password', async () => {
-    const identity = await requireAdmin(new Request('https://demo.wizardgang.ai/admin', {
-      headers: { authorization: `Basic ${btoa('operator:correct horse battery staple')}` },
-    }), baseEnv);
-    expect(identity).toEqual({ username: 'operator' });
+  it('accepts only an authenticated shell decision without reading a password', () => {
+    expect(requireAdmin(true)).toEqual({ username: 'ops' });
+    expect((requireAdmin(false) as Response).status).toBe(401);
   });
 
   it('requires an exact same-origin mutation', () => {

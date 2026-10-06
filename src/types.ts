@@ -47,8 +47,6 @@ export interface Env {
   GITHUB_BRANCH: string;
 
   // WORKER_SECRETS_START
-  DEMO_ADMIN_USER?: string;
-  DEMO_ADMIN_PASSWORD?: string;
   DEMO_WEBHOOK_SECRET?: string;
   GITHUB_WEBHOOK_SECRET?: string;
   GITHUB_APP_PRIVATE_KEY?: string;
@@ -58,7 +56,8 @@ export interface Env {
   CLOUDFLARE_BILLING_TOKEN?: string;
   // WORKER_SECRETS_END
 
-  // Secrets Store binding; wg-edge derives demo-session, identity-session and identity-audit from it.
+  // Shared Secrets Store bindings: the shell gates /admin with WG_OPS_TOKEN; derived session keys use WG_SESSION_KEY.
+  WG_OPS_TOKEN?: SecretsStoreSecret | string;
   WG_SESSION_KEY?: SecretsStoreSecret | string;
 
   // The public wg-github-app identity; wg-edge githubAppToken signs with GITHUB_APP_PRIVATE_KEY.

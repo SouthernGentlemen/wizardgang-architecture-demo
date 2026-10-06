@@ -23,14 +23,11 @@ function env(state: 'online' | 'offline' = 'online', crawlerState: 'enabled' | '
     },
     GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
-    DEMO_ADMIN_USER: 'operator',
-    DEMO_ADMIN_PASSWORD: 'test-admin-password',
     WG_SESSION_KEY: 's'.repeat(32),
     BILLING_DEMO_MONTHLY_BUDGET_USD: '10',
   };
 }
 
-const basic = `Basic ${btoa('operator:test-admin-password')}`;
 
 describe('public route contract', () => {
   it('resolves every registered human demo route and links to its exact primary source', async () => {
@@ -48,7 +45,7 @@ describe('public route contract', () => {
   it('resolves root, protected admin, offline, health, version, and logs surfaces', async () => {
     const environment = env();
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/'), environment)).status).toBe(200);
-    const admin = await routeRequest(new Request('https://demo.wizardgang.ai/admin', { headers: { authorization: basic } }), environment);
+    const admin = await routeRequest(new Request('https://demo.wizardgang.ai/admin'), environment, { adminAuthorized: true });
     expect(admin.status).toBe(200);
     const adminHtml = await admin.text();
     expect(adminHtml).toContain('ChatGPT web access');
@@ -359,22 +356,20 @@ describe('offline routing matrix', () => {
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/version'), environment)).status).toBe(200);
     expect((await routeRequest(new Request('https://demo.wizardgang.ai/api/operations/health'), environment)).status).toBe(503);
     expect((await routeRequest(new Request(`https://demo.wizardgang.ai/assets/${browserAssetName('social.card')}`), environment)).status).toBe(200);
-    expect((await routeRequest(new Request('https://demo.wizardgang.ai/admin', { headers: { authorization: basic } }), environment)).status).toBe(200);
+    expect((await routeRequest(new Request('https://demo.wizardgang.ai/admin'), environment, { adminAuthorized: true })).status).toBe(200);
   });
 
   it('persists and audits an authenticated same-origin admin transition without binding credentials', async () => {
     const environment = env();
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/admin', {
       method: 'POST',
-      headers: { authorization: basic, origin: 'https://demo.wizardgang.ai', 'content-type': 'application/x-www-form-urlencoded' },
+      headers: { origin: 'https://demo.wizardgang.ai', 'content-type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({ state: 'offline', message: 'Planned public demonstration window.' }),
-    }), environment);
+    }), environment, { adminAuthorized: true });
     expect(response.status).toBe(303);
     expect(environment.WG_DB.records<{ state: string }>('control').get('demo')?.body.state).toBe('offline');
     expect(environment.WG_DB.events<{ eventType: string }>('audit').map((event) => event.body.eventType)).toContain('demo_state_changed');
     expect(environment.WG_DB.events('log').length).toBeGreaterThan(0);
-    expect(environment.WG_DB.dump()).not.toContain('test-admin-password');
-    expect(environment.WG_DB.dump()).not.toContain(basic);
   });
 
   it('persists and audits the authenticated ChatGPT access switch', async () => {
@@ -390,15 +385,14 @@ describe('offline routing matrix', () => {
     const environment = env();
     const response = await routeRequest(new Request('https://demo.wizardgang.ai/admin', {
       method: 'POST',
-      headers: { authorization: basic, origin: 'https://demo.wizardgang.ai', 'content-type': 'application/x-www-form-urlencoded' },
+      headers: { origin: 'https://demo.wizardgang.ai', 'content-type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({ control: 'chatgpt-crawl', state: 'enabled' }),
-    }), environment);
+    }), environment, { adminAuthorized: true });
     expect(response.status).toBe(303);
     expect(response.headers.get('location')).toContain('changed=chatgpt-crawl-enabled');
     expect(response.headers.get('location')).toContain('#chatgpt-crawl');
     expect(environment.WG_DB.records<{ state: string }>('control').get('crawler')?.body.state).toBe('enabled');
     expect(environment.WG_DB.events<{ eventType: string }>('audit').map((event) => event.body.eventType)).toContain('chatgpt_crawl_access_changed');
     expect(environment.WG_DB.events<{ event_key: string }>('log').map((event) => event.body.event_key)).toContain('chatgpt_crawl_access_changed');
-    expect(environment.WG_DB.dump()).not.toContain('test-admin-password');
   });
 });

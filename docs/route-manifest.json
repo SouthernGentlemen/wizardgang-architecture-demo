@@ -1077,7 +1077,7 @@
     "browser_html": "page",
     "authentication": {
       "mode": "required",
-      "provider": "admin-basic"
+      "provider": "wg-ops"
     },
     "authorization": {
       "mode": "policy",
@@ -1108,6 +1108,105 @@
     "source": {
       "module": "src/ui/admin.tsx",
       "exportName": "renderAdmin",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.admin-git-delivery",
+    "route": "/admin/api/labs/git-delivery",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "private",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "required",
+      "provider": "wg-ops"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "admin + release controls"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "deny",
+      "indexing": "deny"
+    },
+    "title": "Git delivery operator action",
+    "description": "Protected release preflight and start action behind the shared operator gate.",
+    "docs": [
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/git-demo.ts",
+      "exportName": "gitDemoPreflightResponse",
+      "tests": [
+        "tests/operational-route-registry.test.ts",
+        "tests/router.test.ts"
+      ]
+    },
+    "status": "working"
+  },
+  {
+    "id": "operations.admin-git-release",
+    "route": "/admin/api/labs/git-release",
+    "methods": [
+      "POST"
+    ],
+    "kind": "api",
+    "visibility": "private",
+    "browser_html": "never",
+    "authentication": {
+      "mode": "required",
+      "provider": "wg-ops"
+    },
+    "authorization": {
+      "mode": "policy",
+      "policy": "admin + release-ready controls"
+    },
+    "same_origin": {
+      "mode": "required",
+      "methods": [
+        "POST"
+      ]
+    },
+    "offline": {
+      "mode": "gated"
+    },
+    "cache": {
+      "mode": "no-store"
+    },
+    "crawler": {
+      "crawling": "deny",
+      "indexing": "deny"
+    },
+    "title": "Git release operator action",
+    "description": "Protected merge-and-release action behind the shared operator gate.",
+    "docs": [
+      "docs/OPERATIONS.md",
+      "docs/ROUTE-REGISTRY.md"
+    ],
+    "source": {
+      "module": "src/api/git-demo.ts",
+      "exportName": "gitDemoReleaseResponse",
       "tests": [
         "tests/operational-route-registry.test.ts",
         "tests/router.test.ts"
@@ -2135,8 +2234,7 @@
     "id": "platform.git.delivery",
     "route": "/api/labs/git-delivery",
     "methods": [
-      "GET",
-      "POST"
+      "GET"
     ],
     "kind": "api",
     "visibility": "public",
@@ -2145,14 +2243,10 @@
       "mode": "anonymous"
     },
     "authorization": {
-      "mode": "policy",
-      "policy": "GET public status; POST admin authorization + GitHub preflight/release controls"
+      "mode": "none"
     },
     "same_origin": {
-      "mode": "required",
-      "methods": [
-        "POST"
-      ]
+      "mode": "not-required"
     },
     "offline": {
       "mode": "gated"
@@ -2165,56 +2259,7 @@
       "indexing": "deny"
     },
     "title": "Git delivery laboratory API",
-    "description": "Public status and same-origin administrator-controlled Git delivery demonstration start.",
-    "docs": [
-      "docs/ROUTE-REGISTRY.md"
-    ],
-    "source": {
-      "module": "src/platform/route-capabilities/git.ts",
-      "exportName": "gitLaboratoryCapability",
-      "tests": [
-        "tests/platform-laboratory-routing.test.ts",
-        "tests/git-demo.test.ts",
-        "tests/router.test.ts"
-      ]
-    },
-    "status": "working"
-  },
-  {
-    "id": "platform.git.release",
-    "route": "/api/labs/git-release",
-    "methods": [
-      "POST"
-    ],
-    "kind": "api",
-    "visibility": "private",
-    "browser_html": "never",
-    "authentication": {
-      "mode": "required",
-      "provider": "admin-basic"
-    },
-    "authorization": {
-      "mode": "policy",
-      "policy": "admin + release-ready controls"
-    },
-    "same_origin": {
-      "mode": "required",
-      "methods": [
-        "POST"
-      ]
-    },
-    "offline": {
-      "mode": "gated"
-    },
-    "cache": {
-      "mode": "no-store"
-    },
-    "crawler": {
-      "crawling": "controlled",
-      "indexing": "deny"
-    },
-    "title": "Git release laboratory action",
-    "description": "Same-origin administrator-only release action gated by exact run/PR state and successful validation.",
+    "description": "Public read-only status for the live Git delivery demonstration.",
     "docs": [
       "docs/ROUTE-REGISTRY.md"
     ],

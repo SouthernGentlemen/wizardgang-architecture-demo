@@ -63,6 +63,8 @@ Availability while intentionally offline is declared per route. Gated API traffi
 3. Run `npm run validate:migrations` to apply baseline's vendored shared schema to a clean local D1.
 4. Run `npm run dev` for the local-only development surface.
 
+Development builds generate a local HTTP adapter around the shared shell so loopback requests work while application same-origin checks retain their local URL. Release builds generated with `WG_VERSION` and `WG_COMMIT` import the strict shell directly and exclude that adapter.
+
 ### Validation and command authority
 
 [`package.json`](package.json) scripts are the authority for exact command composition. This README keeps only the entry-point, prerequisite, and side-effect guidance needed to use them.

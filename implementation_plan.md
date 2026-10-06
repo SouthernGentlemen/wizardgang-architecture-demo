@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-459 — [OPS] Become the demo Worker on the shared shell and baseline deploy workflow
-- Dependency: None.
-- Why: Phase 4 cut-over: the Worker becomes demo on baseline's shell, conforming config and single deploy path.
-- Scope: Make wrangler.jsonc conforming for demo: name and WG_APP demo, custom domain demo.wizardgang.ai, the shared compatibility settings, DemoCoordinator and the */5 cron, WG_DB by the UUID database_id from runbook step 3.2, WG_R2, and Secrets Store bindings. The entry uses createEdge, with WG_OPS_TOKEN's operator gate replacing DEMO_ADMIN_USER and DEMO_ADMIN_PASSWORD. release.yml calls Wizard-Gang/baseline deploy-worker.yml pinned to the same baseline commit as platform/ (BASE-030 or later) with secrets: inherit, which GitHub allows only within one organization, so it relies on DEMO-457's move to Wizard-Gang. deploy.yml with its scripts is deleted. demo.wizardgang.ai is a Worker custom domain on wizardgang-architecture-demo, which wrangler in CI moves without a prompt; a hand-made DNS record on the host would block it, so confirm there is none or the owner deletes it immediately before the deploy. The deploy token must hold Secrets Store Edit (baseline runbook step 3.6). Release the cut-over; DemoCoordinator holds only a counter and starts fresh.
-- Non-goals: No product feature change.
-- Acceptance: node platform/conformance/cli.mjs pin and wrangler --worker demo pass; https://demo.wizardgang.ai/version.json reports demo at the release; baseline npm run verify:cloudflare shows no demo drift. Owner follow-up from baseline runbooks: retire wizardgang-architecture-demo (R3), demo-blob and wizardgang-demo-r2 (R2), DEMO_ADMIN_* and the old runtime names; revoke wg-cloudflare-demo so the demo takes wg-cloudflare-deploy; delete the production secret CLOUDFLARE_ACCOUNT_ID.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI, merged-main CI and the deploy run's traffic and /version.json evidence.
-- Authorities: Wizard-Gang/baseline config/cloudflare.json, platform/, .github/workflows/deploy-worker.yml and docs/CLOUDFLARE-RUNBOOK.md; wrangler.jsonc; .github/workflows/release.yml
-
 ### DEMO-461 — [BUILD] Port security and locale validators
 - Dependency: DEMO-459.
 - Why: Secret scanning and locale/governance checks are distinct from release tools.

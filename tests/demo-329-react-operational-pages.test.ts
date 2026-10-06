@@ -46,7 +46,7 @@ describe('DEMO-329 React homepage and operational pages', () => {
 
     const authenticated = await routeRequest(new Request('https://demo.wizardgang.ai/admin', {
       headers: { authorization: `Basic ${btoa(`operator:${password}`)}`, accept: 'text/html' },
-    }), environment);
+    }), environment, { adminAuthorized: true });
     const html = await authenticated.text();
     expect(authenticated.status).toBe(200);
     expect(authenticated.headers.get('x-robots-tag')).toBe('noindex, nofollow');

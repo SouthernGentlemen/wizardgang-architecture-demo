@@ -1,33 +1,24 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "wizardgang-architecture-demo",
-  "main": "src/index.ts",
+  "name": "demo",
+  "main": "src/worker-entry.mjs",
   "compatibility_date": "2026-08-31",
-  "assets": {
-    "binding": "ASSETS",
-    "directory": "./dist/client",
-    "run_worker_first": true
-  },
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false,
   "routes": [
     { "pattern": "demo.wizardgang.ai", "custom_domain": true }
   ],
-  "triggers": {
-    "crons": ["*/5 * * * *"]
-  },
-  // Worker secrets (config/worker-secrets.json) are set with `wrangler secret put` from baseline docs/SECRETS-RUNBOOK.md;
-  // never commit their values. The OAuth client IDs, the Entra tenant and the SAML IdP values are public and live here.
-  // SAML_IDP_CERT, SAML_IDP_ISSUER and SAML_SSO_URL are added once the Entra wg-saml-idp app exists; SAML fails closed until then.
+  "observability": { "enabled": true },
   "vars": {
+    "WG_APP": "demo",
     "GITHUB_REPO_URL": "https://github.com/Wizard-Gang/wizardgang-architecture-demo",
     "GITHUB_BRANCH": "main",
-    "DEPLOYED_VERSION": "development",
     "DEPLOYMENT_ENVIRONMENT": "production",
-    "DEPLOYMENT_CI_STATUS": "not-verified",
     "BILLING_DEMO_MONTHLY_BUDGET_USD": "10",
-    "CLOUDFLARE_WORKER_NAME": "wizardgang-architecture-demo",
+    "CLOUDFLARE_WORKER_NAME": "demo",
     "CLOUDFLARE_R2_BUCKET": "wizardgang",
     "CLOUDFLARE_D1_DATABASE_ID": "95524076-8432-4d4a-b3ab-1a11ede73d4f",
-    "CLOUDFLARE_DO_NAMESPACE": "2a8431fd59b342799b74518e1bcc7b6d",
     "GITHUB_APP_ID": "5200141",
     "GITHUB_APP_INSTALLATION_ID": "168238365",
     "GITHUB_OAUTH_CLIENT_ID": "Ov23lizi50EUG1CVLmrY",
@@ -35,13 +26,15 @@
     "MICROSOFT_OAUTH_CLIENT_ID": "d5706222-8cbb-4072-91a4-02715973f26d",
     "MICROSOFT_TENANT_ID": "dc4e17d6-aa5b-46d9-8a74-4fbc4d7dd5b8"
   },
-  // The shared Secrets Store root key. wg-edge derives demo-session, identity-session and identity-audit from it.
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist/client",
+    "run_worker_first": true
+  },
   "secrets_store_secrets": [
+    { "binding": "WG_OPS_TOKEN", "store_id": "e63e666172544d5c8c4a656ff28ac32a", "secret_name": "WG_OPS_TOKEN" },
     { "binding": "WG_SESSION_KEY", "store_id": "e63e666172544d5c8c4a656ff28ac32a", "secret_name": "WG_SESSION_KEY" }
   ],
-  // Baseline's shared D1 and R2. The demo reads and writes only its own records/events rows (app 'demo') and objects
-  // under demo/; baseline owns the schema (platform/migrations), so there is no migrations_dir. wrangler 4.147 cannot
-  // bind a D1 by name with provisioning off, so the UUID is committed.
   "d1_databases": [
     {
       "binding": "WG_DB",
@@ -68,5 +61,8 @@
       "tag": "do-v1",
       "new_sqlite_classes": ["DemoCoordinator"]
     }
-  ]
+  ],
+  "triggers": {
+    "crons": ["*/5 * * * *"]
+  }
 }

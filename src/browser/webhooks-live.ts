@@ -195,7 +195,7 @@ export function mountLiveGit(root: HTMLElement, signal: AbortSignal, messages: R
     confirmation.checked = false;
     preflightPanel.hidden = true;
     updateControls();
-    const value = await request(`/api/labs/git-delivery?preflight=${encodeURIComponent(bump.value)}`);
+    const value = await request(`/admin/api/labs/git-delivery?preflight=${encodeURIComponent(bump.value)}`);
     preflight = value as unknown as Preflight;
     target.textContent = `${preflight.lastRelease} → v${preflight.targetVersion} · main ${preflight.mainSha}`;
     commits.replaceChildren();
@@ -231,7 +231,7 @@ export function mountLiveGit(root: HTMLElement, signal: AbortSignal, messages: R
   startButton.addEventListener('click', () => {
     if (!preflight || !confirmation.checked || startButton.disabled) return;
     busy = true; updateControls();
-    void request('/api/labs/git-delivery', { method: 'POST', body: JSON.stringify({ bump: bump.value, preflightFingerprint: preflight.fingerprint }) }).then((result) => {
+    void request('/admin/api/labs/git-delivery', { method: 'POST', body: JSON.stringify({ bump: bump.value, preflightFingerprint: preflight.fingerprint }) }).then((result) => {
       requestId = typeof result.requestId === 'string' ? result.requestId : null;
       preflight = null; confirmation.checked = false; preflightPanel.hidden = true;
       notice.textContent = 'Live release requested. Following actual GitHub Actions evidence.';
@@ -241,7 +241,7 @@ export function mountLiveGit(root: HTMLElement, signal: AbortSignal, messages: R
   releaseButton.addEventListener('click', () => {
     if (!status?.releaseReady || !status.pullRequest || !status.requestId || releaseButton.disabled) return;
     busy = true; updateControls();
-    void request('/api/labs/git-release', { method: 'POST', body: JSON.stringify({ pullRequest: status.pullRequest.number, requestId: status.requestId }) }).then(() => {
+    void request('/admin/api/labs/git-release', { method: 'POST', body: JSON.stringify({ pullRequest: status.pullRequest.number, requestId: status.requestId }) }).then(() => {
       notice.textContent = 'Merge & Release requested. Following actual GitHub Actions evidence.';
       return refresh();
     }).catch((error: unknown) => { notice.textContent = error instanceof Error ? error.message : String(error); }).finally(() => { busy = false; updateControls(); });

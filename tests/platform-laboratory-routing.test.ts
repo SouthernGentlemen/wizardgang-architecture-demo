@@ -43,7 +43,6 @@ describe('platform laboratory declarative routing', () => {
       '/api/labs/durable-counter',
       '/api/labs/edge',
       '/api/labs/git-delivery',
-      '/api/labs/git-release',
       '/api/labs/r2-files',
       '/api/labs/r2-files/:id',
       '/api/labs/r2-reset',
