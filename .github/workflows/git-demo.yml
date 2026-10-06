@@ -103,30 +103,7 @@ jobs:
           BUMP: ${{ inputs.bump }}
           REQUEST_ID: ${{ inputs.request_id }}
           GH_TOKEN: ${{ steps.app.outputs.token }}
-        run: |
-          node --input-type=module <<'NODE'
-          import { execFileSync } from 'node:child_process';
-          import fs from 'node:fs';
-          import { nextLiveReleaseId } from './scripts/lib/live-release-identity.ts';
-          const bump = process.env.BUMP;
-          const requestId = process.env.REQUEST_ID;
-          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-          if (!/^\d+\.\d+\.\d+$/.test(pkg.version)) throw new Error(`Invalid package version: ${pkg.version}`);
-          const [major, minor, patch] = pkg.version.split('.').map(Number);
-          const version = bump === 'major' ? `${major + 1}.0.0` : bump === 'minor' ? `${major}.${minor + 1}.0` : `${major}.${minor}.${patch + 1}`;
-          if (execFileSync('git', ['tag', '--list', `v${version}`], { encoding: 'utf8' }).trim()) throw new Error(`Release tag v${version} already exists.`);
-          const subjects = execFileSync('git', ['log', '--format=%s'], { encoding: 'utf8' });
-          const open = JSON.parse(execFileSync('gh', ['pr', 'list', '--state', 'open', '--limit', '1000', '--json', 'title,headRefName'], { encoding: 'utf8' }));
-          const changeId = nextLiveReleaseId(subjects.split('\n'), fs.readFileSync('implementation_plan.md', 'utf8'), open);
-          const shortId = requestId.replace(/[^a-f0-9]/gi, '').slice(0, 8).toLowerCase();
-          const values = {
-            current: pkg.version,
-            version,
-            change_id: changeId,
-            branch: `demo-${changeId.slice(5)}-live-v${version.replaceAll('.', '-')}-${shortId}`,
-          };
-          fs.appendFileSync(process.env.GITHUB_OUTPUT, Object.entries(values).map(([key, value]) => `${key}=${value}\n`).join(''));
-          NODE
+        run: node scripts/git-demo-workflow.ts start
       - name: Show release preflight before merge confirmation
         id: preflight
         env:
@@ -299,31 +276,14 @@ jobs:
           REQUEST_ID: ${{ inputs.request_id }}
         run: |
           pr_json="$(gh pr view "$PULL_REQUEST" --json state,title,body,baseRefName,headRefName,headRefOid)"
-          PR_JSON="$pr_json" node <<'NODE'
-          const fs = require('node:fs');
-          const pr = JSON.parse(process.env.PR_JSON);
-          const requestId = process.env.REQUEST_ID;
-          if (pr.state !== 'OPEN' || pr.baseRefName !== 'main') throw new Error('Pull request is not an open live-demo change against main.');
-          const branch = /^demo-(\d{3,})-live-v(\d+)-(\d+)-(\d+)-[0-9a-f]{8}$/.exec(pr.headRefName);
-          const version = branch ? `${branch[2]}.${branch[3]}.${branch[4]}` : null;
-          if (!version || pr.title !== `[DEMO-${branch[1]}] [BUILD] Demonstrate v${version} release lifecycle`) throw new Error('Pull request does not match the controlled live-demo contract.');
-          if (!pr.body.includes(`<!-- git-demo-request:${requestId} -->`)) throw new Error('Pull request request ID does not match.');
-          fs.appendFileSync(process.env.GITHUB_OUTPUT, `branch=${pr.headRefName}\nsha=${pr.headRefOid}\nversion=${version}\n`);
-          NODE
+          PR_JSON="$pr_json" node scripts/git-demo-workflow.ts verify-pull
       - name: Require successful real CI checks
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           PULL_REQUEST: ${{ inputs.pull_request }}
         run: |
           checks="$(gh pr checks "$PULL_REQUEST" --json bucket,name,workflow)"
-          CHECKS_JSON="$checks" node <<'NODE'
-          const checks = JSON.parse(process.env.CHECKS_JSON);
-          const required = ['validate', 'change-id', 'security', 'secrets'];
-          for (const name of required) {
-            const check = checks.find((entry) => entry.workflow === 'CI' && entry.name === name);
-            if (!check || check.bucket !== 'pass') throw new Error(`Required CI ${name} is not successful on the exact PR head.`);
-          }
-          NODE
+          CHECKS_JSON="$checks" node scripts/git-demo-workflow.ts require-checks
       - name: Verify reviewed source version
         env:
           BRANCH: ${{ steps.pull.outputs.branch }}
@@ -331,8 +291,7 @@ jobs:
           VERSION: ${{ steps.pull.outputs.version }}
         run: |
           git fetch origin "$BRANCH"
-          git checkout --detach "$SHA"
-          test "$(node -p "require('./package.json').version")" = "$VERSION"
+          test "$(git show "$SHA:package.json" | node scripts/git-demo-workflow.ts package-version)" = "$VERSION"
           git show -s --format=%B "$SHA" > "$RUNNER_TEMP/live-release-body.txt"
           grep -qx 'Live-Release: true' "$RUNNER_TEMP/live-release-body.txt"
       - name: Recheck current main and exact PR head
@@ -344,14 +303,7 @@ jobs:
         run: |
           git fetch origin main
           pr_json="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PULL_REQUEST")"
-          PR_JSON="$pr_json" node <<'NODE'
-          const pr = JSON.parse(process.env.PR_JSON);
-          const { execFileSync } = require('node:child_process');
-          const main = execFileSync('git', ['rev-parse', 'origin/main'], { encoding: 'utf8' }).trim();
-          if (pr.state !== 'open' || pr.head.sha !== process.env.SHA || pr.base.sha !== main || pr.mergeable !== true) {
-            throw new Error('Live release PR head, current main, or mergeability changed; revalidate CI on the new exact head.');
-          }
-          NODE
+          PR_JSON="$pr_json" node scripts/git-demo-workflow.ts recheck-base
           echo "sha=$(git rev-parse origin/main)" >> "$GITHUB_OUTPUT"
       - name: Merge without bypassing repository protections
         env:
@@ -375,9 +327,8 @@ jobs:
         run: |
           for attempt in $(seq 1 12); do
             pr_json="$(gh pr view "$PULL_REQUEST" --json state,mergedAt,mergeCommit)"
-            merge_sha="$(PR_JSON="$pr_json" node -p "JSON.parse(process.env.PR_JSON).mergeCommit?.oid || ''")"
-            state="$(PR_JSON="$pr_json" node -p "JSON.parse(process.env.PR_JSON).state")"
-            if [ "$state" = "MERGED" ] && [ -n "$merge_sha" ]; then
+            merge_sha="$(PR_JSON="$pr_json" node scripts/git-demo-workflow.ts merged-commit)"
+            if [ -n "$merge_sha" ]; then
               echo "sha=$merge_sha" >> "$GITHUB_OUTPUT"
               exit 0
             fi
@@ -396,7 +347,7 @@ jobs:
           test "$(git rev-parse origin/main)" = "$MERGE_SHA"
           test "$(git show -s --format=%s "$MERGE_SHA")" = "$(git show -s --format=%s "$SHA")"
           test "$(git rev-parse "$MERGE_SHA^")" = "$BASE_SHA"
-          test "$(git show "$MERGE_SHA:package.json" | node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).version")" = "$VERSION"
+          test "$(git show "$MERGE_SHA:package.json" | node scripts/git-demo-workflow.ts package-version)" = "$VERSION"
           git show -s --format=%B "$MERGE_SHA" | grep -qx 'Live-Release: true'
           if git rev-parse "refs/tags/v$VERSION" >/dev/null 2>&1; then
             echo "Version tag v$VERSION already exists; the main CI cutter must verify its identity."
