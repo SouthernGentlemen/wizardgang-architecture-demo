@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
 import process from 'node:process';
 import { spawnSync } from 'node:child_process';
-import { waitForAssuranceRecordPane } from '../scripts/lib/demo-289-content-review.mjs';
+import { waitForAssuranceRecordPane } from '../scripts/lib/demo-289-content-review.ts';
 import { routeUrl } from '../src/routing/application-routes';
 
 const read = (file) => fs.readFileSync(file, 'utf8');

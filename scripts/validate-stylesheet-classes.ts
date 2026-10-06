@@ -11,15 +11,20 @@ const MAX_REPORTED = 20;
 // These classes are emitted from the bounded HTTP action method vocabulary through
 // `class="http-method http-${action.method.toLowerCase()}"` and therefore do not
 // appear as complete literals in src/.
+interface Finding {
+  selector: string;
+  classes: string[];
+}
+
 const GENERATED_CLASS_ALLOWLIST = new Set([
   'http-put',
   'http-patch',
   'http-delete',
 ]);
 
-async function walk(dir) {
+async function walk(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true });
-  const files = [];
+  const files: string[] = [];
   for (const entry of entries) {
     const absolute = path.join(dir, entry.name);
     if (entry.isDirectory()) files.push(...await walk(absolute));
@@ -28,16 +33,16 @@ async function walk(dir) {
   return files;
 }
 
-function isStylesheetModule(file) {
+function isStylesheetModule(file: string): boolean {
   return file.endsWith('.css') && path.relative(path.join(SRC_DIR, 'styles'), file).startsWith('..') === false;
 }
 
-function stripComments(value) {
+function stripComments(value: string): string {
   return value.replace(/\/\*[\s\S]*?\*\//g, ' ');
 }
 
-function classNamesFromSelector(selector) {
-  const names = new Set();
+function classNamesFromSelector(selector: string): string[] {
+  const names = new Set<string>();
   const cleaned = stripComments(selector);
   for (const match of cleaned.matchAll(/\.(-?[_a-zA-Z]+[_a-zA-Z0-9-]*)/g)) {
     names.add(match[1]);
@@ -45,13 +50,13 @@ function classNamesFromSelector(selector) {
   return [...names];
 }
 
-function boundaryPattern(className) {
+function boundaryPattern(className: string): RegExp {
   const escaped = className.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return new RegExp(`(^|[^_a-zA-Z0-9-])${escaped}($|[^_a-zA-Z0-9-])`);
 }
 
-function findOpenBrace(css, from) {
-  let quote = null;
+function findOpenBrace(css: string, from: number): number {
+  let quote: string | null = null;
   for (let index = from; index < css.length; index += 1) {
     const char = css[index];
     const next = css[index + 1];
@@ -73,9 +78,9 @@ function findOpenBrace(css, from) {
   return -1;
 }
 
-function findMatchingBrace(css, open) {
+function findMatchingBrace(css: string, open: number): number {
   let depth = 1;
-  let quote = null;
+  let quote: string | null = null;
   for (let index = open + 1; index < css.length; index += 1) {
     const char = css[index];
     const next = css[index + 1];
@@ -103,19 +108,19 @@ function findMatchingBrace(css, open) {
   return -1;
 }
 
-function isGroupingAtRule(prelude) {
+function isGroupingAtRule(prelude: string): boolean {
   return /^@(media|supports|container|layer|document)\b/i.test(prelude);
 }
 
-function isOpaqueAtRule(prelude) {
+function isOpaqueAtRule(prelude: string): boolean {
   return /^@(keyframes|-webkit-keyframes|font-face|page|property|counter-style)\b/i.test(prelude);
 }
 
-function meaningfulCss(css) {
+function meaningfulCss(css: string): boolean {
   return stripComments(css).trim().length > 0;
 }
 
-function transformCss(css, classIsLive, findings) {
+function transformCss(css: string, classIsLive: (name: string) => boolean, findings: Finding[]): string {
   let cursor = 0;
   let output = '';
 
@@ -169,19 +174,19 @@ const sourceCorpus = (await Promise.all(
     .map((file) => readFile(file, 'utf8').catch(() => '')),
 )).join('\n');
 
-const liveCache = new Map();
-function classIsLive(name) {
+const liveCache = new Map<string, boolean>();
+function classIsLive(name: string): boolean {
   if (GENERATED_CLASS_ALLOWLIST.has(name)) return true;
   if (!liveCache.has(name)) liveCache.set(name, boundaryPattern(name).test(sourceCorpus));
-  return liveCache.get(name);
+  return liveCache.get(name) as boolean;
 }
 
-const allFindings = [];
+const allFindings: (Finding & { file: string })[] = [];
 let changedFiles = 0;
 
 for (const file of stylesheetFiles) {
   const source = await readFile(file, 'utf8');
-  const findings = [];
+  const findings: Finding[] = [];
   const transformed = transformCss(source, classIsLive, findings);
   if (findings.length === 0) continue;
 

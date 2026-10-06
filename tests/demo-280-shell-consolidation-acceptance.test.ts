@@ -227,7 +227,7 @@ describe('DEMO-280 shell consolidation acceptance', () => {
   });
 
   it('keeps every stylesheet rule backed by live src/ markup or the bounded generated-class exception', () => {
-    const output = execFileSync(process.execPath, ['scripts/validate-stylesheet-classes.mjs'], {
+    const output = execFileSync(process.execPath, ['scripts/validate-stylesheet-classes.ts'], {
       cwd: process.cwd(),
       encoding: 'utf8',
     });

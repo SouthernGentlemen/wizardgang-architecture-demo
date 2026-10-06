@@ -1,4 +1,25 @@
-export function assuranceReviewState(pathname, origin, assurancePath) {
+export interface AssuranceReviewState {
+  page: string;
+  state: string;
+  recordId: string;
+}
+
+export interface AssuranceRecordPane {
+  ready: boolean;
+  headingText: string;
+  recordId: string;
+}
+
+export interface AssuranceRecordPaneOptions<Cdp> {
+  origin: string;
+  assurancePath: string;
+  evaluatePage: (cdp: Cdp, expression: string, label: string) => Promise<AssuranceRecordPane>;
+  sleep: (milliseconds: number) => Promise<unknown>;
+  timeoutMs?: number;
+  pollIntervalMs?: number;
+}
+
+export function assuranceReviewState(pathname: string, origin: string, assurancePath: string): AssuranceReviewState | null {
   const url = new URL(pathname, origin);
   if (url.pathname !== assurancePath) return null;
 
@@ -18,10 +39,10 @@ export function assuranceReviewState(pathname, origin, assurancePath) {
   };
 }
 
-export async function waitForAssuranceRecordPane(
-  cdp,
-  pathname,
-  locale,
+export async function waitForAssuranceRecordPane<Cdp>(
+  cdp: Cdp,
+  pathname: string,
+  locale: string,
   {
     origin,
     assurancePath,
@@ -29,8 +50,8 @@ export async function waitForAssuranceRecordPane(
     sleep,
     timeoutMs = 5_000,
     pollIntervalMs = 50,
-  },
-) {
+  }: AssuranceRecordPaneOptions<Cdp>,
+): Promise<AssuranceRecordPane | null> {
   const state = assuranceReviewState(pathname, origin, assurancePath);
   if (!state) return null;
 

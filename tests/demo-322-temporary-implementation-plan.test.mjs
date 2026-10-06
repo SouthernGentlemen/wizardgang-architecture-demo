@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 
-const validator = resolve('scripts/validate-documentation-cleanup.mjs');
+const validator = resolve('scripts/validate-documentation-cleanup.ts');
 const plannedChange = ['DEMO', '999'].join('-');
 const fixtures = [];
 

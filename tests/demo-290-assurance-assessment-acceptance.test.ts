@@ -281,8 +281,8 @@ describe('DEMO-290 assurance assessment acceptance', () => {
     expect(runner).toContain("['site-browser-audit', 'scripts/site-browser-audit.ts']");
     expect(runner).not.toContain('demo-289-site-evaluation');
     expect(existsSync('scripts/demo-289-site-evaluation.mjs')).toBe(false);
-    expect(existsSync('scripts/lib/demo-289-content-review.mjs')).toBe(true);
-    expect(mainAudit).toContain("from './lib/demo-289-content-review.mjs'");
+    expect(existsSync('scripts/lib/demo-289-content-review.ts')).toBe(true);
+    expect(mainAudit).toContain("from './lib/demo-289-content-review.ts'");
     expect(mainAudit).toContain('assuranceReviewState');
     expect(mainAudit).toContain('waitForAssuranceRecordPane');
   });

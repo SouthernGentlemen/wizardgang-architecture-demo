@@ -19,7 +19,7 @@ export function npmRunName(command) {
 export function createCiValidationCommands({ nodeExecutable, npmExecutable, checkEnvironment }) {
   if (!nodeExecutable || !npmExecutable) throw new TypeError('CI command planning requires Node and npm executables.');
   return [
-    { id: 'toolchain', label: 'Validate pinned Node/npm toolchain', file: nodeExecutable, args: ['scripts/validate-toolchain.mjs'] },
+    { id: 'toolchain', label: 'Validate pinned Node/npm toolchain', file: nodeExecutable, args: ['scripts/validate-toolchain.ts'] },
     { id: 'install', label: 'Install locked dependencies', file: npmExecutable, args: ['ci'] },
     { id: 'check', label: 'Full repository check', file: npmExecutable, args: ['run', 'check'], env: checkEnvironment },
     { id: 'dependency-advisories', label: 'Query dependency advisories (network required)', file: npmExecutable, args: ['run', 'security:dependency-advisories'] },
