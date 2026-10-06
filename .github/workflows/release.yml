@@ -37,7 +37,7 @@ jobs:
       - name: Use committed npm version
         run: npm install --global npm@12.1.0
       - name: Verify pinned Node/npm toolchain
-        run: node scripts/validate-toolchain.mjs
+        run: node scripts/validate-toolchain.ts
       - name: Install locked dependencies
         run: npm ci
       - name: Reproduce the tagged state

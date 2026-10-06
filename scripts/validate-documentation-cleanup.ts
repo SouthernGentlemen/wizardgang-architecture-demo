@@ -3,9 +3,9 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 const root = process.cwd();
-const errors = [];
+const errors: string[] = [];
 
-function trackedFiles() {
+function trackedFiles(): string[] {
   const result = spawnSync('git', ['ls-files'], { cwd: root, encoding: 'utf8' });
   if (result.status !== 0) throw new Error(`unable to list tracked files: ${result.stderr.trim() || result.stdout.trim()}`);
   return result.stdout
@@ -15,7 +15,7 @@ function trackedFiles() {
     .filter((file) => fs.existsSync(path.join(root, file)));
 }
 
-function plainHeadingText(value) {
+function plainHeadingText(value: string): string {
   return value
     .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
     .replace(/<[^>]*>/g, '')
@@ -23,7 +23,7 @@ function plainHeadingText(value) {
     .trim();
 }
 
-function githubSlug(value) {
+function githubSlug(value: string): string {
   return plainHeadingText(value)
     .toLowerCase()
     .replace(/[^\p{L}\p{N}\s-]/gu, '')
@@ -31,9 +31,9 @@ function githubSlug(value) {
     .replace(/\s+/g, '-');
 }
 
-function headingAnchors(markdown) {
-  const anchors = new Set();
-  const counts = new Map();
+function headingAnchors(markdown: string): Set<string> {
+  const anchors = new Set<string>();
+  const counts = new Map<string, number>();
   for (const line of markdown.split(/\r?\n/)) {
     const match = line.match(/^ {0,3}(#{1,6})\s+(.+?)\s*#*\s*$/);
     if (!match) continue;
@@ -46,7 +46,7 @@ function headingAnchors(markdown) {
   return anchors;
 }
 
-function normalizeRepositoryPath(source, target) {
+function normalizeRepositoryPath(source: string, target: string): { repositoryPath: string; anchor: string } {
   const withoutAngle = target.replace(/^<|>$/g, '');
   const [rawPath, rawAnchor = ''] = withoutAngle.split('#', 2);
   let decodedPath = rawPath;
@@ -109,7 +109,7 @@ const canonicalGovernanceNames = [
 ];
 const canonicalGovernanceMarkdown = new Set(canonicalGovernanceNames.map((name) => [governanceRoot, name].join('/')));
 
-function isRetiredDocumentationPath(value) {
+function isRetiredDocumentationPath(value: string): boolean {
   return retiredArchitectureMarkdown.has(value)
     || removedDirectoryPrefixes.some((prefix) => value.startsWith(prefix));
 }
@@ -130,15 +130,15 @@ if (fileSet.has('CHANGE' + 'LOG.md')) {
   errors.push('root release changelog is not allowed; annotated tags and GitHub Releases own release history');
 }
 
-const markdownCache = new Map();
-const anchorCache = new Map();
-function read(relativePath) {
+const markdownCache = new Map<string, string>();
+const anchorCache = new Map<string, Set<string>>();
+function read(relativePath: string): string {
   if (!markdownCache.has(relativePath)) markdownCache.set(relativePath, fs.readFileSync(path.join(root, relativePath), 'utf8'));
-  return markdownCache.get(relativePath);
+  return markdownCache.get(relativePath) as string;
 }
-function anchors(relativePath) {
+function anchors(relativePath: string): Set<string> {
   if (!anchorCache.has(relativePath)) anchorCache.set(relativePath, headingAnchors(read(relativePath)));
-  return anchorCache.get(relativePath);
+  return anchorCache.get(relativePath) as Set<string>;
 }
 
 const isReferenceRepository = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).name === 'wizardgang-architecture-demo';
@@ -267,12 +267,12 @@ for (const source of currentStateMarkdown) {
 
 const intentionalNegativeReferenceFiles = new Set([
   'scripts/validate-governance-metadata.ts',
-  'scripts/validate-documentation-cleanup.mjs',
+  'scripts/validate-documentation-cleanup.ts',
   'tests/assurance-objectives.test.ts',
   'tests/assurance-semantic-partitions.test.ts',
   'tests/removed-routes.test.ts',
 ]);
-function isIntentionalNegativeReferenceFile(file) {
+function isIntentionalNegativeReferenceFile(file: string): boolean {
   return intentionalNegativeReferenceFiles.has(file)
     || /^tests\/demo-(?:311|312|313|316|317|318|319)-/.test(file);
 }
@@ -289,7 +289,7 @@ for (const source of textFiles) {
 }
 
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
-const scripts = packageJson.scripts ?? {};
+const scripts: Record<string, string> = packageJson.scripts ?? {};
 for (const retiredScript of ['generate:assurance-summaries', 'validate:assurance-summaries', 'generate:governance-registers']) {
   if (retiredScript in scripts) errors.push(`package.json: retired documentation generator remains registered as ${retiredScript}`);
 }
@@ -299,7 +299,7 @@ if (!String(scripts.check ?? '').includes('npm run validate:documentation')) {
 
 const registryPath = [governanceRoot, 'REFERENCE-REGISTRY.json'].join('/');
 const registry = JSON.parse(fs.readFileSync(path.join(root, registryPath), 'utf8'));
-for (const record of registry.records ?? []) {
+for (const record of (registry.records ?? []) as { path: string; reference: string }[]) {
   if (!fileSet.has(record.path)) errors.push(`REFERENCE-REGISTRY.json: ${record.reference} resolves to missing ${record.path}`);
   if (isRetiredDocumentationPath(record.path)) errors.push(`REFERENCE-REGISTRY.json: ${record.reference} resolves to retired documentation ${record.path}`);
 }

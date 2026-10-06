@@ -14,7 +14,7 @@ import {
   waitForUrl,
 } from './lib/browser-audit.ts';
 import { parseJsonc } from '../platform/conformance/jsonc.mjs';
-import { assuranceReviewState, waitForAssuranceRecordPane } from './lib/demo-289-content-review.mjs';
+import { assuranceReviewState, waitForAssuranceRecordPane } from './lib/demo-289-content-review.ts';
 import { runCleanLocalMigrations } from './validate-migrations.ts';
 
 type Route = { id: string; route: string; kind: string; visibility: string; methods: string[] };

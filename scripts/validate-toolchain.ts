@@ -5,23 +5,44 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+const packageJson: ToolchainManifest = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
 const pinnedNodeVersion = fs.readFileSync(path.join(root, '.node-version'), 'utf8').trim();
 const packageManager = packageJson.packageManager || '';
 export const TYPESCRIPT_EXECUTION_SCRIPT = 'node scripts/validate-typescript-execution.ts --self-check';
 
-function exactVersion(version, label) {
+interface ToolchainManifest {
+  packageManager?: string;
+  type?: string;
+  engines?: { node?: string; npm?: string };
+  scripts?: Record<string, string>;
+}
+
+interface ToolchainInput {
+  packageJson: ToolchainManifest;
+  pinnedNodeVersion: string;
+  actualNodeVersion: string;
+  actualNpmVersion: string;
+}
+
+interface ToolchainResult {
+  failures: string[];
+  pinnedNodeVersion: string;
+  pinnedNpmVersion: string;
+  typescriptExecutionScript: string;
+}
+
+function exactVersion(version: string | undefined, label: string): string {
   if (!/^\d+\.\d+\.\d+$/.test(version || '')) {
     throw new Error(`${label} must pin an exact semantic version; got "${version}".`);
   }
-  return version;
+  return version as string;
 }
 
-function major(version) {
+function major(version: string): number {
   return Number(version.split('.')[0]);
 }
 
-function engineMajor(spec, label) {
+function engineMajor(spec: string | undefined, label: string): number {
   const match = /^(\d+)\.x$/.exec(spec || '');
   if (!match) throw new Error(`${label} must use an explicit major.x engine range.`);
   return Number(match[1]);
@@ -32,8 +53,8 @@ export function validateToolchainContract({
   pinnedNodeVersion: nodePin,
   actualNodeVersion,
   actualNpmVersion,
-}) {
-  const failures = [];
+}: ToolchainInput): ToolchainResult {
+  const failures: string[] = [];
   const exactNode = exactVersion(nodePin, '.node-version');
   const npmPackageManagerMatch = /^npm@(\d+\.\d+\.\d+)$/.exec(manifest.packageManager || '');
   if (!npmPackageManagerMatch) throw new Error('packageManager must pin an exact npm version.');

@@ -2,22 +2,22 @@ import { parseSync, Visitor } from 'oxc-parser';
 
 const canonicalPageSegments = ['demos', 'assurance', 'operations', 'security'];
 
-function isCanonicalPageLiteral(value) {
+function isCanonicalPageLiteral(value: string): boolean {
   return canonicalPageSegments.some((segment) => {
     const root = `/${segment}`;
     return value === root || value.startsWith(`${root}/`) || value.startsWith(`${root}?`) || value.startsWith(`${root}#`);
   });
 }
 
-function lineNumberAt(text, offset) {
+function lineNumberAt(text: string, offset: number): number {
   return text.slice(0, offset).split(/\r?\n/).length;
 }
 
-export function findCanonicalPageLiteral(file, text) {
+export function findCanonicalPageLiteral(file: string, text: string): string | undefined {
   const { program } = parseSync(file, text);
-  let failure;
+  let failure: string | undefined;
 
-  function inspect(value, start) {
+  function inspect(value: string, start: number): void {
     if (failure || !isCanonicalPageLiteral(value)) return;
     const line = lineNumberAt(text, start);
     failure = `${file}:${line} canonical pathname literal outside a route declaration; use routeUrl(routeId) or move deliberate dead-route data under tests/fixtures/; rerun: npm run lint`;

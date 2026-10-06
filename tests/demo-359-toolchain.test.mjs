@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { validateToolchainContract } from '../scripts/validate-toolchain.mjs';
+import { validateToolchainContract } from '../scripts/validate-toolchain.ts';
 
 const root = process.cwd();
 const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
@@ -55,7 +55,7 @@ describe('DEMO-359 shared toolchain contract', () => {
     expect(ci).toContain('npm run validate:ci');
     expect(ci).toContain('ref: ${{ github.event.pull_request.head.sha || github.sha }}');
     for (const workflow of [release]) {
-      const verifyIndex = workflow.indexOf('node scripts/validate-toolchain.mjs');
+      const verifyIndex = workflow.indexOf('node scripts/validate-toolchain.ts');
       const installIndex = workflow.indexOf('run: npm ci');
       expect(verifyIndex).toBeGreaterThan(-1);
       expect(installIndex).toBeGreaterThan(verifyIndex);

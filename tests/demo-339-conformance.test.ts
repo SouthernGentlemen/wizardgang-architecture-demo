@@ -70,13 +70,13 @@ describe('DEMO-339 deliberate-regression proofs', () => {
   }, 15_000);
 
   it('reads CSS and TSX class reachability, and rejects a retired selector', () => {
-    const root = fixture(['src', 'scripts/validate-stylesheet-classes.mjs']);
+    const root = fixture(['src', 'scripts/validate-stylesheet-classes.ts']);
     try {
       const stylesheet = path.join(root, 'src/styles/proof.css');
       const component = path.join(root, 'src/ui/proof.tsx');
       writeFileSync(stylesheet, '.demo-339-proof { color: red; }\n');
       writeFileSync(component, 'export const proof = <div className="demo-339-proof" />;\n');
-      const check = () => spawnSync(process.execPath, [path.join(root, 'scripts/validate-stylesheet-classes.mjs')], { encoding: 'utf8' });
+      const check = () => spawnSync(process.execPath, [path.join(root, 'scripts/validate-stylesheet-classes.ts')], { encoding: 'utf8' });
       expect(check().status).toBe(0);
       rmSync(component);
       const failure = check();

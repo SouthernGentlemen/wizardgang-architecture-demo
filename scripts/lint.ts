@@ -1,22 +1,22 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { findCanonicalPageLiteral } from './lint-rules.mjs';
+import { findCanonicalPageLiteral } from './lint-rules.ts';
 
-const failures = [];
+const failures: string[] = [];
 const maxReportedFailures = 100;
 const extensions = new Set(['.ts', '.mjs', '.json', '.jsonc', '.md', '.yml', '.yaml', '.graphql', '.sql', '.xml']);
 const urlLiteralExtensions = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']);
 const retiredOneTimeCodemodPath = /^scripts\/demo-\d+-codemod\.mjs$/;
 const retiredOneTimeCodemodReference = /demo-\d+-codemod\.mjs/;
 
-function allowsCanonicalPageLiteral(file) {
+function allowsCanonicalPageLiteral(file: string): boolean {
   const normalized = file.replaceAll('\\', '/');
   return normalized.startsWith('src/routing/')
     || /^src\/[^/]+\/route-capabilities\//.test(normalized)
     || normalized.startsWith('tests/fixtures/');
 }
 
-function walk(directory) {
+function walk(directory: string): void {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
     if (['.git', 'node_modules', '.wrangler', 'dist', 'coverage'].includes(entry.name)) continue;
     const full = path.join(directory, entry.name);

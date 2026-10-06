@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { findCanonicalPageLiteral } from '../scripts/lint-rules.mjs';
+import { findCanonicalPageLiteral } from '../scripts/lint-rules.ts';
 
 describe('repository lint rules', () => {
   it('reports the canonical-page-literal failure for the fixture', () => {

@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-466 — [BUILD] Port lint and documentation validators to TypeScript
-- Dependency: DEMO-465.
-- Why: Lint and simple source-policy validators are the remaining general tooling group.
-- Scope: Convert lint, lint-rules, documentation cleanup, stylesheet-class, and toolchain validators.
-- Non-goals: Do not change required CI names, credential boundaries, release identity, or deployment protection.
-- Acceptance: Lint and documentation checks retain current failure conditions; all scripts under scripts are TS.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: scripts/lint.mjs; scripts/lint-rules.mjs; scripts/validate-documentation-cleanup.mjs; scripts/validate-stylesheet-classes.mjs; scripts/validate-toolchain.mjs
-
 ### DEMO-467 — [BUILD] Move live Git workflow logic to TypeScript
 - Dependency: DEMO-466.
 - Why: The live Git workflow embeds JavaScript for release identity and PR checks.

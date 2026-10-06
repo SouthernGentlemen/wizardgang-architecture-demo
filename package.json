@@ -27,7 +27,7 @@
     "build:client": "npm run generate:assets",
     "build:worker": "node scripts/generate-worker-entry.ts && wrangler deploy --dry-run --outdir dist/worker && npm run validate:worker-bundle",
     "build": "npm run build:client && npm run build:worker",
-    "lint": "node scripts/lint.mjs",
+    "lint": "node scripts/lint.ts",
     "typecheck": "tsc --noEmit && tsc --project src/browser/tsconfig.json --noEmit",
     "validate:typescript-execution": "node scripts/validate-typescript-execution.ts --self-check",
     "test": "vitest run",
@@ -58,7 +58,7 @@
     "validate:security": "node scripts/validate-security.ts",
     "generate:routes": "ROUTE_ARTIFACTS_WRITE=1 vitest run tests/route-artifacts.test.ts",
     "validate:routes": "vitest run tests/route-artifacts.test.ts",
-    "validate:stylesheet-classes": "node scripts/validate-stylesheet-classes.mjs",
+    "validate:stylesheet-classes": "node scripts/validate-stylesheet-classes.ts",
     "validate:react-presentation": "node scripts/validate-react-presentation.ts",
     "validate:worker-bundle": "node scripts/validate-react-presentation.ts --worker-bundle",
     "validate:repository-baseline": "node scripts/validate-repository-baseline.ts",
@@ -76,7 +76,7 @@
     "verify:github-settings": "node scripts/verify-github-settings.ts",
     "apply:github-settings": "node scripts/apply-github-settings.ts",
     "provision:worker-secret": "node scripts/provision-worker-secret.ts",
-    "validate:documentation": "node scripts/validate-documentation-cleanup.mjs"
+    "validate:documentation": "node scripts/validate-documentation-cleanup.ts"
   },
   "devDependencies": {
     "@modelcontextprotocol/client": "^2.2.0",
