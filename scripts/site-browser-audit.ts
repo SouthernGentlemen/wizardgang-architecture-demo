@@ -15,7 +15,7 @@ import {
 } from './lib/browser-audit.ts';
 import { parseJsonc } from '../platform/conformance/jsonc.mjs';
 import { assuranceReviewState, waitForAssuranceRecordPane } from './lib/demo-289-content-review.mjs';
-import { runCleanLocalMigrations } from './validate-migrations.mjs';
+import { runCleanLocalMigrations } from './validate-migrations.ts';
 
 type Route = { id: string; route: string; kind: string; visibility: string; methods: string[] };
 type AuditState = { name: string; path: string };

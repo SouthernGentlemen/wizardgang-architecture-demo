@@ -5,8 +5,8 @@ import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import manifest from '../docs/asset-manifest.json';
-import { validateReactPresentation, validateWorkerBundle } from '../scripts/validate-react-presentation.mjs';
-import { validateRepositoryBaseline } from '../scripts/validate-repository-baseline.mjs';
+import { validateReactPresentation, validateWorkerBundle } from '../scripts/validate-react-presentation.ts';
+import { validateRepositoryBaseline } from '../scripts/validate-repository-baseline.ts';
 
 function fixture(files: string[]): string {
   const root = mkdtempSync(path.join(tmpdir(), 'demo-339-'));

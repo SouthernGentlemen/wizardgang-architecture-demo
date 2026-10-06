@@ -8,9 +8,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const DEFAULT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+type Reader = (name: string) => string;
+
 const REFERENCE_CAPABILITIES = ['typescript', 'react', 'vite', 'vitest', 'browser', 'cloudflareWorker', 'release'];
 
-function createReader(root, failures) {
+function createReader(root: string, failures: string[]): Reader {
   return (name) => {
     const file = path.join(root, name);
     if (!existsSync(file)) {
@@ -21,7 +23,7 @@ function createReader(root, failures) {
   };
 }
 
-function parseJson(read, name, failures) {
+function parseJson(read: Reader, name: string, failures: string[]): any {
   const source = read(name);
   if (!source) return {};
   try {
@@ -32,7 +34,7 @@ function parseJson(read, name, failures) {
   }
 }
 
-function loadCapabilityDeclaration(read, failures) {
+function loadCapabilityDeclaration(read: Reader, failures: string[]): any {
   const declaration = parseJson(read, 'config/repository-capabilities.json', failures);
   if (declaration.schemaVersion !== 1) failures.push('repository capability declaration must use schemaVersion 1');
   if (!['universal', 'reference-stack'].includes(declaration.profile)) failures.push('repository capability profile must be universal or reference-stack');
@@ -46,8 +48,8 @@ function loadCapabilityDeclaration(read, failures) {
   return declaration;
 }
 
-export function validateUniversalRepositoryBaseline(root = DEFAULT_ROOT) {
-  const failures = [];
+export function validateUniversalRepositoryBaseline(root: string = DEFAULT_ROOT): string[] {
+  const failures: string[] = [];
   const read = createReader(root, failures);
   for (const file of ['README.md', 'AGENTS.md', 'CONTRIBUTING.md', 'SECURITY.md', 'LICENSE', '.gitignore', '.node-version', '.npmrc', 'package.json', 'package-lock.json', '.github/workflows/ci.yml']) read(file);
   for (const retired of ['CHANGELOG.md']) if (existsSync(path.join(root, retired))) failures.push(`retire ${retired}; tags and GitHub Releases hold release history`);
@@ -73,7 +75,7 @@ export function validateUniversalRepositoryBaseline(root = DEFAULT_ROOT) {
   const ci = read('.github/workflows/ci.yml');
   if (!/pull_request:/.test(ci) || !/branches:\s*\[main\]/.test(ci)) failures.push('CI must run on pull requests and main');
   if (!/node-version-file:\s*\.node-version/.test(ci)) failures.push('CI must use the pinned Node version');
-  const readLocalModuleGraph = (entry, seen = new Set()) => {
+  const readLocalModuleGraph = (entry: string, seen: Set<string> = new Set()): string => {
     if (seen.has(entry)) return '';
     seen.add(entry);
     const source = read(entry);
@@ -87,8 +89,8 @@ export function validateUniversalRepositoryBaseline(root = DEFAULT_ROOT) {
   return failures;
 }
 
-export function validateReferenceStackBaseline(root = DEFAULT_ROOT, declaredCapabilities = null) {
-  const failures = [];
+export function validateReferenceStackBaseline(root: string = DEFAULT_ROOT, declaredCapabilities: any = null): string[] {
+  const failures: string[] = [];
   const read = createReader(root, failures);
   const declaration = declaredCapabilities ?? loadCapabilityDeclaration(read, failures);
   for (const capability of REFERENCE_CAPABILITIES) {
@@ -98,8 +100,8 @@ export function validateReferenceStackBaseline(root = DEFAULT_ROOT, declaredCapa
 
   const pkg = parseJson(read, 'package.json', failures);
   const tsconfig = parseJson(read, 'tsconfig.json', failures);
-  const major = (name) => Number(String(pkg.dependencies?.[name] ?? pkg.devDependencies?.[name] ?? '').match(/\d+/)?.[0]);
-  for (const [name, version] of [['typescript', 7], ['wrangler', 4], ['vite', 8], ['vitest', 5], ['react', 19], ['react-dom', 19]]) {
+  const major = (name: string) => Number(String(pkg.dependencies?.[name] ?? pkg.devDependencies?.[name] ?? '').match(/\d+/)?.[0]);
+  for (const [name, version] of [['typescript', 7], ['wrangler', 4], ['vite', 8], ['vitest', 5], ['react', 19], ['react-dom', 19]] as const) {
     if (major(name) !== version) failures.push(`pin ${name} major ${version}`);
   }
   if (tsconfig.compilerOptions?.strict !== true) failures.push('TypeScript strict mode required');
@@ -119,9 +121,9 @@ export function validateReferenceStackBaseline(root = DEFAULT_ROOT, declaredCapa
   return failures;
 }
 
-export function validateRepositoryBaseline(root = DEFAULT_ROOT) {
+export function validateRepositoryBaseline(root: string = DEFAULT_ROOT): string[] {
   const failures = validateUniversalRepositoryBaseline(root);
-  const capabilityFailures = [];
+  const capabilityFailures: string[] = [];
   const declaration = loadCapabilityDeclaration(createReader(root, capabilityFailures), capabilityFailures);
   if (declaration.profile === 'reference-stack') failures.push(...validateReferenceStackBaseline(root, declaration));
   return failures;
