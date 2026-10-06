@@ -2,7 +2,7 @@ import { spawn } from 'node:child_process';
 import process from 'node:process';
 
 const audits = [
-  ['site-browser-audit', 'scripts/site-browser-audit.mjs'],
+  ['site-browser-audit', 'scripts/site-browser-audit.ts'],
 ];
 
 function durationMs(started) {

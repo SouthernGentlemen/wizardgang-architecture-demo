@@ -192,6 +192,13 @@
       "reviewedAt": "2026-09-21T01:53:52Z",
       "reviewer": "controlled-repository-review",
       "basis": "DEMO-337 moves the isolated accessibility lab document from a TypeScript string builder to server-rendered React and updates only EVD-SRC-006's repository locator to the new owning TSX module. The evidence ID, title, description, freshness policy, visibility, and relationships are unchanged; this review approves disclosure only for the exact resulting public evidence source revision."
+    },
+    {
+      "id": "review-demo462-browser-audit-typescript",
+      "status": "Reviewed",
+      "reviewedAt": "2026-10-06T21:26:10Z",
+      "reviewer": "controlled-repository-review",
+      "basis": "DEMO-462 ports the main site browser audit from MJS to TypeScript and updates only EVD-TST-004's repository locator to the new owning .ts module. The evidence ID, title, description, freshness policy, visibility, and relationships are unchanged; this review approves disclosure only for the exact resulting public evidence source revision."
     }
   ],
   "sourceApprovals": [
@@ -470,6 +477,12 @@
       "resource": "evidence",
       "revision": "eebf90ff8115293c3080a65996c457544688d654",
       "reviewRef": "review-demo337-react-quality-presentations"
+    },
+    {
+      "id": "source-evidence-d2d192efead8",
+      "resource": "evidence",
+      "revision": "d2d192efead81d6614dad226fea9cd116b6b271e",
+      "reviewRef": "review-demo462-browser-audit-typescript"
     },
     {
       "id": "source-claims-b2ebd29e4ce1",

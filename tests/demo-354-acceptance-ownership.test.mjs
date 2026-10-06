@@ -90,7 +90,7 @@ describe('DEMO-354 acceptance gate ownership', () => {
       'node scripts/run-site-accessibility-audits.mjs',
     );
     const runner = fs.readFileSync(path.join(process.cwd(), 'scripts', 'run-site-accessibility-audits.mjs'), 'utf8');
-    expect(runner.match(/scripts\/site-browser-audit\.mjs/g) ?? []).toHaveLength(1);
+    expect(runner.match(/scripts\/site-browser-audit\.ts/g) ?? []).toHaveLength(1);
     expect(runner).not.toContain('demo-289-site-evaluation');
   });
 

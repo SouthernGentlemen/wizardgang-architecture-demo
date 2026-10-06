@@ -244,7 +244,7 @@ describe('DEMO-290 assurance assessment acceptance', () => {
     expect(assuranceStates.some((state) => state.path.includes('WCAG-1.1.1'))).toBe(true);
     expect(assuranceStates.some((state) => state.path.includes('lang=ar'))).toBe(true);
 
-    const mainAudit = readFileSync('scripts/site-browser-audit.mjs', 'utf8');
+    const mainAudit = readFileSync('scripts/site-browser-audit.ts', 'utf8');
     const runner = readFileSync('scripts/run-site-accessibility-audits.mjs', 'utf8');
 
     expect(mainAudit).toContain('axe-core');
@@ -278,7 +278,7 @@ describe('DEMO-290 assurance assessment acceptance', () => {
     expect(mainAudit).toContain('mergedDemo289Coverage');
     expect(mainAudit).toContain('mergedDemo289MediaCoverage');
 
-    expect(runner).toContain("['site-browser-audit', 'scripts/site-browser-audit.mjs']");
+    expect(runner).toContain("['site-browser-audit', 'scripts/site-browser-audit.ts']");
     expect(runner).not.toContain('demo-289-site-evaluation');
     expect(existsSync('scripts/demo-289-site-evaluation.mjs')).toBe(false);
     expect(existsSync('scripts/lib/demo-289-content-review.mjs')).toBe(true);

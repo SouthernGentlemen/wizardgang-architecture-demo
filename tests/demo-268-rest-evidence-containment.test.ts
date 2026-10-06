@@ -83,7 +83,7 @@ describe('DEMO-268 REST evidence containment', () => {
   });
 
   it('keeps REST browser evidence owned by the surviving main audit', () => {
-    const mainAuditSource = readFileSync('scripts/site-browser-audit.mjs', 'utf8');
+    const mainAuditSource = readFileSync('scripts/site-browser-audit.ts', 'utf8');
     const auditRunnerSource = readFileSync('scripts/run-site-accessibility-audits.mjs', 'utf8');
 
     expect(existsSync('scripts/demo-268-rest-browser-audit.mjs')).toBe(false);
