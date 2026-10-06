@@ -15,6 +15,7 @@ import {
 } from './lib/browser-audit.mjs';
 import { parseJsonc } from '../platform/conformance/jsonc.mjs';
 import { assuranceReviewState, waitForAssuranceRecordPane } from './lib/demo-289-content-review.mjs';
+import { runCleanLocalMigrations } from './validate-migrations.mjs';
 
 const require = createRequire(import.meta.url);
 const axeSource = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
@@ -24,7 +25,10 @@ const serverPort = Number(process.env.SITE_AUDIT_PORT || 8787);
 const debugPort = Number(process.env.SITE_AUDIT_DEBUG_PORT || 9222);
 const origin = `http://127.0.0.1:${serverPort}`;
 const localSessionSecret = 'demo-335-local-browser-audit-session-key';
-const localPersistenceArgs = process.env.WG_LOCAL_D1_PERSIST_TO ? ['--persist-to', process.env.WG_LOCAL_D1_PERSIST_TO] : [];
+// A caller may share one migrated directory (CI, Release). Otherwise, such as baseline's deploy-worker
+// verify job, the audit owns a fresh directory and applies the pinned schema itself.
+const ownedPersistenceDirectory = process.env.WG_LOCAL_D1_PERSIST_TO ? null : fs.mkdtempSync(path.join(os.tmpdir(), 'wg-site-audit-d1-'));
+const localPersistenceArgs = ['--persist-to', process.env.WG_LOCAL_D1_PERSIST_TO || ownedPersistenceDirectory];
 const axeTags = ['wcag2a', 'wcag2aa', 'wcag2aaa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const targetSelector = 'button,select,input:not([type="hidden"]),textarea,summary,[role="button"],[role="tab"]';
 const demosPath = manifest.find((route) => route.id === 'demos.index')?.route;
@@ -418,6 +422,7 @@ async function assertWorkbenchState(cdp, expectedId, label, expectedHash = `#${e
     cdp,
     `document.querySelector('[data-demo-workbench]')?.dataset.demoId === ${JSON.stringify(expectedId)} && document.querySelector('[data-demo-workbench]')?.dataset.demoMounted === 'true'`,
     `${label} to mount`,
+    200,
   );
   const state = await evaluate(cdp, `(()=>{
     const selectedCategories=[...document.querySelectorAll('[data-demo-category][aria-selected="true"]')];
@@ -1424,6 +1429,9 @@ async function main() {
     }
   }
 
+  if (ownedPersistenceDirectory && runCleanLocalMigrations({ persistenceDirectory: ownedPersistenceDirectory }) !== 0) {
+    throw new Error('Could not apply the pinned schema to the audit-owned local D1.');
+  }
   const wranglerBin = path.resolve('node_modules', '.bin', process.platform === 'win32' ? 'wrangler.cmd' : 'wrangler');
   // Sessions derive their keys from the WG_SESSION_KEY Secrets Store binding, which local dev simulates per persistence directory.
   const sessionKeyStore = parseJsonc(fs.readFileSync('wrangler.jsonc', 'utf8')).secrets_store_secrets
@@ -1627,6 +1635,7 @@ async function main() {
     await terminateProcess(chrome);
     await terminateProcess(wrangler);
     fs.rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+    if (ownedPersistenceDirectory) fs.rmSync(ownedPersistenceDirectory, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
   }
 }
 
