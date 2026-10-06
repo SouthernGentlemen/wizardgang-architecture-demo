@@ -266,7 +266,7 @@ for (const source of currentStateMarkdown) {
 }
 
 const intentionalNegativeReferenceFiles = new Set([
-  'scripts/validate-governance-metadata.mjs',
+  'scripts/validate-governance-metadata.ts',
   'scripts/validate-documentation-cleanup.mjs',
   'tests/assurance-objectives.test.ts',
   'tests/assurance-semantic-partitions.test.ts',

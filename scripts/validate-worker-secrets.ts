@@ -8,16 +8,16 @@ import { parseJsonc } from '../platform/conformance/jsonc.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const inventory = JSON.parse(fs.readFileSync(path.join(root, 'config', 'worker-secrets.json'), 'utf8'));
 
-function fail(message) {
+function fail(message: string): void {
   process.stderr.write(message + '\n');
   process.exitCode = 1;
 }
 
-function sorted(values) {
+function sorted(values: string[]): string[] {
   return [...new Set(values)].sort();
 }
 
-function sameNames(label, actual, expected) {
+function sameNames(label: string, actual: string[], expected: string[]): void {
   const a = sorted(actual);
   const e = sorted(expected);
   const missing = e.filter((name) => !a.includes(name));
@@ -34,7 +34,7 @@ if (!inventory || inventory.schemaVersion !== 1 || !Array.isArray(inventory.secr
 }
 
 const expectedKeys = ['capability', 'minimumLength', 'name', 'owner', 'required'];
-const inventoryNames = [];
+const inventoryNames: string[] = [];
 for (const entry of inventory.secrets) {
   if (!entry || typeof entry !== 'object' || Array.isArray(entry)) throw new Error('Worker secret inventory entries must be objects.');
   const keys = Object.keys(entry).sort();
@@ -50,7 +50,7 @@ for (const entry of inventory.secrets) {
 }
 if (new Set(inventoryNames).size !== inventoryNames.length) throw new Error('Worker secret inventory contains duplicate names.');
 
-function markedNames(file, start, end, pattern) {
+function markedNames(file: string, start: string, end: string, pattern: RegExp): string[] {
   const content = fs.readFileSync(path.join(root, file), 'utf8');
   const startIndex = content.indexOf(start);
   const endIndex = content.indexOf(end);
@@ -115,5 +115,5 @@ if (!args.length) {
   const provisioned = sorted(raw.map((entry) => typeof entry === 'string' ? entry : entry?.name).filter((name) => typeof name === 'string'));
   for (const name of provisioned.filter((candidate) => committedVars.includes(candidate))) process.stdout.write(`${name}\n`);
 } else {
-  throw new Error('Usage: node scripts/validate-worker-secrets.mjs [--provisioned|--superseded <wrangler-secret-list.json>]');
+  throw new Error('Usage: node scripts/validate-worker-secrets.ts [--provisioned|--superseded <wrangler-secret-list.json>]');
 }

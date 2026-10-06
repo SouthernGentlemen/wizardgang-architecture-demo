@@ -8,14 +8,14 @@ const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
 const presentation = JSON.parse(fs.readFileSync(path.join(root, 'assurance/presentation/documents.json'), 'utf8'));
 const assuranceRegistry = JSON.parse(fs.readFileSync(path.join(root, 'assurance/registry.json'), 'utf8'));
 
-function flattenResources(resources = []) {
+function flattenResources(resources: any[] = []): any[] {
   return resources.flatMap((resource) => [resource, ...flattenResources(resource.resources ?? [])]);
 }
 
 const resourcePathById = new Map(flattenResources(assuranceRegistry.datasets ?? []).map((resource) => [resource.id, resource.path]));
 const presentationById = new Map((presentation.documents ?? []).map((document) => [document.id, document]));
-const errors = [];
-const references = new Map();
+const errors: string[] = [];
+const references = new Map<string, string>();
 const referencePattern = /^WG-(?:GOV|POL|REG|OBJ|SOA|AIA|A11Y)-\d{3}$/;
 
 const canonicalManagementDocuments = [
@@ -95,7 +95,7 @@ const historicalNarrativePatterns = [
   { label: 'full Git SHA', pattern: /\b[0-9a-f]{40}\b/gi },
 ];
 
-function walk(dir) {
+function walk(dir: string): string[] {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const absolute = path.join(dir, entry.name);
     return entry.isDirectory() ? walk(absolute) : [absolute];
@@ -149,7 +149,7 @@ for (const [reference, expectedPath] of canonicalReferencePaths) {
 }
 
 const registeredPaths = new Set((registry.records ?? []).map((record) => record.path));
-const liveReferences = new Map();
+const liveReferences = new Map<string, string>();
 for (const absolute of walk(governanceRoot).filter((file) => file.endsWith('.md'))) {
   const relative = path.relative(root, absolute).split(path.sep).join('/');
   const text = fs.readFileSync(absolute, 'utf8');

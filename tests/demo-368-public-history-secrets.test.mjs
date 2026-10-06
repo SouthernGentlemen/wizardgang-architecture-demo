@@ -3,7 +3,7 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, unlinkSync, writeFileSync
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { scanPublicHistory, secretKinds } from '../scripts/lib/public-history-secrets.mjs';
+import { scanPublicHistory, secretKinds } from '../scripts/lib/public-history-secrets.ts';
 
 const roots = [];
 
