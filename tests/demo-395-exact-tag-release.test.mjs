@@ -52,6 +52,8 @@ describe('DEMO-395 release and deployment identities', () => {
     expect(release).toContain('Exact-tag Release dispatch is not bound to successful current-main CI');
     expect(release).toContain('$main_sha');
     expect(release).toContain('$REQUESTED_COMMIT');
+    expect(release).toContain('node scripts/release-workflow.ts validate-dispatch');
+    expect(release).not.toMatch(/node (?:-p|-e|--input-type)|<<'NODE'/);
     expect(release).toContain('Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@67b4b86847e0d635a3f6fe4c21618a25d5bc71a0');
     expect(release).toContain('expected_sha: ${{ github.sha }}');
     expect(existsSync('.github/workflows/deploy.yml')).toBe(false);

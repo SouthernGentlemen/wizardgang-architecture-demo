@@ -108,21 +108,9 @@ jobs:
           if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
             ci_json="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_CI_RUN_ID")"
           fi
-          RELEASE_CI_JSON="$ci_json" RELEASE_MAIN_SHA="${main_sha:-}" RELEASE_CHECKOUT_COMMIT="$checkout_commit" node --input-type=module <<'NODE'
-          import { validateExactTagDispatch } from './scripts/lib/exact-tag-release.ts';
-          validateExactTagDispatch({
-            eventName: process.env.GITHUB_EVENT_NAME,
-            ref: process.env.GITHUB_REF,
-            refName: process.env.GITHUB_REF_NAME,
-            tag: process.env.GITHUB_REF_NAME,
-            commit: process.env.REQUESTED_COMMIT,
-            checkoutCommit: process.env.RELEASE_CHECKOUT_COMMIT,
-            ciRun: JSON.parse(process.env.RELEASE_CI_JSON),
-            mainSha: process.env.RELEASE_MAIN_SHA,
-          });
-          NODE
+          RELEASE_CI_JSON="$ci_json" RELEASE_MAIN_SHA="${main_sha:-}" RELEASE_CHECKOUT_COMMIT="$checkout_commit" node scripts/release-workflow.ts validate-dispatch
 
-          package_version="$(node -p "JSON.parse(require('fs').readFileSync('package.json','utf8')).version")"
+          package_version="$(node scripts/release-workflow.ts package-version < package.json)"
           if [[ "v$package_version" != "$GITHUB_REF_NAME" ]]; then
             echo "::error::Package version $package_version does not match release tag $GITHUB_REF_NAME"
             exit 1

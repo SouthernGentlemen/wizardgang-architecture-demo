@@ -68,7 +68,7 @@ describe('DEMO-365 exact release reproduction command ownership', () => {
     expect(releaseWorkflow).toContain('Verify annotated semantic release identity');
     expect(releaseWorkflow).toContain('git cat-file -t "$tag_ref"');
     expect(releaseWorkflow).toContain('checkout_commit="$(git rev-parse HEAD)"');
-    expect(releaseWorkflow).toContain('package_version="$(node -p');
+    expect(releaseWorkflow).toContain('package_version="$(node scripts/release-workflow.ts package-version < package.json)"');
     expect(releaseWorkflow).toContain('Publish GitHub Release from tag and GitHub history');
     expect(releaseWorkflow).toContain('gh release create "${release_args[@]}"');
 
