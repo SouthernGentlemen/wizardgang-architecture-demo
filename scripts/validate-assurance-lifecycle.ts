@@ -31,6 +31,9 @@ const approvedIdentityTransitions = new Map([
   ['EVD-SRC-007', new Set([
     'evidence|source|src/ui/page.ts|\0evidence|source|src/ui/document.tsx|',
   ])],
+  ['EVD-TST-004', new Set([
+    'evidence|test|scripts/site-browser-audit.mjs|\0evidence|test|scripts/site-browser-audit.ts|',
+  ])],
 ]);
 const requiredMigrationCommit = '6f8383cd6a318e0fe03506bc96401f5161c6e222';
 const sensitiveKeys = new Set([
