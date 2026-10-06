@@ -245,7 +245,7 @@ describe('DEMO-290 assurance assessment acceptance', () => {
     expect(assuranceStates.some((state) => state.path.includes('lang=ar'))).toBe(true);
 
     const mainAudit = readFileSync('scripts/site-browser-audit.ts', 'utf8');
-    const runner = readFileSync('scripts/run-site-accessibility-audits.mjs', 'utf8');
+    const runner = readFileSync('scripts/run-site-accessibility-audits.ts', 'utf8');
 
     expect(mainAudit).toContain('axe-core');
     expect(mainAudit).toContain("violation.id==='color-contrast'");

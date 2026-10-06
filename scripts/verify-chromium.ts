@@ -2,7 +2,7 @@ import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import process from 'node:process';
 
-const candidates = process.env.CHROME_BIN
+const candidates: string[] = process.env.CHROME_BIN
   ? [process.env.CHROME_BIN]
   : process.platform === 'win32'
     ? ['chrome.exe']
