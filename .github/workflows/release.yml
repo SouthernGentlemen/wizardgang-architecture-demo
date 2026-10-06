@@ -206,9 +206,9 @@ jobs:
 
   deploy:
     needs: reproduce
-    uses: ./.github/workflows/deploy.yml
+    uses: Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@67b4b86847e0d635a3f6fe4c21618a25d5bc71a0
     with:
-      ref: ${{ github.ref_name }}
-      release_origin: ${{ github.event_name == 'push' && 'tag-push' || 'exact-tag-dispatch' }}
-      accepted_commit: ${{ github.sha }}
+      worker: demo
+      tag: ${{ github.ref_name }}
+      expected_sha: ${{ github.sha }}
     secrets: inherit

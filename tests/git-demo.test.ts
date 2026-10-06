@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { gitDemoReleaseResponse, gitDemoStartResponse, gitDemoStatusResponse } from '../src/api/git-demo';
+import { gitDemoPreflightResponse, gitDemoReleaseResponse, gitDemoStartResponse, gitDemoStatusResponse } from '../src/api/git-demo';
 import { clearGitDemoCacheForTest, collectGitDemoStatus } from '../src/lib/git-demo';
 import { clearGitHubAppTokensForTest } from '../src/lib/github-app';
 import { appToken, appTokenResponse, githubAppEnv, mintedPermissions } from './helpers/github-app';
@@ -23,12 +23,9 @@ function environment(): Env & { WG_DB: SqliteD1 } {
     GITHUB_REPO_URL: repositoryUrl,
     GITHUB_BRANCH: 'main',
     ...githubAppEnv,
-    DEMO_ADMIN_USER: 'operator',
-    DEMO_ADMIN_PASSWORD: 'test-admin-password',
   };
 }
 
-const basic = `Basic ${btoa('operator:test-admin-password')}`;
 
 function json(value: unknown, status = 200): Response {
   return new Response(JSON.stringify(value), { status, headers: { 'content-type': 'application/json' } });
@@ -126,12 +123,12 @@ function fixtures(options: { pulls?: unknown[]; ciConclusion?: string | null; co
 }
 
 function adminRequest(path: string, body: unknown): Request {
-  const payload = path === '/api/labs/git-delivery' && body && typeof body === 'object' && 'bump' in body && !('preflightFingerprint' in body) && typeof body.bump === 'string'
+  const payload = path === '/admin/api/labs/git-delivery' && body && typeof body === 'object' && 'bump' in body && !('preflightFingerprint' in body) && typeof body.bump === 'string'
     ? { ...body, preflightFingerprint: fingerprint(body.bump as 'patch' | 'minor' | 'major') }
     : body;
   return new Request(`https://demo.wizardgang.ai${path}`, {
     method: 'POST',
-    headers: { authorization: basic, origin: 'https://demo.wizardgang.ai', 'content-type': 'application/json' },
+    headers: { origin: 'https://demo.wizardgang.ai', 'content-type': 'application/json' },
     body: JSON.stringify(payload),
   });
 }
@@ -177,27 +174,20 @@ describe('live Git delivery lifecycle', () => {
     expect(invalid.status).toBe(400);
   });
 
-  it('requires same-origin admin authentication before a dispatch', async () => {
+  it('requires same-origin requests after the shell operator gate', async () => {
     fixtures({ pulls: [] });
-    const env = environment();
-    const crossOrigin = await gitDemoStartResponse(new Request('https://demo.wizardgang.ai/api/labs/git-delivery', {
+    const crossOrigin = await gitDemoStartResponse(new Request('https://demo.wizardgang.ai/admin/api/labs/git-delivery', {
       method: 'POST',
-      headers: { authorization: basic, origin: 'https://attacker.example', 'content-type': 'application/json' },
+      headers: { origin: 'https://attacker.example', 'content-type': 'application/json' },
       body: JSON.stringify({ bump: 'patch' }),
-    }), env);
+    }), environment());
     expect(crossOrigin.status).toBe(403);
-    const unauthenticated = await gitDemoStartResponse(new Request('https://demo.wizardgang.ai/api/labs/git-delivery', {
-      method: 'POST',
-      headers: { origin: 'https://demo.wizardgang.ai', 'content-type': 'application/json' },
-      body: JSON.stringify({ bump: 'patch' }),
-    }), env);
-    expect(unauthenticated.status).toBe(401);
   });
 
   it('dispatches only the allowlisted workflow with an Actions-write App installation token', async () => {
     const fetchMock = fixtures({ pulls: [] });
     const env = environment();
-    const response = await gitDemoStartResponse(adminRequest('/api/labs/git-delivery', { bump: 'patch' }), env);
+    const response = await gitDemoStartResponse(adminRequest('/admin/api/labs/git-delivery', { bump: 'patch' }), env);
     const payload = await response.json() as Record<string, unknown>;
     expect(response.status).toBe(202);
     expect(payload).toMatchObject({ accepted: true, bump: 'patch', currentVersion: '0.7.0', targetVersion: '0.7.1', lastRelease: 'v0.7.0' });
@@ -207,8 +197,6 @@ describe('live Git delivery lifecycle', () => {
     const init = dispatch?.[1] as RequestInit;
     expect(new Headers(init.headers).get('authorization')).toBe(`Bearer ${appToken({ actions: 'write' })}`);
     expect(JSON.parse(String(init.body))).toMatchObject({ ref: 'main', inputs: { operation: 'start', bump: 'patch', pull_request: '' } });
-    expect(env.WG_DB.dump()).not.toContain('test-admin-password');
-    expect(env.WG_DB.dump()).not.toContain(basic);
     expect(env.WG_DB.dump()).not.toContain(appToken({ actions: 'write' }));
     expect(env.WG_DB.dump()).not.toContain('PRIVATE KEY');
   });
@@ -231,40 +219,38 @@ describe('live Git delivery lifecycle', () => {
 
   it('refuses a dispatch when the GitHub App is not configured', async () => {
     const fetchMock = fixtures({ pulls: [] });
-    const response = await gitDemoStartResponse(adminRequest('/api/labs/git-delivery', { bump: 'patch' }), { ...environment(), GITHUB_APP_PRIVATE_KEY: undefined });
+    const response = await gitDemoStartResponse(adminRequest('/admin/api/labs/git-delivery', { bump: 'patch' }), { ...environment(), GITHUB_APP_PRIVATE_KEY: undefined });
     expect(response.status).toBe(503);
     expect(fetchMock.mock.calls.some(([input]) => String(input).endsWith('/dispatches'))).toBe(false);
   });
 
   it('shows the complete target and release range to an authenticated operator before start', async () => {
     fixtures({ pulls: [] });
-    const request = new Request('https://demo.wizardgang.ai/api/labs/git-delivery?preflight=patch', { headers: { authorization: basic } });
-    const response = await gitDemoStatusResponse(request, environment());
+    const request = new Request('https://demo.wizardgang.ai/admin/api/labs/git-delivery?preflight=patch');
+    const response = await gitDemoPreflightResponse(request, environment());
     expect(response.status).toBe(200);
     expect(await response.json()).toMatchObject({ mainSha, targetVersion: '0.7.1', lastRelease: 'v0.7.0', commitsSinceRelease: [{ sha: 'c'.repeat(40) }] });
-    const denied = await gitDemoStatusResponse(new Request(request.url), environment());
-    expect(denied.status).toBe(401);
   });
 
   it('fails closed when the commits-since-release comparison is incomplete', async () => {
     fixtures({ pulls: [], compareTotal: 2 });
-    const response = await gitDemoStartResponse(adminRequest('/api/labs/git-delivery', { bump: 'patch' }), environment());
+    const response = await gitDemoStartResponse(adminRequest('/admin/api/labs/git-delivery', { bump: 'patch' }), environment());
     expect(response.status).toBe(503);
     expect(await response.json()).toMatchObject({ error: 'github_preflight_unavailable' });
   });
 
   it('rejects a stale preflight fingerprint before dispatch', async () => {
     const fetchMock = fixtures({ pulls: [] });
-    const request = adminRequest('/api/labs/git-delivery', { bump: 'patch' });
+    const request = adminRequest('/admin/api/labs/git-delivery', { bump: 'patch' });
     const body = await request.json() as Record<string, unknown>;
-    const response = await gitDemoStartResponse(adminRequest('/api/labs/git-delivery', { ...body, preflightFingerprint: '0'.repeat(64) }), environment());
+    const response = await gitDemoStartResponse(adminRequest('/admin/api/labs/git-delivery', { ...body, preflightFingerprint: '0'.repeat(64) }), environment());
     expect(response.status).toBe(409);
     expect(fetchMock.mock.calls.some(([input]) => String(input).endsWith('/dispatches'))).toBe(false);
   });
 
   it('returns the active live-demo pull request instead of creating a collision', async () => {
     const fetchMock = fixtures();
-    const response = await gitDemoStartResponse(adminRequest('/api/labs/git-delivery', { bump: 'minor' }), environment());
+    const response = await gitDemoStartResponse(adminRequest('/admin/api/labs/git-delivery', { bump: 'minor' }), environment());
     expect(response.status).toBe(409);
     expect(await response.json()).toMatchObject({ error: 'git_demo_already_active', requestId, pullRequest: { number: 54 } });
     expect(fetchMock.mock.calls.some(([input]) => String(input).endsWith('/dispatches'))).toBe(false);
@@ -272,7 +258,7 @@ describe('live Git delivery lifecycle', () => {
 
   it('dispatches merge and release only after the real CI workflow passes', async () => {
     const fetchMock = fixtures();
-    const response = await gitDemoReleaseResponse(adminRequest('/api/labs/git-release', { pullRequest: 54, requestId }), environment());
+    const response = await gitDemoReleaseResponse(adminRequest('/admin/api/labs/git-release', { pullRequest: 54, requestId }), environment());
     expect(response.status).toBe(202);
     const dispatch = fetchMock.mock.calls.find(([input]) => String(input).endsWith('/actions/workflows/git-demo.yml/dispatches'));
     expect(JSON.parse(String((dispatch?.[1] as RequestInit).body))).toMatchObject({ inputs: { operation: 'release', request_id: requestId, pull_request: '54' } });
@@ -280,7 +266,7 @@ describe('live Git delivery lifecycle', () => {
 
   it('refuses release while CI is still running', async () => {
     const fetchMock = fixtures({ ciConclusion: null });
-    const response = await gitDemoReleaseResponse(adminRequest('/api/labs/git-release', { pullRequest: 54, requestId }), environment());
+    const response = await gitDemoReleaseResponse(adminRequest('/admin/api/labs/git-release', { pullRequest: 54, requestId }), environment());
     expect(response.status).toBe(409);
     expect(await response.json()).toMatchObject({ error: 'git_demo_ci_not_ready' });
     expect(fetchMock.mock.calls.some(([input]) => String(input).endsWith('/dispatches'))).toBe(false);
@@ -288,7 +274,7 @@ describe('live Git delivery lifecycle', () => {
 
   it('refuses release when a required exact-head check is missing or unavailable', async () => {
     const missing = fixtures({ missingCheck: 'secrets' });
-    const first = await gitDemoReleaseResponse(adminRequest('/api/labs/git-release', { pullRequest: 54, requestId }), environment());
+    const first = await gitDemoReleaseResponse(adminRequest('/admin/api/labs/git-release', { pullRequest: 54, requestId }), environment());
     expect(first.status).toBe(409);
     expect(missing.mock.calls.some(([input]) => String(input).endsWith('/dispatches'))).toBe(false);
     missing.mockRestore();
@@ -301,7 +287,7 @@ describe('live Git delivery lifecycle', () => {
 
   it('does not reuse a stale successful check after its latest rerun fails', async () => {
     const fetchMock = fixtures({ failedLatestCheck: 'security' });
-    const response = await gitDemoReleaseResponse(adminRequest('/api/labs/git-release', { pullRequest: 54, requestId }), environment());
+    const response = await gitDemoReleaseResponse(adminRequest('/admin/api/labs/git-release', { pullRequest: 54, requestId }), environment());
     expect(response.status).toBe(409);
     expect(fetchMock.mock.calls.some(([input]) => String(input).endsWith('/dispatches'))).toBe(false);
   });

@@ -6,9 +6,21 @@ import { removedHtmlPathnames, retiredOperationsHtmlPathname } from './fixtures/
 const expectedPolicies = [
   {
     id: 'operations.admin', pattern: '/admin', methods: ['GET', 'POST'], kind: 'page', visibility: 'private',
-    authentication: { mode: 'required', provider: 'admin-basic' }, authorization: { mode: 'policy', policy: 'admin' },
+    authentication: { mode: 'required', provider: 'wg-ops' }, authorization: { mode: 'policy', policy: 'admin' },
     sameOrigin: { mode: 'required', methods: ['POST'] }, offline: { mode: 'available' }, cache: { mode: 'no-store' },
     crawler: { crawling: 'allow', indexing: 'deny' },
+  },
+  {
+    id: 'operations.admin-git-delivery', pattern: '/admin/api/labs/git-delivery', methods: ['GET', 'POST'], kind: 'api', visibility: 'private',
+    authentication: { mode: 'required', provider: 'wg-ops' }, authorization: { mode: 'policy', policy: 'admin + release controls' },
+    sameOrigin: { mode: 'required', methods: ['POST'] }, offline: { mode: 'gated' }, cache: { mode: 'no-store' },
+    crawler: { crawling: 'deny', indexing: 'deny' },
+  },
+  {
+    id: 'operations.admin-git-release', pattern: '/admin/api/labs/git-release', methods: ['POST'], kind: 'api', visibility: 'private',
+    authentication: { mode: 'required', provider: 'wg-ops' }, authorization: { mode: 'policy', policy: 'admin + release-ready controls' },
+    sameOrigin: { mode: 'required', methods: ['POST'] }, offline: { mode: 'gated' }, cache: { mode: 'no-store' },
+    crawler: { crawling: 'deny', indexing: 'deny' },
   },
   {
     id: 'operations.offline', pattern: '/offline', methods: ['GET'], kind: 'page', visibility: 'public',

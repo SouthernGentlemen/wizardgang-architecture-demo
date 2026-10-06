@@ -1,6 +1,7 @@
 node_modules/
 .wrangler/
 dist/
+src/worker-entry.mjs
 coverage/
 .ci-diagnostics/
 .dev.vars

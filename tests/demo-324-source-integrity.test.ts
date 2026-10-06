@@ -79,6 +79,8 @@ function reachableSourceModules(): Set<string> {
   const reachable = new Set<string>();
   const pending = [
     path.join(srcRoot, 'index.ts'),
+    path.join(srcRoot, 'local-worker.ts'),
+    ...(fs.existsSync(path.join(srcRoot, 'worker-entry.mjs')) ? [path.join(srcRoot, 'worker-entry.mjs')] : []),
     path.join(srcRoot, 'browser', 'shell.ts'),
     path.join(srcRoot, 'browser', 'admin.ts'),
     path.join(srcRoot, 'browser', 'assurance.ts'),

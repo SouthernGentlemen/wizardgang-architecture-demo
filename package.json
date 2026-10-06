@@ -1,6 +1,6 @@
 {
   "name": "wizardgang-architecture-demo",
-  "version": "0.30.0",
+  "version": "0.31.0",
   "private": false,
   "type": "module",
   "imports": {
@@ -20,12 +20,12 @@
     "workerd@1.20260926.1": true
   },
   "scripts": {
-    "dev": "npm run generate:assets && node scripts/dev.mjs",
+    "dev": "node scripts/generate-worker-entry.ts && npm run generate:assets && node scripts/dev.mjs",
     "deploy": "node scripts/refuse-production-deploy.ts",
     "generate:assets": "ASSET_MANIFEST_WRITE=1 vite build",
     "validate:assets": "vite build",
     "build:client": "npm run generate:assets",
-    "build:worker": "wrangler deploy --dry-run --outdir dist/worker && npm run validate:worker-bundle",
+    "build:worker": "node scripts/generate-worker-entry.ts && wrangler deploy --dry-run --outdir dist/worker && npm run validate:worker-bundle",
     "build": "npm run build:client && npm run build:worker",
     "lint": "node scripts/lint.mjs",
     "typecheck": "tsc --noEmit && tsc --project src/browser/tsconfig.json --noEmit",
@@ -69,7 +69,7 @@
     "validate:scaffold": "node scripts/validate-scaffold.mjs",
     "validate:assurance-documentation": "node scripts/validate-assurance-documentation.ts",
     "validate:worker-secrets": "node scripts/validate-worker-secrets.mjs",
-    "check:platform": "node platform/conformance/cli.mjs pin",
+    "check:platform": "node platform/conformance/cli.mjs pin && node platform/conformance/cli.mjs wrangler --worker demo",
     "validate:repository-settings": "node scripts/validate-github-repository-settings.ts",
     "test:plan-queue": "node scripts/check-portfolio-contract.ts",
     "test:github-settings": "node --test tests/github-settings.cases.mjs",
@@ -103,6 +103,9 @@
     "zod": "4.6.5"
   },
   "overrides": {
-    "sharp": "^0.35.4"
+    "sharp": "^0.35.4",
+    "@graphql-tools/utils": "12.0.3",
+    "@graphql-tools/executor-legacy-ws": "1.1.37",
+    "source-map-js": "1.2.2"
   }
 }

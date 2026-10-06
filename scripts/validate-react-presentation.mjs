@@ -96,8 +96,11 @@ export function validateReactPresentation(root = ROOT) {
 
 export function validateWorkerBundle(root = ROOT) {
   const failures = [];
-  const bundlePath = path.join(root, 'dist/worker/index.js');
-  if (!existsSync(bundlePath)) return ['dist/worker/index.js: run npm run build:worker first'];
+  const workerDir = path.join(root, 'dist/worker');
+  const bundles = filesUnder(workerDir).filter((file) => file.endsWith('.js'));
+  if (bundles.length !== 1) return [`dist/worker: expected exactly one Worker JavaScript bundle after npm run build:worker; found ${bundles.length}`];
+  const bundlePath = bundles[0];
+  const bundleLabel = path.relative(root, bundlePath).replaceAll(path.sep, '/');
   const bundle = readFileSync(bundlePath);
   const manifest = JSON.parse(readFileSync(path.join(root, 'docs/asset-manifest.json'), 'utf8'));
   for (const [key, asset] of Object.entries(manifest.assets)) {
@@ -105,7 +108,7 @@ export function validateWorkerBundle(root = ROOT) {
     const browserAsset = path.join(root, 'dist/client', asset.slice(1));
     if (!existsSync(browserAsset)) { failures.push(`${asset}: missing browser asset`); continue; }
     const bytes = readFileSync(browserAsset);
-    if (bundle.includes(bytes.subarray(0, Math.min(bytes.length, 256)))) failures.push(`dist/worker/index.js: browser-only vendored payload bundled: ${asset}`);
+    if (bundle.includes(bytes.subarray(0, Math.min(bytes.length, 256)))) failures.push(`${bundleLabel}: browser-only vendored payload bundled: ${asset}`);
   }
   return failures;
 }

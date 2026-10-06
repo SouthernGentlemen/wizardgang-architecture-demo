@@ -117,9 +117,10 @@ async function authenticateRoute(
   request: Request,
   env: Env,
   route: ApplicationRouteDeclaration,
+  adminAuthorized: boolean,
 ): Promise<AdminIdentity | Response | undefined> {
   if (route.authentication.mode === 'anonymous') return undefined;
-  if (route.authentication.provider === 'admin-basic') return requireAdmin(request, env);
+  if (route.authentication.provider === 'wg-ops') return requireAdmin(adminAuthorized);
   if (route.authentication.provider === 'identity-session') {
     if (await identityReadiness(env) !== 'ready') {
       return json({ error: 'identity_not_configured' }, {
@@ -136,15 +137,23 @@ async function authenticateRoute(
   throw new Error(`Unsupported route authentication provider '${route.authentication.provider}' for ${route.id}`);
 }
 
-export async function routeRequest(request: Request, env: Env): Promise<Response> {
+export async function routeRequest(
+  request: Request,
+  env: Env,
+  options: Readonly<{ adminAuthorized?: boolean }> = {},
+): Promise<Response> {
   try {
-    return await routeRequestUnsafe(request, env);
+    return await routeRequestUnsafe(request, env, options);
   } catch (error) {
     return safeError(request, error);
   }
 }
 
-async function routeRequestUnsafe(request: Request, env: Env): Promise<Response> {
+async function routeRequestUnsafe(
+  request: Request,
+  env: Env,
+  options: Readonly<{ adminAuthorized?: boolean }>,
+): Promise<Response> {
   const url = new URL(request.url);
   const path = normalizeRoutePath(url.pathname);
   const localization = resolveLocalization(request);
@@ -185,7 +194,7 @@ async function routeRequestUnsafe(request: Request, env: Env): Promise<Response>
 
   if (match.status === 'method-not-allowed') return methodNotAllowed([...match.allowedMethods]);
 
-  const authentication = await authenticateRoute(request, env, route);
+  const authentication = await authenticateRoute(request, env, route, options.adminAuthorized === true);
   if (authentication instanceof Response) return authentication;
 
   if (route.sameOrigin.mode === 'required' && route.sameOrigin.methods.includes(request.method as RouteMethod)) {

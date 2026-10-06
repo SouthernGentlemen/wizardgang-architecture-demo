@@ -1,6 +1,6 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { planExactTagRelease, validateDeployTrigger, validateExactTagDispatch } from '../scripts/lib/exact-tag-release.ts';
+import { planExactTagRelease, validateExactTagDispatch } from '../scripts/lib/exact-tag-release.ts';
 
 const commit = 'a'.repeat(40);
 const previous = 'b'.repeat(40);
@@ -42,24 +42,19 @@ describe('DEMO-395 release and deployment identities', () => {
     expect(() => validateExactTagDispatch({ ...valid, ciRun: { ...run, conclusion: 'failure' } })).toThrow();
   });
 
-  it('keeps manual recovery distinct from exact-tag deployment and preserves production approval', () => {
-    expect(validateDeployTrigger({ eventName: 'workflow_dispatch', ref: 'refs/heads/main', tag: 'v0.28.0', releaseOrigin: '', expectedCommit: '', checkoutCommit: previous })).toBe('manual-recovery');
-    expect(validateDeployTrigger({ eventName: 'workflow_dispatch', ref: 'refs/tags/v0.28.1', tag: 'v0.28.1', releaseOrigin: 'exact-tag-dispatch', expectedCommit: commit, checkoutCommit: commit })).toBe('exact-tag-dispatch');
-    expect(() => validateDeployTrigger({ eventName: 'workflow_dispatch', ref: 'refs/tags/v0.28.1', tag: 'v0.28.1', releaseOrigin: '', expectedCommit: commit, checkoutCommit: commit })).toThrow();
-    expect(() => validateDeployTrigger({ eventName: 'workflow_dispatch', ref: 'refs/tags/v0.28.1', tag: 'v0.28.1', releaseOrigin: 'exact-tag-dispatch', expectedCommit: previous, checkoutCommit: commit })).toThrow();
+  it('hands the accepted exact tag to the pinned baseline deploy workflow', () => {
     const cutter = readFileSync('.github/workflows/release-cutter.yml', 'utf8');
     const release = readFileSync('.github/workflows/release.yml', 'utf8');
-    const deploy = readFileSync('.github/workflows/deploy.yml', 'utf8');
     const live = readFileSync('.github/workflows/git-demo.yml', 'utf8');
     expect(cutter).toContain('node scripts/cut-main-release.ts');
     expect(cutter).toContain("github.event.workflow_run.conclusion == 'success'");
     expect(release).toContain('ci_run_id:');
-    expect(release).toContain('exact-tag-dispatch');
-    expect(release).toContain('validateExactTagDispatch');
-    expect(deploy).toContain('environment: production');
-    expect(deploy).toContain('"$ACCEPTED_COMMIT" != "$checkout_commit"');
-    expect(deploy).toContain('Verify production Worker secret names');
-    expect(deploy).toContain('Verify public version, health, and identity continuity');
+    expect(release).toContain('Exact-tag Release dispatch is not bound to successful current-main CI');
+    expect(release).toContain('$main_sha');
+    expect(release).toContain('$REQUESTED_COMMIT');
+    expect(release).toContain('Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@67b4b86847e0d635a3f6fe4c21618a25d5bc71a0');
+    expect(release).toContain('expected_sha: ${{ github.sha }}');
+    expect(existsSync('.github/workflows/deploy.yml')).toBe(false);
     expect(live).not.toContain('git push origin "refs/tags/v$VERSION"');
   });
 });

@@ -18,8 +18,6 @@ Use Cloudflare/GitHub managed secret stores for production and ignored `.dev.var
 The authoritative Worker secret-name inventory is `config/worker-secrets.json`. It follows the baseline registry (`Wizard-Gang/baseline` `config/secrets.json`), which names every WizardGang secret, its one home and its consumers; baseline `docs/SECRETS-RUNBOOK.md` mints, sets, rotates and revokes each one. Values are never checked in or exposed by health, version, logs, usage, evidence, or source-link surfaces.
 
 <!-- WORKER_SECRETS_START -->
-- `DEMO_ADMIN_USER` (until the shared operator gate replaces it);
-- `DEMO_ADMIN_PASSWORD` (until the shared operator gate replaces it);
 - `DEMO_WEBHOOK_SECRET`;
 - `GITHUB_WEBHOOK_SECRET`;
 - `GITHUB_APP_PRIVATE_KEY`;
@@ -39,13 +37,13 @@ Cloudflare usage collection uses the dedicated minimum-permission `CLOUDFLARE_BI
 
 `/admin` is authenticated and state-changing responses use `Cache-Control: no-store`. Online/offline and crawler-access states are persisted in D1 and state transitions are auditable, but audit payloads must never contain credentials or authorization material.
 
-Admin credentials are compared through fixed-length digests, state-changing form submissions require exact same-origin requests, and control failures fail closed. For production, place Cloudflare Access in front of `/admin` where practical while retaining the application-side authentication/authorization boundary.
+The vendored `wg-edge` shell gates `/admin` and `/admin/*` with the shared Secrets Store `WG_OPS_TOKEN`; the application receives only the shell's authenticated-admin decision and never reads an admin password. State-changing form submissions still require exact same-origin requests and failures fail closed.
 
 The controlled Git lifecycle reuses the admin boundary for start and merge/release actions. The browser sends credentials only to the same-origin Worker. The Worker and `git-demo.yml` both act as the `wg-github-app` GitHub App, which is installed on this repository only and holds no Administration, Secrets, Environments or Workflows permission. Each Worker call mints an installation token with only the permissions that call needs through the vendored wg-edge `githubAppToken` (`GITHUB_APP_PRIVATE_KEY`); `git-demo.yml` runs in the `git-demo` environment and mints a job-scoped token from its `APP_ID` and `APP_PRIVATE_KEY`, which GitHub revokes when the job ends. No personal GitHub token remains. The public `/assurance#traceability` check presents disclosure-safe lifecycle evidence; it is not an operator control.
 
-Crawler access combines dynamic `/robots.txt` policy with request gating for `OAI-SearchBot` and `ChatGPT-User`; robots rules alone are insufficient for user-triggered visits. `GPTBot` remains blocked so search/fetch access is separate from model-training access. No authorization decision relies on a crawler user agent.
+Crawler access combines the shared shell's stable `/robots.txt` policy with application request gating for `OAI-SearchBot` and `ChatGPT-User`; robots rules alone are insufficient for user-triggered visits. `GPTBot` remains blocked so search/fetch access is separate from model-training access. No authorization decision relies on a crawler user agent.
 
-No broad operator bearer credential is accepted by the application. REST writes accept only short-lived tokens derived from validated identity sessions, and those tokens are limited to a server-derived visitor namespace. Public REST, GraphQL, and MCP reads share the explicit `demo:read` boundary, and authenticated GraphQL mutations cross the same normalized-principal policy. Webhook receivers verify signatures over the exact request body and reject replayed delivery IDs.
+The broad operator credential is accepted only by the shared shell for the `/admin` boundary; application routes never compare or persist it. REST writes accept only short-lived tokens derived from validated identity sessions, and those tokens are limited to a server-derived visitor namespace. Public REST, GraphQL, and MCP reads share the explicit `demo:read` boundary, and authenticated GraphQL mutations cross the same normalized-principal policy. Webhook receivers verify signatures over the exact request body and reject replayed delivery IDs.
 
 ## Public logging
 

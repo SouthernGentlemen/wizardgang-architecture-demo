@@ -63,7 +63,7 @@ async function request(
   return routeRequest(new Request(new URL(path, 'https://demo.example'), {
     ...init,
     headers,
-  }), env);
+  }), env, { adminAuthorized: headers.get('authorization') === `Basic ${Buffer.from('operator:test-admin-password').toString('base64')}` });
 }
 
 async function page(routeId: string, env = environment()): Promise<{ response: Response; html: string }> {
