@@ -1,14 +1,35 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
+import type { ChildProcess } from 'node:child_process';
 
 const DEFAULT_CDP_TIMEOUT_MS = 15_000;
 const DEFAULT_NAVIGATION_TIMEOUT_MS = 30_000;
 
-export function sleep(ms) {
+type CdpParams = Record<string, unknown>;
+type CdpListener = (method: string, params: CdpParams) => void;
+type CdpEvent = { method: string; params: CdpParams };
+type CdpCallOptions = { timeoutMs?: number; label?: string };
+type PendingCall = {
+  resolve: (value: any) => void;
+  reject: (error: unknown) => void;
+  timer: ReturnType<typeof setTimeout>;
+  label: string;
+};
+type Waiter = { reject: (error: unknown) => void };
+type CdpMessage = {
+  id?: number;
+  method?: string;
+  params?: CdpParams;
+  result?: any;
+  error?: { message: string };
+};
+export type PageTarget = { type: string; webSocketDebuggerUrl?: string; [key: string]: unknown };
+
+export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function fetchWithTimeout(url, options, timeoutMs) {
+async function fetchWithTimeout(url: string, options: RequestInit, timeoutMs: number): Promise<Response> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -18,7 +39,7 @@ async function fetchWithTimeout(url, options, timeoutMs) {
   }
 }
 
-async function fetchJsonWithTimeout(url, options, timeoutMs) {
+async function fetchJsonWithTimeout(url: string, options: RequestInit, timeoutMs: number): Promise<{ response: Response; value: any }> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -33,9 +54,9 @@ async function fetchJsonWithTimeout(url, options, timeoutMs) {
   }
 }
 
-async function settleWithin(promise, timeoutMs) {
-  let timer;
-  const timedOut = new Promise((resolve) => {
+async function settleWithin(promise: Promise<unknown>, timeoutMs: number): Promise<boolean> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timedOut = new Promise<boolean>((resolve) => {
     timer = setTimeout(() => resolve(false), timeoutMs);
   });
   try {
@@ -45,7 +66,7 @@ async function settleWithin(promise, timeoutMs) {
   }
 }
 
-export function chromeExecutable(purpose = 'browser audit') {
+export function chromeExecutable(purpose = 'browser audit'): string {
   if (process.env.CHROME_BIN) return process.env.CHROME_BIN;
   const candidates = process.platform === 'win32'
     ? ['chrome.exe']
@@ -59,7 +80,7 @@ export function chromeExecutable(purpose = 'browser audit') {
   throw new Error(`Chromium/Chrome is required for ${purpose}. Set CHROME_BIN to an installed browser.`);
 }
 
-export async function terminateProcess(child, graceMs = 5_000) {
+export async function terminateProcess(child: ChildProcess | null | undefined, graceMs = 5_000): Promise<void> {
   if (!child) return;
   const openStreams = () => [child.stdin, child.stdout, child.stderr].some((stream) => stream && !stream.destroyed);
   const closeStreams = () => {
@@ -80,8 +101,11 @@ export async function terminateProcess(child, graceMs = 5_000) {
   if (!didClose) closeStreams();
 }
 
-export async function waitForUrl(url, { attempts = 120, intervalMs = 250, requestTimeoutMs = 5_000 } = {}) {
-  let lastError;
+export async function waitForUrl(
+  url: string,
+  { attempts = 120, intervalMs = 250, requestTimeoutMs = 5_000 }: { attempts?: number; intervalMs?: number; requestTimeoutMs?: number } = {},
+): Promise<number> {
+  let lastError: unknown;
   for (let attempt = 0; attempt < attempts; attempt += 1) {
     try {
       const response = await fetchWithTimeout(url, {
@@ -101,15 +125,18 @@ export async function waitForUrl(url, { attempts = 120, intervalMs = 250, reques
   throw lastError ?? new Error(`Unable to reach ${url}`);
 }
 
-export async function waitForPageTarget(debugPort, { attempts = 120, intervalMs = 250 } = {}) {
-  let lastError;
+export async function waitForPageTarget(
+  debugPort: number,
+  { attempts = 120, intervalMs = 250 }: { attempts?: number; intervalMs?: number } = {},
+): Promise<PageTarget> {
+  let lastError: unknown;
   for (let attempt = 0; attempt < attempts; attempt += 1) {
     try {
       const { response, value: targets } = await fetchJsonWithTimeout(`http://127.0.0.1:${debugPort}/json/list`, {
         headers: { connection: 'close' },
       }, 5_000);
       if (response.ok) {
-        const target = targets.find((entry) => entry.type === 'page' && entry.webSocketDebuggerUrl);
+        const target = (targets as PageTarget[]).find((entry) => entry.type === 'page' && entry.webSocketDebuggerUrl);
         if (target) return target;
       }
       if (attempt === 0 || attempt % 20 === 0) {
@@ -130,14 +157,20 @@ export async function waitForPageTarget(debugPort, { attempts = 120, intervalMs 
 }
 
 export class CdpClient {
-  constructor(socket) {
+  socket: WebSocket;
+  nextId: number;
+  pending: Map<number, PendingCall>;
+  listeners: Map<string, Set<CdpListener>>;
+  waiters: Set<Waiter>;
+
+  constructor(socket: WebSocket) {
     this.socket = socket;
     this.nextId = 1;
     this.pending = new Map();
     this.listeners = new Map();
     this.waiters = new Set();
     socket.addEventListener('message', (event) => {
-      let message;
+      let message: CdpMessage;
       try {
         message = JSON.parse(String(event.data));
       } catch (error) {
@@ -153,17 +186,17 @@ export class CdpClient {
         else pending.resolve(message.result);
         return;
       }
-      const listeners = this.listeners.get(message.method);
+      const listeners = this.listeners.get(message.method ?? '');
       if (!listeners) return;
-      for (const listener of [...listeners]) listener(message.method, message.params ?? {});
+      for (const listener of [...listeners]) listener(message.method ?? '', message.params ?? {});
     });
     socket.addEventListener('error', () => this.fail(new Error('Chromium DevTools socket failed.')));
     socket.addEventListener('close', () => this.fail(new Error('Chromium DevTools socket closed.')));
   }
 
-  static async connect(url, timeoutMs = 10_000) {
+  static async connect(url: string, timeoutMs = 10_000): Promise<CdpClient> {
     const socket = new WebSocket(url);
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
       const timer = setTimeout(() => {
         socket.close();
         reject(new Error(`Timed out connecting to Chromium after ${timeoutMs}ms.`));
@@ -180,7 +213,7 @@ export class CdpClient {
     return new CdpClient(socket);
   }
 
-  call(method, params = {}, { timeoutMs = DEFAULT_CDP_TIMEOUT_MS, label = method } = {}) {
+  call(method: string, params: CdpParams = {}, { timeoutMs = DEFAULT_CDP_TIMEOUT_MS, label = method }: CdpCallOptions = {}): Promise<any> {
     const id = this.nextId++;
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
@@ -198,11 +231,14 @@ export class CdpClient {
     });
   }
 
-  waitForAny(methods, { timeoutMs = DEFAULT_CDP_TIMEOUT_MS, label = methods.join(' or ') } = {}) {
+  waitForAny(
+    methods: string[],
+    { timeoutMs = DEFAULT_CDP_TIMEOUT_MS, label = methods.join(' or ') }: CdpCallOptions = {},
+  ): { promise: Promise<CdpEvent | null>; cancel: () => void } {
     let settled = false;
-    let resolvePromise;
-    let rejectPromise;
-    let timer;
+    let resolvePromise: (value: CdpEvent | null) => void;
+    let rejectPromise: (error: unknown) => void;
+    let timer: ReturnType<typeof setTimeout> | undefined;
     const cleanup = () => {
       clearTimeout(timer);
       for (const method of methods) {
@@ -212,18 +248,18 @@ export class CdpClient {
       }
       this.waiters.delete(waiter);
     };
-    const finish = (callback, value) => {
+    const finish = <T>(callback: (value: T) => void, value: T) => {
       if (settled) return;
       settled = true;
       cleanup();
       callback(value);
     };
-    const listener = (method, params) => finish(resolvePromise, { method, params });
-    const promise = new Promise((resolve, reject) => {
+    const listener: CdpListener = (method, params) => finish(resolvePromise, { method, params });
+    const promise = new Promise<CdpEvent | null>((resolve, reject) => {
       resolvePromise = resolve;
       rejectPromise = reject;
     });
-    const waiter = {
+    const waiter: Waiter = {
       reject: (error) => finish(rejectPromise, error),
     };
     this.waiters.add(waiter);
@@ -239,11 +275,11 @@ export class CdpClient {
     };
   }
 
-  once(method, options = {}) {
+  once(method: string, options: CdpCallOptions = {}): Promise<CdpParams | undefined> {
     return this.waitForAny([method], options).promise.then((event) => event?.params);
   }
 
-  on(method, listener) {
+  on(method: string, listener: CdpListener): () => void {
     const listeners = this.listeners.get(method) ?? new Set();
     listeners.add(listener);
     this.listeners.set(method, listeners);
@@ -253,7 +289,7 @@ export class CdpClient {
     };
   }
 
-  fail(error) {
+  fail(error: unknown): void {
     for (const pending of this.pending.values()) {
       clearTimeout(pending.timer);
       pending.reject(error);
@@ -262,7 +298,7 @@ export class CdpClient {
     for (const waiter of [...this.waiters]) waiter.reject(error);
   }
 
-  async close(timeoutMs = 2_000) {
+  async close(timeoutMs = 2_000): Promise<void> {
     this.fail(new Error('Chromium DevTools client closed.'));
     if (this.socket.readyState === WebSocket.CLOSED) return;
     const closed = new Promise((resolve) => this.socket.addEventListener('close', resolve, { once: true }));
@@ -271,7 +307,7 @@ export class CdpClient {
   }
 }
 
-export async function evaluate(cdp, expression, label = 'Runtime.evaluate') {
+export async function evaluate(cdp: CdpClient, expression: string, label = 'Runtime.evaluate'): Promise<any> {
   const result = await cdp.call('Runtime.evaluate', {
     expression,
     awaitPromise: true,
@@ -285,7 +321,11 @@ export async function evaluate(cdp, expression, label = 'Runtime.evaluate') {
   return result.result?.value;
 }
 
-export async function navigate(cdp, url, { timeoutMs = DEFAULT_NAVIGATION_TIMEOUT_MS, label = `navigation for ${url}` } = {}) {
+export async function navigate(
+  cdp: CdpClient,
+  url: string,
+  { timeoutMs = DEFAULT_NAVIGATION_TIMEOUT_MS, label = `navigation for ${url}` }: CdpCallOptions = {},
+): Promise<void> {
   const current = await cdp.call('Runtime.evaluate', {
     expression: 'location.href',
     returnByValue: true,

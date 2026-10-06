@@ -12,7 +12,7 @@ import {
   terminateProcess,
   waitForPageTarget,
   waitForUrl,
-} from './lib/browser-audit.mjs';
+} from './lib/browser-audit.ts';
 import { parseJsonc } from '../platform/conformance/jsonc.mjs';
 import { assuranceReviewState, waitForAssuranceRecordPane } from './lib/demo-289-content-review.mjs';
 import { runCleanLocalMigrations } from './validate-migrations.mjs';

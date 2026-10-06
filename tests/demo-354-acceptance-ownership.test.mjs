@@ -87,9 +87,9 @@ describe('DEMO-354 acceptance gate ownership', () => {
     ]);
     expect(npmRunSequence(packageJson.scripts['test:site-accessibility'])).toEqual(['verify:chromium']);
     expect(commandSequence(packageJson.scripts['test:site-accessibility'])).toContain(
-      'node scripts/run-site-accessibility-audits.mjs',
+      'node scripts/run-site-accessibility-audits.ts',
     );
-    const runner = fs.readFileSync(path.join(process.cwd(), 'scripts', 'run-site-accessibility-audits.mjs'), 'utf8');
+    const runner = fs.readFileSync(path.join(process.cwd(), 'scripts', 'run-site-accessibility-audits.ts'), 'utf8');
     expect(runner.match(/scripts\/site-browser-audit\.ts/g) ?? []).toHaveLength(1);
     expect(runner).not.toContain('demo-289-site-evaluation');
   });

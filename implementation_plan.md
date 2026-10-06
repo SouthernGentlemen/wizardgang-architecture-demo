@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-463 — [BUILD] Port browser audit support to TypeScript
-- Dependency: DEMO-462.
-- Why: Browser helper and runner modules remain authored MJS.
-- Scope: Convert browser-audit helper, audit runner, and Chromium verifier to TS.
-- Non-goals: Do not change required CI names, credential boundaries, release identity, or deployment protection.
-- Acceptance: One browser lifecycle remains executable and diagnostic errors stay actionable.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: scripts/lib/browser-audit.mjs; scripts/run-site-accessibility-audits.mjs; scripts/verify-chromium.mjs
-
 ### DEMO-464 — [BUILD] Port local development tools to TypeScript
 - Dependency: DEMO-463.
 - Why: Local dev command and process helpers are still MJS.
