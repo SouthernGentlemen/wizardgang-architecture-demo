@@ -20,7 +20,7 @@
     "workerd@1.20260926.1": true
   },
   "scripts": {
-    "dev": "node scripts/generate-worker-entry.ts && npm run generate:assets && node scripts/dev.mjs",
+    "dev": "node scripts/generate-worker-entry.ts && npm run generate:assets && node scripts/dev.ts",
     "deploy": "node scripts/refuse-production-deploy.ts",
     "generate:assets": "ASSET_MANIFEST_WRITE=1 vite build",
     "validate:assets": "vite build",

@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import { describe, expect, it, vi } from 'vitest';
-import { stopCheckoutOwnedDevelopmentProcesses } from '../scripts/lib/dev-process-cleanup.mjs';
-import { isCheckoutOwnedDevelopmentProcess } from '../scripts/lib/dev-process-identity.mjs';
+import { stopCheckoutOwnedDevelopmentProcesses } from '../scripts/lib/dev-process-cleanup.ts';
+import { isCheckoutOwnedDevelopmentProcess } from '../scripts/lib/dev-process-identity.ts';
 
 const checkoutRoot = '/work/wizardgang-architecture-demo';
 const owner = { pid: 4100, parentPid: 4000, startToken: 'owner-start', cwd: checkoutRoot };
@@ -106,7 +106,7 @@ describe('DEMO-356 checkout-owned process-tree cleanup', () => {
     const result = run([[owner, vite], [owner, { ...vite, startToken: 'changed' }]]);
     expect(result.signaled).toEqual([]);
     expect(result.decideOwned).not.toHaveBeenCalled();
-    const dev = fs.readFileSync('scripts/dev.mjs', 'utf8');
+    const dev = fs.readFileSync('scripts/dev.ts', 'utf8');
     expect(dev).toContain('stopCheckoutOwnedDevelopmentProcesses');
     expect(dev).toContain("['SIGINT', 'SIGTERM']");
     expect(dev).toContain("child.on('error'");

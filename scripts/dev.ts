@@ -1,23 +1,25 @@
 import { spawn } from 'node:child_process';
+import type { ChildProcess } from 'node:child_process';
 import { realpathSync } from 'node:fs';
 import process from 'node:process';
 import { setTimeout as delay } from 'node:timers/promises';
 import {
   observeDevelopmentProcesses,
   stopCheckoutOwnedDevelopmentProcesses,
-} from './lib/dev-process-cleanup.mjs';
+} from './lib/dev-process-cleanup.ts';
+import type { DevelopmentOwner, ObservedProcess } from './lib/dev-process-identity.ts';
 import {
   DEVELOPMENT_HOST,
   DEVELOPMENT_PORT,
   openDevelopmentBrowser,
   resolveDevelopmentOptions,
   waitForDevelopmentReady,
-} from './lib/dev-readiness.mjs';
+} from './lib/dev-readiness.ts';
 
 const checkoutRoot = realpathSync(process.cwd());
 const ownerIdentity = observeDevelopmentProcesses().find(({ pid }) => pid === process.pid);
 if (!ownerIdentity?.startToken) throw new Error('Cannot establish development coordinator process identity.');
-const owner = { ...ownerIdentity, cwd: checkoutRoot };
+const owner: DevelopmentOwner = { ...ownerIdentity, cwd: checkoutRoot };
 const development = resolveDevelopmentOptions();
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const children = [
@@ -37,7 +39,7 @@ const children = [
   ], { stdio: 'inherit' }),
 ];
 
-async function registerRoot(child) {
+async function registerRoot(child: ChildProcess): Promise<ObservedProcess | null> {
   if (!Number.isSafeInteger(child.pid)) return null;
   for (let attempt = 0; attempt < 20; attempt += 1) {
     try {
@@ -59,10 +61,10 @@ async function registerRoot(child) {
 const rootsPromise = Promise.all(children.map(registerRoot));
 let stopping = false;
 
-async function stop(signal = 'SIGTERM') {
+async function stop(signal: NodeJS.Signals = 'SIGTERM'): Promise<void> {
   if (stopping) return;
   stopping = true;
-  const roots = (await rootsPromise).filter(Boolean);
+  const roots = (await rootsPromise).filter((root): root is ObservedProcess => root !== null);
   if (roots.length !== children.filter(({ pid }) => Number.isSafeInteger(pid)).length) {
     console.error('Development cleanup is missing a direct child identity; refusing unproven PID signals.');
     process.exitCode = 1;
@@ -82,7 +84,7 @@ async function stop(signal = 'SIGTERM') {
   }
 }
 
-for (const signal of ['SIGINT', 'SIGTERM']) {
+for (const signal of ['SIGINT', 'SIGTERM'] as const) {
   process.on(signal, () => { void stop(signal); });
 }
 
@@ -101,7 +103,7 @@ for (const child of children) {
   });
 }
 
-async function reportReadiness() {
+async function reportReadiness(): Promise<void> {
   try {
     const readyUrl = await waitForDevelopmentReady({
       url: development.url,

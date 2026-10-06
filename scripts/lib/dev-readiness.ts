@@ -5,7 +5,7 @@ export const DEVELOPMENT_HOST = '127.0.0.1';
 export const DEVELOPMENT_PORT = 8787;
 export const DEVELOPMENT_URL = `http://${DEVELOPMENT_HOST}:${DEVELOPMENT_PORT}/`;
 
-export function resolveDevelopmentOptions(argv = process.argv.slice(2)) {
+export function resolveDevelopmentOptions(argv: string[] = process.argv.slice(2)): Readonly<{ openBrowser: boolean; url: string }> {
   return Object.freeze({
     openBrowser: argv.includes('--open'),
     url: DEVELOPMENT_URL,
@@ -20,7 +20,15 @@ export async function waitForDevelopmentReady({
   request = globalThis.fetch,
   sleep = delay,
   isCancelled = () => false,
-} = {}) {
+}: {
+  url?: string;
+  attempts?: number;
+  intervalMs?: number;
+  requestTimeoutMs?: number;
+  request?: (url: string, init: RequestInit) => Promise<any>;
+  sleep?: (ms: number) => Promise<unknown>;
+  isCancelled?: () => boolean;
+} = {}): Promise<string | null> {
   if (!Number.isSafeInteger(attempts) || attempts < 1) throw new Error('Development readiness attempts must be a positive integer.');
   if (!Number.isFinite(intervalMs) || intervalMs < 0) throw new Error('Development readiness interval must be non-negative.');
   if (!Number.isFinite(requestTimeoutMs) || requestTimeoutMs <= 0) throw new Error('Development readiness request timeout must be positive.');
@@ -28,7 +36,7 @@ export async function waitForDevelopmentReady({
     throw new Error('Development readiness requires request, sleep, and cancellation functions.');
   }
 
-  let lastError;
+  let lastError: unknown;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     if (isCancelled()) return null;
     try {
@@ -56,7 +64,10 @@ export async function waitForDevelopmentReady({
   });
 }
 
-export function browserOpenCommand(url, platform = process.platform) {
+export function browserOpenCommand(
+  url: string,
+  platform: NodeJS.Platform = process.platform,
+): Readonly<{ command: string; args: string[] }> | null {
   if (platform === 'darwin') return Object.freeze({ command: 'open', args: [url] });
   if (platform === 'win32') {
     return Object.freeze({
@@ -68,14 +79,23 @@ export function browserOpenCommand(url, platform = process.platform) {
   return null;
 }
 
-export async function openDevelopmentBrowser(url, {
+export async function openDevelopmentBrowser(url: string, {
   platform = process.platform,
   timeoutMs = 3_000,
-  execFileImpl = execFile,
-} = {}) {
+  execFileImpl = execFile as any,
+}: {
+  platform?: NodeJS.Platform;
+  timeoutMs?: number;
+  execFileImpl?: (
+    command: string,
+    args: string[],
+    options: { timeout: number; windowsHide: boolean },
+    callback: (error: unknown) => void,
+  ) => unknown;
+} = {}): Promise<boolean> {
   const opener = browserOpenCommand(url, platform);
   if (!opener) return false;
-  return new Promise((resolve) => {
+  return new Promise<boolean>((resolve) => {
     execFileImpl(opener.command, opener.args, {
       timeout: timeoutMs,
       windowsHide: true,

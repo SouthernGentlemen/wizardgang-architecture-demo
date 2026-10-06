@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-464 — [BUILD] Port local development tools to TypeScript
-- Dependency: DEMO-463.
-- Why: Local dev command and process helpers are still MJS.
-- Scope: Convert dev entry point, process identity, cleanup, and readiness helpers.
-- Non-goals: Do not change required CI names, credential boundaries, release identity, or deployment protection.
-- Acceptance: Headless dev reports the same ready URL and cleans up only checkout-owned processes.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: scripts/dev.mjs; scripts/lib/dev-process-identity.mjs; scripts/lib/dev-process-cleanup.mjs; scripts/lib/dev-readiness.mjs
-
 ### DEMO-465 — [BUILD] Port contract and migration validators to TypeScript
 - Dependency: DEMO-464.
 - Why: Remaining contract and migration tools are a bounded operational family.
