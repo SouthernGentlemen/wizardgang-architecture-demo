@@ -1,18 +1,22 @@
-function hasProcessIdentity(value) {
+export type ProcessIdentity = { pid: number; startToken: string };
+export type ObservedProcess = ProcessIdentity & { parentPid: number };
+export type DevelopmentOwner = ObservedProcess & { cwd: string };
+
+function hasProcessIdentity(value: any): boolean {
   return Number.isSafeInteger(value?.pid)
     && value.pid > 0
     && typeof value.startToken === 'string'
     && value.startToken.length > 0;
 }
 
-function sameProcessIdentity(expected, observed) {
+function sameProcessIdentity(expected: any, observed: any): boolean {
   return hasProcessIdentity(expected)
     && hasProcessIdentity(observed)
     && expected.pid === observed.pid
     && expected.startToken === observed.startToken;
 }
 
-function hasObservedParent(value) {
+function hasObservedParent(value: any): boolean {
   return sameProcessIdentity(value, value)
     && Number.isSafeInteger(value.parentPid)
     && value.parentPid >= 0;
@@ -29,7 +33,12 @@ export function isCheckoutOwnedDevelopmentProcess({
   owner,
   expectedTarget,
   lineage,
-}) {
+}: {
+  checkoutRoot: any;
+  owner: any;
+  expectedTarget: any;
+  lineage: any;
+}): boolean {
   if (typeof checkoutRoot !== 'string' || checkoutRoot.length === 0) return false;
   if (!hasProcessIdentity(owner) || owner.cwd !== checkoutRoot) return false;
   if (!hasProcessIdentity(expectedTarget)) return false;
@@ -38,7 +47,7 @@ export function isCheckoutOwnedDevelopmentProcess({
   if (lineage[0].pid === owner.pid) return false;
   if (!sameProcessIdentity(owner, lineage.at(-1))) return false;
 
-  const seenPids = new Set();
+  const seenPids = new Set<number>();
   for (let index = 0; index < lineage.length; index += 1) {
     const current = lineage[index];
     if (!hasObservedParent(current) || seenPids.has(current.pid)) return false;

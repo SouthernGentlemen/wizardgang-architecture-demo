@@ -6,7 +6,7 @@ import {
   openDevelopmentBrowser,
   resolveDevelopmentOptions,
   waitForDevelopmentReady,
-} from '../scripts/lib/dev-readiness.mjs';
+} from '../scripts/lib/dev-readiness.ts';
 
 describe('DEMO-358 shared local-development entry point', () => {
   it('keeps the default lifecycle headless-safe while exposing an explicit browser opt-in', () => {
@@ -86,7 +86,7 @@ describe('DEMO-358 shared local-development entry point', () => {
   });
 
   it('keeps readiness and cleanup in the same checkout-owned coordinator', () => {
-    const source = fs.readFileSync('scripts/dev.mjs', 'utf8');
+    const source = fs.readFileSync('scripts/dev.ts', 'utf8');
     expect(source).toContain('waitForDevelopmentReady');
     expect(source).toContain('Development ready:');
     expect(source).toContain('openDevelopmentBrowser');

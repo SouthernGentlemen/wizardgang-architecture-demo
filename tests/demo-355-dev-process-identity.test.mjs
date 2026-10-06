@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { isCheckoutOwnedDevelopmentProcess } from '../scripts/lib/dev-process-identity.mjs';
+import { isCheckoutOwnedDevelopmentProcess } from '../scripts/lib/dev-process-identity.ts';
 
 const checkoutRoot = '/work/wizardgang-architecture-demo';
 const owner = Object.freeze({
