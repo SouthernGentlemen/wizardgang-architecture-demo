@@ -1,5 +1,4 @@
 import { readFileSync } from 'node:fs';
-import { spawnSync } from 'node:child_process';
 import { describe, expect, it } from 'vitest';
 import { validateControlledPullRequestIdentity } from '../scripts/lib/controlled-pr-identity.ts';
 import { nextLiveReleaseId, validateLiveReleaseIdentity } from '../scripts/lib/live-release-identity.ts';
@@ -57,36 +56,31 @@ describe('DEMO-391 narrow live release identity', () => {
 
 describe('DEMO-391 workflow protection', () => {
   const workflow = readFileSync(new URL('../.github/workflows/git-demo.yml', import.meta.url), 'utf8');
+  const script = readFileSync(new URL('../scripts/git-demo-workflow.ts', import.meta.url), 'utf8');
+  const lib = readFileSync(new URL('../scripts/lib/git-demo-workflow.ts', import.meta.url), 'utf8');
   it('uses exact-head squash, all required CI checks, and no bypass or merge commit', () => {
     expect(workflow).toContain('--match-head-commit "$SHA"');
     expect(workflow).toContain('--squash');
-    expect(workflow).toContain("['validate', 'change-id', 'security', 'secrets']");
-    expect(workflow).toContain('pr.base.sha !== main');
+    expect(workflow).toContain('node scripts/git-demo-workflow.ts require-checks');
+    expect(lib).toContain("['validate', 'change-id', 'security', 'secrets']");
+    expect(workflow).toContain('node scripts/git-demo-workflow.ts recheck-base');
+    expect(lib).toContain('pr.base.sha !== mainSha');
     expect(workflow).not.toMatch(/\s--merge\s*\\/);
     expect(workflow).not.toContain('--admin');
   });
   it('allocates against the queue and open PRs and presents the release range before confirmation', () => {
-    expect(workflow).toContain('nextLiveReleaseId(subjects.split');
-    expect(workflow).toContain("fs.readFileSync('implementation_plan.md'");
-    expect(workflow).toContain("'--state', 'open'");
-    expect(workflow).toContain("version.replaceAll('.', '-')");
+    expect(workflow).toContain('node scripts/git-demo-workflow.ts start');
+    expect(lib).toContain('nextLiveReleaseId(subjects, planMarkdown, openPullRequests)');
+    expect(script).toContain("fs.readFileSync('implementation_plan.md'");
+    expect(script).toContain("'--state', 'open'");
+    expect(lib).toContain("version.replaceAll('.', '-')");
     expect(workflow).toContain('Show release preflight before merge confirmation');
     expect(workflow).toContain('git log --format=');
   });
-  it('keeps each inline workflow Node program syntactically valid', () => {
-    const lines = workflow.split('\n');
-    let checked = 0;
-    for (let index = 0; index < lines.length; index += 1) {
-      if (!/node(?: --input-type=module)? <<'NODE'/.test(lines[index])) continue;
-      const module = lines[index].includes('--input-type=module');
-      const end = lines.findIndex((line, position) => position > index && line.trim() === 'NODE');
-      expect(end).toBeGreaterThan(index);
-      const script = lines.slice(index + 1, end).join('\n');
-      const result = spawnSync(process.execPath, module ? ['--check', '--input-type=module'] : ['--check'], { input: script, encoding: 'utf8' });
-      expect(result.status, result.stderr).toBe(0);
-      checked += 1;
-      index = end;
-    }
-    expect(checked).toBeGreaterThanOrEqual(3);
+  it('keeps workflow application logic in typed scripts instead of inline Node programs', () => {
+    expect(workflow).not.toMatch(/<<'?NODE'?/);
+    expect(workflow).not.toMatch(/\bnode (?:-p|-e|--eval|--print|--input-type)\b/);
+    expect(workflow).not.toMatch(/\bnode\s*<</);
+    expect(workflow).not.toContain('git checkout --detach "$SHA"');
   });
 });

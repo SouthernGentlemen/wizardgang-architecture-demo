@@ -6,7 +6,11 @@ const titlePattern = /^\[DEMO-(\d{3,})\] \[BUILD\] Demonstrate v(\d+\.\d+\.\d+) 
 const branchPattern = /^demo-(\d{3,})-live-v(\d+)-(\d+)-(\d+)-([0-9a-f]{8})$/;
 const sections = ['Change', 'Reason', 'Impact', 'Risk', 'Controls', 'Validation', 'Evidence', 'Source', 'Release'];
 
-export function nextLiveReleaseId(subjects, planMarkdown, openPullRequests = []) {
+export function nextLiveReleaseId(
+  subjects: string[],
+  planMarkdown: string,
+  openPullRequests: Array<{ title: string; headRefName?: string }> = [],
+): string {
   const accepted = subjects.map(parseControlledSubject).filter(Boolean).map((item) => item.number);
   const reserved = new Set(parsePlanTasks(planMarkdown).map((item) => item.number));
   for (const pr of openPullRequests) {
