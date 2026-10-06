@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-468 — [BUILD] Move Release workflow logic to TypeScript
-- Dependency: DEMO-467.
-- Why: Release workflow embeds a separate exact-tag and main-CI JavaScript preflight.
-- Scope: Move only release.yml application logic into typed scripts without changing tag or publication requirements.
-- Non-goals: Do not change required CI names, credential boundaries, release identity, or deployment protection.
-- Acceptance: No inline authored JavaScript remains in release.yml; exact-tag reproduction and release structure remain equivalent.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: .github/workflows/release.yml; scripts/lib/exact-tag-release.mjs; docs/RELEASE-MANAGEMENT.md
-
 ### DEMO-469 — [TEST] Port assurance contract tests to TypeScript
 - Dependency: DEMO-468.
 - Why: Two assurance test files remain MJS.

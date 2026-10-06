@@ -30,7 +30,7 @@ describe('DEMO-312 repository release-history retirement', () => {
     expect(workflow).toContain('git cat-file -t "$tag_ref"');
     expect(workflow).toContain('tag_commit="$(git rev-list -n 1 "$GITHUB_REF_NAME")"');
     expect(workflow).toContain('checkout_commit="$(git rev-parse HEAD)"');
-    expect(workflow).toContain('package_version="$(node -p');
+    expect(workflow).toContain('package_version="$(node scripts/release-workflow.ts package-version < package.json)"');
     expect(workflow).toContain('--generate-notes');
     expect(workflow).toContain('--notes-start-tag "$PREVIOUS_TAG"');
     expect(workflow).toContain('--verify-tag');
