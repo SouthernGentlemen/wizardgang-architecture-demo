@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-483 — [DOCS] Record the v0.30.0 to v0.31.2 production deployments
-- Dependency: DEMO-482 deployed.
-- Why: docs/history/DEPLOYMENTS.md stops at v0.29.1; v0.30.0, v0.31.1 and v0.31.2 were deployed and v0.31.0 was published but never deployed.
-- Scope: Add one record per release in the existing format, from the release and deploy workflow runs and the live version read-back.
-- Non-goals: No product, workflow, or provider change.
-- Acceptance: Each release since v0.29.1 has a record with commit, runs, Worker version, previous release and rollback; v0.31.0 is recorded as published and not deployed.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: docs/history/DEPLOYMENTS.md
-
 ### DEMO-484 — [TEST] Port release-history tests to TypeScript
 - Dependency: DEMO-483.
 - Why: Release identity and history tests remain MJS.

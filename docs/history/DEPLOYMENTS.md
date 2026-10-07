@@ -372,3 +372,81 @@ Each record ties one production deployment to one annotated release tag. A deplo
 **Rollback:** Deploy v0.28.0.
 
 **Note:** GitHub Release v0.29.1 was published at 2026-10-01 02:46:45 UTC. Its original protected deploy job failed local tagged-source validation before production mutation. Manual-recovery Deploy attempt 1 failed on a browser category-key interaction timeout, again before production mutation. Attempt 2 passed every protected gate and completed deployment at 09:50:45 UTC. The intervening immutable v0.29.0 tag was not published as a GitHub Release or deployed to production.
+
+---
+
+## DEP-DEMO-014
+
+**Product:** WizardGang Architecture Demo
+
+**Release:** v0.30.0
+
+**Commit:** `b84692c29cdcdac4f3a8e478f7b1c81b83ef3235`
+
+**Environment:** production
+
+**Date:** 2026-10-05
+
+**URL:** https://demo.wizardgang.ai
+
+**Changes:** Accepted changes in `v0.29.1..v0.30.0`: the recovery DEMO-399 and DEMO-401 through DEMO-434, the plan changes DEMO-453, DEMO-454 and DEMO-460, the platform moves DEMO-455 through DEMO-458, and the release DEMO-478 with its bounded title recovery.
+
+**Validation:** PASS — Release workflow 37387092560 attempt 3 reproduced the annotated v0.30.0 tag and published the GitHub Release at 23:18:04 UTC. Deploy job 112030358676 deployed the tagged commit through the repository's own `deploy.yml` to the Worker then named `wizardgang-architecture-demo` as Worker Version ID `80b4e945-9857-4e67-96e6-d780b135445a`, and completed at 23:41:14 UTC. The public identity reported 0.30.0 at `b84692c`, health was operational, and the GitHub, Google and Microsoft providers stayed configured.
+
+**Previous:** v0.29.1
+
+**Rollback:** Deploy v0.29.1.
+
+**Note:** Release PR #409 was squash-merged as `52404a8` with a pull-request suffix on its live-release title; the bounded recovery #410 (`b84692c`) restored the title, and the tag points at the recovery. Attempt 2 failed on a browser category-key interaction timeout. In attempt 3 the deploy was rerun after its public identity check raced edge propagation.
+
+---
+
+## DEP-DEMO-015
+
+**Product:** WizardGang Architecture Demo
+
+**Release:** v0.31.1
+
+**Commit:** `da9b6af31b059f6f638cf6f27317a6f7d506ab11`
+
+**Environment:** production
+
+**Date:** 2026-10-06
+
+**URL:** https://demo.wizardgang.ai
+
+**Changes:** Accepted changes in `v0.30.0..v0.31.1`: DEMO-459 (the demo Worker on the shared shell and baseline `deploy-worker.yml`), DEMO-479 (the MCP client OAuth advisory) and DEMO-480 (the browser audit owns its local D1).
+
+**Validation:** PASS — Release workflow 37527784971 attempt 1 reproduced the annotated v0.31.1 tag and published the GitHub Release at 20:41:07 UTC. Baseline `deploy-worker.yml` at `67b4b86847e0d635a3f6fe4c21618a25d5bc71a0` ran verify job 112490919625, then deploy job 112492614446 deployed the tagged commit as Worker `demo`, Worker Version ID `ee5f1163-8e1c-4208-bbb5-351b5503452e`, at 100% production traffic, and confirmed the public identity at 20:48:26 UTC.
+
+**Previous:** v0.30.0
+
+**Rollback:** None through the release path: v0.30.0 deployed through the retired `deploy.yml` as the Worker `wizardgang-architecture-demo`, which DEMO-459 renamed in place to `demo`. Roll forward.
+
+**Note:** v0.31.0 (`691dd355c83a25be695399fe86adf40b36d772c3`) was tagged and its GitHub Release published at 2026-10-06 20:20:46 UTC, but Release workflow 37524852847 attempt 3 failed in verify job 112482154730 before any production change: the browser audit had no local D1. The deploy was skipped and v0.31.0 was never deployed; DEMO-480 fixed the audit for v0.31.1. After the deploy, deleting the two old `DEMO_ADMIN_*` Worker secrets created Worker Versions `20708e80-f879-4784-ab7f-dbbd30a57715` and `3564b50d-fe4e-4473-8f26-26b27ca26c13` at 20:49 UTC with the same code.
+
+---
+
+## DEP-DEMO-016
+
+**Product:** WizardGang Architecture Demo
+
+**Release:** v0.31.2
+
+**Commit:** `fea4c609794c01a95fb592694e7398f1edebb446`
+
+**Environment:** production
+
+**Date:** 2026-10-07
+
+**URL:** https://demo.wizardgang.ai
+
+**Changes:** Accepted changes in `v0.31.1..v0.31.2`: the TypeScript ports DEMO-461 through DEMO-473, the plan change DEMO-481 and DEMO-482 (the deploy passes `CLOUDFLARE_ACCOUNT_ID` to the Worker, restoring Cloudflare usage reporting).
+
+**Validation:** PASS — Release workflow 37668383841 attempt 1 reproduced the annotated v0.31.2 tag and published the GitHub Release at 18:42:10 UTC. Baseline `deploy-worker.yml` at `5e3847c8cf0072fa9698aa8e5e141f96e00d73bb` ran verify job 112955054335; after the owner's production approval, deploy job 112956377348 deployed the tagged commit as Worker Version ID `0368f6ad-da21-4d0a-a409-4ff431fdd23c` at 100% production traffic and confirmed the public identity at 18:55:13 UTC. Independent public checks: `/api/operations/version` returned 0.31.2 at the full tagged commit, `/api/operations/health` reported the Worker, D1, R2 and Durable Objects operational with identity ready, and `/api/reporting/operations` returned live Worker, D1 and R2 analytics.
+
+**Previous:** v0.31.1
+
+**Rollback:** Deploy v0.31.1.
+
+**Note:** This was the first deploy with the rotated `wg-cloudflare-deploy` token in the demo's `production` environment. Cloudflare usage reporting is `partial`: Durable Objects analytics and billable usage remain unavailable.
