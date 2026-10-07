@@ -70,14 +70,24 @@ const liveReleaseSquashSuffixExceptions = new Map([
     },
   ],
 ]);
-// DEMO-460 moved the platform tasks ahead of the remaining TypeScript port. It renumbered the queued, never-delivered
-// DEMO-435..442 to DEMO-461..468 and DEMO-444..452 to DEMO-469..477 and dropped DEMO-443, so those IDs are never consumed.
-const renumberedQueue = {
-  sha: 'ecc557aaa0a5e8c766c0020d5aa59357f27ef81e',
-  first: 435,
-  last: 452,
-  reason: 'DEMO-460 renumbered the never-delivered queued DEMO-435..452 (DEMO-443 dropped); those IDs are never consumed.',
-};
+// Plan changes that renumbered queued, never-delivered IDs, which are therefore never consumed:
+// DEMO-460 moved the platform tasks ahead of the remaining TypeScript port, renumbering DEMO-435..442 to DEMO-461..468
+// and DEMO-444..452 to DEMO-469..477 and dropping DEMO-443. DEMO-481 moved the usage-reporting fix and the deployment
+// records ahead of the rest of the port, renumbering DEMO-474..477 to DEMO-484..487.
+const renumberedQueues = [
+  {
+    sha: 'ecc557aaa0a5e8c766c0020d5aa59357f27ef81e',
+    first: 435,
+    last: 452,
+    reason: 'DEMO-460 renumbered the never-delivered queued DEMO-435..452 (DEMO-443 dropped); those IDs are never consumed.',
+  },
+  {
+    sha: 'd2b939fc512c9cd1c569b625c2c0d58722836577',
+    first: 474,
+    last: 477,
+    reason: 'DEMO-481 renumbered the never-delivered queued DEMO-474..477 to DEMO-484..487; those IDs are never consumed.',
+  },
+];
 const controlled = [];
 const failures = [];
 const exceptionsUsed = [];
@@ -98,12 +108,13 @@ for (const record of records) {
 }
 
 let expected = 0;
-let renumberedQueueSeen = false;
+const renumberedQueuesSeen: typeof renumberedQueues = [];
 const delivered = new Set();
 controlled.forEach(({ sha, parents, id, subject, body }) => {
-  if (sha === renumberedQueue.sha) {
-    renumberedQueueSeen = true;
-    exceptionsUsed.push(`${sha.slice(0, 12)}: ${renumberedQueue.reason}`);
+  const renumbered = renumberedQueues.find((queue) => queue.sha === sha);
+  if (renumbered) {
+    renumberedQueuesSeen.push(renumbered);
+    exceptionsUsed.push(`${sha.slice(0, 12)}: ${renumbered.reason}`);
   }
   const continuationException = publishedContinuationExceptions.get(sha);
   const boundedRecovery = parents.length === 1 ? boundedRecoveryContinuations.get(parents[0]) : null;
@@ -152,7 +163,7 @@ controlled.forEach(({ sha, parents, id, subject, body }) => {
   } else {
     expected += 1;
     while (earlyMaintenance.has(expected) || earlyLiveReleases.has(expected) || (expected === 362 && delivered.has(362)) || expected === 363
-      || (renumberedQueueSeen && expected >= renumberedQueue.first && expected <= renumberedQueue.last && !delivered.has(expected))) expected += 1;
+      || renumberedQueuesSeen.some((queue) => expected >= queue.first && expected <= queue.last && !delivered.has(expected))) expected += 1;
     if (id !== expected) failures.push(`${sha.slice(0, 12)} uses DEMO-${String(id).padStart(3, '0')}; expected DEMO-${String(expected).padStart(3, '0')}`);
     delivered.add(id);
   }

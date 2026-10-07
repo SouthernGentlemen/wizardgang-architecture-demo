@@ -5,7 +5,7 @@ import process from 'node:process';
 import { describe, expect, it } from 'vitest';
 
 const root = process.cwd();
-const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
+const read = (file: string) => fs.readFileSync(path.join(root, file), 'utf8');
 const malformedMerge = '4ec192c10dfefd9d119ac223ae599b7db948524c';
 
 describe('DEMO-366 post-merge history recovery', () => {

@@ -2,14 +2,14 @@ import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-const read = (file) => fs.readFileSync(file, 'utf8');
+const read = (file: string) => fs.readFileSync(file, 'utf8');
 const pkg = JSON.parse(read('package.json'));
 const releaseWorkflow = read('.github/workflows/release.yml');
 const releaseManagement = read('docs/RELEASE-MANAGEMENT.md');
 const canonicalAdvisory = 'security:dependency-advisories';
 const staleAdvisory = ['security', 'dependencies'].join(':');
 
-function namedStep(workflow, name) {
+function namedStep(workflow: string, name: string) {
   const marker = `      - name: ${name}\n`;
   const start = workflow.indexOf(marker);
   if (start < 0) return '';
