@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-482 — [FIX] Restore Cloudflare usage reporting on the demo Worker and release v0.31.2
-- Dependency: DEMO-481.
-- Why: Since DEMO-459 moved the deploy to baseline deploy-worker.yml, the Worker no longer receives CLOUDFLARE_ACCOUNT_ID (the old deploy passed it with --var), so live /api/reporting/operations reports Cloudflare analytics as not configured although CLOUDFLARE_BILLING_TOKEN is set.
-- Scope: Commit the non-secret account ID as a wrangler.jsonc var, add a regression test that the Worker configuration supplies every value the usage report needs, and bump the version to 0.31.2 so the merge cuts a release.
-- Non-goals: No secret, token, provider permission, or deploy workflow change.
-- Acceptance: After the owner-approved deploy, live /api/reporting/operations reports cloudflare.operations as available.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI; owner-approved production deploy and a public read-back.
-- Authorities: wrangler.jsonc; src/lib/cloudflare-usage.ts; package.json; package-lock.json
-
 ### DEMO-483 — [DOCS] Record the v0.30.0 to v0.31.2 production deployments
 - Dependency: DEMO-482 deployed.
 - Why: docs/history/DEPLOYMENTS.md stops at v0.29.1; v0.30.0, v0.31.1 and v0.31.2 were deployed and v0.31.0 was published but never deployed.

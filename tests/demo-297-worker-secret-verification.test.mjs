@@ -34,7 +34,7 @@ describe('DEMO-297 Worker secret verification', () => {
   it('uses the shared Secrets Store bindings and the pinned baseline deployment path', () => {
     expect(wrangler).toContain('"binding": "WG_OPS_TOKEN"');
     expect(wrangler).toContain('"binding": "WG_SESSION_KEY"');
-    expect(release).toContain('uses: Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@67b4b86847e0d635a3f6fe4c21618a25d5bc71a0');
+    expect(release).toContain('uses: Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@5e3847c8cf0072fa9698aa8e5e141f96e00d73bb');
     expect(release).toContain('worker: demo');
     expect(release).toContain('secrets: inherit');
     expect(fs.existsSync('.github/workflows/deploy.yml')).toBe(false);

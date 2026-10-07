@@ -28,7 +28,7 @@ describe('DEMO-366 published immutable release deployment boundary', () => {
 
   it('pins deployment to the exact vendored baseline commit and passes exact release identity', () => {
     expect(vendor.source).toBe('Wizard-Gang/baseline');
-    expect(vendor.commit).toBe('67b4b86847e0d635a3f6fe4c21618a25d5bc71a0');
+    expect(vendor.commit).toBe('5e3847c8cf0072fa9698aa8e5e141f96e00d73bb');
     expect(releaseWorkflow).toContain(`uses: Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@${vendor.commit}`);
     expect(releaseWorkflow).toContain('worker: demo');
     expect(releaseWorkflow).toContain('tag: ${{ github.ref_name }}');

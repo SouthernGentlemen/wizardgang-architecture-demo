@@ -46,6 +46,6 @@ describe('DEMO-307 release identity-baseline module execution', () => {
   it('moves deployment implementation out of this repository to the pinned baseline workflow', () => {
     const release = read(workflowPath);
     expect(fs.existsSync('.github/workflows/deploy.yml')).toBe(false);
-    expect(release).toContain('Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@67b4b86847e0d635a3f6fe4c21618a25d5bc71a0');
+    expect(release).toContain('Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@5e3847c8cf0072fa9698aa8e5e141f96e00d73bb');
   });
 });

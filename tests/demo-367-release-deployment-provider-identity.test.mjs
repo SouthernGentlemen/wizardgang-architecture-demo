@@ -16,7 +16,7 @@ describe('DEMO-367 release-to-deployment identity after baseline cut-over', () =
     expect(deployJob).toBeGreaterThan(publication);
     const deploy = releaseWorkflow.slice(deployJob);
     expect(deploy).toContain('needs: reproduce');
-    expect(deploy).toContain('uses: Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@67b4b86847e0d635a3f6fe4c21618a25d5bc71a0');
+    expect(deploy).toContain('uses: Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@5e3847c8cf0072fa9698aa8e5e141f96e00d73bb');
     expect(deploy).toContain('tag: ${{ github.ref_name }}');
     expect(deploy).toContain('expected_sha: ${{ github.sha }}');
   });
