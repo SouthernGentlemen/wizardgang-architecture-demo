@@ -32,6 +32,8 @@ Interactive health reads remain read-only. Identity readiness is informational a
 
 The public log API returns only the identity log envelope needed for bounded diagnostics; structured identity detail is withheld. Identity audit-event payload detail is likewise excluded from public event projections. Subject-derived audit identifiers and visitor sandbox namespaces are not retained in application-log detail.
 
+Cloudflare usage collection pins the demo Worker's surviving DemoCoordinator namespace in Wrangler alongside its resource selectors. The account's billable usage endpoint is Alpha, Restricted and is not offered despite Billing Read permission. `CLOUDFLARE_BILLABLE_USAGE=not-offered` records that verified capability: collection skips the restricted endpoint and exposes `billing-not-offered-by-cloudflare` as a separate qualification, with no invented cost or billing failure. Resource analytics still determine report availability and pagination completeness. Without that explicit capability setting, authorization, rate-limit, malformed-response, and network errors retain their existing failure handling.
+
 ## Route and source ownership
 
 Operational route declarations remain in `src/routing/operational-routes.ts`; machine collection remains in `src/api/operations.ts`; usage/provider observation remains in `src/lib/cloudflare-usage.ts`; logs remain in `src/lib/logs.ts`; reporting APIs remain under the reporting route/API modules.

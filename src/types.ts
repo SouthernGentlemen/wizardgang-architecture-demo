@@ -82,6 +82,7 @@ export interface Env {
   CLOUDFLARE_R2_BUCKET?: string;
   CLOUDFLARE_D1_DATABASE_ID?: string;
   CLOUDFLARE_DO_NAMESPACE?: string;
+  CLOUDFLARE_BILLABLE_USAGE?: 'not-offered';
 }
 
 export type DemoStatus = 'working' | 'planned';

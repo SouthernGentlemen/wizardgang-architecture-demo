@@ -68,6 +68,47 @@ describe('operations machine behavior', () => {
     } finally { vi.unstubAllGlobals(); vi.useRealTimers(); }
   });
 
+  it('qualifies billable usage not offered by Cloudflare without a failure or partial report', async () => {
+    const environment = { ...cloudflareEnv('billing-not-offered-account'), CLOUDFLARE_BILLABLE_USAGE: 'not-offered' as const };
+    const fetcher = vi.fn(analyticsFetch());
+    vi.stubGlobal('fetch', fetcher);
+    try {
+      const snapshot = await collectCloudflareUsage(environment, true);
+      expect(snapshot.status).toBe('available');
+      expect(snapshot.failures).toEqual([]);
+      expect(snapshot.products.durableObjects).toMatchObject({ availability: 'available', requests: 9, cpuTimeMs: 20 });
+      expect(snapshot.cost).toMatchObject({ kind: 'unavailable', amountUsd: null, qualification: 'billing-not-offered-by-cloudflare' });
+      expect(snapshot.cost.note).toContain('Alpha, Restricted');
+      expect(fetcher.mock.calls.every(([url]) => !String(url).includes('/billable/usage'))).toBe(true);
+      const response = await reportingCollectionResponse(new Request('https://demo.example/api/reporting/operations?limit=100'), environment, 'operations');
+      expect(await response.json()).toMatchObject({
+        availability: { 'cloudflare.operations': 'available' },
+        qualifications: { 'cloudflare.operations': null, 'cloudflare.operations.billing': 'billing-not-offered-by-cloudflare' },
+        query: { pagination: { completeness: 'complete', partialReason: null } },
+      });
+    } finally { vi.unstubAllGlobals(); }
+  });
+
+  it('keeps resource failures partial when billable usage is not offered', async () => {
+    const environment = { ...cloudflareEnv('not-offered-malformed-account'), CLOUDFLARE_BILLABLE_USAGE: 'not-offered' as const };
+    vi.stubGlobal('fetch', analyticsFetch({ malformedWorkers: true }));
+    try {
+      const snapshot = await collectCloudflareUsage(environment, true);
+      expect(snapshot.status).toBe('partial');
+      expect(snapshot.failures).toEqual(['Workers analytics']);
+      expect(snapshot.cost.qualification).toBe('billing-not-offered-by-cloudflare');
+    } finally { vi.unstubAllGlobals(); }
+  });
+
+  it('does not reinterpret billing authorization failures as a capability qualification', async () => {
+    vi.stubGlobal('fetch', analyticsFetch({ billing: 'forbidden' }));
+    try {
+      const snapshot = await collectCloudflareUsage(cloudflareEnv('real-billing-authorization-failure'), true);
+      expect(snapshot.cost.qualification).toBe('provider-unauthorized');
+      expect(snapshot.failures).toContain('Billable usage');
+    } finally { vi.unstubAllGlobals(); }
+  });
+
   it('does not convert a successful GraphQL response with no matching account into zero live usage', async () => {
     const environment = cloudflareEnv('missing-account');
     vi.stubGlobal('fetch', analyticsFetch({ missingAccount: true, billing: 'forbidden' }));

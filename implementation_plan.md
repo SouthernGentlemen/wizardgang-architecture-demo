@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-489 — [FIX] Restore Durable Objects usage reporting and qualify restricted billable usage
-- Dependency: DEMO-488.
-- Why: Live /api/reporting/operations is partial because DemoCoordinator analytics lacks its namespace var and Cloudflare's Alpha, Restricted billable usage endpoint is not offered to this account despite the dedicated token having Billing Read.
-- Scope: Commit CLOUDFLARE_DO_NAMESPACE=2a8431fd59b342799b74518e1bcc7b6d for DemoCoordinator on Worker demo as a wrangler.jsonc var beside the D1 database ID; flip the DEMO-455 absence assertion to pin that namespace. Report billable usage as not offered by Cloudflare through a distinct qualification rather than a failure, so otherwise successful /api/reporting/operations is not partial. Keep version 0.31.2 and Release: Unreleased.
-- Non-goals: No version bump, release, deploy, secret, token, provider permission, or deploy workflow change.
-- Acceptance: Namespace configuration is pinned; restricted billable usage is qualified distinctly without masking genuine provider failures or making otherwise complete operations reports partial. Public production read-back follows the final DEMO-494 release.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check with local site-accessibility audit deferred to exact-head CI; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: wrangler.jsonc; tests/demo-455-secret-registry.test.ts; src/lib/cloudflare-usage.ts; src/reporting/; docs/OPERATIONS.md; docs/REPORTING.md
-
 ### DEMO-490 — [TEST] Port release and deployment tests to TypeScript
 - Dependency: DEMO-489.
 - Why: Protected release and deploy tests remain MJS.
