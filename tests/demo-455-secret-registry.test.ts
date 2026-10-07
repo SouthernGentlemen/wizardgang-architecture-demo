@@ -71,7 +71,7 @@ describe('DEMO-455 secret registry normalization', () => {
     for (const name of ['GITHUB_OAUTH_CLIENT_ID', 'GOOGLE_OAUTH_CLIENT_ID', 'MICROSOFT_OAUTH_CLIENT_ID', 'MICROSOFT_TENANT_ID']) {
       expect(wrangler.vars[name], name).toMatch(/\S/);
     }
-    expect(wrangler.vars).not.toHaveProperty('CLOUDFLARE_DO_NAMESPACE'); // The renamed Worker starts a new coordinator namespace.
+    expect(wrangler.vars.CLOUDFLARE_DO_NAMESPACE).toBe('2a8431fd59b342799b74518e1bcc7b6d'); // DemoCoordinator survived the in-place Worker rename.
     expect(wrangler.r2_buckets.every((bucket) => !('preview_bucket_name' in bucket))).toBe(true);
   });
 

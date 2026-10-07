@@ -78,6 +78,8 @@ class ProviderDatasetError extends Error {
 
 const GRAPHQL_API = 'https://api.cloudflare.com/client/v4/graphql';
 const REST_API = 'https://api.cloudflare.com/client/v4';
+const BILLING_NOT_OFFERED = 'billing-not-offered-by-cloudflare';
+const BILLING_NOT_OFFERED_NOTE = 'Cloudflare does not offer the Alpha, Restricted billable usage endpoint to this account; no local pricing fallback is used.';
 const FRESHNESS_MS = 10 * 60 * 1000;
 const MAX_DERIVED_CACHE_ENTRIES = 24;
 const derivedSnapshotCache = new Map<string, CloudflareUsageSnapshot>();
@@ -163,6 +165,7 @@ function snapshotCacheKey(env: Env, startDate: string): string {
     env.CLOUDFLARE_D1_DATABASE_ID ?? '',
     env.CLOUDFLARE_R2_BUCKET ?? '',
     env.CLOUDFLARE_DO_NAMESPACE ?? '',
+    env.CLOUDFLARE_BILLABLE_USAGE ?? '',
     startDate,
   ]);
 }
@@ -537,7 +540,10 @@ export function cloudflareUsageQueryResult(env: Env, snapshot: CloudflareUsageSn
     datasets: [source.id],
     availability: { [source.id]: snapshot.status },
     sources: [source],
-    qualifications: { [source.id]: qualification },
+    qualifications: {
+      [source.id]: qualification,
+      ...(snapshot.cost.qualification === BILLING_NOT_OFFERED ? { [`${source.id}.billing`]: BILLING_NOT_OFFERED } : {}),
+    },
     query: { filters: {} },
     records,
     derived: { count: records.length, totalAvailable: records.filter((record) => record.availability === 'available').length, facets: { metric: metricFacets } },
@@ -586,7 +592,12 @@ export async function collectCloudflareUsage(env: Env, includeBilling = true): P
   else { markFailure(products.durableObjects, durableObjects.error); failures.push('Durable Objects analytics'); }
 
   let cost = unavailableCost(current, includeBilling ? 'billing-unavailable' : 'billing-not-requested');
-  if (includeBilling) {
+  if (includeBilling && env.CLOUDFLARE_BILLABLE_USAGE === 'not-offered') {
+    // Explicit account capability, confirmed independently of token authorization.
+    // Never infer this from 401/403 responses, which remain provider failures.
+    cost = unavailableCost(current, BILLING_NOT_OFFERED);
+    cost.note = BILLING_NOT_OFFERED_NOTE;
+  } else if (includeBilling) {
     try {
       const billed = await billableUsage(env, current.startDate, current.endDate, capturedAt);
       const { trend: billedTrend, ...billedCost } = billed;

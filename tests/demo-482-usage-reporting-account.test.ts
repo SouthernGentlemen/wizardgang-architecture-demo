@@ -17,6 +17,7 @@ describe('DEMO-482 Cloudflare usage reporting receives the account ID at deploy 
     const source = read('wrangler.jsonc');
     const config = parseJsonc(source) as { vars: Record<string, string> };
     expect(config.vars).not.toHaveProperty('CLOUDFLARE_ACCOUNT_ID');
+    expect(config.vars.CLOUDFLARE_BILLABLE_USAGE).toBe('not-offered');
     expect(checkWranglerSource(source, 'demo')).toEqual([]);
     const committed = source.replace('"vars": {', '"vars": {\n    "CLOUDFLARE_ACCOUNT_ID": "0123456789abcdef0123456789abcdef",');
     expect(checkWranglerSource(committed, 'demo')).toContain('vars.CLOUDFLARE_ACCOUNT_ID is never committed; deploy-worker.yml passes it at deploy time');
