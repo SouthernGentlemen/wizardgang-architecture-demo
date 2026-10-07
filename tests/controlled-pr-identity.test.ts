@@ -1,11 +1,25 @@
 import { describe, expect, it } from 'vitest';
-import { validateControlledPullRequestIdentity } from '../scripts/lib/controlled-pr-identity.ts';
+import { validateControlledPullRequestIdentity as validateUntyped } from '../scripts/lib/controlled-pr-identity.ts';
 
-const task = (id, type = 'TEST', dependency = 'none; first open task.') => `### ${id} — [${type}] Validate ${id}\n\n- Dependency: ${dependency}\n- Why: A deterministic process gap exists.\n- Scope: Validate the controlled PR boundary.\n- Non-goals: No provider mutation.\n- Acceptance: Invalid identity fails.\n- Validation: npm run check.\n- Authorities: AGENTS.md.\n`;
-const plan = (...tasks) => `# Active implementation plan\n\n## Open tasks\n\n${tasks.join('\n')}`;
+type ControlledPullRequestIdentity = {
+  branchName: string;
+  title: string;
+  headSubject: string;
+  headBody?: string;
+  rangeSubjects: string[];
+  basePlanMarkdown: string | null;
+  headPlanMarkdown: string | null;
+  baseAcceptedIds: Set<string>;
+  baseSha: string;
+};
+
+const validateControlledPullRequestIdentity = validateUntyped as (identity: ControlledPullRequestIdentity) => string[];
+
+const task = (id: string, type = 'TEST', dependency = 'none; first open task.') => `### ${id} — [${type}] Validate ${id}\n\n- Dependency: ${dependency}\n- Why: A deterministic process gap exists.\n- Scope: Validate the controlled PR boundary.\n- Non-goals: No provider mutation.\n- Acceptance: Invalid identity fails.\n- Validation: npm run check.\n- Authorities: AGENTS.md.\n`;
+const plan = (...tasks: string[]) => `# Active implementation plan\n\n## Open tasks\n\n${tasks.join('\n')}`;
 const validBase = plan(task('DEMO-364'), task('DEMO-365', 'FIX', 'DEMO-364 merged.'));
 const validHead = plan(task('DEMO-365', 'FIX', 'DEMO-364 merged.'));
-const valid = (overrides = {}) => ({
+const valid = (overrides: Partial<ControlledPullRequestIdentity> = {}): ControlledPullRequestIdentity => ({
   branchName: 'demo-364-bind-controlled-pr-identity-and-queue-sequence',
   title: '[DEMO-364] [TEST] Bind controlled PR identity and queue sequence',
   headSubject: '[DEMO-364] [TEST] Bind controlled PR identity and queue sequence',
@@ -96,7 +110,7 @@ describe('controlled PR identity and queue sequence', () => {
 
   it('permits only an exact-parent same-task post-merge recovery without queue mutation', () => {
     const recoveryBase = plan(task('DEMO-423', 'REFACTOR', 'DEMO-422 merged.'));
-    const recovery = {
+    const recovery: ControlledPullRequestIdentity = {
       branchName: 'demo-422-post-merge-history-recovery',
       title: '[DEMO-422] [FIX] Recover post-merge history metadata',
       headSubject: '[DEMO-422] [FIX] Recover post-merge history metadata',
