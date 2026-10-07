@@ -72,7 +72,7 @@
     "check:platform": "node platform/conformance/cli.mjs pin && node platform/conformance/cli.mjs wrangler --worker demo",
     "validate:repository-settings": "node scripts/validate-github-repository-settings.ts",
     "test:plan-queue": "node scripts/check-portfolio-contract.ts",
-    "test:github-settings": "node --test tests/github-settings.cases.mjs",
+    "test:github-settings": "node --test tests/github-settings.cases.ts",
     "verify:github-settings": "node scripts/verify-github-settings.ts",
     "apply:github-settings": "node scripts/apply-github-settings.ts",
     "provision:worker-secret": "node scripts/provision-worker-secret.ts",
