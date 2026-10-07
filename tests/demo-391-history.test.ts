@@ -5,14 +5,14 @@ import { spawnSync } from 'node:child_process';
 import { afterEach, describe, expect, it } from 'vitest';
 
 const script = new URL('../scripts/validate-history.ts', import.meta.url).pathname;
-const directories = [];
+const directories: string[] = [];
 const body = (release = 'Unreleased', marker = '') => `Change:\nChange.\n\nReason:\nReason.\n\nImpact:\nMetadata.\n\nRisk:\nLow\n\nControls:\n- Review.\n\nValidation:\n- Pure test.\n\nEvidence:\n- package.json.\n\nSource:\ndirect.\n\nRelease:\n${release}\n${marker}`;
-function git(cwd, ...args) {
+function git(cwd: string, ...args: string[]) {
   const result = spawnSync('git', args, { cwd, encoding: 'utf8' });
   if (result.status !== 0) throw new Error(result.stderr);
   return result.stdout.trim();
 }
-function commit(cwd, subject, contents) {
+function commit(cwd: string, subject: string, contents: string) {
   git(cwd, 'add', '.');
   git(cwd, 'commit', '--quiet', '-m', subject, '-m', contents);
 }
@@ -40,7 +40,7 @@ function fixture({ marker = 'Live-Release: true', extraChange = false } = {}) {
   commit(cwd, '[DEMO-004] [BUILD] Demonstrate v0.1.1 release lifecycle', body('v0.1.1', marker));
   return cwd;
 }
-function history(cwd) { return spawnSync(process.execPath, [script], { cwd, encoding: 'utf8' }); }
+function history(cwd: string) { return spawnSync(process.execPath, [script], { cwd, encoding: 'utf8' }); }
 
 afterEach(() => { for (const cwd of directories.splice(0)) rmSync(cwd, { recursive: true, force: true }); });
 
