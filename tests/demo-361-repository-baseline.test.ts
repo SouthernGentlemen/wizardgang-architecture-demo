@@ -4,16 +4,16 @@ import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { validateRepositoryBaseline } from '../scripts/validate-repository-baseline.ts';
 
-const roots = [];
+const roots: string[] = [];
 const capabilityNames = ['typescript', 'react', 'vite', 'vitest', 'browser', 'cloudflareWorker', 'release'];
 
-function write(root, file, content) {
+function write(root: string, file: string, content: string) {
   const target = path.join(root, file);
   fs.mkdirSync(path.dirname(target), { recursive: true });
   fs.writeFileSync(target, content);
 }
 
-function capabilityDeclaration(profile, enabled) {
+function capabilityDeclaration(profile: string, enabled: boolean) {
   return JSON.stringify({
     schemaVersion: 1,
     profile,

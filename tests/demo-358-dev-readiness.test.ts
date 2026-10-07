@@ -8,6 +8,8 @@ import {
   waitForDevelopmentReady,
 } from '../scripts/lib/dev-readiness.ts';
 
+const browserOpenCommandFor = browserOpenCommand as (url: string, platform: string) => ReturnType<typeof browserOpenCommand>;
+
 describe('DEMO-358 shared local-development entry point', () => {
   it('keeps the default lifecycle headless-safe while exposing an explicit browser opt-in', () => {
     expect(resolveDevelopmentOptions([])).toEqual({
@@ -68,7 +70,7 @@ describe('DEMO-358 shared local-development entry point', () => {
       command: 'xdg-open',
       args: [DEVELOPMENT_URL],
     });
-    expect(browserOpenCommand(DEVELOPMENT_URL, 'plan9')).toBeNull();
+    expect(browserOpenCommandFor(DEVELOPMENT_URL, 'plan9')).toBeNull();
 
     const unavailable = vi.fn((_command, _args, _options, callback) => {
       callback(Object.assign(new Error('missing opener'), { code: 'ENOENT' }));

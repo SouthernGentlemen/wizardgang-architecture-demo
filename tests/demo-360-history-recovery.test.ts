@@ -3,7 +3,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const root = process.cwd();
-const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
+const read = (file: string) => fs.readFileSync(path.join(root, file), 'utf8');
 
 describe('DEMO-360 immutable history recovery', () => {
   it('records the merged DEMO-359 metadata exception without rewriting main', () => {
