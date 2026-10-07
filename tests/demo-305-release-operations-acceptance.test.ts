@@ -5,7 +5,7 @@ import { spawnSync } from 'node:child_process';
 import { waitForAssuranceRecordPane } from '../scripts/lib/demo-289-content-review.ts';
 import { routeUrl } from '../src/routing/application-routes';
 
-const read = (file) => fs.readFileSync(file, 'utf8');
+const read = (file: string) => fs.readFileSync(file, 'utf8');
 const releaseWorkflow = read('.github/workflows/release.yml');
 const monitorWorkflow = read('.github/workflows/assurance-monitor.yml');
 const monitorValidator = read('scripts/validate-assurance-operations.ts');
@@ -13,13 +13,13 @@ const releaseManagement = read('docs/RELEASE-MANAGEMENT.md');
 const deployments = read('docs/history/DEPLOYMENTS.md');
 const repositorySettingsValidator = read('scripts/validate-github-repository-settings.ts');
 
-function deploymentRecords(markdown) {
+function deploymentRecords(markdown: string) {
   const headings = [...markdown.matchAll(/^## (DEP-DEMO-\d+)\s*$/gm)];
   return headings.map((heading, index) => {
     const bodyStart = heading.index + heading[0].length;
     const bodyEnd = headings[index + 1]?.index ?? markdown.length;
     const body = markdown.slice(bodyStart, bodyEnd);
-    const fields = {};
+    const fields: Record<string, string> = {};
     for (const field of body.matchAll(/^\*\*([^:]+):\*\*\s*(.+)$/gm)) {
       fields[field[1]] = field[2].trim();
     }

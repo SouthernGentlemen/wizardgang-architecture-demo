@@ -4,7 +4,7 @@ import process from 'node:process';
 import { spawnSync } from 'node:child_process';
 
 const workflowPath = '.github/workflows/release.yml';
-const read = (file) => fs.readFileSync(file, 'utf8');
+const read = (file: string) => fs.readFileSync(file, 'utf8');
 
 function inlineNodeBlocks() {
   const lines = read(workflowPath).split('\n');
