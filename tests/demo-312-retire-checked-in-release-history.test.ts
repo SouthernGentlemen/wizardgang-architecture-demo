@@ -3,8 +3,8 @@ import { extname } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
 
-const read = (file) => fs.readFileSync(file, 'utf8');
-const self = 'tests/demo-312-retire-checked-in-release-history.test.mjs';
+const read = (file: string): string => fs.readFileSync(file, 'utf8');
+const self = 'tests/demo-312-retire-checked-in-release-history.test.ts';
 const textExtensions = new Set(['.css', '.html', '.js', '.json', '.md', '.mjs', '.ts', '.txt', '.yaml', '.yml']);
 
 describe('DEMO-312 repository release-history retirement', () => {

@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-470 — [TEST] Port architecture documentation tests to TypeScript
-- Dependency: DEMO-469.
-- Why: A small set of retained documentation tests still use MJS.
-- Scope: Convert retained DEMO-312, 314, and 315 tests after earlier pruning; remove those already retired.
-- Non-goals: Do not remove unique behavioral, security, or release regression coverage.
-- Acceptance: Current architecture documentation checks run from TS.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: tests/demo-312-retire-checked-in-release-history.test.mjs; tests/demo-314-architecture-documentation-consolidation.test.mjs; tests/demo-315-accessibility-documentation-consolidation.test.mjs
-
 ### DEMO-471 — [TEST] Port governance documentation tests to TypeScript
 - Dependency: DEMO-470.
 - Why: Retained governance and cleanup tests still use MJS.
