@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-471 — [TEST] Port governance documentation tests to TypeScript
-- Dependency: DEMO-470.
-- Why: Retained governance and cleanup tests still use MJS.
-- Scope: Convert retained DEMO-316 through 319 tests after their dedicated pruning tasks.
-- Non-goals: Do not remove unique behavioral, security, or release regression coverage.
-- Acceptance: Current governance reference checks run from TS.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: tests/demo-316-management-system-governance-consolidation.test.mjs; tests/demo-317-security-operations-governance-consolidation.test.mjs; tests/demo-318-retire-historical-assessment-markdown.test.mjs; tests/demo-319-documentation-cleanup-acceptance.test.mjs
-
 ### DEMO-472 — [TEST] Port queue and CI tests to TypeScript
 - Dependency: DEMO-471.
 - Why: CI diagnostics, queue, and check-ownership tests remain MJS.
