@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import { describe, expect, it, vi } from 'vitest';
 import { stopCheckoutOwnedDevelopmentProcesses } from '../scripts/lib/dev-process-cleanup.ts';
 import { isCheckoutOwnedDevelopmentProcess } from '../scripts/lib/dev-process-identity.ts';
+import type { ObservedProcess } from '../scripts/lib/dev-process-identity.ts';
 
 const checkoutRoot = '/work/wizardgang-architecture-demo';
 const owner = { pid: 4100, parentPid: 4000, startToken: 'owner-start', cwd: checkoutRoot };
@@ -9,7 +10,9 @@ const vite = { pid: 4200, parentPid: owner.pid, startToken: 'vite-start' };
 const wrangler = { pid: 4300, parentPid: owner.pid, startToken: 'wrangler-start' };
 const workerd = { pid: 4400, parentPid: wrangler.pid, startToken: 'workerd-start' };
 
-function run(snapshots, options = {}) {
+type CleanupOptions = Partial<Parameters<typeof stopCheckoutOwnedDevelopmentProcesses>[0]>;
+
+function run(snapshots: ObservedProcess[][], options: CleanupOptions = {}) {
   let index = 0;
   const observe = vi.fn(() => snapshots[Math.min(index++, snapshots.length - 1)]);
   const signalProcess = vi.fn();

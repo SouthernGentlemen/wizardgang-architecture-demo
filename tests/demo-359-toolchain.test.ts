@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { validateToolchainContract } from '../scripts/validate-toolchain.ts';
 
 const root = process.cwd();
-const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
+const read = (name: string) => fs.readFileSync(path.join(root, name), 'utf8');
 const packageJson = JSON.parse(read('package.json'));
 const packageLock = JSON.parse(read('package-lock.json'));
 const nodeVersion = read('.node-version').trim();

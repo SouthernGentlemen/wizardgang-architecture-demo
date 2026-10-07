@@ -9,7 +9,7 @@ const owner = Object.freeze({
   cwd: checkoutRoot,
 });
 
-function observed(pid, parentPid, startToken) {
+function observed(pid: number, parentPid: number, startToken: string) {
   return Object.freeze({ pid, parentPid, startToken });
 }
 
